@@ -1,0 +1,2 @@
+# zicopsapp
+in nextjs
