@@ -31,13 +31,18 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+    
     - name: Auth GCP service account
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: 'google-github-actions/auth@v0'
       with:
-        service_account_key: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
-        project_id: ${{ secrets.PROJECT_ID }}
-        export_default_credentials: true
+        credentials_json: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
  # Build docker image
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+      
     - name: Build the Docker image
       run: |-
         docker build --build-arg -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA .
