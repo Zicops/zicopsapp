@@ -24,17 +24,11 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
       with:
-        service_account_key: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
-        project_id: ${{ secrets.PROJECT_ID }}
-        export_default_credentials: true
- # Build docker image
-      - name: Build the Docker image
-        run: |-
-          docker build --build-arg -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA .
-      - run: |
-          gcloud auth configure-docker -q
-      - name: Push to GCP
-        run: |-
-          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    
