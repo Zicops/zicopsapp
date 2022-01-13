@@ -8,7 +8,11 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: zicops-one    # TODO: update to cluster name
+  GKE_ZONE: asia-southeast1-a   # TODO: update to cluster zone
+  SERVICE_NAME: zicops-app
 jobs:
   build:
 
@@ -27,6 +31,17 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag zicops-app:$(date +%s)
-
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
+        project_id: ${{ secrets.PROJECT_ID }}
+        export_default_credentials: true
+ # Build docker image
+      - name: Build the Docker image
+        run: |-
+          docker build --build-arg -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA .
+      - run: |
+          gcloud auth configure-docker -q
+      - name: Push to GCP
+        run: |-
+          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
