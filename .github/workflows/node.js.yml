@@ -32,7 +32,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
   
-  publish-deploy-job
+  publish-deploy-job:
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         service_account_key: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
