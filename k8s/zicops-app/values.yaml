@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: gcr.io/zicops-one/zicops-app
   tag: latest
-  port: 8080
+  port: 3000
   pullPolicy: Always
 
 service:
