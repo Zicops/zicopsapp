@@ -58,4 +58,4 @@ jobs:
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE \
           --project $PROJECT_ID
-        helm upgrade k8s/zicops-app --install --wait --atomic
+        helm upgrade zicops-app k8s/zicops-app --install --wait --atomic
