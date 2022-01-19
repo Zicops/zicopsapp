@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: gcr.io/zicops-one/zicops-app
+  tag: latest
+  port: 3000
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
