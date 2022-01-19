@@ -1,7 +1,7 @@
 const courses = () => {
     return (
         <div>
-            <h2>Courses</h2>
+            <h2 style={{marginTop:'300px'}}>Courses</h2>
         </div>
     )
 }

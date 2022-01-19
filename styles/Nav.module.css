@@ -2,8 +2,8 @@
 /* Navbar */
 .navbar{
     width: 100%;
-    /* height: 80px; */
-    padding: 20px 30px;
+    height: 80px;
+    padding: 0px 30px;
     background-color: #102525;
 
     display: flex;
@@ -26,6 +26,8 @@
 
 .menuicon{
     margin-right: 20px;
+    display: flex;
+    align-items: center;
 }
 .menuicon img{
     max-height: 30px;
@@ -34,6 +36,12 @@
 
 .logo{
     margin-right: 20px;
+    /* margin-left: 50px; */
+    /* padding: 5px 0; */
+    /* border: 1px solid white; */
+    min-width: 200px;
+    display: flex;
+    justify-content: center;
 }
 .logo img{
     max-width: 200px;
@@ -88,6 +96,7 @@
     display: flex;
     align-items: center;
     margin-left: 30px;
+    /* margin-right: 50px; */
 }
 .profilepic{
     padding-right: 10px;
