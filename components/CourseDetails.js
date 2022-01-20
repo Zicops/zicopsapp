@@ -9,19 +9,19 @@ const CourseDetails = () => {
           </div>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Course Summary</label>
-            <textarea class={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
+            <textarea className={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
           </div>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Key Takeaway</label>
-            <textarea class={styles.col_75} rows="2" placeholder="What are the key takeaway from this course in 60 words" />
+            <textarea className={styles.col_75} rows="2" placeholder="What are the key takeaway from this course in 60 words" />
           </div>
           
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Course Page Display Picture</label>
             <div className={styles.col_75}>
               <div className={styles.upload_btn_wrapper}>
-                <button class={styles.btn}>
-                  <span class={styles.input_icon}>
+                <button className={styles.btn}>
+                  <span className={styles.input_icon}>
                     <span>
                       <img src="/images/upload.png" alt="" />
                     </span>

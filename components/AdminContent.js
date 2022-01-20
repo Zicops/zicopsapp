@@ -9,7 +9,7 @@ const AdminContent = () => {
         <div className={styles.content}>
             <CourseHead />
             <Main_content_panel>
-            {/* <Admin_content_foot /> */}
+  
             </Main_content_panel>
             <Admin_content_foot />
         </div>

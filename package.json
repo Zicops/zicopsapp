@@ -11,7 +11,8 @@
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-multi-carousel": "^2.6.5"
+    "react-multi-carousel": "^2.6.5",
+    "reactjs-popup": "^2.0.5"
   },
   "devDependencies": {
     "eslint": "8.6.0",

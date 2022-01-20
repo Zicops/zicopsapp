@@ -20,11 +20,11 @@ const AddTopic = () => {
                     </div>
                     <div className={styles.row}>
                         <label htmlFor="name1" className={styles.col_25}>Description</label>
-                        <textarea class={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
+                        <textarea className={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
                     </div>
                     <div className={styles.row}>
                         <label htmlFor="name1" className={styles.col_25}>Topic Type</label>
-                        <select class={styles.col_75}>
+                        <select className={styles.col_75}>
                             <option>Select Topic Type</option>
                             <option>2</option>
                             <option>3</option>

@@ -3,12 +3,23 @@ const Modal = ({ handleClose, show, children }) => {
   
     return (
       <div className={showHideClassName}>
-        <div className="modal-container">
+        <div className="modal_container">
           {children}
           <a href="javascript:;" className="modal-close" onClick={handleClose}>
             close
           </a>
         </div>
+        <style jsx>
+          {`
+            .modal_container{
+              width: 60%;
+              margin: auto;
+            }
+            .modal .d-block{
+              display: block
+            }
+          `}
+        </style>
       </div>
     );
   };

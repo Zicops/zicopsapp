@@ -20,7 +20,7 @@ const AddChapter = () => {
                     </div>
                     <div className={styles.row}>
                         <label htmlFor="name1" className={styles.col_25}>Chapter Description</label>
-                        <textarea class={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
+                        <textarea className={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
                     </div>
                 </div>
                 <div className={styles.chapter_foot}>

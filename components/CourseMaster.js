@@ -10,7 +10,7 @@ const CourseMaster = () => {
           </div>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Select Category</label>
-              <select class={styles.col_75} placeholder="Select the category of the course">
+              <select className={styles.col_75} placeholder="Select the category of the course">
                 <option>Select the category of the course</option>
                 <option>2</option>
                 <option>3</option>
@@ -20,7 +20,7 @@ const CourseMaster = () => {
           </div>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Select Base Sub-category</label>
-              <select class={styles.col_75} placeholder="Select the category of the course">
+              <select className={styles.col_75} placeholder="Select the category of the course">
                 <option>Select the base sub-category of the course</option>
                 <option>2</option>
                 <option>3</option>
@@ -139,8 +139,8 @@ const CourseMaster = () => {
             <label htmlFor="name3" className={styles.col_25}>Upload Preview of the course</label>
             <div className={styles.col_75}>
               <div className={styles.upload_btn_wrapper}>
-                <button class={styles.btn}>
-                  <span class={styles.input_icon}>
+                <button className={styles.btn}>
+                  <span className={styles.input_icon}>
                     <span>
                       <img src="/images/upload.png" alt="" />
                     </span>
@@ -159,8 +159,8 @@ const CourseMaster = () => {
             <label htmlFor="name3" className={styles.col_25}>Display Image</label>
             <div className={styles.col_75}>
               <div className={styles.upload_btn_wrapper}>
-                <button class={styles.btn}>
-                  <span class={styles.input_icon}>
+                <button className={styles.btn}>
+                  <span className={styles.input_icon}>
                     <span>
                       <img src="/images/upload.png" alt="" />
                     </span>
@@ -177,7 +177,7 @@ const CourseMaster = () => {
           </div>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Course Owner</label>
-              <select class={styles.col_75} placeholder="Select the category of the course">
+              <select className={styles.col_75} placeholder="Select the category of the course">
                 <option>Select the owner of the course</option>
                 <option>2</option>
                 <option>3</option>

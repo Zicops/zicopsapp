@@ -28,8 +28,8 @@ const Resources = () => {
                     <input type="text" autoComplete="name" id="name" placeholder="Enter document name" required />
 
                     <div className={styles.upload_btn_wrapper}>
-                        <button class={styles.btn}>
-                            <span class={styles.input_icon}>
+                        <button className={styles.btn}>
+                            <span className={styles.input_icon}>
                                 <span>
                                     <img src="/images/upload.png" alt="" />
                                 </span>

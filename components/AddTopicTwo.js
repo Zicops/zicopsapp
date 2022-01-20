@@ -41,7 +41,7 @@ const AddTopicTwo = () => {
                     </div>
                     <div className={styles.form_row}>
                         <label htmlFor="name1" className={styles.col_25}>Select Language</label>
-                        <select class={styles.col_75}>
+                        <select className={styles.col_75}>
                             <option>Language of the content</option>
                             <option>2</option>
                             <option>3</option>
@@ -51,7 +51,7 @@ const AddTopicTwo = () => {
                     </div>
                     <div className={styles.form_row}>
                         <label htmlFor="name1" className={styles.col_25}>Type of content</label>
-                        <select class={styles.col_75}>
+                        <select className={styles.col_75}>
                             <option>Type of content</option>
                             <option>2</option>
                             <option>3</option>
@@ -63,8 +63,8 @@ const AddTopicTwo = () => {
                         <label htmlFor="name3" className={styles.col_25}>Upload Content</label>
                         <div className={styles.col_75}>
                             <div className={styles.upload_btn_wrapper}>
-                                <button class={styles.btn}>
-                                <span class={styles.input_icon}>
+                                <button className={styles.btn}>
+                                <span className={styles.input_icon}>
                                     <span>
                                     <img src="/images/upload.png" alt="" />
                                     </span>
@@ -81,14 +81,14 @@ const AddTopicTwo = () => {
                     </div>
                     <div className={styles.form_row}>
                         <label htmlFor="name1" className={styles.col_25}>Duration</label>
-                        <input class={styles.col_75} type="time" name="duration"/>
+                        <input className={styles.col_75} type="time" name="duration"/>
                     </div>
                     <div className={styles.form_row}>
-                        <label htmlFor="name3" className={styles.col_25}>Upload Subtitle File</label>
+                        <label htmlFor="name3" className={styles.col_25}>Upload Subtitle</label>
                         <div className={styles.col_75}>
                             <div className={styles.upload_btn_wrapper}>
-                                <button class={styles.btn}>
-                                <span class={styles.input_icon}>
+                                <button className={styles.btn}>
+                                <span className={styles.input_icon}>
                                     <span>
                                     <img src="/images/upload.png" alt="" />
                                     </span>
