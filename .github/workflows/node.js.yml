@@ -45,11 +45,12 @@ jobs:
 
     - name: Build the Docker image
       run: |-
-        docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest .
+        docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest .
     - run: |
         gcloud auth configure-docker -q
     - name: Push image to GCP
-      run: docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+      run: docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+           docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
     - name: Install Helm
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
