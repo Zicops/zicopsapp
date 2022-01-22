@@ -1,7 +1,8 @@
 import AddModuleFoot from '../API/AddModuleFoot';
 import styles from '../styles/CourseMaster.module.css';
 
-const AddTopic = () => {
+const AddTopic = ({set, show}) => {
+    const modalClose = () => set(false);
     return (
         <div className={styles.row}>
             <div className={styles.topic_add}>
@@ -10,20 +11,22 @@ const AddTopic = () => {
                         Topic 1
                     </div>
                     <div className={styles.chapter_cross_img}>
-                        <img src="/images/circular-cross.png" alt="" />
+                        <a className="close" onClick={close}>
+                            <img src="/images/circular-cross.png" alt="" onClick={modalClose}/>
+                        </a>
                     </div>
                 </div>
                 <div className={styles.chapter_body}>
                     <div className={styles.row}>
-                        <label htmlFor="name" className={styles.col_25}>Topic Name</label>
+                        <label htmlFor="name" className={styles.col_25} style={{color: '#ffffff'}}>Topic Name</label>
                         <input type="text" autoComplete="name" id="name" placeholder="Default Name to come here" className={styles.col_75} required />
                     </div>
                     <div className={styles.row}>
-                        <label htmlFor="name1" className={styles.col_25}>Description</label>
+                        <label htmlFor="name1" className={styles.col_25} style={{color: '#ffffff'}}>Description</label>
                         <textarea className={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
                     </div>
                     <div className={styles.row}>
-                        <label htmlFor="name1" className={styles.col_25}>Topic Type</label>
+                        <label htmlFor="name1" className={styles.col_25} style={{color: '#ffffff'}}>Topic Type</label>
                         <select className={styles.col_75}>
                             <option>Select Topic Type</option>
                             <option>2</option>
@@ -34,7 +37,7 @@ const AddTopic = () => {
                     </div>
                 </div>
                 <div className={styles.chapter_foot}>
-                    <AddModuleFoot />
+                    <AddModuleFoot  set={set} show={show}/>
                 </div>
             </div>
         </div>

@@ -4,12 +4,12 @@ const AddModuleBody = () => {
     return (
         <>
             <div className={styles.row}>
-                <label htmlFor="name" className={styles.col_25}>Name</label>
+                <label htmlFor="name" className={styles.col_25} style={{color: '#ffffff'}}>Name</label>
                 <input type="text" autoComplete="name" id="name" placeholder="Enter name of the course (Upto 160 characters)" className={styles.col_75} required />
             </div>
             <div className={styles.row}>
-                <label htmlFor="name1" className={styles.col_25}>Select Category</label>
-                <select class={styles.col_75} placeholder="Select the category of the course">
+                <label htmlFor="name1" className={styles.col_25} style={{color: '#ffffff'}}>Select Category</label>
+                <select className={styles.col_75} placeholder="Select the category of the course">
                     <option>Select the category of the course</option>
                     <option>2</option>
                     <option>3</option>

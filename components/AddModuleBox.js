@@ -1,6 +1,9 @@
+import React, { useState } from 'react';
 import styles from '../styles/CourseMaster.module.css';
 
-const AddModuleBox = ({title, body, foot}) => {
+const AddModuleBox = ({title, body, set, foot, hideCross}) => {
+    const modalClose = () => set(false);
+    
     return (
         <div className={styles.row}>
         <div className={styles.module_add}>
@@ -9,7 +12,7 @@ const AddModuleBox = ({title, body, foot}) => {
             {title}
           </div>
           <div className={styles.cross_img}>
-            <img src="/images/circular-cross.png" alt="" />
+            {!hideCross && <img src="/images/circular-cross.png" alt="" onClick={modalClose}/>}
           </div>
         </div>
         <div className={styles.module_body}>
@@ -22,4 +25,5 @@ const AddModuleBox = ({title, body, foot}) => {
       </div>
     )
 }
+
 export default AddModuleBox

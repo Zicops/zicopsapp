@@ -9,6 +9,7 @@ const IconButton = ({text, styleClass}) => {
     } else {
         sclass = styles.btn_lightblack;
     }
+    
     return (
         <button className={sclass}>
             <span>

@@ -114,7 +114,7 @@ const CourseMaster = () => {
             <div className={styles.col_25}></div>
               <div className={styles.col_25}>
                 <div className={styles.active_button}>
-                  <label for="display_button" className={styles.td_label}>Active</label>
+                  <label htmlFor="display_button" className={styles.td_label}>Active</label>
                   <label className={styles.switch}>
                     <input className={styles.switch_input} type="checkbox" />
                     <span className={styles.switch_label} data-on="On" data-off="Off"></span>
@@ -125,7 +125,7 @@ const CourseMaster = () => {
 
               <div className={styles.col_25}>
                 <div className={styles.active_button}>
-                  <label for="display_button" className={styles.td_label}>Display</label>
+                  <label htmlFor="display_button" className={styles.td_label}>Display</label>
                   <label className={styles.switch}>
                     <input className={styles.switch_input} type="checkbox" />
                     <span className={styles.switch_label} data-on="On" data-off="Off"></span>
