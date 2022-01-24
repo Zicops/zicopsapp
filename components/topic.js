@@ -1,6 +1,6 @@
-import moduleName from 'module';
+
 import Image from 'next/image';
-import Styles from '../styles/topic.module.css';
+import styles from '../styles/Topic.module.css';
 const Topic = () =>{
     return(
         <div className={styles.topic}>
@@ -8,7 +8,7 @@ const Topic = () =>{
             <div><img src="images/resourcesicon.png"/><p>Resources</p></div>
             <div><img src="images/discussicon.png"/><p>Discuss</p></div>
         </div>
-        <div className={styles.topic-loop}>
+        <div className={styles.topic_loop}>
             <div className={styles.topic_img}>
                 <img src="images/topicImage.png" alt=""/>
             </div>
