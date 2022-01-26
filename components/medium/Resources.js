@@ -13,9 +13,9 @@ const Resources = () => {
                 <IconButton styleClass="black" text="Add Resources"/>
             </div>
             
-            <div  Name={styles.form_row}>
+            <div  Name={styles.center_row}>
                 <select >
-                    <option>Select Document Type</option>
+                    <option>Select Resources Type</option>
                 </select>
             </div>
             

@@ -1,0 +1,32 @@
+/* COLOR PROFILE
+Theme Based Colours:
+Theme Colour Primary (Tcp) = 6bcfcf
+Theme Colour Secondary (Tcs) = 24575d
+Theme Colour Tertiary : 142c2c
+Background Content Space (Bc) : 081111
+------------------------------------------------------------------------
+Permanent Colours:
+Pure White (Wp) : ffffff
+Secondary White (Ws): 484848
+Header White (Hw) : b5b5b5
+Body Background : acacac
+Pure Black ( BLp) : 040404
+Secondary Black (BLs) : 737373
+Tertiary Black (BLt) : 121212 */
+
+:root{
+    --primary: #6bcfcf;
+    --secondary: #24575d;
+    --accent: #142c2c;
+    --background_content: #081111;
+
+    --white: #ffffff;
+    --secondary_white: #484848;
+    --tertiary_black: #121212;
+    --secondary_black: #737373;
+    --black: #040404;
+
+
+    --header: #b5b5b5;
+    --background_body: #acacac;
+}

@@ -23,6 +23,7 @@ const ModuleAdded = ({text, type}) => {
             border: 1px solid #808080;
             border-radius: 8px;
             padding: 10px 20px;
+            color: #868b8b;
         }
         .chapter_added_head{
             width: 95%;

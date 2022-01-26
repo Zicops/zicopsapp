@@ -22,10 +22,12 @@
 .head {
     width: 70%;
     padding-left: 10px;
+    margin-bottom: 10px;
 }
 
 .head h2 {
     color: white;
+    margin-bottom: 5px;
 }
 
 .head form {

@@ -48,9 +48,10 @@ const CourseTopics = () => {
                 <IconButton text="Add Topic" />
               </span>
               <Popup open={topicModal} closeOnDocumentClick={false} onClose={closeTopicModal}>
-                <div style={{ width: '800px', position: 'fixed', top: '52%', left: '57%', transform: 'translate(-50%, -50%)' }}>
-                  <AddTopic set={setTopicModal} show={setTopic} />
-                </div>
+              {/* <div style={{ width: '800px', position: 'fixed', top: '40%', left: '57%', transform: 'translate(-50%, -50%)' }}> */}
+                  {!showTopic && <AddTopic set={setTopicModal} show={setTopic} />}
+                  {showTopic && <AddTopicTwo set={setTopicModal} show={setTopic} />}
+                {/* </div> */}
               </Popup>
             </div>
             </>
@@ -82,14 +83,14 @@ const CourseTopics = () => {
           </Popup>
         </div>
 
-          {/* {bodyData.map( ({ title, content }) => (
-              <Accordion title={title} content={content} />
+          {/* {bodyData.map( ({ index, title, content }) => (
+              <Accordion key={index} title={title} content={content} />
           ))} */}
           
 
           
-
-          <AddTopicTwo />
+{/* 
+          <AddTopicTwo /> */}
         </div>
     )
 }

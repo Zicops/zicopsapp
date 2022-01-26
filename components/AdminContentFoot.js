@@ -11,14 +11,12 @@ const Admin_content_foot = () => {
             </div>
             <style jsx>{`
             .content-panel {
-                margin: -70px 10px 10px 10px;
-                color: #ffffff;
-                height: 60px;
+                margin: -75px 10px 10px 10px;
+                color: var(--white);
+                height: 65px;
                 // box-shadow: -2px 2px 10px 0 #000000, 2px -2px 5px 0 #686868;
                 background-color: #000000;
-                border-radius: 10px;
-                // position: absolute;
-                bottom: 330px;
+                border-radius: 0 0 10px 10px;
 
                 display: flex;
                 justify-content: space-between;

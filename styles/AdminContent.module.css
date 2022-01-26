@@ -1,9 +1,0 @@
-.content {
-    background-color: #1a1a1a;
-    float: right;
-    width: calc(100% - 250px);
-    z-index: 1;
-    margin-top: 80px;
-    height: calc(100vh - 80px);
-    padding: 30px 70px;
-}

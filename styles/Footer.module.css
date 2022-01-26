@@ -28,8 +28,8 @@
     position: static;
     width: 100%;
     bottom: 0px;
-    background-color: #001111;
-    color: white;
+    background-color: var(--footer_background);
+    color: var(--white);
     /* height: 100px; */
     display: flex;
     align-items: center;
@@ -43,7 +43,7 @@
     /* padding-bottom: 7px; */
 }
 .h_footer a {
-    color: white;
+    color: var(--white);
     text-decoration: none;
     padding: 0px 5px;
 }
@@ -63,10 +63,13 @@
 
 .connect_us img {
     width: 30px;
+    margin: 0 3px;
 }
 
 .store img{
-    width: 100px;
+    height: 30px;
     padding: 5px;
-    background-color: #102525;
+    background-color: var(--accent );
+    /* background-color: #102525; */
+    margin: 0 3px;
 }

@@ -1,4 +1,3 @@
-
 const QuizLoop = ({type, sr, text}) => {
     let sclass;
     if(type=='question'){
@@ -35,13 +34,11 @@ const QuizLoop = ({type, sr, text}) => {
         </div>
         <style jsx>{`
         .question{
-            // background-color: #ff2211;
             display: flex;
             align-items:center;
             padding: 10px 0;
         }
         .answer{
-            // background-color: #118811;
             display: flex;
             align-items:center;
 

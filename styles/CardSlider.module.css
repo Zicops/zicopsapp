@@ -1,0 +1,11 @@
+.CardCarosel{
+    padding: 10px;
+    background-color: #c5c5c5;
+}
+.carousel_track {
+    background-color:#ff4411;
+    height: 300px;
+}
+.react-multi-carousel-item {
+    width: 100px;
+}

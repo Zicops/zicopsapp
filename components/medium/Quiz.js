@@ -30,18 +30,20 @@ const Quiz = () => {
             </div>
             
             <div className={styles.row}>
-                <div className={styles.col_10}>
+                <div className={styles.col_25}></div>
+                <div className={styles.col_25}>
                     <label className={styles.checkbox_container}>
                         <input type="checkbox" />
-                        <span className={styles.checkmark}></span>Beginner
+                        <span className={styles.checkmark}></span>Create Quiz
                     </label>
                 </div>
-                <div className={styles.col_10}>
+                <div className={styles.col_25}>
                     <label className={styles.checkbox_container}>
                         <input type="checkbox" />
-                        <span className={styles.checkmark}></span>Competent
+                        <span className={styles.checkmark}></span>Upload Quiz
                     </label>
                 </div>
+                <div className={styles.col_25}></div>
             </div>
 
             <div className={styles.form_row}>

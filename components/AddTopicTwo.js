@@ -8,8 +8,10 @@ import Resources from './medium/Resources';
 import styles from '../styles/CourseMaster.module.css';
 import ModuleAdded from './small/ModuleAdded';
 
-const AddTopicTwo = () => {
+const AddTopicTwo = ({set, show}) => {
+    const modalClose = () => set(false);
     return (
+        <div style={{ width: '900px', height: '300px', position: 'fixed', top: '30%', left: '57%', transform: 'translate(-50%, -50%)' }}>
         <div className={styles.row}>
             <div className={styles.topic_add}>
                 <div className={styles.chapter_head}>
@@ -17,7 +19,7 @@ const AddTopicTwo = () => {
                         Topic 1
                     </div>
                     <div className={styles.chapter_cross_img}>
-                        <img src="/images/circular-cross.png" alt="" />
+                        <img src="/images/circular-cross.png" alt=""  onClick={modalClose}/>
                     </div>
                 </div>
                 <ModuleAdded type="module" text="Topic: Introduction to design thinking"/>
@@ -115,6 +117,7 @@ const AddTopicTwo = () => {
                     <AddTopicFoot />
                 </div>
             </div>
+        </div>
         </div>
     )
 }
