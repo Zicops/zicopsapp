@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/zicops-one/zicops-app
-  tag: latest
+  tag: ${GITHUB_SHA}
   port: 3000
   pullPolicy: Always
 
