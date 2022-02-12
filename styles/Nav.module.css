@@ -4,7 +4,7 @@
     width: 100%;
     height: 80px;
     padding: 0px 30px;
-    background-color: #102525;
+    background-color: var(--tile-bg);
 
     display: flex;
     align-items: center;
