@@ -50,7 +50,8 @@ const Nav = () => {
                             Zicops
                         </div>
                     </div>
-                    <img className={styles.dropdownicon} src="images/arrow2.png" onMouseEnter={profilehover} />
+                    <img className={styles.dropdownicon} src="images/arrow2.png" /> 
+                    {/* //onMouseEnter={profilehover}  */}
                 </div>
             </div>
 

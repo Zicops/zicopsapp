@@ -69,7 +69,7 @@ const BigCardSlider = ({deviceType, title, type, data}) => {
                     .slider_header{
                         margin-left: 0;
                         font-size: 20px;
-                        // text-transform: uppercase;
+                        padding-bottom: 10px;
                     }
                     .slider_header span:after{
                         content:'  View all >>';
@@ -85,8 +85,9 @@ const BigCardSlider = ({deviceType, title, type, data}) => {
                     }
                     .slider_header span{
                         color: var(--white);
-                        font-weight: 900;
+                        font-weight: 700;
                         cursor: pointer;
+                        font-size: 26px;
                     }
                     
                 `}</style>

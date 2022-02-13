@@ -2,9 +2,9 @@
 /* Navbar */
 .navbar{
     width: 100%;
-    height: 80px;
+    height: 70px;
     padding: 0px 30px;
-    background-color: var(--tile-bg);
+    background-color: var(--header-bg);
 
     display: flex;
     align-items: center;
@@ -28,17 +28,16 @@
     margin-right: 20px;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 .menuicon img{
     max-height: 30px;
     max-width: 30px;
+    cursor: pointer;    
 }
 
 .logo{
     margin-right: 20px;
-    /* margin-left: 50px; */
-    /* padding: 5px 0; */
-    /* border: 1px solid white; */
     min-width: 200px;
     display: flex;
     justify-content: center;
@@ -61,10 +60,10 @@
     list-style-type: none;
 }
 .menu ul li {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
-    color: #858f8f;
-
+    color: var(--dark_three);
+    cursor: pointer;
     margin: 0 15px;
 }
 .menu ul li:hover{
@@ -81,11 +80,12 @@
     margin: 0;
 }
 .special_menu ul li img{
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     padding: 5px;
-    margin: 5px 10px 0;
-    border: 1px solid #6bcfcf;
+    margin: 5px 5px 0;
+    border: 1px solid var(--primary);
+    cursor: pointer;
 }
 
 
@@ -109,12 +109,19 @@
     padding-right: 10px;
 }
 .profilename .name{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
-    color: #6bcfcf;
+    color: var(--white);
 }
 .profilename .desg{
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 400;
-    color: #6bcfcf;
+    color: var(--primary);
+}
+.dropdownicon{
+    transition: 0.3s;
+    cursor: pointer;
+}
+.dropdownicon:hover{
+    transform: rotate(180deg);
 }

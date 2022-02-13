@@ -18,7 +18,8 @@
   --dark_one: #1a1a1a;
   --dark_two: #202222;
   --dark_three: #868f8f;
-  --tile-bg: #1f1f1f;
+  --tile-bg: #1a1d21;
+  --header-bg: #222529;
 }
 
 html,
@@ -165,7 +166,9 @@ a {
   cursor:pointer;
 }
 
-
+.header-carousel-container{
+  z-index: 0!important;
+}
 .carousel_track {
   position: relative;
   align-items: center;
@@ -174,9 +177,13 @@ a {
 .carousel_container,.carousel_container_big,.carousel_container_round{
   overflow: unset!important;
   z-index: 0;
+  margin-bottom: 50px;
 }
+
 .carousel_container{
-  height: 200px;
+  /* height: 200px; */
+  height: 170px;
+  /* border: 1px solid rgb(62, 163, 42); */
 }
 .card_ietms,
 .card_ietms_big,
@@ -184,6 +191,7 @@ a {
   margin: 0px;
   padding: 5px;
   z-index: 0;
+  /* border: 1px solid white; */
 }
 
 .card_ietms img, .card_ietms_big img, .card_ietms_round img{
@@ -262,4 +270,13 @@ a {
 }
 .col_75 {
   width: 75%;
+}
+
+/* header carousel in homepage */
+.carousel{
+  padding-top: 70px;
+  margin-bottom: 20px;
+}
+.carousel img{
+  width: 100%;
 }

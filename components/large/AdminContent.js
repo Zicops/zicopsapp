@@ -17,8 +17,8 @@ const AdminContent = () => {
                 float: right;
                 width: calc(100% - 250px);
                 z-index: 1;
-                margin-top: 80px;
-                height: calc(110vh - 80px);
+                margin-top: 70px;
+                height: calc(110vh - 70px);
                 padding: 30px 70px;
             }
             `}

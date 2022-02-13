@@ -1,8 +1,5 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import styles from '../styles/HomeSlider.module.css'
-
-
 
 const HomeSlider = () => {
     const responsive = {
@@ -13,8 +10,8 @@ const HomeSlider = () => {
         },
         tablet: {
           breakpoint: { max: 1024, min: 464 },
-          items: 2,
-          slidesToSlide: 2 // optional, default to 1.
+          items: 1,
+          slidesToSlide: 1 // optional, default to 1.
         },
         mobile: {
           breakpoint: { max: 464, min: 0 },
@@ -24,14 +21,9 @@ const HomeSlider = () => {
       };
 
 
-    var carouselItems = ['<div><img src="images/IMG-20220113-WA0020.jpg" alt=""/></div>', '<div><img src="images/IMG-20220113-WA0018.jpg" alt=""/></div>'];
-
-
     return (
-        <div className={styles.carousel}>
-             {/* <img src="images/IMG-20220113-WA0020.jpg" alt=""/>
-             <img src="images/IMG-20220113-WA0018.jpg" alt=""/> */}
-        
+      <>
+        <div className="carousel">        
         <Carousel
             swipeable={false}
             draggable={false}
@@ -44,7 +36,7 @@ const HomeSlider = () => {
             keyBoardControl={true}
             customTransition="all 1s"
             transitionDuration={1000}
-            containerClass="carousel-container"
+            containerClass="header-carousel-container"
             removeArrowOnDeviceType={["tablet", "mobile", "desktop"]}
             deviceType="Laptop"
             dotListClass="custom-dot-list-style"
@@ -54,6 +46,18 @@ const HomeSlider = () => {
         <div><img src="images/IMG-20220113-WA0018.jpg" alt=""/></div>
         </Carousel>
         </div>
+        <div className="dropup" style={{
+          background: '#000000',
+          background: 'linear-gradient(180deg, #00000000 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.9) 100%)',
+          height: '20px',
+          padding: 0,
+          marginTop: '-45px',
+          marginBottom: '40px',
+          position: "relative",
+          zIndex: '2',
+          opacity: '0.3'
+        }}></div>
+      </>
     )
 }
 

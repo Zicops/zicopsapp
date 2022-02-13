@@ -41,9 +41,13 @@ export default function Tabs(){
       query.tabOne = true;
       isTabOneSelected = true;
     }
-    if(query.tabTwo || query.tabThree || query.tabFour || query.tabFive){
-      query.tabOne = false;
-    }
+    if( !!query.tabTwo == true || 
+        !!query.tabThree == true || 
+        !!query.tabFour == true || 
+        !!query.tabFive == true
+      ){
+        query.tabOne = false;
+      }
 
     return(
         <div>
