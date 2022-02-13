@@ -4,19 +4,20 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
-    "next": "^12.0.10",
+    "@apollo/client": "^3.5.8",
+    "graphql": "^16.3.0",
+    "next": "^12.0.8",
     "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-datepicker": "^4.6.0",
     "react-dom": "^17.0.2",
     "react-multi-carousel": "^2.6.5",
+    "react-select": "^5.2.2",
     "react-slick": "^0.28.1",
-    "reactjs-popup": "^2.0.5"
-  },
-  "devDependencies": {
-    "eslint": "8.6.0",
-    "eslint-config-next": "^0.2.4"
+    "reactjs-popup": "^2.0.5",
+    "video.js": "^7.17.0"
   }
 }

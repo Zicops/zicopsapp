@@ -1,11 +1,11 @@
-import Sidebar from "../components/Sidebar"
-import Content from "../components/AdminContent"
+import Sidebar from "../components/large/Sidebar"
+import AdminContent from "../components/large/AdminContent"
 // import Admin_content_foot from "../components/AdminContentFoot"
 const Admin = () => {
     return (
         <div>
             <Sidebar />
-            <Content />
+            <AdminContent />
         </div>
     )
 }

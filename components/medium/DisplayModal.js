@@ -1,5 +1,5 @@
 import Popup from 'reactjs-popup';
-import AddChapter from "./medium/AddChapter";
+import AddChapter from "./AddChapter";
 
 const DisplayModal = () => {
   let CloseEvent = ()=>{

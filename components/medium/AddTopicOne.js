@@ -1,5 +1,5 @@
-import AddModuleFoot from '../API/AddModuleFoot';
-import styles from '../styles/CourseMaster.module.css';
+import AddModuleFoot from '../../API/AddModuleFoot';
+import styles from '../../styles/CourseMaster.module.css';
 
 const AddTopic = ({set, show}) => {
     const modalClose = () => set(false);

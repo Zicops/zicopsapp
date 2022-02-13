@@ -1,5 +1,5 @@
-import Dropdown from './small/SmallDropdown'
-import styles from '../styles/CourseHead.module.css'
+import Dropdown from '../small/SmallDropdown'
+import styles from '../../styles/CourseHead.module.css'
 
 const CourseHead = () => {
     return (

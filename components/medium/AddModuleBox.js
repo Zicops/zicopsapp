@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '../styles/CourseMaster.module.css';
+import styles from '../../styles/CourseMaster.module.css';
 
 const AddModuleBox = ({title, body, set, foot, hideCross}) => {
     const modalClose = () => set(false);

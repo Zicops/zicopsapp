@@ -1,4 +1,4 @@
-import styles from '../styles/CourseMaster.module.css'
+import styles from '../../styles/CourseMaster.module.css'
 
 const CourseMaster = () => {
     return (

@@ -1,18 +1,18 @@
-import Accordion from './small/Accordion';
-import AddChapter from './medium/AddChapter';
+import Accordion from '../small/Accordion';
+import AddChapter from './AddChapter';
 import AddModuleBox, { ModalStatus } from './AddModuleBox';
-import AddModuleBody from '../API/AddModuleBody';
-import AddModuleFoot from '../API/AddModuleFoot';
-import ModuleAdded from './small/ModuleAdded';
+import AddModuleBody from '../../API/AddModuleBody';
+import AddModuleFoot from '../../API/AddModuleFoot';
+import ModuleAdded from '../small/ModuleAdded';
 import AddTopic from './AddTopicOne';
 import AddTopicTwo from './AddTopicTwo';
-import IconButton from './small/IconButton';
-import bodyData from '../API/DataAccordion';
+import IconButton from '../small/IconButton';
+import bodyData from '../../API/DataAccordion';
 import DisplayModal from './DisplayModal';
 import Popup from 'reactjs-popup';
 
 import React, { useState } from 'react';
-import styles from '../styles/CourseMaster.module.css';
+import styles from '../../styles/CourseMaster.module.css';
 
 
 // const { title, content } = accordionData;

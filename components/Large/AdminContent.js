@@ -1,16 +1,13 @@
-import Link from "next/link";
-import CourseHead from "./CourseHead";
-import Main_content_panel from "./Main_content_panel";
-import Admin_content_foot from "./AdminContentFoot";
+import CourseHead from "../medium/CourseHead";
+import Main_content_panel from "../medium/Main_content_panel";
+import Admin_content_foot from "../small/AdminContentFoot";
 
 const AdminContent = () => {
     return (
         <>
         <div className="content">
             <CourseHead />
-            <Main_content_panel>
-  
-            </Main_content_panel>
+            <Main_content_panel />
             <Admin_content_foot />
         </div>
         <style jsx>

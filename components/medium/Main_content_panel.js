@@ -1,4 +1,4 @@
-import Tabs from "./Tab";
+import Tabs from "../small/Tab";
 
 const Main_content_panel = () => {
     

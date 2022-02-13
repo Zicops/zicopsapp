@@ -1,12 +1,12 @@
-import AddModuleFoot from '../API/AddModuleFoot';
-import AddTopicFoot from '../API/AddTopicFoot';
-import ContentAdded from './small/ContentAdded';
-import Accordion from './small/Accordion';
-import Binge from './medium/Binge';
-import Quiz from './medium/Quiz';
-import Resources from './medium/Resources';
-import styles from '../styles/CourseMaster.module.css';
-import ModuleAdded from './small/ModuleAdded';
+import AddModuleFoot from '../../API/AddModuleFoot';
+import AddTopicFoot from '../../API/AddTopicFoot';
+import ContentAdded from '../small/ContentAdded';
+import Accordion from '../small/Accordion';
+import Binge from './Binge';
+import Quiz from './Quiz';
+import Resources from './Resources';
+import styles from '../../styles/CourseMaster.module.css';
+import ModuleAdded from '../small/ModuleAdded';
 
 const AddTopicTwo = ({set, show}) => {
     const modalClose = () => set(false);

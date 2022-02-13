@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import CourseMaster from "./CourseMaster";
-import CourseDetails from "./CourseDetails";
-import CourseTopics from "./CourseTopics";
-import CourseConfiguration from "./CourseConfiguration";
-import CourseAbout from "./CourseAbout";
+
+import CourseMaster from "../medium/CourseMaster";
+import CourseDetails from "../medium/CourseDetails";
+import CourseAbout from "../medium/CourseAbout";
+import CourseTopics from "../medium/CourseTopics";
+import CourseConfiguration from "../medium/CourseConfiguration";
+
 
 const Tab = ({ href, isSelected, title }) => (
     <Link href={href}>

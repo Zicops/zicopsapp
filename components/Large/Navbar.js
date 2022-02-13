@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styles from '../../styles/Nav.module.css'
 
 const Nav = () => {
@@ -10,9 +11,11 @@ const Nav = () => {
     return (
         <div className={styles.navbar} id="navbar">
             <div className={styles.left}>
-                <div className={styles.menuicon}>
-                    <img src="images/menu.png" />
-                </div>
+                <Link href="/admin">
+                    <div className={styles.menuicon}>
+                        <img src="images/menu.png" />
+                    </div>
+                </Link>
                 <div className={styles.logo}>
                     <img src="images/zicops-header-logo.png" />
                 </div>

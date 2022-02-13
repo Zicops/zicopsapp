@@ -4,9 +4,9 @@ const Dropdown = () => {
         <div className="select">
             <select id="course">
                 <option value="hide">Self Paced</option>
-                <option value="2010">Courses 1</option>
-                <option value="2011">Courses 2</option>
-                <option value="2012">Courses 3</option>
+                <option value="2010">Courses 11</option>
+                <option value="2011">Courses 22</option>
+                <option value="2012">Courses 33</option>
             </select>
         </div>
             <style jsx>

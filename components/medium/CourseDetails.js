@@ -1,4 +1,5 @@
-import styles from '../styles/CourseMaster.module.css'
+import DragDrop from './DragDropContainer'
+import styles from '../../styles/CourseMaster.module.css'
 
 const CourseDetails = () => {
     return (
@@ -9,76 +10,7 @@ const CourseDetails = () => {
                 <option>Select the base sub-category of the course</option>
               </select>
           </div>
-          <div className={styles.row}>
-            <label htmlFor="name3" className={styles.col_25}>Additional Categories / Sub-categories</label>
-            <div className={styles.col_25}>
-              <div className={styles.drag_category_area}>
-                <div className={styles.inner_drag_srch}>
-                  <input type="text" placeholder='Search'></input>
-                </div>
-                <div className={styles.inner_drag_ele}>
-                  Java
-                </div>
-                <div className={styles.inner_drag_ele}>
-                  Java
-                </div>
-                <div className={styles.inner_drag_ele}>
-                  Java
-                </div>
-                <div className={styles.inner_drag_ele}>
-                  Java
-                </div>
-                <div className={styles.inner_drag_ele}>
-                  Java
-                </div>
-                <div className={styles.inner_drag_ele}>
-                  Java
-                </div>
-              </div>
-            </div>
-            <div className={styles.col_10}>
-              <img className={styles.handdrag} src='/images/handdrag.png'/>
-            </div>
-            <div className={styles.col_25}>
-              <div className={styles.drop_category_area}>
-                <div className={styles.wrap_drop}>
-                  <div className={styles.Sr_no}>1</div>
-                  <div className={styles.inner_drop_ele}>java</div>
-                </div>
-                <div className={styles.wrap_drop}>
-                  <div className={styles.Sr_no}>2</div>
-                  <div className={styles.inner_drop_ele}>python</div>
-                </div>
-                <div className={styles.wrap_drop}>
-                  <div className={styles.Sr_no}>3</div>
-                  <div className={styles.inner_drop_ele}>c++</div>
-                </div>
-                <div className={styles.wrap_drop}>
-                  <div className={styles.Sr_no}>4</div>
-                  <div className={styles.inner_drop_ele}>html</div>
-                </div>
-                <div className={styles.wrap_drop}>
-                  <div className={styles.Sr_no}>5</div>
-                  <div className={styles.inner_drop_ele}>css</div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.col_15}>
-              
-            </div>
-          </div>
-          {/* <div className={styles.row}>
-            <label htmlFor="name" className={styles.col_25}>Course Name</label>
-            <input type="text" autoComplete="name" id="name" placeholder="Default Name to come here" className={styles.col_75} required />
-          </div>
-          <div className={styles.row}>
-            <label htmlFor="name1" className={styles.col_25}>Course Summary</label>
-            <textarea className={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
-          </div>
-          <div className={styles.row}>
-            <label htmlFor="name1" className={styles.col_25}>Key Takeaway</label>
-            <textarea className={styles.col_75} rows="2" placeholder="What are the key takeaway from this course in 60 words" />
-          </div> */}
+          <DragDrop/>
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Level of Expertise</label>
             <div className={styles.col_25}>

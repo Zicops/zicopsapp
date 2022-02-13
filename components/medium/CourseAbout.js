@@ -1,6 +1,6 @@
-import TagInput from './small/TagInput'
-import BulletPointInput from './small/BulletPointInput'
-import styles from '../styles/CourseMaster.module.css'
+import TagInput from '../small/TagInput'
+import BulletPointInput from '../small/BulletPointInput'
+import styles from '../../styles/CourseMaster.module.css'
 
 const CourseAbout = () => {
 
