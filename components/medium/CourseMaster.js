@@ -1,10 +1,44 @@
+import { gql } from "@apollo/client";
+import client from "../../apollo-client";
 import styles from '../../styles/CourseMaster.module.css'
 
-const CourseMaster = () => {
+export async function getStaticProps() {
+  const { data } = await client.query({
+    query: gql`
+      query Countries {
+        countries {
+          code
+          name
+          emoji
+        }
+      }
+    `,
+  });
+    return {
+      props: {
+        countries: data.countries.slice(0, 4),
+      },
+  };
+}
+
+const CourseMaster = ({countries}) => { 
+  console.log(countries);
     return (
         <div className={styles.course_master}>
           {/* CourseMaster */}
           <div className={styles.row}>
+
+
+          {/* {countries.map((country) => (
+            <div key={country.code} className="card">
+              <h3>{country.name}</h3>
+              <p>
+                {country.code} - {country.emoji}
+              </p>
+            </div>
+          ))} */}
+
+
             <label htmlFor="name" className={styles.col_25}>Name</label>
             <input type="text" autoComplete="name" id="name" placeholder="Enter name of the course (Upto 160 characters)" className={styles.col_75} required />
           </div>
