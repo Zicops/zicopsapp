@@ -12,7 +12,7 @@ const Tab = ({ href, isSelected, title }) => (
     <Link href={href}>
       <a
         style={{
-          padding: '8px 35px',
+          padding: '7px 35px 8px 35px',
           marginTop: '5px',
           backgroundColor: isSelected ? "#202222" : "transparent",
           color: isSelected ? 'var(--white)' : 'var(--dark_three)',
@@ -31,11 +31,20 @@ const Tab = ({ href, isSelected, title }) => (
 export default function Tabs(){
     const { query } = useRouter();
 
-    const isTabOneSelected = !!query.tabOne;
+    let isTabOneSelected = !!query.tabOne;
     const isTabTwoSelected = !!query.tabTwo;
     const isTabThreeSelected = !!query.tabThree;
     const isTabFourSelected = !!query.tabFour;
     const isTabFiveSelected = !!query.tabFive;
+
+    if(typeof query.tabOne == 'undefined'){
+      query.tabOne = true;
+      isTabOneSelected = true;
+    }
+    if(query.tabTwo || query.tabThree || query.tabFour || query.tabFive){
+      query.tabOne = false;
+    }
+
     return(
         <div>
             <nav>
