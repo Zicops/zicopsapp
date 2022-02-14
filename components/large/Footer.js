@@ -6,40 +6,34 @@ const Footer = () => {
         <div className={styles.footer}>
             <div className={styles.row}>
                 <div className={styles.footer_left}>
-                    <div className={styles.col_50}>
-                    <div className={styles.h_footer}>
-                        <Link href="#about_piLearning">
-                            <a>About Zicops</a>
-                        </Link>
-                        <Link href="#about_piLearning">
-                            <a>Terms Of Uses</a>
-                        </Link>
-                        <Link href="#about_piLearning">
-                            <a>Privacy Policy</a>
-                        </Link>
-                        <Link href="#about_piLearning">
-                            <a>FAQ</a>
-                        </Link>
-                        <Link href="#about_piLearning">
-                            <a>Feedback</a>
-                        </Link>
-                        <Link href="#about_piLearning">
-                            <a>Careers</a>
-                        </Link>
-                        {/* <a href="#about_piLearning">About Zicops</a>
-                        <a href="#terms_of_uses">Terms Of Uses</a>
-                        <a href="#privacy_policy">Privacy Policy</a>
-                        <a href="#faq">FAQ</a>
-                        <a href="#feedback">Feedback</a>
-                        <a href="#careers">Careers</a> */}
-                    </div>
+                    <div className={styles.col_75}>
+                        <div className={styles.h_footer}>
+                            <Link href="#about_Zicops">
+                                <a>About Zicops</a>
+                            </Link>
+                            <Link href="#about_Zicops">
+                                <a>Terms Of Uses</a>
+                            </Link>
+                            <Link href="#about_Zicops">
+                                <a>Privacy Policy</a>
+                            </Link>
+                            <Link href="#about_Zicops">
+                                <a>FAQ</a>
+                            </Link>
+                            <Link href="#about_Zicops">
+                                <a>Feedback</a>
+                            </Link>
+                            <Link href="#about_Zicops">
+                                <a>Careers</a>
+                            </Link>
+                        </div>
 
-                    <p className={styles.p_footer}>
-                        © 2021 PiLearning. All Rights Reserved. PiLearning and all related
-                        channel and programming logos are service marks of, and all related
-                        programming visuals and elemnts are the property of Pilearning,Inc.
-                        All rights reserved.
-                    </p>
+                        <p className={styles.p_footer}>
+                            © 2021 Zicops. All Rights Reserved. Zicops and all related
+                            channel and programming logos are service marks of, and all related
+                            programming visuals and elemnts are the property of Zicops,Inc.
+                            All rights reserved.
+                        </p>
                     </div>
                 </div>
                 <div className={styles.footer_right}>
@@ -52,7 +46,7 @@ const Footer = () => {
                             <img src="/images/LinkedIn.png" alt=""/>
                         </div>
                         <div className={styles.store}>
-                            <p className={styles.h_footer}>PiLearning App</p>
+                            <p className={styles.h_footer}>Download App</p>
                             <img src="/images/play_store.png" alt="" />
                             <img src="/images/app_store.png" alt="" />
                         </div>

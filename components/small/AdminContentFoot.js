@@ -1,3 +1,4 @@
+
 const Admin_content_foot = () => {
     
     return (
@@ -7,7 +8,7 @@ const Admin_content_foot = () => {
             </div>
             <div className="right-text">
                 <button>Cancel</button>
-                <button>Save</button>
+                <button type="submit">Save</button>
             </div>
             <style jsx>{`
             .content-panel {

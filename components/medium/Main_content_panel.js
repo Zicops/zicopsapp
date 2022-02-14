@@ -1,6 +1,6 @@
 import Tabs from "../small/Tab";
 
-const Main_content_panel = () => {
+const Main_content_panel = ({props}) => {
     
     return (
         <>

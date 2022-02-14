@@ -1,14 +1,18 @@
 import CourseHead from "../medium/CourseHead";
 import Main_content_panel from "../medium/Main_content_panel";
 import Admin_content_foot from "../small/AdminContentFoot";
+// import { OnSave } from "../../API/handlers/CourseOnSave"
 
 const AdminContent = () => {
     return (
         <>
         <div className="content">
             <CourseHead />
-            <Main_content_panel />
-            <Admin_content_foot />
+            {/* <form onSubmit={OnSave}> */}
+                <Main_content_panel />
+                <Admin_content_foot />
+            {/* </form> */}
+            
         </div>
         <style jsx>
             {`

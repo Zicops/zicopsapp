@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-
+import { ApolloProvider } from '@apollo/client'
+import { mClient } from '../../API/Mutations'
 import CourseMaster from "../medium/CourseMaster";
 import CourseDetails from "../medium/CourseDetails";
 import CourseAbout from "../medium/CourseAbout";
@@ -28,7 +29,7 @@ const Tab = ({ href, isSelected, title }) => (
     </Link>
 )
 
-export default function Tabs(){
+export default function Tabs({props}){
     const { query } = useRouter();
 
     let isTabOneSelected = !!query.tabOne;
@@ -58,6 +59,7 @@ export default function Tabs(){
                 <Tab href="/admin/?tabFour=true" title="Topics" isSelected={isTabFourSelected} /> 
                 <Tab href="/admin/?tabFive=true" title="Configuration" isSelected={isTabFiveSelected} /> 
             </nav>
+            <ApolloProvider client={mClient}>
             <section className="tabSection">
                 {/* <p>{JSON.stringify(query)}</p> */}
                 {query.tabOne ? <CourseMaster /> : ''}
@@ -66,6 +68,7 @@ export default function Tabs(){
                 {query.tabFour && <CourseTopics />}
                 {query.tabFive && <CourseConfiguration />}
             </section>
+            </ApolloProvider>
             <style jsx>{`
             .tabSection {
               background-color: #202222; 

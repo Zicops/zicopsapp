@@ -3,7 +3,6 @@
     position: relative;
 }
 
-
 .row {
     width: 100%;
     margin: 30px 0;
@@ -67,6 +66,12 @@
     border-radius: 0;
     box-shadow: 0px 0px 10px 0px #6bcfcf;
     outline: 0;
+}
+.row select option{
+    font-size: 14px;
+    color: var(--dark_three);
+    background-color: var(--dark_two);
+    height: 20px;
 }
 
 .drag_category_area {
