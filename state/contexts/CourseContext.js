@@ -15,10 +15,6 @@ const CourseContextProvider = (props) => {
     status: ''
   });
 
-  // const setTab = (tab) => {
-  //   setTab(tab);
-  // }
-
   const addCourseMaster = (data) => {
     setCourse({...course, name: data.name, category: data.category, subcategory: data.subcategory, owner: data.owner, status: data.status})
   }

@@ -4,6 +4,18 @@ import { courseContext } from '../../state/contexts/CourseContext'
 
 const Admin_content_foot = () => {
     const { course, setTab, addCourseMaster } = useContext(courseContext);
+
+    function saveCourse(){
+    
+        if(course.name !== '' && course.category !== '' && course.subcategory !== '' && course.owner !== ''){
+            alert ('ready to add course')
+        } else {
+            setTab('tab1')
+            alert ('Please fill master details before saving!')
+        }
+    }
+
+
     return (
         <div className="content-panel">
             <div className="left-text">
@@ -11,7 +23,7 @@ const Admin_content_foot = () => {
             </div>
             <div className="right-text">
                 <button>Cancel</button>
-                <button type="submit">Save</button>
+                <button type="submit" onClick={saveCourse}>Save</button>
             </div>
             <style jsx>{`
             .content-panel {
