@@ -1,5 +1,8 @@
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import React, { useState } from 'react';
+import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
+import {qClient, GET_CATS_N_SUB_CATS} from '../../API/Queries'
+
 
 const categories = [
   {
@@ -28,8 +31,26 @@ const categories = [
   },
 ]
 
+
 const DragDrop = () => {
-  const [draglist, updateDraglist] = useState(categories);
+
+  function GetSubCats(){
+    const {data} = useQuery(GET_CATS_N_SUB_CATS);
+    if(!data){
+      return;
+    }return data.allSubCategories;
+  }
+
+  const sc = GetSubCats();
+  let subcategories = [];
+  if(sc){
+      sc.forEach(function(e, i) {
+        subcategories.push({id: i.toString(), name: e})
+      });
+  }
+ 
+
+  const [draglist, updateDraglist] = useState(subcategories);
   const [droplist, updateDropList] = useState([]);
  
 
@@ -113,64 +134,67 @@ const DragDrop = () => {
     document.getElementById('cad').classList.remove("lgrey")
     document.getElementById('cad').classList.add("primary")
   }
+  
   return (
     <>
       <div className="row" style={{alignItems:'center'}}>
-      <DragDropContext onDragStart={highlightDroppable} onDragEnd={handleOnDragEnd}>
-        <label htmlFor="name3" className="col_25">Additional Categories / Sub-categories</label>
-        <div className="col_25">
-            <Droppable droppableId="categories">
-              {(provided, snapshot) => (
-                <div className="drag_category_area" id="dca" {...provided.droppableProps} ref={provided.innerRef}>
-                  <div className="inner_drag_srch">
-                    <input type="text" id="search" placeholder='Search' onInput={Search}></input>
+
+        <DragDropContext onDragStart={highlightDroppable} onDragEnd={handleOnDragEnd}>
+          <label htmlFor="name3" className="col_25">Additional Categories / Sub-categories</label>
+          <div className="col_25">
+              <Droppable droppableId="categories">
+                {(provided, snapshot) => (
+                  <div className="drag_category_area" id="dca" {...provided.droppableProps} ref={provided.innerRef}>
+                    <div className="inner_drag_srch">
+                      <input type="text" id="search" placeholder='Search' onInput={Search}></input>
+                    </div>
+                    {draglist.map(({ id, name }, index) => {
+                      return (
+                        <Draggable key={id} draggableId={id} index={index}>
+                          {(provided, snapshot) => (
+                            <div className="inner_drag_ele"
+                            ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                              <p>
+                                {name}
+                              </p>
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
                   </div>
-                  {draglist.map(({ id, name }, index) => {
-                    return (
-                      <Draggable key={id} draggableId={id} index={index}>
-                        {(provided, snapshot) => (
-                          <div className="inner_drag_ele"
-                          ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <p>
-                              {name}
-                            </p>
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-        </div>
-        <div className="col_10">
-          <img className="handdrag" src='/images/handdrag.png' />
-        </div>
-        <div className="col_25">
-            <Droppable droppableId="subcategories">
-              {(provided, snapshot) => (
-                <div className="drop_category_area" id="cad" {...provided.droppableProps} ref={provided.innerRef}>
-                  {droplist.map(({ id, name }, index) => {
-                    return (
-                      <Draggable key={id} draggableId={id} index={index}>
-                        {(provided) => (
-                          <div className="wrap_drop" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <div className="Sr_no">{index + 1}</div>
-                            <div className="inner_drop_ele">{name}<span data-index={[id, name, index]} onClick={remove}>x</span></div>
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-        </div>
-        <div className="col_15">
-        </div>
+                )}
+              </Droppable>
+          </div>
+          <div className="col_10">
+            <img className="handdrag" src='/images/handdrag.png' />
+          </div>
+          <div className="col_25">
+              <Droppable droppableId="subcategories">
+                {(provided, snapshot) => (
+                  <div className="drop_category_area" id="cad" {...provided.droppableProps} ref={provided.innerRef}>
+                    {droplist.map(({ id, name }, index) => {
+                      return (
+                        <Draggable key={id} draggableId={id} index={index}>
+                          {(provided) => (
+                            <div className="wrap_drop" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                              <div className="Sr_no">{index + 1}</div>
+                              <div className="inner_drop_ele">{name}<span data-index={[id, name, index]} onClick={remove}>x</span></div>
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+          </div>
+          <div className="col_15">
+          </div>
         </DragDropContext>
+
       </div>
       <style jsx>
         {`      
@@ -237,7 +261,15 @@ const DragDrop = () => {
         }
         .inner_drop_ele span {
           float: right;
+          top: 0;
           cursor: pointer;
+          // background: red;
+          // color: white;
+          // width: 20px;
+          // padding-bottom: 3px;
+          // margin-left: 20px;
+          // border-radius: 50%;
+          // text-align: center;
         }
         .handdrag{
           width: 50px;

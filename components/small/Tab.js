@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { useState, createContext, useContext } from "react";
+import { courseContext } from '../../state/contexts/CourseContext'
+
 import { ApolloProvider } from '@apollo/client'
 import { mClient } from '../../API/Mutations'
 import CourseMaster from "../medium/CourseMaster";
@@ -9,92 +10,97 @@ import CourseTopics from "../medium/CourseTopics";
 import CourseConfiguration from "../medium/CourseConfiguration";
 
 
-const Tab = ({ href, isSelected, title }) => (
-    <Link href={href}>
-      <a
-        style={{
-          padding: '7px 35px 8px 35px',
-          marginTop: '5px',
-          backgroundColor: isSelected ? "#202222" : "transparent",
-          color: isSelected ? 'var(--white)' : 'var(--dark_three)',
-          borderRadius: '5px 5px 0 0',
-          fontSize: '16px',
-          lineHeight: '36px',
-          outline: 0,
-          border: 0,
-        }}
-      >
-        {title}
-      </a>
-    </Link>
-)
+export default function Tabs({ props }) {
 
-export default function Tabs({props}){
-    const { query } = useRouter();
+  const { tab, setTab } = useContext(courseContext);
 
-    let isTabOneSelected = !!query.tabOne;
-    const isTabTwoSelected = !!query.tabTwo;
-    const isTabThreeSelected = !!query.tabThree;
-    const isTabFourSelected = !!query.tabFour;
-    const isTabFiveSelected = !!query.tabFive;
+  // console.log(course);
 
-    if(typeof query.tabOne == 'undefined'){
-      query.tabOne = true;
-      isTabOneSelected = true;
+  function showActiveTab(tab) {
+    switch (tab) {
+      case "tab1":
+        return <CourseMaster />
+      case "tab2":
+        return <CourseDetails />
+      case "tab3":
+        return <CourseAbout />
+      case "tab4":
+        return <CourseTopics />
+      case "tab5":
+        return <CourseConfiguration />
+      default:
+        return <CourseMaster />
     }
-    if( !!query.tabTwo == true || 
-        !!query.tabThree == true || 
-        !!query.tabFour == true || 
-        !!query.tabFive == true
-      ){
-        query.tabOne = false;
-      }
+  }
+  return (
+    <div>
 
-    return(
-        <div>
-            <nav>
-                <Tab href="/admin/?tabOne=true" title="Course Master" isSelected={isTabOneSelected} /> 
-                <Tab href="/admin/?tabTwo=true" title="Details" isSelected={isTabTwoSelected} /> 
-                <Tab href="/admin/?tabThree=true" title="About" isSelected={isTabThreeSelected} />
-                <Tab href="/admin/?tabFour=true" title="Topics" isSelected={isTabFourSelected} /> 
-                <Tab href="/admin/?tabFive=true" title="Configuration" isSelected={isTabFiveSelected} /> 
-            </nav>
-            <ApolloProvider client={mClient}>
-            <section className="tabSection">
-                {/* <p>{JSON.stringify(query)}</p> */}
-                {query.tabOne ? <CourseMaster /> : ''}
-                {query.tabTwo && <CourseDetails />}
-                {query.tabThree && <CourseAbout />}
-                {query.tabFour && <CourseTopics />}
-                {query.tabFive && <CourseConfiguration />}
-            </section>
-            </ApolloProvider>
-            <style jsx>{`
-            .tabSection {
-              background-color: #202222; 
-              height: 60vh; 
-              overflow: auto;
-            }
+      <nav className="tabHeader">
+        <ul>
+          <li className={tab === "tab1" ? "tabli active" : "tabli"} onClick={() => setTab('tab1')}>Course Master</li>
+          <li className={tab === "tab2" ? "tabli active" : "tabli"} onClick={() => setTab('tab2')}>Details</li>
+          <li className={tab === "tab3" ? "tabli active" : "tabli"} onClick={() => setTab('tab3')}>About</li>
+          <li className={tab === "tab4" ? "tabli active" : "tabli"} onClick={() => setTab('tab4')}>Topics</li>
+          <li className={tab === "tab5" ? "tabli active" : "tabli"} onClick={() => setTab('tab5')}>Configuration</li>
+        </ul>
+      </nav>
+      <ApolloProvider client={mClient}>
+          <section className="tabSection">
+            {showActiveTab(tab)}
+          </section>
+      </ApolloProvider>
 
-            .tabSection::-webkit-scrollbar {
-                width: 15px;
-                border-radius: 7px;
-                cursor: pointer;
-            }
-            .tabSection::-webkit-scrollbar-track {
-                background: #2a2e31; 
-                border-radius: 7px;
-            }
+      <style jsx>{`
+        .tabHeader{
+        }
+        .tabHeader ul{
+          display: flex;
+          flex-wrap: wrap;
+          list-style:none;
+        }
+        .tabli{
+          padding: 7px 35px 8px 35px;
+          background-color: transparent;
+          color: var(--dark_three);
+          border-radius: 5px 5px 0 0;
+          font-size: 16px;
+          line-height: 20px;
+          outline: 0;
+          border: 0;
+          cursor: pointer;
+        }
 
-            .tabSection::-webkit-scrollbar-thumb {
-                background: #969a9d; 
-                border-radius: 7px;
-            }
+        .tabli.active{
+          background-color: #202222;
+          color: var(--white);
+          box-shadow: 0 0px 10px 0 var(--dark_one);
+          border-bottom: 1px solid var(--white);
+        }
+        .tabSection {
+          background-color: #202222; 
+          height: 60vh; 
+          overflow: auto;
+        }
 
-            .tabSection::-webkit-scrollbar-thumb::hover {
-                background: #555;   
-            }
-            `}</style>
-        </div>
-    )
+        .tabSection::-webkit-scrollbar {
+            width: 15px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .tabSection::-webkit-scrollbar-track {
+            background: #2a2e31; 
+            border-radius: 7px;
+        }
+
+        .tabSection::-webkit-scrollbar-thumb {
+            background: #969a9d; 
+            border-radius: 7px;
+        }
+
+        .tabSection::-webkit-scrollbar-thumb::hover {
+            background: #555;   
+        }
+      `}</style>
+    </div>
+  )
 }

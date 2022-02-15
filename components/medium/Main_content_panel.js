@@ -5,7 +5,9 @@ const Main_content_panel = ({props}) => {
     return (
         <>
         <div className="content-panel">
+
             <Tabs />
+
         </div>
         <style jsx>{`
         .content-panel {

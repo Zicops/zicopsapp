@@ -1,17 +1,17 @@
 import CourseHead from "../medium/CourseHead";
 import Main_content_panel from "../medium/Main_content_panel";
 import Admin_content_foot from "../small/AdminContentFoot";
-// import { OnSave } from "../../API/handlers/CourseOnSave"
+import CourseContextProvider from "../../state/contexts/CourseContext";
 
 const AdminContent = () => {
     return (
         <>
         <div className="content">
             <CourseHead />
-            {/* <form onSubmit={OnSave}> */}
+            <CourseContextProvider>
                 <Main_content_panel />
                 <Admin_content_foot />
-            {/* </form> */}
+            </CourseContextProvider>
             
         </div>
         <style jsx>

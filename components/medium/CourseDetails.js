@@ -1,16 +1,24 @@
+import { useContext } from 'react';
+import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
+import {qClient, GET_CATS_N_SUB_CATS} from '../../API/Queries'
 import DragDrop from './DragDropContainer'
+import { courseContext } from '../../state/contexts/CourseContext';
 import styles from '../../styles/CourseMaster.module.css'
 
+
 const CourseDetails = () => {
+  const { course, addCourseMaster } = useContext(courseContext);
     return (
         <div className={styles.course_master}>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Course Base Sub-category</label>
               <select className={styles.col_75} placeholder="Select the category of the course">
-                <option>Select the base sub-category of the course</option>
+                <option>{course.subcategory}</option>
               </select>
           </div>
+          <ApolloProvider client={qClient}>
           <DragDrop/>
+          </ApolloProvider>
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Level of Expertise</label>
             <div className={styles.col_25}>

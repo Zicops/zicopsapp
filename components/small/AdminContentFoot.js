@@ -1,10 +1,13 @@
+import { useContext } from "react";
+import { courseContext } from '../../state/contexts/CourseContext'
+
 
 const Admin_content_foot = () => {
-    
+    const { course, setTab, addCourseMaster } = useContext(courseContext);
     return (
         <div className="content-panel">
             <div className="left-text">
-                <h3>Status: Draft</h3>
+                <h3>Status: {course.status}</h3>
             </div>
             <div className="right-text">
                 <button>Cancel</button>
