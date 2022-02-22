@@ -7,6 +7,7 @@ import styles from '../../styles/CourseMaster.module.css'
 
 function CreateCatsDropdown({inputHandler, inputField}){
   const {data} = useQuery(GET_CATS_N_SUB_CATS);
+
   return(
     <select className={styles.col_75} 
     name="category"
@@ -36,22 +37,24 @@ const CourseMaster = () => {
   const { course, setTab, addCourseMaster } = useContext(courseContext);
 
     // added this course - c853ck517c478nrsgj10 / c853qel17c478nrsgj2g / c853t1t17c478nrsgj30 
-    // const [createCourse, {loading, error, data}] = useMutation(ADD_COURSE)
+    const [createCourse, {loading, error, data}] = useMutation(ADD_COURSE)
 
-    // if (loading) console.log('Submitting...');
-    // if (error) {
-    //   alert('Submission error!');
-    //   console.log(error.message);
-    // }
-    // if (data) {
-    //   alert(data.addCourse.status);
-    //   setTab('tab2')
-    // addCourseMaster({
-    //   ...course,
-    //   status: 'SAVED'
-    // })
-    //   console.log(data);
-    // }
+    if (loading) console.log('Submitting...');
+    if (error) {
+      alert('Submission error!');
+      console.log(error.message);
+    }
+    if (data) {
+      alert(data.addCourse.name);
+      alert(data.addCourse.id);
+      addCourseMaster({
+        ...course,
+        id: data.addCourse.id,
+        status: 'SAVED'
+      });
+      setTab('tab2');
+      console.log(data);
+    }
 
     const inputHandler = (e) => {
       addCourseMaster({
@@ -67,21 +70,13 @@ const CourseMaster = () => {
         status: 'SAVED'
       }
       console.log(data)
-      setTab('tab2')
-      // createCourse({
-      //   variables: {
-      //     "name": inputField.name,
-      //     "category": inputField.category,
-      //     "subcategory": inputField.subcategory,
-      //     "owner": inputField.owner,
-      //     "status": "SAVED"
-      //   }
-      // })
+      createCourse({
+          variables: data
+      })
     }
 
     return (
         <div className={styles.course_master}>
-          {/* CourseMaster */}
 
           <form action='' method='POST' onSubmit={(e)=>{
             e.preventDefault()
@@ -159,7 +154,7 @@ const CourseMaster = () => {
           </div>
 
           <div className={styles.row}>
-            <button type='button' onClick={courseMasterSubmit}>Next</button>
+            <button type='button' style={{padding: '10px 35px', cursor: 'pointer'}} onClick={courseMasterSubmit}>Next</button>
           </div>
           </form>
         </div>

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
 import {qClient, GET_CATS_N_SUB_CATS} from '../../API/Queries'
+import {UPLOAD_COURSE_IMAGE} from '../../API/Mutations'
 import DragDrop from './DragDropContainer'
 import { courseContext } from '../../state/contexts/CourseContext';
 import styles from '../../styles/CourseMaster.module.css'
@@ -8,6 +9,15 @@ import styles from '../../styles/CourseMaster.module.css'
 
 const CourseDetails = () => {
   const { course, addCourseMaster } = useContext(courseContext);
+  // const [uploadImage, {loading, error, data}] = useMutation(UPLOAD_COURSE_IMAGE)
+  console.log(course);
+
+  const uploadCourseVideo = () => {
+
+  }
+  const uploadCourseImage = () => {
+    uploadImage({ variables : {file, id}})
+  }
     return (
         <div className={styles.course_master}>
           <div className={styles.row}>
@@ -54,7 +64,7 @@ const CourseDetails = () => {
                   </span>
                   Browse & upload
                 </button>
-                <input type="file" name="myfile" />
+                <input type="file" name="uploadCourseVideo" onChange={uploadCourseVideo}/>
               </div>
               <div className={styles.preview_remove_links}>
                 <a className={styles.preview}>Preview</a>
@@ -74,7 +84,7 @@ const CourseDetails = () => {
                   </span>
                   Browse & upload
                 </button>
-                <input type="file" name="myfile" />
+                <input type="file" name="uploadCourseImage" onChange={uploadCourseImage}/>
               </div>
               <div className={styles.preview_remove_links}>
                 <a className={styles.preview}>Preview</a>
@@ -104,7 +114,7 @@ const CourseDetails = () => {
           </div>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Course Summary</label>
-            <textarea className={styles.col_75} rows="4" placeholder="Provide and outline of the course in less than 1000 characters..." />
+            <textarea className={styles.col_75} rows="4" placeholder={course.id + " Provide and outline of the course in less than 1000 characters..."} />
           </div>
         
         </div>

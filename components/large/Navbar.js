@@ -16,9 +16,11 @@ const Nav = () => {
                         <img src="images/menu.png" />
                     </div>
                 </Link>
+                <Link href="/"><a>
                 <div className={styles.logo}>
                     <img src="images/zicops-header-logo.png" />
                 </div>
+                </a></Link>
                 <div className={styles.menu}>
                     <ul>
                         <li>Self</li>
@@ -27,6 +29,11 @@ const Nav = () => {
                         <li>Labs</li>
                         <li>Exams</li>
                         <li>Community</li>
+                        <Link href="/courses">
+                            <a>
+                                Courses
+                            </a>
+                        </Link>
                     </ul>
                 </div>
             </div>

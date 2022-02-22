@@ -280,3 +280,27 @@ a {
 .carousel img{
   width: 100%;
 }
+
+/* Video JS */
+.vjs-zicops .vjs-big-play-button {
+  border: 2px solid var(--primary)!important;
+}
+
+.vjs-zicops .vjs-control-bar{
+  background-color: transparent!important;
+}
+.vjs-zicops .vjs-control{
+  position: unset!important;
+}
+.vjs-zicops .vjs-progress-control {
+  position: absolute!important;
+  left: 0!important;
+  right: 0!important;
+  width: 100%!important;
+
+  top: -50px;
+  border-radius: 1em;
+  transition: top 150ms linear, opacity 150ms linear, transform 150ms linear, -webkit-transform 150ms linear, -moz-transform 150ms linear, -o-transform 150ms linear;
+  z-index: 1;
+}
+
