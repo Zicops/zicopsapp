@@ -38,6 +38,7 @@ const MainPlayer = ({set}) => {
         var myPlayer = videojs('contentPlayer');
         alert(myPlayer.currentTime())
     }
+    
 
     return (
         <>

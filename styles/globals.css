@@ -290,7 +290,7 @@ a {
   background-color: transparent!important;
 }
 .vjs-zicops .vjs-control{
-  position: unset!important;
+  /* position: unset!important; */
 }
 .vjs-zicops .vjs-progress-control {
   position: absolute!important;
@@ -303,4 +303,49 @@ a {
   transition: top 150ms linear, opacity 150ms linear, transform 150ms linear, -webkit-transform 150ms linear, -moz-transform 150ms linear, -o-transform 150ms linear;
   z-index: 1;
 }
+.vjs-has-started .vjs-control-bar {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0.1s, opacity 0.1s;
+  /* position: relative; */
+  /* right: 0 !important; */
+  /* padding: 0px 300px; */
+  font-size: 20px;
+  color: #6bcfcf !important;
+
+}
+.video-js .vjs-fullscreen-control {
+  cursor: pointer;
+  /* flex: none; */
+  display: flex;
+  position: absolute;
+  right: 0%;
+} 
+/* /// */
+
+/* .video-js .vjs-picture-in-picture-control {
+  position: absolute;
+  right: 10%;
+ 
+
+}
+
+.video-js .vjs-time-control{
+  position: absolute;
+ left: 40%;
+}
+.video-js .vjs-play-control{
+  position: absolute;
+ left:40%;
+}
+.video-js .vjs-mute-control{
+  position: absolute;
+left: 0%;
+} */
+
+
+
 

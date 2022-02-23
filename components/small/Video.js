@@ -35,9 +35,15 @@ export const VideoJS = ( props ) => {
       if (player) {
         player.dispose();
         playerRef.current = null;
+        document.getElementsByClassName('vjs-zicops vjs-control-bar').innerHTML = "";
       }
     };
   }, [playerRef]);
+  React.useEffect(() => {
+    let playerId = videoRef.current.parentNode.id;
+    let player = document.getElementById(playerId);
+    player.querySelector('.vjs-control-bar').innerHTML = '<div className="abc">Hi there how are ya!!</div>';
+}, []);
 
   return (
     <>
