@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import CardSliderHeader from '../small/CardSliderHeader';
 import Card from "../small/SingleCard";
 import {CustomLeftArrow, CustomRightArrow} from '../small/SliderArrows'
 
@@ -13,39 +14,23 @@ const CardSlider = ({deviceType, title, type, data}) => {
             breakpoint: { max: 3000, min: 1920 },
             items: 6,
             slidesToSlide: 6
-          },
+        },
         laptop: {
-          breakpoint: { max: 1920, min: 1024 },
-          items: 5,
-          slidesToSlide: 5
+            breakpoint: { max: 1920, min: 1024 },
+            items: 5,
+            slidesToSlide: 5
         },
         tablet: {
-          breakpoint: { max: 1024, min: 464 },
-          items: 3,
-          slidesToSlide: 3
+            breakpoint: { max: 1024, min: 464 },
+            items: 3,
+            slidesToSlide: 3
         },
         mobile: {
-          breakpoint: { max: 464, min: 0 },
-          items: 1,
-          slidesToSlide: 1
-        }
-      };
-
-    const circles = {
-        all: {
-            breakpoint: { max: 3000, min: 500 },
-            items: 3,
-            slidesToSlide: 3,
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+            slidesToSlide: 1
         }
     };
-    const bigones = {
-        all: {
-            breakpoint: { max: 3000, min: 500 },
-            items: 3,
-            slidesToSlide: 3,
-        }
-    };
-
 
     const makeFirstLastHoverDifferent = ( nextSlide, { currentSlide, onMove }) => {        
         // alert(currentSlide)
@@ -67,18 +52,13 @@ const CardSlider = ({deviceType, title, type, data}) => {
             marginRight: '4%',
             paddingTop: '10px'
         }}> 
-            {(title) && 
-            <div className="slider_header">
-                <span>{title}</span>
-            </div>}
+            <CardSliderHeader title={title}/>
             <Carousel 
                 ref={el => {
 
                     if (el) {
-
                         var slidesToShow = el.state.slidesToShow
                         var currentSlide = el.state.currentSlide
-
                         setCurrentSlide(slidesToShow + currentSlide)
                     }
                 }}
@@ -120,31 +100,6 @@ const CardSlider = ({deviceType, title, type, data}) => {
                         text-align: center;
                         cursor: pointer;
                     }
-                    
-                    .slider_header{
-                        margin-left: 0;
-                        font-size: 20px;
-                        padding-bottom: 10px;
-                    }
-                    .slider_header span:after{
-                        content:'  View all >>';
-                        margin-left: -10px;
-                        transition: all 0.3s;
-                        opacity: 0;
-                        font-size: 10px;
-                        color: var(--primary);
-                    }
-                    .slider_header span:hover:after{
-                        margin-left: 10px;
-                        opacity: 1;
-                    }
-                    .slider_header span{
-                        color: var(--white);
-                        font-weight: 700;
-                        cursor: pointer;
-                        font-size: 24px;
-                    }
-                    
                 `}</style>
         </div>
         

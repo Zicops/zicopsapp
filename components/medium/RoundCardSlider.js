@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Card from '../small/SingleCard'
+import CardSliderHeader from '../small/CardSliderHeader';
 import {CustomLeftArrow, CustomRightArrow} from '../small/SliderArrows'
 
 const RoundCardSlider = ({deviceType, title, type, data}) => {
@@ -43,9 +44,7 @@ const RoundCardSlider = ({deviceType, title, type, data}) => {
             marginRight: '4%',
             paddingTop: '10px'
         }}> 
-            <div className="slider_header">
-                <span>{title}</span>
-            </div>
+            <CardSliderHeader title={title}/>
             <Carousel 
                 swipeable={false}
                 draggable={false}
@@ -82,30 +81,6 @@ const RoundCardSlider = ({deviceType, title, type, data}) => {
                         text-align: center;
                         cursor: pointer;
                     }
-                    .slider_header{
-                        margin-left: 0;
-                        font-size: 20px;
-                        padding-bottom: 10px;
-                    }
-                    .slider_header span:after{
-                        content:'  View all >>';
-                        margin-left: -10px;
-                        transition: all 0.3s;
-                        opacity: 0;
-                        font-size: 10px;
-                        color: var(--primary);
-                    }
-                    .slider_header span:hover:after{
-                        margin-left: 10px;
-                        opacity: 1;
-                    }
-                    .slider_header span{
-                        color: var(--white);
-                        font-weight: 700;
-                        cursor: pointer;
-                        font-size: 24px;
-                    }
-                    
                 `}</style>
         </div>
         

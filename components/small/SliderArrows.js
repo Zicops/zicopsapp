@@ -26,11 +26,11 @@ export const CustomRightArrow = ({ onClick, ...rest }) => {
                     z-index: 0;
                 }
                 .right::before{
-                    content: url(/images/bigarrowrightblack.png);
+                    content: url(/images/Squareone.png);
                     margin-left: 10px;
                 }
                 .right:hover::before{
-                    content: url(/images/bigarrowright.png);
+                    content: url(/images/glowedone.png);
                     // margin-left: -50px;
                 }
                 `}

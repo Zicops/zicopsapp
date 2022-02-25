@@ -4,8 +4,8 @@ export default function Card({image}) {
         <>  
             <div className="card_item">
                 <img src={image} alt=""/>
+                <div className="banner">Self Paced</div>
                 <div className="overlay">
-                    <div className="banner">Self Paced</div>
                     <div className="bottom-box">
                         <div className="title-area">
                             <div className="firstline">
@@ -55,9 +55,6 @@ export default function Card({image}) {
 
                 }
                 
-
-
-
                 /* The overlay effect over the image */
                 .overlay {
                     position: absolute;
@@ -72,7 +69,7 @@ export default function Card({image}) {
 
                 .banner {
                     position: absolute;
-                    top: -80%;
+                    top: 0;
                     right: 0;
                     background-color: #000000;
                     color: #ffffff;
