@@ -20,6 +20,18 @@ const HomeSlider = () => {
         }
       };
 
+    const CustomDot = ({ onMove, index, onClick, active }) => {
+      // onMove means if dragging or swiping in progress.
+      // active is provided by this lib for checking if the item is active or not.
+      return (
+        <li data-index={index}
+          className={active ? "react-multi-carousel-dot react-multi-carousel-dot--active" : "react-multi-carousel-dot"}
+          onClick={() => onClick()}
+        >
+            <button ></button> 
+        </li>
+      );
+    };
 
     return (
       <>
@@ -27,7 +39,7 @@ const HomeSlider = () => {
         <Carousel
             swipeable={false}
             draggable={false}
-            showDots={false}
+            showDots={true}
             responsive={responsive}
             ssr={false} // means to render carousel on server-side.
             infinite={true}
@@ -40,6 +52,7 @@ const HomeSlider = () => {
             removeArrowOnDeviceType={["tablet", "mobile", "desktop"]}
             deviceType="Laptop"
             dotListClass="custom-dot-list-style"
+            customDot={<CustomDot />}
             itemClass="carousel-item-padding-40-px"
         >
         <div><img src="images/IMG-20220113-WA0020.jpg" alt=""/></div>
@@ -52,7 +65,7 @@ const HomeSlider = () => {
           height: '20px',
           padding: 0,
           marginTop: '-45px',
-          marginBottom: '40px',
+          marginBottom: '5px',
           position: "relative",
           zIndex: '2',
           opacity: '0.3'

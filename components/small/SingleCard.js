@@ -84,7 +84,7 @@ export default function Card({image}) {
                     bottom: 0;
                     // height: 100px; 
                     // background-color: #000000;
-                    background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(0,0,0,0.9) 100%);
+                    background: linear-gradient(90deg, rgb(34, 37, 41) 0%, rgba(0,0,0,1) 100%);
                     font-size: 10px;
                     padding: 5px 10px;
                     border-radius: 0 0 8px 8px;

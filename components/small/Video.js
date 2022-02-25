@@ -15,6 +15,8 @@ export const VideoJS = ( props ) => {
       const videoElement = videoRef.current;
       if (!videoElement) return;
 
+
+
       const player = playerRef.current = videojs(videoElement, options, () => {
         console.log("player is ready");
         onReady && onReady(player);
@@ -39,6 +41,12 @@ export const VideoJS = ( props ) => {
     };
   }, [playerRef]);
 
+  React.useEffect(() => {
+      let playerId = videoRef.current.parentNode.id;
+      let player = document.getElementById(playerId);
+      player.querySelector('.vjs-control-bar').innerHTML = '<div className="abc">Hi there how are ya!!</div>';
+  }, []);
+  
   return (
     <>
     <div data-vjs-player>

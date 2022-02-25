@@ -177,7 +177,7 @@ a {
 .carousel_container,.carousel_container_big,.carousel_container_round{
   overflow: unset!important;
   z-index: 0;
-  margin-bottom: 50px;
+  margin-bottom: 2%;
 }
 
 .carousel_container{
@@ -192,6 +192,7 @@ a {
   padding: 5px;
   z-index: 0;
   /* border: 1px solid white; */
+  transition: all 0.5s ease 0.3s;
 }
 
 .card_ietms img, .card_ietms_big img, .card_ietms_round img{
@@ -201,16 +202,14 @@ a {
   cursor: pointer;
   z-index: 0;
   border-radius: 8px;
-  transition: all 0.1s;
 }
 
 .card_ietms:hover{
   transform: scale(1.4); 
-  height: 200px;
-  background-color: var(--primary);
-  transition: all ease-out .1s;
+  transition: all 0.5s ease 0.3s;
+  max-height: 200px;
+  background-color: var(--header-bg);
   border-radius: 8px;
-
   padding: 0;
   border: 4px solid var(--primary);
   box-shadow: 0 0 20px 0 var(--black);
@@ -235,6 +234,7 @@ a {
 
 
 .card_ietms:hover .overlay {
+  transition: all 0.5s ease 0.3s;
   opacity: 1;
 
   /* border-bottom: 4px solid var(--primary);
@@ -242,6 +242,17 @@ a {
   border-right: 4px solid var(--primary); */
 }
 
+.react-multi-carousel-dot-list.custom-dot-list-style{
+  margin-bottom: 20px!important;
+}
+.react-multi-carousel-dot button{
+  cursor: pointer!important;
+  background: var(--header-bg)!important;
+  border: none!important;
+}
+.react-multi-carousel-dot.react-multi-carousel-dot--active button{
+  background: var(--primary)!important;
+}
 
 
 
@@ -290,7 +301,7 @@ a {
   background-color: transparent!important;
 }
 .vjs-zicops .vjs-control{
-  position: unset!important;
+  /* position: unset!important; */
 }
 .vjs-zicops .vjs-progress-control {
   position: absolute!important;

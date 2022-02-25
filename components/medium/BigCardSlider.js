@@ -87,7 +87,7 @@ const BigCardSlider = ({deviceType, title, type, data}) => {
                         color: var(--white);
                         font-weight: 700;
                         cursor: pointer;
-                        font-size: 26px;
+                        font-size: 24px;
                     }
                     
                 `}</style>

@@ -10,7 +10,12 @@ const CardSlider = ({deviceType, title, type, data}) => {
 
     const responsive = {
         desktop: {
-          breakpoint: { max: 3000, min: 1024 },
+            breakpoint: { max: 3000, min: 1920 },
+            items: 6,
+            slidesToSlide: 6
+          },
+        laptop: {
+          breakpoint: { max: 1920, min: 1024 },
           items: 5,
           slidesToSlide: 5
         },
@@ -25,13 +30,7 @@ const CardSlider = ({deviceType, title, type, data}) => {
           slidesToSlide: 1
         }
       };
-    const responsive1 = {
-        all: {
-            breakpoint: { max: 3000, min: 500 },
-            items: 5,
-            slidesToSlide: 5,
-        }
-    };
+
     const circles = {
         all: {
             breakpoint: { max: 3000, min: 500 },
@@ -87,7 +86,7 @@ const CardSlider = ({deviceType, title, type, data}) => {
                 swipeable={false}
                 draggable={false}
                 showDots={false}
-                responsive={responsive1}
+                responsive={responsive}
                 ssr={false} // means to render carousel on server-side.
                 // centerMode={true}
                 // partialVisibility={true}
@@ -143,7 +142,7 @@ const CardSlider = ({deviceType, title, type, data}) => {
                         color: var(--white);
                         font-weight: 700;
                         cursor: pointer;
-                        font-size: 26px;
+                        font-size: 24px;
                     }
                     
                 `}</style>
