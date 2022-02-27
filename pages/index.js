@@ -1,4 +1,5 @@
 import Link from "next/link";
+import React from "react";
 import HomeSlider from '../components/HomeSlider'
 import CardSlider from '../components/medium/CardSlider'
 import BigCardSlider from '../components/medium/BigCardSlider'
@@ -6,6 +7,13 @@ import RoundCardSlider from '../components/medium/RoundCardSlider'
 import {sliderImages, bigImages, circleImages, squareImages} from '../API/DemoSliderData';
 
 export default function Home() {
+
+  React.useEffect(() => {
+
+      console.log(screen.width)
+
+  }, []);
+
     return (
       <div style={{
         backgroundColor: 'var(--tile-bg)',

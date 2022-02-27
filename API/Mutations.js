@@ -46,11 +46,8 @@ export const UPLOAD_COURSE_IMAGE = gql`
     $courseId: String
   ){
     uploadCourseImage(file: {
-      file: $file,
       courseId: $courseId
     })
-  }{
-    url
   }
 `;
 

@@ -47,8 +47,8 @@ const BigCardSlider = ({deviceType, title, type, data}) => {
                 customRightArrow={<CustomRightArrow />}
                 >
                 {
-                data.map( (data) => ( 
-                    <BigCard image={data.img} />
+                data.map( (data, index) => ( 
+                    <BigCard key={index} image={data.img} />
                 ))
                 }
                 <div className="last-text-big">

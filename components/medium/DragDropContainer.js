@@ -1,39 +1,12 @@
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import React, { useState } from 'react';
-import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
+import React, { useState, useContext } from 'react';
+import { useQuery } from '@apollo/client';
+import { courseContext } from '../../state/contexts/CourseContext'
 import {qClient, GET_CATS_N_SUB_CATS} from '../../API/Queries'
 
 
-const categories = [
-  {
-    id: '1',
-    name: 'Java',
-  },
-  {
-    id: '2',
-    name: 'HTML',
-  },
-  {
-    id: '3',
-    name: 'CSS',
-  },
-  {
-    id: '4',
-    name: 'React',
-  },
-  {
-    id: '5',
-    name: 'Python',
-  },
-  {
-    id: '6',
-    name: 'Ruby',
-  },
-]
-
-
 const DragDrop = () => {
-
+  const { fullCourse, updateCourseMaster } = useContext(courseContext);
   function GetSubCats(){
     const {data} = useQuery(GET_CATS_N_SUB_CATS);
     if(!data){
@@ -45,15 +18,15 @@ const DragDrop = () => {
   let subcategories = [];
   if(sc){
       sc.forEach(function(e, i) {
-        subcategories.push({id: i.toString(), name: e})
+        subcategories.push({rank: i.toString(), name: e})
       });
   }
  
 
   const [draglist, updateDraglist] = useState(subcategories);
-  const [droplist, updateDropList] = useState([]);
+  const [droplist, updateDropList] = useState( [fullCourse.sub_categories] );
  
-
+  console.log(droplist)
   function handleOnDragEnd(result) {
     document.getElementById('cad').classList.remove("primary")
 
@@ -78,6 +51,13 @@ const DragDrop = () => {
       if(newlist.length < 5){
         newlist.push(reorderedItem);
         updateDropList( newlist );
+        // console.log(newlist)
+
+        updateCourseMaster({
+          ...fullCourse,
+          sub_categories: newlist,
+        });
+        console.log(fullCourse)
         updateDraglist( list ); 
         document.getElementById('cad').classList.add("lgrey")
       } else {
@@ -95,7 +75,7 @@ const DragDrop = () => {
   }
 
   function remove(e) {
-    const [id, name, index] = e.target.getAttribute("data-index").split(',');
+    const [rank, name, index] = e.target.getAttribute("data-index").split(',');
 
     const newlist = Array.from(droplist);
     newlist.splice(index, 1);
@@ -106,7 +86,7 @@ const DragDrop = () => {
       document.getElementById('cad').classList.remove("primary")
     }
     const list = Array.from(draglist);
-    list.push({id, name});
+    list.push({rank, name});
     updateDraglist( list );
   }
 
@@ -148,9 +128,9 @@ const DragDrop = () => {
                     <div className="inner_drag_srch">
                       <input type="text" id="search" placeholder='Search' onInput={Search}></input>
                     </div>
-                    {draglist.map(({ id, name }, index) => {
+                    {draglist.map(({ rank, name }, index) => {
                       return (
-                        <Draggable key={id} draggableId={id} index={index}>
+                        <Draggable key={rank} draggableId={rank} index={index}>
                           {(provided, snapshot) => (
                             <div className="inner_drag_ele"
                             ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
@@ -174,13 +154,13 @@ const DragDrop = () => {
               <Droppable droppableId="subcategories">
                 {(provided, snapshot) => (
                   <div className="drop_category_area" id="cad" {...provided.droppableProps} ref={provided.innerRef}>
-                    {droplist.map(({ id, name }, index) => {
+                    {droplist.map(({ rank, name }, index) => {
                       return (
-                        <Draggable key={id} draggableId={id} index={index}>
+                        <Draggable key={rank} draggableId={rank} index={index}>
                           {(provided) => (
                             <div className="wrap_drop" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                               <div className="Sr_no">{index + 1}</div>
-                              <div className="inner_drop_ele">{name}<span data-index={[id, name, index]} onClick={remove}>x</span></div>
+                              <div className="inner_drop_ele">{name}<span data-index={[rank, name, index]} onClick={remove}>x</span></div>
                             </div>
                           )}
                         </Draggable>

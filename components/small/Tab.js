@@ -1,8 +1,7 @@
 import { useState, createContext, useContext } from "react";
 import { courseContext } from '../../state/contexts/CourseContext'
 
-import { ApolloProvider } from '@apollo/client'
-import { mClient } from '../../API/Mutations'
+
 import CourseMaster from "../medium/CourseMaster";
 import CourseDetails from "../medium/CourseDetails";
 import CourseAbout from "../medium/CourseAbout";
@@ -44,12 +43,9 @@ export default function Tabs({ props }) {
           <li className={tab === "tab5" ? "tabli active" : "tabli"} onClick={() => setTab('tab5')}>Configuration</li>
         </ul>
       </nav>
-      <ApolloProvider client={mClient}>
           <section className="tabSection">
             {showActiveTab(tab)}
           </section>
-      </ApolloProvider>
-
       <style jsx>{`
         .tabHeader{
         }

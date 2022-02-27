@@ -69,7 +69,7 @@ export default function Card({image}) {
 
                 .banner {
                     position: absolute;
-                    top: 0;
+                    top: -6px;
                     right: 0;
                     background-color: #000000;
                     color: #ffffff;
@@ -79,7 +79,7 @@ export default function Card({image}) {
 
                 .bottom-box{
                     bottom: 0;
-                    // height: 100px; 
+                    height: 100%; 
                     // background-color: #000000;
                     background: linear-gradient(90deg, rgb(34, 37, 41) 0%, rgba(0,0,0,1) 100%);
                     font-size: 10px;

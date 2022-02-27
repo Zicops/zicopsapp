@@ -11,12 +11,12 @@ const CardSlider = ({deviceType, title, type, data}) => {
 
     const responsive = {
         desktop: {
-            breakpoint: { max: 3000, min: 1920 },
+            breakpoint: { max: 3000, min: 1590 },
             items: 6,
             slidesToSlide: 6
         },
         laptop: {
-            breakpoint: { max: 1920, min: 1024 },
+            breakpoint: { max: 1590, min: 1024 },
             items: 5,
             slidesToSlide: 5
         },
@@ -72,6 +72,7 @@ const CardSlider = ({deviceType, title, type, data}) => {
                 // partialVisibility={true}
                 // infinite={true}
                 customTransition="all 1s"
+                autoPlay= {false}
                 transitionDuration={1000}
                 deviceType={deviceType}
                 sliderClass="carousel_track"
@@ -82,8 +83,8 @@ const CardSlider = ({deviceType, title, type, data}) => {
                 customRightArrow={<CustomRightArrow />}
                 >
                 {
-                data.map( (data) => ( 
-                    <Card image={data.img} />
+                data.map( (data, index) => ( 
+                    <Card key={index} image={data.img} />
                 ))
                 }
                 <div className="last-text">

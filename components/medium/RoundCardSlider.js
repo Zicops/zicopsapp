@@ -62,8 +62,8 @@ const RoundCardSlider = ({deviceType, title, type, data}) => {
                 customRightArrow={<CustomRightArrow />}
                 >
                 {
-                data.map( (data) => ( 
-                    <Card image={data.img} />
+                data.map( (data, index) => ( 
+                    <Card key={index} image={data.img} />
                 ))
                 }
                 <div className="last-round">

@@ -185,14 +185,14 @@ a {
   /* height: 170px; */
   /* border: 1px solid rgb(62, 163, 42); */
 }
+
 .card_ietms,
 .card_ietms_big,
 .card_ietms_round {
-  margin: 0px;
-  padding: 5px;
   z-index: 0;
   /* border: 1px solid white; */
   transition: all 0.5s ease 0.3s;
+  transform: scale(0.95);
 }
 
 .card_ietms img, .card_ietms_big img, .card_ietms_round img{
@@ -205,7 +205,7 @@ a {
 }
 
 .card_ietms:hover{
-  transform: scale(1.4); 
+  transform: scale(1.8); 
   transition: all 0.5s ease 0.3s;
   max-height: 200px;
   background-color: var(--header-bg);

@@ -1,3 +1,5 @@
+import { ApolloProvider } from '@apollo/client'
+import { mClient } from '../../API/Mutations'
 import CourseHead from "../medium/CourseHead";
 import Main_content_panel from "../medium/Main_content_panel";
 import Admin_content_foot from "../small/AdminContentFoot";
@@ -8,11 +10,12 @@ const AdminContent = () => {
         <>
         <div className="content">
             <CourseHead />
+            <ApolloProvider client={mClient}>
             <CourseContextProvider>
                 <Main_content_panel />
                 <Admin_content_foot />
             </CourseContextProvider>
-            
+            </ApolloProvider>
         </div>
         <style jsx>
             {`

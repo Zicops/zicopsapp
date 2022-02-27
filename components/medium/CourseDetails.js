@@ -8,9 +8,14 @@ import styles from '../../styles/CourseMaster.module.css'
 
 
 const CourseDetails = () => {
-  const { course, addCourseMaster } = useContext(courseContext);
+  const { course, fullCourse, updateCourseMaster } = useContext(courseContext);
   // const [uploadImage, {loading, error, data}] = useMutation(UPLOAD_COURSE_IMAGE)
-  console.log(course);
+  const inputHandler = (e) => {
+    updateCourseMaster({
+      ...fullCourse,
+      [e.target.name]: e.target.value,
+    })
+  }
 
   const uploadCourseVideo = () => {
 
@@ -22,8 +27,13 @@ const CourseDetails = () => {
         <div className={styles.course_master}>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Course Base Sub-category</label>
-              <select className={styles.col_75} placeholder="Select the category of the course">
-                <option>{course.subcategory}</option>
+              <select 
+              className={styles.col_75}
+              onChange={inputHandler}
+              value={(course.subcategory)?course.subcategory:'Select Subcategory in Course Master Tab'}
+              >
+                <option disabled selected hidden>Select Subcategory in Course Master Tab</option>
+                <option> {course.subcategory}</option>
               </select>
           </div>
           <ApolloProvider client={qClient}>
@@ -35,19 +45,34 @@ const CourseDetails = () => {
               {/* <input type="checkbox" id="beginner" name="beginner" value="Beginner" className={styles.checkbox} />
               <label className={styles.checkbox_label} for="beginner"> Beginner</label> */}
               <label className={styles.checkbox_container}>
-                <input type="checkbox" />
+                <input type="checkbox" 
+                name='expertise_level'
+                onChange={inputHandler}
+                value="Beginner" 
+                checked={(fullCourse.expertise_level === "Beginner")? 'checked' : false}
+                />
                 <span className={styles.checkmark}></span>Beginner
               </label>
             </div>
             <div className={styles.col_25}>
               <label className={styles.checkbox_container}>
-                <input type="checkbox" />
+                <input type="checkbox" 
+                name='expertise_level'
+                onChange={inputHandler}
+                value="Competent" 
+                checked={(fullCourse.expertise_level === "Competent")? "checked" : false}
+                />
                 <span className={styles.checkmark}></span>Competent
               </label>
             </div>
             <div className={styles.col_25}>
               <label className={styles.checkbox_container}>
-                <input type="checkbox" />
+                <input type="checkbox" 
+                name='expertise_level'
+                onChange={inputHandler}
+                value="Proficient" 
+                checked={(fullCourse.expertise_level === "Proficient")? "checked" : false}
+                />
                 <span className={styles.checkmark}></span>Proficient
               </label>
             </div>
@@ -114,7 +139,14 @@ const CourseDetails = () => {
           </div>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Course Summary</label>
-            <textarea className={styles.col_75} rows="4" placeholder={course.id + " Provide and outline of the course in less than 1000 characters..."} />
+            <textarea 
+            name="summary"
+            onChange={inputHandler}
+            className={styles.col_75} 
+            rows="4" 
+            value={fullCourse.summary}
+            placeholder={" Provide and outline of the course in less than 1000 characters..."} 
+            />
           </div>
         
         </div>

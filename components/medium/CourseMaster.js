@@ -34,7 +34,7 @@ function CreateSubCatsDropdown({inputHandler, inputField}){
 }
 const CourseMaster = () => { 
 
-  const { course, setTab, addCourseMaster } = useContext(courseContext);
+  const { course, fullCourse, setTab, addCourseMaster, updateCourseMaster } = useContext(courseContext);
 
     // added this course - c853ck517c478nrsgj10 / c853qel17c478nrsgj2g / c853t1t17c478nrsgj30 
     const [createCourse, {loading, error, data}] = useMutation(ADD_COURSE)
@@ -45,12 +45,20 @@ const CourseMaster = () => {
       console.log(error.message);
     }
     if (data) {
-      alert(data.addCourse.name);
       alert(data.addCourse.id);
       addCourseMaster({
         ...course,
         id: data.addCourse.id,
         status: 'SAVED'
+      });
+      updateCourseMaster({
+        ...fullCourse,
+        id: data.addCourse.id,
+        name: course.name,
+        category: course.category,
+        subcategory: course.subcategory,
+        owner: course.owner,
+        status: data.addCourse.status,
       });
       setTab('tab2');
       console.log(data);
@@ -60,6 +68,10 @@ const CourseMaster = () => {
       addCourseMaster({
         ...course,
         status: 'SAVED',
+        [e.target.name]: e.target.value,
+      })
+      updateCourseMaster({
+        ...fullCourse,
         [e.target.name]: e.target.value,
       })
     }
