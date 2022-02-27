@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+
 :root{
   --primary: #6bcfcf;
   --secondary: #24575d;
@@ -28,7 +30,7 @@ body, h1, h2, h3, h4, h5, p, ul, li {
   margin: 0;
   /* font-family: -apple-system, Open Sans, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', sans-serif;
 }
 
 a {

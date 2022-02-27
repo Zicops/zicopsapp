@@ -11,12 +11,12 @@ const CardSlider = ({deviceType, title, type, data}) => {
 
     const responsive = {
         desktop: {
-            breakpoint: { max: 3000, min: 1590 },
+            breakpoint: { max: 3000, min: 1530 },
             items: 6,
             slidesToSlide: 6
         },
         laptop: {
-            breakpoint: { max: 1590, min: 1024 },
+            breakpoint: { max: 1530, min: 1024 },
             items: 5,
             slidesToSlide: 5
         },
