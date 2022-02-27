@@ -30,7 +30,7 @@ export default function Card({image}) {
                                     </div>
                                 </div>
                                 <div className="description">
-                                    consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                    Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                                 </div>
                             </div>
                             <div className="icon-area">
@@ -58,37 +58,42 @@ export default function Card({image}) {
                 /* The overlay effect over the image */
                 .overlay {
                     position: absolute;
-                    bottom:0;
+                    top:0;
                     left: 0;
                     color: #f1f1f1;
                     width: 100%;
+                    height: 100%;
                     opacity:0;
-                    border-radius: 0 0 9px 9px;
-                    box-shadow: 0 0 70px 0 #000000;
+                    border-radius: 7px;
+                    // box-shadow: 0 0 70px 0 #000000;
                 }
-
+                .overlay::hover{
+                    cursor: pointer;
+                }
                 .banner {
                     position: absolute;
-                    top: -6px;
+                    top: 0;
                     right: 0;
                     background-color: #000000;
                     color: #ffffff;
                     font-size: 10px;
                     padding: 3px 7px;
+                    border-radius: 0 4px 0 0;
                 }
 
                 .bottom-box{
-                    bottom: 0;
-                    height: 100%; 
-                    // background-color: #000000;
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
                     background: linear-gradient(90deg, rgb(34, 37, 41) 0%, rgba(0,0,0,1) 100%);
                     font-size: 10px;
                     padding: 5px 10px;
-                    border-radius: 0 0 8px 8px;
+                    border-radius: 5px;
+                    align-content: space-between;
                 }
 
                 .title-area{
-                    padding: 2px 0;
+                    padding: 5px 0;
                 }
 
                 .firstline{
@@ -96,13 +101,13 @@ export default function Card({image}) {
                     justify-content: space-between;
                 }
                 .title{
-                    font-size: 10px;
+                    font-size: 1em;
                     font-weight: 700;
                     line-height: 1.2em;
                     max-width: 60%;
                 }
                 .rating{
-                    font-size: 10px;
+                    font-size: 1em;
                     font-weight: 600;
                 }
                 .desc-area{
@@ -110,14 +115,15 @@ export default function Card({image}) {
                 }
                 .main-desc{
                     width: 85%;
+                    align-items: center;
                 }
                 .one{
                     display: flex;
                     padding-top: 2px;
                 }
                 .one-text{
-                    font-size: 8px;
-                    margin-right: 30px;
+                    font-size: 0.8em;
+                    margin-right: 20px;
                 }
                 .one-text .level{
                     color: #8f9494;
@@ -127,11 +133,13 @@ export default function Card({image}) {
                     font-weight: 600;
                 }
                 .description{
-                    font-size: 8px;
+                    font-size: 0.8em;
                     color: #858f8f;
-                    padding: 2px 0;
+                    padding: 5px 0;
                 }
                 .category{
+                    position: absolute;
+                    bottom: 0;
                     display: flex;
                     padding-bottom: 5px;
                 }
@@ -143,7 +151,7 @@ export default function Card({image}) {
                 }
                 .category ul li{
                     margin-right: 20px;
-                    font-size: 8px;
+                    font-size: 0.8em;
                 }
                 .icon-area {
                     width: 15%;
@@ -165,7 +173,6 @@ export default function Card({image}) {
                     margin: 3px 7px;
                     border: 1px solid #6bcfcf;
                 }
-
             `}
             </style>
         </>

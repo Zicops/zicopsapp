@@ -67,12 +67,12 @@ export const CustomLeftArrow = ({ onClick, ...rest }) => {
                 }
                 
                 .left::before{
-                    content: url(/images/bigarrowrightblack.png);
-                    margin-left: 10px;
-                    transform: rotate(180deg);
+                    content: url(/images/leftArrow.png);
+                    margin-left: -10px;
+                    // transform: rotate(180deg);
                 }
                 .left:hover::before{
-                    content: url(/images/bigarrowright.png);
+                    content: url(/images/leftArrowHover.png);
                 }
                 `}
             </style>
