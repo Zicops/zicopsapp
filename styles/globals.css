@@ -41,6 +41,16 @@ a {
 * {
   box-sizing: border-box;
 }
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
 .react-datepicker, 
 .react-datepicker__triangle, .react-datepicker__triangle:after, .react-datepicker__triangle:before,
 .react-datepicker__header {
@@ -196,6 +206,7 @@ a {
   transition: all 0.5s ease 0.3s;
   transform: scale(0.95);
   border-radius: 8px;
+  border: 2px solid transparent;
 }
 
 .card_ietms img, .card_ietms_big img, .card_ietms_round img{

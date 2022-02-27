@@ -3,7 +3,7 @@
 }
 .row {
     width: 100%;
-    margin-bottom: 3px;
+    margin-bottom: 3px; 
     display: flex;
     align-items: baseline;
     justify-content: space-around;
@@ -50,8 +50,11 @@
     color: var(--dark_three);
     margin-right: 25%;
 }
-
+.footer_left{
+    width: 50%;
+}
 .footer_right{
+    width: 50%;
     display: flex;
     justify-content: flex-end;
 }

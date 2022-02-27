@@ -4,9 +4,9 @@ import styles from '../../styles/Footer.module.css'
 const Footer = () => {
     return (
         <div className={styles.footer}>
-            <div className={styles.row}>
+            {/* <div className={styles.row}> */}
                 <div className={styles.footer_left}>
-                    <div className={styles.col_75}>
+                    {/* <div className={styles.col_75}> */}
                         <div className={styles.h_footer}>
                             <Link href="#about_Zicops">
                                 <a>About Zicops</a>
@@ -34,25 +34,23 @@ const Footer = () => {
                             programming visuals and elemnts are the property of Zicops,Inc.
                             All rights reserved.
                         </p>
-                    </div>
-                </div>
-                <div className={styles.footer_right}>
-                    {/* <div className={styles.col_50}> */}
-                        <div className={styles.connect_us}>
-                            <p className={styles.h_footer}>Connect with us</p>
-                            <img src="/images/Twitter.png" alt=""/>
-                            <img src="/images/FB.png" alt=""/>
-                            <img src="/images/Insta.png" alt=""/>
-                            <img src="/images/LinkedIn.png" alt=""/>
-                        </div>
-                        <div className={styles.store}>
-                            <p className={styles.h_footer}>Download App</p>
-                            <img src="/images/play_store.png" alt="" />
-                            <img src="/images/app_store.png" alt="" />
-                        </div>
                     {/* </div> */}
                 </div>
-            </div>
+                <div className={styles.footer_right}>
+                    <div className={styles.connect_us}>
+                        <p className={styles.h_footer}>Connect with us</p>
+                        <img src="/images/Twitter.png" alt=""/>
+                        <img src="/images/FB.png" alt=""/>
+                        <img src="/images/Insta.png" alt=""/>
+                        <img src="/images/LinkedIn.png" alt=""/>
+                    </div>
+                    <div className={styles.store}>
+                        <p className={styles.h_footer}>Download App</p>
+                        <img src="/images/play_store.png" alt="" />
+                        <img src="/images/app_store.png" alt="" />
+                    </div>
+                </div>
+            {/* </div> */}
         </div>
     )
 }

@@ -12,24 +12,24 @@ export default function Card({image}) {
                                 <div className="title">
                                     Introduction to Data Science with Python
                                 </div>
-                                <div className="rating">
-                                    NLR 7.5/10
-                                </div>
+                                {/* <div className="rating noselect"> */}
+                                <div className="secondline">Self Paced</div>
+                                {/* </div> */}
                             </div>
                         </div>
                         <div className="desc-area">
                             <div className="main-desc">
                                 <div className="one">
                                     <div className="one-text">
-                                        <span className="level">Level:</span>
-                                        <span className="value">Beginner</span>
+                                        <span className="level noselect">Level:</span>
+                                        <span className="value noselect">Beginner</span>
                                     </div>
                                     <div className="one-text">
-                                        <span className="level">Duration:</span>
-                                        <span className="value">240 mins</span>
+                                        <span className="level noselect">Duration:</span>
+                                        <span className="value noselect">240 mins</span>
                                     </div>
                                 </div>
-                                <div className="description">
+                                <div className="description noselect">
                                     Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                                 </div>
                             </div>
@@ -67,9 +67,7 @@ export default function Card({image}) {
                     border-radius: 7px;
                     // box-shadow: 0 0 70px 0 #000000;
                 }
-                .overlay::hover{
-                    cursor: pointer;
-                }
+                
                 .banner {
                     position: absolute;
                     top: 0;
@@ -99,6 +97,11 @@ export default function Card({image}) {
                 .firstline{
                     display: flex;
                     justify-content: space-between;
+                }
+                .secondline{
+                    padding: 2px 0;
+                    font-size: 1em;
+                    color: var(--primary);
                 }
                 .title{
                     font-size: 1em;
