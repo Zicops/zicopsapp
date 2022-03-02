@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import BigCard from '../small/SingleBigCard';
+import BigCard, { OneCard } from '../small/SingleBigCard';
 import CardSliderHeader from '../small/CardSliderHeader';
 import {CustomLeftArrow, CustomRightArrow} from '../small/SliderArrows'
+import { getHeight } from 'react-slick/lib/utils/innerSliderUtils';
+import { NonceProvider } from 'react-select';
 
-const BigCardSlider = ({deviceType, title, type, data, slide}) => {
+const OneCardSlider = ({deviceType, title, type, data, slide}) => {
 
     const [currentSlide, setCurrentSlide] = useState(0);  
     
@@ -16,7 +18,7 @@ const BigCardSlider = ({deviceType, title, type, data, slide}) => {
         <div className="cardCarosel" style={{
             marginLeft: '4%',
             marginRight: '4%',
-            paddingTop: '10px'
+            paddingTop: '10px',
         }}> 
             <CardSliderHeader title={title}/>
             <Carousel 
@@ -37,7 +39,7 @@ const BigCardSlider = ({deviceType, title, type, data, slide}) => {
                 >
                 {
                 data.map( (data, index) => ( 
-                    <BigCard key={index} image={data.img} />
+                    <OneCard key={index} image={data.img} />
                 ))
                 }
                 <div className="last-text-big">
@@ -47,12 +49,13 @@ const BigCardSlider = ({deviceType, title, type, data, slide}) => {
 
                 <style jsx>{`
                     .last-text-big{
-                        padding: 48% 0;
+                        padding: 5.75% 0;
                         color: var(--primary);
                         background-color: #003548;
                         border-radius: 8px;
                         text-align: center;
                         cursor: pointer;
+                        font-size: 22px;
                     }
                 `}</style>
         </div>
@@ -61,4 +64,4 @@ const BigCardSlider = ({deviceType, title, type, data, slide}) => {
     )
 }
 
-export default BigCardSlider
+export default OneCardSlider

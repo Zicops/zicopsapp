@@ -48,6 +48,8 @@ export const UPLOAD_COURSE_IMAGE = gql`
     uploadCourseImage(file: {
       courseId: $courseId
     })
+  }{
+    url
   }
 `;
 

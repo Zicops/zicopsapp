@@ -41,4 +41,10 @@ export const circleImages = [
         { id: 3, img: "/images/courses/1qwe.png" },
         { id: 4, img: "/images/courses/2qwe.png" },
         { id: 5, img: "/images/courses/3qwe.png" },
+        { id: 6, img: "/images/courses/1qwe.png" },
+        { id: 7, img: "/images/courses/2qwe.png" },
+        { id: 8, img: "/images/courses/3qwe.png" },
+        { id: 9, img: "/images/courses/1qwe.png" },
+        { id: 10, img: "/images/courses/2qwe.png" },
+        { id: 11, img: "/images/courses/3qwe.png" },
     ]

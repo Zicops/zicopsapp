@@ -192,18 +192,12 @@ a {
   margin-bottom: 2%;
 }
 
-.carousel_container{
-  /* height: 200px; */
-  /* height: 170px; */
-  /* border: 1px solid rgb(62, 163, 42); */
-}
-
 .card_ietms,
 .card_ietms_big,
 .card_ietms_round {
   z-index: 0;
   /* border: 1px solid white; */
-  transition: all 0.5s ease 0.3s;
+  transition: all 0.2s ease-out 0.6s;
   transform: scale(0.95);
   border-radius: 8px;
   border: 2px solid transparent;
@@ -219,7 +213,7 @@ a {
 
 .card_ietms:hover{
   transform: scale(1.4); 
-  transition: all 0.5s ease 0.3s;
+  transition: all 0.2s ease-out 0.6s;
   /* max-height: 200px; */
   width: 350px;
   background-color: var(--header-bg);
@@ -230,7 +224,14 @@ a {
 
   z-index: 99;
 }
+.card_ietms:hover .overlay {
+  transition: all 0.2s ease-out 0.6s;
+  opacity: 1;
 
+  /* border-bottom: 4px solid var(--primary);
+  border-left: 4px solid var(--primary);
+  border-right: 4px solid var(--primary); */
+}
 .card_ietms[data-index='0']:hover,
 .card_ietms[data-index='5']:hover,
 .card_ietms[data-index='10']:hover,
@@ -247,14 +248,7 @@ a {
 }
 
 
-.card_ietms:hover .overlay {
-  transition: all 0.5s ease 0.3s;
-  opacity: 1;
 
-  /* border-bottom: 4px solid var(--primary);
-  border-left: 4px solid var(--primary);
-  border-right: 4px solid var(--primary); */
-}
 
 .react-multi-carousel-dot-list.custom-dot-list-style{
   margin-bottom: 20px!important;
@@ -314,9 +308,7 @@ a {
 .vjs-zicops .vjs-control-bar{
   background-color: transparent!important;
 }
-.vjs-zicops .vjs-control{
-  /* position: unset!important; */
-}
+
 .vjs-zicops .vjs-progress-control {
   position: absolute!important;
   left: 0!important;

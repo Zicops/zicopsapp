@@ -6,6 +6,13 @@ export const courseContext = createContext();
 const CourseContextProvider = (props) => {
 
   // const [course, dispatch] = useReducer(courseReducer, []);
+  // {
+  //   name : 'Java',
+  //   rank : '4',
+  // },{
+  //   name : 'Qwerty',
+  //   rank : '3',
+  // }
   const [tab, setTab] = useState('tab1');
   const [fullCourse, updateCourse] = useState({
     id : '',
@@ -39,13 +46,7 @@ const CourseContextProvider = (props) => {
     is_display : '',
     category : '',
     sub_category : '',
-    sub_categories : [{
-      name : 'Java',
-      rank : '4',
-    },{
-      name : 'Qwerty',
-      rank : '3',
-    }]
+    sub_categories : []
   });
   const [course, setCourse] = useState({
     id: '',

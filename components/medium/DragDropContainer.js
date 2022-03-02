@@ -24,7 +24,7 @@ const DragDrop = () => {
  
 
   const [draglist, updateDraglist] = useState(subcategories);
-  const [droplist, updateDropList] = useState( [fullCourse.sub_categories] );
+  const [droplist, updateDropList] = useState( fullCourse.sub_categories );
  
   console.log(droplist)
   function handleOnDragEnd(result) {
@@ -53,11 +53,11 @@ const DragDrop = () => {
         updateDropList( newlist );
         // console.log(newlist)
 
-        updateCourseMaster({
-          ...fullCourse,
-          sub_categories: newlist,
-        });
-        console.log(fullCourse)
+        // updateCourseMaster({
+        //   ...fullCourse,
+        //   sub_categories: newlist,
+        // });
+        // console.log(fullCourse)
         updateDraglist( list ); 
         document.getElementById('cad').classList.add("lgrey")
       } else {

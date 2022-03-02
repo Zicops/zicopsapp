@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CardSliderHeader from '../small/CardSliderHeader';
@@ -32,8 +32,11 @@ const CardSlider = ({deviceType, title, type, data}) => {
         }
     };
 
+
+
     const makeFirstLastHoverDifferent = ( nextSlide, { currentSlide, onMove }) => {        
-        // alert(currentSlide)
+        alert(currentSlide)
+        // document.querySelectorAll(".card-ietms").forEach
     //     let container = document.getElementsByClassName('carousel_container');
     //     let item = document.getElementsByClassName('card-ietms')  
         
@@ -44,6 +47,17 @@ const CardSlider = ({deviceType, title, type, data}) => {
     }
     
     // console.log(currentSlide);
+    // function Timer() {
+    //     const [count, setCount] = useState(0);
+
+    //     useEffect(() => {
+    //         setTimeout(() => {
+    //             setCount((count) => count + 1);
+    //         }, 1000);
+    //     });
+
+    //     return <h4>I've rendered {count} times!</h4>;
+    // }
 
     return (
         <>
@@ -54,14 +68,14 @@ const CardSlider = ({deviceType, title, type, data}) => {
         }}> 
             <CardSliderHeader title={title}/>
             <Carousel 
-                ref={el => {
-
-                    if (el) {
-                        var slidesToShow = el.state.slidesToShow
-                        var currentSlide = el.state.currentSlide
-                        setCurrentSlide(slidesToShow + currentSlide)
-                    }
-                }}
+                // ref={el => (this.Carousel = el)}
+                // ref={el => {
+                //     if (el) {
+                //         var slidesToShow = el.state.slidesToShow
+                //         var currentSlide = el.state.currentSlide
+                //         setCurrentSlide(slidesToShow + currentSlide)
+                //     }
+                // }}
                 beforeChange={makeFirstLastHoverDifferent}
                 swipeable={false}
                 draggable={false}
@@ -78,7 +92,7 @@ const CardSlider = ({deviceType, title, type, data}) => {
                 sliderClass="carousel_track"
                 containerClass="carousel_container"
                 itemClass="card_ietms"
-                removeArrowOnDeviceType={["tablet", "mobile"]}
+                // removeArrowOnDeviceType={["tablet", "mobile"]}
                 customLeftArrow={<CustomLeftArrow />}
                 customRightArrow={<CustomRightArrow />}
                 >

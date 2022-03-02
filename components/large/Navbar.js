@@ -23,7 +23,11 @@ const Nav = () => {
                 </a></Link>
                 <div className={styles.menu}>
                     <ul>
-                        <li>Self</li>
+                        <Link href="/self-landing">
+                            <li>
+                                Self
+                            </li>
+                        </Link>
                         <li>Classroom</li>
                         <li>Events</li>
                         <li>Labs</li>
