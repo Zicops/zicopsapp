@@ -1,12 +1,16 @@
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import React, { useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useQuery } from '@apollo/client';
 import { courseContext } from '../../state/contexts/CourseContext'
 import {qClient, GET_CATS_N_SUB_CATS} from '../../API/Queries'
 
 
 const DragDrop = () => {
-  const { fullCourse, updateCourseMaster } = useContext(courseContext);
+  
+  const { fullCourse, setTab, updateCourseMaster } = useContext(courseContext);
+
+  let subCatsArr = (fullCourse.sub_categories.length > 0) ? fullCourse.sub_categories : [];
+
   function GetSubCats(){
     const {data} = useQuery(GET_CATS_N_SUB_CATS);
     if(!data){
@@ -22,11 +26,9 @@ const DragDrop = () => {
       });
   }
  
-
   const [draglist, updateDraglist] = useState(subcategories);
-  const [droplist, updateDropList] = useState( fullCourse.sub_categories );
+  const [droplist, updateDropList] = useState( subCatsArr );
  
-  console.log(droplist)
   function handleOnDragEnd(result) {
     document.getElementById('cad').classList.remove("primary")
 
@@ -47,17 +49,11 @@ const DragDrop = () => {
       const newlist = Array.from(droplist);
       const list = Array.from(draglist);
       const [reorderedItem] = list.splice(result.source.index, 1);
-      
+      reorderedItem['rank'] = newlist.length;
       if(newlist.length < 5){
         newlist.push(reorderedItem);
         updateDropList( newlist );
         // console.log(newlist)
-
-        // updateCourseMaster({
-        //   ...fullCourse,
-        //   sub_categories: newlist,
-        // });
-        // console.log(fullCourse)
         updateDraglist( list ); 
         document.getElementById('cad').classList.add("lgrey")
       } else {
@@ -69,6 +65,9 @@ const DragDrop = () => {
       const newlist = Array.from(droplist);
       const [reorderedItem] = newlist.splice(result.source.index, 1);
       newlist.splice(result.destination.index, 0, reorderedItem);
+      newlist.map((el, index)=>{
+        el.rank = index;
+      })
       updateDropList(newlist);
       document.getElementById('cad').classList.add("lgrey")
     }
@@ -115,6 +114,13 @@ const DragDrop = () => {
     document.getElementById('cad').classList.add("primary")
   }
   
+  useEffect(() => {
+    updateCourseMaster({
+      ...fullCourse,
+      sub_categories : droplist
+    })
+  }, [droplist])
+
   return (
     <>
       <div className="row" style={{alignItems:'center'}}>
@@ -130,7 +136,7 @@ const DragDrop = () => {
                     </div>
                     {draglist.map(({ rank, name }, index) => {
                       return (
-                        <Draggable key={rank} draggableId={rank} index={index}>
+                        <Draggable key={rank} draggableId={'drag_' + rank} index={index}>
                           {(provided, snapshot) => (
                             <div className="inner_drag_ele"
                             ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
@@ -156,7 +162,7 @@ const DragDrop = () => {
                   <div className="drop_category_area" id="cad" {...provided.droppableProps} ref={provided.innerRef}>
                     {droplist.map(({ rank, name }, index) => {
                       return (
-                        <Draggable key={rank} draggableId={rank} index={index}>
+                        <Draggable key={rank} draggableId={'drop_'+rank.toString()} index={index}>
                           {(provided) => (
                             <div className="wrap_drop" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                               <div className="Sr_no">{index + 1}</div>

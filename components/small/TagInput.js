@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const TagInput = ({placeholder}) => {
-    
+const TagInput = ({placeholder, name, course, updateCourse}) => {
+    let nameArr = (course[name].length > 0) ? course[name] : [];
+
     const [input, setInput] = useState('');
-    const [tags, setTags] = useState([]);
+    const [tags, setTags] = useState(nameArr);
     const [isKeyReleased, setIsKeyReleased] = useState(false);
 
     const onChange = (e) => {
@@ -37,13 +38,19 @@ const TagInput = ({placeholder}) => {
     const deleteTag = (index) => {
         setTags(prevState => prevState.filter((tag, i) => i !== index))
     }
+    useEffect(() => {
+        updateCourse({
+            ...course,
+            [name]: tags
+        })
+    }, [tags])
     return(
         <>
         <div className="container">
-            {tags.map((tag, index) => <div className="tag">{tag}
+            {tags.map((tag, index) => <div key={index} className="tag">{tag}
             <button onClick={() => deleteTag(index)}>x</button>
             </div>)}
-            <input
+            <input name={name}
                 value={input}
                 placeholder={placeholder}
                 onKeyDown={onKeyDown}

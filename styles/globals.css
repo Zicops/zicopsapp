@@ -320,4 +320,84 @@ a {
   transition: top 150ms linear, opacity 150ms linear, transform 150ms linear, -webkit-transform 150ms linear, -moz-transform 150ms linear, -o-transform 150ms linear;
   z-index: 1;
 }
+.video-js .vjs-progress-holder{
+  height: 0.5em!important;
+  box-shadow: 0 0 10px 0 #001111;
+}
+.video-js .vjs-slider{
+  background-color: #73859f!important;
+}
 
+/* #73859fbf */
+.video-js .vjs-play-progress{
+  background-color: var(--primary)!important;
+}
+.video-js .vjs-play-progress::before{
+  font-size: 1.5em!important;
+  background-color: var(--primary)!important;
+  color: var(--primary)!important;
+  box-shadow: 0 0 10px 0 #001111;
+  border-radius: 50%;
+}
+.vjs-control-bar{
+  display: flex!important;
+  justify-content: space-between!important;
+  margin: 10px 0;
+}
+.zicopsRestartBtn{
+  /* background-color: #6bcfcf!important; */
+  background-image: url('/images/reload_53905.png')!important;
+  background-position: center!important; 
+  background-repeat: no-repeat!important; 
+  background-size: contain!important; 
+}
+.zicopsPreviousBtn{
+  /* background-color: #6bcfcf!important; */
+  background-image: url('/images/prev-topic.png')!important;
+  background-position: center!important; 
+  background-repeat: no-repeat!important; 
+  background-size: contain!important; 
+  transform: translate(180deg)!important;
+}
+.zicopsLittleBack{
+  /* background-color: #6bcfcf!important; */
+  background-image: url('/images/prev-back.png')!important;
+  background-position: center!important; 
+  background-repeat: no-repeat!important; 
+  background-size: contain!important; 
+}
+.zicopsPlayButton{
+  /* background-color: #6bcfcf!important; */
+  background-image: url('/images/preview-btn.png')!important;
+  background-position: center!important; 
+  background-repeat: no-repeat!important; 
+  background-size: contain!important; 
+}
+.zicopsLittleForward{
+  /* background-color: #6bcfcf!important; */
+  background-image: url('/images/next-forward.png')!important;
+  background-position: center!important; 
+  background-repeat: no-repeat!important; 
+  background-size: contain!important; 
+}
+.zicopsNextBtn{
+  /* background-color: #6bcfcf!important; */
+  background-image: url('/images/next-topic.png')!important;
+  background-position: center!important; 
+  background-repeat: no-repeat!important; 
+  background-size: contain!important; 
+}
+.zicopsVolumeBtn{
+  /* background-color: #6bcfcf!important; */
+  background-image: url('/images/volume-up_90749.png')!important;
+  background-position: center!important; 
+  background-repeat: no-repeat!important; 
+  background-size: contain!important; 
+}
+.zicopsFullScreenBtn{
+  /* background-color: #6bcfcf!important; */
+  background-image: url('/images/switch-to-full-screen-button_icon.png')!important;
+  background-position: center!important; 
+  background-repeat: no-repeat!important; 
+  background-size: contain!important; 
+}

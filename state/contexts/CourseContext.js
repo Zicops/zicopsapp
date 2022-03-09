@@ -1,18 +1,9 @@
 import { createContext, useState, useReducer, useEffect } from 'react';
-import courseReducer from '../reducers/CourseReducer';
 
 export const courseContext = createContext();
 
 const CourseContextProvider = (props) => {
-
-  // const [course, dispatch] = useReducer(courseReducer, []);
-  // {
-  //   name : 'Java',
-  //   rank : '4',
-  // },{
-  //   name : 'Qwerty',
-  //   rank : '3',
-  // }
+ 
   const [tab, setTab] = useState('tab1');
   const [fullCourse, updateCourse] = useState({
     id : '',
@@ -24,26 +15,27 @@ const CourseContextProvider = (props) => {
     previewVideo : '',
     tileImage : '',
     owner : '',
-    duration : '',
+    duration : 0,
     expertise_level : '',
-    language : '',
-    benefits : '',
+    language : [],
+    benefits : [],
+    outcomes : [],
     created_at : '',
     updated_at : '',
     type : '',
-    prequisites : '',
-    goodFor : '',
-    mustFor : '',
-    related_skills : '',
+    prequisites : [],
+    goodFor : [],
+    mustFor : [],
+    related_skills : [],
     publish_date : '',
     expiry_date : '',
     expected_completion : '',
-    qa_required : '',
-    approvers : '',
+    qa_required : false,
+    approvers : [],
     created_by : '',
     updated_by : '',
     status : '',
-    is_display : '',
+    is_display : false,
     category : '',
     sub_category : '',
     sub_categories : []
@@ -106,10 +98,7 @@ const CourseContextProvider = (props) => {
       is_display : data.is_display,
       category : data.category,
       sub_category : data.sub_category,
-      sub_categories : {
-        name : data.sub_categories.name,
-        rank : data.sub_categories.rank,
-      }
+      sub_categories : data.sub_categories //this is an array that contains objects
     })
   }
   return (

@@ -55,6 +55,8 @@ const HomeSlider = () => {
             customDot={<CustomDot />}
             itemClass="carousel-item-padding-40-px"
         >
+        <div><img src="images/banner-image-1.jpg" alt=""/></div>
+        <div><img src="images/banner-image-2.png" alt=""/></div>
         <div><img src="images/IMG-20220113-WA0020.jpg" alt=""/></div>
         <div><img src="images/IMG-20220113-WA0018.jpg" alt=""/></div>
         </Carousel>

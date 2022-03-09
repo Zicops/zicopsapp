@@ -9,9 +9,24 @@ const MainPlayer = ({set}) => {
 
     const playerRef = React.useRef(null);
     const videoJsOptions = {
-        // autoplay: true,
+        autoplay: true,
         controls: true,
         aspectRatio: "18:7", 
+        
+        controlBar: {
+            playToggle: false,
+            captionsButton: false,
+            chaptersButton: false,            
+            subtitlesButton: false,
+            remainingTimeDisplay: false,
+            volumePanel: false,
+            pictureInPictureToggle: false,
+            progressControl: {
+              seekBar: true
+            },
+            fullscreenToggle: false,
+            playbackRateMenuButton: false,
+          },
 
         responsive: true,
         fluid: true,
@@ -39,6 +54,17 @@ const MainPlayer = ({set}) => {
         alert(myPlayer.currentTime())
     }
 
+    const playbutton = () => {
+        var player  = videojs('contentPlayer');
+        var Component = videojs.getComponent('Component');
+        var myComponent = new Component(player);
+        var myButton = myComponent.addChild('MyButton', {
+            text: 'Press Me',
+            buttonChildExample: {
+                buttonChildOption: true
+            }
+        });
+    }
     return (
         <>
 
@@ -57,10 +83,12 @@ const MainPlayer = ({set}) => {
                 <div className="bookmark" onClick={addBookmark}>
                     <button>Bookmark</button>
                 </div>
+                {/* <div className="playButton" onClick={playbutton}>
+                    <button>Play</button>
+                </div> */}
             </div>
 
         <style jsx>{`
-
             .overlay {
                 position: absolute;
                 top: 0;
@@ -68,13 +96,11 @@ const MainPlayer = ({set}) => {
                 margin-top: 80px;
                 width: 100%;
             }
-
             .back_arrow{
                 margin-top: 20px;
                 margin-left: 100px;
                 cursor: pointer;
             }
-
             .bookmark{
                 position: absolute;
                 top: 20px;

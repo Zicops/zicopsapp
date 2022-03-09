@@ -14,6 +14,7 @@ const CourseHead = () => {
           <div className={styles.head}>
             <h2>Add a new course</h2>
               <Select 
+              instanceId="coursehead_coursetype"
               options={options} 
               defaultValue={{ value: 'self-paced', label: 'Self Paced' }}
               className='zicops_select_container'

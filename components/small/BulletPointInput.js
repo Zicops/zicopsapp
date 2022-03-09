@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const BulletPointInput = ({placeholder}) => {
-    
+const BulletPointInput = ({placeholder, name, course, updateCourse}) => {
+
+    let nameArr = (course[name].length > 0) ? course[name] : [];
+
     const [input, setInput] = useState('');
-    const [tags, setTags] = useState([]);
+    const [tags, setTags] = useState(nameArr);
     const [isKeyReleased, setIsKeyReleased] = useState(false);
 
     const onChange = (e) => {
         const { value } = e.target;
         setInput(value);
-      };
+    };
     const onKeyDown = (e) => {
         const { key } = e;
         const trimmedInput = input.trim();
@@ -17,7 +19,7 @@ const BulletPointInput = ({placeholder}) => {
         if (key === 'Enter' && trimmedInput.length && !tags.includes(trimmedInput)) {
             e.preventDefault();
             setTags(prevState => [...prevState, trimmedInput]);
-            setInput('');
+            setInput('');            
         }
 
         if (key === "Backspace" && !input.length && tags.length && isKeyReleased) {
@@ -30,20 +32,27 @@ const BulletPointInput = ({placeholder}) => {
 
         setIsKeyReleased(false);
     };
-
     const onKeyUp = () => {
         setIsKeyReleased(true);
     }
     const deleteTag = (index) => {
-        setTags(prevState => prevState.filter((tag, i) => i !== index))
+        setTags(prevState => prevState.filter((tag, i) => i !== index));
     }
+
+    useEffect(() => {
+        updateCourse({
+            ...course,
+            [name]: tags
+        })
+    }, [tags])
+
     return(
         <>
         <div className="container">
-            {tags.map((tag, index) => <div className="bullets"><li>{tag}</li>
+            {tags.map((tag, index) => <div key={index} className="bullets"><li>{tag}</li>
             <button onClick={() => deleteTag(index)}>x</button>
             </div>)}
-            <input
+            <input name={name}
                 value={input}
                 placeholder={placeholder}
                 onKeyDown={onKeyDown}

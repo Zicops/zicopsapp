@@ -1,0 +1,154 @@
+<div class="vjs-control-bar" dir="ltr">
+    <button class="vjs-play-control vjs-control vjs-button vjs-paused" type="button" title="Play" aria-disabled="false">
+        <span class="vjs-icon-placeholder" aria-hidden="true"></span>
+        <span class="vjs-control-text" aria-live="polite">Play</span>
+    </button>
+
+    <div class="vjs-volume-panel vjs-control vjs-volume-panel-horizontal">
+
+        <button class="vjs-mute-control vjs-control vjs-button vjs-vol-3" type="button" title="Mute" aria-disabled="false">
+            <span class="vjs-icon-placeholder" aria-hidden="true"></span>
+            <span class="vjs-control-text" aria-live="polite">Mute</span>
+        </button>
+
+        <div class="vjs-volume-control vjs-control vjs-volume-horizontal">
+            <div tabindex="0" class="vjs-volume-bar vjs-slider-bar vjs-slider vjs-slider-horizontal" role="slider"
+                aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Volume Level" aria-live="polite"
+                aria-valuetext="100%">
+                <div class="vjs-mouse-display">
+                    <div class="vjs-volume-tooltip" aria-hidden="true"></div>
+                </div>
+                <div class="vjs-volume-level">
+                    <span class="vjs-control-text"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="vjs-current-time vjs-time-control vjs-control">
+        <span class="vjs-control-text" role="presentation">Current Time&nbsp;</span>
+        <span class="vjs-current-time-display" aria-live="off" role="presentation">0:03</span>
+    </div>
+    <div class="vjs-time-control vjs-time-divider" aria-hidden="true"><div>
+        <span>/</span>
+    </div>
+    
+</div>
+
+
+
+    <div class="vjs-duration vjs-time-control vjs-control">
+        <span class="vjs-control-text" role="presentation">Duration&nbsp;</span>
+        <span class="vjs-duration-display" aria-live="off" role="presentation">4:33</span>
+    </div>
+    <div class="vjs-progress-control vjs-control">
+        <div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"
+            aria-valuenow="1.13" aria-valuemin="0" aria-valuemax="100" aria-label="Progress Bar"
+            aria-valuetext="0:03 of 4:33">
+            <div class="vjs-load-progress" style="width: 14.15%;">
+                <span class="vjs-control-text">
+                    <span>Loaded</span>:
+                    <span class="vjs-control-text-loaded-percentage">14.15%</span>
+                </span>
+                <div data-start="0" data-end="2.432" style="left: 0%; width: 6.29%;"></div>
+                <div data-start="20.09" data-end="38.692" style="left: 51.92%; width: 48.08%;"></div>
+            </div>
+
+            <div class="vjs-mouse-display" style="left: 59px;">
+                <div class="vjs-time-tooltip" aria-hidden="true" style="right: -14px;">0:10</div>
+            </div>
+
+            <div class="vjs-play-progress vjs-slider-bar" aria-hidden="true" style="width: 1.13%;">
+                <div class="vjs-time-tooltip" aria-hidden="true" style="right: -14px;">0:03</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="vjs-live-control vjs-control vjs-hidden">
+        <div class="vjs-live-display" aria-live="off"><span class="vjs-control-text">Stream Type&nbsp;</span>LIVE</div>
+    </div><button class="vjs-seek-to-live-control vjs-control" type="button" title="Seek to live, currently behind live"
+        aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span
+            class="vjs-control-text" aria-live="polite">Seek to live, currently behind live</span><span
+            class="vjs-seek-to-live-text" aria-hidden="true">LIVE</span></button>
+    <div class="vjs-remaining-time vjs-time-control vjs-control"><span class="vjs-control-text"
+            role="presentation">Remaining Time&nbsp;</span><span aria-hidden="true">-</span><span
+            class="vjs-remaining-time-display" aria-live="off" role="presentation">4:30</span></div>
+    <div class="vjs-custom-control-spacer vjs-spacer ">&nbsp;</div>
+    <div class="vjs-playback-rate vjs-menu-button vjs-menu-button-popup vjs-control vjs-button vjs-hidden">
+        <div class="vjs-playback-rate-value" id="vjs-playback-rate-value-label-contentPlayer_component_255">1x</div>
+        <button class="vjs-playback-rate vjs-menu-button vjs-menu-button-popup vjs-button" type="button"
+            aria-disabled="false" title="Playback Rate" aria-haspopup="true" aria-expanded="false"
+            aria-describedby="vjs-playback-rate-value-label-contentPlayer_component_255"><span
+                class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text"
+                aria-live="polite">Playback Rate</span></button>
+        <div class="vjs-menu">
+            <ul class="vjs-menu-content" role="menu"></ul>
+        </div>
+    </div>
+
+    <div class="vjs-chapters-button vjs-menu-button vjs-menu-button-popup vjs-control vjs-button vjs-hidden"><button
+            class="vjs-chapters-button vjs-menu-button vjs-menu-button-popup vjs-button" type="button"
+            aria-disabled="false" title="Chapters" aria-haspopup="true" aria-expanded="false"><span
+                class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text"
+                aria-live="polite">Chapters</span></button>
+        <div class="vjs-menu">
+            <ul class="vjs-menu-content" role="menu">
+                <li class="vjs-menu-title" tabindex="-1">Chapters</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="vjs-descriptions-button vjs-menu-button vjs-menu-button-popup vjs-control vjs-button vjs-hidden"><button
+            class="vjs-descriptions-button vjs-menu-button vjs-menu-button-popup vjs-button" type="button"
+            aria-disabled="false" title="Descriptions" aria-haspopup="true" aria-expanded="false"><span
+                class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text"
+                aria-live="polite">Descriptions</span></button>
+        <div class="vjs-menu">
+            <ul class="vjs-menu-content" role="menu">
+                <li class="vjs-menu-item vjs-selected" tabindex="-1" role="menuitemradio" aria-disabled="false"
+                    aria-checked="true"><span class="vjs-menu-item-text">descriptions off</span><span
+                        class="vjs-control-text" aria-live="polite">, selected</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="vjs-subs-caps-button vjs-menu-button vjs-menu-button-popup vjs-control vjs-button vjs-hidden"><button
+            class="vjs-subs-caps-button vjs-menu-button vjs-menu-button-popup vjs-button" type="button"
+            aria-disabled="false" title="Captions" aria-haspopup="true" aria-expanded="false"><span
+                class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text"
+                aria-live="polite">Captions</span></button>
+        <div class="vjs-menu">
+            <ul class="vjs-menu-content" role="menu">
+                <li class="vjs-menu-item vjs-texttrack-settings" tabindex="-1" role="menuitem" aria-disabled="false">
+                    <span class="vjs-menu-item-text">captions settings</span><span class="vjs-control-text"
+                        aria-live="polite">, opens captions settings dialog</span></li>
+                <li class="vjs-menu-item vjs-selected" tabindex="-1" role="menuitemradio" aria-disabled="false"
+                    aria-checked="true"><span class="vjs-menu-item-text">captions off</span><span
+                        class="vjs-control-text" aria-live="polite">, selected</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="vjs-audio-button vjs-menu-button vjs-menu-button-popup vjs-control vjs-button vjs-hidden"><button
+            class="vjs-audio-button vjs-menu-button vjs-menu-button-popup vjs-button" type="button"
+            aria-disabled="false" title="Audio Track" aria-haspopup="true" aria-expanded="false"><span
+                class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text"
+                aria-live="polite">Audio Track</span></button>
+        <div class="vjs-menu">
+            <ul class="vjs-menu-content" role="menu"></ul>
+        </div>
+    </div>
+
+    <button class="vjs-picture-in-picture-control vjs-control vjs-button" type="button" title="Picture-in-Picture"
+        aria-disabled="false">
+        <span class="vjs-icon-placeholder" aria-hidden="true"></span>
+        <span class="vjs-control-text" aria-live="polite">Picture-in-Picture</span>
+    </button>
+
+    <button class="vjs-fullscreen-control vjs-control vjs-button" type="button" title="Fullscreen" aria-disabled="false">
+        <span class="vjs-icon-placeholder" aria-hidden="true"></span>
+        <span class="vjs-control-text" aria-live="polite">Fullscreen</span>
+    </button>
+</div>

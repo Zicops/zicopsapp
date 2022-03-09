@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useEffect, useContext } from "react";
 import { courseContext } from '../../state/contexts/CourseContext'
 import { useMutation } from '@apollo/client';
 import {ADD_COURSE, UPDATE_COURSE} from '../../API/Mutations'
@@ -71,28 +71,38 @@ const Admin_content_foot = () => {
             is_display : data.updateCourse.is_display,
             category : data.updateCourse.category,
             sub_category : data.updateCourse.sub_category,
-            sub_categories : {
-                name : data.updateCourse.sub_categories.name,
-                rank : data.updateCourse.sub_categories.rank,
-            }
+            // sub_categories : {
+            //     name : data.updateCourse.sub_categories.name,
+            //     rank : data.updateCourse.sub_categories.rank,
+            // }
         });
         console.log(dataFull);
     }
 
     function saveCourse(){
     
-        if(course.id == ''){
+        if(fullCourse.id == ''){
             // add course
-
-            if(course.name !== '' && course.category !== '' && course.subcategory !== '' && course.owner !== ''){
-                let data = {
-                ...course,
-                status: 'SAVED'
-                }
-                console.log(data)
+            if(fullCourse.name !== '' && fullCourse.category !== '' && fullCourse.subcategory !== '' && fullCourse.owner !== ''){
+                const { id, created_at, updated_at, sub_categories, ...sendData } = fullCourse;
                 createCourse({
-                    variables: data
-                })
+                    variables: {
+                        ...sendData,
+                        status: 'SAVED'
+                    }
+                }).then((d)=>{
+                    // useEffect(() => { 
+                    //     if (typeof d !== 'undefined' && d.data.addCourse.id.length > 0) {
+                    //     updateCourseMaster({
+                    //         ...fullCourse,
+                    //         id: d.data.addCourse.id,
+                    //         status: d.data.addCourse.status,
+                    //     });
+                    //     }
+                    // },[])
+                    console.log(d)
+                  })
+                  .catch((err)=> console.log(err))
             } else {
                 setTab('tab1')
                 alert ('Please fill master details before saving!')
@@ -101,15 +111,18 @@ const Admin_content_foot = () => {
         } else {
             //update course
             console.log('updating...')
+            const { prequisites, related_skills, expected_completion, ...updateData } = fullCourse;
             let data = {
-            ...fullCourse
+            ...updateData
             }
-            console.log(data)
             updateCourse({
                 variables: data
+            }).then( (d)=>{
+                alert("Course Updated")
+                console.log("Course updated")
+                console.log(d)
             })
         }
-        
     }
 
 

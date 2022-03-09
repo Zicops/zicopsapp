@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { courseContext } from '../../state/contexts/CourseContext';
 import BulletPointInput from '../small/BulletPointInput'
 import DatePicker from "react-datepicker";
 import SlideButton from '../small/SlideButton';
@@ -7,8 +8,13 @@ import styles from '../../styles/CourseMaster.module.css'
 
 const CourseConfiguration = () => {
 
-  const [publishDate, setPublishDate] = useState(new Date());
-  const [expireDate, setExpireDate] = useState(new Date());
+  const { fullCourse, setTab, updateCourseMaster } = useContext(courseContext);
+
+  let pubDate = (fullCourse.publish_date > 0) ? new Date(fullCourse.publish_date * 1000) : new Date();
+  let expDate = (fullCourse.expiry_date > 0) ? new Date(fullCourse.expiry_date * 1000) : new Date();
+
+  const [publishDate, setPublishDate] = useState(pubDate);
+  const [expireDate, setExpireDate] = useState(expDate);
   const years = [
     "2025",
     "2024",
@@ -85,8 +91,21 @@ const CourseConfiguration = () => {
     </div>
   )
 
-
-
+  // expiry_date 
+  useEffect(() => {
+    updateCourseMaster({
+      ...fullCourse,
+      expiry_date: Math.floor(expireDate / 1000).toString(),
+    })
+  }, [expireDate])
+  
+  // publish_date
+  useEffect(() => {
+    updateCourseMaster({
+      ...fullCourse,
+      publish_date: Math.floor(publishDate / 1000).toString(),
+    })
+  }, [publishDate])
 
 
     return (
@@ -123,12 +142,15 @@ const CourseConfiguration = () => {
             <div className={styles.col_25}></div>
             <div className={styles.col_25}></div>
           </div>
-          <div className={styles.row}>
-                <label htmlFor="name" className={styles.col_25}>Add Approval</label>
-                <div className={styles.col_75}>
-                    <BulletPointInput placeholder="Add Approval"/>
-                </div>
-            </div>
+        {/* <div className={styles.row}>
+          <label htmlFor="name" className={styles.col_25}>Add Approval</label>
+          <div className={styles.col_75}>
+            <BulletPointInput placeholder="Add Approval" 
+            name="approvers"
+            course={fullCourse}
+            updateCourse={updateCourseMaster}/>
+          </div>
+        </div> */}
           <div className={styles.row}>
             <label htmlFor="name" className={styles.col_25}>Visibility in the Learning space</label>
             <div className={styles.col_25}>

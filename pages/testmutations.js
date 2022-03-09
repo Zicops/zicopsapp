@@ -1,14 +1,19 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useMutation, useQuery } from '@apollo/client';
-import {GET_CATS_N_SUB_CATS} from '../API/Queries'
+import { createUploadLink } from "apollo-upload-client";
+import {GET_CATS_N_SUB_CATS} from '../API/Queries';
+
+
+const link = createUploadLink({ uri: "https://demo.zicops.com/cc/api/v1/query" })
+
 const qClient = new ApolloClient({
     uri: "https://demo.zicops.com/cq/api/v1/query",
     cache: new InMemoryCache()
 })
 
-// const mClient = new ApolloClient({
-//     uri: "https://demo.zicops.com/cc/api/v1/query",
-//     cache: new InMemoryCache()
-// })
+const mClient = new ApolloClient({
+    link,
+    cache: new InMemoryCache()
+})
 
 // const GET_CATS = gql`
 //     {
@@ -16,6 +21,21 @@ const qClient = new ApolloClient({
 //         allSubCategories
 //     }
 // `;
+
+export const UPLOAD_COURSE_IMAGE = gql`
+  mutation uploadCourseImage(
+    $file: Upload,
+    $courseId: String
+  ){
+    uploadCourseImage(file: {
+      file: $file,
+      courseId: $courseId
+    }) {
+      success
+      url
+    }
+  }
+`;
 
 // function Todos(){
 //     const { loading, error, data } = useQuery(GET_CATS)
@@ -101,18 +121,37 @@ const qClient = new ApolloClient({
 //     );
 // }
   
-function CategoryList(){
-    const {data} = useQuery(GET_CATS_N_SUB_CATS);
-    return (
-        (data) ? data.allCategories.map( cats => <p>{cats}</p> ) : null
-    )
+// function CategoryList(){
+//     const {data} = useQuery(GET_CATS_N_SUB_CATS);
+//     return (
+//         (data) ? data.allCategories.map( cats => <p>{cats}</p> ) : null
+//     )
+// }
+export function UploadFile() {
+    const [uploadImage] = useMutation(UPLOAD_COURSE_IMAGE);
+
+    const onChange = (e) =>
+        uploadImage({
+            variables: {
+                    file: e.target.files[0],
+                    courseId: "c853ck517c478nrsgj10"
+                }
+        })
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+    return <input type="file" required onChange={onChange} />;
 }
 export default function Test() {
     return (
-        <ApolloProvider client={qClient}>
+        <ApolloProvider client={mClient}>
             <br /><br /><br /><br /><br /><br /><br />
-            <CategoryList />
+            {/* <CategoryList /> */}
             {/* <Todos /> */}
+            <UploadFile/>
             <br /><br /><br /><br /><br /><br /><br />
         </ApolloProvider>
     )

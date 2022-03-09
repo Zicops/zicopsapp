@@ -1,15 +1,52 @@
-import { useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
 import {qClient, GET_CATS_N_SUB_CATS} from '../../API/Queries'
-import {UPLOAD_COURSE_IMAGE} from '../../API/Mutations'
+import {UPLOAD_COURSE_IMAGE, UPLOAD_COURSE_TILE_IMAGE, UPLOAD_COURSE_PREVIEW} from '../../API/Mutations'
 import DragDrop from './DragDropContainer'
 import { courseContext } from '../../state/contexts/CourseContext';
 import styles from '../../styles/CourseMaster.module.css'
 
 
 const CourseDetails = () => {
-  const { course, fullCourse, updateCourseMaster } = useContext(courseContext);
-  // const [uploadImage, {loading, error, data}] = useMutation(UPLOAD_COURSE_IMAGE)
+  const { course, setTab, fullCourse, updateCourseMaster } = useContext(courseContext);
+  const [uploadImage] = useMutation(UPLOAD_COURSE_IMAGE);
+  const [uploadTileImage] = useMutation(UPLOAD_COURSE_TILE_IMAGE);
+  const [uploadPreview] = useMutation(UPLOAD_COURSE_PREVIEW);
+
+  let nameArr = (fullCourse.expertise_level.length > 0) ? fullCourse['expertise_level'].split(" , ") : [];
+
+  const [expertiseLevel, setExpertiseLevel] = useState(nameArr);
+
+  console.log(fullCourse);
+    // if (loading || loading1 || loading2) console.log('Submitting...');
+    // if (error || error1 || error2) {
+    //   alert('Submission error!');
+    //   console.log(error.message);
+    // }
+    // if (data) {
+    //   console.log(data);
+    //   updateCourseMaster({
+    //     ...fullCourse,
+    //     image : data.uploadCourseImage.url,
+    //   });
+    //   console.log(fullCourse);
+    // }
+    // if (data1) {
+    //   console.log(data1);
+    //   updateCourseMaster({
+    //     ...fullCourse,
+    //     tileImage : data1.uploadCourseTileImage.url,
+    //   });
+    //   console.log(fullCourse);
+    // }
+    // if (data2) {
+    //   console.log(data2);
+    //   updateCourseMaster({
+    //     ...fullCourse,
+    //     previewVideo : data2.url,
+    //   });
+    //   console.log(fullCourse);
+    // }
   const inputHandler = (e) => {
     updateCourseMaster({
       ...fullCourse,
@@ -17,28 +54,105 @@ const CourseDetails = () => {
     })
   }
 
-  const uploadCourseVideo = () => {
+  const inputHandlerAddArr = (e) => {
+    const trimmedInput = e.target.value.trim();
+    if(e.target.checked == false){
+      deleteExpertiseLevel(trimmedInput)
+    } else if ( trimmedInput.length && !expertiseLevel.includes(trimmedInput) ) {
+        setExpertiseLevel(prevState => [...prevState, trimmedInput]);
+    }
+  }
 
+  const deleteExpertiseLevel = (trimmedInput) => {
+    setExpertiseLevel(prevState => prevState.filter( function(el) { return el !== trimmedInput; } ));
   }
-  const uploadCourseImage = () => {
-    uploadImage({ variables : {file, id}})
+
+  useEffect(() => { 
+    updateCourseMaster({
+      ...fullCourse,
+      expertise_level: expertiseLevel.join(" , "),
+    })
+    console.log(JSON.stringify(fullCourse))
+  }, [expertiseLevel])
+
+  const uploadCourseVideo = (e) => {
+    if(fullCourse.id){
+      uploadPreview({
+        variables: {
+          file: e.target.files[0],
+          courseId: fullCourse.id
+        }
+      }).then( (data) => {
+          console.log(data);
+      })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setTab('tab1');
+      alert('Add Course First');
+    }
   }
+  const uploadCourseImage = (e) => {
+    if(fullCourse.id){
+      uploadImage({
+        variables: {
+          file: e.target.files[0],
+          courseId: fullCourse.id
+        }
+      })
+      .then( (data) => {
+        updateCourseMaster({
+          ...fullCourse,
+          image : data.data.uploadCourseImage.url,
+        });
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+    } else {
+      setTab('tab1');
+      alert('Add Course Master First');
+    }
+  }
+  const uploadCourseTileImage = (e) => {
+    if(fullCourse.id){
+      uploadTileImage({
+        variables: {
+          file: e.target.files[0],
+          courseId: fullCourse.id
+        }
+      })
+        .then( (data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setTab('tab1');
+      alert('Add Course First');
+    }
+  }
+
     return (
         <div className={styles.course_master}>
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Course Base Sub-category</label>
               <select 
               className={styles.col_75}
-              onChange={inputHandler}
-              value={(course.subcategory)?course.subcategory:'Select Subcategory in Course Master Tab'}
+              onChange={inputHandlerAddArr}
+              value={(fullCourse.sub_category)?fullCourse.subcategory:'Select Subcategory in Course Master Tab'}
               >
-                <option disabled selected hidden>Select Subcategory in Course Master Tab</option>
-                <option> {course.subcategory}</option>
+                <option disabled hidden>Select Subcategory in Course Master Tab</option>
+                <option> {fullCourse.sub_category}</option>
               </select>
           </div>
           <ApolloProvider client={qClient}>
           <DragDrop/>
           </ApolloProvider>
+
+          {/* Expertise Level */}
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Level of Expertise</label>
             <div className={styles.col_25}>
@@ -47,9 +161,9 @@ const CourseDetails = () => {
               <label className={styles.checkbox_container}>
                 <input type="checkbox" 
                 name='expertise_level'
-                onChange={inputHandler}
+                onChange={inputHandlerAddArr}
                 value="Beginner" 
-                checked={(fullCourse.expertise_level === "Beginner")? 'checked' : false}
+                checked={ expertiseLevel.includes("Beginner") ? 'checked' : false}
                 />
                 <span className={styles.checkmark}></span>Beginner
               </label>
@@ -58,9 +172,9 @@ const CourseDetails = () => {
               <label className={styles.checkbox_container}>
                 <input type="checkbox" 
                 name='expertise_level'
-                onChange={inputHandler}
+                onChange={inputHandlerAddArr}
                 value="Competent" 
-                checked={(fullCourse.expertise_level === "Competent")? "checked" : false}
+                checked={ expertiseLevel.includes("Competent") ? "checked" : false}
                 />
                 <span className={styles.checkmark}></span>Competent
               </label>
@@ -69,14 +183,15 @@ const CourseDetails = () => {
               <label className={styles.checkbox_container}>
                 <input type="checkbox" 
                 name='expertise_level'
-                onChange={inputHandler}
+                onChange={inputHandlerAddArr}
                 value="Proficient" 
-                checked={(fullCourse.expertise_level === "Proficient")? "checked" : false}
+                checked={ expertiseLevel.includes("Proficient") ? "checked" : false}
                 />
                 <span className={styles.checkmark}></span>Proficient
               </label>
             </div>
           </div>
+          {/* Upload Course Video */}
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Upload Preview of the course</label>
             <div className={styles.col_75}>
@@ -97,6 +212,7 @@ const CourseDetails = () => {
               </div>
             </div>
           </div>
+          {/* Upload Course Image */}
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Course Display Image</label>
             <div className={styles.col_75}>
@@ -117,6 +233,7 @@ const CourseDetails = () => {
               </div>
             </div>
           </div>
+          {/* Upload Course Page Display Picture */}
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Course Page Display Picture</label>
             <div className={styles.col_75}>
@@ -129,7 +246,7 @@ const CourseDetails = () => {
                   </span>
                   Browse & upload
                 </button>
-                <input type="file" name="myfile" />
+                <input type="file" name="myfile" onChange={uploadCourseTileImage}/>
               </div>
               <div className={styles.preview_remove_links}>
                 <a className={styles.preview}>Preview</a>
@@ -137,6 +254,7 @@ const CourseDetails = () => {
               </div>
             </div>
           </div>
+          {/* Course Summary */}
           <div className={styles.row}>
             <label htmlFor="name1" className={styles.col_25}>Course Summary</label>
             <textarea 
