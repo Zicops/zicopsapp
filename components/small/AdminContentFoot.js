@@ -5,104 +5,102 @@ import {ADD_COURSE, UPDATE_COURSE} from '../../API/Mutations'
 
 const Admin_content_foot = () => {
     const { course, fullCourse, setTab, addCourseMaster, updateCourseMaster } = useContext(courseContext);
-    const [createCourse, {loading, error, data}] = useMutation(ADD_COURSE)
-    const [updateCourse, {loadingFull, errorFull, dataFull}] = useMutation(UPDATE_COURSE)
+    const [createCourse ] = useMutation(ADD_COURSE)
+    const [updateCourse ] = useMutation(UPDATE_COURSE)
     // console.log(fullCourse);
-    if (loading || loadingFull) console.log('Submitting...');
-    if (error) {
-      alert('Submission error!');
-      console.log(error.message);
-    }
-    if (errorFull) {
-        alert('Submission error!');
-        console.log(errorFull.message);
-    }
-    if (data) {
-      addCourseMaster({
-        ...course,
-        id: data.addCourse.id,
-        status: 'SAVED'
-      });
+    // if (loading || loadingFull) console.log('Submitting...');
+    // if (error) {
+    //   alert('Submission error!');
+    //   console.log(error.message);
+    // }
+    // if (errorFull) {
+    //     alert('Submission error!');
+    //     console.log(errorFull.message);
+    // }
+    // if (data) {
+    //   addCourseMaster({
+    //     ...course,
+    //     id: data.addCourse.id,
+    //     status: 'SAVED'
+    //   });
 
-      updateCourseMaster({
-        ...fullCourse,
-        id: data.addCourse.id,
-        name: course.name,
-        category: course.category,
-        subcategory: course.subcategory,
-        owner: course.owner,
-        status: data.addCourse.status,
-      });
-      setTab('tab2');
-      console.log(data);
-    }
+    //   updateCourseMaster({
+    //     ...fullCourse,
+    //     id: data.addCourse.id,
+    //     name: course.name,
+    //     category: course.category,
+    //     subcategory: course.subcategory,
+    //     owner: course.owner,
+    //     status: data.addCourse.status,
+    //   });
+    //   setTab('tab2');
+    //   console.log(data);
+    // }
 
-    if (dataFull) {
-        updateCourseMaster({
-            ...fullCourse,
-            id : data.updateCourse.id,
-            name : data.updateCourse.name,
-            description : data.updateCourse.description,
-            summary : data.updateCourse.summary,
-            instructor : data.updateCourse.instructor,
-            image : data.updateCourse.image,
-            previewVideo : data.updateCourse.previewVideo,
-            tileImage : data.updateCourse.tileImage,
-            owner : data.updateCourse.owner,
-            duration : data.updateCourse.duration,
-            expertise_level : data.updateCourse.expertise_level,
-            language : data.updateCourse.language,
-            benefits : data.updateCourse.benefits,
-            created_at : data.updateCourse.created_at,
-            updated_at : data.updateCourse.updated_at,
-            type : data.updateCourse.type,
-            prequisites : data.updateCourse.prequisites,
-            goodFor : data.updateCourse.goodFor,
-            mustFor : data.updateCourse.mustFor,
-            related_skills : data.updateCourse.related_skills,
-            publish_date : data.updateCourse.publish_date,
-            expiry_date : data.updateCourse.expiry_date,
-            expected_completion : data.updateCourse.expected_completion,
-            qa_required : data.updateCourse.qa_required,
-            approvers : data.updateCourse.approvers,
-            created_by : data.updateCourse.created_by,
-            updated_by : data.updateCourse.updated_by,
-            status : data.updateCourse.status,
-            is_display : data.updateCourse.is_display,
-            category : data.updateCourse.category,
-            sub_category : data.updateCourse.sub_category,
-            // sub_categories : {
-            //     name : data.updateCourse.sub_categories.name,
-            //     rank : data.updateCourse.sub_categories.rank,
-            // }
-        });
-        console.log(dataFull);
-    }
+    // if (dataFull) {
+    //     updateCourseMaster({
+    //         ...fullCourse,
+    //         id : data.updateCourse.id,
+    //         name : data.updateCourse.name,
+    //         description : data.updateCourse.description,
+    //         summary : data.updateCourse.summary,
+    //         instructor : data.updateCourse.instructor,
+    //         image : data.updateCourse.image,
+    //         previewVideo : data.updateCourse.previewVideo,
+    //         tileImage : data.updateCourse.tileImage,
+    //         owner : data.updateCourse.owner,
+    //         duration : data.updateCourse.duration,
+    //         expertise_level : data.updateCourse.expertise_level,
+    //         language : data.updateCourse.language,
+    //         benefits : data.updateCourse.benefits,
+    //         created_at : data.updateCourse.created_at,
+    //         updated_at : data.updateCourse.updated_at,
+    //         type : data.updateCourse.type,
+    //         prequisites : data.updateCourse.prequisites,
+    //         goodFor : data.updateCourse.goodFor,
+    //         mustFor : data.updateCourse.mustFor,
+    //         related_skills : data.updateCourse.related_skills,
+    //         publish_date : data.updateCourse.publish_date,
+    //         expiry_date : data.updateCourse.expiry_date,
+    //         expected_completion : data.updateCourse.expected_completion,
+    //         qa_required : data.updateCourse.qa_required,
+    //         approvers : data.updateCourse.approvers,
+    //         created_by : data.updateCourse.created_by,
+    //         updated_by : data.updateCourse.updated_by,
+    //         status : data.updateCourse.status,
+    //         is_display : data.updateCourse.is_display,
+    //         category : data.updateCourse.category,
+    //         sub_category : data.updateCourse.sub_category,
+    //         // sub_categories : {
+    //         //     name : data.updateCourse.sub_categories.name,
+    //         //     rank : data.updateCourse.sub_categories.rank,
+    //         // }
+    //     });
+    //     console.log(dataFull);
+    // }
 
     function saveCourse(){
     
         if(fullCourse.id == ''){
             // add course
+
             if(fullCourse.name !== '' && fullCourse.category !== '' && fullCourse.subcategory !== '' && fullCourse.owner !== ''){
                 const { id, created_at, updated_at, sub_categories, ...sendData } = fullCourse;
+                // console.log(sendData)
                 createCourse({
                     variables: {
                         ...sendData,
                         status: 'SAVED'
                     }
-                }).then((d)=>{
-                    // useEffect(() => { 
-                    //     if (typeof d !== 'undefined' && d.data.addCourse.id.length > 0) {
-                    //     updateCourseMaster({
-                    //         ...fullCourse,
-                    //         id: d.data.addCourse.id,
-                    //         status: d.data.addCourse.status,
-                    //     });
-                    //     }
-                    // },[])
-                    console.log(d)
-                  })
-                  .catch((err)=> console.log(err))
+                }).then((d) => {
+                    if (typeof d !== 'undefined' && d.data.addCourse.id.length > 0) {
+                        updateCourseMaster(d.data.addCourse);
+                        // go to next tab
+                        setTimeout( ()=>{
+                        setTab('tab2');
+                        }, 50)
+                    }
+                })
             } else {
                 setTab('tab1')
                 alert ('Please fill master details before saving!')
@@ -111,9 +109,9 @@ const Admin_content_foot = () => {
         } else {
             //update course
             console.log('updating...')
-            const { prequisites, related_skills, expected_completion, ...updateData } = fullCourse;
+            // const { prequisites, related_skills, expected_completion, ...updateData } = fullCourse;
             let data = {
-            ...updateData
+            ...fullCourse
             }
             updateCourse({
                 variables: data
@@ -129,7 +127,7 @@ const Admin_content_foot = () => {
     return (
         <div className="content-panel">
             <div className="left-text">
-                <h3>Status: {course.status}</h3>
+                <h3>Status: {fullCourse.status}</h3>
             </div>
             <div className="right-text">
                 <button>Cancel</button>
