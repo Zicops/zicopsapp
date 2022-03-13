@@ -1,6 +1,6 @@
-import Link from 'next/link'
+import Link from 'next/link';
 import styles from '../../styles/Nav.module.css'
-
+import LeftDropdown from '../menuComps/LeftDropdown';
 const Nav = () => {
     function truncate(str) {
         return str.length > 16 ? str.substring(0, 13) + "..." : str;
@@ -8,14 +8,29 @@ const Nav = () => {
     function profilehover(){
         alert();
     }
+    function leftMenuHover(){
+        alert();
+    }
+    function leftMenuLeave(){
+        alert();
+    }
     return (
         <div className={styles.navbar} id="navbar">
             <div className={styles.left}>
-                <Link href="/admin">
-                    <div className={styles.menuicon}>
-                        <img src="images/menu.png" />
-                    </div>
-                </Link>
+                {/* <Link href="/admin"> */}
+                    {/* <div className={styles.menuicon}>
+                        <Image 
+                        src="/images/menu.png" 
+                        alt="left menu"
+                        width={30}
+                        height={20}
+                        // onMouseEnter={leftMenuHover}
+                        // onMouseLeave={leftMenuLeave}
+                        />
+                        
+                    </div> */}
+                    <LeftDropdown/>
+                {/* </Link> */}
                 <Link href="/"><a>
                 <div className={styles.logo}>
                     <img src="images/zicops-header-logo.png" />
@@ -55,7 +70,7 @@ const Nav = () => {
                     <img className={styles.profilepic} src="images/dp.png" />
                     <div className={styles.profilename}>
                         <div className={styles.name}>
-                        {truncate('Md Ustaadd khanaa')}
+                        {truncate('Abhishek Ghosh')}
                         </div>
                         <div className={styles.desg}>
                             Zicops

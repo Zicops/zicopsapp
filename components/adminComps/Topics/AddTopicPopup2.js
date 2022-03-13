@@ -1,4 +1,30 @@
+import ContentAdded from "../../small/ContentAdded";
+import Accordion from "../../small/Accordion";
+import Binge from "../../medium/Binge";
+import Quiz from "../../medium/Quiz";
+import Resources from "../../medium/Resources";
+import { useContext } from 'react';
+import { useMutation } from '@apollo/client';
+import { UPLOAD_TOPIC_CONTENT_SUBTITLE } from '../../../API/Mutations'
+import { moduleContext } from '../../../state/contexts/ModuleContext';
+
 const AddTopicPopup2 = () => {
+    const [uploadCourseContentSubtitle] = useMutation(UPLOAD_TOPIC_CONTENT_SUBTITLE)
+    const { topic, topicContent, addUpdateTopicContent } = useContext(moduleContext);
+
+
+    const uploadSubtitle = (e) => {
+        document.getElementById('subtitle').innerText = e.target.files[0].name;
+        uploadCourseContentSubtitle({
+            variables: {
+                file: e.target.files[0],
+                courseId: topic.courseId,
+                topicId: topic.id,
+            }
+        }).then( (d)=> {
+            console.log(d)
+        })
+    }
     return ( 
         <>
             <div className="chapter_body">
@@ -23,10 +49,10 @@ const AddTopicPopup2 = () => {
                     <label htmlFor="name1" className="col_25">Select Language</label>
                     <select className="col_75">
                         <option>Language of the content</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <option>English</option>
+                        <option>Hindi</option>
+                        <option>Bengali</option>
+                        <option>Marathi</option>
                     </select>
                 </div>
                 <div className="form_row">
@@ -76,7 +102,8 @@ const AddTopicPopup2 = () => {
                                 </span>
                                 Browse & upload
                             </button>
-                            <input type="file" name="myfile" />
+                            <input type="file" name="subtitle" onChange={uploadSubtitle}/>
+                            <div id="subtitle"></div>
                         </div>
                         {/* <div className={styles.preview_remove_links}>
                                 <a className={styles.preview}>Preview</a>
@@ -85,12 +112,12 @@ const AddTopicPopup2 = () => {
                     </div>
                 </div>
                 <div className="form_row">
-                    <button type="button" value="add" className="button_single">Add</button>
+                    <button type="button" value="add" className="button_single" >Add</button>
                 </div>
-                {/* <ContentAdded />
+                <ContentAdded />
                 <Accordion title="Binge it" content={<Binge />} />
                 <Accordion title="Quiz" content={<Quiz />} />
-                <Accordion title="Resources" content={<Resources />} /> */}
+                <Accordion title="Resources" content={<Resources />} />
             </div>
             <style jsx>
                 {`

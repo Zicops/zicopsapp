@@ -378,3 +378,44 @@ addCourseTopic(
       }
   }
 `;
+
+export const UPLOAD_TOPIC_RESOURCE = gql`
+mutation uploadTopicResource(
+  $courseId: String,
+  $file: Upload,
+  $type: String,
+  $topicId: String,
+  $url: String
+){
+  uploadTopicResource(
+    courseId: $courseId, 
+    resource: {
+      type : $type,
+      topicId : $topicId,
+      url : $url,
+      file : $file
+    }
+  ) {
+    success
+    url
+  }
+}
+`;
+
+
+export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
+mutation uploadTopicContentSubtitle(
+  $file: Upload,
+  $courseId: String,
+  $topicId: String
+){
+  uploadTopicContentSubtitle(file: {
+    file: $file,
+    courseId: $courseId,
+    topicId: $topicId
+  }) {
+    success
+    url
+  }
+}
+`;

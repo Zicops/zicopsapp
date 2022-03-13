@@ -28,7 +28,7 @@
     position: static;
     width: 100%;
     bottom: 0px;
-    background-color: var(--header-bg);
+    background-color: var(--tile-bg);
     color: var(--white);
     display: flex;
     align-items: center;

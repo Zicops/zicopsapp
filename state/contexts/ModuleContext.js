@@ -76,8 +76,52 @@ const ModuleContextProvider = (props) => {
     })
   }
 
+  const [resources, addResources] = useState([{
+    type : '',
+    topicId : '',
+    url : '',
+    file : {},
+  }])
+  const addResourcesToTopic = (data) => {
+    addResources([
+      ...resources, 
+      {
+        type : data.type,
+        topicId : data.topicId,
+        url : data.url,
+        file : data.file,
+    }])
+  }
+
+  const [ topicContent, addTopicContent ] = useState([{
+    language : '',
+    topicId : '',
+    startTime : 0,
+    duration : 0,
+    skipIntroDuration : 0,
+    nextShowTime : 0,
+    fromEndTime : 0,
+    type : ''
+  }])
+
+  const addUpdateTopicContent = (data) => {
+    addTopicContent([
+      ...topicContent, 
+      {
+        language : data.language,
+        topicId : data.topicId,
+        startTime : data.startTime,
+        duration : data.duration,
+        skipIntroDuration : data.skipIntroDuration,
+        nextShowTime : data.nextShowTime,
+        fromEndTime : data.fromEndTime,
+        type : data.type,
+      }
+    ])
+  }
+
   return (
-    <moduleContext.Provider value={{ module, addAndUpdateModule, chapter, addAndUpdateChapter, topic, addAndUpdateTopic }}>
+    <moduleContext.Provider value={{ module, addAndUpdateModule, chapter, addAndUpdateChapter, topic, addAndUpdateTopic, resources, addResourcesToTopic, topicContent, addUpdateTopicContent}}>
       {props.children}
     </moduleContext.Provider>
   );

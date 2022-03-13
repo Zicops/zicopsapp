@@ -1019,8 +1019,8 @@ transition: All 0.3s ease;
 }
 
 .form_row input, .form_row select{
-  /* border: 1px solid #858f8f!important;
-  padding: 5px 10px!important; */
+  border: 2px solid var(--primary)!important;
+  padding: 5px 10px!important;
 }
 
 .form_row input[type="time"]{
@@ -1171,4 +1171,13 @@ transition: All 0.3s ease;
   background-position: center!important; 
   background-repeat: no-repeat!important; 
   background-size: contain!important; 
+}
+
+.menuitems[data-reach-menu-list],
+.menuitems[data-reach-menu-items]{ 
+  color: var(--primary)!important;
+  background-color: var(--dark_two)!important;
+  border: 1px solid var(--primary)!important;
+  padding: 8px!important;
+  margin: 3px!important;
 }

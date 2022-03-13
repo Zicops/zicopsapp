@@ -1,6 +1,6 @@
 const ContentAdded = () => {
     // let type = data.type;
-    // let duration = data.duration;
+    // let duration = data.duration; 
     // let sub_lang = (data.lang)?data.lang:'';
 
     return (

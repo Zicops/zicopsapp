@@ -1,7 +1,7 @@
 import Sidebar from "../components/large/Sidebar"
 import AdminContent from "../components/large/AdminContent"
 
-const Admin = ({categories, subCategories}) => {
+const Admin = () => {
       return (
         <div>
             <Sidebar />

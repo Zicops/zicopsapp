@@ -1,6 +1,6 @@
 import styles from '../../styles/CourseMaster.module.css';
 
-const IconButton = ({text, styleClass}) => {
+const IconButton = ({text, styleClass, onClick}) => {
     let sclass;
     if(styleClass=='black'){
         sclass = styles.btn_add;
@@ -11,7 +11,7 @@ const IconButton = ({text, styleClass}) => {
     }
     
     return (
-        <button className={sclass}>
+        <button className={sclass} onClick={onClick}>
             <span>
                 <img src="/images/plus.png" alt="" />
             </span>
