@@ -12,21 +12,30 @@ const MainPlayer = ({set}) => {
         autoplay: true,
         controls: true,
         aspectRatio: "18:7", 
-        
         controlBar: {
-            playToggle: false,
-            captionsButton: false,
-            chaptersButton: false,            
-            subtitlesButton: false,
-            remainingTimeDisplay: false,
-            volumePanel: false,
-            pictureInPictureToggle: false,
-            progressControl: {
-              seekBar: true
-            },
-            fullscreenToggle: false,
-            playbackRateMenuButton: false,
-          },
+            children: [
+                "playToggle",
+                "volumePanel",
+                "fullscreenToggle"
+            ],
+            volumePanel: {
+                inline: false
+              }
+        },
+        // controlBar: {
+        //     playToggle: false,
+        //     captionsButton: false,
+        //     chaptersButton: false,            
+        //     subtitlesButton: false,
+        //     remainingTimeDisplay: false,
+        //     volumePanel: false,
+        //     pictureInPictureToggle: false,
+        //     progressControl: {
+        //       seekBar: true
+        //     },
+        //     fullscreenToggle: false,
+        //     playbackRateMenuButton: false,
+        //   },
 
         responsive: true,
         fluid: true,

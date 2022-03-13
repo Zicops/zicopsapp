@@ -95,7 +95,10 @@ export default function Home() {
         margin: 0,
         padding: 0
         }}>
+
       <HomeSlider />
+
+      
       <CardSlider title="Continue with your Courses" data={sliderImages}/>
       <CardSlider title="Recommended Courses" data={sliderImages}/>
 

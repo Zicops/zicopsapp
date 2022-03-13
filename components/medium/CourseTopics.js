@@ -77,9 +77,7 @@ const CourseTopics = () => {
           <IconButton text="Add Module" styleClass="black"/>
           </span>
           <Popup open={openModal} closeOnDocumentClick={false} onClose={closeModal}>
-            <div style={{ width: '800px', position: 'fixed', top: '52%', left: '57%', transform: 'translate(-50%, -50%)' }}>
-              <AddModuleBox set={setModal} title="Module1" body={<AddModuleBody />} foot={<AddModuleFoot set={setModal} show={setModule}/>} />
-            </div>
+              <AddModuleBox set={setModal} title="Module1" body={<AddModuleBody />} foot={<AddModuleFoot set={setModal} show={setModule}/>} /> 
           </Popup>
         </div>
 

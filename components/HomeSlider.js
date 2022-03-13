@@ -55,16 +55,16 @@ const HomeSlider = () => {
             customDot={<CustomDot />}
             itemClass="carousel-item-padding-40-px"
         >
-        <div><img src="images/banner-image-1.jpg" alt=""/></div>
-        <div><img src="images/banner-image-2.png" alt=""/></div>
-        <div><img src="images/IMG-20220113-WA0020.jpg" alt=""/></div>
-        <div><img src="images/IMG-20220113-WA0018.jpg" alt=""/></div>
+        <div className="zicops-slider"><img src="images/banner-image-1.jpg" alt=""/></div>
+        <div className="zicops-slider"><img src="images/banner-image-2.png" alt=""/></div>
+        <div className="zicops-slider"><img src="images/IMG-20220113-WA0020.jpg" alt=""/></div>
+        <div className="zicops-slider"><img src="images/IMG-20220113-WA0018.jpg" alt=""/></div>
         </Carousel>
         </div>
         <div className="dropup" style={{
           background: '#000000',
           background: 'linear-gradient(180deg, #00000000 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.9) 100%)',
-          height: '20px',
+          height: '21px',
           padding: 0,
           marginTop: '-45px',
           marginBottom: '5px',
@@ -72,6 +72,24 @@ const HomeSlider = () => {
           zIndex: '2',
           opacity: '0.3'
         }}></div>
+        <style jsx>
+          {`
+          .zicops-slider{
+            //height: 300px;
+            position: "relative",
+            z-index: '1',
+          }
+          // .zicops-slider:after{
+          //   height: 20px;
+          //   width: 100%;
+          //   color: white;
+          //   background-color: blue;
+          //   box-shadow: 0px 6px 8px -3px rgba(255, 255, 255, 0.75), 0px -6px 8px -3px rgba(255, 255, 255, 0.75);
+          //   position: "relative",
+          //   z-index: '2',
+          // }
+          `}
+        </style>
       </>
     )
 }

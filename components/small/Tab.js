@@ -1,11 +1,12 @@
 import { useState, createContext, useContext } from "react";
 import { courseContext } from '../../state/contexts/CourseContext'
-
+import ModuleContextProvider from '../../state/contexts/ModuleContext'
 
 import CourseMaster from "../medium/CourseMaster";
 import CourseDetails from "../medium/CourseDetails";
 import CourseAbout from "../medium/CourseAbout";
 import CourseTopics from "../medium/CourseTopics";
+import CourseTopics2 from "../adminComps/Topics/CourseTopics";
 import CourseConfiguration from "../medium/CourseConfiguration";
 
 
@@ -23,8 +24,10 @@ export default function Tabs({ props }) {
         return <CourseDetails />
       case "tab3":
         return <CourseAbout />
-      case "tab4":
-        return <CourseTopics />
+      // case "tab4":
+        // return <CourseTopics />
+      case "tab6":
+        return <CourseTopics2 />
       case "tab5":
         return <CourseConfiguration />
       default:
@@ -39,12 +42,15 @@ export default function Tabs({ props }) {
           <li className={tab === "tab1" ? "tabli active" : "tabli"} onClick={() => setTab('tab1')}>Course Master</li>
           <li className={tab === "tab2" ? "tabli active" : "tabli"} onClick={() => setTab('tab2')}>Details</li>
           <li className={tab === "tab3" ? "tabli active" : "tabli"} onClick={() => setTab('tab3')}>About</li>
-          <li className={tab === "tab4" ? "tabli active" : "tabli"} onClick={() => setTab('tab4')}>Topics</li>
+          {/* <li className={tab === "tab4" ? "tabli active" : "tabli"} onClick={() => setTab('tab4')}>Topics</li> */}
+          <li className={tab === "tab6" ? "tabli active" : "tabli"} onClick={() => setTab('tab6')}>Topics</li>
           <li className={tab === "tab5" ? "tabli active" : "tabli"} onClick={() => setTab('tab5')}>Configuration</li>
         </ul>
       </nav>
           <section className="tabSection">
+            <ModuleContextProvider>
             {showActiveTab(tab)}
+            </ModuleContextProvider>
           </section>
       <style jsx>{`
         .tabHeader{

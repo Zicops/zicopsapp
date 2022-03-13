@@ -110,9 +110,11 @@ export const VideoJS = ( props ) => {
       });
       var playButton = new ButtonComp(player, {
         clickHandler: function(event) {
-          videojs.log('Custom Button Clicked');
-          //Perform your logic here !
-          alert('play')
+          if (this.player().paused()) {
+            this.player().play();
+          } else {
+            this.player().pause();
+          }
         }
       });
       var littleForward = new ButtonComp(player, {
@@ -138,9 +140,12 @@ export const VideoJS = ( props ) => {
       });
       var fullScreenBtn = new ButtonComp(player, {
         clickHandler: function(event) {
-          videojs.log('Custom Button Clicked');
           //Perform your logic here !
-          alert('fullScreen')
+          if (this.player().isFullscreen()) {
+            this.player().exitFullscreen();
+          } else {
+            this.player().requestFullscreen();
+          }
         }
       });
 
@@ -153,14 +158,14 @@ export const VideoJS = ( props ) => {
       volumeBtn.addClass('zicopsVolumeBtn')
       fullScreenBtn.addClass('zicopsFullScreenBtn')
 
-      player.controlBar.addChild(restartBtn,{},1)
-      player.controlBar.addChild(previousBtn,{},2)
-      player.controlBar.addChild(littleBack,{},3)
-      player.controlBar.addChild(playButton,{},4)
-      player.controlBar.addChild(littleForward,{},5)
-      player.controlBar.addChild(nextBtn,{},6)
-      player.controlBar.addChild(volumeBtn,{},7)
-      player.controlBar.addChild(fullScreenBtn,{},8)
+      player.controlBar.addChild(restartBtn,{},0)
+      // player.controlBar.addChild(previousBtn,{},2)
+      // player.controlBar.addChild(littleBack,{},3)
+      // player.controlBar.addChild(playButton,{},4)
+      // player.controlBar.addChild(littleForward,{},5)
+      // player.controlBar.addChild(nextBtn,{},6)
+      // player.controlBar.addChild(volumeBtn,{},7)
+      // player.controlBar.addChild(fullScreenBtn,{},8)
       // console.log(playButton.contentEl());
       // var Button = videojs.getComponent('Button');
       // var button = new Button(player, {

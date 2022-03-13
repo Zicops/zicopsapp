@@ -95,11 +95,12 @@ const CourseMaster = () => {
           }
         }).then((d) => {
           if (typeof d !== 'undefined' && d.data.addCourse.id.length > 0) {
-            updateCourseMaster({
-              ...fullCourse,
-              id: d.data.addCourse.id,
-              status: d.data.addCourse.status,
-            });
+            updateCourseMaster(d.data.addCourse);
+            // go to next tab
+            setTimeout( ()=>{
+              setTab('tab2');
+            }, 50)
+            
           }
         })
       } else {

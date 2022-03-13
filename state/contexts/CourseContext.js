@@ -50,7 +50,6 @@ const CourseContextProvider = (props) => {
     owner: '',
     status: 'DRAFT'
   });
-
   const addCourseMaster = (data) => {
     setCourse({
       ...course, 

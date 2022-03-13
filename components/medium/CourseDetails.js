@@ -83,7 +83,12 @@ const CourseDetails = () => {
           courseId: fullCourse.id
         }
       }).then( (data) => {
-          console.log(data);
+          // console.log(data.data.uploadCoursePreviewVideo.url);
+          document.getElementById("coursePreview").innerText = e.target.files[0].name;
+          updateCourseMaster({
+            ...fullCourse,
+            previewVideo: data.data.uploadCoursePreviewVideo.url,
+          })
       })
         .catch((err) => {
           console.log(err);
@@ -102,6 +107,7 @@ const CourseDetails = () => {
         }
       })
       .then( (data) => {
+        document.getElementById("courseImage").innerText = e.target.files[0].name;
         updateCourseMaster({
           ...fullCourse,
           image : data.data.uploadCourseImage.url,
@@ -124,7 +130,11 @@ const CourseDetails = () => {
         }
       })
         .then( (data) => {
-          console.log(data);
+          document.getElementById("courseTileImage").innerText = e.target.files[0].name;
+          updateCourseMaster({
+            ...fullCourse,
+            tileImage : data.data.uploadCourseTileImage.url,
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -194,7 +204,7 @@ const CourseDetails = () => {
           {/* Upload Course Video */}
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Upload Preview of the course</label>
-            <div className={styles.col_75}>
+            <div className={styles.col_25}>
               <div className={styles.upload_btn_wrapper}>
                 <button className={styles.btn}>
                   <span className={styles.input_icon}>
@@ -211,11 +221,14 @@ const CourseDetails = () => {
                 <a className={styles.remove}>Remove</a>
               </div>
             </div>
+            <div className={styles.col_50}>
+              <span id="coursePreview"></span>
+            </div>
           </div>
           {/* Upload Course Image */}
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Course Display Image</label>
-            <div className={styles.col_75}>
+            <div className={styles.col_25}>
               <div className={styles.upload_btn_wrapper}>
                 <button className={styles.btn}>
                   <span className={styles.input_icon}>
@@ -232,11 +245,14 @@ const CourseDetails = () => {
                 <a className={styles.remove}>Remove</a>
               </div>
             </div>
+            <div className={styles.col_50}>
+              <span id="courseImage"></span>
+            </div>
           </div>
           {/* Upload Course Page Display Picture */}
           <div className={styles.row}>
             <label htmlFor="name3" className={styles.col_25}>Course Page Display Picture</label>
-            <div className={styles.col_75}>
+            <div className={styles.col_25}>
               <div className={styles.upload_btn_wrapper}>
                 <button className={styles.btn}>
                   <span className={styles.input_icon}>
@@ -252,6 +268,9 @@ const CourseDetails = () => {
                 <a className={styles.preview}>Preview</a>
                 <a className={styles.remove}>Remove</a>
               </div>
+            </div>
+            <div className={styles.col_50}>
+            <span id="courseTileImage"></span>
             </div>
           </div>
           {/* Course Summary */}

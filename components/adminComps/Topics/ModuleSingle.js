@@ -7,11 +7,6 @@ const ModuleAdded = ({text, type}) => {
     else if (type == 'chapter') {
         added_head = 'chapter_added_head';
     } else added_head = 'topic_added_head';
-
-    const editModal = () => {
-        alert(added_head)
-    }
-
     return (
         <>
         
@@ -62,14 +57,14 @@ const ModuleAdded = ({text, type}) => {
             cursor: pointer;
         }
         `}</style>
-                <div className={added_head}>
-                    <div className="module_title">
-                        {text}
-                    </div>
-                    <div className="edit_img" onClick={editModal}>
-                        <img src="/images/edit-icon.png" alt="" />
-                    </div>
+            <div className={added_head}>
+                <div className="module_title">
+                    {text}
                 </div>
+                <div className="edit_img">
+                    <img src="/images/edit-icon.png" alt="" />
+                </div>
+            </div>
         </>
     )
   }
