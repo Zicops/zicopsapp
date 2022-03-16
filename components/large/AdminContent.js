@@ -9,7 +9,7 @@ const AdminContent = () => {
     return (
         <>
         <div className="content">
-            <CourseHead />
+            <CourseHead title="Add a new course"/>
 
             <ApolloProvider client={mClient}>
                 <CourseContextProvider>

@@ -150,7 +150,7 @@ const CourseMaster = () => {
             onChange={inputHandler}
             value={fullCourse.owner}
           >
-            <option>Select the owner of the course</option>
+            <option hidden>Select the owner of the course</option>
             <option>Abhishek</option>
             <option>Puneet</option>
             <option>Gokul</option>
@@ -158,6 +158,20 @@ const CourseMaster = () => {
           </select>
         </div>
 
+        <div className={styles.row}>
+          <label htmlFor="owner1" className={styles.col_25}>Course Owner</label>
+          <select
+            className="greenText"
+            name="owner1"
+            onchange="this.className=this.options[this.selectedIndex].className"
+          >
+            <option hidden>select something</option>
+            <option class="greenText">Abhishek</option>
+            <option class="redText">Puneet</option>
+            <option class="blueText">Gokul</option>
+            <option class="redText">Vaishnavi</option>
+          </select>
+        </div>
 
         <div className={styles.row}>
           <div className={styles.col_25}></div>

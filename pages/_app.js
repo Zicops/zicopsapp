@@ -1,11 +1,15 @@
-import Layout from '../components/large/Layout'
-import '../styles/globals.css'
+import Layout from '../components/large/Layout';
+import UserContextProvider from '../state/contexts/UserContext';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
+
   return (
-<Layout>
-        <Component {...pageProps} />
-</Layout>
+    <UserContextProvider>
+      <Layout>
+      <Component {...pageProps} />
+      </Layout>
+    </UserContextProvider>
   )
 }
 

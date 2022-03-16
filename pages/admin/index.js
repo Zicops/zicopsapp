@@ -1,5 +1,5 @@
-import MissionControlHeader from "../components/adminComps/MissionControl/MissionControlHeader"
-import MissionControlCards from "../components/adminComps/MissionControl/MissionControlCards"
+import MissionControlHeader from "../../components/adminComps/MissionControl/MissionControlHeader"
+import MissionControlCards from "../../components/adminComps/MissionControl/MissionControlCards"
 
 const AdminHome = () => {
     return (

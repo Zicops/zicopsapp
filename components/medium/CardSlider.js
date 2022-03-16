@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CardSliderHeader from '../small/CardSliderHeader';
@@ -6,8 +6,10 @@ import Card from "../small/SingleCard";
 import {CustomLeftArrow, CustomRightArrow} from '../small/SliderArrows'
 
 const CardSlider = ({deviceType, title, type, data}) => {
+    const [selectedCard, setSelectedCard] = useState(0);
+    const [cardToDisplay, setCardToDisplay] = useState(0);
 
-    const [currentSlide, setCurrentSlide] = useState(0);
+    const carouselRef = useRef(0)
 
     const responsive = {
         desktop: {
@@ -31,11 +33,22 @@ const CardSlider = ({deviceType, title, type, data}) => {
             slidesToSlide: 1
         }
     };
+    
+    
+    useEffect(()=>{
+        setCardToDisplay(carouselRef.current.state.slidesToShow);
+        setSelectedCard(carouselRef.current.state.currentSlides)
+        setTimeout( ()=>{
+            // if ( document.getElementsByClassName('card-ietms').dataset.index  == cardToDisplay ){
+            //     console.log('foundit')
+            // }
+            // console.log(cardToDisplay);
+            // console.log(selectedCard);
+        }, 50)
+    }, [selectedCard])
 
-
-
-    const makeFirstLastHoverDifferent = ( nextSlide, { currentSlide, onMove }) => {        
-        alert(currentSlide)
+    // const makeFirstLastHoverDifferent = ( nextSlide, { currentSlide, onMove }) => {        
+        // alert(currentSlide)
         // document.querySelectorAll(".card-ietms").forEach
     //     let container = document.getElementsByClassName('carousel_container');
     //     let item = document.getElementsByClassName('card-ietms')  
@@ -44,7 +57,7 @@ const CardSlider = ({deviceType, title, type, data}) => {
     //         // console.log(container.html);
     //         alert('yes');
     //     }
-    }
+    // }
     
     // console.log(currentSlide);
     // function Timer() {
@@ -68,15 +81,9 @@ const CardSlider = ({deviceType, title, type, data}) => {
         }}> 
             <CardSliderHeader title={title}/>
             <Carousel 
-                // ref={el => (this.Carousel = el)}
-                // ref={el => {
-                //     if (el) {
-                //         var slidesToShow = el.state.slidesToShow
-                //         var currentSlide = el.state.currentSlide
-                //         setCurrentSlide(slidesToShow + currentSlide)
-                //     }
-                // }}
-                beforeChange={makeFirstLastHoverDifferent}
+                ref={carouselRef}
+                // ref={ (el) => console.log(el)}
+                // beforeChange={makeFirstLastHoverDifferent}
                 swipeable={false}
                 draggable={false}
                 showDots={false}
@@ -105,7 +112,6 @@ const CardSlider = ({deviceType, title, type, data}) => {
                     See All
                 </div>
             </Carousel>
-
                 <style jsx>{`
                     .last-text{
                         padding: 24% 0;
@@ -114,6 +120,10 @@ const CardSlider = ({deviceType, title, type, data}) => {
                         border-radius: 8px;
                         text-align: center;
                         cursor: pointer;
+                    }
+                    .card_ietms[data-index='0']:hover {
+                        margin-left: 60px!important;
+                        margin-right: -60px!important;
                     }
                 `}</style>
         </div>

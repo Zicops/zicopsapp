@@ -12,3 +12,62 @@ export const GET_CATS_N_SUB_CATS = gql`
         allSubCategories
     }
 `;
+export const GET_CATS = gql`
+    query CatsQuery {
+        allCategories
+    }
+`;
+export const GET_SUB_CATS = gql`
+    query CatsQuery {
+        allSubCategories
+    }
+`;
+export const GET_LATEST_COURSES = gql`
+{
+    latestCourses(
+      publish_time: 1647426684,
+      pageCursor: "",
+      Direction: "",
+      pageSize: 7,
+      status: SAVED
+    ) {
+      courses {
+        id
+        name
+        description
+        summary
+        instructor
+        image
+        previewVideo
+        tileImage
+        owner
+        duration
+        expertise_level
+        language
+        benefits
+        outcomes
+        created_at
+        updated_at
+        type
+        prequisites
+        goodFor
+        mustFor
+        related_skills
+        publish_date
+        expiry_date
+        expected_completion
+        qa_required
+        approvers
+        created_by
+        updated_by
+        status
+        is_display
+        category
+        sub_category
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;

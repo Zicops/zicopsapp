@@ -10,25 +10,37 @@ import {
   import Image from "next/image";
   import "@reach/menu-button/styles.css";
 
-  import { useState, useEffect } from "react";
-
+  import { useState, useEffect, useContext } from "react";
+  import { userContext } from '../../state/contexts/UserContext'
 
 
 const LeftDropdown = () => {
-    const [isAdmin, setAdmin] = useState(0);
+    const { isAdmin, makeAdmin } = useContext(userContext);
 
-    useEffect(()=>{
-      let page = window.location.href.split('/').pop();
-      if(!page) {
-          setAdmin(0) 
-          return; 
-      }
-      if( page == 'adminHome' || page == 'admin'){
-        setAdmin(1);
-      } else {
-        setAdmin(0);
-      }
-    }, [])
+    // console.log("isAdmin :"+isAdmin);
+
+    useEffect(() => {
+        let url = window.location.href;
+        let pathname = new URL(url).pathname;
+        let pathArr = pathname.split('/');
+        if ( pathArr.includes("admin") ){
+            window.localStorage.setItem('isAdmin', 1);
+        } else {
+            window.localStorage.setItem('isAdmin', 0);
+        }
+        makeAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
+      }, []);
+    
+    useEffect(() => {
+        window.localStorage.setItem('isAdmin', isAdmin);
+    }, [isAdmin]);
+
+    const gotoAdmin = ()=>{
+        makeAdmin(1);
+    }
+    const gotoUser = ()=>{
+        makeAdmin(0);
+    }
 
     return (
         <>
@@ -67,7 +79,7 @@ const LeftDropdown = () => {
                 padding: '8px',
                 margin: '3px'
             }}
-            onSelect={() => alert("Download")}>Language</MenuItem>
+            onSelect={() => alert("Languages")}>Language</MenuItem>
             <MenuItem className="menuitems"
             style={{ 
                 color: 'var(--primary)',
@@ -76,8 +88,7 @@ const LeftDropdown = () => {
                 padding: '8px',
                 margin: '3px',
             }}
-            onSelect={() => alert("Copy")}>Preferences</MenuItem>    
-            {!isAdmin &&       
+            onSelect={() => alert("Preferences")}>Preferences</MenuItem>    
             <MenuLink className="menuitems"
             style={{ 
                 color: 'var(--primary)',
@@ -86,23 +97,12 @@ const LeftDropdown = () => {
                 padding: '8px',
                 margin: '3px'
             }}
-            as="a" href="/adminHome/">
-            Switch to Admin
+            as="a" href={!isAdmin ? "/" : "/admin" }
+            onClick={!isAdmin ? gotoAdmin : gotoUser}
+            >
+            {!isAdmin ? "Switch to Admin" : "Switch to Learner" }
             </MenuLink>
-            }
-            {isAdmin && 
-            <MenuLink className="menuitems"
-            style={{ 
-                color: 'var(--primary)',
-                backgroundColor: 'var(--dark_two)',
-                border: '1px solid var(--primary)',
-                padding: '8px',
-                margin: '3px'
-            }}
-            as="a" href="/">
-            Switch to Learner
-            </MenuLink>
-            }
+            
         </MenuList>
         </Menu>
         

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Select from 'react-select'
 import styles from '../../styles/CourseHead.module.css'
 
-const CourseHead = () => {
+const CourseHead = ({title}) => {
   const options = [
     { value: 'self-paced', label: 'Self Paced' },
     { value: 'classroom', label: 'Classroom' },
@@ -12,7 +12,7 @@ const CourseHead = () => {
     return (
         <div className={styles.add_course_head}>
           <div className={styles.head}>
-            <h2>Add a new course</h2>
+            <h2>{title}</h2>
               <Select 
               instanceId="coursehead_coursetype"
               options={options} 

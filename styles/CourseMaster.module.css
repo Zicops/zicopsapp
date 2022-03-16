@@ -29,6 +29,7 @@
     border: 1px solid #858f8f!important;
     padding: 5px 10px!important;
 }
+
 .form_row input[type="time"]{
     width: 20%;
     margin-right: auto;
@@ -52,15 +53,38 @@
 .col_75 {
     width: 75%;
 }
-.row input, .row select, .row textarea{
+.row input, .row textarea{
     padding: 10px;
     margin: 10px;
     border: 2px solid #6bcfcf;
     background-color: #202222;
-    color: #858f8f;
+    color: var(--white);
     font-size: 13px;
     font-family: 'Open Sans';
   }
+.row select{
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #6bcfcf;
+    background-color: #202222;
+    color: white;
+    font-size: 13px;
+    font-family: 'Open Sans';
+  }
+
+
+.row select:invalid option:not(:disabled) { color: #868686 }
+.row input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+color: #868686;
+opacity: 1; /* Firefox */
+}
+.row input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+color: #868686;
+}
+.row input::-ms-input-placeholder { /* Microsoft Edge */
+color: #868686;
+}
+
 .row input:focus, .row select:focus, .row textarea:focus{
     border: 2px solid #6bcfcf;
     border-radius: 0;

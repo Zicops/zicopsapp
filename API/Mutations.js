@@ -402,6 +402,18 @@ mutation uploadTopicResource(
 }
 `;
 
+export const UPLOAD_TOPIC_CONTENT_VIDEO = gql`
+mutation uploadTopicContentVideo($file: Upload, $courseId: String, $topicId: String){
+  uploadTopicContentVideo(file: {
+    file: $file,
+    courseId: $courseId,
+    topicId: $topicId
+  }) {
+    success
+    url
+  }
+}
+`;
 
 export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
 mutation uploadTopicContentSubtitle(

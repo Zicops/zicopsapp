@@ -1,7 +1,41 @@
 import Link from "next/link";
+import {useRouter} from 'next/router'
 import styles from '../../styles/Sidebar.module.css'
 
+const SidebarData = [
+    {
+
+        title: "Zicops Courses" ,
+        link: "/admin/zicops-courses"
+
+    },
+    {
+
+        title: "My Courses" ,
+        link: "/admin/add-new-course"
+
+    },
+    {
+
+        title: "Categories" ,
+        link: "/admin/categories"
+
+    },
+    {
+
+        title: "Sub-categories" ,
+        link: "/admin/subcategories"
+
+    },
+    {
+
+        title: "Dashboard" ,
+        link: "/admin"
+
+    },
+]
 const Sidebar = () => {
+    const router = useRouter()
     return (
         <div className={styles.sidebar}>
 
@@ -12,7 +46,22 @@ const Sidebar = () => {
 
             <div className={styles.sidebar_menu}>
                 <ul>
-                    <Link href="#">
+                {SidebarData.map((val, key) => {
+                    return ( 
+                        <Link href={val.link}
+                            key={key} 
+                            className="row"
+                            id={router.pathname == val.link ? "active" : ""}
+                            onClick={()=> {
+                                router.pathname = val.link
+                            }}
+                        >                   
+                            <a>{val.title}</a>
+                        </Link>
+                        
+                    )   
+                })}
+                    {/* <Link href="#">
                         <a>Zicops Courses</a>
                     </Link>
                     <Link href="#">
@@ -26,7 +75,7 @@ const Sidebar = () => {
                     </Link>
                     <Link href="#">
                         <a>Dashboard</a>
-                    </Link>
+                    </Link> */}
                 </ul>
             </div>
         </div>
