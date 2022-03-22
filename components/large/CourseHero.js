@@ -1,8 +1,14 @@
+import { useRouter } from 'next/router'
+
 const CourseHero = ({set}) => {
     const ShowPlayer = () => set(true);
+    const router = useRouter()
     return (
         <>
         <div className="course-header">
+            <div className="back_btn" onClick={() => router.back()}>
+                <img src="/images/bigarrowleft.png" alt="" />
+            </div>
             <div className="course-header-text">
                 <div className="heading row">
                     <div className="col_75">
@@ -61,7 +67,7 @@ const CourseHero = ({set}) => {
                             <p>:</p>
                         </div>
                         <div className="col_75">
-                            <span>Aptitude and Attitude towards Designing</span>
+                            Aptitude and Attitude towards Designing
                         </div>
                     </div>
                     <div className="float row">
@@ -70,7 +76,7 @@ const CourseHero = ({set}) => {
                             <p>:</p>
                         </div>
                         <div className="col_75">
-                            <span>Anyone who is interested in learning the basic concepts of Designing</span>
+                            Anyone who is interested in learning the basic concepts of Designing
                         </div>
                     </div>
                     <div className="float row">
@@ -79,7 +85,7 @@ const CourseHero = ({set}) => {
                             <p>:</p>
                         </div>
                         <div className="col_75">
-                            <span>Product Designers, Product Managers, Business Analyst, UI/UX Designers</span>
+                            Product Designers, Product Managers, Business Analyst, UI/UX Designers
                         </div>
                     </div>
                     
@@ -89,10 +95,11 @@ const CourseHero = ({set}) => {
         <style jsx>
             {`
             .course-header{
-                padding-top: 150px;
-                margin-top: -30px;
-                padding-bottom: 50px;
-                height: 94vh;
+                padding-top: 5vh;
+                // margin-top: -5vh;
+                // padding-bottom: 10vh;
+                margin-top:70px;
+                height: 38.8889vw;
                 background-color: #000909;
                 background-image: url('../images/bg-new.png');
                 background-position: bottom left;
@@ -100,72 +107,83 @@ const CourseHero = ({set}) => {
                 // background-size: 100%; 
                 background-size: cover;
             }
+            .back_btn{
+                position: absolute;
+                left: 50px;
+                top: calc(6vh + 70px);
+                cursor: pointer;
+            }
             .course-header-text{
                 color: #ffffff;
-                font-size: 13px;
+                font-size: 1vw;
                 width: 50%;
-                padding-left: 5%;
+                padding-left: calc(2% + 80px);
             }
             .course-header-text .heading{
             
             }
             .course-header-text .heading h1{
-                font-size: 32px;
-                line-height: 36px;
+                font-size: 2vw;
+                line-height: 2.3vw;
             }
             .course-header-text .heading p{
                 color: #858f8f;
-                font-size: 13px;
-                line-height: 30px;
-                padding-bottom: 10px;
+                font-size: 1vw;
+                line-height: 2vw;
+                padding-bottom: 1vh;
             }
             .course-header-text .heading p span{
                 color: #e2e2e2;
-                font-size: 13px;
+                font-size: 1vw;
                 font-weight: 600;
             }
             .course-header-text .heading ul{
                 color: #e2e2e2;
-                font-size: 13px;
+                font-size: 1vw;
                 display: flex;
             }
             .course-header-text .heading ul li{
                 color: #adadad;
-                font-size: 13px;
+                font-size: 1vw;
                 font-weight: 600;
-                margin: 0 15px;
+                margin: 0 1.2vw;
             }
             .course-header-text .summary{
                 color: #858f8f;
-                font-size: 14px;
-                margin: 20px 0px;
-                padding-bottom: 10px;
+                font-size: 0.9vw;
+                margin: 2vh 0px;
+                padding-bottom: 1vh;
             }
             .course-header-text .more-info{
                 color: #858f8f;
-                font-size: 13px;
+                font-size: 0.9vw;
+            }
+            .course-header-text .more-info span{
+                color: var(--primary);
+                font-size: 0.9vw;
+                font-weight: 600;
             }
             .course-header-text .float{
-                padding-bottom: 5px;
+                padding-bottom: 1vh;
             }
             
             .course-header-text .float p{
                 float:right;
-                padding-right: 10px;
+                padding-right: 1vw;
             }
             
             .course-big-button button{
-                margin-top: 20px;
-                margin-bottom: 5px;
-                padding: 10px 90px;
+                margin-top: 2vh;
+                margin-bottom: 1vh;
+                padding: 2vh 6vw;
             
                 background-color: transparent;
                 background-image: url(/images/preview-btn.png);
                 background-repeat: no-repeat;
-                background-size: 25px;
+                background-size: 2vw;
                 background-position: top 50% left 20%;
             
-                font-size: 14px;
+                font-size: 0.9vw;
                 font-weight: bold;
                 color: #6bcfcf;
                 border: 2px solid #6bcfcf;
@@ -175,16 +193,12 @@ const CourseHero = ({set}) => {
             
             .course-big-button button:hover{
                 color: #000000;
-                border: 2px solid #000000;
-            
+                border: 2px solid #000000;       
                 background-color: #6bcfcf;
                 background-image: url(/images/preview-button.png);
-                background-repeat: no-repeat;
-                background-size: 25px;
-                background-position: top 50% left 20%;
             }
             .suggested-completion p{
-                font-size: 10px;
+                font-size: 0.7vw;
                 color: #858f8f;
                 margin-bottom: 20px;
             }
