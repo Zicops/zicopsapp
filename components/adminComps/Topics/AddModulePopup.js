@@ -2,10 +2,10 @@ import { useState, useContext, useEffect } from 'react';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 import { useMutation } from '@apollo/client';
-import { ADD_COURSE_MODULE } from '../../../API/Mutations'
+import { ADD_COURSE_MODULE, UPDATE_COURSE_MODULE } from '../../../API/Mutations'
 
 
-const AddModulePopup = ({ title, set, hideCross, show }) => {
+const AddModulePopup = ({ set, hideCross, show, editdata }) => {
     const { module, addAndUpdateModule } = useContext(moduleContext);
     const { fullCourse } = useContext(courseContext);
     const [addModuleReady, setAddModuleReady] = useState(0);
@@ -20,8 +20,17 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
         sequence: module.length + 1,
         setGlobal: false
     });
+
+    
+    useEffect(() => {
+        if (editdata) {
+            setNewModule(editdata)
+        }
+    }, [])
+
     const [createCourseModule] = useMutation(ADD_COURSE_MODULE)
-    console.log(module);
+    const [updateCourseModule] = useMutation(UPDATE_COURSE_MODULE);
+
     const inputHandler = (e) => {
         setNewModule({
             ...newModule,
@@ -38,14 +47,23 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
     const modalClose = () => set(false);
     const moduleAdd = () => {
 
-        createCourseModule({
-            variables: {
-                ...newModule,
-            }
-        }).then((d)=>{
-            addAndUpdateModule(d.data.addCourseModule)
-        })
-
+        if(newModule.id && newModule.id.length > 0){
+            // updateCourseModule({
+            //     variables: {
+            //         ...newModule,
+            //     }
+            // }).then((d)=>{
+                addAndUpdateModule(newModule)
+            // })
+        } else {
+            createCourseModule({
+                variables: {
+                    ...newModule,
+                }
+            }).then((d)=>{
+                addAndUpdateModule(d.data.addCourseModule)
+            })
+        }
         show(true)
         set(false)
     }
@@ -65,7 +83,6 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
     // }
     
     useEffect(()=>{
-        console.log(newModule);
         if(newModule.name !== '' && newModule.level !== '' && newModule.description !== ''){
             setAddModuleReady(1);
         } else {
@@ -79,7 +96,7 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
                 <div className="module_add">
                     <div className="module_head">
                         <div className="module_title">
-                            {title}
+                        Module {newModule.sequence}
                         </div>
                         <div className="cross_img">
                             {!hideCross && <img src="/images/circular-cross.png" alt="" onClick={modalClose} />}
@@ -145,7 +162,7 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
                                     <button type="button" value="cancel" className="btn_cancel_add" onClick={modalClose}>Cancel</button>
                                     <button type="button" value="add" 
                                     className={addModuleReady ? "btn_cancel_add" : "btn_cancel_add_disabled"} 
-                                    onClick={moduleAdd} disabled={!addModuleReady}>Add</button>
+                                    onClick={moduleAdd} disabled={!addModuleReady}>{!editdata?"Add":"Update"}</button>
                                 </div>
                             </div>
                         </div>

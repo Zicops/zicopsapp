@@ -6,9 +6,9 @@ const CourseContextProvider = (props) => {
  
   const [tab, setTab] = useState('tab1');
 
-  const [courseVideo, setCourseVideo] = useState({courseId: ''});
-  const [courseImage, setCourseImage] = useState({courseId: ''});
-  const [courseTileImage, setCourseTileImage] = useState({courseId: ''});
+  const [courseVideo, setCourseVideo] = useState({upload: 0, courseId: ''});
+  const [courseImage, setCourseImage] = useState({upload: 0, courseId: ''});
+  const [courseTileImage, setCourseTileImage] = useState({upload: 0, courseId: ''});
 
   const [fullCourse, updateCourse] = useState({
     id : '',

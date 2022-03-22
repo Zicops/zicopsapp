@@ -13,11 +13,16 @@ import ChapterRow from './ChapterRow';
 const ModuleRow = ( {mod} ) => {
     const { chapter, topic } = useContext(moduleContext);
 
+    const [clickedModule, setClickedModule] = useState(0);
     const [clickedChapter, setClickedChapter] = useState(0);
     const [clickedTopic, setClickedTopic] = useState(0);
-
+    
     const thisModChapter = chapter.filter(obj => obj.moduleId === mod.id);
     const thisModTopics = topic.filter(obj => obj.moduleId === mod.id);
+
+    const [openModal, setModal] = useState(false);
+    const closeModal = () => setModal(false);
+    const [showModule, setModule] = useState(false);
 
     const [chapterModal, setChapterModal] = useState(false);
     const closeChapterModal = () => setChapterModal(false);
@@ -40,7 +45,10 @@ const ModuleRow = ( {mod} ) => {
         setTopicModal(o => !o);
         mod.isChapter ? setClickedChapter(e.target.getAttribute('data-custom')) : '';
     }
-
+    function editModule(mod){
+        setClickedModule(mod);
+        setModal(o => !o)
+    }
     function editTopic(topic){
         setClickedTopic(topic);
         setTopicModal(o => !o);
@@ -48,7 +56,7 @@ const ModuleRow = ( {mod} ) => {
     return ( 
         <div className="row">
             <ModuleBox>
-                <ModuleAdded type="module" text={"Module " + mod.sequence + ": " + mod.id } />
+                <ModuleAdded type="module" text={"Module " + mod.sequence + ": " + mod.id } edit={()=>editModule(mod)}/>
                     
                 {mod.isChapter ?
                     <>
@@ -74,6 +82,9 @@ const ModuleRow = ( {mod} ) => {
                     </Popup>
                     <Popup open={chapterModal} closeOnDocumentClick={false} onClose={closeChapterModal}>
                         <AddChapterPopup set={setChapterModal} modId={mod.id} show={setChapter}/>
+                    </Popup>
+                    <Popup open={openModal} closeOnDocumentClick={false} onClose={closeModal}>
+                        <AddModulePopup set={setModal} show={setModule} editdata={clickedModule}/>
                     </Popup>
 
             </ModuleBox>

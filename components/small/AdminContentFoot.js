@@ -9,22 +9,13 @@ const Admin_content_foot = () => {
     const [uploadImage] = useMutation(UPLOAD_COURSE_IMAGE);
     const [uploadTileImage] = useMutation(UPLOAD_COURSE_TILE_IMAGE);
     const [uploadPreview] = useMutation(UPLOAD_COURSE_PREVIEW);
-    const [updateCourse ] = useMutation(UPDATE_COURSE)
+    const [updateCourse] = useMutation(UPDATE_COURSE)
 
-    const uploadCourseImage = async () =>{
-        const d = await uploadImage({
-            variables: courseImage
-        })
-        if (typeof d !== 'undefined' && d.data.uploadCourseImage.url.length > 0){
-            await updateCourseMaster({
-                ...fullCourse,
-                image: data.data.uploadCourseImage.url,
-            });
-            console.log('Course Image Uploaded.');
-        } else {
-            console.log(d);
-        }
-    }
+
+    useEffect(()=>{
+        console.log(fullCourse)
+    }, [fullCourse])
+
 
     const saveCourse = async () => {
         if(fullCourse.id == ''){
@@ -32,7 +23,7 @@ const Admin_content_foot = () => {
             console.log('Creating new course...')
             if(fullCourse.name !== '' && fullCourse.category !== '' && fullCourse.subcategory !== '' && fullCourse.owner !== ''){
                 const { id, created_at, updated_at,  ...sendData } = fullCourse;
-                console.log(sendData);
+                // console.log(sendData);
 
                 const d = await createCourse({
                     variables: {
@@ -46,10 +37,10 @@ const Admin_content_foot = () => {
                     window.localStorage.setItem('addedCourseId', d.data.addCourse.id);
                     // JSON.parse(window.localStorage.getItem('addedCourseId'));
                     
-                    console.log('Recieved Added Course data...');
-                    console.log(d.data.addCourse);
+                    // console.log('Recieved Added Course data...');
+                    // console.log(d.data.addCourse);
                     await updateCourseMaster(d.data.addCourse);
-                    console.log('Local Data Updated...');
+                    // console.log('Local Data Updated...');
 
                     await setCourseVideo({
                         ...courseVideo,
@@ -79,8 +70,86 @@ const Admin_content_foot = () => {
             console.log(courseVideo);
             console.log(courseImage);
             console.log(courseTileImage);
-            console.log(fullCourse);
-            // const { prequisites, related_skills, expected_completion, ...updateData } = fullCourse;
+
+            // if(courseVideo.upload || courseImage.upload || courseTileImage.upload) {
+            //     function uploadFiles(){
+
+            //     }
+            // }
+            if (courseVideo.file && courseVideo.upload){
+                await previewVideoUpload();
+            }
+            if (courseImage.file && courseImage.upload){
+                await courseImageUpload();
+            }
+            if (courseTileImage.file && courseTileImage.upload){
+                await courseTileImageUpload();
+            }
+            console.log('checking fullCourse...')
+            // updateCourseBySave()
+            
+        }
+
+        async function courseTileImageUpload() {
+            const cTile = await uploadTileImage({
+                variables: courseTileImage
+            });
+            if (cTile.data.uploadCourseTileImage.success) {
+                await updateCourseMaster({
+                    ...fullCourse,
+                    tileImage: cTile.data.uploadCourseTileImage.url,
+                });
+                await setCourseTileImage({
+                    ...courseTileImage,
+                    upload: 0,
+                });
+            } else {
+                console.log('Tile Image Upload Failed');
+                console.log(cTile);
+            }
+        }
+
+        async function courseImageUpload() {
+            const cImage = await uploadImage({
+                variables: courseImage
+            });
+            if (cImage.data.uploadCourseImage.success) {
+                await updateCourseMaster({
+                    ...fullCourse,
+                    image: cImage.data.uploadCourseImage.url,
+                });
+                await setCourseImage({
+                    ...courseImage,
+                    upload: 0,
+                });
+            } else {
+                console.log('Image Upload Failed');
+                console.log(cImage);
+            }
+        }
+
+        async function previewVideoUpload() {
+            const cVideo = await uploadPreview({
+                variables: courseVideo
+            });
+            if (cVideo.data.uploadCoursePreviewVideo.success) {
+                await updateCourseMaster({
+                    ...fullCourse,
+                    previewVideo: cVideo.data.uploadCoursePreviewVideo.url,
+                });
+                await setCourseVideo({
+                    ...courseVideo,
+                    upload: 0,
+                });
+            } else {
+                console.log('Tile Image Upload Failed');
+                console.log(cVideo);
+            }
+        }
+
+        async function updateCourseBySave() {
+            // console.log(recentFullCourse);
+            // const { related_skills, expected_completion, ...updateData } = fullCourse;
             // let data = {
             // ...fullCourse
             // }
@@ -91,6 +160,23 @@ const Admin_content_foot = () => {
             //     console.log("Course updated")
             //     console.log(d)
             // })
+            // const cData = await updateCourse({
+            //     variables: data
+            // });
+            // console.log(cData);
+            // if (cVideo.data.uploadCoursePreviewVideo.success) {
+            //     await updateCourseMaster({
+            //         ...fullCourse,
+            //         previewVideo: cVideo.data.uploadCoursePreviewVideo.url,
+            //     });
+            //     await setCourseVideo({
+            //         ...courseVideo,
+            //         upload: 0,
+            //     });
+            // } else {
+            //     console.log('Tile Image Upload Failed');
+            //     console.log(cVideo);
+            // }
         }
     }
 

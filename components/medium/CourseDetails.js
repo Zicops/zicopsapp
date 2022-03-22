@@ -75,16 +75,23 @@ const CourseDetails = () => {
   }, [expertiseLevel])
 
   const uploadCourseVideo = (e) => {
-    let fileType = e.target.files[0].type;
-    if(fileType != "video/mp4" && fileType != "videp/mp4"){
-      document.getElementById("coursePreview").innerText = "Only mp4 is allowed!";
-      return;
+    if(courseVideo.courseId){
+      let fileType = e.target.files[0].type;
+      if(fileType != "video/mp4" && fileType != "videp/mp4"){
+        document.getElementById("coursePreview").innerText = "Only mp4 is allowed!";
+        return;
+      }
+      document.getElementById("coursePreview").innerText = e.target.files[0].name;
+      setCourseVideo({
+        ...courseVideo,
+        upload: 1,
+        file: e.target.files[0]
+      });
+    } else {
+      setTab('tab1');
+      alert('Add Course Master First');
     }
-    document.getElementById("coursePreview").innerText = e.target.files[0].name;
-    setCourseVideo({
-      ...courseVideo,
-      file: e.target.files[0]
-    });
+  }
     // if(fullCourse.id){
     //   uploadPreview({
     //     variables: {
@@ -106,9 +113,9 @@ const CourseDetails = () => {
     //   setTab('tab1');
     //   alert('Add Course First');
     // }
-  }
+
   const uploadCourseImage = (e) => {
-    // if(fullCourse.id){
+    if(courseImage.courseId){
       let fileType = e.target.files[0].type;
       if(fileType != "image/jpeg" && fileType != "image/png" && fileType != "image/gif"){
         document.getElementById("courseImage").innerText = "Only JPG, JPEG, PNG, GIF is allowed!";
@@ -117,12 +124,14 @@ const CourseDetails = () => {
       document.getElementById("courseImage").innerText = e.target.files[0].name;
       setCourseImage({
         ...courseImage,
+        upload: 1,
         file: e.target.files[0]
       });
-    // } else {
-    //   setTab('tab1');
-    //   alert('Add Course Master First');
-    // }
+    } else {
+      setTab('tab1');
+      alert('Add Course Master First');
+    }
+  }
     // if(fullCourse.id){
     //   uploadImage({
     //     variables: {
@@ -142,18 +151,25 @@ const CourseDetails = () => {
     //   });
     // } 
     // console.log(courseImage);
-  }
+
   const uploadCourseTileImage = (e) => {
-    let fileType = e.target.files[0].type;
-      if(fileType != "image/jpeg" && fileType != "image/png" && fileType != "image/gif"){
-        document.getElementById("courseTileImage").innerText = "Only JPG, JPEG, PNG, GIF is allowed!";
-        return;
-      }
-    document.getElementById("courseTileImage").innerText = e.target.files[0].name;
-      setCourseTileImage({
-        ...courseTileImage,
-        file: e.target.files[0]
-      });
+    if(courseTileImage.courseId){
+      let fileType = e.target.files[0].type;
+        if(fileType != "image/jpeg" && fileType != "image/png" && fileType != "image/gif"){
+          document.getElementById("courseTileImage").innerText = "Only JPG, JPEG, PNG, GIF is allowed!";
+          return;
+        }
+        document.getElementById("courseTileImage").innerText = e.target.files[0].name;
+        setCourseTileImage({
+          ...courseTileImage,
+          upload: 1,
+          file: e.target.files[0]
+        });
+    } else {
+      setTab('tab1');
+      alert('Add Course Master First');
+    }  
+  }
     // if(fullCourse.id){
     //   uploadTileImage({
     //     variables: {
@@ -175,7 +191,7 @@ const CourseDetails = () => {
     //   setTab('tab1');
     //   alert('Add Course First');
     // }
-  }
+
 
     return (
         <div className="course_master">

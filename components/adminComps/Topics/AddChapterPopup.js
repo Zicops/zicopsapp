@@ -31,7 +31,7 @@ const AddChapterPopup = ({set, show, modId, editdata}) => {
     const modalClose = () => set(false);
 
     const chapterAdd = () => {
-        console.log(newChapter);
+        // console.log(newChapter);
         if(newChapter.id && newChapter.id.length > 0){
             updateCourseChapter({
                 variables : {

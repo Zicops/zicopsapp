@@ -310,6 +310,49 @@ addCourseModule(
       }
   }
 `;
+export const UPDATE_COURSE_MODULE = gql`
+mutation 
+updateCourseModule(
+    $id : ID,
+    $name : String,
+    $isChapter : Boolean,
+    $description : String,
+    $courseId : String,
+    $owner : String,
+    $duration : Int,
+    $level : String,
+    $sequence : Int,
+    $setGlobal : Boolean,
+  ) {
+  updateCourseModule(
+    courseId: $courseId, 
+    module: {
+      id : $id,
+      name : $name,
+      isChapter : $isChapter,
+      description : $description,
+      courseId : $courseId,
+      owner : $owner,
+      duration : $duration,
+      level : $level,
+      sequence : $sequence,
+      setGlobal : $setGlobal,
+    }){
+        id
+        name
+        isChapter
+        description
+        courseId
+        owner
+        duration
+        created_at
+        updated_at
+        level
+        sequence
+        setGlobal
+      }
+  }
+`;
 
 export const ADD_COURSE_CHAPTER = gql`
 mutation 

@@ -33,7 +33,7 @@ function CreateSubCatsDropdown({ inputHandler, inputField }) {
 }
 const CourseMaster = () => { 
 
-  const { fullCourse, setTab, updateCourseMaster } = useContext(courseContext);
+  const { fullCourse, setTab, updateCourseMaster, courseVideo, setCourseVideo, courseImage, setCourseImage, courseTileImage, setCourseTileImage } = useContext(courseContext);
 
   const [createCourse, { loading, error, data }] = useMutation(ADD_COURSE)
 
@@ -41,6 +41,10 @@ const CourseMaster = () => {
   if (error) {
     alert('Submission error!');
     console.log(error.message);
+  }
+  if (data == '') {
+    alert('Course Add Failed!');
+    console.log('Course Add Failed!');
   }
   // if (data) {
   //     updateCourseMaster({
@@ -83,15 +87,45 @@ const CourseMaster = () => {
     })
   }
 
-  const courseMasterSubmit = () => {
+  const courseMasterSubmit = async () => {
     if(fullCourse.id !== ''){
       // go to next tab
       setTab('tab2');
     } else {  
       if (fullCourse.name !== '' && fullCourse.category !== '' && fullCourse.subcategory !== '' && fullCourse.owner !== '') {
         
-        // const { id, created_at, updated_at, sub_categories, ...sendData } = fullCourse;
-        // // console.log(sendData)
+        const { id, created_at, updated_at, ...sendData } = fullCourse;
+        // console.log(sendData)
+        const d = await createCourse({
+          variables: {
+            ...sendData,
+            status: 'SAVED'
+          }
+        })
+        if (typeof d !== 'undefined' && d.data.addCourse.id.length > 0) {
+
+          window.localStorage.setItem('addedCourseId', d.data.addCourse.id);
+          // JSON.parse(window.localStorage.getItem('addedCourseId'));
+
+          await updateCourseMaster(d.data.addCourse);
+
+          await setCourseVideo({
+            ...courseVideo,
+            courseId: d.data.addCourse.id
+          });
+          await setCourseImage({
+            ...courseImage,
+            courseId: d.data.addCourse.id
+          });
+          await setCourseTileImage({
+            ...courseTileImage,
+            courseId: d.data.addCourse.id
+          });
+          // go to next tab
+            setTimeout( ()=>{
+              setTab('tab2');
+            }, 50)
+        }
         // createCourse({
         //   variables: {
         //     ...sendData,
@@ -106,7 +140,7 @@ const CourseMaster = () => {
         //     }, 50)
         //   }
         // })
-        setTab('tab2');
+
       } else {
         alert('All Fields Required!')
       }

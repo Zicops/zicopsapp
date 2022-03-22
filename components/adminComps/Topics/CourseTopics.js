@@ -33,41 +33,18 @@ const CourseTopics2 = () => {
     return ( 
         <>
         <div>
-            {/* {module.length && */}
-            {/* // <div className="row"> */}
+
                 {module.map( (value, index) => {
                     return <ModuleRow key={index} mod={value} />
                 }) }
-                {/* <ModuleBox>
-                    <ModuleAdded type="module" text={"Module " + module.sequence + ": " + module.id } />
-                    {chapter.id && 
-                        <ModuleAdded type="chapter" text={"Chapter " + chapter.sequence + ": " + chapter.id } />
-                        }
-                    {topic.id && 
-                        <ModuleAdded type="topic" text={"Topic " + topic.sequence + ": " + topic.id } />
-                        }
-                        <span className="buttongap" onClick={openModalAddTopic}>
-                            <IconButton text="Add Topic" />
-                        </span>
-                        <Popup open={topicModal} closeOnDocumentClick={false} onClose={closeTopicModal}>
-                            <AddTopicPopup set={setTopicModal} title={"Topic " + topic.sequence} show={setTopic}/>
-                        </Popup>
-                    {module.isChapter &&
-                        <span className='buttongap' onClick={openModalAddChapter}>
-                            <IconButton text="Add Chapter" styleClass="grey" />
-                        </span>}
-                        <Popup open={chapterModal} closeOnDocumentClick={false} onClose={closeChapterModal}>
-                            <AddChapterPopup set={setChapterModal} title={"Chapter " + chapter.sequence} show={setChapter}/>
-                        </Popup>
-                </ModuleBox> */}
-            {/* </div>} */}
+                
             
             <div className="row">         
                 <span onClick={openModalIfCourseAdded}>
                     <IconButton text="Add Module" styleClass="black"/>
                 </span>
                 <Popup open={openModal} closeOnDocumentClick={false} onClose={closeModal}>
-                    <AddModulePopup set={setModal} title={"Module " + (module.length+1)} show={setModule}/>
+                    <AddModulePopup set={setModal} show={setModule}/>
                 </Popup>
             </div>
 
