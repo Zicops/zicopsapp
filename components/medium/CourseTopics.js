@@ -43,7 +43,7 @@ const CourseTopics = () => {
             <>
             <ModuleAdded type="chapter" text="Chapter1: xxxxxxxx" /> 
             {showTopic && <ModuleAdded type="topic" text="Topic1: xxxxxxxx" />}
-            <div className={styles.row}>
+            <div className="row">
               <span onClick={() => setTopicModal(o => !o)}>
                 <IconButton text="Add Topic" />
               </span>
@@ -57,7 +57,7 @@ const CourseTopics = () => {
             </>
             }
             
-            <div className={styles.row}>
+            <div className="row">
               <span onClick={() => setChapterModal(o => !o)}>
                 <IconButton text="Add Chapter" styleClass="grey" />
               </span>
@@ -72,7 +72,7 @@ const CourseTopics = () => {
         
 
 
-        <div className={styles.row}>         
+        <div className="row">         
           <span onClick={() => setModal(o => !o)}>
           <IconButton text="Add Module" styleClass="black"/>
           </span>
@@ -81,14 +81,6 @@ const CourseTopics = () => {
           </Popup>
         </div>
 
-          {/* {bodyData.map( ({ index, title, content }) => (
-              <Accordion key={index} title={title} content={content} />
-          ))} */}
-          
-
-          
-{/* 
-          <AddTopicTwo /> */}
         </div>
     )
 }

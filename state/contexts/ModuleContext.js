@@ -4,76 +4,116 @@ export const moduleContext = createContext();
 
 const ModuleContextProvider = (props) => {
  
-  const [module, updateModule] = useState({
-    id : '',
-    name : '',
-    isChapter : false,
-    description : '',
-    courseId : '',
-    owner : '',
-    duration : 0,
-    level : '',
-    sequence : 1,
-    setGlobal : false
-  })
+  const [module, updateModule] = useState([])
   const addAndUpdateModule = (data) => {
-    updateModule({
-        ...module, 
-        id: data.id,
-        name: data.name, 
-        isChapter : data.isChapter,
-        description : data.description,
-        courseId : data.courseId,
-        owner : data.owner,
-        duration : data.duration,
-        level : data.level,
-        sequence : data.sequence,
-        setGlobal : data.setGlobal
-    })
+
+    let cur_module = module.filter(obj => obj.id === data.id);
+
+    if (cur_module.length > 0){
+      const updatedModule = module.map((obj) => {
+        if (obj.id === data.id) {
+          return { 
+            ...obj, 
+            id: data.id,
+            name: data.name, 
+            isChapter : data.isChapter,
+            description : data.description,
+            courseId : data.courseId,
+            owner : data.owner,
+            duration : data.duration,
+            level : data.level,
+            sequence : data.sequence,
+            setGlobal : data.setGlobal
+          };
+        } else return obj;
+      });
+      updateModule(updatedModule);
+    } else {
+      updateModule([
+          ...module, 
+        {  id: data.id,
+          name: data.name, 
+          isChapter : data.isChapter,
+          description : data.description,
+          courseId : data.courseId,
+          owner : data.owner,
+          duration : data.duration,
+          level : data.level,
+          sequence : data.sequence,
+          setGlobal : data.setGlobal
+      }])
+    }
   }
  
-  const [chapter, updateChapter] = useState({
-    id : '',
-    name : '',
-    description : '',
-    moduleId : '',
-    courseId : '',
-    sequence : 1,
-  })
+  const [chapter, updateChapter] = useState([])
   const addAndUpdateChapter = (data) => {
-    updateChapter({
-        ...chapter, 
-        id: data.id,
-        name: data.name, 
-        description : data.description,
-        moduleId : data.moduleId,
-        courseId : data.courseId,
-        sequence : data.sequence
-    })
+
+    let cur_chapter = chapter.filter(obj => obj.id === data.id);
+   
+    if (cur_chapter.length > 0){
+      const updatedChapter = chapter.map((obj) => {
+        if (obj.id === data.id) {
+          return { 
+            ...obj, 
+            id: data.id,
+            name: data.name, 
+            description : data.description,
+            moduleId : data.moduleId,
+            courseId : data.courseId,
+            sequence : data.sequence
+          };
+        } else return obj;
+      });
+      updateChapter(updatedChapter)
+    } else {
+      updateChapter([
+          ...chapter, 
+        {  id: data.id,
+          name: data.name, 
+          description : data.description,
+          moduleId : data.moduleId,
+          courseId : data.courseId,
+          sequence : data.sequence
+      }])
+    }
+    
   }
 
-  const [topic, updateTopic] = useState({
-    id : '',
-    name : '',
-    description : '',
-    type : '',
-    moduleId : '',
-    chapterId : '',
-    courseId : '',
-    sequence : 1,
-  })
+  const [topic, updateTopic] = useState([])
   const addAndUpdateTopic = (data) => {
-    updateTopic({
+
+    let cur_topic = topic.filter(obj => obj.id === data.id);
+    if (cur_topic.length > 0){
+      const updatedTopic = topic.map((obj) => {
+        if (obj.id === data.id) {
+          return { 
+            ...obj, 
+            id: data.id,
+            name: data.name, 
+            description : data.description,
+            type: data.type, 
+            moduleId : data.moduleId,
+            chapterId : data.chapterId,
+            courseId : data.courseId,
+            sequence : data.sequence
+          };
+        } else return obj;
+      });
+      updateTopic(updatedTopic);
+    } else {
+      updateTopic([
         ...topic, 
-        id: data.id,
-        name: data.name, 
-        description : data.description,
-        type: data.type, 
-        moduleId : data.moduleId,
-        chapterId : data.chapterId,
-        courseId : data.courseId,
-        sequence : data.sequence
-    })
+        {  id: data.id,
+          name: data.name, 
+          description : data.description,
+          type: data.type, 
+          moduleId : data.moduleId,
+          chapterId : data.chapterId,
+          courseId : data.courseId,
+          sequence : data.sequence
+      }])
+    }
+
   }
 
   const [resources, addResources] = useState([{
@@ -93,16 +133,7 @@ const ModuleContextProvider = (props) => {
     }])
   }
 
-  const [ topicContent, addTopicContent ] = useState([{
-    language : '',
-    topicId : '',
-    startTime : 0,
-    duration : 0,
-    skipIntroDuration : 0,
-    nextShowTime : 0,
-    fromEndTime : 0,
-    type : ''
-  }])
+  const [ topicContent, addTopicContent ] = useState([])
 
   const addUpdateTopicContent = (data) => {
     addTopicContent([
@@ -120,8 +151,32 @@ const ModuleContextProvider = (props) => {
     ])
   }
 
+  const [topicVideo, setTopicVideo] = useState([]);
+  const setCourseTopicVideo = (data) => {
+    setTopicVideo([
+      ...topicVideo, 
+      {
+        courseId: data.courseId,
+        topicId: data.id,
+        file: data.file
+      }
+    ])
+  }
+  const [topicSubtitle, setTopicSubtitle] = useState([]);
+  const setCourseTopicSubtitle = (data) => {
+    setTopicSubtitle([
+      ...topicSubtitle, 
+      {
+        courseId: data.courseId,
+        topicId: data.id,
+        file: data.file
+      }
+    ])
+  }
+
+
   return (
-    <moduleContext.Provider value={{ module, addAndUpdateModule, chapter, addAndUpdateChapter, topic, addAndUpdateTopic, resources, addResourcesToTopic, topicContent, addUpdateTopicContent}}>
+    <moduleContext.Provider value={{ module, addAndUpdateModule, chapter, addAndUpdateChapter, topic, addAndUpdateTopic, resources, addResourcesToTopic, topicContent, addUpdateTopicContent, topicSubtitle, setCourseTopicSubtitle, topicVideo, setCourseTopicVideo}}>
       {props.children}
     </moduleContext.Provider>
   );

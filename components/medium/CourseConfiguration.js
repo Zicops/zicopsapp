@@ -109,10 +109,10 @@ const CourseConfiguration = () => {
 
 
     return (
-        <div className={styles.course_master}>
-          <div className={styles.row}>
-            <label htmlFor="name" className={styles.col_25}>Publish Date</label>
-            <div className={styles.col_25}>
+        <div className="course_master">
+          <div className="row">
+            <label htmlFor="name" className="col_25">Publish Date</label>
+            <div className="col_25">
                 <DatePicker 
                 dateFormat="dd/MM/yyyy"
                 renderCustomHeader={CustomHeader}
@@ -122,8 +122,8 @@ const CourseConfiguration = () => {
                 dayClassName={()=>'calander_dates'}
                 />
             </div>
-            <label htmlFor="name" className={styles.col_25} style={{ textAlign: 'center' }}><span>Expire Date</span></label>
-            <div className={styles.col_25}>
+            <label htmlFor="name" className="col_25" style={{ textAlign: 'center' }}><span>Expire Date</span></label>
+            <div className="col_25">
                 <DatePicker 
                 dateFormat="dd/MM/yyyy"
                 renderCustomHeader={CustomHeader}
@@ -134,13 +134,13 @@ const CourseConfiguration = () => {
                 />
             </div>
           </div>
-          <div className={styles.row}>
-            <label htmlFor="name" className={styles.col_25}>Quality Control Check</label>
-            <div className={styles.col_25}>
+          <div className="row">
+            <label htmlFor="name" className="col_25">Quality Control Check</label>
+            <div className="col_25">
             <SlideButton />
             </div>
-            <div className={styles.col_25}></div>
-            <div className={styles.col_25}></div>
+            <div className="col_25"></div>
+            <div className="col_25"></div>
           </div>
         {/* <div className={styles.row}>
           <label htmlFor="name" className={styles.col_25}>Add Approval</label>
@@ -151,13 +151,13 @@ const CourseConfiguration = () => {
             updateCourse={updateCourseMaster}/>
           </div>
         </div> */}
-          <div className={styles.row}>
-            <label htmlFor="name" className={styles.col_25}>Visibility in the Learning space</label>
-            <div className={styles.col_25}>
+          <div className="row">
+            <label htmlFor="name" className="col_25">Visibility in the Learning space</label>
+            <div className="col_25">
             <SlideButton />
             </div>
-            <div className={styles.col_25}></div>
-            <div className={styles.col_25}></div>
+            <div className="col_25"></div>
+            <div className="col_25"></div>
           </div>
         </div>
     )

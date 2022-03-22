@@ -5,6 +5,11 @@ export const courseContext = createContext();
 const CourseContextProvider = (props) => {
  
   const [tab, setTab] = useState('tab1');
+
+  const [courseVideo, setCourseVideo] = useState({courseId: ''});
+  const [courseImage, setCourseImage] = useState({courseId: ''});
+  const [courseTileImage, setCourseTileImage] = useState({courseId: ''});
+
   const [fullCourse, updateCourse] = useState({
     id : '',
     name : '',
@@ -40,29 +45,6 @@ const CourseContextProvider = (props) => {
     sub_category : '',
     sub_categories : []
   });
-  const [course, setCourse] = useState({
-    id: '',
-    name: '',
-    description: '',
-    summary: '',
-    category: '',
-    subcategory: '',
-    owner: '',
-    status: 'DRAFT'
-  });
-  const addCourseMaster = (data) => {
-    setCourse({
-      ...course, 
-      id: data.id,
-      name: data.name, 
-      description: data.description,
-      summary: data.summary,
-      category: data.category, 
-      subcategory: data.subcategory, 
-      owner: data.owner, 
-      status: data.status
-    })
-  }
   const updateCourseMaster = (data) => {
     updateCourse({
       ...fullCourse, 
@@ -79,6 +61,7 @@ const CourseContextProvider = (props) => {
       expertise_level : data.expertise_level,
       language : data.language,
       benefits : data.benefits,
+      outcomes : data.outcomes,
       created_at : data.created_at,
       updated_at : data.updated_at,
       type : data.type,
@@ -101,7 +84,7 @@ const CourseContextProvider = (props) => {
     })
   }
   return (
-    <courseContext.Provider value={{ tab, course, fullCourse, setTab, addCourseMaster, updateCourseMaster }}>
+    <courseContext.Provider value={{ tab, setTab, fullCourse, updateCourseMaster, courseVideo, setCourseVideo, courseImage, setCourseImage, courseTileImage, setCourseTileImage}}>
       {props.children}
     </courseContext.Provider>
   );

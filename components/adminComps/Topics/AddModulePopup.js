@@ -9,22 +9,40 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
     const { module, addAndUpdateModule } = useContext(moduleContext);
     const { fullCourse } = useContext(courseContext);
     const [addModuleReady, setAddModuleReady] = useState(0);
+    const [newModule, setNewModule] = useState({
+        name: '',
+        isChapter: false,
+        description: '',
+        courseId: fullCourse.id,
+        owner: '',
+        duration: 0,
+        level: '',
+        sequence: module.length + 1,
+        setGlobal: false
+    });
     const [createCourseModule] = useMutation(ADD_COURSE_MODULE)
     console.log(module);
+    const inputHandler = (e) => {
+        setNewModule({
+            ...newModule,
+            [e.target.name]: e.target.value,
+        })
+    }
+    const handleCheckbox = (e) => {
+        setNewModule({
+            ...newModule,
+            [e.target.name]: e.target.checked,
+        })
+    }
 
     const modalClose = () => set(false);
     const moduleAdd = () => {
 
-        // alert(addModuleReady)
-
-        const { id, created_at, updated_at, ...moduleData } = module;
         createCourseModule({
             variables: {
-                ...moduleData,
-                courseId: fullCourse.id
+                ...newModule,
             }
         }).then((d)=>{
-            // console.log(d.data.addCourseModule);
             addAndUpdateModule(d.data.addCourseModule)
         })
 
@@ -33,26 +51,27 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
     }
     
 
-    const inputHandler = (e) => {
-        addAndUpdateModule({
-            ...module,
-            [e.target.name]: e.target.value,
-        })
-    }
-    const handleCheckbox = (e) => {
-        addAndUpdateModule({
-            ...module,
-            [e.target.name]: e.target.checked,
-        })
-    }
+    // const inputHandler = (e) => {
+    //     addAndUpdateModule({
+    //         ...module,
+    //         [e.target.name]: e.target.value,
+    //     })
+    // }
+    // const handleCheckbox = (e) => {
+    //     addAndUpdateModule({
+    //         ...module,
+    //         [e.target.name]: e.target.checked,
+    //     })
+    // }
     
     useEffect(()=>{
-        if(module.name !== '' && module.level !== '' && module.description !== ''){
+        console.log(newModule);
+        if(newModule.name !== '' && newModule.level !== '' && newModule.description !== ''){
             setAddModuleReady(1);
         } else {
             setAddModuleReady(0);
         }
-    }, [module])
+    }, [newModule])
     return (
         <>
         <div className="add_module_popup" >
@@ -72,14 +91,14 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
                             <input type="text" autoComplete="name" id="name" placeholder="Enter name of the course (Upto 160 characters)" className="col_75" required 
                             name="name"
                             onChange={inputHandler}
-                            value={module.name}/>
+                            value={newModule.name}/>
                         </div>
                         <div className="form_row">
                             <label htmlFor="level" className="col_25" style={{ color: '#ffffff' }}>Expertise Level</label>
                             <select className="col_75" placeholder="Select the category of the course"
                             name="level"
                             onChange={inputHandler}
-                            value={module.level}
+                            value={newModule.level}
                             >
                                 <option hidden>Select the category of the course</option>
                                 <option>Beginner</option>
@@ -91,7 +110,7 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
                             <label htmlFor="description" className="col_25" style={{ color: '#ffffff' }}>Description</label>
                             <textarea className="col_75" rows="4" name="description" placeholder="Brief description in less than 60 characters"
                             onChange={inputHandler}
-                            value={module.description}/>
+                            value={newModule.description}/>
                         </div>
 
                         <div className="form_row">
@@ -101,8 +120,8 @@ const AddModulePopup = ({ title, set, hideCross, show }) => {
                                     <div className="radio_btn">
                                         <input type="checkbox" name="isChapter" id="chapter-radio" 
                                         onChange={handleCheckbox}
-                                        value={module.isChapter}
-                                        checked={ module.isChapter ? 'checked' : false}
+                                        value={newModule.isChapter}
+                                        checked={ newModule.isChapter ? 'checked' : false}
                                         />
                                     </div>
                                     <div className="chapter">

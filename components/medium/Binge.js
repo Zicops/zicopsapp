@@ -73,7 +73,7 @@ const Binge = () => {
                 </div>
             </div>
             <style jsx>{`
-                .row{width: 100%; display: flex;}
+                .row{width: 100%; display: flex; align-items: center;}
                 .binge_setting{
                     display: flex;
                     align-items: center;

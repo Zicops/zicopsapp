@@ -2,54 +2,81 @@ import { useState, useContext, useEffect } from 'react';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 import { useMutation } from '@apollo/client';
-import { ADD_COURSE_TOPIC } from '../../../API/Mutations'
+import { ADD_COURSE_TOPIC, UPDATE_COURSE_TOPIC } from '../../../API/Mutations'
 import ModuleAdded from '../../small/ModuleAdded';
 import AddTopicPopup2 from './AddTopicPopup2';
 
-const AddTopicPopup = ({set, show}) => {
-    const { module, chapter, topic, addAndUpdateTopic } = useContext(moduleContext);
+const AddTopicPopup = ({set, show, modId, chapId, editdata}) => {
+    const { topic, addAndUpdateTopic } = useContext(moduleContext);
     const { fullCourse } = useContext(courseContext);
     const [addTopicReady, setAddTopicReady] = useState(0);
     const [createCourseTopic] = useMutation(ADD_COURSE_TOPIC)
-    console.log(topic);
+    const [updateCourseTopic] = useMutation(UPDATE_COURSE_TOPIC)
 
+    const thisModTopics = topic.filter(obj => obj.moduleId === modId);
+    
+    const [newTopic, setNewTopic] = useState({
+        name : '',
+        description : '',
+        type : '',
+        moduleId : modId,
+        chapterId : (chapId)?chapId:'',
+        courseId : fullCourse.id,
+        sequence : thisModTopics.length + 1,
+    });
+
+    useEffect(() => {
+        if (editdata) {
+            setNewTopic(editdata)
+        }
+    }, [])
+    
     const modalClose = () => set(false);
     const topicAdd = () => {
 
-        // alert(addModuleReady)
+        if(newTopic.id && newTopic.id.length > 0){
+            console.log('update')
+            // updateCourseTopic({
+            //     variables: {
+            //         ...newTopic,
+            //     }
+            // }).then((d)=>{
+            //     addAndUpdateTopic(d.data.addCourseTopic)
+            // })
+        } else {
+            console.log('added')
+            createCourseTopic({
+                variables: {
+                    ...newTopic,
+                }
+            }).then((d)=>{
+                addAndUpdateTopic(d.data.addCourseTopic)
+                setNewTopic(d.data.addCourseTopic);
+            })
+        }
 
-        const { id, ...topicData } = topic;
-        createCourseTopic({
-            variables: {
-                ...topicData,
-                courseId: fullCourse.id,
-                moduleId: module.id,
-                chapterId: chapter.id
-            }
-        }).then((d)=>{
-            // console.log(d.data.addCourseTopic);
-            addAndUpdateTopic(d.data.addCourseTopic)
-        })
 
         show(true)
         // set(false)
     }
      
-
+    const updateAllTopic = () => {
+        console.log('update all topic!')
+    }
     const inputHandler = (e) => {
-        addAndUpdateTopic({
-            ...topic,
+        setNewTopic({
+            ...newTopic,
             [e.target.name]: e.target.value,
         })
     }
-    
+
     useEffect(()=>{
-        if(topic.name !== '' && topic.type !== '' && module.description !== ''){
+        if(newTopic.name !== '' && newTopic.type !== '' && newTopic.description !== ''){
             setAddTopicReady(1);
         } else {
             setAddTopicReady(0);
         }
-    }, [topic])
+    }, [newTopic])
     return (
         <>
         <div className="add_module_popup" >
@@ -58,39 +85,39 @@ const AddTopicPopup = ({set, show}) => {
                 <div className="module_add">
                     <div className="module_head">
                         <div className="module_title">
-                        Topic {topic.sequence}
+                        Topic {newTopic.sequence}
                         </div>
                         <div className="cross_img">
                             <img src="/images/circular-cross.png" alt="" onClick={modalClose} />
                         </div>
                     </div>
                     <div className="module_body">
-                    {topic.id && 
+                    {newTopic.id && 
                     <div className="topicAdded">
-                    <ModuleAdded type="module" text={"Topic " + topic.sequence + ": " + topic.name } />
-                    <AddTopicPopup2/>
+                        <ModuleAdded type="module" text={"Topic " + newTopic.sequence + ": " + newTopic.name } />
+                        <AddTopicPopup2 topic={newTopic}/>
                     </div>}
-                    {!topic.id && 
+                    {!newTopic.id && 
                         <>
                         <div className="form_row">
                             <label htmlFor="name" className="col_25" style={{ color: '#ffffff' }}>Topic Name</label>
                             <input type="text" autoComplete="name" id="name" placeholder="Enter topic name ( in less than 20 characters )" className="col_75" required 
                             name="name"
                             onChange={inputHandler}
-                            value={topic.name}/>
+                            value={newTopic.name}/>
                         </div>
                         <div className="form_row">
                             <label htmlFor="description" className="col_25" style={{ color: '#ffffff' }}>Description</label>
                             <textarea className="col_75" rows="4" name="description" placeholder="Brief description in less than 60 characters"
                             onChange={inputHandler}
-                            value={topic.description}/>
+                            value={newTopic.description}/>
                         </div>
                         <div className="form_row">  
                             <label htmlFor="name1" className="col_25" style={{ color: '#ffffff' }}>Topic Type</label>
                             <select className="col_75"
                             name="type"
                             onChange={inputHandler}
-                            value={topic.type}
+                            value={newTopic.type}
                             >
                                 <option hidden>Select topic type</option>
                                 <option>Content</option>
@@ -99,10 +126,10 @@ const AddTopicPopup = ({set, show}) => {
                             </select>
                         </div>
                         </>
-                    }
+                    } 
                     </div>
-                    {/* {!topic.id && 
-                    <> */}
+                    {!newTopic.id ? 
+                    <>
                     <div className="module_foot">
                         <div className="form_row">
                             <div className="col_25"></div>
@@ -116,7 +143,23 @@ const AddTopicPopup = ({set, show}) => {
                             </div>
                         </div>
                     </div>
-                    {/* </>} */}
+                    </>
+                    :
+                    <>
+                    <div className="module_foot">
+                        <div className="form_row">
+                            <div className="col_25"></div>
+                            <div className="col_75">
+                                <div className="button_container">
+                                    <button type="button" value="cancel" className="btn_cancel_add" onClick={modalClose}>Design Later</button>
+                                    <button type="button" value="add" 
+                                    className="btn_cancel_add" 
+                                    onClick={updateAllTopic}>Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </>}
                 </div>
             </div>
             }

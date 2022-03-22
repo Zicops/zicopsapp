@@ -19,7 +19,7 @@ const Resources = () => {
     });
     const [uploadResource] = useMutation(UPLOAD_TOPIC_RESOURCE);
 
-    const inputHandler = (e) => {
+    const inputHandler = (e) => { 
         addRes({
             ...res,
             [e.target.name]: e.target.value,

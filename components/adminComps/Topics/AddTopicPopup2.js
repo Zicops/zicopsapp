@@ -3,28 +3,72 @@ import Accordion from "../../small/Accordion";
 import Binge from "../../medium/Binge";
 import Quiz from "../../medium/Quiz";
 import Resources from "../../medium/Resources";
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useMutation } from '@apollo/client';
-import { UPLOAD_TOPIC_CONTENT_SUBTITLE } from '../../../API/Mutations'
+import { ADD_TOPIC_CONTENT, UPLOAD_TOPIC_CONTENT_VIDEO, UPLOAD_TOPIC_CONTENT_SUBTITLE } from '../../../API/Mutations'
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 
-const AddTopicPopup2 = () => {
-    const [uploadCourseContentSubtitle] = useMutation(UPLOAD_TOPIC_CONTENT_SUBTITLE)
-    const { topic, topicContent, addUpdateTopicContent } = useContext(moduleContext);
+const AddTopicPopup2 = ({topic}) => {
+    const [addCourseTopicContent] = useMutation(ADD_TOPIC_CONTENT);
+    const [uploadCourseContentVideo] = useMutation(UPLOAD_TOPIC_CONTENT_VIDEO);
+    const [uploadCourseContentSubtitle] = useMutation(UPLOAD_TOPIC_CONTENT_SUBTITLE);
+    const { topicContent, addUpdateTopicContent } = useContext(moduleContext);
 
+    const [newTopicContent, setNewTopicContent] = useState({
+        language : '',
+        topicId : topic.id,
+        startTime : 0,
+        duration : 0,
+        skipIntroDuration : 0,
+        nextShowTime : 0,
+        fromEndTime : 0,
+        type : ''
+    })
 
-    const uploadSubtitle = (e) => {
-        document.getElementById('subtitle').innerText = e.target.files[0].name;
-        uploadCourseContentSubtitle({
-            variables: {
-                file: e.target.files[0],
-                courseId: topic.courseId,
-                topicId: topic.id,
-            }
-        }).then( (d)=> {
-            console.log(d)
+    const [topicVideo, setTopicVideo] = useState({ courseId: topic.courseId, topicId: topic.id });
+    const [topicSubtitle, setTopicSubtitle] = useState({ courseId: topic.courseId, topicId: topic.id });
+
+    const inputHandler = (e) => {
+        setNewTopicContent({
+            ...newTopicContent,
+            [e.target.name]: e.target.value,
         })
     }
+
+    const uploadTopicContent = (e) => {
+        let fileType = e.target.files[0].type;
+        if(fileType != "video/mp4" && fileType != "videp/mp4"){
+            document.getElementById("upload_content").innerText = "Only mp4 is allowed!";
+            return;
+        }
+        document.getElementById("upload_content").innerText = e.target.files[0].name;
+        setTopicVideo({
+            ...topicVideo,
+            file: e.target.files[0]
+        });
+    }
+    const uploadTopicSubtitle = (e) => {
+        // let fileType = e.target.files[0].type;
+        document.getElementById("subtitle").innerText = e.target.files[0].name;
+        setTopicSubtitle({
+            ...topicSubtitle,
+            file: e.target.files[0]
+        });
+    }
+    const addCourseContent = async () => {
+        // var tc = await addCourseTopicContent({
+        //     variables : newTopicContent
+        // })
+        // console.log(tc);
+        // addUpdateTopicContent(tc);
+        // await uploadCourseContentVideo({
+        //     variables : topicVideo
+        // })
+        // await uploadCourseContentSubtitle({
+        //     variables : topicSubtitle
+        // })
+    }
+
     return ( 
         <>
             <div className="chapter_body">
@@ -46,9 +90,13 @@ const AddTopicPopup2 = () => {
                     <div className="col_25"></div>
                 </div>
                 <div className="form_row">
-                    <label htmlFor="name1" className="col_25">Select Language</label>
-                    <select className="col_75">
-                        <option>Language of the content</option>
+                    <label htmlFor="language" className="col_25">Select Language</label>
+                    <select className="col_75"
+                    name="language"
+                    onChange={inputHandler}
+                    value={newTopicContent.language}
+                    >
+                        <option hidden>Language of the content</option>
                         <option>English</option>
                         <option>Hindi</option>
                         <option>Bengali</option>
@@ -57,8 +105,12 @@ const AddTopicPopup2 = () => {
                 </div>
                 <div className="form_row">
                     <label htmlFor="name1" className="col_25">Type of content</label>
-                    <select className="col_75">
-                        <option>Type of content</option>
+                    <select className="col_75"
+                    name="type"
+                    onChange={inputHandler}
+                    value={newTopicContent.type}
+                    >
+                        <option hidden>Type of content</option>
                         <option>SCORM</option>
                         <option>TinCan</option>
                         <option>Web HTML5</option>
@@ -78,12 +130,9 @@ const AddTopicPopup2 = () => {
                                 </span>
                                 Browse & upload
                             </button>
-                            <input type="file" name="myfile" />
+                            <input type="file" name="upload_content" onChange={uploadTopicContent} />
+                            <div id="upload_content"></div>
                         </div>
-                        {/* <div className={styles.preview_remove_links}>
-                                <a className={styles.preview}>Preview</a>
-                                <a className={styles.remove}>Remove</a>
-                            </div> */}
                     </div>
                 </div>
                 <div className="form_row">
@@ -102,17 +151,13 @@ const AddTopicPopup2 = () => {
                                 </span>
                                 Browse & upload
                             </button>
-                            <input type="file" name="subtitle" onChange={uploadSubtitle}/>
+                            <input type="file" name="subtitle" onChange={uploadTopicSubtitle}/>
                             <div id="subtitle"></div>
                         </div>
-                        {/* <div className={styles.preview_remove_links}>
-                                <a className={styles.preview}>Preview</a>
-                                <a className={styles.remove}>Remove</a>
-                            </div> */}
                     </div>
                 </div>
                 <div className="form_row">
-                    <button type="button" value="add" className="button_single" >Add</button>
+                    <button type="button" value="add" className="button_single" onClick={addCourseContent}>Add</button>
                 </div>
                 <ContentAdded />
                 <Accordion title="Binge it" content={<Binge />} />

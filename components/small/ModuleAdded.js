@@ -1,4 +1,4 @@
-const ModuleAdded = ({text, type}) => {
+const ModuleAdded = ({text, type, edit}) => {
     // alert(type);
     var added_head 
     if (type == 'module') {
@@ -7,10 +7,6 @@ const ModuleAdded = ({text, type}) => {
     else if (type == 'chapter') {
         added_head = 'chapter_added_head';
     } else added_head = 'topic_added_head';
-
-    const editModal = () => {
-        alert(added_head)
-    }
 
     return (
         <>
@@ -66,7 +62,7 @@ const ModuleAdded = ({text, type}) => {
                     <div className="module_title">
                         {text}
                     </div>
-                    <div className="edit_img" onClick={editModal}>
+                    <div className="edit_img" onClick={edit}>
                         <img src="/images/edit-icon.png" alt="" />
                     </div>
                 </div>

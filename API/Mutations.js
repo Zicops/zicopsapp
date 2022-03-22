@@ -340,7 +340,36 @@ addCourseChapter(
       }
   }
 `;
-
+export const UPDATE_COURSE_CHAPTER = gql`
+mutation 
+updateCourseChapter(
+    $id : ID,
+    $name : String,
+    $description : String,
+    $moduleId : String,
+    $courseId : String,
+    $sequence : Int,
+  ) {
+  updateCourseChapter(
+    chapter: {
+      id : $id
+      name : $name,
+      description : $description,
+      moduleId : $moduleId,
+      courseId : $courseId,
+      sequence : $sequence,
+    }){
+      id
+      name
+      description
+      moduleId
+      courseId
+      created_at
+      updated_at
+      sequence
+      }
+  }
+`;
 export const ADD_COURSE_TOPIC = gql`
 mutation 
 addCourseTopic(
@@ -355,6 +384,45 @@ addCourseTopic(
   addCourseTopic(
     courseId: $courseId, 
     topic: {
+      name : $name,
+      description : $description,
+      type : $type,
+      moduleId : $moduleId,
+      chapterId : $chapterId,
+      courseId : $courseId,
+      sequence : $sequence,
+    }){
+      id
+      name
+      description
+      type
+      moduleId
+      chapterId
+      courseId
+      created_at
+      updated_at
+      sequence
+      created_by
+      updated_by
+      }
+  }
+`;
+
+export const UPDATE_COURSE_TOPIC = gql`
+mutation 
+updateCourseTopic(
+    $id : ID,
+    $name : String,
+    $description : String,
+    $type : String
+    $moduleId : String,
+    $chapterId : String,
+    $courseId : String,
+    $sequence : Int,
+  ) {
+  updateCourseTopic(
+    topic: {
+      id : $id,
       name : $name,
       description : $description,
       type : $type,
@@ -428,6 +496,44 @@ mutation uploadTopicContentSubtitle(
   }) {
     success
     url
+  }
+}
+`;
+
+export const ADD_TOPIC_CONTENT = gql`
+mutation addTopicContent(
+  $topicId : String,
+  $language : String,
+  $startTime : Int,
+  $duration : Int,
+  $skipIntroDuration : Int,
+  $nextShowTime : Int,
+  $fromEndTime : Int,
+  $type : String
+){
+  addTopicContent(
+    topicId: $topicId, 
+    topicContent: {
+      language : $language,
+      topicId : $topicId,
+      startTime : $startTime,
+      duration : $duration,
+      skipIntroDuration : $skipIntroDuration,
+      nextShowTime : $nextShowTime,
+      fromEndTime : $fromEndTime,
+      type : $type
+    }
+  ) {
+    language
+    topicId
+    startTime
+    duration
+    skipIntroDuration
+    nextShowTime
+    fromEndTime
+    created_at
+    updated_at
+    type
   }
 }
 `;

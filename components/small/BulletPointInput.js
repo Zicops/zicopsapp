@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 const BulletPointInput = ({placeholder, name, course, updateCourse}) => {
 
-    let nameArr = (course[name].length > 0) ? course[name] : [];
+    let nameArr = (!!course[name] && course[name].length > 0) ? course[name] : [];
 
     const [input, setInput] = useState('');
     const [tags, setTags] = useState(nameArr);

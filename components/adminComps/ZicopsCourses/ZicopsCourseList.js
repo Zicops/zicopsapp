@@ -3,9 +3,10 @@ import { qClient, GET_LATEST_COURSES} from '../../../API/Queries'
 import { ApolloProvider, useQuery } from '@apollo/client'
 import MUIDataTable from "mui-datatables";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { useEffect } from "react";
 
 
-const columns = ["Name", "Owner", "Category", "Expertise Level"];
+const columns = ["Name", "Created at", "Owner", "Category", "Expertise Level"];
 
 const data = [
  ["Joe James", "Test Corp", "Yonkers", "NY"],
@@ -17,38 +18,48 @@ const data = [
 const options = {
     filter: false,
     print: false,
-    selectableRows: false,
+    selectableRows: 'none',
     download: false,
     viewColumns: false,
-    search: false
+    search: false,
+    rowsPerPage: 7
   };
 
   const useStyles = makeStyles({
     root: {
-      background: "linear-gradient(45deg, var(--dark) 30%, var(--primary) 90%)",
+      background: "linear-gradient(45deg, var(--dark_three) 30%, var(--primary) 90%)",
       color: "var(--white)",
       padding: "30px"
     }
   });
 
-function LatestCourseList() {
-    const { data } = useQuery(GET_LATEST_COURSES);
+function LatestCourseList( {time} ) {
     const classes = useStyles();
     let latest = [];
-    (data) ? data.latestCourses.courses.map( (val, index) => latest.push( [val.name, val.owner, val.category, val.expertise_level] )) : null;
+
+        const { data } = useQuery(GET_LATEST_COURSES, {
+            variables: {
+                publish_time: time,
+                pageSize: 37,
+                pageCursor: ""
+            }
+        });
+        (data) ? data.latestCourses.courses.map((val, index) => latest.push([val.name, new Date(val.created_at * 1000).toISOString().slice(0, 19).replace('T', ' '), val.owner, val.category, val.expertise_level])) : null;
+    
     return (
-        <div>       
+        <div>
             <MUIDataTable className={classes.root}
-                data={latest} 
-                columns={columns} 
-                options={options} 
-                />
+                data={latest}
+                columns={columns}
+                options={options}
+            />
         </div>
     )
-  }
+}
 
 
 const ZicopsCourseList = () => {
+    var time = Date.now();
     return ( 
         <>
         <div className="content">
@@ -58,7 +69,7 @@ const ZicopsCourseList = () => {
                 {/* <CourseContextProvider> */}
 
                     <div className="content-panel">
-                        <LatestCourseList />
+                        <LatestCourseList time={time}/>
                     </div>
                     
                 {/* </CourseContextProvider> */}

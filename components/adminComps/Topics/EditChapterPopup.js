@@ -2,57 +2,38 @@ import { useState, useContext, useEffect } from 'react';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 import { useMutation } from '@apollo/client';
-import { ADD_COURSE_CHAPTER, UPDATE_COURSE_CHAPTER } from '../../../API/Mutations'
+import { ADD_COURSE_CHAPTER } from '../../../API/Mutations'
 
-const AddChapterPopup = ({set, show, modId, editdata}) => {
+const EditChapterPopup = ({set, show, modId}) => {
     const [chapterAddReady, setChapterAddReady] = useState(0);
     const { chapter, addAndUpdateChapter } = useContext(moduleContext);
     const { fullCourse } = useContext(courseContext);
-    const [createCourseChapter] = useMutation(ADD_COURSE_CHAPTER);
-    const [updateCourseChapter] = useMutation(UPDATE_COURSE_CHAPTER);
-
+    // const [createCourseChapter] = useMutation(ADD_COURSE_CHAPTER)
 
     const thisModChapter = chapter.filter(obj => obj.moduleId === modId);
 
-    const [newChapter, setNewChapter] = useState({
-        name: '',
-        description: '',
-        moduleId: modId,
-        courseId: fullCourse.id,
-        sequence: thisModChapter.length + 1,
-    });
-
-    useEffect(() => {
-        if (editdata) {
-            setNewChapter(editdata)
-        }
-    }, [editdata])
-
+    // const [newChapter, setNewChapter] = useState({
+    //     name: '',
+    //     description: '',
+    //     moduleId: modId,
+    //     courseId: fullCourse.id,
+    //     sequence: thisModChapter.length + 1,
+    // });
     const modalClose = () => set(false);
 
     const chapterAdd = () => {
-        console.log(newChapter);
-        if(newChapter.id && newChapter.id.length > 0){
-            updateCourseChapter({
-                variables : {
-                    ...newChapter
-                }
-            }).then((d)=>{
-                addAndUpdateChapter(d.data.updateCourseChapter)
-            });
-        } else {
-            createCourseChapter({
-                variables : {
-                    ...newChapter
-                }
-            }).then((d)=>{
-                addAndUpdateChapter(d.data.addCourseChapter)
-            })
-        }
+
+        // createCourseChapter({
+        //     variables : {
+        //         ...newChapter
+        //     }
+        // }).then((d)=>{
+        //     addAndUpdateChapter(d.data.addCourseChapter)
+        // })
+
         show(true)
         set(false)
     }
-    
     const inputHandler = (e) => {
         setNewChapter({
             ...newChapter,
@@ -66,7 +47,6 @@ const AddChapterPopup = ({set, show, modId, editdata}) => {
             setChapterAddReady(0);
         }
     }, [newChapter])
-
     return (
         <>
         <div className="add_chapter_popup" >
@@ -106,7 +86,7 @@ const AddChapterPopup = ({set, show, modId, editdata}) => {
                                     <button type="button" value="cancel" className="btn_cancel_add" onClick={modalClose}>Cancel</button>
                                     <button type="button" value="add" 
                                     className={chapterAddReady ? "btn_cancel_add" : "btn_cancel_add_disabled"} 
-                                    onClick={chapterAdd} disabled={!chapterAddReady}>{!editdata?"Add":"Update"}</button>
+                                    onClick={chapterAdd} disabled={!chapterAddReady}>Add</button>
                                 </div>
                             </div>
                         </div>
@@ -192,4 +172,4 @@ const AddChapterPopup = ({set, show, modId, editdata}) => {
         </>
     )
 }
-export default AddChapterPopup
+export default EditChapterPopup

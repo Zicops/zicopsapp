@@ -53,11 +53,25 @@ a {
 textarea{
   resize: none;
 }
+/* Change the color when autocomplete field */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    box-shadow: 0 0 0 30px #202222 inset !important;
+    -webkit-box-shadow: 0 0 0 30px #202222 inset !important;
+}
+/*Change text in autofill textbox*/
+input:-webkit-autofill{
+  -webkit-text-fill-color: #ffffff !important;
+}
 .course_master{
   padding: 0 50px 20px 50px;
   position: relative;
 }
-
+.placeholder{
+  color: #00f !important;
+}
 .row {
   width: 100%;
   margin: 30px 0;
@@ -92,6 +106,7 @@ textarea{
 .container-fluid {
   width: 100%;
 }
+
 .col_10 {
   width: 10%;
 }
@@ -116,31 +131,51 @@ textarea{
 .col_75 {
   width: 75%;
 }
-.row input, .row select, .row textarea{
+.row input, .row textarea{
   padding: 10px;
   margin: 10px;
   border: 2px solid #6bcfcf;
   background-color: #202222;
-  color: #858f8f;
+  color: var(--white);
   font-size: 13px;
   font-family: 'Open Sans';
 }
-.row input::focus{
-  color: var(--white);
+.row input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #868686;
+  opacity: 1; /* Firefox */
+}
+.row input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #868686; 
+}
+.row input::-ms-input-placeholder { /* Microsoft Edge */
+  color: #868686;
 }
 .row input:focus, .row select:focus, .row textarea:focus{
   border: 2px solid #6bcfcf;
   border-radius: 0;
   box-shadow: 0px 0px 10px 0px #6bcfcf;
   outline: 0;
+  color: var(--white);
+}
+
+.row select{
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid #6bcfcf;
+  background-color: #202222;
+  color: #868686;
+  font-size: 13px;
+  font-family: 'Open Sans';
 }
 .row select option{
   font-size: 14px;
-  color: var(--dark_three);
+  color: var(--dark_three)!important;
   background-color: var(--dark_two);
-  height: 20px;
 }
 
+.white{
+  color: var(--white)!important;
+}
 .drag_category_area {
   height: 180px;
   overflow-y: auto;
@@ -343,9 +378,20 @@ textarea{
 
 
 
-
-
-
+.buttongap{
+  margin: 10px 0;
+}
+.admin-next-btn{ 
+  background-color: var(--primary);
+  color: var(--dark_one);
+  padding: 10px 35px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.admin-next-btn:hover{ 
+  /* background-color: var(--dark_three); */
+  box-shadow: 0px 0px 10px 0px var(--dark_three);
+}
 .active_button{
   display: flex;
   align-items: center;

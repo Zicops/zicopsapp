@@ -22,13 +22,18 @@ export const GET_SUB_CATS = gql`
         allSubCategories
     }
 `;
+
 export const GET_LATEST_COURSES = gql`
-{
+query LatestCourses(
+  $publish_time: Int,
+  $pageCursor: String,
+  $pageSize: Int,
+){
     latestCourses(
-      publish_time: 1647426684,
-      pageCursor: "",
+      publish_time: $publish_time,
+      pageCursor: $pageCursor,
       Direction: "",
-      pageSize: 7,
+      pageSize: $pageSize,
       status: SAVED
     ) {
       courses {

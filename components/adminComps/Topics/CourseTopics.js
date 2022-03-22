@@ -6,6 +6,7 @@ import AddChapterPopup from './AddChapterPopup';
 import AddTopicPopup from './AddTopicPopup';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
+import ModuleRow from './ModuleRow';
 import ModuleBox from './ModuleBox';
 import ModuleAdded from '../../small/ModuleAdded';
 
@@ -13,19 +14,12 @@ const CourseTopics2 = () => {
     const { fullCourse, setTab } = useContext(courseContext);
     const { module, chapter, topic } = useContext(moduleContext);
 
-    console.log(module)
+    // console.log(module)
 
     const [openModal, setModal] = useState(false);
     const closeModal = () => setModal(false);
     const [showModule, setModule] = useState(false);
 
-    const [chapterModal, setChapterModal] = useState(false);
-    const closeChapterModal = () => setChapterModal(false);
-    const [showChapter, setChapter] = useState(false);
-  
-    const [topicModal, setTopicModal] = useState(false);
-    const closeTopicModal = () => setTopicModal(false);
-    const [showTopic, setTopic] = useState(false);
 
     const openModalIfCourseAdded = () => {
         if( !fullCourse.id ) {
@@ -35,19 +29,16 @@ const CourseTopics2 = () => {
         setModal(o => !o)
     }
 
-    const openModalAddChapter = () => {
-        setChapterModal(o => !o)
-    }
-
-    const openModalAddTopic = () => {
-        setTopicModal(o => !o)
-    }
+    
     return ( 
         <>
         <div>
-            {module.id &&
-            <div className="row">
-                <ModuleBox>
+            {/* {module.length && */}
+            {/* // <div className="row"> */}
+                {module.map( (value, index) => {
+                    return <ModuleRow key={index} mod={value} />
+                }) }
+                {/* <ModuleBox>
                     <ModuleAdded type="module" text={"Module " + module.sequence + ": " + module.id } />
                     {chapter.id && 
                         <ModuleAdded type="chapter" text={"Chapter " + chapter.sequence + ": " + chapter.id } />
@@ -68,14 +59,15 @@ const CourseTopics2 = () => {
                         <Popup open={chapterModal} closeOnDocumentClick={false} onClose={closeChapterModal}>
                             <AddChapterPopup set={setChapterModal} title={"Chapter " + chapter.sequence} show={setChapter}/>
                         </Popup>
-                </ModuleBox>
-            </div>}
+                </ModuleBox> */}
+            {/* </div>} */}
+            
             <div className="row">         
                 <span onClick={openModalIfCourseAdded}>
                     <IconButton text="Add Module" styleClass="black"/>
                 </span>
                 <Popup open={openModal} closeOnDocumentClick={false} onClose={closeModal}>
-                    <AddModulePopup set={setModal} title={"Module " + module.sequence} show={setModule}/>
+                    <AddModulePopup set={setModal} title={"Module " + (module.length+1)} show={setModule}/>
                 </Popup>
             </div>
 
