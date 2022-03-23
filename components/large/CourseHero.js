@@ -6,106 +6,109 @@ const CourseHero = ({set}) => {
     return (
         <>
         <div className="course-header">
-            <div className="back_btn" onClick={() => router.back()}>
-                <img src="/images/bigarrowleft.png" alt="" />
-            </div>
-            <div className="course-header-text">
-                <div className="heading row">
-                    <div className="col_75">
-                        <h1>Fundamentals of Design Thinking</h1>
-                        <p>This course is provisioned by <span>Zicops</span></p>
+            <div className="gradient">
+                <div className="back_btn" onClick={() => router.back()}>
+                    <img src="/images/bigarrowleft.png" alt="" />
+                </div>
+                <div className="course-header-text">
+                    <div className="heading row">
+                        <div className="col_75">
+                            <h1>Fundamentals of Design Thinking</h1>
+                            <p>This course is provisioned by <span>Zicops</span></p>
 
-                        <ul>
-                            <li>eContent</li>
-                            <li>Self learning</li>
-                            <li>Duration: 120 mins</li>
-                        </ul>
- 
-                    </div>
-                    <div className="icons col_25">
+                            <ul>
+                                <li>eContent</li>
+                                <li>Self learning</li>
+                                <li>Duration: 120 mins</li>
+                            </ul>
+    
+                        </div>
+                        <div className="icons col_25">
 
-                    </div>
-                </div>
-                <div className="summary">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                    nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolori...
-                </div>
-                <div className="more-info">
-                    <div className="float row">
-                        <div className="col_25">
-                            <span>Key take-aways</span>
-                            <p>:</p>
-                        </div>
-                        <div className="col_75">
-                        Strong foundation of design thinking UI/UX, Product Design, Part of Design Certification
-                        </div> 
-                    </div>
-                </div>
-                <div className="more-info">
-                    <div className="float row">
-                        <div className="col_25">
-                            <span>Expertise Level</span>
-                            <p>:</p>
-                        </div>
-                        <div className="col_75">
-                        Beginner
-                        </div> 
-                    </div>
-                </div>
-                <div className="course-big-button">
-                    <button onClick={ShowPlayer}>Preview the course</button>
-                </div>
-                <div className="suggested-completion">
-                    <p>** Suggested duration for completion of this course is 4 Weeks</p>
-                </div>
-                <div className="more-info">
-                    <div className="float row">
-                        <div className="col_25">
-                            <span>Prerequisites</span>
-                            <p>:</p>
-                        </div>
-                        <div className="col_75">
-                            Aptitude and Attitude towards Designing
                         </div>
                     </div>
-                    <div className="float row">
-                        <div className="col_25">
-                            <span>Good for</span>
-                            <p>:</p>
-                        </div>
-                        <div className="col_75">
-                            Anyone who is interested in learning the basic concepts of Designing
+                    <div className="summary">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolori...
+                    </div>
+                    <div className="more-info">
+                        <div className="float row">
+                            <div className="col_25">
+                                <span>Key take-aways</span>
+                                <p>:</p>
+                            </div>
+                            <div className="col_75">
+                            Strong foundation of design thinking UI/UX, Product Design, Part of Design Certification
+                            </div> 
                         </div>
                     </div>
-                    <div className="float row">
-                        <div className="col_25">
-                            <span>Must for</span>
-                            <p>:</p>
-                        </div>
-                        <div className="col_75">
-                            Product Designers, Product Managers, Business Analyst, UI/UX Designers
+                    <div className="more-info">
+                        <div className="float row">
+                            <div className="col_25">
+                                <span>Expertise Level</span>
+                                <p>:</p>
+                            </div>
+                            <div className="col_75">
+                            Beginner
+                            </div> 
                         </div>
                     </div>
-                    
+                    <div className="course-big-button">
+                        <button onClick={ShowPlayer}>Preview the course</button>
+                    </div>
+                    <div className="suggested-completion">
+                        <p>** Suggested duration for completion of this course is 4 Weeks</p>
+                    </div>
+                    <div className="more-info">
+                        <div className="float row">
+                            <div className="col_25">
+                                <span>Prerequisites</span>
+                                <p>:</p>
+                            </div>
+                            <div className="col_75">
+                                Aptitude and Attitude towards Designing
+                            </div>
+                        </div>
+                        <div className="float row">
+                            <div className="col_25">
+                                <span>Good for</span>
+                                <p>:</p>
+                            </div>
+                            <div className="col_75">
+                                Anyone who is interested in learning the basic concepts of Designing
+                            </div>
+                        </div>
+                        <div className="float row">
+                            <div className="col_25">
+                                <span>Must for</span>
+                                <p>:</p>
+                            </div>
+                            <div className="col_75">
+                                Product Designers, Product Managers, Business Analyst, UI/UX Designers
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
         </div>
         <style jsx>
             {`
             .course-header{
-                padding-top: 5vh;
-                // margin-top: -5vh;
-                // padding-bottom: 10vh;
-                margin-top:70px;
-                height: 38.8889vw;
-                background-color: #000909;
                 background-image: url('../images/bg-new.png');
                 background-position: bottom left;
                 background-repeat: no-repeat;
-                // background-size: 100%; 
+                background-size: 100%; 
                 background-size: cover;
+            }
+            .gradient{
+                padding-top: 5vh;
+                margin-top:70px;
+                height: 38.8889vw;
+                background: rgba(0,0,0,0);
+                background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 100%);
             }
             .back_btn{
                 position: absolute;

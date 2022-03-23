@@ -46,32 +46,7 @@ const CourseMaster = () => {
     alert('Course Add Failed!');
     console.log('Course Add Failed!');
   }
-  // if (data) {
-  //     updateCourseMaster({
-  //       ...fullCourse,
-  //       id: data.addCourse.id,
-  //       status: data.addCourse.status,
-  //     });
-  //     console.log(fullCourse);
-  //     setTab('tab2');
-  // }
 
-  // useEffect(() => { 
-  //   console.log(data)
-
-    // if (typeof data !== 'undefined' && data.addCourse.id.length > 0) {
-      // useEffect(() => { 
-        // if (typeof data !== 'undefined' && data.addCourse.id.length > 0) {
-          // updateCourseMaster({
-          //   ...fullCourse,
-          //   id: data.addCourse.id,
-          //   status: data.addCourse.status,
-          // });
-        // }
-        // console.log(fullCourse);
-      // },[fullCourse])
-    // }
-  // }, [data])
 
   const inputHandler = (e) => {
     updateCourseMaster({
@@ -153,8 +128,7 @@ const CourseMaster = () => {
   return (
     <div className="course_master">
       <form>
-
-        <div className="row">
+        <div className="row my_30">
           <label htmlFor="name" className="col_25">Name</label>
           <input
             type="text"
@@ -169,7 +143,7 @@ const CourseMaster = () => {
         </div>
 
         <ApolloProvider client={qClient}>
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="category" className="col_25">Course Category</label>
             <CreateCatsDropdown inputHandler={inputHandlerSelect} inputField={fullCourse} />
           </div>
@@ -180,7 +154,7 @@ const CourseMaster = () => {
         </ApolloProvider>
 
 
-        <div className="row">
+        <div className="row my_30">
           <label htmlFor="owner" className="col_25">Course Owner</label>
           <select
             className={(fullCourse.owner.length>0)?"col_75 white":"col_75"}
@@ -197,7 +171,7 @@ const CourseMaster = () => {
           </select>
         </div>
 
-        <div className="row">
+        <div className="row my_30">
           <div className="col_25"></div>
           <div className="col_25">
             <div className="active_button">
@@ -223,7 +197,7 @@ const CourseMaster = () => {
           <div className="col_25"></div>
         </div>
 
-        <div className="row">
+        <div className="row my_30">
           <button type='button' className="admin-next-btn" onClick={courseMasterSubmit}>Next</button>
         </div>
       </form>

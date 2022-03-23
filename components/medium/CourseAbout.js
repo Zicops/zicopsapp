@@ -19,7 +19,7 @@ const CourseAbout = () => {
     
     return (
         <div className="course_master">
-            <div className="row">
+            <div className="row my_30">
                 <label htmlFor="benefits" className="col_25">Learning Objectives/Outcomes</label>
                 <div className="col_75">
                     <BulletPointInput placeholder="Add Learning Objectives/Outcomes and press enter"
@@ -29,7 +29,7 @@ const CourseAbout = () => {
                     />
                 </div>
             </div>
-            <div className="row">
+            <div className="row my_30">
                 <label htmlFor="name" className="col_25">Program Highlights/Benefits</label>
                 <div className="col_75">
                     <BulletPointInput placeholder="Add Program Highlights/Benefits and press enter"
@@ -38,13 +38,13 @@ const CourseAbout = () => {
                     updateCourse={updateCourseMaster}/>
                 </div>
             </div>
-            <div className="row">
+            <div className="row my_30">
                 <label htmlFor="description" className="col_25">Course Description</label>
                 <textarea className="col_75" rows="4" name="description" placeholder="Provide a description for the course" 
                 onChange={inputHandler}
                 value={fullCourse.description}/>
             </div>
-            <div className="row">
+            <div className="row my_30">
                 <label htmlFor="prequisites" className="col_25">Pre-requisites</label>
                 <div className="col_75">
                     <BulletPointInput placeholder="Add Pre-requisites and press enter"
@@ -53,7 +53,7 @@ const CourseAbout = () => {
                     updateCourse={updateCourseMaster}/>
                 </div>
             </div> 
-            <div className="row">
+            <div className="row my_30">
                 <label htmlFor="goodFor" className="col_25">Good For</label>
                 <div className="col_25">
                     <BulletPointInput placeholder="Add Good For and press enter"
@@ -69,7 +69,7 @@ const CourseAbout = () => {
                     updateCourse={updateCourseMaster}/>
                 </div>
             </div>
-            <div className="row">
+            <div className="row my_30">
                 <label htmlFor="related_skills" className="col_25">Related Skills</label>
                 <div className="col_75">
                     <TagInput placeholder="Add Related Skills"

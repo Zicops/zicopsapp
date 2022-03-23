@@ -110,7 +110,7 @@ const CourseConfiguration = () => {
 
     return (
         <div className="course_master">
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name" className="col_25">Publish Date</label>
             <div className="col_25">
                 <DatePicker 
@@ -134,7 +134,7 @@ const CourseConfiguration = () => {
                 />
             </div>
           </div>
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name" className="col_25">Quality Control Check</label>
             <div className="col_25">
             <SlideButton />
@@ -151,7 +151,7 @@ const CourseConfiguration = () => {
             updateCourse={updateCourseMaster}/>
           </div>
         </div> */}
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name" className="col_25">Visibility in the Learning space</label>
             <div className="col_25">
             <SlideButton />

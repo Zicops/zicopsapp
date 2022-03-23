@@ -80,6 +80,10 @@ input:-webkit-autofill{
   align-items: center;
   justify-content: space-around;
 } */
+
+.mt_30{ margin-top: 30px}
+.mb_30{ margin-bottom: 30px}
+
 .center_row{
   width: 100%;
   text-align: center;
@@ -1047,7 +1051,6 @@ transition: All 0.3s ease;
 
 .row {
   width: 100%;
-  margin-bottom: 3px;
   display: flex;
   align-items: baseline;
   justify-content: space-around;
@@ -1071,6 +1074,8 @@ transition: All 0.3s ease;
 .col_75 {
   width: 75%;
 }
+
+.my_30{ margin-top: 30px; margin-bottom: 30px;}
 
 .form_row {
   width: 80%;

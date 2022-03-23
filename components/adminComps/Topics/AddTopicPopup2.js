@@ -72,12 +72,12 @@ const AddTopicPopup2 = ({topic}) => {
     return ( 
         <>
             <div className="chapter_body">
-                <div className="row">
+                <div className="row my_30">
                     <div className="topic_title">
                         Content
                     </div>
                 </div>
-                <div className="row">
+                <div className="row my_30">
                     <div className="col_25"></div>
                     <div className="col_50">
                         <div className="checkbox_mark">

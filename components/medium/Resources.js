@@ -51,10 +51,10 @@ const Resources = () => {
         <>
             <QuizAdded index="Doc 1" text="How to read this topic?" type="FDF"/>
             <QuizAdded index="Doc 2" text="Help Chart Cheetsheet" type="Excel"/>
-            <div className={styles.row}>
+            <div className="row my_30">
                 <IconButton styleClass="black" text="Add Resources" onClick={()=>setButtonOn(!buttonOn)}/>
             </div>
-            {buttonOn &&
+            {buttonOn ?
             <>
             <div className={styles.center_row}>
                 <select 
@@ -68,7 +68,7 @@ const Resources = () => {
                     <option >DOC</option>
                 </select>
             </div>
-            <div className={styles.row} style={{
+            <div className="row" style={{
                 'justifyContent': 'center',
                 marginTop: '10px',
                 padding: '0px',
@@ -80,7 +80,7 @@ const Resources = () => {
                     value={res.url}
                     />
 
-                    <div className={styles.upload_btn_wrapper}>
+                    <div className={styles.upload_btn_wrapper} style={{}}>
                         <button className={styles.btn}>
                             <span className={styles.input_icon}>
                                 <span>
@@ -96,7 +96,7 @@ const Resources = () => {
                     
             </div>
             
-            <div className={styles.row} style={{
+            <div className="row" style={{
                 'justifyContent': 'center',
                 marginTop: '10px',
                 padding: '0px',
@@ -121,7 +121,7 @@ const Resources = () => {
                     cursor: 'pointer',
                 }}>Add</button>
             </div>
-            </>
+            </> : null
             }
         </>
     )

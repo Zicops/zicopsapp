@@ -81,7 +81,7 @@ const AddTopicPopup = ({set, show, modId, chapId, editdata}) => {
         <>
         <div className="add_module_popup" >
             
-            <div className="row">
+            <div className="row my_30">
                 <div className="module_add">
                     <div className="module_head">
                         <div className="module_title">

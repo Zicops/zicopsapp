@@ -55,9 +55,11 @@ const Admin_content_foot = () => {
                         courseId: d.data.addCourse.id
                     });
 
-                    // if(courseImage.file){
-                    //     uploadCourseImage();
-                    // }
+                    // go to next tab
+                    setTimeout( ()=>{
+                        setTab('tab2');
+                    }, 50)
+
                 }
 
             } else {

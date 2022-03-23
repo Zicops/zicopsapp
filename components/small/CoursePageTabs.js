@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const CoursePageTabs = () => {
 
     let list = ['Topics', 'Resources', 'Notes', 'Discussion', 'Mentor', 'About']
     const [active, setActive] = useState('')
-    const makeActive = (e) => {e.target.setActive('active')}
+    // const makeActive = (e) => {e.target.setActive('active')}
+
+    useEffect(()=>{
+        alert(active)
+    }, [active])
     return (
         <>
             <div className="middle_tab">
                 <div className="tabs">
                     <ul>
-                        {list.map((li) => <li key={li} onClick={makeActive}>{li}</li>)}
+                        {list.map((li, index) => <li className={(active == index) ? "active" : ""} key={index} onClick={() => setActive(index)}>{li}</li>)}
                         {/* <li className="active">Topics</li>
                         <li>Resources</li>
                         <li>Notes</li>

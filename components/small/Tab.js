@@ -25,7 +25,7 @@ export default function Tabs({ props }) {
       case "tab3":
         return <CourseAbout />
       // case "tab4":
-        // return <CourseTopics />
+      // return <CourseTopics />
       case "tab6":
         return <CourseTopics2 />
       case "tab5":

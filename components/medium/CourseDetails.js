@@ -13,39 +13,8 @@ const CourseDetails = () => {
   const [uploadPreview] = useMutation(UPLOAD_COURSE_PREVIEW);
 
   let nameArr = (fullCourse.expertise_level.length > 0) ? fullCourse['expertise_level'].split(" , ") : [];
-
   const [expertiseLevel, setExpertiseLevel] = useState(nameArr);
 
-  // console.log(fullCourse);
-    // if (loading || loading1 || loading2) console.log('Submitting...');
-    // if (error || error1 || error2) {
-    //   alert('Submission error!');
-    //   console.log(error.message);
-    // }
-    // if (data) {
-    //   console.log(data);
-    //   updateCourseMaster({
-    //     ...fullCourse,
-    //     image : data.uploadCourseImage.url,
-    //   });
-    //   console.log(fullCourse);
-    // }
-    // if (data1) {
-    //   console.log(data1);
-    //   updateCourseMaster({
-    //     ...fullCourse,
-    //     tileImage : data1.uploadCourseTileImage.url,
-    //   });
-    //   console.log(fullCourse);
-    // }
-    // if (data2) {
-    //   console.log(data2);
-    //   updateCourseMaster({
-    //     ...fullCourse,
-    //     previewVideo : data2.url,
-    //   });
-    //   console.log(fullCourse);
-    // }
   const inputHandler = (e) => {
     updateCourseMaster({
       ...fullCourse,
@@ -71,7 +40,6 @@ const CourseDetails = () => {
       ...fullCourse,
       expertise_level: expertiseLevel.join(" , "),
     })
-    // console.log(courseImage)
   }, [expertiseLevel])
 
   const uploadCourseVideo = (e) => {
@@ -92,27 +60,6 @@ const CourseDetails = () => {
       alert('Add Course Master First');
     }
   }
-    // if(fullCourse.id){
-    //   uploadPreview({
-    //     variables: {
-    //       file: e.target.files[0],
-    //       courseId: fullCourse.id
-    //     }
-    //   }).then( (data) => {
-    //       // console.log(data.data.uploadCoursePreviewVideo.url);
-    //       document.getElementById("coursePreview").innerText = e.target.files[0].name;
-    //       updateCourseMaster({
-    //         ...fullCourse,
-    //         previewVideo: data.data.uploadCoursePreviewVideo.url,
-    //       })
-    //   })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // } else {
-    //   setTab('tab1');
-    //   alert('Add Course First');
-    // }
 
   const uploadCourseImage = (e) => {
     if(courseImage.courseId){
@@ -132,25 +79,7 @@ const CourseDetails = () => {
       alert('Add Course Master First');
     }
   }
-    // if(fullCourse.id){
-    //   uploadImage({
-    //     variables: {
-    //       file: e.target.files[0],
-    //       courseId: fullCourse.id
-    //     }
-    //   })
-    //   .then( (data) => {
-    //     document.getElementById("courseImage").innerText = e.target.files[0].name;
-    //     updateCourseMaster({
-    //       ...fullCourse,
-    //       image : data.data.uploadCourseImage.url,
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   });
-    // } 
-    // console.log(courseImage);
+
 
   const uploadCourseTileImage = (e) => {
     if(courseTileImage.courseId){
@@ -170,32 +99,11 @@ const CourseDetails = () => {
       alert('Add Course Master First');
     }  
   }
-    // if(fullCourse.id){
-    //   uploadTileImage({
-    //     variables: {
-    //       file: e.target.files[0],
-    //       courseId: fullCourse.id
-    //     }
-    //   })
-    //     .then( (data) => {
-    //       document.getElementById("courseTileImage").innerText = e.target.files[0].name;
-    //       updateCourseMaster({
-    //         ...fullCourse,
-    //         tileImage : data.data.uploadCourseTileImage.url,
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // } else {
-    //   setTab('tab1');
-    //   alert('Add Course First');
-    // }
 
 
     return (
         <div className="course_master">
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name1" className="col_25">Course Base Sub-category</label>
               <select 
               className="col_75"
@@ -211,7 +119,7 @@ const CourseDetails = () => {
           </ApolloProvider>
 
           {/* Expertise Level */}
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name3" className="col_25">Level of Expertise</label>
             <div className="col_25">
               <label className="checkbox_container">
@@ -248,7 +156,7 @@ const CourseDetails = () => {
             </div>
           </div>
           {/* Upload Course Video */}
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name3" className="col_25">Upload Preview of the course</label>
             <div className="col_25">
               <div className="upload_btn_wrapper">
@@ -272,7 +180,7 @@ const CourseDetails = () => {
             </div>
           </div>
           {/* Upload Course Image */}
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name3" className="col_25">Course Display Image</label>
             <div className="col_25">
               <div className="upload_btn_wrapper">
@@ -296,7 +204,7 @@ const CourseDetails = () => {
             </div>
           </div>
           {/* Upload Course Page Display Picture */}
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name3" className="col_25">Course Page Display Picture</label>
             <div className="col_25">
               <div className="upload_btn_wrapper">
@@ -320,7 +228,7 @@ const CourseDetails = () => {
             </div>
           </div>
           {/* Course Summary */}
-          <div className="row">
+          <div className="row my_30">
             <label htmlFor="name1" className="col_25">Course Summary</label>
             <textarea 
             name="summary"

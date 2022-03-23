@@ -39,7 +39,7 @@ const CourseTopics2 = () => {
                 }) }
                 
             
-            <div className="row">         
+            <div className="row modbtn">         
                 <span onClick={openModalIfCourseAdded}>
                     <IconButton text="Add Module" styleClass="black"/>
                 </span>
@@ -51,7 +51,7 @@ const CourseTopics2 = () => {
         </div>
         <style jsx>
             {`
-            .row{
+            .modbtn{
                 padding: 30px;
             }
             .buttongap{

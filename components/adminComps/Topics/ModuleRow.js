@@ -54,7 +54,7 @@ const ModuleRow = ( {mod} ) => {
         setTopicModal(o => !o);
     }
     return ( 
-        <div className="row">
+        <div className="row my_30">
             <ModuleBox>
                 <ModuleAdded type="module" text={"Module " + mod.sequence + ": " + mod.id } edit={()=>editModule(mod)}/>
                     
