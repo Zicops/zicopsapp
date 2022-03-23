@@ -1,8 +1,11 @@
 export default function Card({image}) {
 
+    const gotoCourse = () => {
+        window.location.href = '/courses'
+    }
     return (
         <>  
-            <div className="card_item">
+            <div className="card_item" onClick={gotoCourse}>
                 <img src={image} alt=""/>
                 <div className="banner">Self Paced</div>
                 <div className="overlay">
@@ -52,7 +55,7 @@ export default function Card({image}) {
             </div>
             <style jsx>{`
                 .card_item{
-
+                    cursor:pointer;
                 }
                 
                 /* The overlay effect over the image */

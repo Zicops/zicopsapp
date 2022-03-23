@@ -1,3 +1,4 @@
+import AboutTabSmallSection from './AboutTabSmallSection'
 const AboutTabBigSection = () => {
 return(
     <>
@@ -12,6 +13,7 @@ return(
                 </div>
             </div>
         </div>
+        <AboutTabSmallSection/>
         <style jsx>{`
         .tab_big_section{
             background-color:#323232;

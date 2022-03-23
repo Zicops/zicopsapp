@@ -9,10 +9,10 @@ const TopicFiles = () => {
              </div>
             <div className="topic_body">
                 <div className="topic_data">
-                    <p >12 Files</p>
+                    <p>12 Files</p>
                 </div>
                 <div className="arrow_img">
-                    <img src="images/right-arrow.png" alt="" />
+                    <img src="/images/right-arrow.png" alt="" />
                 </div>
             </div>
             </div>
