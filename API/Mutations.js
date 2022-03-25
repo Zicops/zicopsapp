@@ -158,7 +158,6 @@ export const UPLOAD_COURSE_TILE_IMAGE = gql`
     }
   }
 `;
-
 export const UPDATE_COURSE = gql`
 mutation 
   updateCourse(
@@ -268,7 +267,6 @@ mutation
       }
   }
 `;
-
 export const ADD_COURSE_MODULE = gql`
 mutation 
 addCourseModule(
@@ -383,6 +381,7 @@ addCourseChapter(
       }
   }
 `;
+
 export const UPDATE_COURSE_CHAPTER = gql`
 mutation 
 updateCourseChapter(
@@ -413,6 +412,7 @@ updateCourseChapter(
       }
   }
 `;
+
 export const ADD_COURSE_TOPIC = gql`
 mutation 
 addCourseTopic(

@@ -1,47 +1,98 @@
-import AboutTabSmallSection from './AboutTabSmallSection'
+import CardCourseAbout from "../small/CardCourseAbout";
+import {about_course} from "../../API/DemoCourseData"
 const AboutTabBigSection = () => {
-return(
-    <>
-        <div className="tab_big_section">
+    return ( 
+        <>
+        <CardCourseAbout>
             <div className="tab_heading">
-                About this course
+                {about_course.heading}
             </div>
-            <div className="row">
-                <div className="tab_section_summery">
-                You will learn the most in-demand and essential components for becoming a Core Java developer in this course, which is intended to help you master them. This is especially true if you're going on a job interview or working on a Java project that requires your best effort. There is no pre-requisite for this course; thus, you will go from zero to hero in no time! In addition, I've included a particular emphasis on Object Orientation in Java for this Complete Java Programming Course, which I believe is underemphasized in other Java classes, therefore I've placed a strong emphasis on it throughout the lectures. Writing classes and interfaces, as well as numerous methods including loops and if else statements, exception handling, and file processing, as well as learning how to debug software using Eclipse, will all be covered in detail in this course. You'll also learn how to use the collections framework and go deep into the world of java generics. You'll learn all there is to know about multi-threading as well as the JDBC API, which is used to interact with a MySQL database. There are also practical tasks sprinkled throughout the course to allow you to put the ideas you are learning into practice as you are learning them. Another task includes processing files containing stock market data, as is the case with one of the projects, which involves developing
-                <p>a management system for auto dealerships. </p>
+            <div className="tab_section_summary">
+                <p>{about_course.description}</p>
+            </div>
+            <div className="row my_30 abstra">
+                <div className="col_33">
+                    <div className="row">
+                        <div className="col_50">
+                            <div>Course Duration: </div>
+                        </div>
+                        <div className="col_50 abstract">
+                            <div>{about_course.duration} Hours</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col_33">
+                    <div className="row">
+                        <div className="col_25">
+                            <div>Owned By: </div>
+                        </div>
+                        <div className="col_75 abstract">
+                            <div>{about_course.owner}</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col_33">
+
                 </div>
             </div>
-        </div>
-        <AboutTabSmallSection/>
+            <div className="row my_30 abstra">
+                <div className="col_33">
+                    <div className="row">
+                        <div className="col_50">
+                            <div>Expected Completion Time: </div>
+                        </div>
+                        <div className="col_50 abstract">
+                            <div>{about_course.competion_time} Hours</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col_33">
+                    <div className="row">
+                        <div className="col_25">
+                            <div>Instructor: </div>
+                        </div>
+                        <div className="col_75 abstract">
+                            <h4>{about_course.instructor.name}</h4>
+                            <p>{about_course.instructor.desg}</p>
+                            <p>{about_course.instructor.dept}</p>
+                            <p>{about_course.instructor.position}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="col_33">
+                    
+                </div>
+            </div>
+        </CardCourseAbout>
         <style jsx>{`
-        .tab_big_section{
-            background-color:#323232;
-            padding:25px;
-            margin:40px 80px;
-            border-radius:5px;
-        }
-        .tab_heading{
-            color: rgb(81, 190, 188);
-            font-size:1.5em;
-            padding-bottom:15px;
-            font-weight:700;
-            
-        }
-        .tab_section_summery{
-            color: rgb(189, 182, 182);
-            font-size:1em;
-           
-         }
-     
-          
-      
-          
-        `}
-
-        </style>
-            
-
-    </>
-)}
-export default AboutTabBigSection
+            .tab_heading{
+                color: var(--primary);
+                font-size:1.5vw;
+                padding-bottom:15px;
+                font-weight:700;
+            }
+            .tab_section_summary{
+                color: var(--primary);
+                font-size: 0.9vw;
+            }
+            .abstra{
+                font-size: 0.9vw;
+                color: var(--primary); 
+            }
+            .abstract{
+                color: var(--white);
+                font-weight: 600;
+            }
+            .abstract h4{
+                margin-bottom: 5px;
+            }
+            .abstract p{
+                margin-bottom: 5px;
+                font-weight: 400;
+            }
+        `}</style>
+        </>
+     );
+}
+ 
+export default AboutTabBigSection;

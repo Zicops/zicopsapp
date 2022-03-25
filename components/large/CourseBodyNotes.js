@@ -1,6 +1,6 @@
 import Dropdown from '../small/Dropdown'
 import HeadingSubheading from '../small/HeadingSubheading'
-
+import ItemSlider from '../ItemSlider'
 const CourseBodyNotes = () => {
     const options = [
         { value: 'module1', label: 'Module 1' },
@@ -12,6 +12,7 @@ const CourseBodyNotes = () => {
         <>
             <Dropdown options={options} />
             <HeadingSubheading />
+            <ItemSlider items={options} />
         </>
      );
 }

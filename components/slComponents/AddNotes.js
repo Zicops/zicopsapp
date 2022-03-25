@@ -1,39 +1,42 @@
-const AddNotes = () => {
+const AddNotes = ({text}) => {
     return(
         <>
-        <div className="add_notes col_25">
-            <div className="add_notes_btn">
-                +
-            </div>
-            <div className="add_notes_text">
-                Add Note
+        <div className="add">
+            <div className="add_plus">
+                + 
+                <div className="add_text">
+                    {text}
+                </div>
             </div>
         </div>
         <style jsx>{`
-        .add_notes{
-            background-color:#323232;
-            padding:25px;
-            border-radius:5px;
-            margin:20px 80px;
-            border:1px solid rgb(189, 182, 182);
-            display:block;
-            text-align:center;
-            
+        .add{
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            align-self: stretch;
+            text-align: center;
+            margin: 5px;
+            padding:20px;
+            border:1px solid var(--dark_three);
+            border-radius: 5px;
+            color: var(--dark_three);
+            cursor: pointer;
         }
-        .add_notes_btn{
-            font-size:50px;
-            font-weight:600;
-            color:rgb(189, 182, 182);
+        .add:hover{
+            border:1px solid rgb(81, 190, 188);
+            color: rgb(81, 190, 188);
         }
-        .add_notes_btn:hover{
-            cursor:pointer;
+        .add_plus{
+            color: var(--primary);
+            font-size:3vw;
+            line-height: 2vw;
         }
-        .add_notes_text{
-            font-size:1em;
-            color:rgb(189, 182, 182);
+        .add_text{
+             font-size: 1.1vw;
+             color: var(--dark_three);
         }
-      
-
         `}
         </style>
         </>

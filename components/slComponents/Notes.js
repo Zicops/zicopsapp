@@ -1,54 +1,52 @@
 const Notes = () => {
     return(
         <>
-        <div className="row">
-        <div className="notes col_25">
-            <div className="notes_head">
-                Topic 1
+        <div className="topic">
+            <div className="topic_head">
+                Chapter 1
              </div>
-            <div className="notes_body">
-                <div className="notes_data">
-                    <p >12 Notes</p>
-                    <p>03 Bookmark</p>
+            <div className="topic_body">
+                <div className="topic_data">
+                    <p>12 Files</p>
+                    <p>03 Bookmarks</p>
                 </div>
                 <div className="arrow_img">
-                <img src="images/right-arrow.png" alt="" />
+                    <img src="/images/right-arrow-white.png" alt="" />
                 </div>
             </div>
         </div>
-        </div>
         <style jsx>{`
-        .notes{
+        .topic{
             background-color:#323232;
-            padding:25px;
-            border-radius:5px;
-            margin:40px 80px;
-            min-height:150px;
+            padding:10px 20px;
+            border-radius: 5px;
+            flex: 1;
+            margin: 5px;
+            border:1px solid transparent;
+            cursor: pointer;
         }
-       .notes_head{
-            color: rgb(81, 190, 188);
+        .topic:hover{
+            border:1px solid rgb(81, 190, 188);
+        }
+        .topic_head{
+            color: var(--primary);
             font-weight:700;
-            font-size:20px;
-            padding-bottom:10px;
-            text-transform:capitalize;
-            border-bottom:1px solid  rgb(189, 182, 182);
-         }
-         .notes_body{
-             padding:10px 15px;
-             font-size:1em;
-             color: rgb(189, 182, 182);
+            font-size:1.25vw;
+            padding: 10px;
+            text-transform: capitalize;
+            border-bottom:1px solid var(--dark_three);
+        }
+        .topic_body{
+             font-size: 1.1vw;
+             color: var(--dark_three);
+             padding: 20px 10px;
              display:flex;
              justify-content:space-between;
              align-items:center;
-          
-         }
-         .arrow_img img{
-             width:8px;
-         }
-         .notes_body p{
-             padding-bottom:5px;
-         }
-
+        }
+        .arrow_img img{
+            width: 10px;
+        }
         `}
         </style>
         </>

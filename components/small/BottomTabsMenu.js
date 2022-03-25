@@ -1,13 +1,13 @@
 const BottomTabsMenu = ( {props} ) => {
     
-    const list = ["Topics", "Resources", "Notes", "Discussion", "Mentor", "About"]
+    const list = ["Topics", "Resources", "Notes", "Discussion", "Mentor"]
 
     return ( 
 
         <> 
             <div className="bottomtabs my_30">
                 <ul>
-                {list.filter( (item) => item !== list[props.activeTab] ).map((li, index)=><li onClick={() => props.setActiveTab(index)}>{li}</li>)}
+                {list.filter( (item) => item !== props.activeCourseTab ).map((li)=><li onClick={() => props.setActiveCourseTab(li)}>{li}</li>)}
                 </ul>
             </div>
             <style jsx>

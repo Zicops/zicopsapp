@@ -7,7 +7,7 @@ const CoursePageTabs = ( {props} ) => {
             <div className="middle_tab">
                 <div className="tabs">
                     <ul>
-                        {list.map((li, index) => <li className={(props.activeTab == index) ? "active" : ""} key={index} onClick={() => props.setActiveTab(index)}>{li}</li>)}
+                        {list.map((li, index) => <li className={(props.activeCourseTab == li) ? "active" : ""} key={index} onClick={() => props.setActiveCourseTab(li)}>{li}</li>)}
                     </ul>
                 </div>
             </div>
