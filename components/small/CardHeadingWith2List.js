@@ -12,7 +12,7 @@ const CardHeadingWith2List = ({props}) => {
                 </div>
                 <div className="col_75">
                     <ul>
-                        {props.goodfor.map( (li,index) => <li>{li}</li> )}
+                        {props.goodfor.map( (li,index) => <li key={index}>{li}</li> )}
                     </ul>
                 </div>
             </div>
@@ -22,7 +22,7 @@ const CardHeadingWith2List = ({props}) => {
                 </div>
                 <div className="col_75">
                     <ul>
-                        {props.mustfor.map( (li,index) => <li>{li}</li> )}
+                        {props.mustfor.map( (li,index) => <li key={index}>{li}</li> )}
                     </ul>
                 </div>
             </div>

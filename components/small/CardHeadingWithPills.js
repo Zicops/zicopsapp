@@ -7,7 +7,7 @@ const CardHeadingWithPills = ({props}) => {
         </div>
         <div className="tab_section_summary">
             
-            {props.data.map( (li,index) => <div className="pills">{li}</div> )}
+            {props.data.map( (li,index) => <div key={index} className="pills">{li}</div> )}
 
         </div>
         <style jsx>

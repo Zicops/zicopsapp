@@ -1,5 +1,5 @@
 import CoursePageTabs from '../small/CoursePageTabs'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import CourseBodyTopics from './CourseBodyTopics';
 import CourseBodyResources from './CourseBodyResources';
 import CourseBodyNotes from './CourseBodyNotes';
@@ -12,15 +12,20 @@ import BottomTabsMenu from '../small/BottomTabsMenu'
 
 
 const CourseBody = () => {
-
-    const [activeCourseTab, setActiveCourseTab] = useState('Topics')
+    let myRef = useRef();
+    const [activeCourseTab, setActiveCourseTab] = useState('Topics');
     const options = [
         { value: 'module1', label: 'Module 1' },
         { value: 'module2', label: 'Module 2' },
         { value: 'module3', label: 'Module 3' },
         { value: 'module4', label: 'Module 4' }
       ]
-    const props = {activeCourseTab:activeCourseTab, setActiveCourseTab:setActiveCourseTab};
+    const props = {activeCourseTab:activeCourseTab, setActiveCourseTab:setActiveCourseTab, refProp:myRef};
+
+    useEffect(()=>{
+        window.scrollTo({ behavior: 'smooth', top: myRef.current.offsetTop - 200 });
+    },[activeCourseTab]);
+
     const showActiveTab = (activeTab) => {
         switch (activeTab) {
             case 'Topics':
@@ -43,7 +48,7 @@ const CourseBody = () => {
     return (
         <>
         <div className='coursebody'>
-            <CoursePageTabs props={props}/>
+            <CoursePageTabs  props={props}/>
   
                 {showActiveTab(activeCourseTab)}
                 {(activeCourseTab !== 'About')?

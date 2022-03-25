@@ -4,7 +4,7 @@ const CoursePageTabs = ( {props} ) => {
 
     return (
         <>
-            <div className="middle_tab">
+            <div className="middle_tab" ref={props.refProp}>
                 <div className="tabs">
                     <ul>
                         {list.map((li, index) => <li className={(props.activeCourseTab == li) ? "active" : ""} key={index} onClick={() => props.setActiveCourseTab(li)}>{li}</li>)}

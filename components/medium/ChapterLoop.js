@@ -14,7 +14,7 @@ const ChapterLoop = (props) => {
         
         {
         props.topic.map( (index) => ( 
-            <TopicLoop index={index} />
+            <TopicLoop key={index} index={index} />
         ))
         }
         <style jsx>
