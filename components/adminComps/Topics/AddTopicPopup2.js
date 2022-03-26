@@ -32,14 +32,16 @@ const AddTopicPopup2 = ({topic}) => {
         })
         setCourseTopicVideo({
             ...topicVideo,
-            id: topic.id,
-            courseId: topic.courseId,
+            topicId: topic.id,
+            courseId: topic.courseId
         });
         setCourseTopicSubtitle({
             ...topicSubtitle,
-            courseId: topic.courseId,
-            id: topic.id,
+            topicId: topic.id,
+            courseId: topic.courseId
         });
+
+        console.log(topic);
         console.log(topicContent);
         console.log(topicVideo);
         console.log(topicSubtitle);
@@ -81,6 +83,7 @@ const AddTopicPopup2 = ({topic}) => {
             file: e.target.files[0]
         });
     }
+
     const uploadTopicSubtitle = (e) => {
         document.getElementById("subtitle").innerText = e.target.files[0].name;
         setCourseTopicSubtitle({
@@ -88,6 +91,7 @@ const AddTopicPopup2 = ({topic}) => {
             file: e.target.files[0]
         });
     }
+
     const addCourseContent = async () => {
         var tc = await addCourseTopicContent({
             variables : topicContent
@@ -99,12 +103,16 @@ const AddTopicPopup2 = ({topic}) => {
             variables : topicVideo
         })
         console.log(tv);
+
         var ts =await uploadCourseContentSubtitle({
             variables : topicSubtitle
         })
         console.log(ts);
 
-        setContentUploaded(1);
+        if(tc.data.length){
+            setContentUploaded(1);
+        }
+        
     }
 
     return ( 
@@ -205,7 +213,7 @@ const AddTopicPopup2 = ({topic}) => {
                 {!contentUploaded ? null: <ContentAdded />}
                 <Accordion title="Binge it" content={<Binge video={topicVideo} />} />
                 <Accordion title="Quiz" content={<Quiz />} />
-                <Accordion title="Resources" content={<Resources />} />
+                <Accordion title="Resources" content={<Resources topic={topic} />} />
             </div>
             <style jsx>
                 {`

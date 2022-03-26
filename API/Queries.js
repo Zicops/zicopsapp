@@ -69,6 +69,10 @@ query LatestCourses(
         is_display
         category
         sub_category
+        sub_categories {
+          name
+          rank
+        }
       }
       pageCursor
       direction

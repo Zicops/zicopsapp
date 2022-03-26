@@ -1,12 +1,18 @@
 import { useState, useEffect, useContext } from "react";
-import { courseContext } from '../../state/contexts/CourseContext'
+import { courseContext } from '../../state/contexts/CourseContext';
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
-import { qClient, GET_CATS_N_SUB_CATS } from '../../API/Queries'
-import { ADD_COURSE } from '../../API/Mutations'
+import { qClient, GET_CATS_N_SUB_CATS } from '../../API/Queries';
+import { ADD_COURSE } from '../../API/Mutations';
+import { useRouter } from 'next/router';
 
 function CreateCatsDropdown({ inputHandler, inputField }) {
   const { data } = useQuery(GET_CATS_N_SUB_CATS);
-
+  const router = useRouter();
+  const {
+    query: {courseId}
+  } = router;
+  const editcourseId = {courseId};
+  console.log(editcourseId)
   return (
     <select className="col_75"
       name="category"
@@ -47,6 +53,11 @@ const CourseMaster = () => {
     console.log('Course Add Failed!');
   }
 
+  useEffect(()=>{
+    // let editCourse = JSON.parse(window.localStorage.getItem('fullCourse'));
+    // console.log(editCourse.course);
+    // updateCourseMaster(editCourse.course);
+  }, [])
 
   const inputHandler = (e) => {
     updateCourseMaster({

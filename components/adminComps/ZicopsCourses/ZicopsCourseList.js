@@ -3,10 +3,11 @@ import { qClient, GET_LATEST_COURSES} from '../../../API/Queries'
 import { ApolloProvider, useQuery } from '@apollo/client'
 import MUIDataTable from "mui-datatables";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { useEffect } from "react";
+import { courseContext } from '../../../state/contexts/CourseContext';
+import { useContext } from "react";
+import Router from 'next/router';
 
-
-const columns = ["Id", "Name", "Created at", "Owner", "Category", "Expertise Level"];
+const columns = ["Id", "Name", "Created at", "Owner", "Category", "Expertise Level", "Edit"];
 
 const data = [
  ["Joe James", "Test Corp", "Yonkers", "NY"],
@@ -37,14 +38,31 @@ function LatestCourseList( {time} ) {
     const classes = useStyles();
     let latest = [];
 
-        const { data } = useQuery(GET_LATEST_COURSES, {
-            variables: {
-                publish_time: time,
-                pageSize: 37,
-                pageCursor: ""
+    const { data } = useQuery(GET_LATEST_COURSES, {
+        variables: {
+            publish_time: time,
+            pageSize: 50,
+            pageCursor: ""
+        }
+    });
+    // const { fullCourse, updateCourseMaster } = useContext(courseContext);
+    
+    function editCourse(course) {
+        // updateCourseMaster(course);
+        // window.localStorage.setItem( 'fullCourse', JSON.stringify({course}) );
+        // window.location.href = "/admin/add-new-course";
+        // console.log(course);
+        let courseId = course.id;
+        Router.push({
+            pathname: "/admin/add-new-course",
+            query: {
+                courseId
             }
-        });
-        (data) ? data.latestCourses.courses.map((val, index) => latest.push([val.id, val.name, new Date(val.created_at * 1000).toISOString().slice(0, 19).replace('T', ' '), val.owner, val.category, val.expertise_level])) : null;
+        })
+    }
+
+
+    (data) ? data.latestCourses.courses.map((val, index) => latest.push([val.id, val.name, new Date(val.created_at * 1000).toISOString().slice(0, 19).replace('T', ' '), val.owner, val.category, val.expertise_level, <button onClick={()=>editCourse(val)}>Edit</button>])) : null;
     
     return (
         <div>

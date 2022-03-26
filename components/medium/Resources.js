@@ -7,12 +7,13 @@ import { moduleContext } from '../../state/contexts/ModuleContext';
 import { useMutation } from '@apollo/client';
 import { UPLOAD_TOPIC_RESOURCE } from '../../API/Mutations'
 
-const Resources = () => {
+const Resources = ({topic}) => {
     const [buttonOn, setButtonOn] = useState(0);
     const resInput = useRef(null)
-    const { module, chapter, topic, resources, addResourcesToTopic } = useContext(moduleContext);
+    const { resources, addResourcesToTopic } = useContext(moduleContext);
     const [res, addRes] = useState({
         courseId : topic.courseId,
+        name : '',
         type : '',
         topicId : topic.id,
         url : '',
@@ -26,7 +27,7 @@ const Resources = () => {
         })
     }
     const inputHandlerFile = (e) => {
-        console.log(e.target.files[0])
+        // console.log(e.target.files[0])
         document.getElementById("resourceFile").innerText = e.target.files[0].name;
         addRes((prevState) => ({
             ...prevState,
@@ -39,21 +40,22 @@ const Resources = () => {
         uploadResource({
             variables: res
         }).then((data) => {
-            console.log(data)
-            // addResourcesToTopic({
-            //     ...data,
-            // });
+            console.log(data);
+            if(data.data.uploadTopicResource.success){
+                // addResourcesToTopic({
+                //     ...data,
+                // });
+
+            }
         }).catch((err) => {
                 console.log(err);
             });
     }
     return (
         <>
-            {/* <QuizAdded index="Doc 1" text="How to read this topic?" type="FDF"/>
+            {/* <QuizAdded index="Doc 1" text="How to read this topic?" type="PDF"/>
             <QuizAdded index="Doc 2" text="Help Chart Cheetsheet" type="Excel"/> */}
-            <div className="row my_30">
-                <IconButton styleClass="black" text="Add Resources" onClick={()=>setButtonOn(!buttonOn)}/>
-            </div>
+            
             {buttonOn ?
             <>
             <div className={styles.center_row}>
@@ -76,9 +78,9 @@ const Resources = () => {
             }}>
 
                     <input type="text" autoComplete="name" id="name" placeholder="Enter document name" required 
-                    name="url"
+                    name="name"
                     onChange={inputHandler}
-                    value={res.url}
+                    value={res.name}
                     />
 
                     <div className={styles.upload_btn_wrapper} style={{}}>
@@ -92,11 +94,11 @@ const Resources = () => {
                         </button>
                         <input type="file" name="file"
                         onChange={inputHandlerFile} />
-                        <div id="resourceFile">{resInput.current}</div>
+                        
                     </div>
                     
             </div>
-            
+            <div id="resourceFile" style={{textAlign: 'center'}}>{resInput.current}</div>
             <div className="row" style={{
                 'justifyContent': 'center',
                 marginTop: '10px',
@@ -124,6 +126,9 @@ const Resources = () => {
             </div>
             </> : null
             }
+            <div className="row my_30">
+                <IconButton styleClass="black" text="Add Resources" onClick={()=>setButtonOn(!buttonOn)}/>
+            </div>
         </>
     )
 }

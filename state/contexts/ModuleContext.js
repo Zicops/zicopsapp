@@ -116,16 +116,12 @@ const ModuleContextProvider = (props) => {
 
   }
 
-  const [resources, addResources] = useState([{
-    type : '',
-    topicId : '',
-    url : '',
-    file : {},
-  }])
+  const [resources, addResources] = useState([])
   const addResourcesToTopic = (data) => {
     addResources([
       ...resources, 
       {
+        name: data.name,
         type : data.type,
         topicId : data.topicId,
         url : data.url,
@@ -145,7 +141,6 @@ const ModuleContextProvider = (props) => {
 })
 
   const addUpdateTopicContent = (data) => {
-    
     addTopicContent(
       {
         ...topicContent, 
@@ -166,16 +161,16 @@ const ModuleContextProvider = (props) => {
     setTopicVideo({
       ...topicVideo, 
         courseId: data.courseId,
-        topicId: data.id,
+        topicId: data.topicId,
         file: data.file
     })
   }
   const [topicSubtitle, setTopicSubtitle] = useState({});
   const setCourseTopicSubtitle = (data) => {
     setTopicSubtitle({
-      ...topicSubtitle, 
+        ...topicSubtitle, 
         courseId: data.courseId,
-        topicId: data.id,
+        topicId: data.topicId,
         file: data.file
     })
   }
