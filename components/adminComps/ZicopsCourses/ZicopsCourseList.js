@@ -6,7 +6,7 @@ import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { useEffect } from "react";
 
 
-const columns = ["Name", "Created at", "Owner", "Category", "Expertise Level"];
+const columns = ["Id", "Name", "Created at", "Owner", "Category", "Expertise Level"];
 
 const data = [
  ["Joe James", "Test Corp", "Yonkers", "NY"],
@@ -44,7 +44,7 @@ function LatestCourseList( {time} ) {
                 pageCursor: ""
             }
         });
-        (data) ? data.latestCourses.courses.map((val, index) => latest.push([val.name, new Date(val.created_at * 1000).toISOString().slice(0, 19).replace('T', ' '), val.owner, val.category, val.expertise_level])) : null;
+        (data) ? data.latestCourses.courses.map((val, index) => latest.push([val.id, val.name, new Date(val.created_at * 1000).toISOString().slice(0, 19).replace('T', ' '), val.owner, val.category, val.expertise_level])) : null;
     
     return (
         <div>

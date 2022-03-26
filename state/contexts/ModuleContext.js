@@ -133,12 +133,22 @@ const ModuleContextProvider = (props) => {
     }])
   }
 
-  const [ topicContent, addTopicContent ] = useState([])
+  const [ topicContent, addTopicContent ] = useState({
+    language : '',
+    topicId : '',
+    startTime : 0,
+    duration : 0,
+    skipIntroDuration : 0,
+    nextShowTime : 0,
+    fromEndTime : 0,
+    type : ''
+})
 
   const addUpdateTopicContent = (data) => {
-    addTopicContent([
-      ...topicContent, 
+    
+    addTopicContent(
       {
+        ...topicContent, 
         language : data.language,
         topicId : data.topicId,
         startTime : data.startTime,
@@ -148,35 +158,41 @@ const ModuleContextProvider = (props) => {
         fromEndTime : data.fromEndTime,
         type : data.type,
       }
-    ])
+    )
   }
 
-  const [topicVideo, setTopicVideo] = useState([]);
+  const [topicVideo, setTopicVideo] = useState({});
   const setCourseTopicVideo = (data) => {
-    setTopicVideo([
+    setTopicVideo({
       ...topicVideo, 
-      {
         courseId: data.courseId,
         topicId: data.id,
         file: data.file
-      }
-    ])
+    })
   }
-  const [topicSubtitle, setTopicSubtitle] = useState([]);
+  const [topicSubtitle, setTopicSubtitle] = useState({});
   const setCourseTopicSubtitle = (data) => {
-    setTopicSubtitle([
+    setTopicSubtitle({
       ...topicSubtitle, 
-      {
         courseId: data.courseId,
         topicId: data.id,
         file: data.file
-      }
-    ])
+    })
   }
-
+  // const setCourseTopicSubtitle = (data) => {
+  //   setTopicSubtitle([
+  //     ...topicSubtitle, 
+  //     {
+  //       courseId: data.courseId,
+  //       topicId: data.id,
+  //       file: data.file
+  //     }
+  //   ])
+  // }
+  const [contentUploaded, setContentUploaded] = useState(0);
 
   return (
-    <moduleContext.Provider value={{ module, addAndUpdateModule, chapter, addAndUpdateChapter, topic, addAndUpdateTopic, resources, addResourcesToTopic, topicContent, addUpdateTopicContent, topicSubtitle, setCourseTopicSubtitle, topicVideo, setCourseTopicVideo}}>
+    <moduleContext.Provider value={{ module, addAndUpdateModule, chapter, addAndUpdateChapter, topic, addAndUpdateTopic, resources, addResourcesToTopic, topicContent, addUpdateTopicContent, topicSubtitle, setCourseTopicSubtitle, topicVideo, setCourseTopicVideo, contentUploaded, setContentUploaded }}>
       {props.children}
     </moduleContext.Provider>
   );

@@ -1,7 +1,9 @@
+import { moduleContext } from '../../state/contexts/ModuleContext';
+import { useContext } from 'react';
+
 const ContentAdded = () => {
-    // let type = data.type;
-    // let duration = data.duration; 
-    // let sub_lang = (data.lang)?data.lang:'';
+
+    const { topicContent } = useContext(moduleContext);
 
     return (
         <>
@@ -9,16 +11,16 @@ const ContentAdded = () => {
             <div className="content_details">
                 <div className="content_top">
                     <span className="label">Content Type :</span> 
-                    <span className="value">mp4</span>
+                    <span className="value">{topicContent.type}</span>
                 </div>
                 <div className="content_top">
-                    <span className="label">Content Type :</span>
-                    <span className="value">2 Mins 30 Secs</span>
+                    <span className="label">Duration :</span>
+                    <span className="value">{topicContent.duration + " Sec"}</span>
                 </div>
             </div>
             <div className="content_bar">
                 <div className="language">
-                    English
+                    {topicContent.language}
                 </div>
                 <div className="text">
                     Subtitle Added

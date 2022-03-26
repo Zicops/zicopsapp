@@ -162,7 +162,7 @@ const AddTopicPopup = ({set, show, modId, chapId, editdata}) => {
                     </>}
                 </div>
             </div>
-            }
+            {/* } */}
         </div>
         <style jsx>{`
         .add_module_popup{

@@ -34,9 +34,9 @@ const CourseTopics2 = () => {
         <>
         <div>
 
-                {module.map( (value, index) => {
-                    return <ModuleRow key={index} mod={value} />
-                }) }
+            {module.map( (value, index) => {
+                return <ModuleRow key={index} mod={value} />
+            }) }
                 
             
             <div className="row modbtn">         

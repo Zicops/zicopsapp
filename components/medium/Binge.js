@@ -1,4 +1,8 @@
-const Binge = () => {
+import { useState } from "react"
+
+const Binge = ({video}) => {
+    const [check, setCheck] = useState(0);
+    const videoSrc = URL.createObjectURL(video.file);
     return (
         <>
             <div className="row">
@@ -12,6 +16,7 @@ const Binge = () => {
                                 <span className="label">
                                     Start Time
                                 </span>
+                                {/* <input type="number" className="value" value="2000" /> */}
                                 <span className="value">
                                     20:00
                                 </span>
@@ -54,7 +59,7 @@ const Binge = () => {
                     <div className="from_end">
                         <div className="checkbox_mark">
                             <label className="checkbox_container">
-                                <input type="checkbox" checked />
+                                <input type="checkbox" onChange={()=>setCheck(!check)} checked={check} />
                                 <span className="checkmark"></span>From End
                             </label>
                         </div>
@@ -62,6 +67,10 @@ const Binge = () => {
                     
                 </div>
                 <div className="video_preview">
+                <video controls>
+                <source  src={videoSrc} id='video' type="video/mp4" />
+                Your browser does not support HTML5 video.
+                </video>
                 </div>
             </div>
             <div className="center">

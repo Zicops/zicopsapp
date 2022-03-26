@@ -49,8 +49,8 @@ const Resources = () => {
     }
     return (
         <>
-            <QuizAdded index="Doc 1" text="How to read this topic?" type="FDF"/>
-            <QuizAdded index="Doc 2" text="Help Chart Cheetsheet" type="Excel"/>
+            {/* <QuizAdded index="Doc 1" text="How to read this topic?" type="FDF"/>
+            <QuizAdded index="Doc 2" text="Help Chart Cheetsheet" type="Excel"/> */}
             <div className="row my_30">
                 <IconButton styleClass="black" text="Add Resources" onClick={()=>setButtonOn(!buttonOn)}/>
             </div>
@@ -70,6 +70,7 @@ const Resources = () => {
             </div>
             <div className="row" style={{
                 'justifyContent': 'center',
+                'alignItems': 'center',
                 marginTop: '10px',
                 padding: '0px',
             }}>

@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { courseContext } from '../../state/contexts/CourseContext'
 import { useMutation } from '@apollo/client';
 import {ADD_COURSE, UPLOAD_COURSE_IMAGE, UPLOAD_COURSE_TILE_IMAGE, UPLOAD_COURSE_PREVIEW, UPDATE_COURSE} from '../../API/Mutations'
@@ -10,10 +10,13 @@ const Admin_content_foot = () => {
     const [uploadTileImage] = useMutation(UPLOAD_COURSE_TILE_IMAGE);
     const [uploadPreview] = useMutation(UPLOAD_COURSE_PREVIEW);
     const [updateCourse] = useMutation(UPDATE_COURSE)
-
+    const [toUpload, setToUpload] = useState(0);
 
     useEffect(()=>{
-        console.log(fullCourse)
+        if(toUpload){
+            console.log(fullCourse)
+            setToUpload(0)
+        }
     }, [fullCourse])
 
 
@@ -40,7 +43,7 @@ const Admin_content_foot = () => {
                     // console.log('Recieved Added Course data...');
                     // console.log(d.data.addCourse);
                     await updateCourseMaster(d.data.addCourse);
-                    // console.log('Local Data Updated...');
+                    // console.log('Local Data Updated...');await 
 
                     await setCourseVideo({
                         ...courseVideo,
@@ -73,11 +76,6 @@ const Admin_content_foot = () => {
             console.log(courseImage);
             console.log(courseTileImage);
 
-            // if(courseVideo.upload || courseImage.upload || courseTileImage.upload) {
-            //     function uploadFiles(){
-
-            //     }
-            // }
             if (courseVideo.file && courseVideo.upload){
                 await previewVideoUpload();
             }
@@ -87,8 +85,9 @@ const Admin_content_foot = () => {
             if (courseTileImage.file && courseTileImage.upload){
                 await courseTileImageUpload();
             }
-            console.log('checking fullCourse...')
-            // updateCourseBySave()
+            console.log('Updating fullCourse...');
+            updateCourseBySave();
+            setToUpload(1);
             
         }
 
@@ -150,35 +149,13 @@ const Admin_content_foot = () => {
         }
 
         async function updateCourseBySave() {
-            // console.log(recentFullCourse);
-            // const { related_skills, expected_completion, ...updateData } = fullCourse;
-            // let data = {
-            // ...fullCourse
-            // }
-            // updateCourse({
-            //     variables: data
-            // }).then( (d)=>{
-            //     alert("Course Updated")
-            //     console.log("Course updated")
-            //     console.log(d)
-            // })
-            // const cData = await updateCourse({
-            //     variables: data
-            // });
-            // console.log(cData);
-            // if (cVideo.data.uploadCoursePreviewVideo.success) {
-            //     await updateCourseMaster({
-            //         ...fullCourse,
-            //         previewVideo: cVideo.data.uploadCoursePreviewVideo.url,
-            //     });
-            //     await setCourseVideo({
-            //         ...courseVideo,
-            //         upload: 0,
-            //     });
-            // } else {
-            //     console.log('Tile Image Upload Failed');
-            //     console.log(cVideo);
-            // }
+            updateCourse({
+                variables: fullCourse
+            }).then( (d)=>{
+                alert("Course Updated")
+                updateCourseMaster(d.data.updateCourse);
+                console.log(d)
+            })
         }
     }
 
