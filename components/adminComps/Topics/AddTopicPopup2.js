@@ -109,9 +109,9 @@ const AddTopicPopup2 = ({topic}) => {
         })
         console.log(ts);
 
-        if(tc.data.length){
-            setContentUploaded(1);
-        }
+
+        setContentUploaded(1);
+
         
     }
 
