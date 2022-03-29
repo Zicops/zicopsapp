@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import styles from '../../styles/Nav.module.css'
 import LeftDropdown from '../menuComps/LeftDropdown';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { userContext } from '../../state/contexts/UserContext'
 
 const Nav = () => {
 
+    const [ isSearch, setSearch ] = useState(0);
     const { isAdmin } = useContext(userContext);
     const AdminMenu = [
         {
@@ -71,7 +72,18 @@ const Nav = () => {
     function truncate(str) {
         return str.length > 16 ? str.substring(0, 13) + "..." : str;
     }
-
+    function searchShow() {
+        setSearch(1);
+        return;
+    }
+    function searchHide() {
+        let search_text = document.getElementById('nav_search_bar').value;
+        if(search_text){
+            return;
+        }
+        setSearch(0);
+        return;
+    }
     return (
         <div className={styles.navbar} id="navbar">
             <div className={styles.left}>
@@ -96,15 +108,30 @@ const Nav = () => {
                 </div>
             </div>
             <div className={styles.right}>
+                {!isSearch ? '' :
+                <div className={styles.search_menu} onMouseLeave={searchHide} >
+                    <select className={styles.nav_search_dropdown} placeholder="Search..." >
+                        <option>All</option>
+                        <option>Self Paced</option>
+                        <option>Classroom</option>
+                        <option>Labs</option>
+                        <option>Exam</option>
+                        <option>Blogs</option>
+                    </select>
+                    <input type="text" className={styles.nav_search} id="nav_search_bar" placeholder="Search..."/>
+                    <button className={styles.nav_search_btn}></button>
+                </div>
+                }
                 <div className={styles.special_menu}>
                     <ul>
                         {/* <li><img src="images/chat.png" /></li> */}
                         {/* <li><img src="images/cart.png" /></li>
                         <li><img src="images/heart.png" /></li> */}
-                        <li><img src="/images/chat.png" /></li>
+                        {!isAdmin && !isSearch &&
+                        <li onMouseEnter={searchShow} ><img src="/images/search.png" /></li>
+                        }
                         <li><img src="/images/bell.png" /></li>
-                        {!isAdmin && 
-                        <li><img src="/images/search.png" /></li>}
+                        <li><img src="/images/chat.png" /></li>
                     </ul>
                 </div>
                 <div className={styles.profile}>

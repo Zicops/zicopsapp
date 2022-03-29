@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import Layout from '../components/large/Layout';
 import UserContextProvider from '../state/contexts/UserContext';
 import '../styles/globals.css';
@@ -5,11 +6,17 @@ import '../styles/globals.css';
 function MyApp({ Component, pageProps }) {
 
   return (
+    <>
+    <Head>
+      <title>Zicops - Demo</title>
+      <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
+    </Head>
     <UserContextProvider>
       <Layout>
       <Component {...pageProps} />
       </Layout>
     </UserContextProvider>
+    </>
   )
 }
 

@@ -88,7 +88,11 @@
     cursor: pointer;
 }
 
-
+.search_menu{
+    display: flex;
+    align-items: center;
+    transition: all 2s;
+}
 
 
 
@@ -124,4 +128,47 @@
 }
 .dropdownicon:hover{
     transform: rotate(180deg);
+}
+
+
+.nav_search, .nav_search:focus{
+    background-color: unset;
+    color: white;
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid #ffffff80;
+    padding: 5px 35px 5px 10px;
+}
+select.nav_search_dropdown{
+    width: 50px;
+}
+select.nav_search_dropdow:selected{
+    width: 100%;
+}
+.nav_search:after{
+    content: 'searvh';
+}
+.nav_search_btn{
+    background-image: url('/images/magnifier.png');
+    width: 25px;
+    height: 25px;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: unset;
+    border: 0;
+    padding: 5px;
+    margin-left: -30px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.nav_search_dropdown{
+    background-color: var(--primary);
+    color: var(--dark_two);
+    font-weight: 600;
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid #ffffff80;
+    border-radius: 3px;
+    padding: 5px;
 }
