@@ -114,8 +114,8 @@
     color: var(--white);
 }
 .profilename .desg{
-    font-size: 10px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 600;
     color: var(--primary);
 }
 .dropdownicon{
