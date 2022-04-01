@@ -22,7 +22,7 @@ For creating a new component
 - if subcompoents require subSubComponent then move the subComponent to /component
 
 ```
-learning (root directory)
+zicopsapp (root directory)
 
 ├── assets (all the static assets like images, icons, fonts)
 │   ├── containerName (component or page name)
