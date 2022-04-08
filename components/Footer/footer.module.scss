@@ -1,0 +1,58 @@
+@import '../../styles/base.scss';
+
+.footer {
+  width: 100%;
+  height: $footerHeight;
+
+  position: static;
+  bottom: 0px;
+  background-color: $bgTile;
+  color: $white;
+
+  display: flex;
+  align-items: center;
+  padding: 20px 30px;
+
+  z-index: 2;
+
+  .heading {
+    font-size: 13px;
+    a {
+      color: $white;
+      text-decoration: none;
+      margin-right: 30px;
+    }
+  }
+
+  .text {
+    font-size: 10px;
+    color: $darkThree;
+    margin-right: 25%;
+  }
+
+  .footerLeft {
+    width: 50%;
+  }
+  .footerRight {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+
+    .connectWithUs {
+      margin-right: 100px;
+
+      span {
+        margin: 0 3px;
+      }
+    }
+
+    .store {
+      img {
+        height: 30px;
+        padding: 5px;
+        background-color: $black;
+        margin-right: 5px;
+      }
+    }
+  }
+}

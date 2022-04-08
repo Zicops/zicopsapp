@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import QuizLoop from '../small/QuizLoop';
 import QuizAdded from '../small/QuizAdded';
 import IconButton from '../small/IconButton'
@@ -10,7 +10,9 @@ import { UPLOAD_TOPIC_RESOURCE } from '../../API/Mutations'
 const Resources = ({topic}) => {
     const [buttonOn, setButtonOn] = useState(0);
     const resInput = useRef(null)
+    
     const { resources, addResourcesToTopic } = useContext(moduleContext);
+
     const [res, addRes] = useState({
         courseId : topic.courseId,
         name : '',
@@ -18,6 +20,9 @@ const Resources = ({topic}) => {
         topicId : topic.id,
         url : '',
     });
+
+
+
     const [uploadResource] = useMutation(UPLOAD_TOPIC_RESOURCE);
 
     const inputHandler = (e) => { 
@@ -36,20 +41,20 @@ const Resources = ({topic}) => {
     }
 
     const addResource = () => {
-        console.log(res)
+        
         uploadResource({
             variables: res
         }).then((data) => {
             console.log(data);
             if(data.data.uploadTopicResource.success){
-                // addResourcesToTopic({
-                //     ...data,
-                // });
-
+                addRes({
+                    ...res,
+                    url: data.data.uploadTopicResource.url
+                });
             }
         }).catch((err) => {
-                console.log(err);
-            });
+            console.log(err);
+        });
     }
     return (
         <>

@@ -3,8 +3,8 @@ import { sliderImages } from '../API/DemoSliderData'
 import { useState } from 'react'
 import CourseHero from '../components/large/CourseHero'
 import CourseBody from '../components/large/CourseBody'
-import ContentPlayer from '../components/large/ContentPayer'
-
+// import ContentPlayer from '../components/large/ContentPayer'
+import CustomVideo from '../components/CustomVideoPlayer'
 
 const courses = () => {
     const [startPlayer, setStartPlayer] = useState(false);
@@ -16,7 +16,7 @@ const courses = () => {
             margin: 0,
             padding: 0
             }}>
-            {startPlayer?<ContentPlayer set={setStartPlayer}/>:<CourseHero set={setStartPlayer}/>}
+            {startPlayer?<CustomVideo set={setStartPlayer}/>:<CourseHero set={setStartPlayer}/>}
             <CourseBody/>
             <CardSlider title="Your Other Subscribed Courses" data={sliderImages}/>
             <CardSlider title="Related Courses" data={sliderImages}/>

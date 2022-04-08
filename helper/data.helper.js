@@ -1,0 +1,56 @@
+import { tabData } from '../components/Tabs/Logic/tabs.helper';
+
+export function createCourseAndUpdateContext(courseContextData, createCourse) {
+  const {
+    fullCourse,
+    setTab,
+    updateCourseMaster,
+    courseVideo,
+    setCourseVideo,
+    courseImage,
+    setCourseImage,
+    courseTileImage,
+    setCourseTileImage
+  } = courseContextData;
+
+  if (!fullCourse.name || !fullCourse.category || !fullCourse.sub_category || !fullCourse.owner) {
+    setTab(tabData[0].name);
+    return alert('Please fill all the Course Master Details');
+  }
+
+  const { id, created_at, updated_at, ...sendData } = fullCourse;
+
+  createCourse({
+    variables: {
+      ...sendData,
+      status: 'SAVED'
+    }
+  })
+    .then((res) => {
+      if (!res || !res?.data?.addCourse?.id) return;
+
+      updateCourseMaster(res.data.addCourse);
+
+      const courseId = res.data.addCourse.id;
+      setCourseVideo({
+        ...courseVideo,
+        courseId: courseId
+      });
+      setCourseImage({
+        ...courseImage,
+        courseId: courseId
+      });
+      setCourseTileImage({
+        ...courseTileImage,
+        courseId: courseId
+      });
+
+      // go to next tab
+      setTimeout(() => {
+        setTab(tabData[1].name);
+      }, 50);
+    })
+    .catch((err) => {
+      console.log('Course Add Error: ', err);
+    });
+}

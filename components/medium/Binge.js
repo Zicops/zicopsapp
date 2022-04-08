@@ -2,7 +2,10 @@ import { useState } from "react"
 
 const Binge = ({video}) => {
     const [check, setCheck] = useState(0);
-    const videoSrc = URL.createObjectURL(video.file);
+    let videoSrc;
+    if (video.file) {
+         videoSrc = URL.createObjectURL(video.file);
+    }
     return (
         <>
             <div className="row">

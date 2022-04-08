@@ -91,9 +91,14 @@
 .search_menu{
     display: flex;
     align-items: center;
-    transition: all 2s;
+    /* transition: all 2s; */
 }
 
+.search_hide{
+    opacity: 0;
+    margin-right: -200px;
+    transition: all 0.3s;
+}
 
 
 .profile{

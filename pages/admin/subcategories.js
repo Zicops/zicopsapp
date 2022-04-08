@@ -1,4 +1,4 @@
-import Sidebar from "../../components/large/Sidebar"
+import Sidebar from '../../components/Sidebar';
 import ZicopsSubcatsList from "../../components/adminComps/ZicopsCourses/ZicopsSubcatsList"
 
 const Admin = () => {

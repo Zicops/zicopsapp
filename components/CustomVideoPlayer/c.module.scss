@@ -1,0 +1,57 @@
+.vidcontainer {
+    position: relative;
+    // padding-bottom: 56.25%;
+    margin-top: 70px;
+    overflow: hidden;
+    padding-bottom: 39.25%;
+    background: #000000;
+
+    .custom_ui_container{
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        z-index: 5;
+        width: 100%;
+
+        button{
+            border-radius: 10px;
+            margin: 5px 10px;
+        }
+
+        .drawer{
+            top: 0;
+            width: 50%;
+            height: 100%;
+            right: 0;
+            opacity: 50%;
+            color: white;
+        }
+    }
+
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    position: absolute;
+    bottom: 0px;
+
+    width: 100%;
+    height: 100px;
+    // padding: 10px 0;
+
+    background: rgb(0,0,0);
+    background: -moz-linear-gradient(0deg, #000000 0%, #00000000 100%, #00000000 100%);
+    background: -webkit-linear-gradient(0deg, #000000 0%, #00000000 100%, #00000000 100%);
+    background: linear-gradient(0deg, #000000 0%, #00000000 100%, #00000000 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+}

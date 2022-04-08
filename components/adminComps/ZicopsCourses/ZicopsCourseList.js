@@ -1,5 +1,5 @@
-import CourseHead from "../../medium/CourseHead";
-import { qClient, GET_LATEST_COURSES} from '../../../API/Queries'
+import CourseHead from "../../CourseHead";
+import { queryClient, GET_LATEST_COURSES} from '../../../API/Queries'
 import { ApolloProvider, useQuery } from '@apollo/client'
 import MUIDataTable from "mui-datatables";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
@@ -45,16 +45,11 @@ function LatestCourseList( {time} ) {
             pageCursor: ""
         }
     });
-    // const { fullCourse, updateCourseMaster } = useContext(courseContext);
     
     function editCourse(course) {
-        // updateCourseMaster(course);
-        // window.localStorage.setItem( 'fullCourse', JSON.stringify({course}) );
-        // window.location.href = "/admin/add-new-course";
-        // console.log(course);
         let courseId = course.id;
         Router.push({
-            pathname: "/admin/add-new-course",
+            pathname: "/admin/courses",
             query: {
                 courseId
             }
@@ -83,7 +78,7 @@ const ZicopsCourseList = () => {
         <div className="content">
             <CourseHead title="Zicops Course Offerings"/>
 
-            <ApolloProvider client={qClient}>
+            <ApolloProvider client={queryClient}>
                 {/* <CourseContextProvider> */}
 
                     <div className="content-panel">

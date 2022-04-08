@@ -68,3 +68,7 @@ Classname should be add like this
 `` classname={`${styles.ComponentClass} globalClassName`} ``
 
 classname should be in camelCase
+
+pageName/index.js+styles.scss
+
+components/  pageComponent/subcompoent1/subcomp2

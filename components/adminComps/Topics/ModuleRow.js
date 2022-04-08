@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import IconButton from '../../small/IconButton';
 import Popup from 'reactjs-popup';
 import AddModulePopup from './AddModulePopup';
@@ -31,6 +31,12 @@ const ModuleRow = ( {mod} ) => {
     const [topicModal, setTopicModal] = useState(false);
     const closeTopicModal = () => setTopicModal(false);
     const [showTopic, setTopic] = useState(false);
+
+    useEffect(()=>{
+        // const all_chapters = GetCourseChapters(mod.courseId);
+    }, [])
+
+
 
     const openModalAddChapter = () => {
         setChapterModal(o => !o)

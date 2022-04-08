@@ -1,13 +1,13 @@
-import Sidebar from "../../components/large/Sidebar"
-import AdminContent from "../../components/large/AdminContent"
+;
+import Sidebar from '../../components/Sidebar';
 
 const addCourse = () => {
-      return (
-        <div>
-            <Sidebar />
-            <AdminContent />
-        </div>
-    )
-}
+  return (
+    <div>
+      <Sidebar />
+      {/* <AdminContent title="Add A New Course" /> */}
+    </div>
+  );
+};
 
 export default addCourse

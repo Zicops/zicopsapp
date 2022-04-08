@@ -1,0 +1,201 @@
+@import '../../styles/base.scss';
+
+/* Navbar */
+.navbar {
+  width: 100%;
+  height: $headerHeight;
+  padding: 0px 30px;
+  background-color: var(--header-bg);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 0px 29px 10px rgba(0, 0, 0, 0.7);
+  -webkit-box-shadow: 0px 0px 29px 10px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0px 0px 29px 10px rgba(0, 0, 0, 0.7);
+
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+
+.left,
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.menuicon {
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.menuicon img {
+  max-height: 30px;
+  max-width: 30px;
+  cursor: pointer;
+}
+
+.logo {
+  margin-right: 20px;
+  min-width: 200px;
+  display: flex;
+  justify-content: center;
+}
+.logo img {
+  max-width: 200px;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+}
+.menu ul {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+}
+.menu ul li {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark_three);
+  cursor: pointer;
+  margin: 0 15px;
+}
+.menu ul li:hover {
+  color: #c2d1d1;
+}
+.special_menu {
+  display: flex;
+  align-items: center;
+}
+.special_menu ul {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  margin: 0;
+}
+.special_menu ul li img {
+  width: 25px;
+  height: 25px;
+  padding: 5px;
+  margin: 5px 5px 0;
+  border: 1px solid var(--primary);
+  cursor: pointer;
+}
+
+.search_menu {
+  display: flex;
+  align-items: center;
+  /* transition: all 2s; */
+}
+
+.search_hide {
+  opacity: 0;
+  margin-right: -200px;
+  transition: all 0.3s;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+  /* margin-right: 50px; */
+}
+.profilepic {
+  padding-right: 10px;
+  max-width: 55px;
+  max-height: 55px;
+  border-radius: 50%;
+}
+
+.profilename {
+  padding-right: 10px;
+}
+.profilename .name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+}
+.profilename .desg {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+}
+.dropdownicon {
+  transition: 0.3s;
+  cursor: pointer;
+}
+.dropdownicon:hover {
+  transform: rotate(180deg);
+}
+
+.nav_search,
+.nav_search:focus {
+  background-color: unset;
+  color: white;
+  border: 0;
+  outline: 0;
+  border-bottom: 1px solid #ffffff80;
+  padding: 5px 35px 5px 10px;
+}
+select.nav_search_dropdown {
+  width: 50px;
+}
+select.nav_search_dropdow:selected {
+  width: 100%;
+}
+.nav_search:after {
+  content: 'searvh';
+}
+.nav_search_btn {
+  background-image: url('/images/magnifier.png');
+  width: 25px;
+  height: 25px;
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: unset;
+  border: 0;
+  padding: 5px;
+  margin-left: -30px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.nav_search_dropdown {
+  background-color: var(--primary);
+  color: var(--dark_two);
+  font-weight: 600;
+  border: 0;
+  outline: 0;
+  border-bottom: 1px solid #ffffff80;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.leftMenuDropdown {
+  background-color: red;
+  .reachMenuButton {
+    background-color: 'transparent';
+    border: 0;
+    outline: 0;
+    width: '50px';
+  }
+  .reachMenuList {
+    background-color: 'var(--dark_two)';
+    margin-top: '20px';
+    padding: 0;
+    font-size: '16px';
+    width: '250px';
+    position: 'absolute';
+    z-index: 9999;
+  }
+  .reachMenuItem {
+    color: var(--primary);
+    background-color: var(--dark_two);
+    border: 1px solid var(--primary);
+    padding: 8px;
+    margin: 3px;
+  }
+}

@@ -1,5 +1,5 @@
-import CourseHead from "../../medium/CourseHead";
-import { qClient, GET_SUB_CATS} from '../../../API/Queries'
+import CourseHead from "../../CourseHead";
+import { queryClient, GET_SUB_CATS} from '../../../API/Queries'
 import { ApolloProvider, useQuery } from '@apollo/client'
 import MUIDataTable from "mui-datatables";
 
@@ -43,7 +43,7 @@ const ZicopsSubcatsList = () => {
         <div className="content">
             <CourseHead title="Zicops Course Offerings"/>
 
-            <ApolloProvider client={qClient}>
+            <ApolloProvider client={queryClient}>
                 {/* <CourseContextProvider> */}
 
                     <div className="content-panel">

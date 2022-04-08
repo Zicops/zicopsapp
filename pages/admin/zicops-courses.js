@@ -1,5 +1,4 @@
-import Sidebar from "../../components/large/Sidebar"
-import AdminContent from "../../components/large/AdminContent"
+import Sidebar from '../../components/Sidebar';
 import ZicopsCourseList from "../../components/adminComps/ZicopsCourses/ZicopsCourseList"
 
 const ZicopsCourses = () => {

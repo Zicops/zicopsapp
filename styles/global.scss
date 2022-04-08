@@ -1,0 +1,131 @@
+// // custom video styles delete later
+// .container {
+//     position: relative;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     height: 300px;
+//     width: 500px;
+//     margin: 100px auto;
+
+
+//     .custom-ui-container{
+//         position: absolute;
+//         top: 0px;
+//         left: 0px;
+//         z-index: 5;
+//         width: 100%;
+
+//         button{
+//             border-radius: 10px;
+//             margin: 5px 10px;
+//         }
+
+//         .drawer{
+//             top: 0;
+//             width: 50%;
+//             height: 100%;
+//             right: 0;
+//             opacity: 50%;
+//             color: white;
+//         }
+//     }
+
+//     video {
+//         width: 100%;
+//     }
+
+//     // input[type="range"] {
+//     //     -webkit-appearance: none !important;
+//     //     background: rgba(255, 255, 255, 0.2);
+//     //     border-radius: 20px;
+//     //     height: 4px;
+//     //     width: 350px;
+//     // }
+
+//     // input[type="range"]::-webkit-slider-thumb {
+//     //     -webkit-appearance: none !important;
+//     //     cursor: pointer;
+//     //     height: 6px;
+//     // }
+
+//     // input[type="range"]::-moz-range-progress {
+//     //     background: white;
+//     // }
+// }
+
+
+
+// .video-wrapper {
+//     width: 100%;
+//     height: 100%;
+//     max-width: 700px;
+//     position: absolute;
+//     top: 0;
+//     display: flex;
+//     justify-content: center;
+//     overflow: hidden;
+//     border-radius: 10px;
+//     z-index: 3;
+
+// }
+
+// .container:fullscreen .video-wrapper{
+//     max-width: 100vw;
+// }
+// // .video-wrapper:hover .controls {
+// //     transform: translateY(0%);
+// // }
+
+// .controls {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-evenly;
+//     position: absolute;
+//     bottom: 0px;
+//     padding: 14px;
+//     width: 100%;
+//     max-width: 500px;
+//     flex-wrap: wrap;
+//     background: rgba(255, 255, 255, 0.25);
+//     box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.1);
+//     border-radius: 10px;
+//     border: 1px solid rgba(255, 255, 255, 0.18);
+//     transition: all 0.3s ease-in-out;
+// }
+
+// .actions button {
+//     background: none;
+//     border: none;
+//     outline: none;
+//     cursor: pointer;
+// }
+
+// .actions button i {
+//     background-color: none;
+//     color: white;
+//     font-size: 30px;
+// }
+
+// .velocity {
+//     appearance: none;
+//     background: none;
+//     color: white;
+//     outline: none;
+//     border: none;
+//     text-align: center;
+//     font-size: 16px;
+// }
+
+// .mute-btn {
+//     background: none;
+//     border: none;
+//     outline: none;
+//     cursor: pointer;
+// }
+
+// .mute-btn i {
+//     background-color: none;
+//     color: white;
+//     font-size: 20px;
+// }// custom video styles delete later
