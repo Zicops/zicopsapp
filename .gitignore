@@ -34,4 +34,4 @@ yarn-error.log*
 .vercel
 
 # video files
-/public/videos
+# /public/videos
