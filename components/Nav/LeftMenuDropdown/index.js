@@ -13,7 +13,7 @@ import { userContext } from '../../../state/contexts/UserContext';
 
 import LeftDropDownSubMenu from '../LeftDropDownSubmenu/index.js';
 
-import { languages,preferences } from '../Logic/subMenu.helper.js';
+import { languages, preferences } from '../Logic/subMenu.helper.js';
 
 export default function LeftMenuDropdown() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -22,7 +22,6 @@ export default function LeftMenuDropdown() {
     makeAdmin
   );
 
-  
   return (
     <>
       <Button
@@ -39,8 +38,8 @@ export default function LeftMenuDropdown() {
         <Image src="/images/menu.png" alt="" height="20px" width="30px" />
       </Button>
       <Menu
-      {...languages}
-      {...preferences}
+        {...languages}
+        {...preferences}
         id="fade-menu"
         anchorEl={anchorEl}
         open={open}
@@ -74,11 +73,11 @@ export default function LeftMenuDropdown() {
         }}>
         <MenuItem onSelect={() => alert('Languages')}>
           Language
-          <LeftDropDownSubMenu subData={languages}  />
+          <LeftDropDownSubMenu subData={languages} />
         </MenuItem>
         <MenuItem onSelect={() => alert('Preferences')}>
           Preferences
-          <LeftDropDownSubMenu  subData={preferences} />
+          <LeftDropDownSubMenu subData={preferences} />
         </MenuItem>
         <MenuItem
           as="a"
