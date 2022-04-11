@@ -1,26 +1,6 @@
 import { useEffect } from 'react';
 import { getQueryData } from '../../../helper/api.helper';
 
-export function filterAndSortChapter(chapters, moduleId) {
-  const filteredAndSortedChapter = chapters
-    .filter((chapter) => chapter.moduleId === moduleId)
-    .sort((c1, c2) => {
-      return c1.sequence - c2.sequence;
-    });
-
-  return filteredAndSortedChapter;
-}
-
-export function filterAndSortTopics(topics, moduleId, chapterId = '') {
-  const filteredAndSortedTopics = topics
-    .filter((topic) => topic.moduleId === moduleId && topic.chapterId === chapterId)
-    .sort((t1, t2) => {
-      return t1.sequence - t2.sequence;
-    });
-
-  return filteredAndSortedTopics;
-}
-
 export function getNewModuleObject(courseId = '', squenceNumber = 1) {
   return {
     name: '',
@@ -91,7 +71,7 @@ export function getNewResourceObject(courseId = '', topicId = '') {
     courseId: courseId,
     name: '',
     type: '',
-    topicId: topicId,
+    topicId: topicId
   };
 }
 
@@ -102,11 +82,12 @@ export function getSquenceNumber(arrayOfObj, moduleId) {
 }
 
 export function useLoadAndSetDataInContext(QUERY, variables, callbackAfterSuccess = () => {}) {
-  const { data } = getQueryData(QUERY, variables);
+  const { data, loading, error } = getQueryData(QUERY, variables);
+
   useEffect(() => {
     if (!data) return;
 
-    callbackAfterSuccess(data);
+    callbackAfterSuccess(data, error);
   }, [data]);
 }
 

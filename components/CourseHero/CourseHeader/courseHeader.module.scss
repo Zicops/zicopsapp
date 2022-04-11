@@ -1,0 +1,29 @@
+@import '../../../styles/base.scss';
+
+.heading h1{
+    font-size: 2vw;
+    line-height: 2.3vw;
+    min-height: 50px;
+}
+.heading p{
+    color: #858f8f;
+    font-size: 1vw;
+    line-height: 2vw;
+    padding-bottom: 1vh;
+}
+.heading p span{
+    color: #e2e2e2;
+    font-size: 1vw;
+    font-weight: 600;
+}
+.heading ul{
+    color: #e2e2e2;
+    font-size: 1vw;
+    display: flex;
+}
+.heading ul li{
+    color: #adadad;
+    font-size: 1vw;
+    font-weight: 600;
+    margin: 0 1.2vw;
+}

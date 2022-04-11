@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import HomeSlider from '../components/HomeSlider';
 import CardSlider from '../components/medium/CardSlider';
 import BigCardSlider from '../components/medium/BigCardSlider';
@@ -8,6 +8,7 @@ import RoundCardSlider from '../components/medium/RoundCardSlider';
 import { sliderImages, bigImages, circleImages, squareImages } from '../API/DemoSliderData';
 import { userContext } from '../state/contexts/UserContext';
 import { useRouter } from 'next/router';
+import { Skeleton } from '@mui/material';
 
 export default function Home() {
   const { isAdmin } = useContext(userContext);
@@ -91,6 +92,11 @@ export default function Home() {
       slidesToSlide: 1
     }
   };
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  setTimeout(() => {
+    setIsDataLoaded(true);
+  }, 2000);
+
   return (
     <div
       style={{
@@ -99,7 +105,16 @@ export default function Home() {
         margin: 0,
         padding: 0
       }}>
-      <HomeSlider />
+      {isDataLoaded ? (
+        <HomeSlider />
+      ) : (
+        <Skeleton
+          sx={{ bgcolor: 'dimgray' }}
+          variant="rectangular"
+          animation="wave"
+          height={391}
+        />
+      )}
 
       <CardSlider title="Continue with your Courses" data={sliderImages} />
       <CardSlider title="Recommended Courses" data={sliderImages} />

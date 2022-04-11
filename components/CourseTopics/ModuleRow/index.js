@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import Popup from 'reactjs-popup';
+import { filterAndSortChapter, filterAndSortTopics } from '../../../helper/data.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 import IconButton from '../../common/IconButton';
@@ -9,11 +10,7 @@ import AddTopicPopUp from '../AddTopicPopUp';
 import ChapterRow from '../ChapterRow';
 import styles from '../courseTopics.module.scss';
 import EditTopicPopUp from '../EditTopicPopUp';
-import {
-  filterAndSortChapter,
-  filterAndSortTopics,
-  getSquenceNumber
-} from '../Logic/courseTopics.helper';
+import { getSquenceNumber } from '../Logic/courseTopics.helper';
 import useAddChapter from '../Logic/useAddChapter';
 import useAddTopic from '../Logic/useAddTopic';
 import useAddTopicContent from '../Logic/useAddTopicContent';

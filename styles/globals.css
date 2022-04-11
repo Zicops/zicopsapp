@@ -1045,7 +1045,7 @@ transition: All 0.3s ease;
 .card_ietms_round {
   z-index: 0;
   /* border: 1px solid white; */
-  transition: all 0.2s ease-out 0.6s;
+  /* transition: all 0.2s ease-out 0.6s; */
   transform: scale(0.95);
   border-radius: 8px;
   border: 2px solid transparent;
@@ -1080,20 +1080,15 @@ transition: All 0.3s ease;
   border-left: 4px solid var(--primary);
   border-right: 4px solid var(--primary); */
 }
-/* .card_ietms[data-index='0']:hover,
-.card_ietms[data-index='5']:hover,
-.card_ietms[data-index='10']:hover,
-.card_ietms[data-index='15']:hover {
+
+.card_ietms_start:hover > li {
   margin-left: 60px;
   margin-right: -60px;
 }
-.card_ietms[data-index='4']:hover,
-.card_ietms[data-index='9']:hover,
-.card_ietms[data-index='14']:hover,
-.card_ietms[data-index='19']:hover {
+.card_ietms_end:hover {
   margin-left: -60px;
   margin-right: 60px;
-} */
+}
 
 .card-left:hover{
   margin-left: 60px;

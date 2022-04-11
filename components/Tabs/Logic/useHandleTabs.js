@@ -41,7 +41,8 @@ export default function useHandleTabs(courseContextData) {
 
   useEffect(() => {
     setCouseIdForFileContext();
-    console.log(fullCourse)
+    
+    console.log(fullCourse);
   }, [fullCourse]);
 
   function setCouseIdForFileContext(e) {

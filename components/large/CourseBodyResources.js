@@ -35,9 +35,6 @@ const CourseBodyResources = () => {
             <div style={{display: 'flex', width: '100%', padding:'0 calc(6% + 25px)', alignItems: 'center'}}>
             <Notes /><Notes /><AddNotes text="Add Resource" /><div className="col_25"></div>
             </div>
-            <div className="row" style={{padding:'0 calc(6% + 25px)'}}>
-            <Bookmark /><Bookmark />
-            </div>
         </>
      );
 }

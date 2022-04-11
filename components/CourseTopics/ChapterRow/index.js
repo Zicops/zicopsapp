@@ -1,11 +1,12 @@
 import { useContext } from 'react';
 import Popup from 'reactjs-popup';
+import { filterAndSortTopics } from '../../../helper/data.helper';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 import IconButton from '../../common/IconButton';
 import AddChapterPopUp from '../AddChapterPopUp';
 import AddTopicPopUp from '../AddTopicPopUp';
 import EditTopicPopUp from '../EditTopicPopUp';
-import { filterAndSortTopics, getSquenceNumber } from '../Logic/courseTopics.helper';
+import { getSquenceNumber } from '../Logic/courseTopics.helper';
 import useAddTopicContent from '../Logic/useAddTopicContent';
 import useEditChapter from '../Logic/useEditChapter';
 import ModuleBlock from '../ModuleBlock';

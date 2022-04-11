@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Skeleton } from '@mui/material';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import BigCard from '../small/SingleBigCard';
@@ -9,8 +10,10 @@ const BigCardSlider = ({deviceType, title, type, data, slide}) => {
 
     const [currentSlide, setCurrentSlide] = useState(0);  
     
-    // console.log(currentSlide);
-
+    const [cardData, setCardData] = useState(new Array(6).fill(null));
+    setTimeout(() => {
+        setCardData(data);  
+    }, 2000);
     return (
         <>
         <div className="cardCarosel" style={{
@@ -18,7 +21,17 @@ const BigCardSlider = ({deviceType, title, type, data, slide}) => {
             marginRight: '4%',
             paddingTop: '10px'
         }}> 
+            {cardData.every((d) => !d) ? (
+            <Skeleton
+                style={{ marginBottom: '10px' }}
+                sx={{ bgcolor: 'dimgray' }}
+                variant="text"
+                width={350}
+                height={40}
+            />
+            ) : (
             <CardSliderHeader title={title}/>
+            )}
             <Carousel 
                 swipeable={false}
                 draggable={false}
@@ -35,11 +48,18 @@ const BigCardSlider = ({deviceType, title, type, data, slide}) => {
                 customLeftArrow={<CustomLeftArrow />}
                 customRightArrow={<CustomRightArrow />}
                 >
-                {
-                data.map( (data, index) => ( 
-                    <BigCard key={index} image={data.img} />
-                ))
-                }
+                {cardData.map((data, index) => {
+                    if (!data)
+                        return (
+                            <Skeleton
+                            sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
+                            variant="rectangular"
+                            height={396}
+                            />
+                        );
+                    
+                return <BigCard key={index} image={data.img} />
+                })}
                 <div className="last-text-big">
                     See All
                 </div>
