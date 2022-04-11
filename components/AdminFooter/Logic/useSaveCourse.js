@@ -7,6 +7,8 @@ import {
   UPLOAD_COURSE_TILE_IMAGE
 } from '../../../API/Mutations';
 import { createCourseAndUpdateContext } from '../../../helper/data.helper';
+import { useRouter } from 'next/router';
+import CourseMaster from '../../Tabs/CourseMaster';
 
 export default function useSaveCourse(courseContextData) {
   const {
@@ -25,6 +27,10 @@ export default function useSaveCourse(courseContextData) {
   const [uploadTileImage] = useMutation(UPLOAD_COURSE_TILE_IMAGE);
   const [uploadPreview] = useMutation(UPLOAD_COURSE_PREVIEW);
   const [updateCourse] = useMutation(UPDATE_COURSE);
+  const router = useRouter();
+  function returnToMycourses() {
+    router.push('/admin/zicops-courses')
+  }
 
   async function saveCourseData() {
     console.log(courseContextData);
@@ -84,5 +90,5 @@ export default function useSaveCourse(courseContextData) {
     }
   }
 
-  return { fullCourse, saveCourseData };
+  return { fullCourse, saveCourseData, returnToMycourses };
 }

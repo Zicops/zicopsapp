@@ -5,7 +5,7 @@ import useSaveCourse from './Logic/useSaveCourse';
 
 export default function AdminFooter() {
   const courseContextData = useContext(courseContext);
-  const { fullCourse, saveCourseData } = useSaveCourse(courseContextData);
+  const { fullCourse, saveCourseData, returnToMycourses } = useSaveCourse(courseContextData);
 
   return (
     <div className="content-panel">
@@ -16,7 +16,7 @@ export default function AdminFooter() {
         <Link href={fullCourse.id ? `/preview?courseId=${fullCourse.id}` : `/preview`}>
           <a>Preview</a>
         </Link>
-        <button>Cancel</button>
+        <button onClick={returnToMycourses}>Cancel</button>
         
         <button type="submit" onClick={saveCourseData}>
           Save

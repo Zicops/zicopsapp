@@ -1429,7 +1429,17 @@ transition: All 0.3s ease;
    justify-content: center;
    align-items: center;
  }
+ .paginationStyle li div{
+  color: var(--white);
+ }
+.paginationStyle button {
+  color: var(--white);
+  border: 0;
+}
 
+.MuiDataGrid-iconButtonContainer{
+  color: white;
+}
 
 
 

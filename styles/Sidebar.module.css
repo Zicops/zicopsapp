@@ -42,7 +42,7 @@
 .sidebar_menu ul a.active {
     background-color: #63c0c0;
     color: #202222;
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .sidebar_menu ul a:hover:not(.active) {

@@ -2,7 +2,6 @@ import CourseHead from '../../CourseHead';
 import { queryClient, GET_LATEST_COURSES } from '../../../API/Queries';
 import { ApolloProvider, useQuery } from '@apollo/client';
 import MUIDataTable from 'mui-datatables';
-import Switch from '@mui/material/Switch';
 import {
   DataGrid,
   gridPageCountSelector,
@@ -20,8 +19,7 @@ import Router from 'next/router';
 import { fontWeight } from '@mui/system';
 import { Image } from '@mui/icons-material';
 
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
-
+// const columns = ["Id", "Name", "Created at", "Owner", "Category", "Expertise Level", "Edit"];
 const columns = [
   // {
   //   field: 'id',
@@ -74,12 +72,12 @@ const columns = [
   {
     field: 'action',
     headerClassName: 'course-list-header',
-    headerName: 'Display',
+    headerName: 'Action',
     sortable: false,
     renderCell: (params) => {
       return (
-        <button style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }} >
-          <Switch {...label} defaultChecked color="success" />
+        <button style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }} onClick={() => editCourse(params.row.id)}>
+          <img src='/images/edit-icon.png' width={20}></img>
         </button>
       );
     }
@@ -204,7 +202,7 @@ function CustomPagination() {
 function CustomAscendingIcon() {
   return (
     <div style={{marginLeft: '20px', marginTop: '5px'}}>
-      <img src="/images/upsort.svg" alt="" height={15} width={15}/>
+      <img src="/images/downsort.svg" alt="" height={15} width={15} style={{"transform": "rotate(180deg)"}}/>
     </div>
   );
 }
@@ -304,7 +302,7 @@ function LatestCourseList({ time }) {
   );
 }
 
-const ZicopsCourseList = () => {
+const MyCourseList = () => {
   var time = Date.now();
   return (
     <>
@@ -327,4 +325,4 @@ const ZicopsCourseList = () => {
 };
 
 // export default withStyles(useStyles)(ZicopsCourseList);
-export default ZicopsCourseList;
+export default MyCourseList;

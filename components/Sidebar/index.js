@@ -25,7 +25,7 @@ export default function Sidebar() {
                 onClick={() => {
                   router.pathname = val.link;
                 }}>
-                <a>{val.title}</a>
+                <a className={router.pathname == val.link || (router.route.includes('admin/courses') && val.link == '/admin/my-courses') ? styles.active : ''}>{val.title}</a>
               </Link>
             );
           })}
