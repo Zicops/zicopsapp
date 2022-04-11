@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import styles from './nav.module.scss';
+import styles from '../../styles/Nav.module.css';
 import { useContext } from 'react';
 import { AdminMenu, truncateTo16, UserMenu } from './Logic/nav.helper';
 import { useHandleNav } from './Logic/useHandleNav';

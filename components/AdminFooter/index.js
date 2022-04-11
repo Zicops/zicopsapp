@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useContext } from 'react';
 import { courseContext } from '../../state/contexts/CourseContext';
 import useSaveCourse from './Logic/useSaveCourse';
@@ -12,7 +13,11 @@ export default function AdminFooter() {
         <h3>Status: {fullCourse.status}</h3>
       </div>
       <div className="right-text">
+        <Link href={fullCourse.id ? `/preview?courseId=${fullCourse.id}` : `/preview`}>
+          <a>Preview</a>
+        </Link>
         <button>Cancel</button>
+        
         <button type="submit" onClick={saveCourseData}>
           Save
         </button>

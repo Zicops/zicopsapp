@@ -2,8 +2,6 @@ import React from 'react';
 import Select from 'react-select';
 import styles from './courseHead.module.scss';
 
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 export default function CourseHead({ title }) {
   const options = [
     { value: 'self-paced', label: 'Self Paced' },
@@ -11,13 +9,6 @@ export default function CourseHead({ title }) {
     { value: 'labs', label: 'Labs' },
     { value: 'test', label: 'Test' }
   ];
-
-  const router = useRouter();
-
-  useEffect(() => {
-    const { query: courseId } = router;
-    console.log(router, router.query);
-  }, []);
 
   return (
     <div className={`${styles.courseHead}`}>

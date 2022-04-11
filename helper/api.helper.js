@@ -11,10 +11,10 @@ export function getQueryData(QUERY, variablesObj = {}) {
   useEffect(() => {
     if (data.error) {
       console.error('Course Get Error: ', data.error);
-      alert('Error');
+      // alert('Error');
       return data;
     }
-  }, []);
+  }, [data]);
 
   return data;
 }

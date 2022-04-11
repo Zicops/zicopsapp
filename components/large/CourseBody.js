@@ -22,9 +22,9 @@ const CourseBody = () => {
       ]
     const props = {activeCourseTab:activeCourseTab, setActiveCourseTab:setActiveCourseTab, refProp:myRef};
 
-    useEffect(()=>{
-        window.scrollTo({ behavior: 'smooth', top: myRef.current.offsetTop - 200 });
-    },[activeCourseTab]);
+    // useEffect(()=>{
+    //     window.scrollTo({ behavior: 'smooth', top: myRef.current.offsetTop - 200 });
+    // },[activeCourseTab]);
 
     const showActiveTab = (activeTab) => {
         switch (activeTab) {

@@ -54,3 +54,24 @@ export function createCourseAndUpdateContext(courseContextData, createCourse) {
       console.log('Course Add Error: ', err);
     });
 }
+
+export function filterAndSortChapter(chapters, moduleId) {
+  const filteredAndSortedChapter = chapters
+    .filter((chapter) => chapter.moduleId === moduleId)
+    .sort((c1, c2) => {
+      return c1.sequence - c2.sequence;
+    });
+
+  return filteredAndSortedChapter;
+}
+
+export function filterAndSortTopics(topics, moduleId, chapterId = '') {
+  console.log(topics, moduleId, chapterId);
+  const filteredAndSortedTopics = topics
+    .filter((topic) => topic.moduleId === moduleId && topic.chapterId === chapterId)
+    .sort((t1, t2) => {
+      return t1.sequence - t2.sequence;
+    });
+
+  return filteredAndSortedTopics;
+}
