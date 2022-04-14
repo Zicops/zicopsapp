@@ -177,6 +177,7 @@ export const GET_COURSE_TOPICS = gql`
 export const GET_COURSE_TOPICS_CONTENT = gql`
   query getTopicContent($topic_id: String) {
     getTopicContent(topic_id: $topic_id) {
+      id
       language
       topicId
       startTime

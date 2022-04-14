@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useEffect } from 'react';
 import Button from './Button';
 import { 
   controlBar, 
@@ -29,6 +30,7 @@ export default function ControlBar({
     <div className={`${controlBar}`}>
       <input
         type="range"
+        id="vidInput"
         onChange={handleProgress}
         value={progress}
         min={0}

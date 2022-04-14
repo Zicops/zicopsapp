@@ -489,8 +489,8 @@ export const UPLOAD_TOPIC_RESOURCE = gql`
 `;
 
 export const UPLOAD_TOPIC_CONTENT_VIDEO = gql`
-  mutation uploadTopicContentVideo($file: Upload, $courseId: String, $topicId: String) {
-    uploadTopicContentVideo(file: { file: $file, courseId: $courseId, topicId: $topicId }) {
+  mutation uploadTopicContentVideo($file: Upload, $courseId: String, $contentId: String) {
+    uploadTopicContentVideo(file: { file: $file, courseId: $courseId, contentId: $contentId }) {
       success
       url
     }
@@ -498,8 +498,8 @@ export const UPLOAD_TOPIC_CONTENT_VIDEO = gql`
 `;
 
 export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
-  mutation uploadTopicContentSubtitle($file: Upload, $courseId: String, $topicId: String) {
-    uploadTopicContentSubtitle(file: { file: $file, courseId: $courseId, topicId: $topicId }) {
+  mutation uploadTopicContentSubtitle($file: Upload, $courseId: String, $contentId: String) {
+    uploadTopicContentSubtitle(file: { file: $file, courseId: $courseId, contentId: $contentId }) {
       success
       url
     }
@@ -530,6 +530,7 @@ export const ADD_TOPIC_CONTENT = gql`
         type: $type
       }
     ) {
+      id
       language
       topicId
       startTime

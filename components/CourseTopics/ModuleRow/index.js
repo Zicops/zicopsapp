@@ -40,8 +40,33 @@ export default function ModuleRow({ data, courseId, editDetails }) {
     handleChapterInput,
     addNewChapter
   } = useAddChapter(moduleContextData);
-  const addTopicData = useAddTopic(moduleContextData);
+
   const editTopicData = useEditTopic(moduleContextData);
+  const {
+    activateEditTopic,
+    isEditTopicPopUpOpen,
+    toggleEditTopicPopUp,
+    currentTopic,
+    isEditTopicReady,
+    saveAllData,
+    addTopicContent,
+  } = editTopicData;
+  
+  const {
+    handleAddTopicContentInput,
+    saveVideoInContext,
+    saveSubtitleInContext,
+    addNewTopicContent,
+    isTopicContentFormVisible,
+    toggleTopicContentForm,
+    bingeData,
+    newTopicContent,
+    newTopicContentVideo,
+    newTopicContentSubtitle
+  } = addTopicContent;
+
+  const addTopicData = useAddTopic(moduleContextData, toggleEditTopicPopUp, toggleTopicContentForm);
+
   const {
     newTopic,
     isAddTopicPopUpOpen,
@@ -51,24 +76,6 @@ export default function ModuleRow({ data, courseId, editDetails }) {
     handleTopicInput,
     addNewTopic
   } = addTopicData;
-  const {
-    activateEditTopic,
-    isEditTopicPopUpOpen,
-    toggleEditTopicPopUp,
-    currentTopic,
-    isEditTopicReady,
-    saveAllData
-  } = editTopicData;
-
-  const {
-    handleAddTopicContentInput,
-    saveVideoInContext,
-    saveSubtitleInContext,
-    addNewTopicContent,
-    isTopicContentFormVisible,
-    toggleTopicContentForm,
-    bingeData
-  } = useAddTopicContent(moduleContextData, currentTopic);
 
   const isChapterPresent = moduleData.isChapter;
   let filteredAndSortedData = [];
@@ -160,6 +167,9 @@ export default function ModuleRow({ data, courseId, editDetails }) {
             isTopicAddReady={isEditTopicReady}
             saveAllData={saveAllData}
             bingeData={bingeData}
+            newTopicContent={newTopicContent}
+            newTopicContentVideo={newTopicContentVideo}
+            newTopicContentSubtitle={newTopicContentSubtitle}
           />
         </Popup>
         <Popup open={isAddTopicPopUpOpen} closeOnDocumentClick={false}>

@@ -6,9 +6,15 @@ import ControlBar from '../VideoPlayer/ControlBar';
 import styles from './customVideoPlayer.module.scss';
 import useVideoPlayer from './Logic/useHandleVideo';
 import useSaveData from './Logic/useSaveData';
+import { courseContext } from '../../state/contexts/CourseContext';
 
 export default function CustomVideo({ set }) {
   const PlayerClose = () => set(false);
+  let videoSrc = '/videos/zicops-product-demo-learner-panel.mp4';
+
+  const { fullCourse } = useContext(courseContext);
+  if (fullCourse?.previewVideo) videoSrc = fullCourse.previewVideo;
+
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
 
@@ -41,16 +47,29 @@ export default function CustomVideo({ set }) {
     handleNotesChange,
     handleSaveNotes
   } = useSaveData(videoElement, userContextData);
+
+  const [hideControls, setHideControls] = useState(0);
+
   const vidRef = useRef();
 
-  // setTimeout(function(){
-  //   vidRef?.current?.style.opacity = "1";
-  // }, 3000)
+  // If no mouse movement for 3 sec, setHideControls(1)
+  // var elem = vidRef?.current;
+  var timeout;
+  var duration = 2500;
+  document.addEventListener('mousemove', function () {
+    // console.log("Mouse is moving!")
+    setHideControls(0);
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      // console.log("Mouse Has stopped!");
+      setHideControls(1);
+    }, duration);
+  });
 
   return (
     <div className={styles.videoContainer} ref={videoContainer}>
       {/* <div className="custom-ui-container">Custom Bar</div> */}
-      <div className={`${styles.customUiContainer}`}>
+      <div className={`${styles.customUiContainer} ${hideControls ? styles.fadeHideTop : ''}`}>
         <div className={`${styles.topIconsContainer}`}>
           <div className={`${styles.firstIcon}`} onClick={PlayerClose}>
             <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
@@ -143,13 +162,14 @@ export default function CustomVideo({ set }) {
       </div>
       <div className="video_wrapper">
         <video
-          src="/videos/zicops-product-demo-learner-panel.mp4"
+          src={videoSrc}
           ref={videoElement}
           onTimeUpdate={handleOnTimeUpdate}
           muted={playerState.isMuted}
           id="video"
         />
-        <div className={styles.controls} ref={vidRef}>
+        {/* {!hideControls && */}
+        <div className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`} ref={vidRef}>
           <ControlBar
             isPause={playerState.isPlaying}
             reloadVideo={reloadVideo}
@@ -164,6 +184,7 @@ export default function CustomVideo({ set }) {
             handleVolume={handleVolume}
           />
         </div>
+        {/* } */}
       </div>
     </div>
   );

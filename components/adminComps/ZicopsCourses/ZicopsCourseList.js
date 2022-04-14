@@ -7,6 +7,8 @@ import {
   DataGrid,
   gridPageCountSelector,
   gridPageSelector,
+  GridToolbarContainer,
+  GridToolbarExport,
   useGridApiContext,
   useGridSelector
 } from '@mui/x-data-grid';
@@ -19,6 +21,7 @@ import { useContext } from 'react';
 import Router from 'next/router';
 import { fontWeight } from '@mui/system';
 import { Image } from '@mui/icons-material';
+import { Box } from '@mui/material';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -78,8 +81,10 @@ const columns = [
     sortable: false,
     renderCell: (params) => {
       return (
+
         <button style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }} >
           <Switch {...label} defaultChecked color="success" />
+
         </button>
       );
     }
@@ -204,7 +209,7 @@ function CustomPagination() {
 function CustomAscendingIcon() {
   return (
     <div style={{marginLeft: '20px', marginTop: '5px'}}>
-      <img src="/images/upsort.svg" alt="" height={15} width={15}/>
+      <img src="/images/downsort.svg" alt="" height={15} width={15} style={{"transform": "rotate(180deg)"}}/>
     </div>
   );
 }
@@ -215,6 +220,22 @@ function CustomDescendingIcon() {
     </div>
   );
 }
+
+function CustomFooter() {
+  return (
+    <Box sx={{ padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
+      <div>
+        <GridToolbarExport name="Download" />
+      </div>
+
+      <div>
+        <CustomPagination />
+      </div>
+    </Box>
+
+  );
+}
+
 function LatestCourseList({ time }) {
   // const classes = useStyles();
   let latest = [];
@@ -243,7 +264,7 @@ function LatestCourseList({ time }) {
   // console.log(data1);
 
   return (
-    <div style={{ height: '490px' }}>
+    <div style={{ height: '70vh' }}>
       {/* <MUIDataTable className={classes.root}
                 data={latest}
                 columns={columns}
@@ -265,9 +286,9 @@ function LatestCourseList({ time }) {
           disableSelectionOnClick
           // sortModel={[{ field: 'name', sort: 'asc' }]}
           components={{
-            Pagination: CustomPagination,
             ColumnSortedDescendingIcon: CustomDescendingIcon,
             ColumnSortedAscendingIcon: CustomAscendingIcon,
+            Footer: CustomFooter
           }}
           pageSize={7}
           rowsPerPageOptions={[5]}

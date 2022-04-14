@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import { ADD_COURSE_CHAPTER, ADD_COURSE_TOPIC } from '../../../API/Mutations';
 import { getNewChapterObject, getNewTopicObject } from './courseTopics.helper';
 
-export default function useAddTopic(moduleContextData) {
+export default function useAddTopic(
+  moduleContextData,
+  toggleEditTopicPopUp,
+  toggleTopicContentForm
+) {
   const { topic, addAndUpdateTopic } = moduleContextData;
 
   const [isAddTopicReady, setIsAddTopicReady] = useState(false);
@@ -33,17 +37,50 @@ export default function useAddTopic(moduleContextData) {
     });
   }
 
-  function addNewTopic() {
-    console.log(newTopic);
-    createCourseTopic({
+  const [isTopicSavedInContext, setIsTopicSavedInContext] = useState({
+    topicId: '',
+    count: 0
+  });
+
+  useEffect(() => {
+    if (isTopicSavedInContext.topicId) {
+      const index = topic.findIndex((t) => t.id === isTopicSavedInContext.topicId);
+
+      if (index > 0) {
+        setIsTopicSavedInContext({
+          ...isTopicSavedInContext,
+          count: ++isTopicSavedInContext.count,
+          topicId: ''
+        });
+        toggleEditTopicPopUp(isTopicSavedInContext.topicId);
+        toggleTopicContentForm();
+        return;
+      }
+
+      setIsTopicSavedInContext({
+        ...isTopicSavedInContext,
+        count: ++isTopicSavedInContext.count
+      });
+    }
+  }, [topic]);
+
+  async function addNewTopic() {
+    console.log('newTopic', newTopic);
+    const res = await createCourseTopic({
       variables: {
         ...newTopic
       }
-    }).then((d) => {
-      addAndUpdateTopic(d.data.addCourseTopic);
-      setNewTopic(getNewTopicObject());
-      setIsAddTopicPopUpOpen(false);
     });
+
+    setIsTopicSavedInContext({
+      ...isTopicSavedInContext,
+      topicId: res.data.addCourseTopic.id,
+      count: ++isTopicSavedInContext.count
+    });
+
+    await addAndUpdateTopic(res.data.addCourseTopic);
+    setNewTopic(getNewTopicObject());
+    setIsAddTopicPopUpOpen(false);
   }
 
   return {

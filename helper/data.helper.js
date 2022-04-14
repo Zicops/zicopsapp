@@ -66,7 +66,6 @@ export function filterAndSortChapter(chapters, moduleId) {
 }
 
 export function filterAndSortTopics(topics, moduleId, chapterId = '') {
-  console.log(topics, moduleId, chapterId);
   const filteredAndSortedTopics = topics
     .filter((topic) => topic.moduleId === moduleId && topic.chapterId === chapterId)
     .sort((t1, t2) => {
@@ -74,4 +73,10 @@ export function filterAndSortTopics(topics, moduleId, chapterId = '') {
     });
 
   return filteredAndSortedTopics;
+}
+
+export function filterTopicContent(topicContent, topicId = '') {
+  const filteredTopicContent = topicContent.filter((content) => content.topicId === topicId);
+  console.log(filteredTopicContent, topicId);
+  return filteredTopicContent;
 }

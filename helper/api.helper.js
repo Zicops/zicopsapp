@@ -8,9 +8,12 @@ export function getQueryData(QUERY, variablesObj = {}) {
     client: queryClient
   });
 
+  console.log('API RES: ', data.data);
+
   useEffect(() => {
     if (data.error) {
-      console.error('Course Get Error: ', data.error);
+      // console.error('Variables: ', variablesObj);
+      // console.error('Course Get Error: ', data.error);
       // alert('Error');
       return data;
     }

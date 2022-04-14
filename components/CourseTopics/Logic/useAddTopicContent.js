@@ -5,9 +5,22 @@ import {
   UPLOAD_TOPIC_CONTENT_SUBTITLE,
   UPLOAD_TOPIC_CONTENT_VIDEO
 } from '../../../API/Mutations';
+import {
+  getNewTopicContentObject,
+  getNewTopicSubtitleObject,
+  getNewTopicVideoObject
+} from './courseTopics.helper';
 
 export default function useAddTopicContent(moduleContextData, topic) {
-  const [isTopicContentFormVisible, setIsTopicContentFormVisible] = useState(false);
+  const [isTopicContentFormVisible, setIsTopicContentFormVisible] = useState(true);
+
+  const [newTopicContent, setNewTopicContent] = useState(getNewTopicContentObject(topic?.id));
+  const [newTopicContentVideo, setNewTopicContentVideo] = useState(
+    getNewTopicVideoObject(topic.courseId)
+  );
+  const [newTopicContentSubtitle, setNewTopicContentSubtitle] = useState(
+    getNewTopicSubtitleObject(topic.courseId)
+  );
 
   const {
     topicContent,
@@ -17,6 +30,10 @@ export default function useAddTopicContent(moduleContextData, topic) {
     topicSubtitle,
     setCourseTopicSubtitle
   } = moduleContextData;
+
+  // const [addCourseTopicContent] = useMutation(ADD_TOPIC_CONTENT);
+  // const [uploadCourseContentVideo] = useMutation(UPLOAD_TOPIC_CONTENT_VIDEO);
+  // const [uploadCourseContentSubtitle] = useMutation(UPLOAD_TOPIC_CONTENT_SUBTITLE);
 
   const startTimeMin = Math.floor(parseInt(topicContent.startTime) / 60);
   const startTimeSec = parseInt(topicContent.startTime) - startTimeMin * 60;
@@ -32,28 +49,41 @@ export default function useAddTopicContent(moduleContextData, topic) {
   });
 
   useEffect(() => {
-    addUpdateTopicContent({
-      ...topicContent,
-      topicId: topic.id
+    setNewTopicContent({
+      ...newTopicContent,
+      ...getNewTopicContentObject(topic.id)
     });
-    setCourseTopicVideo({
-      ...topicVideo,
-      topicId: topic.id,
-      courseId: topic.courseId
+    setNewTopicContentVideo({
+      ...newTopicContentVideo,
+      ...getNewTopicVideoObject(topic.courseId, topicContent.length)
     });
-    setCourseTopicSubtitle({
-      ...topicSubtitle,
-      topicId: topic.id,
-      courseId: topic.courseId
+    setNewTopicContentSubtitle({
+      ...newTopicContentSubtitle,
+      ...getNewTopicSubtitleObject(topic.courseId, topicContent.length)
     });
-    console.log(topic, 'topw');
+    // addUpdateTopicContent({
+    //   ...topicContent,
+    //   topicId: topic.id
+    // });
+    // setCourseTopicVideo({
+    //   ...topicVideo,
+    //   courseId: topic.courseId
+    // });
+    // setCourseTopicSubtitle({
+    //   ...topicSubtitle,
+    //   courseId: topic.courseId
+    // });
   }, [topic]);
 
-  function toggleTopicContentForm() {
+  function toggleTopicContentForm(value) {
+    // console.log('form show value', value, isTopicContentFormVisible);
+    if (typeof value === 'boolean') return setIsTopicContentFormVisible(value);
+
     setIsTopicContentFormVisible(!isTopicContentFormVisible);
   }
 
   function handleAddTopicContentInput(e) {
+    console.log(e.target.value);
     const name = e.target.name;
     if (e.target.type === 'checkbox') {
       switchEndAndStartTime(e.target.checked);
@@ -90,18 +120,23 @@ export default function useAddTopicContent(moduleContextData, topic) {
       });
     }
 
-    addUpdateTopicContent({
-      ...topicContent,
+    if (e.target.name === 'language') {
+      const isLanguagePresent = topicContent.some((content) => {
+        return content.language === e.target.value;
+      });
+
+      if (isLanguagePresent)
+        return alert(`Topic Content already added in language ${e.target.value}`);
+    }
+    setNewTopicContent({
+      ...newTopicContent,
       [e.target.name]: e.target.value
     });
-
-    console.log(topicContent);
   }
 
   function addBingeToContext(minutes, seconds, name) {
     minutes = parseInt(minutes);
     seconds = parseInt(seconds);
-    console.log(minutes, seconds, minutes * 60 + seconds);
     addUpdateTopicContent({
       ...topicContent,
       [name]: minutes * 60 + seconds
@@ -126,8 +161,8 @@ export default function useAddTopicContent(moduleContextData, topic) {
 
   function saveVideoInContext(e) {
     if (!e.target.files) {
-      return addUpdateTopicContent({
-        ...topicContent,
+      return setNewTopicContent({
+        ...newTopicContent,
         duration: 0
       });
     }
@@ -140,33 +175,70 @@ export default function useAddTopicContent(moduleContextData, topic) {
       window.URL.revokeObjectURL(video.src);
       duration = video.duration;
 
-      addUpdateTopicContent({
-        ...topicContent,
+      setNewTopicContent({
+        ...newTopicContent,
         duration: parseInt(duration)
       });
     };
 
-    setCourseTopicVideo({
-      ...topicVideo,
-      file: e.target.files[0]
+    setNewTopicContentVideo({
+      ...newTopicContentVideo,
+      file: e.target.files[0],
+      contentIndex: topicContent.length
     });
   }
 
   function saveSubtitleInContext(e) {
-    console.log(e.target.files);
     if (!e.target.files) return;
-    console.log(e.target.files);
 
-    setCourseTopicSubtitle({
-      ...topicSubtitle,
-      file: e.target.files[0]
+    setNewTopicContentSubtitle({
+      ...newTopicContentSubtitle,
+      file: e.target.files[0],
+      contentIndex: topicContent.length
     });
   }
 
   function addNewTopicContent() {
-    console.log(topicContent);
+    console.log(
+      'new topic content',
+      newTopicContent,
+      newTopicContentVideo,
+      newTopicContentSubtitle
+    );
 
-    setIsTopicContentFormVisible(true);
+    if (!newTopicContent.language) {
+      return alert('Please select language');
+    }
+    if (!newTopicContent.type) {
+      return alert('Please select type');
+    }
+    if (!newTopicContentVideo.file) {
+      return alert('Please add video file');
+    }
+    // addCourseTopicContent({
+    //   variables: {
+    //     ...topicContent
+    //   }
+    // })
+    //   .then((d) => {
+    //     addUpdateTopicContent(d.data.addTopicContent);
+    //     setIsTopicContentFormVisible(true);
+    //   })
+    //   .catch((err) => {
+    //     console.log('Topic Content Save Error: ', err);
+    //     alert('Topic Content Save Error, Check Log');
+    //   });
+
+    // uploadCourseContentVideo({ variables: topicVideo });
+    // if (topicSubtitle.file) uploadCourseContentSubtitle({ variables: topicSubtitle });
+    addUpdateTopicContent({ ...newTopicContent });
+    setCourseTopicVideo({ ...newTopicContentVideo });
+    setCourseTopicSubtitle({ ...newTopicContentSubtitle });
+
+    setIsTopicContentFormVisible(false);
+    setNewTopicContent(getNewTopicContentObject(topic.id));
+    setNewTopicContentVideo(getNewTopicVideoObject(topic.courseId));
+    setNewTopicContentSubtitle(getNewTopicSubtitleObject(topic.courseId));
   }
 
   return {
@@ -176,6 +248,9 @@ export default function useAddTopicContent(moduleContextData, topic) {
     addNewTopicContent,
     isTopicContentFormVisible,
     toggleTopicContentForm,
-    bingeData
+    bingeData,
+    newTopicContent,
+    newTopicContentVideo,
+    newTopicContentSubtitle
   };
 }

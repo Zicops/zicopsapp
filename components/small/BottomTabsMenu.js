@@ -7,7 +7,7 @@ const BottomTabsMenu = ( {props} ) => {
         <> 
             <div className="bottomtabs my_30">
                 <ul>
-                {list.filter( (item) => item !== props.activeCourseTab ).map((li)=><li onClick={() => props.setActiveCourseTab(li)}>{li}</li>)}
+                    {list.filter((item) => item !== props.activeCourseTab).map((li, i) => <li key={i} onClick={() => props.setActiveCourseTab(li)}>{li}</li>)}
                 </ul>
             </div>
             <style jsx>

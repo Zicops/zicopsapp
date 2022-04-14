@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import IconButton from '../../common/IconButton';
@@ -6,14 +6,19 @@ import styles from '../../../styles/CourseMaster.module.css';
 import useAddResources from '../Logic/useAddResources';
 import QuizAdded from '../../small/QuizAdded';
 
-export default function Resources({ topic }) {
+export default function Resources({ topicId }) {
   const { fullCourse } = useContext(courseContext);
   const moduleContextData = useContext(moduleContext);
   const { newResource, handleResourceInput, addNewResource, isFormVisible, toggleFormVisibility } =
-    useAddResources(moduleContextData, fullCourse.id, topic.id);
+    useAddResources(moduleContextData, fullCourse.id, topicId);
 
-  const { resources } = moduleContextData;
-  // console.log('ssss', resources);
+  const { resources, addResourcesToTopic } = moduleContextData;
+
+  useEffect(() => {
+    return () => {
+      addResourcesToTopic('clear');
+    };
+  }, []);
 
   return (
     <>
@@ -118,8 +123,6 @@ export default function Resources({ topic }) {
       <div className="row my_30">
         <IconButton styleClass="btnBlack" text="Add Resources" handleClick={toggleFormVisibility} />
       </div>
-
-      {/* {resources} */}
     </>
   );
 }

@@ -13,6 +13,11 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     playerState.isPlaying ? videoElement.current.play() : videoElement.current.pause();
   }, [playerState.isPlaying, videoElement]);
 
+  // TODO : Change this to Ref OR change entire input range to DIV
+  useEffect(() => {
+    document.getElementById('vidInput')?.style.background = 'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' + playerState.progress + '%, #22252980 ' + playerState.progress + '%, #22252980 100%)';
+  }, [playerState.progress]);
+  
   function togglePlay() {
     setPlayerState({
       ...playerState,
@@ -30,6 +35,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
 
   const handleOnTimeUpdate = () => {
     const progress = (videoElement.current.currentTime / videoElement.current.duration) * 100;
+    // document.getElementById('vidInput').style.background = 'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' + progress + '%, #22252980 ' + progress + '%, #22252980 100%)'
     setPlayerState({
       ...playerState,
       progress
@@ -38,6 +44,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
 
   const handleVideoProgress = (event) => {
     const manualChange = Number(event.target.value);
+    // event.target.style.background = 'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' + manualChange + '%, #22252980 ' + manualChange + '%, #22252980 100%)'
     setVideoTime(manualChange);
   };
 

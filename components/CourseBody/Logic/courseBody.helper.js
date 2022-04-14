@@ -1,6 +1,6 @@
-import CourseBodyAbout from '../../large/CourseBodyAbout';
 import CourseBodyNotes from '../../large/CourseBodyNotes';
 import CourseBodyResources from '../../large/CourseBodyResources';
+import CourseBodyAbout from '../CourseBodyAbout';
 import CourseBodyTopics from '../CourseBodyTopics';
 
 export const tabs = [
