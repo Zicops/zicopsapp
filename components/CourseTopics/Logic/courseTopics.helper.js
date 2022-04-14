@@ -50,18 +50,18 @@ export function getNewTopicContentObject(topicId = '') {
   };
 }
 
-export function getNewTopicVideoObject(courseId = '', topicId = '') {
+export function getNewTopicVideoObject(courseId = '', contentIndex = '') {
   return {
     courseId: courseId,
-    topicId: topicId,
+    contentIndex: contentIndex,
     file: ''
   };
 }
 
-export function getNewTopicSubtitleObject(courseId = '', topicId = '') {
+export function getNewTopicSubtitleObject(courseId = '', contentIndex = '') {
   return {
     courseId: courseId,
-    topicId: topicId,
+    contentIndex: contentIndex,
     file: ''
   };
 }

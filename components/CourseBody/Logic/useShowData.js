@@ -55,10 +55,10 @@ export default function useShowData(courseContextData, moduleContextData) {
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      setSelectedModule(getModuleOptions()[0]);
-    }, 1000);
-  }, []);
+    setSelectedModule(getModuleOptions()[0]);
+    console.log('slected mod', getModuleOptions());
+  }, [moduleData]);
+
   // load topicContent
   // TODO: call this on activateEditTopic has been called and after currentTopic has id
   //   useLoadAndSetDataInContext(GET_COURSE_TOPICS_CONTENT, { topic_id: currentTopic.id }, (data) => {
@@ -80,7 +80,7 @@ export default function useShowData(courseContextData, moduleContextData) {
 
   function getModuleOptions() {
     // if (!moduleData.length) return [{ value: '', label: '' }];
-
+    console.log('moduleData getopton', moduleData);
     const options = [];
     moduleData.forEach((mod) => {
       options.push({

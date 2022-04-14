@@ -5,12 +5,21 @@ import { courseContext } from '../../state/contexts/CourseContext';
 import DropdownSelect from '../Tabs/DropdownSelect';
 import useHandleTabs from '../Tabs/Logic/useHandleTabs';
 import DragDrop from './DragAndDrop';
+import PreviewImage from './PreviewImage';
 
 export default function CourseDetails() {
   const courseContextData = useContext(courseContext);
-  const { fullCourse, fileData, handleChange } = useHandleTabs(courseContextData);
+  const {
+    fullCourse,
+    fileData,
+    handleChange,
+    togglePreviewPopUp,
+    previewFileData,
+    removeSavedFile
+  } = useHandleTabs(courseContextData);
 
-  const { courseImage, courseTileImage, courseVideo } = courseContextData;
+  const { courseVideo, courseImage, courseTileImage } = courseContextData;
+
   return (
     <div className="course_master">
       <DropdownSelect
@@ -88,12 +97,31 @@ export default function CourseDetails() {
               type="file"
               name="uploadCourseVideo"
               accept="video/mp4"
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e);
+                console.log(e);
+              }}
             />
           </div>
           <div className="preview_remove_links">
-            <a className="preview">Preview</a>
-            <a className="remove">Remove</a>
+            <a
+              className="preview"
+              onClick={() => {
+                if (fullCourse.previewVideo || courseVideo?.file) {
+                  togglePreviewPopUp(
+                    fileData.uploadCourseVideo,
+                    fullCourse.previewVideo || courseVideo?.file,
+                    true
+                  );
+                } else {
+                  alert('No File detected, please upload');
+                }
+              }}>
+              Preview
+            </a>
+            <a className="remove" onClick={() => removeSavedFile('uploadCourseVideo')}>
+              Remove
+            </a>
           </div>
         </div>
         <div className="col_50">
@@ -124,8 +152,23 @@ export default function CourseDetails() {
             />
           </div>
           <div className="preview_remove_links">
-            <a className="preview">Preview</a>
-            <a className="remove">Remove</a>
+            <a
+              className="preview"
+              onClick={() => {
+                if (fullCourse.tileImage || courseTileImage?.file) {
+                  togglePreviewPopUp(
+                    fileData.uploadCourseImage,
+                    fullCourse.tileImage || courseTileImage?.file
+                  );
+                } else {
+                  alert('No File detected, please upload');
+                }
+              }}>
+              Preview
+            </a>
+            <a className="remove" onClick={() => removeSavedFile('uploadCourseImage')}>
+              Remove
+            </a>
           </div>
         </div>
         <div className="col_50">
@@ -148,16 +191,23 @@ export default function CourseDetails() {
               </span>
               Browse & upload
             </button>
-            <input
-              type="file"
-              name="myfile"
-              accept=".jpeg, .png, .gif"
-              onChange={handleChange}
-            />
+            <input type="file" name="myfile" accept=".jpeg, .png, .gif" onChange={handleChange} />
           </div>
           <div className="preview_remove_links">
-            <a className="preview">Preview</a>
-            <a className="remove">Remove</a>
+            <a
+              className="preview"
+              onClick={() => {
+                if (fullCourse.image || courseImage?.file) {
+                  togglePreviewPopUp(fileData.myfile, fullCourse.image || courseImage?.file);
+                } else {
+                  alert('No File detected, please upload');
+                }
+              }}>
+              Preview
+            </a>
+            <a className="remove" onClick={() => removeSavedFile('myfile')}>
+              Remove
+            </a>
           </div>
         </div>
         <div className="col_50">
@@ -179,6 +229,18 @@ export default function CourseDetails() {
           placeholder={' Provide and outline of the course in less than 1000 characters...'}
         />
       </div>
+
+      {previewFileData && (
+        <PreviewImage
+          fileName={previewFileData.fileName}
+          filePath={previewFileData.filePath}
+          isVideo={previewFileData.isVideo}
+          popUpData={{
+            closeBtn: { name: 'Close', handleClick: togglePreviewPopUp },
+            submitBtn: { name: 'Download' }
+          }}
+        />
+      )}
     </div>
   );
 }

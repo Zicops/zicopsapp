@@ -5,21 +5,25 @@ import useSaveCourse from './Logic/useSaveCourse';
 
 export default function AdminFooter() {
   const courseContextData = useContext(courseContext);
-  const { fullCourse, saveCourseData, returnToMycourses } = useSaveCourse(courseContextData);
+  const { fullCourse, saveCourseData, isCourseSaved, returnToMycourses } =
+    useSaveCourse(courseContextData);
 
   return (
     <div className="content-panel">
       <div className="left-text">
-        <h3>Status: {fullCourse.status}</h3>
+        <h3>Status: {isCourseSaved ? fullCourse.status : isCourseSaved}</h3>
       </div>
       <div className="right-text">
-        <Link href={fullCourse.id ? `/preview?courseId=${fullCourse.id}` : `/preview`}>
-          <a>Preview</a>
-        </Link>
+        {fullCourse.id && (
+          <Link href={`/preview?courseId=${fullCourse.id}`}>
+            <a>Preview</a>
+          </Link>
+        )}
+
         <button onClick={returnToMycourses}>Cancel</button>
-        
+
         <button type="submit" onClick={saveCourseData}>
-          Save
+          {isCourseSaved ? 'Update' : 'Save'}
         </button>
       </div>
 

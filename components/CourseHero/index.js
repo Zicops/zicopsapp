@@ -1,4 +1,4 @@
-import { Skeleton } from '@mui/material';
+import { Link, Skeleton } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
 import { GET_COURSE } from '../../API/Queries';
@@ -49,50 +49,52 @@ export default function CourseHero({ set }) {
   } = courseContextData?.fullCourse;
 
   return (
-      <div className={`${style.course_header}`}>
-        <div className={`${style.gradient}`}>
-          <div className={`${style.back_btn}`} onClick={() => router.back()}>
+    <div className={`${style.course_header}`}>
+      <div className={`${style.gradient}`}>
+        <Link href={`/admin/courses?courseId=${courseContextData?.fullCourse.id}`}>
+          <a className={`${style.back_btn}`}>
             <img src="/images/bigarrowleft.png" alt="" />
+          </a>
+        </Link>
+
+        <div className={`${style.course_header_text}`}>
+          <CourseHeader
+            courseTitle={courseTitle}
+            provisionedBy={provisionedBy}
+            category={category}
+            subCategory={subCategory}
+            duration={duration?.toString()}
+          />
+
+          <div className={`${style.summary}`}>
+            {summary || (
+              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
+            )}
+          </div>
+          <div className={`${style.more_info}`}>
+            <Info name="Key take-aways" data={benefits?.join(', ')} />
+            <Info name="Expertise Level" data={expertiseLevel?.split(',').join(' | ')} />
           </div>
 
-          <div className={`${style.course_header_text}`}>
-            <CourseHeader
-              courseTitle={courseTitle}
-              provisionedBy={provisionedBy}
-              category={category}
-              subCategory={subCategory}
-              duration={duration?.toString()}
-            />
-
-            <div className={`${style.summary}`}>
-              {summary || (
-                <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
+          <div className={`${style.course_big_button}`}>
+            <button onClick={ShowPlayer}>Preview the course</button>
+          </div>
+          <div className={`${style.suggested_completion}`}>
+            <p>
+              ** Suggested duration for completion of this course is{' '}
+              {duration?.toString() || (
+                <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
               )}
-            </div>
-            <div className={`${style.more_info}`}>
-              <Info name="Key take-aways" data={benefits?.join(', ')} />
-              <Info name="Expertise Level" data={expertiseLevel?.split(',').join(' | ')} />
-            </div>
+            </p>
+          </div>
 
-            <div className={`${style.course_big_button}`}>
-              <button onClick={ShowPlayer}>Preview the course</button>
-            </div>
-            <div className={`${style.suggested_completion}`}>
-              <p>
-                ** Suggested duration for completion of this course is{' '}
-                {duration?.toString() || (
-                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
-                )}
-              </p>
-            </div>
-
-            <div className={`${style.more_info}`}>
-              <Info name="Prerequisites" data={prequisites?.join(', ')} />
-              <Info name="Good for" data={goodFor?.join(', ')} />
-              <Info name="Must for" data={mustFor?.join(', ')} />
-            </div>
+          <div className={`${style.more_info}`}>
+            <Info name="Prerequisites" data={prequisites?.join(', ')} />
+            <Info name="Good for" data={goodFor?.join(', ')} />
+            <Info name="Must for" data={mustFor?.join(', ')} />
           </div>
         </div>
       </div>
+    </div>
   );
 }

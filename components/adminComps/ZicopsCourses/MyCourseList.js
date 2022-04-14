@@ -241,7 +241,7 @@ function LatestCourseList({ time }) {
   // console.log(data1);
 
   return (
-    <div style={{ height: '490px' }}>
+    <div style={{ height: '70vh' }}>
       {/* <MUIDataTable className={classes.root}
                 data={latest}
                 columns={columns}
@@ -306,9 +306,9 @@ const MyCourseList = () => {
   var time = Date.now();
   return (
     <>
-      <div className="content-panel">
+      {/* <div className="content-panel"> */}
         <LatestCourseList time={time} />
-      </div>
+      {/* </div> */}
 
       <style jsx>
         {`

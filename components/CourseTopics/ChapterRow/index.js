@@ -51,7 +51,8 @@ export default function ChapterRow({
     toggleEditTopicPopUp,
     currentTopic,
     isEditTopicReady,
-    saveAllData
+    saveAllData,
+    addTopicContent
   } = editTopicData;
 
   const {
@@ -61,8 +62,11 @@ export default function ChapterRow({
     addNewTopicContent,
     isTopicContentFormVisible,
     toggleTopicContentForm,
-    bingeData
-  } = useAddTopicContent(moduleContextData, currentTopic);
+    bingeData,
+    newTopicContent,
+    newTopicContentVideo,
+    newTopicContentSubtitle
+  } = addTopicContent;
 
   return (
     <>
@@ -74,7 +78,6 @@ export default function ChapterRow({
 
       {filteredAndSortedData &&
         filteredAndSortedData.map((topic) => {
-          console.log(topic);
           return (
             <ModuleBlock
               key={topic.id}
@@ -113,6 +116,9 @@ export default function ChapterRow({
           isTopicAddReady={isEditTopicReady}
           saveAllData={saveAllData}
           bingeData={bingeData}
+          newTopicContent={newTopicContent}
+          newTopicContentVideo={newTopicContentVideo}
+          newTopicContentSubtitle={newTopicContentSubtitle}
         />
       </Popup>
       <Popup open={isAddTopicPopUpOpen} closeOnDocumentClick={false}>

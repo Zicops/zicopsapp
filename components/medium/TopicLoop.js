@@ -33,7 +33,7 @@ const TopicLoop = (props) =>{
                     </div>
                 </div>
             </div>
-            <style>
+            <style jsx>
                 {`
                 .topic{
                     display: flex;

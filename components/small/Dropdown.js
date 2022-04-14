@@ -4,10 +4,12 @@ const Dropdown = ( {options} ) => {
         <>
         <div className='row' style={{margin:'40px 0 0'}}>
             <Select 
-              options={options} 
-              defaultValue={{ value: 'module1', label: 'Module 1' }}
-              className='zicops_select_container'
-              classNamePrefix="zicops_select"
+                options={options} 
+                id="selectbox"
+                instanceId="selectbox"
+                defaultValue={{ value: 'module1', label: 'Module 1' }}
+                className='zicops_select_container'
+                classNamePrefix="zicops_select"
               />
         </div>
         </>

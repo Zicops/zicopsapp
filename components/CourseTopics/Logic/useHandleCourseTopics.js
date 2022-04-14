@@ -13,7 +13,6 @@ export default function useHandleCourseTopics(courseContextData, moduleContextDa
     topic: topicData,
     addAndUpdateTopic
   } = moduleContextData;
-  console.log(moduleContextData);
 
   const addModuleData = useAddModule(courseContextData, moduleContextData);
   const editModuleData = useEditModule(moduleContextData);
@@ -32,6 +31,7 @@ export default function useHandleCourseTopics(courseContextData, moduleContextDa
       });
     }
   );
+
   // load chapters
   useLoadAndSetDataInContext(
     GET_COURSE_CHAPTERS,
