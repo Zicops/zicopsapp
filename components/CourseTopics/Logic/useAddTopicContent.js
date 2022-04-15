@@ -35,17 +35,20 @@ export default function useAddTopicContent(moduleContextData, topic) {
   // const [uploadCourseContentVideo] = useMutation(UPLOAD_TOPIC_CONTENT_VIDEO);
   // const [uploadCourseContentSubtitle] = useMutation(UPLOAD_TOPIC_CONTENT_SUBTITLE);
 
-  const startTimeMin = Math.floor(parseInt(topicContent.startTime) / 60);
-  const startTimeSec = parseInt(topicContent.startTime) - startTimeMin * 60;
-  const nextShowTimeMin = Math.floor(parseInt(topicContent.nextShowTime) / 60);
-  const nextShowTimeSec = parseInt(topicContent.nextShowTime) - nextShowTimeMin * 60;
+  const startTimeMin = Math.floor(parseInt(topicContent[0]?.startTime) / 60);
+  const startTimeSec = parseInt(topicContent[0]?.startTime) - startTimeMin * 60;
+  const nextShowTimeMin = Math.floor(parseInt(topicContent[0]?.nextShowTime) / 60);
+  const nextShowTimeSec = parseInt(topicContent[0]?.nextShowTime) - nextShowTimeMin * 60;
 
   const [bingeData, setBingeData] = useState({
     startTimeMin: startTimeMin,
     startTimeSec: startTimeSec,
     nextShowTimeMin: nextShowTimeMin,
     nextShowTimeSec: nextShowTimeSec,
-    isFromEnd: topicContent.nextShowTime || false
+    isFromEnd: topicContent[0]?.nextShowTime || false,
+    selectedTopicContent: '',
+    skipIntroDuration: topicContent[0]?.skipIntroDuration,
+    shouldBingeDataUpdated: true
   });
 
   useEffect(() => {
@@ -75,6 +78,35 @@ export default function useAddTopicContent(moduleContextData, topic) {
     // });
   }, [topic]);
 
+  useEffect(() => {
+    console.log('Recent topicContent', topicContent);
+    if (bingeData.shouldBingeDataUpdated && topicContent[0]) {
+      const startTimeMin = Math.floor(parseInt(topicContent[0]?.startTime) / 60);
+      const startTimeSec = parseInt(topicContent[0]?.startTime) - startTimeMin * 60;
+      const nextShowTimeMin = Math.floor(parseInt(topicContent[0]?.nextShowTime) / 60);
+      const nextShowTimeSec = parseInt(topicContent[0]?.nextShowTime) - nextShowTimeMin * 60;
+
+      setBingeData({
+        startTimeMin: startTimeMin,
+        startTimeSec: startTimeSec,
+        nextShowTimeMin: nextShowTimeMin,
+        nextShowTimeSec: nextShowTimeSec,
+        isFromEnd: topicContent[0]?.nextShowTime || false,
+        selectedTopicContent: '',
+        skipIntroDuration: topicContent[0]?.skipIntroDuration
+      });
+    }
+  }, [topicContent]);
+
+  useEffect(() => {
+    console.log('binge updated', bingeData);
+    addUpdateTopicContent({
+      ...topicContent[0],
+      ...bingeData,
+      isUpdated: true
+    });
+  }, [bingeData]);
+
   function toggleTopicContentForm(value) {
     // console.log('form show value', value, isTopicContentFormVisible);
     if (typeof value === 'boolean') return setIsTopicContentFormVisible(value);
@@ -83,9 +115,9 @@ export default function useAddTopicContent(moduleContextData, topic) {
   }
 
   function handleAddTopicContentInput(e) {
-    console.log(e.target.value);
     const name = e.target.name;
     if (e.target.type === 'checkbox') {
+      console.log(e.target.value, e.target.checked);
       switchEndAndStartTime(e.target.checked);
       return setBingeData({
         ...bingeData,
@@ -128,6 +160,14 @@ export default function useAddTopicContent(moduleContextData, topic) {
       if (isLanguagePresent)
         return alert(`Topic Content already added in language ${e.target.value}`);
     }
+
+    if (e.target.name === 'skipIntroDuration') {
+      setBingeData({
+        ...bingeData,
+        skipIntroDuration: e.target.value
+      });
+    }
+
     setNewTopicContent({
       ...newTopicContent,
       [e.target.name]: e.target.value
@@ -137,24 +177,29 @@ export default function useAddTopicContent(moduleContextData, topic) {
   function addBingeToContext(minutes, seconds, name) {
     minutes = parseInt(minutes);
     seconds = parseInt(seconds);
+
     addUpdateTopicContent({
-      ...topicContent,
+      ...topicContent[0],
+      isUpdated: true,
       [name]: minutes * 60 + seconds
     });
   }
 
   function switchEndAndStartTime(isFromEndTrue) {
+    console.log(isFromEndTrue);
     if (isFromEndTrue) {
       addUpdateTopicContent({
-        ...topicContent,
-        fromEndTime: topicContent.nextShowTime,
-        nextShowTime: 0
+        ...topicContent[0],
+        isUpdated: true,
+        fromEndTime: topicContent[0].nextShowTime,
+        nextShowTime: '0'
       });
     } else {
       addUpdateTopicContent({
-        ...topicContent,
-        fromEndTime: 0,
-        nextShowTime: topicContent.fromEndTime
+        ...topicContent[0],
+        isUpdated: true,
+        fromEndTime: '0',
+        nextShowTime: topicContent[0].fromEndTime
       });
     }
   }
@@ -231,7 +276,7 @@ export default function useAddTopicContent(moduleContextData, topic) {
 
     // uploadCourseContentVideo({ variables: topicVideo });
     // if (topicSubtitle.file) uploadCourseContentSubtitle({ variables: topicSubtitle });
-    addUpdateTopicContent({ ...newTopicContent });
+    addUpdateTopicContent({ ...newTopicContent, isUpdated: true });
     setCourseTopicVideo({ ...newTopicContentVideo });
     setCourseTopicSubtitle({ ...newTopicContentSubtitle });
 
@@ -248,6 +293,7 @@ export default function useAddTopicContent(moduleContextData, topic) {
     addNewTopicContent,
     isTopicContentFormVisible,
     toggleTopicContentForm,
+    setBingeData,
     bingeData,
     newTopicContent,
     newTopicContentVideo,

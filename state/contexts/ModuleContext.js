@@ -117,76 +117,134 @@ const ModuleContextProvider = (props) => {
       });
     }
     updateTopic(topicData);
+    // const dataUpdated = await new Promise((res, rej) => {
+
+    // })
   };
 
   const [resources, addResources] = useState([]);
+  let resourcesData = [];
   const addResourcesToTopic = (data) => {
-    console.log('from mod context', data);
-    addResources([
-      ...resources,
-      {
-        name: data.name,
-        type: data.type,
-        topicId: data.topicId,
-        url: data.url,
-        file: data.file || null
-      }
-    ]);
+    if (data === 'clear') {
+      resourcesData = [];
+      addResources([]);
+      return;
+    }
+
+    resourcesData = [...resources, ...resourcesData];
+    resourcesData.push({
+      name: data.name,
+      type: data.type,
+      topicId: data.topicId,
+      courseId: data.courseId,
+      url: data.url,
+      file: data.file || null
+    });
+
+    addResources(resourcesData);
   };
 
-  const [topicContent, addTopicContent] = useState({
-    language: '',
-    topicId: '',
-    startTime: 0,
-    duration: 0,
-    skipIntroDuration: 0,
-    nextShowTime: 0,
-    fromEndTime: 0,
-    type: ''
-  });
+  const [topicContent, addTopicContent] = useState([]);
+  let topicContentData = [];
 
   const addUpdateTopicContent = (data) => {
-    addTopicContent({
-      ...topicContent,
-      language: data.language,
-      topicId: data.topicId,
-      startTime: data.startTime,
-      duration: data.duration,
-      skipIntroDuration: data.skipIntroDuration,
-      nextShowTime: data.nextShowTime,
-      fromEndTime: data.fromEndTime,
-      type: data.type
-    });
+    if (data === 'clear') {
+      topicContentData = [];
+      addTopicContent([]);
+      return;
+    }
+
+    topicContentData = [...topicContent, ...topicContentData];
+    let currentTopicContent = topicContentData.filter((obj) => obj.language === data.language);
+
+    if (!data.language && !data.type) return;
+
+    console.log('before', topicContentData);
+    if (currentTopicContent.length > 0) {
+      console.log('if');
+      topicContentData = topicContentData.map((obj) => {
+        console.log(obj, data, obj.language, data.language, obj.language === data.language);
+        if (obj.language === data.language) {
+          return {
+            id: data.id || obj.id || '',
+            language: data.language || obj.language,
+            topicId: data.topicId || obj.topicId,
+            startTime: data.startTime || obj.startTime,
+            duration: data.duration || obj.duration,
+            skipIntroDuration: data.skipIntroDuration || obj.skipIntroDuration,
+            nextShowTime: data.nextShowTime || obj.nextShowTime,
+            fromEndTime: data.fromEndTime || obj.fromEndTime,
+            type: data.type || obj.type,
+            isUpdated: data.isUpdated || false
+          };
+        } else {
+          return obj;
+        }
+      });
+    } else {
+      console.log('else');
+      topicContentData.push({
+        id: data.id || '',
+        language: data.language,
+        topicId: data.topicId,
+        startTime: data.startTime,
+        duration: data.duration,
+        skipIntroDuration: data.skipIntroDuration,
+        nextShowTime: data.nextShowTime,
+        fromEndTime: data.fromEndTime,
+        type: data.type,
+        isUpdated: data.isUpdated || false
+      });
+    }
+    console.log('oout if');
+    console.log('after', topicContentData);
+    addTopicContent(topicContentData);
   };
 
-  const [topicVideo, setTopicVideo] = useState({});
+  const [topicVideo, setTopicVideo] = useState([]);
+  let topicVideoData = [];
+
   const setCourseTopicVideo = (data) => {
-    setTopicVideo({
-      ...topicVideo,
+    if (data === 'clear') {
+      topicVideoData = [];
+      setTopicVideo([]);
+      return;
+    }
+
+    topicVideoData = [...topicVideo, ...topicVideoData];
+    topicVideoData.push({
       courseId: data.courseId,
-      topicId: data.topicId,
-      file: data.file
+      contentId: data.contentId,
+      contentIndex: data.contentIndex,
+      file: data.file,
+      contentUrl: data.contentUrl
     });
+
+    setTopicVideo(topicVideoData);
   };
-  const [topicSubtitle, setTopicSubtitle] = useState({});
+
+  const [topicSubtitle, setTopicSubtitle] = useState([]);
+  let topicSubtitleData = [];
+
   const setCourseTopicSubtitle = (data) => {
-    setTopicSubtitle({
-      ...topicSubtitle,
+    if (data === 'clear') {
+      topicSubtitleData = [];
+      setTopicSubtitle([]);
+      return;
+    }
+
+    topicSubtitleData = [...topicSubtitle, ...topicSubtitleData];
+    topicSubtitleData.push({
       courseId: data.courseId,
-      topicId: data.topicId,
-      file: data.file
+      contentId: data.contentId,
+      contentIndex: data.contentIndex,
+      file: data.file,
+      subtitleUrl: data.subtitleUrl
     });
+
+    setTopicSubtitle(topicSubtitleData);
   };
-  // const setCourseTopicSubtitle = (data) => {
-  //   setTopicSubtitle([
-  //     ...topicSubtitle,
-  //     {
-  //       courseId: data.courseId,
-  //       topicId: data.id,
-  //       file: data.file
-  //     }
-  //   ])
-  // }
+
   const [contentUploaded, setContentUploaded] = useState(0);
 
   return (

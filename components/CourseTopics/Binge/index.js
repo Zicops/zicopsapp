@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import style from './binge.module.scss';
 
-export default function Binge({ video, handleInput, topicContent, bingeData }) {
+export default function Binge({ video, handleInput, bingeData }) {
   const [check, setCheck] = useState(0);
   let videoSrc;
   if (video.file) {
@@ -14,6 +14,7 @@ export default function Binge({ video, handleInput, topicContent, bingeData }) {
         <div className={`${style.bingeform}`}>
           <div className={`${style.binge_setting}`}>
             <div className={`${style.binge_setting_title}`}>Skip Intro :</div>
+
             <div className={`${style.binge_setting_body}`}>
               <div className={`${style.newline}`}>
                 <span className={`${style.label}`}>Start Time</span>
@@ -23,7 +24,8 @@ export default function Binge({ video, handleInput, topicContent, bingeData }) {
                   className={`${style.valuae}`}
                   value={bingeData.startTimeMin || ''}
                   onChange={handleInput}
-                />:
+                />
+                :
                 <input
                   type="text"
                   name="startTimeSec"
@@ -40,7 +42,7 @@ export default function Binge({ video, handleInput, topicContent, bingeData }) {
                   type="text"
                   name="skipIntroDuration"
                   className={`${style.durationvalue}`}
-                  value={topicContent.skipIntroDuration || ''}
+                  value={bingeData.skipIntroDuration || ''}
                   onChange={handleInput}
                 />
                 {/* <span className={`${value">00</span> */}
@@ -49,7 +51,7 @@ export default function Binge({ video, handleInput, topicContent, bingeData }) {
             </div>
           </div>
           <div className={`${style.binge_setting}`}>
-            <div className={`${style.binge_setting_title}`}>Text Topic :</div>
+            <div className={`${style.binge_setting_title}`}>Next Topic :</div>
             <div className={`${style.binge_setting_body}`}>
               <div className={`${style.newline}`}>
                 <span className={`${style.label}`}>Start Time</span>
@@ -98,7 +100,8 @@ export default function Binge({ video, handleInput, topicContent, bingeData }) {
         <div className={`${style.checkbox_mark}`}>
           <label className={`${style.checkbox_label}`}>
             <input type="checkbox" />
-            <span className={`${style.checkmark_box}`}></span>Set as global binge setting for the Module
+            <span className={`${style.checkmark_box}`}></span>Set as global binge setting for the
+            Module
           </label>
         </div>
       </div>

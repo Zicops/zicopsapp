@@ -62,9 +62,7 @@ export default function useEditTopic(moduleContextData) {
     setCourseTopicVideo('clear');
     setCourseTopicSubtitle('clear');
 
-    // console.log('Content - ', data);
     data.getTopicContent.forEach((res) => {
-      console.log(res);
       addUpdateTopicContent(res);
       setCourseTopicVideo(res);
       setCourseTopicSubtitle(res);
@@ -93,6 +91,16 @@ export default function useEditTopic(moduleContextData) {
 
     setCurrentTopic(topic[index] || {});
     setIsEditTopicPopUpOpen(true);
+    addTopicContent.setBingeData({
+      startTimeMin: 0,
+      startTimeSec: 0,
+      nextShowTimeMin: 0,
+      nextShowTimeSec: 0,
+      isFromEnd: '',
+      selectedTopicContent: '',
+      skipIntroDuration: 0,
+      shouldBingeDataUpdated: true
+    });
   }
 
   function handleEditTopicInput(e) {
@@ -141,12 +149,22 @@ export default function useEditTopic(moduleContextData) {
     console.log('Topic Content Upload Started');
 
     topicContent.forEach(async (content, index) => {
-      const { id, ...contentData } = content;
+      const { id, isUpdated, ...contentData } = content;
+      const sendTopicContent = {
+        ...contentData,
+        startTime: topicContent[0].startTime,
+        skipIntroDuration: topicContent[0].skipIntroDuration,
+        nextShowTime: topicContent[0].nextShowTime,
+        fromEndTime: topicContent[0].fromEndTime
+      };
 
-      if (!id) {
+      console.log('Is topic uploaded: ', sendTopicContent);
+      console.log('Is topic uploaded: ', isUpdated);
+
+      if (isUpdated) {
         const topicContentRes = await addCourseTopicContent({
           variables: {
-            ...contentData
+            ...sendTopicContent
           }
         });
 
