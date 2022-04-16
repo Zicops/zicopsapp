@@ -939,12 +939,27 @@ transition: All 0.3s ease;
   z-index: 2; */
 }
 
+.react-datepicker__navigation--previous{
+  top: 43% !important;
+  left: -20px !important;
+  rotate: 90deg !important;
+  border: 3px solid var(--primary) !important;
+  text-align: center !important;
+  width: 40px  !important; 
+  height: 40px !important;
+  background: var(--accent) !important;
+}
 
-
-
-
-
-
+.react-datepicker__navigation--next{
+  top: 43% !important;
+  right: -20px !important;
+  rotate: 90deg !important;
+  border: 3px solid var(--primary) !important;
+  text-align: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  background: var(--accent) !important;
+}
 
 
 
@@ -1440,20 +1455,17 @@ transition: All 0.3s ease;
 
 
 
-/*only for test*/
- /* leftDropDownMenu and SubMenu Styles */
-
- 
- .LeftDropdownR-admin:hover{
-  background: var(--dark_one);
-}
-
+/* submenu styles: these styles are part of submenu   */
 
 .szh-menu {
   background: var(--dark_two);
   color: var(--primary);
    margin-left: 20px;
   
+}
+
+.szh-menu--dir-left{
+  margin-left: -20px;
 }
 
 .szh-menu__item {
@@ -1473,6 +1485,23 @@ transition: All 0.3s ease;
   position: relative;
 }
 
-.szh-menu__arrow--dir-right{
+.szh-menu__arrow{
   background: var(--dark_two);
-} 
+}
+
+.dropdown-submenu-justifycontent-left {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dropdown-submenu-justifycontent-right {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse ;
+
+}
+
+
+
+
+

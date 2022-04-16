@@ -11,11 +11,15 @@ import { useContext } from 'react';
 
 import { userContext } from '../../../state/contexts/UserContext';
 
-import LeftDropDownSubMenu from '../LeftDropDownSubmenu/index.js';
+import DropDownSubMenu from '../DropDownSubmenu/index.js';
 
 import { languages, preferences } from '../Logic/subMenu.helper.js';
 
-export default function LeftMenuDropdown() {
+import RightArrow from '../../../public/images/bigarrowright.png' 
+
+import styles from '../nav.module.scss'
+
+export default function LeftMenuDropdown({navmenuicon}) {
   const { isAdmin, makeAdmin } = useContext(userContext);
   const { anchorEl, handleClick, handleClose, open, gotoAdmin, gotoUser } = useDropDownHandle(
     isAdmin,
@@ -25,6 +29,7 @@ export default function LeftMenuDropdown() {
   return (
     <>
       <Button
+      {...navmenuicon}
         disableRipple
         id="fade-button"
         aria-controls={open ? 'fade-menu' : undefined}
@@ -35,7 +40,7 @@ export default function LeftMenuDropdown() {
         style={{
           height: '70px'
         }}>
-        <Image src="/images/menu.png" alt="" height="20px" width="30px" />
+        <Image src={navmenuicon} alt="" height="20px" width="30px" />
       </Button>
       <Menu
         {...languages}
@@ -46,6 +51,7 @@ export default function LeftMenuDropdown() {
         onClose={handleClose}
         MenuListProps={{ onMouseLeave: handleClose }}
         TransitionComponent={Fade}
+        disableScrollLock={true}
         sx={{
           '& .MuiMenu-list': {
             // marginTop : '30px',
@@ -71,13 +77,13 @@ export default function LeftMenuDropdown() {
             boxShadow: 'none'
           }
         }}>
-        <MenuItem onSelect={() => alert('Languages')}>
-          Language
-          <LeftDropDownSubMenu subData={languages} />
+        <MenuItem onSelect={() => alert('Languages')} >
+          {/* Language */}
+          <DropDownSubMenu subData={languages} menuIcon={RightArrow} submenutext="Language" arrowpositon='right' submenurowdirection={false}/>
         </MenuItem>
         <MenuItem onSelect={() => alert('Preferences')}>
-          Preferences
-          <LeftDropDownSubMenu subData={preferences} />
+          
+          <DropDownSubMenu subData={preferences} menuIcon={RightArrow} submenutext="Preferences" arrowpositon='right' submenurowdirection={false} />
         </MenuItem>
         <MenuItem
           as="a"
@@ -87,7 +93,7 @@ export default function LeftMenuDropdown() {
             border: '1px solid var(--primary)',
             margin: '2px'
           }}
-          className="LeftDropdownR-admin">
+          className={`${styles.LeftDropdownR_admin}`}>
           {!isAdmin ? 'Switch to Admin' : 'Switch to Learner'}
         </MenuItem>
       </Menu>

@@ -5,20 +5,24 @@ import Image from 'next/image';
 
 import { useDropDownSubmenuHandle } from '../Logic/useDropDownSubmenuHandle';
 
-export default function LeftDropDownSubMenu({subData}) {
-
-    const {ref, menuProps, toggleMenu} = useDropDownSubmenuHandle()
-
-    
-
+export default function DropDownSubMenu({ subData, menuIcon, submenutext,arrowpositon,submenurowdirection}) {
+  const { ref, menuProps, toggleMenu } = useDropDownSubmenuHandle();
+  
+  
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <div
+        className={`${
+          submenurowdirection
+            ? 'dropdown-submenu-justifycontent-right'
+            : 'dropdown-submenu-justifycontent-left'
+        }`}
         ref={ref}
         onMouseEnter={() => toggleMenu(true)}
         onMouseLeave={() => toggleMenu(false)}
         onClose={() => toggleMenu(false)}>
-        <Image src="/images/bigarrowright.png" height="22px" width="20px" />
+        {submenutext}
+        <Image src={menuIcon} height="22px" width="20px" />
       </div>
       <ControlledMenu
         {...subData}
@@ -29,17 +33,13 @@ export default function LeftDropDownSubMenu({subData}) {
         anchorRef={ref}
         align={'start'}
         arrow={true}
-        direction={'right'}
+        direction={arrowpositon}
         position={'initial'}
         viewScroll={'initial'}>
-        {
-          // console.log(subData)
-          subData.map((elements) => {
-            const {title,link} = elements
-            return <MenuItem>{title}</MenuItem>;
-          })
-        }
-        
+        {subData.map((elements) => {
+          const { title, link } = elements;
+          return <MenuItem>{title}</MenuItem>;
+        })}
       </ControlledMenu>
     </div>
   );

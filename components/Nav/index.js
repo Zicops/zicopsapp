@@ -5,6 +5,10 @@ import { AdminMenu, truncateTo16, UserMenu } from './Logic/nav.helper';
 import { useHandleNav } from './Logic/useHandleNav';
 import LeftMenuDropdown from './LeftMenuDropdown';
 import { userContext } from '../../state/contexts/UserContext';
+import RightDropDownMenu from './RightDropDownMenu'
+
+import HamburgerMenuIcon from '../../public/images/menu.png'
+
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -16,7 +20,7 @@ export default function Nav() {
   return (
     <div className={styles.navbar} id="navbar">
       <div className={styles.left}>
-        <LeftMenuDropdown isAdmin={isAdmin} handleClick={{ gotoAdmin, gotoUser }} />
+        <LeftMenuDropdown isAdmin={isAdmin} handleClick={{ gotoAdmin, gotoUser }} navmenuicon={HamburgerMenuIcon} />
 
         <Link href={isAdmin ? '/admin' : '/'}>
           <a className={styles.logo}>
@@ -81,7 +85,8 @@ export default function Nav() {
             <div className={styles.name}>{truncateTo16('Abhishek Ghosh')}</div>
             <div className={styles.desg}>Zicops</div>
           </div>
-          <img className={styles.dropdownicon} src="/images/arrow2.png" />
+          {/* <img className={styles.dropdownicon} src="/images/arrow2.png" /> */}
+          <RightDropDownMenu />
         </div>
       </div>
     </div>
