@@ -1,0 +1,17 @@
+@import '../../../styles/base.scss';
+
+.btn {
+  padding: 10px 20px;
+  background-color: transparent;
+  color: #858f8f;
+  border-radius: 50px;
+  min-width: 155px;
+  margin: 5px;
+  font-family: 'Open Sans';
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 0 10px 0 #959595;
+  }
+}

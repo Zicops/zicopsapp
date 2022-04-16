@@ -1,0 +1,12 @@
+.options {
+  height: 70vh;
+  overflow: auto;
+  display: block;
+}
+
+.radioBtn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
