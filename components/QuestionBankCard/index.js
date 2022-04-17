@@ -1,6 +1,7 @@
 import InputField from '../common/InputField';
 import DropdownSelect from '../common/DropdownSelectCommon';
 import styles from './questionBankCard.module.scss';
+import Button from '../common/Button';
 
 const QuestionBankCard = ({ title }) => {
   const obj1 = {
@@ -43,6 +44,8 @@ const QuestionBankCard = ({ title }) => {
             value: 'disabled'
           }}
         />
+        <Button text={'Save'} />
+        <Button text={'Cancel'} />
       </form>
     </div>
   );

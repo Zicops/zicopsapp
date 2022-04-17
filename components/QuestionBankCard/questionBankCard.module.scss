@@ -1,10 +1,15 @@
 @import '../../styles/base.scss';
 
 .qb_container {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .qb_container span {
   display: table;
   margin: 0 auto;
+}
+
+.qb_container button {
+  position: relative;
+  float: right;
 }
