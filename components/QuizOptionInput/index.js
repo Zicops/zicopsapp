@@ -1,6 +1,5 @@
-import RadioButton from '../common/RadionButton';
 import QuizInput from '../QuizInput/index';
-import DropdownSelect from '../Tabs/DropdownSelect';
+import DropdownSelect from '../common/DropdownSelectCommon';
 import styles from './quizOptionInput.module.scss';
 
 const QuizOptionInput = () => {

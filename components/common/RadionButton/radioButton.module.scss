@@ -8,6 +8,7 @@
   padding: 10px;
   margin-left: 60px;
   font-size: 14px;
+  float: left;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -18,9 +19,8 @@
 .container input {
   position: absolute;
   opacity: 0;
-  left: -20px;
+  left: -17px;
   top: 10px;
-  width: 100%;
   cursor: pointer;
   z-index: 3;
 }
