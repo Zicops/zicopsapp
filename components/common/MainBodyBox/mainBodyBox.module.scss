@@ -1,0 +1,9 @@
+@import '../../../styles/base.scss';
+
+.content_panel {
+  margin: 30px 10px 10px 10px;
+  color: $white;
+  box-shadow: -2px 2px 10px 0 $black, 2px -2px 5px 0 $darkThree;
+  border-radius: 10px;
+  padding: 20px;
+}
