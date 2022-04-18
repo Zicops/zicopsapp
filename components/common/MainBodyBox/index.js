@@ -3,15 +3,7 @@ import RadioButton from '../RadionButton';
 import ExamFooter from '../ExamFooter';
 
 const MainBodyBox = ({ children }) => {
-  return (
-    <div className={`${styles.content_panel}`}>
-      <div className={`${styles.radioBtn}`}>
-        <RadioButton text={'Create Question'} />
-        <RadioButton text={'Upload Question'} />
-      </div>
-      {children}
-    </div>
-  );
+  return <div className={`${styles.content_panel}`}>{children}</div>;
 };
 
 export default MainBodyBox;
