@@ -7,6 +7,24 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 500m
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_clear_headers 'Access-Control-Allow-Credentials';
+      more_clear_headers 'Access-Control-Allow-Origin';
+      more_clear_headers 'Access-Control-Allow-Headers';
+      more_clear_headers 'Access-Control-Allow-Methods';
+      more_clear_headers 'Access-Control-Expose-Headers';
+      more_clear_headers 'Last-Modified';
+      # To make sure Vary header is cleaned completely we need to clear it explicitely together with "gzip_vary off"
+      more_clear_headers 'Vary';
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "X-Frame-Options: sameorigin";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-Download-Options: noopen";
+      more_set_headers "Surrogate-Control: no-store";
+      more_set_headers "Referrer-Policy: no-referrer-when-downgrade";
+      more_set_headers "X-DNS-Prefetch-Control: off";
+      more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.googleapis.com https://securetoken.googleapis.com https://storage.googleapis.com";
+      more_set_headers "Strict-Transport-Security: max-age=15724800; includeSubDomains";
 spec:
   rules:
     - http:
