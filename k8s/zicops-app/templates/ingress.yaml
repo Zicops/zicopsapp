@@ -8,6 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 500m
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $csp_image_src_value "'self'";
       more_clear_headers 'Access-Control-Allow-Credentials';
       more_clear_headers 'Access-Control-Allow-Origin';
       more_clear_headers 'Access-Control-Allow-Headers';
@@ -23,7 +24,7 @@ metadata:
       more_set_headers "Surrogate-Control: no-store";
       more_set_headers "Referrer-Policy: no-referrer-when-downgrade";
       more_set_headers "X-DNS-Prefetch-Control: off";
-      more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.googleapis.com https://securetoken.googleapis.com https://storage.googleapis.com";
+      more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src ${csp_image_src_value}; connect-src 'self' https://www.googleapis.com https://securetoken.googleapis.com https://storage.googleapis.com";
       more_set_headers "Strict-Transport-Security: max-age=15724800; includeSubDomains";
 spec:
   rules:
