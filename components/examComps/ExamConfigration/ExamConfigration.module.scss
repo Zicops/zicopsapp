@@ -1,0 +1,12 @@
+@import '../../../styles/base.scss';
+
+ .ExamConfigration{
+            display: grid;
+            justify-content: space-around;
+            justify-items: start;
+            grid-template-columns: auto auto;
+            align-content: center;
+            // border:1px solid white;
+            min-height:200px;
+            padding-left:50px;
+          }
