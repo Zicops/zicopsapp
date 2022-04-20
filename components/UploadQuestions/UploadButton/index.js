@@ -17,14 +17,18 @@ const UploadButton = () => {
               </span>
               Browse & upload
             </button>
-            <input type="file" name="uploadCourseVideo" /*onChange={uploadCourseVideo}*/ />
+            <input
+              type="file"
+              name="uploadCourseVideo" /*onChange={uploadCourseVideo} -> left here because logic was needed in future use*/
+            />
           </div>
           <div className={`${styles.preview_remove_links}`}>
             <a className={`${styles.preview}`}>Preview</a>
             <a className={`${styles.remove}`}>Remove</a>
           </div>
         </div>
-        {/* <div className="col_50">
+        {/* left here because needed a popup if the user upload file other than excel template
+         <div className="col_50">
           <span id="coursePreview">{courseVideo.file ? courseVideo.file.name : ''}</span>
         </div> */}
       </div>
