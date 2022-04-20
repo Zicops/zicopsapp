@@ -10,8 +10,8 @@ const McqCard = ({ question }) => {
   return (
     <>
       <div className={`${styles.mcq_container}`}>
-        <span style={{ margin: '0 auto' }}>QUESTION</span>
-        <div style={{ margin: '10px' }}>
+        <span className={`${styles.qtitle}`}>QUESTION</span>
+        <div className={`${styles.qcontent}`}>
           <p>
             <span className={`${styles.span_element}`}>Q.</span>
             {question}
@@ -19,12 +19,14 @@ const McqCard = ({ question }) => {
         </div>
         <section className={`${styles.option_container}`}>
           <McqOption obj={obj} />
-          <McqOption obj={{ ...obj, text: 'option b', src: undefined, option: 'b' }} />
-          <McqOption obj={{ ...obj, option: 'c' }} />
+          <McqOption
+            obj={{ ...obj, text: 'option b', src: undefined, option: 'b', checked: true }}
+          />
+          <McqOption obj={{ ...obj, option: 'c', src: '/images/Back.png' }} />
           <McqOption obj={{ ...obj, option: 'd' }} />
         </section>
         <span className={`${styles.span_element}`}>Hint:</span>
-        <div>{obj.hint}</div>
+        <div className={`${styles.hint}`}>{obj.hint}</div>
         <div className={`${styles.btn}`}>
           <Button text={'Edit'} />
           <Button text={'Cancel'} />
