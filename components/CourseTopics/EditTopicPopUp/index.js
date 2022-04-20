@@ -1,4 +1,5 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { filterTopicContent } from '../../../helper/data.helper';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 import Quiz from '../../medium/Quiz';
 import Accordion from '../../small/Accordion';
@@ -15,13 +16,21 @@ export default function EditTopicPopUp({
   isFormVisible,
   toggleForm,
   saveAllData,
-  bingeData
+  bingeData,
+  newTopicContent = {},
+  newTopicContentVideo = {},
+  newTopicContentSubtitle = {}
 }) {
   const { handleInput, handleTopicVideo, handleTopicSubtitle, addNewCourseContent } = inputHandlers;
 
   const { topicContent, topicVideo, topicSubtitle } = useContext(moduleContext);
-  // console.log('TOpic data', topicContent, topicData);
-  const currentTopicContent = topicContent.topicId === topicData.id ? topicContent : null;
+  const filteredTopicContent = filterTopicContent(topicContent, topicData.id);
+
+  useEffect(() => {
+    toggleForm(!filteredTopicContent.length);
+  }, []);
+
+  console.log('topcicontentdata', newTopicContent, topicContent, isFormVisible);
 
   return (
     <>
@@ -41,183 +50,196 @@ export default function EditTopicPopUp({
                 title={`Topic ${topicData.sequence} : ${topicData.name}`}
                 editHandler={() => {}}
               />
-              <div className="chapter_body">
-                <div className="row my_30">
-                  <div className="topic_title">Content</div>
-                </div>
-
-                {isFormVisible && (
-                  <>
-                    <div className="row my_30">
-                      <div className="col_25"></div>
-                      <div className="col_50">
-                        <div className="checkbox_mark">
-                          <label className="checkbox_container">
-                            <input type="checkbox" />
-                            <span className="checkmark"></span>is Default
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col_25"></div>
-                    </div>
-
-                    <div className="form_row">
-                      <label htmlFor="language" className="col_25">
-                        Select Language
-                      </label>
-                      <select
-                        className="col_75"
-                        name="language"
-                        onChange={handleInput}
-                        value={topicContent.language || ''}>
-                        <option hidden>Language of the content</option>
-                        {['English', 'Hindi', 'Bengali', 'Marathi'].map((lang) => (
-                          <option key={lang} value={lang}>
-                            {lang}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="form_row">
-                      <label htmlFor="name1" className="col_25">
-                        Type of content
-                      </label>
-                      <select
-                        className="col_75"
-                        name="type"
-                        onChange={handleInput}
-                        value={topicContent.type}>
-                        <option hidden>Type of content</option>
-                        {['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'].map((type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="form_row">
-                      <label htmlFor="name3" className="col_25">
-                        Upload Content
-                      </label>
-                      <div className="col_75">
-                        <div className="upload_btn_wrapper">
-                          <button className="btn">
-                            <span className="input_icon">
-                              <span>
-                                <img src="/images/upload.png" alt="" />
-                              </span>
-                            </span>
-                            Browse & upload
-                          </button>
-                          <input
-                            type="file"
-                            name="upload_content"
-                            onChange={handleTopicVideo}
-                            accept={`.${topicContent.type}`}
-                          />
-                          <div id="upload_content">
-                            {topicVideo.file ? topicVideo.file.name : ''}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="form_row">
-                      <label htmlFor="name1" className="col_25">
-                        Duration
-                      </label>
-                      <input
-                        className="col_50"
-                        type="text"
-                        name="duration"
-                        disabled
-                        onChange={handleInput}
-                        value={topicContent.duration}
-                      />
-                      <div className="col_25">seconds</div>
-                    </div>
-
-                    <div className="form_row">
-                      <label htmlFor="name3" className="col_25">
-                        Upload Subtitle
-                      </label>
-                      <div className="col_75">
-                        <div className="upload_btn_wrapper">
-                          <button className="btn">
-                            <span className="input_icon">
-                              <span>
-                                <img src="/images/upload.png" alt="" />
-                              </span>
-                            </span>
-                            Browse & upload
-                          </button>
-                          <input type="file" name="subtitle" onChange={handleTopicSubtitle} />
-                          <div id="subtitle">
-                            {topicSubtitle.file ? topicSubtitle.file.name : ''}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="form_row">
-                      <button
-                        type="button"
-                        value="add"
-                        className="button_single"
-                        onClick={addNewCourseContent}>
-                        Add
-                      </button>
-                    </div>
-                  </>
-                )}
-
-                {currentTopicContent && (
-                  <TopicContentView topicContent={currentTopicContent} toggleForm={toggleForm} />
-                )}
-                <Accordion
-                  title="Binge it"
-                  content={
-                    <Binge
-                      video={topicVideo}
-                      handleInput={handleInput}
-                      topicContent={topicContent}
-                      bingeData={bingeData}
-                    />
-                  }
-                />
-                <Accordion title="Quiz" content={<Quiz />} />
-                <Accordion
-                  title="Resources"
-                  content={<Resources topic={currentTopicContent || {}} />}
-                />
+            </div>
+            <div className="chapter_body">
+              <div className="row my_30">
+                <div className="topic_title">Content</div>
               </div>
 
-              <div className="module_foot">
-                <div className="form_row">
-                  <div className="col_25"></div>
-                  <div className="col_75">
-                    <div className="button_container">
-                      <button
-                        type="button"
-                        value="cancel"
-                        className="btn_cancel_add"
-                        onClick={closeModal}>
-                        Design Later
-                      </button>
-
-                      <button
-                        type="button"
-                        className={isTopicAddReady ? 'btn_cancel_add' : 'btn_cancel_add_disabled'}
-                        onClick={() => {
-                          saveAllData();
-                          console.log(saveAllData);
-                          console.log('sssssss');
-                        }}>
-                        Design
-                      </button>
+              {isFormVisible && (
+                <>
+                  <div className="row my_30">
+                    <div className="col_25"></div>
+                    <div className="col_50">
+                      <div className="checkbox_mark">
+                        <label className="checkbox_container">
+                          <input type="checkbox" />
+                          <span className="checkmark"></span>is Default
+                        </label>
+                      </div>
                     </div>
+                    <div className="col_25"></div>
+                  </div>
+
+                  <div className="form_row">
+                    <label htmlFor="language" className="col_25">
+                      Select Language
+                    </label>
+                    <select
+                      className="col_75"
+                      name="language"
+                      onChange={handleInput}
+                      value={newTopicContent.language || ''}>
+                      <option hidden>Language of the content</option>
+                      {['English', 'Hindi', 'Bengali', 'Marathi'].map((lang) => (
+                        <option key={lang} value={lang}>
+                          {lang}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form_row">
+                    <label htmlFor="name1" className="col_25">
+                      Type of content
+                    </label>
+                    <select
+                      className="col_75"
+                      name="type"
+                      onChange={handleInput}
+                      value={newTopicContent.type}>
+                      <option hidden>Type of content</option>
+                      {['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'].map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form_row">
+                    <label htmlFor="name3" className="col_25">
+                      Upload Content
+                    </label>
+                    <div className="col_75">
+                      <div className="upload_btn_wrapper">
+                        <button className="btn">
+                          <span className="input_icon">
+                            <span>
+                              <img src="/images/upload.png" alt="" />
+                            </span>
+                          </span>
+                          Browse & upload
+                        </button>
+                        <input
+                          type="file"
+                          name="upload_content"
+                          onChange={handleTopicVideo}
+                          accept={`.${newTopicContent.type}`}
+                        />
+                        <div id="upload_content">
+                          {newTopicContentVideo.file ? newTopicContentVideo.file.name : ''}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="form_row">
+                    <label htmlFor="name1" className="col_25">
+                      Duration
+                    </label>
+                    <input
+                      className="col_50"
+                      type="text"
+                      name="duration"
+                      disabled
+                      onChange={handleInput}
+                      value={newTopicContent.duration}
+                    />
+                    <div className="col_25">seconds</div>
+                  </div>
+
+                  <div className="form_row">
+                    <label htmlFor="name3" className="col_25">
+                      Upload Subtitle
+                    </label>
+                    <div className="col_75">
+                      <div className="upload_btn_wrapper">
+                        <button className="btn">
+                          <span className="input_icon">
+                            <span>
+                              <img src="/images/upload.png" alt="" />
+                            </span>
+                          </span>
+                          Browse & upload
+                        </button>
+                        <input type="file" name="subtitle" onChange={handleTopicSubtitle} />
+                        <div id="subtitle">
+                          {newTopicContentSubtitle.file ? newTopicContentSubtitle.file.name : ''}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="form_row">
+                    <button
+                      type="button"
+                      value="add"
+                      className="button_single"
+                      onClick={addNewCourseContent}>
+                      Add
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {filteredTopicContent && !!filteredTopicContent.length && (
+                <>
+                  {filteredTopicContent.map((content, index) => (
+                    <TopicContentView
+                      topicContent={content}
+                      isSubtitleAdded={
+                        topicSubtitle[index]?.file || topicSubtitle[index]?.subtitleUrl
+                      }
+                      key={content.id || index}
+                    />
+                  ))}
+
+                  <button className="transparent_button" onClick={toggleForm}>
+                    <span>
+                      <img src="/images/plus.png" alt="" />
+                    </span>
+                    <span>Add Language</span>
+                  </button>
+                </>
+              )}
+
+              <Accordion
+                title="Binge it"
+                content={
+                  <Binge
+                    video={topicVideo}
+                    handleInput={handleInput}
+                    topicContent={topicContent}
+                    bingeData={bingeData}
+                  />
+                }
+              />
+              <Accordion title="Quiz" content={<Quiz />} />
+              <Accordion title="Resources" content={<Resources topicId={topicData.id || ''} />} />
+            </div>
+
+            <div className="module_foot">
+              <div className="form_row">
+                <div className="col_25"></div>
+                <div className="col_75">
+                  <div className="button_container">
+                    <button
+                      type="button"
+                      value="cancel"
+                      className="btn_cancel_add"
+                      onClick={closeModal}>
+                      Design Later
+                    </button>
+
+                    <button
+                      type="button"
+                      className={isTopicAddReady ? 'btn_cancel_add' : 'btn_cancel_add_disabled'}
+                      onClick={() => {
+                        saveAllData();
+                      }}>
+                      Design
+                    </button>
                   </div>
                 </div>
               </div>
@@ -348,6 +370,27 @@ export default function EditTopicPopUp({
             border-color: #ffffff;
             color: #ffffff;
             background-color: #1a1a1a;
+          }
+
+          .transparent_button {
+            background-color: transparent;
+            color: #868f8f;
+            font-family: 'Open Sans';
+            border: none;
+
+            cursor: pointer;
+            transition: all 0.3s;
+
+            display: flex;
+            margin-left: auto;
+          }
+          .transparent_button:hover {
+            color: #ffffff;
+          }
+          .transparent_button span img {
+            width: 13px;
+            height: 13px;
+            margin-right: 10px;
           }
         `}
       </style>

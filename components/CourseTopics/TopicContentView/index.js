@@ -1,4 +1,4 @@
-export default function TopicContentView({ topicContent, toggleForm }) {
+export default function TopicContentView({ topicContent, isSubtitleAdded }) {
   return (
     <>
       <div className="content_added">
@@ -14,14 +14,8 @@ export default function TopicContentView({ topicContent, toggleForm }) {
         </div>
         <div className="content_bar">
           <div className="language">{topicContent.language}</div>
-          <div className="text">Subtitle Added</div>
+          <div className="text">Content Added {isSubtitleAdded ? 'With Subtitle' : ''}</div>
         </div>
-        <button className="transparent_button" onClick={toggleForm}>
-          <span>
-            <img src="/images/plus.png" alt="" />
-          </span>
-          <span>Add Language</span>
-        </button>
       </div>
 
       <style jsx>{`
@@ -57,26 +51,6 @@ export default function TopicContentView({ topicContent, toggleForm }) {
         }
         .content_bar .text {
           margin: auto;
-        }
-        .transparent_button {
-          background-color: transparent;
-          color: #868f8f;
-          font-family: 'Open Sans';
-          border: none;
-
-          cursor: pointer;
-          transition: all 0.3s;
-
-          display: flex;
-          margin-left: auto;
-        }
-        .transparent_button:hover {
-          color: #ffffff;
-        }
-        .transparent_button span img {
-          width: 13px;
-          height: 13px;
-          margin-right: 10px;
         }
       `}</style>
     </>

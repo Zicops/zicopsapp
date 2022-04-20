@@ -69,6 +69,15 @@
   margin: 0 15px;
 }
 
+.menu ul li.active {
+  font-size: 16px;
+  font-weight: 600;
+  color: $primary;
+  cursor: pointer;
+  margin: 0 15px;
+  border-bottom: 1px solid $primary;
+}
+
 .menu ul li:hover {
   color: #c2d1d1;
 }
@@ -229,6 +238,3 @@ select.nav_search_dropdow:selected {
 .LeftDropdownR_admin:hover {
   background: var(--dark_one);
 }
-
-
-

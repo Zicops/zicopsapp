@@ -1,24 +1,20 @@
 import React from 'react';
 import Select from 'react-select';
+import { useRouter } from 'next/router';
 import styles from './courseHead.module.scss';
 
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 export default function CourseHead({ title }) {
+  const router = useRouter();
   const options = [
     { value: 'self-paced', label: 'Self Paced' },
     { value: 'classroom', label: 'Classroom' },
     { value: 'labs', label: 'Labs' },
     { value: 'test', label: 'Test' }
   ];
-
-  const router = useRouter();
-
-  useEffect(() => {
-    const { query: courseId } = router;
-    console.log(router, router.query);
-  }, []);
-
+  const route = router.route;
+  function gotoAddcourse(){
+    router.push('/admin/courses')
+  }
   return (
     <div className={`${styles.courseHead}`}>
       <div className={`${styles.header}`}>
@@ -33,6 +29,8 @@ export default function CourseHead({ title }) {
       </div>
 
       <div className={styles.icons}>
+        {!route.includes('admin/courses') &&
+        <img src="/images/plus_big.png" className="rightside_icon" alt="" onClick={gotoAddcourse}/>}
         <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
         <img src="/images/sitemap_icon.png" className="rightside_icon" alt="" />
       </div>

@@ -17,6 +17,8 @@ export default function useAddResources(moduleContextData, courseId = '', topicI
     if (!data.getTopicResources) return;
     if (!data.getTopicResources[0]) return;
 
+    addResourcesToTopic('clear');
+
     data.getTopicResources.forEach((res) => {
       addResourcesToTopic(res);
     });
@@ -24,6 +26,16 @@ export default function useAddResources(moduleContextData, courseId = '', topicI
   useEffect(() => {
     console.log(newResource);
   }, [newResource]);
+
+  useEffect(() => {
+    if (!topicId && !courseId) return addResourcesToTopic('clear');
+
+    setNewResource({
+      ...newResource,
+      topicId: topicId,
+      courseId: courseId
+    });
+  }, [topicId, courseId]);
 
   function toggleFormVisibility() {
     setIsFormVisible(!isFormVisible);
@@ -39,11 +51,11 @@ export default function useAddResources(moduleContextData, courseId = '', topicI
         e.target.value = '';
         return alert('Please select the Resource Type first');
       }
-      let acceptedType = 'sheet';
-      if (newResource.type === 'DOC') acceptedType = 'document';
-      if (newResource.type === 'PDF') acceptedType = 'pdf';
+      let acceptedTypeRegex = /sheet|csv/;
+      if (newResource.type === 'DOC') acceptedTypeRegex = /document/;
+      if (newResource.type === 'PDF') acceptedTypeRegex = /pdf/;
 
-      if (!e.target.files[0].type.includes(acceptedType)) {
+      if (!acceptedTypeRegex.test(e.target.files[0].type)) {
         e.target.value = '';
         return alert('Wrong Type of File Uploaded.');
       }
@@ -65,7 +77,7 @@ export default function useAddResources(moduleContextData, courseId = '', topicI
 
   function addNewResource() {
     addResourcesToTopic(newResource);
-    setNewResource(getNewResourceObject(topicId));
+    setNewResource(getNewResourceObject(courseId, topicId));
     setIsFormVisible(false);
   }
 

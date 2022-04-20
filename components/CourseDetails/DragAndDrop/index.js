@@ -13,9 +13,6 @@ const DragDrop = ({ data, contextData }) => {
     removeItem
   } = useHandleDragDrop(contextData);
 
-  console.log('draglist');
-  console.log(draglist);
-  console.log(droplist);
   return (
     <>
       <div className="row" style={{ alignItems: 'center' }}>
@@ -32,7 +29,7 @@ const DragDrop = ({ data, contextData }) => {
                   id="dca"
                   {...provided.droppableProps}
                   ref={provided.innerRef}>
-                  <div className="inner_drag_srch">
+                  <div className="inner_drag_srch disableTextSelection">
                     <input
                       type="text"
                       id="search"
@@ -46,7 +43,7 @@ const DragDrop = ({ data, contextData }) => {
                       <Draggable key={rank} draggableId={'drag_' + rank} index={index}>
                         {(provided) => (
                           <div
-                            className="inner_drag_ele"
+                            className="inner_drag_ele disableTextSelection"
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}>
@@ -80,7 +77,7 @@ const DragDrop = ({ data, contextData }) => {
                       <Draggable key={rank} draggableId={'drop_' + rank.toString()} index={index}>
                         {(provided) => (
                           <div
-                            className="wrap_drop"
+                            className="wrap_drop disableTextSelection"
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}>

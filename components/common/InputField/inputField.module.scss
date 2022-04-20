@@ -1,0 +1,40 @@
+@import '../../../styles/base.scss';
+
+.my_30 {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.col_25 {
+  width: 25%;
+}
+
+.col_75 {
+  width: 75%;
+}
+
+.row {
+  width: 100%;
+  margin: 30px 0;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.row input {
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid $primary;
+  background-color: $darkTwo;
+  color: var(--white);
+  font-size: 13px;
+  font-family: 'Open Sans';
+  &focus {
+    border: 2px solid $primary;
+    border-radius: 0;
+    box-shadow: 0px 0px 10px 0px $primary;
+    outline: 0;
+    color: $white;
+  }
+}

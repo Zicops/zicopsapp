@@ -9,7 +9,7 @@ export const AdminMenu = [
   },
   {
     title: 'Course',
-    link: '/'
+    link: '/admin/my-courses'
   },
   {
     title: 'Training',

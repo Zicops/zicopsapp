@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import Popup from 'reactjs-popup';
+import { filterAndSortChapter, filterAndSortTopics } from '../../../helper/data.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import { moduleContext } from '../../../state/contexts/ModuleContext';
 import IconButton from '../../common/IconButton';
@@ -9,11 +10,7 @@ import AddTopicPopUp from '../AddTopicPopUp';
 import ChapterRow from '../ChapterRow';
 import styles from '../courseTopics.module.scss';
 import EditTopicPopUp from '../EditTopicPopUp';
-import {
-  filterAndSortChapter,
-  filterAndSortTopics,
-  getSquenceNumber
-} from '../Logic/courseTopics.helper';
+import { getSquenceNumber } from '../Logic/courseTopics.helper';
 import useAddChapter from '../Logic/useAddChapter';
 import useAddTopic from '../Logic/useAddTopic';
 import useAddTopicContent from '../Logic/useAddTopicContent';
@@ -43,8 +40,33 @@ export default function ModuleRow({ data, courseId, editDetails }) {
     handleChapterInput,
     addNewChapter
   } = useAddChapter(moduleContextData);
-  const addTopicData = useAddTopic(moduleContextData);
+
   const editTopicData = useEditTopic(moduleContextData);
+  const {
+    activateEditTopic,
+    isEditTopicPopUpOpen,
+    toggleEditTopicPopUp,
+    currentTopic,
+    isEditTopicReady,
+    saveAllData,
+    addTopicContent,
+  } = editTopicData;
+  
+  const {
+    handleAddTopicContentInput,
+    saveVideoInContext,
+    saveSubtitleInContext,
+    addNewTopicContent,
+    isTopicContentFormVisible,
+    toggleTopicContentForm,
+    bingeData,
+    newTopicContent,
+    newTopicContentVideo,
+    newTopicContentSubtitle
+  } = addTopicContent;
+
+  const addTopicData = useAddTopic(moduleContextData, toggleEditTopicPopUp, toggleTopicContentForm);
+
   const {
     newTopic,
     isAddTopicPopUpOpen,
@@ -54,24 +76,6 @@ export default function ModuleRow({ data, courseId, editDetails }) {
     handleTopicInput,
     addNewTopic
   } = addTopicData;
-  const {
-    activateEditTopic,
-    isEditTopicPopUpOpen,
-    toggleEditTopicPopUp,
-    currentTopic,
-    isEditTopicReady,
-    saveAllData
-  } = editTopicData;
-
-  const {
-    handleAddTopicContentInput,
-    saveVideoInContext,
-    saveSubtitleInContext,
-    addNewTopicContent,
-    isTopicContentFormVisible,
-    toggleTopicContentForm,
-    bingeData
-  } = useAddTopicContent(moduleContextData, currentTopic);
 
   const isChapterPresent = moduleData.isChapter;
   let filteredAndSortedData = [];
@@ -163,6 +167,9 @@ export default function ModuleRow({ data, courseId, editDetails }) {
             isTopicAddReady={isEditTopicReady}
             saveAllData={saveAllData}
             bingeData={bingeData}
+            newTopicContent={newTopicContent}
+            newTopicContentVideo={newTopicContentVideo}
+            newTopicContentSubtitle={newTopicContentSubtitle}
           />
         </Popup>
         <Popup open={isAddTopicPopUpOpen} closeOnDocumentClick={false}>

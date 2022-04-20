@@ -14,8 +14,34 @@ const UserContextProvider = (props) => {
     // router.push(isAdmin? '/admin': '/')
   }, [isAdmin]);
 
+  const [bookmarkData, setBookmarkData] = useState([]);
+  const addBookmarkData = (data) => {
+    setBookmarkData([
+      ...bookmarkData,
+      {
+        id: data.id,
+        timestamp: data.timestamp,
+        title: data.title,
+        captureImg: data.captureImg
+      }
+    ]);
+  };
+
+  const [notes, setNotes] = useState([]);
+  const addNotes = (data) => {
+    setNotes([
+      ...notes,
+      {
+        id: data.id,
+        timestamp: data.timestamp,
+        title: data.title,
+        notes: data.notes
+      }
+    ]);
+  };
+
   return (
-    <userContext.Provider value={{ isAdmin, makeAdmin }}>{props.children}</userContext.Provider>
+    <userContext.Provider value={{ isAdmin, makeAdmin, bookmarkData, addBookmarkData, notes, addNotes }}>{props.children}</userContext.Provider>
   );
 };
 

@@ -22,6 +22,7 @@
   --dark_three: #868f8f;
   --tile-bg: #1a1d21;
   --header-bg: #222529;
+  --skeleton-dark: dimgray;
 }
 
 html,
@@ -1129,7 +1130,7 @@ transition: All 0.3s ease;
 .card_ietms_round {
   z-index: 0;
   /* border: 1px solid white; */
-  transition: all 0.2s ease-out 0.6s;
+  /* transition: all 0.2s ease-out 0.6s; */
   transform: scale(0.95);
   border-radius: 8px;
   border: 2px solid transparent;
@@ -1164,20 +1165,15 @@ transition: All 0.3s ease;
   border-left: 4px solid var(--primary);
   border-right: 4px solid var(--primary); */
 }
-/* .card_ietms[data-index='0']:hover,
-.card_ietms[data-index='5']:hover,
-.card_ietms[data-index='10']:hover,
-.card_ietms[data-index='15']:hover {
+
+.card_ietms_start:hover > li {
   margin-left: 60px;
   margin-right: -60px;
 }
-.card_ietms[data-index='4']:hover,
-.card_ietms[data-index='9']:hover,
-.card_ietms[data-index='14']:hover,
-.card_ietms[data-index='19']:hover {
+.card_ietms_end:hover {
   margin-left: -60px;
   margin-right: 60px;
-} */
+}
 
 .card-left:hover{
   margin-left: 60px;
@@ -1519,11 +1515,6 @@ transition: All 0.3s ease;
    align-items: center;
  }
 
-
-
-
-
-
 /* submenu styles: these styles are part of submenu   */
 
 .szh-menu {
@@ -1550,9 +1541,20 @@ transition: All 0.3s ease;
   background-color: var(--dark_one);
 }
 
-.szh-menu__item--submenu {
-  position: relative;
+ .paginationStyle li div{
+  color: var(--white);
+ }
+.paginationStyle button {
+  color: var(--white);
+  border: 0;
+
 }
+.paginationStyle .Mui-selected{
+  color: var(--primary)!important;
+  font-weight: 600;
+  font-size: 16px;
+}
+
 
 .szh-menu__arrow{
   background: var(--dark_two);
@@ -1571,6 +1573,7 @@ transition: All 0.3s ease;
 }
 
 
-
-
+.MuiDataGrid-iconButtonContainer{
+  color: white;
+}
 

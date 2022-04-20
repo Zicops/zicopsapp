@@ -30,6 +30,8 @@ export default function useHandleTabs(courseContextData) {
 
   const [createCourse, { loading, error, data }] = useMutation(ADD_COURSE);
   const [fileData, setFileData] = useState({});
+  const [isPreviewPopUpOpen, setIsPreviewPopUpOpen] = useState(false);
+  const [previewFileData, setPreviewFileData] = useState(null);
 
   useEffect(() => {
     if (courseData?.getCourse && !isDataLoaded) {
@@ -41,8 +43,104 @@ export default function useHandleTabs(courseContextData) {
 
   useEffect(() => {
     setCouseIdForFileContext();
-    console.log(fullCourse)
+
+    setFileData({
+      myfile: getFileNameFromUrl(fullCourse.image, 'img'),
+      uploadCourseImage: getFileNameFromUrl(fullCourse.tileImage, 'til'),
+      uploadCourseVideo: getFileNameFromUrl(fullCourse.previewVideo, 'vid')
+    });
   }, [fullCourse]);
+
+  function getFileNameFromUrl(fileUrl, type) {
+    if (!fileUrl) {
+      if (type === 'img') return courseImage?.file?.name;
+      if (type === 'vid') return courseVideo?.file?.name;
+      if (type === 'til') return courseTileImage?.file?.name;
+    }
+
+    return decodeURI(fileUrl.split('?')[0].split('/').pop());
+  }
+
+  async function convertFileToUrl(file) {
+    if (!file) return '';
+
+    // const reader = new FileReaderSync();
+    // let fileUrl = reader.readAsDataURL(file);
+
+    let fileUrl = await new Promise((resolve) => {
+      let fileReader = new FileReader();
+      fileReader.onload = (e) => resolve(fileReader.result);
+      fileReader.readAsDataURL(file);
+    });
+
+    console.log(fileUrl);
+    return fileUrl;
+  }
+
+  console.log(fullCourse);
+  console.log(courseVideo);
+  function togglePreviewPopUp(fileName, filePath, isVideo) {
+    console.log('filepath', filePath);
+
+    setIsPreviewPopUpOpen(!isPreviewPopUpOpen);
+
+    if (typeof filePath === 'object') {
+      convertFileToUrl(filePath).then((f) => {
+        return setPreviewFileData(
+          !isPreviewPopUpOpen
+            ? {
+                fileName,
+                filePath: f,
+                isVideo
+              }
+            : null
+        );
+      });
+    }
+
+    setPreviewFileData(
+      !isPreviewPopUpOpen
+        ? {
+            fileName,
+            filePath,
+            isVideo
+          }
+        : null
+    );
+  }
+
+  function removeSavedFile(name) {
+    let contextName = 'image';
+    if (name === 'myfile') {
+      setCourseImage({
+        ...courseImage,
+        upload: 0,
+        courseId: fullCourse.id
+      });
+    } else if (name === 'uploadCourseImage') {
+      contextName = 'tileImage';
+      setCourseTileImage({
+        ...courseTileImage,
+        upload: 0,
+        courseId: fullCourse.id
+      });
+    } else if (name === 'uploadCourseVideo') {
+      contextName = 'previewVideo';
+      setCourseVideo({
+        upload: 0,
+        courseId: fullCourse.id
+      });
+    }
+
+    updateCourseMaster({
+      ...fullCourse,
+      [contextName]: ''
+    });
+    setFileData({
+      ...fileData,
+      [name]: ''
+    });
+  }
 
   function setCouseIdForFileContext(e) {
     setCourseImage({
@@ -69,14 +167,13 @@ export default function useHandleTabs(courseContextData) {
   }
 
   function handleChange(e) {
+    console.log(e.target.type);
     if (e.target.type === 'checkbox') {
       return handleExpertise(e);
     }
     if (e.target.type === 'file') {
       return handleFileInput(e);
     }
-    console.log(e.target.name, e.target.value)
-
     updateCourseMaster({
       ...fullCourse,
       [e.target.name]: e.target.value
@@ -97,7 +194,6 @@ export default function useHandleTabs(courseContextData) {
       expertiseLevel = expertiseLevelArr.filter((el) => el !== trimmedInput).join(',');
     }
 
-    console.log(expertiseLevel);
     updateCourseMaster({
       ...fullCourse,
       [e.target.name]: expertiseLevel
@@ -105,16 +201,15 @@ export default function useHandleTabs(courseContextData) {
   }
 
   function handleFileInput(e) {
+    console.log(e.target.files);
     if (!fullCourse.id) {
       setTab(tabData[0].name);
       alert('Add Course Master First');
       return;
     }
 
-    console.log(e.target.files);
     let fileDisplayValue = e.target.files[0].name;
     let acceptedType = [];
-
     if (e.target.name === 'myfile') {
       acceptedType = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
 
@@ -175,6 +270,9 @@ export default function useHandleTabs(courseContextData) {
     fileData,
     handleChange,
     saveCourseMasterTabDetails,
-    updateCourseMaster
+    updateCourseMaster,
+    togglePreviewPopUp,
+    previewFileData,
+    removeSavedFile
   };
 }

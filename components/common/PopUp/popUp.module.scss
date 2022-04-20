@@ -1,0 +1,66 @@
+.popUpContainer {
+  width: 800px;
+  position: fixed;
+  top: 50%;
+  left: 57%;
+  transform: translate(-50%, -50%);
+}
+.popUp {
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: rgb(4, 4, 4);
+  opacity: 0.95;
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.34), -5px -5px 5px 0px rgba(247, 241, 241, 0.16);
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.title {
+  color: #858f8f;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: auto;
+  margin-bottom: 15px;
+}
+.cross_img img {
+  width: 20px;
+  cursor: pointer;
+}
+.footer {
+  padding: 30px;
+  margin: auto;
+}
+.btn_cancel_add {
+  width: 150px;
+  height: 40px;
+  background-color: #202222;
+  border: 2px solid #858f8f;
+  color: #858f8f;
+  cursor: pointer;
+  margin-right: 15px;
+  text-transform: capitalize;
+  font-size: 15px;
+}
+
+.btn_cancel_add_disabled {
+  width: 150px;
+  height: 40px;
+  background-color: #202222;
+  border: 2px solid #858f8f;
+  color: #858f8f;
+  cursor: no-drop;
+  margin-right: 15px;
+  text-transform: capitalize;
+  font-size: 15px;
+  opacity: 0.5;
+}
+
+.btn_cancel_add:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+  background-color: #1a1a1a;
+}

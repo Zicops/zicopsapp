@@ -5,7 +5,7 @@ export const sidebarData = [
   },
   {
     title: 'My Courses',
-    link: '/admin/courses'
+    link: '/admin/my-courses'
   },
   {
     title: 'Categories',

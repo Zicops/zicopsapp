@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styles from './nav.module.scss';
 import { useContext } from 'react';
 import { AdminMenu, truncateTo16, UserMenu } from './Logic/nav.helper';
@@ -16,7 +17,8 @@ export default function Nav() {
     isAdmin,
     makeAdmin
   );
-
+///admin/  
+  const router = useRouter();
   return (
     <div className={styles.navbar} id="navbar">
       <div className={styles.left}>
@@ -33,7 +35,7 @@ export default function Nav() {
             {(isAdmin ? AdminMenu : UserMenu).map((val, key) => {
               return (
                 <Link href={val.link} key={key}>
-                  <li>{val.title}</li>
+                  <li className={(router.route.includes('/admin/') && val.link == '/admin/my-courses') ? styles.active : ''}>{val.title}</li>
                 </Link>
               );
             })}
