@@ -1,0 +1,28 @@
+@import '../../../styles/base.scss';
+
+// .big_calender {
+//     background: inherit;
+
+//     .react-datepicker__navigation {
+//         top: 50% !important;
+//     }
+// }
+
+.react-datepicker{
+    .common_calender{
+        width:400px !important;
+        height:400px !important;
+        background-color: var(--dark_two) !important;
+        border: 0;
+    }
+}
+
+.clock_time{
+    text-transform: uppercase !important;
+    color: $darkThree !important;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    margin-left: 12px;
+    width: 100%;
+}
