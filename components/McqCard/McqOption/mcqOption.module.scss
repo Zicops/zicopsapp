@@ -1,0 +1,22 @@
+@import '../../../styles/base.scss';
+
+.options img {
+  height: 100px;
+  width: 200px;
+  top: 20px;
+  object-fit: contain;
+  object-position: left;
+}
+
+.options {
+  margin: 20px;
+  display: flex;
+}
+
+.options div {
+  margin-left: 10px;
+}
+
+.option {
+  display: flex;
+}

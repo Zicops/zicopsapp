@@ -1,0 +1,21 @@
+@import '../../../styles/base.scss';
+
+.footer_panel {
+  margin: -75px 10px 10px 10px;
+  color: $white;
+  height: 65px;
+  // box-shadow: -2px 2px 10px 0 #000000, 2px -2px 5px 0 #686868;
+  background-color: $black;
+  border-radius: 0 0 10px 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.left_text {
+  margin-left: 50px;
+  font-size: 14px;
+}
+.right_text {
+  margin-right: 50px;
+}

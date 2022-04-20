@@ -1,0 +1,42 @@
+@import '../../styles/base.scss';
+
+.uq_container {
+  margin-top: 40px;
+  min-height: 40vh;
+  padding-right: 30px;
+  padding-top: 30px;
+}
+
+.small {
+  font-size: small;
+  display: table;
+  position: relative;
+  float: right;
+}
+
+.uq_second {
+  font-size: large;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.uq_second span {
+  position: relative;
+  float: right;
+  font-size: large;
+}
+
+.uq_second button {
+  width: 20%;
+  padding: 10px 20px;
+  border-radius: 2px;
+  box-shadow: none;
+  outline: 0;
+  border: 0;
+  font-size: 14px;
+  background-color: $primary;
+  font-weight: 550;
+  margin-left: 145px;
+}
