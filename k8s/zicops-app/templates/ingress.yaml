@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       set $csp_image_src_value "'self' data: https://googleapis.com https://storage.googleapis.com";
       set $csp_media_src_value "'self' https://googleapis.com https://storage.googleapis.com";      
-      set $csp_frame_src_value "'self' https://www.google.com https://www.google-analytics.com https://docs.google.com";
+      set $csp_frame_src_value "'self' https://googleapis.com https://storage.googleapis.com https://docs.google.com";
       more_clear_headers 'Access-Control-Allow-Credentials';
       more_clear_headers 'Access-Control-Allow-Origin';
       more_clear_headers 'Access-Control-Allow-Headers';
