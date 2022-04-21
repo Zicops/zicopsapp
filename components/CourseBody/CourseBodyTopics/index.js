@@ -1,15 +1,14 @@
-import { Skeleton } from '@mui/material';
 import { useContext } from 'react';
+import { useRecoilValue } from 'recoil';
 import { filterAndSortChapter } from '../../../helper/data.helper';
+import { ChapterAtom, TopicAtom } from '../../../state/atoms/module.atoms';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import { moduleContext } from '../../../state/contexts/ModuleContext';
 import Dropdown from '../../common/Dropdown';
-import useShowData from '../Logic/useShowData';
-import Chapter from './Chapter';
 import Header from '../Header';
+import useShowData from '../Logic/useShowData';
+import ChapterRow from './ChapterRow';
 
 export default function CourseBodyTopics() {
-  const moduleContextData = useContext(moduleContext);
   const courseContextData = useContext(courseContext);
   const {
     myRef,
@@ -20,15 +19,15 @@ export default function CourseBodyTopics() {
     moduleData,
     handleModuleChange,
     selectedModule
-  } = useShowData(courseContextData, moduleContextData);
-
-  const options = getModuleOptions();
+  } = useShowData(courseContextData);
 
   const { fullCourse } = courseContextData;
-  const { chapter: chapterData, topic, topicContent } = moduleContextData;
+  const chapterData = useRecoilValue(ChapterAtom);
+  const topic = useRecoilValue(TopicAtom);
 
   const filteredAndSortedData = filterAndSortChapter(chapterData, selectedModule?.value);
 
+  const options = getModuleOptions();
   // if (options[0].value === '')
   //   return <Skeleton sx={{ bgcolor: 'dimgray' }} variant="rectangular" width={300} height={200} />;
 
@@ -43,9 +42,8 @@ export default function CourseBodyTopics() {
 
       {filteredAndSortedData &&
         filteredAndSortedData.map((chapter, index) => (
-          <Chapter
+          <ChapterRow
             topics={topic}
-            topicContent={topicContent}
             name={chapter.name}
             description={chapter.description}
             index={index + 1}

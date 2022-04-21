@@ -27,12 +27,14 @@
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-datepicker": "^4.6.0",
+    "react-documents": "^1.1.2",
     "react-dom": "^17.0.2",
     "react-multi-carousel": "^2.6.5",
     "react-redux": "^7.2.6",
     "react-select": "^5.2.2",
     "react-slick": "^0.28.1",
     "reactjs-popup": "^2.0.5",
+    "recoil": "^0.7.1",
     "redux": "^4.1.2"
   },
   "devDependencies": {

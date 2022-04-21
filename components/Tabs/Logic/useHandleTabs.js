@@ -45,9 +45,11 @@ export default function useHandleTabs(courseContextData) {
     setCouseIdForFileContext();
 
     setFileData({
-      myfile: getFileNameFromUrl(fullCourse.image, 'img'),
-      uploadCourseImage: getFileNameFromUrl(fullCourse.tileImage, 'til'),
-      uploadCourseVideo: getFileNameFromUrl(fullCourse.previewVideo, 'vid')
+      myfile: courseImage.file?.name || getFileNameFromUrl(fullCourse.image, 'img'),
+      uploadCourseImage:
+        courseTileImage.file?.name || getFileNameFromUrl(fullCourse.tileImage, 'til'),
+      uploadCourseVideo:
+        courseVideo.file?.name || getFileNameFromUrl(fullCourse.previewVideo, 'vid')
     });
   }, [fullCourse]);
 
@@ -73,15 +75,10 @@ export default function useHandleTabs(courseContextData) {
       fileReader.readAsDataURL(file);
     });
 
-    console.log(fileUrl);
     return fileUrl;
   }
 
-  console.log(fullCourse);
-  console.log(courseVideo);
   function togglePreviewPopUp(fileName, filePath, isVideo) {
-    console.log('filepath', filePath);
-
     setIsPreviewPopUpOpen(!isPreviewPopUpOpen);
 
     if (typeof filePath === 'object') {
@@ -96,6 +93,7 @@ export default function useHandleTabs(courseContextData) {
             : null
         );
       });
+      return;
     }
 
     setPreviewFileData(
@@ -114,20 +112,23 @@ export default function useHandleTabs(courseContextData) {
     if (name === 'myfile') {
       setCourseImage({
         ...courseImage,
-        upload: 0,
+        upload: -1,
+        file: null,
         courseId: fullCourse.id
       });
     } else if (name === 'uploadCourseImage') {
       contextName = 'tileImage';
       setCourseTileImage({
         ...courseTileImage,
-        upload: 0,
+        upload: -1,
+        file: null,
         courseId: fullCourse.id
       });
     } else if (name === 'uploadCourseVideo') {
       contextName = 'previewVideo';
       setCourseVideo({
-        upload: 0,
+        upload: -1,
+        file: null,
         courseId: fullCourse.id
       });
     }
@@ -167,7 +168,6 @@ export default function useHandleTabs(courseContextData) {
   }
 
   function handleChange(e) {
-    console.log(e.target.type);
     if (e.target.type === 'checkbox') {
       return handleExpertise(e);
     }
@@ -201,7 +201,6 @@ export default function useHandleTabs(courseContextData) {
   }
 
   function handleFileInput(e) {
-    console.log(e.target.files);
     if (!fullCourse.id) {
       setTab(tabData[0].name);
       alert('Add Course Master First');
@@ -251,6 +250,7 @@ export default function useHandleTabs(courseContextData) {
       }
     }
 
+    e.target.value = '';
     setFileData({
       ...fileData,
       [e.target.name]: fileDisplayValue

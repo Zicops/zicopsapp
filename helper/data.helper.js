@@ -75,8 +75,17 @@ export function filterAndSortTopics(topics, moduleId, chapterId = '') {
   return filteredAndSortedTopics;
 }
 
+export function filterAndSortTopicsBasedOnModuleId(topics, moduleId) {
+  const filteredAndSortedTopics = topics
+    .filter((topic) => topic.moduleId === moduleId)
+    .sort((t1, t2) => {
+      return t1.sequence - t2.sequence;
+    });
+
+  return filteredAndSortedTopics;
+}
+
 export function filterTopicContent(topicContent, topicId = '') {
   const filteredTopicContent = topicContent.filter((content) => content.topicId === topicId);
-  console.log(filteredTopicContent, topicId);
   return filteredTopicContent;
 }

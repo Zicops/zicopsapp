@@ -1,28 +1,59 @@
 import Image from 'next/image';
-import Button from '../VideoPlayer/ControlBar/Button';
-import { useContext, useRef, useState } from 'react';
-import { userContext } from '../../state/contexts/UserContext';
-import ControlBar from '../VideoPlayer/ControlBar';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { VideoAtom } from '../../state/atoms/video.atom';
+import { courseContext } from '../../state/contexts/CourseContext';
+import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
 import useVideoPlayer from './Logic/useHandleVideo';
-import useSaveData from './Logic/useSaveData';
-import { courseContext } from '../../state/contexts/CourseContext';
+import UiComponents from './UiComponents';
+import VideoPlayer from './VideoPlayer';
+
+let videoSrc = 'videos/zicops-product-demo-learner-panel.mp4';
+let type = 'mp4';
 
 export default function CustomVideo({ set }) {
-  const PlayerClose = () => set(false);
-  let videoSrc = '/videos/zicops-product-demo-learner-panel.mp4';
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
   const { fullCourse } = useContext(courseContext);
-  if (fullCourse?.previewVideo) videoSrc = fullCourse.previewVideo;
 
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
 
-  const [BookmarkShow, setBookmarkShow] = useState(false);
+  // reset global variables
+  useEffect(() => {
+    if (fullCourse?.previewVideo) videoSrc = fullCourse.previewVideo;
 
-  function toggleBookmark() {
-    setBookmarkShow((BookmarkShow) => !BookmarkShow);
-  }
+    return () => {
+      videoSrc = 'videos/zicops-product-demo-learner-panel.mp4';
+      type = 'mp4';
+
+      setVideoData({
+        ...videoData,
+        topicContent: [],
+        startPlayer: false
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    videoSrc = videoData.topicContent[0]?.contentUrl || videoSrc;
+    type = videoData.topicContent[0]?.type || type;
+
+    videoContainer.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center'
+    });
+  }, [videoData]);
+
+  useEffect(() => {
+    console.log(videoSrc);
+    set(true);
+  }, [videoSrc]);
+
+  // console.log(videoData, videoSrc);
+
   const {
     playerState,
     togglePlay,
@@ -34,21 +65,18 @@ export default function CustomVideo({ set }) {
     moveVideoProgress,
     handleVolume,
     toggleFullScreen,
-    updateIsPlayingTo
+    updateIsPlayingTo,
+    playPauseActivated,
+    setPlayPauseActivated,
+    handleKeyDownEvents
   } = useVideoPlayer(videoElement, videoContainer);
 
-  const userContextData = useContext(userContext);
-
-  const {
-    handleBookmarkChange,
-    bookmarkData,
-    handleSaveBookmark,
-    notes,
-    handleNotesChange,
-    handleSaveNotes
-  } = useSaveData(videoElement, userContextData);
-
   const [hideControls, setHideControls] = useState(0);
+  const [hideTopBar, setHideTopBar] = useState(0);
+
+  useEffect(() => {
+    if (type !== 'mp4') setHideControls(1);
+  }, [type]);
 
   const vidRef = useRef();
 
@@ -57,134 +85,81 @@ export default function CustomVideo({ set }) {
   var timeout;
   var duration = 2500;
   document.addEventListener('mousemove', function () {
-    // console.log("Mouse is moving!")
+    return;
+    if (type !== 'mp4') return;
+
+    //    console.log("Mouse is moving!")
     setHideControls(0);
+    setHideTopBar(0);
     clearTimeout(timeout);
     timeout = setTimeout(function () {
       // console.log("Mouse Has stopped!");
       setHideControls(1);
+      setHideTopBar(1);
     }, duration);
   });
 
   return (
-    <div className={styles.videoContainer} ref={videoContainer}>
-      {/* <div className="custom-ui-container">Custom Bar</div> */}
-      <div className={`${styles.customUiContainer} ${hideControls ? styles.fadeHideTop : ''}`}>
-        <div className={`${styles.topIconsContainer}`}>
-          <div className={`${styles.firstIcon}`} onClick={PlayerClose}>
-            <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
-          </div>
-          <div className={`${styles.leftIcons}`}>
-            <Button>
-              <Image src="/images/4019936_2.png" alt="" height="30px" width="28px" />
-            </Button>
-            <Button>
-              <Image src="/images/pot-plant-icon.png" alt="" height="30px" width="30px" />
-            </Button>
-            <Button>
-              <Image
-                src="/images/conversation-icon-png-clipart2.png"
-                alt=""
-                height="30px"
-                width="30px"
-              />
-            </Button>
-          </div>
-          <div className={`${styles.centerText}`}></div>
-          <div className={`${styles.rightIcons}`}>
-            <Button>
-              <Image
-                src="/images/bookmark2.png"
-                alt=""
-                height="30px"
-                width="18px"
-                onMouseEnter={() => {
-                  toggleBookmark();
-                  updateIsPlayingTo(false);
-                }}
-              />
-            </Button>
-            <Button>
-              <Image src="/images/Notes Icon2.png" alt="" height="25px" width="25px" />
-            </Button>
-            <Button>
-              <Image src="/images/Quiz Icon2.png" alt="" height="30px" width="30px" />
-            </Button>
-          </div>
-          <div className={`${styles.lastIcon}`}></div>
-        </div>
-        {/* <div className={`${styles.bookmarkBtn}`}>
-          <button onClick={() => updateIsPlayingToPlay(false)}>Bookmark</button>
-        </div> */}
-        {/* <div className={`${styles.drawer}`}> */}
-        {BookmarkShow && (
-          <div className={`${styles.bookmarksInput}`}>
-            <input
-              className={`${styles.bookmarksField}`}
-              type="text"
-              placeholder="add bookmark title"
-              onChange={handleBookmarkChange}
-              value={bookmarkData.title}
-            />
-            <button
-              className={`${styles.bookmarksBtn}`}
-              type="submit"
-              onClick={() => {
-                handleSaveBookmark(playerState.progress);
-              }}>
-              Save Bookmark
-            </button>
-          </div>
-        )}
-        {/* <div className={`${styles.NotesInputBox}`}>
-            <input
-              type="text"
-              placeholder="add notes title"
-              onChange={handleNotesChange}
-              value={notes.title}
-              name="title"
-            />
-            <textarea
-              placeholder="add notes"
-              onChange={handleNotesChange}
-              value={notes.notes}
-              name="notes"
-            />
-            <button
-              type="submit"
-              onClick={() => {
-                handleSaveNotes(playerState.progress);
-              }}>
-              Save Notes
-            </button>
-          </div> */}
-        <div id="output"></div>
+    <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
+      {/* custom Ui components */}
+      <div className={`${styles.customUiContainer} ${hideTopBar ? styles.fadeHideTop : ''}`}>
+        <UiComponents
+          updateIsPlayingTo={updateIsPlayingTo}
+          set={set}
+          refs={{ videoElement, videoContainer }}
+        />
       </div>
-      <div className="video_wrapper">
-        <video
+      {playPauseActivated !== null && (
+        <div className={`${styles.playPauseIndicator}`}>
+          {!playerState.isPlaying ? (
+            <Image src="/images/preview-btn.png" alt="" height="100px" width="100px" />
+          ) : (
+            <Image src="/images/progressTriangle.png" alt="" height="100px" width="100px" />
+          )}
+        </div>
+      )}
+
+      <div
+        className="video_wrapper"
+        tabIndex="0"
+        onClick={togglePlay}
+        onKeyDown={handleKeyDownEvents}>
+        {/* video player */}
+        <VideoPlayer
+          videoSrc={videoSrc}
+          type={type}
+          videoElement={videoElement}
+          handleOnTimeUpdate={handleOnTimeUpdate}
+          playerState={playerState}
+        />
+        {/* <video
           src={videoSrc}
           ref={videoElement}
           onTimeUpdate={handleOnTimeUpdate}
           muted={playerState.isMuted}
           id="video"
-        />
-        {/* {!hideControls && */}
+        /> */}
+
+        {/* <iframe
+          id="video"
+          src="https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html"
+          frameBorder="0"
+        /> */}
+
+        {/* control bar */}
         <div className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`} ref={vidRef}>
           <ControlBar
-            isPause={playerState.isPlaying}
             reloadVideo={reloadVideo}
             handlePlay={togglePlay}
             handleFullScreen={toggleFullScreen}
             forwardVideo={() => moveVideoProgress(true)}
             backwardVideo={() => moveVideoProgress(false)}
             handleProgress={handleVideoProgress}
-            progress={playerState.progress}
-            isMute={playerState.isMuted}
             handleMute={toggleMute}
             handleVolume={handleVolume}
+            playerState={playerState}
           />
         </div>
-        {/* } */}
       </div>
     </div>
   );

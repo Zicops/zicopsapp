@@ -8,17 +8,16 @@ import { tabs } from './Logic/courseBody.helper';
 import useShowData from './Logic/useShowData';
 
 export default function CourseBody() {
-  const moduleContextData = useContext(moduleContext);
   const courseContextData = useContext(courseContext);
-  console.log(moduleContextData);
+
   const {
     myRef,
     showActiveTab,
     activeCourseTab,
     setActiveCourseTab,
-    getModuleOptions, 
+    getModuleOptions,
     moduleData
-  } = useShowData(courseContextData, moduleContextData);
+  } = useShowData(courseContextData);
 
   const props = {
     activeCourseTab: activeCourseTab,

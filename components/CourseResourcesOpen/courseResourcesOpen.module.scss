@@ -1,0 +1,12 @@
+@import '../../styles/base.scss';
+
+.gridThree {
+  display: grid;
+  grid-template-columns: repeat(3, 33%);
+  gap: 15px;
+}
+.resourceType {
+  color: $white;
+  font-size: 20px;
+  font-weight: 700;
+}
