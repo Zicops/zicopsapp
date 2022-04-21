@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { userContext } from '../../../state/contexts/UserContext';
 
-export default function useSaveData(videoElement, userContextData) {
+export default function useSaveData(videoElement) {
+  const { addBookmarkData, addNotes } = useContext(userContext);
+
   const [bookmarkData, setBookmarkData] = useState({
     timestamp: '',
     title: '',
@@ -11,13 +14,13 @@ export default function useSaveData(videoElement, userContextData) {
     title: '',
     notes: ''
   });
-  const { addBookmarkData, addNotes } = userContextData;
 
   useEffect(() => {
     console.log(bookmarkData);
   }, [bookmarkData]);
 
   function handleBookmarkChange(e) {
+    console.log(e);
     setBookmarkData({
       ...bookmarkData,
       title: e.target.value

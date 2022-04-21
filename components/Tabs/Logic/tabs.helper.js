@@ -2,7 +2,7 @@ import CourseDetails from '../../CourseDetails';
 import CourseAbout from '../CourseAbout';
 import CourseConfiguration from '../../CourseConfiguration';
 import CourseMaster from '../CourseMaster';
-import CourseTopics from '../../CourseTopics';
+import CourseTopic from '../../CourseTopic';
 
 export const tabData = [
   {
@@ -19,7 +19,7 @@ export const tabData = [
   },
   {
     name: 'Topics',
-    component: <CourseTopics />
+    component: <CourseTopic /> // this is new
   },
   {
     name: 'Configuration',

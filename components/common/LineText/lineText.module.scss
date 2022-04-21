@@ -1,0 +1,38 @@
+.lineheader {
+
+    color: #ffffff;
+    margin: 30px 0;
+
+    .heading {
+        position: relative;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        text-transform: capitalize;
+    }
+
+    .heading:before {
+        content: '';
+        flex: 0.047;
+        border-bottom: 2px solid #ffffff;
+    }
+
+    .heading:after {
+        content: '';
+        flex: 1;
+        border-bottom: 2px solid #ffffff;
+    }
+
+    .heading:not(:empty)::before {
+        margin-right: 1em;
+    }
+
+    .heading:not(:empty)::after {
+        margin-left: 1em;
+    }
+
+    // .description {
+    //     font-size: 13px;
+    //     padding: 0 5%;
+    // }
+}

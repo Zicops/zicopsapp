@@ -7,6 +7,7 @@ import { courseContext } from '../../state/contexts/CourseContext';
 import CourseHeader from './CourseHeader';
 import Info from './Info';
 import style from './courseHero.module.scss';
+import { truncateToN } from '../../helper/common.helper';
 
 export default function CourseHero({ set }) {
   const ShowPlayer = () => set(true);
@@ -39,6 +40,7 @@ export default function CourseHero({ set }) {
     name: courseTitle,
     benefits,
     summary,
+    image,
     expertise_level: expertiseLevel,
     prequisites,
     goodFor,
@@ -49,7 +51,7 @@ export default function CourseHero({ set }) {
   } = courseContextData?.fullCourse;
 
   return (
-    <div className={`${style.course_header}`}>
+    <div className={`${style.course_header}`} style={{backgroundImage: `url(${image})`, backgroundSize: 'cover'}}>
       <div className={`${style.gradient}`}>
         <Link href={`/admin/courses?courseId=${courseContextData?.fullCourse.id}`}>
           <a className={`${style.back_btn}`}>
@@ -67,7 +69,7 @@ export default function CourseHero({ set }) {
           />
 
           <div className={`${style.summary}`}>
-            {summary || (
+            {truncateToN(summary, 400) || (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
             )}
           </div>

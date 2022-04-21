@@ -47,6 +47,10 @@ const CourseContextProvider = (props) => {
     sub_categories: []
   });
   const updateCourseMaster = (data) => {
+    const sub_categories_filtered = data.sub_categories.filter((s) => s.name);
+    const sub_categories = [];
+    sub_categories_filtered.forEach((s) => sub_categories.push({ name: s.name, rank: s.rank }));
+
     updateCourse({
       ...fullCourse,
       id: data.id,
@@ -81,7 +85,7 @@ const CourseContextProvider = (props) => {
       is_display: data.is_display,
       category: data.category,
       sub_category: data.sub_category,
-      sub_categories: data.sub_categories //this is an array that contains objects
+      sub_categories: sub_categories //this is an array that contains objects
     });
   };
   return (

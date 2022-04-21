@@ -3,6 +3,7 @@ import PopUp from '../../common/PopUp';
 
 export default function PreviewImage({ fileName, filePath, isVideo, popUpData }) {
   const { closeBtn, submitBtn } = popUpData;
+
   return (
     <>
       <PopUp title={`Image Preview (${fileName})`} closeBtn={closeBtn} submitBtn={submitBtn}>
@@ -12,7 +13,7 @@ export default function PreviewImage({ fileName, filePath, isVideo, popUpData })
           </div>
         ) : (
           <div style={{ position: 'relative', width: '100%', paddingBottom: '20%' }}>
-            <Image src={filePath} layout="fill" objectFit="contain" alt="" />
+            {filePath && <Image src={filePath} layout="fill" objectFit="contain" alt="" />}
           </div>
         )}
       </PopUp>

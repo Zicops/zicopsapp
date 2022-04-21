@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export default function useVideoPlayer(videoElement, videoContainer) {
+  const [playPauseActivated, setPlayPauseActivated] = useState(null);
   const [playerState, setPlayerState] = useState({
     isPlaying: false,
     progress: 0,
@@ -9,20 +10,109 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     volume: 0.8
   });
 
+  // reset playpause to null after few seconds
   useEffect(() => {
-    playerState.isPlaying ? videoElement.current.play() : videoElement.current.pause();
+    clearTimeout(timeout);
+
+    const timeout = setTimeout(() => {
+      setPlayPauseActivated(null);
+    }, 1000);
+  }, [playPauseActivated]);
+
+  useEffect(() => {
+    playerState.isPlaying ? videoElement.current?.play() : videoElement.current?.pause();
   }, [playerState.isPlaying, videoElement]);
 
   // TODO : Change this to Ref OR change entire input range to DIV
   useEffect(() => {
-    document.getElementById('vidInput')?.style.background = 'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' + playerState.progress + '%, #22252980 ' + playerState.progress + '%, #22252980 100%)';
+    document.getElementById('vidInput').style.background =
+      'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' +
+      playerState.progress +
+      '%, #22252980 ' +
+      playerState.progress +
+      '%, #22252980 100%)';
   }, [playerState.progress]);
-  
-  function togglePlay() {
+
+  // keyboard events
+  useEffect(() => {
+    togglePlay();
+
+    // document.addEventListener('keydown', function (e) {
+    //   if (e.code === 'Space') {
+    //     // e.preventDefault();
+    //     // return ' ';
+    //     // e.stopPropagation();
+    //   }
+    //   // console.log(e);
+    //   //   // console.log('play', playerState);
+    //   //   togglePlay('sss');
+    //   //   return;
+    //   // }
+    //   // if (e.code === 'KeyR' && e.shiftKey) {
+    //   //   // console.log('play', playerState);
+    //   //   reloadVideo();
+    //   //   return;
+    //   // }
+    // });
+  }, []);
+
+  function handleKeyDownEvents(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    // console.log(e);
+    if (e.code === 'Space') {
+      console.log('play', playerState);
+      togglePlay('sss');
+      return;
+    }
+    if (e.code === 'KeyR' && e.shiftKey) {
+      // console.log('play', playerState);
+      reloadVideo();
+      return;
+    }
+    if (e.code === 'KeyR' && e.shiftKey) {
+      reloadVideo();
+      return;
+    }
+    if (e.code === 'KeyM') {
+      toggleMute();
+      return;
+    }
+
+    if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
+      updateVolumeValue(e.code === 'ArrowUp');
+      return;
+    }
+
+    if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+      moveVideoProgress(e.code === 'ArrowRight');
+      return;
+    }
+  }
+
+  function updateVolumeValue(isIncrement) {
+    let vol = playerState.volume - 0.1;
+    if (isIncrement) vol = playerState.volume + 0.1;
+
+    if (vol > 1) vol = 1;
+    if (vol < 0) vol = 0;
+
+    setPlayerState({
+      ...playerState,
+      volume: vol
+    });
+    videoElement.current.volume = vol;
+  }
+
+  function togglePlay(s) {
+    console.log(s, playerState.isPlaying);
+    console.log(playerState);
     setPlayerState({
       ...playerState,
       isPlaying: !playerState.isPlaying
     });
+
+    setPlayPauseActivated(!playerState.isPlaying);
   }
 
   // pass true or false
@@ -34,11 +124,11 @@ export default function useVideoPlayer(videoElement, videoContainer) {
   }
 
   const handleOnTimeUpdate = () => {
-    const progress = (videoElement.current.currentTime / videoElement.current.duration) * 100;
+    const progress = (videoElement.current?.currentTime / videoElement.current?.duration) * 100;
     // document.getElementById('vidInput').style.background = 'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' + progress + '%, #22252980 ' + progress + '%, #22252980 100%)'
     setPlayerState({
       ...playerState,
-      progress
+      progress: progress || 0
     });
   };
 
@@ -49,12 +139,15 @@ export default function useVideoPlayer(videoElement, videoContainer) {
   };
 
   function setVideoTime(time) {
-    videoElement.current.currentTime = (videoElement.current.duration / 100) * time;
+    if (!videoElement.current) return;
+
+    videoElement.current.currentTime = (videoElement.current?.duration / 100) * time;
     setPlayerState({
       ...playerState,
       progress: time
     });
   }
+
   const handleVideoSpeed = (event) => {
     const speed = Number(event.target.value);
     videoElement.current.playbackRate = speed;
@@ -76,12 +169,12 @@ export default function useVideoPlayer(videoElement, videoContainer) {
   }
 
   function moveVideoProgress(isForward) {
-    let time = Math.floor(videoElement.current.currentTime);
+    let time = Math.floor(videoElement.current?.currentTime);
 
     if (isForward) {
       time += 10;
-      if (videoElement.current.duration < time) {
-        time = videoElement.current.duration - 1;
+      if (videoElement.current?.duration < time) {
+        time = videoElement.current?.duration - 1;
       }
     } else {
       time -= 10;
@@ -97,17 +190,17 @@ export default function useVideoPlayer(videoElement, videoContainer) {
 
   // fix fullscreen issue
   function toggleFullScreen() {
-    console.log(videoContainer.current.fullscreenElement);
-    if (!videoContainer.current.fullscreenElement) {
-      videoContainer.current.requestFullscreen();
+    console.log(videoContainer.current?.fullscreenElement);
+    if (!videoContainer.current?.fullscreenElement) {
+      videoContainer.current?.requestFullscreen();
     } else {
       document.exitFullscreen();
-      videoContainer.current.exitFullscreen();
+      videoContainer.current?.exitFullscreen();
     }
   }
 
   function handleVolume(e) {
-    const volume = parseFloat(e.target.value / 100);
+    const volume = parseFloat(e.target.value);
 
     setPlayerState({
       ...playerState,
@@ -127,6 +220,9 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     moveVideoProgress,
     handleVolume,
     toggleFullScreen,
-    updateIsPlayingTo
+    updateIsPlayingTo,
+    playPauseActivated,
+    setPlayPauseActivated,
+    handleKeyDownEvents
   };
 }

@@ -1,9 +1,24 @@
 import { Skeleton } from '@mui/material';
+import { useRecoilState } from 'recoil';
+import { VideoAtom } from '../../../../state/atoms/video.atom';
 
-export default function TopicBox({ index, name, description, duration }) {
+export default function TopicBox({ index, topic, topicContent }) {
+  const { name, description } = topic;
+  const duration = topicContent[0]?.duration.toString();
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
+
+  function updateVideoData() {
+    setVideoData({
+      ...videoData,
+      topicContent: topicContent,
+      startPlayer: true
+    });
+    console.log(topicContent, 'ssssssssss');
+  }
+
   return (
     <>
-      <div className="topic">
+      <div className="topic" onClick={updateVideoData}>
         <div className="preclassName">
           <div>
             <img src="images/resourcesicon.png" />
@@ -24,7 +39,7 @@ export default function TopicBox({ index, name, description, duration }) {
             <div className="topic_heading">
               <h4>
                 <span>
-                  {index + ". " || (
+                  {index + '. ' || (
                     <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
                   )}
                 </span>

@@ -1,0 +1,125 @@
+@import '../../../styles/base.scss';
+
+.controlBar {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+.fullScreenBtn {
+  float: right;
+  margin-top: -50px;
+  margin-right: 20px;
+}
+
+.controlButtons {
+  display: flex;
+  margin: auto;
+  width: 60%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+// Set progressbar
+.progressBar {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  top: -30px;
+  // box-shadow: 0 3px 5px 0 $tertiaryBlack;
+  // accent-color: $primary;
+}
+
+/* Removes default focus */
+.progressBar:focus {
+  outline: none;
+}
+
+/***** Chrome, Safari, Opera and Edge Chromium styles *****/
+/* slider track */
+.progressBar::-webkit-slider-runnable-track {
+  // background-color: $bgHeader;
+  height: 4px;
+  transition: all 0.1s;
+  // opacity: 0.5;
+}
+.progressBar:hover::-webkit-slider-runnable-track {
+  height: 6px;
+  // opacity: 1;
+}
+.progressBar:hover::-webkit-slider-thumb {
+  height: 25px;
+  width: 25px;
+  margin-top: -10px; /* Centers thumb on the track */
+}
+/* slider thumb */
+.progressBar::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -8px; /* Centers thumb on the track */
+
+  /*custom styles*/
+  background-color: $primary;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 0 $white;
+  opacity: 1 !important;
+}
+
+/******** Firefox styles ********/
+/* slider track */
+.progressBar::-moz-range-track {
+  background-color: $primary;
+  border-radius: 0.5rem;
+  height: 0.5rem;
+}
+
+/* slider thumb */
+.progressBar::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 0; /*Removes default border-radius that FF applies*/
+
+  /*custom styles*/
+  background-color: $primary;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px 0 $tertiaryBlack;
+}
+
+.btn {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  padding: 0;
+  margin: auto 10px;
+  opacity: 0.8;
+  cursor: pointer;
+  img {
+    height: 100%;
+  }
+}
+.btn:hover {
+  opacity: 1;
+}
+.volume {
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  .volumeSlider {
+    display: none;
+    position: absolute;
+    left: 200%;
+    transform: rotate(270deg) translate(60%, -580%);
+  }
+
+  &:hover .volumeSlider {
+    display: block;
+  }
+  .volumeSlider:hover {
+    display: block;
+  }
+}
