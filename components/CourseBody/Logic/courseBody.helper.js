@@ -1,6 +1,8 @@
+import { useRecoilState } from 'recoil';
+import { ResourcesAtom } from '../../../state/atoms/module.atoms';
 import CourseBodyNotes from '../../large/CourseBodyNotes';
-import CourseBodyResources from '../../large/CourseBodyResources';
 import CourseBodyAbout from '../CourseBodyAbout';
+import CourseBodyResources from '../CourseBodyResources';
 import CourseBodyTopics from '../CourseBodyTopics';
 
 export const tabs = [
@@ -17,3 +19,13 @@ export const tabs = [
   { name: 'Mentor', comp: ' XYZ ' },
   { name: 'About', comp: <CourseBodyAbout /> }
 ];
+
+export function getResourceCount(topicId) {
+  const [resources, updateResources] = useRecoilState(ResourcesAtom);
+
+  const filteredResources = resources.filter((r, i) => {
+    return r.topicId === topicId;
+  });
+
+  return filteredResources.length;
+}

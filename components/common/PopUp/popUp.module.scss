@@ -12,6 +12,7 @@
   background-color: rgb(4, 4, 4);
   opacity: 0.95;
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.34), -5px -5px 5px 0px rgba(247, 241, 241, 0.16);
+  z-index: 20;
 }
 .header {
   display: flex;

@@ -41,7 +41,10 @@ const UserContextProvider = (props) => {
   };
 
   return (
-    <userContext.Provider value={{ isAdmin, makeAdmin, bookmarkData, addBookmarkData, notes, addNotes }}>{props.children}</userContext.Provider>
+    <userContext.Provider
+      value={{ isAdmin, makeAdmin, bookmarkData, addBookmarkData, notes, addNotes }}>
+      {props.children}
+    </userContext.Provider>
   );
 };
 

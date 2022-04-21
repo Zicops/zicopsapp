@@ -97,10 +97,7 @@ export default function CourseDetails() {
               type="file"
               name="uploadCourseVideo"
               accept="video/mp4"
-              onChange={(e) => {
-                handleChange(e);
-                console.log(e);
-              }}
+              onChange={(e) => handleChange(e)}
             />
           </div>
           <div className="preview_remove_links">
@@ -110,7 +107,7 @@ export default function CourseDetails() {
                 if (fullCourse.previewVideo || courseVideo?.file) {
                   togglePreviewPopUp(
                     fileData.uploadCourseVideo,
-                    fullCourse.previewVideo || courseVideo?.file,
+                    courseVideo?.file || fullCourse.previewVideo,
                     true
                   );
                 } else {
@@ -158,7 +155,7 @@ export default function CourseDetails() {
                 if (fullCourse.tileImage || courseTileImage?.file) {
                   togglePreviewPopUp(
                     fileData.uploadCourseImage,
-                    fullCourse.tileImage || courseTileImage?.file
+                    courseTileImage?.file || fullCourse.tileImage
                   );
                 } else {
                   alert('No File detected, please upload');
@@ -198,7 +195,7 @@ export default function CourseDetails() {
               className="preview"
               onClick={() => {
                 if (fullCourse.image || courseImage?.file) {
-                  togglePreviewPopUp(fileData.myfile, fullCourse.image || courseImage?.file);
+                  togglePreviewPopUp(fileData.myfile, courseImage?.file || fullCourse.image);
                 } else {
                   alert('No File detected, please upload');
                 }

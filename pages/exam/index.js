@@ -2,8 +2,8 @@ import Sidebar from '../../components/large/Sidebar';
 import MainBody from '../../components/common/MainBody';
 import MainBodyBox from '../../components/common/MainBodyBox';
 // import SwitchButton from '../../components/common/SwitchButton';
-import ExamConfigration from '../../components/examComps/ExamConfigration';
-import ExamDatePicker from '../../components/common/ExamDatePicker';
+// import ExamConfigration from '../../components/examComps/ExamConfigration';
+// import ExamDatePicker from '../../components/common/ExamDatePicker';
 const Exam = () => {
   return (
     <>
@@ -16,8 +16,8 @@ const Exam = () => {
             <SwitchButton text={'Show right Answers on finish'} />
             <SwitchButton text={'Show result on finish'} />
           </div> */}
-          <ExamConfigration />
-          <ExamDatePicker text={'Exam Date'} />
+          {/* <ExamConfigration />
+          <ExamDatePicker text={'Exam Date'} /> */}
         </MainBodyBox>
       </MainBody>
       {/* <style>{`
