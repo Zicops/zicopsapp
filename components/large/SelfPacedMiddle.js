@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import CommonCalendar from '../common/CommonCalendar';
 import CalenderLarge from '../small/Calender'
 const SelfPacedMiddle = () => {
     return (
@@ -100,7 +101,8 @@ const SelfPacedMiddle = () => {
                             </div>
                         </div>
                         <div class="col_40 calender_box">
-                            <CalenderLarge/>
+                            {/* <CalenderLarge/> */}
+                            <CommonCalendar />
                         </div>
                     </div>
                 </div>
