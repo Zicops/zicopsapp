@@ -1,8 +1,8 @@
-import Image from 'next/image';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { VideoAtom } from '../../state/atoms/video.atom';
 import { courseContext } from '../../state/contexts/CourseContext';
+import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
 import useVideoPlayer from './Logic/useHandleVideo';
@@ -67,37 +67,13 @@ export default function CustomVideo({ set }) {
     toggleFullScreen,
     updateIsPlayingTo,
     playPauseActivated,
-    setPlayPauseActivated,
-    handleKeyDownEvents
-  } = useVideoPlayer(videoElement, videoContainer);
+    handleKeyDownEvents,
+    hideControls,
+    hideTopBar
+  } = useVideoPlayer(videoElement, videoContainer, type);
 
-  const [hideControls, setHideControls] = useState(0);
-  const [hideTopBar, setHideTopBar] = useState(0);
-
-  useEffect(() => {
-    if (type !== 'mp4') setHideControls(1);
-  }, [type]);
-
+  // currently  not used, can remove later
   const vidRef = useRef();
-
-  // If no mouse movement for 3 sec, setHideControls(1)
-  // var elem = vidRef?.current;
-  var timeout;
-  var duration = 2500;
-  document.addEventListener('mousemove', function () {
-    return;
-    if (type !== 'mp4') return;
-
-    //    console.log("Mouse is moving!")
-    setHideControls(0);
-    setHideTopBar(0);
-    clearTimeout(timeout);
-    timeout = setTimeout(function () {
-      // console.log("Mouse Has stopped!");
-      setHideControls(1);
-      setHideTopBar(1);
-    }, duration);
-  });
 
   return (
     <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
@@ -109,21 +85,9 @@ export default function CustomVideo({ set }) {
           refs={{ videoElement, videoContainer }}
         />
       </div>
-      {playPauseActivated !== null && (
-        <div className={`${styles.playPauseIndicator}`}>
-          {!playerState.isPlaying ? (
-            <Image src="/images/preview-btn.png" alt="" height="100px" width="100px" />
-          ) : (
-            <Image src="/images/progressTriangle.png" alt="" height="100px" width="100px" />
-          )}
-        </div>
-      )}
+      {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}
 
-      <div
-        className="video_wrapper"
-        tabIndex="0"
-        onClick={togglePlay}
-        onKeyDown={handleKeyDownEvents}>
+      <div className="video_wrapper">
         {/* video player */}
         <VideoPlayer
           videoSrc={videoSrc}
@@ -131,20 +95,9 @@ export default function CustomVideo({ set }) {
           videoElement={videoElement}
           handleOnTimeUpdate={handleOnTimeUpdate}
           playerState={playerState}
+          handleClick={togglePlay}
+          handleKeyDown={handleKeyDownEvents}
         />
-        {/* <video
-          src={videoSrc}
-          ref={videoElement}
-          onTimeUpdate={handleOnTimeUpdate}
-          muted={playerState.isMuted}
-          id="video"
-        /> */}
-
-        {/* <iframe
-          id="video"
-          src="https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html"
-          frameBorder="0"
-        /> */}
 
         {/* control bar */}
         <div className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`} ref={vidRef}>

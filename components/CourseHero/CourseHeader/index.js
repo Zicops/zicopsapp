@@ -17,13 +17,13 @@ export default function CourseHeader({
           )}
           {/* This is a big title that can be too big to displat byt we still have to sidplay it anyhow. */}
         </h1>
-        {provisionedBy ? <p>
-          This course is provisioned by{' '}
-          <span>
-            {provisionedBy}
-          </span>
-        </p> : ( <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} /> )
-        }
+        {provisionedBy ? (
+          <p>
+            This course is provisioned by <span>{provisionedBy}</span>
+          </p>
+        ) : (
+          <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
+        )}
 
         <ul>
           <li>
@@ -40,7 +40,8 @@ export default function CourseHeader({
             Duration:{' '}
             {duration || (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
-            )} {' '} mins
+            )}{' '}
+            mins
           </li>
         </ul>
       </div>

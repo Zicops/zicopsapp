@@ -4,7 +4,7 @@ import SwitchButton from '../../common/SwitchButton';
 const ExamConfigration = () => {
   return (
     <>
-      <div className={`ExamConfigration`}>
+      <div className={`examConfigration`}>
         <SwitchButton text={'Question Shuffling'} />
         <SwitchButton text={'Display Answer Hints'} />
         <SwitchButton text={'Show right Answers on finish'} />
@@ -12,7 +12,7 @@ const ExamConfigration = () => {
         {/* <InputField /> */}
       </div>
       <style>{`
-          .ExamConfigration{
+          .examConfigration{
             display: grid;
             justify-content: spaec-around;
             justify-items: start;

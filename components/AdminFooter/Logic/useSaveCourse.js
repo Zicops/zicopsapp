@@ -10,11 +10,13 @@ import {
 import { createCourseAndUpdateContext } from '../../../helper/data.helper';
 import { useRouter } from 'next/router';
 import CourseMaster from '../../Tabs/CourseMaster';
+import { tabData } from '../../Tabs/Logic/tabs.helper';
 
 export default function useSaveCourse(courseContextData) {
   const {
     fullCourse,
     updateCourseMaster,
+    tab,
     courseVideo,
     setCourseVideo,
     courseImage,
@@ -38,33 +40,42 @@ export default function useSaveCourse(courseContextData) {
     setIsCourseSaved(!!fullCourse?.id);
   }, [fullCourse]);
 
+  useEffect(() => {
+    if (tab === tabData[0].name) return;
+
+    // saveCourseData();
+  }, [tab]);
+
   async function saveCourseData() {
     setIsCourseSaved('SAVING...');
 
     if (!fullCourse.id) {
-      alert('course created');
-      console.log('course created');
       return createCourseAndUpdateContext(courseContextData, createCourse);
     }
-    alert('course update started');
+    // alert('course update started');
 
     await uploadFile(courseImage, uploadImage, 'image', 'uploadCourseImage');
     await uploadFile(courseTileImage, uploadTileImage, 'tileImage', 'uploadCourseTileImage');
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
-    console.log('course created', fullCourse);
+    console.log('var', fullCourse, fullCourse.outcomes);
     const courseUpdateResponse = await updateCourse({
       variables: fullCourse
     });
 
     alert('course updated');
-    console.log('course updated');
+    console.log(
+      'course updated',
+      fullCourse,
+      courseUpdateResponse.data.updateCourse.outcomes
+    );
     updateCourseMaster(courseUpdateResponse.data.updateCourse);
 
     setIsCourseSaved(true);
   }
 
   async function uploadFile(fileData, fileUploadMutation, fileNameInContext, fileDataName) {
+    console.log(fileData, !fileData.file || !fileData.upload);
     if (!fileData.file || !fileData.upload) return;
 
     const fileUploadRespone = await fileUploadMutation({

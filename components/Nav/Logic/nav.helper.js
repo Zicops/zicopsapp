@@ -17,7 +17,7 @@ export const AdminMenu = [
   },
   {
     title: 'Exams',
-    link: '/'
+    link: '/exam'
   },
   {
     title: 'Vendor',

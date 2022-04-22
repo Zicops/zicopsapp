@@ -1,23 +1,46 @@
-import Sidebar from '../../components/large/Sidebar';
+import Sidebar from '../../components/common/Sidebar';
+import CourseHead from '../../components/CourseHead';
 import MainBody from '../../components/common/MainBody';
 import MainBodyBox from '../../components/common/MainBodyBox';
+import ZicopsRadioButton from '../../components/common/ZicopsRadioButton';
+// import TimePicker from '../../components/common/TimePicker';
+// import RadioButtonLeft from '../../components/common/ZicopsRadioButton';
 // import SwitchButton from '../../components/common/SwitchButton';
+
 // import ExamConfigration from '../../components/examComps/ExamConfigration';
 // import ExamDatePicker from '../../components/common/ExamDatePicker';
+
+import ExamMaster from '../../components/examComps/ExamMaster';
+// import ExamSchedule from '../../components/examComps/ExamSchedule';
+
 const Exam = () => {
   return (
     <>
       <Sidebar />
       <MainBody>
+        <CourseHead title="My Exam" />
         <MainBodyBox>
-          {/* <div className={`ExamConfigration`}>
-            <SwitchButton text={'Question Shuffling'} />
-            <SwitchButton text={'Display Answer Hints'} />
-            <SwitchButton text={'Show right Answers on finish'} />
-            <SwitchButton text={'Show result on finish'} />
-          </div> */}
           {/* <ExamConfigration />
           <ExamDatePicker text={'Exam Date'} /> */}
+          {/* <ExamConfigration /> */}
+          {/* <ExamSchedule /> */}
+
+          {/* <ZicopsRadioButton text={'Scheduled'} />
+          <ZicopsRadioButton text={'Exam Access:'} /> */}
+          {/* <TimePicker /> */}
+          <ExamMaster />
+          {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
+          {/* <CustomTimePicker /> */}
+          {/* <CheckBoxField checkBox_label={'Stretch Examination Conduct Duration'} />
+          <InputField label={'Question paper name'} placeholder={'Enter the question paper name'} />
+          <Marks label={'Total marks:'} placeholder={'Total Marks'} />
+          <DropdownSelect
+            inputData={{
+              inputName: 'course_sub_category',
+              label: 'Max Attempts',
+              placeholder: 'Select Max Attempts'
+            }}
+          /> */}
         </MainBodyBox>
       </MainBody>
       {/* <style>{`

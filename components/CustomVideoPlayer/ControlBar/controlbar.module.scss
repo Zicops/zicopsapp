@@ -104,6 +104,17 @@
 .btn:hover {
   opacity: 1;
 }
+
+// volume styles
+.volumeContainer {
+  padding: 10px;
+
+  &:hover .volumeSlider,
+  .volumeSlider:hover {
+    display: block;
+  }
+}
+
 .volume {
   position: relative;
   height: 100%;
@@ -113,13 +124,13 @@
     display: none;
     position: absolute;
     left: 200%;
-    transform: rotate(270deg) translate(60%, -580%);
+    transform: rotate(270deg) translate(65%, -580%);
+    accent-color: $primary;
   }
+}
 
-  &:hover .volumeSlider {
-    display: block;
-  }
-  .volumeSlider:hover {
-    display: block;
-  }
+// make the progress bar dim on volume hover
+.dimProgressBar {
+  // display: none;
+  opacity: 0;
 }

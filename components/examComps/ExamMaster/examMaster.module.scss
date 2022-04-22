@@ -1,0 +1,8 @@
+@import '../../../styles/base.scss';
+
+.totalMarksGridMain {
+    display: grid;
+    grid-template-columns: 25% 10% auto 100px;
+    column-gap: 30px;
+    justify-content: space-between;
+}
