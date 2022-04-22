@@ -3,15 +3,27 @@ import { useContext } from 'react';
 import { courseContext } from '../../state/contexts/CourseContext';
 import useSaveCourse from './Logic/useSaveCourse';
 
+function getDateTimeFromUnix(unixTimestamp) {
+  if (!unixTimestamp) return '';
+  // https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript#:~:text=let%20unix_timestamp%20%3D%201549312452,console.log(formattedTime)%3B
+  const d = new Date(unixTimestamp * 1000);
+  // console.log(unixTimestamp, d);
+  return d.toLocaleString();
+}
+
 export default function AdminFooter() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, saveCourseData, isCourseSaved, returnToMycourses } =
     useSaveCourse(courseContextData);
+  // console.log(fullCourse);
+  const displayTime = `( at ${getDateTimeFromUnix(fullCourse.updated_at || fullCourse.created_at)} )`;
 
   return (
     <div className="content-panel">
       <div className="left-text">
-        <h3>Status: {isCourseSaved ? fullCourse.status : isCourseSaved}</h3>
+        <h3>
+          Status: {isCourseSaved ? `${fullCourse.status}` : isCourseSaved} <span style={{fontSize:'12px', fontWeight: '400'}}>{ displayTime }</span>
+        </h3>
       </div>
       <div className="right-text">
         {fullCourse.id && (

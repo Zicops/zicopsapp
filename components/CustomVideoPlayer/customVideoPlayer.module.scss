@@ -170,3 +170,18 @@
 //     background-color: rgba(128, 128, 128, 0.485);
 //     z-index: 2;
 // }
+.centerFlashIcon{
+  opacity: 0;
+  animation: myflash 0.3s ease-in-out;
+}
+@keyframes myflash {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

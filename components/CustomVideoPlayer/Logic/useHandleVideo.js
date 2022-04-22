@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
-export default function useVideoPlayer(videoElement, videoContainer) {
+export default function useVideoPlayer(videoElement, videoContainer, type) {
+  // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute]
   const [playPauseActivated, setPlayPauseActivated] = useState(null);
   const [playerState, setPlayerState] = useState({
     isPlaying: false,
@@ -10,10 +11,35 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     volume: 0.8
   });
 
+  const [hideControls, setHideControls] = useState(0);
+  const [hideTopBar, setHideTopBar] = useState(0);
+
+  useEffect(() => {
+    togglePlay();
+
+    let timeout;
+    const duration = 2500;
+    videoContainer.current?.addEventListener('mousemove', function () {
+      if (type !== 'mp4') return;
+
+      setHideControls(0);
+      setHideTopBar(0);
+      clearTimeout(timeout);
+
+      timeout = setTimeout(function () {
+        setHideControls(1);
+        setHideTopBar(1);
+      }, duration);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (type !== 'mp4') setHideControls(1);
+  }, [type]);
+
   // reset playpause to null after few seconds
   useEffect(() => {
     clearTimeout(timeout);
-
     const timeout = setTimeout(() => {
       setPlayPauseActivated(null);
     }, 1000);
@@ -34,35 +60,13 @@ export default function useVideoPlayer(videoElement, videoContainer) {
   }, [playerState.progress]);
 
   // keyboard events
-  useEffect(() => {
-    togglePlay();
-
-    // document.addEventListener('keydown', function (e) {
-    //   if (e.code === 'Space') {
-    //     // e.preventDefault();
-    //     // return ' ';
-    //     // e.stopPropagation();
-    //   }
-    //   // console.log(e);
-    //   //   // console.log('play', playerState);
-    //   //   togglePlay('sss');
-    //   //   return;
-    //   // }
-    //   // if (e.code === 'KeyR' && e.shiftKey) {
-    //   //   // console.log('play', playerState);
-    //   //   reloadVideo();
-    //   //   return;
-    //   // }
-    // });
-  }, []);
-
   function handleKeyDownEvents(e) {
     e.preventDefault();
     e.stopPropagation();
     // console.log(e);
     if (e.code === 'Space') {
       console.log('play', playerState);
-      togglePlay('sss');
+      togglePlay();
       return;
     }
     if (e.code === 'KeyR' && e.shiftKey) {
@@ -97,6 +101,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     if (vol > 1) vol = 1;
     if (vol < 0) vol = 0;
 
+    setPlayPauseActivated(isIncrement ? 'volumeUp' : 'volumeDown');
     setPlayerState({
       ...playerState,
       volume: vol
@@ -104,15 +109,13 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     videoElement.current.volume = vol;
   }
 
-  function togglePlay(s) {
-    console.log(s, playerState.isPlaying);
-    console.log(playerState);
+  function togglePlay() {
     setPlayerState({
       ...playerState,
       isPlaying: !playerState.isPlaying
     });
 
-    setPlayPauseActivated(!playerState.isPlaying);
+    setPlayPauseActivated(!playerState.isPlaying ? 'play' : 'pause');
   }
 
   // pass true or false
@@ -121,6 +124,8 @@ export default function useVideoPlayer(videoElement, videoContainer) {
       ...playerState,
       isPlaying: !!play
     });
+
+    setPlayPauseActivated(!!play ? 'play' : 'pause');
   }
 
   const handleOnTimeUpdate = () => {
@@ -157,15 +162,18 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     });
   };
 
-  const toggleMute = () => {
+  function toggleMute() {
     setPlayerState({
       ...playerState,
       isMuted: !playerState.isMuted
     });
-  };
+
+    setPlayPauseActivated(!playerState.isMuted ? 'mute' : 'unmute');
+  }
 
   function reloadVideo() {
     setVideoTime(0);
+    setPlayPauseActivated('reload');
   }
 
   function moveVideoProgress(isForward) {
@@ -186,17 +194,45 @@ export default function useVideoPlayer(videoElement, videoContainer) {
       ...playerState,
       progress: time
     });
+
+    setPlayPauseActivated(isForward ? 'forward' : 'backward');
   }
 
+  /* View in fullscreen */
+  function openFullscreen(elem) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+      /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      /* IE11 */
+      elem.msRequestFullscreen();
+    }
+  }
+  /* Close fullscreen */
+  function closeFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      /* Safari */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      /* IE11 */
+      document.msExitFullscreen();
+    }
+  }
   // fix fullscreen issue
   function toggleFullScreen() {
-    console.log(videoContainer.current?.fullscreenElement);
-    if (!videoContainer.current?.fullscreenElement) {
-      videoContainer.current?.requestFullscreen();
+    if (!document.fullscreenElement) {
+      // videoContainer.current?.requestFullscreen();
+      openFullscreen(videoContainer.current);
     } else {
-      document.exitFullscreen();
-      videoContainer.current?.exitFullscreen();
+      // document.exitFullscreen();
+      closeFullscreen();
     }
+
+    setPlayPauseActivated(!document.fullscreenElement ? 'enterFullScreen' : 'exitFullScreen');
   }
 
   function handleVolume(e) {
@@ -223,6 +259,8 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     updateIsPlayingTo,
     playPauseActivated,
     setPlayPauseActivated,
-    handleKeyDownEvents
+    handleKeyDownEvents,
+    hideControls,
+    hideTopBar
   };
 }

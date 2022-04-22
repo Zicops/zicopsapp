@@ -28,6 +28,8 @@ export function createCourseAndUpdateContext(courseContextData, createCourse) {
   })
     .then((res) => {
       if (!res || !res?.data?.addCourse?.id) return;
+      alert('course created');
+      console.log('course created', res);
 
       updateCourseMaster(res.data.addCourse);
 

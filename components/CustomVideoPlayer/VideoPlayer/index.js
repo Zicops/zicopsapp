@@ -7,12 +7,17 @@ export default function VideoPlayer({
   type,
   videoElement,
   handleOnTimeUpdate,
-  playerState
+  playerState,
+  handleClick,
+  handleKeyDown
 }) {
   return (
     <>
       {type === 'mp4' && (
         <video
+          tabIndex="0"
+          onClick={handleClick}
+          onKeyDown={handleKeyDown}
           src={videoSrc}
           ref={videoElement}
           onTimeUpdate={handleOnTimeUpdate}
