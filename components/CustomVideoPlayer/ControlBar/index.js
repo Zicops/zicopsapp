@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useState } from 'react';
 import Button from '../Button';
 import {
   controlBar,
@@ -6,7 +7,8 @@ import {
   fullScreenBtn,
   playPauseBtn,
   progressBar,
-  volumeBtn
+  volumeContainer,
+  dimProgressBar
 } from './controlbar.module.scss';
 import Volume from './Volume';
 
@@ -21,9 +23,10 @@ export default function ControlBar({
   handleVolume,
   handleMute,
   handleProgress,
-
   playerState
 }) {
+  const [hideBar, setHideBar] = useState(false);
+
   return (
     <div className={`${controlBar}`}>
       <input
@@ -34,8 +37,9 @@ export default function ControlBar({
         min={0}
         max={100}
         step={0.1}
-        className={`${progressBar}`}
+        className={`${progressBar} ${hideBar ? dimProgressBar : ''}`}
       />
+
       <div className={`${controlButtons}`}>
         <Button handleClick={reloadVideo}>
           <Image src="/images/reload_53905.png" alt="" height="25px" width="22px" />
@@ -65,7 +69,10 @@ export default function ControlBar({
           <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
         </Button>
 
-        <div className={`${volumeBtn}`}>
+        <div
+          className={`${volumeContainer}`}
+          onMouseEnter={() => setHideBar(true)}
+          onMouseLeave={() => setHideBar(false)}>
           <Volume
             handleVolumeChange={handleVolume}
             handleMute={handleMute}
