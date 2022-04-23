@@ -3,6 +3,10 @@ import CourseHead from '../../components/CourseHead';
 import MainBody from '../../components/common/MainBody';
 import MainBodyBox from '../../components/common/MainBodyBox';
 import ZicopsRadioButton from '../../components/common/ZicopsRadioButton';
+import UploadQuestions from '../../components/examComps/UploadQuestions';
+import QuizOptionInput from '../../components/examComps/QuizOptionInput';
+import QuestionBankCard from '../../components/examComps/QuestionBankCard';
+import McqCard from '../../components/examComps/McqCard';
 // import TimePicker from '../../components/common/TimePicker';
 // import RadioButtonLeft from '../../components/common/ZicopsRadioButton';
 // import SwitchButton from '../../components/common/SwitchButton';
@@ -28,7 +32,11 @@ const Exam = () => {
           {/* <ZicopsRadioButton text={'Scheduled'} />
           <ZicopsRadioButton text={'Exam Access:'} /> */}
           {/* <TimePicker /> */}
-          <ExamMaster />
+          {/* <ExamMaster /> */}
+          {/* <UploadQuestions /> */}
+          {/* <QuizOptionInput /> */}
+          <QuestionBankCard />
+          {/* <McqCard /> */}
           {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
           {/* <CustomTimePicker /> */}
           {/* <CheckBoxField checkBox_label={'Stretch Examination Conduct Duration'} />
