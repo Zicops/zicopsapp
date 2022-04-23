@@ -1,0 +1,46 @@
+@import '../../../styles/base.scss';
+
+.container {
+  font-family: 'Open sans';
+  font-weight: 600;
+}
+
+.dropdown {
+  margin-left: 10px;
+  margin-right: -8px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.inputContainer {
+  margin: 2px;
+}
+
+.innerContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 275px;
+  margin-top: 20px;
+}
+
+.innerContainer button {
+  border: 0;
+  background: $darkOne;
+  color: $white;
+  padding: 0 5px;
+  display: flex;
+  width: 68px;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.innerContainer img {
+  height: 17px;
+  width: 17px;
+}
+
+.small {
+  display: flex;
+}
