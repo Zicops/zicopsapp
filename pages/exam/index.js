@@ -15,6 +15,7 @@ import McqCard from '../../components/examComps/McqCard';
 // import ExamDatePicker from '../../components/common/ExamDatePicker';
 
 import ExamMaster from '../../components/examComps/ExamMaster';
+import QuestionMasterReadioButton from '../../components/examComps/QuestionMasterRadioButton';
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
@@ -33,9 +34,10 @@ const Exam = () => {
           <ZicopsRadioButton text={'Exam Access:'} /> */}
           {/* <TimePicker /> */}
           {/* <ExamMaster /> */}
+          <QuestionMasterReadioButton />
           {/* <UploadQuestions /> */}
           {/* <QuizOptionInput /> */}
-          <QuestionBankCard />
+          <QuestionBankCard title={'Add'} />
           {/* <McqCard /> */}
           {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
           {/* <CustomTimePicker /> */}
