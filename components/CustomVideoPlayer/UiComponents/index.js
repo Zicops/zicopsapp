@@ -3,6 +3,8 @@ import Image from 'next/image';
 import styles from '../customVideoPlayer.module.scss';
 import useSaveData from '../Logic/useSaveData';
 import { useState } from 'react';
+import { truncateToN } from '../../../helper/common.helper';
+import { CottageSharp } from '@mui/icons-material';
 
 export default function UiComponents({ refs, updateIsPlayingTo, set }) {
   const {
@@ -22,6 +24,11 @@ export default function UiComponents({ refs, updateIsPlayingTo, set }) {
   function toggleBookmark() {
     setBookmarkShow((BookmarkShow) => !BookmarkShow);
   }
+
+  const courseName = truncateToN("This is a Course Name This is a Course Name This is a Course", 60);
+
+  const TopicSequence = "M2T12";
+  const courseTopicName = truncateToN(TopicSequence+": This is a Course Name for demo run ", 80);
 
   return (
     <>
@@ -45,7 +52,14 @@ export default function UiComponents({ refs, updateIsPlayingTo, set }) {
             />
           </Button>
         </div>
-        <div className={`${styles.centerText}`}></div>
+        <div className={`${styles.centerText}`}>
+          <div className={`${styles.centerTextHeading}`}>
+          {courseName}
+          </div>
+          <div className={`${styles.centerTextSubheading}`}>
+          {courseTopicName}
+          </div>
+        </div>
         <div className={`${styles.rightIcons}`}>
           <Button>
             <Image
