@@ -1,7 +1,9 @@
 import {Box} from "@mui/material";
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import {IconButton} from "@material-ui/core";
 
 
-export default function Folder({isDrag}){
+export default function Folder({isDrag, total}){
 
     // let isDrag = true;
     return(
@@ -31,7 +33,15 @@ export default function Folder({isDrag}){
                 }}>
                     <img src={'images/frontFolder.png'} alt={'folder'}/>
                 </Box>
-
+                <Box fontWeight={600} p={3} position={'absolute'} bottom={0} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                    <Box>
+                        <Box mb={0.5}>Course Folder</Box>
+                        <Box ml={1.5} fontSize={'14px'} sx={{opacity: 0.5}}>{total} Course in Folder</Box>
+                    </Box>
+                    <IconButton>
+                        <ArrowForwardIosRoundedIcon sx={{color: 'white'}} />
+                    </IconButton>
+                </Box>
             </Box>
         </>
     )

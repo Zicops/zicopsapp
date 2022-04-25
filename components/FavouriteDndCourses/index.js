@@ -1,4 +1,4 @@
-import {Box, Grid} from "@mui/material";
+import {Box, Grid, Grow} from "@mui/material";
 import Card from "./Card/Card";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import React, {useEffect, useState} from "react";
@@ -86,6 +86,7 @@ export default function FavouriteDndCourses(){
     const [dropped, setDropped] = useState([]);
     const [isDrag, setIsDrag] = useState(false);
     const [dragId, setDragId] = useState('')
+    const [total, setTotal] = useState(0);
 
 
     useEffect(() => {
@@ -102,6 +103,7 @@ export default function FavouriteDndCourses(){
             const element = data.filter(e => e.id === result.draggableId)
             dropped.push(element);
             setData(data.filter(each => each.id !== result.draggableId));
+            setTotal(total + 1);
         }
         setIsDrag(false)
         // console.log(result);
@@ -115,16 +117,29 @@ export default function FavouriteDndCourses(){
                     <Grid container spacing={2}>
                         <Grid item xl={5} lg={5} md={5} sm={5} xs={12}>
                             <Box height={'590px'} fontWeight={600} p={4} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'} textAlign={'center'}>
-                                <Box fontSize={'22px'} mb={0.5}>
-                                    Drag your favorite course in folder
-                                </Box>
+                                <Grow
+                                    in={isDrag}
+                                    style={{ transformOrigin: '0 0 0' }}
+                                    {...(isDrag ? { timeout: 700 } : {})}
+                                >
+                                    <Box fontSize={'22px'} mb={0.5}>
+                                        Drop the favorite course in folder
+                                    </Box>
+                                </Grow>
+                                {
+                                    !isDrag && (
+                                        <Box fontSize={'22px'} mb={0.5}>
+                                            Drag your favorite course in folder
+                                        </Box>
+                                    )
+                                }
                                 <Box px={12} fontSize={'13px'} color={'rgba(255,255,255,0.5)'} mb={5}>
                                     Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                 </Box>
                                 <Droppable droppableId="character">
                                     {(provided) => (
                                         <div {...provided.droppableProps} ref={provided.innerRef}>
-                                            <Folder isDrag={isDrag} />
+                                            <Folder total={total} isDrag={isDrag} />
                                         </div>
                                         // <img {...provided.droppableProps} ref={provided.innerRef} src={'images/folder.png'} alt={'folder'} width={'100%'}/>
                                     )}
