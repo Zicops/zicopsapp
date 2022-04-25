@@ -1,0 +1,53 @@
+@import '../../../styles/base.scss';
+
+.container {
+  overflow: auto;
+}
+
+.firstContainer {
+  display: flex;
+  font-size: 18px;
+  padding-left: 10px;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  & :nth-child(1) {
+    margin-right: 45px !important;
+  }
+  & :nth-child(2) {
+    margin-right: 150px !important;
+  }
+}
+
+.aqmd_dropdown {
+  margin-left: 10px;
+  margin-right: -8px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: 700;
+  select {
+    margin-left: -2px !important;
+  }
+}
+
+.aqmd_dropdown2 {
+  width: 50%;
+  label {
+    width: 50% !important;
+  }
+
+  select {
+    width: 50% !important;
+  }
+}
+
+.dropdownContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.btnContainer {
+  position: relative;
+  float: right;
+}

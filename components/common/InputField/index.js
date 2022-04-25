@@ -1,6 +1,6 @@
 import styles from './inputField.module.scss';
 
-const InputField = ({ obj, classes }) => {
+const InputField = ({ obj }) => {
   let inputSize, labelSize;
   if (obj.label === '') {
     inputSize = styles.col_100;
@@ -11,7 +11,7 @@ const InputField = ({ obj, classes }) => {
   }
   return (
     <>
-      <div className={`row ${styles.container} ${classes}`}>
+      <div className={`row ${styles.container} `}>
         <label htmlFor={`${obj.name}`} className={`${labelSize}`}>
           {obj.label}
         </label>

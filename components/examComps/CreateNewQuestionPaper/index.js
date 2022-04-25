@@ -2,30 +2,16 @@ import InputField from '../../common/InputField';
 import DropdownSelect from '../../Tabs/DropdownSelect';
 import QuizCheckBox from '../QuizOptionInput/QuizCheckBox';
 import styles from './createNewQuestionPaper.module.scss';
+import { InputFieldData } from './Logic/createNewQuestionPaper.helper';
 
 const CreateNewQuestionPaper = () => {
-  const obj1 = {
-    type: 'text',
-    name: 'qPaperName',
-    label: 'Question Paper Name:',
-    placeholder: 'Enter name of the course (Upto 60 characters)',
-    id: 'name'
-  };
-
-  const obj2 = {
-    type: 'text',
-    name: 'description',
-    label: 'Description:',
-    placeholder: 'Enter name of the course (Upto 160 characters)',
-    id: 'description'
-  };
   return (
-    <div className={`${styles.container}`}>
+    <div>
       <form>
-        <InputField obj={obj1} classes={styles.Container} />
-        <InputField obj={obj2} classes={styles.Container} />
+        <InputField obj={InputFieldData[0]} />
+        <InputField obj={InputFieldData[1]} />
         <DropdownSelect
-          classes={styles.dropdown}
+          classes={styles.cnq_dropdown}
           data={['Accounting', 'Bussiness', 'Developement', 'Engg']}
           inputData={{
             inputName: 'category',
@@ -35,7 +21,7 @@ const CreateNewQuestionPaper = () => {
           }}
         />
         <DropdownSelect
-          classes={styles.dropdown}
+          classes={styles.cnq_dropdown}
           data={['Accounting', 'Bussiness', 'Developement', 'Engg']}
           inputData={{
             inputName: 'category',
@@ -45,7 +31,7 @@ const CreateNewQuestionPaper = () => {
           }}
         />
         <DropdownSelect
-          classes={styles.dropdown}
+          classes={styles.cnq_dropdown}
           data={['Accounting', 'Bussiness', 'Developement', 'Engg']}
           inputData={{
             inputName: 'category',
