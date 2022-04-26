@@ -1,31 +1,34 @@
 @import '../../../styles/base.scss';
 
 .uq_container {
-  margin-top: 40px;
-  min-height: 40vh;
-  padding-right: 30px;
-  padding-top: 30px;
+  margin-top: 30px;
+  // min-height: 40vh;
+  // padding-right: 30px;
+  // padding-top: 30px;
 }
 
 .small {
-  font-size: small;
-  display: table;
   position: relative;
+  font-size: 11px;
   float: right;
+  font-weight: 100;
+  color: $darkThree;
+  padding-bottom: 2px;
 }
 
 .uq_second {
-  font-size: large;
-  margin-bottom: 20px;
+  font-size: medium;
+  margin-bottom: 30px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  font-weight: 300;
 }
 
 .uq_second span {
   position: relative;
   float: right;
-  font-size: large;
+  font-size: 14px;
 }
 
 .uq_second button {
@@ -38,5 +41,5 @@
   font-size: 14px;
   background-color: $primary;
   font-weight: 550;
-  margin-left: 145px;
+  margin-left: 180px;
 }

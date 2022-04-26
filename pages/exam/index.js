@@ -17,6 +17,7 @@ import CreateNewQuestionPaper from '../../components/examComps/CreateNewQuestion
 
 import ExamMaster from '../../components/examComps/ExamMaster';
 import AddQuestionMetaData from '../../components/examComps/AddQuestionMetaData';
+import UploadNewQuestionBank from '../../components/examComps/UploadNewQuestionBank';
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
@@ -35,11 +36,12 @@ const Exam = () => {
           {/* <TimePicker /> */}
           {/* <ExamMaster /> */}
           {/* <UploadQuestions /> */}
-          {/* <QuizOptionInput /> */}
-          <QuestionBankCard />
+          <QuizOptionInput />
+          {/* <QuestionBankCard /> */}
           {/* <McqCard /> */}
           {/* <CreateNewQuestionPaper /> */}
           {/* <AddQuestionMetaData /> */}
+          {/* <UploadNewQuestionBank /> */}
           {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
           {/* <CustomTimePicker /> */}
           {/* <CheckBoxField checkBox_label={'Stretch Examination Conduct Duration'} />

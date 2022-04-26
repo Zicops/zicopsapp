@@ -20,6 +20,7 @@
   top: -10px;
   font-size: 18px;
   font-family: 'Open Sans';
+  font-weight: 600;
 }
 
 .col_75 {
@@ -70,14 +71,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
 }
 .preview {
   position: relative;
   font-size: 13px;
-  color: #858f8f;
+  color: $white;
   cursor: pointer;
   float: left;
+  font-weight: bold;
+  padding-top: 2px;
 }
 .remove {
   font-size: 13px;
@@ -85,4 +87,6 @@
   cursor: pointer;
   float: right;
   color: $primary;
+  font-weight: bold;
+  padding-top: 2px;
 }
