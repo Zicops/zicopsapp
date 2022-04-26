@@ -7,6 +7,7 @@ import UploadQuestions from '../../components/examComps/UploadQuestions';
 import QuizOptionInput from '../../components/examComps/QuizOptionInput';
 import QuestionBankCard from '../../components/examComps/QuestionBankCard';
 import McqCard from '../../components/examComps/McqCard';
+import CreateNewQuestionPaper from '../../components/examComps/CreateNewQuestionPaper';
 // import TimePicker from '../../components/common/TimePicker';
 // import RadioButtonLeft from '../../components/common/ZicopsRadioButton';
 // import SwitchButton from '../../components/common/SwitchButton';
@@ -15,7 +16,11 @@ import McqCard from '../../components/examComps/McqCard';
 // import ExamDatePicker from '../../components/common/ExamDatePicker';
 
 import ExamMaster from '../../components/examComps/ExamMaster';
+
+import AddQuestionMetaData from '../../components/examComps/AddQuestionMetaData';
+
 import QuestionMasterReadioButton from '../../components/examComps/QuestionMasterRadioButton';
+
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
@@ -29,7 +34,6 @@ const Exam = () => {
           <ExamDatePicker text={'Exam Date'} /> */}
           {/* <ExamConfigration /> */}
           {/* <ExamSchedule /> */}
-
           {/* <ZicopsRadioButton text={'Scheduled'} />
           <ZicopsRadioButton text={'Exam Access:'} /> */}
           {/* <TimePicker /> */}
@@ -39,6 +43,8 @@ const Exam = () => {
           {/* <QuizOptionInput /> */}
           <QuestionBankCard title={'Add'} />
           {/* <McqCard /> */}
+          {/* <CreateNewQuestionPaper /> */}
+          {/* <AddQuestionMetaData /> */}
           {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
           {/* <CustomTimePicker /> */}
           {/* <CheckBoxField checkBox_label={'Stretch Examination Conduct Duration'} />

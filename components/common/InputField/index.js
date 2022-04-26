@@ -11,7 +11,7 @@ const InputField = ({ obj }) => {
   }
   return (
     <>
-      <div className={`row ${styles.container}`}>
+      <div className={`row ${styles.container} `}>
         <label htmlFor={`${obj.name}`} className={`${labelSize}`}>
           {obj.label}
         </label>
