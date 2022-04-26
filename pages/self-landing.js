@@ -5,6 +5,7 @@ import CardSlider from '../components/medium/CardSlider'
 import BigCardSlider from '../components/medium/BigCardSlider'
 import SelfPacedMiddle from '../components/large/SelfPacedMiddle'
 import { sliderImages, bigImages, circleImages, squareImages } from '../API/DemoSliderData';
+import FavouriteDndCourses from "../components/FavouriteDndCourses";
 
 export default function Self() {
 
@@ -95,7 +96,8 @@ export default function Self() {
             margin: 0,
             padding: 0
         }}>
-            <HeroSlider />
+            {/*<HeroSlider />*/}
+            <FavouriteDndCourses />
             <CardSlider title="Subscribed Classroom Courses" data={sliderImages} />
             <CardSlider title="Recomended For You" data={sliderImages} />
 
