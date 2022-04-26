@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { secondsToMinutes } from '../../../helper/utils.helper';
 
 export default function useVideoPlayer(videoElement, videoContainer, type) {
   // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute]
@@ -11,10 +12,13 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     volume: 0.8
   });
 
+  const [seek, setSeek] = useState(0);
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
+  const tooltip = useRef(null);
 
   useEffect(() => {
+    videoElement.current.focus();
     togglePlay();
 
     let timeout;
@@ -74,8 +78,8 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       reloadVideo();
       return;
     }
-    if (e.code === 'KeyR' && e.shiftKey) {
-      reloadVideo();
+    if (e.code === 'KeyF') {
+      toggleFullScreen();
       return;
     }
     if (e.code === 'KeyM') {
@@ -92,6 +96,25 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       moveVideoProgress(e.code === 'ArrowRight');
       return;
     }
+  }
+
+  function handleMouseMove(e) {
+    console.log(e.pageX);
+    console.log(playerState);
+
+    tooltip.current.style.left = e.pageX + 'px';
+
+    var videoDuration = videoElement.current.duration;
+    const timestamp = (e.pageX / screen.width) * videoDuration;
+
+    const timeObj = secondsToMinutes(timestamp);
+    setSeek(`${timeObj.minute}: ${timeObj.second}`);
+  }
+
+  function handleMouseExit(e) {
+    console.log(e);
+    console.log(playerState);
+    setSeek(0);
   }
 
   function updateVolumeValue(isIncrement) {
@@ -196,6 +219,11 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     });
 
     setPlayPauseActivated(isForward ? 'forward' : 'backward');
+    // postion is not accurate
+    tooltip.current.style.left = (time / videoElement.current.duration) * screen.width + 'px';
+
+    const timeObj = secondsToMinutes(time);
+    setSeek(`${timeObj.minute}: ${timeObj.second}`);
   }
 
   /* View in fullscreen */
@@ -261,6 +289,10 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     setPlayPauseActivated,
     handleKeyDownEvents,
     hideControls,
-    hideTopBar
+    hideTopBar,
+    handleMouseExit,
+    handleMouseMove,
+    seek,
+    tooltip
   };
 }
