@@ -17,6 +17,7 @@ const McqCard = ({ question }) => {
             {question}
           </p>
         </div>
+        <div className={`${styles.span_element}`}>Options:</div>
         <section className={`${styles.option_container}`}>
           <McqOption obj={obj} />
           <McqOption

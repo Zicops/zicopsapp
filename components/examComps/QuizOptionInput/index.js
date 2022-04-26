@@ -29,10 +29,15 @@ const QuizOptionInput = () => {
         }}
       />
       <span>Enter Options:</span>
-      <QuizInput type="option" sr="O1" text="Enter question in less than 160 characters" />
-      <QuizInput type="option" sr="O2" text="Enter question in less than 160 characters" />
-      <QuizInput type="option" sr="O3" text="Enter question in less than 160 characters" />
-      <QuizInput type="option" sr="O4" text="Enter question in less than 160 characters" />
+      <span style={{ fontSize: 'small', float: 'right', paddingRight: '10px' }}>
+        Select the checkbox for the right option.
+      </span>
+      <div style={{ marginTop: '20px' }}>
+        <QuizInput type="option" sr="O1" text="Enter question in less than 160 characters" />
+        <QuizInput type="option" sr="O2" text="Enter question in less than 160 characters" />
+        <QuizInput type="option" sr="O3" text="Enter question in less than 160 characters" />
+        <QuizInput type="option" sr="O4" text="Enter question in less than 160 characters" />
+      </div>
     </form>
   );
 };

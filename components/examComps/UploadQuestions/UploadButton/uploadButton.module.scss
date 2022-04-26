@@ -75,9 +75,12 @@
 .preview {
   position: relative;
   font-size: 13px;
-  color: #858f8f;
+  color: $white;
   cursor: pointer;
   float: left;
+  font-weight: bold;
+  padding-top: 2px;
+
 }
 .remove {
   font-size: 13px;
@@ -85,4 +88,7 @@
   cursor: pointer;
   float: right;
   color: $primary;
+  font-weight: bold;
+  padding-top: 2px;
+
 }
