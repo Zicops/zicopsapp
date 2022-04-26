@@ -19,9 +19,7 @@ const McqCard = ({ question }) => {
         </div>
         <section className={`${styles.option_container}`}>
           <McqOption obj={obj} />
-          <McqOption
-            obj={{ ...obj, text: 'option b', src: undefined, option: 'b', checked: true }}
-          />
+          <McqOption obj={{ ...obj, text: 'option b', src: undefined, option: 'b', checked: true }}/>
           <McqOption obj={{ ...obj, option: 'c', src: '/images/Back.png' }} />
           <McqOption obj={{ ...obj, option: 'd' }} />
         </section>

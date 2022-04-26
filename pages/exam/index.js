@@ -16,8 +16,12 @@ import CreateNewQuestionPaper from '../../components/examComps/CreateNewQuestion
 // import ExamDatePicker from '../../components/common/ExamDatePicker';
 
 import ExamMaster from '../../components/examComps/ExamMaster';
+
 import AddQuestionMetaData from '../../components/examComps/AddQuestionMetaData';
 import UploadNewQuestionBank from '../../components/examComps/UploadNewQuestionBank';
+
+import QuestionMasterReadioButton from '../../components/examComps/QuestionMasterRadioButton';
+
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
@@ -35,9 +39,10 @@ const Exam = () => {
           <ZicopsRadioButton text={'Exam Access:'} /> */}
           {/* <TimePicker /> */}
           {/* <ExamMaster /> */}
+          <QuestionMasterReadioButton />
           {/* <UploadQuestions /> */}
-          <QuizOptionInput />
-          {/* <QuestionBankCard /> */}
+          {/* <QuizOptionInput /> */}
+          <QuestionBankCard title={'Add'} />
           {/* <McqCard /> */}
           {/* <CreateNewQuestionPaper /> */}
           {/* <AddQuestionMetaData /> */}
