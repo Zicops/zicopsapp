@@ -3,7 +3,16 @@
 .options {
   max-height: 70vh;
   display: block;
-  overflow: auto;
+  // overflow: auto;
+}
+
+.options {
+  div {
+    input:nth-child(2) {
+      margin-left: -10px !important;
+      margin-right: 20px !important;
+    }
+  }
 }
 
 .options::-webkit-scrollbar {

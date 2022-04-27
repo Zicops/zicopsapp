@@ -2,20 +2,18 @@
 
 .uq_container {
   margin-top: 30px;
-  min-height: 40vh;
+  // min-height: 40vh;
   // padding-right: 30px;
   // padding-top: 30px;
 }
 
 .small {
-  font-size: 11px;
-  // display: table;
   position: relative;
+  font-size: 11px;
   float: right;
   font-weight: 100;
   color: $darkThree;
   padding-bottom: 2px;
-  
 }
 
 .uq_second {
@@ -30,7 +28,7 @@
 .uq_second span {
   position: relative;
   float: right;
-  font-size: large;
+  font-size: 14px;
 }
 
 .uq_second button {
@@ -43,5 +41,5 @@
   font-size: 14px;
   background-color: $primary;
   font-weight: 550;
-  margin-left: 228px;
+  margin-left: 180px;
 }
