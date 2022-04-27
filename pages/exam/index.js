@@ -20,11 +20,23 @@ import ExamMaster from '../../components/examComps/ExamMaster';
 import AddQuestionMetaData from '../../components/examComps/AddQuestionMetaData';
 import UploadNewQuestionBank from '../../components/examComps/UploadNewQuestionBank';
 
-import QuestionMasterReadioButton from '../../components/examComps/QuestionMasterRadioButton';
+import QuestionMasterRadioButton from '../../components/examComps/QuestionMasterRadioButton';
+import { useState, useEffect } from 'react';
 
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
+
+  const [radioButton, setRadioButton] = useState('')
+
+  function onRadioChanged(e) {
+    setRadioButton(e.target.value);
+  }
+
+  // useEffect(() => {
+  //   alert(radioButton);
+  // }, [radioButton]);
+  
   return (
     <>
       <Sidebar />
@@ -39,14 +51,14 @@ const Exam = () => {
           <ZicopsRadioButton text={'Exam Access:'} /> */}
           {/* <TimePicker /> */}
           {/* <ExamMaster /> */}
-          <QuestionMasterReadioButton />
+          <QuestionMasterRadioButton onRadioChanged={onRadioChanged} />
           {/* <UploadQuestions /> */}
           {/* <QuizOptionInput /> */}
-          <QuestionBankCard title={'Add'} />
+          {radioButton === 'create' && <QuestionBankCard title={'Add'} />}
           {/* <McqCard /> */}
           {/* <CreateNewQuestionPaper /> */}
           {/* <AddQuestionMetaData /> */}
-          {/* <UploadNewQuestionBank /> */}
+          {radioButton === 'upload' && <UploadNewQuestionBank />}
           {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
           {/* <CustomTimePicker /> */}
           {/* <CheckBoxField checkBox_label={'Stretch Examination Conduct Duration'} />
