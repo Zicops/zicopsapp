@@ -43,16 +43,6 @@ export default function CourseBodyAbout() {
 
       <div className="compo_row">
         <div className="col_50 small_compo">
-          <Lists title="Pre-quisites" list={fullCourse.prequisites} />
-        </div>
-
-        <div className="col_50 small_compo">
-          <TargetAudienceList goodFor={fullCourse.goodFor} mustFor={fullCourse.mustFor} />
-        </div>
-      </div>
-
-      <div className="compo_row">
-        <div className="col_50 small_compo">
           <Inclusions
             languages={fullCourse.language}
             moduleCount={moduleData.length}

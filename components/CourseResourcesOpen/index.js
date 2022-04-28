@@ -5,8 +5,7 @@ import CourseResourceLoop from '../CourseResourceLoop';
 import CourseShowContainer from '../CourseShowContainer';
 import styles from './courseResourcesOpen.module.scss';
 
-const CourseResourcesOpen = ({ isResourceShown }) => {
-  const resources = useRecoilValue(ResourcesAtom);
+const CourseResourcesOpen = ({ isResourceShown, resources }) => {
   console.log('resources', resources);
 
   if (!isResourceShown) return null;

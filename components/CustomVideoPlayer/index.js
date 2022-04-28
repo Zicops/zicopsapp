@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { VideoAtom } from '../../state/atoms/video.atom';
 import { courseContext } from '../../state/contexts/CourseContext';
@@ -9,50 +9,25 @@ import useVideoPlayer from './Logic/useHandleVideo';
 import UiComponents from './UiComponents';
 import VideoPlayer from './VideoPlayer';
 
-let videoSrc = 'videos/zicops-product-demo-learner-panel.mp4';
-let type = 'mp4';
-
 export default function CustomVideo({ set }) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
   const { fullCourse } = useContext(courseContext);
 
+  let skipVideoTimer = null;
+  const [timeoutState, setTimeoutState] = useState(null);
+  let isLastVideo = true;
+
+  if (videoData.allModuleTopic) {
+    isLastVideo = videoData.currentTopicIndex + 1 === videoData.allModuleTopic?.length;
+    skipVideoTimer =
+      videoData.topicContent[0].nextShowTime || videoData.topicContent[0].fromEndTime;
+
+    if (isLastVideo) skipVideoTimer = null;
+  }
+
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
-
-  // reset global variables
-  useEffect(() => {
-    if (fullCourse?.previewVideo) videoSrc = fullCourse.previewVideo;
-
-    return () => {
-      videoSrc = 'videos/zicops-product-demo-learner-panel.mp4';
-      type = 'mp4';
-
-      setVideoData({
-        ...videoData,
-        topicContent: [],
-        startPlayer: false
-      });
-    };
-  }, []);
-
-  useEffect(() => {
-    videoSrc = videoData.topicContent[0]?.contentUrl || videoSrc;
-    type = videoData.topicContent[0]?.type || type;
-
-    videoContainer.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-      inline: 'center'
-    });
-  }, [videoData]);
-
-  useEffect(() => {
-    console.log(videoSrc);
-    set(true);
-  }, [videoSrc]);
-
-  // console.log(videoData, videoSrc);
 
   const {
     playerState,
@@ -73,9 +48,66 @@ export default function CustomVideo({ set }) {
     handleMouseExit,
     handleMouseMove,
     seek,
-    tooltip
-  } = useVideoPlayer(videoElement, videoContainer, type);
+    tooltip,
+    playNextVideo,
+    playPreviousVideo
+  } = useVideoPlayer(videoElement, videoContainer, videoData.type);
 
+  useEffect(() => {
+    set(true);
+    if (videoData.allModuleTopic && skipVideoTimer) {
+      const duration = videoElement.current?.duration;
+      const isFromStart = videoData.topicContent[0].nextShowTime > 0;
+      const timeToWait = isFromStart
+        ? videoData.topicContent[0].nextShowTime * 1000
+        : (duration - videoData.topicContent[0].fromEndTime) * 1000;
+
+      console.log('play in progress', parseInt(skipVideoTimer) * 60 + 5000);
+
+      setTimeoutState(
+        setTimeout(() => {
+          if (!timeoutState) {
+            console.log('next will play');
+            playNextVideo();
+            skipVideoTimer = null;
+          }
+        }, timeToWait + 5000)
+      );
+    }
+
+    // reset video atom when unmounted
+    return () => {
+      // setVideoData({
+      //   ...videoData,
+      //   videoSrc: 'videos/zicops-product-demo-learner-panel.mp4',
+      //   type: 'mp4',
+      //   topicContent: [],
+      //   allModuleTopic: null,
+      //   currentTopicIndex: 0,
+      //   startPlayer: false
+      // });
+      handleMouseMove({ target: { value: 0 } });
+    };
+  }, []);
+
+  useEffect(() => {
+    videoContainer.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center'
+    });
+    console.log(videoData);
+  }, [videoData]);
+
+  useEffect(() => {
+    set(true);
+  }, [videoData.videoSrc]);
+
+  // console.log(
+  //   skipVideoTimer,
+  //   (playerState.progress * 9) / 100,
+  //   skipVideoTimer < (playerState.progress * 9) / 100
+  // );
   // currently  not used, can remove later
   const vidRef = useRef();
 
@@ -94,8 +126,8 @@ export default function CustomVideo({ set }) {
       <div className="video_wrapper">
         {/* video player */}
         <VideoPlayer
-          videoSrc={videoSrc}
-          type={type}
+          videoSrc={videoData.videoSrc || null}
+          type={videoData.type || 'mp4'}
           videoElement={videoElement}
           handleOnTimeUpdate={handleOnTimeUpdate}
           playerState={playerState}
@@ -103,13 +135,42 @@ export default function CustomVideo({ set }) {
           handleKeyDown={handleKeyDownEvents}
         />
 
+        {/* watch credits button */}
+        {skipVideoTimer < (playerState.progress * 9) / 100 && timeoutState && (
+          <>
+            <div className={`${styles.nextPlayBtn}`}>
+              <span></span>
+              <div
+                onClick={() => {
+                  // console.log('play cancaled', timeoutState);
+                  clearTimeout(timeoutState);
+                  playNextVideo();
+                  skipVideoTimer = null;
+                  setTimeoutState(null);
+                }}>
+                Next
+              </div>
+            </div>
+            <div className={`${styles.watchCreditsBtn}`}>
+              <span></span>
+              <div
+                onClick={() => {
+                  // console.log('play cancaled', timeoutState);
+                  clearTimeout(timeoutState);
+                  skipVideoTimer = null;
+                  setTimeoutState(null);
+                }}>
+                Watch Credits
+              </div>
+            </div>
+          </>
+        )}
+
         {/* control bar */}
         <div
           className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`}
           ref={vidRef}
-          onClick={() => {
-            videoElement.current?.focus();
-          }}>
+          onClick={() => videoElement.current?.focus()}>
           <ControlBar
             handleMouseExit={handleMouseExit}
             handleMouseMove={handleMouseMove}
@@ -124,6 +185,8 @@ export default function CustomVideo({ set }) {
             handleVolume={handleVolume}
             playerState={playerState}
             tooltip={tooltip}
+            playNextVideo={playNextVideo}
+            playPreviousVideo={playPreviousVideo}
           />
         </div>
       </div>

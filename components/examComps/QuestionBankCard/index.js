@@ -1,5 +1,5 @@
 import InputField from '../../common/InputField';
-import DropdownSelect from '../../Tabs/DropdownSelect';
+import DropdownSelect from '../../Tabs/common/DropdownSelect';
 import styles from './questionBankCard.module.scss';
 import Button from '../../common/Button';
 import { InputFieldData } from './Logic/QuestionBankCard.helper';

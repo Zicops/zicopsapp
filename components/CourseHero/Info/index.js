@@ -1,21 +1,31 @@
 import { Skeleton } from '@mui/material';
+import { useRecoilValue } from 'recoil';
+import { isLoadingAtom } from '../../../state/atoms/module.atoms';
 
 export default function Info({ name, data }) {
+  const isLoading = useRecoilValue(isLoadingAtom);
+
   return (
     <>
       <div className="float row">
         <div className="col_25" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span>
-            {data ? (
-              name
-            ) : (
+            {isLoading ? (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
+            ) : (
+              name
             )}
           </span>
           <p>:</p>
         </div>
         <div className="col_75">
-          {data || <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />}
+          {isLoading ? (
+            <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
+          ) : data ? (
+            data
+          ) : (
+            'N/A'
+          )}
         </div>
       </div>
 

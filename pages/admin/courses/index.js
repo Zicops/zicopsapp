@@ -1,13 +1,12 @@
 import { ApolloProvider } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { mutationClient } from '../../../API/Mutations';
-import AdminFooter from '../../../components/AdminFooter';
 import CourseHead from '../../../components/CourseHead';
 import Sidebar from '../../../components/Sidebar';
-import Tabs from '../../../components/Tabs';
+import CourseTabs from '../../../components/Tabs';
+import AdminFooter from '../../../components/Tabs/AdminFooter';
 import CourseContextProvider from '../../../state/contexts/CourseContext';
-import { useEffect, useState } from 'react';
-
-import { useRouter } from 'next/router';
 
 export default function Courses() {
   const router = useRouter();
@@ -26,7 +25,7 @@ export default function Courses() {
 
         <ApolloProvider client={mutationClient}>
           <CourseContextProvider>
-            <Tabs />
+            <CourseTabs />
 
             <AdminFooter />
           </CourseContextProvider>

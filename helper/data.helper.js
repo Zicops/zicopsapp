@@ -91,3 +91,9 @@ export function filterTopicContent(topicContent, topicId = '') {
   const filteredTopicContent = topicContent.filter((content) => content.topicId === topicId);
   return filteredTopicContent;
 }
+
+export function filterResources(resources, topicId) {
+  const filteredResources = resources.filter((res) => res.topicId === topicId);
+
+  return filteredResources;
+}

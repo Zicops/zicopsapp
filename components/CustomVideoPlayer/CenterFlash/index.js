@@ -13,9 +13,14 @@ export default function CenterFlash({ state }) {
   if (state === 'volumeDown') imgSrc = '/images/volume-up_90749.png';
   if (state === 'enterFullScreen') imgSrc = '/images/progressTriangle.png';
   if (state === 'exitFullScreen') imgSrc = '/images/progressTriangle.png';
+
   if (state === 'reload') imgSrc = '/images/reload_53905.png';
   if (state === 'unmute') imgSrc = '/images/volume-up_90749.png';
   if (state === 'mute') imgSrc = '/images/volume-up_90749.png';
+
+  if (state === 'next') imgSrc = '/images/progressTriangle.png';
+  if (state === 'previous') imgSrc = '/images/progressTriangle.png';
+
 
   return (
     <div className={`${styles.playPauseIndicator}`}>

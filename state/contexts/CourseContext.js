@@ -42,6 +42,7 @@ const CourseContextProvider = (props) => {
     updated_by: '',
     status: '',
     is_display: false,
+    is_active: true,
     category: '',
     sub_category: '',
     sub_categories: []
@@ -83,6 +84,7 @@ const CourseContextProvider = (props) => {
       updated_by: data.updated_by,
       status: data.status,
       is_display: data.is_display,
+      is_active: data.is_active,
       category: data.category,
       sub_category: data.sub_category,
       sub_categories: sub_categories //this is an array that contains objects

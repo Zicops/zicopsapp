@@ -6,11 +6,15 @@ import {
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
   GET_COURSE_TOPICS_CONTENT,
+  GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID,
+  GET_TOPIC_RESOURCES_BY_COURSE_ID,
   GET_TOPIC_RESOURCES,
   queryClient
 } from '../../../API/Queries';
+import { filterResources } from '../../../helper/data.helper';
 import {
   ChapterAtom,
+  isLoadingAtom,
   ModuleAtom,
   ResourcesAtom,
   TopicAtom,
@@ -38,59 +42,70 @@ export default function useShowData(courseContextData) {
   const [topicData, updateTopicData] = useRecoilState(TopicAtom);
   const [topicContent, updateTopicContent] = useRecoilState(TopicContentAtom);
   const [resources, updateResources] = useRecoilState(ResourcesAtom);
+  const [filteredResources, setFilteredResources] = useState([]);
+  const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
 
   // module, chapter, topic data query obj
-  const [loadModuleData, { error: errorModuleData, refetch: refetchModule }] = useLazyQuery(
+  const [loadModuleData, { error: errorModuleData, loading: loadingModuleData }] = useLazyQuery(
     GET_COURSE_MODULES,
     {
       client: queryClient
     }
   );
-  const [loadChapterData, { error: errorChapterData, refetch: refetchChapter }] = useLazyQuery(
+  const [loadChapterData, { error: errorChapterData, loading: loadingChapterData }] = useLazyQuery(
     GET_COURSE_CHAPTERS,
     { client: queryClient }
   );
-  const [loadTopicData, { error: errorTopicData, refetch: refetchTopic }] = useLazyQuery(
-    GET_COURSE_TOPICS,
-    {
-      client: queryClient
-    }
-  );
-  const [loadTopicContentData, { error: errorTopicContentData, refetch: refetchTopicContent }] =
-    useLazyQuery(GET_COURSE_TOPICS_CONTENT, {
+  const [loadTopicData, { error: errorTopicData }] = useLazyQuery(GET_COURSE_TOPICS, {
+    client: queryClient
+  });
+  const [loadTopicContentData, { error: errorTopicContentData, loading: loadingTopicData }] =
+    useLazyQuery(GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID, {
       client: queryClient
     });
-  const [loadResourcesData, { error: errorResourcesData, refetch: refetchResources }] =
-    useLazyQuery(GET_TOPIC_RESOURCES, {
+  const [loadResourcesData, { error: errorResourcesData, loading: loadingResourceData }] =
+    useLazyQuery(GET_TOPIC_RESOURCES_BY_COURSE_ID, {
       client: queryClient
     });
 
   // load module, chapter, topic data and set in recoil
   useEffect(() => {
     if (!fullCourse.id) return;
+    setIsLoading(
+      loadingModuleData && loadingChapterData && loadingTopicData && loadingResourceData
+    );
 
     loadModuleData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      updateModuleData(data.getCourseModules);
+      if (errorModuleData) alert('Module Load Error');
+
+      updateModuleData(data.getCourseModules || []);
 
       setSelectedModule(getModuleOptions(data.getCourseModules)[0]);
-      if (errorModuleData) alert('Module Load Error');
     });
 
     loadChapterData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      updateChapterData(data.getCourseChapters);
-
       if (errorChapterData) alert('Chapter Load Error');
+
+      updateChapterData(data.getCourseChapters || []);
     });
 
     loadTopicData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      updateTopicData(data.getTopics);
-
       if (errorTopicData) alert('Topic Load Error');
+
+      updateTopicData(data.getTopics || []);
     });
 
-    // loadResourcesData({ variables: { topic_id: null } }).then(() => {
-    //   if (errorResourcesData) alert('Resources Load Error');
-    // });
+    loadResourcesData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
+      if (errorResourcesData) alert('Resources Load Error');
+
+      updateResources(data.getResourcesByCourseId || []);
+    });
+
+    loadTopicContentData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
+      if (errorTopicContentData) alert('Topic Content Load Error');
+
+      updateTopicContent(data.getTopicContentByCourseId || []);
+    });
   }, [fullCourse]);
 
   // function saveContentInState(data) {
@@ -99,21 +114,21 @@ export default function useShowData(courseContextData) {
   //   updateTopicContent(localData);
   // }
 
-  useEffect(() => {
-    let localData = [];
-    topicData.some((t, i) => {
-      loadTopicContentData({ variables: { topic_id: t.id } }).then(({ data }) => {
-        localData = [...localData, ...data.getTopicContent];
-        console.log(i, data, t.id, topicContent, localData);
+  // useEffect(() => {
+  //   let localData = [];
+  //   topicData.some((t, i) => {
+  //     loadTopicContentData({ variables: { topic_id: t.id } }).then(({ data }) => {
+  //       localData = [...localData, ...data.getTopicContent];
+  //       console.log(i, data, t.id, topicContent, localData);
 
-        updateTopicContent(localData);
+  //       updateTopicContent(localData);
 
-        if (errorTopicContentData) alert('Topic Content Load Error');
-      });
+  //       if (errorTopicContentData) alert('Topic Content Load Error');
+  //     });
 
-      return false;
-    });
-  }, [topicData]);
+  //     return false;
+  //   });
+  // }, [topicData]);
 
   // useEffect(() => {
   //   console.log('topicContenttopicContent', topicContent);
@@ -181,17 +196,21 @@ export default function useShowData(courseContextData) {
   }
 
   function showResources(topic) {
-    // console.log('showres', topic);
-    updateResources([]);
-    if (isResourceShown?.includes(topic.id)) return;
+    if (isResourceShown?.includes(topic.id)) {
+      setFilteredResources([]);
+      setIsResourceShown(null);
+      return;
+    }
 
-    loadResourcesData({ variables: { topic_id: topic.id } }).then(({ data }) => {
-      // console.log('data.getTopicResources', data.getTopicResources);
-      updateResources((prev) => data.getTopicResources);
+    setFilteredResources(filterResources(resources, topic.id));
+    setIsResourceShown(topic.id + '|:|' + topic.name);
 
-      setIsResourceShown(topic.id + '|:|' + topic.name);
-      if (errorResourcesData) alert('Resources Load Error');
-    });
+    // loadResourcesData({ variables: { topic_id: topic.id } }).then(({ data }) => {
+    //   // console.log('data.getTopicResources', data.getTopicResources);
+    //   updateResources((prev) => data.getTopicResources);
+
+    //   if (errorResourcesData) alert('Resources Load Error');
+    // });
   }
 
   return {
@@ -204,6 +223,7 @@ export default function useShowData(courseContextData) {
     handleModuleChange,
     selectedModule,
     showResources,
+    filteredResources,
     isResourceShown
   };
 }

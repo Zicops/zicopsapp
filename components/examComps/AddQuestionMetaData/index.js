@@ -1,6 +1,6 @@
 import styles from './addQuestionMetaData.module.scss';
 import ZicopsRadioButton from '../../common/ZicopsRadioButton';
-import DropdownSelect from '../../Tabs/DropdownSelect';
+import DropdownSelect from '../../Tabs/common/DropdownSelect';
 import Button from '../../common/Button';
 import InputField from '../../common/InputField';
 import { InputFieldData } from './Logic/addQuestionMetaData.helper';

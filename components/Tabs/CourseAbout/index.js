@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import BulletPointInput from '../../small/BulletPointInput';
 import TagInput from '../../small/TagInput';
+import NextButton from '../common/NextButton';
 import useHandleTabs from '../Logic/useHandleTabs';
 
 export default function CourseAbout() {
@@ -99,6 +100,8 @@ export default function CourseAbout() {
           />
         </div>
       </div>
+
+      <NextButton tabIndex={3}/>
     </div>
   );
 }

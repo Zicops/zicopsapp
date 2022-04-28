@@ -6,42 +6,61 @@ export default function CourseHeader({
   provisionedBy,
   category,
   subCategory,
-  duration
+  duration,
+  isLoading
 }) {
   return (
     <div className={`${style.heading} row`}>
       <div className="col_75">
         <h1>
-          {courseTitle || (
+          {isLoading ? (
             <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={50} width={400} />
+          ) : courseTitle ? (
+            courseTitle
+          ) : (
+            'N/A'
           )}
+
           {/* This is a big title that can be too big to displat byt we still have to sidplay it anyhow. */}
         </h1>
-        {provisionedBy ? (
+
+        {isLoading ? (
+          <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={300} />
+        ) : provisionedBy ? (
           <p>
             This course is provisioned by <span>{provisionedBy}</span>
           </p>
         ) : (
-          <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
+          'N/A'
         )}
 
         <ul>
           <li>
-            {category || (
+            {isLoading ? (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
+            ) : category ? (
+              category
+            ) : (
+              'N/A'
             )}
           </li>
           <li>
-            {subCategory || (
+            {isLoading ? (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
+            ) : subCategory ? (
+              subCategory
+            ) : (
+              'N/A'
             )}
           </li>
           <li>
-            Duration:{' '}
-            {duration || (
-              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
-            )}{' '}
-            mins
+            {isLoading ? (
+              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
+            ) : subCategory ? (
+              `Duration: ${duration} mins`
+            ) : (
+              'N/A'
+            )}
           </li>
         </ul>
       </div>

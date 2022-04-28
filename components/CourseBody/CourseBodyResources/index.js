@@ -21,6 +21,7 @@ export default function CourseBodyResources() {
     handleModuleChange,
     selectedModule,
     showResources,
+    filteredResources,
     isResourceShown
   } = useShowData(courseContextData);
 
@@ -49,7 +50,7 @@ export default function CourseBodyResources() {
         isResourceShown={isResourceShown}
       />
 
-      <CourseResourcesOpen isResourceShown={isResourceShown} />
+      <CourseResourcesOpen resources={filteredResources} isResourceShown={isResourceShown} />
     </>
   );
 }

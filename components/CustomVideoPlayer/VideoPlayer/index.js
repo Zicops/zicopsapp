@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import { courseContext } from '../../../state/contexts/CourseContext';
 import styles from '../customVideoPlayer.module.scss';
 
 export default function VideoPlayer({
@@ -13,7 +11,9 @@ export default function VideoPlayer({
 }) {
   return (
     <>
-      {type === 'mp4' && (
+      {!videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
+
+      {type === 'mp4' && videoSrc && (
         <video
           tabIndex="0"
           onClick={handleClick}
@@ -26,7 +26,7 @@ export default function VideoPlayer({
         />
       )}
 
-      {type === 'SCORM' && (
+      {type === 'SCORM' && videoSrc && (
         <iframe
           src="https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html"
           frameBorder="0"

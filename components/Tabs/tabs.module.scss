@@ -1,11 +1,10 @@
 @import '../../styles/base.scss';
 
-.contentPanel{
+.contentPanel {
   margin: 30px 10px 10px 10px;
   color: $white;
   height: calc(60vh + 100px);
-  box-shadow: -2px 2px 10px 0 $black,
-  2px -2px 5px 0 $secondaryBlack;
+  box-shadow: -2px 2px 10px 0 $black, 2px -2px 5px 0 $secondaryBlack;
   border-radius: 10px;
 }
 
@@ -46,4 +45,23 @@
 
 .widthHalf {
   width: 50%;
+}
+
+.nextBtn {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: $white;
+  cursor: pointer;
+  font-size: large;
+
+  span {
+    margin-right: 12px;
+  }
+
+  img {
+    align-items: center;
+  }
 }

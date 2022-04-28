@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { filterTopicContent } from '../../../helper/data.helper';
 import { secondsToMinutes } from '../../../helper/utils.helper';
+import { TopicContentAtom } from '../../../state/atoms/module.atoms';
+import { VideoAtom } from '../../../state/atoms/video.atom';
 
 export default function useVideoPlayer(videoElement, videoContainer, type) {
-  // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute]
+  // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
   const [playPauseActivated, setPlayPauseActivated] = useState(null);
   const [playerState, setPlayerState] = useState({
     isPlaying: false,
@@ -12,16 +16,20 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     volume: 0.8
   });
 
+  const [videoData, updateVideoData] = useRecoilState(VideoAtom);
+  const topicContent = useRecoilValue(TopicContentAtom);
   const [seek, setSeek] = useState(0);
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
+
 // hide control bar if no mouse movement for 2.5 sec
+
+  let timeout;
   useEffect(() => {
-    videoElement.current.focus();
+    videoElement.current?.focus();
     togglePlay();
 
-    let timeout;
     const duration = 2500;
     videoContainer.current?.addEventListener('mousemove', function () {
       if (type !== 'mp4') return;
@@ -67,15 +75,20 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   function handleKeyDownEvents(e) {
     e.preventDefault();
     e.stopPropagation();
-    // console.log(e);
     if (e.code === 'Space') {
-      console.log('play', playerState);
       togglePlay();
       return;
     }
     if (e.code === 'KeyR' && e.shiftKey) {
-      // console.log('play', playerState);
       reloadVideo();
+      return;
+    }
+    if (e.code === 'KeyN' && e.shiftKey) {
+      playNextVideo();
+      return;
+    }
+    if (e.code === 'KeyP' && e.shiftKey) {
+      playPreviousVideo();
       return;
     }
     if (e.code === 'KeyF') {
@@ -99,12 +112,10 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   }
 
   function handleMouseMove(e) {
-    console.log(e.pageX);
-    console.log(playerState);
-
+    if (!videoElement.current) return;
     tooltip.current.style.left = e.pageX + 'px';
 
-    var videoDuration = videoElement.current.duration;
+    var videoDuration = videoElement.current?.duration;
     const timestamp = (e.pageX / screen.width) * videoDuration;
 
     const timeObj = secondsToMinutes(timestamp);
@@ -112,8 +123,6 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   }
 
   function handleMouseExit(e) {
-    console.log(e);
-    console.log(playerState);
     setSeek(0);
   }
 
@@ -139,6 +148,46 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     });
 
     setPlayPauseActivated(!playerState.isPlaying ? 'play' : 'pause');
+  }
+
+  function playNextVideo() {
+    if (!videoData.allModuleTopic) return;
+    if (videoData.allModuleTopic.length === videoData.currentTopicIndex) return;
+
+    const topicId = videoData.allModuleTopic[videoData.currentTopicIndex + 1].id;
+    const filteredTopicContent = filterTopicContent(topicContent, topicId);
+    const isTopicContentPresent = filteredTopicContent.length > 0;
+    console.log(filteredTopicContent);
+
+    updateVideoData({
+      ...videoData,
+      videoSrc: isTopicContentPresent ? filteredTopicContent[0].contentUrl : null,
+      type: isTopicContentPresent ? filteredTopicContent[0].type : null,
+      currentTopicIndex: isTopicContentPresent ? videoData.currentTopicIndex + 1 : null,
+      topicContent: isTopicContentPresent ? filteredTopicContent : null,
+      allModuleTopic: isTopicContentPresent ? videoData.allModuleTopic : null
+    });
+
+    setPlayPauseActivated('next');
+  }
+
+  function playPreviousVideo() {
+    if (!videoData.allModuleTopic) return;
+    if (videoData.currentTopicIndex === 0) return;
+
+    const topicId = videoData.allModuleTopic[videoData.currentTopicIndex - 1].id;
+    const filteredTopicContent = filterTopicContent(topicContent, topicId);
+    const isTopicContentPresent = filteredTopicContent.length > 0;
+    updateVideoData({
+      ...videoData,
+      videoSrc: isTopicContentPresent ? filteredTopicContent[0].contentUrl : null,
+      type: isTopicContentPresent ? filteredTopicContent[0].type : null,
+      currentTopicIndex: isTopicContentPresent ? videoData.currentTopicIndex - 1 : null,
+      topicContent: isTopicContentPresent ? filteredTopicContent : null,
+      allModuleTopic: isTopicContentPresent ? videoData.allModuleTopic : null
+    });
+
+    setPlayPauseActivated('previous');
   }
 
   // pass true or false
@@ -293,6 +342,8 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     handleMouseExit,
     handleMouseMove,
     seek,
-    tooltip
+    tooltip,
+    playNextVideo,
+    playPreviousVideo
   };
 }

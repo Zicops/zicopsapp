@@ -169,11 +169,24 @@ export default function useHandleTabs(courseContextData) {
 
   function handleChange(e) {
     if (e.target.type === 'checkbox') {
+      if (e.target.name.includes('is_')) {
+        // toggle button
+        updateCourseMaster({
+          ...fullCourse,
+          [e.target.name]: e.target.checked
+        });
+        return;
+      }
+
+      // expertise level beginner, competent and proficient
       return handleExpertise(e);
     }
+
+    // image and video file
     if (e.target.type === 'file') {
       return handleFileInput(e);
     }
+
     updateCourseMaster({
       ...fullCourse,
       [e.target.name]: e.target.value
@@ -257,10 +270,6 @@ export default function useHandleTabs(courseContextData) {
     });
   }
 
-  function saveCourseMasterTabDetails() {
-    createCourseAndUpdateContext(courseContextData, createCourse);
-  }
-
   return {
     fullCourse,
     tabData,
@@ -269,7 +278,6 @@ export default function useHandleTabs(courseContextData) {
     setTab,
     fileData,
     handleChange,
-    saveCourseMasterTabDetails,
     updateCourseMaster,
     togglePreviewPopUp,
     previewFileData,

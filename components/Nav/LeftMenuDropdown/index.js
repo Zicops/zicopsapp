@@ -44,8 +44,8 @@ export default function LeftMenuDropdown({navmenuicon}) {
         <Image src={navmenuicon} alt="" height="20px" width="30px" />
       </Button> */}
       <Menu
-        {...languages}
-        {...preferences}
+        // {...languages}
+        // {...preferences}
         id="fade-menu"
         anchorEl={anchorEl}
         open={open}
