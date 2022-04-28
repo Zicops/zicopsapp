@@ -22,21 +22,28 @@ import UploadNewQuestionBank from '../../components/examComps/UploadNewQuestionB
 
 import QuestionMasterRadioButton from '../../components/examComps/QuestionMasterRadioButton';
 import { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { examRadioButton } from '../../state/atoms/exam.atoms';
 
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
+  // const [radioButton, setRadioButton] = useState('');
 
-  const [radioButton, setRadioButton] = useState('')
+  const [radioButton, setRadioButton] = useRecoilState(examRadioButton);
+  const [name, setName] = useState('');
 
   function onRadioChanged(e) {
     setRadioButton(e.target.value);
+  }
+  function handleChange(e) {
+    console.log(e.target.value);
   }
 
   // useEffect(() => {
   //   alert(radioButton);
   // }, [radioButton]);
-  
+
   return (
     <>
       <Sidebar />
@@ -54,7 +61,9 @@ const Exam = () => {
           <QuestionMasterRadioButton onRadioChanged={onRadioChanged} />
           {/* <UploadQuestions /> */}
           {/* <QuizOptionInput /> */}
-          {radioButton === 'create' && <QuestionBankCard title={'Add'} />}
+          {radioButton === 'create' && (
+            <QuestionBankCard title={'Add'} handleChange={handleChange} />
+          )}
           {/* <McqCard /> */}
           {/* <CreateNewQuestionPaper /> */}
           {/* <AddQuestionMetaData /> */}

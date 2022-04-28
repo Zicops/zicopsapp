@@ -1,6 +1,6 @@
 import styles from './inputField.module.scss';
 
-const InputField = ({ obj }) => {
+const InputField = ({ obj, inputHandler }) => {
   let inputSize, labelSize;
   if (obj.label === '') {
     inputSize = styles.col_100;
@@ -22,7 +22,7 @@ const InputField = ({ obj }) => {
           placeholder={`${obj.placeholder}`}
           className={`${inputSize}`}
           //   required
-          //   onChange={inputHandler} "Enter name of the course (Upto 160 characters)"
+          onChange={inputHandler}
           //   value={fullCourse.name}
         />
       </div>
