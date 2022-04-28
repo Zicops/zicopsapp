@@ -36,6 +36,7 @@ export const ADD_COURSE = gql`
     $created_by: String
     $updated_by: String
     $status: Status
+    $is_active: Boolean
     $is_display: Boolean
     $category: String
     $sub_category: String
@@ -70,6 +71,7 @@ export const ADD_COURSE = gql`
         updated_by: $updated_by
         status: $status
         is_display: $is_display
+        is_active: $is_active
         category: $category
         sub_category: $sub_category
         sub_categories: $sub_categories
@@ -104,6 +106,7 @@ export const ADD_COURSE = gql`
       created_by
       updated_by
       status
+      is_active
       is_display
       category
       sub_category
@@ -168,6 +171,7 @@ export const UPDATE_COURSE = gql`
     $created_by: String
     $updated_by: String
     $status: Status
+    $is_active: Boolean
     $is_display: Boolean
     $category: String
     $sub_category: String
@@ -202,6 +206,7 @@ export const UPDATE_COURSE = gql`
         created_by: $created_by
         updated_by: $updated_by
         status: $status
+        is_active: $is_active
         is_display: $is_display
         category: $category
         sub_category: $sub_category
@@ -237,6 +242,7 @@ export const UPDATE_COURSE = gql`
       created_by
       updated_by
       status
+      is_active
       is_display
       category
       sub_category
@@ -516,9 +522,11 @@ export const ADD_TOPIC_CONTENT = gql`
     $nextShowTime: Int
     $fromEndTime: Int
     $type: String
+    $courseId: String
   ) {
     addTopicContent(
       topicId: $topicId
+      courseId: $courseId
       topicContent: {
         language: $language
         topicId: $topicId
@@ -528,6 +536,48 @@ export const ADD_TOPIC_CONTENT = gql`
         nextShowTime: $nextShowTime
         fromEndTime: $fromEndTime
         type: $type
+      }
+    ) {
+      id
+      language
+      topicId
+      startTime
+      duration
+      skipIntroDuration
+      nextShowTime
+      fromEndTime
+      created_at
+      updated_at
+      type
+    }
+  }
+`;
+
+export const UPDATE_TOPIC_CONTENT = gql`
+  mutation updateTopicContent(
+    $id: String
+    $topicId: String
+    $language: String
+    $startTime: Int
+    $duration: Int
+    $skipIntroDuration: Int
+    $nextShowTime: Int
+    $fromEndTime: Int
+    $type: String
+    $courseId: String
+  ) {
+    updateTopicContent(
+      topicContent: {
+        id: $id
+        topicId: $topicId
+        language: $language
+        startTime: $startTime
+        duration: $duration
+        skipIntroDuration: $skipIntroDuration
+        nextShowTime: $nextShowTime
+        fromEndTime: $fromEndTime
+        type: $type
+        courseId: $courseId
       }
     ) {
       id

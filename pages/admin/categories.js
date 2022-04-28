@@ -1,7 +1,7 @@
 import Sidebar from '../../components/Sidebar';
 import ZicopsCatsList from "../../components/adminComps/ZicopsCourses/ZicopsCatsList"
 
-const Admin = () => {
+const ZicopsCategories = () => {
       return (
         <div>
             <Sidebar />
@@ -10,4 +10,4 @@ const Admin = () => {
     )
 }
 
-export default Admin
+export default ZicopsCategories

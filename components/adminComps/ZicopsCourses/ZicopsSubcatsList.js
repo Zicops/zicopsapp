@@ -1,14 +1,6 @@
 import CourseHead from '../../CourseHead';
-import Pagination from '@mui/material/Pagination';
-import PaginationItem from '@mui/material/PaginationItem';
-import StyledDataGrid from '../../common/StyledDataGrid';
+import ZicopsTable from '../../common/ZicopsTable';
 
-import {
-  gridPageCountSelector,
-  gridPageSelector,
-  useGridApiContext,
-  useGridSelector
-} from '@mui/x-data-grid';
 import { queryClient, GET_SUB_CATS } from '../../../API/Queries';
 import { ApolloProvider, useQuery } from '@apollo/client';
 
@@ -27,80 +19,26 @@ const columns = [
   }
 ];
 
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  return (
-    <Pagination
-      classes={{ ul: 'paginationStyle' }}
-      variant="outlined"
-      shape="rounded"
-      page={page + 1}
-      count={pageCount}
-      renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />
-  );
-}
-
-function CustomAscendingIcon() {
-  return (
-    <div style={{ marginLeft: '20px', marginTop: '5px' }}>
-      <img
-        src="/images/downsort.svg"
-        alt=""
-        height={15}
-        width={15}
-        style={{ transform: 'rotate(180deg)' }}
-      />
-    </div>
-  );
-}
-
-function CustomDescendingIcon() {
-  return (
-    <div style={{ marginLeft: '20px', marginTop: '5px' }}>
-      <img src="/images/downsort.svg" alt="" height={15} width={15} />
-    </div>
-  );
-}
 
 function ZicopsSubCategoryList() {
+
+
   const { data } = useQuery(GET_SUB_CATS);
-  // console.log(data);
   let latest = [];
-  data
-    ? data.allSubCategories.map((val, index) => latest.push({ id: index + 1, SubCatName: val }))
-    : null;
+  if(data)
+    data.allSubCategories.map((val, index) => latest.push({ id: index + 1, SubCatName: val }));
+
   return (
-    <div style={{ height: '70vh' }}>
-      {data && (
-        <StyledDataGrid
-          rows={latest}
+      
+        <ZicopsTable
           columns={columns}
-          sx={{
-            border: 0,
-            pt: 2,
-            pb: 0,
-            px: 5,
-            color: '#fff'
-          }}
-          autoHeight={false}
-          disableSelectionOnClick
-          components={{
-            Pagination: CustomPagination,
-            ColumnSortedDescendingIcon: CustomDescendingIcon,
-            ColumnSortedAscendingIcon: CustomAscendingIcon
-          }}
+          data={latest}
           pageSize={7}
-          rowsPerPageOptions={[5]}
-          pagination
+          rowsPerPageOptions={[3]}
+          tableHeight='70vh'
         />
-      )}
-    </div>
-  );
+
+  )
 }
 
 const ZicopsSubcatsList = () => {
