@@ -16,7 +16,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
-
+// hide control bar if no mouse movement for 2.5 sec
   useEffect(() => {
     videoElement.current.focus();
     togglePlay();

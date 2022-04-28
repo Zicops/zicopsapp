@@ -8,7 +8,8 @@ import {
   playPauseBtn,
   progressBar,
   volumeContainer,
-  dimProgressBar
+  dimProgressBar,
+  tooltipContainer
 } from './controlbar.module.scss';
 import Volume from './Volume';
 
@@ -23,7 +24,11 @@ export default function ControlBar({
   handleVolume,
   handleMute,
   handleProgress,
-  playerState
+  playerState,
+  handleMouseExit,
+  handleMouseMove,
+  seek,
+  tooltip
 }) {
   const [hideBar, setHideBar] = useState(false);
 
@@ -33,12 +38,18 @@ export default function ControlBar({
         type="range"
         id="vidInput"
         onChange={handleProgress}
+        onMouseLeave={handleMouseExit}
+        onMouseMove={handleMouseMove}
         value={playerState.progress || 0}
         min={0}
         max={100}
         step={0.1}
         className={`${progressBar} ${hideBar ? dimProgressBar : ''}`}
       />
+
+      <div className={`${tooltipContainer} ${!seek ? 'hide' : ''}`} ref={tooltip}>
+        {seek}
+      </div>
 
       <div className={`${controlButtons}`}>
         <Button handleClick={reloadVideo}>

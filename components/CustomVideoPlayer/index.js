@@ -69,7 +69,11 @@ export default function CustomVideo({ set }) {
     playPauseActivated,
     handleKeyDownEvents,
     hideControls,
-    hideTopBar
+    hideTopBar,
+    handleMouseExit,
+    handleMouseMove,
+    seek,
+    tooltip
   } = useVideoPlayer(videoElement, videoContainer, type);
 
   // currently  not used, can remove later
@@ -100,8 +104,16 @@ export default function CustomVideo({ set }) {
         />
 
         {/* control bar */}
-        <div className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`} ref={vidRef}>
+        <div
+          className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`}
+          ref={vidRef}
+          onClick={() => {
+            videoElement.current?.focus();
+          }}>
           <ControlBar
+            handleMouseExit={handleMouseExit}
+            handleMouseMove={handleMouseMove}
+            seek={seek}
             reloadVideo={reloadVideo}
             handlePlay={togglePlay}
             handleFullScreen={toggleFullScreen}
@@ -111,6 +123,7 @@ export default function CustomVideo({ set }) {
             handleMute={toggleMute}
             handleVolume={handleVolume}
             playerState={playerState}
+            tooltip={tooltip}
           />
         </div>
       </div>
