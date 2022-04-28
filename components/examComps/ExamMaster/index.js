@@ -1,10 +1,8 @@
 import CheckBoxField from '../../common/CheckBoxField';
 import InputField from '../../common/InputField';
-import Marks from '../../common/Marks';
-import ZicopsTextarea from '../../common/ZicopsTextarea';
 import ZicopsRadioButton from '../../common/ZicopsRadioButton';
-import DropdownSelect from '../../Tabs/DropdownSelect';
-import styles from './examMaster.module.scss';
+import ZicopsTextarea from '../../common/ZicopsTextarea';
+
 const ExamMaster = () => {
   return (
     <>

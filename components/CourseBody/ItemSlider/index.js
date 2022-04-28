@@ -1,7 +1,6 @@
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import TopicFiles from './TopicFiles';
-import Image from 'next/image';
 import { useRecoilValue } from 'recoil';
 import { Resources } from '../../../state/atoms/module.atoms';
 import { getResourceCount } from '../Logic/courseBody.helper';
@@ -27,81 +26,6 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
   };
   let prevItem = null;
 
-  const CustomLeftArrow = ({ onClick, styleClass }) => (
-    <>
-      <div className={`left_arrow ${styleClass} `}>
-        <Image
-          onClick={() => onClick()}
-          src="/images/bigarrowleft.png"
-          alt=""
-          height={20}
-          width={20}
-        />
-      </div>
-
-      <style jsx>
-        {`
-          .left_arrow {
-            position: absolute !important;
-            left: 5%;
-            margin-top: -165px;
-            opacity: 0.8;
-            cursor: pointer;
-          }
-          .left_arrow:hover {
-            opacity: 1;
-          }
-          .disable{
-            display: none;
-          }
-        `}
-      </style>
-    </>
-  );
-  const CustomRightArrow = ({ onClick }) => (
-    <>
-      <div className="right_arrow">
-        <Image
-          onClick={() => onClick()}
-          src="/images/bigarrowright.png"
-          alt=""
-          height={20}
-          width={20}
-        />
-      </div>
-
-      <style jsx>
-        {`
-          .right_arrow {
-            position: absolute !important;
-            right: 5%;
-            margin-top: -165px;
-            opacity: 0.8;
-            cursor: pointer;
-          }
-          .right_arrow:hover {
-            opacity: 1;
-          }
-        `}
-      </style>
-    </>
-  );
-
-  const ButtonGroup = ({ next, previous, goToSlide, ...rest }) => {
-    const {
-      carouselState: { currentSlide }
-    } = rest;
-    return (
-      <div className="carousel-button-group">
-        <CustomLeftArrow
-          styleClass={currentSlide === 0 ? 'disable' : ''}
-          onClick={() => previous()}
-        />
-        <CustomRightArrow onClick={() => next()} />
-        {/* <ButtonThree onClick={() => goToSlide(currentSlide + 1)}> Go to any slide </ButtonThree> */}
-      </div>
-    );
-  };
   return (
     <>
       <Carousel
@@ -119,15 +43,11 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
         customTransition="all 1s"
         transitionDuration={1000}
         containerClass="itsItemContainer"
-        arrows={false}
-        renderButtonGroupOutside={true}
-        customButtonGroup={<ButtonGroup />}
-        // customRightArrow={<CustomRightArrow />}
-        // customLeftArrow={<CustomLeftArrow />}
         // removeArrowOnDeviceType={["tablet", "mobile", "desktop"]}
         deviceType="Laptop"
         dotListClass=""
         // customDot={<CustomDot />}
+        renderButtonGroupOutside={true}
         itemClass="">
         {itemsArr.map((item, i) => {
           if (i + 1 == itemsArr.length) {

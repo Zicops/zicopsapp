@@ -40,6 +40,11 @@ export const ResourcesAtom = atom({
   default: []
 });
 
+export const isLoadingAtom = atom({
+  key: 'isLoading',
+  default: true
+});
+
 // object structures which can be used  for reset or immutable new object
 export function getModuleObject(data) {
   return {

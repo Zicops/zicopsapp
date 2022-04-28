@@ -1,5 +1,5 @@
 import QuizInput from './QuizInput/index';
-import DropdownSelect from '../../Tabs/DropdownSelect';
+import DropdownSelect from '../../Tabs/common/DropdownSelect';
 import InputField from '../../common/InputField';
 import styles from './quizOptionInput.module.scss';
 

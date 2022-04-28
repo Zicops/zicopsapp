@@ -1,22 +1,22 @@
 import Image from 'next/image';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { VideoAtom } from '../../../state/atoms/video.atom';
 import Button from '../Button';
 import {
   controlBar,
   controlButtons,
+  dimProgressBar,
   fullScreenBtn,
   playPauseBtn,
   progressBar,
-  volumeContainer,
-  dimProgressBar,
-  tooltipContainer
+  tooltipContainer,
+  volumeContainer
 } from './controlbar.module.scss';
 import Volume from './Volume';
 
 export default function ControlBar({
   reloadVideo,
-  prevVideo,
-  nextVideo,
   forwardVideo,
   backwardVideo,
   handlePlay,
@@ -28,9 +28,20 @@ export default function ControlBar({
   handleMouseExit,
   handleMouseMove,
   seek,
-  tooltip
+  tooltip,
+  playNextVideo,
+  playPreviousVideo
 }) {
   const [hideBar, setHideBar] = useState(false);
+  const videoData = useRecoilValue(VideoAtom);
+
+  let isFirstVideo = true;
+  let isLastVideo = true;
+
+  if (videoData.allModuleTopic) {
+    isFirstVideo = videoData.currentTopicIndex === 0;
+    isLastVideo = videoData.currentTopicIndex + 1 === videoData.allModuleTopic?.length;
+  }
 
   return (
     <div className={`${controlBar}`}>
@@ -56,7 +67,7 @@ export default function ControlBar({
           <Image src="/images/reload_53905.png" alt="" height="25px" width="22px" />
         </Button>
 
-        <Button>
+        <Button handleClick={playPreviousVideo} disable={isFirstVideo}>
           <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
         </Button>
 
@@ -76,7 +87,7 @@ export default function ControlBar({
           <Image src="/images/next-forward.png" alt="" height="40px" width="35px" />
         </Button>
 
-        <Button>
+        <Button handleClick={playNextVideo} disable={isLastVideo}>
           <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
         </Button>
 

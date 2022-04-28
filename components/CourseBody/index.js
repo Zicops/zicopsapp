@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import { courseContext } from '../../state/contexts/CourseContext';
-import { moduleContext } from '../../state/contexts/ModuleContext';
-import Dropdown from '../common/Dropdown';
 import BottomTabsMenu from '../small/BottomTabsMenu';
+import { coursebody, navbarOverrideElement } from './courseBody.module.scss';
 import CoursePageTabs from './CoursePageTabs';
 import { tabs } from './Logic/courseBody.helper';
 import useShowData from './Logic/useShowData';
@@ -27,7 +26,9 @@ export default function CourseBody() {
 
   return (
     <>
-      <div className="coursebody">
+      <div className={navbarOverrideElement}>This is Preview Page</div>
+
+      <div className={coursebody}>
         <CoursePageTabs
           tabData={tabs}
           ref={myRef}
@@ -44,15 +45,6 @@ export default function CourseBody() {
           </>
         )}
       </div>
-
-      {/* move styles to .scss */}
-      <style jsx>
-        {`
-          .coursebody {
-            background-color: #1a1d21;
-          }
-        `}
-      </style>
     </>
   );
 }

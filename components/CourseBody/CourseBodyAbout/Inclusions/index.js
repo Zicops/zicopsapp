@@ -14,7 +14,7 @@ export default function Inclusions({
       <div className="tab_section_summary">
         <div className="row mb_10">
           <div className="col_50 label">
-            Multilingual Support <span>:</span>
+            Languages <span>:</span>
           </div>
           <div className="col_50">
             {languages.map((e, i) => (

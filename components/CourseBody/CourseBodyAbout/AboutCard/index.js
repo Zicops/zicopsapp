@@ -3,26 +3,9 @@ import { Skeleton } from '@mui/material';
 export default function AboutCard({ isDataLoaded, fullCourse }) {
   return (
     <>
-      <div className="tab_heading">
-        {isDataLoaded ? (
-          'About this course'
-        ) : (
-          <Skeleton sx={{ bgcolor: 'var(--skeleton-dark)' }} variant="text" width={200} />
-        )}
-      </div>
+      <div className="tab_heading">About this course</div>
       <div className="tab_section_summary">
-        <p>
-          {isDataLoaded ? (
-            fullCourse.description
-          ) : (
-            <Skeleton
-              sx={{ bgcolor: 'var(--skeleton-dark)' }}
-              variant="text"
-              height={60}
-              width={1000}
-            />
-          )}
-        </p>
+        <p>{fullCourse.description}</p>
       </div>
 
       <div className="row my_30 abstra">

@@ -1,13 +1,14 @@
 import { Skeleton } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { filterAndSortTopics, filterTopicContent } from '../../../../helper/data.helper';
-import { TopicContentAtom } from '../../../../state/atoms/module.atoms';
+import { isLoadingAtom, TopicContentAtom } from '../../../../state/atoms/module.atoms';
 import TopicBox from '../TopicBox';
 import style from './chapter.module.scss';
 
 export default function ChapterRow({ topics, name, index, description, chapterId, moduleId }) {
   const filteredAndSortedData = filterAndSortTopics(topics, moduleId, chapterId);
 
+  const isLoading = useRecoilValue(isLoadingAtom);
   const topicContent = useRecoilValue(TopicContentAtom);
   return (
     <>
@@ -15,21 +16,31 @@ export default function ChapterRow({ topics, name, index, description, chapterId
         <div className={`${style.heading}`}>
           <h2>
             Chapter{' '}
-            {index || (
+            {isLoading ? (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={80} />
+            ) : (
+              index
             )}
             :{' '}
             <span>
-              {name || (
+              {isLoading ? (
                 <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={100} />
+              ) : name ? (
+                name
+              ) : (
+                'N/A'
               )}
             </span>
           </h2>
         </div>
         <div className={`${style.description}`}>
           <p>
-            {description || (
+            {isLoading ? (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={500} />
+            ) : description ? (
+              description
+            ) : (
+              'N/A'
             )}
           </p>
         </div>
@@ -44,6 +55,7 @@ export default function ChapterRow({ topics, name, index, description, chapterId
             index={index + 1}
             topic={topic}
             topicContent={filteredTopicContent}
+            moduleId={moduleId}
           />
         );
       })}

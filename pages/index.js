@@ -1,14 +1,17 @@
-import Link from 'next/link';
-import React, { useContext, useState } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import { Skeleton } from '@mui/material';
+import { useRouter } from 'next/router';
+import React, { useContext, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { bigImages, circleImages, sliderImages, squareImages } from '../API/DemoSliderData';
+import { GET_LATEST_COURSES, queryClient } from '../API/Queries';
 import HomeSlider from '../components/HomeSlider';
-import CardSlider from '../components/medium/CardSlider';
 import BigCardSlider from '../components/medium/BigCardSlider';
+import CardSlider from '../components/medium/CardSlider';
 import OneCardSlider from '../components/medium/OneCardSlider';
 import RoundCardSlider from '../components/medium/RoundCardSlider';
-import { sliderImages, bigImages, circleImages, squareImages } from '../API/DemoSliderData';
+import { isLoadingAtom } from '../state/atoms/module.atoms';
 import { userContext } from '../state/contexts/UserContext';
-import { useRouter } from 'next/router';
-import { Skeleton } from '@mui/material';
 
 export default function Home() {
   const { isAdmin } = useContext(userContext);
@@ -92,10 +95,31 @@ export default function Home() {
       slidesToSlide: 1
     }
   };
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-  setTimeout(() => {
-    setIsDataLoaded(true);
-  }, 2000);
+
+  // load data query obj
+
+  const [latestCourseData, setLatestCourseData] = useState(new Array(15).fill(null));
+  const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
+  const [loadCourseData, { error, loading, refetch }] = useLazyQuery(GET_LATEST_COURSES, {
+    client: queryClient
+  });
+
+  useEffect(() => {
+    setIsLoading(loading);
+
+    loadCourseData({
+      variables: {
+        publish_time: Date.now(),
+        pageSize: 15,
+        pageCursor: ''
+      }
+    }).then(({ data }) => {
+      console.log(data);
+      setLatestCourseData(data.latestCourses.courses);
+
+      if (error) alert('Course Load Error');
+    });
+  }, []);
 
   return (
     <div
@@ -105,17 +129,13 @@ export default function Home() {
         margin: 0,
         padding: 0
       }}>
-      {isDataLoaded ? (
-        <HomeSlider />
+      {isLoading ? (
+        <Skeleton sx={{ bgcolor: 'dimgray' }} variant="rectangular" animation="wave" height={391} />
       ) : (
-        <Skeleton
-          sx={{ bgcolor: 'dimgray' }}
-          variant="rectangular"
-          animation="wave"
-          height={391}
-        />
+        <HomeSlider />
       )}
 
+      <CardSlider title="Latest Courses" data={latestCourseData} />
       <CardSlider title="Continue with your Courses" data={sliderImages} />
       <CardSlider title="Recommended Courses" data={sliderImages} />
 

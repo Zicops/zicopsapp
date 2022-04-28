@@ -1,5 +1,5 @@
 import InputField from '../../common/InputField';
-import DropdownSelect from '../../Tabs/DropdownSelect';
+import DropdownSelect from '../../Tabs/common/DropdownSelect';
 import QuizCheckBox from '../QuizOptionInput/QuizCheckBox';
 import styles from './createNewQuestionPaper.module.scss';
 import { InputFieldData } from './Logic/createNewQuestionPaper.helper';

@@ -1,6 +1,6 @@
 import styles from './uploadNewQuestionBank.module.scss';
 import InputField from '../../common/InputField';
-import DropdownSelect from '../../Tabs/DropdownSelect';
+import DropdownSelect from '../../Tabs/common/DropdownSelect';
 import { obj } from './Logic/uploadNewQuestionBank.helper.js';
 import UploadQuestions from '../UploadQuestions';
 import Button from '../../common/Button';

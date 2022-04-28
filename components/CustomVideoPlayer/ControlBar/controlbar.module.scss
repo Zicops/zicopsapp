@@ -104,6 +104,10 @@
 .btn:hover {
   opacity: 1;
 }
+.btn:disabled {
+  opacity: 0.4;
+  cursor: no-drop;
+}
 
 // volume styles
 .volumeContainer {

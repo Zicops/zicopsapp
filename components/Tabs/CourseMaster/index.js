@@ -1,15 +1,15 @@
 import { useContext } from 'react';
 import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
 import { getQueryData } from '../../../helper/api.helper';
-import { getData } from '../../../helper/utils.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import TextInput from '../TextInput';
+import DropdownSelect from '../common/DropdownSelect';
+import NextButton from '../common/NextButton';
+import TextInput from '../common/TextInput';
 import useHandleTabs from '../Logic/useHandleTabs';
-import DropdownSelect from '../DropdownSelect';
 
 export default function CourseMaster() {
   const courseContextData = useContext(courseContext);
-  const { fullCourse, handleChange, saveCourseMasterTabDetails } = useHandleTabs(courseContextData);
+  const { fullCourse, handleChange } = useHandleTabs(courseContextData);
   const { data } = getQueryData(GET_CATS_N_SUB_CATS);
 
   return (
@@ -66,7 +66,13 @@ export default function CourseMaster() {
                 Active
               </label>
               <label className="switch">
-                <input className="switch_input" type="checkbox" name="active" />
+                <input
+                  className="switch_input"
+                  type="checkbox"
+                  name="is_active"
+                  onChange={handleChange}
+                  checked={fullCourse.is_active || false}
+                />
                 <span className="switch_label" data-on="On" data-off="Off"></span>
                 <span className="switch_handle"></span>
               </label>
@@ -79,7 +85,13 @@ export default function CourseMaster() {
                 Display
               </label>
               <label className="switch">
-                <input className="switch_input" type="checkbox" name="display" />
+                <input
+                  className="switch_input"
+                  type="checkbox"
+                  name="is_display"
+                  onChange={handleChange}
+                  checked={fullCourse.is_display}
+                />
                 <span className="switch_label" data-on="On" data-off="Off"></span>
                 <span className="switch_handle"></span>
               </label>
@@ -88,11 +100,23 @@ export default function CourseMaster() {
           <div className="col_25"></div>
         </div>
 
-        <div className="row my_30">
-          <button type="button" className="admin-next-btn" onClick={saveCourseMasterTabDetails}>
+        <NextButton tabIndex={1}/>
+
+        {/* <div className="row">
+          <div className="col_75"></div>
+          <div className="col_25"></div>
+          <button type="button" className={nextBtn} onClick={() => saveCourseData(true, 1)}>
+            <span>Next</span>
+            <Image src="/images/bigarrowright.png" alt="" height={20} width={20} />
+          </button>
+        </div> */}
+        {/* <div className="row">
+          <div className="col_75"></div>
+          <div className="col_25"></div>
+          <button type="button" className="admin-next-btn" onClick={() => saveCourseData(true, 1)}>
             Next
           </button>
-        </div>
+        </div> */}
       </form>
     </div>
   );
