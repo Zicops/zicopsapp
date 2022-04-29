@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 import { courseContext } from '../../state/contexts/CourseContext';
 import BottomTabsMenu from '../small/BottomTabsMenu';
-import { coursebody, navbarOverrideElement } from './courseBody.module.scss';
+import { coursebody, navbarOverrideElement, navbarOverrideElementClose } from './courseBody.module.scss';
 import CoursePageTabs from './CoursePageTabs';
 import { tabs } from './Logic/courseBody.helper';
 import useShowData from './Logic/useShowData';
-
+import Link from 'next/link';
 export default function CourseBody() {
   const courseContextData = useContext(courseContext);
 
@@ -26,7 +26,14 @@ export default function CourseBody() {
 
   return (
     <>
-      <div className={navbarOverrideElement}>This is Preview Page</div>
+      <div className={navbarOverrideElement}>This is Preview Page
+        <Link href={`/admin/courses?courseId=${courseContextData?.fullCourse.id}`}>
+          <a className={navbarOverrideElementClose}>
+            {/* X */}
+            <img src="/images/circular-cross.png" alt="" width={50}/>
+          </a>
+        </Link>
+      </div>
 
       <div className={coursebody}>
         <CoursePageTabs
