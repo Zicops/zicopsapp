@@ -529,7 +529,6 @@ export const ADD_TOPIC_CONTENT = gql`
       courseId: $courseId
       topicContent: {
         language: $language
-        topicId: $topicId
         startTime: $startTime
         duration: $duration
         skipIntroDuration: $skipIntroDuration

@@ -42,7 +42,7 @@ export const ResourcesAtom = atom({
 
 export const isLoadingAtom = atom({
   key: 'isLoading',
-  default: true
+  default: false
 });
 
 // object structures which can be used  for reset or immutable new object

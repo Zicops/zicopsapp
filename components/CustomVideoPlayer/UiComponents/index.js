@@ -2,11 +2,21 @@ import Button from '../Button';
 import Image from 'next/image';
 import styles from '../customVideoPlayer.module.scss';
 import useSaveData from '../Logic/useSaveData';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { truncateToN } from '../../../helper/common.helper';
 import { CottageSharp } from '@mui/icons-material';
+import { courseContext } from '../../../state/contexts/CourseContext';
+import { useRecoilValue } from 'recoil';
+import { VideoAtom } from '../../../state/atoms/video.atom';
+import { ModuleAtom } from '../../../state/atoms/module.atoms';
+import { filterModule } from '../../../helper/data.helper';
 
 export default function UiComponents({ refs, updateIsPlayingTo, set }) {
+  const { videoElement, videoContainer } = refs;
+  const videoData = useRecoilValue(VideoAtom);
+  const moduleData = useRecoilValue(ModuleAtom);
+  const { fullCourse } = useContext(courseContext);
+
   const {
     handleBookmarkChange,
     bookmarkData,
@@ -17,7 +27,6 @@ export default function UiComponents({ refs, updateIsPlayingTo, set }) {
   } = useSaveData(videoElement);
 
   const PlayerClose = () => set(false);
-  const { videoElement, videoContainer } = refs;
 
   const [BookmarkShow, setBookmarkShow] = useState(false);
 
@@ -25,10 +34,13 @@ export default function UiComponents({ refs, updateIsPlayingTo, set }) {
     setBookmarkShow((BookmarkShow) => !BookmarkShow);
   }
 
-  const courseName = truncateToN("This is a Course Name This is a Course Name This is a Course", 60);
-
-  const TopicSequence = "M2T12";
-  const courseTopicName = truncateToN(TopicSequence+": This is a Course Name for demo run ", 80);
+  const activeModule = filterModule(moduleData, videoData.currentModuleId);
+  const currentTopic = videoData?.allModuleTopic
+    ? videoData?.allModuleTopic[videoData?.currentTopicIndex]
+    : null;
+  const displaySequence = `M${activeModule?.sequence}T${currentTopic?.sequence}`;
+  // const TopicSequence = 'M2T12';
+  const courseTopicName = `${displaySequence} ${currentTopic?.name}`;
 
   return (
     <>
@@ -53,12 +65,8 @@ export default function UiComponents({ refs, updateIsPlayingTo, set }) {
           </Button>
         </div>
         <div className={`${styles.centerText}`}>
-          <div className={`${styles.centerTextHeading}`}>
-          {courseName}
-          </div>
-          <div className={`${styles.centerTextSubheading}`}>
-          {courseTopicName}
-          </div>
+          <div className={`${styles.centerTextHeading}`}>{truncateToN(fullCourse?.name, 60)}</div>
+          <div className={`${styles.centerTextSubheading}`}>{truncateToN(courseTopicName, 80)}</div>
         </div>
         <div className={`${styles.rightIcons}`}>
           <Button>

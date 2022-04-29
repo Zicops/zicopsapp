@@ -1,10 +1,10 @@
+import { Fragment } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import TopicFiles from './TopicFiles';
 import { useRecoilValue } from 'recoil';
-import { Resources } from '../../../state/atoms/module.atoms';
+import { ResourcesAtom } from '../../../state/atoms/module.atoms';
 import { getResourceCount } from '../Logic/courseBody.helper';
-import { Fragment } from 'react';
+import TopicFiles from './TopicFiles';
 
 export default function ItemSlider({ itemsArr, showResources, isResourceShown }) {
   const responsive = {
@@ -25,6 +25,7 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
     }
   };
   let prevItem = null;
+  const resources = useRecoilValue(ResourcesAtom);
 
   return (
     <>
@@ -50,16 +51,30 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
         renderButtonGroupOutside={true}
         itemClass="">
         {itemsArr.map((item, i) => {
+          // console.log(i + 1, itemsArr.length, i + 1 == itemsArr.length);
+          // console.log(i % 2, i % 2 == 0);
           if (i + 1 == itemsArr.length) {
             return (
-              <div style={{ padding: '5px' }}>
-                <TopicFiles
-                  fileCount={getResourceCount(item.id)}
-                  topic={item}
-                  handleClick={showResources}
-                  isResourceShown={isResourceShown}
-                />
-              </div>
+              <>
+                {prevItem && (
+                  <div style={{ padding: '5px' }}>
+                    <TopicFiles
+                      fileCount={getResourceCount(resources, prevItem?.id)}
+                      topic={prevItem}
+                      handleClick={showResources}
+                      isResourceShown={isResourceShown}
+                    />
+                  </div>
+                )}
+                <div style={{ padding: '5px' }}>
+                  <TopicFiles
+                    fileCount={getResourceCount(resources, item?.id)}
+                    topic={item}
+                    handleClick={showResources}
+                    isResourceShown={isResourceShown}
+                  />
+                </div>
+              </>
             );
           }
           if (i % 2 == 0) {
@@ -67,13 +82,13 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
             return null;
           }
 
-          // console.log(isResourceShown, prevItem.id, item.id);
+          // console.log(i, prevItem, item);
 
           return (
-            <Fragment key={item.id}>
+            <Fragment key={item.id + i + prevItem?.id}>
               <div style={{ padding: '5px' }}>
                 <TopicFiles
-                  fileCount={getResourceCount(prevItem.id)}
+                  fileCount={getResourceCount(resources, prevItem.id)}
                   topic={prevItem}
                   handleClick={showResources}
                   isResourceShown={isResourceShown}
@@ -81,12 +96,14 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
               </div>
               <div style={{ padding: '5px' }}>
                 <TopicFiles
-                  fileCount={getResourceCount(item.id)}
+                  fileCount={getResourceCount(resources, item.id)}
                   topic={item}
                   handleClick={showResources}
                   isResourceShown={isResourceShown}
                 />
               </div>
+              {/* reset prevItem */}
+              {(prevItem = null)}
             </Fragment>
           );
         })}

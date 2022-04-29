@@ -1,26 +1,32 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import {
   ADD_TOPIC_CONTENT,
   UPDATE_COURSE_TOPIC,
+  UPDATE_TOPIC_CONTENT,
   UPLOAD_TOPIC_CONTENT_SUBTITLE,
   UPLOAD_TOPIC_CONTENT_VIDEO,
   UPLOAD_TOPIC_RESOURCE
-} from '../../../API/Mutations';
-import { GET_COURSE_TOPICS_CONTENT, GET_TOPIC_RESOURCES, queryClient } from '../../../API/Queries';
-import { filterTopicContent } from '../../../helper/data.helper';
+} from '../../../../API/Mutations';
+import {
+  GET_COURSE_TOPICS_CONTENT,
+  GET_TOPIC_RESOURCES,
+  queryClient
+} from '../../../../API/Queries';
+import { filterTopicContent } from '../../../../helper/data.helper';
 import {
   BingeAtom,
   getBingeObject,
   getTopicObject,
+  isLoadingAtom,
   ResourcesAtom,
   TopicAtom,
   TopicContentAtom,
   TopicSubtitleAtom,
   TopicVideoAtom
-} from '../../../state/atoms/module.atoms';
-import { courseContext } from '../../../state/contexts/CourseContext';
+} from '../../../../state/atoms/module.atoms';
+import { courseContext } from '../../../../state/contexts/CourseContext';
 import useAddTopicContent from './useAddTopicContent';
 
 export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
@@ -39,13 +45,20 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   const [topicSubtitle, updateTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
   const [binge, updateBinge] = useRecoilState(BingeAtom);
   const [resources, updateResources] = useRecoilState(ResourcesAtom);
+  const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
 
   // mutations
   const [updateCourseTopic, { error: updateTopicError }] = useMutation(UPDATE_COURSE_TOPIC);
-  const [addCourseTopicContent] = useMutation(ADD_TOPIC_CONTENT);
-  const [uploadCourseContentVideo] = useMutation(UPLOAD_TOPIC_CONTENT_VIDEO);
-  const [uploadCourseContentSubtitle] = useMutation(UPLOAD_TOPIC_CONTENT_SUBTITLE);
-  const [uploadTopicResource] = useMutation(UPLOAD_TOPIC_RESOURCE);
+  const [addCourseTopicContent, { loading: addContentLoading }] = useMutation(ADD_TOPIC_CONTENT);
+  const [updateCourseTopicContent] = useMutation(UPDATE_TOPIC_CONTENT);
+  const [uploadCourseContentVideo, { loading: uploadVideoLoading }] = useMutation(
+    UPLOAD_TOPIC_CONTENT_VIDEO
+  );
+  const [uploadCourseContentSubtitle, { loading: uploadSubtileLoading }] = useMutation(
+    UPLOAD_TOPIC_CONTENT_SUBTITLE
+  );
+  const [uploadTopicResource, { loading: uploadResourcesLoading }] =
+    useMutation(UPLOAD_TOPIC_RESOURCE);
 
   // local state
   const [editTopic, setEditTopic] = useState(getTopicObject({ courseId: fullCourse.id }));
@@ -61,6 +74,7 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
 
     setIsEditTopicReady(!!editTopic.name && !!editTopic.description);
   }, [editTopic]);
+
   // set local state to edit topic data for form
   function activateEditTopic(topicId) {
     const index = topicData.findIndex((t) => t.id === topicId);
@@ -109,6 +123,7 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
           const showTime = content.fromEndTime || content.nextShowTime;
           const showTimeMin = Math.floor(parseInt(showTime) / 60);
           const showTimeSec = parseInt(showTime) - showTimeMin * 60;
+          console.log(content);
 
           const bingeData = {
             startTimeMin: startTimeMin,
@@ -116,7 +131,7 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
             skipIntroDuration: content.skipIntroDuration,
             showTimeMin: showTimeMin,
             showTimeSec: showTimeSec,
-            isFromEnd: content.nextShowTime.toString() === '0'
+            isFromEnd: content.fromEndTime > 0
           };
           updateBinge(bingeData);
         }
@@ -182,19 +197,16 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   // save to db and update context with refetch
   async function handleEditTopicSubmit() {
     console.log('Topic and Resources upload started');
+    setIsLoading(
+      addContentLoading && uploadVideoLoading && uploadSubtileLoading && uploadResourcesLoading
+    );
 
     topicContent.forEach(async (content, index) => {
-      if (content.id) {
-        console.log(
-          `Topic Content with id ${content.id} and language ${content.language} is skipped and not uploaded`
-        );
-        return;
-      }
-
       const startTime = parseInt(binge.startTimeMin) * 60 + parseInt(binge.startTimeSec);
       const showTime = parseInt(binge.showTimeMin) * 60 + parseInt(binge.showTimeSec);
 
       const sendContentData = {
+        courseId: fullCourse.id,
         topicId: content.topicId,
         language: content.language,
         type: content.type,
@@ -204,7 +216,19 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
         nextShowTime: !binge.isFromEnd ? showTime : 0,
         fromEndTime: binge.isFromEnd ? showTime : 0
       };
-      const { data } = await addCourseTopicContent({ variables: sendContentData });
+      let data = {};
+      if (!!content.id) {
+        console.log(
+          `Topic Content with id ${content.id} and language ${content.language} is updated`
+        );
+        sendContentData.id = content.id;
+        // data = await (await updateCourseTopicContent({ variables: sendContentData })).data;
+        return;
+      } else {
+        console.log('sendContentData', sendContentData);
+        data = await (await addCourseTopicContent({ variables: sendContentData })).data;
+      }
+
       console.log(`Topic Content Uploaded with language ${content.language}`);
 
       if (data.addTopicContent) {

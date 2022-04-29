@@ -1,4 +1,8 @@
-export default function Card({ image, styleClass, carouselRefData }) {
+import { truncateToN } from '../../helper/common.helper';
+
+export default function Card({ image, courseData, styleClass, carouselRefData }) {
+  if (!courseData) return null;
+
   function handleMouseEnter(e, start = 0, end = 0) {
     if (e.currentTarget.parentNode.dataset.index === start.toString()) {
       e.currentTarget.parentNode.style.marginLeft = '60px';
@@ -14,9 +18,8 @@ export default function Card({ image, styleClass, carouselRefData }) {
   function handleMouseLeave(e) {
     e.currentTarget.parentNode.style.margin = '';
   }
-
   const gotoCourse = () => {
-    window.location.href = '/courses';
+    window.location.href = courseData?.id ? `/preview?courseId=${courseData.id}` : '/courses';
   };
 
   return (
@@ -32,13 +35,13 @@ export default function Card({ image, styleClass, carouselRefData }) {
           )
         }
         onMouseLeave={handleMouseLeave}>
-        <img src={image} alt="" />
+        <img src={courseData.tileImage || image || '/images/courses/workplace design.png'} alt="" />
         <div className="banner">Self Paced</div>
         <div className="overlay">
           <div className="bottom-box">
             <div className="title-area">
               <div className="firstline">
-                <div className="title">Introduction to Data Science with Python</div>
+                <div className="title">{courseData.name}</div>
                 {/* <div className="rating noselect"> */}
                 <div className="secondline">Self Paced</div>
                 {/* </div> */}
@@ -49,17 +52,16 @@ export default function Card({ image, styleClass, carouselRefData }) {
                 <div className="one">
                   <div className="one-text">
                     <span className="level noselect">Level:</span>
-                    <span className="value noselect">Beginner</span>
+                    <span className="value noselect">
+                      {courseData.expertise_level?.split(',').join(' | ')}
+                    </span>
                   </div>
                   <div className="one-text">
                     <span className="level noselect">Duration:</span>
-                    <span className="value noselect">240 mins</span>
+                    <span className="value noselect">{courseData.duration} mins</span>
                   </div>
                 </div>
-                <div className="description noselect">
-                  Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                  magna aliqua.
-                </div>
+                <div className="description noselect">{truncateToN(courseData.summary)}</div>
               </div>
               <div className="icon-area">
                 <ul>
@@ -74,9 +76,7 @@ export default function Card({ image, styleClass, carouselRefData }) {
             </div>
             <div className="category">
               <ul>
-                <li>Data Science</li>
-                <li>Business Intelligence</li>
-                <li>ETL</li>
+                <li>{courseData.category}</li>
               </ul>
             </div>
           </div>

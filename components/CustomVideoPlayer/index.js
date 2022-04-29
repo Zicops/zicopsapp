@@ -12,16 +12,15 @@ import VideoPlayer from './VideoPlayer';
 export default function CustomVideo({ set }) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
-  const { fullCourse } = useContext(courseContext);
-
   let skipVideoTimer = null;
   const [timeoutState, setTimeoutState] = useState(null);
   let isLastVideo = true;
 
   if (videoData.allModuleTopic) {
+    console.log(videoData);
     isLastVideo = videoData.currentTopicIndex + 1 === videoData.allModuleTopic?.length;
     skipVideoTimer =
-      videoData.topicContent[0].nextShowTime || videoData.topicContent[0].fromEndTime;
+      videoData.topicContent[0]?.nextShowTime || videoData.topicContent[0]?.fromEndTime;
 
     if (isLastVideo) skipVideoTimer = null;
   }

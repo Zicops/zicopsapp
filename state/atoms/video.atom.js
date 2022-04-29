@@ -8,6 +8,7 @@ export const VideoAtom = atom({
     topicContent: [],
     startPlayer: false,
     currentTopicIndex: 0,
-    allModuleTopic: null
+    allModuleTopic: null,
+    currentModuleId: null
   }
 });
