@@ -191,7 +191,6 @@ export default function useShowData(courseContextData) {
   function handleModuleChange(e) {
     setSelectedModule(e);
 
-    updateResources([]);
     setIsResourceShown(null);
   }
 
@@ -219,7 +218,6 @@ export default function useShowData(courseContextData) {
     activeCourseTab,
     setActiveCourseTab,
     getModuleOptions,
-    moduleData,
     handleModuleChange,
     selectedModule,
     showResources,

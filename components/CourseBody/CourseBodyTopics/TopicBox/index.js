@@ -21,9 +21,10 @@ export default function TopicBox({ index, topic, topicContent, moduleId }) {
       videoSrc: topicContent[0]?.contentUrl || null,
       type: topicContent[0]?.type || null,
       startPlayer: true,
-      topicContent: topicContent?.length ? topicContent : null,
-      currentTopicIndex: topicContent?.length ? currentTopicIndex : null,
-      allModuleTopic: topicContent?.length ? filteredTopicData : null
+      topicContent: topicContent,
+      currentTopicIndex: currentTopicIndex,
+      allModuleTopic: filteredTopicData,
+      currentModuleId: moduleId
     });
   }
 

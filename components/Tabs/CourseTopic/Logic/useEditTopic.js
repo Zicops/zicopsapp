@@ -19,6 +19,7 @@ import {
   BingeAtom,
   getBingeObject,
   getTopicObject,
+  isLoadingAtom,
   ResourcesAtom,
   TopicAtom,
   TopicContentAtom,
@@ -44,14 +45,20 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   const [topicSubtitle, updateTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
   const [binge, updateBinge] = useRecoilState(BingeAtom);
   const [resources, updateResources] = useRecoilState(ResourcesAtom);
+  const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
 
   // mutations
   const [updateCourseTopic, { error: updateTopicError }] = useMutation(UPDATE_COURSE_TOPIC);
-  const [addCourseTopicContent] = useMutation(ADD_TOPIC_CONTENT);
+  const [addCourseTopicContent, { loading: addContentLoading }] = useMutation(ADD_TOPIC_CONTENT);
   const [updateCourseTopicContent] = useMutation(UPDATE_TOPIC_CONTENT);
-  const [uploadCourseContentVideo] = useMutation(UPLOAD_TOPIC_CONTENT_VIDEO);
-  const [uploadCourseContentSubtitle] = useMutation(UPLOAD_TOPIC_CONTENT_SUBTITLE);
-  const [uploadTopicResource] = useMutation(UPLOAD_TOPIC_RESOURCE);
+  const [uploadCourseContentVideo, { loading: uploadVideoLoading }] = useMutation(
+    UPLOAD_TOPIC_CONTENT_VIDEO
+  );
+  const [uploadCourseContentSubtitle, { loading: uploadSubtileLoading }] = useMutation(
+    UPLOAD_TOPIC_CONTENT_SUBTITLE
+  );
+  const [uploadTopicResource, { loading: uploadResourcesLoading }] =
+    useMutation(UPLOAD_TOPIC_RESOURCE);
 
   // local state
   const [editTopic, setEditTopic] = useState(getTopicObject({ courseId: fullCourse.id }));
@@ -61,12 +68,17 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   // custom hooks to manage data in edit topic form, includes topic content
   const topicContentData = useAddTopicContent(editTopic);
 
+  useEffect(() => {
+    setEditTopic(getTopicObject({ courseId: fullCourse.id }));
+  }, []);
+
   // reset binge data and disable/enable update button
   useEffect(() => {
     updateBinge(getBingeObject());
 
     setIsEditTopicReady(!!editTopic.name && !!editTopic.description);
   }, [editTopic]);
+
   // set local state to edit topic data for form
   function activateEditTopic(topicId) {
     const index = topicData.findIndex((t) => t.id === topicId);
@@ -189,8 +201,9 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   // save to db and update context with refetch
   async function handleEditTopicSubmit() {
     console.log('Topic and Resources upload started');
-    console.log(binge);
-    // return;
+    setIsLoading(
+      addContentLoading && uploadVideoLoading && uploadSubtileLoading && uploadResourcesLoading
+    );
 
     topicContent.forEach(async (content, index) => {
       const startTime = parseInt(binge.startTimeMin) * 60 + parseInt(binge.startTimeSec);
@@ -207,16 +220,17 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
         nextShowTime: !binge.isFromEnd ? showTime : 0,
         fromEndTime: binge.isFromEnd ? showTime : 0
       };
-
       let data = {};
-      if (content.id) {
+      if (!!content.id) {
         console.log(
           `Topic Content with id ${content.id} and language ${content.language} is updated`
         );
-        sendContentData.id = content.id;
-        // data = await (await updateCourseTopicContent({ variables: sendContentData })).data;
+        const { courseId, topicId, ...updateContentData } = sendContentData;
+        updateContentData.contentId = content.id;
+        data = await (await updateCourseTopicContent({ variables: updateContentData })).data;
         return;
       } else {
+        console.log('sendContentData', sendContentData);
         data = await (await addCourseTopicContent({ variables: sendContentData })).data;
       }
 
@@ -259,6 +273,8 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
       await uploadTopicResource({ variables: sendResources });
     });
 
+    // if (!isLoading) {
+    // }
     togglePopUp('editTopic', false);
     alert('Topic Content and Resources Uploaded');
   }

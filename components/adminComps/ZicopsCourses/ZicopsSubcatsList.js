@@ -3,6 +3,7 @@ import ZicopsTable from '../../common/ZicopsTable';
 
 import { queryClient, GET_SUB_CATS } from '../../../API/Queries';
 import { ApolloProvider, useQuery } from '@apollo/client';
+import { useEffect, useState } from 'react';
 
 const columns = [
   {
@@ -19,26 +20,72 @@ const columns = [
   }
 ];
 
+const res = [
+  {
+    breakpoint: 1024,
+    pageSize: 2
+  },
+  {
+    breakpoint: 1530,
+    pageSize: 3
+  },
+  {
+    breakpoint: 1920,
+    pageSize: 4
+  }
+];
 
 function ZicopsSubCategoryList() {
+  const [pageSize, setPageSize] = useState(10);
 
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      const screenWidth = screen.width;
+
+      let isSizeMatched = false;
+      res.forEach((r, i) => {
+        // console.log(r.breakpoint, screenWidth, r.breakpoint > screenWidth);
+        // switch (true) {
+        //   case r.breakpoint > screenWidth:
+        //     console.log(r, screenWidth);
+        //     setPageSize(r.pageSize);
+        //     break;
+        //   default:
+        //     // setPageSize(1);
+        //     break;
+        // }
+        if (r.breakpoint < screenWidth) {
+          isSizeMatched = true;
+          console.log(r, screenWidth, r.breakpoint < screenWidth);
+          setPageSize(r.pageSize);
+        }
+        if (!isSizeMatched && i + 1 === res.length) {
+          setPageSize(10);
+        }
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log('pageSize: ', pageSize);
+  }, [pageSize]);
 
   const { data } = useQuery(GET_SUB_CATS);
+  // console.log(data);
   let latest = [];
-  if(data)
+
+  if (data)
     data.allSubCategories.map((val, index) => latest.push({ id: index + 1, SubCatName: val }));
 
   return (
-      
-        <ZicopsTable
-          columns={columns}
-          data={latest}
-          pageSize={7}
-          rowsPerPageOptions={[3]}
-          tableHeight='70vh'
-        />
-
-  )
+    <ZicopsTable
+      columns={columns}
+      data={latest}
+      pageSize={pageSize}
+      rowsPerPageOptions={[3]}
+      tableHeight="70vh"
+    />
+  );
 }
 
 const ZicopsSubcatsList = () => {

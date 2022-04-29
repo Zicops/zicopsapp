@@ -45,6 +45,7 @@ export default function CourseBodyResources() {
       />
 
       <ItemSlider
+        key={selectedModule?.value}
         itemsArr={filteredAndSortedData}
         showResources={showResources}
         isResourceShown={isResourceShown}

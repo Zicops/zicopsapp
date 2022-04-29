@@ -97,3 +97,9 @@ export function filterResources(resources, topicId) {
 
   return filteredResources;
 }
+
+export function filterModule(moduleData, moduleId) {
+  const filteredModules = moduleData.filter((mod) => mod.id === moduleId);
+
+  return filteredModules[0];
+}

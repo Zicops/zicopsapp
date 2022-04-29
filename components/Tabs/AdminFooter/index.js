@@ -5,17 +5,21 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 import { getDateTimeFromUnix, isCourseUploadingAtom } from '../Logic/tabs.helper';
 import useSaveCourse from '../Logic/useSaveCourse';
 import { useRouter } from 'next/router';
+import { isLoadingAtom } from '../../../state/atoms/module.atoms';
 
 export default function AdminFooter() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, saveCourseData, returnToMycourses } = useSaveCourse(courseContextData);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
+  const isLoading = useRecoilValue(isLoadingAtom);
   const router = useRouter();
 
   const displayTime =
     fullCourse.updated_at || fullCourse.created_at
       ? `(at ${getDateTimeFromUnix(fullCourse.updated_at || fullCourse.created_at)})`
       : '';
+
+  console.log(isLoading);
 
   return (
     <div className="content-panel">
