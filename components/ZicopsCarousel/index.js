@@ -109,12 +109,18 @@ const CardSlider = ({ deviceType, title, type, data }) => {
         {/* move to .scss */}
         <style jsx>{`
           .last-text {
-            padding: 24% 0;
+            height: 140px;
             color: var(--primary);
-            background-color: #868686;
+            background-color: var(--dark_three);
             border-radius: 8px;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
+          }
+          .last-text:hover {
+            border-radius: 4px;
+            transition-delay: 0.6s;
           }
           .card_ietms[data-index='0']:hover {
             margin-left: 60px !important;

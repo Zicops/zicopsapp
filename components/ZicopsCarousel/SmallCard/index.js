@@ -174,7 +174,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
             width: 100%;
             height: 100%;
             opacity: 0;
-            border-radius: 7px;
+            border-radius: 8px;
             // box-shadow: 0 0 70px 0 #000000;
           }
 

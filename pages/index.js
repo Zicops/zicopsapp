@@ -138,38 +138,38 @@ export default function Home() {
       )}
       <ZicopsCarousel title="Latest Courses" data={latestCourseData} />
       {/* <CardSlider title="Latest Courses" data={latestCourseData} /> */}
-      <CardSlider title="Continue with your Courses" data={sliderImages} />
-      <CardSlider title="Recommended Courses" data={sliderImages} />
+      <ZicopsCarousel title="Continue with your Courses" data={sliderImages} />
+      <ZicopsCarousel title="Recommended Courses" data={sliderImages} />
 
       <BigCardSlider title="Courses mandatory for you" data={squareImages} slide={realSquare} />
 
-      <CardSlider title="New Launched Courses" data={sliderImages} />
-      <CardSlider title="Most Popular Courses in Zicops" data={sliderImages} />
-      <CardSlider title="Suggested Learning paths" data={sliderImages} />
+      <ZicopsCarousel title="New Launched Courses" data={sliderImages} />
+      <ZicopsCarousel title="Most Popular Courses in Zicops" data={sliderImages} />
+      <ZicopsCarousel title="Suggested Learning paths" data={sliderImages} />
 
       <BigCardSlider title="Categories and Subcategories" data={squareImages} slide={smallSquare} />
       <div style={{ marginTop: '-60px' }}>
         <BigCardSlider title="" data={circleImages} slide={smallSquare} />
       </div>
-      <CardSlider title="Full Stack Development" data={sliderImages} />
-      <CardSlider title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
       <OneCardSlider title="Featured Events" data={sliderImages} slide={one} />
-      <CardSlider title="Full Stack Development" data={sliderImages} />
-      <CardSlider title="Full Stack Development" data={sliderImages} />
-      <CardSlider title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
 
       <RoundCardSlider title="Upcoming Webinars & Podcasts" data={circleImages} />
 
-      <CardSlider title="Available Webinars" data={sliderImages} />
-      <CardSlider title="Cloud Computing" data={sliderImages} />
-      <CardSlider title="Ettiquettes" data={sliderImages} />
+      <ZicopsCarousel title="Available Webinars" data={sliderImages} />
+      <ZicopsCarousel title="Cloud Computing" data={sliderImages} />
+      <ZicopsCarousel title="Ettiquettes" data={sliderImages} />
 
       <BigCardSlider title="Categories" data={bigImages} slide={bigSquare} />
 
-      <CardSlider title="Distance Learning" data={sliderImages} />
-      <CardSlider title="Cloud Certification Courses" data={sliderImages} />
-      <CardSlider title="Distance Learning" data={sliderImages} />
-      <CardSlider title="Cloud Certification Courses" data={sliderImages} />
+      <ZicopsCarousel title="Distance Learning" data={sliderImages} />
+      <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} />
+      <ZicopsCarousel title="Distance Learning" data={sliderImages} />
+      <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} />
       {/* <Link href="/courses">
       <a>Courses</a>
       </Link> */}
