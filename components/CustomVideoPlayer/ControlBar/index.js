@@ -68,7 +68,17 @@ export default function ControlBar({
         </Button>
 
         <Button handleClick={playPreviousVideo} disable={isFirstVideo}>
-          <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
+          {isFirstVideo ? (
+            <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
+          ) : (
+            <Image
+              src="/images/next-topic.png"
+              style={{ transform: 'rotate(180deg)' }}
+              alt=""
+              height="30px"
+              width="30px"
+            />
+          )}
         </Button>
 
         <Button handleClick={backwardVideo}>
@@ -88,7 +98,18 @@ export default function ControlBar({
         </Button>
 
         <Button handleClick={playNextVideo} disable={isLastVideo}>
-          <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
+          {isLastVideo ? (
+            <Image
+              src="/images/prev-topic.png"
+              style={{ transform: 'rotate(180deg)' }}
+              alt=""
+              height="30px"
+              width="30px"
+            />
+          ) : (
+            <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
+          )}
+          {/* <Image src="/images/next-topic.png" alt="" height="30px" width="30px" /> */}
         </Button>
 
         <div

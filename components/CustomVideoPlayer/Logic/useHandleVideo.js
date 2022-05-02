@@ -23,12 +23,13 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
 
-// hide control bar if no mouse movement for 2.5 sec
+  // hide control bar if no mouse movement for 2.5 sec
 
   let timeout;
   useEffect(() => {
+    setVideoTime(0);
     videoElement.current?.focus();
-    togglePlay();
+    updateIsPlayingTo(true);
 
     const duration = 2500;
     videoContainer.current?.addEventListener('mousemove', function () {
@@ -43,10 +44,21 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
         setHideTopBar(1);
       }, duration);
     });
+    videoContainer.current?.addEventListener('keydown', function () {
+      if (type !== 'mp4') return;
+
+      setHideControls(0);
+      setHideTopBar(0);
+    });
   }, []);
 
   useEffect(() => {
-    if (type !== 'mp4') setHideControls(1);
+    if (playerState.progress > 0) setVideoTime(0);
+  }, [videoData.videoSrc]);
+
+  useEffect(() => {
+    if (type === null) return setVideoTime(0);
+    if (type !== 'mp4') return setHideControls(1);
   }, [type]);
 
   // reset playpause to null after few seconds
@@ -163,11 +175,12 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       ...videoData,
       videoSrc: isTopicContentPresent ? filteredTopicContent[0].contentUrl : null,
       type: isTopicContentPresent ? filteredTopicContent[0].type : null,
-      currentTopicIndex: isTopicContentPresent ? videoData.currentTopicIndex + 1 : null,
-      topicContent: isTopicContentPresent ? filteredTopicContent : null,
-      allModuleTopic: isTopicContentPresent ? videoData.allModuleTopic : null
+      currentTopicIndex: videoData.currentTopicIndex + 1 || 0,
+      topicContent: filteredTopicContent,
+      allModuleTopic: videoData.allModuleTopic
     });
 
+    setVideoTime(0);
     setPlayPauseActivated('next');
   }
 
@@ -182,11 +195,12 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       ...videoData,
       videoSrc: isTopicContentPresent ? filteredTopicContent[0].contentUrl : null,
       type: isTopicContentPresent ? filteredTopicContent[0].type : null,
-      currentTopicIndex: isTopicContentPresent ? videoData.currentTopicIndex - 1 : null,
-      topicContent: isTopicContentPresent ? filteredTopicContent : null,
-      allModuleTopic: isTopicContentPresent ? videoData.allModuleTopic : null
+      currentTopicIndex: videoData.currentTopicIndex - 1 || 0,
+      topicContent: filteredTopicContent,
+      allModuleTopic: videoData.allModuleTopic
     });
 
+    setVideoTime(0);
     setPlayPauseActivated('previous');
   }
 
@@ -216,13 +230,13 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   };
 
   function setVideoTime(time) {
-    if (!videoElement.current) return;
-
-    videoElement.current.currentTime = (videoElement.current?.duration / 100) * time;
     setPlayerState({
       ...playerState,
       progress: time
     });
+    if (!videoElement.current) return;
+
+    videoElement.current.currentTime = (videoElement.current?.duration / 100) * time || 0;
   }
 
   const handleVideoSpeed = (event) => {

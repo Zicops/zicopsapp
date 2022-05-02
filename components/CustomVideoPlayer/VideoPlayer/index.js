@@ -18,12 +18,14 @@ export default function VideoPlayer({
           tabIndex="0"
           onClick={handleClick}
           onKeyDown={handleKeyDown}
-          src={videoSrc}
           ref={videoElement}
           onTimeUpdate={handleOnTimeUpdate}
           muted={playerState.isMuted}
           className={`${styles.videoElement}`}
-        />
+          // crossOrigin="anonymous"
+        >
+          <source src={videoSrc} />
+        </video>
       )}
 
       {type === 'SCORM' && videoSrc && (

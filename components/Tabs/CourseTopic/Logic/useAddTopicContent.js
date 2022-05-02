@@ -7,7 +7,8 @@ import {
   getTopicVideoObject,
   TopicContentAtom,
   TopicSubtitleAtom,
-  TopicVideoAtom
+  TopicVideoAtom,
+  uploadStatusAtom
 } from '../../../../state/atoms/module.atoms';
 import useAddBinge from './useAddBinge';
 
@@ -16,6 +17,7 @@ export default function useAddTopicContent(topic) {
   const [topicContent, addTopicContent] = useRecoilState(TopicContentAtom);
   const [topicVideo, addTopicVideo] = useRecoilState(TopicVideoAtom);
   const [topicSubtitle, addTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
+  const [uploadStatus, setUploadStatus] = useRecoilState(uploadStatusAtom);
 
   // binge data input handler hook
   const { handleBingeInput } = useAddBinge();
@@ -47,6 +49,7 @@ export default function useAddTopicContent(topic) {
     setNewTopicContent(getTopicContentObject({ topicId: topic.id, is_default: isDefault }));
     setNewTopicVideo(getTopicVideoObject({ courseId: topic.courseId }));
     setNewTopicSubtitle(getTopicSubtitleObject({ courseId: topic.courseId }));
+    setUploadStatus({});
   }, [topic]);
 
   function toggleTopicContentForm(value) {
@@ -98,16 +101,34 @@ export default function useAddTopicContent(topic) {
       window.URL.revokeObjectURL(video.src);
       duration = video.duration;
 
+      const variable_buffer_time = 2;
+      const filteredTopicContent = filterTopicContent(topicContent, topic?.id);
+      if (filteredTopicContent.length) {
+        const prevUploadDuration = filteredTopicContent[0].duration;
+        console.log(
+          prevUploadDuration + variable_buffer_time,
+          prevUploadDuration - variable_buffer_time,
+          duration
+        );
+        // 6 < 4 < 2
+        if (
+          prevUploadDuration + variable_buffer_time <= duration ||
+          prevUploadDuration - variable_buffer_time >= duration
+        ) {
+          alert('Video Length Should be same for all videos!!');
+          return;
+        }
+      }
+
       setNewTopicContent({
         ...newTopicContent,
         duration: parseInt(duration)
       });
+      setNewTopicVideo({
+        ...newTopicVideo,
+        file: e.target.files[0]
+      });
     };
-
-    setNewTopicVideo({
-      ...newTopicVideo,
-      file: e.target.files[0]
-    });
   }
 
   // subtitle input

@@ -87,8 +87,12 @@ export function filterAndSortTopicsBasedOnModuleId(topics, moduleId) {
   return filteredAndSortedTopics;
 }
 
+// filter based on topic id and sort based on is_default true
 export function filterTopicContent(topicContent, topicId = '') {
-  const filteredTopicContent = topicContent.filter((content) => content.topicId === topicId);
+  const filteredTopicContent = topicContent
+    .filter((content) => content.topicId === topicId)
+    .sort((c1, c2) => c2.is_default - c1.is_default);
+
   return filteredTopicContent;
 }
 
@@ -102,4 +106,8 @@ export function filterModule(moduleData, moduleId) {
   const filteredModules = moduleData.filter((mod) => mod.id === moduleId);
 
   return filteredModules[0];
+}
+
+export function sortTopicContentByIsDefault(topicContent) {
+  return topicContent.sort((content) => content.is_default);
 }

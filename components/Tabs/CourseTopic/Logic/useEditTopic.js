@@ -25,7 +25,8 @@ import {
   TopicAtom,
   TopicContentAtom,
   TopicSubtitleAtom,
-  TopicVideoAtom
+  TopicVideoAtom,
+  uploadStatusAtom
 } from '../../../../state/atoms/module.atoms';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 import useAddTopicContent from './useAddTopicContent';
@@ -47,6 +48,7 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   const [binge, updateBinge] = useRecoilState(BingeAtom);
   const [resources, updateResources] = useRecoilState(ResourcesAtom);
   const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
+  const [uploadStatus, setUploadStatus] = useRecoilState(uploadStatusAtom);
 
   const [progress, setProgress] = useState(0);
   // mutations
@@ -54,44 +56,13 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   const [addCourseTopicContent, { loading: addContentLoading }] = useMutation(ADD_TOPIC_CONTENT);
   const [updateCourseTopicContent] = useMutation(UPDATE_TOPIC_CONTENT);
   const [uploadCourseContentVideo, { loading: uploadVideoLoading }] = useMutation(
-    UPLOAD_TOPIC_CONTENT_VIDEO,
-    {
-      context: {
-        fetchOptions: {
-          useUpload: true,
-          onProgress: (ev) => {
-            setProgress(ev.loaded / ev.total);
-          }
-        }
-      }
-    }
+    UPLOAD_TOPIC_CONTENT_VIDEO
   );
   const [uploadCourseContentSubtitle, { loading: uploadSubtileLoading }] = useMutation(
-    UPLOAD_TOPIC_CONTENT_SUBTITLE,
-    {
-      context: {
-        fetchOptions: {
-          useUpload: true,
-          onProgress: (ev) => {
-            setProgress(ev.loaded / ev.total);
-          }
-        }
-      }
-    }
+    UPLOAD_TOPIC_CONTENT_SUBTITLE
   );
-  const [uploadTopicResource, { loading: uploadResourcesLoading }] = useMutation(
-    UPLOAD_TOPIC_RESOURCE,
-    {
-      context: {
-        fetchOptions: {
-          useUpload: true,
-          onProgress: (ev) => {
-            setProgress(ev.loaded / ev.total);
-          }
-        }
-      }
-    }
-  );
+  const [uploadTopicResource, { loading: uploadResourcesLoading }] =
+    useMutation(UPLOAD_TOPIC_RESOURCE);
 
   useEffect(() => {
     console.log('Upload Progress', progress);
@@ -285,7 +256,21 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
           file: topicVideo[index].file
         };
 
-        await uploadCourseContentVideo({ variables: sendVideoData });
+        await uploadCourseContentVideo({
+          variables: sendVideoData,
+          context: {
+            fetchOptions: {
+              useUpload: true,
+              onProgress: (ev) => {
+                console.log(ev);
+                setUploadStatus({
+                  [content.language]: ev.loaded / ev.total
+                });
+                setProgress(ev.loaded / ev.total);
+              }
+            }
+          }
+        });
 
         console.log(`Topic Video Uploaded with language ${content.language}`);
 

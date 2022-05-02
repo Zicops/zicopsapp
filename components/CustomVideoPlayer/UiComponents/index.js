@@ -11,7 +11,7 @@ import { VideoAtom } from '../../../state/atoms/video.atom';
 import { ModuleAtom } from '../../../state/atoms/module.atoms';
 import { filterModule } from '../../../helper/data.helper';
 
-export default function UiComponents({ refs, updateIsPlayingTo, set }) {
+export default function UiComponents({ refs, updateIsPlayingTo, set, playerState }) {
   const { videoElement, videoContainer } = refs;
   const videoData = useRecoilValue(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
@@ -38,9 +38,12 @@ export default function UiComponents({ refs, updateIsPlayingTo, set }) {
   const currentTopic = videoData?.allModuleTopic
     ? videoData?.allModuleTopic[videoData?.currentTopicIndex]
     : null;
-  const displaySequence = `M${activeModule?.sequence}T${currentTopic?.sequence}`;
+  const displaySequence = `M${activeModule?.sequence || 0}T${currentTopic?.sequence || 0}`;
   // const TopicSequence = 'M2T12';
-  const courseTopicName = `${displaySequence} ${currentTopic?.name}`;
+  console.log(videoData, activeModule, currentTopic);
+  const courseTopicName = videoData.isPreview
+    ? 'Preview Video'
+    : `${displaySequence} ${currentTopic?.name || ''}`;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { Link, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
 import { GET_COURSE } from '../../API/Queries';
@@ -11,8 +11,9 @@ import { truncateToN } from '../../helper/common.helper';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
 import { VideoAtom } from '../../state/atoms/video.atom';
+import Link from 'next/link';
 
-export default function CourseHero({ set }) {
+export default function CourseHero({ isPreview = false }) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const { fullCourse } = useContext(courseContext);
 
@@ -21,7 +22,8 @@ export default function CourseHero({ set }) {
       ...videoData,
       videoSrc: fullCourse?.previewVideo,
       type: 'mp4',
-      startPlayer: true
+      startPlayer: true,
+      isPreview: true
     });
   };
   const isLoading = useRecoilValue(isLoadingAtom);
@@ -63,11 +65,14 @@ export default function CourseHero({ set }) {
       className={`${style.course_header}`}
       style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover' }}>
       <div className={`${style.gradient}`}>
-        <Link href={`/admin/courses?courseId=${courseContextData?.fullCourse.id}`}>
-          <a className={`${style.back_btn}`}>
-            <img src="/images/bigarrowleft.png" alt="" />
-          </a>
-        </Link>
+        <span onClick={() => (isPreview ? '' : router?.back())}>
+          <Link
+            href={isPreview ? `/admin/courses?courseId=${courseContextData?.fullCourse.id}` : ''}>
+            <a className={`${style.back_btn}`}>
+              <img src="/images/bigarrowleft.png" alt="" />
+            </a>
+          </Link>
+        </span>
 
         <div className={`${style.course_header_text}`}>
           <CourseHeader
