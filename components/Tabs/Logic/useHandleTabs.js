@@ -1,10 +1,8 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { ADD_COURSE } from '../../../API/Mutations';
-import { GET_COURSE } from '../../../API/Queries';
-import { getQueryData } from '../../../helper/api.helper';
-import { createCourseAndUpdateContext } from '../../../helper/data.helper';
+import { GET_COURSE, queryClient } from '../../../API/Queries';
 import { tabData } from './tabs.helper';
 
 export default function useHandleTabs(courseContextData) {
@@ -26,20 +24,27 @@ export default function useHandleTabs(courseContextData) {
   const router = useRouter();
   const { query: courseId } = router;
   const editCourseId = courseId.courseId || null;
-  const { data: courseData } = getQueryData(GET_COURSE, { course_id: editCourseId });
-
+  // const { data: courseData } = getQueryData(, { course_id: editCourseId });
+  const [loadCourseData, { error: errorCourseData, refetch: refetchCourse }] = useLazyQuery(
+    GET_COURSE,
+    { client: queryClient }
+  );
   const [createCourse, { loading, error, data }] = useMutation(ADD_COURSE);
   const [fileData, setFileData] = useState({});
   const [isPreviewPopUpOpen, setIsPreviewPopUpOpen] = useState(false);
   const [previewFileData, setPreviewFileData] = useState(null);
 
   useEffect(() => {
-    if (courseData?.getCourse && !isDataLoaded) {
-      updateCourseMaster(courseData.getCourse);
+    loadCourseData({ variables: { course_id: editCourseId } }).then(({ data }) => {
+      if (errorCourseData) return alert('course load error');
 
-      setIsDataLoaded(true);
-    }
-  }, [courseData]);
+      if (data?.getCourse && !isDataLoaded) {
+        updateCourseMaster(data.getCourse);
+
+        setIsDataLoaded(true);
+      }
+    });
+  }, [editCourseId]);
 
   useEffect(() => {
     setCouseIdForFileContext();
@@ -158,15 +163,6 @@ export default function useHandleTabs(courseContextData) {
     });
   }
 
-  function showActiveTab(tab) {
-    const index = tabData.findIndex((t) => {
-      return t.name === tab;
-    });
-
-    if (index >= 0) return tabData[index].component;
-    return tabData[0].component;
-  }
-
   function handleChange(e) {
     if (e.target.type === 'checkbox') {
       if (e.target.name.includes('is_')) {
@@ -273,9 +269,6 @@ export default function useHandleTabs(courseContextData) {
   return {
     fullCourse,
     tabData,
-    showActiveTab,
-    tab,
-    setTab,
     fileData,
     handleChange,
     updateCourseMaster,

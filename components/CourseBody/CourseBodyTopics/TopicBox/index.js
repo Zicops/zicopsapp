@@ -24,7 +24,8 @@ export default function TopicBox({ index, topic, topicContent, moduleId }) {
       topicContent: topicContent,
       currentTopicIndex: currentTopicIndex,
       allModuleTopic: filteredTopicData,
-      currentModuleId: moduleId
+      currentModuleId: moduleId,
+      isPreview: false
     });
   }
 

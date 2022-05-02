@@ -6,7 +6,7 @@ const CardSliderHeader = ({title}) => {
         </div>
         <style jsx>{`
             .slider_header{
-                margin-left: 0;
+                margin-left: 10px;
                 font-size: 20px;
                 padding-bottom: 10px;
             }

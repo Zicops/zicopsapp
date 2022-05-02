@@ -10,6 +10,8 @@ import BigCardSlider from '../components/medium/BigCardSlider';
 import CardSlider from '../components/medium/CardSlider';
 import OneCardSlider from '../components/medium/OneCardSlider';
 import RoundCardSlider from '../components/medium/RoundCardSlider';
+import ZicopsCarousel from '../components/ZicopsCarousel';
+import SmallCard from '../components/ZicopsCarousel/SmallCard';
 import { isLoadingAtom } from '../state/atoms/module.atoms';
 import { userContext } from '../state/contexts/UserContext';
 
@@ -134,8 +136,8 @@ export default function Home() {
       ) : (
         <HomeSlider />
       )}
-
-      <CardSlider title="Latest Courses" data={latestCourseData} />
+      <ZicopsCarousel title="Latest Courses" data={latestCourseData} />
+      {/* <CardSlider title="Latest Courses" data={latestCourseData} /> */}
       <CardSlider title="Continue with your Courses" data={sliderImages} />
       <CardSlider title="Recommended Courses" data={sliderImages} />
 

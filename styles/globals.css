@@ -67,7 +67,7 @@ input:-webkit-autofill{
   -webkit-text-fill-color: #ffffff !important;
 }
 .course_master{
-  padding: 0 50px 20px 50px;
+  padding: 30px 50px 20px 50px;
   position: relative;
 }
 .placeholder{
@@ -288,96 +288,12 @@ input:-webkit-autofill{
   align-items: center;
   margin: 10px;
 }
-.checkbox{
-  /* background-color:red; */
-  /* width: 18px; */
-  /* height: 18px; */
-  /* color: red; */
-  /* border:1px solid red; */
-}
-.checkbox input:checked ~ .checkbox {
-  /* background-color: #e5f321; */
-}
-.checkbox_label{
-  /* font-size: 13px; */
-}
 
 
 
 
 
 
-
-
-/* Customize the label (the container) */
-.checkbox_container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  /* margin-bottom: 10px; */
-  cursor: pointer;
-  font-size: 14px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Hide the browser's default checkbox */
-.checkbox_container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-/* Create a custom checkbox */
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 20px;
-  width: 20px;
-  background-color: #202222;
-  border: 1px solid #858f8f;
-}
-
-/* On mouse-over, add a grey background color */
-.checkbox_container:hover input ~ .checkmark {
-  /* border: 2px solid #858f8f; */
-  /* box-shadow: 0 0 1px 0 #FFFFFF; */
-}
-
-/* When the checkbox is checked, add a blue background */
-.checkbox_container input:checked ~ .checkmark {
-  background-color: #202222;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-/* Show the checkmark when checked */
-.checkbox_container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-/* Style the checkmark/indicator */
-.checkbox_container .checkmark:after {
-  left: 5px;
-  top: 1px;
-  width: 5px;
-  height: 10px;
-  border: solid #858f8f;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
 
 
 
@@ -941,98 +857,6 @@ transition: All 0.3s ease;
 }
 
 
-/* Common calendar styles  */
-
-.react-datepicker.common_calendar {
-  width: 410px !important;
-  height: 400px !important;
-  background-color: var(--dark_two) !important;
-  border: 0;
-  margin-bottom: 60px;
-}
-
-
-.common_calendar .react-datepicker__navigation--previous {
-  top: 59% !important;
-  left: -55px !important;
-  width: 50px !important;
-  height: 50px !important;
-  rotate: 90deg !important;
-  border: 1px solid var(--primary) !important;
-  text-align: center !important;
-  background: url('../public/images/bigarrowleft.png') no-repeat center !important;
-}
-
-
-.common_calendar .react-datepicker__navigation--next {
-  top: 59% !important;
-  right: -80px !important;
-  width: 50px !important;
-  height: 50px !important;
-  rotate: 90deg !important;
-  border: 1px solid var(--primary) !important;
-  text-align: center !important;
-  background: url('../public/images/bigarrowright.png') no-repeat center !important;
-  border: none;
-}
-
-.common_calendar .react-datepicker__navigation--previous:hover,
-.common_calendar .react-datepicker__navigation--next:hover {
-  border: 3px solid var(--primary) !important;
-}
-
-.common_calendar .react-datepicker__navigation-icon {
-  display: none !important;
-}
-
-.common_calendar .react-datepicker__current-month {
-  font-size: 2rem !important;
-  font-weight: 600 !important;
-  color: var(--primary) !important;
-  margin-bottom: 20px;
-}
-
-.common_calendar .react-datepicker__day-names {
-  font-size: 1.2rem;
-  display: flex;
-  justify-content: space-around;
-  margin-right: 18px;
-}
-
-.common_calendar .react-datepicker__day.common_calendar_dates {
-  width: 40px;
-  height: 40px;
-  font-size: 17px;
-  text-align: center;
-  margin-right: 20px;
-  margin-bottom: 15px;
-  padding: 6px 0;
-  background: var(--header-bg);
-  color: var(--primary);
-  border: 1px solid var(--primary);
-}
-
-
-.common_calendar .react-datepicker__day.common_calendar_dates:hover {
-  border: 3px solid var(--primary) !important;
-  background: var(--accent);
-  color: var(--primary) !important;
-  padding: 4px 0;
-  border-radius: 0px;
-}
-
-.common_calendar .react-datepicker__week {
-  display: flex;
-  justify-content: space-around;
-}
-
-
-.common_calendar .react-datepicker__day--outside-month {
-  color: var(--primary) !important;
-  pointer-events: none;
-  border: none !important;
-  background: var(--dark_one) !important;
-}
 
 
 
@@ -1054,9 +878,6 @@ transition: All 0.3s ease;
   font-size: 16px;
   width: 200px;
   height: 40px;
-  /* background-color: var(--dark_one); */
-  /* color: var(--primary); */
-  /* border: 2px solid var(--primary); */
   outline: none;
   padding: 10px 0px;
   font-weight: 600;
@@ -1065,6 +886,7 @@ transition: All 0.3s ease;
   background-color: var(--dark_two)!important;
   border-radius: 0!important;
   border: 2px solid var(--primary)!important;
+  box-shadow: none;
 }
 .zicops_select__control--menu-is-open{
   background-color: var(--dark_two)!important;
@@ -1101,7 +923,6 @@ transition: All 0.3s ease;
   cursor:pointer;
 }
 .zicops_select__menu-list{
-  /* background-color: var(--black)!important; */
   color: var(--primary)!important;
   border-radius: 0!important;
   cursor:pointer;
@@ -1118,6 +939,10 @@ transition: All 0.3s ease;
   margin: 4px!important;
   cursor:pointer;
 }
+
+
+
+
 
 .header-carousel-container{
   z-index: 0!important;
@@ -1141,7 +966,7 @@ transition: All 0.3s ease;
   /* transition: all 0.2s ease-out 0.6s; */
   transform: scale(0.95);
   border-radius: 8px;
-  border: 2px solid transparent;
+  border: 4px solid transparent;
 }
 
 .card_ietms img, .card_ietms_big img, .card_ietms_round img{
@@ -1149,6 +974,7 @@ transition: All 0.3s ease;
   display: block;
   margin: auto;
   cursor: pointer;
+  border-radius: 8px;
   z-index: 0;
 }
 
@@ -1160,7 +986,7 @@ transition: All 0.3s ease;
   background-color: var(--header-bg);
 
   padding: 0;
-  border: 2px solid var(--primary);
+  border: 4px solid var(--primary);
   box-shadow: 0 0 20px 0 var(--black);
 
   z-index: 99;

@@ -12,8 +12,8 @@ export default function CourseHead({ title }) {
     { value: 'test', label: 'Test' }
   ];
   const route = router.route;
-  function gotoAddcourse(){
-    router.push('/admin/courses')
+  function gotoAddcourse() {
+    router.push('/admin/courses');
   }
   return (
     <div className={`${styles.courseHead}`}>
@@ -25,12 +25,19 @@ export default function CourseHead({ title }) {
           defaultValue={{ value: 'self-paced', label: 'Self Paced' }}
           className="zicops_select_container"
           classNamePrefix="zicops_select"
+          isSearchable={false}
         />
       </div>
 
       <div className={styles.icons}>
-        {!route.includes('admin/courses') &&
-        <img src="/images/plus_big.png" className="rightside_icon" alt="" onClick={gotoAddcourse}/>}
+        {!route.includes('admin/courses') && (
+          <img
+            src="/images/plus_big.png"
+            className="rightside_icon"
+            alt=""
+            onClick={gotoAddcourse}
+          />
+        )}
         <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
         <img src="/images/sitemap_icon.png" className="rightside_icon" alt="" />
       </div>

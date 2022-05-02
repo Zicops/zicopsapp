@@ -44,9 +44,10 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   '& .MuiPaginationItem-root': {
     borderRadius: 0
   },
-  '& .MuiDataGrid-cell:focus, .MuiDataGrid-columnHeader:focus': {
-    outline: 'none'
-  },
+  '& .MuiDataGrid-cell:focus,.MuiDataGrid-cell:focus-within, .MuiDataGrid-columnHeader:focus, .MuiDataGrid-columnHeader:focus-within':
+    {
+      outline: 'none'
+    },
   '& .MuiDataGrid-columnHeader': {
     border: '0px',
     // borderBottom: '7px solid var(--white)',

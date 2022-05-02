@@ -1,12 +1,35 @@
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { TopicContentAtom } from '../../../../../state/atoms/module.atoms';
+
 export default function AddTopicContentForm({
   inputHandlers,
+  setNewTopicContent,
   data,
   addNewTopicContent,
-  isAddTopicContentReady
+  isAddTopicContentReady,
+  topicContent
 }) {
   const { newTopicContent, newTopicVideo, newTopicSubtitle } = data;
   const { handleTopicContentInput, handleTopicSubtitleInput, handleTopicVideoInput } =
     inputHandlers;
+
+  // to set state based on if topic content is present or not
+  useEffect(() => {
+    if (topicContent?.length > 0) {
+      setNewTopicContent({
+        ...newTopicContent,
+        type: topicContent[0]?.type
+      });
+    } else {
+      console.log(true);
+      // setNewTopicContent({
+      //   ...newTopicContent,
+      //   is_default: true
+      // });
+    }
+  }, []);
+  console.log(newTopicContent);
 
   return (
     <>
@@ -15,7 +38,12 @@ export default function AddTopicContentForm({
         <div className="col_50">
           <div className="checkbox_mark">
             <label className="checkbox_container">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                name="is_default"
+                checked={newTopicContent?.is_default}
+                onChange={handleTopicContentInput}
+              />
               <span className="checkmark"></span>is Default
             </label>
           </div>
@@ -48,6 +76,7 @@ export default function AddTopicContentForm({
         <select
           className="col_75"
           name="type"
+          disabled={topicContent?.length > 0}
           onChange={handleTopicContentInput}
           value={newTopicContent.type}>
           <option hidden>Type of content</option>

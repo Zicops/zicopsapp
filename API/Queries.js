@@ -191,6 +191,7 @@ export const GET_COURSE_TOPICS_CONTENT = gql`
       type
       contentUrl
       subtitleUrl
+      is_default
     }
   }
 `;
@@ -212,6 +213,7 @@ export const GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID = gql`
       type
       contentUrl
       subtitleUrl
+      is_default
     }
   }
 `;
