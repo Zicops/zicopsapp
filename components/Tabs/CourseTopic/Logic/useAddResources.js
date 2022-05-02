@@ -8,6 +8,7 @@ export default function useAddResources(courseId = '', topicId = '') {
 
   // local state
   const [isResourcesFormVisible, setIsResourcesFormVisible] = useState(false);
+  const [isResourceReady, setIsResourcesReady] = useState(false);
   const [newResource, setNewResource] = useState(getResourcesObject({ courseId, topicId }));
 
   // update resouce courseid and topicid
@@ -18,6 +19,12 @@ export default function useAddResources(courseId = '', topicId = '') {
       courseId: courseId
     });
   }, [topicId, courseId]);
+
+  useEffect(() => {
+    setIsResourcesReady(
+      newResource.name && newResource.type && (newResource.file || newResource.url)
+    );
+  }, [newResource]);
 
   function toggleResourceForm() {
     setIsResourcesFormVisible(!isResourcesFormVisible);
@@ -71,6 +78,7 @@ export default function useAddResources(courseId = '', topicId = '') {
     handleResourceInput,
     addNewResource,
     isResourcesFormVisible,
-    toggleResourceForm
+    toggleResourceForm,
+    isResourceReady
   };
 }

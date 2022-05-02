@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { filterTopicContent } from '../../../../helper/data.helper';
 import {
   getTopicContentObject,
   getTopicSubtitleObject,
@@ -42,7 +43,8 @@ export default function useAddTopicContent(topic) {
 
   // add topic id
   useEffect(() => {
-    setNewTopicContent(getTopicContentObject({ topicId: topic.id }));
+    const isDefault = filterTopicContent(topicContent, topic?.id).length === 0;
+    setNewTopicContent(getTopicContentObject({ topicId: topic.id, is_default: isDefault }));
     setNewTopicVideo(getTopicVideoObject({ courseId: topic.courseId }));
     setNewTopicSubtitle(getTopicSubtitleObject({ courseId: topic.courseId }));
   }, [topic]);
@@ -55,6 +57,14 @@ export default function useAddTopicContent(topic) {
 
   // input handler
   function handleTopicContentInput(e) {
+    if (e.target.type === 'checkbox') {
+      setNewTopicContent({
+        ...newTopicContent,
+        [e.target.name]: e.target.checked
+      });
+      return;
+    }
+
     // language needs to be unique
     if (e.target.name === 'language') {
       const isLanguagePresent = topicContent.some((content) => {
@@ -112,8 +122,25 @@ export default function useAddTopicContent(topic) {
 
   // save in recoil state
   function addNewTopicContent() {
+    const isDefault = newTopicContent.is_default;
+    let topicContentArr = [];
+    // set is_default to false of every topic content if current is true
+    if (isDefault) {
+      topicContent.forEach((content) => {
+        const updatedContent = {
+          ...content,
+          is_default: false
+        };
+        topicContentArr.push(updatedContent);
+      });
+
+      topicContentArr.push(newTopicContent);
+    } else {
+      topicContentArr = [...topicContent, newTopicContent];
+    }
+
     // save in recoil state
-    addTopicContent([...topicContent, newTopicContent]);
+    addTopicContent(topicContentArr);
     addTopicVideo([...topicVideo, newTopicVideo]);
     addTopicSubtitle([...topicSubtitle, newTopicSubtitle]);
 
@@ -140,6 +167,7 @@ export default function useAddTopicContent(topic) {
   return {
     localStates,
     isTopicContentFormVisible,
+    setNewTopicContent,
     toggleTopicContentForm,
     inputHandlers,
     addNewTopicContent,

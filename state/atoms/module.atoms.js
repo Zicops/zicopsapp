@@ -91,7 +91,8 @@ export function getTopicContentObject(data) {
     id: data.id || '',
     language: data.language || '',
     type: data.type || '',
-    duration: data.duration || 0
+    duration: data.duration || 0,
+    is_default: data.is_default || false
   };
 }
 

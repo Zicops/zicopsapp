@@ -1,6 +1,6 @@
 import CourseHead from '../../CourseHead';
 import ZicopsTable from '../../common/ZicopsTable';
-
+import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { queryClient, GET_SUB_CATS } from '../../../API/Queries';
 import { ApolloProvider, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
@@ -10,68 +10,31 @@ const columns = [
     field: 'id',
     headerName: 'Index',
     headerClassName: 'course-list-header',
-    width: 300
+    flex: 1
   },
   {
     field: 'SubCatName',
     headerClassName: 'course-list-header',
     headerName: 'SubCategory',
-    width: 300
-  }
-];
-
-const res = [
-  {
-    breakpoint: 1024,
-    pageSize: 2
-  },
-  {
-    breakpoint: 1530,
-    pageSize: 3
-  },
-  {
-    breakpoint: 1920,
-    pageSize: 4
+    flex: 3
   }
 ];
 
 function ZicopsSubCategoryList() {
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(6);
 
   useEffect(() => {
-    window.addEventListener('resize', () => {
-      const screenWidth = screen.width;
-
-      let isSizeMatched = false;
-      res.forEach((r, i) => {
-        // console.log(r.breakpoint, screenWidth, r.breakpoint > screenWidth);
-        // switch (true) {
-        //   case r.breakpoint > screenWidth:
-        //     console.log(r, screenWidth);
-        //     setPageSize(r.pageSize);
-        //     break;
-        //   default:
-        //     // setPageSize(1);
-        //     break;
-        // }
-        if (r.breakpoint < screenWidth) {
-          isSizeMatched = true;
-          console.log(r, screenWidth, r.breakpoint < screenWidth);
-          setPageSize(r.pageSize);
-        }
-        if (!isSizeMatched && i + 1 === res.length) {
-          setPageSize(10);
-        }
-      });
+    const screenWidth = window.screen.width;
+    console.log(screenWidth);
+    TableResponsiveRows.forEach((r, i) => {
+      if (r.breakpoint <= screenWidth) {
+        setPageSize(r.pageSize);
+      }
     });
   }, []);
 
-  useEffect(() => {
-    console.log('pageSize: ', pageSize);
-  }, [pageSize]);
-
   const { data } = useQuery(GET_SUB_CATS);
-  // console.log(data);
+
   let latest = [];
 
   if (data)

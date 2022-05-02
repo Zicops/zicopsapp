@@ -36,3 +36,18 @@ export function secondsToMinutes(seconds) {
 
   return { minute: min, second: sec };
 }
+
+export const TableResponsiveRows = [
+  {
+    breakpoint: 1200,
+    pageSize: 5
+  },
+  {
+    breakpoint: 1500,
+    pageSize: 7
+  },
+  {
+    breakpoint: 1900,
+    pageSize: 12
+  }
+];

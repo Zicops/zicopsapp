@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
 export function useHandleNav(isAdmin, setAdmin) {
-  const [isSearch, setSearch] = useState(0);
+  const [searchQuery, setSearchQuery] = useState(null);
   const router = useRouter();
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const route = router.route;
@@ -12,24 +13,47 @@ export function useHandleNav(isAdmin, setAdmin) {
     setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
   }, []);
 
+  // whenever input is render it should be on focus
+  useEffect(() => {
+    searchInputRef.current?.focus();
+  }, [searchInputRef.current]);
+
   function gotoAdmin() {
     setAdmin(1);
     router.push('/admin');
   }
+
   function gotoUser() {
     setAdmin(0);
     router.push('/');
   }
 
-  function handleMouseHover(searchStatus) {
-    setSearch(searchStatus);
+  function activateSearch() {
+    setSearchQuery('');
+    searchInputRef.current?.focus();
+  }
+
+  function deactivateSearch(e) {
+    if (searchQuery?.length > 0) return;
+    if (e.relatedTarget?.className.includes('nav')) return;
+
+    setSearchQuery(null);
   }
 
   function handleSearch(e) {
+    e.stopPropagation();
     const searchText = e.target.value;
     console.log(searchText);
-    setSearch(1)
+    setSearchQuery(searchText);
   }
 
-  return { isSearch, handleMouseHover, handleSearch, gotoAdmin, gotoUser };
+  return {
+    searchQuery,
+    searchInputRef,
+    activateSearch,
+    deactivateSearch,
+    handleSearch,
+    gotoAdmin,
+    gotoUser
+  };
 }

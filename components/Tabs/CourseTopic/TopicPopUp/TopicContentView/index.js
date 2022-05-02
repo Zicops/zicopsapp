@@ -2,20 +2,19 @@ import { useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../../../helper/data.helper';
 import { TopicContentAtom, TopicSubtitleAtom } from '../../../../../state/atoms/module.atoms';
 
-export default function TopicContentView({ topicId, toggleTopicContentForm }) {
+export default function TopicContentView({ topicContent, toggleTopicContentForm }) {
   const topicSubtitle = useRecoilValue(TopicSubtitleAtom);
-  const topicContent = useRecoilValue(TopicContentAtom);
-  const filteredTopicContent = filterTopicContent(topicContent, topicId);
-
   return (
     <>
-      {filteredTopicContent && !!filteredTopicContent.length && (
+      {topicContent && !!topicContent.length && (
         <>
-          {filteredTopicContent.map((content, index) => {
+          {topicContent.map((content, index) => {
             const isSubtitleAdded = topicSubtitle[index]?.file || topicSubtitle[index]?.subtitleUrl;
             return (
               <div className="content_added" key={content.language}>
-                <div className="content_details">
+                <div
+                  className="content_details"
+                  style={content.is_default ? { background: 'red ' } : {}}>
                   <div className="content_top">
                     <span className="label">Content Type :</span>
                     <span className="value">{content.type}</span>

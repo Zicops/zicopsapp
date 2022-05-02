@@ -60,10 +60,6 @@ export default function CourseTopic() {
     handleEditChapterSubmit
   } = useEditChapter(togglePopUp, refetchDataAndUpdateRecoil);
 
-  // add topic
-  const { newTopicData, constructTopicData, isAddTopicReady, handleTopicInput, addNewTopic } =
-    useAddTopic(togglePopUp, refetchDataAndUpdateRecoil);
-
   // edit topic
   const {
     editTopic,
@@ -76,6 +72,10 @@ export default function CourseTopic() {
     handleEditTopicInput,
     updateTopicAndContext
   } = useEditTopic(togglePopUp, refetchDataAndUpdateRecoil);
+
+  // add topic
+  const { newTopicData, constructTopicData, isAddTopicReady, handleTopicInput, addNewTopic } =
+    useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, activateEditTopic);
 
   return (
     <>
@@ -106,10 +106,9 @@ export default function CourseTopic() {
         </div>
       </div>
 
-            {/* <div style={{marginRight: '5%'}}>
+      {/* <div style={{marginRight: '5%'}}>
               <NextButton tabIndex={4}/>
             </div> */}
-      
 
       {/* add module pop up */}
       {isAddModulePopUpOpen && (

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useRecoilValue } from 'recoil';
-import { TopicVideoAtom } from '../../../../state/atoms/module.atoms';
+import { TopicContentAtom, TopicVideoAtom } from '../../../../state/atoms/module.atoms';
 // imported from common, recommended to remove later
 import styles from '../../../common/PopUp/popUp.module.scss';
 import Quiz from '../../../medium/Quiz';
@@ -12,6 +12,7 @@ import AddTopicForm from './AddTopicForm';
 import BingeForm from './BingeForm';
 import ResourcesForm from './ResourcesForm';
 import TopicContentView from './TopicContentView';
+import { filterTopicContent } from '../../../../helper/data.helper';
 
 export default function TopicPopUp({
   addTopicData = {},
@@ -27,6 +28,7 @@ export default function TopicPopUp({
     isEditTopicReady,
 
     localStates: addTopicContentLocalStates,
+    setNewTopicContent,
     isTopicContentFormVisible,
     toggleTopicContentForm,
     inputHandlers,
@@ -44,10 +46,14 @@ export default function TopicPopUp({
   };
   const closeBtnObj = { name: 'Cancel', handleClick: closeModal };
 
-  let topicVideo;
+  let topicVideo,
+    filteredTopicContent = null;
   const editTopicFormRef = useRef(null),
     addTopicContentRef = useRef(null);
+
+  const topicContent = useRecoilValue(TopicContentAtom);
   if (isEdit) {
+    filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
     closeBtnObj.name = 'Design Later';
     closeBtnObj.handleClick = () => {
       const shouldCloseModal = confirm(
@@ -143,6 +149,8 @@ export default function TopicPopUp({
               <div ref={addTopicContentRef}>
                 {isTopicContentFormVisible && (
                   <AddTopicContentForm
+                    topicContent={filteredTopicContent}
+                    setNewTopicContent={setNewTopicContent}
                     data={addTopicContentLocalStates}
                     inputHandlers={inputHandlers}
                     addNewTopicContent={addNewTopicContent}
@@ -152,7 +160,7 @@ export default function TopicPopUp({
               </div>
               {/* all the topic content added and saved */}
               <TopicContentView
-                topicId={editTopic?.id}
+                topicContent={filteredTopicContent}
                 toggleTopicContentForm={() => {
                   if (!isTopicContentFormVisible)
                     addTopicContentRef.current?.scrollIntoView({

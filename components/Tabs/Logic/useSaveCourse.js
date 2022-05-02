@@ -39,6 +39,7 @@ export default function useSaveCourse(courseContextData) {
   }
 
   useEffect(() => {
+    console.log(tab);
     if (tab === tabData[0].name) return;
 
     // saveCourseData();

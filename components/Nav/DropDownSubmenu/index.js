@@ -19,7 +19,9 @@ export default function DropDownSubMenu({ subData, menuIcon, submenutext, arrowp
           onMouseLeave={() => toggleMenu(false)}
           onClose={() => toggleMenu(false)}>
           {!submenurowdirection && submenutext}
-          <Image src={menuIcon} alt="" height="20px" width="20px" />
+          <div style={{margin: '4px 0 -4px'}}>
+          <Image src={menuIcon} alt="" height={17} width={15} />
+          </div>
           {submenurowdirection && submenutext}
         </div>
         <ControlledMenu
@@ -54,6 +56,7 @@ export default function DropDownSubMenu({ subData, menuIcon, submenutext, arrowp
         .dropdown-submenu-justifycontent-space-between {
           display: flex;
           justify-content: space-between;
+          align-items: center;
         }
       `}</style>
     </>

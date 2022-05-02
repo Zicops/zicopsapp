@@ -2,7 +2,7 @@ export default function Lists({ title, list, isPills = false }) {
   return (
     <>
       <div className="tab_heading">{title}</div>
-      <div className="tab_section_summary" style={isPills ? { display: 'flex' } : {}}>
+      <div className="tab_section_summary" style={isPills ? { display: 'flex', flexWrap: 'wrap' } : {}}>
         {isPills ? (
           list.map((li, index) => (
             <div key={index} className="pills">

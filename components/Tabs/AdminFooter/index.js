@@ -19,7 +19,7 @@ export default function AdminFooter() {
       ? `(at ${getDateTimeFromUnix(fullCourse.updated_at || fullCourse.created_at)})`
       : '';
 
-  console.log(isLoading);
+  // console.log(isLoading);
 
   return (
     <div className="content-panel">

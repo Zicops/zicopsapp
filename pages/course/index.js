@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { sliderImages } from '../../API/DemoSliderData';
 import { mutationClient } from '../../API/Mutations';
@@ -11,7 +11,7 @@ import { getVideoObject, VideoAtom } from '../../state/atoms/video.atom';
 import CourseContextProvider from '../../state/contexts/CourseContext';
 import ModuleContextProvider from '../../state/contexts/ModuleContext';
 
-export default function PreviewCourse() {
+export default function Course() {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const startPlayer = videoData.startPlayer;
 
@@ -40,15 +40,15 @@ export default function PreviewCourse() {
               padding: 0
             }}>
             {startPlayer ? (
-              <CustomVideo set={setStartPlayer} isPreview={true} />
+              <CustomVideo set={setStartPlayer} />
             ) : (
-              <CourseHero set={setStartPlayer} isPreview={true} />
+              <CourseHero set={setStartPlayer} />
             )}
 
-            <CourseBody isPreview={true} />
-            {/* <CardSlider title="Your Other Subscribed Courses" data={sliderImages} />
+            <CourseBody />
+            <CardSlider title="Your Other Subscribed Courses" data={sliderImages} />
             <CardSlider title="Related Courses" data={sliderImages} />
-            <CardSlider title="Recomended Courses" data={sliderImages} /> */}
+            <CardSlider title="Recomended Courses" data={sliderImages} />
           </div>
         </ModuleContextProvider>
       </CourseContextProvider>

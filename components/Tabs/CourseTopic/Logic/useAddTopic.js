@@ -5,7 +5,7 @@ import { ADD_COURSE_TOPIC } from '../../../../API/Mutations';
 import { getTopicObject, TopicAtom } from '../../../../state/atoms/module.atoms';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 
-export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil) {
+export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, activateEditTopic) {
   const { fullCourse } = useContext(courseContext);
   const [createCourseTopic, { loading, error }] = useMutation(ADD_COURSE_TOPIC);
 
@@ -48,17 +48,17 @@ export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil) {
 
   // save in database
   async function addNewTopic() {
-    console.log(newTopicData);
-    await createCourseTopic({ variables: { ...newTopicData } });
+    const { data } = await createCourseTopic({ variables: { ...newTopicData } });
 
     if (error) return alert('Topic Create Error');
 
     refetchDataAndUpdateRecoil('topic');
 
     setNewTopicData(getTopicObject({ courseId: fullCourse.id, sequence: topicData.length + 1 }));
-    togglePopUp('addTopic', false);
-    togglePopUp('editTopic', true);
     alert('New Topic Created');
+
+    togglePopUp('addTopic', false);
+    activateEditTopic(data.addCourseTopic.id, data.addCourseTopic);
   }
 
   return {
