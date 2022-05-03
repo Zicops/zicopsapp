@@ -1,10 +1,9 @@
 @import '../../styles/base.scss';
 
     .course_header {
-      background-image: url(/images/bg-new.png);
-      background-position: bottom left;
+      // background-image: url(/images/bg-new.png);
+      background-position: right center ;
       background-repeat: no-repeat;
-      background-size: 100%;
       background-size: cover;
     }
     .gradient {
@@ -14,9 +13,9 @@
       background: rgba(0, 0, 0, 0);
       background: linear-gradient(
         90deg,
-        rgba(0, 0, 0, 0.5) 0%,
-        rgba(0, 0, 0, 1) 40%,
-        rgba(0, 0, 0, 0) 70%,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 1) 35%,
+        rgba(0, 0, 0, 0.7) 70%,
         rgba(0, 0, 0, 0) 100%
       );
     }
@@ -64,7 +63,7 @@
       font-size: 0.9vw;
       margin: 2vh 0px;
       padding-bottom: 1vh;
-      min-height: 100px;
+      // min-height: 100px;
     }
     .course_header_text .more_info {
       color: #858f8f;

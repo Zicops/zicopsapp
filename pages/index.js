@@ -1,14 +1,19 @@
-import Link from 'next/link';
-import React, { useContext, useState } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import { Skeleton } from '@mui/material';
+import { useRouter } from 'next/router';
+import React, { useContext, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { bigImages, circleImages, sliderImages, squareImages } from '../API/DemoSliderData';
+import { GET_LATEST_COURSES, queryClient } from '../API/Queries';
 import HomeSlider from '../components/HomeSlider';
-import CardSlider from '../components/medium/CardSlider';
 import BigCardSlider from '../components/medium/BigCardSlider';
+import CardSlider from '../components/medium/CardSlider';
 import OneCardSlider from '../components/medium/OneCardSlider';
 import RoundCardSlider from '../components/medium/RoundCardSlider';
-import { sliderImages, bigImages, circleImages, squareImages } from '../API/DemoSliderData';
+import ZicopsCarousel from '../components/ZicopsCarousel';
+import SmallCard from '../components/ZicopsCarousel/SmallCard';
+import { isLoadingAtom } from '../state/atoms/module.atoms';
 import { userContext } from '../state/contexts/UserContext';
-import { useRouter } from 'next/router';
-import { Skeleton } from '@mui/material';
 
 export default function Home() {
   const { isAdmin } = useContext(userContext);
@@ -92,10 +97,31 @@ export default function Home() {
       slidesToSlide: 1
     }
   };
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-  setTimeout(() => {
-    setIsDataLoaded(true);
-  }, 2000);
+
+  // load data query obj
+
+  const [latestCourseData, setLatestCourseData] = useState(new Array(15).fill(null));
+  const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
+  const [loadCourseData, { error, loading, refetch }] = useLazyQuery(GET_LATEST_COURSES, {
+    client: queryClient
+  });
+
+  useEffect(() => {
+    setIsLoading(loading);
+
+    loadCourseData({
+      variables: {
+        publish_time: Date.now(),
+        pageSize: 15,
+        pageCursor: ''
+      }
+    }).then(({ data }) => {
+      console.log(data);
+      setLatestCourseData(data.latestCourses.courses);
+
+      if (error) alert('Course Load Error');
+    });
+  }, []);
 
   return (
     <div
@@ -105,49 +131,45 @@ export default function Home() {
         margin: 0,
         padding: 0
       }}>
-      {isDataLoaded ? (
-        <HomeSlider />
+      {isLoading ? (
+        <Skeleton sx={{ bgcolor: 'dimgray' }} variant="rectangular" animation="wave" height={391} />
       ) : (
-        <Skeleton
-          sx={{ bgcolor: 'dimgray' }}
-          variant="rectangular"
-          animation="wave"
-          height={391}
-        />
+        <HomeSlider />
       )}
-
-      <CardSlider title="Continue with your Courses" data={sliderImages} />
-      <CardSlider title="Recommended Courses" data={sliderImages} />
+      <ZicopsCarousel title="Latest Courses" data={latestCourseData} />
+      {/* <CardSlider title="Latest Courses" data={latestCourseData} /> */}
+      <ZicopsCarousel title="Continue with your Courses" data={sliderImages} />
+      <ZicopsCarousel title="Recommended Courses" data={sliderImages} />
 
       <BigCardSlider title="Courses mandatory for you" data={squareImages} slide={realSquare} />
 
-      <CardSlider title="New Launched Courses" data={sliderImages} />
-      <CardSlider title="Most Popular Courses in Zicops" data={sliderImages} />
-      <CardSlider title="Suggested Learning paths" data={sliderImages} />
+      <ZicopsCarousel title="New Launched Courses" data={sliderImages} />
+      <ZicopsCarousel title="Most Popular Courses in Zicops" data={sliderImages} />
+      <ZicopsCarousel title="Suggested Learning paths" data={sliderImages} />
 
       <BigCardSlider title="Categories and Subcategories" data={squareImages} slide={smallSquare} />
       <div style={{ marginTop: '-60px' }}>
         <BigCardSlider title="" data={circleImages} slide={smallSquare} />
       </div>
-      <CardSlider title="Full Stack Development" data={sliderImages} />
-      <CardSlider title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
       <OneCardSlider title="Featured Events" data={sliderImages} slide={one} />
-      <CardSlider title="Full Stack Development" data={sliderImages} />
-      <CardSlider title="Full Stack Development" data={sliderImages} />
-      <CardSlider title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
 
       <RoundCardSlider title="Upcoming Webinars & Podcasts" data={circleImages} />
 
-      <CardSlider title="Available Webinars" data={sliderImages} />
-      <CardSlider title="Cloud Computing" data={sliderImages} />
-      <CardSlider title="Ettiquettes" data={sliderImages} />
+      <ZicopsCarousel title="Available Webinars" data={sliderImages} />
+      <ZicopsCarousel title="Cloud Computing" data={sliderImages} />
+      <ZicopsCarousel title="Ettiquettes" data={sliderImages} />
 
       <BigCardSlider title="Categories" data={bigImages} slide={bigSquare} />
 
-      <CardSlider title="Distance Learning" data={sliderImages} />
-      <CardSlider title="Cloud Certification Courses" data={sliderImages} />
-      <CardSlider title="Distance Learning" data={sliderImages} />
-      <CardSlider title="Cloud Certification Courses" data={sliderImages} />
+      <ZicopsCarousel title="Distance Learning" data={sliderImages} />
+      <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} />
+      <ZicopsCarousel title="Distance Learning" data={sliderImages} />
+      <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} />
       {/* <Link href="/courses">
       <a>Courses</a>
       </Link> */}

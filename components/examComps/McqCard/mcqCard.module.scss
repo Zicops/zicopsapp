@@ -1,0 +1,45 @@
+@import '../../../styles/base.scss';
+
+.mcq_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.option_container {
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: 50% 50%;
+  margin-top: 10px;
+  padding-left: 30px;
+}
+
+.btn {
+  margin-left: 35%;
+  margin-top: 20px;
+}
+
+.btn button {
+  float: right;
+}
+
+.span_element {
+  float: left;
+  position: relative;
+  color: $darkThree;
+  font-weight: 600;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.qtitle {
+  margin: 0 auto;
+}
+
+.qcontent {
+  margin: 10px;
+}
+
+.hint {
+  font-size: 14px;
+}

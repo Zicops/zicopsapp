@@ -1,10 +1,8 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { ADD_COURSE } from '../../../API/Mutations';
-import { GET_COURSE } from '../../../API/Queries';
-import { getQueryData } from '../../../helper/api.helper';
-import { createCourseAndUpdateContext } from '../../../helper/data.helper';
+import { GET_COURSE, queryClient } from '../../../API/Queries';
 import { tabData } from './tabs.helper';
 
 export default function useHandleTabs(courseContextData) {
@@ -26,28 +24,37 @@ export default function useHandleTabs(courseContextData) {
   const router = useRouter();
   const { query: courseId } = router;
   const editCourseId = courseId.courseId || null;
-  const { data: courseData } = getQueryData(GET_COURSE, { course_id: editCourseId });
-
+  // const { data: courseData } = getQueryData(, { course_id: editCourseId });
+  const [loadCourseData, { error: errorCourseData, refetch: refetchCourse }] = useLazyQuery(
+    GET_COURSE,
+    { client: queryClient }
+  );
   const [createCourse, { loading, error, data }] = useMutation(ADD_COURSE);
   const [fileData, setFileData] = useState({});
   const [isPreviewPopUpOpen, setIsPreviewPopUpOpen] = useState(false);
   const [previewFileData, setPreviewFileData] = useState(null);
 
   useEffect(() => {
-    if (courseData?.getCourse && !isDataLoaded) {
-      updateCourseMaster(courseData.getCourse);
+    loadCourseData({ variables: { course_id: editCourseId } }).then(({ data }) => {
+      if (errorCourseData) return alert('course load error');
 
-      setIsDataLoaded(true);
-    }
-  }, [courseData]);
+      if (data?.getCourse && !isDataLoaded) {
+        updateCourseMaster(data.getCourse);
+
+        setIsDataLoaded(true);
+      }
+    });
+  }, [editCourseId]);
 
   useEffect(() => {
     setCouseIdForFileContext();
 
     setFileData({
-      myfile: getFileNameFromUrl(fullCourse.image, 'img'),
-      uploadCourseImage: getFileNameFromUrl(fullCourse.tileImage, 'til'),
-      uploadCourseVideo: getFileNameFromUrl(fullCourse.previewVideo, 'vid')
+      myfile: courseImage.file?.name || getFileNameFromUrl(fullCourse.image, 'img'),
+      uploadCourseImage:
+        courseTileImage.file?.name || getFileNameFromUrl(fullCourse.tileImage, 'til'),
+      uploadCourseVideo:
+        courseVideo.file?.name || getFileNameFromUrl(fullCourse.previewVideo, 'vid')
     });
   }, [fullCourse]);
 
@@ -73,15 +80,10 @@ export default function useHandleTabs(courseContextData) {
       fileReader.readAsDataURL(file);
     });
 
-    console.log(fileUrl);
     return fileUrl;
   }
 
-  console.log(fullCourse);
-  console.log(courseVideo);
   function togglePreviewPopUp(fileName, filePath, isVideo) {
-    console.log('filepath', filePath);
-
     setIsPreviewPopUpOpen(!isPreviewPopUpOpen);
 
     if (typeof filePath === 'object') {
@@ -96,6 +98,7 @@ export default function useHandleTabs(courseContextData) {
             : null
         );
       });
+      return;
     }
 
     setPreviewFileData(
@@ -114,20 +117,23 @@ export default function useHandleTabs(courseContextData) {
     if (name === 'myfile') {
       setCourseImage({
         ...courseImage,
-        upload: 0,
+        upload: -1,
+        file: null,
         courseId: fullCourse.id
       });
     } else if (name === 'uploadCourseImage') {
       contextName = 'tileImage';
       setCourseTileImage({
         ...courseTileImage,
-        upload: 0,
+        upload: -1,
+        file: null,
         courseId: fullCourse.id
       });
     } else if (name === 'uploadCourseVideo') {
       contextName = 'previewVideo';
       setCourseVideo({
-        upload: 0,
+        upload: -1,
+        file: null,
         courseId: fullCourse.id
       });
     }
@@ -157,23 +163,26 @@ export default function useHandleTabs(courseContextData) {
     });
   }
 
-  function showActiveTab(tab) {
-    const index = tabData.findIndex((t) => {
-      return t.name === tab;
-    });
-
-    if (index >= 0) return tabData[index].component;
-    return tabData[0].component;
-  }
-
   function handleChange(e) {
-    console.log(e.target.type);
     if (e.target.type === 'checkbox') {
+      if (e.target.name.includes('is_')) {
+        // toggle button
+        updateCourseMaster({
+          ...fullCourse,
+          [e.target.name]: e.target.checked
+        });
+        return;
+      }
+
+      // expertise level beginner, competent and proficient
       return handleExpertise(e);
     }
+
+    // image and video file
     if (e.target.type === 'file') {
       return handleFileInput(e);
     }
+
     updateCourseMaster({
       ...fullCourse,
       [e.target.name]: e.target.value
@@ -201,7 +210,6 @@ export default function useHandleTabs(courseContextData) {
   }
 
   function handleFileInput(e) {
-    console.log(e.target.files);
     if (!fullCourse.id) {
       setTab(tabData[0].name);
       alert('Add Course Master First');
@@ -251,25 +259,18 @@ export default function useHandleTabs(courseContextData) {
       }
     }
 
+    e.target.value = '';
     setFileData({
       ...fileData,
       [e.target.name]: fileDisplayValue
     });
   }
 
-  function saveCourseMasterTabDetails() {
-    createCourseAndUpdateContext(courseContextData, createCourse);
-  }
-
   return {
     fullCourse,
     tabData,
-    showActiveTab,
-    tab,
-    setTab,
     fileData,
     handleChange,
-    saveCourseMasterTabDetails,
     updateCourseMaster,
     togglePreviewPopUp,
     previewFileData,

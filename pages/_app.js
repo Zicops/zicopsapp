@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import UserContextProvider from '../state/contexts/UserContext';
 import '../styles/globals.css';
 import '../styles/global.scss';
+import { RecoilRoot } from 'recoil';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -11,11 +12,14 @@ function MyApp({ Component, pageProps }) {
         <title>Zicops - Demo</title>
         <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
       </Head>
-      <UserContextProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </UserContextProvider>
+
+      <RecoilRoot>
+        <UserContextProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </UserContextProvider>
+      </RecoilRoot>
     </>
   );
 }

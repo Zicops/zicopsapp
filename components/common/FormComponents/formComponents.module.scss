@@ -1,0 +1,112 @@
+@import '../../../styles/base.scss';
+
+.labeledInputWrapper {
+  display: flex;
+  align-items: baseline;
+  label {
+    width: 25%;
+  }
+  input {
+    width: 75%;
+    padding: 10px;
+    border: 2px solid $darkThree;
+    background-color: $darkTwo;
+    color: $secondaryBlack;
+    font-size: 13px;
+    font-family: 'Open Sans';
+
+    &:not(:placeholder-shown) {
+      /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+      color: $white;
+      border: 2px solid $primary;
+    }
+    &:focus {
+      border: 2px solid $primary;
+      box-shadow: 0px 0px 10px 0px $primary;
+      outline: 0;
+      color: $white;
+    }
+  }
+}
+.labeledDropdownWrapper {
+  display: flex;
+  align-items: baseline;
+  label {
+    width: 25%;
+  }
+}
+
+/* Customize the label (the container) */
+.labeledRadioCheckboxWrapper {
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: $darkTwo;
+        border: 1px solid $darkThree;
+    }
+    
+    /* Create the checkmark/indicator  */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        left: 5px;
+        top: 1px;
+        width: 5px;
+        height: 10px;
+        border: 2px solid $darkThree;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    
+        // (hidden when not checked)
+        display: none;
+    }
+    // input[type='checkbox']:hover~.checkmark {
+    //     border: 1px solid white;
+    // }
+    /* Show checkmark on checked */
+    input[type='checkbox']:checked~.checkmark:after {
+        display: block;
+    }
+
+    /* Create a custom radio button */
+    .radiomark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        border: 2px solid $primary;
+        background-color: transparent;
+    }
+    // input[type='radio']:hover~.radiomark {
+    //     border: 2px solid white;
+    // }
+    /* Show radio selected on select */
+    input[type='radio']:checked~.radiomark {
+        background-color: $primary;
+    }
+}

@@ -1,8 +1,12 @@
+import { Fragment } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { useRecoilValue } from 'recoil';
+import { ResourcesAtom } from '../../../state/atoms/module.atoms';
+import { getResourceCount } from '../Logic/courseBody.helper';
 import TopicFiles from './TopicFiles';
 
-export default function ItemSlider({ itemsArr, fileCount }) {
+export default function ItemSlider({ itemsArr, showResources, isResourceShown }) {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -20,6 +24,8 @@ export default function ItemSlider({ itemsArr, fileCount }) {
       slidesToSlide: 1 // optional, default to 1.
     }
   };
+  let prevItem = null;
+  const resources = useRecoilValue(ResourcesAtom);
 
   return (
     <>
@@ -31,6 +37,7 @@ export default function ItemSlider({ itemsArr, fileCount }) {
         ssr={false} // means to render carousel on server-side.
         infinite={true}
         // centerMode={true}
+        shouldResetAutoplay={false}
         autoPlay={false}
         autoPlaySpeed={5000}
         keyBoardControl={true}
@@ -43,11 +50,63 @@ export default function ItemSlider({ itemsArr, fileCount }) {
         // customDot={<CustomDot />}
         renderButtonGroupOutside={true}
         itemClass="">
-        {itemsArr.map((item, i) => (
-          <div className="item" key={item.name}>
-            <TopicFiles fileCount={fileCount} topicName={item.name} />
-          </div>
-        ))}
+        {itemsArr.map((item, i) => {
+          // console.log(i + 1, itemsArr.length, i + 1 == itemsArr.length);
+          // console.log(i % 2, i % 2 == 0);
+          if (i + 1 == itemsArr.length) {
+            return (
+              <>
+                {prevItem && (
+                  <div style={{ padding: '5px' }}>
+                    <TopicFiles
+                      fileCount={getResourceCount(resources, prevItem?.id)}
+                      topic={prevItem}
+                      handleClick={showResources}
+                      isResourceShown={isResourceShown}
+                    />
+                  </div>
+                )}
+                <div style={{ padding: '5px' }}>
+                  <TopicFiles
+                    fileCount={getResourceCount(resources, item?.id)}
+                    topic={item}
+                    handleClick={showResources}
+                    isResourceShown={isResourceShown}
+                  />
+                </div>
+              </>
+            );
+          }
+          if (i % 2 == 0) {
+            prevItem = item;
+            return null;
+          }
+
+          // console.log(i, prevItem, item);
+
+          return (
+            <Fragment key={item.id + i + prevItem?.id}>
+              <div style={{ padding: '5px' }}>
+                <TopicFiles
+                  fileCount={getResourceCount(resources, prevItem.id)}
+                  topic={prevItem}
+                  handleClick={showResources}
+                  isResourceShown={isResourceShown}
+                />
+              </div>
+              <div style={{ padding: '5px' }}>
+                <TopicFiles
+                  fileCount={getResourceCount(resources, item.id)}
+                  topic={item}
+                  handleClick={showResources}
+                  isResourceShown={isResourceShown}
+                />
+              </div>
+              {/* reset prevItem */}
+              {(prevItem = null)}
+            </Fragment>
+          );
+        })}
       </Carousel>
 
       {/* move to .scss */}

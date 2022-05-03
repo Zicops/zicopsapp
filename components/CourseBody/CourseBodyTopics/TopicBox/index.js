@@ -1,9 +1,37 @@
 import { Skeleton } from '@mui/material';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { filterAndSortTopicsBasedOnModuleId } from '../../../../helper/data.helper';
+import { isLoadingAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
+import { VideoAtom } from '../../../../state/atoms/video.atom';
 
-export default function TopicBox({ index, name, description, duration }) {
+export default function TopicBox({ index, topic, topicContent, moduleId }) {
+  const { name, description } = topic;
+  const duration = topicContent[0]?.duration.toString();
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const topicData = useRecoilValue(TopicAtom);
+
+  const isLoading = useRecoilValue(isLoadingAtom);
+
+  function updateVideoData() {
+    const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicData, moduleId);
+    const currentTopicIndex = filteredTopicData.findIndex((t) => t.id === topic.id);
+
+    setVideoData({
+      ...videoData,
+      videoSrc: topicContent[0]?.contentUrl || null,
+      type: topicContent[0]?.type || null,
+      startPlayer: true,
+      topicContent: topicContent,
+      currentTopicIndex: currentTopicIndex,
+      allModuleTopic: filteredTopicData,
+      currentModuleId: moduleId,
+      isPreview: false
+    });
+  }
+
   return (
     <>
-      <div className="topic">
+      <div className="topic" onClick={updateVideoData}>
         <div className="preclassName">
           <div>
             <img src="images/resourcesicon.png" />
@@ -24,19 +52,29 @@ export default function TopicBox({ index, name, description, duration }) {
             <div className="topic_heading">
               <h4>
                 <span>
-                  {index + ". " || (
+                  {isLoading ? (
                     <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
+                  ) : (
+                    index + '. '
                   )}
                 </span>
-                {name || (
+                {isLoading ? (
                   <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={150} />
+                ) : name ? (
+                  name
+                ) : (
+                  'N/A'
                 )}
               </h4>
             </div>
             <div className="topic_description">
               <p>
-                {description || (
+                {isLoading ? (
                   <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
+                ) : description ? (
+                  description
+                ) : (
+                  'N/A'
                 )}
               </p>
             </div>
@@ -48,15 +86,18 @@ export default function TopicBox({ index, name, description, duration }) {
             <div className="details">
               <div>Video + Quiz</div>
               <div>
-                Duration :{' '}
                 <span>
-                  {duration || (
+                  {isLoading ? (
                     <Skeleton
                       sx={{ bgcolor: 'dimgray' }}
                       variant="rectangular"
                       height={20}
                       width={100}
                     />
+                  ) : duration ? (
+                    `Duration : ${duration}`
+                  ) : (
+                    'N/A'
                   )}
                 </span>
               </div>

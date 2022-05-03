@@ -1,15 +1,25 @@
-import { Skeleton } from '@mui/material';
 import { useContext } from 'react';
-import { filterAndSortChapter } from '../../../helper/data.helper';
+import { useRecoilValue } from 'recoil';
+import {
+  filterAndSortChapter,
+  filterAndSortTopics,
+  filterModule,
+  filterTopicContent
+} from '../../../helper/data.helper';
+import {
+  ChapterAtom,
+  ModuleAtom,
+  TopicAtom,
+  TopicContentAtom
+} from '../../../state/atoms/module.atoms';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import { moduleContext } from '../../../state/contexts/ModuleContext';
 import Dropdown from '../../common/Dropdown';
-import useShowData from '../Logic/useShowData';
-import Chapter from './Chapter';
 import Header from '../Header';
+import useShowData from '../Logic/useShowData';
+import ChapterRow from './ChapterRow';
+import TopicBox from './TopicBox';
 
 export default function CourseBodyTopics() {
-  const moduleContextData = useContext(moduleContext);
   const courseContextData = useContext(courseContext);
   const {
     myRef,
@@ -17,20 +27,26 @@ export default function CourseBodyTopics() {
     activeCourseTab,
     setActiveCourseTab,
     getModuleOptions,
-    moduleData,
     handleModuleChange,
     selectedModule
-  } = useShowData(courseContextData, moduleContextData);
-
-  const options = getModuleOptions();
+  } = useShowData(courseContextData);
 
   const { fullCourse } = courseContextData;
-  const { chapter: chapterData, topic, topicContent } = moduleContextData;
+  const chapterData = useRecoilValue(ChapterAtom);
+  const topic = useRecoilValue(TopicAtom);
+  const topicContent = useRecoilValue(TopicContentAtom);
+  const moduleData = useRecoilValue(ModuleAtom);
 
-  const filteredAndSortedData = filterAndSortChapter(chapterData, selectedModule?.value);
+  const options = getModuleOptions();
+  const currentModule = filterModule(moduleData, selectedModule?.value);
+  const isChapterPresent = currentModule?.isChapter;
 
-  // if (options[0].value === '')
-  //   return <Skeleton sx={{ bgcolor: 'dimgray' }} variant="rectangular" width={300} height={200} />;
+  let filteredAndSortedData = [];
+  if (isChapterPresent) {
+    filteredAndSortedData = filterAndSortChapter(chapterData, selectedModule?.value);
+  } else {
+    filteredAndSortedData = filterAndSortTopics(topic, selectedModule?.value);
+  }
 
   return (
     <>
@@ -41,19 +57,31 @@ export default function CourseBodyTopics() {
         expertise={fullCourse.expertise_level?.split(',').join(' | ')}
       />
 
-      {filteredAndSortedData &&
-        filteredAndSortedData.map((chapter, index) => (
-          <Chapter
-            topics={topic}
-            topicContent={topicContent}
-            name={chapter.name}
-            description={chapter.description}
-            index={index + 1}
-            key={chapter.name}
-            chapterId={chapter.id}
-            moduleId={selectedModule.value}
-          />
-        ))}
+      {isChapterPresent && filteredAndSortedData
+        ? filteredAndSortedData.map((chapter, index) => (
+            <ChapterRow
+              topics={topic}
+              name={chapter.name}
+              description={chapter.description}
+              index={index + 1}
+              key={chapter.name}
+              chapterId={chapter.id}
+              moduleId={selectedModule.value}
+            />
+          ))
+        : filteredAndSortedData.map((topic, index) => {
+            const filteredTopicContent = filterTopicContent(topicContent, topic.id);
+
+            return (
+              <TopicBox
+                key={topic.name}
+                index={index + 1}
+                topic={topic}
+                topicContent={filteredTopicContent}
+                moduleId={selectedModule?.value}
+              />
+            );
+          })}
     </>
   );
 }

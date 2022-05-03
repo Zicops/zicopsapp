@@ -1,0 +1,69 @@
+@import '../../../styles/base.scss';
+
+.contianer {
+  overflow: auto;
+  min-height: 70vh;
+  max-height: 90vh;
+}
+.aqmd_dropdown {
+  margin-left: 10px;
+  margin-right: -8px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.aqmd_dropdown2 {
+  width: 50%;
+  label {
+    width: 50% !important;
+  }
+
+  select {
+    width: 50% !important;
+    margin-left: 22px !important;
+  }
+}
+
+.dropdownContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.uqContainer {
+  padding-left: 11px;
+  padding-top: 10px;
+  button:nth-child(2) {
+    margin-left: 120px !important;
+  }
+  div {
+    margin-top: 0px !important;
+    :nth-child(3) {
+      div {
+        margin-left: 28px !important;
+      }
+    }
+  }
+}
+
+.uqFooter {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.leftBox {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.rightBox {
+  text-decoration: underline;
+  color: $primary;
+  font-weight: bold;
+  a {
+    margin-right: 10px;
+  }
+}

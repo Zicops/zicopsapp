@@ -1,28 +1,33 @@
-import Image from 'next/image';
-import Button from '../VideoPlayer/ControlBar/Button';
-import { useContext, useRef, useState } from 'react';
-import { userContext } from '../../state/contexts/UserContext';
-import ControlBar from '../VideoPlayer/ControlBar';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { VideoAtom } from '../../state/atoms/video.atom';
+import { courseContext } from '../../state/contexts/CourseContext';
+import CenterFlash from './CenterFlash';
+import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
 import useVideoPlayer from './Logic/useHandleVideo';
-import useSaveData from './Logic/useSaveData';
-import { courseContext } from '../../state/contexts/CourseContext';
+import UiComponents from './UiComponents';
+import VideoPlayer from './VideoPlayer';
 
 export default function CustomVideo({ set }) {
-  const PlayerClose = () => set(false);
-  let videoSrc = '/videos/zicops-product-demo-learner-panel.mp4';
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
-  const { fullCourse } = useContext(courseContext);
-  if (fullCourse?.previewVideo) videoSrc = fullCourse.previewVideo;
+  let skipVideoTimer = null;
+  const [timeoutState, setTimeoutState] = useState(null);
+  let isLastVideo = true;
+
+  if (videoData.allModuleTopic) {
+    console.log(videoData);
+    isLastVideo = videoData.currentTopicIndex + 1 === videoData.allModuleTopic?.length;
+    skipVideoTimer =
+      videoData.topicContent[0]?.nextShowTime || videoData.topicContent[0]?.fromEndTime;
+
+    if (isLastVideo) skipVideoTimer = null;
+  }
 
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
 
-  const [BookmarkShow, setBookmarkShow] = useState(false);
-
-  function toggleBookmark() {
-    setBookmarkShow((BookmarkShow) => !BookmarkShow);
-  }
   const {
     playerState,
     togglePlay,
@@ -34,157 +39,155 @@ export default function CustomVideo({ set }) {
     moveVideoProgress,
     handleVolume,
     toggleFullScreen,
-    updateIsPlayingTo
-  } = useVideoPlayer(videoElement, videoContainer);
+    updateIsPlayingTo,
+    playPauseActivated,
+    handleKeyDownEvents,
+    hideControls,
+    hideTopBar,
+    handleMouseExit,
+    handleMouseMove,
+    seek,
+    tooltip,
+    playNextVideo,
+    playPreviousVideo
+  } = useVideoPlayer(videoElement, videoContainer, videoData.type);
 
-  const userContextData = useContext(userContext);
+  useEffect(() => {
+    set(true);
+    if (videoData.allModuleTopic && skipVideoTimer) {
+      const duration = videoElement.current?.duration;
+      const isFromStart = videoData.topicContent[0].nextShowTime > 0;
+      const timeToWait = isFromStart
+        ? videoData.topicContent[0].nextShowTime * 1000
+        : (duration - videoData.topicContent[0].fromEndTime) * 1000;
 
-  const {
-    handleBookmarkChange,
-    bookmarkData,
-    handleSaveBookmark,
-    notes,
-    handleNotesChange,
-    handleSaveNotes
-  } = useSaveData(videoElement, userContextData);
+      console.log('play in progress', parseInt(skipVideoTimer) * 60 + 5000);
 
-  const [hideControls, setHideControls] = useState(0);
+      setTimeoutState(
+        setTimeout(() => {
+          if (!timeoutState) {
+            console.log('next will play');
+            playNextVideo();
+            skipVideoTimer = null;
+          }
+        }, timeToWait + 5000)
+      );
+    }
 
+    // reset video atom when unmounted
+    return () => {
+      // setVideoData({
+      //   ...videoData,
+      //   videoSrc: 'videos/zicops-product-demo-learner-panel.mp4',
+      //   type: 'mp4',
+      //   topicContent: [],
+      //   allModuleTopic: null,
+      //   currentTopicIndex: 0,
+      //   startPlayer: false
+      // });
+      handleMouseMove({ target: { value: 0 } });
+    };
+  }, []);
+
+  useEffect(() => {
+    videoContainer.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center'
+    });
+    console.log(videoData);
+  }, [videoData]);
+
+  useEffect(() => {
+    set(true);
+  }, [videoData.videoSrc]);
+
+  // console.log(
+  //   skipVideoTimer,
+  //   (playerState.progress * 9) / 100,
+  //   skipVideoTimer < (playerState.progress * 9) / 100
+  // );
+  // currently  not used, can remove later
   const vidRef = useRef();
 
-  // If no mouse movement for 3 sec, setHideControls(1)
-  // var elem = vidRef?.current;
-  var timeout;
-  var duration = 2500;
-  document.addEventListener('mousemove', function () {
-    // console.log("Mouse is moving!")
-    setHideControls(0);
-    clearTimeout(timeout);
-    timeout = setTimeout(function () {
-      // console.log("Mouse Has stopped!");
-      setHideControls(1);
-    }, duration);
-  });
-
   return (
-    <div className={styles.videoContainer} ref={videoContainer}>
-      {/* <div className="custom-ui-container">Custom Bar</div> */}
-      <div className={`${styles.customUiContainer} ${hideControls ? styles.fadeHideTop : ''}`}>
-        <div className={`${styles.topIconsContainer}`}>
-          <div className={`${styles.firstIcon}`} onClick={PlayerClose}>
-            <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
-          </div>
-          <div className={`${styles.leftIcons}`}>
-            <Button>
-              <Image src="/images/4019936_2.png" alt="" height="30px" width="28px" />
-            </Button>
-            <Button>
-              <Image src="/images/pot-plant-icon.png" alt="" height="30px" width="30px" />
-            </Button>
-            <Button>
-              <Image
-                src="/images/conversation-icon-png-clipart2.png"
-                alt=""
-                height="30px"
-                width="30px"
-              />
-            </Button>
-          </div>
-          <div className={`${styles.centerText}`}></div>
-          <div className={`${styles.rightIcons}`}>
-            <Button>
-              <Image
-                src="/images/bookmark2.png"
-                alt=""
-                height="30px"
-                width="18px"
-                onMouseEnter={() => {
-                  toggleBookmark();
-                  updateIsPlayingTo(false);
-                }}
-              />
-            </Button>
-            <Button>
-              <Image src="/images/Notes Icon2.png" alt="" height="25px" width="25px" />
-            </Button>
-            <Button>
-              <Image src="/images/Quiz Icon2.png" alt="" height="30px" width="30px" />
-            </Button>
-          </div>
-          <div className={`${styles.lastIcon}`}></div>
-        </div>
-        {/* <div className={`${styles.bookmarkBtn}`}>
-          <button onClick={() => updateIsPlayingToPlay(false)}>Bookmark</button>
-        </div> */}
-        {/* <div className={`${styles.drawer}`}> */}
-        {BookmarkShow && (
-          <div className={`${styles.bookmarksInput}`}>
-            <input
-              className={`${styles.bookmarksField}`}
-              type="text"
-              placeholder="add bookmark title"
-              onChange={handleBookmarkChange}
-              value={bookmarkData.title}
-            />
-            <button
-              className={`${styles.bookmarksBtn}`}
-              type="submit"
-              onClick={() => {
-                handleSaveBookmark(playerState.progress);
-              }}>
-              Save Bookmark
-            </button>
-          </div>
-        )}
-        {/* <div className={`${styles.NotesInputBox}`}>
-            <input
-              type="text"
-              placeholder="add notes title"
-              onChange={handleNotesChange}
-              value={notes.title}
-              name="title"
-            />
-            <textarea
-              placeholder="add notes"
-              onChange={handleNotesChange}
-              value={notes.notes}
-              name="notes"
-            />
-            <button
-              type="submit"
-              onClick={() => {
-                handleSaveNotes(playerState.progress);
-              }}>
-              Save Notes
-            </button>
-          </div> */}
-        <div id="output"></div>
-      </div>
-      <div className="video_wrapper">
-        <video
-          src={videoSrc}
-          ref={videoElement}
-          onTimeUpdate={handleOnTimeUpdate}
-          muted={playerState.isMuted}
-          id="video"
+    <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
+      {/* custom Ui components */}
+      <div className={`${styles.customUiContainer} ${hideTopBar ? styles.fadeHideTop : ''}`}>
+        <UiComponents
+          updateIsPlayingTo={updateIsPlayingTo}
+          set={set}
+          refs={{ videoElement, videoContainer }}
         />
-        {/* {!hideControls && */}
-        <div className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`} ref={vidRef}>
+      </div>
+      {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}
+
+      <div className="video_wrapper">
+        {/* video player */}
+        <VideoPlayer
+          videoSrc={videoData.videoSrc || null}
+          type={videoData.type || 'mp4'}
+          videoElement={videoElement}
+          handleOnTimeUpdate={handleOnTimeUpdate}
+          playerState={playerState}
+          handleClick={togglePlay}
+          handleKeyDown={handleKeyDownEvents}
+        />
+
+        {/* watch credits button */}
+        {skipVideoTimer < (playerState.progress * 9) / 100 && timeoutState && (
+          <>
+            <div className={`${styles.nextPlayBtn}`}>
+              <span></span>
+              <div
+                onClick={() => {
+                  // console.log('play cancaled', timeoutState);
+                  clearTimeout(timeoutState);
+                  playNextVideo();
+                  skipVideoTimer = null;
+                  setTimeoutState(null);
+                }}>
+                Next
+              </div>
+            </div>
+            <div className={`${styles.watchCreditsBtn}`}>
+              <span></span>
+              <div
+                onClick={() => {
+                  // console.log('play cancaled', timeoutState);
+                  clearTimeout(timeoutState);
+                  skipVideoTimer = null;
+                  setTimeoutState(null);
+                }}>
+                Watch Credits
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* control bar */}
+        <div
+          className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`}
+          ref={vidRef}
+          onClick={() => videoElement.current?.focus()}>
           <ControlBar
-            isPause={playerState.isPlaying}
+            handleMouseExit={handleMouseExit}
+            handleMouseMove={handleMouseMove}
+            seek={seek}
             reloadVideo={reloadVideo}
             handlePlay={togglePlay}
             handleFullScreen={toggleFullScreen}
             forwardVideo={() => moveVideoProgress(true)}
             backwardVideo={() => moveVideoProgress(false)}
             handleProgress={handleVideoProgress}
-            progress={playerState.progress}
-            isMute={playerState.isMuted}
             handleMute={toggleMute}
             handleVolume={handleVolume}
+            playerState={playerState}
+            tooltip={tooltip}
+            playNextVideo={playNextVideo}
+            playPreviousVideo={playPreviousVideo}
           />
         </div>
-        {/* } */}
       </div>
     </div>
   );

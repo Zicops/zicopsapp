@@ -1,7 +1,11 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
+import customFetch from './customFetch';
 
-const link = createUploadLink({ uri: 'https://demo.zicops.com/cc/api/v1/query' });
+const link = createUploadLink({
+  uri: 'https://demo.zicops.com/cc/api/v1/query',
+  fetch: customFetch
+});
 // Set Mutation Client
 export const mutationClient = new ApolloClient({
   link,
@@ -36,6 +40,7 @@ export const ADD_COURSE = gql`
     $created_by: String
     $updated_by: String
     $status: Status
+    $is_active: Boolean
     $is_display: Boolean
     $category: String
     $sub_category: String
@@ -70,6 +75,7 @@ export const ADD_COURSE = gql`
         updated_by: $updated_by
         status: $status
         is_display: $is_display
+        is_active: $is_active
         category: $category
         sub_category: $sub_category
         sub_categories: $sub_categories
@@ -104,6 +110,7 @@ export const ADD_COURSE = gql`
       created_by
       updated_by
       status
+      is_active
       is_display
       category
       sub_category
@@ -123,6 +130,7 @@ export const UPLOAD_COURSE_PREVIEW = gql`
     }
   }
 `;
+
 export const UPLOAD_COURSE_IMAGE = gql`
   mutation uploadCourseImage($file: Upload, $courseId: String) {
     uploadCourseImage(file: { file: $file, courseId: $courseId }) {
@@ -131,6 +139,7 @@ export const UPLOAD_COURSE_IMAGE = gql`
     }
   }
 `;
+
 export const UPLOAD_COURSE_TILE_IMAGE = gql`
   mutation uploadCourseTileImage($file: Upload, $courseId: String) {
     uploadCourseTileImage(file: { file: $file, courseId: $courseId }) {
@@ -139,6 +148,7 @@ export const UPLOAD_COURSE_TILE_IMAGE = gql`
     }
   }
 `;
+
 export const UPDATE_COURSE = gql`
   mutation updateCourse(
     $id: ID
@@ -168,6 +178,7 @@ export const UPDATE_COURSE = gql`
     $created_by: String
     $updated_by: String
     $status: Status
+    $is_active: Boolean
     $is_display: Boolean
     $category: String
     $sub_category: String
@@ -202,6 +213,7 @@ export const UPDATE_COURSE = gql`
         created_by: $created_by
         updated_by: $updated_by
         status: $status
+        is_active: $is_active
         is_display: $is_display
         category: $category
         sub_category: $sub_category
@@ -237,6 +249,7 @@ export const UPDATE_COURSE = gql`
       created_by
       updated_by
       status
+      is_active
       is_display
       category
       sub_category
@@ -247,6 +260,7 @@ export const UPDATE_COURSE = gql`
     }
   }
 `;
+
 export const ADD_COURSE_MODULE = gql`
   mutation addCourseModule(
     $name: String
@@ -288,6 +302,7 @@ export const ADD_COURSE_MODULE = gql`
     }
   }
 `;
+
 export const UPDATE_COURSE_MODULE = gql`
   mutation updateCourseModule(
     $id: ID
@@ -516,18 +531,21 @@ export const ADD_TOPIC_CONTENT = gql`
     $nextShowTime: Int
     $fromEndTime: Int
     $type: String
+    $courseId: String
+    $is_default: Boolean
   ) {
     addTopicContent(
       topicId: $topicId
+      courseId: $courseId
       topicContent: {
         language: $language
-        topicId: $topicId
         startTime: $startTime
         duration: $duration
         skipIntroDuration: $skipIntroDuration
         nextShowTime: $nextShowTime
         fromEndTime: $fromEndTime
         type: $type
+        is_default: $is_default
       }
     ) {
       id
@@ -541,6 +559,48 @@ export const ADD_TOPIC_CONTENT = gql`
       created_at
       updated_at
       type
+      is_default
+    }
+  }
+`;
+
+export const UPDATE_TOPIC_CONTENT = gql`
+  mutation updateTopicContent(
+    $contentId: String
+    $language: String
+    $startTime: Int
+    $duration: Int
+    $skipIntroDuration: Int
+    $nextShowTime: Int
+    $fromEndTime: Int
+    $type: String
+    $is_default: Boolean
+  ) {
+    updateTopicContent(
+      topicContent: {
+        contentId: $contentId
+        language: $language
+        startTime: $startTime
+        duration: $duration
+        skipIntroDuration: $skipIntroDuration
+        nextShowTime: $nextShowTime
+        fromEndTime: $fromEndTime
+        type: $type
+        is_default: $is_default
+      }
+    ) {
+      id
+      language
+      topicId
+      startTime
+      duration
+      skipIntroDuration
+      nextShowTime
+      fromEndTime
+      created_at
+      updated_at
+      type
+      is_default
     }
   }
 `;

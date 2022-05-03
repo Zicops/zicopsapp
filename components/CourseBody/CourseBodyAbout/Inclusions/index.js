@@ -1,12 +1,11 @@
-export default function Inclusions({
-  languages,
-  moduleCount,
-  chapterCount,
-  topicCount,
-  labsCount,
-  assesmentCount,
-  quizCount
-}) {
+import { useRecoilValue } from 'recoil';
+import { ChapterAtom, ModuleAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
+
+export default function Inclusions({ languages, labsCount, assesmentCount, quizCount }) {
+  const moduleData = useRecoilValue(ModuleAtom);
+  const chapter = useRecoilValue(ChapterAtom);
+  const topic = useRecoilValue(TopicAtom);
+
   return (
     <>
       <div className="tab_heading">Course Inclusion</div>
@@ -14,7 +13,7 @@ export default function Inclusions({
       <div className="tab_section_summary">
         <div className="row mb_10">
           <div className="col_50 label">
-            Multilingual Support <span>:</span>
+            Languages <span>:</span>
           </div>
           <div className="col_50">
             {languages.map((e, i) => (
@@ -28,7 +27,7 @@ export default function Inclusions({
           </div>
           <div className="col_50">
             <span>
-              Modules: {moduleCount}, Chapters: {chapterCount}, Topics: {topicCount}
+              Modules: {moduleData.length}, Chapters: {chapter.length}, Topics: {topic.length}
             </span>
           </div>
         </div>

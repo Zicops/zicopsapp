@@ -1,24 +1,27 @@
 import { useContext } from 'react';
 import { courseContext } from '../../state/contexts/CourseContext';
-import { moduleContext } from '../../state/contexts/ModuleContext';
-import Dropdown from '../common/Dropdown';
 import BottomTabsMenu from '../small/BottomTabsMenu';
+import {
+  coursebody,
+  navbarOverrideElement,
+  navbarOverrideElementClose
+} from './courseBody.module.scss';
 import CoursePageTabs from './CoursePageTabs';
 import { tabs } from './Logic/courseBody.helper';
 import useShowData from './Logic/useShowData';
+import Link from 'next/link';
 
-export default function CourseBody() {
-  const moduleContextData = useContext(moduleContext);
+export default function CourseBody({ isPreview = false }) {
   const courseContextData = useContext(courseContext);
-  console.log(moduleContextData);
+
   const {
     myRef,
     showActiveTab,
     activeCourseTab,
     setActiveCourseTab,
-    getModuleOptions, 
+    getModuleOptions,
     moduleData
-  } = useShowData(courseContextData, moduleContextData);
+  } = useShowData(courseContextData);
 
   const props = {
     activeCourseTab: activeCourseTab,
@@ -28,7 +31,19 @@ export default function CourseBody() {
 
   return (
     <>
-      <div className="coursebody">
+      {isPreview && (
+        <div className={navbarOverrideElement}>
+          This is Preview Page
+          <Link href={`/admin/courses?courseId=${courseContextData?.fullCourse.id}`}>
+            <a className={navbarOverrideElementClose}>
+              {/* X */}
+              <img src="/images/circular-cross.png" alt="" width={50} />
+            </a>
+          </Link>
+        </div>
+      )}
+
+      <div className={coursebody}>
         <CoursePageTabs
           tabData={tabs}
           ref={myRef}
@@ -45,15 +60,6 @@ export default function CourseBody() {
           </>
         )}
       </div>
-
-      {/* move styles to .scss */}
-      <style jsx>
-        {`
-          .coursebody {
-            background-color: #1a1d21;
-          }
-        `}
-      </style>
     </>
   );
 }

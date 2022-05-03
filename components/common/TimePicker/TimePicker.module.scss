@@ -1,0 +1,111 @@
+.time {
+	width: 20%;
+	min-width: 100px;
+	margin: 25px auto;
+	
+	&__heading {
+		text-align: center;
+		color: #fff;
+		text-shadow: 4px 4px 0px rgba(0, 0, 0, .2);
+	}
+	
+	&__input {
+		width: 100%;
+		
+		.time_picker {
+			width: 100%;
+			font-size: 25px;
+			padding: 10px;
+			font-weight: 300;
+			text-align: center;
+			border: solid 2px #303233;
+			color: #6bcfcf;
+			outline: none;
+			box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, .1);
+			background-color: #202222;
+		}
+	}
+}
+
+// Start Timepicker CSS
+
+div[id^="tp_"].timepicker__wrapper {
+	opacity: 0;
+	height: auto;
+	min-width: 150px;
+	max-height: 0px;
+	overflow: hidden;
+	position: absolute;
+	transition: max-height .1s ease-in-out;
+	background: #000000;
+	background-color: #202222;
+	border-radius: 0px 0px 5px 5px;
+	border: 2px solid #303233;
+	border-top: transparent;
+	box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, .1);
+	text-align: center;
+	
+	* {
+		box-shadow: border-box;
+	}
+	
+	&-active {
+		opacity: 1;
+		max-height: 150px;
+		padding: 15px;
+	}
+	
+	&-full {
+		
+		> div {
+			width: 33% !important;
+		}
+	}
+	
+	> div {
+		margin: 0px;
+		padding: 0px;
+		display: inline-block;
+		text-align: center;
+		width: 50%;
+		max-width: 75px;
+		
+		.display {
+			color: #6bcfcf;
+			font-size: 30px;
+			font-weight: 100;
+			line-height: 35px;
+			margin: 0px;
+			text-transform: uppercase;
+			user-select: none;
+		}
+		
+		.timepicker__button {
+			margin: 15px auto;
+			padding: 0px;
+			background: #fff;
+			cursor: pointer;
+			background: transparent;
+			border: solid 5px transparent;
+			
+			&__up > div {
+				width: 0px;
+				height: 0px;
+				margin: auto;
+				border-left: solid 5px transparent;
+				border-right: solid 5px transparent;
+				border-bottom: solid 5px #6bcfcf;
+			}
+			
+			&__down > div {
+				width: 0px;
+				height: 0px;
+				margin: auto;
+				border-left: solid 5px transparent;
+				border-right: solid 5px transparent;
+				border-top: solid 5px #6bcfcf;
+			}
+		}
+	}
+}
+

@@ -109,6 +109,7 @@ export const GET_COURSE = gql`
       created_by
       updated_by
       status
+      is_active
       is_display
       category
       sub_category
@@ -190,6 +191,29 @@ export const GET_COURSE_TOPICS_CONTENT = gql`
       type
       contentUrl
       subtitleUrl
+      is_default
+    }
+  }
+`;
+
+export const GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID = gql`
+  query getTopicContent($course_id: String) {
+    getTopicContentByCourseId(course_id: $course_id) {
+      id
+      language
+      topicId
+      courseId
+      startTime
+      duration
+      skipIntroDuration
+      nextShowTime
+      fromEndTime
+      created_at
+      updated_at
+      type
+      contentUrl
+      subtitleUrl
+      is_default
     }
   }
 `;
@@ -200,6 +224,23 @@ export const GET_TOPIC_RESOURCES = gql`
       name
       type
       topicId
+      created_at
+      updated_at
+      created_by
+      updated_by
+      url
+    }
+  }
+`;
+
+export const GET_TOPIC_RESOURCES_BY_COURSE_ID = gql`
+  query getTopicResources($course_id: String) {
+    getResourcesByCourseId(course_id: $course_id) {
+      id
+      name
+      type
+      topicId
+      courseId
       created_at
       updated_at
       created_by

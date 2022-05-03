@@ -1,5 +1,5 @@
 import { Skeleton } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import CardSliderHeader from '../small/CardSliderHeader';
@@ -32,12 +32,10 @@ const CardSlider = ({ deviceType, title, type, data }) => {
     }
   };
 
-  const [cardData, setCardData] = useState(new Array(15).fill(null));
-
   // set the data after 2 min to view the skeleton loader
-  setTimeout(() => {
-    setCardData(data);
-  }, 2000);
+  // setTimeout(() => {
+  //   setCardData(data);
+  // }, 2000);
 
   return (
     <>
@@ -48,7 +46,7 @@ const CardSlider = ({ deviceType, title, type, data }) => {
           marginRight: '4%',
           paddingTop: '10px'
         }}>
-        {cardData.every((d) => !d) ? (
+        {data.every((d) => !d) ? (
           <Skeleton
             style={{ marginBottom: '10px' }}
             sx={{ bgcolor: 'dimgray' }}
@@ -59,6 +57,7 @@ const CardSlider = ({ deviceType, title, type, data }) => {
         ) : (
           <CardSliderHeader title={title} />
         )}
+
         <Carousel
           ref={carouselRef}
           // ref={ (el) => console.log(el)}
@@ -78,12 +77,12 @@ const CardSlider = ({ deviceType, title, type, data }) => {
           deviceType={deviceType}
           sliderClass="carousel_track"
           containerClass="carousel_container"
-          itemClass={cardData.every((d) => !d) ? '' : `card_ietms`}
+          itemClass={data.every((d) => !d) ? '' : `card_ietms`}
           // removeArrowOnDeviceType={["tablet", "mobile"]}
           customLeftArrow={<CustomLeftArrow />}
           customRightArrow={<CustomRightArrow />}>
-          {cardData.map((data, index) => {
-            if (!data)
+          {data.map((d, index) => {
+            if (!d)
               return (
                 <Skeleton
                   key={index}
@@ -99,11 +98,12 @@ const CardSlider = ({ deviceType, title, type, data }) => {
                 key={index}
                 styleClass={index === 0 ? 'card_ietms_start' : ''}
                 carouselRefData={carouselRef.current}
-                image={data.img}
+                image={d.img}
+                courseData={d}
               />
             );
           })}
-          {cardData.every((d) => d) ? <div className="last-text">See All</div> : <></>}
+          {data.every((d) => d) ? <div className="last-text">See All</div> : <></>}
         </Carousel>
 
         {/* move to .scss */}

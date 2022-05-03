@@ -7,9 +7,24 @@ import { courseContext } from '../../state/contexts/CourseContext';
 import CourseHeader from './CourseHeader';
 import Info from './Info';
 import style from './courseHero.module.scss';
+import { truncateToN } from '../../helper/common.helper';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isLoadingAtom } from '../../state/atoms/module.atoms';
+import { VideoAtom } from '../../state/atoms/video.atom';
 
 export default function CourseHero({ set }) {
-  const ShowPlayer = () => set(true);
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const { fullCourse } = useContext(courseContext);
+
+  const ShowPlayer = () => {
+    setVideoData({
+      ...videoData,
+      videoSrc: fullCourse?.previewVideo,
+      type: 'mp4',
+      startPlayer: true
+    });
+  };
+  const isLoading = useRecoilValue(isLoadingAtom);
 
   const router = useRouter();
   const courseContextData = useContext(courseContext);
@@ -20,12 +35,6 @@ export default function CourseHero({ set }) {
     error
   } = getQueryData(GET_COURSE, { course_id: router?.query?.courseId });
 
-  // console.log('courseContextData: ', courseContextData);
-  // console.log('loading: ', loading);
-  // console.log('Course Data Error: ', error);
-  // console.log('isDataLoaded: ', isDataLoaded);
-  // console.log('Data from api: ', courseData);
-  // console.log('\n');
   useEffect(() => {
     if (courseData?.getCourse && !isDataLoaded) {
       updateCourseMaster(courseData.getCourse);
@@ -39,6 +48,7 @@ export default function CourseHero({ set }) {
     name: courseTitle,
     benefits,
     summary,
+    image,
     expertise_level: expertiseLevel,
     prequisites,
     goodFor,
@@ -49,7 +59,9 @@ export default function CourseHero({ set }) {
   } = courseContextData?.fullCourse;
 
   return (
-    <div className={`${style.course_header}`}>
+    <div
+      className={`${style.course_header}`}
+      style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover' }}>
       <div className={`${style.gradient}`}>
         <Link href={`/admin/courses?courseId=${courseContextData?.fullCourse.id}`}>
           <a className={`${style.back_btn}`}>
@@ -64,15 +76,20 @@ export default function CourseHero({ set }) {
             category={category}
             subCategory={subCategory}
             duration={duration?.toString()}
+            isLoading={isLoading}
           />
 
           <div className={`${style.summary}`}>
-            {summary || (
+            {isLoading ? (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
+            ) : summary ? (
+              truncateToN(summary, 400)
+            ) : (
+              'N/A'
             )}
           </div>
           <div className={`${style.more_info}`}>
-            <Info name="Key take-aways" data={benefits?.join(', ')} />
+            <Info name="Course Benefits" data={benefits?.join(', ')} />
             <Info name="Expertise Level" data={expertiseLevel?.split(',').join(' | ')} />
           </div>
 
@@ -81,9 +98,10 @@ export default function CourseHero({ set }) {
           </div>
           <div className={`${style.suggested_completion}`}>
             <p>
-              ** Suggested duration for completion of this course is{' '}
-              {duration?.toString() || (
-                <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
+              {isLoading ? (
+                <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={400} />
+              ) : (
+                `** Suggested duration for completion of this course is ${duration?.toString()}`
               )}
             </p>
           </div>

@@ -1,13 +1,17 @@
-export default function TopicFiles({ fileCount, topicName }) {
+export default function TopicFiles({ fileCount, topic, handleClick, isResourceShown }) {
+  const isResourceActive = isResourceShown?.includes(topic.id);
+
   return (
     <>
-      <div className="topic">
-        <div className="topic_head">Topic {topicName}</div>
+      <div
+        className={`topic ${isResourceActive ? 'highlight' : ''}`}
+        onClick={() => handleClick(topic)}>
+        <div className="topic_head">{topic.name}</div>
         <div className="topic_body">
           <div className="topic_data">
             <p>{fileCount} Files</p>
           </div>
-          <div className="arrow_img">
+          <div className={`arrow_img ${isResourceActive ? 'rotate' : ''}`}>
             <img src="/images/right-arrow-white.png" alt="" />
           </div>
         </div>
@@ -25,7 +29,8 @@ export default function TopicFiles({ fileCount, topicName }) {
             border: 1px solid transparent;
             cursor: pointer;
           }
-          .topic:hover {
+          .topic:hover,
+          .highlight {
             border: 1px solid rgb(81, 190, 188);
           }
           .topic_head {
@@ -46,6 +51,9 @@ export default function TopicFiles({ fileCount, topicName }) {
           }
           .arrow_img img {
             width: 10px;
+          }
+          .rotate {
+            transform: rotate(90deg);
           }
         `}
       </style>

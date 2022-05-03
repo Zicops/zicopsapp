@@ -28,6 +28,8 @@ export function createCourseAndUpdateContext(courseContextData, createCourse) {
   })
     .then((res) => {
       if (!res || !res?.data?.addCourse?.id) return;
+      alert('course created');
+      console.log('course created', res);
 
       updateCourseMaster(res.data.addCourse);
 
@@ -75,8 +77,29 @@ export function filterAndSortTopics(topics, moduleId, chapterId = '') {
   return filteredAndSortedTopics;
 }
 
+export function filterAndSortTopicsBasedOnModuleId(topics, moduleId) {
+  const filteredAndSortedTopics = topics
+    .filter((topic) => topic.moduleId === moduleId)
+    .sort((t1, t2) => {
+      return t1.sequence - t2.sequence;
+    });
+
+  return filteredAndSortedTopics;
+}
+
 export function filterTopicContent(topicContent, topicId = '') {
   const filteredTopicContent = topicContent.filter((content) => content.topicId === topicId);
-  console.log(filteredTopicContent, topicId);
   return filteredTopicContent;
+}
+
+export function filterResources(resources, topicId) {
+  const filteredResources = resources.filter((res) => res.topicId === topicId);
+
+  return filteredResources;
+}
+
+export function filterModule(moduleData, moduleId) {
+  const filteredModules = moduleData.filter((mod) => mod.id === moduleId);
+
+  return filteredModules[0];
 }

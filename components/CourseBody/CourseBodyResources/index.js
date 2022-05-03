@@ -1,10 +1,15 @@
-import { filterAndSortChapter } from '../../../helper/data.helper';
+import { useContext } from 'react';
+import { useRecoilValue } from 'recoil';
+import { filterAndSortTopicsBasedOnModuleId } from '../../../helper/data.helper';
+import { TopicAtom } from '../../../state/atoms/module.atoms';
+import { courseContext } from '../../../state/contexts/CourseContext';
 import Dropdown from '../../common/Dropdown';
+import CourseResourcesOpen from '../../CourseResourcesOpen';
 import Header from '../Header';
 import ItemSlider from '../ItemSlider';
+import useShowData from '../Logic/useShowData';
 
 export default function CourseBodyResources() {
-  const moduleContextData = useContext(moduleContext);
   const courseContextData = useContext(courseContext);
   const {
     myRef,
@@ -14,15 +19,22 @@ export default function CourseBodyResources() {
     getModuleOptions,
     moduleData,
     handleModuleChange,
-    selectedModule
-  } = useShowData(courseContextData, moduleContextData);
+    selectedModule,
+    showResources,
+    filteredResources,
+    isResourceShown
+  } = useShowData(courseContextData);
 
   const options = getModuleOptions();
 
   const { fullCourse } = courseContextData;
-  const { chapter: chapterData, topic, topicContent } = moduleContextData;
+  const topicData = useRecoilValue(TopicAtom);
+  // const { chapter: chapterData, topic, topicContent } = moduleContextData;
 
-  const filteredAndSortedData = filterAndSortChapter(chapterData, selectedModule?.value);
+  const filteredAndSortedData = filterAndSortTopicsBasedOnModuleId(
+    topicData,
+    selectedModule?.value
+  );
 
   return (
     <>
@@ -32,7 +44,14 @@ export default function CourseBodyResources() {
         expertise={fullCourse.expertise_level?.split(',').join(' | ')}
       />
 
-      <ItemSlider itemsArr={filteredAndSortedData} />
+      <ItemSlider
+        key={selectedModule?.value}
+        itemsArr={filteredAndSortedData}
+        showResources={showResources}
+        isResourceShown={isResourceShown}
+      />
+
+      <CourseResourcesOpen resources={filteredResources} isResourceShown={isResourceShown} />
     </>
   );
 }

@@ -1,0 +1,37 @@
+@import '../../styles/base.scss';
+
+/* Navbar */
+.navbarOverrideElement {
+  width: 100%;
+  height: $headerHeight;
+  padding: 0px 30px;
+  background-color: var(--header-bg);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 29px 10px rgba(0, 0, 0, 0.7);
+  -webkit-box-shadow: 0px 0px 29px 10px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0px 0px 29px 10px rgba(0, 0, 0, 0.7);
+
+  color: $white;
+  font-size: 25px;
+  font-weight: 500;
+
+  position: fixed;
+  top: 0;
+  z-index: 1100;
+}
+
+.coursebody {
+  background-color: #1a1d21;
+}
+.navbarOverrideElementClose{
+  position: absolute;
+  top: 12px;
+  right: 50px;
+ }
+ .navbarOverrideElementClose:hover{
+   box-shadow: 0px 0px 55px 0px $darkOne;
+   border-radius: 50%;
+  }

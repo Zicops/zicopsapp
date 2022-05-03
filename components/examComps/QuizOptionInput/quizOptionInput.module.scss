@@ -1,0 +1,36 @@
+@import '../../../styles/base.scss';
+
+.options {
+  max-height: 70vh;
+  display: block;
+  // overflow: auto;
+}
+
+.options {
+  div {
+    input:nth-child(2) {
+      margin-left: -10px !important;
+      margin-right: 20px !important;
+    }
+  }
+}
+
+.options::-webkit-scrollbar {
+  width: 15px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+/* Track */
+.options::-webkit-scrollbar-track {
+  background: $secondaryWhite;
+  border-radius: 7px;
+}
+/* Handle */
+.options::-webkit-scrollbar-thumb {
+  background: $secondaryBlack;
+  border-radius: 7px;
+}
+/* Handle on hover */
+.options::-webkit-scrollbar-thumb:hover {
+  background: $secondaryBlack;
+}

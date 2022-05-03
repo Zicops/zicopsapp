@@ -1,105 +1,53 @@
 import CourseHead from '../../CourseHead';
-import Pagination from '@mui/material/Pagination';
-import PaginationItem from '@mui/material/PaginationItem';
-import StyledDataGrid from '../../common/StyledDataGrid';
-
-import {
-  gridPageCountSelector,
-  gridPageSelector,
-  useGridApiContext,
-  useGridSelector
-} from '@mui/x-data-grid';
+import ZicopsTable from '../../common/ZicopsTable';
+import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { queryClient, GET_SUB_CATS } from '../../../API/Queries';
 import { ApolloProvider, useQuery } from '@apollo/client';
+import { useEffect, useState } from 'react';
 
 const columns = [
   {
     field: 'id',
     headerName: 'Index',
     headerClassName: 'course-list-header',
-    width: 300
+    flex: 1
   },
   {
     field: 'SubCatName',
     headerClassName: 'course-list-header',
     headerName: 'SubCategory',
-    width: 300
+    flex: 3
   }
 ];
 
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  return (
-    <Pagination
-      classes={{ ul: 'paginationStyle' }}
-      variant="outlined"
-      shape="rounded"
-      page={page + 1}
-      count={pageCount}
-      renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />
-  );
-}
-
-function CustomAscendingIcon() {
-  return (
-    <div style={{ marginLeft: '20px', marginTop: '5px' }}>
-      <img
-        src="/images/downsort.svg"
-        alt=""
-        height={15}
-        width={15}
-        style={{ transform: 'rotate(180deg)' }}
-      />
-    </div>
-  );
-}
-
-function CustomDescendingIcon() {
-  return (
-    <div style={{ marginLeft: '20px', marginTop: '5px' }}>
-      <img src="/images/downsort.svg" alt="" height={15} width={15} />
-    </div>
-  );
-}
-
 function ZicopsSubCategoryList() {
+  const [pageSize, setPageSize] = useState(6);
+
+  useEffect(() => {
+    const screenWidth = window.screen.width;
+    console.log(screenWidth);
+    TableResponsiveRows.forEach((r, i) => {
+      if (r.breakpoint <= screenWidth) {
+        setPageSize(r.pageSize);
+      }
+    });
+  }, []);
+
   const { data } = useQuery(GET_SUB_CATS);
-  // console.log(data);
+
   let latest = [];
-  data
-    ? data.allSubCategories.map((val, index) => latest.push({ id: index + 1, SubCatName: val }))
-    : null;
+
+  if (data)
+    data.allSubCategories.map((val, index) => latest.push({ id: index + 1, SubCatName: val }));
+
   return (
-    <div style={{ height: '70vh' }}>
-      {data && (
-        <StyledDataGrid
-          rows={latest}
-          columns={columns}
-          sx={{
-            border: 0,
-            pt: 2,
-            pb: 0,
-            px: 5,
-            color: '#fff'
-          }}
-          autoHeight={false}
-          disableSelectionOnClick
-          components={{
-            Pagination: CustomPagination,
-            ColumnSortedDescendingIcon: CustomDescendingIcon,
-            ColumnSortedAscendingIcon: CustomAscendingIcon
-          }}
-          pageSize={7}
-          rowsPerPageOptions={[5]}
-          pagination
-        />
-      )}
-    </div>
+    <ZicopsTable
+      columns={columns}
+      data={latest}
+      pageSize={pageSize}
+      rowsPerPageOptions={[3]}
+      tableHeight="70vh"
+    />
   );
 }
 

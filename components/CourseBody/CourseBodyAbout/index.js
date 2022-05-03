@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import { moduleContext } from '../../../state/contexts/ModuleContext';
 import AboutCard from './AboutCard';
 import Inclusions from './Inclusions';
 import Lists from './Lists';
@@ -8,7 +7,6 @@ import TargetAudienceList from './TargetAudienceList';
 
 export default function CourseBodyAbout() {
   const { fullCourse } = useContext(courseContext);
-  const { module: moduleData, chapter, topic } = useContext(moduleContext);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -43,21 +41,8 @@ export default function CourseBodyAbout() {
 
       <div className="compo_row">
         <div className="col_50 small_compo">
-          <Lists title="Pre-quisites" list={fullCourse.prequisites} />
-        </div>
-
-        <div className="col_50 small_compo">
-          <TargetAudienceList goodFor={fullCourse.goodFor} mustFor={fullCourse.mustFor} />
-        </div>
-      </div>
-
-      <div className="compo_row">
-        <div className="col_50 small_compo">
           <Inclusions
             languages={fullCourse.language}
-            moduleCount={moduleData.length}
-            chapterCount={chapter.length}
-            topicCount={topic.length}
             quizCount={2}
             labsCount={4}
             assesmentCount={3}
