@@ -1,0 +1,49 @@
+@import '../../../styles/base.scss';
+
+.answer_single_option {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    color: $white;
+    cursor: pointer;
+
+    .answer_single_option_count {
+        font-size: 1.6rem;
+        margin-right: 4px;
+        margin-top: 15px;
+    }
+
+    .answer_single_option_info {
+        width: 90%;
+        height: 100%;
+        border: 2px solid $secondaryWhite;
+        background: $black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.7rem;
+
+        
+
+        .answer_single_option_img_container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .answer_single_option_img {
+                width: 70%;
+                height: 70%;
+
+            }
+        }
+    }
+
+    .answer_single_option_info:hover{
+        border: 4px solid $white;
+    }
+
+    
+}
+
