@@ -1,0 +1,26 @@
+@import '../../../styles/base.scss';
+
+.exam_question_number{
+    padding: 4px 20px;
+    p{
+        font-size: 2rem;
+        color: $darkThree;
+    }
+}
+
+.all_questions{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+
+    .all_questions_img_container{
+        width: 35%;
+        text-align: center;
+        
+    }
+}
+
+.all_questions p{
+    width: 60%;
+    margin-left:10px;
+}

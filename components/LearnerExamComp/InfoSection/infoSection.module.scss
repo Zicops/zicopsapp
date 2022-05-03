@@ -1,0 +1,107 @@
+@import '../../../styles/base.scss';
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+.info_section {
+    // border: 1px solid red;
+    width: 94%;
+
+    .info_section_button_boxes_container {
+        width: 100%;
+        padding: 0 15px;
+        display: flex;
+        justify-content: space-between;
+
+        .info_button {
+            border: none;
+            background: transparent;
+            display: flex;
+            cursor: pointer;
+            color: $darkThree;
+
+            .info_button_boxes {
+                width: 20px;
+                height: 20px;
+                border: 1px solid black;
+                background: $primary;
+                margin-right: 10px;
+            }
+
+            .info_button_boxes_marked {
+                background: $white;
+            }
+
+            .info_button_boxes_unattempted {
+                background: $primary;
+            }
+        }
+
+        .info_section_seeAll_button {
+            border: none;
+            background: transparent;
+            color: $darkThree;
+            border-bottom: 1px solid $darkThree;
+            cursor: pointer;
+        }
+    }
+
+    .info_section_answer_details {
+        width: 100%;
+        padding: 0 15px;
+        text-align: center;
+        margin-top: 10px;
+
+        .info_section_answer_details_marks {
+            font-size: 1.5rem;
+            color: $primary;
+            font-weight: 600;
+        }
+    }
+
+    .info_section_answer_details p {
+        font-size: 1.5rem;
+        color: $darkThree;
+    }
+
+    .info_section_exam_info_button_container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 5px;
+
+
+        .info_section_exam_info_button {
+            width: 80%;
+            margin-top: 10px;
+            height: 45px;
+            font-size: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: $white;
+        }
+
+        .info_section_exam_info_button_question{
+            background: $secondary;
+            border: 2px solid $primary;
+        }
+
+        .info_section_exam_info_button_exam{
+            background: red;
+            border: 2px solid rgb(211, 110, 110);
+        }
+    }
+
+    .info_section_watch{
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+        // border: 1px solid red;
+        font-family: 'Orbitron', sans-serif;
+
+        .info_section_watch_time{
+            font-size: 2.4rem;
+            margin-top: 10px;
+            color: $primary;
+        }
+    }
+}

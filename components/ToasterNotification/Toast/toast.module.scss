@@ -1,0 +1,64 @@
+@import '../../../styles/base.scss';
+
+.toasterContainer {
+  font-size: 14px;
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 999999;
+}
+
+.toasterInnerContainer {
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0px 0px 0px 2px $primary inset;
+  padding: 20px;
+  width: 100%;
+  max-height: 200;
+  align-items: center;
+  background-color: $darkTwo;
+  margin-bottom: 15px;
+  overflow: hidden;
+  font-size: medium;
+  transition: 0.3s ease;
+  button {
+    position: relative;
+    top: -20px;
+    right: -10px;
+    appearance: none;
+    background-color: $darkTwo;
+    color: $primary;
+    border: 1px solid $primary;
+
+    &:hover {
+      background-color: $secondary;
+      color: aqua;
+    }
+  }
+}
+
+.t_container {
+  display: flex;
+  flex-direction: column;
+  .toasterText {
+    font-size: small;
+  }
+  .toasterTitle {
+    font-weight: 700;
+  }
+}
+
+.bottom_left {
+  bottom: 12px;
+  left: 12px;
+  transition: transform 0.6s ease-in;
+  animation: toast-in-left 0.7s;
+}
+
+@keyframes toast-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

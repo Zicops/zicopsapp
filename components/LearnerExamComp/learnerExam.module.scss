@@ -1,0 +1,19 @@
+@import '../../styles/base.scss';
+
+.questionSection{
+    height: 125vh;
+    width: 100vw;
+    margin-top: 70px;
+    display: flex;
+
+    .questionSection_questions{
+        width: 80vw;
+        // border: 1px solid red;
+        
+    }
+    .proctor_section{
+        width: 20vw;
+        background: $darkOne;
+        border-left: 2px solid var(--primary);
+    }
+}

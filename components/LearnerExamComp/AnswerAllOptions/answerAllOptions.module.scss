@@ -1,0 +1,69 @@
+@import '../../../styles/base.scss';
+
+.answer_all_options {
+    background: $tertiaryBlack;
+    width: 100%;
+    display: grid;
+
+    grid-row-gap: 10%;
+    justify-content: space-around;
+    padding: 43px 0;
+
+    height: 66%;
+    grid-template-rows: repeat(2, 40%);
+    grid-template-columns: repeat(2, 35%);
+}
+
+.answer_all_options_buttons_container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+    background: $tertiaryBlack;
+
+    .answer_all_options_button {
+        height: 63%;
+        width: 12%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-right: 20px;
+        margin-bottom: 35px;
+        border-radius: 10px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .answer_all_options_button span {
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: lowercase;
+    }
+
+    .answer_all_options_button_clear {
+        background: $tertiaryBlack;
+        border: 2px solid $secondaryWhite;
+        color: $secondaryWhite; 
+    }
+
+    .answer_all_options_button_unmark{
+        background: $primary;
+        border: 2px solid $secondary;
+    }
+
+    .answer_all_options_button_previous{
+        color: $white;
+        border: 3px solid $primary;
+        background: $tertiaryBlack;
+        font-size: 1.3rem;
+    }
+
+    .answer_all_options_button_next{
+        color: $secondary;
+        background: $black;
+        border: 1px solid black;
+    }
+
+}
