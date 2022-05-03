@@ -1,0 +1,33 @@
+@import '../../../styles/base.scss';
+
+.proctor_section{
+    width: 94%;
+
+    .proctor_section_btn{
+        margin-top: 4px;
+        width: 50%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: $white;
+    }
+    .proctor_section_btn:nth-child(1){
+        border-right: 1px solid $white;
+    }
+
+    .proctor_section_img{
+        margin-top: 5px;
+        padding: 1px 14px;
+    }
+    .proctor_section_info{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 7px;
+        color: $white;
+    }
+    .proctor_section_info:nth-child(1){
+        color: $darkThree;
+        font-size: 12px;
+    }
+}
