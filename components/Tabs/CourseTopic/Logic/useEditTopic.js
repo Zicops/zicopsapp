@@ -296,10 +296,14 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
         name: resource.name,
         type: resource.type,
         topicId: resource.topicId,
-        courseId: resource.courseId,
-        file: resource.file
+        courseId: resource.courseId
       };
-
+      if (resource.file && resource.type !== 'LINK') {
+        sendResources.file = resource.file;
+      } else {
+        sendResources.url = resource.url;
+      }
+      
       await uploadTopicResource({ variables: sendResources });
     }
 
