@@ -87,8 +87,8 @@ export default function ControlBar({
               src="/images/next-topic.png"
               style={{ transform: 'rotate(180deg)' }}
               alt=""
-              height="40px"
-              width="35px"
+              height="30px"
+              width="30px"
             />
           )}
         </Button>
@@ -119,7 +119,7 @@ export default function ControlBar({
               width="30px"
             />
           ) : (
-            <Image src="/images/next-topic.png" alt="" height="40px" width="35px" />
+            <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
           )}
           {/* <Image src="/images/next-topic.png" alt="" height="30px" width="30px" /> */}
         </Button>
