@@ -6,13 +6,13 @@ export default function PreviewImage({ fileName, filePath, isVideo, popUpData })
 
   return (
     <>
-      <PopUp title={`Image Preview (${fileName})`} closeBtn={closeBtn} submitBtn={submitBtn}>
+      <PopUp title={`Image Preview (${fileName})`} closeBtn={closeBtn} submitBtn={submitBtn} isFooterVisible={false}>
         {isVideo ? (
           <div style={{ position: 'relative', width: '100%' }}>
             <video controls src={filePath} style={{ width: '100%' }}></video>
           </div>
         ) : (
-          <div style={{ position: 'relative', width: '100%', paddingBottom: '20%' }}>
+          <div style={{ position: 'relative', width: '100%', paddingBottom: '60%' }}>
             {filePath && <Image src={filePath} layout="fill" objectFit="contain" alt="" />}
           </div>
         )}
