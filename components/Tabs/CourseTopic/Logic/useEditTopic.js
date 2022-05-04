@@ -303,9 +303,10 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
       await uploadTopicResource({ variables: sendResources });
     }
 
+    setUploadStatus(null);
     console.log('Topic Content and resources Uploaded');
-    togglePopUp('editTopic', false);
     alert('Topic Content and Resources Uploaded');
+    togglePopUp('editTopic', false);
   }
 
   return {

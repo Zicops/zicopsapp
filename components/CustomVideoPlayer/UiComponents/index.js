@@ -40,7 +40,6 @@ export default function UiComponents({ refs, updateIsPlayingTo, set, playerState
     : null;
   const displaySequence = `M${activeModule?.sequence || 0}T${currentTopic?.sequence || 0}`;
   // const TopicSequence = 'M2T12';
-  console.log(videoData, activeModule, currentTopic);
   const courseTopicName = videoData.isPreview
     ? 'Preview Video'
     : `${displaySequence} ${currentTopic?.name || ''}`;

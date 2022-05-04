@@ -7,8 +7,7 @@ import {
   getTopicVideoObject,
   TopicContentAtom,
   TopicSubtitleAtom,
-  TopicVideoAtom,
-  uploadStatusAtom
+  TopicVideoAtom
 } from '../../../../state/atoms/module.atoms';
 import useAddBinge from './useAddBinge';
 
@@ -17,7 +16,6 @@ export default function useAddTopicContent(topic) {
   const [topicContent, addTopicContent] = useRecoilState(TopicContentAtom);
   const [topicVideo, addTopicVideo] = useRecoilState(TopicVideoAtom);
   const [topicSubtitle, addTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
-  const [uploadStatus, setUploadStatus] = useRecoilState(uploadStatusAtom);
 
   // binge data input handler hook
   const { handleBingeInput } = useAddBinge();
@@ -49,7 +47,6 @@ export default function useAddTopicContent(topic) {
     setNewTopicContent(getTopicContentObject({ topicId: topic.id, is_default: isDefault }));
     setNewTopicVideo(getTopicVideoObject({ courseId: topic.courseId }));
     setNewTopicSubtitle(getTopicSubtitleObject({ courseId: topic.courseId }));
-    setUploadStatus({});
   }, [topic]);
 
   function toggleTopicContentForm(value) {

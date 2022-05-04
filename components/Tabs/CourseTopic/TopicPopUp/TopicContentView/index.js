@@ -32,7 +32,7 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                   className="content_bar"
                   style={{
                     background: `linear-gradient(90deg, #86D386 ${
-                      uploadStatus[content.language] * 100 || 0
+                      uploadStatus ? uploadStatus[content.language] * 100 : 0
                     }%, #868686 0%, #868686 100%)`
                   }}>
                   <div className="language">{content.language}</div>

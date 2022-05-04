@@ -9,11 +9,17 @@ export function getVideoObject() {
   return {
     videoSrc: 'videos/zicops-product-demo-learner-panel.mp4',
     type: 'mp4',
-    topicContent: [],
     startPlayer: false,
+    isPreview: false,
+
+    topicContent: [],
     currentTopicIndex: 0,
+
     allModuleTopic: null,
     currentModuleId: null,
-    isPreview: false
+
+    allModuleOptions: null,
+    currentModuleIndex: 0,
+    setNewModule: null
   };
 }

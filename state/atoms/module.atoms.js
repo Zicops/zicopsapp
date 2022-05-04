@@ -47,7 +47,7 @@ export const isLoadingAtom = atom({
 
 export const uploadStatusAtom = atom({
   key: 'uploadStatus',
-  default: {}
+  default: null
 });
 
 // object structures which can be used  for reset or immutable new object

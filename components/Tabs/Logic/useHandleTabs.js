@@ -35,6 +35,7 @@ export default function useHandleTabs(courseContextData) {
   const [previewFileData, setPreviewFileData] = useState(null);
 
   useEffect(() => {
+    if (!editCourseId) return;
     loadCourseData({ variables: { course_id: editCourseId } }).then(({ data }) => {
       if (errorCourseData) return alert('course load error');
 

@@ -88,6 +88,13 @@ export default function CustomVideo({ set }) {
     console.log(videoData);
   }, [videoData]);
 
+  // turn off video player if preview video ends
+  useEffect(() => {
+    if (videoData.isPreview && playerState.progress === 100) {
+      set(false);
+    }
+  }, [playerState.progress]);
+
   // console.log(
   //   skipVideoTimer,
   //   (playerState.progress * 9) / 100,
