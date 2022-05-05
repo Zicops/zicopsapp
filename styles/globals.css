@@ -1363,3 +1363,4 @@ transition: All 0.3s ease;
 .MuiDataGrid-iconButtonContainer{
   color: white;
 }
+div[data-rbd-placeholder-context-id] {display: none !important;}
