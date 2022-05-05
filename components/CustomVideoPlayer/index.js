@@ -17,7 +17,6 @@ export default function CustomVideo({ set }) {
   let isLastVideo = true;
 
   if (videoData.allModuleTopic) {
-    console.log(videoData);
     isLastVideo = videoData.currentTopicIndex + 1 === videoData.allModuleTopic?.length;
     skipVideoTimer =
       videoData.topicContent[0]?.nextShowTime || videoData.topicContent[0]?.fromEndTime;
@@ -74,17 +73,8 @@ export default function CustomVideo({ set }) {
       );
     }
 
-    // reset video atom when unmounted
+    // reset video progress when unmounted
     return () => {
-      // setVideoData({
-      //   ...videoData,
-      //   videoSrc: 'videos/zicops-product-demo-learner-panel.mp4',
-      //   type: 'mp4',
-      //   topicContent: [],
-      //   allModuleTopic: null,
-      //   currentTopicIndex: 0,
-      //   startPlayer: false
-      // });
       handleMouseMove({ target: { value: 0 } });
     };
   }, []);
@@ -98,9 +88,12 @@ export default function CustomVideo({ set }) {
     console.log(videoData);
   }, [videoData]);
 
+  // turn off video player if preview video ends
   useEffect(() => {
-    set(true);
-  }, [videoData.videoSrc]);
+    if (videoData.isPreview && playerState.progress === 100) {
+      set(false);
+    }
+  }, [playerState.progress]);
 
   // console.log(
   //   skipVideoTimer,
@@ -118,6 +111,7 @@ export default function CustomVideo({ set }) {
           updateIsPlayingTo={updateIsPlayingTo}
           set={set}
           refs={{ videoElement, videoContainer }}
+          playerState={playerState}
         />
       </div>
       {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}

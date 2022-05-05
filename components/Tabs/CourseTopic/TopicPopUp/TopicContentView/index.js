@@ -1,9 +1,15 @@
 import { useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../../../helper/data.helper';
-import { TopicContentAtom, TopicSubtitleAtom } from '../../../../../state/atoms/module.atoms';
+import {
+  TopicContentAtom,
+  TopicSubtitleAtom,
+  uploadStatusAtom
+} from '../../../../../state/atoms/module.atoms';
 
 export default function TopicContentView({ topicContent, toggleTopicContentForm }) {
   const topicSubtitle = useRecoilValue(TopicSubtitleAtom);
+  const uploadStatus = useRecoilValue(uploadStatusAtom);
+
   return (
     <>
       {topicContent && !!topicContent.length && (
@@ -12,9 +18,7 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
             const isSubtitleAdded = topicSubtitle[index]?.file || topicSubtitle[index]?.subtitleUrl;
             return (
               <div className="content_added" key={content.language}>
-                <div
-                  className="content_details"
-                  style={content.is_default ? { background: 'red ' } : {}}>
+                <div className="content_details">
                   <div className="content_top">
                     <span className="label">Content Type :</span>
                     <span className="value">{content.type}</span>
@@ -24,9 +28,18 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                     <span className="value">{content.duration + ' Sec'}</span>
                   </div>
                 </div>
-                <div className="content_bar">
+                <div
+                  className="content_bar"
+                  style={{
+                    background: `linear-gradient(90deg, #86D386 ${
+                      uploadStatus ? uploadStatus[content.language] * 100 : 0
+                    }%, #868686 0%, #868686 100%)`
+                  }}>
                   <div className="language">{content.language}</div>
-                  <div className="text">Content Added {isSubtitleAdded ? 'With Subtitle' : ''}</div>
+                  <div className="text">
+                    Content Added {isSubtitleAdded ? 'With Subtitle' : ''}{' '}
+                    {content.is_default ? `(default)` : ''}
+                  </div>
                 </div>
               </div>
             );

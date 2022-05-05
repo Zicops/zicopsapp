@@ -1,23 +1,22 @@
-import { arrayOf, objectOf, shape, string } from 'prop-types';
-import { useEffect } from 'react';
 import Select from 'react-select';
 import { labeledDropdownWrapper, zicops_select_container } from '../formComponents.module.scss';
-export default function LabeledDropdown({ dropdownOptions, styleClass, changeHandler }) {
-  const {
-    inputName,
-    label,
-    placeholder,
-    options,
-    value,
-    isDisabled,
-    isSearchEnable,
-    isMulti
-    } = dropdownOptions;
+
+export default function LabeledDropdown({
+  dropdownOptions,
+  styleClass,
+  changeHandler,
+  isFiftyFifty = false
+}) {
+  const { inputName, label, placeholder, options, value, isDisabled, isSearchEnable, isMulti } =
+    dropdownOptions;
+
+  let containerWidth = '75%';
+  if (!label) containerWidth = '100%';
 
   const customStyles = {
     container: (provided, state) => ({
       ...provided,
-      width: !label ? '100%' : '75%',
+      width: isFiftyFifty ? '50%' : containerWidth,
       boxShadow: state.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
     }),
     control: (provided, state) => ({
@@ -37,35 +36,33 @@ export default function LabeledDropdown({ dropdownOptions, styleClass, changeHan
     input: (provided, state) => ({ ...provided, color: 'var(--white)' }),
     indicatorSeparator: (provided, state) => ({
       ...provided,
-      display: 'none'
+      display: 'none !important'
     }),
     menuList: (provided, state) => ({
       ...provided,
       padding: 0,
       borderRadius: 0,
       maxHeight: '200px',
-      
       /* width */
       '&::-webkit-scrollbar': {
         width: '5px',
         borderRadius: '0px',
-        cursor: 'pointer',
+        cursor: 'pointer'
       },
       /* Track */
       '&::-webkit-scrollbar-track': {
-        background: '#2a2e31', 
-        borderRadius: '7px',
+        background: '#2a2e31',
+        borderRadius: '7px'
       },
       /* Handle */
       '&::-webkit-scrollbar-thumb': {
-        background: '#969a9d', 
+        background: '#969a9d',
         borderRadius: '7px',
         /* Handle on hover */
         '&:hover': {
-          background: '#555',   
+          background: '#555'
         }
       }
-      
     }),
     option: (provided, state) => ({
       ...provided,
@@ -109,7 +106,10 @@ export default function LabeledDropdown({ dropdownOptions, styleClass, changeHan
   return (
     <div className={`${labeledDropdownWrapper} ${styleClass}`}>
       {!!label && (
-        <label htmlFor={inputName} aria-label={inputName}>
+        <label
+          htmlFor={inputName}
+          aria-label={inputName}
+          style={isFiftyFifty ? { width: '50%' } : {}}>
           {label}
         </label>
       )}

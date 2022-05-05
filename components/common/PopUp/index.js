@@ -34,7 +34,12 @@ export default function PopUp({
                         <button
                           type="button"
                           value="cancel"
-                          className={`${styles.btn_cancel_add}`}
+                          className={`${
+                            submitBtn.disabled
+                              ? styles.btn_cancel_add_disabled
+                              : styles.btn_cancel_add
+                          }`}
+                          disabled={closeBtn.disabled}
                           onClick={closeBtn.handleClick}>
                           {closeBtn.name}
                         </button>

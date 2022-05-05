@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { courseContext } from '../../../state/contexts/CourseContext';
+import LabeledRadioCheckbox from '../../common/FormComponents/LabeledRadioCheckbox';
 import DropdownSelect from '../common/DropdownSelect';
 import NextButton from '../common/NextButton';
 import useHandleTabs from '../Logic/useHandleTabs';
@@ -35,44 +36,38 @@ export default function CourseDetails() {
 
       {/* Expertise Level */}
       <div className="row my_30">
-        <label htmlFor="name3" className="col_25">
+        <label htmlFor="name3" className="col_25" style={{marginRight: '15px'}}>
           Level of Expertise
         </label>
         <div className="col_25">
-          <label className="checkbox_container">
-            <input
-              type="checkbox"
-              name="expertise_level"
-              onChange={handleChange}
-              value="Beginner"
-              checked={fullCourse.expertise_level.includes('Beginner') ? 'checked' : false}
-            />
-            <span className="checkmark"></span>Beginner
-          </label>
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label="Beginner"
+            name="expertise_level"
+            value="Beginner"
+            isChecked={fullCourse.expertise_level.includes('Beginner')}
+            changeHandler={handleChange}
+          />
         </div>
         <div className="col_25">
-          <label className="checkbox_container">
-            <input
-              type="checkbox"
-              name="expertise_level"
-              onChange={handleChange}
-              value="Competent"
-              checked={fullCourse.expertise_level.includes('Competent') ? 'checked' : false}
-            />
-            <span className="checkmark"></span>Competent
-          </label>
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label="Competent"
+            name="expertise_level"
+            value="Competent"
+            isChecked={fullCourse.expertise_level.includes('Competent')}
+            changeHandler={handleChange}
+          />
         </div>
         <div className="col_25">
-          <label className="checkbox_container">
-            <input
-              type="checkbox"
-              name="expertise_level"
-              onChange={handleChange}
-              value="Proficient"
-              checked={fullCourse.expertise_level.includes('Proficient') ? 'checked' : false}
-            />
-            <span className="checkmark"></span>Proficient
-          </label>
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label="Proficient"
+            name="expertise_level"
+            value="Proficient"
+            isChecked={fullCourse.expertise_level.includes('Proficient')}
+            changeHandler={handleChange}
+          />
         </div>
       </div>
 
@@ -225,7 +220,7 @@ export default function CourseDetails() {
         />
       </div>
 
-      <NextButton tabIndex={2}/>
+      <NextButton tabIndex={2} />
 
       {previewFileData && (
         <PreviewImage

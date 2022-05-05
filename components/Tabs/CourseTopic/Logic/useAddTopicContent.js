@@ -98,16 +98,34 @@ export default function useAddTopicContent(topic) {
       window.URL.revokeObjectURL(video.src);
       duration = video.duration;
 
+      const variable_buffer_time = 2;
+      const filteredTopicContent = filterTopicContent(topicContent, topic?.id);
+      if (filteredTopicContent.length) {
+        const prevUploadDuration = filteredTopicContent[0].duration;
+        console.log(
+          prevUploadDuration + variable_buffer_time,
+          prevUploadDuration - variable_buffer_time,
+          duration
+        );
+        // 6 < 4 < 2
+        if (
+          prevUploadDuration + variable_buffer_time <= duration ||
+          prevUploadDuration - variable_buffer_time >= duration
+        ) {
+          alert('Video Length Should be same for all videos!!');
+          return;
+        }
+      }
+
       setNewTopicContent({
         ...newTopicContent,
         duration: parseInt(duration)
       });
+      setNewTopicVideo({
+        ...newTopicVideo,
+        file: e.target.files[0]
+      });
     };
-
-    setNewTopicVideo({
-      ...newTopicVideo,
-      file: e.target.files[0]
-    });
   }
 
   // subtitle input

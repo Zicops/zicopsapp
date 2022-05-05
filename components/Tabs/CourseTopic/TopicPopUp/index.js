@@ -1,6 +1,10 @@
 import { useRef } from 'react';
 import { useRecoilValue } from 'recoil';
-import { TopicContentAtom, TopicVideoAtom } from '../../../../state/atoms/module.atoms';
+import {
+  TopicContentAtom,
+  TopicVideoAtom,
+  uploadStatusAtom
+} from '../../../../state/atoms/module.atoms';
 // imported from common, recommended to remove later
 import styles from '../../../common/PopUp/popUp.module.scss';
 import Quiz from '../../../medium/Quiz';
@@ -52,6 +56,8 @@ export default function TopicPopUp({
     addTopicContentRef = useRef(null);
 
   const topicContent = useRecoilValue(TopicContentAtom);
+  const uploadStatus = useRecoilValue(uploadStatusAtom);
+  console.log(uploadStatus);
   if (isEdit) {
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
     closeBtnObj.name = 'Design Later';
@@ -64,10 +70,11 @@ export default function TopicPopUp({
         closeModal();
       }
     };
+    closeBtnObj.disabled = !!uploadStatus;
 
     submitBtnObj.name = 'Design';
     submitBtnObj.handleClick = handleEditTopicSubmit;
-    submitBtnObj.disabled = false;
+    submitBtnObj.disabled = !!uploadStatus;
 
     topicVideo = useRecoilValue(TopicVideoAtom)[0] || addTopicContentLocalStates.newTopicVideo;
   }

@@ -1,10 +1,8 @@
-import { arrayOf, element, elementType, shape, string } from 'prop-types';
+import { arrayOf, element, shape, string } from 'prop-types';
 import { useEffect, useState } from 'react';
 import { contentPanel } from './tab.module.scss';
 
-export default function Tab({ tabData, switchTab }) {
-  const [tab, setTab] = useState(tabData[0].name);
-
+export default function Tab({ tabData, tab, setTab }) {
   function showActiveTab(tab) {
     const index = tabData.findIndex((t) => {
       return t.name === tab;
@@ -13,10 +11,6 @@ export default function Tab({ tabData, switchTab }) {
     if (index >= 0) return tabData[index].component;
     return tabData[0].component;
   }
-
-  useEffect(() => {
-    setTab(switchTab);
-  }, [switchTab]);
 
   return (
     <div className={`${contentPanel}`}>

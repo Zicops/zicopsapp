@@ -3,7 +3,6 @@ import Image from 'next/image';
 
 export default function CenterFlash({ state }) {
   if (!state) return null;
-  console.log(state);
 
   let imgSrc = '/images/progressTriangle.png';
   if (state === 'pause') imgSrc = '/images/preview-btn.png';
@@ -20,7 +19,6 @@ export default function CenterFlash({ state }) {
 
   if (state === 'next') imgSrc = '/images/progressTriangle.png';
   if (state === 'previous') imgSrc = '/images/progressTriangle.png';
-
 
   return (
     <div className={`${styles.playPauseIndicator}`}>

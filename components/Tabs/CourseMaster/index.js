@@ -23,7 +23,9 @@ export default function CourseMaster() {
     label: 'Course Category',
     placeholder: 'Select the category of the course',
     options: allCatOptions,
-    value: { value: fullCourse?.category, label: fullCourse?.category },
+    value: fullCourse?.category
+      ? { value: fullCourse?.category, label: fullCourse?.category }
+      : null,
     isDisabled: false,
     isSearchEnable: true,
     isMulti: false
@@ -36,26 +38,28 @@ export default function CourseMaster() {
     label: 'Select Base Sub-category',
     placeholder: 'Select the sub-category of the course',
     options: allSubcatOptions,
-    value: { value: fullCourse?.sub_category, label: fullCourse?.sub_category },
+    value: fullCourse?.sub_category
+      ? { value: fullCourse?.sub_category, label: fullCourse?.sub_category }
+      : null,
     isDisabled: false,
     isSearchEnable: true,
     isMulti: false
   };
   const allOwners = [
-    { value: "Abhishek", label: "Abhishek" },
-    { value: "Sonali", label: "Sonali" },
-    { value: "Joy", label: "Joy" },
-    { value: "Puneet", label: "Puneet" },
-    { value: "Vaishnavi", label: "Vaishnavi" },
-    { value: "Harshad", label: "Harshad" },
-    { value: "Rishav", label: "Rishav" }
+    { value: 'Abhishek', label: 'Abhishek' },
+    { value: 'Sonali', label: 'Sonali' },
+    { value: 'Joy', label: 'Joy' },
+    { value: 'Puneet', label: 'Puneet' },
+    { value: 'Vaishnavi', label: 'Vaishnavi' },
+    { value: 'Harshad', label: 'Harshad' },
+    { value: 'Rishav', label: 'Rishav' }
   ];
   const owner_dropdown = {
     inputName: 'owner',
     label: 'Course Owner',
     placeholder: 'Select the owner of the course',
     options: allOwners,
-    value: { value: fullCourse?.owner, label: fullCourse?.owner },
+    value: fullCourse?.owner ? { value: fullCourse?.owner, label: fullCourse?.owner } : null,
     isDisabled: false,
     isSearchEnable: true,
     isMulti: false
@@ -82,7 +86,7 @@ export default function CourseMaster() {
     label: 'Languages',
     placeholder: 'Select multiple language for the course',
     options: allLanguages,
-    value: allSelectedLanguages,
+    value: allSelectedLanguages.length ? allSelectedLanguages : null,
     isDisabled: false,
     isSearchEnable: true,
     isMulti: true
@@ -128,7 +132,7 @@ export default function CourseMaster() {
             changeHandler(e, fullCourse, updateCourseMaster, language_dropdown.inputName)
           }
         />
-        
+
         <div className="row my_30">
           <div className="col_25"></div>
           <div className="col_25">
