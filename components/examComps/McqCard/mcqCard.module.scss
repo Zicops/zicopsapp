@@ -4,14 +4,16 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 0 20px 20px;
 }
 
 .option_container {
   display: grid;
   grid-template-rows: auto auto;
   grid-template-columns: 50% 50%;
-  margin-top: 10px;
-  padding-left: 30px;
+  // margin-top: 10px;
+  // padding-left: 30px;
+  padding-bottom: 10px;
 }
 
 .btn {
@@ -26,10 +28,13 @@
 .span_element {
   float: left;
   position: relative;
-  color: $darkThree;
+  color: $white;
   font-weight: 600;
   margin-right: 10px;
   margin-bottom: 10px;
+  span {
+    margin-right: 20px;
+  }
 }
 
 .qtitle {
@@ -38,8 +43,10 @@
 
 .qcontent {
   margin: 10px;
+  color: $white;
 }
 
 .hint {
   font-size: 14px;
+  color: $darkThree;
 }
