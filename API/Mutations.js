@@ -513,13 +513,30 @@ export const UPLOAD_TOPIC_CONTENT_VIDEO = gql`
 `;
 
 export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
-  mutation uploadTopicContentSubtitle($file: Upload, $courseId: String, $contentId: String) {
-    uploadTopicContentSubtitle(file: { file: $file, courseId: $courseId, contentId: $contentId }) {
+  mutation uploadTopicContentSubtitle(
+    $file: Upload
+    $courseId: String
+    $contentId: String
+    $language: String
+  ) {
+    uploadTopicContentSubtitle(
+      file: [{ file: $file, courseId: $courseId, contentId: $contentId, language: $language }]
+    ) {
       success
       url
+      language
     }
   }
 `;
+// not in use remove later replaced by new mutation
+// export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
+//   mutation uploadTopicContentSubtitle($file: Upload, $courseId: String, $contentId: String) {
+//     uploadTopicContentSubtitle(file: { file: $file, courseId: $courseId, contentId: $contentId }) {
+//       success
+//       url
+//     }
+//   }
+// `;
 
 export const ADD_TOPIC_CONTENT = gql`
   mutation addTopicContent(

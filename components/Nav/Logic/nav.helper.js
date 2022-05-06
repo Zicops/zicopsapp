@@ -9,7 +9,7 @@ export const AdminMenu = [
   },
   {
     title: 'Course',
-    link: '/admin/my-courses'
+    link: '/admin/course/my-courses'
   },
   {
     title: 'Training',
@@ -17,7 +17,7 @@ export const AdminMenu = [
   },
   {
     title: 'Exams',
-    link: '/exam'
+    link: '/admin/exams/my-question-bank'
   },
   {
     title: 'Vendor',
@@ -56,7 +56,7 @@ export const UserMenu = [
   },
   {
     title: 'Exams',
-    link: '/'
+    link: '/exams'
   },
   {
     title: 'Community',

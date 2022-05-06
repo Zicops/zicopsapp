@@ -1,34 +1,21 @@
-import Image from 'next/image';
-import '@reach/menu-button/styles.css';
-import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
-
 import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Fade from '@mui/material/Fade';
-
-import styles from '../nav.module.scss';
-
+import '@reach/menu-button/styles.css';
+import Image from 'next/image';
+import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
-
-import { languages, preferences } from '../Logic/subMenu.helper.js'; 
-
-import LeftArrow from '../../../public/images/bigarrowleft.png'
-
-import LeftMenuDropdown from '../LeftMenuDropdown/index.js'
-
-import DownArrowIcon from '../../../public/images/arrow2.png'
+import { languages, preferences } from '../Logic/subMenu.helper.js';
+import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
 
 export default function RightDropDownMenu() {
-
   const { anchorEl, handleClick, handleClose, open } = useDropDownHandle();
   let today = new Date();
-  let date = new Date().toUTCString().slice(5, 16); 
+  let date = new Date().toUTCString().slice(5, 16);
 
   return (
     <>
-      {/* <LeftMenuDropdown navmenuicon={DownArrowIcon} /> */}
-
       <Button
         disableRipple
         id="fade-button"
@@ -77,8 +64,7 @@ export default function RightDropDownMenu() {
             background: 'transparent',
             boxShadow: 'none'
           }
-        }}
-        >
+        }}>
         <MenuItem
           style={{
             display: 'flex',
@@ -92,7 +78,7 @@ export default function RightDropDownMenu() {
           <h2>Powered by Zicops</h2>
         </MenuItem>
         <MenuItem>
-        {/* submenu for myDetails */}
+          {/* submenu for myDetails */}
           <DropDownSubMenu
             subData={languages}
             menuIcon={LeftArrow}
@@ -104,7 +90,7 @@ export default function RightDropDownMenu() {
         <MenuItem className="dropdown-submenu-justifycontent-right">My Certificates</MenuItem>
         <MenuItem className="dropdown-submenu-justifycontent-right">My Dashboard</MenuItem>
         <MenuItem>
-        {/* submenu for support */}
+          {/* submenu for support */}
           <DropDownSubMenu
             subData={preferences}
             menuIcon={LeftArrow}

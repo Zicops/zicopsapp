@@ -4,6 +4,13 @@ import { userContext } from '../../../state/contexts/UserContext';
 export default function useSaveData(videoElement) {
   const { addBookmarkData, addNotes } = useContext(userContext);
 
+  const [showBookmark, setShowBookmark] = useState(false);
+  const [showLanguageSubtitles, setShowLanguageSubtitles] = useState(false);
+
+  function toggleStates(setState, state) {
+    setState(!state);
+  }
+
   const [bookmarkData, setBookmarkData] = useState({
     timestamp: '',
     title: '',
@@ -88,7 +95,15 @@ export default function useSaveData(videoElement) {
     alert('Notes added');
   }
 
+  const states = {
+    showBookmark,
+    setShowBookmark,
+    showLanguageSubtitles,
+    setShowLanguageSubtitles
+  };
   return {
+    states,
+    toggleStates,
     handleBookmarkChange,
     bookmarkData,
     handleSaveBookmark,

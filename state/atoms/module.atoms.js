@@ -114,7 +114,8 @@ export function getTopicSubtitleObject(data) {
     courseId: data.courseId,
     contentId: data.contentId,
     file: data.file || null,
-    subtitleUrl: data.subtitleUrl || null
+    subtitleUrl: data.subtitleUrl || null,
+    language: data.language || null
   };
 }
 

@@ -117,89 +117,136 @@ export default function FavouriteDndCourses(){
     }
 
 
-    return(
-        <>
-            <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-                <Box bgcolor={'#101216'} mt={9} width={'100%'} color={'#FFF'} sx={{overflowY: 'hidden'}}>
-                    <Grid container spacing={2}>
-                        <Grid item xl={5} lg={5} md={5} sm={5} xs={12}>
-                            <Box height={'100%'} fontWeight={600} p={4} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'} textAlign={'center'}>
-                                <Box fontSize={'22px'} mb={0.5} sx={{
-                                    transform: !isDrag ? 'translate(0, 160px)' : 'translate(0, 0)',
-                                    transition: 'transform 0.2s'
-                                }}>
-                                    Drop the favorite course in folder
-                                </Box>
-                                <Box fontSize={'22px'} mb={0.5} sx={{
-                                    // transform: isDrag ? 'translate(0, 0)' : '',
-                                    display: isDrag ? 'none' : '',
-                                    transition: 'display 0.1s'
-                                }}>
-                                    Drag your favorite course in folder
-                                </Box>
-                                <Box px={12} fontSize={'13px'} color={'rgba(255,255,255,0.5)'} mb={5}>
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                </Box>
-                                <Droppable droppableId="character">
-                                    {(provided) => (
-                                        <>
-                                            <div
-                                                {...provided.droppableProps} ref={provided.innerRef}
-                                                onMouseEnter={onMouseEnterHandler}
-                                                onMouseLeave={onMouseLeaveHandler}
-                                            >
-                                                {console.log(hover)}
-                                                <Folder total={total} isDrag={isDrag} />
-                                            </div>
-                                        </>
-                                    )}
-                                </Droppable>
-                            </Box>
-                        </Grid>
-                        <Grid item xl={7} lg={7} md={7} sm={7} xs={12} sx={{background: '#000'}}>
-                            <Droppable droppableId="drop" isDropEnabled={true}>
-                                {(provided) => (
-                                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                                        <Box width={'100%'} height={'100%'} py={2} pr={2}>
-                                            <Grid container spacing={2} >
-                                                {
-                                                    data.slice(0, 9).map((each, index) => (
-                                                        <Draggable key={each.id} draggableId={each.id} index={index}>
-                                                            {(provided) => (
-                                                                <>
-                                                                    {(isDrag && dragId === each.id) ? (
-                                                                        <Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
-                                                                            <Box width={'100%'} height={'100%'} border={'1px dashed #6ECDCD'} sx={{borderRadius: '5px'}} overflow={'hidden'} />
-                                                                        </Grid>
-                                                                    ) : ''}
-                                                                    <Grid item xl={4} lg={4} md={4} sm={4} xs={12}
-                                                                          {...provided.draggableProps}
-                                                                          {...provided.dragHandleProps}
-                                                                          ref={provided.innerRef}
-                                                                    >
-                                                                        <Card title={each.title} tag={each.tag} topic={each.topic}
-                                                                              hover={hover}
-                                                                              isDrag={isDrag}
-                                                                              dragId={dragId}
-                                                                              id={each.id}
-                                                                              rotate={(isDrag && !hover && dragId === each.id) ? 'rotate(-7.73deg)' : ''}
-                                                                              scale={(isDrag && hover && dragId === each.id) ? 'scale(0.6)' : ''}
-                                                                              boxShadow={(isDrag && dragId === each.id) ? '0px 0px 36px 16px rgba(110, 205, 205, 0.2)' : ''}
-                                                                        />
-                                                                    </Grid>
-                                                                </>
-                                                            )}
-                                                        </Draggable>
-                                                    ))
-                                                }
-                                            </Grid>
-                                        </Box>
-                                    </div>)}
-                            </Droppable>
-                        </Grid>
-                    </Grid>
+    return (
+      <>
+        <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <Box
+            bgcolor={'#101216'}
+            mt={9}
+            height={'75vh'}
+            width={'100%'}
+            color={'#FFF'}
+            sx={{ overflowY: 'hidden' }}>
+            <Grid container spacing={2}>
+              <Grid item xl={5} lg={5} md={5} sm={5} xs={12}>
+                <Box
+                  height={'100%'}
+                  fontWeight={600}
+                  p={4}
+                  width={'100%'}
+                  display={'flex'}
+                  alignItems={'center'}
+                  justifyContent={'center'}
+                  flexDirection={'column'}
+                  textAlign={'center'}>
+                  <Box
+                    fontSize={'22px'}
+                    mb={0.5}
+                    sx={{
+                      transform: !isDrag ? 'translate(0, 160px)' : 'translate(0, 0)',
+                      transition: 'transform 0.2s'
+                    }}>
+                    Drop the favorite course in folder
+                  </Box>
+                  <Box
+                    fontSize={'22px'}
+                    mb={0.5}
+                    sx={{
+                      // transform: isDrag ? 'translate(0, 0)' : '',
+                      display: isDrag ? 'none' : '',
+                      transition: 'display 0.1s'
+                    }}>
+                    Drag your favorite course in folder
+                  </Box>
+                  <Box px={12} fontSize={'13px'} color={'rgba(255,255,255,0.5)'} mb={5}>
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                  </Box>
+                  <Droppable droppableId="character">
+                    {(provided) => (
+                      <>
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          onMouseEnter={onMouseEnterHandler}
+                          onMouseLeave={onMouseLeaveHandler}>
+                          {/* {console.log(hover)} */}
+                          <Folder total={total} isDrag={isDrag} />
+                        </div>
+                      </>
+                    )}
+                  </Droppable>
                 </Box>
-            </DragDropContext>
-        </>
-    )
+              </Grid>
+              <Grid item xl={7} lg={7} md={7} sm={7} xs={12} sx={{ background: '#000' }}>
+                <Droppable droppableId="drop" isDropDisabled={true}>
+                  {(provider) => (
+                    <div {...provider.droppableProps} ref={provider.innerRef}>
+                      <Box width={'100%'} height={'75vh'} py={2} pr={2}>
+                        <Grid container spacing={2}>
+                          {data.slice(0, 9).map((each, index) => (
+                            <Draggable key={each.id} draggableId={each.id} index={index}>
+                              {(provided) => (
+                                <>
+                                  {isDrag && dragId === each.id ? (
+                                    <Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
+                                      <Box
+                                        width={'100%'}
+                                        height={'100%'}
+                                        border={'2px dashed #6ECDCD'}
+                                        sx={{ borderRadius: '5px' }}
+                                        overflow={'hidden'}
+                                      />
+                                    </Grid>
+                                  ) : (
+                                    ''
+                                  )}
+                                  <Grid
+                                    item
+                                    xl={4}
+                                    lg={4}
+                                    md={4}
+                                    sm={4}
+                                    xs={12}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    ref={provided.innerRef}>
+                                    <Card
+                                      title={each.title}
+                                      tag={each.tag}
+                                      topic={each.topic}
+                                      hover={hover}
+                                      isDrag={isDrag}
+                                      dragId={dragId}
+                                      id={each.id}
+                                      rotate={
+                                        isDrag && !hover && dragId === each.id
+                                          ? 'rotate(-7.73deg)'
+                                          : ''
+                                      }
+                                      scale={
+                                        isDrag && hover && dragId === each.id ? 'scale(0.5)' : ''
+                                      }
+                                      boxShadow={
+                                        isDrag && dragId === each.id
+                                          ? '0px 0px 36px 16px rgba(110, 205, 205, 0.2)'
+                                          : ''
+                                      }
+                                    />
+                                  </Grid>
+                                </>
+                              )}
+                            </Draggable>
+                          ))}
+                        </Grid>
+                      </Box>
+                      <div style={{ maxHeight: '0px' }}>{provider.placeholder}</div>
+                    </div>
+                  )}
+                </Droppable>
+              </Grid>
+            </Grid>
+          </Box>
+        </DragDropContext>
+      </>
+    );
 }

@@ -1,8 +1,8 @@
 import { useRecoilValue } from 'recoil';
 import { ResourcesAtom } from '../../../../../state/atoms/module.atoms';
 import styles from '../../../../../styles/CourseMaster.module.css';
+import Bar from '../../../../common/Bar';
 import IconButton from '../../../../common/IconButton';
-import QuizAdded from '../../../../small/QuizAdded';
 import useAddResources from '../../Logic/useAddResources';
 
 export default function ResourcesForm({ courseId, topicId }) {
@@ -20,7 +20,7 @@ export default function ResourcesForm({ courseId, topicId }) {
     <>
       {resources &&
         resources.map((res, index) => (
-          <QuizAdded key={res.name + index} index={index + 1} text={res.name} type={res.type} />
+          <Bar key={res.name + index} index={index + 1} text={res.name} type={res.type} />
         ))}
 
       {isResourcesFormVisible && (

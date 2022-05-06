@@ -44,7 +44,7 @@ const CardSlider = ({ deviceType, title, type, data }) => {
         style={{
           marginLeft: '4%',
           marginRight: '4%',
-          paddingTop: '10px'
+          paddingTop: '25px'
         }}>
         {data.every((d) => !d) ? (
           <Skeleton

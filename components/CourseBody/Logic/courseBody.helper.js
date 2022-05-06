@@ -1,3 +1,6 @@
+import { useRecoilState } from 'recoil';
+import { filterAndSortTopicsBasedOnModuleId } from '../../../helper/data.helper';
+import { VideoAtom } from '../../../state/atoms/video.atom';
 import CourseBodyNotes from '../../large/CourseBodyNotes';
 import CourseBodyAbout from '../CourseBodyAbout';
 import CourseBodyResources from '../CourseBodyResources';
@@ -24,4 +27,39 @@ export function getResourceCount(resources, topicId) {
   });
 
   return filteredResources.length;
+}
+
+export function updateVideoData(
+  videoData,
+  setVideoData,
+  idObject,
+  topic,
+  topicContent,
+  allModuleOptions,
+  currrentModule,
+  setSelectedModule
+) {
+  const { moduleId, topicId } = idObject;
+  const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topic, moduleId);
+  const currentTopicIndex = filteredTopicData.findIndex((t) => t.id === topicId);
+
+  const currentModuleIndex = allModuleOptions.findIndex((m) => m.value === currrentModule.value);
+
+  setVideoData({
+    ...videoData,
+    videoSrc: topicContent[0]?.contentUrl || null,
+    type: topicContent[0]?.type || null,
+    startPlayer: true,
+    isPreview: false,
+    currentTopicIndex: currentTopicIndex,
+    
+    topicContent: topicContent,
+    currentTopicContentIndex: 0,
+    allModuleTopic: filteredTopicData,
+    currentModuleId: moduleId,
+
+    allModuleOptions: allModuleOptions,
+    currentModuleIndex: currentModuleIndex,
+    setNewModule: setSelectedModule
+  });
 }

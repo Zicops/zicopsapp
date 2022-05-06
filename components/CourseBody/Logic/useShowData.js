@@ -11,7 +11,7 @@ import {
   GET_TOPIC_RESOURCES,
   queryClient
 } from '../../../API/Queries';
-import { filterResources } from '../../../helper/data.helper';
+import { filterResources, sortArrByKeyInOrder } from '../../../helper/data.helper';
 import {
   ChapterAtom,
   isLoadingAtom,
@@ -20,10 +20,12 @@ import {
   TopicAtom,
   TopicContentAtom
 } from '../../../state/atoms/module.atoms';
+import { VideoAtom } from '../../../state/atoms/video.atom';
 import { tabs } from './courseBody.helper';
 
 export default function useShowData(courseContextData) {
   const { fullCourse } = courseContextData;
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
   let myRef = useRef(null);
   const [activeCourseTab, setActiveCourseTab] = useState(tabs[0].name);
@@ -36,6 +38,9 @@ export default function useShowData(courseContextData) {
     }
   }, [activeCourseTab]);
 
+  useEffect(() => {
+    if (selectedModule.value !== videoData.currentModuleId) console.log(selectedModule);
+  }, [selectedModule]);
   // recoil states
   const [moduleData, updateModuleData] = useRecoilState(ModuleAtom);
   const [chapter, updateChapterData] = useRecoilState(ChapterAtom);
@@ -78,9 +83,10 @@ export default function useShowData(courseContextData) {
     loadModuleData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
       if (errorModuleData) alert('Module Load Error');
 
-      updateModuleData(data.getCourseModules || []);
+      const sortedData = sortArrByKeyInOrder([...data.getCourseModules], "sequence", 1);
+      updateModuleData(sortedData || []);
 
-      setSelectedModule(getModuleOptions(data.getCourseModules)[0]);
+      setSelectedModule(getModuleOptions(sortedData)[0]);
     });
 
     loadChapterData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
@@ -173,14 +179,16 @@ export default function useShowData(courseContextData) {
       data.forEach((mod) => {
         options.push({
           value: mod.id,
-          label: mod.name
+          // label: mod.name
+          label: 'MODULE ' + mod.sequence
         });
       });
     } else {
       moduleData?.forEach((mod) => {
         options.push({
           value: mod.id,
-          label: mod.name
+          // label: mod.name
+          label: 'MODULE ' + mod.sequence
         });
       });
     }
@@ -220,6 +228,7 @@ export default function useShowData(courseContextData) {
     getModuleOptions,
     handleModuleChange,
     selectedModule,
+    setSelectedModule,
     showResources,
     filteredResources,
     isResourceShown

@@ -115,22 +115,22 @@ const ExamMaster = () => {
           placeholder={'Enter Instructions/Guidelines(upto 300 characters) '}
         />
         <div className="row my_10">
-          <div className="col_15">
+          {/* <div className="col_15">
             <ZicopsRadioButton text={'Schedule'} />
           </div>
           <div className="col_15">
             <ZicopsRadioButton text={'Take Anytime'} />
-          </div>
+          </div> */}
           <div className="col_15"></div>
           <div className="col_15">
             <label>Exam Access:</label>
           </div>
-          <div className="col_15">
+          {/* <div className="col_15">
             <ZicopsRadioButton text={'Open For All'} />
           </div>
           <div className="col_15">
             <ZicopsRadioButton text={'Only For Cohort'} />
-          </div>
+          </div> */}
           <div className="col_10">
             <label style={{ marginLeft: '55%' }}>Map</label>
           </div>
