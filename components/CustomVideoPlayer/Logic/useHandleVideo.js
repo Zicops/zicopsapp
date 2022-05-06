@@ -77,6 +77,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   // reset progress when video changes
   useEffect(() => {
     if (playerState.progress > 0) setVideoTime(0);
+    if (!playerState.isPlaying) togglePlay();
   }, [videoData.videoSrc]);
 
   // show/hide controls based on type (show only for mp4)
@@ -179,7 +180,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     videoElement.current.volume = vol;
   }
 
-  function togglePlay() {
+  function togglePlay(state) {
     setPlayerState({
       ...playerState,
       isPlaying: !playerState.isPlaying
@@ -209,7 +210,8 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       type: isTopicContentPresent ? filteredTopicContent[0].type : null,
       currentTopicIndex: videoData.currentTopicIndex + 1 || 0,
       topicContent: filteredTopicContent,
-      allModuleTopic: videoData.allModuleTopic
+      allModuleTopic: videoData.allModuleTopic,
+      currentTopicContentIndex: 0
     });
 
     setVideoTime(0);
@@ -236,7 +238,8 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       type: isTopicContentPresent ? filteredTopicContent[0].type : null,
       currentTopicIndex: videoData.currentTopicIndex - 1 || 0,
       topicContent: filteredTopicContent,
-      allModuleTopic: videoData.allModuleTopic
+      allModuleTopic: videoData.allModuleTopic,
+      currentTopicContentIndex: 0
     });
 
     setVideoTime(0);

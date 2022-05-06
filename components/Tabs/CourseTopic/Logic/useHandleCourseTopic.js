@@ -7,6 +7,7 @@ import {
   GET_COURSE_TOPICS,
   queryClient
 } from '../../../../API/Queries';
+import { sortArrByKeyInOrder } from '../../../../helper/data.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 
@@ -61,7 +62,8 @@ export default function useHandleCourseTopic() {
   // load module, chapter, topic data and set in recoil
   useEffect(() => {
     loadModuleData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      updateModuleData(data.getCourseModules);
+      const sortedData = sortArrByKeyInOrder([...data.getCourseModules], "sequence");
+      updateModuleData(sortedData);
 
       if (errorModuleData) alert('Module Load Error');
     });

@@ -34,7 +34,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
     <div className="row my_30">
       <div className={`${styles.moduleBox}`}>
         <ModuleBlock
-          title={`Module ${mod.sequence} : ${mod.id}`}
+          title={`Module ${mod.sequence} : ${mod.name}`}
           type="module"
           editHandler={() => activateEditModule(mod.id)}
         />
@@ -49,7 +49,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
                   <Fragment key={chapter.id}>
                     <ModuleBlock
                       type="chapter"
-                      title={`Chapter ${chapter.sequence} : ${chapter.id}`}
+                      title={`Chapter ${chapter.sequence} : ${chapter.name}`}
                       editHandler={() => activateEditChapter(chapter.id)}
                     />
 
@@ -59,7 +59,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
                           <ModuleBlock
                             key={topic.id}
                             type="topic"
-                            title={`Topic ${topic.sequence} : ${topic.id} : ${topic.name}`}
+                            title={`Topic ${topic.sequence} : ${topic.name}`}
                             editHandler={() => activateEditTopic(topic.id)}
                           />
                         );
@@ -104,7 +104,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
                   <ModuleBlock
                     key={topic.id}
                     type="topic"
-                    title={`Topic ${topic.sequence} : ${topic.id} : ${topic.name}`}
+                    title={`Topic ${topic.sequence} : ${topic.name}`}
                     editHandler={() => activateEditTopic(topic.id)}
                   />
                 );

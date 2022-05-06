@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import CommonCalendar from '../common/CommonCalendar';
+import CommonCalendar from '../../archives/CommonCalendar';
 import CalenderLarge from '../small/Calender'
 const SelfPacedMiddle = () => {
     return (

@@ -1343,11 +1343,11 @@ transition: All 0.3s ease;
   transform: scale(1.01);
  }
 
- .calender_box{
+ /* .calender_box{
    display: flex;
    justify-content: center;
    align-items: center;
- }
+ } */
  .paginationStyle li div{
   color: var(--white);
  }
@@ -1369,7 +1369,7 @@ transition: All 0.3s ease;
 }
 
 /* Common calendar styles  */
-
+/* 
 .react-datepicker.common_calendar {
   width: 410px !important;
   height: 400px !important;
@@ -1459,4 +1459,4 @@ transition: All 0.3s ease;
   pointer-events: none;
   border: none !important;
   background: var(--dark_one) !important;
-}
+} */

@@ -30,8 +30,8 @@ export default function Card({ image, courseData, styleClass, carouselRefData })
         onMouseEnter={(e) =>
           handleMouseEnter(
             e,
-            carouselRefData.state.currentSlide,
-            carouselRefData.state.currentSlide + carouselRefData.state.slidesToShow - 1
+            carouselRefData.state?.currentSlide,
+            carouselRefData.state?.currentSlide + carouselRefData.state?.slidesToShow - 1
           )
         }
         onMouseLeave={handleMouseLeave}>

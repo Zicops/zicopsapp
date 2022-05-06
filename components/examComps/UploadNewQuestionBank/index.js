@@ -2,7 +2,7 @@ import styles from './uploadNewQuestionBank.module.scss';
 import InputField from '../../common/InputField';
 import DropdownSelect from '../../Tabs/common/DropdownSelect';
 import { obj } from './Logic/uploadNewQuestionBank.helper.js';
-import UploadQuestions from '../UploadQuestions';
+import UploadQuestions from '../ExamsTabs/AddQuestionMetaData/uploadNew/UploadQuestions';
 import Button from '../../common/Button';
 
 const UploadNewQuestionBank = ({ text }) => {
@@ -35,14 +35,14 @@ const UploadNewQuestionBank = ({ text }) => {
       <div className={`${styles.uqContainer}`}>
         <UploadQuestions />
       </div>
-      <div className={`${styles.uqFooter}`}>
+      {/* <div className={`${styles.uqFooter}`}>
         <div className={`${styles.leftBox}`}>Current Status:{text}</div>
         <div className={`${styles.rightBox}`}>
           <a>View Statistics</a>
           <Button text={'Cancel'} />
           <Button text={'Add'} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

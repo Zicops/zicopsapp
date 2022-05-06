@@ -11,9 +11,10 @@ export function getVideoObject() {
     type: 'mp4',
     startPlayer: false,
     isPreview: false,
+    currentTopicIndex: 0,
 
     topicContent: [],
-    currentTopicIndex: 0,
+    currentTopicContentIndex: 0,
 
     allModuleTopic: null,
     currentModuleId: null,

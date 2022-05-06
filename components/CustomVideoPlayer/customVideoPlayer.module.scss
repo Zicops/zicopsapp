@@ -29,10 +29,27 @@
     // border: 1px solid white;
     // background-color: #888822;
     // background: rgb(0,0,0);
-    background: -moz-linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0) 100%);
-    background: -webkit-linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0) 100%);
-    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 65%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);   
+    background: -moz-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.7) 75%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    background: -webkit-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.7) 75%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.8) 65%,
+      rgba(0, 0, 0, 0.7) 75%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+
     .topIconsContainer {
       display: flex;
       align-items: center;
@@ -53,13 +70,13 @@
 
       .centerText {
         width: 50%;
-        .centerTextHeading{
+        .centerTextHeading {
           font-size: 20px;
           font-weight: 800;
           color: $primary;
           text-align: center;
         }
-        .centerTextSubheading{
+        .centerTextSubheading {
           font-size: 14px;
           font-weight: 400;
           color: $white;
@@ -89,6 +106,36 @@
       background: rgba(139, 139, 139, 0.471);
     }
 
+    .languageList {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: $bgContent;
+      // box-shadow: 0 0 50px 0 $white;
+      color: $white;
+      height: 140px;
+      overflow: auto;
+      padding: 3px;
+      button {
+        background-color: transparent;
+        margin: 3px;
+        padding: 5px 10px;
+        width: 100px;
+        border: 1px solid $white;
+        color: $white;
+        cursor: pointer;
+        &:hover {
+          background-color: $white;
+          color: $bgContent;
+        }
+      }
+    
+      .languageBtnActive {
+        background-color: $primary;
+        color: $bgContent;
+      }
+    }
     .bookmarksInput {
       position: absolute;
       right: 24%;
@@ -97,6 +144,7 @@
       // opacity: 0.75;
       width: 200px;
       box-shadow: 0 0 10px 0 $darkTwo;
+
       .bookmarksField {
         width: 100%;
         padding: 10px;
@@ -190,7 +238,7 @@
 //     z-index: 2;
 // }
 
-.centerFlashIcon{
+.centerFlashIcon {
   // opacity: 0;
   // transition: all 1s;
   animation: myflash 1s;
@@ -236,7 +284,7 @@
   background-size: 200% 100%;
 }
 
-.watchCreditsBtn {
+.nextPlayBtn {
   top: 70%;
   transition: all 5s ease-in;
   animation: fill 5s;

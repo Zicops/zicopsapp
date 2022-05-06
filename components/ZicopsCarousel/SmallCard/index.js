@@ -31,8 +31,8 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
         onMouseEnter={(e) =>
           handleMouseEnter(
             e,
-            carouselRefData.state.currentSlide,
-            carouselRefData.state.currentSlide + carouselRefData.state.slidesToShow - 1
+            carouselRefData.state?.currentSlide,
+            carouselRefData.state?.currentSlide + carouselRefData.state?.slidesToShow - 1
           )
         }
         onMouseLeave={handleMouseLeave}>

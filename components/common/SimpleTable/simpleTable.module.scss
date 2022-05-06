@@ -1,0 +1,101 @@
+@import '../../../styles/base.scss';
+
+.simpleTable {
+  // background-color: $bgContent;
+  height: 100%;
+
+  .tableHeader {
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    font-family: 'Open Sans' sans-serif;
+    text-transform: uppercase;
+    color: white;
+    text-align: left;
+    /* border: 2px solid var(--primary); */
+    margin-bottom: 20px;
+    text-shadow: 0px 1px 10px var(--primary);
+    /* box-shadow:1px 0px 11px 0px var(--primary); */
+    margin-bottom: 40px;
+    margin-left: 60px;
+  }
+
+  .tableContainer {
+    margin-right: 50px;
+
+    .tableHead {
+      padding: 10px 50px;
+      margin: 0px 10px;
+      color: $white;
+
+      .row {
+        color: var(--black);
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        background-color: $darkThree;
+        text-transform: capitalize;
+        padding: 10px;
+        margin-right: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .tableBody {
+      background-color: $black;
+      padding: 0px 50px;
+      height: 400px;
+      overflow-y: auto;
+      margin: 0px 10px;
+
+      &::-webkit-scrollbar {
+        width: 15px;
+        cursor: pointer;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $secondaryBlack;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $primary;
+      }
+
+      .row {
+        color: $header;
+        text-align: center;
+        font-size: 14px;
+        text-transform: capitalize;
+        padding: 8px 3px;
+        border: 1px solid $darkThree;
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .row:hover {
+        color: $primary;
+        border: 2px solid $primary;
+        background-color: #6bcfcf10;
+        box-shadow: 0px 0px 20px 2px #6bcfcf80;
+        font-weight: 600;
+        transform: scale(1.01);
+      }
+    }
+  }
+}
+
+// .scheduleBtnHover{
+//   margin: 0px 10px;
+//   padding: 2px 10px;
+//   border: 1px solid $primary;
+// }
+.scheduleBtnHover:hover {
+  background-color: $primary;
+  color: $black
+}

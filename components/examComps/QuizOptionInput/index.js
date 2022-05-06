@@ -2,6 +2,8 @@ import QuizInput from './QuizInput/index';
 import DropdownSelect from '../../Tabs/common/DropdownSelect';
 import InputField from '../../common/InputField';
 import styles from './quizOptionInput.module.scss';
+import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
+import LabeledTextarea from '../../common/FormComponents/LabeledTextarea';
 
 const QuizOptionInput = () => {
   const data = ['MCQ', 'Descriptive'];
@@ -11,28 +13,42 @@ const QuizOptionInput = () => {
     placeholder: 'Select Question type',
     label: 'Select question type:'
   };
+  const dropdownOptions = {
+    inputName: 'questionType',
+    label: 'Select Question Type',
+    placeholder: 'Select question type',
+    options: [
+      { label: 'MCQ', value: 'MCQ' },
+      { label: 'Descriptive', value: 'Descriptive' }
+    ],
+    isDisabled: false,
+    isSearchEnable: false,
+    isMulti: false
+  };
   return (
     <form className={`${styles.options}`}>
       <span>
-        <DropdownSelect data={data} inputData={inputData} />
+        <LabeledDropdown dropdownOptions={dropdownOptions} />
       </span>
-      <span>Enter Question:</span>
+      <br />
+      <div> Enter Question: </div>
+      <br />
       <QuizInput type="question" sr="Q" text="Enter question in less than 160 characters" />
-      <span>Exam Hint:</span>
-      <InputField
-        obj={{
-          type: 'text',
-          name: 'hint',
-          label: '',
-          placeholder: 'Enter hint in 60 words',
-          id: 'hint'
+      <div>Exam Hint:</div>
+      <br />
+      <LabeledTextarea
+        inputOptions={{
+          inputName: 'hint',
+          placeholder: 'Enter hint in less than 300 characters.',
+          rows: 4
         }}
       />
+      <br />
       <span>Enter Options:</span>
       <span style={{ fontSize: 'small', float: 'right', paddingRight: '10px' }}>
         Select the checkbox for the right option.
       </span>
-      <div style={{ marginTop: '20px' }}>
+      <div style={{ marginTop: '20px', paddingBottom: '30px' }}>
         <QuizInput type="option" sr="O1" text="Enter question in less than 160 characters" />
         <QuizInput type="option" sr="O2" text="Enter question in less than 160 characters" />
         <QuizInput type="option" sr="O3" text="Enter question in less than 160 characters" />

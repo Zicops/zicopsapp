@@ -1,0 +1,87 @@
+@import '../../../styles/base.scss';
+
+.simpleTable {
+  background-color: var(--dark_two);
+  padding: 50px 20px;
+
+  .tableHeader {
+    /* width: 500px;
+  margin: auto; */
+    font-size: 35px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    font-family: 'Open Sans' sans-serif;
+    text-transform: uppercase;
+    color: white;
+    text-align: center;
+    /* border: 2px solid var(--primary); */
+    margin-bottom: 20px;
+    text-shadow: 0px 1px 10px var(--primary);
+    /* box-shadow:1px 0px 11px 0px var(--primary); */
+    margin-right: 50px;
+  }
+
+  .tableContainer {
+    margin-right: 50px;
+
+    .tableHead {
+      padding: 10px 50px;
+      margin: 0px 10px;
+      color: $white;
+
+      .row {
+        color: var(--primary);
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        text-transform: capitalize;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    .tableBody {
+      background-color: $bgContent;
+      padding: 10px 50px;
+      height: 400px;
+      overflow-y: auto;
+      margin: 0px 10px;
+
+      &::-webkit-scrollbar {
+        width: 15px;
+        cursor: pointer;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $secondaryBlack;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $primary;
+      }
+    }
+  }
+}
+
+.tableRow {
+  color: $white;
+  // text-align: center;
+  font-size: 14px;
+  text-transform: capitalize;
+  padding: 8px 3px;
+  border: 1px solid $primary;
+  margin-right: 50px;
+  // display: flex;
+  // justify-content: space-between;
+  // font-family: inherit;
+  // cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    background-color: #6bcfcf10;
+    box-shadow: 0px 0px 20px 2px #6bcfcf80;
+    font-weight: 600;
+    transform: scale(1.01);
+  }
+}

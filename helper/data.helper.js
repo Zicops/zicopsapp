@@ -111,3 +111,12 @@ export function filterModule(moduleData, moduleId) {
 export function sortTopicContentByIsDefault(topicContent) {
   return topicContent.sort((content) => content.is_default);
 }
+
+export function sortArrByKeyInOrder(array, key, isAsc = true) {
+  let ascVal = -1, desVal = 1;
+  if (isAsc) {
+    ascVal = 1;
+    desVal = -1;
+  } 
+  return array?.sort((a, b) => (a[key] > b[key] ? ascVal : desVal));
+}
