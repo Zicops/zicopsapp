@@ -15,27 +15,28 @@ import ZicopsExam from '../../components/examComps/ZicopsExam';
 import LabeledInput from '../../components/common/FormComponents/LabeledInput';
 import LabeledDropdown from '../../components/common/FormComponents/LabeledDropdown';
 import LabeledCheckbox from '../../components/common/FormComponents/LabeledRadioCheckbox';
+import ZicopsSidebarButton from '../../components/common/ZicopsSidebarButton/Index';
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
   const inputOptions = {
-    inputName: "Test", 
-    label: "Test",
-    placeholder: "This is Placeholder", 
-    // value: "Value is This", 
-    // maxLength: 20, 
-    // isRequired: false, 
+    inputName: 'Test',
+    label: 'Test',
+    placeholder: 'This is Placeholder'
+    // value: "Value is This",
+    // maxLength: 20,
+    // isRequired: false,
     // isDisabled: false
-  }
+  };
   const changeHandler = (e) => {};
 
   const options = [
     { value: 'self-paced', label: 'Self Paced' },
     { value: 'classroom', label: 'Classroom' },
     { value: 'labs', label: 'Labs' },
-    { value: 'test', label: 'Test' },
+    { value: 'test', label: 'Test' }
   ];
-  
+
   const dropdownOptions = {
     inputName: 'dropdown',
     label: 'Dropdown',
@@ -47,20 +48,20 @@ const Exam = () => {
     isMulti: false
   };
 
-    const languages = [
-      { value: 'english', label: 'English' },
-      { value: 'hindi', label: 'Hindi' },
-      { value: 'marathi', label: 'Marathi' },
-      { value: 'bengali', label: 'Bengali' },
-      { value: 'telegu', label: 'Telegu' },
-      { value: 'tamil', label: 'Tamil' },
-      { value: 'kannada', label: 'Kannada' },
-      { value: 'punjabi', label: 'Punjabi' },
-      { value: 'assamese', label: 'Assamese' },
-      { value: 'orria', label: 'Orria' },
-      { value: 'bhojpuri', label: 'Bhojpuri' },
-      { value: 'maithili', label: 'Maithili' }
-    ];
+  const languages = [
+    { value: 'english', label: 'English' },
+    { value: 'hindi', label: 'Hindi' },
+    { value: 'marathi', label: 'Marathi' },
+    { value: 'bengali', label: 'Bengali' },
+    { value: 'telegu', label: 'Telegu' },
+    { value: 'tamil', label: 'Tamil' },
+    { value: 'kannada', label: 'Kannada' },
+    { value: 'punjabi', label: 'Punjabi' },
+    { value: 'assamese', label: 'Assamese' },
+    { value: 'orria', label: 'Orria' },
+    { value: 'bhojpuri', label: 'Bhojpuri' },
+    { value: 'maithili', label: 'Maithili' }
+  ];
   const dropdownOptions1 = {
     inputName: 'language',
     label: 'Language',
@@ -147,6 +148,7 @@ const Exam = () => {
               placeholder: 'Select Max Attempts'
             }}
           /> */}
+          <ZicopsSidebarButton title={'My Courses'} />
         </MainBodyBox>
       </MainBody>
       {/* <style>{`
