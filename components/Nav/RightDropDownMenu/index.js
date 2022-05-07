@@ -51,7 +51,7 @@ export default function RightDropDownMenu() {
           '& .MuiMenuItem-root': {
             border: '1px solid var(--primary)',
             margin: '2px',
-            // justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             // alignItems: 'center',
             '&:hover': {
               background: 'var(--dark_one)',
