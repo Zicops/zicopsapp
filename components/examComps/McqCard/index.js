@@ -2,7 +2,7 @@ import Button from '../../common/Button';
 import styles from './mcqCard.module.scss';
 import McqOption from './McqOption';
 
-const McqCard = ({ question }) => {
+const McqCard = ({ question, isButtonVisible = false }) => {
   const obj = {
     option: 'a',
     hint: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.'
@@ -42,10 +42,12 @@ const McqCard = ({ question }) => {
         </section>
         <span className={`${styles.span_element}`}>Hint:</span>
         <div className={`${styles.hint}`}>{obj.hint}</div>
-        <div className={`${styles.btn}`}>
-          <Button text={'Edit'} />
-          <Button text={'Cancel'} />
-        </div>
+        {isButtonVisible && (
+          <div className={`${styles.btn}`}>
+            <Button text={'Edit'} />
+            <Button text={'Cancel'} />
+          </div>
+        )}
       </div>
     </>
   );
