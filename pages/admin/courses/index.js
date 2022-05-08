@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { mutationClient } from '../../../API/Mutations';
 import CourseHead from '../../../components/CourseHead';
-import Sidebar from '../../../components/Sidebar';
+import Sidebar from '../../../components/common/Sidebar';
 import CourseTabs from '../../../components/Tabs';
 import AdminFooter from '../../../components/Tabs/AdminFooter';
 import CourseContextProvider from '../../../state/contexts/CourseContext';
+import { courseSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
 
 export default function Courses() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function Courses() {
 
   return (
     <div>
-      <Sidebar />
+      <Sidebar sidebarItemsArr={courseSidebarData} />
 
       <div className={`adminContent`}>
         <CourseHead title={isCourseIdPresent ? 'Edit Course' : 'Add New Course'} />

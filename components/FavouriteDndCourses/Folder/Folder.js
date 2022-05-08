@@ -38,9 +38,9 @@ export default function Folder({isDrag, total}){
                         <Box mb={0.5}>Course Folder</Box>
                         <Box ml={1.5} fontSize={'14px'} sx={{opacity: 0.5}}>{total} Course in Folder</Box>
                     </Box>
-                    <IconButton>
+                    {/* <IconButton> */}
                         <ArrowForwardIosRoundedIcon sx={{color: 'white'}} />
-                    </IconButton>
+                    {/* </IconButton> */}
                 </Box>
             </Box>
         </>

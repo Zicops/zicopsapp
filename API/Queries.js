@@ -190,7 +190,10 @@ export const GET_COURSE_TOPICS_CONTENT = gql`
       updated_at
       type
       contentUrl
-      subtitleUrl
+      subtitleUrl {
+        url
+        language
+      }
       is_default
     }
   }
@@ -212,7 +215,10 @@ export const GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID = gql`
       updated_at
       type
       contentUrl
-      subtitleUrl
+      subtitleUrl {
+        url
+        language
+      }
       is_default
     }
   }

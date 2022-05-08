@@ -1,37 +1,84 @@
 import { Skeleton } from '@mui/material';
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterAndSortTopicsBasedOnModuleId } from '../../../../helper/data.helper';
 import { isLoadingAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
 import { VideoAtom } from '../../../../state/atoms/video.atom';
+import { updateVideoData } from '../../Logic/courseBody.helper';
 
-export default function TopicBox({ index, topic, topicContent, moduleId }) {
+export default function TopicBox({
+  topicCount,
+  topic,
+  topicContent,
+  moduleId,
+  getModuleOptions,
+  currrentModule,
+  setSelectedModule
+}) {
   const { name, description } = topic;
   const duration = topicContent[0]?.duration.toString();
-  const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const topicData = useRecoilValue(TopicAtom);
 
   const isLoading = useRecoilValue(isLoadingAtom);
+  const allModuleOptions = getModuleOptions();
 
-  function updateVideoData() {
-    const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicData, moduleId);
-    const currentTopicIndex = filteredTopicData.findIndex((t) => t.id === topic.id);
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
-    setVideoData({
-      ...videoData,
-      videoSrc: topicContent[0]?.contentUrl || null,
-      type: topicContent[0]?.type || null,
-      startPlayer: true,
-      topicContent: topicContent,
-      currentTopicIndex: currentTopicIndex,
-      allModuleTopic: filteredTopicData,
-      currentModuleId: moduleId,
-      isPreview: false
-    });
-  }
+  const { allModuleTopic, currentTopicIndex } = videoData;
+  const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
+
+  // auto play video when next or previous button clciked (module switch)
+  useEffect(() => {
+    if (
+      currrentModule.value !== videoData.currentModuleId &&
+      videoData.startPlayer &&
+      currrentModule.isVideoControlClicked
+    ) {
+      const lastModuleIndex = videoData.currentModuleIndex;
+      const currentModuleIndex = allModuleOptions.findIndex(
+        (m) => m.value === currrentModule.value
+      );
+      const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicData, moduleId);
+
+      // to detect is next button clicked or previous button clicked
+      let isNextClicked = false;
+      if (lastModuleIndex < currentModuleIndex) isNextClicked = true;
+      if (isNextClicked && topicCount !== 1) return;
+      if (!isNextClicked && topicCount !== filteredTopicData.length) return;
+
+      updateVideoData(
+        videoData,
+        setVideoData,
+        { moduleId: moduleId, topicId: topic.id },
+        topicData,
+        topicContent,
+        allModuleOptions,
+        currrentModule,
+        setSelectedModule
+      );
+      setSelectedModule({
+        ...currrentModule,
+        isVideoControlClicked: false
+      });
+    }
+  }, [currrentModule]);
 
   return (
     <>
-      <div className="topic" onClick={updateVideoData}>
+      <div
+        className="topic"
+        onClick={() =>
+          updateVideoData(
+            videoData,
+            setVideoData,
+            { moduleId: moduleId, topicId: topic.id },
+            topicData,
+            topicContent,
+            allModuleOptions,
+            currrentModule,
+            setSelectedModule
+          )
+        }>
         <div className="preclassName">
           <div>
             <img src="images/resourcesicon.png" />
@@ -43,7 +90,7 @@ export default function TopicBox({ index, topic, topicContent, moduleId }) {
           </div>
         </div>
 
-        <div className="topic-loop">
+        <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
           <div className="topic_img">
             <img src="images/topicImage.png" alt="" />
           </div>
@@ -55,7 +102,7 @@ export default function TopicBox({ index, topic, topicContent, moduleId }) {
                   {isLoading ? (
                     <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
                   ) : (
-                    index + '. '
+                    topicCount + '. '
                   )}
                 </span>
                 {isLoading ? (
@@ -144,7 +191,7 @@ export default function TopicBox({ index, topic, topicContent, moduleId }) {
                     transition: all 0.3s;
                     cursor: pointer;
                 }
-                .topic-loop:hover{
+                .topic-loop:hover, .activeTopic{
                     box-shadow: 0 0 10px 0 #6bcfcf;
                     transform: scale(1.02);
                     background-color: #000000;

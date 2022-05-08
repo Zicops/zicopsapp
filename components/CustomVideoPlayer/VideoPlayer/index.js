@@ -1,19 +1,21 @@
+import { useRecoilValue } from 'recoil';
+import { VideoAtom } from '../../../state/atoms/video.atom';
 import styles from '../customVideoPlayer.module.scss';
 
 export default function VideoPlayer({
-  videoSrc,
-  type,
   videoElement,
   handleOnTimeUpdate,
   playerState,
   handleClick,
   handleKeyDown
 }) {
+  const videoData = useRecoilValue(VideoAtom);
+
   return (
     <>
-      {!videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
+      {!videoData.videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
 
-      {type === 'mp4' && videoSrc && (
+      {videoData.type === 'mp4' && videoData.videoSrc && (
         <video
           tabIndex="0"
           onClick={handleClick}
@@ -22,13 +24,15 @@ export default function VideoPlayer({
           onTimeUpdate={handleOnTimeUpdate}
           muted={playerState.isMuted}
           className={`${styles.videoElement}`}
+          src={videoData.videoSrc}
+          autoPlay={true}
           // crossOrigin="anonymous"
         >
-          <source src={videoSrc} />
+          {/* <source src={videoData.videoSrc} /> */}
         </video>
       )}
 
-      {type === 'SCORM' && videoSrc && (
+      {videoData.type === 'SCORM' && videoData.videoSrc && (
         <iframe
           src="https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html"
           frameBorder="0"

@@ -4,7 +4,7 @@
   align-items: center;
   padding: 10px 0;
   margin-bottom: 2%;
-  padding-right: 10px;
+  // padding-right: 10px;
 }
 .option {
   display: flex;
@@ -30,12 +30,13 @@
   padding: 10px;
   background: $darkTwo;
   color: $white;
-  border: 1px solid $primary;
+  border: 1px solid $darkThree;
   margin-top: 2px;
   &:focus {
     outline: none;
     border-color: $secondary;
     color: $white;
+    border: 1px solid $primary;
     box-shadow: 2px 2px 10px 0px $primary;
   }
 }

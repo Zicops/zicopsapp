@@ -1,10 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { filterTopicContent } from '../../../../../helper/data.helper';
-import {
-  TopicContentAtom,
-  TopicSubtitleAtom,
-  uploadStatusAtom
-} from '../../../../../state/atoms/module.atoms';
+import { TopicSubtitleAtom, uploadStatusAtom } from '../../../../../state/atoms/module.atoms';
 
 export default function TopicContentView({ topicContent, toggleTopicContentForm }) {
   const topicSubtitle = useRecoilValue(TopicSubtitleAtom);

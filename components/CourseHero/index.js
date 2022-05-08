@@ -10,13 +10,18 @@ import style from './courseHero.module.scss';
 import { truncateToN } from '../../helper/common.helper';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
-import { VideoAtom } from '../../state/atoms/video.atom';
+import { getVideoObject, VideoAtom } from '../../state/atoms/video.atom';
 import Link from 'next/link';
 
 export default function CourseHero({ isPreview = false }) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const { fullCourse } = useContext(courseContext);
 
+  // reset video data
+  useEffect(() => {
+    setVideoData(getVideoObject());
+  }, []);
+  
   const ShowPlayer = () => {
     setVideoData({
       ...videoData,

@@ -6,13 +6,14 @@ export default function Dropdown({ options, handleChange, value }) {
   return (
     <>
       {/* move styles to .scss */}
-      <div className="row" style={{ margin: '40px 0 0' }}>
+      <div className="form_row" style={{ margin: '40px auto 0px' }}>
         <Select
           options={options}
           value={value}
           onChange={handleChange}
           className="zicops_select_container"
           classNamePrefix="zicops_select"
+          isSearchable={false}
         />
       </div>
     </>

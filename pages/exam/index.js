@@ -15,6 +15,7 @@ import ZicopsExam from '../../components/examComps/ZicopsExam';
 import LabeledInput from '../../components/common/FormComponents/LabeledInput';
 import LabeledDropdown from '../../components/common/FormComponents/LabeledDropdown';
 import LabeledCheckbox from '../../components/common/FormComponents/LabeledRadioCheckbox';
+import QuestionSection from '../../components/LearnerExamComp';
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
@@ -35,7 +36,6 @@ const Exam = () => {
     { value: 'labs', label: 'Labs' },
     { value: 'test', label: 'Test' },
   ];
-  
   const dropdownOptions = {
     inputName: 'dropdown',
     label: 'Dropdown',
@@ -46,21 +46,20 @@ const Exam = () => {
     isSearchEnable: false,
     isMulti: false
   };
-
-    const languages = [
-      { value: 'english', label: 'English' },
-      { value: 'hindi', label: 'Hindi' },
-      { value: 'marathi', label: 'Marathi' },
-      { value: 'bengali', label: 'Bengali' },
-      { value: 'telegu', label: 'Telegu' },
-      { value: 'tamil', label: 'Tamil' },
-      { value: 'kannada', label: 'Kannada' },
-      { value: 'punjabi', label: 'Punjabi' },
-      { value: 'assamese', label: 'Assamese' },
-      { value: 'orria', label: 'Orria' },
-      { value: 'bhojpuri', label: 'Bhojpuri' },
-      { value: 'maithili', label: 'Maithili' }
-    ];
+  const languages = [
+    { value: 'english', label: 'English' },
+    { value: 'hindi', label: 'Hindi' },
+    { value: 'marathi', label: 'Marathi' },
+    { value: 'bengali', label: 'Bengali' },
+    { value: 'telegu', label: 'Telegu' },
+    { value: 'tamil', label: 'Tamil' },
+    { value: 'kannada', label: 'Kannada' },
+    { value: 'punjabi', label: 'Punjabi' },
+    { value: 'assamese', label: 'Assamese' },
+    { value: 'orria', label: 'Orria' },
+    { value: 'bhojpuri', label: 'Bhojpuri' },
+    { value: 'maithili', label: 'Maithili' }
+  ];
   const dropdownOptions1 = {
     inputName: 'language',
     label: 'Language',
@@ -73,11 +72,12 @@ const Exam = () => {
   };
   return (
     <>
-      <Sidebar />
+      <QuestionSection />
+      {/* <Sidebar />
       <MainBody>
         <CourseHead title="My Exam" />
-        <MainBodyBox>
-          <LabeledInput inputOptions={inputOptions} changeHandler={changeHandler} />
+        <MainBodyBox> */}
+      {/* <LabeledInput inputOptions={inputOptions} changeHandler={changeHandler} />
           <br />
           <LabeledDropdown dropdownOptions={dropdownOptions} changeHandler={changeHandler} />
           <br />
@@ -125,19 +125,19 @@ const Exam = () => {
               name={'check'}
               value={'Check this out 3'}
             />
-          </div>
-          {/* <ExamConfigration />
+          </div> */}
+      {/* <ExamConfigration />
           <ExamDatePicker text={'Exam Date'} /> */}
-          {/* <ExamConfigration /> */}
-          {/* <ExamSchedule /> */}
-          {/* <ZicopsRadioButton text={'Scheduled'} />
+      {/* <ExamConfigration /> */}
+      {/* <ExamSchedule /> */}
+      {/* <ZicopsRadioButton text={'Scheduled'} />
           <ZicopsRadioButton text={'Exam Access:'} /> */}
-          {/* <TimePicker /> */}
-          {/* <ExamMaster /> */}
-          {/* <ZicopsExam /> */}
-          {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
-          {/* <CustomTimePicker /> */}
-          {/* <CheckBoxField checkBox_label={'Stretch Examination Conduct Duration'} />
+      {/* <TimePicker /> */}
+      {/* <ExamMaster /> */}
+      {/* <ZicopsExam /> */}
+      {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
+      {/* <CustomTimePicker /> */}
+      {/* <CheckBoxField checkBox_label={'Stretch Examination Conduct Duration'} />
           <InputField label={'Question paper name'} placeholder={'Enter the question paper name'} />
           <Marks label={'Total marks:'} placeholder={'Total Marks'} />
           <DropdownSelect
@@ -147,8 +147,8 @@ const Exam = () => {
               placeholder: 'Select Max Attempts'
             }}
           /> */}
-        </MainBodyBox>
-      </MainBody>
+      {/* </MainBodyBox>
+      </MainBody> */}
       {/* <style>{`
           .ExamConfigration{
               display: grid;

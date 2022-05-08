@@ -1,11 +1,11 @@
-export default function Bar({ index, text, type }) {
+export default function Bar({ index, text, type, style }) {
   // let type = data.type;
   // let duration = data.duration;
   // let sub_lang = (data.lang)?data.lang:'';
 
   return (
     <>
-      <div className="content_added">
+      <div className="content_added" style={style}>
         <div className="content_bar">
           <div className="index">{index}</div>
           <div className="text">{text}</div>
