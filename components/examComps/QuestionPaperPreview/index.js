@@ -11,20 +11,6 @@ const QuestionPaperPreview = () => {
   // thinking about pushing value to quesSection.sec_A array. similarly to other elements.
 
   questionList.forEach((item) => {
-    // if (item.section === 'A') {
-    //   quesSection.secA.push(item);
-    //   console.log(quesSection.secA.length);
-    // }
-    // if (item.section === 'B') {
-    //   quesSection.secB.push(item);
-    // }
-    // if (item.section === 'C') {
-    //   quesSection.secC.push(item);
-    // }
-    // if (item.section === 'D') {
-    //   quesSection.secD.push(item);
-    // }
-
     let secKey = `sec${item.section}`;
     quesSection.hasOwnProperty(secKey)
       ? quesSection[secKey].push(item)
@@ -37,7 +23,7 @@ const QuestionPaperPreview = () => {
     <>
       <div className={`${styles.container}`}>
         <button onClick={() => setIsOpen(!isOpen)}>Clck me</button>
-        <PopUp title={'Core Java Fundamental'} isPopUpOpen={isOpen}>
+        <PopUp title={'Core Java Fundamental'} isPopUpOpen={isOpen} isFooterVisible={false}>
           <div className={`${styles.paperContainer}`}>
             <QuestionPaperTop />
             <QuestionSection quesSection={quesSection} />

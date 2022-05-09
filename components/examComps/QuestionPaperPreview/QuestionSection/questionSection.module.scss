@@ -16,3 +16,17 @@
   color: $darkThree;
   padding: 5px;
 }
+
+.questionTop {
+  color: $white;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 10px;
+  p {
+    font-weight: 600;
+    color: $darkThree;
+    span {
+      color: $white;
+    }
+  }
+}
