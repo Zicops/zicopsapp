@@ -10,7 +10,7 @@ const columns = [
     field: 'name',
     headerName: 'Name',
     headerClassName: 'course-list-header',
-    flex: 2
+    flex: 1.5
   },
   {
     field: 'owner',

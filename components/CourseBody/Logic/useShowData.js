@@ -38,9 +38,9 @@ export default function useShowData(courseContextData) {
     }
   }, [activeCourseTab]);
 
-  useEffect(() => {
-    if (selectedModule.value !== videoData.currentModuleId) console.log(selectedModule);
-  }, [selectedModule]);
+  // useEffect(() => {
+  //   if (selectedModule.value !== videoData.currentModuleId) console.log(selectedModule);
+  // }, [selectedModule]);
   // recoil states
   const [moduleData, updateModuleData] = useRecoilState(ModuleAtom);
   const [chapter, updateChapterData] = useRecoilState(ChapterAtom);
@@ -86,7 +86,7 @@ export default function useShowData(courseContextData) {
       const sortedData = sortArrByKeyInOrder([...data.getCourseModules], "sequence", 1);
       updateModuleData(sortedData || []);
 
-      setSelectedModule(getModuleOptions(sortedData)[0]);
+      setSelectedModule(getModuleOptions(sortedData)[0] || {});
     });
 
     loadChapterData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
