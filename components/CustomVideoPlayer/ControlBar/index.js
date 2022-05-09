@@ -14,6 +14,7 @@ import {
   volumeContainer
 } from './controlbar.module.scss';
 import Volume from './Volume';
+import styles from './controlbar.module.scss';
 
 export default function ControlBar({
   reloadVideo,
@@ -81,15 +82,18 @@ export default function ControlBar({
 
         <Button handleClick={playPreviousVideo} disable={disablePreviousButton}>
           {disablePreviousButton ? (
-            <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
+            <div className={`${styles.prevBtn} ${styles.disabled}`}></div>
           ) : (
-            <Image
-              src="/images/next-topic.png"
-              style={{ transform: 'rotate(180deg)' }}
-              alt=""
-              height="30px"
-              width="30px"
-            />
+            <div className={`${styles.prevBtn}`}></div>
+            // <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
+            // <div className={`${styles.prevBtn}`}></div>
+            // <Image
+            //   src="/images/next-topic.png"
+            //   style={{ transform: 'rotate(180deg)' }}
+            //   alt=""
+            //   height="30px"
+            //   width="30px"
+            // />
           )}
         </Button>
 
