@@ -11,3 +11,19 @@
   overflow: auto;
   padding-right: 5px;
 }
+
+.paperContainer::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+/* Track */
+.paperContainer::-webkit-scrollbar-track {
+  background: $darkTwo;
+  border-radius: 7px;
+}
+/* Handle */
+.paperContainer::-webkit-scrollbar-thumb {
+  background: $darkThree;
+  border-radius: 7px;
+}

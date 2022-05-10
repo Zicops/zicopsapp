@@ -17,8 +17,6 @@ const QuestionPaperPreview = () => {
       : (quesSection[secKey] = [item]);
   });
 
-  console.log(quesSection);
-
   return (
     <>
       <div className={`${styles.container}`}>

@@ -16,8 +16,12 @@ const McqCard = ({ question, isButtonVisible = false }) => {
           <p className={`${styles.span_element}`}>
             {/* TODO : Add difficulty lebel */}
             <span>Q.</span>
-            {question}
+            <span>{question}</span>
           </p>
+          <div className={`${styles.quesImg}`}>
+            Q. <img src="/images/courses/1.png" alt="Not found" />
+          </div>
+          <p>Options</p>
         </div>
         {/* <div className={`${styles.span_element}`}>Options:</div> */}
         <section className={`${styles.option_container}`}>

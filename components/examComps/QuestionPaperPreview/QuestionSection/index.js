@@ -6,7 +6,7 @@ const QuestionSection = ({ quesSection }) => {
   const numOfQuestion = 5;
   return (
     <>
-      <div className={`${styles.sectionSection}`}>
+      <div className={`${styles.sectionContainer}`}>
         {quesSection.secA.length != 0 && (
           <Accordion title={'Section A'}>
             <div className={`${styles.questionTop}`}>
