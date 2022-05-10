@@ -7,7 +7,7 @@ const QuestionSection = ({ quesSection }) => {
   return (
     <>
       <div className={`${styles.sectionContainer}`}>
-        {quesSection.secA.length != 0 && (
+        {quesSection.secA !== undefined && (
           <Accordion title={'Section A'}>
             <div className={`${styles.questionTop}`}>
               <p>Lorem ipsum is just some dummy text for use of our own.</p>
@@ -15,15 +15,16 @@ const QuestionSection = ({ quesSection }) => {
                 Questions: <span>{numOfQuestion}</span>
               </p>
             </div>
-            {quesSection.secA.map((item) => (
-              <div>
-                <div className={`${styles.line}`}></div>
-                <McqCard question={item.question} />
-              </div>
-            ))}
+            {quesSection.secA === undefined &&
+              quesSection.secA?.map((item) => (
+                <div>
+                  <div className={`${styles.line}`}></div>
+                  <McqCard question={item.question} />
+                </div>
+              ))}
           </Accordion>
         )}
-        {quesSection.secB.length != 0 && (
+        {quesSection.secB !== undefined && (
           <Accordion title={'Section B'}>
             <div className={`${styles.questionTop}`}>
               <p>Lorem ipsum is just some dummy text for use of our own.</p>
@@ -39,7 +40,7 @@ const QuestionSection = ({ quesSection }) => {
             ))}
           </Accordion>
         )}
-        {quesSection.secC.length != 0 && (
+        {quesSection.secC !== undefined && (
           <Accordion title={'Section C'}>
             <div className={`${styles.questionTop}`}>
               <p>Lorem ipsum is just some dummy text for use of our own.</p>
@@ -55,7 +56,7 @@ const QuestionSection = ({ quesSection }) => {
             ))}
           </Accordion>
         )}
-        {quesSection.secD.length != 0 && (
+        {quesSection.secD !== undefined && (
           <Accordion title={'Section D'}>
             <div className={`${styles.questionTop}`}>
               <p>Lorem ipsum is just some dummy text for use of our own.</p>

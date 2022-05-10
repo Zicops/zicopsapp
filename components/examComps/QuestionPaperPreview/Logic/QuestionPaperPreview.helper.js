@@ -1,6 +1,6 @@
 export const questionList = [
-  { question: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit?', section: 'A' },
-  { question: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit2?', section: 'A' },
+  { question: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit?', section: 'D' },
+  { question: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit2?', section: 'D' },
   {
     question:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit?',
