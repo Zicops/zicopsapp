@@ -64,7 +64,7 @@ export default function AboutCard({ isDataLoaded, fullCourse }) {
         </div>
 
         <div className="col_33">
-          <div className="row">
+          {/* <div className="row">
             {isDataLoaded ? (
               <>
                 <div className="col_25">
@@ -77,7 +77,7 @@ export default function AboutCard({ isDataLoaded, fullCourse }) {
             ) : (
               <Skeleton sx={{ bgcolor: 'var(--skeleton-dark)' }} variant="text" width={350} />
             )}
-          </div>
+          </div> */}
         </div>
         <div className="col_33"></div>
       </div>

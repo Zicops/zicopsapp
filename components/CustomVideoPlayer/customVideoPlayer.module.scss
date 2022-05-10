@@ -267,50 +267,47 @@
   font-size: larger;
 }
 
-.watchCreditsBtn{
+.watchCreditsBtn,
+.nextPlayBtn{
   position: absolute;
   right: 2%;
   top: 60%;
-  border: 2px solid var(--dark_three);
   border-radius: 0;
   padding: 10px;
   width: 200px;
   display: block;
-  cursor: pointer;
   text-align: center;
+  cursor: pointer;
+}
+.watchCreditsBtn{
+  border: 4px solid var(--dark_three);
   background-color: transparent;
   background-position: left top;
   background-size: 200% 100%;
   color: $darkThree;
 }
+.watchCreditsBtn:hover{
+  border: 4px solid var(--primary);
+}
 .nextPlayBtn {
-  position: absolute;
-  right: 2%;
-  top: 60%;
-  border: 2px solid var(--primary);
-  border-radius: 0;
-  padding: 10px;
-  width: 200px;
-  display: block;
-  cursor: pointer;
-  text-align: center;
+  border: 4px solid var(--primary);
   background: linear-gradient(to left, #00000000 50%, $primary 50%);
   background-position: left top;
   background-size: 200% 100%;
-  color: $darkThree;
-}
-
-.nextPlayBtn {
+  box-shadow: 0 0 10px 0 $primary;
   top: 70%;
   transition: all 5s ease-in;
   animation: fill 5s;
+  color: $primary;
+  .nextPlayBtnTxt{
+    mix-blend-mode: difference;
+  }
 }
 
 @keyframes fill {
   0% {
     background-position: right top;
   }
-
   100% {
     background-position: left top;
   }

@@ -149,23 +149,24 @@ export default function CustomVideo({ set }) {
         {showBingeButtons && (
           <>
             <div className={`${styles.nextPlayBtn}`}>
-              <span></span>
+              {/* <span></span> */}
               <div
+                className={`${styles.nextPlayBtnTxt}`}
                 onClick={() => {
                   playNextVideo();
                   setShowBingeButtons(false);
                 }}>
-                Next
+                Next Topic
               </div>
             </div>
             <div className={`${styles.watchCreditsBtn}`}>
-              <span></span>
+              {/* <span></span> */}
               <div
                 onClick={() => {
                   clearTimeout(timeout);
                   setShowBingeButtons(null);
                 }}>
-                Watch Credits
+                Keep Watching
               </div>
             </div>
           </>
