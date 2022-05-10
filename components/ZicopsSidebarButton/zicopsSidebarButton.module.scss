@@ -1,0 +1,27 @@
+.sidebar_menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 250px;
+    text-align: center;
+}
+
+.sidebar_menu ul a {
+    display: block;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 2px solid #63c0c0;
+    margin: 4px 2px;
+    font-weight: 400;
+}
+
+.sidebar_menu ul a.active {
+    background-color: #63c0c0;
+    color: #202222;
+    font-weight: 600;
+}
+
+.sidebar_menu ul a:hover:not(.active) {
+    box-shadow: inset 0 0 10px 0 #63c0c0
+}
