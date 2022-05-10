@@ -1,18 +1,23 @@
 import { useRef } from 'react';
 import { useRecoilValue } from 'recoil';
-import { TopicContentAtom, TopicVideoAtom } from '../../../../state/atoms/module.atoms';
+import { filterTopicContent } from '../../../../helper/data.helper';
+import {
+  TopicContentAtom,
+  TopicVideoAtom,
+  uploadStatusAtom
+} from '../../../../state/atoms/module.atoms';
+import PopUp from '../../../common/PopUp';
 // imported from common, recommended to remove later
 import styles from '../../../common/PopUp/popUp.module.scss';
 import Quiz from '../../../medium/Quiz';
 import Accordion from '../../../small/Accordion';
-import PopUp from '../../../common/PopUp';
 import ModuleBlock from '../ModuleBlock';
 import AddTopicContentForm from './AddTopicContentForm';
 import AddTopicForm from './AddTopicForm';
 import BingeForm from './BingeForm';
 import ResourcesForm from './ResourcesForm';
+import SubtitleForm from './SubtitleForm';
 import TopicContentView from './TopicContentView';
-import { filterTopicContent } from '../../../../helper/data.helper';
 
 export default function TopicPopUp({
   addTopicData = {},
@@ -52,6 +57,8 @@ export default function TopicPopUp({
     addTopicContentRef = useRef(null);
 
   const topicContent = useRecoilValue(TopicContentAtom);
+  const uploadStatus = useRecoilValue(uploadStatusAtom);
+  console.log(uploadStatus);
   if (isEdit) {
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
     closeBtnObj.name = 'Design Later';
@@ -64,10 +71,11 @@ export default function TopicPopUp({
         closeModal();
       }
     };
+    closeBtnObj.disabled = !!uploadStatus;
 
     submitBtnObj.name = 'Design';
     submitBtnObj.handleClick = handleEditTopicSubmit;
-    submitBtnObj.disabled = false;
+    submitBtnObj.disabled = !!uploadStatus;
 
     topicVideo = useRecoilValue(TopicVideoAtom)[0] || addTopicContentLocalStates.newTopicVideo;
   }
@@ -173,6 +181,15 @@ export default function TopicPopUp({
               />
 
               {/* binge accordion */}
+              <Accordion
+                title="Subtitles"
+                content={
+                  <SubtitleForm
+                    topicId={editTopic?.id || ''}
+                    courseId={editTopic?.courseId || ''}
+                  />
+                }
+              />
               <Accordion
                 title="Binge it"
                 content={

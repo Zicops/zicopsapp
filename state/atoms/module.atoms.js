@@ -45,6 +45,11 @@ export const isLoadingAtom = atom({
   default: false
 });
 
+export const uploadStatusAtom = atom({
+  key: 'uploadStatus',
+  default: null
+});
+
 // object structures which can be used  for reset or immutable new object
 export function getModuleObject(data) {
   return {
@@ -109,7 +114,8 @@ export function getTopicSubtitleObject(data) {
     courseId: data.courseId,
     contentId: data.contentId,
     file: data.file || null,
-    subtitleUrl: data.subtitleUrl || null
+    subtitleUrl: data.subtitleUrl || null,
+    language: data.language || null
   };
 }
 

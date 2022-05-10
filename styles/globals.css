@@ -1343,11 +1343,11 @@ transition: All 0.3s ease;
   transform: scale(1.01);
  }
 
- .calender_box{
+ /* .calender_box{
    display: flex;
    justify-content: center;
    align-items: center;
- }
+ } */
  .paginationStyle li div{
   color: var(--white);
  }
@@ -1363,3 +1363,100 @@ transition: All 0.3s ease;
 .MuiDataGrid-iconButtonContainer{
   color: white;
 }
+.dropdown-submenu-justifycontent-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Common calendar styles  */
+/* 
+.react-datepicker.common_calendar {
+  width: 410px !important;
+  height: 400px !important;
+  background-color: var(--dark_two) !important;
+  border: 0;
+  margin-bottom: 60px;
+}
+
+
+.common_calendar .react-datepicker__navigation--previous {
+  top: 59% !important;
+  left: -55px !important;
+  width: 50px !important;
+  height: 50px !important;
+  rotate: 90deg !important;
+  border: 1px solid var(--primary) !important;
+  text-align: center !important;
+  background: url('../public/images/bigarrowleft.png') no-repeat center !important;
+}
+
+
+.common_calendar .react-datepicker__navigation--next {
+  top: 59% !important;
+  right: -80px !important;
+  width: 50px !important;
+  height: 50px !important;
+  rotate: 90deg !important;
+  border: 1px solid var(--primary) !important;
+  text-align: center !important;
+  background: url('../public/images/bigarrowright.png') no-repeat center !important;
+  border: none;
+}
+
+.common_calendar .react-datepicker__navigation--previous:hover,
+.common_calendar .react-datepicker__navigation--next:hover {
+  border: 3px solid var(--primary) !important;
+}
+
+.common_calendar .react-datepicker__navigation-icon {
+  display: none !important;
+}
+
+.common_calendar .react-datepicker__current-month {
+  font-size: 2rem !important;
+  font-weight: 600 !important;
+  color: var(--primary) !important;
+  margin-bottom: 20px;
+}
+
+.common_calendar .react-datepicker__day-names {
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: space-around;
+  margin-right: 18px;
+}
+
+.common_calendar .react-datepicker__day.common_calendar_dates {
+  width: 40px;
+  height: 40px;
+  font-size: 17px;
+  text-align: center;
+  margin-right: 20px;
+  margin-bottom: 15px;
+  padding: 6px 0;
+  background: var(--header-bg);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+
+.common_calendar .react-datepicker__day.common_calendar_dates:hover {
+  border: 3px solid var(--primary) !important;
+  background: var(--accent);
+  color: var(--primary) !important;
+  padding: 4px 0;
+  border-radius: 0px;
+}
+
+.common_calendar .react-datepicker__week {
+  display: flex;
+  justify-content: space-around;
+}
+
+
+.common_calendar .react-datepicker__day--outside-month {
+  color: var(--primary) !important;
+  pointer-events: none;
+  border: none !important;
+  background: var(--dark_one) !important;
+} */

@@ -44,7 +44,7 @@
   padding: 2px;
   margin: -10px 7px 0;
 }
-.szh-menu--dir-left{
+.szh-menu--dir-left {
   margin-left: -7px;
 }
 .szh-menu__item {
@@ -56,6 +56,30 @@
   color: $primary;
   background-color: $darkOne;
 }
-.szh-menu__arrow{
+.szh-menu__arrow {
   background: transparent;
+}
+
+// util classes (common classes that are like bootstrap util classes)
+@for $i from 1 through 100 {
+  .w-#{$i} {
+    width: #{$i} + '%';
+  }
+  .h-#{$i} {
+    height: #{$i} + '%';
+  }
+}
+
+.position-relative {
+  position: relative;
+}
+
+.center-element-with-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.position-absolute {
+  position: absolute;
 }

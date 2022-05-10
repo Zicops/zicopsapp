@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from './sidebar.module.scss';
-import { examSidebarData } from './Logic/sidebar.helper';
 
 // move the styles in sidebar.module.scss in this folder
-export default function Sidebar() {
+export default function Sidebar({ sidebarItemsArr }) {
   const router = useRouter();
   return (
     <div className={styles.sidebar}>
@@ -15,7 +14,7 @@ export default function Sidebar() {
 
       <div className={styles.sidebar_menu}>
         <ul>
-          {examSidebarData.map((val, key) => {
+          {sidebarItemsArr.map((val, key) => {
             return (
               <Link
                 href={val.link}
@@ -26,12 +25,11 @@ export default function Sidebar() {
                   router.pathname = val.link;
                 }}>
                 <a
-                //   className={
-                //     router.pathname == val.link ||
-                //     (router.route.includes('admin/courses') && val.link == '/admin/my-courses')
-                //       ? styles.active
-                //       : ''
-                //   }
+                  className={
+                    router.pathname == val.link
+                      ? styles.active
+                      : ''
+                  }
                 >
                   {val.title}
                 </a>

@@ -1,0 +1,20 @@
+@import '../../../styles/base.scss';
+
+.nextBtn {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: $white;
+  cursor: pointer;
+  font-size: large;
+
+  span {
+    margin-right: 12px;
+  }
+
+  img {
+    align-items: center;
+  }
+}

@@ -4,6 +4,7 @@ import { filterTopicContent } from '../../../helper/data.helper';
 import { secondsToMinutes } from '../../../helper/utils.helper';
 import { TopicContentAtom } from '../../../state/atoms/module.atoms';
 import { VideoAtom } from '../../../state/atoms/video.atom';
+import { addCallbackToEvent } from './customVideoPlayer.helper';
 
 export default function useVideoPlayer(videoElement, videoContainer, type) {
   // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
@@ -13,7 +14,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     progress: 0,
     speed: 1,
     isMuted: false,
-    volume: 0.8
+    volume: 0.7
   });
 
   const [videoData, updateVideoData] = useRecoilState(VideoAtom);
@@ -23,30 +24,66 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
 
-// hide control bar if no mouse movement for 2.5 sec
-
+  // hide control bar if no mouse movement for 2.5 sec
+  const duration = 2500;
   let timeout;
   useEffect(() => {
+    setVideoTime(0);
     videoElement.current?.focus();
-    togglePlay();
+    updateIsPlayingTo(true);
 
-    const duration = 2500;
-    videoContainer.current?.addEventListener('mousemove', function () {
-      if (type !== 'mp4') return;
+    function switchControls(value) {
+      setHideControls(value);
+      setHideTopBar(value);
+    }
+    // function hideControls() {
+    //   if (type !== 'mp4') return;
 
-      setHideControls(0);
-      setHideTopBar(0);
-      clearTimeout(timeout);
+    //   clearTimeout(timeout);
 
-      timeout = setTimeout(function () {
-        setHideControls(1);
-        setHideTopBar(1);
-      }, duration);
-    });
+    //   timeout = setTimeout(function () {
+    //     setHideControls(1);
+    //     setHideTopBar(1);
+    //   }, duration);
+    // }
+    addCallbackToEvent(videoContainer.current, [
+      {
+        event: 'mousemove',
+        callback: () => {
+          if (type !== 'mp4') return;
+          switchControls(0);
+          clearTimeout(timeout);
+
+          timeout = setTimeout(() => switchControls(1), duration);
+        }
+      },
+      {
+        event: 'keydown',
+        callback: () => {
+          if (type !== 'mp4') return;
+          switchControls(0);
+        }
+      },
+      {
+        event: 'click',
+        callback: () => {
+          if (type !== 'mp4') return;
+          switchControls(0);
+        }
+      }
+    ]);
   }, []);
 
+  // reset progress when video changes
   useEffect(() => {
-    if (type !== 'mp4') setHideControls(1);
+    if (playerState.progress > 0) setVideoTime(0);
+    if (!playerState.isPlaying) togglePlay();
+  }, [videoData.videoSrc]);
+
+  // show/hide controls based on type (show only for mp4)
+  useEffect(() => {
+    if (type === null) return setVideoTime(0);
+    if (type !== 'mp4') return setHideControls(1);
   }, [type]);
 
   // reset playpause to null after few seconds
@@ -57,11 +94,13 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     }, 1000);
   }, [playPauseActivated]);
 
+  // play video on state update
   useEffect(() => {
     playerState.isPlaying ? videoElement.current?.play() : videoElement.current?.pause();
   }, [playerState.isPlaying, videoElement]);
 
   // TODO : Change this to Ref OR change entire input range to DIV
+  // progress bar color update on video play
   useEffect(() => {
     document.getElementById('vidInput').style.background =
       'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' +
@@ -141,7 +180,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     videoElement.current.volume = vol;
   }
 
-  function togglePlay() {
+  function togglePlay(state) {
     setPlayerState({
       ...playerState,
       isPlaying: !playerState.isPlaying
@@ -152,7 +191,13 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
 
   function playNextVideo() {
     if (!videoData.allModuleTopic) return;
-    if (videoData.allModuleTopic.length === videoData.currentTopicIndex) return;
+    // switch to next module
+    if (videoData.allModuleTopic.length === videoData.currentTopicIndex + 1) {
+      const { setNewModule, allModuleOptions, currentModuleIndex } = videoData;
+      if (currentModuleIndex + 1 === allModuleOptions.length) return;
+      setNewModule({ ...allModuleOptions[currentModuleIndex + 1], isVideoControlClicked: true });
+      return;
+    }
 
     const topicId = videoData.allModuleTopic[videoData.currentTopicIndex + 1].id;
     const filteredTopicContent = filterTopicContent(topicContent, topicId);
@@ -163,17 +208,26 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       ...videoData,
       videoSrc: isTopicContentPresent ? filteredTopicContent[0].contentUrl : null,
       type: isTopicContentPresent ? filteredTopicContent[0].type : null,
-      currentTopicIndex: isTopicContentPresent ? videoData.currentTopicIndex + 1 : null,
-      topicContent: isTopicContentPresent ? filteredTopicContent : null,
-      allModuleTopic: isTopicContentPresent ? videoData.allModuleTopic : null
+      currentTopicIndex: videoData.currentTopicIndex + 1 || 0,
+      topicContent: filteredTopicContent,
+      allModuleTopic: videoData.allModuleTopic,
+      currentTopicContentIndex: 0
     });
 
+    setVideoTime(0);
     setPlayPauseActivated('next');
+    togglePlay();
   }
 
   function playPreviousVideo() {
     if (!videoData.allModuleTopic) return;
-    if (videoData.currentTopicIndex === 0) return;
+    // switch to previous module
+    if (videoData.currentTopicIndex === 0) {
+      const { setNewModule, allModuleOptions, currentModuleIndex } = videoData;
+      if (currentModuleIndex === 0) return;
+      setNewModule({ ...allModuleOptions[currentModuleIndex - 1], isVideoControlClicked: true });
+      return;
+    }
 
     const topicId = videoData.allModuleTopic[videoData.currentTopicIndex - 1].id;
     const filteredTopicContent = filterTopicContent(topicContent, topicId);
@@ -182,12 +236,15 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       ...videoData,
       videoSrc: isTopicContentPresent ? filteredTopicContent[0].contentUrl : null,
       type: isTopicContentPresent ? filteredTopicContent[0].type : null,
-      currentTopicIndex: isTopicContentPresent ? videoData.currentTopicIndex - 1 : null,
-      topicContent: isTopicContentPresent ? filteredTopicContent : null,
-      allModuleTopic: isTopicContentPresent ? videoData.allModuleTopic : null
+      currentTopicIndex: videoData.currentTopicIndex - 1 || 0,
+      topicContent: filteredTopicContent,
+      allModuleTopic: videoData.allModuleTopic,
+      currentTopicContentIndex: 0
     });
 
+    setVideoTime(0);
     setPlayPauseActivated('previous');
+    togglePlay();
   }
 
   // pass true or false
@@ -202,7 +259,6 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
 
   const handleOnTimeUpdate = () => {
     const progress = (videoElement.current?.currentTime / videoElement.current?.duration) * 100;
-    // document.getElementById('vidInput').style.background = 'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' + progress + '%, #22252980 ' + progress + '%, #22252980 100%)'
     setPlayerState({
       ...playerState,
       progress: progress || 0
@@ -211,18 +267,17 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
 
   const handleVideoProgress = (event) => {
     const manualChange = Number(event.target.value);
-    // event.target.style.background = 'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' + manualChange + '%, #22252980 ' + manualChange + '%, #22252980 100%)'
     setVideoTime(manualChange);
   };
 
   function setVideoTime(time) {
-    if (!videoElement.current) return;
-
-    videoElement.current.currentTime = (videoElement.current?.duration / 100) * time;
     setPlayerState({
       ...playerState,
       progress: time
     });
+    if (!videoElement.current) return;
+
+    videoElement.current.currentTime = (videoElement.current?.duration / 100) * time || 0;
   }
 
   const handleVideoSpeed = (event) => {
@@ -287,6 +342,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       elem.msRequestFullscreen();
     }
   }
+
   /* Close fullscreen */
   function closeFullscreen() {
     if (document.exitFullscreen) {
@@ -299,6 +355,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       document.msExitFullscreen();
     }
   }
+
   // fix fullscreen issue
   function toggleFullScreen() {
     if (!document.fullscreenElement) {

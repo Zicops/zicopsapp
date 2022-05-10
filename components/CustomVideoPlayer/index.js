@@ -1,7 +1,6 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { VideoAtom } from '../../state/atoms/video.atom';
-import { courseContext } from '../../state/contexts/CourseContext';
 import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
@@ -12,18 +11,8 @@ import VideoPlayer from './VideoPlayer';
 export default function CustomVideo({ set }) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
-  let skipVideoTimer = null;
-  const [timeoutState, setTimeoutState] = useState(null);
-  let isLastVideo = true;
-
-  if (videoData.allModuleTopic) {
-    console.log(videoData);
-    isLastVideo = videoData.currentTopicIndex + 1 === videoData.allModuleTopic?.length;
-    skipVideoTimer =
-      videoData.topicContent[0]?.nextShowTime || videoData.topicContent[0]?.fromEndTime;
-
-    if (isLastVideo) skipVideoTimer = null;
-  }
+  const { isPreview, topicContent, currentTopicContentIndex } = videoData;
+  const [showBingeButtons, setShowBingeButtons] = useState(false);
 
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
@@ -54,40 +43,35 @@ export default function CustomVideo({ set }) {
 
   useEffect(() => {
     set(true);
-    if (videoData.allModuleTopic && skipVideoTimer) {
-      const duration = videoElement.current?.duration;
-      const isFromStart = videoData.topicContent[0].nextShowTime > 0;
-      const timeToWait = isFromStart
-        ? videoData.topicContent[0].nextShowTime * 1000
-        : (duration - videoData.topicContent[0].fromEndTime) * 1000;
 
-      console.log('play in progress', parseInt(skipVideoTimer) * 60 + 5000);
+    // if (videoData.allModuleTopic && skipVideoTimer) {
+    //   const duration = videoElement.current?.duration;
+    //   const isFromStart = videoData.topicContent[0].nextShowTime > 0;
+    //   const timeToWait = isFromStart
+    //     ? videoData.topicContent[0].nextShowTime * 1000
+    //     : (duration - videoData.topicContent[0].fromEndTime) * 1000;
 
-      setTimeoutState(
-        setTimeout(() => {
-          if (!timeoutState) {
-            console.log('next will play');
-            playNextVideo();
-            skipVideoTimer = null;
-          }
-        }, timeToWait + 5000)
-      );
-    }
+    //   console.log('play in progress', parseInt(skipVideoTimer) * 60 + 5000);
 
-    // reset video atom when unmounted
-    return () => {
-      // setVideoData({
-      //   ...videoData,
-      //   videoSrc: 'videos/zicops-product-demo-learner-panel.mp4',
-      //   type: 'mp4',
-      //   topicContent: [],
-      //   allModuleTopic: null,
-      //   currentTopicIndex: 0,
-      //   startPlayer: false
-      // });
-      handleMouseMove({ target: { value: 0 } });
-    };
+    //   setTimeoutState(
+    //     setTimeout(() => {
+    //       if (!timeoutState) {
+    //         console.log('next will play');
+    //         playNextVideo();
+    //         skipVideoTimer = null;
+    //       }
+    //     }, timeToWait + 5000)
+    //   );
+    // }
+
+    // reset video progress when unmounted
+    return () => handleMouseMove({ target: { value: 0 } });
   }, []);
+
+  useEffect(() => {
+    setShowBingeButtons(false);
+    console.log('src updated', videoData.videoSrc);
+  }, [videoData.videoSrc]);
 
   useEffect(() => {
     videoContainer.current?.scrollIntoView({
@@ -98,15 +82,43 @@ export default function CustomVideo({ set }) {
     console.log(videoData);
   }, [videoData]);
 
+  // turn off video player if preview video ends
   useEffect(() => {
-    set(true);
-  }, [videoData.videoSrc]);
+    if (isPreview && playerState.progress === 100) {
+      set(false);
+    }
 
-  // console.log(
-  //   skipVideoTimer,
-  //   (playerState.progress * 9) / 100,
-  //   skipVideoTimer < (playerState.progress * 9) / 100
-  // );
+    // console.log(videoElement.current, playerState);
+    // autoplay next video
+    if (playerState.progress === 100) playNextVideo();
+
+    // add logic for preventing binge button for last video
+    if (topicContent && showBingeButtons !== null) {
+      const isStartTime = topicContent[0]?.nextShowTime > 0;
+      const buttonShowTime = isStartTime
+        ? topicContent[currentTopicContentIndex]?.nextShowTime
+        : topicContent[currentTopicContentIndex]?.fromEndTime;
+
+      // console.log(buttonShowTime, videoElement.current?.currentTime);
+      if (buttonShowTime === 0) return;
+      setShowBingeButtons(buttonShowTime < videoElement.current?.currentTime);
+    }
+  }, [playerState.progress]);
+
+  // binge logic
+  let timeout = null;
+  useEffect(() => {
+    // start 5 sec timer to play next video
+    if (showBingeButtons) {
+      timeout = setTimeout(() => {
+        setShowBingeButtons(false);
+        playNextVideo();
+      }, 5000);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [showBingeButtons]);
+
   // currently  not used, can remove later
   const vidRef = useRef();
 
@@ -118,6 +130,7 @@ export default function CustomVideo({ set }) {
           updateIsPlayingTo={updateIsPlayingTo}
           set={set}
           refs={{ videoElement, videoContainer }}
+          playerState={playerState}
         />
       </div>
       {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}
@@ -125,8 +138,6 @@ export default function CustomVideo({ set }) {
       <div className="video_wrapper">
         {/* video player */}
         <VideoPlayer
-          videoSrc={videoData.videoSrc || null}
-          type={videoData.type || 'mp4'}
           videoElement={videoElement}
           handleOnTimeUpdate={handleOnTimeUpdate}
           playerState={playerState}
@@ -135,31 +146,27 @@ export default function CustomVideo({ set }) {
         />
 
         {/* watch credits button */}
-        {skipVideoTimer < (playerState.progress * 9) / 100 && timeoutState && (
+        {showBingeButtons && (
           <>
             <div className={`${styles.nextPlayBtn}`}>
-              <span></span>
+              {/* <span></span> */}
               <div
+                className={`${styles.nextPlayBtnTxt}`}
                 onClick={() => {
-                  // console.log('play cancaled', timeoutState);
-                  clearTimeout(timeoutState);
                   playNextVideo();
-                  skipVideoTimer = null;
-                  setTimeoutState(null);
+                  setShowBingeButtons(false);
                 }}>
-                Next
+                Next Topic
               </div>
             </div>
             <div className={`${styles.watchCreditsBtn}`}>
-              <span></span>
+              {/* <span></span> */}
               <div
                 onClick={() => {
-                  // console.log('play cancaled', timeoutState);
-                  clearTimeout(timeoutState);
-                  skipVideoTimer = null;
-                  setTimeoutState(null);
+                  clearTimeout(timeout);
+                  setShowBingeButtons(null);
                 }}>
-                Watch Credits
+                Keep Watching
               </div>
             </div>
           </>

@@ -7,7 +7,8 @@ import {
   getTopicVideoObject,
   TopicContentAtom,
   TopicSubtitleAtom,
-  TopicVideoAtom
+  TopicVideoAtom,
+  uploadStatusAtom
 } from '../../../../state/atoms/module.atoms';
 import useAddBinge from './useAddBinge';
 
@@ -16,7 +17,8 @@ export default function useAddTopicContent(topic) {
   const [topicContent, addTopicContent] = useRecoilState(TopicContentAtom);
   const [topicVideo, addTopicVideo] = useRecoilState(TopicVideoAtom);
   const [topicSubtitle, addTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
-
+  const [uploadStatus, updateUploadStatus] = useRecoilState(uploadStatusAtom);
+  
   // binge data input handler hook
   const { handleBingeInput } = useAddBinge();
 
@@ -33,6 +35,9 @@ export default function useAddTopicContent(topic) {
   const [isTopicContentFormVisible, setIsTopicContentFormVisible] = useState(false);
   const [isAddTopicContentReady, setIsAddTopicContentReady] = useState(false);
 
+   useEffect(() => {
+     updateUploadStatus(null);
+   }, []);
   // disable add button if data is incomplete
   // TODO: add styles for add button in AddTopicContentForm add button at bottom
   useEffect(() => {
@@ -67,9 +72,9 @@ export default function useAddTopicContent(topic) {
 
     // language needs to be unique
     if (e.target.name === 'language') {
-      const isLanguagePresent = topicContent.some((content) => {
-        return content.language === e.target.value;
-      });
+       const isLanguagePresent = topicContent.some(
+         (content) => content.language === e.target.value
+       );
 
       if (isLanguagePresent)
         return alert(`Topic Content already added in language ${e.target.value}`);
@@ -98,16 +103,34 @@ export default function useAddTopicContent(topic) {
       window.URL.revokeObjectURL(video.src);
       duration = video.duration;
 
+      const variable_buffer_time = 2;
+      const filteredTopicContent = filterTopicContent(topicContent, topic?.id);
+      if (filteredTopicContent.length) {
+        const prevUploadDuration = filteredTopicContent[0].duration;
+        console.log(
+          prevUploadDuration + variable_buffer_time,
+          prevUploadDuration - variable_buffer_time,
+          duration
+        );
+        // 6 < 4 < 2
+        if (
+          prevUploadDuration + variable_buffer_time <= duration ||
+          prevUploadDuration - variable_buffer_time >= duration
+        ) {
+          alert('Video Length Should be same for all videos!!');
+          return;
+        }
+      }
+
       setNewTopicContent({
         ...newTopicContent,
         duration: parseInt(duration)
       });
+      setNewTopicVideo({
+        ...newTopicVideo,
+        file: e.target.files[0]
+      });
     };
-
-    setNewTopicVideo({
-      ...newTopicVideo,
-      file: e.target.files[0]
-    });
   }
 
   // subtitle input

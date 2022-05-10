@@ -5,7 +5,17 @@ import { isLoadingAtom, TopicContentAtom } from '../../../../state/atoms/module.
 import TopicBox from '../TopicBox';
 import style from './chapter.module.scss';
 
-export default function ChapterRow({ topics, name, index, description, chapterId, moduleId }) {
+export default function ChapterRow({
+  topics,
+  name,
+  index,
+  description,
+  chapterId,
+  moduleId,
+  getModuleOptions,
+  currrentModule,
+  setSelectedModule
+}) {
   const filteredAndSortedData = filterAndSortTopics(topics, moduleId, chapterId);
 
   const isLoading = useRecoilValue(isLoadingAtom);
@@ -52,10 +62,13 @@ export default function ChapterRow({ topics, name, index, description, chapterId
         return (
           <TopicBox
             key={topic.name}
-            index={index + 1}
+            topicCount={index + 1}
             topic={topic}
             topicContent={filteredTopicContent}
             moduleId={moduleId}
+            getModuleOptions={getModuleOptions}
+            currrentModule={currrentModule}
+            setSelectedModule={setSelectedModule}
           />
         );
       })}

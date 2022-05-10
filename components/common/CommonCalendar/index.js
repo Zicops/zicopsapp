@@ -2,27 +2,22 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 // import Clock from 'react-digital-clock';
 import styles from './calendar.module.scss';
+import CustomCalenderFooter from './CustomCalenderFooter';
+import CustomCalenderHeader from './CustomCalenderHeader';
 
-const CommonCalendar = () => {
-  let today = new Date();
-  let date = new Date().toUTCString().slice(5, 16);
+export default function CommonCalendar() {
   return (
-    <div>
+    <div className={`w-100 h-100 ${styles.commonCalendar}`}>
       <DatePicker
+        calendarContainer={CustomCalenderFooter}
+        renderCustomHeader={CustomCalenderHeader}
         dateFormat="dd/MM/yyyy"
-        className="common_calendar_body"
-        calendarClassName="common_calendar"
-        dayClassName={() => 'common_calendar_dates'}
-        monthClassName={() => 'common_calendar_months'}
+        calendarClassName={`${styles.calender}`}
+        dayClassName={() => `${styles.singleDayCell}`}
+        // openToDate={new Date('1993/09/28')}
         inline
         fixedHeight
       />
-      <div className={`${styles.clock_time}`}>
-        <span>{date}</span>
-        {/* <Clock format={'hh-mm'} /> */}
-      </div>
     </div>
   );
-};
-
-export default CommonCalendar;
+}

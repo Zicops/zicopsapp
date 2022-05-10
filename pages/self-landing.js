@@ -1,11 +1,11 @@
-import Link from "next/link";
 import { useEffect } from "react";
-import HeroSlider from '../components/HeroSlider'
-import CardSlider from '../components/medium/CardSlider'
-import BigCardSlider from '../components/medium/BigCardSlider'
-import SelfPacedMiddle from '../components/large/SelfPacedMiddle'
-import { sliderImages, bigImages, circleImages, squareImages } from '../API/DemoSliderData';
+import { bigImages, sliderImages } from '../API/DemoSliderData';
+import CommonCalendar from '../components/common/CommonCalendar';
+import SimpleTable from '../components/common/SimpleTable';
 import FavouriteDndCourses from "../components/FavouriteDndCourses";
+import BigCardSlider from '../components/medium/BigCardSlider';
+import ZicopsCarousel from '../components/ZicopsCarousel';
+
 
 export default function Self() {
 
@@ -83,39 +83,69 @@ export default function Self() {
         }
       };
 
+    const tableData = {
+      columnHeader: ['Course Name', 'End Date', 'Sub Category', 'Completion'],
+      rowData: [
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
+        ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%']
+      ]
+  };
+  
     useEffect(() => {
 
         console.log(screen.width)
 
     }, []);
 
+
     return (
-        <div style={{
-            backgroundColor: 'var(--tile-bg)',
-            overflow: 'hidden',
-            margin: 0,
-            padding: 0
+      <div
+        style={{
+          backgroundColor: 'var(--tile-bg)',
+          overflow: 'hidden',
+          margin: 0,
+          padding: 0
         }}>
-            {/*<HeroSlider />*/}
-            <FavouriteDndCourses />
-            <CardSlider title="Subscribed Classroom Courses" data={sliderImages} />
-            <CardSlider title="Recomended For You" data={sliderImages} />
+        {/*<HeroSlider />*/}
+        <FavouriteDndCourses />
+        <ZicopsCarousel title="Subscribed Classroom Courses" data={sliderImages} />
+        <ZicopsCarousel title="Recomended For You" data={sliderImages} />
 
-            <SelfPacedMiddle />
+        <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
+          <div className="w-60 border_right">
+            <SimpleTable
+              tableData={tableData}
+              tableHeight="70vh"
+              tableHeading="Mandatory Courses"
+            />
+          </div>
+          <div className="w-40 calender_box">
+            <CommonCalendar />
+          </div>
+        </div>
+        {/* <SelfPacedMiddle /> */}
+        
+        <ZicopsCarousel title="Trending" data={sliderImages} />
+        <BigCardSlider title="Recomended Premier Courses" data={bigImages} slide={realSquare} />
+        <ZicopsCarousel title="Live Events" data={sliderImages} />
+        <ZicopsCarousel title="Your Attended Events" data={sliderImages} />
+        <ZicopsCarousel title="Upcoming Events" data={sliderImages} />
+        <ZicopsCarousel title="Live Events" data={sliderImages} />
 
-            <CardSlider title="Trending" data={sliderImages} />
-            <BigCardSlider title="Recomended Premier Courses" data={bigImages} slide={realSquare}/>
-            <CardSlider title="Live Events" data={sliderImages} />
-            <CardSlider title="Your Attended Events" data={sliderImages} />
-            <CardSlider title="Upcoming Events" data={sliderImages} />
-            <CardSlider title="Live Events" data={sliderImages} />
-
-            {/* <Link href="/courses">
+        {/* <Link href="/courses">
       <a>Courses</a>
       </Link> */}
-            {/* <Link href="/admin">
+        {/* <Link href="/admin">
       <a style={{display:'flex', justifyContent: 'center', color: 'var(--primary)'}}><h2>Go to Admin Module</h2></a>
       </Link> */}
-        </div>
-    )
+      </div>
+    );
 }

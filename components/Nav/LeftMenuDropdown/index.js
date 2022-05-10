@@ -13,10 +13,10 @@ import { userContext } from '../../../state/contexts/UserContext';
 
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { languages, preferences } from '../Logic/subMenu.helper.js';
-import RightArrow from '../../../public/images/bigarrowright.png' 
-import styles from '../nav.module.scss'
+import RightArrow from '../../../public/images/bigarrowright.png';
+import styles from '../nav.module.scss';
 
-export default function LeftMenuDropdown({navmenuicon}) {
+export default function LeftMenuDropdown({ navmenuicon }) {
   const { isAdmin, makeAdmin } = useContext(userContext);
   const { anchorEl, handleClick, handleClose, open, gotoAdmin, gotoUser } = useDropDownHandle(
     isAdmin,
@@ -44,8 +44,8 @@ export default function LeftMenuDropdown({navmenuicon}) {
         <Image src={navmenuicon} alt="" height="20px" width="30px" />
       </Button> */}
       <Menu
-        // {...languages}
-        // {...preferences}
+        {...languages}
+        {...preferences}
         id="fade-menu"
         anchorEl={anchorEl}
         open={open}

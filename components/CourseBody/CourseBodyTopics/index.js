@@ -28,7 +28,8 @@ export default function CourseBodyTopics() {
     setActiveCourseTab,
     getModuleOptions,
     handleModuleChange,
-    selectedModule
+    selectedModule,
+    setSelectedModule
   } = useShowData(courseContextData);
 
   const { fullCourse } = courseContextData;
@@ -53,7 +54,8 @@ export default function CourseBodyTopics() {
       <Dropdown options={options} handleChange={handleModuleChange} value={selectedModule} />
 
       <Header
-        title={fullCourse.name}
+        title={currentModule?.name}
+        description={currentModule?.description || 'this is a description.'}
         expertise={fullCourse.expertise_level?.split(',').join(' | ')}
       />
 
@@ -67,6 +69,9 @@ export default function CourseBodyTopics() {
               key={chapter.name}
               chapterId={chapter.id}
               moduleId={selectedModule.value}
+              getModuleOptions={getModuleOptions}
+              currrentModule={selectedModule}
+              setSelectedModule={setSelectedModule}
             />
           ))
         : filteredAndSortedData.map((topic, index) => {
@@ -75,10 +80,13 @@ export default function CourseBodyTopics() {
             return (
               <TopicBox
                 key={topic.name}
-                index={index + 1}
+                topicCount={index + 1}
                 topic={topic}
                 topicContent={filteredTopicContent}
                 moduleId={selectedModule?.value}
+                getModuleOptions={getModuleOptions}
+                currrentModule={selectedModule}
+                setSelectedModule={setSelectedModule}
               />
             );
           })}

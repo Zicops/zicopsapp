@@ -1,6 +1,6 @@
 import { Skeleton } from '@mui/material';
 
-export default function Header({ title, expertise }) {
+export default function Header({ title, description, expertise }) {
   return (
     <>
       <div className="module-header">
@@ -10,6 +10,15 @@ export default function Header({ title, expertise }) {
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={400} />
             )}
           </h2>
+        </div>
+
+        <div className="subheading">
+          {/* Description: */}
+          <span>
+            {'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non temporibus vel nemo! Quaerat nam laborum, placeat repellat minima eius distinctio iure. Doloribus repellat quas suscipit.' || (
+              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={10} width={150} />
+            )}
+          </span>
         </div>
 
         <div className="subheading">
@@ -38,14 +47,17 @@ export default function Header({ title, expertise }) {
           .subheading {
             display: flex;
             gap: 5px;
-            font-size: 13px;
-            color: #858f8f;
+            font-size: 14px;
+            color: var(--dark_three);
+            margin: 10px 0;
+            max-width: 800px;
+            text-align: center;
           }
           .heading h2 {
             font-size: 22px;
             font-weight: normal;
             line-height: 30px;
-            color: #ffffff;
+            color: var(--white);
           }
         `}
       </style>

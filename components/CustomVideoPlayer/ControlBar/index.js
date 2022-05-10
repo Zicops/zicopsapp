@@ -35,12 +35,24 @@ export default function ControlBar({
   const [hideBar, setHideBar] = useState(false);
   const videoData = useRecoilValue(VideoAtom);
 
-  let isFirstVideo = true;
-  let isLastVideo = true;
+  let disablePreviousButton = true;
+  let disableNextButton = true;
 
   if (videoData.allModuleTopic) {
-    isFirstVideo = videoData.currentTopicIndex === 0;
-    isLastVideo = videoData.currentTopicIndex + 1 === videoData.allModuleTopic?.length;
+    const { allModuleTopic, currentTopicIndex } = videoData;
+    disablePreviousButton = currentTopicIndex === 0;
+    disableNextButton = currentTopicIndex + 1 === allModuleTopic?.length;
+  }
+
+  if (videoData.allModuleOptions) {
+    const { allModuleOptions, currentModuleIndex } = videoData;
+    if (disablePreviousButton) disablePreviousButton = currentModuleIndex === 0;
+    if (disableNextButton) disableNextButton = currentModuleIndex + 1 === allModuleOptions.length;
+  }
+
+  if (videoData.isPreview) {
+    disablePreviousButton = true;
+    disableNextButton = true;
   }
 
   return (
@@ -67,8 +79,18 @@ export default function ControlBar({
           <Image src="/images/reload_53905.png" alt="" height="25px" width="22px" />
         </Button>
 
-        <Button handleClick={playPreviousVideo} disable={isFirstVideo}>
-          <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
+        <Button handleClick={playPreviousVideo} disable={disablePreviousButton}>
+          {disablePreviousButton ? (
+            <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
+          ) : (
+            <Image
+              src="/images/next-topic.png"
+              style={{ transform: 'rotate(180deg)' }}
+              alt=""
+              height="30px"
+              width="30px"
+            />
+          )}
         </Button>
 
         <Button handleClick={backwardVideo}>
@@ -87,8 +109,19 @@ export default function ControlBar({
           <Image src="/images/next-forward.png" alt="" height="40px" width="35px" />
         </Button>
 
-        <Button handleClick={playNextVideo} disable={isLastVideo}>
-          <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
+        <Button handleClick={playNextVideo} disable={disableNextButton}>
+          {disableNextButton ? (
+            <Image
+              src="/images/prev-topic.png"
+              style={{ transform: 'rotate(180deg)' }}
+              alt=""
+              height="30px"
+              width="30px"
+            />
+          ) : (
+            <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
+          )}
+          {/* <Image src="/images/next-topic.png" alt="" height="30px" width="30px" /> */}
         </Button>
 
         <div
@@ -99,7 +132,7 @@ export default function ControlBar({
             handleVolumeChange={handleVolume}
             handleMute={handleMute}
             isMute={playerState.isMuted}
-            volume={playerState.volume}
+            vol={playerState.volume}
           />
         </div>
       </div>
