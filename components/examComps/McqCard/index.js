@@ -2,7 +2,7 @@ import Button from '../../common/Button';
 import styles from './mcqCard.module.scss';
 import McqOption from './McqOption';
 
-const McqCard = ({ question }) => {
+const McqCard = ({ question, isButtonVisible = false }) => {
   const obj = {
     option: 'a',
     hint: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.'
@@ -16,8 +16,12 @@ const McqCard = ({ question }) => {
           <p className={`${styles.span_element}`}>
             {/* TODO : Add difficulty lebel */}
             <span>Q.</span>
-            {question}
+            <span>{question}</span>
           </p>
+          <div className={`${styles.quesImg}`}>
+            Q. <img src="/images/courses/1.png" alt="Not found" />
+          </div>
+          <p>Options</p>
         </div>
         {/* <div className={`${styles.span_element}`}>Options:</div> */}
         <section className={`${styles.option_container}`}>
@@ -42,10 +46,12 @@ const McqCard = ({ question }) => {
         </section>
         <span className={`${styles.span_element}`}>Hint:</span>
         <div className={`${styles.hint}`}>{obj.hint}</div>
-        <div className={`${styles.btn}`}>
-          <Button text={'Edit'} />
-          <Button text={'Cancel'} />
-        </div>
+        {isButtonVisible && (
+          <div className={`${styles.btn}`}>
+            <Button text={'Edit'} />
+            <Button text={'Cancel'} />
+          </div>
+        )}
       </div>
     </>
   );

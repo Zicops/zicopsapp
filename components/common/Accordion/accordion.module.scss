@@ -1,0 +1,84 @@
+@import '../../../styles/base.scss';
+
+.accordion {
+  max-width: 100%;
+  // margin: 2rem auto;
+  margin: auto;
+}
+
+.accordion_title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  cursor: pointer;
+  // background-color: $black;
+  background-color: $darkOne;
+  color: $darkThree;
+  position: relative;
+  div:nth-child(2) {
+    position: absolute;
+    right: 10px;
+    img {
+      width: 20px;
+    }
+  }
+  //   &:after {
+  //     content: '';
+  //     height: 1px;
+  //     margin-top: 12px;
+  //     background-color: #808080;
+  //     width: 80%;
+  //   }
+}
+
+.accordion_title_active {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  // background-color: $black;
+  background-color: $darkOne;
+  color: $white;
+  position: relative;
+  text-decoration: underline;
+  div:nth-child(2) {
+    position: absolute;
+    right: 10px;
+    img {
+      width: 20px;
+    }
+  }
+}
+
+// .accordion_title_active:after {
+//   content: '';
+//   height: 1px;
+//   margin-top: 12px;
+//   background-color: $white;
+//   width: 80%;
+// }
+
+.accordion_title:hover,
+.accordion_title_active:hover {
+  background-color: $tertiaryBlack;
+}
+
+// .accordion_title_icon,
+// .accordion_title_active img {
+//   width: 20px;
+//   margin-right: 10px;
+// }
+// .accordion_title .accordion_title_text,
+// .accordion_title_active .accordion_title_text {
+//   width: 20%;
+// }
+.accordion_title,
+.accordion_title_active,
+.accordion_content {
+  padding: 1rem;
+}
+
+.accordion_content {
+  background-color: $darkOne;
+  color: $darkThree;
+  font-size: 13px;
+}
