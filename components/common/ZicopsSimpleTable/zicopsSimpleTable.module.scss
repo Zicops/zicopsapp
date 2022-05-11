@@ -1,36 +1,40 @@
 @import '../../../styles/base.scss';
 
 .simpleTable {
-  background-color: var(--dark_two);
+  position: relative;
+  background-color: $black;
+  color: $primary;
   padding: 50px 20px;
 
+  .searchBar {
+    position: absolute;
+    right: 120px;
+    background-color: transparent;
+    border: 2px solid $primary;
+    padding: 5px 10px;
+  }
+
   .tableHeader {
-    /* width: 500px;
-  margin: auto; */
+    // text-shadow: 0px 0px 20px $primary, 0px 0px 15px $primary, 0px 0px 10px $primary,
+    //   0px 0px 5px $primary;
+
     font-size: 35px;
     font-weight: 600;
+    font-family: 'Open Sans';
     letter-spacing: 3px;
-    font-family: 'Open Sans' sans-serif;
     text-transform: uppercase;
-    color: white;
     text-align: center;
-    /* border: 2px solid var(--primary); */
+
     margin-bottom: 20px;
-    text-shadow: 0px 1px 10px var(--primary);
-    /* box-shadow:1px 0px 11px 0px var(--primary); */
     margin-right: 50px;
   }
 
   .tableContainer {
-    margin-right: 50px;
-
     .tableHead {
       padding: 10px 50px;
       margin: 0px 10px;
-      color: $white;
 
       .row {
-        color: var(--primary);
         text-align: center;
         font-size: 15px;
         font-weight: 600;
@@ -42,46 +46,65 @@
 
     .tableBody {
       background-color: $bgContent;
-      padding: 10px 50px;
       height: 400px;
-      overflow-y: auto;
-      margin: 0px 10px;
-
-      &::-webkit-scrollbar {
-        width: 15px;
-        cursor: pointer;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: $secondaryBlack;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: $primary;
-      }
     }
+  }
+
+  :global(.MuiDataGrid-virtualScrollerContent) {
+    overflow-x: hidden;
+  }
+  :global(.MuiDataGrid-virtualScrollerRenderZone) {
+    width: 100%;
   }
 }
 
 .tableRow {
-  color: $white;
-  // text-align: center;
+  color: $primary;
+
   font-size: 14px;
   text-transform: capitalize;
-  padding: 8px 3px;
   border: 1px solid $primary;
-  margin-right: 50px;
-  // display: flex;
-  // justify-content: space-between;
-  // font-family: inherit;
-  // cursor: pointer;
+  margin: 5px auto;
+  max-width: 99%;
 
   &:hover {
-    color: var(--primary);
-    border: 2px solid var(--primary);
-    background-color: #6bcfcf10;
-    box-shadow: 0px 0px 20px 2px #6bcfcf80;
+    color: $primary;
+    border: 2px solid $primary;
+    background-color: $darkTwo;
+    box-shadow: 0px 0px 20px 2px $primary;
     font-weight: 600;
     transform: scale(1.01);
   }
+}
+
+.previousBtn,
+.nextBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  border: 1px solid $primary;
+  background-color: $bgContent;
+  padding: 5px;
+  z-index: 10;
+
+  &:disabled {
+    cursor: no-drop;
+
+    img {
+      opacity: 0.5;
+    }
+  }
+}
+.previousBtn {
+  left: -40px;
+}
+
+.nextBtn {
+  right: -40px;
 }

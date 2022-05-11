@@ -1,0 +1,58 @@
+@import '../../../styles/base.scss';
+
+.customHeader {
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.inlineCalender {
+  background-color: $darkOne;
+  border: 1px solid $darkOne;
+
+  :global(.react-datepicker),
+  :global(.react-datepicker__triangle),
+  :global(.react-datepicker__triangle::after),
+  :global(.react-datepicker__triangle::before),
+  :global(.react-datepicker__header) {
+    background-color: $darkOne !important;
+    border: 1px solid $darkOne !important;
+  }
+
+  :global(.react-datepicker__month) {
+    overflow: hidden;
+    margin: auto 10px;
+  }
+
+  .calanderDates {
+    position: relative;
+
+    color: $darkThree;
+    background-color: $darkTwo;
+    outline: 2px solid $darkTwo;
+    z-index: 1;
+
+    &:hover {
+      position: relative;
+
+      color: $primary !important;
+      border-radius: 0px !important;
+
+      box-shadow: 0 0 30px 10px $primary;
+      z-index: 0;
+    }
+  }
+
+  :global(.react-datepicker__day--selected),
+  :global(.react-datepicker__day--keyboard-selected) {
+    position: relative;
+
+    background-color: $black !important;
+    color: $primary !important;
+
+    border-radius: 0px !important;
+    outline: 2px solid $primary !important;
+    font-weight: 700;
+    z-index: 2;
+  }
+}

@@ -122,15 +122,20 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
           contentUrl: content.contentUrl,
           file: null
         };
-        const topicSubtitleData = {
-          courseId: content.courseId,
-          contentId: content.id,
-          subtitleUrl: content.subtitleUrl || null,
-          file: null
-        };
+        content?.subtitleUrl?.forEach((s) => {
+          const topicSubtitleData = {
+            courseId: content.courseId,
+            contentId: content.id,
+            subtitleUrl: s.url || null,
+            file: null,
+            language: s.language
+          };
+
+          topicSubtitleArray.push(topicSubtitleData);
+        });
         topicContentArray.push(contentData);
         topicVideoArray.push(topicVideoData);
-        topicSubtitleArray.push(topicSubtitleData);
+        // topicSubtitleArray.push(topicSubtitleData);
 
         if (index === 0) {
           // binge data

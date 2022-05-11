@@ -6,7 +6,7 @@ import styles from './learnerExam.module.scss'
 import AnswerAllOptions from './AnswerAllOptions';
 import InfoSection from './InfoSection';
 
-const QuestionSection = () => {
+const LearnerExamComponent = () => {
   return (
     <div className={`${styles.questionSection}`}>
       <div className={`${styles.questionSection_questions}`}>
@@ -22,4 +22,4 @@ const QuestionSection = () => {
   );
 };
 
-export default QuestionSection;
+export default LearnerExamComponent;
