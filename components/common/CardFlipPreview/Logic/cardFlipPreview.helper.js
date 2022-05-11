@@ -8,5 +8,5 @@ export const backSide = {
 };
 
 export const frontSide = {
-  imgSrc: ''
+  imgSrc: '/images/courses/ANGULAR.png'
 };

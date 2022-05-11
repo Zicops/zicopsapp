@@ -1,7 +1,5 @@
 import styles from './cardFlipPreview.module.scss';
-import Image from 'next/image';
-import frontImage from '../../../public/images/courses/ANGULAR.png';
-import { backSide } from './Logic/cardFlipPreview.helper';
+import { backSide, frontSide } from './Logic/cardFlipPreview.helper';
 
 const CardFlipPreview = () => {
   return (
@@ -9,7 +7,7 @@ const CardFlipPreview = () => {
       <div className={`${styles.cardContainer}`}>
         <div className={`${styles.cardInnerContainer}`}>
           <div className={`${styles.cardFrontSide}`}>
-            <Image src={frontImage} width="302px" height="332px" />
+            <img src={frontSide.imgSrc} alt="not found" />
           </div>
           <div className={`${styles.cardBackSide}`}>
             <div className={`${styles.cbTitle}`}>{backSide.title}</div>
