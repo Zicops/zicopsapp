@@ -160,14 +160,36 @@ export default function UiComponents({
 
           <div className={`${styles.rightIcons}`}>
             {/* bookmark btn */}
-            <Button>
-              <div
-                className={`${styles.videoBookmark}`}
-                onClick={() => {
-                  toggleStates(setShowBookmark, showBookmark);
-                  updateIsPlayingTo(false);
-                }}></div>
-            </Button>
+            <div className={`position-relative`}>
+              <Button>
+                <div
+                  className={`${styles.videoBookmark}`}
+                  onClick={() => {
+                    toggleStates(setShowBookmark, showBookmark);
+                    updateIsPlayingTo(false);
+                  }}></div>
+              </Button>
+
+              {showBookmark && (
+                <div className={`${styles.bookmarksInput}`}>
+                  <input
+                    className={`${styles.bookmarksField}`}
+                    type="text"
+                    placeholder="add bookmark title"
+                    onChange={handleBookmarkChange}
+                    value={bookmarkData.title}
+                  />
+                  <button
+                    className={`${styles.bookmarksBtn}`}
+                    type="submit"
+                    onClick={() => {
+                      handleSaveBookmark(playerState.progress);
+                    }}>
+                    Save Bookmark
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* notes btn */}
             <Button>
@@ -222,7 +244,7 @@ export default function UiComponents({
       {/* <div className={`${styles.drawer}`}> */}
       {/* elements which will be activated when user clicks on one of the above btns  */}
       {/* show bookmark input to save bookmarks */}
-      {showBookmark && (
+      {/* {showBookmark && (
         <div className={`${styles.bookmarksInput}`}>
           <input
             className={`${styles.bookmarksField}`}
@@ -240,7 +262,7 @@ export default function UiComponents({
             Save Bookmark
           </button>
         </div>
-      )}
+      )} */}
 
       {/* <div className={`${styles.NotesInputBox}`}>
             <input
