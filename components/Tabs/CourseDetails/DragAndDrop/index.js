@@ -22,41 +22,38 @@ const DragDrop = ({ data, contextData }) => {
           </label>
 
           <div className="col_25">
-            <Droppable droppableId="categories">
-              {(provided) => (
-                <div
-                  className="drag_category_area"
-                  id="dca"
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}>
-                  <div className="inner_drag_srch disableTextSelection">
-                    <input
-                      type="text"
-                      id="search"
-                      placeholder="Search"
-                      autoComplete="off"
-                      onInput={handleSearch}></input>
+            <div className="drag_category_area">
+              <div className="inner_drag_srch">
+                <input
+                  type="text"
+                  id="search"
+                  placeholder="Search"
+                  autoComplete="off"
+                  onInput={handleSearch}></input>
+              </div>
+              <Droppable droppableId="categories">
+                {(provided) => (
+                  <div id="dca" {...provided.droppableProps} ref={provided.innerRef}>
+                    {draglist.map(({ rank, name }, index) => {
+                      return (
+                        <Draggable key={name + rank} draggableId={'drag_' + rank} index={index}>
+                          {(provided) => (
+                            <div
+                              className="inner_drag_ele"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}>
+                              <p>{name}</p>
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
                   </div>
-
-                  {draglist.map(({ rank, name }, index) => {
-                    return (
-                      <Draggable key={name + rank} draggableId={'drag_' + rank} index={index}>
-                        {(provided) => (
-                          <div
-                            className="inner_drag_ele disableTextSelection"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}>
-                            <p>{name}</p>
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+                )}
+              </Droppable>
+            </div>
           </div>
 
           <div className="col_10">

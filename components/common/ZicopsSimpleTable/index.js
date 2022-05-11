@@ -1,11 +1,7 @@
 import { arrayOf, shape, string } from 'prop-types';
-import { useCallback } from 'react';
 import StyledDataGrid from '../StyledDataGrid';
-import {
-  CustomAscendingIcon,
-  CustomDescendingIcon,
-  CustomPagination
-} from '../ZicopsTable/Logic/zicopsTable.helper';
+import { CustomAscendingIcon, CustomDescendingIcon } from '../ZicopsTable/Logic/zicopsTable.helper';
+import CustomPagination from './CustomPagination';
 import styles from './zicopsSimpleTable.module.scss';
 
 export default function ZicopsSimpleTable({
@@ -18,25 +14,16 @@ export default function ZicopsSimpleTable({
   headingStyle,
   pageSize
 }) {
-  // const { columnHeader, rowData } = tableData;
-
-  const getRowSpacing = useCallback((params) => {
-    return {
-      top: params.isFirstVisible ? 0 : 5,
-      bottom: params.isLastVisible ? 0 : 5,
-      left: params.isFirstVisible ? 0 : 5,
-      right: params.isLastVisible ? 0 : 5
-    };
-  }, []);
   return (
     <>
       <div className={`${styles.simpleTable}`}>
         {/* table heading */}
+        <input type="search" className={`${styles.searchBar}`} placeholder="Search" />
         <div className={`${styles.tableHeader} ${headingStyleClass}`} style={headingStyle}>
           {tableHeading}
         </div>
 
-        <div style={{ height: tableHeight }}>
+        <div style={{ height: tableHeight, width: '90vw', margin: 'auto' }}>
           <StyledDataGrid
             rows={data || []}
             columns={columns}
@@ -53,13 +40,11 @@ export default function ZicopsSimpleTable({
               Pagination: CustomPagination,
               ColumnSortedDescendingIcon: CustomDescendingIcon,
               ColumnSortedAscendingIcon: CustomAscendingIcon
-              // ColumnMenu: CustomColumnMenu
             }}
             getRowClassName={() => `${styles.tableRow}`}
             disableColumnMenu={true}
             pageSize={pageSize}
-            rowsPerPageOptions={rowsPerPageOptions}
-            getRowSpacing={getRowSpacing}
+            rowsPerPageOptions={[rowsPerPageOptions]}
             pagination
           />
         </div>

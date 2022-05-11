@@ -7,10 +7,18 @@ import { ModuleAtom } from '../../../state/atoms/module.atoms';
 import { VideoAtom } from '../../../state/atoms/video.atom';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import Button from '../Button';
-import useSaveData from '../Logic/useSaveData';
 import styles from '../customVideoPlayer.module.scss';
+import useSaveData from '../Logic/useSaveData';
+import Quiz from './Quiz';
 
-export default function UiComponents({ refs, updateIsPlayingTo, set, playerState }) {
+export default function UiComponents({
+  refs,
+  updateIsPlayingTo,
+  set,
+  playerState,
+  styleClass,
+  moveVideoProgressBySeconds
+}) {
   const { videoElement, videoContainer } = refs;
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
@@ -27,8 +35,17 @@ export default function UiComponents({ refs, updateIsPlayingTo, set, playerState
     handleSaveNotes
   } = useSaveData(videoElement);
 
-  const { showBookmark, setShowBookmark, showLanguageSubtitles, setShowLanguageSubtitles } = states;
-  const PlayerClose = () => set(false);
+  const {
+    showBookmark,
+    setShowBookmark,
+    showLanguageSubtitles,
+    setShowLanguageSubtitles,
+    showQuizDropdown,
+    setShowQuizDropdown,
+    showQuiz,
+    setShowQuiz
+  } = states;
+  const playerClose = () => set(false);
 
   const activeModule = filterModule(moduleData, videoData.currentModuleId);
   const currentTopic = videoData?.allModuleTopic
@@ -45,107 +62,189 @@ export default function UiComponents({ refs, updateIsPlayingTo, set, playerState
 
   return (
     <>
-      <div className={`${styles.topIconsContainer}`}>
-        {/* back button on left which close the player and return to hero */}
-        <div className={`${styles.firstIcon}`} onClick={PlayerClose}>
-          <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
+      <div className={`${styles.customUiContainer} ${styleClass}`}>
+        <div className={`${styles.topIconsContainer}`}>
+          {/* back button on left which close the player and return to hero */}
+          <div className={`${styles.firstIcon}`} onClick={playerClose}>
+            <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
+          </div>
+
+          <div className={`${styles.leftIcons}`}>
+            {/* subtitles and language button */}
+            <div className="position-relative">
+              <Button>
+                <Image
+                  src="/images/4019936_2.png"
+                  alt=""
+                  height="30px"
+                  width="28px"
+                  onClick={() => {
+                    toggleStates(setShowLanguageSubtitles, showLanguageSubtitles);
+                  }}
+                />
+              </Button>
+
+              {/* subtitle and language element */}
+              {showLanguageSubtitles && (
+                <div className={`${styles.languageList}`}>
+                  {/* for topic content language  */}
+                  <div>
+                    <h4>Audio </h4>
+                    {videoData?.topicContent &&
+                      videoData.topicContent.map((c, i) => (
+                        <button
+                          key={c.id}
+                          className={`${
+                            i === videoData.currentTopicContentIndex ? styles.languageBtnActive : ''
+                          }`}
+                          onClick={() => {
+                            setVideoData({
+                              ...videoData,
+                              currentTopicContentIndex: i,
+                              videoSrc: videoData.topicContent[i].contentUrl
+                            });
+                          }}>
+                          {c.language}
+                        </button>
+                      ))}
+                  </div>
+
+                  {/* for topic content subtitles */}
+                  <div>
+                    <h4>Subtitles</h4>
+                    {videoData?.topicContent &&
+                      videoData.topicContent.map((c, i) => (
+                        <button
+                          key={c.id}
+                          className={`${
+                            i === videoData.currentTopicContentIndex ? styles.languageBtnActive : ''
+                          }`}
+                          onClick={() => {
+                            setVideoData({
+                              ...videoData,
+                              currentTopicContentIndex: i,
+                              videoSrc: videoData.topicContent[i].contentUrl
+                            });
+                          }}>
+                          {c.language}
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* something I dont know, update comment later */}
+            <Button>
+              <Image src="/images/pot-plant-icon.png" alt="" height="30px" width="30px" />
+            </Button>
+
+            {/* something to do with discussion, update later */}
+            <Button>
+              <Image
+                src="/images/conversation-icon-png-clipart2.png"
+                alt=""
+                height="30px"
+                width="30px"
+              />
+            </Button>
+          </div>
+
+          {/* video title */}
+          <div className={`${styles.centerText}`}>
+            <div className={`${styles.centerTextHeading}`}>{truncateToN(fullCourse?.name, 60)}</div>
+            <div className={`${styles.centerTextSubheading}`}>
+              {truncateToN(courseTopicName, 80)}
+            </div>
+          </div>
+
+          <div className={`${styles.rightIcons}`}>
+            {/* bookmark btn */}
+            <div className={`position-relative`}>
+              <Button>
+                <div
+                  className={`${styles.videoBookmark}`}
+                  onClick={() => {
+                    toggleStates(setShowBookmark, showBookmark);
+                    updateIsPlayingTo(false);
+                  }}></div>
+              </Button>
+
+              {showBookmark && (
+                <div className={`${styles.bookmarksInput}`}>
+                  <input
+                    className={`${styles.bookmarksField}`}
+                    type="text"
+                    placeholder="add bookmark title"
+                    onChange={handleBookmarkChange}
+                    value={bookmarkData.title}
+                  />
+                  <button
+                    className={`${styles.bookmarksBtn}`}
+                    type="submit"
+                    onClick={() => {
+                      handleSaveBookmark(playerState.progress);
+                    }}>
+                    Save Bookmark
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* notes btn */}
+            <Button>
+              <Image src="/images/Notes Icon2.png" alt="" height="25px" width="25px" />
+            </Button>
+
+            {/* quiz btn */}
+            <div className={`position-relative`}>
+              {/* <Button>
+                <Image
+                  onClick={() => toggleStates(setShowQuizDropdown, showQuizDropdown)}
+                  src="/images/Quiz Icon2.png"
+                  alt=""
+                  height="30px"
+                  width="30px"
+                />
+              </Button> */}
+              <Button>
+                <div
+                  className={`${styles.videoQuiz}`}
+                  onClick={() => toggleStates(setShowQuizDropdown, showQuizDropdown)}></div>
+              </Button>
+              {showQuizDropdown && (
+                <div className={`${styles.quizDropdown}`}>
+                  <button
+                    onClick={() => {
+                      updateIsPlayingTo(false);
+                      toggleStates(setShowQuiz, showQuiz);
+                      toggleStates(setShowQuizDropdown, setShowQuizDropdown);
+                    }}>
+                    Quiz 1
+                  </button>
+                  <button
+                    onClick={() => {
+                      updateIsPlayingTo(false);
+                      toggleStates(setShowQuiz, showQuiz);
+                      toggleStates(setShowQuizDropdown, setShowQuizDropdown);
+                    }}>
+                    Quiz 2
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className={`${styles.lastIcon}`}></div>
         </div>
-
-        <div className={`${styles.leftIcons}`}>
-          {/* subtitles and language button */}
-          <Button styleClass={'position-relative'}>
-            <Image
-              src="/images/4019936_2.png"
-              alt=""
-              height="30px"
-              width="28px"
-              onClick={() => {
-                toggleStates(setShowLanguageSubtitles, showLanguageSubtitles);
-              }}
-            />
-
-            {/* subtitle and language element */}
-            {showLanguageSubtitles && (
-              <div className={`${styles.languageList}`}>
-                {/* for topic content language  */}
-                {videoData?.topicContent &&
-                  videoData.topicContent.map((c, i) => (
-                    <button
-                      className={`${
-                        i === videoData.currentTopicContentIndex ? styles.languageBtnActive : ''
-                      }`}
-                      onClick={() => {
-                        setVideoData({
-                          ...videoData,
-                          currentTopicContentIndex: i,
-                          videoSrc: videoData.topicContent[i].contentUrl
-                        });
-                      }}>
-                      {c.language}
-                    </button>
-                  ))}
-              </div>
-            )}
-          </Button>
-
-          {/* something I dont know, update comment later */}
-          <Button>
-            <Image src="/images/pot-plant-icon.png" alt="" height="30px" width="30px" />
-          </Button>
-
-          {/* something to do with chat, update later*/}
-          <Button>
-            <Image
-              src="/images/conversation-icon-png-clipart2.png"
-              alt=""
-              height="30px"
-              width="30px"
-            />
-          </Button>
-        </div>
-
-        {/* video title */}
-        <div className={`${styles.centerText}`}>
-          <div className={`${styles.centerTextHeading}`}>{truncateToN(fullCourse?.name, 60)}</div>
-          <div className={`${styles.centerTextSubheading}`}>{truncateToN(courseTopicName, 80)}</div>
-        </div>
-
-        <div className={`${styles.rightIcons}`}>
-          {/* bookmark btn */}
-          <Button>
-            <Image
-              src="/images/bookmark2.png"
-              alt=""
-              height="30px"
-              width="18px"
-              onMouseEnter={() => {
-                toggleStates(setShowBookmark, showBookmark);
-                updateIsPlayingTo(false);
-              }}
-            />
-          </Button>
-
-          {/* notes btn */}
-          <Button>
-            <Image src="/images/Notes Icon2.png" alt="" height="25px" width="25px" />
-          </Button>
-
-          {/* quiz btn */}
-          <Button>
-            <Image src="/images/Quiz Icon2.png" alt="" height="30px" width="30px" />
-          </Button>
-        </div>
-
-        <div className={`${styles.lastIcon}`}></div>
       </div>
       {/* <div className={`${styles.bookmarkBtn}`}>
           <button onClick={() => updateIsPlayingToPlay(false)}>Bookmark</button>
         </div> */}
       {/* <div className={`${styles.drawer}`}> */}
-
       {/* elements which will be activated when user clicks on one of the above btns  */}
       {/* show bookmark input to save bookmarks */}
-      {showBookmark && (
+      {/* {showBookmark && (
         <div className={`${styles.bookmarksInput}`}>
           <input
             className={`${styles.bookmarksField}`}
@@ -163,7 +262,7 @@ export default function UiComponents({ refs, updateIsPlayingTo, set, playerState
             Save Bookmark
           </button>
         </div>
-      )}
+      )} */}
 
       {/* <div className={`${styles.NotesInputBox}`}>
             <input
@@ -187,7 +286,23 @@ export default function UiComponents({ refs, updateIsPlayingTo, set, playerState
               Save Notes
             </button>
           </div> */}
-      <div id="output"></div>
+      {/* <div id="output"></div> */}
+
+      {showQuiz && (
+        <Quiz
+          playerClose={playerClose}
+          handleSkip={() => {
+            moveVideoProgressBySeconds(-1);
+            updateIsPlayingTo(true);
+            toggleStates(setShowQuiz, showQuiz);
+          }}
+          handleSubmit={() => {
+            moveVideoProgressBySeconds(-1);
+            updateIsPlayingTo(true);
+            toggleStates(setShowQuiz, showQuiz);
+          }}
+        />
+      )}
     </>
   );
 }

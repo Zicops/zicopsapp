@@ -36,6 +36,7 @@ export default function ControlBar({
   const [hideBar, setHideBar] = useState(false);
   const videoData = useRecoilValue(VideoAtom);
 
+  console.log(videoData);
   let disablePreviousButton = true;
   let disableNextButton = true;
 
@@ -77,7 +78,8 @@ export default function ControlBar({
 
       <div className={`${controlButtons}`}>
         <Button handleClick={reloadVideo}>
-          <Image src="/images/reload_53905.png" alt="" height="25px" width="22px" />
+          {/* <Image src="/images/reload_53905.png" alt="" height="25px" width="22px" /> */}
+          <div className={`${styles.reloadBtn}`}></div>
         </Button>
 
         <Button handleClick={playPreviousVideo} disable={disablePreviousButton}>
@@ -98,32 +100,38 @@ export default function ControlBar({
         </Button>
 
         <Button handleClick={backwardVideo}>
-          <Image src="/images/prev-back.png" alt="" height="40px" width="35px" />
+          {/* <Image src="/images/prev-back.png" alt="" height="40px" width="35px" /> */}
+          <div className={`${styles.backwordBtn}`}></div>
         </Button>
 
         <Button handleClick={handlePlay} styleClass={playPauseBtn}>
           {!playerState.isPlaying ? (
-            <Image src="/images/preview-btn.png" alt="" height="50px" width="50px" />
+            // <Image src="/images/preview-btn.png" alt="" height="50px" width="50px" />
+            <div className={`${styles.pauseBtn}`}></div>
           ) : (
-            <Image src="/images/progressTriangle.png" alt="" height="50px" width="50px" />
+            // <Image src="/images/progressTriangle.png" alt="" height="50px" width="50px" />
+            <div className={`${styles.playBtn}`}></div>
           )}
         </Button>
 
         <Button handleClick={forwardVideo}>
-          <Image src="/images/next-forward.png" alt="" height="40px" width="35px" />
+          {/* <Image src="/images/next-forward.png" alt="" height="40px" width="35px" /> */}
+          <div className={`${styles.forwardBtn}`}></div>
         </Button>
 
         <Button handleClick={playNextVideo} disable={disableNextButton}>
           {disableNextButton ? (
-            <Image
-              src="/images/prev-topic.png"
-              style={{ transform: 'rotate(180deg)' }}
-              alt=""
-              height="30px"
-              width="30px"
-            />
+            <div className={`${styles.nextBtn} ${styles.disabled}`}></div>
           ) : (
-            <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
+            // <Image
+            //   src="/images/prev-topic.png"
+            //   style={{ transform: 'rotate(180deg)' }}
+            //   alt=""
+            //   height="30px"
+            //   width="30px"
+            // />
+            // <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
+            <div className={`${styles.nextBtn}`}></div>
           )}
           {/* <Image src="/images/next-topic.png" alt="" height="30px" width="30px" /> */}
         </Button>
@@ -142,12 +150,11 @@ export default function ControlBar({
       </div>
       <div className={`${fullScreenBtn}`}>
         <Button handleClick={handleFullScreen}>
-          <Image
-            src="/images/switch-to-full-screen-button_icon.png"
-            alt=""
-            height="30px"
-            width="30px"
-          />
+          {!document.fullscreenElement ? (
+            <div className={`${styles.fsBtn}`}></div>
+          ) : (
+            <div className={`${styles.fseBtn}`}></div>
+          )}
         </Button>
       </div>
     </div>

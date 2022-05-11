@@ -75,6 +75,7 @@ export default function AdminFooter() {
           padding: 10px 20px;
           background-color: transparent;
           color: #858f8f;
+          border: 1px solid var(--dark_three);
           border-radius: 50px;
           min-width: 155px;
           margin: 5px;

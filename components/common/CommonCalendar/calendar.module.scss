@@ -58,17 +58,41 @@
       color: $header;
       border: 1px solid $header;
 
-      &:hover,
-      &:global(.react-datepicker__day--keyboard-selected) {
+      &:hover {
         border: 3px solid $primary;
         background: $accent;
         color: $primary;
-        padding: 4px 0;
+        padding: 4px;
         border-radius: 0px;
       }
 
-      &:global(.react-datepicker__day--keyboard-selected) {
-        border-radius: 5px;
+      // &:global(.react-datepicker__day--keyboard-selected) {
+      //   border-radius: 5px;
+      // }
+    }
+
+    .highlighted {
+      border: 3px solid $primary;
+      background: $accent;
+      color: $primary;
+      padding: 4px;
+      border-radius: 0px;
+    }
+
+    .circleAtCorner {
+      position: relative;
+
+      &::before {
+        content: '';
+        height: 10px;
+        width: 10px;
+
+        position: absolute;
+        top: -5px;
+        right: -5px;
+
+        background: $white;
+        border-radius: 50%;
       }
     }
 
@@ -78,6 +102,7 @@
       justify-content: center;
       // row-gap: 10px;
     }
+
     :global(.react-datepicker__day-name) {
       font-size: 1.2rem;
       width: 10%;

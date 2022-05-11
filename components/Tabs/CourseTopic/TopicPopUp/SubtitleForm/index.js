@@ -24,48 +24,51 @@ export default function SubtitleForm({ courseId, topicId }) {
 
   const languageOptions = [];
   fullCourse?.language.forEach((lang) => languageOptions.push({ value: lang, label: lang }));
+  console.log(languageOptions);
   return (
     <>
       {subtitles &&
-        subtitles.map((res, index) => (
-          <Bar
-            style={{
-              background: `linear-gradient(90deg, #86D386 ${
-                uploadStatus && uploadStatus?.isSubtitle
-                  ? uploadStatus[subtitles.language] * 100
-                  : 0
-              }%, #868686 0%, #868686 100%)`
-            }}
+        subtitles.map((sub, index) => (
+          <Bar key={sub.language + index} index={index + 1} text={sub.language} type={'File'} />
+          /*  <Bar
+          style={{
+            background: `linear-gradient(90deg, #86D386 ${
+              uploadStatus && uploadStatus?.isSubtitle
+                ? uploadStatus[subtitles.language] * 100
+                : 0
+            }%, #868686 0%, #868686 100%)`
+          }}
             key={res.language + index}
             index={index + 1}
             text={res.language}
             type={'File'}
-          />
+          /> */
         ))}
 
       {isSubtitlesFormVisible && (
         <>
-          <div
-            className="row"
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '10px',
-              padding: '0px'
-            }}>
-            <div className={styles.center_row}>
-              <LabeledDropdown
-                isFiftyFifty={true}
-                dropdownOptions={{
-                  inputName: 'language',
-                  placeholder: 'Select Language',
-                  options: languageOptions,
-                  isSearchEnable: false
-                }}
-                changeHandler={handleSubtitleInput}
-              />
+          {/* <div className={`form-row`}>
+            <LabeledDropdown
+              isFiftyFifty={true}
+              dropdownOptions={{
+                inputName: 'language',
+                placeholder: 'Select Language',
+                options: languageOptions,
+                isSearchEnable: false
+              }}
+              changeHandler={handleSubtitleInput}
+            />
+          </div> */}
+          <div className={`center-element-with-flex`}>
+            <div className="" style={{}}>
+              <select name="type" onChange={handleSubtitleInput}>
+                <option hidden>Select Subtitle Language</option>
+                {languageOptions.map((value, index) => (
+                  <option>{value.label}</option>
+                ))}
+              </select>
             </div>
-            <div className={styles.upload_btn_wrapper} style={{}}>
+            <div className={`${styles.upload_btn_wrapper}`} style={{}}>
               <button className={styles.btn}>
                 <span className={styles.input_icon}>
                   <span>
@@ -119,6 +122,10 @@ export default function SubtitleForm({ courseId, topicId }) {
       {/* move to .scss */}
       <style jsx>
         {`
+        .sub-row{
+          display: flex;
+          justify-content: center;
+        }
           .button_single{
             padding: '10px 20px',
             borderRadius: '30px',

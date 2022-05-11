@@ -54,8 +54,9 @@ export default function useHandleDragDrop(courseContextData) {
     setIsDragOn(2);
     const previousDraglist = [...draglist];
     const previousDroplist = [...droplist];
+    if (result.destination?.droppableId !== 'subcategories') return;
 
-    if (result.source.droppableId === 'subcategories') {
+    if (result.source?.droppableId === 'subcategories') {
       const [reorderedItem] = previousDroplist.splice(result.source.index, 1);
       previousDroplist.splice(result.destination.index, 0, reorderedItem);
       previousDroplist.map((e, i) => (e.rank = i));

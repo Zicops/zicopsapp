@@ -1,12 +1,10 @@
-import { useState } from 'react';
-import Image from 'next/image';
 import Button from '../../Button';
-import { volume, volumeBtn, volumeSlider, show } from '../controlbar.module.scss';
+import styles from '../controlbar.module.scss';
 
 export default function Volume({ handleVolumeChange, handleMute, isMute, vol }) {
   return (
-    <div className={`${volume}`}>
-      <div className={`${volumeSlider}`}>
+    <div className={`${styles.volume}`}>
+      <div className={`${styles.volumeSlider}`}>
         <input
           type="range"
           name="volume"
@@ -18,11 +16,11 @@ export default function Volume({ handleVolumeChange, handleMute, isMute, vol }) 
         />
       </div>
 
-      <Button styleClass={`${volumeBtn}`} handleClick={handleMute}>
+      <Button styleClass={`${styles.volumeBtn}`} handleClick={handleMute}>
         {isMute ? (
-          <Image src="/images/audio.png" alt="" width="25px" height="25px" />
+          <div className={`${styles.muteVolumeIconBtn}`}></div>
         ) : (
-          <Image src="/images/volume-up_90749.png" alt="" width="25px" height="25px" />
+          <div className={`${styles.volumeIconBtn}`}></div>
         )}
       </Button>
     </div>

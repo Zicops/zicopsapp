@@ -27,7 +27,7 @@ export function CustomPagination() {
 
 export function CustomAscendingIcon() {
   return (
-    <div style={{ marginLeft: '20px', marginTop: '5px' }}>
+    <div style={{ marginTop: '5px' }}>
       <img
         src="/images/downsort.svg"
         alt=""
@@ -41,7 +41,7 @@ export function CustomAscendingIcon() {
 
 export function CustomDescendingIcon() {
   return (
-    <div style={{ marginLeft: '20px', marginTop: '5px' }}>
+    <div style={{ marginTop: '5px' }}>
       <img src="/images/downsort.svg" alt="" height={15} width={15} />
     </div>
   );

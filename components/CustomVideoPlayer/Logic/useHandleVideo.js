@@ -11,7 +11,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
   const [playPauseActivated, setPlayPauseActivated] = useState(null);
   const [playerState, setPlayerState] = useState({
     isPlaying: false,
-    progress: 0,
+    progress: 0, // o - 100
     speed: 1,
     isMuted: false,
     volume: 0.7
@@ -99,6 +99,12 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     playerState.isPlaying ? videoElement.current?.play() : videoElement.current?.pause();
   }, [playerState.isPlaying, videoElement]);
 
+  // volume = 0 is mute, volume > 0 is unmute
+  useEffect(() => {
+    if (playerState.volume <= 0 && !playerState.isMuted ) return toggleMute();
+    if (playerState.volume > 0 && playerState.isMuted) return toggleMute();
+  }, [playerState.volume]);
+  
   // TODO : Change this to Ref OR change entire input range to DIV
   // progress bar color update on video play
   useEffect(() => {
@@ -265,10 +271,30 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     });
   };
 
-  const handleVideoProgress = (event) => {
+  function handleVideoProgress(event) {
     const manualChange = Number(event.target.value);
+    // console.log(event.target.value, manualChange);
     setVideoTime(manualChange);
   };
+
+  function moveVideoProgressBySeconds(seconds) {
+    let time = Math.floor(videoElement.current?.currentTime);
+    if (!time) return;
+
+    let updatedTime = time + seconds;
+
+    if (videoElement.current?.duration < updatedTime) {
+      updatedTime = videoElement.current?.duration - 1;
+    }
+    if (updatedTime < 0) updatedTime = 0;
+    if (!updatedTime) updatedTime = time;
+
+    videoElement.current.currentTime = updatedTime;
+    setPlayerState({
+      ...playerState,
+      progress: updatedTime
+    });
+  }
 
   function setVideoTime(time) {
     setPlayerState({
@@ -316,7 +342,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       if (time < 0) time = 0;
     }
 
-    videoElement.current.currentTime = time;
+    if (videoElement.current) videoElement.current.currentTime = time;
     setPlayerState({
       ...playerState,
       progress: time
@@ -332,12 +358,12 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
 
   /* View in fullscreen */
   function openFullscreen(elem) {
-    if (elem.requestFullscreen) {
+    if (elem?.requestFullscreen) {
       elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
+    } else if (elem?.webkitRequestFullscreen) {
       /* Safari */
       elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
+    } else if (elem?.msRequestFullscreen) {
       /* IE11 */
       elem.msRequestFullscreen();
     }
@@ -401,6 +427,8 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     seek,
     tooltip,
     playNextVideo,
-    playPreviousVideo
+    playPreviousVideo,
+    setVideoTime,
+    moveVideoProgressBySeconds
   };
 }
