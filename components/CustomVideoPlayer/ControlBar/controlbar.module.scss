@@ -149,3 +149,32 @@
   background-color: #fff;
   text-align: center;
 }
+
+// style by sonali
+.prevBtn{
+  background: url('../../../public/images/svg/rewind-line.svg') no-repeat center;
+  background-size: 20px;
+  width: 30px;
+  height: 30px;
+  color:$primary;
+  border: 1px solid $white;
+  border-radius: 5px;
+}
+.prevBtn:hover{
+  background-image: url('../../../public/images/svg/rewind-fill.svg');
+}
+// .nextBtn{
+//   background: url('../../../public/images/svg/rewind-line.svg') no-repeat center;
+//   background-size: 20px;
+//   width: 30px;
+//   height: 30px;
+//   color:$primary;
+//   border: 1px solid $white;
+//   border-radius: 5px;
+// }
+// .nextBtn:hover{
+//   background-image: url('../../../public/images/svg/rewind-fill.svg');
+// }
+.disabled{
+  opacity: 0.6;
+}
