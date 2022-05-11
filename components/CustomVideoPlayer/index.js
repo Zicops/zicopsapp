@@ -1,18 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../state/atoms/video.atom';
 import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
 import useVideoPlayer from './Logic/useHandleVideo';
+import SkipButtons from './SkipButtons';
 import UiComponents from './UiComponents';
 import VideoPlayer from './VideoPlayer';
 
 export default function CustomVideo({ set }) {
-  const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const videoData = useRecoilValue(VideoAtom);
 
   const { isPreview, topicContent, currentTopicContentIndex } = videoData;
   const [showBingeButtons, setShowBingeButtons] = useState(false);
+  const [showSkipIntroButtons, setShowSkipIntroButtons] = useState(false);
 
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
@@ -22,13 +24,12 @@ export default function CustomVideo({ set }) {
     togglePlay,
     handleOnTimeUpdate,
     handleVideoProgress,
-    handleVideoSpeed,
-    toggleMute,
-    reloadVideo,
     moveVideoProgress,
+    toggleMute,
+    updateIsPlayingTo,
+    reloadVideo,
     handleVolume,
     toggleFullScreen,
-    updateIsPlayingTo,
     playPauseActivated,
     handleKeyDownEvents,
     hideControls,
@@ -38,31 +39,13 @@ export default function CustomVideo({ set }) {
     seek,
     tooltip,
     playNextVideo,
-    playPreviousVideo
+    playPreviousVideo,
+    setVideoTime,
+    moveVideoProgressBySeconds
   } = useVideoPlayer(videoElement, videoContainer, videoData.type);
 
   useEffect(() => {
     set(true);
-
-    // if (videoData.allModuleTopic && skipVideoTimer) {
-    //   const duration = videoElement.current?.duration;
-    //   const isFromStart = videoData.topicContent[0].nextShowTime > 0;
-    //   const timeToWait = isFromStart
-    //     ? videoData.topicContent[0].nextShowTime * 1000
-    //     : (duration - videoData.topicContent[0].fromEndTime) * 1000;
-
-    //   console.log('play in progress', parseInt(skipVideoTimer) * 60 + 5000);
-
-    //   setTimeoutState(
-    //     setTimeout(() => {
-    //       if (!timeoutState) {
-    //         console.log('next will play');
-    //         playNextVideo();
-    //         skipVideoTimer = null;
-    //       }
-    //     }, timeToWait + 5000)
-    //   );
-    // }
 
     // reset video progress when unmounted
     return () => handleMouseMove({ target: { value: 0 } });
@@ -70,7 +53,7 @@ export default function CustomVideo({ set }) {
 
   useEffect(() => {
     setShowBingeButtons(false);
-    console.log('src updated', videoData.videoSrc);
+    setShowSkipIntroButtons(false);
   }, [videoData.videoSrc]);
 
   useEffect(() => {
@@ -79,44 +62,55 @@ export default function CustomVideo({ set }) {
       block: 'center',
       inline: 'center'
     });
-    console.log(videoData);
   }, [videoData]);
 
   // turn off video player if preview video ends
   useEffect(() => {
-    if (isPreview && playerState.progress === 100) {
-      set(false);
-    }
+    if (isPreview && playerState.progress === 100) set(false);
 
-    // console.log(videoElement.current, playerState);
     // autoplay next video
     if (playerState.progress === 100) playNextVideo();
 
     // add logic for preventing binge button for last video
     if (topicContent && showBingeButtons !== null) {
       const isStartTime = topicContent[0]?.nextShowTime > 0;
-      const buttonShowTime = isStartTime
-        ? topicContent[currentTopicContentIndex]?.nextShowTime
-        : topicContent[currentTopicContentIndex]?.fromEndTime;
+       const buttonShowTime = isStartTime
+         ? topicContent[currentTopicContentIndex]?.nextShowTime
+         : videoElement.current?.duration - topicContent[currentTopicContentIndex]?.fromEndTime;
 
-      // console.log(buttonShowTime, videoElement.current?.currentTime);
-      if (buttonShowTime === 0) return;
+      if (!buttonShowTime) return;
       setShowBingeButtons(buttonShowTime < videoElement.current?.currentTime);
+    }
+
+    // skip intro logic
+    if (topicContent && showSkipIntroButtons !== null) {
+      const skipIntroTime = topicContent[0]?.startTime;
+      const skipIntroDuration = topicContent[0]?.skipIntroDuration;
+
+      if (!skipIntroDuration || !skipIntroTime) return;
+      const currentTime = videoElement.current?.currentTime;
+
+      if (showSkipIntroButtons === null) return;
+
+      // show buttons if the video time is between skip start time and intro duration
+      setShowSkipIntroButtons(
+        skipIntroTime < currentTime && skipIntroTime + skipIntroDuration > currentTime
+      );
     }
   }, [playerState.progress]);
 
   // binge logic
-  let timeout = null;
+  let bingeTimeout = null;
   useEffect(() => {
     // start 5 sec timer to play next video
     if (showBingeButtons) {
-      timeout = setTimeout(() => {
+      bingeTimeout = setTimeout(() => {
         setShowBingeButtons(false);
         playNextVideo();
       }, 5000);
     }
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(bingeTimeout);
   }, [showBingeButtons]);
 
   // currently  not used, can remove later
@@ -125,14 +119,16 @@ export default function CustomVideo({ set }) {
   return (
     <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
       {/* custom Ui components */}
-      <div className={`${styles.customUiContainer} ${hideTopBar ? styles.fadeHideTop : ''}`}>
-        <UiComponents
-          updateIsPlayingTo={updateIsPlayingTo}
-          set={set}
-          refs={{ videoElement, videoContainer }}
-          playerState={playerState}
-        />
-      </div>
+      {/* <div className={`${styles.customUiContainer} ${hideTopBar ? styles.fadeHideTop : ''}`}> */}
+      <UiComponents
+        styleClass={hideTopBar ? styles.fadeHideTop : ''}
+        updateIsPlayingTo={updateIsPlayingTo}
+        set={set}
+        refs={{ videoElement, videoContainer }}
+        playerState={playerState}
+        moveVideoProgressBySeconds={moveVideoProgressBySeconds}
+      />
+      {/* </div> */}
       {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}
 
       <div className="video_wrapper">
@@ -145,30 +141,57 @@ export default function CustomVideo({ set }) {
           handleKeyDown={handleKeyDownEvents}
         />
 
+        {/* skip intro button */}
+        {showSkipIntroButtons && (
+          <>
+            <SkipButtons
+              nextBtnObj={{
+                text: 'Skip Intro',
+                classes: styles.skipIntroBtn,
+                customStyles: {
+                  background: `linear-gradient(90deg, var(--primary) ${
+                    ((videoElement.current?.currentTime - topicContent[0]?.startTime) /
+                      topicContent[0].skipIntroDuration) *
+                      100 || 0
+                  }%, var(--dark_one) 0%, var(--dark_one) 100%)`,
+                },
+                clickHandler: () => {
+                  const skipIntroTime = topicContent[0]?.startTime;
+                  const skipIntroDuration = topicContent[0]?.skipIntroDuration;
+                  const videoDuration = videoElement.current?.duration;
+
+                  const skipTime = ((skipIntroTime + skipIntroDuration) / videoDuration) * 100;
+
+                  setVideoTime(skipTime);
+                  setShowSkipIntroButtons(null);
+                }
+              }}
+              stayBtnObj={{ isVisible: false }}
+            />
+          </>
+        )}
+
         {/* watch credits button */}
         {showBingeButtons && (
           <>
-            <div className={`${styles.nextPlayBtn}`}>
-              {/* <span></span> */}
-              <div
-                className={`${styles.nextPlayBtnTxt}`}
-                onClick={() => {
+            <SkipButtons
+              nextBtnObj={{
+                text: 'Next Topic',
+                classes: styles.nextPlayBtn,
+                clickHandler: () => {
                   playNextVideo();
                   setShowBingeButtons(false);
-                }}>
-                Next Topic
-              </div>
-            </div>
-            <div className={`${styles.watchCreditsBtn}`}>
-              {/* <span></span> */}
-              <div
-                onClick={() => {
-                  clearTimeout(timeout);
+                }
+              }}
+              stayBtnObj={{
+                text: 'Watch Credits',
+                classes: styles.watchCreditsBtn,
+                clickHandler: () => {
+                  clearTimeout(bingeTimeout);
                   setShowBingeButtons(null);
-                }}>
-                Keep Watching
-              </div>
-            </div>
+                }
+              }}
+            />
           </>
         )}
 

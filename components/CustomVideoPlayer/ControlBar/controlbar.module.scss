@@ -127,7 +127,7 @@
   .volumeSlider {
     display: none;
     position: absolute;
-    left: 200%;
+    left: 160%;
     transform: rotate(270deg) translate(65%, -580%);
     accent-color: $primary;
   }
@@ -151,18 +151,93 @@
 }
 
 // style by sonali
-.prevBtn{
-  background: url('../../../public/images/svg/rewind-line.svg') no-repeat center;
-  background-size: 20px;
-  width: 30px;
-  height: 30px;
+ .reloadBtn, .prevBtn, .backwordBtn, .pauseBtn, .playBtn, .forwardBtn, .nextBtn, .volumeIconBtn, .muteVolumeIconBtn, .fsBtn, .fseBtn{
+  width: 35px;
+  height: 35px;
   color:$primary;
-  border: 1px solid $white;
   border-radius: 5px;
+  cursor: pointer;
 }
-.prevBtn:hover{
-  background-image: url('../../../public/images/svg/rewind-fill.svg');
+.reloadBtn{
+  background: url('/images/svg/replay.svg') no-repeat center;
+  background-size: cover;
 }
+.prevBtn {
+  background: url('/images/svg/skip-back-line.svg') no-repeat center;
+  background-size: cover;
+}
+.backwordBtn {
+  background: url('/images/svg/rewind-line.svg') no-repeat center;
+  background-size: cover;
+}
+.pauseBtn {
+  background: url('/images/svg/play-line.svg') no-repeat center;
+  background-size: cover;
+}
+.playBtn {
+  background: url('/images/svg/pause-line.svg') no-repeat center;
+  background-size: cover;
+}
+.forwardBtn {
+  background: url('/images/svg/speed-line.svg') no-repeat center;
+  background-size: cover;
+}
+.nextBtn {
+  background: url('/images/svg/skip-forward-line.svg') no-repeat center;
+  background-size: cover;
+}
+.volumeIconBtn {
+  background: url('/images/svg/volume-up-line.svg') no-repeat center;
+  background-size: cover;
+}
+.muteVolumeIconBtn {
+  background: url('/images/svg/volume-mute-line.svg') no-repeat center;
+  background-size: cover;
+}
+.fsBtn {
+  background: url('/images/svg/fullscreen-line.svg') no-repeat center;
+  background-size: cover;
+}
+.fseBtn {
+  background: url('/images/svg/fullscreen-exit-line.svg') no-repeat center;
+  background-size: cover;
+}
+
+.prevBtn:hover {
+  background: url('/images/svg/skip-back-fill.svg') no-repeat center;
+  background-size: cover;
+}
+
+.backwordBtn:hover {
+  background: url('/images/svg/rewind-fill.svg') no-repeat center;
+    background-size: cover;
+}
+
+.pauseBtn:hover {
+  background: url('/images/svg/play-fill.svg') no-repeat center;
+  background-size: cover;
+  width: 40px;
+  height: 40px;
+}   
+
+.playBtn:hover {
+  background: url('/images/svg/pause-fill.svg') no-repeat center;
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+}
+
+.forwardBtn:hover {
+  background: url('/images/svg/speed-fill.svg') no-repeat center;
+    background-size: cover;
+}
+
+.nextBtn:hover {
+  background: url('/images/svg/skip-forward-fill.svg') no-repeat center;
+    background-size: cover;
+}
+
+
 // .nextBtn{
 //   background: url('../../../public/images/svg/rewind-line.svg') no-repeat center;
 //   background-size: 20px;
@@ -176,5 +251,16 @@
 //   background-image: url('../../../public/images/svg/rewind-fill.svg');
 // }
 .disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.nextBtn.disabled:hover{
+  background: url('../../../public/images/svg/skip-forward-line.svg') no-repeat center;
+  background-size: cover;
+  opacity: 0.6;
+}
+.prevBtn.disabled:hover {
+  background: url('../../../public/images/svg/skip-back-line.svg') no-repeat center;
+  background-size: cover;
   opacity: 0.6;
 }

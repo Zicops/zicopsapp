@@ -37,15 +37,16 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
         }
         onMouseLeave={handleMouseLeave}>
         {/* remove image later */}
-        <div className='smallCard'>
-            <div className="banner">Self Paced</div>
-            {/* <div className="preText">Scripting with</div>
-            <div className="mainTopic">PYTHON</div> */}
-          <img src={courseData.tileImage || image || '/images/courses/workplace design.png'}
+        <div className="smallCard">
+          <div className="banner">Self Paced</div>
+          <div className="preText">{courseData.name || 'Hands on Scripting with PYTHON'}</div>
+          <div className="mainTopic">{courseData.owner || 'Scripting'}</div>
+          <img
+            src={courseData.tileImage || image || '/images/courses/workplace design.png'}
             alt=""
           />
         </div>
-        
+
         <div className="overlay">
           <div className="bottom-box">
             <div className="title-area">
@@ -54,23 +55,28 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
               </div>
               <div className="secondline">Self Paced</div>
             </div>
-            <img className='addCoursePlus' src="images/svg/add-line.svg" />
+            <img className="addCoursePlus" src="images/svg/add-line.svg" />
             <div className="desc-area">
               <div className="main-desc">
                 <div className="one">
                   <div className="one-text">
                     <span className="level noselect">Level:</span>
                     <span className="value noselect">
-                      {courseData.expertise_level ? courseData.expertise_level.split(',').join(' | ') : " Beginner"}
+                      {courseData.expertise_level
+                        ? courseData.expertise_level.split(',').join(' | ')
+                        : ' Beginner'}
                     </span>
                   </div>
                   <div className="one-text">
                     <span className="level noselect">Duration:</span>
-                    <span className="value noselect">{courseData.duration || " 275"} mins</span>
+                    <span className="value noselect">{courseData.duration || ' 275'} mins</span>
                   </div>
                 </div>
-                
-                <div className="description noselect">Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore consequatur maxime, aliquid quo temporibus aperiam maiores aut fugit.</div>
+
+                <div className="description noselect">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore consequatur
+                  maxime, aliquid quo temporibus aperiam maiores aut fugit.
+                </div>
 
                 {/* <div className="description noselect">{truncateToN(courseData.summary)}</div> */}
                 {/* images/svg */}
@@ -88,9 +94,9 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
             </div>
             <div className="category">
               <ul>
-              {/* <li>{courseData.category || " Category 1"}</li> */}
-              <li>{courseData.category || " Category that is longer"}</li>
-              <li>{courseData.category || " Category longer"}</li>
+                {/* <li>{courseData.category || " Category 1"}</li> */}
+                <li>{courseData.category || ' Category that is longer'}</li>
+                <li>{courseData.category || ' Category longer'}</li>
               </ul>
             </div>
           </div>
@@ -101,70 +107,70 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
           .card_item {
             cursor: pointer;
           }
-            .smallCard{
-                position: relative;
-                height: 140px;
-                background-color: var(--header-bg);
-                border-radius: 8px;
-                // background-image: url('/images/courses/workplace design.png');
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-            .smallCard img{
-              height: 100%;
-              object-fit: cover;
-            }
-            .banner {
-                position: absolute;
-                top: 4%;
-                right: 2%;
-                background-color: #000000;
-                color: #ffffff;
-                font-size: 10px;
-                padding: 3px 7px;
-                border-radius: 0 4px 0 0;
-            }
-            .addCoursePlus{
-                width: 20px;
-                position: absolute;
-                top: 4%;
-                right: 2%;
-                border-radius: 50%;
-                // background-color: #000000;
-                // color: #ffffff;
-                // font-size: 10px;
-                // padding: 3px 7px;
-                // border-radius: 0 4px 0 0;
-                cursor: pointer;
-            }
-            .addCoursePlus:hover{
-                background-color: #121212;
-                box-shadow: inset 0 0 10px 0 var(--primary);
-                cursor: pointer;
-            }
-            .preText{
-                position: absolute;
-                top: 45%;
-                left: 5%;
-                // background-color: #00000050;
-                color: #ffffff;
-                font-size: 16px;
-                padding: 3px 7px;
-                border-radius: 0 4px 0 0;
-                // text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
-            }
-            .mainTopic{
-                position: absolute;
-                bottom: 10%;
-                left: 5%;
-                // background-color: #00000050;
-                color: #ffffff;
-                font-size: 28px;
-                padding: 3px 7px;
-                border-radius: 0 4px 0 0;
-                // text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
-            }
+          .smallCard {
+            position: relative;
+            height: 140px;
+            background-color: var(--header-bg);
+            border-radius: 8px;
+            // background-image: url('/images/courses/workplace design.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+          }
+          .smallCard img {
+            height: 100%;
+            object-fit: cover;
+          }
+          .banner {
+            position: absolute;
+            top: 4%;
+            right: 2%;
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 10px;
+            padding: 3px 7px;
+            border-radius: 0 4px 0 0;
+          }
+          .addCoursePlus {
+            width: 20px;
+            position: absolute;
+            top: 4%;
+            right: 2%;
+            border-radius: 50%;
+            // background-color: #000000;
+            // color: #ffffff;
+            // font-size: 10px;
+            // padding: 3px 7px;
+            // border-radius: 0 4px 0 0;
+            cursor: pointer;
+          }
+          .addCoursePlus:hover {
+            background-color: #121212;
+            box-shadow: inset 0 0 10px 0 var(--primary);
+            cursor: pointer;
+          }
+          .preText {
+            position: absolute;
+            top: 45%;
+            left: 0;
+            background-color: #00000050;
+            color: #ffffff;
+            font-size: 16px;
+            padding: 3px 7px;
+            border-radius: 0 4px 0 0;
+            text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+          }
+          .mainTopic {
+            position: absolute;
+            bottom: 10%;
+            left: 0;
+            background-color: #00000050;
+            color: #ffffff;
+            font-size: 14px;
+            padding: 3px 7px;
+            border-radius: 0 4px 0 0;
+            text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+          }
           /* The overlay effect over the image */
           .overlay {
             position: absolute;
@@ -177,8 +183,6 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
             border-radius: 8px;
             // box-shadow: 0 0 70px 0 #000000;
           }
-
-          
 
           .bottom-box {
             display: flex;

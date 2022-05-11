@@ -38,11 +38,17 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   '& .MuiDataGrid-cell': {
     color: theme.palette.mode === 'light' ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,0.65)'
   },
+  '& .MuiDataGrid-columnHeaderTitleContainerContent': {
+    overflow: 'visible'
+  },
   '& .MuiDataGrid-row:hover': {
     backgroundColor: '#7373732b'
   },
   '& .MuiPaginationItem-root': {
     borderRadius: 0
+  },
+  '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeaderTitle': {
+    textOverflow: 'clip'
   },
   '& .MuiDataGrid-cell:focus,.MuiDataGrid-cell:focus-within, .MuiDataGrid-columnHeader:focus, .MuiDataGrid-columnHeader:focus-within':
     {

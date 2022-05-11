@@ -6,6 +6,8 @@ export default function useSaveData(videoElement) {
 
   const [showBookmark, setShowBookmark] = useState(false);
   const [showLanguageSubtitles, setShowLanguageSubtitles] = useState(false);
+  const [showQuizDropdown, setShowQuizDropdown] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   function toggleStates(setState, state) {
     setState(!state);
@@ -33,6 +35,10 @@ export default function useSaveData(videoElement) {
       title: e.target.value
     });
   }
+  // function handleAutoQuizChange(e) {
+  //   console.log(e);
+  //   alert('hi');
+  // }
 
   function captureImageOfVideo() {
     //   remove after testing
@@ -99,7 +105,11 @@ export default function useSaveData(videoElement) {
     showBookmark,
     setShowBookmark,
     showLanguageSubtitles,
-    setShowLanguageSubtitles
+    setShowLanguageSubtitles,
+    showQuizDropdown,
+    setShowQuizDropdown,
+    showQuiz,
+    setShowQuiz
   };
   return {
     states,
@@ -107,6 +117,7 @@ export default function useSaveData(videoElement) {
     handleBookmarkChange,
     bookmarkData,
     handleSaveBookmark,
+    // handleAutoQuizChange,
     notes,
     handleNotesChange,
     handleSaveNotes

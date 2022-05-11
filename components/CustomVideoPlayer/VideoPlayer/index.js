@@ -28,6 +28,7 @@ export default function VideoPlayer({
           autoPlay={true}
           // crossOrigin="anonymous"
         >
+          <track label="English" kind="subtitles" srclang="en" src="subtitle.vtt" default></track>
           {/* <source src={videoData.videoSrc} /> */}
         </video>
       )}

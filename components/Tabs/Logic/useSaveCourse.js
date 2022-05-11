@@ -52,7 +52,6 @@ export default function useSaveCourse(courseContextData) {
       createCourseAndUpdateContext(courseContextData, createCourse);
       setIsLoading(addCourseLoading ? 'SAVING...' : null);
 
-      alert('course created');
       if (isNextButton) setTab(tabData[tabIndex || 0].name);
       return;
     }

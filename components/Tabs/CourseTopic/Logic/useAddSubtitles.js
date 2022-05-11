@@ -35,18 +35,6 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
 
   // input handler
   function handleSubtitleInput(e) {
-    if (e.value) {
-      // language needs to be unique
-      const isLanguagePresent = topicSubtitle.some((sub) => sub.language === e.value);
-
-      if (isLanguagePresent) return alert(`Subtitle already added in language ${e.value}`);
-
-      setNewSubtitles({
-        ...newSubtitles,
-        language: e.value
-      });
-      return;
-    }
 
     if (e.target.type == 'file') {
       if (!e.target.files) return;
@@ -56,6 +44,20 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
         ...newSubtitles,
         file: e.target.files[0],
         name: e.target.files[0].name
+      });
+      return;
+    }
+    
+    if (e.target.value) {
+      // language needs to be unique
+      const isLanguagePresent = topicSubtitle.some((sub) => sub.language === e.target.value);
+
+      if (isLanguagePresent)
+        return alert(`Subtitle already added in language ${e.target.value}`);
+
+      setNewSubtitles({
+        ...newSubtitles,
+        language: e.target.value
       });
       return;
     }

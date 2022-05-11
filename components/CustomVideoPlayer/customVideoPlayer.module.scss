@@ -6,6 +6,7 @@
   margin-top: 70px;
   overflow: hidden;
   padding-bottom: 39.25%;
+  max-height: 70vh;
   background: #000000;
 
   .playPauseIndicator {
@@ -43,10 +44,8 @@
     );
     background: linear-gradient(
       180deg,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 0.8) 65%,
-      rgba(0, 0, 0, 0.7) 75%,
-      rgba(0, 0, 0, 0) 100%
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0) 80%
     );
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
 
@@ -107,34 +106,79 @@
     }
 
     .languageList {
+      display: flex;
+      gap: 5px;
+
       position: absolute;
       top: 50px;
       left: 50%;
+
       transform: translateX(-50%);
       background-color: $bgContent;
+      border: 1px solid $white;
       // box-shadow: 0 0 50px 0 $white;
+
       color: $white;
       height: 140px;
-      overflow: auto;
       padding: 3px;
-      button {
-        background-color: transparent;
-        margin: 3px;
-        padding: 5px 10px;
-        width: 100px;
-        border: 1px solid $white;
-        color: $white;
-        cursor: pointer;
-        &:hover {
-          background-color: $white;
-          color: $bgContent;
+
+      overflow: hidden;
+      div {
+          opacity: 1;
+          overflow-y: auto;
+          overflow-x: hidden;
+      
+          &:first-child {
+            padding-right: 5px;
+            border-right: 1px solid $primary;
+          }
+      
+          &::-webkit-scrollbar {
+            width: 5px;
+          }
+      
+          h4 {
+            text-align: center;
+          }
+      
+          button {
+            background-color: transparent;
+            margin: 3px;
+            padding: 5px 10px;
+            width: 100px;
+            border: 1px solid $primary;
+            color: $primary;
+            cursor: pointer;
+      
+            &:hover {
+              background-color: $primary;
+              color: $bgContent;
+            }
+          }
+      
+          .languageBtnActive {
+            background-color: $white;
+            color: $bgContent;
+          }
         }
-      }
+      // button {
+      //   background-color: transparent;
+      //   margin: 3px;
+      //   padding: 5px 10px;
+      //   width: 100px;
+      //   border: 1px solid $white;
+      //   color: $white;
+      //   cursor: pointer;
+      //   &:hover {
+      //     background-color: $white;
+      //     color: $bgContent;
+      //   }
+      // }
     
-      .languageBtnActive {
-        background-color: $primary;
-        color: $bgContent;
-      }
+      // .languageBtnActive {
+      //   background-color: $primary;
+      //   color: $bgContent;
+      // }
     }
     .bookmarksInput {
       position: absolute;
@@ -151,12 +195,14 @@
         border-radius: 0;
         border-color: $bgHeader;
         opacity: 1;
+        
+        &:focus {
+          border-radius: 0;
+          outline: 0;
+          opacity: 1;
+        }
       }
-      .bookmarksField:focus {
-        border-radius: 0;
-        outline: 0;
-        opacity: 1;
-      }
+
       .bookmarksBtn {
         background-color: $bgHeader;
         color: $darkThree;
@@ -166,10 +212,30 @@
         width: 100%;
         cursor: pointer;
         opacity: 1;
+
+        &:hover {
+          background-color: $bgHeader;
+          color: $white;
+        }
       }
-      .bookmarksBtn:hover {
-        background-color: $bgHeader;
-        color: $white;
+    }
+
+    .quizDropdown {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+
+      margin-top: 10px;
+      background-color: $bgContent;
+
+      button {
+        background-color: transparent;
+        margin: 3px;
+        padding: 5px 10px;
+        width: 100px;
+        border: 1px solid $primary;
+        color: $primary;
+        cursor: pointer;
       }
     }
   }
@@ -180,6 +246,32 @@
     left: 0;
     width: 100%;
     height: 100%;
+    &::cue {
+      color: $white;
+      background-color: #00000080;
+      font: 22px "Open Sans";
+    }
+  }
+
+  .quizContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $darkThree;
+    z-index: 15;
+
+    display: flex;
+    // flex-direction: column;
+    // justify-content: space-between;
+    align-items: center;
+
+    .footerBtns {
+      width: 90%;
+      text-align: end;
+      margin: 50px auto;
+    }
   }
 }
 
@@ -214,33 +306,41 @@
   opacity: 0;
   transition: all 0.3s ease-in-out;
 }
-// .customUiContainer{
-//     position: absolute;
-//     width: 100%;
-//     z-index: 2;
-//     height: 100%;
-// }
 
-// .btn{
-//     position: absolute;
-//     right: 10px;
-//     top: 10px;
-//     z-index: 4;
-// }
+.videoBookmark{
+  height: 30px;
+  width: 30px;
+  background: url('/images/svg/bookmark-line.svg') no-repeat center;
+  background-size: cover;
+  opacity: 1;
+  &:hover {
+    height: 35px;
+    width: 30px;
+    background: url('/images/svg/bookmark-fill.svg') no-repeat center;
+    background-size: cover;
+    opacity: 1;
+  }
+}
+.videoQuiz{
+  height: 30px;
+  width: 30px;
+  background: url('/images/svg/quiz.svg') no-repeat center;
+  background-size: cover;
+  opacity: 1;
+  &:hover {
+    height: 35px;
+    width: 30px;
+    background: url('/images/svg/quiz.svg') no-repeat center;
+    background-size: cover;
+    opacity: 1;
+  }
+}
 
-// .drawer{
-//     position: absolute;
-//     right: 0;
-//     top: 0;
-//     height: 100%;
-//     width: 40%;
-//     background-color: rgba(128, 128, 128, 0.485);
-//     z-index: 2;
-// }
 
 .centerFlashIcon {
-  // opacity: 0;
-  // transition: all 1s;
+  background-color: #00000050;
+  padding: 20px;
+  border-radius: 50%;
   animation: myflash 1s;
 }
 @keyframes myflash {
@@ -253,11 +353,13 @@
   70% {
     opacity: 1;
   }
-  100% {
-    opacity: 0;
-  }
+  // 100% {
+  //   opacity: 0;
+  // }
 }
-
+.centerFlashIconImg{
+  opacity: 0.8;
+}
 .fallbackForVideo {
   position: absolute;
   top: 50%;
@@ -267,11 +369,18 @@
   font-size: larger;
 }
 
-.watchCreditsBtn,
-.nextPlayBtn{
+.bingeClasses{
   position: absolute;
+  bottom: 140px;
   right: 2%;
-  top: 60%;
+  > div{
+    margin-bottom: 15px;
+  }
+}
+.watchCreditsBtn,
+.nextPlayBtn, 
+.skipIntroBtn{
+  
   border-radius: 0;
   padding: 10px;
   width: 200px;
@@ -294,16 +403,29 @@
   background: linear-gradient(to left, #00000000 50%, $primary 50%);
   background-position: left top;
   background-size: 200% 100%;
-  box-shadow: 0 0 10px 0 $primary;
-  top: 70%;
+  // box-shadow: 0 0 10px 0 $primary;
   transition: all 5s ease-in;
   animation: fill 5s;
   color: $primary;
-  .nextPlayBtnTxt{
+  div {
     mix-blend-mode: difference;
   }
 }
+.skipIntroBtn {
+  border: 4px solid var(--primary);
+  background: linear-gradient(to left, #00000000 50%, $primary 50%);
+  background-position: left top;
+  background-size: 200% 100%;
+  box-shadow: 0 0 10px 0 $primary;
+  top: 70%;
+  // transition: all 5s ease-in;
+  // animation: fill 5s;
+  color: $primary;
 
+  div {
+    mix-blend-mode: difference;
+  }
+}
 @keyframes fill {
   0% {
     background-position: right top;
@@ -312,3 +434,30 @@
     background-position: left top;
   }
 }
+
+// .quizScreenContainer {
+//   width: 100%;
+//   height: 100%;
+//     position: absolute;
+//       right: 50%;
+//       transform: translate(50%, 0);
+//       top: 0;
+//       border-radius: 0;
+//       // padding: 10px;
+//       // display: block;
+//       // text-align: center;
+//   border: 4px solid var(--primary);
+//   // background: linear-gradient(to left, #00000000 50%, $primary 50%);
+//   // background-position: left top;
+//   // background-size: 200% 100%;
+//   // box-shadow: 0 0 10px 0 $primary;
+//   // top: 70%;
+//   // transition: all 5s ease-in;
+//   // animation: fill 5s;
+//   color: $primary;
+//   background-color: $primary;
+//   z-index: 15;
+//   .skipIntroBtnTxt {
+//     mix-blend-mode: difference;
+//   }
+// }

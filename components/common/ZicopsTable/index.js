@@ -1,10 +1,23 @@
+import { GridColumnMenuContainer, GridFilterMenuItem, SortGridMenuItems } from '@mui/x-data-grid';
 import StyledDataGrid from '../../common/StyledDataGrid';
 import {
   CustomAscendingIcon,
   CustomDescendingIcon, CustomPagination
 } from './Logic/zicopsTable.helper';
 
+// https://stackoverflow.com/questions/66514102/how-can-you-disable-specific-material-ui-datagrid-column-menu-options
+const CustomColumnMenu = (props) => {
+  const { hideMenu, currentColumn } = props;
+  return (
+    <GridColumnMenuContainer hideMenu={hideMenu} currentColumn={currentColumn} style={{backgroundColor: 'var(--dark_three)'}}>
+      <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
+      <div>Custom Text</div>
+      <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
+    </GridColumnMenuContainer>
+  )
+}
 const ZicopsTable = ({ columns, data, pageSize, rowsPerPageOptions, tableHeight }) => {
+
   return (
     <div style={{ height: tableHeight }}>
       <StyledDataGrid
@@ -18,14 +31,16 @@ const ZicopsTable = ({ columns, data, pageSize, rowsPerPageOptions, tableHeight 
           color: '#fff'
         }}
         autoHeight={false}
+        // disableColumnMenu={true}
         disableSelectionOnClick
         components={{
           Pagination: CustomPagination,
           ColumnSortedDescendingIcon: CustomDescendingIcon,
-          ColumnSortedAscendingIcon: CustomAscendingIcon
+          ColumnSortedAscendingIcon: CustomAscendingIcon,
+          ColumnMenu: CustomColumnMenu
         }}
         pageSize={pageSize}
-        rowsPerPageOptions={rowsPerPageOptions}
+        rowsPerPageOptions={[rowsPerPageOptions]}
         pagination
       />
     </div>
