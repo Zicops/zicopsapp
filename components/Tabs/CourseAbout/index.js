@@ -45,7 +45,8 @@ export default function CourseAbout() {
           className="col_75"
           rows="4"
           name="description"
-          placeholder="Provide a description for the course"
+          maxLength="2000"
+          placeholder="Provide a description for the course."
           onChange={handleChange}
           value={fullCourse.description}
         />
@@ -101,7 +102,7 @@ export default function CourseAbout() {
         </div>
       </div>
 
-      <NextButton tabIndex={3}/>
+      <NextButton tabIndex={3} />
     </div>
   );
 }
