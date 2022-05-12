@@ -1,3 +1,5 @@
+import LabeledInput from '../../../common/FormComponents/LabeledInput';
+
 export default function ModulePopUp({
   closeModal,
   moduleData,
@@ -18,7 +20,19 @@ export default function ModulePopUp({
               </div>
             </div>
             <div className="module_body">
-              <div className="form_row">
+              <LabeledInput
+                inputOptions={{
+                  inputName: 'name',
+                  type: 'text',
+                  label: 'Module Name',
+                  placeholder: 'Enter name of the module (Upto 60 characters)',
+                  value: moduleData.name,
+                  maxLength: 60,
+                  isRequired: true
+                }}
+                changeHandler={handleInput}
+              />
+              {/* <div className="form_row">
                 <label htmlFor="name" className="col_25" style={{ color: '#ffffff' }}>
                   Module Name
                 </label>
@@ -34,7 +48,7 @@ export default function ModulePopUp({
                   onChange={handleInput}
                   value={moduleData.name}
                 />
-              </div>
+              </div> */}
 
               <div className="form_row">
                 <label htmlFor="level" className="col_25" style={{ color: '#ffffff' }}>
@@ -46,7 +60,7 @@ export default function ModulePopUp({
                   name="level"
                   onChange={handleInput}
                   value={moduleData.level}>
-                  <option hidden>Select the expertise level of the course</option>
+                  <option hidden>Select the expertise level of the module</option>
                   <option>Beginner</option>
                   <option>Competent</option>
                   <option>Proficient</option>
@@ -60,9 +74,9 @@ export default function ModulePopUp({
                 <textarea
                   className="col_75"
                   rows="4"
-                  maxLength={60}
+                  maxLength="160"
                   name="description"
-                  placeholder="Brief description in less than 60 characters"
+                  placeholder="Brief description in less than 160 characters"
                   onChange={handleInput}
                   value={moduleData.description}
                 />

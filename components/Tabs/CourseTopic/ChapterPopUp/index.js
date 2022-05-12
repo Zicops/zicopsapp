@@ -1,3 +1,5 @@
+import LabeledInput from '../../../common/FormComponents/LabeledInput';
+
 export default function ChapterPopUp({
   chapterData,
   closeModal,
@@ -18,7 +20,19 @@ export default function ChapterPopUp({
               </div>
             </div>
             <div className="chapter_body">
-              <div className="row">
+              <LabeledInput
+                inputOptions={{
+                  inputName: 'name',
+                  type: 'text',
+                  label: 'Chapter Name',
+                  placeholder: 'Default Name to come here',
+                  value: chapterData.name,
+                  maxLength: 60,
+                  isRequired: true
+                }}
+                changeHandler={handleInput}
+              />
+              {/* <div className="row">
                 <label htmlFor="name" className="col_25" style={{ color: '#ffffff' }}>
                   Chapter Name
                 </label>
@@ -33,7 +47,7 @@ export default function ChapterPopUp({
                   className="col_75"
                   required
                 />
-              </div>
+              </div> */}
               <div className="row">
                 <label htmlFor="description" className="col_25" style={{ color: '#ffffff' }}>
                   Chapter Description
@@ -41,8 +55,9 @@ export default function ChapterPopUp({
                 <textarea
                   className="col_75"
                   rows="4"
-                  placeholder="Provide and outline of the course in less than 1000 characters..."
+                  placeholder="Provide and outline of the course in less than 160 characters..."
                   name="description"
+                  maxLength="160"
                   onChange={handleInput}
                   value={chapterData.description}
                 />

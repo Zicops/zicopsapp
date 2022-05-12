@@ -1,8 +1,22 @@
+import LabeledInput from '../../../../common/FormComponents/LabeledInput';
+
 export default function AddTopicForm({ handleInput, topicData, isEdit = false }) {
   console.log(topicData);
   return (
     <>
-      <div className="form_row">
+      <LabeledInput
+        inputOptions={{
+          inputName: 'name',
+          type: 'text',
+          label: 'Topic Name',
+          placeholder: 'Enter topic name ( in less than 60 characters )',
+          value: topicData.name,
+          maxLength: 60,
+          isRequired: true
+        }}
+        changeHandler={handleInput}
+      />
+      {/* <div className="form_row">
         <label htmlFor="name" className="col_25" style={{ color: '#ffffff' }}>
           Topic Name
         </label>
@@ -17,7 +31,7 @@ export default function AddTopicForm({ handleInput, topicData, isEdit = false })
           onChange={handleInput}
           value={topicData.name}
         />
-      </div>
+      </div> */}
       <div className="form_row">
         <label htmlFor="description" className="col_25" style={{ color: '#ffffff' }}>
           Description
@@ -26,7 +40,8 @@ export default function AddTopicForm({ handleInput, topicData, isEdit = false })
           className="col_75"
           rows="4"
           name="description"
-          placeholder="Brief description in less than 60 characters"
+          maxLength="160"
+          placeholder="Brief description in less than 160 characters"
           onChange={handleInput}
           value={topicData.description}
         />
