@@ -2,8 +2,10 @@ export const questions = [
   {
     question: {
       QuestionNumber: 1,
-      question:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit libero enim facilis deserunt ut, quam consequatur est dolor sit amet consectetur adipisicing elit ?'
+      question: {
+        ques: 'Lorem ipsum dolor sit amet consectetur adipisicing elit libero enim facilis deserunt ut, quam consequatur est dolor sit amet consectetur adipisicing elit ?',
+        imgSrc: '/images/courses/1.png'
+      }
     },
     answerOptions: [
       { option: 'A', answerText: 'New York', isCorrect: false, imgSrc: '/images/courses/1.png' },
@@ -15,8 +17,10 @@ export const questions = [
   {
     question: {
       QuestionNumber: 2,
-      question:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit libero enim facilis deserunt ut, quam consequatur est dolor sit amet consectetur adipisicing elit ?'
+      question: {
+        ques: 'Lorem ipsum dolor sit amet consectetur adipisicing elit libero enim facilis deserunt ut, quam consequatur est dolor sit amet consectetur adipisicing elit ?'
+        // imgSrc: '/images/courses/1.png'
+      }
     },
     answerOptions: [
       {
@@ -33,8 +37,10 @@ export const questions = [
   {
     question: {
       QuestionNumber: 3,
-      question:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit libero enim facilis deserunt ut, quam consequatur est dolor sit amet consectetur adipisicing elit ?'
+      question: {
+        ques: 'Lorem ipsum dolor sit amet consectetur adipisicing elit libero enim facilis deserunt ut, quam consequatur est dolor sit amet consectetur adipisicing elit ?',
+        imgSrc: '/images/courses/1.png'
+      }
     },
     answerOptions: [
       { option: 'A', answerText: 'Apple', isCorrect: true, imgSrc: '/images/courses/1.png' },

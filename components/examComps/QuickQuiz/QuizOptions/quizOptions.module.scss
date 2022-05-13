@@ -1,17 +1,17 @@
 @import '../../../../styles/base.scss';
 
 .quizOptionsGrid {
-  background: $tertiaryBlack;
+  background: $darkOne;
   width: 100%;
   display: grid;
 
-  grid-row-gap: 10%;
+  row-gap: 10%;
   justify-content: space-around;
-  padding: 43px 0;
 
-  height: 66%;
+  height: 60%;
   grid-template-rows: repeat(2, 40%);
   grid-template-columns: repeat(2, 35%);
+  margin: 0 5%;
 }
 
 .quizOptionsRow {
