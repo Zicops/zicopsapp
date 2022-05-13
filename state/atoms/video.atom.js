@@ -15,6 +15,7 @@ export function getVideoObject() {
 
     topicContent: [],
     currentTopicContentIndex: 0,
+    currentSubtitleIndex: 0,
 
     allModuleTopic: null,
     currentModuleId: null,

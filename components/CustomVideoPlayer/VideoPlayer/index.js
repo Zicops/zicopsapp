@@ -72,8 +72,8 @@ export default function VideoPlayer({
               srcLang="en"
               default
               hidden
-              // src={topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]?.url}
-              src={'/pineapple.vtt'}
+              src={topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]?.url}
+              // src={'/pineapple.vtt'}
             />
             {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}
           </video>
