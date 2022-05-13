@@ -231,19 +231,18 @@ select.nav_search_dropdow:selected {
 }
 
 .dropdown_menu {
+  cursor: pointer;
   transform-origin: top left;
   animation: scaleZ 500ms 0ms ease-in-out forwards;
 }
 
 .dropdown_menu_right {
+  cursor: pointer;
   transform-origin: top right;
   animation: scaleZ 500ms 0ms ease-in-out forwards;
 }
 
-.dropdown_menu_reverse {
-  transform-origin: top left;
-  animation: fadeOut 500ms 0s ease-in-out backwards;
-}
+
 
 .dropdown_item_1 {
   transform-origin: top center;

@@ -18,13 +18,6 @@ export default function RightDropDownMenu() {
 
   const{dropdown_menu_right,dropdown_menu_reverse} = styles
 
-  let animationStyle;
-  
-  if(open === false){
-    animationStyle=dropdown_menu_reverse
-  }else{
-    animationStyle= dropdown_menu_right
-  }
   
   return (
     <>
@@ -36,6 +29,7 @@ export default function RightDropDownMenu() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         onMouseEnter={handleClick}
+        className={`${styles.dropdown_menu_right}`}
         style={{
           height: '70px'
         }}>
@@ -52,7 +46,6 @@ export default function RightDropDownMenu() {
         TransitionComponent={Fade}
         disableScrollLock={true}
         // className={`${styles.dropdown_menu_right}`}
-        className={`${animationStyle}`}
         sx={{
           '& .MuiMenu-list': {
             // marginTop : '30px',

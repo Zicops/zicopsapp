@@ -26,7 +26,7 @@ export default function LeftMenuDropdown({ navmenuicon }) {
   const time = new Date();
   return (
     <>
-      <MyButton id="fade-button" style={{ height: '70px' }} handleClick={handleClick}>
+      <MyButton id="fade-button" style={{ height: '70px' }} handleClick={handleClick}         className={`${styles.dropdown_menu}`}>
         <Image src={navmenuicon} alt="" height="20px" width="30px" />
       </MyButton>
       {/* <Button
@@ -53,7 +53,6 @@ export default function LeftMenuDropdown({ navmenuicon }) {
         MenuListProps={{ onMouseLeave: handleClose }}
         TransitionComponent={Fade}
         disableScrollLock={true}
-        className={`${styles.dropdown_menu}`}
         sx={{
           '& .MuiMenu-list': {
             // marginTop : '30px',
