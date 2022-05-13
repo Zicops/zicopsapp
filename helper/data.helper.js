@@ -1,6 +1,8 @@
+import { useRecoilState } from 'recoil';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
+import { ToastMsgAtom } from '../state/atoms/toast.atom';
 
-export function createCourseAndUpdateContext(courseContextData, createCourse) {
+export function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
     fullCourse,
     setTab,
@@ -12,10 +14,14 @@ export function createCourseAndUpdateContext(courseContextData, createCourse) {
     courseTileImage,
     setCourseTileImage
   } = courseContextData;
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   if (!fullCourse.name || !fullCourse.category || !fullCourse.sub_category || !fullCourse.owner) {
     setTab(tabData[0].name);
-    return alert('Please fill all the Course Master Details');
+    return setToastMsg([
+      ...toastMsg,
+      { type: 'info', message: 'Please fill all the Course Master Details' }
+    ]);
   }
 
   const { id, created_at, updated_at, ...sendData } = fullCourse;
@@ -28,7 +34,7 @@ export function createCourseAndUpdateContext(courseContextData, createCourse) {
   })
     .then((res) => {
       if (!res || !res?.data?.addCourse?.id) return;
-      alert('course created');
+      setToastMsg([...toastMsg, { type: 'success', message: 'Course Created' }]);
       console.log('course created', res);
 
       updateCourseMaster(res.data.addCourse);

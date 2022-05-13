@@ -112,7 +112,7 @@ export function getTopicVideoObject(data) {
 export function getTopicSubtitleObject(data) {
   return {
     courseId: data.courseId,
-    contentId: data.contentId,
+    topicId: data.topicId,
     file: data.file || null,
     subtitleUrl: data.subtitleUrl || null,
     language: data.language || null
