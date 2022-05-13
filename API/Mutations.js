@@ -516,11 +516,11 @@ export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
   mutation uploadTopicContentSubtitle(
     $file: Upload
     $courseId: String
-    $contentId: String
+    $topicId: String
     $language: String
   ) {
     uploadTopicContentSubtitle(
-      file: [{ file: $file, courseId: $courseId, contentId: $contentId, language: $language }]
+      file: [{ file: $file, courseId: $courseId, topicId: $topicId, language: $language }]
     ) {
       success
       url
@@ -528,6 +528,7 @@ export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
     }
   }
 `;
+
 // not in use remove later replaced by new mutation
 // export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
 //   mutation uploadTopicContentSubtitle($file: Upload, $courseId: String, $contentId: String) {

@@ -42,13 +42,13 @@ export default function CustomVideo({ set }) {
     playPreviousVideo,
     setVideoTime,
     moveVideoProgressBySeconds
-  } = useVideoPlayer(videoElement, videoContainer, videoData.type);
+  } = useVideoPlayer(videoElement, videoContainer);
 
   useEffect(() => {
     set(true);
 
     // reset video progress when unmounted
-    return () => handleMouseMove({ target: { value: 0 } });
+    // return () => handleMouseMove({ target: { value: 0 } });
   }, []);
 
   useEffect(() => {
@@ -74,9 +74,9 @@ export default function CustomVideo({ set }) {
     // add logic for preventing binge button for last video
     if (topicContent && showBingeButtons !== null) {
       const isStartTime = topicContent[0]?.nextShowTime > 0;
-       const buttonShowTime = isStartTime
-         ? topicContent[currentTopicContentIndex]?.nextShowTime
-         : videoElement.current?.duration - topicContent[currentTopicContentIndex]?.fromEndTime;
+      const buttonShowTime = isStartTime
+        ? topicContent[currentTopicContentIndex]?.nextShowTime
+        : videoElement.current?.duration - topicContent[currentTopicContentIndex]?.fromEndTime;
 
       if (!buttonShowTime) return;
       setShowBingeButtons(buttonShowTime < videoElement.current?.currentTime);
@@ -139,6 +139,7 @@ export default function CustomVideo({ set }) {
           playerState={playerState}
           handleClick={togglePlay}
           handleKeyDown={handleKeyDownEvents}
+          isControlBarVisible={hideControls}
         />
 
         {/* skip intro button */}
@@ -153,7 +154,7 @@ export default function CustomVideo({ set }) {
                     ((videoElement.current?.currentTime - topicContent[0]?.startTime) /
                       topicContent[0].skipIntroDuration) *
                       100 || 0
-                  }%, var(--dark_one) 0%, var(--dark_one) 100%)`,
+                  }%, var(--dark_one) 0%, var(--dark_one) 100%)`
                 },
                 clickHandler: () => {
                   const skipIntroTime = topicContent[0]?.startTime;

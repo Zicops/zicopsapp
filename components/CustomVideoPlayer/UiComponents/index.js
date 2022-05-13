@@ -60,6 +60,8 @@ export default function UiComponents({
     setShowLanguageSubtitles(false);
   }, [videoData.videoSrc]);
 
+  const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
+
   return (
     <>
       <div className={`${styles.customUiContainer} ${styleClass}`}>
@@ -68,9 +70,8 @@ export default function UiComponents({
           <div className={`${styles.firstIcon}`} onClick={playerClose}>
             <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
           </div>
-
+	{/* subtitles and language button */}
           <div className={`${styles.leftIcons}`}>
-            {/* subtitles and language button */}
             <div className="position-relative">
               <Button>
                 <Image
@@ -112,21 +113,20 @@ export default function UiComponents({
                   {/* for topic content subtitles */}
                   <div>
                     <h4>Subtitles</h4>
-                    {videoData?.topicContent &&
-                      videoData.topicContent.map((c, i) => (
+                    {topicContent &&
+                      topicContent[currentTopicContentIndex]?.subtitleUrl?.map((s, i) => (
                         <button
-                          key={c.id}
+                          key={s.language}
                           className={`${
-                            i === videoData.currentTopicContentIndex ? styles.languageBtnActive : ''
+                            i === currentSubtitleIndex ? styles.languageBtnActive : ''
                           }`}
                           onClick={() => {
                             setVideoData({
                               ...videoData,
-                              currentTopicContentIndex: i,
-                              videoSrc: videoData.topicContent[i].contentUrl
+                              currentSubtitleIndex: i
                             });
                           }}>
-                          {c.language}
+                          {s.language}
                         </button>
                       ))}
                   </div>
@@ -212,6 +212,7 @@ export default function UiComponents({
                   className={`${styles.videoQuiz}`}
                   onClick={() => toggleStates(setShowQuizDropdown, showQuizDropdown)}></div>
               </Button>
+
               {showQuizDropdown && (
                 <div className={`${styles.quizDropdown}`}>
                   <button
@@ -238,10 +239,12 @@ export default function UiComponents({
           <div className={`${styles.lastIcon}`}></div>
         </div>
       </div>
+
       {/* <div className={`${styles.bookmarkBtn}`}>
           <button onClick={() => updateIsPlayingToPlay(false)}>Bookmark</button>
         </div> */}
       {/* <div className={`${styles.drawer}`}> */}
+
       {/* elements which will be activated when user clicks on one of the above btns  */}
       {/* show bookmark input to save bookmarks */}
       {/* {showBookmark && (

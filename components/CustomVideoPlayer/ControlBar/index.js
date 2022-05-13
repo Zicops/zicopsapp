@@ -36,7 +36,6 @@ export default function ControlBar({
   const [hideBar, setHideBar] = useState(false);
   const videoData = useRecoilValue(VideoAtom);
 
-  console.log(videoData);
   let disablePreviousButton = true;
   let disableNextButton = true;
 
