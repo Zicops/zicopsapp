@@ -35,10 +35,6 @@ export default function useSaveData(videoElement) {
       title: e.target.value
     });
   }
-  // function handleAutoQuizChange(e) {
-  //   console.log(e);
-  //   alert('hi');
-  // }
 
   function captureImageOfVideo() {
     //   remove after testing
@@ -117,7 +113,6 @@ export default function useSaveData(videoElement) {
     handleBookmarkChange,
     bookmarkData,
     handleSaveBookmark,
-    // handleAutoQuizChange,
     notes,
     handleNotesChange,
     handleSaveNotes
