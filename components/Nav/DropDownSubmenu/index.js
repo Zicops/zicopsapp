@@ -5,10 +5,11 @@ import Image from 'next/image';
 
 import { useDropDownSubmenuHandle } from '../Logic/useDropDownSubmenuHandle';
 
+import styles from '../nav.module.scss'
+
 export default function DropDownSubMenu({ subData, menuIcon, submenutext, arrowpositon, submenurowdirection}) {
   const { ref, menuProps, toggleMenu } = useDropDownSubmenuHandle();
-  
-  
+
   return (
     <>
       <div style={{ width: '100%' }}>
@@ -36,16 +37,20 @@ export default function DropDownSubMenu({ subData, menuIcon, submenutext, arrowp
           direction={arrowpositon}
           position={'initial'}
           viewScroll={'initial'}
+          className={`${styles.dropdown_menu}`}
           >
-          {subData.map((elements) => {
+          {subData.map((elements,index) => {
             const { title, link } = elements;
+            const addStyles = styles+index;
             return (
               <MenuItem key={title}
                 style={{
                   border: '1px solid var(--primary)',
                   margin: '2px',
                   // background: 'var(--dark_one)'
-                }}>
+                }}
+                className={`${styles.dropdown_item_1}`}
+                >
                 {title}
               </MenuItem>
             );

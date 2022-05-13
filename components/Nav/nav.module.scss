@@ -31,6 +31,7 @@
   align-items: center;
   cursor: pointer;
 }
+
 .menuicon img {
   max-height: 30px;
   max-width: 30px;
@@ -43,6 +44,7 @@
   display: flex;
   justify-content: center;
 }
+
 .logo img {
   max-width: 200px;
 }
@@ -51,11 +53,13 @@
   display: flex;
   align-items: center;
 }
+
 .menu ul {
   display: flex;
   align-items: center;
   list-style-type: none;
 }
+
 .menu ul li {
   font-size: 14px;
   font-weight: 600;
@@ -63,6 +67,7 @@
   cursor: pointer;
   margin: 0 15px;
 }
+
 .menu ul li.active {
   font-size: 16px;
   font-weight: 600;
@@ -71,19 +76,23 @@
   margin: 0 15px;
   border-bottom: 1px solid $primary;
 }
+
 .menu ul li:hover {
   color: #c2d1d1;
 }
+
 .special_menu {
   display: flex;
   align-items: center;
 }
+
 .special_menu ul {
   display: flex;
   align-items: center;
   list-style-type: none;
   margin: 0;
 }
+
 .special_menu ul li img {
   width: 25px;
   height: 25px;
@@ -111,6 +120,7 @@
   margin-left: 30px;
   /* margin-right: 50px; */
 }
+
 .profilepic {
   padding-right: 10px;
   max-width: 55px;
@@ -121,20 +131,24 @@
 .profilename {
   padding-right: 10px;
 }
+
 .profilename .name {
   font-size: 14px;
   font-weight: 700;
   color: var(--white);
 }
+
 .profilename .desg {
   font-size: 14px;
   font-weight: 600;
   color: var(--primary);
 }
+
 .dropdownicon {
   transition: 0.3s;
   cursor: pointer;
 }
+
 .dropdownicon:hover {
   transform: rotate(180deg);
 }
@@ -148,15 +162,19 @@
   border-bottom: 1px solid #ffffff80;
   padding: 5px 35px 5px 10px;
 }
+
 select.nav_search_dropdown {
   width: 50px;
 }
+
 select.nav_search_dropdow:selected {
   width: 100%;
 }
+
 .nav_search:after {
   content: 'searvh';
 }
+
 .nav_search_btn {
   background-image: url('/images/magnifier.png');
   width: 25px;
@@ -171,6 +189,7 @@ select.nav_search_dropdow:selected {
   margin-right: 10px;
   cursor: pointer;
 }
+
 .nav_search_dropdown {
   background-color: var(--primary);
   color: var(--dark_two);
@@ -184,12 +203,14 @@ select.nav_search_dropdow:selected {
 
 .leftMenuDropdown {
   background-color: red;
+
   .reachMenuButton {
     background-color: 'transparent';
     border: 0;
     outline: 0;
     width: '50px';
   }
+
   .reachMenuList {
     background-color: 'var(--dark_two)';
     margin-top: '20px';
@@ -199,6 +220,7 @@ select.nav_search_dropdow:selected {
     position: 'absolute';
     z-index: 9999;
   }
+
   .reachMenuItem {
     color: var(--primary);
     background-color: var(--dark_two);
@@ -207,3 +229,82 @@ select.nav_search_dropdow:selected {
     margin: 3px;
   }
 }
+
+.dropdown_menu {
+  transform-origin: top left;
+  animation: scaleZ 500ms 0ms ease-in-out forwards;
+}
+
+.dropdown_menu_right {
+  transform-origin: top right;
+  animation: scaleZ 500ms 0ms ease-in-out forwards;
+}
+
+.dropdown_menu_reverse {
+  transform-origin: top left;
+  animation: fadeOut 500ms 0s ease-in-out backwards;
+}
+
+.dropdown_item_1 {
+  transform-origin: top center;
+  animation: scaleZ 500ms 60ms ease-in-out forwards;
+}
+
+.dropdown_item_2 {
+  transform-origin: top center;
+  animation: scaleZ 500ms 120ms ease-in-out forwards;
+}
+
+.dropdown_item_3 {
+  transform-origin: top center;
+  animation: scaleZ 500ms 180ms ease-in-out forwards;
+}
+
+.dropdown_item_4 {
+  transform-origin: top center;
+  animation: scaleZ 500ms 240ms ease-in-out forwards;
+}
+
+.dropdown_item_5 {
+  transform-origin: top center;
+  animation: scaleZ 500ms 300ms ease-in-out forwards;
+}
+
+.dropdown_item_6 {
+  transform-origin: top center;
+  animation: scaleZ 500ms 360ms ease-in-out forwards;
+}
+
+@keyframes scaleZ {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  80% {
+    transform: scale(1.07);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+
+
+@keyframes growDown {
+  0% {
+    transform: scaleY(0);
+  }
+
+  80% {
+    transform: scaleY(1.1);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+

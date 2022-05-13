@@ -8,12 +8,24 @@ import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { languages, preferences } from '../Logic/subMenu.helper.js';
 import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
+import styles from '../nav.module.scss'
 
 export default function RightDropDownMenu() {
   const { anchorEl, handleClick, handleClose, open } = useDropDownHandle();
   let today = new Date();
   let date = new Date().toUTCString().slice(5, 16);
 
+
+  const{dropdown_menu_right,dropdown_menu_reverse} = styles
+
+  let animationStyle;
+  
+  if(open === false){
+    animationStyle=dropdown_menu_reverse
+  }else{
+    animationStyle= dropdown_menu_right
+  }
+  
   return (
     <>
       <Button
@@ -39,6 +51,8 @@ export default function RightDropDownMenu() {
         MenuListProps={{ onMouseLeave: handleClose }}
         TransitionComponent={Fade}
         disableScrollLock={true}
+        // className={`${styles.dropdown_menu_right}`}
+        className={`${animationStyle}`}
         sx={{
           '& .MuiMenu-list': {
             // marginTop : '30px',
@@ -73,11 +87,15 @@ export default function RightDropDownMenu() {
             fontSize: '10px',
             alignItems: 'flex-end',
             backgroundColor: 'var(--header-bg)'
-          }}>
+          }}
+          className={`${styles.dropdown_item_1}`}
+          >
           <p style={{ color: 'var(--background_body)' }}>{date}</p>
           <h2>Powered by Zicops</h2>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+        className={`${styles.dropdown_item_2}`}
+        >
           {/* submenu for myDetails */}
           <DropDownSubMenu
             subData={languages}
@@ -87,9 +105,11 @@ export default function RightDropDownMenu() {
             submenurowdirection={true}
           />
         </MenuItem>
-        <MenuItem className="dropdown-submenu-justifycontent-right">My Certificates</MenuItem>
-        <MenuItem className="dropdown-submenu-justifycontent-right">My Dashboard</MenuItem>
-        <MenuItem>
+        <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_3}`}>My Certificates</MenuItem>
+        <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_4}`}>My Dashboard</MenuItem>
+        <MenuItem
+        className={`${styles.dropdown_item_5}`}
+        >
           {/* submenu for support */}
           <DropDownSubMenu
             subData={preferences}
@@ -99,7 +119,7 @@ export default function RightDropDownMenu() {
             submenurowdirection={true}
           />
         </MenuItem>
-        <MenuItem className="dropdown-submenu-justifycontent-right">Logout</MenuItem>
+        <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_6}`}>Logout</MenuItem>
       </Menu>
     </>
   );

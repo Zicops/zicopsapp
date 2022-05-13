@@ -53,6 +53,7 @@ export default function LeftMenuDropdown({ navmenuicon }) {
         MenuListProps={{ onMouseLeave: handleClose }}
         TransitionComponent={Fade}
         disableScrollLock={true}
+        className={`${styles.dropdown_menu}`}
         sx={{
           '& .MuiMenu-list': {
             // marginTop : '30px',
@@ -78,7 +79,7 @@ export default function LeftMenuDropdown({ navmenuicon }) {
             boxShadow: 'none'
           }
         }}>
-        <MenuItem onSelect={() => alert('Languages')}>
+        <MenuItem onSelect={() => alert('Languages')} className={`${styles.dropdown_item_1}`}>
           {/* Language */}
           <DropDownSubMenu
             subData={languages}
@@ -88,7 +89,7 @@ export default function LeftMenuDropdown({ navmenuicon }) {
             submenurowdirection={false}
           />
         </MenuItem>
-        <MenuItem onSelect={() => alert('Preferences')}>
+        <MenuItem onSelect={() => alert('Preferences')} className={`${styles.dropdown_item_2}`}>
           <DropDownSubMenu
             subData={preferences}
             menuIcon={RightArrow}
@@ -105,7 +106,7 @@ export default function LeftMenuDropdown({ navmenuicon }) {
             border: '1px solid var(--primary)',
             margin: '2px'
           }}
-          className={`${styles.LeftDropdownR_admin}`}>
+          className={`${styles.LeftDropdownR_admin} ${styles.dropdown_item_3}`}>
           {!isAdmin ? 'Switch to Admin' : 'Switch to Learner'}
         </MenuItem>
       </Menu>
