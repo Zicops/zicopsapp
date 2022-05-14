@@ -10,14 +10,13 @@ import {
   UPLOAD_COURSE_TILE_IMAGE
 } from '../../../API/Mutations';
 import { createCourseAndUpdateContext } from '../../../helper/data.helper';
-import { isCourseUploadingAtom, tabData } from './tabs.helper';
+import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
+import { CourseTabAtom, isCourseUploadingAtom, tabData } from './tabs.helper';
 
 export default function useSaveCourse(courseContextData) {
   const {
     fullCourse,
     updateCourseMaster,
-    tab,
-    setTab,
     courseVideo,
     setCourseVideo,
     courseImage,
@@ -32,11 +31,8 @@ export default function useSaveCourse(courseContextData) {
   const [uploadPreview, { loading: uploadPreviewLoading }] = useMutation(UPLOAD_COURSE_PREVIEW);
   const [updateCourse, { loading: udpateCourseLoading }] = useMutation(UPDATE_COURSE);
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
-  const router = useRouter();
-
-  function returnToMycourses() {
-    router.push('/admin/zicops-courses');
-  }
+  const [tab, setTab] = useRecoilState(CourseTabAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   useEffect(() => {
     console.log(tab);
@@ -45,7 +41,7 @@ export default function useSaveCourse(courseContextData) {
     // saveCourseData();
   }, [tab]);
 
-  async function saveCourseData(isNextButton, tabIndex) {
+  async function saveCourseData(isNextButton, tabIndex, showToastMsg = true) {
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
 
     if (!fullCourse.id) {
@@ -66,19 +62,16 @@ export default function useSaveCourse(courseContextData) {
       variables: fullCourse
     });
 
-    alert('course updated');
-    console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
+
     updateCourseMaster(courseUpdateResponse.data.updateCourse);
 
-    console.log(
-      udpateCourseLoading && uploadImageLoading && uploadTileLoading && uploadPreviewLoading
-    );
     setIsLoading(
       udpateCourseLoading && uploadImageLoading && uploadTileLoading && uploadPreviewLoading
         ? 'UPDATING...'
         : null
     );
-    console.log(isNextButton, tabData[tabIndex || 0].name, tabIndex);
+    if (showToastMsg) setToastMsg([{ type: 'success', message: 'Course Updated' }]);
+    console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
     if (isNextButton) setTab(tabData[tabIndex || 0].name);
   }
 
@@ -121,5 +114,5 @@ export default function useSaveCourse(courseContextData) {
     }
   }
 
-  return { fullCourse, saveCourseData, returnToMycourses };
+  return { fullCourse, saveCourseData };
 }

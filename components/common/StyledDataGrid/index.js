@@ -33,16 +33,23 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
     border: 'none',
     borderBottom: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f02b' : '#3030302b'}`,
-    fontSize: '16px'
+    fontSize: '16px',
+    // color: '#868686'
   },
-  '& .MuiDataGrid-cell': {
-    color: theme.palette.mode === 'light' ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,0.65)'
-  },
+  // '& .MuiDataGrid-cell:hover': {
+  //   color: 'var(--primary)'
+  // },
+  // '& .MuiDataGrid-cell': {
+  //   color: theme.palette.mode === 'light' ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,0.65)'
+  // },
   '& .MuiDataGrid-columnHeaderTitleContainerContent': {
     overflow: 'visible'
   },
   '& .MuiDataGrid-row:hover': {
-    backgroundColor: '#7373732b'
+    // backgroundColor: '#7373732b'
+  },
+  '& .MuiDataGrid-row:hover .MuiDataGrid-cell': {
+    color: 'var(--primary)'
   },
   '& .MuiPaginationItem-root': {
     borderRadius: 0

@@ -1,0 +1,21 @@
+@import '../../../styles/base.scss';
+
+.footerBtn {
+  min-width: 155px;
+  background-color: transparent;
+  border-radius: 50px;
+  border: 1px solid $darkThree;
+
+  padding: 10px 20px;
+  margin: 5px;
+
+  color: $secondaryBlack;
+  font-family: 'Open Sans';
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 0 10px 0 $darkThree;
+  }
+}

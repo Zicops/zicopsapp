@@ -1,0 +1,40 @@
+@import '../../../styles/base.scss';
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 100%;
+  margin: 10px 20px 10px auto;
+
+  border: 1px solid $white;
+  border-radius: 8px;
+
+  padding: 10px 20px;
+  color: $secondaryBlack;
+}
+
+.largeHead {
+  width: 100%;
+}
+.mediumHead {
+  width: 95%;
+  margin-right: 0;
+}
+.smallHead {
+  width: 90%;
+  margin-right: 0;
+}
+
+.title {
+  text-transform: uppercase;
+}
+
+.editImg {
+  img {
+    width: 25px;
+    cursor: pointer;
+  }
+}

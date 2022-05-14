@@ -38,9 +38,8 @@ export default function useShowData(courseContextData) {
     }
   }, [activeCourseTab]);
 
-  // useEffect(() => {
-  //   if (selectedModule.value !== videoData.currentModuleId) console.log(selectedModule);
-  // }, [selectedModule]);
+
+
   // recoil states
   const [moduleData, updateModuleData] = useRecoilState(ModuleAtom);
   const [chapter, updateChapterData] = useRecoilState(ChapterAtom);

@@ -55,6 +55,8 @@ export function updateVideoData(
     
     topicContent: topicContent,
     currentTopicContentIndex: 0,
+    currentSubtitleIndex: 0,
+
     allModuleTopic: filteredTopicData,
     currentModuleId: moduleId,
 

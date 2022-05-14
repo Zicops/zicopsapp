@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   ADD_TOPIC_CONTENT,
-  mutationClient,
   UPDATE_COURSE_TOPIC,
   UPDATE_TOPIC_CONTENT,
   UPLOAD_TOPIC_CONTENT_SUBTITLE,
@@ -50,7 +49,6 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
   const [uploadStatus, setUploadStatus] = useRecoilState(uploadStatusAtom);
 
-  const [progress, setProgress] = useState(0);
   // mutations
   const [updateCourseTopic, { error: updateTopicError }] = useMutation(UPDATE_COURSE_TOPIC);
   const [addCourseTopicContent, { loading: addContentLoading }] = useMutation(ADD_TOPIC_CONTENT);
@@ -63,11 +61,6 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   );
   const [uploadTopicResource, { loading: uploadResourcesLoading }] =
     useMutation(UPLOAD_TOPIC_RESOURCE);
-
-  useEffect(() => {
-    console.log('Upload Progress', progress);
-  }, [progress]);
-
   // local state
   const [editTopic, setEditTopic] = useState(getTopicObject({ courseId: fullCourse.id }));
   const [isEditTopicFormVisible, setIsEditTopicFormVisible] = useState(false);
@@ -122,20 +115,20 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
           contentUrl: content.contentUrl,
           file: null
         };
-        content?.subtitleUrl?.forEach((s) => {
-          const topicSubtitleData = {
-            courseId: content.courseId,
-            contentId: content.id,
-            subtitleUrl: s.url || null,
-            file: null,
-            language: s.language
-          };
 
-          topicSubtitleArray.push(topicSubtitleData);
-        });
         topicContentArray.push(contentData);
         topicVideoArray.push(topicVideoData);
-        // topicSubtitleArray.push(topicSubtitleData);
+
+        for (let i = 0; i < content?.subtitleUrl?.length; i++) {
+          const subtitle = content?.subtitleUrl[i];
+          topicSubtitleArray.push({
+            courseId: content.courseId,
+            topicId: content.topicId,
+            subtitleUrl: subtitle.url,
+            language: subtitle.language,
+            file: null
+          });
+        }
 
         if (index === 0) {
           // binge data
@@ -246,10 +239,18 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
         );
         const { courseId, topicId, ...updateContentData } = sendContentData;
         updateContentData.contentId = content.id;
-        data = await (await updateCourseTopicContent({ variables: updateContentData })).data;
+        data = await (
+          await updateCourseTopicContent({ variables: updateContentData }).catch((err) =>
+            console.log(err)
+          )
+        ).data;
       } else {
         console.log('sendContentData', sendContentData);
-        data = await (await addCourseTopicContent({ variables: sendContentData })).data;
+        data = await (
+          await addCourseTopicContent({ variables: sendContentData }).catch((err) =>
+            console.log(err)
+          )
+        ).data;
       }
 
       console.log(`Topic Content Uploaded with language ${content.language}`);
@@ -267,30 +268,49 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
             fetchOptions: {
               useUpload: true,
               onProgress: (ev) => {
-                console.log(ev);
+
                 setUploadStatus({
                   [content.language]: ev.loaded / ev.total
                 });
-                setProgress(ev.loaded / ev.total);
+
               }
             }
           }
-        });
+        }).catch((err) => console.log(err));
 
         console.log(`Topic Video Uploaded with language ${content.language}`);
 
-        if (topicSubtitle[index].file) {
-          const sendSubtitleData = {
-            contentId: data.addTopicContent?.id || content.id,
-            courseId: topicSubtitle[index].courseId,
-            file: topicSubtitle[index].file
-          };
-          await uploadCourseContentSubtitle({ variables: sendSubtitleData });
+        // if (topicSubtitle[index].file) {
+        //   const sendSubtitleData = {
+        //     contentId: data.addTopicContent?.id || content.id,
+        //     courseId: topicSubtitle[index].courseId,
+        //     file: topicSubtitle[index].file
+        //   };
+        //   await uploadCourseContentSubtitle({ variables: sendSubtitleData }).catch((err) =>
+        //     console.log(err)
+        //   );
 
-          console.log(`Topic Subtitle Uploaded with language ${content.language}`);
-        }
+        //   console.log(`Topic Subtitle Uploaded with language ${content.language}`);
+        // }
       }
     }
+
+    // if (topicSubtitle[index].file) {
+    for (let i = 0; i < topicSubtitle.length; i++) {
+      const subtitle = topicSubtitle[i];
+      const sendResources = {
+        topicId: subtitle.topicId,
+        courseId: subtitle.courseId,
+        file: subtitle.file,
+        language: subtitle.language
+      };
+      await uploadCourseContentSubtitle({ variables: sendResources }).catch((err) =>
+        console.log(err)
+      );
+
+      console.log(`Topic Subtitle Uploaded with language ${subtitle.language}`);
+    }
+    // }
 
     console.log('Topic Content and related Video and Subtitle Uploaded');
 
@@ -308,9 +328,10 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
       } else {
         sendResources.url = resource.url;
       }
-      
-      await uploadTopicResource({ variables: sendResources });
+
+      await uploadTopicResource({ variables: sendResources }).catch((err) => console.log(err));
     }
+
 
     setUploadStatus(null);
     console.log('Topic Content and resources Uploaded');

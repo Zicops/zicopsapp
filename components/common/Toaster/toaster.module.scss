@@ -1,0 +1,115 @@
+@import '../../../styles/base.scss';
+
+$toastPositionFromBottom: 10px;
+$toastPositionFromLeft: 20px;
+
+$backgroundColor: $black;
+$fallbackHeadingColor: $white;
+$messageColor: $secondaryWhite;
+
+$imgHeight: 25px;
+$imgWidth: 25px;
+
+$successImg: '/images/heart.png';
+$infoImg: '/images/heart.png';
+$warningImg: '/images/heart.png';
+$dangerImg: '/images/heart.png';
+
+.toasterContainer {
+  position: absolute;
+  bottom: $toastPositionFromBottom;
+  left: $toastPositionFromLeft;
+
+  z-index: 100;
+
+  .toaster {
+    position: relative;
+    padding: 10px 15px;
+    margin: 20px auto;
+
+    width: 20vw;
+    max-height: 100px;
+
+    background-color: $backgroundColor;
+    border-radius: 10px;
+
+    color: $fallbackHeadingColor;
+
+    animation: toast-in-left 0.7s;
+    transition: transform 0.6s ease-in;
+    transition: all .5s ease;
+
+    h3 {
+      display: flex;
+      margin-bottom: 5px;
+      align-items: flex-end;
+      text-transform: capitalize;
+    }
+
+    p {
+      color: $messageColor;
+    }
+
+    .imgContainer {
+      height: $imgHeight;
+      width: $imgWidth;
+      margin-right: 10px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .success {
+      color: #5cb85c;
+      span {
+        background-image: url($successImg);
+      }
+    }
+
+    .danger {
+      color: #d9534f;
+      span {
+        background-image: url($dangerImg);
+      }
+    }
+
+    .info {
+      color: #5bc0de;
+      span {
+        background-image: url($infoImg);
+      }
+    }
+
+    .warning {
+      color: #f0ad4e;
+      span {
+        background-image: url($warningImg);
+      }
+    }
+
+    .crossBtn {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      height: 25px;
+      width: 25px;
+
+      border-radius: 50%;
+
+      background-color: $darkTwo;
+    }
+  }
+}
+
+@keyframes toast-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

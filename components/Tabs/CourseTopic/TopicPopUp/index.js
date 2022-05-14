@@ -6,12 +6,12 @@ import {
   TopicVideoAtom,
   uploadStatusAtom
 } from '../../../../state/atoms/module.atoms';
+import BlackRow from '../../../common/BlackRow';
 import PopUp from '../../../common/PopUp';
 // imported from common, recommended to remove later
 import styles from '../../../common/PopUp/popUp.module.scss';
 import Quiz from '../../../medium/Quiz';
 import Accordion from '../../../small/Accordion';
-import ModuleBlock from '../ModuleBlock';
 import AddTopicContentForm from './AddTopicContentForm';
 import AddTopicForm from './AddTopicForm';
 import BingeForm from './BingeForm';
@@ -58,7 +58,7 @@ export default function TopicPopUp({
 
   const topicContent = useRecoilValue(TopicContentAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
-  console.log(uploadStatus);
+
   if (isEdit) {
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
     closeBtnObj.name = 'Design Later';
@@ -93,8 +93,8 @@ export default function TopicPopUp({
         {isEdit && (
           <>
             <div className="topicAdded">
-              <ModuleBlock
-                type="module"
+              <BlackRow
+                type="large"
                 title={`Topic ${editTopic.sequence} : ${editTopic.name}`}
                 editHandler={() => {
                   if (!isEditTopicFormVisible)
@@ -190,12 +190,7 @@ export default function TopicPopUp({
                   />
                 }
               />
-              <Accordion
-                title="Binge it"
-                content={
-                  <BingeForm topicVideo={topicVideo} handleInput={inputHandlers.handleBingeInput} />
-                }
-              />
+              <Accordion title="Binge it" content={<BingeForm topicVideo={topicVideo} />} />
               <Accordion title="Quiz" content={<Quiz />} />
               <Accordion
                 title="Resources"

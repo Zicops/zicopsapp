@@ -1,8 +1,9 @@
 import { useRecoilValue } from 'recoil';
 import { BingeAtom } from '../../../../../state/atoms/module.atoms';
+import useAddBinge from '../../Logic/useAddBinge';
 import style from './bingeForm.module.scss';
 
-export default function BingeForm({ topicVideo, handleInput }) {
+export default function BingeForm({ topicVideo }) {
   let videoSrc;
   if (topicVideo.file) {
     videoSrc = URL.createObjectURL(topicVideo.file);
@@ -11,6 +12,9 @@ export default function BingeForm({ topicVideo, handleInput }) {
   }
 
   const bingeData = useRecoilValue(BingeAtom);
+
+  // binge data input handler hook
+  const { handleBingeInput: handleInput } = useAddBinge();
 
   return (
     <>

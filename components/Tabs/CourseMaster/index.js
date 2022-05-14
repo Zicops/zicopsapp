@@ -5,9 +5,9 @@ import { changeHandler } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../common/FormComponents/LabeledInput';
-import DropdownSelect from '../common/DropdownSelect';
+import SwitchButton from '../../common/FormComponents/SwitchButton';
 import NextButton from '../common/NextButton';
-import TextInput from '../common/TextInput';
+import styles from '../courseTabs.module.scss';
 import useHandleTabs from '../Logic/useHandleTabs';
 
 export default function CourseMaster() {
@@ -16,9 +16,8 @@ export default function CourseMaster() {
   const { data } = getQueryData(GET_CATS_N_SUB_CATS);
 
   const allCatOptions = [];
-  if (data?.allCategories)
-    data.allCategories.map((val) => allCatOptions.push({ value: val, label: val }));
-  const category_dropdown = {
+  data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
+  const categoryDropdownOptions = {
     inputName: 'category',
     label: 'Course Category',
     placeholder: 'Select the category of the course',
@@ -26,14 +25,12 @@ export default function CourseMaster() {
     value: fullCourse?.category
       ? { value: fullCourse?.category, label: fullCourse?.category }
       : null,
-    isDisabled: false,
-    isSearchEnable: true,
-    isMulti: false
+    isSearchEnable: true
   };
+
   const allSubcatOptions = [];
-  if (data?.allSubCategories)
-    data.allSubCategories.map((val) => allSubcatOptions.push({ value: val, label: val }));
-  const subcategory_dropdown = {
+  data?.allSubCategories?.map((val) => allSubcatOptions.push({ value: val, label: val }));
+  const subcategoryDropdownOptions = {
     inputName: 'sub_category',
     label: 'Select Base Sub-category',
     placeholder: 'Select the sub-category of the course',
@@ -41,10 +38,9 @@ export default function CourseMaster() {
     value: fullCourse?.sub_category
       ? { value: fullCourse?.sub_category, label: fullCourse?.sub_category }
       : null,
-    isDisabled: false,
-    isSearchEnable: true,
-    isMulti: false
+    isSearchEnable: true
   };
+
   const allOwners = [
     { value: 'Abhishek', label: 'Abhishek' },
     { value: 'Sonali', label: 'Sonali' },
@@ -54,16 +50,15 @@ export default function CourseMaster() {
     { value: 'Harshad', label: 'Harshad' },
     { value: 'Rishav', label: 'Rishav' }
   ];
-  const owner_dropdown = {
+  const ownerDropdownOptions = {
     inputName: 'owner',
     label: 'Course Owner',
     placeholder: 'Select the owner of the course',
     options: allOwners,
     value: fullCourse?.owner ? { value: fullCourse?.owner, label: fullCourse?.owner } : null,
-    isDisabled: false,
-    isSearchEnable: true,
-    isMulti: false
+    isSearchEnable: true
   };
+
   const allLanguages = [
     { value: 'English', label: 'English' },
     { value: 'Hindi', label: 'Hindi' },
@@ -79,157 +74,80 @@ export default function CourseMaster() {
     { value: 'Maithili', label: 'Maithili' }
   ];
   const allSelectedLanguages = [];
-  if (fullCourse?.language)
-    fullCourse.language.map((val) => allSelectedLanguages.push({ value: val, label: val }));
-  const language_dropdown = {
+
+  fullCourse?.language?.map((val) => allSelectedLanguages.push({ value: val, label: val }));
+  const languageDropdownOptions = {
     inputName: 'language',
     label: 'Languages',
     placeholder: 'Select multiple language for the course',
     options: allLanguages,
     value: allSelectedLanguages.length ? allSelectedLanguages : null,
-    isDisabled: false,
     isSearchEnable: true,
     isMulti: true
   };
+
   return (
-    <div className="course_master">
-      <form>
-        <LabeledInput
-          inputOptions={{
-            inputName: 'name',
-            label: 'Name',
-            placeholder: 'Enter name of the course (Upto 60 characters)',
-            maxLength: 60,
-            value: fullCourse.name
-          }}
-          changeHandler={handleChange}
-        />
-        <br />
-        <LabeledDropdown
-          dropdownOptions={category_dropdown}
-          changeHandler={(e) =>
-            changeHandler(e, fullCourse, updateCourseMaster, category_dropdown.inputName)
-          }
-        />
-        <br />
-        <LabeledDropdown
-          dropdownOptions={subcategory_dropdown}
-          changeHandler={(e) =>
-            changeHandler(e, fullCourse, updateCourseMaster, subcategory_dropdown.inputName)
-          }
-        />
-        <br />
-        <LabeledDropdown
-          dropdownOptions={owner_dropdown}
-          changeHandler={(e) =>
-            changeHandler(e, fullCourse, updateCourseMaster, owner_dropdown.inputName)
-          }
-        />
-        <br />
-        <LabeledDropdown
-          dropdownOptions={language_dropdown}
-          changeHandler={(e) =>
-            changeHandler(e, fullCourse, updateCourseMaster, language_dropdown.inputName)
-          }
-        />
+    <>
+      <LabeledInput
+        styleClass={styles.inputGroup}
+        inputOptions={{
+          inputName: 'name',
+          label: 'Name',
+          placeholder: 'Enter name of the course (Upto 60 characters)',
+          maxLength: 60,
+          value: fullCourse.name
+        }}
+        changeHandler={handleChange}
+      />
 
-        <div className="row my_30">
-          <div className="col_25"></div>
-          <div className="col_25">
-            <div className="active_button">
-              <label htmlFor="active" className="td_label">
-                Active
-              </label>
-              <label className="switch">
-                <input
-                  className="switch_input"
-                  type="checkbox"
-                  name="is_active"
-                  onChange={handleChange}
-                  checked={fullCourse.is_active || false}
-                />
-                <span className="switch_label" data-on="On" data-off="Off"></span>
-                <span className="switch_handle"></span>
-              </label>
-            </div>
-          </div>
+      <LabeledDropdown
+        styleClass={styles.inputGroup}
+        dropdownOptions={categoryDropdownOptions}
+        changeHandler={(e) =>
+          changeHandler(e, fullCourse, updateCourseMaster, categoryDropdownOptions.inputName)
+        }
+      />
 
-          <div className="col_25">
-            <div className="active_button">
-              <label htmlFor="display" className="td_label">
-                Display
-              </label>
-              <label className="switch">
-                <input
-                  className="switch_input"
-                  type="checkbox"
-                  name="is_display"
-                  onChange={handleChange}
-                  checked={fullCourse.is_display}
-                />
-                <span className="switch_label" data-on="On" data-off="Off"></span>
-                <span className="switch_handle"></span>
-              </label>
-            </div>
-          </div>
-          <div className="col_25"></div>
-        </div>
-        <NextButton tabIndex={1} />
-        {/* <div className="row">
-          <div className="col_75"></div>
-          <div className="col_25"></div>
-          <button type="button" className={nextBtn} onClick={() => saveCourseData(true, 1)}>
-            <span>Next</span>
-            <Image src="/images/bigarrowright.png" alt="" height={20} width={20} />
-          </button>
-        </div> */}
-        {/* <div className="row">
-          <div className="col_75"></div>
-          <div className="col_25"></div>
-          <button type="button" className="admin-next-btn" onClick={() => saveCourseData(true, 1)}>
-            Next
-          </button>
-        </div> */}
-      </form>
-    </div>
+      <LabeledDropdown
+        styleClass={styles.inputGroup}
+        dropdownOptions={subcategoryDropdownOptions}
+        changeHandler={(e) =>
+          changeHandler(e, fullCourse, updateCourseMaster, subcategoryDropdownOptions.inputName)
+        }
+      />
+
+      <LabeledDropdown
+        styleClass={styles.inputGroup}
+        dropdownOptions={ownerDropdownOptions}
+        changeHandler={(e) =>
+          changeHandler(e, fullCourse, updateCourseMaster, ownerDropdownOptions.inputName)
+        }
+      />
+
+      <LabeledDropdown
+        styleClass={styles.inputGroup}
+        dropdownOptions={languageDropdownOptions}
+        changeHandler={(e) =>
+          changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
+        }
+      />
+
+      <div className={`w-100 center-element-with-flex ${styles.switchContainer}`}>
+        <SwitchButton
+          label="Active"
+          inputName="is_active"
+          isChecked={fullCourse.is_active || false}
+          handleChange={handleChange}
+        />
+        <SwitchButton
+          label="Display"
+          inputName="is_display"
+          isChecked={fullCourse.is_display || false}
+          handleChange={handleChange}
+        />
+      </div>
+
+      <NextButton tabIndex={1} />
+    </>
   );
 }
-
-// TODO:
-// function CreateCatsDropdown({ inputHandler, inputField }) {
-//   return (
-//     <select className="col_75" name="category" onChange={inputHandler} value={inputField.category}>
-//       <option className="col_75" value="">
-//         Select the category of the course
-//       </option>
-//       {data
-//         ? data.allCategories.map((value, index) => (
-//             <option key={index} className="col_75 white" value={value}>
-//               {value}
-//             </option>
-//           ))
-//         : null}
-//     </select>
-//   );
-// }
-// function CreateSubCatsDropdown({ inputHandler, inputField }) {
-//   const { data } = useQuery(GET_CATS_N_SUB_CATS);
-//   return (
-//     <select
-//       className="col_75"
-//       name="sub_category"
-//       onChange={inputHandler}
-//       value={inputField.sub_category}>
-//       <option className="col_75" value="">
-//         Select the base sub-category of the course
-//       </option>
-//       {data
-//         ? data.allSubCategories.map((cats, index) => (
-//             <option key={index} className="col_75 white" value={cats}>
-//               {cats}
-//             </option>
-//           ))
-//         : null}
-//     </select>
-//   );
-// }

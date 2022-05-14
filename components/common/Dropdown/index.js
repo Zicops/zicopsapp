@@ -2,7 +2,6 @@ import { arrayOf, objectOf, shape, string } from 'prop-types';
 import Select from 'react-select';
 
 export default function Dropdown({ options, handleChange, value }) {
-  console.log('Value', value);
   return (
     <>
       {/* move styles to .scss */}

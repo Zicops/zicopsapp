@@ -1,0 +1,34 @@
+@import '../../../../styles/base.scss';
+
+.inputField {
+  margin-bottom: 30px;
+}
+
+.inputLabelGap {
+  margin-top: 20px;
+}
+.checkboxContainer {
+  display: inline-block;
+  margin: 10px 0;
+
+  label {
+    margin-right: 10px;
+  }
+}
+
+.scheduleContainer {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-gap: 30px;
+}
+
+.stretchDuration {
+  grid-column: 1/3;
+  margin-left: 25%;
+}
+
+.configurationContainer {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  justify-items: start;
+}

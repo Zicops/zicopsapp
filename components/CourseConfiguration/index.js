@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { courseContext } from '../../state/contexts/CourseContext';
+import InputDatePicker from '../common/InputDatePicker';
 import SlideButton from '../small/SlideButton';
 import CustomHeader from './CustomHeader';
 import useHandleConfig from './Logic/useHandleConfig';
@@ -18,30 +19,14 @@ export default function CourseConfiguration() {
           Publish Date
         </label>
         <div className="col_25">
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            renderCustomHeader={CustomHeader}
-            selected={publishDate}
-            onChange={(date) => setPublishDate(date)}
-            calendarClassName="dark_calender"
-            className="calender_body"
-            dayClassName={() => 'calander_dates'}
-          />
+          <InputDatePicker selectedDate={publishDate} changeHandler={(d) => setPublishDate(d)} />
         </div>
 
         <label htmlFor="name" className="col_25" style={{ textAlign: 'center' }}>
           <span>Expire Date</span>
         </label>
         <div className="col_25">
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            renderCustomHeader={CustomHeader}
-            selected={expireDate}
-            onChange={(date) => setExpireDate(date)}
-            calendarClassName="dark_calender"
-            className="calender_body"
-            dayClassName={() => 'calander_dates'}
-          />
+          <InputDatePicker selectedDate={expireDate} changeHandler={(d) => setExpireDate(d)} />
         </div>
       </div>
 

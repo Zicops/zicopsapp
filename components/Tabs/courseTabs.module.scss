@@ -1,0 +1,153 @@
+@import '../../styles/base.scss';
+
+// tab index
+.previewButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+// utils
+.inputGroup {
+  margin-bottom: 30px;
+}
+
+// course master
+.switchContainer {
+  gap: 50px;
+}
+
+// course details
+.fileName {
+  text-align: end;
+}
+
+// course about
+.alignBaseline {
+  align-items: baseline;
+}
+// .container {
+//   display: flex;
+//   flex-wrap: wrap;
+//   // padding-left: 14px;
+//   // border: 1px grey solid;
+//   border-radius: 5px;
+//   // color: black
+// }
+
+// .tag {
+//   display: flex;
+//   align-items: center;
+//   margin: 10px 0;
+//   margin-right: 10px;
+//   padding-left: 10px;
+//   padding-right: 5px;
+//   border: 1px solid var(--primary);
+//   border-radius: 5px;
+//   background-color: var(--primary);
+//   white-space: nowrap;
+//   color: white;
+// }
+
+// .tag button {
+//   display: flex;
+//   padding: 6px;
+//   border: none;
+//   background-color: unset;
+//   cursor: pointer;
+//   color: white;
+// }
+.bulletPointInputContainer {
+  align-items: flex-start;
+  font-size: 13px;
+
+  &.tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    input {
+      width: 25%;
+      margin: 0;
+    }
+  }
+
+  .tags {
+      display: flex;
+      align-items: center;
+
+      margin: 10px 0;
+      margin-right: 10px;
+      padding-left: 10px;
+      padding-right: 5px;
+
+      border: 1px solid $primary;
+      border-radius: 5px;
+      background-color: $primary;
+      white-space: nowrap;
+      color: $white;
+      button {
+        padding: 10px;
+      }
+  }
+
+  .bullets {
+    display: flex;
+    justify-content: space-between;
+
+    border-radius: 5px;
+    font-size: inherit;
+    color: $darkThree;
+
+    background-color: $tertiaryBlack;
+    border: 1px solid $darkThree;
+    padding: 3px 10px;
+    margin: 5px auto;
+
+    &:last-child {
+      margin-bottom: 10px;
+    }
+  }
+
+  button {
+    padding: 0px;
+    border: none;
+    color: $white;
+
+    background-color: unset;
+    cursor: pointer;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+
+    border: 2px solid $darkThree;
+    background-color: $darkTwo;
+
+    color: $secondaryBlack;
+    font-size: inherit;
+    font-family: 'Open Sans';
+
+    &:not(:placeholder-shown) {
+      /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+      color: $white;
+      border: 2px solid $primary;
+    }
+    &:focus {
+      border: 2px solid $primary;
+      box-shadow: 0px 0px 10px 0px $primary;
+      outline: 0;
+      color: $white;
+    }
+  }
+}
+
+// course topic
+.buttonGap {
+  margin: 10px auto;
+}
+
+// module pop up
+.isChapterWiseLabel {
+  width: 100px;
+}

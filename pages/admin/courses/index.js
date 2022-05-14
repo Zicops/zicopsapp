@@ -1,37 +1,33 @@
 import { ApolloProvider } from '@apollo/client';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import { mutationClient } from '../../../API/Mutations';
-import CourseHead from '../../../components/CourseHead';
+import AdminHeader from '../../../components/common/AdminHeader';
+import MainBody from '../../../components/common/MainBody';
+import MainBodyBox from '../../../components/common/MainBodyBox';
 import Sidebar from '../../../components/common/Sidebar';
+import { courseSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
 import CourseTabs from '../../../components/Tabs';
 import AdminFooter from '../../../components/Tabs/AdminFooter';
 import CourseContextProvider from '../../../state/contexts/CourseContext';
-import { courseSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
+import ModuleContextProvider from '../../../state/contexts/ModuleContext';
 
-export default function Courses() {
-  const router = useRouter();
-  const [isCourseIdPresent, setIsCourseIdPresent] = useState(false);
-
-  useEffect(() => {
-    setIsCourseIdPresent(router?.query?.courseId ? true : false);
-  }, [router]);
-
+export default function AddCoursePage() {
   return (
-    <div>
+    <>
       <Sidebar sidebarItemsArr={courseSidebarData} />
 
-      <div className={`adminContent`}>
-        <CourseHead title={isCourseIdPresent ? 'Edit Course' : 'Add New Course'} />
+      <MainBody>
+        <AdminHeader title="Add New Course" />
 
         <ApolloProvider client={mutationClient}>
           <CourseContextProvider>
-            <CourseTabs />
-
-            <AdminFooter />
+            <ModuleContextProvider>
+              <MainBodyBox>
+                <CourseTabs />
+              </MainBodyBox>
+            </ModuleContextProvider>
           </CourseContextProvider>
         </ApolloProvider>
-      </div>
-    </div>
+      </MainBody>
+    </>
   );
 }

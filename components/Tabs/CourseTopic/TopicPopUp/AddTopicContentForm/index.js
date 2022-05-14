@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { TopicContentAtom } from '../../../../../state/atoms/module.atoms';
+import { courseContext } from '../../../../../state/contexts/CourseContext';
 
 export default function AddTopicContentForm({
   inputHandlers,
@@ -10,6 +11,7 @@ export default function AddTopicContentForm({
   isAddTopicContentReady,
   topicContent
 }) {
+  const {fullCourse} = useContext(courseContext);
   const { newTopicContent, newTopicVideo, newTopicSubtitle } = data;
   const { handleTopicContentInput, handleTopicSubtitleInput, handleTopicVideoInput } =
     inputHandlers;
@@ -61,7 +63,7 @@ export default function AddTopicContentForm({
           onChange={handleTopicContentInput}
           value={newTopicContent.language || ''}>
           <option hidden>Language of the content</option>
-          {['English', 'Hindi', 'Bengali', 'Marathi'].map((lang) => (
+          {fullCourse?.language?.map((lang) => (
             <option key={lang} value={lang}>
               {lang}
             </option>

@@ -11,55 +11,6 @@
   margin: auto;
 }
 
-.moduleBox {
-  width: 90%;
-  min-height: 200px;
-  border-radius: 10px;
-  border: 1px solid $primary;
-  background-color: $black;
-  padding: 10px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  width: 100%;
-  margin-left: auto;
-  margin-right: 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-
-  border: 1px solid $white;
-  border-radius: 8px;
-
-  padding: 10px 20px;
-  color: $secondaryBlack;
-}
-
-.moduleHead {
-  width: 100%;
-}
-.chapterHead {
-  width: 95%;
-  margin-right: 0;
-}
-.topicHead {
-  width: 90%;
-  margin-right: 0;
-}
-
-.title {
-  text-transform: uppercase;
-}
-
-.editImg {
-  img {
-    width: 25px;
-    cursor: pointer;
-  }
+.moduleBoxContainer {
+  margin: 30px auto;
 }

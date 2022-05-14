@@ -46,7 +46,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
             alt=""
           />
         </div>
-
+        
         <div className="overlay">
           <div className="bottom-box">
             <div className="title-area">
@@ -62,14 +62,12 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
                   <div className="one-text">
                     <span className="level noselect">Level:</span>
                     <span className="value noselect">
-                      {courseData.expertise_level
-                        ? courseData.expertise_level.split(',').join(' | ')
-                        : ' Beginner'}
+                      {courseData.expertise_level ? courseData.expertise_level.split(',').join(' | ') : " Beginner"}
                     </span>
                   </div>
                   <div className="one-text">
                     <span className="level noselect">Duration:</span>
-                    <span className="value noselect">{courseData.duration || ' 275'} mins</span>
+                    <span className="value noselect">{courseData.duration || " 275"} mins</span>
                   </div>
                 </div>
 

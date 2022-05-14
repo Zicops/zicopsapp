@@ -72,11 +72,11 @@ const Exam = () => {
   };
   return (
     <>
-      <QuestionSection />
-      {/* <Sidebar />
+      {/* <QuestionSection /> */}
+      {/* <Sidebar /> */}
       <MainBody>
         <CourseHead title="My Exam" />
-        <MainBodyBox> */}
+        <MainBodyBox>
       {/* <LabeledInput inputOptions={inputOptions} changeHandler={changeHandler} />
           <br />
           <LabeledDropdown dropdownOptions={dropdownOptions} changeHandler={changeHandler} />
@@ -147,8 +147,8 @@ const Exam = () => {
               placeholder: 'Select Max Attempts'
             }}
           /> */}
-      {/* </MainBodyBox>
-      </MainBody> */}
+      </MainBodyBox>
+      </MainBody>
       {/* <style>{`
           .ExamConfigration{
               display: grid;
