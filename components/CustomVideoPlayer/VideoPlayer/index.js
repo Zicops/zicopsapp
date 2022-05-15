@@ -57,7 +57,6 @@ export default function VideoPlayer({
       {videoData.type === 'mp4' && videoData.videoSrc && (
         <>
           <video
-            crossorigin="anonymous"
             tabIndex="0"
             onClick={handleClick}
             onKeyDown={handleKeyDown}
