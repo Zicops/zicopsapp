@@ -8,6 +8,7 @@ import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { languages, preferences } from '../Logic/subMenu.helper.js';
 import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
+import styles from '../nav.module.scss';
 
 export default function RightDropDownMenu() {
   const { anchorEl, handleClick, handleClose, open } = useDropDownHandle();
