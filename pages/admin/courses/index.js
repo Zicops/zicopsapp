@@ -6,9 +6,6 @@ import MainBodyBox from '../../../components/common/MainBodyBox';
 import Sidebar from '../../../components/common/Sidebar';
 import { courseSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
 import CourseTabs from '../../../components/Tabs';
-import AdminFooter from '../../../components/Tabs/AdminFooter';
-import CourseContextProvider from '../../../state/contexts/CourseContext';
-import ModuleContextProvider from '../../../state/contexts/ModuleContext';
 
 export default function AddCoursePage() {
   return (
@@ -19,13 +16,9 @@ export default function AddCoursePage() {
         <AdminHeader title="Add New Course" />
 
         <ApolloProvider client={mutationClient}>
-          <CourseContextProvider>
-            <ModuleContextProvider>
-              <MainBodyBox>
-                <CourseTabs />
-              </MainBodyBox>
-            </ModuleContextProvider>
-          </CourseContextProvider>
+          <MainBodyBox>
+            <CourseTabs />
+          </MainBodyBox>
         </ApolloProvider>
       </MainBody>
     </>

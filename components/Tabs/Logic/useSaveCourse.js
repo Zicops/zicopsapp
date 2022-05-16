@@ -30,6 +30,7 @@ export default function useSaveCourse(courseContextData) {
   const [uploadTileImage, { loading: uploadTileLoading }] = useMutation(UPLOAD_COURSE_TILE_IMAGE);
   const [uploadPreview, { loading: uploadPreviewLoading }] = useMutation(UPLOAD_COURSE_PREVIEW);
   const [updateCourse, { loading: udpateCourseLoading }] = useMutation(UPDATE_COURSE);
+
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -62,7 +63,6 @@ export default function useSaveCourse(courseContextData) {
       variables: fullCourse
     });
 
-
     updateCourseMaster(courseUpdateResponse.data.updateCourse);
 
     setIsLoading(
@@ -70,8 +70,10 @@ export default function useSaveCourse(courseContextData) {
         ? 'UPDATING...'
         : null
     );
-    if (showToastMsg) setToastMsg([{ type: 'success', message: 'Course Updated' }]);
+
+    if (showToastMsg) setToastMsg({ type: 'success', message: 'Course Updated' });
     console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
+
     if (isNextButton) setTab(tabData[tabIndex || 0].name);
   }
 

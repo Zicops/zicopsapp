@@ -7,7 +7,7 @@ export function useHandleNav(isAdmin, setAdmin) {
   const searchInputRef = useRef(null);
 
   useEffect(() => {
-    const route = router.route;
+    const route = router.asPath;
     window.localStorage.setItem('isAdmin', route.includes('admin') ? 1 : 0);
 
     setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));

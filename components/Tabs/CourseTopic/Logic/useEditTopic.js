@@ -27,6 +27,7 @@ import {
   TopicVideoAtom,
   uploadStatusAtom
 } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 import useAddTopicContent from './useAddTopicContent';
 
@@ -48,6 +49,7 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   const [resources, updateResources] = useRecoilState(ResourcesAtom);
   const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
   const [uploadStatus, setUploadStatus] = useRecoilState(uploadStatusAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // mutations
   const [updateCourseTopic, { error: updateTopicError }] = useMutation(UPDATE_COURSE_TOPIC);
@@ -153,14 +155,14 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
       updateTopicVideo(topicVideoArray);
       updateTopicSubtitle(topicSubtitleArray);
 
-      if (errorContentData) alert('Topic Content Load Error');
+      if (errorContentData) setToastMsg({ type: 'danger', message: 'Topic Content Load Error' });
     });
 
     // resources
     loadResourcesData({ variables: { topic_id: topicId } }).then(({ data }) => {
       updateResources(data.getTopicResources);
 
-      if (errorResourcesData) alert('Resources Load Error');
+      if (errorResourcesData) setToastMsg({ type: 'danger', message: 'Resources Load Error' });
     });
 
     const filteredTopicContent = filterTopicContent(topicContent, topicId);
@@ -172,14 +174,6 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
     if (typeof value === 'boolean') setIsEditTopicFormVisible(value);
 
     setIsEditTopicFormVisible(!isEditTopicFormVisible);
-  }
-
-  // edit topic input handler
-  function handleEditTopicInput(e) {
-    setEditTopic({
-      ...editTopic,
-      [e.target.name]: e.target.value
-    });
   }
 
   // save edit topic in function
@@ -195,14 +189,19 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
       sequence: editTopic.sequence
     };
 
+    let isError = false;
     await updateCourseTopic({
       variables: sendTopicData
+    }).catch((err) => {
+      console.log(err);
+      isError = true;
+      return setToastMsg({ type: 'danger', message: 'Topic Update Error' });
     });
 
-    if (updateTopicError) return alert('Topic Update Error');
+    if (updateTopicError) return setToastMsg({ type: 'danger', message: 'Topic Update Error' });
 
     refetchDataAndUpdateRecoil('topic');
-    alert('Topic Updated');
+    if (!isError) setToastMsg({ type: 'success', message: 'Topic Updated' });
 
     setIsEditTopicFormVisible(false);
   }
@@ -268,11 +267,9 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
             fetchOptions: {
               useUpload: true,
               onProgress: (ev) => {
-
                 setUploadStatus({
                   [content.language]: ev.loaded / ev.total
                 });
-
               }
             }
           }
@@ -332,20 +329,20 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
       await uploadTopicResource({ variables: sendResources }).catch((err) => console.log(err));
     }
 
-
     setUploadStatus(null);
     console.log('Topic Content and resources Uploaded');
-    alert('Topic Content and Resources Uploaded');
+    setToastMsg({ type: 'success', message: 'Topic Content and Resources Uploaded' });
+
     togglePopUp('editTopic', false);
   }
 
   return {
     editTopic,
+    setEditTopic,
     activateEditTopic,
     toggleEditTopicForm,
     isEditTopicFormVisible,
     isEditTopicReady,
-    handleEditTopicInput,
     topicContentData,
     handleEditTopicSubmit,
     updateTopicAndContext

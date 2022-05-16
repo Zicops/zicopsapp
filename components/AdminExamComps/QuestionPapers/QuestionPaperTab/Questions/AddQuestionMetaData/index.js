@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { PopUpStatesAtomFamily } from '../../../../../../state/atoms/popUp.atom';
+import Button from '../../../../../common/Button';
 import LabeledRadioCheckbox from '../../../../../common/FormComponents/LabeledRadioCheckbox';
 import FooterBtns from '../../../../common/FooterBtns';
 import useAddQuestionMetaData from '../../Logic/useAddQuestionMetaData';
@@ -44,11 +45,19 @@ export default function AddQuestionMetaData() {
         <ExistingQuestion newMetaData={newMetaData} setNewMetaData={setNewMetaData} />
       )}
 
-      <FooterBtns
+      <section className={`${styles.footerBtns}`}>
+        <Button
+          text="Add"
+          clickHandler={handleSaveMetaData}
+          // isDisabled={!isNewCustomSectionReady}
+        />
+        <Button text="Cancel" clickHandler={() => udpateAddQuestionMetaDataPopUp(false)} />
+      </section>
+      {/* <Buttons
         handleCancel={() => udpateAddQuestionMetaDataPopUp(false)}
         handleSave={handleSaveMetaData}
         submitText="Save"
-      />
+      /> */}
     </>
   );
 }

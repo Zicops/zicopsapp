@@ -7,9 +7,9 @@ import {
   uploadStatusAtom
 } from '../../../../state/atoms/module.atoms';
 import BlackRow from '../../../common/BlackRow';
+import Button from '../../../common/Button';
 import PopUp from '../../../common/PopUp';
-// imported from common, recommended to remove later
-import styles from '../../../common/PopUp/popUp.module.scss';
+import styles from '../../courseTabs.module.scss';
 import Quiz from '../../../medium/Quiz';
 import Accordion from '../../../small/Accordion';
 import AddTopicContentForm from './AddTopicContentForm';
@@ -25,9 +25,10 @@ export default function TopicPopUp({
   closeModal,
   isEdit = false
 }) {
-  const { newTopicData, handleTopicInput, addNewTopic, isAddTopicReady } = addTopicData;
+  const { newTopicData, setNewTopicData, addNewTopic, isAddTopicReady } = addTopicData;
   const {
     editTopic,
+    setEditTopic,
     toggleEditTopicForm,
     isEditTopicFormVisible,
     isEditTopicReady,
@@ -40,7 +41,6 @@ export default function TopicPopUp({
     addNewTopicContent,
     isAddTopicContentReady,
     handleEditTopicSubmit,
-    handleEditTopicInput,
     updateTopicAndContext
   } = editTopicData;
 
@@ -87,73 +87,48 @@ export default function TopicPopUp({
         submitBtn={submitBtnObj}
         closeBtn={closeBtnObj}>
         {/* add topic form popup */}
-        {!isEdit && <AddTopicForm handleInput={handleTopicInput} topicData={newTopicData} />}
+        {!isEdit && <AddTopicForm setTopicData={setNewTopicData} topicData={newTopicData} />}
 
         {/* edit topic form popup containing add topic content, binge data, resources, quiz */}
         {isEdit && (
           <>
-            <div className="topicAdded">
-              <BlackRow
-                type="large"
-                title={`Topic ${editTopic.sequence} : ${editTopic.name}`}
-                editHandler={() => {
-                  if (!isEditTopicFormVisible)
-                    editTopicFormRef.current?.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'center',
-                      inline: 'center'
-                    });
-                  toggleEditTopicForm();
-                }}
-              />
-            </div>
+            <BlackRow
+              type="large"
+              title={`Topic ${editTopic.sequence} : ${editTopic.name}`}
+              editHandler={() => {
+                if (!isEditTopicFormVisible)
+                  editTopicFormRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                  });
+                toggleEditTopicForm();
+              }}
+            />
 
             {/* add topic content form section */}
-            <div className="chapter_body">
+            <div className={`${styles.topicContentContainer}`}>
               {/* edit topic form */}
               <div ref={editTopicFormRef}>
                 {isEditTopicFormVisible && (
                   <>
-                    <AddTopicForm
-                      handleInput={handleEditTopicInput}
-                      topicData={editTopic}
-                      isEdit={true}
-                    />
+                    <AddTopicForm setTopicData={setEditTopic} topicData={editTopic} isEdit={true} />
 
-                    <div className={`${styles.footer}`}>
-                      <div className={`form_row`}>
-                        <div className={`col_25`}></div>
-                        <div className={`col_75`}>
-                          <div className={`${styles.button_container}`}>
-                            {/* <button
-                            type="button"
-                            value="cancel"
-                            className={`${styles.btn_cancel_add}`}
-                            onClick={() => toggleEditTopicForm(false)}>
-                            Cancel
-                          </button> */}
-                            <button
-                              type="button"
-                              value="add"
-                              className={`${
-                                isEditTopicReady
-                                  ? styles.btn_cancel_add
-                                  : styles.btn_cancel_add_disabled
-                              }`}
-                              disabled={!isEditTopicReady}
-                              onClick={() => updateTopicAndContext()}>
-                              Update
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                    <div className="center-element-with-flex">
+                      <Button
+                        clickHandler={() => updateTopicAndContext()}
+                        isDisabled={!isEditTopicReady}
+                        text="Update"
+                        type="button"
+                      />
                     </div>
                   </>
                 )}
               </div>
-              <div className="row my_30">
-                <div className="topic_title">Content</div>
-              </div>
+
+              {/* topic content title */}
+              <div className={`${styles.titleWithLineAtSide}`}>Content</div>
+
               <div ref={addTopicContentRef}>
                 {isTopicContentFormVisible && (
                   <AddTopicContentForm
@@ -166,6 +141,7 @@ export default function TopicPopUp({
                   />
                 )}
               </div>
+
               {/* all the topic content added and saved */}
               <TopicContentView
                 topicContent={filteredTopicContent}

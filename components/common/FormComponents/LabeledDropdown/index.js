@@ -66,7 +66,7 @@ export default function LabeledDropdown({
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: 'var(--dark_two)',
+      backgroundColor: state.isFocused ? 'var(--black)' : 'var(--dark_two)',
       color: state.isSelected ? 'var(--white)' : 'var(--dark_three)',
       borderRadius: 0,
       boxShadow: 'none',
@@ -123,6 +123,7 @@ export default function LabeledDropdown({
         styles={customStyles}
         isSearchable={!!isSearchEnable}
         isDisabled={!!isDisabled}
+        isOptionDisabled={(option) => option.disabled}
         isMulti={!!isMulti}
         isClearable={false}
       />

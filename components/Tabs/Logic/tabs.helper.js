@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import CourseConfiguration from '../../CourseConfiguration';
+import CourseConfiguration from '../CourseConfiguration';
 import CourseAbout from '../CourseAbout';
 import CourseDetails from '../CourseDetails';
 import CourseMaster from '../CourseMaster';

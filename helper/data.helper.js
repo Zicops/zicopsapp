@@ -18,10 +18,7 @@ export function createCourseAndUpdateContext(courseContextData, createCourse, sh
 
   if (!fullCourse.name || !fullCourse.category || !fullCourse.sub_category || !fullCourse.owner) {
     setTab(tabData[0].name);
-    return setToastMsg([
-      ...toastMsg,
-      { type: 'info', message: 'Please fill all the Course Master Details' }
-    ]);
+    return setToastMsg({ type: 'info', message: 'Please fill all the Course Master Details' });
   }
 
   const { id, created_at, updated_at, ...sendData } = fullCourse;
@@ -34,7 +31,7 @@ export function createCourseAndUpdateContext(courseContextData, createCourse, sh
   })
     .then((res) => {
       if (!res || !res?.data?.addCourse?.id) return;
-      setToastMsg([...toastMsg, { type: 'success', message: 'Course Created' }]);
+      setToastMsg({ type: 'success', message: 'Course Created' });
       console.log('course created', res);
 
       updateCourseMaster(res.data.addCourse);
@@ -118,11 +115,15 @@ export function sortTopicContentByIsDefault(topicContent) {
   return topicContent.sort((content) => content.is_default);
 }
 
-export function sortArrByKeyInOrder(array, key, isAsc = true) {
-  let ascVal = -1, desVal = 1;
+export function sortArrByKeyInOrder(array, key = 'sequence', isAsc = true) {
+  if (!array.length) return [];
+
+  const localArr = [...array];
+  let ascVal = -1,
+    desVal = 1;
   if (isAsc) {
     ascVal = 1;
     desVal = -1;
-  } 
-  return array?.sort((a, b) => (a[key] > b[key] ? ascVal : desVal));
+  }
+  return localArr?.sort((a, b) => (a[key] > b[key] ? ascVal : desVal));
 }
