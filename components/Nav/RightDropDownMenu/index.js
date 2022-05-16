@@ -43,7 +43,7 @@ export default function RightDropDownMenu() {
           '& .MuiMenu-list': {
             // marginTop : '30px',
             color: 'var(--primary)',
-            background: 'var(--header-bg)',
+            // background: 'var(--header-bg)',
             padding: '2px',
             width: '250px',
             left: '45%'
@@ -66,6 +66,7 @@ export default function RightDropDownMenu() {
           }
         }}>
         <MenuItem
+          className={`${styles.dropdown_item_1}`}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -77,7 +78,7 @@ export default function RightDropDownMenu() {
           <p style={{ color: 'var(--background_body)' }}>{date}</p>
           <h2>Powered by Zicops</h2>
         </MenuItem>
-        <MenuItem>
+        <MenuItem className={`${styles.dropdown_item_2}`}>
           {/* submenu for myDetails */}
           <DropDownSubMenu
             subData={languages}
@@ -87,9 +88,13 @@ export default function RightDropDownMenu() {
             submenurowdirection={true}
           />
         </MenuItem>
-        <MenuItem className="dropdown-submenu-justifycontent-right">My Certificates</MenuItem>
-        <MenuItem className="dropdown-submenu-justifycontent-right">My Dashboard</MenuItem>
-        <MenuItem>
+        <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_3}`}>
+          My Certificates
+        </MenuItem>
+        <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_4}`}>
+          My Dashboard
+        </MenuItem>
+        <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_5}`}>
           {/* submenu for support */}
           <DropDownSubMenu
             subData={preferences}
@@ -99,7 +104,9 @@ export default function RightDropDownMenu() {
             submenurowdirection={true}
           />
         </MenuItem>
-        <MenuItem className="dropdown-submenu-justifycontent-right">Logout</MenuItem>
+        <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_6}`}>
+          Logout
+        </MenuItem>
       </Menu>
     </>
   );
