@@ -19,17 +19,22 @@
   width: 50%;
 }
 
-.qb_container {
+.questionBankContainer {
   margin-top: 30px;
+
+  .btnContainer {
+    display: flex;
+    justify-content: flex-end;
+  }
   // span {
   //   display: table;
   //   margin: 0 auto;
   // }
-  button {
-    position: relative;
-    float: right;
-    margin-right: 0;
-  }
+  // button {
+  //   position: relative;
+  //   float: right;
+  //   margin-right: 0;
+  // }
 }
 
 .inputField {

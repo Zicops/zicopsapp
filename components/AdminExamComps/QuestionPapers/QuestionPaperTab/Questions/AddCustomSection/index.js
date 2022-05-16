@@ -20,9 +20,7 @@ export default function AddCustomSection({ handleCancel }) {
   } = useAddCustomSection();
 
   return (
-    <>
-      <h2 style={{ color: '#fff' }}>Add Custom Section</h2>
-
+    <div className={`${styles.popUpFormContainer}`}>
       <LabeledInput
         inputOptions={{
           inputName: 'name',
@@ -42,25 +40,30 @@ export default function AddCustomSection({ handleCancel }) {
         changeHandler={(e) => changeHandler(e, newCustomSection, setNewCustomSection)}
       />
 
-      {/* <LabeledDropdown
+      <LabeledDropdown
         styleClass={styles.inputField}
         dropdownOptions={{
-          inputName: 'type',
-          label: 'Section Type:',
-          placeholder: 'Select question Bank',
+          inputName: 'difficulty_level',
+          label: 'Difficulty Level:',
+          placeholder: 'Select Difficulty Level',
           options: [
-            { value: 'MCQ', label: 'MCQ' },
-            { value: 'Descriptive', label: 'Descriptive' }
+            { value: '1', label: 'easy' },
+            { value: '2', label: 'hard' }
           ]
         }}
-        changeHandler={(e) => changeHandler(e, newCustomSection, setNewCustomSection, 'type')}
-      /> */}
-
-      <FooterBtns
-        handleCancel={() => udpateCustomSectionPopUp(false)}
-        handleSave={handleSaveCustomSection}
-        submitText="Save"
+        changeHandler={(e) =>
+          changeHandler(e, newCustomSection, setNewCustomSection, 'difficulty_level')
+        }
       />
-    </>
+
+      <section className={`${styles.footerBtns}`}>
+        <Button
+          text="Add"
+          clickHandler={handleSaveCustomSection}
+          isDisabled={!isNewCustomSectionReady}
+        />
+        <Button text="Cancel" clickHandler={() => udpateCustomSectionPopUp(false)} />
+      </section>
+    </div>
   );
 }

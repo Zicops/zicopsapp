@@ -1,7 +1,12 @@
 import TextInputWithFile from '../../../../../common/TextInputWithFile';
 import styles from '../../../questionMasterTab.module.scss';
 
-export default function InputWithCheckbox({ labelCount }) {
+export default function InputWithCheckbox({
+  labelCount,
+  isCorrectHandler,
+  inputChangeHandler,
+  fileInputHandler
+}) {
   return (
     <>
       <div className={`${styles.optionContainer}`}>
@@ -11,15 +16,17 @@ export default function InputWithCheckbox({ labelCount }) {
           </div>
           <div>
             <label className={styles.checkboxContainer}>
-              <input type="checkbox" />
+              <input type="checkbox" name="isCorrect" onChange={isCorrectHandler} />
               <span className={styles.checkmark}></span>
             </label>
           </div>
         </div>
         <TextInputWithFile
           type="option"
-          sr="O1"
-          text="Enter question in less than 160 characters"
+          inputName="description"
+          fileInputHandler={fileInputHandler}
+          changeHandler={inputChangeHandler}
+          text="Enter answer in less than 160 characters"
         />
       </div>
     </>

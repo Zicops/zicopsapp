@@ -1,16 +1,15 @@
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   CustomSectionAtom,
-  QuestionMetaDataAtom,
-  QuestionPaperMasterAtom
+  QuestionMetaDataAtom, QuestionPaperTabDataAtom
 } from '../../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../../state/atoms/popUp.atom';
 import BlackBox from '../../../../../common/BlackBox';
 import BlackRow from '../../../../../common/BlackRow';
 import IconButton from '../../../../../common/IconButton';
 import PopUp from '../../../../../common/PopUp';
-import AddQuestionMetaData from '../AddQuestionMetaData';
 import styles from '../../questionPaperTab.module.scss';
+import AddQuestionMetaData from '../AddQuestionMetaData';
 
 export default function SectionBox({ section }) {
   const [addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp] = useRecoilState(
@@ -18,14 +17,14 @@ export default function SectionBox({ section }) {
   );
   const customSection = useRecoilValue(CustomSectionAtom);
   const questionMetaData = useRecoilValue(QuestionMetaDataAtom);
-  const questionPaper = useRecoilValue(QuestionPaperMasterAtom);
+  const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
 
   if (!customSection.length) return null;
 
   return (
     <>
       <BlackBox>
-        {questionPaper.isSectionWise ? (
+        {questionPaperTabData.questionPaperMaster?.section_wise ? (
           <>
             <BlackRow type="large" title={section.name} editHandler={() => {}} />
             {questionMetaData.map((metaData) => (

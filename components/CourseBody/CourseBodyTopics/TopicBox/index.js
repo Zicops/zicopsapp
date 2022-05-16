@@ -67,7 +67,8 @@ export default function TopicBox({
     <>
       <div
         className="topic"
-        onClick={() =>
+        onClick={() => {
+          if (!topicContent.length) return;
           updateVideoData(
             videoData,
             setVideoData,
@@ -77,8 +78,8 @@ export default function TopicBox({
             allModuleOptions,
             currrentModule,
             setSelectedModule
-          )
-        }>
+          );
+        }}>
         <div className="preclassName">
           <div>
             <img src="images/resourcesicon.png" />

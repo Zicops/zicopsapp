@@ -10,10 +10,12 @@ export default function SwitchButton({
   return (
     <>
       <FormControlLabel
-        control={<Switch color='success' checked={isChecked} onChange={handleChange} />}
+        control={
+          <Switch color="success" name={inputName} checked={isChecked} onChange={handleChange} />
+        }
         label={label}
         labelPlacement={labelPlacement}
-        name={inputName}
+
       />
     </>
   );

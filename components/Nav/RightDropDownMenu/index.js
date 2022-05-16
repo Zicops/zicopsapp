@@ -33,7 +33,7 @@ export default function RightDropDownMenu() {
       <Menu
         // {...languages}
         // {...preferences}
-        id="fade-menu"
+	id="fade-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -51,7 +51,7 @@ export default function RightDropDownMenu() {
           },
           '& .MuiMenuItem-root': {
             border: '1px solid var(--primary)',
-            margin: '2px',
+            // margin: '2px',
             justifyContent: 'flex-end',
             // alignItems: 'center',
             '&:hover': {
@@ -95,7 +95,7 @@ export default function RightDropDownMenu() {
         <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_4}`}>
           My Dashboard
         </MenuItem>
-        <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_5}`}>
+        <MenuItem className={`${styles.dropdown_item_5}`}>
           {/* submenu for support */}
           <DropDownSubMenu
             subData={preferences}

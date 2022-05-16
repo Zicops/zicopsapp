@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { getResourcesObject, ResourcesAtom } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
 export default function useAddResources(courseId = '', topicId = '') {
   // recoil state
   const [resources, addResources] = useRecoilState(ResourcesAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local state
   const [isResourcesFormVisible, setIsResourcesFormVisible] = useState(false);
@@ -32,6 +34,14 @@ export default function useAddResources(courseId = '', topicId = '') {
 
   // input handler
   function handleResourceInput(e) {
+    if (e.value) {
+      return setNewResource({
+        ...newResource,
+        type: e.value,
+        file: e.value === 'LINK' ? null : newResource.file
+      });
+    }
+
     if (e.target.type == 'file') {
       if (!e.target.files) return;
       if (!e.target.files[0]) return;
@@ -39,7 +49,10 @@ export default function useAddResources(courseId = '', topicId = '') {
       console.log(e.target.files);
       if (!newResource.type) {
         e.target.value = '';
-        return alert('Please select the Resource Type first');
+        return setToastMsg({
+          type: 'danger',
+          message: `Please select the Resource Type first`
+        });
       }
 
       let acceptedTypeRegex = /sheet|csv/;
@@ -48,7 +61,10 @@ export default function useAddResources(courseId = '', topicId = '') {
 
       if (!acceptedTypeRegex.test(e.target.files[0].type)) {
         e.target.value = '';
-        return alert('Wrong Type of File Uploaded.');
+        return setToastMsg({
+          type: 'danger',
+          message: `Wrong Type of File Uploaded.`
+        });
       }
 
       setNewResource({

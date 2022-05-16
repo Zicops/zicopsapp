@@ -9,7 +9,9 @@ export default function BrowseAndUpload({
   inputName,
   previewData,
   handleRemove,
-  isActive
+  isActive,
+  acceptedTypes = '.jpeg, .png, .gif',
+  hidePreviewBtns = false
 }) {
   const [showPreview, setShowPreview] = useState(false);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -22,32 +24,29 @@ export default function BrowseAndUpload({
           Browse & upload
         </button>
 
-        <input
-          type="file"
-          name={inputName}
-          accept=".jpeg, .png, .gif"
-          onChange={handleFileUpload}
-        />
+        <input type="file" name={inputName} accept={acceptedTypes} onChange={handleFileUpload} />
 
-        <div className={`${styles.btnContainer}`}>
-          <button
-            className={`${styles.preview}`}
-            onClick={() => {
-              if (previewData?.fileName || previewData?.filePath) {
-                setShowPreview(true);
-              } else {
-                setToastMsg([
-                  ...toastMsg,
-                  { type: 'warning', message: 'No File detected, Please Upload a File' }
-                ]);
-              }
-            }}>
-            Preview
-          </button>
-          <button className={`${styles.remove}`} onClick={handleRemove}>
-            Remove
-          </button>
-        </div>
+        {!hidePreviewBtns && (
+          <div className={`${styles.btnContainer}`}>
+            <button
+              className={`${styles.preview}`}
+              onClick={() => {
+                if (previewData?.fileName || previewData?.filePath) {
+                  setShowPreview(true);
+                } else {
+                  setToastMsg([
+                    ...toastMsg,
+                    { type: 'warning', message: 'No File detected, Please Upload a File' }
+                  ]);
+                }
+              }}>
+              Preview
+            </button>
+            <button className={`${styles.remove}`} onClick={handleRemove}>
+              Remove
+            </button>
+          </div>
+        )}
       </div>
 
       {showPreview && (

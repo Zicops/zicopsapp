@@ -14,24 +14,13 @@ export default function ExistingQuestion({newMetaData, setNewMetaData}) {
 
   return (
     <>
-      <LabeledDropdown
-        styleClass={styles.inputField}
-        dropdownOptions={{
-          inputName: 'questionBank',
-          label: 'Question Bank:',
-          placeholder: 'Select the sub category of the course',
-          options: categoryOption
-        }}
-        changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData, 'questionBank')}
-      />
-
       <div className={styles.twoInputContainer}>
         <LabeledDropdown
           styleClass={styles.halfInputField}
           dropdownOptions={{
             inputName: 'category',
             label: 'Category:',
-            placeholder: 'Select the category',
+            placeholder: 'Select category',
             options: categoryOption
           }}
           isFiftyFifty={true}
@@ -41,7 +30,7 @@ export default function ExistingQuestion({newMetaData, setNewMetaData}) {
           dropdownOptions={{
             inputName: 'sub_category',
             label: 'Sub-Category:',
-            placeholder: 'Select the sub category',
+            placeholder: 'Select sub-category',
             options: categoryOption
           }}
           isFiftyFifty={true}
@@ -56,6 +45,16 @@ export default function ExistingQuestion({newMetaData, setNewMetaData}) {
           placeholder: 'Select difficulty level',
           options: categoryOption
         }}
+      />
+      <LabeledDropdown
+        styleClass={styles.inputField}
+        dropdownOptions={{
+          inputName: 'questionBank',
+          label: 'Question Bank:',
+          placeholder: 'Select the question bank to choose question from',
+          options: categoryOption
+        }}
+        changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData, 'questionBank')}
       />
       <div className={styles.twoInputContainer}>
         <LabeledInput

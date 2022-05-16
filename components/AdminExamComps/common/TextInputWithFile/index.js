@@ -1,14 +1,22 @@
+import { truncateToN } from '../../../../helper/common.helper';
 import styles from './textInputWithFile.module.scss';
 
-export default function TextInputWithFile({ type = 'question' }) {
+export default function TextInputWithFile({
+  inputName,
+  type = 'question',
+  changeHandler,
+  fileInputHandler,
+  fileNmae
+}) {
   return (
     <>
       <div className={`w-100 ${styles.container}`}>
         <div className={styles.box}>
           <input
             type="text"
-            name={type}
+            name={inputName}
             placeholder={`Enter ${type} in less than 160 characters`}
+            onChange={changeHandler}
           />
 
           <div className={styles.attachment}>
@@ -17,6 +25,7 @@ export default function TextInputWithFile({ type = 'question' }) {
                 <img src="/images/attachment.png" alt="" />
               </span>
             </div>
+            <span>{truncateToN(fileNmae, 60)}</span>
             <div className={styles.innerBox}>
               <span>
                 <img src="/images/img.png" alt="" />
@@ -31,7 +40,7 @@ export default function TextInputWithFile({ type = 'question' }) {
                 Video
               </span>
 
-              <input type="file" name="quiz_attachment" />
+              <input type="file" onChange={fileInputHandler} name="quiz_attachment" />
             </div>
           </div>
         </div>
