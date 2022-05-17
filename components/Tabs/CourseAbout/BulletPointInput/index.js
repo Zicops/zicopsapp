@@ -51,14 +51,14 @@ export default function BulletPointInput({
         className={`w-100 ${styles.bulletPointInputContainer} ${
           isBullet ? '' : styles.tagsContainer
         }`}>
-        <ul>
+        {/* <ul> */}
           {tags.map((tag, index) => (
-            <li key={index} className={`w-100 ${isBullet ? styles.bullets : styles.tags}`}>
+            <span key={index} className={`w-100 ${isBullet ? styles.bullets : styles.tags}`}>
               {tag}
               <button onClick={() => deleteTag(index)}>x</button>
-            </li>
+            </span>
           ))}
-        </ul>
+        {/* </ul> */}
         <input
           name={name}
           value={input}

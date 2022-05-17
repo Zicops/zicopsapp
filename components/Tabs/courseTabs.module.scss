@@ -38,22 +38,15 @@
     input {
       width: 25%;
       margin: 0;
-      margin-left: 10px;
-    }
-
-    ul {
-      display: flex;
+      margin-bottom: 10px;
     }
   }
 
   .tags {
-      display: flex;
-      align-items: center;
-
-      margin: 10px 0;
+      width: max-content;
+      margin-bottom: 10px;
       margin-right: 10px;
       padding-left: 10px;
-      padding-right: 5px;
 
       border: 1px solid $primary;
       border-radius: 5px;
