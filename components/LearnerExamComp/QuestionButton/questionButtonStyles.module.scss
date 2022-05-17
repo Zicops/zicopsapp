@@ -22,5 +22,14 @@
 }
 
 .question_button_unattempted{
+    background: $secondary;
+}
+
+.question_button_notVisited{
     background: $secondaryBlack;
+}
+
+.question_button_current{
+    box-shadow: 0px 0px 10px $white;
+    border: 5px double red;
 }

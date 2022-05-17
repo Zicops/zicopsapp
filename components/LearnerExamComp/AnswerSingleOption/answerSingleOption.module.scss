@@ -18,9 +18,7 @@
         height: 100%;
         border: 2px solid $secondaryWhite;
         background: $black;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        padding: 7px;
         font-size: 1.7rem;
 
         
@@ -40,8 +38,12 @@
         }
     }
 
-    .answer_single_option_info:hover{
-        border: 4px solid $white;
+    //.answer_single_option_info:hover{
+    //    border: 2px solid $white;
+    //}
+
+    .answer_single_option_info_selected{
+        border: 2px solid $primary;
     }
 
     

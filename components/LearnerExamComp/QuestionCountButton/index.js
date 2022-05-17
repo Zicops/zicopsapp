@@ -3,16 +3,12 @@ import QuestionButton from '../QuestionButton'
 import styles from './questionCountStyle.module.scss'
 
 
-
-  
-
-const QuestionCountButtonSection = () => {
+const QuestionCountButtonSection = ({data, setData, current, setCurrent}) => {
     return (
         <div className={`${styles.questionCountContainer}`}>
             {
-                questionData.map((items)=>{
-                    const {QuestionNumber, check} = items
-                    return <QuestionButton data={QuestionNumber} check={check}/>
+                data.map((each)=>{
+                    return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
                 })
             }
         </div>
