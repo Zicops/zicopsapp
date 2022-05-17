@@ -2,7 +2,7 @@ import { useRecoilState } from 'recoil';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
 
-export function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
+export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
     fullCourse,
     setTab,
@@ -14,50 +14,36 @@ export function createCourseAndUpdateContext(courseContextData, createCourse, sh
     courseTileImage,
     setCourseTileImage
   } = courseContextData;
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   if (!fullCourse.name || !fullCourse.category || !fullCourse.sub_category || !fullCourse.owner) {
     setTab(tabData[0].name);
-    return setToastMsg({ type: 'info', message: 'Please fill all the Course Master Details' });
+    return { type: 'info', message: 'Please fill all the Course Master Details' };
   }
 
   const { id, created_at, updated_at, ...sendData } = fullCourse;
 
-  createCourse({
-    variables: {
-      ...sendData,
-      status: 'SAVED'
-    }
-  })
-    .then((res) => {
-      if (!res || !res?.data?.addCourse?.id) return;
-      setToastMsg({ type: 'success', message: 'Course Created' });
-      console.log('course created', res);
+  const res = await createCourse({ variables: { ...sendData, status: 'SAVED' } }).catch((err) => {
+    console.log('Course Add Error: ', err);
+    return { type: 'danger', message: 'Course Create Error' };
+  });
 
-      updateCourseMaster(res.data.addCourse);
+  if (!res || !res?.data?.addCourse?.id)
+    return { type: 'danger', message: 'Course Id not recieved in response' };
 
-      const courseId = res.data.addCourse.id;
-      setCourseVideo({
-        ...courseVideo,
-        courseId: courseId
-      });
-      setCourseImage({
-        ...courseImage,
-        courseId: courseId
-      });
-      setCourseTileImage({
-        ...courseTileImage,
-        courseId: courseId
-      });
+  console.log('course created', res);
+  updateCourseMaster(res.data.addCourse);
 
-      // go to next tab
-      setTimeout(() => {
-        setTab(tabData[1].name);
-      }, 50);
-    })
-    .catch((err) => {
-      console.log('Course Add Error: ', err);
-    });
+  const courseId = res.data.addCourse.id;
+  setCourseVideo({ ...courseVideo, courseId: courseId });
+  setCourseImage({ ...courseImage, courseId: courseId });
+  setCourseTileImage({ ...courseTileImage, courseId: courseId });
+
+  // go to next tab
+  setTimeout(() => {
+    setTab(tabData[1].name);
+  }, 50);
+
+  return { type: 'success', message: 'Course Created', courseId: courseId };
 }
 
 export function filterAndSortChapter(chapters, moduleId) {
