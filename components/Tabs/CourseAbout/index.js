@@ -54,7 +54,8 @@ export default function CourseAbout() {
             inputName: 'description',
             placeholder: 'Provide description of the course',
             rows: 4,
-            value: fullCourse?.description
+            value: fullCourse?.description,
+            maxLength: 2000
           }}
           changeHandler={handleChange}
         />

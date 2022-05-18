@@ -28,8 +28,8 @@ export default function ChapterPopUp({
             inputOptions={{
               inputName: 'name',
               label: 'Chapter Name:',
-              placeholder: 'Enter name of the chapter (Upto 16 characters)',
-              maxLength: 16,
+              placeholder: 'Enter name of the chapter (Upto 60 characters)',
+              maxLength: 60,
               value: chapterData.name
             }}
             changeHandler={(e) => changeHandler(e, chapterData, setChapterData)}
@@ -41,10 +41,10 @@ export default function ChapterPopUp({
               styleClass="w-75"
               inputOptions={{
                 inputName: 'description',
-                placeholder: 'Brief description in less than 60 characters',
+                placeholder: 'Brief description in less than 160 characters',
                 rows: 4,
                 value: chapterData?.description,
-                maxLength: 60
+                maxLength: 160
               }}
               changeHandler={(e) => changeHandler(e, chapterData, setChapterData)}
             />

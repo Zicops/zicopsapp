@@ -149,13 +149,13 @@ export default function CustomVideo({ set }) {
               nextBtnObj={{
                 text: 'Skip Intro',
                 classes: styles.skipIntroBtn,
-                customStyles: {
-                  background: `linear-gradient(90deg, var(--primary) ${
-                    ((videoElement.current?.currentTime - topicContent[0]?.startTime) /
-                      topicContent[0].skipIntroDuration) *
-                      100 || 0
-                  }%, var(--dark_one) 0%, var(--dark_one) 100%)`
-                },
+                // customStyles: {
+                //   background: `linear-gradient(90deg, var(--primary) ${
+                //     ((videoElement.current?.currentTime - topicContent[0]?.startTime) /
+                //       topicContent[0].skipIntroDuration) *
+                //       100 || 0
+                //   }%, var(--dark_one) 0%, var(--dark_one) 100%)`
+                // },
                 clickHandler: () => {
                   const skipIntroTime = topicContent[0]?.startTime;
                   const skipIntroDuration = topicContent[0]?.skipIntroDuration;

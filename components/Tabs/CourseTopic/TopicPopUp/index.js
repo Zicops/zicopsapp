@@ -64,7 +64,7 @@ export default function TopicPopUp({
     closeBtnObj.name = 'Design Later';
     closeBtnObj.handleClick = () => {
       const shouldCloseModal = confirm(
-        'Your unsaved data will be lost. Are you sure to close modal'
+        'Are you sure? Your unsaved data will be lost!'
       ).valueOf();
 
       if (shouldCloseModal) {
