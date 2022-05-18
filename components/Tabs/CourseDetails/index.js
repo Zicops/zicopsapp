@@ -142,7 +142,8 @@ export default function CourseDetails() {
             inputName: 'summary',
             placeholder: 'Provide and outline of the course in less than 1000 characters...',
             rows: 4,
-            value: fullCourse?.summary
+            value: fullCourse?.summary,
+            maxLength: 1000
           }}
           changeHandler={handleChange}
         />

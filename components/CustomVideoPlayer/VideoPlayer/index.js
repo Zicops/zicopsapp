@@ -50,6 +50,12 @@ export default function VideoPlayer({
   }, [videoElement.current?.textTracks[0]?.cues?.length]);
 
   const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
+
+  const isTrackSrcAvailable =
+    topicContent[currentTopicContentIndex] &&
+    topicContent[currentTopicContentIndex]?.subtitleUrl &&
+    topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex];
+  
   return (
     <>
       {!videoData.videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
@@ -66,13 +72,14 @@ export default function VideoPlayer({
             className={`${styles.videoElement}`}
             src={videoData.videoSrc}
             autoPlay={true}>
+            
             <track
               kind="subtitles"
               label="English Subtitles"
               srcLang="en"
               default
               hidden
-              src={topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]?.url}
+              src={isTrackSrcAvailable ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]?.url : ''}
               // src={'/pineapple.vtt'}
             />
             {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}

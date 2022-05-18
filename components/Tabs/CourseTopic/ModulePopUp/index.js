@@ -35,8 +35,8 @@ export default function ModulePopUp({
           inputOptions={{
             inputName: 'name',
             label: 'Module Name:',
-            placeholder: 'Enter name of the course (Upto 16 characters)',
-            maxLength: 16,
+            placeholder: 'Enter name of the module (Upto 60 characters)',
+            maxLength: 60,
             value: moduleData.name
           }}
           changeHandler={(e) => changeHandler(e, moduleData, setModuleData)}
@@ -59,10 +59,10 @@ export default function ModulePopUp({
             styleClass="w-75"
             inputOptions={{
               inputName: 'description',
-              placeholder: 'Brief description in less than 60 characters',
+              placeholder: 'Brief description in less than 160 characters',
               rows: 4,
               value: moduleData?.description,
-              maxLength: 60
+              maxLength: 160
             }}
             changeHandler={(e) => changeHandler(e, moduleData, setModuleData)}
           />

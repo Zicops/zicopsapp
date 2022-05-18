@@ -16,8 +16,8 @@ export default function AddTopicForm({ topicData, setTopicData, isEdit = false }
         inputOptions={{
           inputName: 'name',
           label: 'Topic Name:',
-          placeholder: 'Enter topic name ( in less than 20 characters )',
-          maxLength: 20,
+          placeholder: 'Enter topic name ( in less than 60 characters )',
+          maxLength: 60,
           value: topicData.name
         }}
         changeHandler={(e) => changeHandler(e, topicData, setTopicData)}
@@ -29,10 +29,10 @@ export default function AddTopicForm({ topicData, setTopicData, isEdit = false }
           styleClass="w-75"
           inputOptions={{
             inputName: 'description',
-            placeholder: 'Brief description in less than 60 characters',
+            placeholder: 'Brief description in less than 160 characters',
             rows: 4,
             value: topicData?.description,
-            maxLength: 60
+            maxLength: 160
           }}
           changeHandler={(e) => changeHandler(e, topicData, setTopicData)}
         />
