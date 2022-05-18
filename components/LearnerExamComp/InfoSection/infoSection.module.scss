@@ -3,18 +3,20 @@
 
 .info_section {
     // border: 1px solid red;
-    width: 94%;
+    width: 100%;
 
     .info_section_button_boxes_container {
         width: 100%;
         padding: 0 15px;
         display: flex;
-        justify-content: space-between;
+        align-items: center;
+        justify-content: space-around;
 
         .info_button {
             border: none;
             background: transparent;
             display: flex;
+            align-items: center;
             cursor: pointer;
             color: $darkThree;
 
@@ -23,7 +25,11 @@
                 height: 20px;
                 border: 1px solid black;
                 background: $primary;
-                margin-right: 10px;
+                margin-right: 3px;
+            }
+
+            .info_button_boxes_attempted {
+                background: $primary;
             }
 
             .info_button_boxes_marked {
@@ -31,9 +37,23 @@
             }
 
             .info_button_boxes_unattempted {
-                background: $primary;
+                background: $secondary;
+            }
+
+            .info_button_boxes_unvisited {
+                background: $secondaryBlack;
             }
         }
+
+    }
+
+    .info_section_seeAll_button_container{
+
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
 
         .info_section_seeAll_button {
             border: none;
@@ -43,6 +63,8 @@
             cursor: pointer;
         }
     }
+
+
 
     .info_section_answer_details {
         width: 100%;

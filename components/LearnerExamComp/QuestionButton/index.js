@@ -18,7 +18,7 @@ const QuestionButton = ({each, data, setData, current, setCurrent}) => {
 
   const handleChange = () => {
     return data.map(function (obj) {
-      if (obj.id === current.id) {
+      if (obj.id === each.id) {
         return {
           ...obj,
           isVisited: true,
@@ -32,15 +32,15 @@ const QuestionButton = ({each, data, setData, current, setCurrent}) => {
 
   useEffect(() => {
     if(trigger){
-      setCurrent(data.filter(e => e.id === (each.id))[0])
       setData(handleChange());
+      setCurrent(data.filter(e => e.id === (each.id))[0])
     }
   }, [trigger])
 
   return (
     <>
       <button onClick={() => {
-        setTrigger(true)
+            setTrigger(true)
       }} className={`${styles.question_buttons} ${classNameBe} ${current.id === each.id ? styles.question_button_current : ''} `}>{each.id}</button>
     </>
   );
