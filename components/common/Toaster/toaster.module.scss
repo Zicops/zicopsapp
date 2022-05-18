@@ -16,7 +16,7 @@ $warningImg: '/images/heart.png';
 $dangerImg: '/images/heart.png';
 
 .toasterContainer {
-  position: absolute;
+  position: fixed;
   bottom: $toastPositionFromBottom;
   left: $toastPositionFromLeft;
 
@@ -37,7 +37,7 @@ $dangerImg: '/images/heart.png';
 
     animation: toast-in-left 0.7s;
     transition: transform 0.6s ease-in;
-    transition: all .5s ease;
+    transition: all 0.5s ease;
 
     h3 {
       display: flex;

@@ -207,3 +207,57 @@ select.nav_search_dropdow:selected {
     margin: 3px;
   }
 }
+
+
+// Rajeev's dropdown animation
+// .dropdown_menu {
+//   cursor: pointer;
+//   transform-origin: top left;
+//   animation: scaleZ 500ms 0ms ease-in-out forwards;
+// }
+
+// .dropdown_menu_right {
+//   cursor: pointer;
+//   transform-origin: top right;
+//   animation: scaleZ 500ms 0ms ease-in-out forwards;
+// }
+
+@for $var from 1 to 7 {
+  .dropdown_item_#{$var} {
+    opacity: 0;
+    background-color: $bgHeader;
+    transform-origin: top center;
+    animation: scaleZ 500ms $var*60ms ease-in-out forwards;
+  }
+}
+
+@keyframes scaleZ {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  80% {
+    transform: scale(1.07);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+
+
+@keyframes growDown {
+  0% {
+    transform: scaleY(0);
+  }
+
+  80% {
+    transform: scaleY(1.1);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}

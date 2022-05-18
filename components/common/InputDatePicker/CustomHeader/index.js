@@ -9,7 +9,12 @@ export default function CustomHeader({ changeYear, changeMonth }) {
 
   return (
     <div className={`${styles.customHeader}`}>
-      <select value={currentYear} onChange={({ target: { value } }) => changeYear(value)}>
+      <select
+        defaultValue={currentYear}
+        onChange={({ target: { value } }) => {
+          console.log(value);
+          changeYear(value);
+        }}>
         {getYearsFromNow(YEARS_FROM_NOW).map((option) => (
           <option key={option} value={option}>
             {option}
@@ -18,8 +23,11 @@ export default function CustomHeader({ changeYear, changeMonth }) {
       </select>
 
       <select
-        value={months[currentMonth]}
-        onChange={({ target: { value } }) => changeMonth(months.indexOf(value))}>
+        defaultValue={months[currentMonth]}
+        onChange={({ target: { value } }) => {
+          console.log(value);
+          return changeMonth(months.indexOf(value));
+        }}>
         {months.map((option) => (
           <option key={option} value={option}>
             {option}

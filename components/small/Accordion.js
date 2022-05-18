@@ -71,6 +71,7 @@ const Accordion = ({ title, content }) => {
             }
             
             .accordion-content {
+                min-height: 120px;
                 background-color: #1a1a1a;
                 color: #858f8f;
                 font-size: 13px;

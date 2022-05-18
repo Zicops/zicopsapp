@@ -1,8 +1,9 @@
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ADD_COURSE_MODULE } from '../../../../API/Mutations';
 import { getModuleObject, ModuleAtom } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 
 export default function useAddModule(togglePopUp, refetchDataAndUpdateRecoil) {
@@ -11,6 +12,7 @@ export default function useAddModule(togglePopUp, refetchDataAndUpdateRecoil) {
 
   // recoil state
   const moduleData = useRecoilValue(ModuleAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local states
   const [isAddModuleReady, setIsAddModuleReady] = useState(false);
@@ -33,36 +35,29 @@ export default function useAddModule(togglePopUp, refetchDataAndUpdateRecoil) {
     });
   }, [moduleData]);
 
-  // update local state which will be later saved in database on submit
-  function handleModuleInput(e) {
-    let value = e.target.value;
-    if (e.target.type === 'checkbox') {
-      value = e.target.checked;
-    }
-
-    setNewModuleData({
-      ...newModuleData,
-      [e.target.name]: value
-    });
-  }
-
   // save course in database
   async function addNewModule() {
     // save in db
-    await createCourseModule({ variables: { ...newModuleData } });
+    let isError = false;
+    await createCourseModule({ variables: { ...newModuleData } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Module Create Error' });
+    });
 
-    if (error) return alert('Module Create Error');
+    if (error) return setToastMsg({ type: 'danger', message: 'Module Create Error' });
 
     refetchDataAndUpdateRecoil('module');
 
     setNewModuleData(getModuleObject({ courseId: fullCourse.id, sequence: moduleData.length + 1 }));
+    if (!isError) setToastMsg({ type: 'success', message: 'New Module Created' });
+
     togglePopUp('addModule', false);
-    alert('New Module Created');
   }
 
   return {
     newModuleData,
-    handleModuleInput,
+    setNewModuleData,
     isAddModuleReady,
     addNewModule
   };

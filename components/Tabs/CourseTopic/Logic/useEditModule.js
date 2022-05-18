@@ -1,15 +1,18 @@
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { UPDATE_COURSE_MODULE } from '../../../../API/Mutations';
 import { getModuleObject, ModuleAtom } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 
 export default function useEditModule(togglePopUp, refetchDataAndUpdateRecoil) {
   const { fullCourse } = useContext(courseContext);
   const [updateCourseModule, { loading, error }] = useMutation(UPDATE_COURSE_MODULE);
 
+  // recoil state
   const moduleData = useRecoilValue(ModuleAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [editModule, setEditModule] = useState(getModuleObject({ courseId: fullCourse.id }));
   const [isEditModuleReady, setIsEditModuleReady] = useState(false);
@@ -29,39 +32,32 @@ export default function useEditModule(togglePopUp, refetchDataAndUpdateRecoil) {
     togglePopUp('editModule', true);
   }
 
-  // update local state which will be saved in db and context on submit
-  function handleEditModuleInput(e) {
-    let value = e.target.value;
-    if (e.target.type === 'checkbox') {
-      value = e.target.checked;
-    }
-
-    setEditModule({
-      ...editModule,
-      [e.target.name]: value
-    });
-  }
-
   // save to db and update context with refetch
   async function handleEditModuleSubmit() {
-    console.log(editModule);
+    let isError = false;
     // save in db
-    await updateCourseModule({ variables: { ...editModule } });
+    await updateCourseModule({ variables: { ...editModule } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Module Update Error' });
+    });
 
-    if (error) return alert('Module Update Error');
+    if (error) return setToastMsg({ type: 'danger', message: 'Module Update Error' });
 
     refetchDataAndUpdateRecoil('module');
 
     // reset local data and close module
     setEditModule(getModuleObject({ courseId: fullCourse.id }));
+    if (!isError) setToastMsg({ type: 'success', message: 'Module Updated' });
+
     togglePopUp('editModule', false);
   }
 
   return {
     editModule,
+    setEditModule,
     activateEditModule,
     isEditModuleReady,
-    handleEditModuleInput,
     handleEditModuleSubmit
   };
 }

@@ -36,7 +36,7 @@ export default function UploadNewQuestionBank({ text }) {
           dropdownOptions={{
             inputName: 'category',
             label: 'Category:',
-            placeholder: 'Select the category',
+            placeholder: 'Select category',
             options: categoryOption
           }}
           isFiftyFifty={true}
@@ -46,7 +46,7 @@ export default function UploadNewQuestionBank({ text }) {
           dropdownOptions={{
             inputName: 'sub_category',
             label: 'Sub-Category:',
-            placeholder: 'Select the sub category',
+            placeholder: 'Select sub-category',
             options: categoryOption
           }}
           isFiftyFifty={true}

@@ -3,14 +3,27 @@
 .btn {
   padding: 10px 20px;
   background-color: transparent;
-  color: $secondaryBlack;
-  border-radius: 50px;
+
   min-width: 155px;
   margin: 5px;
+  border: 1px solid $secondaryBlack;
+  border-radius: 50px;
+
+  color: $secondaryBlack;
   font-family: 'Open Sans';
   font-size: 13px;
   font-weight: 800;
   cursor: pointer;
+
+  &:disabled {
+    cursor: no-drop;
+    opacity: 0.7;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
   &:hover {
     box-shadow: 0 0 10px 0 $secondaryBlack;
   }

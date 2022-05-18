@@ -1,5 +1,5 @@
 import { arrayOf, element, shape, string } from 'prop-types';
-import TabFooterButton from './TabFooterButton';
+import Button from '../Button';
 
 // Add proptype for extra added props
 export default function TabContainer({ tabData, tab, setTab, footerObj = {}, children }) {
@@ -46,8 +46,8 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
         {children}
 
         <div className="right-text">
-          <TabFooterButton clickHandler={handleCancel} text={cancelDisplay} />
-          <TabFooterButton clickHandler={handleSubmit} text={submitDisplay} />
+          <Button clickHandler={handleCancel} text={cancelDisplay} />
+          <Button clickHandler={handleSubmit} text={submitDisplay} />
         </div>
       </div>
       {/* TODO: add the style in the scss file */}

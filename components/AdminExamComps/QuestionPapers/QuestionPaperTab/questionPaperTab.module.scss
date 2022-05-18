@@ -73,3 +73,24 @@
   text-align: end;
   flex-grow: 1;
 }
+
+.twoInputContainers {
+  display: flex;
+  > div {
+    width: 50%;
+
+    &:last-child {
+      padding-left: 20px;
+    }
+  }
+}
+
+.popUpFormContainer {
+  > div {
+    margin-bottom: 20px;
+  }
+
+  .footerBtns {
+    text-align: end;
+  }
+}

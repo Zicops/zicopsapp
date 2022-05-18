@@ -208,17 +208,17 @@ export default function LearnerExams() {
 
   const simpleTableRef = useRef(null);
   
-  useEffect(() => {
-    document.addEventListener('scroll', function (e) {
-      // lastKnownScrollPosition = window.scrollY;
-      simpleTableRef.current?.scrollIntoView({
-        behavior: 'auto',
-        block: 'end',
-        inline: 'center'
-      });
-      console.log('ref', simpleTableRef);
-    });
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener('scroll', function (e) {
+  //     // lastKnownScrollPosition = window.scrollY;
+  //     simpleTableRef.current?.scrollIntoView({
+  //       behavior: 'auto',
+  //       block: 'end',
+  //       inline: 'center'
+  //     });
+  //     console.log('ref', simpleTableRef);
+  //   });
+  // }, []);
   
   return (
     <div

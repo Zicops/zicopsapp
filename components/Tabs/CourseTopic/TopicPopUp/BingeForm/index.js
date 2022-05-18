@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { BingeAtom } from '../../../../../state/atoms/module.atoms';
 import useAddBinge from '../../Logic/useAddBinge';
-import style from './bingeForm.module.scss';
+import style from '../../../courseTabs.module.scss';
 
 export default function BingeForm({ topicVideo }) {
   let videoSrc;
@@ -82,6 +82,7 @@ export default function BingeForm({ topicVideo }) {
               </div>
             </div>
           </div>
+
           <div className={`${style.from_end}`}>
             <div className={`${style.checkbox_mark}`}>
               <label className={`${style.checkbox_container}`}>
@@ -96,20 +97,12 @@ export default function BingeForm({ topicVideo }) {
             </div>
           </div>
         </div>
+
         <div className={`${style.video_preview}`}>
           <video controls>
             <source src={videoSrc} id="video" type="video/mp4" />
             Your browser does not support HTML5 video.
           </video>
-        </div>
-      </div>
-      <div className={`${style.center}`}>
-        <div className={`${style.checkbox_mark}`}>
-          <label className={`${style.checkbox_label}`}>
-            <input type="checkbox" />
-            <span className={`${style.checkmark_box}`}></span>Set as global binge setting for the
-            Module
-          </label>
         </div>
       </div>
     </>

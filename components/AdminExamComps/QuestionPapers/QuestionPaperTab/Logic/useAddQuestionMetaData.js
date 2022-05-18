@@ -4,11 +4,9 @@ import {
   CustomSectionAtom,
   getCustomSectionObject,
   getQuestionMetaDataObject,
-  QuestionMetaDataAtom,
-  QuestionPaperMasterAtom
+  QuestionMetaDataAtom, QuestionPaperTabDataAtom
 } from '../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../state/atoms/popUp.atom';
-import { questionPaperTabData } from './questionPaperTab.helper';
 
 export default function useAddQuestionMetaData() {
   const [addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp] = useRecoilState(
@@ -16,7 +14,7 @@ export default function useAddQuestionMetaData() {
   );
   const [questionMetaData, updateQuestionMetaData] = useRecoilState(QuestionMetaDataAtom);
   const [customSection, udpateCustomSection] = useRecoilState(CustomSectionAtom);
-  const questionPaper = useRecoilValue(QuestionPaperMasterAtom);
+  const questionPaper = useRecoilValue(QuestionPaperTabDataAtom);
   const [newMetaData, setNewMetaData] = useState(getQuestionMetaDataObject());
   const [isNewMetaData, setIsNewMetaData] = useState(false);
 

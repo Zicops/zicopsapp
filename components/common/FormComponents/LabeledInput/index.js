@@ -20,12 +20,15 @@ export default function LabeledInput({
   } = inputOptions;
   return (
     <div className={`${labeledInputWrapper} ${isFiftyFifty ? halfInputWrapper : ''} ${styleClass}`}>
-      <label htmlFor={inputName} aria-label={inputName}>
-        {label}
-      </label>
+      {label && (
+        <label htmlFor={inputName} aria-label={inputName} className="w-100">
+          {label}
+        </label>
+      )}
 
       <input
         type={type}
+        className={label ? 'w-75' : 'w-100'}
         name={inputName}
         placeholder={placeholder}
         value={value}

@@ -22,13 +22,13 @@
 
 .halfInputField {
   width: 50%;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .radioContainer {
   display: flex;
   margin-top: 20px;
-
+  gap: 20px;
   label {
     width: 25%;
     color: $white;
@@ -231,3 +231,6 @@
   font-weight: bold;
   padding-top: 2px;
 }
+    .footerBtns {
+      text-align: end;
+    }
