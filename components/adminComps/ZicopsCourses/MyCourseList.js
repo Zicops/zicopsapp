@@ -48,19 +48,11 @@ const columns = [
   }
 ];
 
-function editCourse(course) {
-  // alert(course)
-  let courseId = course;
-  Router.push({
-    pathname: '/admin/courses',
-    query: {
-      courseId
-    }
-  });
+function editCourse(courseId) {
+  Router.push(`/admin/courses/${courseId}`);
 }
 
 function MyLatestCourseList({ time }) {
-
   const [pageSize, setPageSize] = useState(6);
 
   useEffect(() => {

@@ -230,48 +230,26 @@ select.nav_search_dropdow:selected {
   }
 }
 
-.dropdown_menu {
-  cursor: pointer;
-  transform-origin: top left;
-  animation: scaleZ 500ms 0ms ease-in-out forwards;
-}
+// Rajeev's dropdown animation
+// .dropdown_menu {
+//   cursor: pointer;
+//   transform-origin: top left;
+//   animation: scaleZ 500ms 0ms ease-in-out forwards;
+// }
 
-.dropdown_menu_right {
-  cursor: pointer;
-  transform-origin: top right;
-  animation: scaleZ 500ms 0ms ease-in-out forwards;
-}
+// .dropdown_menu_right {
+//   cursor: pointer;
+//   transform-origin: top right;
+//   animation: scaleZ 500ms 0ms ease-in-out forwards;
+// }
 
-
-
-.dropdown_item_1 {
-  transform-origin: top center;
-  animation: scaleZ 500ms 60ms ease-in-out forwards;
-}
-
-.dropdown_item_2 {
-  transform-origin: top center;
-  animation: scaleZ 500ms 120ms ease-in-out forwards;
-}
-
-.dropdown_item_3 {
-  transform-origin: top center;
-  animation: scaleZ 500ms 180ms ease-in-out forwards;
-}
-
-.dropdown_item_4 {
-  transform-origin: top center;
-  animation: scaleZ 500ms 240ms ease-in-out forwards;
-}
-
-.dropdown_item_5 {
-  transform-origin: top center;
-  animation: scaleZ 500ms 300ms ease-in-out forwards;
-}
-
-.dropdown_item_6 {
-  transform-origin: top center;
-  animation: scaleZ 500ms 360ms ease-in-out forwards;
+@for $var from 1 to 7 {
+  .dropdown_item_#{$var} {
+    opacity: 0;
+    background-color: $bgHeader;
+    transform-origin: top center;
+    animation: scaleZ 500ms $var*60ms ease-in-out forwards;
+  }
 }
 
 @keyframes scaleZ {
@@ -279,11 +257,9 @@ select.nav_search_dropdow:selected {
     opacity: 0;
     transform: scale(0);
   }
-
   80% {
     transform: scale(1.07);
   }
-
   100% {
     opacity: 1;
     transform: scale(1);
@@ -306,4 +282,3 @@ select.nav_search_dropdow:selected {
     transform: scaleY(1);
   }
 }
-

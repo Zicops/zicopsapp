@@ -69,7 +69,7 @@ export default function Nav() {
             </select>
 
             <input
-              type="text"
+              type="search"
               ref={searchInputRef}
               className={styles.nav_search}
               placeholder="Search..."

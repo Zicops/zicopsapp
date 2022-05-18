@@ -1,0 +1,388 @@
+@import '../../styles/base.scss';
+
+// tab index
+.previewButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+// utils
+.marginBottom {
+  margin-bottom: 30px;
+}
+
+// course master
+.switchContainer {
+  gap: 50px;
+}
+
+// course details
+.fileName {
+  text-align: end;
+}
+
+// course about
+.alignBaseline {
+  align-items: baseline;
+}
+
+.bulletPointInputContainer {
+  align-items: flex-start;
+  font-size: 13px;
+
+  &.tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    input {
+      width: 25%;
+      margin: 0;
+      margin-bottom: 10px;
+    }
+  }
+
+  .tags {
+      width: max-content;
+      margin-bottom: 10px;
+      margin-right: 10px;
+      padding-left: 10px;
+
+      border: 1px solid $primary;
+      border-radius: 5px;
+      background-color: $primary;
+      white-space: nowrap;
+      color: $white;
+      button {
+        padding: 10px;
+      }
+  }
+
+  .bullets {
+    display: flex;
+    justify-content: space-between;
+
+    border-radius: 5px;
+    font-size: inherit;
+    color: $darkThree;
+
+    background-color: $tertiaryBlack;
+    border: 1px solid $darkThree;
+    padding: 3px 10px;
+    margin: 5px auto;
+
+    &:last-child {
+      margin-bottom: 10px;
+    }
+  }
+
+  button {
+    padding: 0px;
+    border: none;
+    color: $white;
+
+    background-color: unset;
+    cursor: pointer;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+
+    border: 2px solid $darkThree;
+    background-color: $darkTwo;
+
+    color: $secondaryBlack;
+    font-size: inherit;
+    font-family: 'Open Sans';
+
+    &:not(:placeholder-shown) {
+      /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+      color: $white;
+      border: 2px solid $primary;
+    }
+    &:focus {
+      border: 2px solid $primary;
+      box-shadow: 0px 0px 10px 0px $primary;
+      outline: 0;
+      color: $white;
+    }
+  }
+}
+
+// course topic
+.buttonGap {
+  margin: 10px auto;
+}
+
+// module pop up
+.popUpFormContainer {
+  padding: 20px 50px;
+
+  > div {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .isChapterWiseLabelContainer {
+    margin-left: 25%;
+    justify-content: start;
+    align-items: center;
+    margin-bottom: 0;
+
+    .isChapterWiseLabel {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+
+      span {
+        color: $darkThree;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// topic content
+.topicContentContainer {
+  min-height: 200px;
+  padding: 10px;
+  border: 1px solid $black;
+  border-radius: 10px;
+  max-height: 52vh;
+  overflow: auto;
+  color: $white;
+}
+
+.titleWithLineAtSide {
+  color: $white;
+  font-size: 16px;
+  text-transform: uppercase;
+  text-align: center;
+
+  &::before,
+  &::after {
+    display: inline-block;
+    content: '';
+    border-top: 2px solid $secondaryBlack;
+    min-width: 200px;
+    margin: 0 1rem;
+
+    transform: translateY(-5px);
+  }
+}
+
+.flexContainerWithSpace {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flexCenterWithGap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.topicContentSmallBtn {
+  min-width: 100px;
+  width: 100px;
+  padding: 8px 10px;
+}
+
+.centerAccordinBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 20px;
+}
+
+// binge form
+.bingerow {
+  display: flex;
+  align-items: center;
+
+  .bingeform {
+    width: 60%;
+    // padding: 10px;
+    // display: flex;
+    .binge_setting {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .binge_setting_title {
+        font-size: 16px;
+        color: $primary;
+        width: 23%;
+      }
+      .binge_setting_body {
+        width: 75%;
+        padding: 10px;
+      }
+    }
+  }
+}
+
+.newline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // margin-bottom: 5px;
+
+  input {
+    padding: 0 3px;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid $white;
+    width: 20px;
+    margin: 5px 0px;
+
+    background-color: $darkTwo;
+    color: $secondaryBlack;
+  }
+  input:focus {
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid $white;
+    outline: 0;
+    box-shadow: none;
+  }
+  .durationvalue {
+    width: 40px;
+  }
+}
+.label {
+  min-width: 80px;
+  font-size: 14px;
+}
+// //   .value {
+// //     min-width: 60px;
+// //     color: #ffffff;
+// //     font-size: 13px;
+// //     border-bottom: 1px solid #ffffff;
+// //     border-radius: 3px;
+// //     text-align: center;
+// //     padding: 0;
+// //     margin: 0;
+// //   }
+.after {
+  min-width: 80px;
+  color: #868f8f;
+  font-size: 12px;
+  margin-left: 20px;
+}
+.video_preview {
+  height: 150px;
+  // width: 40%;
+  // background-color: #8f8f8f;
+  // margin-left: auto;
+  display: flex;
+}
+.from_end {
+  display: flex;
+  justify-content: center;
+  margin-left: 25%;
+}
+.checkbox_label {
+  font-size: 18px;
+  color: #ffffff;
+  margin: auto;
+}
+.center {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+//   /* Customize the label (the container) */
+.checkbox_container {
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  /* margin-bottom: 10px; */
+  margin-top: -10px;
+  cursor: pointer;
+  font-size: 11px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  // .formEndCheckmark{
+  //     color:#6bcfcf;
+  // }
+}
+
+//   /* Hide the browser's default checkbox */
+//   .checkbox_container input {
+//     position: absolute;
+//     opacity: 0;
+//     cursor: pointer;
+//     height: 0;
+//     width: 0;
+//   }
+
+//   /* Create a custom checkbox */
+//   .checkmark {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     height: 15px;
+//     width: 15px;
+//     background-color: #202222;
+//     border: 1px solid #858f8f;
+//   }
+
+//   /* On mouse-over, add a grey background color */
+//   .checkbox_container:hover input ~ .checkmark {
+//     /* border: 2px solid #858f8f; */
+//     /* box-shadow: 0 0 1px 0 #FFFFFF; */
+//   }
+
+//   /* When the checkbox is checked, add a blue background */
+//   .checkbox_container input:checked ~ .checkmark {
+//     background-color: #202222;
+//   }
+
+//   /* Create the checkmark/indicator (hidden when not checked) */
+//   .checkmark:after {
+//     content: '';
+//     position: absolute;
+//     display: none;
+//   }
+
+//   /* Show the checkmark when checked */
+//   .checkbox_container input:checked ~ .checkmark:after {
+//     display: block;
+//   }
+
+//   /* Style the checkmark/indicator */
+//   .checkbox_container .checkmark:after {
+//     left: 3px;
+//     top: 0px;
+//     width: 4px;
+//     height: 8px;
+//     border: solid #858f8f;
+//     border-width: 0 3px 3px 0;
+//     -webkit-transform: rotate(45deg);
+//     -ms-transform: rotate(45deg);
+//     transform: rotate(45deg);
+//   }
+
+
+// course configuration
+.courseConfigContainer{
+  display: flex;
+}
+
+// .configSwitchContainer{
+//   display: flex;
+//   justify-content: space-between;
+//   width: 50%;
+// }

@@ -8,6 +8,7 @@ import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { languages, preferences } from '../Logic/subMenu.helper.js';
 import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
+
 import styles from '../nav.module.scss'
 
 export default function RightDropDownMenu() {
@@ -38,7 +39,7 @@ export default function RightDropDownMenu() {
       <Menu
         // {...languages}
         // {...preferences}
-        id="fade-menu"
+	id="fade-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -50,14 +51,14 @@ export default function RightDropDownMenu() {
           '& .MuiMenu-list': {
             // marginTop : '30px',
             color: 'var(--primary)',
-            background: 'var(--header-bg)',
+            // background: 'var(--header-bg)',
             padding: '2px',
             width: '250px',
             left: '45%'
           },
           '& .MuiMenuItem-root': {
             border: '1px solid var(--primary)',
-            margin: '2px',
+            // margin: '2px',
             justifyContent: 'flex-end',
             // alignItems: 'center',
             '&:hover': {
@@ -73,6 +74,7 @@ export default function RightDropDownMenu() {
           }
         }}>
         <MenuItem
+          className={`${styles.dropdown_item_1}`}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -86,9 +88,8 @@ export default function RightDropDownMenu() {
           <p style={{ color: 'var(--background_body)' }}>{date}</p>
           <h2>Powered by Zicops</h2>
         </MenuItem>
-        <MenuItem
-        className={`${styles.dropdown_item_2}`}
-        >
+
+        <MenuItem className={`${styles.dropdown_item_2}`}>
           {/* submenu for myDetails */}
           <DropDownSubMenu
             subData={languages}
@@ -100,9 +101,8 @@ export default function RightDropDownMenu() {
         </MenuItem>
         <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_3}`}>My Certificates</MenuItem>
         <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_4}`}>My Dashboard</MenuItem>
-        <MenuItem
-        className={`${styles.dropdown_item_5}`}
-        >
+        <MenuItem className={`${styles.dropdown_item_5}`}>
+
           {/* submenu for support */}
           <DropDownSubMenu
             subData={preferences}

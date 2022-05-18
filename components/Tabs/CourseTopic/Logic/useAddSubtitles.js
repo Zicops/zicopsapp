@@ -5,10 +5,12 @@ import {
   getTopicSubtitleObject,
   TopicSubtitleAtom
 } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
 export default function useAddSubtitles(courseId = '', topicId = '') {
   // recoil state
   const [topicSubtitle, addTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local state
   const [isSubtitlesFormVisible, setIsSubtitlesFormVisible] = useState(false);
@@ -25,7 +27,6 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
   }, [topicId, courseId]);
 
   useEffect(() => {
-    console.log(newSubtitles.language && newSubtitles.file);
     setIsSubtitlesReady(newSubtitles.language && newSubtitles.file);
   }, [newSubtitles]);
 
@@ -35,29 +36,35 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
 
   // input handler
   function handleSubtitleInput(e) {
+    if (e.value) {
+      // language needs to be unique
+      const isLanguagePresent = topicSubtitle.some((sub) => sub.language === e.value);
+
+      if (isLanguagePresent)
+        return setToastMsg({
+          type: 'danger',
+          message: `Subtitle already added in language ${e.value}`
+        });
+
+      setNewSubtitles({
+        ...newSubtitles,
+        language: e.value
+      });
+      return;
+    }
 
     if (e.target.type == 'file') {
       if (!e.target.files) return;
       if (!e.target.files[0]) return;
 
+      const nameArr = e.target.files[0].name.split('.');
+      if (!nameArr[nameArr.length - 1].includes('vtt'))
+        return setToastMsg({ type: 'danger', message: 'Only VTT file is accepted' });
+
       setNewSubtitles({
         ...newSubtitles,
         file: e.target.files[0],
         name: e.target.files[0].name
-      });
-      return;
-    }
-    
-    if (e.target.value) {
-      // language needs to be unique
-      const isLanguagePresent = topicSubtitle.some((sub) => sub.language === e.target.value);
-
-      if (isLanguagePresent)
-        return alert(`Subtitle already added in language ${e.target.value}`);
-
-      setNewSubtitles({
-        ...newSubtitles,
-        language: e.target.value
       });
       return;
     }

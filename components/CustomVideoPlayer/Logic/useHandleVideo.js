@@ -6,7 +6,7 @@ import { TopicContentAtom } from '../../../state/atoms/module.atoms';
 import { VideoAtom } from '../../../state/atoms/video.atom';
 import { addCallbackToEvent } from './customVideoPlayer.helper';
 
-export default function useVideoPlayer(videoElement, videoContainer, type) {
+export default function useVideoPlayer(videoElement, videoContainer) {
   // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
   const [playPauseActivated, setPlayPauseActivated] = useState(null);
   const [playerState, setPlayerState] = useState({
@@ -36,21 +36,12 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       setHideControls(value);
       setHideTopBar(value);
     }
-    // function hideControls() {
-    //   if (type !== 'mp4') return;
 
-    //   clearTimeout(timeout);
-
-    //   timeout = setTimeout(function () {
-    //     setHideControls(1);
-    //     setHideTopBar(1);
-    //   }, duration);
-    // }
     addCallbackToEvent(videoContainer.current, [
       {
         event: 'mousemove',
         callback: () => {
-          if (type !== 'mp4') return;
+          if (videoData.type !== 'mp4') return;
           switchControls(0);
           clearTimeout(timeout);
 
@@ -60,19 +51,27 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
       {
         event: 'keydown',
         callback: () => {
-          if (type !== 'mp4') return;
+          if (videoData.type !== 'mp4') return;
           switchControls(0);
         }
       },
       {
         event: 'click',
         callback: () => {
-          if (type !== 'mp4') return;
+          if (videoData.type !== 'mp4') return;
           switchControls(0);
         }
       }
     ]);
   }, []);
+
+  // reset tooltip and seek after timeoutSeconds
+  const timeoutSeconds = 2000;
+  useEffect(() => {
+    setTimeout(() => {
+      setSeek(0);
+    }, timeoutSeconds);
+  }, [seek]);
 
   // reset progress when video changes
   useEffect(() => {
@@ -82,9 +81,9 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
 
   // show/hide controls based on type (show only for mp4)
   useEffect(() => {
-    if (type === null) return setVideoTime(0);
-    if (type !== 'mp4') return setHideControls(1);
-  }, [type]);
+    if (videoData.type === null) return setVideoTime(0);
+    if (videoData.type !== 'mp4') return setHideControls(1);
+  }, [videoData.type]);
 
   // reset playpause to null after few seconds
   useEffect(() => {
@@ -164,6 +163,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     const timestamp = (e.pageX / screen.width) * videoDuration;
 
     const timeObj = secondsToMinutes(timestamp);
+    if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
     setSeek(`${timeObj.minute}: ${timeObj.second}`);
   }
 
@@ -273,7 +273,6 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
 
   function handleVideoProgress(event) {
     const manualChange = Number(event.target.value);
-    // console.log(event.target.value, manualChange);
     setVideoTime(manualChange);
   };
 
@@ -353,6 +352,7 @@ export default function useVideoPlayer(videoElement, videoContainer, type) {
     tooltip.current.style.left = (time / videoElement.current.duration) * screen.width + 'px';
 
     const timeObj = secondsToMinutes(time);
+    if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
     setSeek(`${timeObj.minute}: ${timeObj.second}`);
   }
 

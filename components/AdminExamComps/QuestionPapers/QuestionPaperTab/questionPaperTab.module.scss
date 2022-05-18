@@ -1,0 +1,96 @@
+@import '../../../../styles/base.scss';
+
+.qbc_dropdown {
+  margin-left: 10px;
+  margin-right: -8px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.dropdown {
+  // margin-left: 15px;
+  // margin-right: 0;
+  // margin-top: 20px;
+  width: 100%;
+  margin: 30px 0px;
+}
+
+.widthHalf {
+  width: 50%;
+}
+
+.qb_container {
+  margin-top: 30px;
+
+  button {
+    position: relative;
+    float: right;
+    margin-right: 0;
+  }
+}
+
+.inputField {
+  margin-bottom: 30px;
+}
+
+.footer {
+  display: flex;
+  margin: auto;
+  margin-right: 0%;
+  width: 75%;
+
+  label {
+    width: 100%;
+  }
+}
+
+// add custom sectopn
+.acs_dropdown {
+  // margin-left: 10px;
+  // margin-right: -8px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 16px;
+  // font-weight: 600;
+  color: $white;
+}
+
+.bt_Container {
+  position: relative;
+  float: right;
+}
+
+.sectionBoxContainer {
+  display: flex;
+  flex-direction: column;
+
+  button {
+    margin: auto;
+  }
+}
+
+.numberOfQuestions {
+  text-align: end;
+  flex-grow: 1;
+}
+
+.twoInputContainers {
+  display: flex;
+  > div {
+    width: 50%;
+
+    &:last-child {
+      padding-left: 20px;
+    }
+  }
+}
+
+.popUpFormContainer {
+  > div {
+    margin-bottom: 20px;
+  }
+
+  .footerBtns {
+    text-align: end;
+  }
+}

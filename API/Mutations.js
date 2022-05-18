@@ -516,11 +516,11 @@ export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
   mutation uploadTopicContentSubtitle(
     $file: Upload
     $courseId: String
-    $contentId: String
+    $topicId: String
     $language: String
   ) {
     uploadTopicContentSubtitle(
-      file: [{ file: $file, courseId: $courseId, contentId: $contentId, language: $language }]
+      file: [{ file: $file, courseId: $courseId, topicId: $topicId, language: $language }]
     ) {
       success
       url
@@ -528,15 +528,6 @@ export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
     }
   }
 `;
-// not in use remove later replaced by new mutation
-// export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
-//   mutation uploadTopicContentSubtitle($file: Upload, $courseId: String, $contentId: String) {
-//     uploadTopicContentSubtitle(file: { file: $file, courseId: $courseId, contentId: $contentId }) {
-//       success
-//       url
-//     }
-//   }
-// `;
 
 export const ADD_TOPIC_CONTENT = gql`
   mutation addTopicContent(
@@ -618,6 +609,377 @@ export const UPDATE_TOPIC_CONTENT = gql`
       updated_at
       type
       is_default
+    }
+  }
+`;
+
+export const CREATE_QUESTION_BANK = gql`
+  mutation createQuestionBank(
+    $name: String
+    $category: String
+    $sub_category: String
+    $created_by: String
+    $updated_by: String
+    $is_active: Boolean
+    $is_default: Boolean
+    $owner: String
+  ) {
+    createQuestionBank(
+      input: {
+        name: $name
+        category: $category
+        sub_category: $sub_category
+        created_by: $created_by
+        updated_by: $updated_by
+        is_active: $is_active
+        is_default: $is_default
+        owner: $owner
+      }
+    ) {
+      id
+      name
+      category
+      sub_category
+      created_at
+      updated_at
+      created_by
+      updated_by
+      is_active
+      is_default
+      owner
+    }
+  }
+`;
+
+export const UPDATE_QUESTION_BANK = gql`
+  mutation updateQuestionBank(
+    $id: ID
+    $name: String
+    $category: String
+    $sub_category: String
+    $created_by: String
+    $updated_by: String
+    $is_active: Boolean
+    $is_default: Boolean
+    $owner: String
+  ) {
+    updateQuestionBank(
+      input: {
+        id: $id
+        name: $name
+        category: $category
+        sub_category: $sub_category
+        created_by: $created_by
+        updated_by: $updated_by
+        is_active: $is_active
+        is_default: $is_default
+        owner: $owner
+      }
+    ) {
+      id
+      name
+      category
+      sub_category
+      created_at
+      updated_at
+      created_by
+      updated_by
+      is_active
+      is_default
+      owner
+    }
+  }
+`;
+
+export const ADD_QUESTION_BANK_QUESTION = gql`
+  mutation addQuestionBankQuestion(
+    $description: String
+    $type: String
+    $difficulty: Int
+    $file: Upload
+    $attachmentType: String
+    $hint: String
+    $qbmId: String
+    $status: String
+    $createdBy: String
+    $updatedBy: String
+  ) {
+    addQuestionBankQuestion(
+      input: {
+        Description: $description
+        Type: $type
+        Difficulty: $difficulty
+        File: $file
+        AttachmentType: $attachmentType
+        Hint: $hint
+        QbmId: $qbmId
+        Status: $status
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+      }
+    ) {
+      id
+      Description
+      Type
+      Difficulty
+      Attachment
+      AttachmentType
+      Hint
+      QbmId
+      Status
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+    }
+  }
+`;
+
+export const UPDATE_QUESTION_BANK_QUESTION = gql`
+  mutation updateQuestionBankQuestion(
+    $description: String
+    $type: String
+    $difficulty: Int
+    $file: Upload
+    $attachmentType: String
+    $hint: String
+    $qbmId: String
+    $status: String
+    $createdBy: String
+    $updatedBy: String
+  ) {
+    updateQuestionBankQuestion(
+      input: {
+        Description: $description
+        Type: $type
+        Difficulty: $difficulty
+        File: $file
+        AttachmentType: $attachmentType
+        Hint: $hint
+        QbmId: $qbmId
+        Status: $status
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+      }
+    ) {
+      id
+      Description
+      Type
+      Difficulty
+      Attachment
+      AttachmentType
+      Hint
+      QbmId
+      Status
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+    }
+  }
+`;
+
+export const ADD_QUESTION_OPTIONS = gql`
+  mutation addQuestionOptions(
+    $qmId: String
+    $description: String
+    $isCorrect: Boolean
+    $createdBy: String
+    $updatedBy: String
+    $attachmentType: String
+    $file: Upload
+    $isActive: Boolean
+  ) {
+    addQuestionOptions(
+      input: {
+        QmId: $qmId
+        Description: $description
+        IsCorrect: $isCorrect
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        AttachmentType: $attachmentType
+        File: $file
+        IsActive: $isActive
+      }
+    ) {
+      id
+      QmId
+      Description
+      IsCorrect
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      AttachmentType
+      Attachment
+      IsActive
+    }
+  }
+`;
+
+export const UPDATE_QUESTION_OPTIONS = gql`
+  mutation updateQuestionOptions(
+    $qmId: String
+    $description: String
+    $isCorrect: Boolean
+    $createdBy: String
+    $updatedBy: String
+    $attachmentType: String
+    $file: Upload
+    $isActive: Boolean
+  ) {
+    updateQuestionOptions(
+      input: {
+        QmId: $qmId
+        Description: $description
+        IsCorrect: $isCorrect
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        AttachmentType: $attachmentType
+        File: $file
+        IsActive: $isActive
+      }
+    ) {
+      id
+      QmId
+      Description
+      IsCorrect
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      AttachmentType
+      Attachment
+      IsActive
+    }
+  }
+`;
+
+export const ADD_QUESTION_PAPER = gql`
+  mutation addQuestionPaper(
+    $name: String
+    $category: String
+    $sub_category: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+    $difficulty_level: String
+    $section_wise: Boolean
+    $description: String
+    $suggested_duration: String
+  ) {
+    addQuestionPaper(
+      input: {
+        name: $name
+        Category: $category
+        SubCategory: $sub_category
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+        DifficultyLevel: $difficulty_level
+        SectionWise: $section_wise
+        Description: $description
+        SuggestedDuration: $suggested_duration
+      }
+    ) {
+      id
+      name
+      Category
+      SubCategory
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      DifficultyLevel
+      SectionWise
+      Description
+      SuggestedDuration
+    }
+  }
+`;
+
+export const UPDATE_QUESTION_PAPER = gql`
+  mutation updateQuestionPaper(
+    $name: String
+    $category: String
+    $subCategory: String
+    $createdBy: String
+    $updatedBy: String
+    $isActive: Boolean
+    $difficultyLevel: String
+    $sectionWise: Boolean
+    $description: String
+    $suggestedDuration: String
+  ) {
+    updateQuestionPaper(
+      input: {
+        name: $name
+        Category: $category
+        SubCategory: $subCategory
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $isActive
+        DifficultyLevel: $difficultyLevel
+        SectionWise: $sectionWise
+        Description: $description
+        SuggestedDuration: $suggestedDuration
+      }
+    ) {
+      id
+      name
+      Category
+      SubCategory
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      DifficultyLevel
+      SectionWise
+      Description
+      SuggestedDuration
+    }
+  }
+`;
+
+export const ADD_QUESTION_PAPER_SECTION = gql`
+  mutation addQuestionPaperSection(
+    $qpId: String
+    $name: String
+    $description: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+    $type: String
+    $difficulty_level: String
+    $total_questions: Int
+  ) {
+    addQuestionPaperSection(
+      input: {
+        QpId: $qpId
+        Name: $name
+        Description: $description
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+        Type: $type
+        DifficultyLevel: $difficulty_level
+        TotalQuestions: $total_questions
+      }
+    ) {
+      id
+      QpId
+      Name
+      Description
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      DifficultyLevel
+      TotalQuestions
     }
   }
 `;

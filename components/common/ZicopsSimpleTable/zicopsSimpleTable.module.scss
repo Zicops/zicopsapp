@@ -2,7 +2,7 @@
 
 .simpleTable {
   position: relative;
-  background-color: $black;
+  // background-color: $black;
   color: $primary;
   padding: 50px 20px;
 
@@ -10,8 +10,13 @@
     position: absolute;
     right: 120px;
     background-color: transparent;
-    border: 2px solid $primary;
+    border: 2px solid $darkThree;
+    color: $darkThree;
     padding: 5px 10px;
+    &:focus{
+      border: 2px solid transparent;
+      outline: 2px solid $primary;
+    }
   }
 
   .tableHeader {
@@ -45,7 +50,7 @@
     }
 
     .tableBody {
-      background-color: $bgContent;
+      // background-color: $bgContent;
       height: 400px;
     }
   }
@@ -59,11 +64,11 @@
 }
 
 .tableRow {
-  color: $primary;
+  color: $white;
 
   font-size: 14px;
   text-transform: capitalize;
-  border: 1px solid $primary;
+  border: 1px solid $darkThree;
   margin: 5px auto;
   max-width: 99%;
 
@@ -97,7 +102,7 @@
     cursor: no-drop;
 
     img {
-      opacity: 0.5;
+      opacity: 0.3;
     }
   }
 }

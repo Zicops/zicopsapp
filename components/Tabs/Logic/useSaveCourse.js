@@ -10,14 +10,13 @@ import {
   UPLOAD_COURSE_TILE_IMAGE
 } from '../../../API/Mutations';
 import { createCourseAndUpdateContext } from '../../../helper/data.helper';
-import { isCourseUploadingAtom, tabData } from './tabs.helper';
+import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
+import { CourseTabAtom, isCourseUploadingAtom, tabData } from './tabs.helper';
 
 export default function useSaveCourse(courseContextData) {
   const {
     fullCourse,
     updateCourseMaster,
-    tab,
-    setTab,
     courseVideo,
     setCourseVideo,
     courseImage,
@@ -26,33 +25,38 @@ export default function useSaveCourse(courseContextData) {
     setCourseTileImage
   } = courseContextData;
 
+  // mutation
   const [createCourse, { loading: addCourseLoading }] = useMutation(ADD_COURSE);
   const [uploadImage, { loading: uploadImageLoading }] = useMutation(UPLOAD_COURSE_IMAGE);
   const [uploadTileImage, { loading: uploadTileLoading }] = useMutation(UPLOAD_COURSE_TILE_IMAGE);
   const [uploadPreview, { loading: uploadPreviewLoading }] = useMutation(UPLOAD_COURSE_PREVIEW);
   const [updateCourse, { loading: udpateCourseLoading }] = useMutation(UPDATE_COURSE);
+
+  // recoil state
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
+  const [tab, setTab] = useRecoilState(CourseTabAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
   const router = useRouter();
 
-  function returnToMycourses() {
-    router.push('/admin/zicops-courses');
-  }
-
   useEffect(() => {
-    console.log(tab);
     if (tab === tabData[0].name) return;
 
     // saveCourseData();
   }, [tab]);
 
-  async function saveCourseData(isNextButton, tabIndex) {
+  async function saveCourseData(isNextButton, tabIndex, showToastMsg = true) {
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
 
     if (!fullCourse.id) {
-      createCourseAndUpdateContext(courseContextData, createCourse);
+      const resObj = await createCourseAndUpdateContext(courseContextData, createCourse);
+      setToastMsg({ type: resObj.type, message: resObj.message });
       setIsLoading(addCourseLoading ? 'SAVING...' : null);
 
-      if (isNextButton) setTab(tabData[tabIndex || 0].name);
+      if (isNextButton && resObj.type === 'success') {
+        setTab(tabData[tabIndex || 0].name);
+        router.push(router.asPath + `/${resObj?.courseId}`);
+      }
       return;
     }
     // alert('course update started');
@@ -66,19 +70,17 @@ export default function useSaveCourse(courseContextData) {
       variables: fullCourse
     });
 
-    alert('course updated');
-    console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
     updateCourseMaster(courseUpdateResponse.data.updateCourse);
 
-    console.log(
-      udpateCourseLoading && uploadImageLoading && uploadTileLoading && uploadPreviewLoading
-    );
     setIsLoading(
       udpateCourseLoading && uploadImageLoading && uploadTileLoading && uploadPreviewLoading
         ? 'UPDATING...'
         : null
     );
-    console.log(isNextButton, tabData[tabIndex || 0].name, tabIndex);
+
+    if (showToastMsg) setToastMsg({ type: 'success', message: 'Course Updated' });
+    console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
+
     if (isNextButton) setTab(tabData[tabIndex || 0].name);
   }
 
@@ -121,5 +123,5 @@ export default function useSaveCourse(courseContextData) {
     }
   }
 
-  return { fullCourse, saveCourseData, returnToMycourses };
+  return { fullCourse, saveCourseData };
 }

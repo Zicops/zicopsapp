@@ -6,6 +6,7 @@ import styles from './adminHeader.module.scss';
 export default function AdminHeader({
   title,
   pageRoute,
+  handleClickForPlus,
   isAddShown = false,
   isShowOption = false
 }) {
@@ -44,7 +45,7 @@ export default function AdminHeader({
             src="/images/plus_big.png"
             className="rightside_icon"
             alt=""
-            onClick={gotoPageRoute}
+            onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
           />
         )}
         <img src="/images/setting_icon.png" className="rightside_icon" alt="" />

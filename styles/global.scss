@@ -2,18 +2,12 @@
 
 * {
   // disable text selection
-  -webkit-touch-callout: none;
-  /* iOS Safari */
-  -webkit-user-select: none;
-  /* Safari */
-  -khtml-user-select: none;
-  /* Konqueror HTML */
-  -moz-user-select: none;
-  /* Firefox */
-  -ms-user-select: none;
-  /* Internet Explorer/Edge */
-  user-select: none;
-  /* Non-prefixed version, currently supported by Chrome and Opera */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
 .adminContent {
@@ -92,16 +86,20 @@
 // util classes (common classes that are like bootstrap util classes)
 @for $i from 1 through 100 {
   .w-#{$i} {
-    width: #{$i}+'%';
+    width: #{$i} + '%';
   }
 
   .h-#{$i} {
-    height: #{$i}+'%';
+    height: #{$i} + '%';
   }
 }
 
 .position-relative {
   position: relative;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .center-element-with-flex {

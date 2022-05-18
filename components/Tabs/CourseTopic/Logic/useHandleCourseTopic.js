@@ -9,6 +9,7 @@ import {
 } from '../../../../API/Queries';
 import { sortArrByKeyInOrder } from '../../../../helper/data.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 
 export default function useHandleCourseTopic() {
@@ -40,6 +41,7 @@ export default function useHandleCourseTopic() {
   const [moduleData, updateModuleData] = useRecoilState(ModuleAtom);
   const [chapterData, updateChapterData] = useRecoilState(ChapterAtom);
   const [topicData, updateTopicData] = useRecoilState(TopicAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // module, chapter, topic data query obj
   const [loadModuleData, { error: errorModuleData, refetch: refetchModule }] = useLazyQuery(
@@ -61,25 +63,25 @@ export default function useHandleCourseTopic() {
 
   // load module, chapter, topic data and set in recoil
   useEffect(() => {
-    loadModuleData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      const sortedData = sortArrByKeyInOrder([...data.getCourseModules], "sequence");
+    loadModuleData({ variables: { course_id: fullCourse?.id } }).then(({ data }) => {
+      const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence');
       updateModuleData(sortedData);
 
-      if (errorModuleData) alert('Module Load Error');
+      if (errorModuleData) setToastMsg({ type: 'danger', message: 'Module Load Error' });
     });
 
-    loadChapterData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
+    loadChapterData({ variables: { course_id: fullCourse?.id } }).then(({ data }) => {
       updateChapterData(data.getCourseChapters);
 
-      if (errorChapterData) alert('Chapter Load Error');
+      if (errorChapterData) setToastMsg({ type: 'danger', message: 'Chapter Load Error' });
     });
 
-    loadTopicData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
+    loadTopicData({ variables: { course_id: fullCourse?.id } }).then(({ data }) => {
       updateTopicData(data.getTopics);
 
-      if (errorTopicData) alert('Topic Load Error');
+      if (errorTopicData) setToastMsg({ type: 'danger', message: 'Topic Load Error' });
     });
-  }, []);
+  }, [fullCourse?.id]);
 
   function togglePopUp(popUpName, value) {
     popUpStates.some((popUp) => {
@@ -87,7 +89,7 @@ export default function useHandleCourseTopic() {
       if (isPopNameMatched) {
         if (!fullCourse.id) {
           setTab(tabData[0].name);
-          alert('Add course first');
+          setToastMsg({ type: 'danger', message: 'Add course first' });
         }
 
         popUp.update(typeof value === 'boolean' ? value : !popUp.state);
@@ -100,28 +102,32 @@ export default function useHandleCourseTopic() {
   function refetchDataAndUpdateRecoil(name) {
     if (name.match(new RegExp('module', 'gi'))) {
       refetchModule().then(({ data: { getCourseModules } }) => {
-        updateModuleData(getCourseModules);
+        const sortedData = sortArrByKeyInOrder(getCourseModules);
+        updateModuleData(sortedData);
       });
 
-      if (errorModuleData) return alert('Module Refetch Error');
+      if (errorModuleData) return setToastMsg({ type: 'danger', message: 'Module Refetch Error' });
       return 'SUCCESS';
     }
 
     if (name.match(new RegExp('chapter', 'gi'))) {
       refetchChapter().then(({ data: { getCourseChapters } }) => {
-        updateChapterData(getCourseChapters);
+        const sortedData = sortArrByKeyInOrder(getCourseChapters);
+        updateChapterData(sortedData);
       });
 
-      if (errorChapterData) return alert('Chapter Refetch Error');
+      if (errorChapterData)
+        return setToastMsg({ type: 'danger', message: 'Chapter Refetch Error' });
       return 'SUCCESS';
     }
 
     if (name.match(new RegExp('topic', 'gi'))) {
       refetchTopic().then(({ data: { getTopics } }) => {
-        updateTopicData(getTopics);
+        const sortedData = sortArrByKeyInOrder(getTopics);
+        updateTopicData(sortedData);
       });
 
-      if (errorChapterData) return alert('Topic Refetch Error');
+      if (errorChapterData) return setToastMsg({ type: 'danger', message: 'Topic Refetch Error' });
       return 'SUCCESS';
     }
   }

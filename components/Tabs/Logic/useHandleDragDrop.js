@@ -16,8 +16,8 @@ export default function useHandleDragDrop(courseContextData) {
     let subCategoriesForDraglist = [];
     let subCategoriesForDroplist = [];
 
-    if (data?.allCategories) {
-      data.allCategories.forEach(function (e, i) {
+    if (data?.allSubCategories) {
+      data.allSubCategories.forEach(function (e, i) {
         subCategoriesForDraglist.push({ rank: i.toString(), name: e });
       });
 

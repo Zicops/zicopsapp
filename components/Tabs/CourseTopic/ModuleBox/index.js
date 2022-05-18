@@ -3,10 +3,11 @@ import { useRecoilValue } from 'recoil';
 import { filterAndSortChapter, filterAndSortTopics } from '../../../../helper/data.helper';
 import { ChapterAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
 import { courseContext } from '../../../../state/contexts/CourseContext';
+import BlackBox from '../../../common/BlackBox';
+import BlackRow from '../../../common/BlackRow';
 import IconButton from '../../../common/IconButton';
-import styles from '../courseTopic.module.scss';
+import styles from '../../courseTabs.module.scss';
 import { getSequenceNumber } from '../Logic/courseTopic.helper';
-import ModuleBlock from '../ModuleBlock';
 
 export default function ModuleBox({ mod, activateHandlers }) {
   const { fullCourse } = useContext(courseContext);
@@ -31,11 +32,11 @@ export default function ModuleBox({ mod, activateHandlers }) {
   }
 
   return (
-    <div className="row my_30">
-      <div className={`${styles.moduleBox}`}>
-        <ModuleBlock
+    <div className={`w-100`}>
+      <BlackBox>
+        <BlackRow
           title={`Module ${mod.sequence} : ${mod.name}`}
-          type="module"
+          type="large"
           editHandler={() => activateEditModule(mod.id)}
         />
 
@@ -47,8 +48,8 @@ export default function ModuleBox({ mod, activateHandlers }) {
 
                 return (
                   <Fragment key={chapter.id}>
-                    <ModuleBlock
-                      type="chapter"
+                    <BlackRow
+                      type="medium"
                       title={`Chapter ${chapter.sequence} : ${chapter.name}`}
                       editHandler={() => activateEditChapter(chapter.id)}
                     />
@@ -56,16 +57,16 @@ export default function ModuleBox({ mod, activateHandlers }) {
                     {filteredTopics &&
                       filteredTopics.map((topic) => {
                         return (
-                          <ModuleBlock
+                          <BlackRow
                             key={topic.id}
-                            type="topic"
+                            type="small"
                             title={`Topic ${topic.sequence} : ${topic.name}`}
                             editHandler={() => activateEditTopic(topic.id)}
                           />
                         );
                       })}
 
-                    <span className="buttongap">
+                    <span className={`${styles.buttonGap}`}>
                       <IconButton
                         text="Add Topic"
                         handleClick={() =>
@@ -82,7 +83,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
                 );
               })}
 
-            <span className="buttongap">
+            <span className={`${styles.buttonGap}`}>
               <IconButton
                 text="Add Chapter"
                 handleClick={() =>
@@ -101,16 +102,16 @@ export default function ModuleBox({ mod, activateHandlers }) {
             {filteredAndSortedData &&
               filteredAndSortedData.map((topic) => {
                 return (
-                  <ModuleBlock
+                  <BlackRow
                     key={topic.id}
-                    type="topic"
+                    type="small"
                     title={`Topic ${topic.sequence} : ${topic.name}`}
                     editHandler={() => activateEditTopic(topic.id)}
                   />
                 );
               })}
 
-            <span className="buttongap">
+            <span className={`${styles.buttonGap}`}>
               <IconButton
                 text="Add Topic"
                 handleClick={() =>
@@ -120,7 +121,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
             </span>
           </>
         )}
-      </div>
+      </BlackBox>
     </div>
   );
 }

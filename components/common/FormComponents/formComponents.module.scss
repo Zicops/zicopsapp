@@ -8,7 +8,6 @@
     color: $white;
   }
   input {
-    width: 75%;
     padding: 10px;
     border: 2px solid $darkThree;
     background-color: $darkTwo;
@@ -45,15 +44,23 @@
       width: 25%;
     }
 
-    textarea {
-      resize: none;
-      border: 2px solid $darkThree;
-      background-color: #202222;
-      color: var(--white);
-      font-size: 13px;
-      padding: 10px;
-      font-family: 'Open Sans';
-      width: 100%;
+
+
+  textarea {
+    resize: none;
+    border: 2px solid $darkThree;
+    background-color: #202222;
+    color: var(--white);
+    font-size: 13px;
+    padding: 10px;
+    font-family: 'Open Sans';
+    width: 100%;
+
+    &:not(:placeholder-shown) {
+      /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+      color: $white;
+      border: 2px solid $primary;
+    }
       &:focus {
         border: 2px solid $primary;
         border-radius: 0;
@@ -149,5 +156,79 @@
   }
   input {
     width: 50%;
+  }
+}
+
+// upload button
+.uploadBtnWrapper {
+  width: 100%;
+  position: relative;
+
+  .btn {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding: 4px 20px;
+
+    border: 2px solid $secondaryBlack;
+    border-radius: 3px;
+    background-color: $darkTwo;
+
+    color: $darkThree;
+    font-size: 14px;
+    font-family: 'Open Sans';
+
+    &.isActive {
+      border-color: $primary;
+    }
+
+    img {
+      width: 30px;
+      margin: 5px 10px 5px 0;
+    }
+  }
+
+  input[type='file'] {
+    font-size: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+
+    height: 100%;
+    width: 100%;
+  }
+
+  .btnContainer {
+    position: relative;
+    height: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-left: 10px;
+
+    width: 100%;
+
+    button {
+      position: absolute;
+      bottom: -10px;
+      background: transparent;
+      outline: transparent;
+      border: transparent;
+      cursor: pointer;
+      font-weight: 600;
+
+      &.preview {
+        left: 0;
+        color: $primary;
+      }
+      &.remove {
+        right: 0;
+        color: $secondaryBlack;
+      }
+    }
   }
 }

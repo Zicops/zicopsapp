@@ -1,8 +1,9 @@
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ADD_COURSE_CHAPTER } from '../../../../API/Mutations';
 import { ChapterAtom, getChapterObject } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 
 export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
@@ -12,6 +13,7 @@ export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
 
   // recoil state
   const chapterData = useRecoilValue(ChapterAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local states
   const [isAddChapterReady, setIsAddChapterReady] = useState(false);
@@ -39,36 +41,32 @@ export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
     togglePopUp('addChapter', true);
   }
 
-  // update local state which will be later saved in database on submit
-
-  function handleChapterInput(e) {
-    setNewChapterData({
-      ...newChapterData,
-      [e.target.name]: e.target.value
-    });
-  }
-
   // save course in database
   async function addNewChapter() {
-    console.log(newChapterData);
-    await createCourseChapter({ variables: { ...newChapterData } });
+    let isError = false;
+    await createCourseChapter({ variables: { ...newChapterData } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Chapter Create Error' });
+    });
 
-    if (error) return alert('Chapter Create Error');
+    if (error) return setToastMsg({ type: 'danger', message: 'Chapter Create Error' });
 
     refetchDataAndUpdateRecoil('chapter');
 
     setNewChapterData(
       getChapterObject({ courseId: fullCourse.id, sequence: chapterData.length + 1 })
     );
+    if (!isError) setToastMsg({ type: 'success', message: 'New Chapter Created' });
+
     togglePopUp('addChapter', false);
-    alert('New Chapter Created');
   }
 
   return {
     newChapterData,
+    setNewChapterData,
     isAddChapterReady,
     constructChapterData,
-    handleChapterInput,
     addNewChapter
   };
 }

@@ -54,7 +54,7 @@ export const uploadFetch = (url, options) =>
 
 export default function customFetch(uri, options) {
   if (options.useUpload) {
-    return uploadFetch(uri, options);
+    return uploadFetch(uri, options).catch((err) => console.log(err));
   }
-  return global.fetch(uri, options);
+  return global.fetch(uri, options).catch((err) => console.log(err));
 }

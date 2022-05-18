@@ -15,6 +15,10 @@ export default function Sidebar({ sidebarItemsArr }) {
       <div className={styles.sidebar_menu}>
         <ul>
           {sidebarItemsArr.map((val, key) => {
+            const currentUrl = router.pathname.split('/')[3];
+            const pathUrl = val.link.split('/');
+            const isActive = currentUrl === pathUrl[pathUrl.length - 1];
+
             return (
               <Link
                 href={val.link}
@@ -24,15 +28,7 @@ export default function Sidebar({ sidebarItemsArr }) {
                 onClick={() => {
                   router.pathname = val.link;
                 }}>
-                <a
-                  className={
-                    router.pathname == val.link
-                      ? styles.active
-                      : ''
-                  }
-                >
-                  {val.title}
-                </a>
+                <a className={isActive ? styles.active : ''}>{val.title}</a>
               </Link>
             );
           })}

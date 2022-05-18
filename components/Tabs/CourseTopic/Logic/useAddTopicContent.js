@@ -3,24 +3,19 @@ import { useRecoilState } from 'recoil';
 import { filterTopicContent } from '../../../../helper/data.helper';
 import {
   getTopicContentObject,
-  getTopicSubtitleObject,
   getTopicVideoObject,
   TopicContentAtom,
-  TopicSubtitleAtom,
   TopicVideoAtom,
   uploadStatusAtom
 } from '../../../../state/atoms/module.atoms';
-import useAddBinge from './useAddBinge';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
 export default function useAddTopicContent(topic) {
   // recoil state
   const [topicContent, addTopicContent] = useRecoilState(TopicContentAtom);
   const [topicVideo, addTopicVideo] = useRecoilState(TopicVideoAtom);
-  const [topicSubtitle, addTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
   const [uploadStatus, updateUploadStatus] = useRecoilState(uploadStatusAtom);
-  
-  // binge data input handler hook
-  const { handleBingeInput } = useAddBinge();
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local state
   const [newTopicContent, setNewTopicContent] = useState(
@@ -29,17 +24,14 @@ export default function useAddTopicContent(topic) {
   const [newTopicVideo, setNewTopicVideo] = useState(
     getTopicVideoObject({ courseId: topic.courseId })
   );
-  const [newTopicSubtitle, setNewTopicSubtitle] = useState(
-    getTopicSubtitleObject({ courseId: topic.courseId })
-  );
   const [isTopicContentFormVisible, setIsTopicContentFormVisible] = useState(false);
   const [isAddTopicContentReady, setIsAddTopicContentReady] = useState(false);
 
-   useEffect(() => {
-     updateUploadStatus(null);
-   }, []);
+  useEffect(() => {
+    updateUploadStatus(null);
+  }, []);
+
   // disable add button if data is incomplete
-  // TODO: add styles for add button in AddTopicContentForm add button at bottom
   useEffect(() => {
     setIsAddTopicContentReady(
       !!newTopicContent.language && !!newTopicContent.type && !!newTopicVideo.file
@@ -51,7 +43,6 @@ export default function useAddTopicContent(topic) {
     const isDefault = filterTopicContent(topicContent, topic?.id).length === 0;
     setNewTopicContent(getTopicContentObject({ topicId: topic.id, is_default: isDefault }));
     setNewTopicVideo(getTopicVideoObject({ courseId: topic.courseId }));
-    setNewTopicSubtitle(getTopicSubtitleObject({ courseId: topic.courseId }));
   }, [topic]);
 
   function toggleTopicContentForm(value) {
@@ -61,38 +52,42 @@ export default function useAddTopicContent(topic) {
   }
 
   // input handler
-  function handleTopicContentInput(e) {
+  function handleTopicContentInput(e, inputName = null) {
+    // language needs to be unique
+    if (inputName) {
+      if (inputName === 'language') {
+        const isLanguagePresent = topicContent.some((content) => content.language === e.value);
+
+        if (isLanguagePresent)
+          return setToastMsg({
+            type: 'danger',
+            message: `Topic Content already added in language ${e.value}`
+          });
+      }
+
+      return setNewTopicContent({ ...newTopicContent, [inputName]: e.value });
+    }
+
     if (e.target.type === 'checkbox') {
-      setNewTopicContent({
-        ...newTopicContent,
-        [e.target.name]: e.target.checked
-      });
+      setNewTopicContent({ ...newTopicContent, [e.target.name]: e.target.checked });
       return;
     }
 
-    // language needs to be unique
-    if (e.target.name === 'language') {
-       const isLanguagePresent = topicContent.some(
-         (content) => content.language === e.target.value
-       );
-
-      if (isLanguagePresent)
-        return alert(`Topic Content already added in language ${e.target.value}`);
-    }
-
-    setNewTopicContent({
-      ...newTopicContent,
-      [e.target.name]: e.target.value
-    });
+    setNewTopicContent({ ...newTopicContent, [e.target.name]: e.target.value });
   }
 
   // video input
   function handleTopicVideoInput(e) {
-    if (!e.target.files) {
-      return setNewTopicContent({
+    if (!e.target.files?.length) {
+      setNewTopicVideo({
+        ...newTopicVideo,
+        file: null
+      });
+      setNewTopicContent({
         ...newTopicContent,
         duration: 0
       });
+      return;
     }
 
     const video = document.createElement('video');
@@ -117,7 +112,7 @@ export default function useAddTopicContent(topic) {
           prevUploadDuration + variable_buffer_time <= duration ||
           prevUploadDuration - variable_buffer_time >= duration
         ) {
-          alert('Video Length Should be same for all videos!!');
+          setToastMsg({ type: 'danger', message: 'Video Length Should be same for all videos!!' });
           return;
         }
       }
@@ -131,16 +126,6 @@ export default function useAddTopicContent(topic) {
         file: e.target.files[0]
       });
     };
-  }
-
-  // subtitle input
-  function handleTopicSubtitleInput(e) {
-    if (!e.target.files) return;
-
-    setNewTopicSubtitle({
-      ...newTopicSubtitle,
-      file: e.target.files[0]
-    });
   }
 
   // save in recoil state
@@ -165,26 +150,21 @@ export default function useAddTopicContent(topic) {
     // save in recoil state
     addTopicContent(topicContentArr);
     addTopicVideo([...topicVideo, newTopicVideo]);
-    addTopicSubtitle([...topicSubtitle, newTopicSubtitle]);
 
     setIsTopicContentFormVisible(false);
 
     // reset local state
     setNewTopicContent(getTopicContentObject({ topicId: topic.id }));
     setNewTopicVideo(getTopicVideoObject({ courseId: topic.id }));
-    setNewTopicSubtitle(getTopicVideoObject({ courseId: topic.id }));
   }
 
   const inputHandlers = {
     handleTopicContentInput,
-    handleTopicSubtitleInput,
-    handleTopicVideoInput,
-    handleBingeInput
+    handleTopicVideoInput
   };
   const localStates = {
     newTopicContent,
-    newTopicVideo,
-    newTopicSubtitle
+    newTopicVideo
   };
 
   return {

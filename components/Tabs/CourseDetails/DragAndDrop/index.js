@@ -2,6 +2,7 @@ import React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import useHandleDragDrop from '../../Logic/useHandleDragDrop';
 
+// TODO: update this component later
 const DragDrop = ({ data, contextData }) => {
   const {
     draglist,
@@ -119,6 +120,7 @@ const DragDrop = ({ data, contextData }) => {
           }
           .drop_category_area,
           .drag_category_area {
+            position: relative;
             height: 180px;
             overflow-y: auto;
             margin: 10px;
@@ -186,6 +188,9 @@ const DragDrop = ({ data, contextData }) => {
             margin: auto;
           }
           .inner_drag_srch {
+            position: sticky;
+            background-color: #1a1a1a;
+            top: 0;
             margin-bottom: 0;
           }
           .inner_drag_srch input {

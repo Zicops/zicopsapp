@@ -1,8 +1,9 @@
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ADD_COURSE_TOPIC } from '../../../../API/Mutations';
 import { getTopicObject, TopicAtom } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 
 export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, activateEditTopic) {
@@ -11,6 +12,7 @@ export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, act
 
   // recoil state
   const topicData = useRecoilValue(TopicAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local states
   const [isAddTopicReady, setIsAddTopicReady] = useState(false);
@@ -38,24 +40,21 @@ export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, act
     togglePopUp('addTopic', true);
   }
 
-  // update local state which will be later saved in database on submit
-  function handleTopicInput(e) {
-    setNewTopicData({
-      ...newTopicData,
-      [e.target.name]: e.target.value
-    });
-  }
-
   // save in database
   async function addNewTopic() {
-    const { data } = await createCourseTopic({ variables: { ...newTopicData } });
+    let isError = false;
+    const { data } = await createCourseTopic({ variables: { ...newTopicData } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Topic Create Error' });
+    });
 
-    if (error) return alert('Topic Create Error');
+    if (error) return setToastMsg({ type: 'danger', message: 'Topic Create Error' });
 
     refetchDataAndUpdateRecoil('topic');
 
     setNewTopicData(getTopicObject({ courseId: fullCourse.id, sequence: topicData.length + 1 }));
-    alert('New Topic Created');
+    if (!isError) setToastMsg({ type: 'success', message: 'New Topic Created' });
 
     togglePopUp('addTopic', false);
     activateEditTopic(data.addCourseTopic.id, data.addCourseTopic);
@@ -63,9 +62,9 @@ export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, act
 
   return {
     newTopicData,
+    setNewTopicData,
     constructTopicData,
     isAddTopicReady,
-    handleTopicInput,
     addNewTopic
   };
 }

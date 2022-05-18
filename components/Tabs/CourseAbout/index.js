@@ -1,21 +1,24 @@
 import { useContext } from 'react';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import BulletPointInput from '../../small/BulletPointInput';
+import BulletPointInput from './BulletPointInput';
 import TagInput from '../../small/TagInput';
 import NextButton from '../common/NextButton';
 import useHandleTabs from '../Logic/useHandleTabs';
+import styles from '../courseTabs.module.scss';
+import LabeledTextarea from '../../common/FormComponents/LabeledTextarea';
 
 export default function CourseAbout() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, handleChange, updateCourseMaster } = useHandleTabs(courseContextData);
 
   return (
-    <div className="course_master">
-      <div className="row my_30">
-        <label htmlFor="benefits" className="col_25">
-          Learning Objectives/Outcomes
+    <div>
+      {/* outcomes */}
+      <div className={`center-element-with-flex ${styles.marginBottom} ${styles.alignBaseline}`}>
+        <label htmlFor="outcomes" className="w-25">
+          Learning Objectives/Outcomes:
         </label>
-        <div className="col_75">
+        <div className="w-75">
           <BulletPointInput
             placeholder="Add Learning Objectives/Outcomes and press enter"
             name="outcomes"
@@ -24,11 +27,13 @@ export default function CourseAbout() {
           />
         </div>
       </div>
-      <div className="row my_30">
-        <label htmlFor="name" className="col_25">
-          Program Highlights/Benefits
+
+      {/* benefits */}
+      <div className={`center-element-with-flex ${styles.marginBottom} ${styles.alignBaseline}`}>
+        <label htmlFor="benefits" className="w-25">
+          Program Highlights/Benefits:
         </label>
-        <div className="col_75">
+        <div className="w-75">
           <BulletPointInput
             placeholder="Add Program Highlights/Benefits and press enter"
             name="benefits"
@@ -37,24 +42,31 @@ export default function CourseAbout() {
           />
         </div>
       </div>
-      <div className="row my_30">
-        <label htmlFor="description" className="col_25">
-          Course Description
+
+      {/* description */}
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
+        <label htmlFor="description" className="w-25">
+          Course Description:
         </label>
-        <textarea
-          className="col_75"
-          rows="4"
-          name="description"
-          placeholder="Provide a description for the course"
-          onChange={handleChange}
-          value={fullCourse.description}
+        <LabeledTextarea
+          styleClass="w-75"
+          inputOptions={{
+            inputName: 'description',
+            placeholder: 'Provide description of the course',
+            rows: 4,
+            value: fullCourse?.description,
+            maxLength: 2000
+          }}
+          changeHandler={handleChange}
         />
       </div>
-      <div className="row my_30">
-        <label htmlFor="prequisites" className="col_25">
-          Pre-requisites
+
+      {/* prerequisites */}
+      <div className={`center-element-with-flex ${styles.marginBottom} ${styles.alignBaseline}`}>
+        <label htmlFor="prequisites" className="w-25">
+          Pre-requisites:
         </label>
-        <div className="col_75">
+        <div className="w-75">
           <BulletPointInput
             placeholder="Add Pre-requisites and press enter"
             name="prequisites"
@@ -63,11 +75,13 @@ export default function CourseAbout() {
           />
         </div>
       </div>
-      <div className="row my_30">
-        <label htmlFor="goodFor" className="col_25">
-          Good For
+
+      {/* good for */}
+      <div className={`center-element-with-flex ${styles.marginBottom} ${styles.alignBaseline}`}>
+        <label htmlFor="goodFor" className="w-25">
+          Good For:
         </label>
-        <div className="col_25">
+        <div className="w-25">
           <BulletPointInput
             placeholder="Add Good For and press enter"
             name="goodFor"
@@ -75,10 +89,11 @@ export default function CourseAbout() {
             updateCourse={updateCourseMaster}
           />
         </div>
-        <label htmlFor="mustFor" className="col_25" style={{ textAlign: 'center' }}>
-          <span>Must For</span>
+
+        <label htmlFor="mustFor" className="w-25" style={{ textAlign: 'center' }}>
+          Must For:
         </label>
-        <div className="col_25">
+        <div className="w-25">
           <BulletPointInput
             placeholder="Add Must For and press enter"
             name="mustFor"
@@ -87,21 +102,30 @@ export default function CourseAbout() {
           />
         </div>
       </div>
-      <div className="row my_30">
-        <label htmlFor="related_skills" className="col_25">
+
+      {/* related skills */}
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
+        <label htmlFor="related_skills" className="w-25">
           Related Skills
         </label>
-        <div className="col_75">
-          <TagInput
+        <div className="w-75">
+          <BulletPointInput
             placeholder="Add Related Skills"
             name="related_skills"
             course={fullCourse}
             updateCourse={updateCourseMaster}
+            isBullet={false}
           />
+          {/* <TagInput
+            placeholder="Add Related Skills"
+            name=""
+            course={fullCourse}
+            updateCourse={updateCourseMaster}
+          /> */}
         </div>
       </div>
 
-      <NextButton tabIndex={3}/>
+      <NextButton tabIndex={3} />
     </div>
   );
 }

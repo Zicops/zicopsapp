@@ -100,7 +100,7 @@ export default function Home() {
 
   // load data query obj
 
-  const [latestCourseData, setLatestCourseData] = useState(new Array(15).fill(null));
+  const [latestCourseData, setLatestCourseData] = useState(new Array(28).fill(null));
   const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
   const [loadCourseData, { error, loading, refetch }] = useLazyQuery(GET_LATEST_COURSES, {
     client: queryClient
@@ -112,7 +112,7 @@ export default function Home() {
     loadCourseData({
       variables: {
         publish_time: Date.now(),
-        pageSize: 15,
+        pageSize: 28,
         pageCursor: ''
       }
     }).then(({ data }) => {
