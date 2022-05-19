@@ -1,7 +1,7 @@
-import styles from './cardFlipPreview.module.scss';
+import styles from '../zicopsCarousel.module.scss';
 import { backSide, frontSide } from './Logic/cardFlipPreview.helper';
 
-const CardFlipPreview = ({ image }) => {
+const SquareCard = ({ image }) => {
   return (
     <>
       <div className={`${styles.cardContainer}`}>
@@ -30,4 +30,4 @@ const CardFlipPreview = ({ image }) => {
   );
 };
 
-export default CardFlipPreview;
+export default SquareCard;
