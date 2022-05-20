@@ -6,9 +6,8 @@ import { courseContext } from '../../../../state/contexts/CourseContext';
 import BlackBox from '../../../common/BlackBox';
 import BlackRow from '../../../common/BlackRow';
 import IconButton from '../../../common/IconButton';
-import styles from '../courseTopic.module.scss';
+import styles from '../../courseTabs.module.scss';
 import { getSequenceNumber } from '../Logic/courseTopic.helper';
-
 
 export default function ModuleBox({ mod, activateHandlers }) {
   const { fullCourse } = useContext(courseContext);
@@ -33,7 +32,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
   }
 
   return (
-    <div className={`w-90 ${styles.moduleBoxContainer}`}>
+    <div className={`w-100`}>
       <BlackBox>
         <BlackRow
           title={`Module ${mod.sequence} : ${mod.name}`}
@@ -67,7 +66,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
                         );
                       })}
 
-                    <span className="buttongap">
+                    <span className={`${styles.buttonGap}`}>
                       <IconButton
                         text="Add Topic"
                         handleClick={() =>
@@ -84,7 +83,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
                 );
               })}
 
-            <span className="buttongap">
+            <span className={`${styles.buttonGap}`}>
               <IconButton
                 text="Add Chapter"
                 handleClick={() =>
@@ -112,7 +111,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
                 );
               })}
 
-            <span className="buttongap">
+            <span className={`${styles.buttonGap}`}>
               <IconButton
                 text="Add Topic"
                 handleClick={() =>

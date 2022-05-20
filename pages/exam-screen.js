@@ -432,4 +432,3 @@ const ExamScreen = () => {
 }
 
 export default ExamScreen;
-ExamScreen.layout= null;

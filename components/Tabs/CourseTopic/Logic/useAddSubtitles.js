@@ -5,10 +5,12 @@ import {
   getTopicSubtitleObject,
   TopicSubtitleAtom
 } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
 export default function useAddSubtitles(courseId = '', topicId = '') {
   // recoil state
   const [topicSubtitle, addTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local state
   const [isSubtitlesFormVisible, setIsSubtitlesFormVisible] = useState(false);
@@ -25,7 +27,6 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
   }, [topicId, courseId]);
 
   useEffect(() => {
-    console.log(newSubtitles.language && newSubtitles.file);
     setIsSubtitlesReady(newSubtitles.language && newSubtitles.file);
   }, [newSubtitles]);
 
@@ -39,7 +40,11 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
       // language needs to be unique
       const isLanguagePresent = topicSubtitle.some((sub) => sub.language === e.value);
 
-      if (isLanguagePresent) return alert(`Subtitle already added in language ${e.value}`);
+      if (isLanguagePresent)
+        return setToastMsg({
+          type: 'danger',
+          message: `Subtitle already added in language ${e.value}`
+        });
 
       setNewSubtitles({
         ...newSubtitles,
@@ -53,7 +58,8 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
       if (!e.target.files[0]) return;
 
       const nameArr = e.target.files[0].name.split('.');
-      if (!nameArr[nameArr.length - 1].includes('vtt')) return alert('Only VTT file is accepted');
+      if (!nameArr[nameArr.length - 1].includes('vtt'))
+        return setToastMsg({ type: 'danger', message: 'Only VTT file is accepted' });
 
       setNewSubtitles({
         ...newSubtitles,

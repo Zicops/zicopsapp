@@ -89,7 +89,7 @@ export default function CourseMaster() {
   return (
     <>
       <LabeledInput
-        styleClass={styles.inputGroup}
+        styleClass={styles.marginBottom}
         inputOptions={{
           inputName: 'name',
           label: 'Name',
@@ -101,7 +101,7 @@ export default function CourseMaster() {
       />
 
       <LabeledDropdown
-        styleClass={styles.inputGroup}
+        styleClass={styles.marginBottom}
         dropdownOptions={categoryDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, categoryDropdownOptions.inputName)
@@ -109,7 +109,7 @@ export default function CourseMaster() {
       />
 
       <LabeledDropdown
-        styleClass={styles.inputGroup}
+        styleClass={styles.marginBottom}
         dropdownOptions={subcategoryDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, subcategoryDropdownOptions.inputName)
@@ -117,7 +117,7 @@ export default function CourseMaster() {
       />
 
       <LabeledDropdown
-        styleClass={styles.inputGroup}
+        styleClass={styles.marginBottom}
         dropdownOptions={ownerDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, ownerDropdownOptions.inputName)
@@ -125,7 +125,7 @@ export default function CourseMaster() {
       />
 
       <LabeledDropdown
-        styleClass={styles.inputGroup}
+        styleClass={styles.marginBottom}
         dropdownOptions={languageDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
@@ -136,13 +136,13 @@ export default function CourseMaster() {
         <SwitchButton
           label="Active"
           inputName="is_active"
-          isChecked={fullCourse.is_active || false}
+          isChecked={fullCourse?.is_active || false}
           handleChange={handleChange}
         />
         <SwitchButton
           label="Display"
           inputName="is_display"
-          isChecked={fullCourse.is_display || false}
+          isChecked={fullCourse?.is_display || false}
           handleChange={handleChange}
         />
       </div>

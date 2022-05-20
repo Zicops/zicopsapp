@@ -25,7 +25,7 @@ export default function CourseDetails() {
   return (
     <>
       <LabeledDropdown
-        styleClass={styles.inputGroup}
+        styleClass={styles.marginBottom}
         dropdownOptions={{
           inputName: 'course_sub_category',
           label: 'Course Base Sub-category:',
@@ -37,12 +37,12 @@ export default function CourseDetails() {
         }}
       />
 
-      <div className={`${styles.inputGroup}`}>
+      <div className={`${styles.marginBottom}`}>
         <DragDrop contextData={courseContextData} />
       </div>
 
       {/* Expertise Level */}
-      <div className={`center-element-with-flex ${styles.inputGroup}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label className="w-25">Level of Expertise:</label>
 
         <div className="w-25">
@@ -80,7 +80,7 @@ export default function CourseDetails() {
       </div>
 
       {/* Upload Course Video */}
-      <div className={`center-element-with-flex ${styles.inputGroup}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label className={`w-25`}>Upload Preview of the course:</label>
         <div className={`w-25`}>
           <BrowseAndUpload
@@ -98,7 +98,7 @@ export default function CourseDetails() {
       </div>
 
       {/* Upload Course Image */}
-      <div className={`center-element-with-flex ${styles.inputGroup}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label className={`w-25`}> Course Display Image:</label>
         <div className={`w-25`}>
           <BrowseAndUpload
@@ -116,7 +116,7 @@ export default function CourseDetails() {
       </div>
 
       {/* Upload Course Page Display Picture */}
-      <div className={`center-element-with-flex ${styles.inputGroup}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label className={`w-25`}>Course Page Display Picture:</label>
         <div className={`w-25`}>
           <BrowseAndUpload
@@ -134,7 +134,7 @@ export default function CourseDetails() {
       </div>
 
       {/* Course Summary */}
-      <div className={`center-element-with-flex ${styles.inputGroup}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label className="w-25">Course Summary:</label>
         <LabeledTextarea
           styleClass="w-75"
@@ -142,7 +142,8 @@ export default function CourseDetails() {
             inputName: 'summary',
             placeholder: 'Provide and outline of the course in less than 1000 characters...',
             rows: 4,
-            value: fullCourse?.summary
+            value: fullCourse?.summary,
+            maxLength: 1000
           }}
           changeHandler={handleChange}
         />

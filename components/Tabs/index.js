@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../state/contexts/CourseContext';
+import Button from '../common/Button';
 import TabContainer from '../common/TabContainer';
-import TabFooterButton from '../common/TabContainer/TabFooterButton';
+import styles from './courseTabs.module.scss';
 import { CourseTabAtom, getDateTimeFromUnix, isCourseUploadingAtom } from './Logic/tabs.helper';
 import useHandleTabs from './Logic/useHandleTabs';
 import useSaveCourse from './Logic/useSaveCourse';
-import styles from './courseTabs.module.scss';
 
 export default function CourseTabs() {
   const courseContextData = useContext(courseContext);
@@ -18,6 +18,12 @@ export default function CourseTabs() {
 
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
+
+  // TODO: set to first tab when new course is opened
+  // useEffect(() => {
+  //   console.log(router);
+  //   setTab(tabData[0].name);
+  // }, [fullCourse?.id]);
 
   const displayTime =
     fullCourse.updated_at || fullCourse.created_at
@@ -48,7 +54,7 @@ export default function CourseTabs() {
         }}>
         {fullCourse.id && (
           <div className={`${styles.previewButtonContainer}`}>
-            <TabFooterButton
+            <Button
               clickHandler={async () => {
                 await saveCourseData(false, 0, false);
                 router.push(`/preview?courseId=${fullCourse.id}`);

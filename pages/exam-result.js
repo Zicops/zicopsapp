@@ -88,4 +88,3 @@ const ExamResult = () => {
 }
 
 export default ExamResult;
-ExamResult.layout= null;

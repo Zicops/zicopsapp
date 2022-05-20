@@ -128,7 +128,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
                   <img src="/images/svg/edit-box-line.svg" width={20}></img>
                 </button>
                 <button
-                  // onClick={handleCreateExams}
+                  onClick={() => router.push('/admin/exams/my-exams/add')}
                   style={{ background: 'var(--primary)', color: 'var(--black)' }}>
                   + Create Exams
                 </button>
@@ -137,7 +137,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
           </>
         );
       },
-      flex: 0.5
+      flex: isEdit? 1: 0.5
     }
   ];
 

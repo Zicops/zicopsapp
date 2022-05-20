@@ -14,7 +14,7 @@ export default function CourseAbout() {
   return (
     <div>
       {/* outcomes */}
-      <div className={`center-element-with-flex ${styles.inputGroup} ${styles.alignBaseline}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom} ${styles.alignBaseline}`}>
         <label htmlFor="outcomes" className="w-25">
           Learning Objectives/Outcomes:
         </label>
@@ -29,7 +29,7 @@ export default function CourseAbout() {
       </div>
 
       {/* benefits */}
-      <div className={`center-element-with-flex ${styles.inputGroup} ${styles.alignBaseline}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom} ${styles.alignBaseline}`}>
         <label htmlFor="benefits" className="w-25">
           Program Highlights/Benefits:
         </label>
@@ -44,7 +44,7 @@ export default function CourseAbout() {
       </div>
 
       {/* description */}
-      <div className={`center-element-with-flex ${styles.inputGroup}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label htmlFor="description" className="w-25">
           Course Description:
         </label>
@@ -54,14 +54,15 @@ export default function CourseAbout() {
             inputName: 'description',
             placeholder: 'Provide description of the course',
             rows: 4,
-            value: fullCourse?.description
+            value: fullCourse?.description,
+            maxLength: 2000
           }}
           changeHandler={handleChange}
         />
       </div>
 
       {/* prerequisites */}
-      <div className={`center-element-with-flex ${styles.inputGroup} ${styles.alignBaseline}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom} ${styles.alignBaseline}`}>
         <label htmlFor="prequisites" className="w-25">
           Pre-requisites:
         </label>
@@ -76,7 +77,7 @@ export default function CourseAbout() {
       </div>
 
       {/* good for */}
-      <div className={`center-element-with-flex ${styles.inputGroup} ${styles.alignBaseline}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom} ${styles.alignBaseline}`}>
         <label htmlFor="goodFor" className="w-25">
           Good For:
         </label>
@@ -103,7 +104,7 @@ export default function CourseAbout() {
       </div>
 
       {/* related skills */}
-      <div className={`center-element-with-flex ${styles.inputGroup}`}>
+      <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label htmlFor="related_skills" className="w-25">
           Related Skills
         </label>

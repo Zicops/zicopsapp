@@ -1,13 +1,13 @@
 import styles from './cardFlipPreview.module.scss';
 import { backSide, frontSide } from './Logic/cardFlipPreview.helper';
 
-const CardFlipPreview = () => {
+const CardFlipPreview = ({ image }) => {
   return (
     <>
       <div className={`${styles.cardContainer}`}>
         <div className={`${styles.cardInnerContainer}`}>
           <div className={`${styles.cardFrontSide}`}>
-            <img src={frontSide.imgSrc} alt="not found" />
+            <img src={image || frontSide.imgSrc} alt="not found" />
           </div>
           <div className={`${styles.cardBackSide}`}>
             <div className={`${styles.cbTitle}`}>{backSide.title}</div>

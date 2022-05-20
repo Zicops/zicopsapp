@@ -25,17 +25,21 @@ export default function useSaveCourse(courseContextData) {
     setCourseTileImage
   } = courseContextData;
 
+  // mutation
   const [createCourse, { loading: addCourseLoading }] = useMutation(ADD_COURSE);
   const [uploadImage, { loading: uploadImageLoading }] = useMutation(UPLOAD_COURSE_IMAGE);
   const [uploadTileImage, { loading: uploadTileLoading }] = useMutation(UPLOAD_COURSE_TILE_IMAGE);
   const [uploadPreview, { loading: uploadPreviewLoading }] = useMutation(UPLOAD_COURSE_PREVIEW);
   const [updateCourse, { loading: udpateCourseLoading }] = useMutation(UPDATE_COURSE);
+
+  // recoil state
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
+  const router = useRouter();
+
   useEffect(() => {
-    console.log(tab);
     if (tab === tabData[0].name) return;
 
     // saveCourseData();
@@ -45,10 +49,14 @@ export default function useSaveCourse(courseContextData) {
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
 
     if (!fullCourse.id) {
-      createCourseAndUpdateContext(courseContextData, createCourse);
+      const resObj = await createCourseAndUpdateContext(courseContextData, createCourse);
+      setToastMsg({ type: resObj.type, message: resObj.message });
       setIsLoading(addCourseLoading ? 'SAVING...' : null);
 
-      if (isNextButton) setTab(tabData[tabIndex || 0].name);
+      if (isNextButton && resObj.type === 'success') {
+        setTab(tabData[tabIndex || 0].name);
+        router.push(router.asPath + `/${resObj?.courseId}`);
+      }
       return;
     }
     // alert('course update started');
@@ -62,7 +70,6 @@ export default function useSaveCourse(courseContextData) {
       variables: fullCourse
     });
 
-
     updateCourseMaster(courseUpdateResponse.data.updateCourse);
 
     setIsLoading(
@@ -70,8 +77,10 @@ export default function useSaveCourse(courseContextData) {
         ? 'UPDATING...'
         : null
     );
-    if (showToastMsg) setToastMsg([{ type: 'success', message: 'Course Updated' }]);
+
+    if (showToastMsg) setToastMsg({ type: 'success', message: 'Course Updated' });
     console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
+
     if (isNextButton) setTab(tabData[tabIndex || 0].name);
   }
 

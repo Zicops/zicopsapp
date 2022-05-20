@@ -1,7 +1,17 @@
 import { atom } from 'recoil';
 
-export const QuestionPaperMasterAtom = atom({
-  key: 'QuestionPaperMaster',
+export const QuestionBankAtom = atom({
+  key: 'QuestionBank',
+  default: []
+});
+
+export const QuestionTabDataAtom = atom({
+  key: 'QuestionTabData',
+  default: getQuestionTabDataObject()
+});
+
+export const QuestionPaperTabDataAtom = atom({
+  key: 'QuestionPaperTabData',
   default: {}
 });
 
@@ -20,9 +30,30 @@ export const ExamMasterAtom = atom({
   default: getExamMasterObject()
 });
 
-export function getQuestionPaperMasterObject(data = {}) {
+export function getQuestionBankObject(data = {}) {
   return {
-    isSectionWise: data.isSectionWise || false
+    name: data.name || '',
+    category: data.category || '',
+    sub_category: data.sub_category || '',
+
+    // maybe discarded
+    is_active: data.is_active || '',
+    is_default: data.is_default || '',
+    owner: data.owner || ''
+  };
+}
+
+export function getQuestionTabDataObject(data = {}) {
+  return {
+    question: data.question || {},
+    options: data.options || []
+  };
+}
+
+export function getQuestionPaperTabDataObject(data = {}) {
+  return {
+    questionPaperMaster: data.questionPaperMaster || {},
+    question: data.question || {}
   };
 }
 

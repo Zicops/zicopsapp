@@ -45,6 +45,8 @@ export function updateVideoData(
 
   const currentModuleIndex = allModuleOptions.findIndex((m) => m.value === currrentModule.value);
 
+  if (!topicContent.length) return;
+
   setVideoData({
     ...videoData,
     videoSrc: topicContent[0]?.contentUrl || null,

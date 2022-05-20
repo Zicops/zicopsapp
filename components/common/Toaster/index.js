@@ -5,10 +5,12 @@ import styles from './toaster.module.scss';
 
 export default function Toaster() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const MAXIMUM_TOASTER_DISPLAYED = 5;
+  const MAXIMUM_TOASTER_DISPLAYED = 6;
   const FADE_OUT_IN_SECONDS = 3;
 
   useEffect(() => {
+    if (!toastMsg.length) return;
+
     const timeout = setTimeout(() => {
       const msg = [...toastMsg];
       msg.pop();
@@ -18,9 +20,11 @@ export default function Toaster() {
     return () => clearTimeout(timeout);
   }, [toastMsg]);
 
+  if (!toastMsg.length) return null;
+
   return (
     <div className={`${styles.toasterContainer}`}>
-      {toastMsg.slice(-MAXIMUM_TOASTER_DISPLAYED).map(({ type, message }, index) => (
+      {toastMsg?.slice(-MAXIMUM_TOASTER_DISPLAYED).map(({ type, message }, index) => (
         <div className={`${styles.toaster}`} key={index}>
           <div
             className={`${styles.crossBtn}`}

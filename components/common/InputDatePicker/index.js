@@ -7,7 +7,7 @@ export default function InputDatePicker({
   changeHandler = function () {}
 }) {
   return (
-    <>
+    <div className={`${styles.inputDatePickerContainer}`}>
       <DatePicker
         dateFormat="dd/MM/yyyy"
         renderCustomHeader={CustomHeader}
@@ -16,6 +16,6 @@ export default function InputDatePicker({
         calendarClassName={styles.inlineCalender}
         dayClassName={() => styles.calanderDates}
       />
-    </>
+    </div>
   );
 }

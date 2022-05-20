@@ -1,5 +1,8 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { CustomSectionAtom, QuestionPaperMasterAtom } from '../../../../../state/atoms/exams.atoms';
+import {
+  CustomSectionAtom,
+  QuestionPaperTabDataAtom
+} from '../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../state/atoms/popUp.atom';
 import IconButton from '../../../../common/IconButton';
 import PopUp from '../../../../common/PopUp';
@@ -16,8 +19,8 @@ export default function Questions() {
     PopUpStatesAtomFamily('addQuestionMetaData')
   );
   const customSection = useRecoilValue(CustomSectionAtom);
-  const newQuestionPaper = useRecoilValue(QuestionPaperMasterAtom);
-
+  const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
+  console.log(questionPaperTabData);
   return (
     <div className={`${customSection.length ? '' : 'h-100'}`}>
       <div
@@ -28,14 +31,14 @@ export default function Questions() {
           <SectionBox section={section} />
         ))}
 
-        {newQuestionPaper.isSectionWise && (
+        {questionPaperTabData.questionPaperMaster?.section_wise && (
           <IconButton
             text="Add Section"
             styleClass="btnBlack"
             handleClick={() => udpateCustomSectionPopUp(true)}
           />
         )}
-        {!newQuestionPaper.isSectionWise && !customSection.length && (
+        {!questionPaperTabData.questionPaperMaster?.section_wise && !customSection.length && (
           <IconButton
             text="Add Question"
             styleClass="btnGrey"
@@ -48,6 +51,7 @@ export default function Questions() {
       <PopUp
         isFooterVisible={false}
         isPopUpOpen={customSectionPopUp}
+        title="Add Custom Section"
         closeBtn={{ handleClick: () => udpateCustomSectionPopUp(false) }}>
         <AddCustomSection />
       </PopUp>

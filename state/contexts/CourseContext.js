@@ -48,46 +48,46 @@ const CourseContextProvider = (props) => {
     sub_categories: []
   });
   const updateCourseMaster = (data) => {
-    const sub_categories_filtered = data.sub_categories.filter((s) => s.name);
+    const sub_categories_filtered = data.sub_categories?.filter((s) => s.name);
     const sub_categories = [];
-    sub_categories_filtered.forEach((s) => sub_categories.push({ name: s.name, rank: s.rank }));
+    sub_categories_filtered?.forEach((s) => sub_categories.push({ name: s.name, rank: s.rank }));
 
     updateCourse({
       ...fullCourse,
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      summary: data.summary,
-      instructor: data.instructor,
-      image: data.image,
-      previewVideo: data.previewVideo,
-      tileImage: data.tileImage,
-      owner: data.owner,
-      duration: data.duration,
-      expertise_level: data.expertise_level,
-      language: data.language,
-      benefits: data.benefits,
-      outcomes: data.outcomes,
-      created_at: data.created_at,
-      updated_at: data.updated_at,
-      type: data.type,
-      prequisites: data.prequisites,
-      goodFor: data.goodFor,
-      mustFor: data.mustFor,
-      related_skills: data.related_skills,
-      publish_date: data.publish_date,
-      expiry_date: data.expiry_date,
-      expected_completion: data.expected_completion,
-      qa_required: data.qa_required,
-      approvers: data.approvers,
-      created_by: data.created_by,
-      updated_by: data.updated_by,
-      status: data.status,
-      is_display: data.is_display,
-      is_active: data.is_active,
-      category: data.category,
-      sub_category: data.sub_category,
-      sub_categories: sub_categories //this is an array that contains objects
+      id: data.id || null,
+      name: data.name || '',
+      description: data.description || '',
+      summary: data.summary || '',
+      instructor: data.instructor || '',
+      image: data.image || '',
+      previewVideo: data.previewVideo || '',
+      tileImage: data.tileImage || '',
+      owner: data.owner || '',
+      duration: data.duration || 0,
+      expertise_level: data.expertise_level || '',
+      language: data.language || [],
+      benefits: data.benefits || [],
+      outcomes: data.outcomes || [],
+      created_at: data.created_at || '',
+      updated_at: data.updated_at || '',
+      type: data.type || '',
+      prequisites: data.prequisites || [],
+      goodFor: data.goodFor || [],
+      mustFor: data.mustFor || [],
+      related_skills: data.related_skills || [],
+      publish_date: data.publish_date || '',
+      expiry_date: data.expiry_date || '',
+      expected_completion: data.expected_completion || '',
+      qa_required: data.qa_required || false,
+      approvers: data.approvers || [],
+      created_by: data.created_by || '',
+      updated_by: data.updated_by || '',
+      status: data.status || '',
+      is_display: data.is_display || false,
+      is_active: typeof data.is_active === 'boolean' ? data.is_active : true,
+      category: data.category || '',
+      sub_category: data.sub_category || '',
+      sub_categories: sub_categories || [] //this is an array that contains objects
     });
   };
   return (
