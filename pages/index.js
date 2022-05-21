@@ -146,6 +146,13 @@ export default function Home() {
       <ZicopsCarousel title="New Launched Courses" data={sliderImages} />
       <ZicopsCarousel title="Most Popular Courses in Zicops" data={sliderImages} />
       <ZicopsCarousel title="Suggested Learning paths" data={sliderImages} />
+      <ZicopsCarousel
+        title="See through resources"
+        data={squareImages}
+        type="square"
+        slide={realSquare}
+      />
+      <ZicopsCarousel title="See through courses" data={circleImages} type="circle" />
 
       <BigCardSlider title="Categories and Subcategories" data={squareImages} slide={smallSquare} />
       <div style={{ marginTop: '-60px' }}>
