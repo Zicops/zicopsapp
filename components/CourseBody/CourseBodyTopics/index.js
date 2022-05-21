@@ -56,7 +56,7 @@ export default function CourseBodyTopics() {
       <Header
         title={currentModule?.name}
         description={currentModule?.description || 'this is a description.'}
-        expertise={fullCourse.expertise_level?.split(',').join(' | ')}
+        expertise={currentModule?.level?.split(',').join(' | ')}
       />
 
       {isChapterPresent && filteredAndSortedData
