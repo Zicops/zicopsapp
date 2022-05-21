@@ -5,8 +5,12 @@ import QuestionCountButtonSection from './QuestionCountButton';
 import styles from './learnerExam.module.scss'
 import AnswerAllOptions from './AnswerAllOptions';
 import InfoSection from './InfoSection';
+import {useState} from "react";
 
 const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
+
+    const [filter, setFilter] = useState('all')
+
   return (
     <div className={`${styles.questionSection}`}>
       <div className={`${styles.questionSection_questions}`}>
@@ -21,12 +25,12 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
       <div className={`${styles.proctor_section}`}>
           <ProctoredSection/>
         <QuestionCountButtonSection
+            filterData={filter}
             data={data} setData={setData}
             current={current} setCurrent={setCurrent}
         />
         <InfoSection
-            data={data} setData={setData}
-            current={current} setCurrent={setCurrent}
+            data={data} setFilter={setFilter}
         />
       </div>
     </div>

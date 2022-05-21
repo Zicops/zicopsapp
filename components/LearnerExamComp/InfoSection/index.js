@@ -3,7 +3,7 @@ import TimerDropdown from '../TimerDropdown';
 import styles from'./infoSection.module.scss'
 import {useRouter} from "next/router";
 
-const InfoSection = ({data, setData, current, setCurrent}) => {
+const InfoSection = ({data, setFilter}) => {
 
     const Router = useRouter()
    
@@ -18,9 +18,6 @@ const InfoSection = ({data, setData, current, setCurrent}) => {
         return attempted + '/' + data.length;
     }
 
-    const showAttempted = () => {
-
-    }
 
     const handleEndButton = async () => {
         const result = JSON.stringify(data);
@@ -32,28 +29,28 @@ const InfoSection = ({data, setData, current, setCurrent}) => {
     <div className={`${styles.info_section}`}>
       <div className={`${styles.info_section_button_boxes_container}`}>
         <section>
-          <button onClick={showAttempted} className={`${styles.info_button}`}>
+          <button onClick={() => {setFilter('attempted')}} className={`${styles.info_button}`}>
             <div className={`${styles.info_button_boxes} ${styles.info_button_boxes_attempted}`}></div>
             Attempted
           </button>
-          <button className={`${styles.info_button}`}>
+          <button onClick={() => {setFilter('marked')}} className={`${styles.info_button}`}>
             <div className={`${styles.info_button_boxes} ${styles.info_button_boxes_marked}`}></div>
             Marked
           </button>
         </section>
           <section>
-              <button className={`${styles.info_button}`}>
+              <button onClick={() => {setFilter('unattempted')}} className={`${styles.info_button}`}>
                   <div className={`${styles.info_button_boxes} ${styles.info_button_boxes_unattempted}`}></div>
                   Unattempted
               </button>
-              <button className={`${styles.info_button}`}>
+              <button onClick={() => {setFilter('unvisited')}}  className={`${styles.info_button}`}>
                   <div className={`${styles.info_button_boxes} ${styles.info_button_boxes_unvisited}`}></div>
                   Not Visited
               </button>
           </section>
       </div>
         <div className={`${styles.info_section_seeAll_button_container}`}>
-            <button className={`${styles.info_section_seeAll_button}`}>See All</button>
+            <button onClick={() => {setFilter('all')}}  className={`${styles.info_section_seeAll_button}`}>See All</button>
         </div>
       <div className={`${styles.info_section_answer_details}`}>
           <p>You have attempted</p>
