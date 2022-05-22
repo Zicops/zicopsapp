@@ -1,5 +1,6 @@
 import styles from './questionButtonStyles.module.scss';
 import {useEffect, useState} from "react";
+import {Grid} from "@mui/material";
 
 const QuestionButton = ({each, data, setData, current, setCurrent}) => {
   const { question_button_marked , question_button_attempted , question_button_unattempted, question_button_notVisited, question_button_current} = styles ;
@@ -39,9 +40,11 @@ const QuestionButton = ({each, data, setData, current, setCurrent}) => {
 
   return (
     <>
-      <button onClick={() => {
-            setTrigger(true)
-      }} className={`${styles.question_buttons} ${classNameBe} ${current.id === each.id ? styles.question_button_current : ''} `}>{each.id}</button>
+      <Grid item lg={2.4} md={2.4} sm={2.4} xs={2.4} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+        <button onClick={() => {
+          setTrigger(true)
+        }} className={`${styles.question_buttons} ${classNameBe} ${current.id === each.id ? styles.question_button_current : ''} `}>{each.id}</button>
+      </Grid>
     </>
   );
 };

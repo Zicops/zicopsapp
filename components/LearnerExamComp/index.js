@@ -15,7 +15,7 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
     <div className={`${styles.questionSection}`}>
       <div className={`${styles.questionSection_questions}`}>
         <ExamAllQuestions
-            data={data} current={current}
+            current={current}
         />
         <AnswerAllOptions
             data={data} setData={setData}
@@ -24,14 +24,14 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
       </div>
       <div className={`${styles.proctor_section}`}>
           <ProctoredSection/>
-        <QuestionCountButtonSection
-            filterData={filter}
-            data={data} setData={setData}
-            current={current} setCurrent={setCurrent}
-        />
-        <InfoSection
-            data={data} setFilter={setFilter}
-        />
+          <QuestionCountButtonSection
+              filterData={filter}
+              data={data} setData={setData}
+              current={current} setCurrent={setCurrent}
+          />
+          <InfoSection
+              data={data} setFilter={setFilter}
+          />
       </div>
     </div>
   );

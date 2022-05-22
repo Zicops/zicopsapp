@@ -3,12 +3,12 @@
 
 .questionSection{
     //height: 100vh;
-    width: 100vw;
+    width: 100%;
      margin-top: 70px;
     display: flex;
 
     .questionSection_questions{
-        width: 80vw;
+        width: 80%;
         height: 100vh;
         overflow-y: scroll;
     }
@@ -18,7 +18,7 @@
     }
 
     .proctor_section{
-        width: 20vw;
+        width: 20%;
         background: $darkOne;
         height: 100vh;
         overflow-y: scroll;

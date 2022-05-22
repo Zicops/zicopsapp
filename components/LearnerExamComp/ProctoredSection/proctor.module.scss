@@ -1,7 +1,7 @@
 @import '../../../styles/base.scss';
 
 .proctor_section{
-    width: 94%;
+    width: 100%;
 
     .proctor_section_btn{
         margin-top: 4px;
@@ -21,13 +21,15 @@
     }
     .proctor_section_info{
         display: flex;
-        flex-direction: row;
         justify-content: space-between;
-        padding: 0 7px;
+        padding: 0 14px;
         color: $white;
     }
     .proctor_section_info:nth-child(1){
         color: $darkThree;
         font-size: 12px;
+    }
+    .proctor_full_width{
+        width: 100%;
     }
 }
