@@ -15,6 +15,7 @@ const ExamScreen = () => {
                 {
                     id: 'a',
                     text: '1864',
+                    image: '/images/bg-new.png'
                 },
                 {
                     id: 'b',
@@ -23,10 +24,12 @@ const ExamScreen = () => {
                 {
                     id: 'c',
                     text: '1894',
+                    image: '/images/bg-new.png'
                 },
                 {
                     id: 'd',
-                    text: '1902'
+                    text: '1902',
+                    image: '/images/bg-new.png'
                     // image: '/images/bg-new.png'
                 },
             ]

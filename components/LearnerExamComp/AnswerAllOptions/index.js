@@ -1,6 +1,7 @@
 import AnswerSingleOption from "../AnswerSingleOption"
 import styles from './answerAllOptions.module.scss'
 import {useEffect, useState} from "react";
+import {Box, Grid} from "@mui/material";
 
 const AnswerAllOptions = ({data, setData, current, setCurrent}) => {
 
@@ -86,14 +87,28 @@ const AnswerAllOptions = ({data, setData, current, setCurrent}) => {
 
   return (
     <>
-    <div className={`${styles.answer_all_options}`} >
-      {
-        data[current.id - 1].options.map((each) => (
-            <AnswerSingleOption currentData={current} optionData={each} option={option} setOption={setOption}/>
-        ))
-      }
-    </div>
-    <div className={`${styles.answer_all_options_buttons_container}`}>
+      <Box p={4} width={'100%'}>
+        <Grid spacing={4} container direction="row" justifyContent="center" alignItems="center">
+          {
+            current.options.slice(0, 2).map((each) => (
+                <AnswerSingleOption currentData={current} optionData={each} option={option} setOption={setOption}/>
+            ))
+          }
+          {
+            current.options.slice(2, 4).map((each) => (
+                <AnswerSingleOption currentData={current} optionData={each} option={option} setOption={setOption}/>
+            ))
+          }
+        </Grid>
+      </Box>
+      {/*<div className={`${styles.answer_all_options}`} >*/}
+      {/*  {*/}
+      {/*    current.options.map((each) => (*/}
+      {/*        <AnswerSingleOption currentData={current} optionData={each} option={option} setOption={setOption}/>*/}
+      {/*    ))*/}
+      {/*  }*/}
+      {/*</div>*/}
+      <div className={`${styles.answer_all_options_buttons_container}`}>
       <button onClick={() => {
         setOption(null)
       }} className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_clear}`}>Clear<span>all options</span></button>
