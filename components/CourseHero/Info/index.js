@@ -23,7 +23,7 @@ export default function Info({ name, data }) {
           {isLoading ? (
             <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
           ) : data ? (
-            truncateToN(data, 40)
+            truncateToN(data, 60)
           ) : (
             'N/A'
           )}
