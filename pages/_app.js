@@ -25,7 +25,6 @@ function MyApp({ Component, pageProps }) {
             <UserContextProvider>
               <Layout>
                 <Component {...pageProps} />
-
                 <Toaster />
               </Layout>
             </UserContextProvider>

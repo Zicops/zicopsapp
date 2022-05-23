@@ -3,7 +3,7 @@ import styles from './answerAllOptions.module.scss'
 import {useEffect, useState} from "react";
 import {Box, Grid} from "@mui/material";
 
-const AnswerAllOptions = ({data, setData, current, setCurrent}) => {
+const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter}) => {
 
   const [option, setOption] = useState(current?.selectedOption);
   const [nextTrigger, setNextTrigger] = useState(false);
@@ -87,7 +87,7 @@ const AnswerAllOptions = ({data, setData, current, setCurrent}) => {
 
   return (
     <>
-      <Box p={4} width={'100%'}>
+      <Box p={4} width={'100%'} mb={10}>
         <Grid spacing={4} container direction="row" justifyContent="center" alignItems="center">
           {
             current.options.slice(0, 2).map((each) => (
@@ -110,9 +110,11 @@ const AnswerAllOptions = ({data, setData, current, setCurrent}) => {
       {/*</div>*/}
       <div className={`${styles.answer_all_options_buttons_container}`}>
       <button onClick={() => {
+        if(filter !== 'all') setFilter('all')
         setOption(null)
       }} className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_clear}`}>Clear<span>all options</span></button>
       <button onClick={() => {
+        if(filter !== 'all') setFilter('all')
         setMark(!mark)
         setMarkTrigger(true);
       }} className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_unmark}`}>{mark ? 'Unmark' : 'Mark'}<span>from review</span></button>

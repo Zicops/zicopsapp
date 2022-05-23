@@ -15,7 +15,7 @@ const QuestionButton = ({each, data, setData, current, setCurrent}) => {
     classNameBe= question_button_unattempted ;
   }
 
-  const [trigger, setTrigger] = useState(false);
+  // const [trigger, setTrigger] = useState(false);
 
   const handleChange = () => {
     return data.map(function (obj) {
@@ -31,18 +31,20 @@ const QuestionButton = ({each, data, setData, current, setCurrent}) => {
     });
   }
 
-  useEffect(() => {
-    if(trigger){
-      setData(handleChange());
-      setCurrent(data.filter(e => e.id === (each.id))[0])
-    }
-  }, [trigger])
+  // useEffect(() => {
+  //   if(trigger){
+  //     setCurrent(data.filter(e => e.id === (each.id))[0])
+  //     setData(handleChange());
+  //   }
+  // }, [trigger])
 
   return (
     <>
       <Grid item lg={2.4} md={2.4} sm={2.4} xs={2.4} display={'flex'} justifyContent={'center'} alignItems={'center'}>
         <button onClick={() => {
-          setTrigger(true)
+          setCurrent(data.filter(e => e.id === (each.id))[0])
+          setData(handleChange());
+          // setTrigger(true)
         }} className={`${styles.question_buttons} ${classNameBe} ${current.id === each.id ? styles.question_button_current : ''} `}>{each.id}</button>
       </Grid>
     </>

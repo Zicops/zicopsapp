@@ -30,7 +30,6 @@ const ExamScreen = () => {
                     id: 'd',
                     text: '1902',
                     image: '/images/bg-new.png'
-                    // image: '/images/bg-new.png'
                 },
             ]
         },

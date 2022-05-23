@@ -3,7 +3,7 @@ import TimerDropdown from '../TimerDropdown';
 import styles from'./infoSection.module.scss'
 import {useRouter} from "next/router";
 
-const InfoSection = ({data, setFilter}) => {
+const InfoSection = ({data, filter, setFilter}) => {
 
     const Router = useRouter()
    

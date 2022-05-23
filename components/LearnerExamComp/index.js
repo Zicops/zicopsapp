@@ -20,6 +20,7 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
         <AnswerAllOptions
             data={data} setData={setData}
             current={current} setCurrent={setCurrent}
+            filter={filter} setFilter={setFilter}
         />
       </div>
       <div className={`${styles.proctor_section}`}>
@@ -30,6 +31,7 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
               current={current} setCurrent={setCurrent}
           />
           <InfoSection
+              filter={filter}
               data={data} setFilter={setFilter}
           />
       </div>

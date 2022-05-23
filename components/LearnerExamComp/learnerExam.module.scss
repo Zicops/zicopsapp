@@ -2,9 +2,10 @@
 
 
 .questionSection{
-    //height: 100vh;
+    height: 100vh;
     width: 100%;
-     margin-top: 70px;
+    position: relative;
+     //margin-top: 70px;
     display: flex;
 
     .questionSection_questions{

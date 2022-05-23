@@ -5,9 +5,13 @@ import {Grid} from "@mui/material";
 
 
 const QuestionCountButtonSection = ({data, setData, current, setCurrent, filterData}) => {
+
+    const height = data.length / 5;
+    console.log(height)
+
     return (
         <>
-            <Grid container spacing={1} pt={0.5} pb={1.5} pr={2} pl={2.5} sx={{width: '102%', background: '#040404', my: 2}}>
+            <Grid container spacing={1} pt={0.5} pb={1.5} pr={2} pl={2.5} sx={{width: '102%',height: `calc(64px * ${height})`, background: '#040404', my: 2}}>
                 {
                     filterData === 'all' && data.map((each)=>{
                         return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
