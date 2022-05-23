@@ -15,13 +15,13 @@ const QuestionSection = ({ quesSection }) => {
                 Questions: <span>{numOfQuestion}</span>
               </p>
             </div>
-            {quesSection.secA === undefined &&
-              quesSection.secA?.map((item) => (
-                <div>
-                  <div className={`${styles.line}`}></div>
-                  <McqCard question={item.question} />
-                </div>
-              ))}
+            {/* {quesSection.secA === undefined && */}
+            {quesSection.secA?.map((item) => (
+              <div>
+                <div className={`${styles.line}`}></div>
+                <McqCard question={item.question} />
+              </div>
+            ))}
           </Accordion>
         )}
         {quesSection.secB !== undefined && (
