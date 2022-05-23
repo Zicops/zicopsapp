@@ -87,4 +87,4 @@ const ExamResult = () => {
     );
 }
 
-export default ExamResult;
+export default ExamResult
