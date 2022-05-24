@@ -73,7 +73,11 @@
 }
 
 .questionInnerContainer {
-  margin-top: 20px;
+  margin-top: 10px;
+}
+
+.questionContainerInnerContainer:hover {
+  border: 2px solid $white;
 }
 
 //questionTop
