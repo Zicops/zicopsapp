@@ -3,9 +3,9 @@ import styles from './answerAllOptions.module.scss'
 import {useEffect, useState} from "react";
 import {Box, Grid} from "@mui/material";
 
-const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter}) => {
+const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter, option, setOption}) => {
 
-  const [option, setOption] = useState(current?.selectedOption);
+
   const [nextTrigger, setNextTrigger] = useState(false);
   const [previousTrigger, setPreviousTrigger] = useState(false);
   const [markTrigger, setMarkTrigger] = useState(false);
@@ -88,7 +88,7 @@ const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter
   return (
     <>
       <Box p={4} width={'100%'} mb={10}>
-        <Grid spacing={4} container direction="row" justifyContent="center" alignItems="center">
+        <Grid spacing={4} container direction="row" justifyContent="center" alignItems="flex-start">
           {
             current.options.slice(0, 2).map((each) => (
                 <AnswerSingleOption currentData={current} optionData={each} option={option} setOption={setOption}/>

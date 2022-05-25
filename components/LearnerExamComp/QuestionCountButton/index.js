@@ -4,32 +4,36 @@ import styles from './questionCountStyle.module.scss'
 import {Grid} from "@mui/material";
 
 
-const QuestionCountButtonSection = ({data, setData, current, setCurrent, filterData}) => {
+const QuestionCountButtonSection = ({data, setData, current, setCurrent, filterData, setOption}) => {
 
     const height = data.length / 5;
     console.log(height)
 
     return (
         <>
-            <Grid container spacing={1} pt={0.5} pb={1.5} pr={2} pl={2.5} sx={{width: '102%',height: `calc(64px * ${height})`, background: '#040404', my: 2}}>
+            {/*<Grid container spacing={1} pt={0.5} pb={1.5} pr={2} pl={2.5} sx={{width: '102%',height: `calc(54px * 6)`, background: '#040404', my: 2}}>*/}
+            {/*    */}
+            {/*</Grid>*/}
+
+            <div className={`${styles.questionCountContainer}`}>
                 {
                     filterData === 'all' && data.map((each)=>{
-                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
+                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent} setOption={setOption}/>
                     })
                 }
                 {
                     filterData === 'attempted' && data.filter(obj => obj.selectedOption !== null).map((each)=>{
-                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
+                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent} setOption={setOption}/>
                     })
                 }
                 {
                     filterData === 'marked' && data.filter(obj => obj.isMarked === true).map((each)=>{
-                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
+                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent} setOption={setOption}/>
                     })
                 }
                 {
                     filterData === 'unattempted' && data.filter(obj => (obj.isVisited === true) && (obj.selectedOption === null)).map((each)=>{
-                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
+                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent} setOption={setOption}/>
                     })
                 }
                 {
@@ -37,10 +41,7 @@ const QuestionCountButtonSection = ({data, setData, current, setCurrent, filterD
                         return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
                     })
                 }
-            </Grid>
-
-            {/*<div className={`${styles.questionCountContainer}`}>*/}
-            {/*</div>*/}
+            </div>
         </>
     )
 }

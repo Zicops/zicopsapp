@@ -16,8 +16,11 @@
     }
 
     .proctor_section_img{
-        margin-top: 5px;
-        padding: 1px 14px;
+        //padding: 1px 14px;
+        height: 120px;
+        width: 212px;
+        margin: 5px auto;
+        background: #5bc0de;
     }
     .proctor_section_info{
         display: flex;

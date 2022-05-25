@@ -1,13 +1,12 @@
 @import '../../../styles/base.scss';
 
 .questionCountContainer{
-    width: 262px;
-    height: 300px;
-    padding: 10px;
+    width: 245px;
+    height: 280px;
+    padding: 10px 10px 10px 15px;
     background: $black;
     display: grid;
-    grid-template-columns:repeat(5,50px) ;
-    grid-template-rows: repeat(auto-fill,50px);
-    margin: 10px 15px;
-    
+    grid-template-columns:repeat(5,45px) ;
+    grid-template-rows: repeat(auto-fill,45px);
+    margin: 5px 0;
 }

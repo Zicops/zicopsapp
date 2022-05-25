@@ -10,6 +10,7 @@ import {useState} from "react";
 const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
 
     const [filter, setFilter] = useState('all')
+    const [option, setOption] = useState(current?.selectedOption);
 
   return (
     <div className={`${styles.questionSection}`}>
@@ -18,6 +19,7 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
             current={current}
         />
         <AnswerAllOptions
+            option={option} setOption={setOption}
             data={data} setData={setData}
             current={current} setCurrent={setCurrent}
             filter={filter} setFilter={setFilter}
@@ -26,7 +28,7 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
       <div className={`${styles.proctor_section}`}>
           <ProctoredSection/>
           <QuestionCountButtonSection
-              filterData={filter}
+              filterData={filter} setOption={setOption}
               data={data} setData={setData}
               current={current} setCurrent={setCurrent}
           />
