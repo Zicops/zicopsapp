@@ -1,17 +1,15 @@
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../state/contexts/CourseContext';
 import Button from '../common/Button';
 import TabContainer from '../common/TabContainer';
 import styles from './courseTabs.module.scss';
-import { CourseTabAtom, getDateTimeFromUnix, isCourseUploadingAtom } from './Logic/tabs.helper';
-import useHandleTabs from './Logic/useHandleTabs';
+import { CourseTabAtom, getDateTimeFromUnix, isCourseUploadingAtom, tabData } from './Logic/tabs.helper';
 import useSaveCourse from './Logic/useSaveCourse';
 
 export default function CourseTabs() {
   const courseContextData = useContext(courseContext);
-  const { tabData } = useHandleTabs(courseContextData);
 
   const { fullCourse, saveCourseData } = useSaveCourse(courseContextData);
   const router = useRouter();

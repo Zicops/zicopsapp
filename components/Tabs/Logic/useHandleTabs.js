@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
-import { tabData } from './tabs.helper';
+import { CourseTabAtom, tabData } from './tabs.helper';
 
 export default function useHandleTabs(courseContextData) {
   const {
     fullCourse,
-    tab,
-    setTab,
     updateCourseMaster,
     courseVideo,
     setCourseVideo,
@@ -19,7 +17,8 @@ export default function useHandleTabs(courseContextData) {
 
   // recoil state
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-
+  const [tab, setTab] = useRecoilState(CourseTabAtom);
+  
   const [fileData, setFileData] = useState({});
   const [isPreviewPopUpOpen, setIsPreviewPopUpOpen] = useState(false);
   const [previewFileData, setPreviewFileData] = useState(null);
@@ -247,7 +246,6 @@ export default function useHandleTabs(courseContextData) {
 
   return {
     fullCourse,
-    tabData,
     fileData,
     handleChange,
     updateCourseMaster,

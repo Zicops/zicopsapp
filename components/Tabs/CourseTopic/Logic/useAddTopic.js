@@ -17,7 +17,7 @@ export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, act
   // local states
   const [isAddTopicReady, setIsAddTopicReady] = useState(false);
   const [newTopicData, setNewTopicData] = useState(
-    getTopicObject({ courseId: fullCourse.id, sequence: topicData.length + 1 })
+    getTopicObject({ courseId: fullCourse.id, sequence: topicData?.length + 1 })
   );
 
   // disable save button if data is not correct

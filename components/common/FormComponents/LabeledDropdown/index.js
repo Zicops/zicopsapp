@@ -103,6 +103,11 @@ export default function LabeledDropdown({
       fontSize: '14px'
     })
   };
+
+    let selectedValue = null;
+    if (value?.value) selectedValue = value;
+    if (isMulti && value?.length) selectedValue = value;
+  
   return (
     <div className={`${labeledDropdownWrapper} ${styleClass}`}>
       {!!label && (
@@ -115,7 +120,7 @@ export default function LabeledDropdown({
       )}
       <Select
         options={options}
-        value={value}
+        value={selectedValue}
         name={inputName}
         placeholder={placeholder}
         onChange={changeHandler}

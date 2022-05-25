@@ -40,7 +40,7 @@ const ZicopsTable = ({ columns, data, pageSize, rowsPerPageOptions, tableHeight 
           ColumnMenu: CustomColumnMenu
         }}
         pageSize={pageSize}
-        rowsPerPageOptions={[rowsPerPageOptions]}
+        rowsPerPageOptions={rowsPerPageOptions}
         pagination
       />
     </div>
