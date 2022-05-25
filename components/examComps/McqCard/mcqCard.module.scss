@@ -66,6 +66,7 @@
   flex-direction: column;
   flex-wrap: nowrap;
   margin-left: -10px;
+  font-size: 16px;
   :nth-child(3) {
     margin-left: 20px !important;
     margin: 20px 0;
@@ -75,6 +76,6 @@
 }
 
 .hint {
-  font-size: 14px;
+  font-size: 16px;
   color: $darkThree;
 }

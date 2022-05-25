@@ -6,20 +6,9 @@ const QuestionPaperTop = () => {
       <div className={`${styles.container}`}>
         <div className={`${styles.middleSection}`}>
           <p>
-            Description: <p>{obj.description}</p>
+            QUESTION PAPER NAME: <p>{obj.description}</p>
           </p>
         </div>
-        {/* <div className={`${styles.upperSection}`}>
-          <p>
-            Category: <span>{obj.category}</span>
-          </p>
-          <p>
-            Sub-Category: <span>{obj.subCategory}</span>
-          </p>
-          <p>
-            Level: <span>{obj.level}</span>
-          </p>
-        </div> */}
 
         <div className={`${styles.lowerSection}`}>
           <p>
