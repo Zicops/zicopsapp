@@ -2,8 +2,6 @@ import { useState, useEffect, useContext } from "react";
 
 import { userContext } from '../../../state/contexts/UserContext';
 
-
-
 export function useDropDownHandle (){
     const { isAdmin, makeAdmin } = useContext(userContext);
 
@@ -40,9 +38,17 @@ export function useDropDownHandle (){
       setAnchorEl(event.currentTarget);
     };
   
-    function handleClose  ()  {
-      setAnchorEl(null);
-    };  
+  function handleClose(e) {
+    // prevent closing if the pointer is over menu list
+    if (e?.relatedTarget?.classList) {
+      const classList = [...e?.relatedTarget?.classList];
+      console.log(classList);
+
+      if (classList.includes('MuiMenuItem-root')) return;
+    }
+
+    setAnchorEl(null);
+  };  
 
     return {isAdmin,gotoAdmin,gotoUser,open,anchorEl,handleClick,handleClose};
 }
