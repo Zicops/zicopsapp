@@ -5,8 +5,7 @@ import { useState } from 'react';
 import styles from '../questionPaperPreview.module.scss';
 
 const QuestionSection = ({ quesSection }) => {
-  const [isLearner, setIsLearner] = useState(false);
-  const numOfQuestion = 5;
+  const [isLearner, setIsLearner] = useState(true);
   return (
     <>
       <div className={`${styles.sectionContainer}`}>
@@ -28,7 +27,13 @@ const QuestionSection = ({ quesSection }) => {
                 )}
                 <div className={`${styles.QuestionContainer}`}>
                   {/* <div className={`${styles.line}`}></div> */}
-                  <McqCard question={item.question} />
+                  <div
+                    className={`${styles.questionContainerInnerContainer}`}
+                    onClick={() => {
+                      alert(`You Clicked question ${item.question}`);
+                    }}>
+                    <McqCard question={item.question} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -51,7 +56,9 @@ const QuestionSection = ({ quesSection }) => {
                 )}
                 <div className={`${styles.QuestionContainer}`}>
                   {/* <div className={`${styles.line}`}></div> */}
-                  <McqCard question={item.question} />
+                  <div className={`${styles.questionContainerInnerContainer}`}>
+                    <McqCard question={item.question} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -74,7 +81,9 @@ const QuestionSection = ({ quesSection }) => {
                 )}
                 <div className={`${styles.QuestionContainer}`}>
                   {/* <div className={`${styles.line}`}></div> */}
-                  <McqCard question={item.question} />
+                  <div className={`${styles.questionContainerInnerContainer}`}>
+                    <McqCard question={item.question} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -97,7 +106,9 @@ const QuestionSection = ({ quesSection }) => {
                 )}
                 <div className={`${styles.QuestionContainer}`}>
                   {/* <div className={`${styles.line}`}></div> */}
-                  <McqCard question={item.question} />
+                  <div className={`${styles.questionContainerInnerContainer}`}>
+                    <McqCard question={item.question} />
+                  </div>
                 </div>
               </div>
             ))}

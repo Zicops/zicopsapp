@@ -22,13 +22,13 @@
       width: 20px;
     }
   }
-  //   &:after {
-  //     content: '';
-  //     height: 1px;
-  //     margin-top: 12px;
-  //     background-color: #808080;
-  //     width: 80%;
-  //   }
+  // &:after {
+  //   content: '';
+  //   height: 1px;
+  //   margin-top: 12px;
+  //   background-color: #808080;
+  //   width: 80%;
+  // }
 }
 
 .accordion_title_active {
@@ -47,15 +47,24 @@
       width: 20px;
     }
   }
-}
 
-// .accordion_title_active:after {
-//   content: '';
-//   height: 1px;
-//   margin-top: 12px;
-//   background-color: $white;
-//   width: 80%;
-// }
+  &:after {
+    content: '';
+    height: 1px;
+    margin: 12px -20px 0 10px;
+    background-color: $primary;
+    width: 35%;
+  }
+
+  &:before {
+    content: '';
+    height: 1px;
+    margin-top: 12px;
+    background-color: $primary;
+    margin: 12px 10px 0 -20px;
+    width: 35%;
+  }
+}
 
 .accordion_title:hover,
 .accordion_title_active:hover {

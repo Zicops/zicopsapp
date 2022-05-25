@@ -4,7 +4,12 @@ const QuestionPaperTop = () => {
   return (
     <>
       <div className={`${styles.container}`}>
-        <div className={`${styles.upperSection}`}>
+        <div className={`${styles.middleSection}`}>
+          <p>
+            Description: <p>{obj.description}</p>
+          </p>
+        </div>
+        {/* <div className={`${styles.upperSection}`}>
           <p>
             Category: <span>{obj.category}</span>
           </p>
@@ -14,12 +19,8 @@ const QuestionPaperTop = () => {
           <p>
             Level: <span>{obj.level}</span>
           </p>
-        </div>
-        <div className={`${styles.middleSection}`}>
-          <p>
-            Description: <p>{obj.description}</p>
-          </p>
-        </div>
+        </div> */}
+
         <div className={`${styles.lowerSection}`}>
           <p>
             Total No. of Question: <span>{obj.Total_Q}</span>
@@ -28,7 +29,10 @@ const QuestionPaperTop = () => {
             Total Marks: <span>{obj.Total_M}</span>
           </p>
           <p>
-            Section Wise: <span>{obj.SectionWise}</span>
+            Passing Marks: <span>{obj.Passing_M}</span>
+          </p>
+          <p>
+            Duration: <span>{obj.Duration}</span>
           </p>
         </div>
       </div>
