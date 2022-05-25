@@ -4,6 +4,7 @@ import { VideoAtom } from '../../state/atoms/video.atom';
 import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
+import DraggableDiv from './DraggableDiv';
 import useVideoPlayer from './Logic/useHandleVideo';
 import SkipButtons from './SkipButtons';
 import UiComponents from './UiComponents';
@@ -130,6 +131,9 @@ export default function CustomVideo({ set }) {
       />
       {/* </div> */}
       {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}
+
+      {/* <DraggableDiv> "Hi" </DraggableDiv>
+      <DraggableDiv> "Hello" </DraggableDiv> */}
 
       <div className="video_wrapper">
         {/* video player */}

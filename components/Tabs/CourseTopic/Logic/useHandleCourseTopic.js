@@ -1,5 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
-import { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   GET_COURSE_CHAPTERS,
@@ -10,10 +11,13 @@ import {
 import { sortArrByKeyInOrder } from '../../../../helper/data.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
-import { courseContext } from '../../../../state/contexts/CourseContext';
+import { CourseTabAtom, tabData } from '../../Logic/tabs.helper';
 
 export default function useHandleCourseTopic() {
-  const { fullCourse, setTab } = useContext(courseContext);
+  const router = useRouter();
+  const courseId = router.query?.courseId;
+  // const
+  const [tab, setTab] = useRecoilState(CourseTabAtom);
 
   // pop up states
   const [isAddModulePopUpOpen, setIsAddModulePopUpOpen] = useState(false);
@@ -63,33 +67,41 @@ export default function useHandleCourseTopic() {
 
   // load module, chapter, topic data and set in recoil
   useEffect(() => {
-    loadModuleData({ variables: { course_id: fullCourse?.id } }).then(({ data }) => {
+    if (!courseId) {
+      updateModuleData([]);
+      updateChapterData([]);
+      updateTopicData([]);
+      return;
+    }
+    
+    loadModuleData({ variables: { course_id: courseId } }).then(({ data }) => {
       const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence');
       updateModuleData(sortedData);
 
       if (errorModuleData) setToastMsg({ type: 'danger', message: 'Module Load Error' });
     });
 
-    loadChapterData({ variables: { course_id: fullCourse?.id } }).then(({ data }) => {
+    loadChapterData({ variables: { course_id: courseId } }).then(({ data }) => {
       updateChapterData(data.getCourseChapters);
 
       if (errorChapterData) setToastMsg({ type: 'danger', message: 'Chapter Load Error' });
     });
 
-    loadTopicData({ variables: { course_id: fullCourse?.id } }).then(({ data }) => {
+    loadTopicData({ variables: { course_id: courseId } }).then(({ data }) => {
       updateTopicData(data.getTopics);
 
       if (errorTopicData) setToastMsg({ type: 'danger', message: 'Topic Load Error' });
     });
-  }, [fullCourse?.id]);
+  }, [courseId]);
 
   function togglePopUp(popUpName, value) {
     popUpStates.some((popUp) => {
       const isPopNameMatched = popUp.name.match(new RegExp(popUpName, 'gi'));
       if (isPopNameMatched) {
-        if (!fullCourse.id) {
+        if (!courseId) {
           setTab(tabData[0].name);
           setToastMsg({ type: 'danger', message: 'Add course first' });
+          return;
         }
 
         popUp.update(typeof value === 'boolean' ? value : !popUp.state);

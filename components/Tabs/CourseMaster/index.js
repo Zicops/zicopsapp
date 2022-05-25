@@ -75,19 +75,21 @@ export default function CourseMaster() {
   ];
   const allSelectedLanguages = [];
 
+
   fullCourse?.language?.map((val) => allSelectedLanguages.push({ value: val, label: val }));
   const languageDropdownOptions = {
     inputName: 'language',
     label: 'Languages',
     placeholder: 'Select multiple language for the course',
     options: allLanguages,
-    value: allSelectedLanguages.length ? allSelectedLanguages : null,
+    value: allSelectedLanguages,
     isSearchEnable: true,
     isMulti: true
   };
 
   return (
     <>
+      {/* course name */}
       <LabeledInput
         styleClass={styles.marginBottom}
         inputOptions={{
@@ -100,6 +102,7 @@ export default function CourseMaster() {
         changeHandler={handleChange}
       />
 
+      {/* course category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
         dropdownOptions={categoryDropdownOptions}
@@ -108,6 +111,7 @@ export default function CourseMaster() {
         }
       />
 
+      {/* course sub category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
         dropdownOptions={subcategoryDropdownOptions}
@@ -116,6 +120,7 @@ export default function CourseMaster() {
         }
       />
 
+      {/* course owner */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
         dropdownOptions={ownerDropdownOptions}
@@ -124,6 +129,7 @@ export default function CourseMaster() {
         }
       />
 
+      {/* language */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
         dropdownOptions={languageDropdownOptions}
