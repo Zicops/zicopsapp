@@ -2,8 +2,17 @@ import styles from './home.module.scss';
 import ScrollItems from './ScrollItems';
 import { data } from './Logic/homePage.helper';
 import HomeInputField from './HomeInputField';
+import { useEffect } from 'react';
 
 const HomePage = () => {
+  function handleScroll() {
+    console.log(window.scrollY);
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className={`${styles.HomeContainer}`}>
       <header className={`${styles.HomeHeader}`}>
@@ -16,10 +25,10 @@ const HomePage = () => {
         </div>
       </header>
       <div className={`${styles.HomeBody}`}>
-        <div className={`${styles.scrollContainer}`}>
-          {data.map((item) => (
-            <ScrollItems item={item} />
-          ))}
+        <div className={`${styles.scrollContainer} ${styles.y}`}>
+          {/* {data.map((item) => ( */}
+          <ScrollItems item={data[0]} />
+          {/* ))} */}
         </div>
         <div className={`${styles.btn}`}>
           <button>See More</button>
