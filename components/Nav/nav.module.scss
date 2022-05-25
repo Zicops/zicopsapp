@@ -234,7 +234,7 @@ select.nav_search_dropdow:selected {
   .dropdown_item_#{$var} {
     opacity: 0;
     width: 250px;
-    color: $primary;
+    color: $primary !important;
     background-color: $bgHeader !important;
     transform-origin: top center;
     animation: scaleZ 500ms $var*60ms ease-in-out forwards;
