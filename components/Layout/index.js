@@ -1,17 +1,25 @@
 import Footer from '../Footer';
 import Nav from '../Nav';
+import { useState, useEffect } from 'react';
 import { main } from './layout.module.scss';
-import {useRouter} from "next/router";
+import { useRouter } from 'next/router';
 
-export default function DefaultLayout({ children }) {
+export default function Layout({ children }) {
+    const [isFullHeight, setIsFullHeight] = useState(0);
     const router = useRouter();
-    const showLayout = !(router.pathname === '/exam-screen');
+    const fullHeightPageArray = ['/home', '/exam-screen'];
 
-  return (
-    <>
-        {showLayout && <Nav />}
-        <main className={main}>{children}</main>
-        {showLayout && <Footer />}
-    </>
-  );
+    useEffect(() => {
+        if (fullHeightPageArray.includes(router.pathname)) {
+            setIsFullHeight(1);
+        }
+    }, []);
+
+    return (
+        <>
+            {!isFullHeight && <Nav />}
+            <main className={main}>{children}</main>
+            {!isFullHeight && <Footer />}
+        </>
+    );
 }

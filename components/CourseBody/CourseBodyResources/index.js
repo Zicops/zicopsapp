@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useRecoilValue } from 'recoil';
-import { filterAndSortTopicsBasedOnModuleId } from '../../../helper/data.helper';
-import { TopicAtom } from '../../../state/atoms/module.atoms';
+import { filterAndSortTopicsBasedOnModuleId, filterModule } from '../../../helper/data.helper';
+import { TopicAtom, ModuleAtom } from '../../../state/atoms/module.atoms';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import Dropdown from '../../common/Dropdown';
 import CourseResourcesOpen from '../../CourseResourcesOpen';
@@ -17,15 +17,17 @@ export default function CourseBodyResources() {
     activeCourseTab,
     setActiveCourseTab,
     getModuleOptions,
-    moduleData,
+    // moduleData,
     handleModuleChange,
     selectedModule,
     showResources,
     filteredResources,
     isResourceShown
   } = useShowData(courseContextData);
+  const moduleData = useRecoilValue(ModuleAtom);
 
   const options = getModuleOptions();
+  const currentModule = filterModule(moduleData, selectedModule?.value);
 
   const { fullCourse } = courseContextData;
   const topicData = useRecoilValue(TopicAtom);
@@ -40,8 +42,9 @@ export default function CourseBodyResources() {
     <>
       <Dropdown options={options} handleChange={handleModuleChange} value={selectedModule} />
       <Header
-        title={fullCourse.name}
-        expertise={fullCourse.expertise_level?.split(',').join(' | ')}
+        title={currentModule?.name}
+        description={currentModule?.description || 'this is a description.'}
+        expertise={currentModule?.level?.split(',').join(' | ')}
       />
 
       <ItemSlider

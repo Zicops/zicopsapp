@@ -8,6 +8,7 @@ const McqCard = ({ question, isButtonVisible = false }) => {
     hint: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.'
   };
   obj.src = '/images/courses/1.png';
+  // obj.quesSrc = '/images/courses/1.png';
   return (
     <>
       <div className={`${styles.mcq_container}`}>
@@ -18,9 +19,11 @@ const McqCard = ({ question, isButtonVisible = false }) => {
             <span>Q.</span>
             <span>{question}</span>
           </p>
-          <div className={`${styles.quesImg}`}>
-            Q. <img src="/images/courses/1.png" alt="Not found" />
-          </div>
+          {obj.quesSrc !== undefined && (
+            <div className={`${styles.quesImg}`}>
+              Q. <img src="/images/courses/1.png" alt="Not found" />
+            </div>
+          )}
           <p>Options</p>
         </div>
         {/* <div className={`${styles.span_element}`}>Options:</div> */}

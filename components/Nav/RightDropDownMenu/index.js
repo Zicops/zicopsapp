@@ -1,3 +1,4 @@
+import { MenuList, Paper } from '@mui/material';
 import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
 import Menu from '@mui/material/Menu';
@@ -15,6 +16,52 @@ export default function RightDropDownMenu() {
   let today = new Date();
   let date = new Date().toUTCString().slice(5, 16);
 
+  const menuItemList = [
+    {
+      id: 1,
+      styles: {
+        display: 'flex',
+        flexDirection: 'column',
+        border: 'none',
+        fontSize: '10px',
+        alignItems: 'flex-end',
+        backgroundColor: 'var(--header-bg)'
+      },
+      comp: (
+        <>
+          <p style={{ color: 'var(--background_body)' }}>{date}</p>
+          <h2>Powered by Zicops</h2>
+        </>
+      )
+    },
+    {
+      id: 2,
+      comp: (
+        <DropDownSubMenu
+          subData={languages}
+          menuIcon={LeftArrow}
+          submenutext="My Profile"
+          arrowpositon="left"
+          submenurowdirection={true}
+        />
+      )
+    },
+    { id: 3, class: 'dropdown-submenu-justifycontent-right', name: 'My Certificates' },
+    { id: 4, class: 'dropdown-submenu-justifycontent-right', name: 'My Dashboard' },
+    {
+      id: 5,
+      comp: (
+        <DropDownSubMenu
+          subData={preferences}
+          menuIcon={LeftArrow}
+          submenutext="Support"
+          arrowpositon="left"
+          submenurowdirection={true}
+        />
+      )
+    },
+    { id: 6, class: 'dropdown-submenu-justifycontent-right', name: 'Logout' }
+  ];
   return (
     <>
       <Button
@@ -25,15 +72,58 @@ export default function RightDropDownMenu() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         onMouseEnter={handleClick}
+        onMouseLeave={handleClose}
         style={{
           height: '70px'
         }}>
         <Image src="/images/arrow2.png" alt="" height="20px" width="25px" />
       </Button>
-      <Menu
+      {anchorEl && (
+        <Paper
+          sx={{
+            position: 'absolute',
+            top: '70px',
+            right: '30px',
+            padding: '0px',
+            background: 'transparent'
+          }}>
+          <MenuList
+            autoFocusItem={open}
+            id="composition-menu"
+            aria-labelledby="composition-button"
+            style={{ padding: 0 }}
+            onMouseLeave={handleClose}
+            onKeyDown={handleClick}>
+            {menuItemList.map((item) => {
+              return (
+                <MenuItem
+                  key={item.id}
+                  sx={{
+                    '&.MuiMenuItem-root': {
+                      border: '1px solid var(--primary)',
+                      // margin: '2px',
+                      backgroundColor: 'var(--header-bg)',
+                      justifyContent: 'flex-end',
+                      // alignItems: 'center',
+                      '&:hover': {
+                        background: 'red',
+                        color: 'var(--primary)'
+                      }
+                    }
+                  }}
+                  style={item.styles ? item.styles : {}}
+                  className={`${item.class} ${styles[`dropdown_item_${item.id}`]}`}>
+                  {item.name ? item.name : item.comp}
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </Paper>
+      )}
+      {/* <Menu
         // {...languages}
         // {...preferences}
-	id="fade-menu"
+        id="fade-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -80,7 +170,7 @@ export default function RightDropDownMenu() {
           <h2>Powered by Zicops</h2>
         </MenuItem>
         <MenuItem className={`${styles.dropdown_item_2}`}>
-          {/* submenu for myDetails */}
+
           <DropDownSubMenu
             subData={languages}
             menuIcon={LeftArrow}
@@ -96,7 +186,7 @@ export default function RightDropDownMenu() {
           My Dashboard
         </MenuItem>
         <MenuItem className={`${styles.dropdown_item_5}`}>
-          {/* submenu for support */}
+
           <DropDownSubMenu
             subData={preferences}
             menuIcon={LeftArrow}
@@ -108,7 +198,7 @@ export default function RightDropDownMenu() {
         <MenuItem className={`dropdown-submenu-justifycontent-right ${styles.dropdown_item_6}`}>
           Logout
         </MenuItem>
-      </Menu>
+      </Menu> */}
     </>
   );
 }

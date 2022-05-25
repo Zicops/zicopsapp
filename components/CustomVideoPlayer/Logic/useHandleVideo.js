@@ -397,6 +397,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
 
   function handleVolume(e) {
     const volume = parseFloat(e.target.value);
+    if (!videoElement?.current) return;
 
     setPlayerState({
       ...playerState,

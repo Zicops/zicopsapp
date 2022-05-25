@@ -115,6 +115,7 @@
       // box-shadow: 0 0 50px 0 $white;
 
       color: $white;
+      width: 240px;
       height: 140px;
       padding: 3px;
 
@@ -470,3 +471,21 @@
 //     mix-blend-mode: difference;
 //   }
 // }
+
+// draggable div
+
+.draggableDiv {
+  height: 100px;
+  width: 100px;
+
+  background-color: red;
+
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  z-index: 15;
+
+  &:hover {
+    background-color: green;
+  }
+}

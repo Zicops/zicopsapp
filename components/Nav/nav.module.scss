@@ -145,8 +145,16 @@
   color: white;
   border: 0;
   outline: 0;
+  padding: 5px 35px 5px 3px;
+  transition: all 0.2s;
+}
+.nav_search{
+  width: 150px;
   border-bottom: 1px solid #ffffff80;
-  padding: 5px 35px 5px 10px;
+}
+.nav_search:focus{
+  width: 250px;
+  border-bottom: 1px solid $primary;
 }
 select.nav_search_dropdown {
   width: 50px;
@@ -225,7 +233,9 @@ select.nav_search_dropdow:selected {
 @for $var from 1 to 7 {
   .dropdown_item_#{$var} {
     opacity: 0;
-    background-color: $bgHeader;
+    width: 250px;
+    color: $primary !important;
+    background-color: $bgHeader !important;
     transform-origin: top center;
     animation: scaleZ 500ms $var*60ms ease-in-out forwards;
   }

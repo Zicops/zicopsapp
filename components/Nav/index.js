@@ -60,13 +60,14 @@ export default function Nav() {
       </div>
 
       <div className={styles.right} onBlur={deactivateSearch}>
-        {searchQuery !== null && (
+        {/* {searchQuery !== null && ( */}
+        {1 && (
           <div className={`${styles.search_menu}`} id="search_menu">
-            <select className={styles.nav_search_dropdown} placeholder="Search...">
+            {/* <select className={styles.nav_search_dropdown} placeholder="Search...">
               {['All', 'Self Paced', 'Classroom', 'Labs', 'Exam', 'Blogs'].map((opt) => (
                 <option key={opt}>{opt}</option>
               ))}
-            </select>
+            </select> */}
 
             <input
               type="search"
@@ -82,11 +83,11 @@ export default function Nav() {
 
         <div className={styles.special_menu}>
           <ul>
-            {!isAdmin && searchQuery === null && (
+            {/* {!isAdmin && searchQuery === null && (
               <li onClick={() => activateSearch(true)}>
                 <img src="/images/search.png" />
               </li>
-            )}
+            )} */}
             <li>
               <img src="/images/bell.png" />
             </li>
