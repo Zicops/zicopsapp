@@ -1,46 +1,30 @@
 @import '../../../../styles/base.scss';
 
-// .container {
-//   margin-top: 10px;
-//   max-height: 60vh;
-//   overflow: auto;
-// }
-
 .paperContainer {
-  max-height: 70vh;
+  height: 100vh;
   overflow: auto;
   padding-right: 5px;
-}
+  overflow-y: scroll;
 
+  background-color: $darkTwo;
+}
 .paperContainer::-webkit-scrollbar {
   width: 5px;
-  border-radius: 7px;
-  cursor: pointer;
 }
-/* Track */
-.paperContainer::-webkit-scrollbar-track {
-  background: $darkTwo;
-  border-radius: 7px;
-}
-/* Handle */
-.paperContainer::-webkit-scrollbar-thumb {
-  background: $darkThree;
-  border-radius: 7px;
-}
+
 
 //QuestionSection
-
-.line {
-  content: '';
-  height: 3px;
-  margin-top: 12px;
-  background-color: $white;
-  width: 100%;
-  margin-bottom: 20px;
-}
+// .line {
+//   content: '';
+//   height: 3px;
+//   margin-top: 12px;
+//   background-color: $white;
+//   width: 100%;
+//   margin-bottom: 20px;
+// }
 
 .sectionContainer {
-  margin-top: 20px;
+  margin-top: 10px;
   border-radius: 10px;
   background-color: $darkOne;
   color: $darkThree;
@@ -51,10 +35,11 @@
   color: $white;
   display: flex;
   justify-content: space-between;
-  margin: 0 10px;
+  margin: 0 10px 40px 10px;
   p {
     font-weight: 600;
     color: $darkThree;
+    font-size: 16px;
     span {
       color: $white;
     }
@@ -68,14 +53,18 @@
 }
 
 .qstatusContainer {
-  text-align: right;
   margin-right: 20px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .questionInnerContainer {
-  margin-top: 10px;
+  margin-bottom: 40px;
 }
 
+.questionContainerInnerContainer {
+  border: 2px solid transparent;
+}
 .questionContainerInnerContainer:hover {
   border: 2px solid $white;
 }
@@ -85,44 +74,54 @@
   color: $darkThree;
 }
 
-.upperSection {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 5px;
-  margin-top: 30px;
-  font-weight: bold;
-  span {
-    color: $white;
-  }
+// .upperSection {
+//   display: flex;
+//   justify-content: space-between;
+//   margin: 0 5px;
+//   margin-top: 30px;
+//   font-weight: bold;
+//   span {
+//     color: $white;
+//   }
   // p:nth-child(3) {
   //   margin-right: 80px;
   // }
   // p:nth-child(1) {
   //   margin-left: -30px;
   // }
-  p:nth-child(2) {
-    margin-left: -30px;
-  }
-}
+//   p:nth-child(2) {
+//     margin-left: -30px;
+//   }
+// }
 
 .middleSection {
-  text-align: center;
-  margin: 30px 80px;
-  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0 10px 0;
   p {
+      font-size: 24px;
+      color: $primary;
+      font-weight: 700;
     p {
       margin-top: 20px;
       font-size: 15px;
-      color: $white;
+      color: $darkThree;
+      font-weight: 400;
     }
   }
+}
+
+.description{
+  text-align: center;
+  margin: 0px 70px;
 }
 
 .lowerSection {
   display: flex;
   justify-content: space-between;
-  margin: 0 5px;
-  font-weight: bold;
+  margin: 40px 25px;
+  font-size: 18px;
   span {
     color: $white;
   }
@@ -132,37 +131,38 @@
   // p:nth-child(1) {
   //   margin-left: -30px;
   // }
-  p:nth-child(2) {
-    margin-left: -40px;
-  }
+  // p:nth-child(2) {
+  //   margin-left: -40px;
+  // }
 }
 
 //Question Status
 
-@mixin inputField($property, $value) {
-  input[type='checkbox'] {
-    appearance: none;
-    content: ' ';
-    #{$property}: $value;
-    margin: 0;
-    border-radius: 1px;
-    height: 10px;
-    width: 10px;
-    margin-right: 10px;
-  }
+.qStyle_coontainer{
+  display: flex;
+  align-items: center;
 }
 
-.attempted {
-  // color: $primary;
-  @include inputField(background-color, $primary);
+.info_button_boxes {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  background: $primary;
+  margin-right: 3px;
 }
 
-.unattempted {
-  color: $darkThree;
-  @include inputField(background-color, $darkThree);
+.info_button_boxes_attempted {
+  background: $primary;
 }
 
-.marked {
-  color: $white;
-  @include inputField(background-color, $white);
+.info_button_boxes_marked {
+  background: $white;
+}
+
+.info_button_boxes_unattempted {
+  background: $secondary;
+}
+
+.info_button_boxes_unvisited {
+  background: $secondaryBlack;
 }

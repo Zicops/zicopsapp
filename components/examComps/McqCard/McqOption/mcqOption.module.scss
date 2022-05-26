@@ -11,6 +11,7 @@
 .options {
   margin: 20px;
   display: flex;
+  align-items: flex-start;
   color: $darkThree;
 }
 
@@ -20,4 +21,18 @@
 
 .option {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid $secondaryBlack;
+  width: 60%;
+  height: 120px;
+  padding: 5px;
+  text-align: center;
+
+  div{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 }

@@ -1,29 +1,25 @@
 import styles from '../questionPaperPreview.module.scss';
 import { obj } from './Logic/questionTop';
-const QuestionPaperTop = () => {
+import CloseIcon from '@mui/icons-material/Close';
+import {IconButton} from "@mui/material";
+const QuestionPaperTop = ({data, setIsQuestion}) => {
   return (
     <>
       <div className={`${styles.container}`}>
         <div className={`${styles.middleSection}`}>
+          <span />
           <p>
-            Description: <p>{obj.description}</p>
+            QUESTION PAPER NAME
           </p>
+          <IconButton onClick={() => {setIsQuestion(false)}}>
+            <CloseIcon sx={{color: '#FFF'}} />
+          </IconButton>
         </div>
-        {/* <div className={`${styles.upperSection}`}>
-          <p>
-            Category: <span>{obj.category}</span>
-          </p>
-          <p>
-            Sub-Category: <span>{obj.subCategory}</span>
-          </p>
-          <p>
-            Level: <span>{obj.level}</span>
-          </p>
-        </div> */}
+        <p  className={`${styles.description}`}>{obj.description}</p>
 
         <div className={`${styles.lowerSection}`}>
           <p>
-            Total No. of Question: <span>{obj.Total_Q}</span>
+            Total No. of Question: <span>{data.length}</span>
           </p>
           <p>
             Total Marks: <span>{obj.Total_M}</span>

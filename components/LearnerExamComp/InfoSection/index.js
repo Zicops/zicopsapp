@@ -3,7 +3,7 @@ import TimerDropdown from '../TimerDropdown';
 import styles from'./infoSection.module.scss'
 import {useRouter} from "next/router";
 
-const InfoSection = ({data, filter, setFilter}) => {
+const InfoSection = ({data, setIsQuestion, setFilter}) => {
 
     const Router = useRouter()
    
@@ -58,7 +58,9 @@ const InfoSection = ({data, filter, setFilter}) => {
           <p>Questions</p>
       </div>
       <div className={`${styles.info_section_exam_info_button_container}`}>
-          <button className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_question}`}>Question Paper</button>
+          <button onClick={() => {
+              setIsQuestion(true)
+          }} className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_question}`}>Question Paper</button>
           <button onClick={handleEndButton} className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_exam}`}>End Exam</button>
       </div>
       <div className={`${styles.info_section_watch}`}>

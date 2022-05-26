@@ -2,36 +2,48 @@ import Button from '../../common/Button';
 import styles from './mcqCard.module.scss';
 import McqOption from './McqOption';
 
-const McqCard = ({ question, isButtonVisible = false }) => {
+const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCurrent }) => {
   const obj = {
     option: 'a',
     hint: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.'
   };
   obj.src = '/images/courses/1.png';
   // obj.quesSrc = '/images/courses/1.png';
+
+  const handleChange = () => {
+    return data.map(function (obj) {
+      if (obj.id === each.id) {
+        return {
+          ...obj,
+          isVisited: true,
+        };
+      }
+      else {
+        return {...obj};
+      }
+    });
+  }
+
   return (
     <>
-      <div className={`${styles.mcq_container}`}>
-        {/* <span className={`${styles.qtitle}`}>QUESTION</span> */}
+      <div className={`${styles.mcq_container}`} onClick={() => {
+        setCurrent(data.filter(e => e.id === (each.id))[0])
+        setData(handleChange());
+        setOption(data.filter(e => e.id === (each.id))[0]?.selectedOption)
+        setIsQuestion(false)
+      }}>
         <div className={`${styles.qcontent}`}>
           <p className={`${styles.span_element}`}>
             {/* TODO : Add difficulty lebel */}
-            <span>Q.</span>
-            <span>{question}</span>
+            <span>Q{each.id}.</span>
+            <span>{each.question.text}</span>
           </p>
-          {obj.quesSrc !== undefined && (
-            <div className={`${styles.quesImg}`}>
-              Q. <img src="/images/courses/1.png" alt="Not found" />
-            </div>
-          )}
-          <p>Options</p>
         </div>
         {/* <div className={`${styles.span_element}`}>Options:</div> */}
         <section className={`${styles.option_container}`}>
-          <McqOption obj={{ ...obj, option: 'a' }} />
-          <McqOption obj={{ ...obj, option: 'b', checked: true }} />
-          <McqOption obj={{ ...obj, option: 'c' }} />
-          <McqOption obj={{ ...obj, option: 'd' }} />
+          {each.options.map((option) => (
+              <McqOption optionData={option} checked={each.selectedOption}/>
+          ))}
           {/* <McqOption
             obj={{ ...obj, text: 'Wrong Answer', src: undefined, option: 'a' }}
           />
@@ -49,12 +61,12 @@ const McqCard = ({ question, isButtonVisible = false }) => {
         </section>
         <span className={`${styles.span_element}`}>Hint:</span>
         <div className={`${styles.hint}`}>{obj.hint}</div>
-        {isButtonVisible && (
-          <div className={`${styles.btn}`}>
-            <Button text={'Edit'} />
-            <Button text={'Cancel'} />
-          </div>
-        )}
+        {/*{isButtonVisible && (*/}
+        {/*  <div className={`${styles.btn}`}>*/}
+        {/*    <Button text={'Edit'} />*/}
+        {/*    <Button text={'Cancel'} />*/}
+        {/*  </div>*/}
+        {/*)}*/}
       </div>
     </>
   );

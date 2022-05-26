@@ -5,7 +5,7 @@ import PopUp from '../../../common/PopUp';
 import { useState } from 'react';
 import { questionList } from './Logic/QuestionPaperPreview.helper';
 
-const QuestionPaperPreview = () => {
+const QuestionPaperView2 = ({setIsQuestion, setOption, data, setData, current, setCurrent}) => {
   const [isOpen, setIsOpen] = useState(false);
   const quesSection = {};
   // thinking about pushing value to quesSection.sec_A array. similarly to other elements.
@@ -19,17 +19,22 @@ const QuestionPaperPreview = () => {
 
   return (
     <>
-      <div className={`${styles.Maincontainer}`}>
-        <button onClick={() => setIsOpen(!isOpen)}>Clck me</button>
-        <PopUp title={'Core Java Fundamental'} isPopUpOpen={isOpen} isFooterVisible={false}>
+      {/*<div className={`${styles.Maincontainer}`}>*/}
+        {/* <button onClick={() => setIsOpen(!isOpen)}>Clck me</button> */}
+        {/* <PopUp title={'Core Java Fundamental'} isPopUpOpen={isOpen} isFooterVisible={false}> */}
           <div className={`${styles.paperContainer}`}>
-            <QuestionPaperTop />
-            <QuestionSection quesSection={quesSection} />
+            <QuestionPaperTop setIsQuestion={setIsQuestion} data={data} />
+            <QuestionSection
+                setIsQuestion={setIsQuestion}
+                quesSection={quesSection} setOption={setOption}
+                data={data} setData={setData}
+                current={current} setCurrent={setCurrent}
+            />
           </div>
-        </PopUp>
-      </div>
+        {/* </PopUp> */}
+      {/*</div>*/}
     </>
   );
 };
 
-export default QuestionPaperPreview;
+export default QuestionPaperView2;

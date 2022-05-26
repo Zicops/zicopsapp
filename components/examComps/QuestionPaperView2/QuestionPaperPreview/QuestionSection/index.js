@@ -4,41 +4,39 @@ import QuestionStatus from '../QuestionStatus';
 import { useState } from 'react';
 import styles from '../questionPaperPreview.module.scss';
 
-const QuestionSection = ({ quesSection }) => {
+const QuestionSection = ({ quesSection, setIsQuestion, setOption, data, setData, current, setCurrent }) => {
   const [isLearner, setIsLearner] = useState(true);
+
+
   return (
     <>
       <div className={`${styles.sectionContainer}`}>
-        {quesSection.secA !== undefined && (
           <Accordion title={'Section A'}>
-            <div className={`${styles.questionTop}`}>
-              <p>Lorem ipsum is just some dummy text for use of our own.</p>
-              <p>
-                Questions: <span>{quesSection.secA.length}</span>
-              </p>
-            </div>
-            {/* {quesSection.secA === undefined && */}
-            {quesSection.secA?.map((item) => (
-              <div className={`${styles.questionInnerContainer}`}>
-                {isLearner && (
-                  <div className={`${styles.qstatusContainer}`}>
-                    <QuestionStatus qStatus={'Attempted'} />
-                  </div>
-                )}
-                <div className={`${styles.QuestionContainer}`}>
-                  {/* <div className={`${styles.line}`}></div> */}
-                  <div
-                    className={`${styles.questionContainerInnerContainer}`}
-                    onClick={() => {
-                      alert(`You Clicked question ${item.question}`);
-                    }}>
-                    <McqCard question={item.question} />
-                  </div>
-                </div>
+              <div className={`${styles.questionTop}`}>
+                  <p>Lorem ipsum is just some dummy text for use of our own.</p>
+                  <p>
+                      Questions: <span>{data.length}</span>
+                  </p>
               </div>
-            ))}
+              {data.map((each) => (
+                  <div className={`${styles.questionInnerContainer}`}>
+                      <div className={`${styles.qstatusContainer}`}>
+                          <span />
+                          <QuestionStatus each={each} />
+                      </div>
+                      <div className={`${styles.QuestionContainer}`}>
+                          <div className={`${styles.questionContainerInnerContainer}`}>
+                              <McqCard each={each}
+                                       setIsQuestion={setIsQuestion}
+                                       setOption={setOption}
+                                       data={data} setData={setData}
+                                       current={current} setCurrent={setCurrent}
+                              />
+                          </div>
+                      </div>
+                  </div>
+              ))}
           </Accordion>
-        )}
         {quesSection.secB !== undefined && (
           <Accordion title={'Section B'}>
             <div className={`${styles.questionTop}`}>
