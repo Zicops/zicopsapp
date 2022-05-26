@@ -1,18 +1,28 @@
 @import '../../styles/base.scss';
+
+.HomeMainContainer {
+  height: 100vh;
+  scroll-snap-type: y mandatory;
+}
+
 .HomeContainer {
   font-family: 'Open Sans';
-  background-image: url('../../public/images/starrySky.png');
+  background-image: url('../../public/images/starrySky2.png');
   background-position: center;
   background-size: cover;
   height: 100vh;
+  scroll-snap-align: start;
 }
+
+//Home Header
 
 .HomeHeader {
   //   background-color: $darkTwo;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  height: 70px;
+  padding-top: 10px;
 
   .Login {
     display: flex;
@@ -45,6 +55,8 @@
   }
 }
 
+//HomeBody
+
 .HomeBody {
   //   background-color: $darkTwo;
   display: flex;
@@ -54,13 +66,12 @@
   height: 60%;
   width: 60%;
   margin: 40px auto 0px auto;
+  // scroll-snap-type: y mandatory;
 
   .scrollContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: auto;
-    height: 235px;
     width: 100%;
 
     .scrollItems {
@@ -74,6 +85,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      margin-bottom: 20px;
       // background-color: $darkTwo;
       height: 150px;
       width: 150px;
@@ -81,8 +93,8 @@
       padding: 5px;
       :nth-child(1) {
         width: 66%;
-        height: 50%;
-        margin-bottom: 5px;
+        height: 70%;
+        margin-bottom: 10px;
         object-fit: contain;
       }
       :nth-child(2) {
@@ -94,7 +106,7 @@
       color: $white;
       font-size: 1.2em;
       text-align: center;
-      height: 85px;
+      // height: 85px;
       width: 505px;
     }
   }
@@ -102,6 +114,7 @@
   .formContainer {
     display: flex;
     flex-direction: row;
+    background-color: $black;
     border: 3px solid $primary;
     border-radius: 5px;
     width: 450px;
@@ -112,7 +125,7 @@
       border: none;
       width: 80%;
       font-family: 'Open Sans';
-      background-color: inherit;
+      background-color: $black;
       color: $darkThree;
     }
 
@@ -161,18 +174,21 @@
   }
 }
 
+//Footer
+
 .HomeFooter {
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 27px;
-  left: 0px;
-  bottom: 50px;
+  top: 70px;
+  // left: 0px;
   //   background-color: $darkTwo;
   font-size: small;
   .HomeFooterInner {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: space-evenly;
+
+    font-family: 'Open Sans';
 
     max-width: 60%;
     margin: 3px 300px 0 300px;
