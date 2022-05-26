@@ -77,7 +77,9 @@ export default function Nav() {
               onInput={handleSearch}
               autoFocus={true}
             />
-            <button className={styles.nav_search_btn}></button>
+            <button
+              className={styles.nav_search_btn}
+              onClick={() => searchQuery && router.push(`/search-page?q=${searchQuery}`)}></button>
           </div>
         )}
 
