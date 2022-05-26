@@ -18,7 +18,12 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
     <div className={`${styles.questionSection}`}>
       <div className={`${styles.questionSection_questions}`}>
           {
-              isQuestion ? <QuestionPaperView2 setIsQuestion={setIsQuestion} setOption={setOption} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
+              isQuestion ?
+                  <QuestionPaperView2
+                      setIsQuestion={setIsQuestion} setOption={setOption}
+                      data={data} setData={setData}
+                      current={current} setCurrent={setCurrent}
+                  />
                   : (
                   <>
                       <ExamAllQuestions

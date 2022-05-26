@@ -37,7 +37,6 @@ const ExamScreen = () => {
             id: 2,
             question: {
                 text: 'He is a former professional ice hockey player who played with the Montreal Canadiens in the National Hockey League (NHL) from 1955 to 1975. He won 11 Stanley Cups, more than any other player in NHL history. He was given the nick name \'Pocket Rocket\'. Who was he?',
-                image: '/images/bg-new.png'
             },
             options: [
                 {
@@ -62,7 +61,6 @@ const ExamScreen = () => {
             id: 3,
             question: {
                 text: 'He became two-time inductee into the Basketball Hall of Fame ? being enshrined in 2002 for his individual career, and again in 2010 as a member of the \'Dream Team\'. He was rated the greatest National Basketball Association (NBA) point guard of all time by ESPN in 2007. Who is this legendary basketball player who played for the Lakers?',
-                image: '/images/bg-new.png'
             },
             options: [
                 {
@@ -112,7 +110,6 @@ const ExamScreen = () => {
             id: 5,
             question: {
                 text: '"Float like a butterfly, sting like a bee. The hands can\'t hit what the eyes can\'t see." To which of the following sportspersons does this memorable quote attributed to?',
-                image: '/images/bg-new.png'
             },
             options: [
                 {
@@ -187,7 +184,6 @@ const ExamScreen = () => {
             id: 8,
             question: {
                 text: 'Which of the following is not a standard international racing distance in the sport canoeing and kayaking?',
-                image: '/images/bg-new.png'
             },
             options: [
                 {
@@ -262,7 +258,6 @@ const ExamScreen = () => {
             id: 11,
             question: {
                 text: 'This championship is a domestic first- class cricket championship played in India between teams representing regional cricket associations. The competition is named after first Indian cricketer who played international cricket for England. Who was the player after whom it is named?',
-                image: '/images/bg-new.png'
             },
             options: [
                 {
@@ -312,7 +307,6 @@ const ExamScreen = () => {
             id: 13,
             question: {
                 text: 'The World Table Tennis Championships have been held since 1926, biennia since 1957. Seven different events presented by different trophies are currently held with individual events in odd numbered years and team events in even-numbered years. Which of the following trophies is awarded to the women\'s team champion?',
-                image: '/images/bg-new.png'
             },
             options: [
                 {
@@ -337,7 +331,6 @@ const ExamScreen = () => {
             id: 14,
             question: {
                 text: 'This trophy is a biennial world amateur team golf championship for men organized by the International Golf Federation. It is named after the then President of United States when the tournament was first played. Which US President is it named after?',
-                image: '/images/bg-new.png'
             },
             options: [
                 {

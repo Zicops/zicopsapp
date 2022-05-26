@@ -21,7 +21,7 @@ const QuestionStatus = ({ each }) => {
   }
   return (
     <>
-      <div className={`${styles.qStyle_coontainer}`}>
+      <div className={`${styles.qStyle_container}`}>
         <div className={`${styles.info_button_boxes} ${obj.qStyle}`}></div>
         {obj.text}
       </div>

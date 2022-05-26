@@ -1,6 +1,8 @@
 import Button from '../../common/Button';
 import styles from './mcqCard.module.scss';
 import McqOption from './McqOption';
+import {Box, Grid} from "@mui/material";
+import Image from "next/image";
 
 const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCurrent }) => {
   const obj = {
@@ -24,6 +26,8 @@ const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCu
     });
   }
 
+  const isImage = !!each.question?.image;
+
   return (
     <>
       <div className={`${styles.mcq_container}`} onClick={() => {
@@ -39,6 +43,13 @@ const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCu
             <span>{each.question.text}</span>
           </p>
         </div>
+        {
+            isImage && (
+                <Box width={'100%'} display={'flex'} justifyContent={'center'} mb={4}>
+                  <Image src={each.question?.image} width="150px" height="90px" />
+                </Box>
+            )
+        }
         {/* <div className={`${styles.span_element}`}>Options:</div> */}
         <section className={`${styles.option_container}`}>
           {each.options.map((option) => (
@@ -72,5 +83,4 @@ const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCu
   );
 };
 
-<></>;
 export default McqCard;
