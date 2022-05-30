@@ -6,6 +6,7 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
   const {
     status,
     submitDisplay = 'Submit',
+    disableSubmit = false,
     handleSubmit = function () {},
     cancelDisplay = 'Cancel',
     handleCancel = function () {}
@@ -47,7 +48,7 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
 
         <div className="right-text">
           <Button clickHandler={handleCancel} text={cancelDisplay} />
-          <Button clickHandler={handleSubmit} text={submitDisplay} />
+          <Button clickHandler={handleSubmit} isDisabled={disableSubmit} text={submitDisplay} />
         </div>
       </div>
       {/* TODO: add the style in the scss file */}

@@ -50,7 +50,6 @@ export default function VideoPlayer({
   }, [videoElement.current?.textTracks[0]?.cues?.length]);
 
   const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
-
   const isTrackSrcAvailable =
     topicContent[currentTopicContentIndex] &&
     topicContent[currentTopicContentIndex]?.subtitleUrl &&

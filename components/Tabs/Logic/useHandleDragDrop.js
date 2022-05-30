@@ -8,7 +8,6 @@ export default function useHandleDragDrop(courseContextData) {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [draglist, updateDraglist] = useState([]);
-  const [filteredDraglist, updateFilteredDraglist] = useState([]);
   const [droplist, updateDroplist] = useState(fullCourse.sub_categories || []);
   const [isDragOn, setIsDragOn] = useState(0);
 
@@ -41,10 +40,6 @@ export default function useHandleDragDrop(courseContextData) {
   }, []);
 
   useEffect(() => {
-    updateFilteredDraglist(draglist);
-  }, [draglist]);
-
-  useEffect(() => {
     updateCourseMaster({
       ...fullCourse,
       sub_categories: droplist
@@ -53,12 +48,25 @@ export default function useHandleDragDrop(courseContextData) {
 
   function handleOnDragEnd(result) {
     setIsDragOn(2);
-    const prevDraglist = filteredDraglist.length ? [...filteredDraglist] : [...draglist];
+    // local array of state
+    const prevDraglist = [...draglist];
     const prevDroplist = droplist.length ? [...droplist] : [];
 
+    // return if the item is not dropped in the subcat box
     if (result.destination?.droppableId !== 'subcategories') return;
+    // return if selected items are 5
     if (prevDroplist.length >= 5) return;
 
+    // rearrange the rank in subcat box
+    if (result.source.droppableId === 'subcategories') {
+      const [reorderedItem] = prevDroplist.splice(result.source.index, 1);
+      prevDroplist.splice(result.destination.index, 0, reorderedItem);
+      prevDroplist.map((e, i) => (e.rank = i));
+
+      return updateDroplist(prevDroplist);
+    }
+
+    // remove item from drag list and add in drop list
     if (result.destination?.droppableId === 'subcategories') {
       const dragItemIndex = result.source.index;
       const [dragItem] = prevDraglist.splice(dragItemIndex, 1);
@@ -66,14 +74,14 @@ export default function useHandleDragDrop(courseContextData) {
       prevDroplist.push(dragItem);
 
       updateDroplist(prevDroplist);
-      !searchQuery ? updateDraglist(prevDraglist) : updateFilteredDraglist(prevDraglist);
+      updateDraglist(prevDraglist);
 
       return;
     }
   }
 
   function removeItem(e) {
-    const [rank, name, index] = e.target.getAttribute('data-index').split(',');
+    const [rank, name, index] = e.target.getAttribute('data-index').split('::');
 
     const previousDroplist = [...droplist];
     const previousDraglist = [...draglist];
@@ -83,23 +91,13 @@ export default function useHandleDragDrop(courseContextData) {
 
     updateDroplist(previousDroplist);
     updateDraglist(previousDraglist);
-    setSearchQuery('');
-    if (previousDroplist.length == 0) {
-      setIsDragOn(0);
-    }
+    if (previousDroplist.length === 0) setIsDragOn(0);
   }
 
   function handleSearch(e) {
     const query = e.target.value.toLowerCase().trim();
-    const currentDraglist = [...draglist].filter(
-      (item) => !droplist.find((obj) => obj.name === item.name)
-    );;
-    const filteredList = currentDraglist.filter((category) =>
-      category.name.toLowerCase().includes(query)
-    );
 
     setSearchQuery(query);
-    updateFilteredDraglist(filteredList);
   }
 
   function highlightDroppable() {
@@ -107,7 +105,7 @@ export default function useHandleDragDrop(courseContextData) {
   }
 
   return {
-    draglist: filteredDraglist,
+    draglist,
     droplist,
     isDragOn,
     searchQuery,

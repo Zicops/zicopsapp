@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { getQuestionMetaDataObject } from '../../../../../state/atoms/exams.atoms';
 import QuestionPaperMaster from '../QuestionPaperMaster';
 import Questions from '../Questions';
 
@@ -34,3 +35,8 @@ export default function getQuestionPaperMasterObject(data = {}) {
     is_default: data.is_default || false
   };
 }
+
+export const NewQuestionMetaDataAtom = atom({
+  key: 'NewQuestionMetaData',
+  default: getQuestionMetaDataObject()
+});

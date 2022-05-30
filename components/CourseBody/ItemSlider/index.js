@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { ResourcesAtom } from '../../../state/atoms/module.atoms';
 import { getResourceCount } from '../Logic/courseBody.helper';
 import TopicFiles from './TopicFiles';
+import CustomButtonGroup from './CustomButtonGroup';
 
 export default function ItemSlider({ itemsArr, showResources, isResourceShown }) {
   const responsive = {
@@ -28,7 +29,7 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
   const resources = useRecoilValue(ResourcesAtom);
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
       <Carousel
         swipeable={false}
         draggable={false}
@@ -49,10 +50,10 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
         dotListClass=""
         // customDot={<CustomDot />}
         renderButtonGroupOutside={true}
+        arrows={false}
+        customButtonGroup={<CustomButtonGroup />}
         itemClass="">
         {itemsArr.map((item, i) => {
-          // console.log(i + 1, itemsArr.length, i + 1 == itemsArr.length);
-          // console.log(i % 2, i % 2 == 0);
           if (i + 1 == itemsArr.length) {
             return (
               <>
@@ -121,6 +122,6 @@ export default function ItemSlider({ itemsArr, showResources, isResourceShown })
           }
         `}
       </style>
-    </>
+    </div>
   );
 }

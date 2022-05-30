@@ -1,5 +1,5 @@
 import Select from 'react-select';
-import { labeledDropdownWrapper, zicops_select_container } from '../formComponents.module.scss';
+import { labeledDropdownWrapper } from '../formComponents.module.scss';
 
 export default function LabeledDropdown({
   dropdownOptions,
@@ -104,10 +104,10 @@ export default function LabeledDropdown({
     })
   };
 
-    let selectedValue = null;
-    if (value?.value) selectedValue = value;
-    if (isMulti && value?.length) selectedValue = value;
-  
+  let selectedValue = null;
+  if (value?.value) selectedValue = value;
+  if (isMulti && value?.length) selectedValue = value;
+
   return (
     <div className={`${labeledDropdownWrapper} ${styleClass}`}>
       {!!label && (
@@ -124,7 +124,7 @@ export default function LabeledDropdown({
         name={inputName}
         placeholder={placeholder}
         onChange={changeHandler}
-        className={zicops_select_container}
+        className={`${label ? '' : 'w-100'}`}
         styles={customStyles}
         isSearchable={!!isSearchEnable}
         isDisabled={!!isDisabled}

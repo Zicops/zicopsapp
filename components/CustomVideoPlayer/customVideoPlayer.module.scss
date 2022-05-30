@@ -285,7 +285,6 @@
   &.increaseDistanceFromBottom {
     bottom: 120px;
   }
-
 }
 .controls {
   display: flex;
@@ -484,7 +483,7 @@
   top: 100px;
   left: 100px;
   z-index: 15;
-  cursor: all-scroll;
+  cursor: move;
   &:hover {
     background-color: $primary;
   }

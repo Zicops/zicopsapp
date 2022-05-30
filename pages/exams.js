@@ -207,19 +207,32 @@ export default function LearnerExams() {
   ];
 
   const simpleTableRef = useRef(null);
-  
-  // useEffect(() => {
-  //   document.addEventListener('scroll', function (e) {
-  //     // lastKnownScrollPosition = window.scrollY;
-  //     simpleTableRef.current?.scrollIntoView({
-  //       behavior: 'auto',
-  //       block: 'end',
-  //       inline: 'center'
-  //     });
-  //     console.log('ref', simpleTableRef);
-  //   });
-  // }, []);
-  
+  useEffect(() => {
+    // let isSnapped = false;
+
+    // const observer = new IntersectionObserver((entries) => {
+    //   if (entries[0].isIntersecting && !isSnapped) {
+    //     simpleTableRef.current?.scrollIntoView(false);
+
+    //     isSnapped = true;
+    //   } else {
+    //     isSnapped = false;
+    //   }
+    // });
+
+    // observer.observe(simpleTableRef.current);
+
+    // document.addEventListener('scroll', function (e) {
+    //   // lastKnownScrollPosition = window.scrollY;
+    //   simpleTableRef.current?.scrollIntoView({
+    //     behavior: 'auto',
+    //     block: 'end',
+    //     inline: 'center'
+    //   });
+    //   console.log('ref', simpleTableRef);
+    // });
+  }, []);
+
   return (
     <div
       className="scrollsnap"

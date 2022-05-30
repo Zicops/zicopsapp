@@ -5,6 +5,13 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 0 20px 20px;
+
+  .optionsTitle {
+    margin-left: 20px !important;
+    margin: 20px 0;
+    color: $darkThree;
+    font-weight: bold;
+  }
 }
 
 .option_container {
@@ -14,6 +21,63 @@
   // margin-top: 10px;
   // padding-left: 30px;
   padding-bottom: 10px;
+}
+
+.qcontent {
+  // margin: 10px;
+  color: $white;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: -10px;
+}
+.quesImg {
+  display: flex;
+  margin-left: 20px;
+  margin-top: 20px;
+  color: $darkThree;
+  font-weight: bold;
+  img {
+    height: 100px;
+    width: 200px;
+    object-fit: contain;
+    // object-position: left;
+  }
+}
+
+.btn {
+  margin-left: 35%;
+  margin-top: 20px;
+}
+
+.btn button {
+  float: right;
+}
+
+.span_element {
+  display: flex;
+  color: $white;
+  font-weight: 600;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  :nth-child(1) {
+    margin-right: 10px;
+    color: $darkThree;
+    font-weight: bold;
+  }
+  :nth-child(2) {
+    text-align: left;
+  }
+}
+
+.qtitle {
+  margin: 0 auto;
+}
+
+.hint {
+  font-size: 14px;
+  color: $darkThree;
 }
 
 .btn {
@@ -43,6 +107,7 @@
 
 .qcontent {
   margin: 10px;
+  margin-bottom: 0;
   color: $white;
 }
 

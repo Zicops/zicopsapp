@@ -5,7 +5,7 @@ import LabeledInput from '../../../common/FormComponents/LabeledInput';
 import useHandleQuestionBank from '../Logic/useHandleQuestionBank';
 import styles from './addQuestionBank.module.scss';
 
-export default function AddQuestionBank({ isEdit = false, editQuestionBankId, closePopUp }) {
+export default function AddQuestionBank({ isEdit = false, closePopUp, refetchQuestionBank }) {
   const categoryOption = [
     { value: 'Accounting', label: 'Accounting' },
     { value: 'Bussiness', label: 'Bussiness' },
@@ -19,7 +19,7 @@ export default function AddQuestionBank({ isEdit = false, editQuestionBankId, cl
     isAddQuestionBankReady,
     createNewQuestionBank,
     updateQuestionBank
-  } = useHandleQuestionBank(editQuestionBankId);
+  } = useHandleQuestionBank(refetchQuestionBank);
 
   return (
     <div className={`${styles.questionBankContainer}`}>

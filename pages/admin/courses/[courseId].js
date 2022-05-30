@@ -28,7 +28,7 @@ export default function EditCoursePage() {
     loadCourseData({ variables: { course_id: editCourseId } }).then(({ data }) => {
       if (errorCourseData) return setToastMsg({ type: 'danger', message: 'course load error' });
 
-      console.log('data loaded');
+
       if (data?.getCourse) updateCourseMaster(data.getCourse);
     });
   }, [editCourseId]);

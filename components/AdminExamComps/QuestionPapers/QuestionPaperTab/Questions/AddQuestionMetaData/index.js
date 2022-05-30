@@ -15,12 +15,10 @@ export default function AddQuestionMetaData() {
   );
   const [isUploadSelected, setIsUploadSelected] = useState(false);
 
-  const { newMetaData, setNewMetaData, isNewMetaData, handleSaveMetaData } =
+  const { newMetaData, setNewMetaData, isNewMetaDataReady, handleSaveMetaData } =
     useAddQuestionMetaData();
-
   return (
     <>
-      <h2>Add Question Meta Data</h2>
       <div className={`${styles.radioContainer} ${styles.inputField}`}>
         <label>Question Selection:</label>
         <LabeledRadioCheckbox
@@ -46,18 +44,9 @@ export default function AddQuestionMetaData() {
       )}
 
       <section className={`${styles.footerBtns}`}>
-        <Button
-          text="Add"
-          clickHandler={handleSaveMetaData}
-          // isDisabled={!isNewCustomSectionReady}
-        />
+        <Button text="Add" clickHandler={handleSaveMetaData} isDisabled={!isNewMetaDataReady} />
         <Button text="Cancel" clickHandler={() => udpateAddQuestionMetaDataPopUp(false)} />
       </section>
-      {/* <Buttons
-        handleCancel={() => udpateAddQuestionMetaDataPopUp(false)}
-        handleSave={handleSaveMetaData}
-        submitText="Save"
-      /> */}
     </>
   );
 }
