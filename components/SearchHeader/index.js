@@ -23,33 +23,40 @@ export default function SearchHeader() {
   return (
     <div className={`${styles.searchHeader}`}>
       <div className={`${styles.searchQuery}`}>
-        Showing results for <span>"{ q }"</span>
+        Showing results in{' '}
+        <span className={`${styles.colorWhite}`}>
+          "English + Developement + Java Beginner + Self paced"
+        </span>{' '}
+        for <span>"{q}"</span>
       </div>
       <div className={`${styles.bar}`}></div>
       <div className={`${styles.searchParamDropdowns}`}>
-        {/* <div className="searchParamDropdownitem"> */}
         <LabeledDropdown
           dropdownOptions={{
+            isSearchEnable: true,
             placeholder: 'Language',
-            options: Languages
+            options: Languages,
+            // changeHandler: handleInputChange,
+            value: ''
           }}
         />
-        {/* </div> */}
-
         <LabeledDropdown
           dropdownOptions={{
+            isSearchEnable: true,
             placeholder: 'Category',
             options: Type
           }}
         />
         <LabeledDropdown
           dropdownOptions={{
+            isSearchEnable: true,
             placeholder: 'Sub-category',
             options: Type
           }}
         />
         <LabeledDropdown
           dropdownOptions={{
+            isSearchEnable: true,
             placeholder: 'Type',
             options: Type
           }}

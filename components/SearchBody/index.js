@@ -16,7 +16,11 @@ const SearchBody = () => {
       { id: 11, img: '/images/courses/4.png' },
       { id: 12, img: '/images/courses/3.png' },
       { id: 13, img: '/images/courses/2.png' },
-      { id: 14, img: '/images/courses/1.png' }
+      { id: 14, img: '/images/courses/1.png' },
+      { id: 15, img: '/images/courses/4.png' },
+      { id: 16, img: '/images/courses/3.png' },
+      { id: 17, img: '/images/courses/2.png' }
+      // { id: 18, img: '/images/courses/1.png' }
     ];
     return (
         <>

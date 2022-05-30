@@ -104,11 +104,7 @@ export default function RightDropDownMenu() {
                       // margin: '2px',
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
-                      // alignItems: 'center',
-                      '&:hover': {
-                        background: 'red',
-                        color: 'var(--primary)'
-                      }
+                      padding: 0,
                     }
                   }}
                   style={item.styles ? item.styles : {}}
