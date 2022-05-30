@@ -35,29 +35,28 @@ const RangeSlider = () => {
     {
       value: 0,
       label: '0'
+    },
+    {
+      value: 6,
+      label: '6'
+    },
+    {
+      value: 7,
+      label: '7'
+    },
+    {
+      value: 9,
+      label: '9'
+    },
+    {
+      value: 8,
+      label: '8'
     }
   ];
 
   return (
     <>
       <div className={`${styles.rsliderContainer}`}>
-        <Slider
-          //   aria-label="Temperature"
-          defaultValue={3}
-          //   getAriaValueText="no"
-          valueLabelDisplay="auto"
-          step={1}
-          marks
-          min={1}
-          max={10}
-          sx={{
-            '& .MuiSlider-thumb': {
-              borderRadius: '0',
-              height: '10px',
-              width: '10px'
-            }
-          }}
-        />
         <StyledSlider //   aria-label="Temperature"
           defaultValue={3}
           //   getAriaValueText="no"
