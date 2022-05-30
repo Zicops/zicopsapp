@@ -20,13 +20,13 @@ const QuestionPaperView2 = () => {
   return (
     <>
       <div className={`${styles.Maincontainer}`}>
-        {/* <button onClick={() => setIsOpen(!isOpen)}>Clck me</button> */}
-        {/* <PopUp title={'Core Java Fundamental'} isPopUpOpen={isOpen} isFooterVisible={false}> */}
+        <button onClick={() => setIsOpen(!isOpen)}>Clck me</button>
+        <PopUp title={'Core Java Fundamental'} isPopUpOpen={isOpen} isFooterVisible={false}>
           <div className={`${styles.paperContainer}`}>
             <QuestionPaperTop />
             <QuestionSection quesSection={quesSection} />
           </div>
-        {/* </PopUp> */}
+        </PopUp>
       </div>
     </>
   );

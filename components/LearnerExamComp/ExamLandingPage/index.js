@@ -73,9 +73,9 @@ const ExamLandingPage = () => {
           <button className={`${styles.exam_landing_btn}`} style={{color:'var(--dark_three'}}>Skip Exam</button>
         </section>
       </div>
-      <div className={`${styles.exam_landing_footer}`}>
+      {/* <div className={`${styles.exam_landing_footer}`}>
         <button><img  src='./images/switch-to-full-screen-button_icon.png' style={{background:'var(--black)',width:'100%',height:'100%'}}/></button>
-      </div>
+      </div> */}
     </div>
   );
 };

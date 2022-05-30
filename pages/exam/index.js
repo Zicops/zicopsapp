@@ -16,6 +16,7 @@ import LabeledInput from '../../components/common/FormComponents/LabeledInput';
 import LabeledDropdown from '../../components/common/FormComponents/LabeledDropdown';
 import LabeledCheckbox from '../../components/common/FormComponents/LabeledRadioCheckbox';
 import QuestionSection from '../../components/LearnerExamComp';
+import QuestionPaperView2 from '../../components/examComps/QuestionPaperView2/QuestionPaperPreview';
 // import ExamSchedule from '../../components/examComps/ExamSchedule';
 
 const Exam = () => {
@@ -77,76 +78,7 @@ const Exam = () => {
       <MainBody>
         <CourseHead title="My Exam" />
         <MainBodyBox>
-      {/* <LabeledInput inputOptions={inputOptions} changeHandler={changeHandler} />
-          <br />
-          <LabeledDropdown dropdownOptions={dropdownOptions} changeHandler={changeHandler} />
-          <br />
-          <LabeledDropdown dropdownOptions={dropdownOptions1} changeHandler={changeHandler} />
-          <br />
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <LabeledCheckbox
-              type="radio"
-              label="Check this out 1"
-              name={'check'}
-              value={'Check this out 1'}
-            />
-
-            <LabeledCheckbox
-              type="radio"
-              label="Check this out 2"
-              name={'check'}
-              value={'Check this out 2'}
-            />
-
-            <LabeledCheckbox
-              type="radio"
-              label="Check this out 3"
-              name={'check'}
-              value={'Check this out 3'}
-            />
-          </div>
-          <br />
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <LabeledCheckbox
-              type="checkbox"
-              label="Check this out 1"
-              name={'check'}
-              value={'Check this out 1'}
-            />
-            <LabeledCheckbox
-              type="checkbox"
-              label="Check this out 2"
-              name={'check'}
-              value={'Check this out 2'}
-            />
-            <LabeledCheckbox
-              type="checkbox"
-              label="Check this out 3"
-              name={'check'}
-              value={'Check this out 3'}
-            />
-          </div> */}
-      {/* <ExamConfigration />
-          <ExamDatePicker text={'Exam Date'} /> */}
-      {/* <ExamConfigration /> */}
-      {/* <ExamSchedule /> */}
-      {/* <ZicopsRadioButton text={'Scheduled'} />
-          <ZicopsRadioButton text={'Exam Access:'} /> */}
-      {/* <TimePicker /> */}
-      {/* <ExamMaster /> */}
-      {/* <ZicopsExam /> */}
-      {/* <ExamDatePicker text={'Exam Date'} datePicker_label={'Select Exam Date'} /> */}
-      {/* <CustomTimePicker /> */}
-      {/* <CheckBoxField checkBox_label={'Stretch Examination Conduct Duration'} />
-          <InputField label={'Question paper name'} placeholder={'Enter the question paper name'} />
-          <Marks label={'Total marks:'} placeholder={'Total Marks'} />
-          <DropdownSelect
-            inputData={{
-              inputName: 'course_sub_category',
-              label: 'Max Attempts',
-              placeholder: 'Select Max Attempts'
-            }}
-          /> */}
+          <QuestionPaperView2/>
       </MainBodyBox>
       </MainBody>
       {/* <style>{`

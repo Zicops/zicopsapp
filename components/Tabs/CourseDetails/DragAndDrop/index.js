@@ -8,6 +8,7 @@ const DragDrop = ({ data, contextData }) => {
     draglist,
     droplist,
     isDragOn,
+    searchQuery,
     handleSearch,
     highlightDroppable,
     handleOnDragEnd,
@@ -30,6 +31,7 @@ const DragDrop = ({ data, contextData }) => {
                   id="search"
                   placeholder="Search"
                   autoComplete="off"
+                  value={searchQuery}
                   onInput={handleSearch}></input>
               </div>
               <Droppable droppableId="categories">
