@@ -36,6 +36,7 @@
         font-size: 1.5rem;
         font-weight: 600;
         text-transform: uppercase;
+        cursor: pointer;
     }
 
     .answer_all_options_button span {
@@ -45,9 +46,15 @@
     }
 
     .answer_all_options_button_clear {
+        background: $black;
+        border: 2px solid $white;
+        color: $white;
+    }
+    .answer_all_options_button_clear_disabled {
         background: $tertiaryBlack;
         border: 2px solid $secondaryWhite;
-        color: $secondaryWhite; 
+        color: $secondaryWhite;
+        cursor: default;
     }
 
     .answer_all_options_button_unmark{
@@ -61,11 +68,26 @@
         background: $tertiaryBlack;
         font-size: 1.3rem;
     }
-
-    .answer_all_options_button_next{
+    .answer_all_options_button_previous_disabled{
         color: $secondary;
         background: $black;
         border: 1px solid black;
+        font-size: 1.3rem;
+        cursor: default;
+    }
+
+    .answer_all_options_button_next{
+        color: $white;
+        border: 3px solid $primary;
+        background: $tertiaryBlack;
+        font-size: 1.3rem;
+    }
+    .answer_all_options_button_next_disabled{
+        color: $secondary;
+        background: $black;
+        border: 1px solid black;
+        font-size: 1.3rem;
+        cursor: default;
     }
 
 }
