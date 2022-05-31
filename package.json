@@ -20,10 +20,10 @@
     "@szhsin/react-menu": "^3.0.0",
     "apollo-upload-client": "^17.0.0",
     "graphql": "^16.3.0",
-    "graphql-upload": "^13.0.0",
+    "graphql-upload": "^15.0.1",
     "mui-datatables": "^3.8.5",
-    "next": "^12.0.8",
-    "react": "^17.0.2",
+    "next": "12.0.8",
+    "react": "17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-datepicker": "^4.6.0",
     "react-documents": "^1.1.2",
@@ -32,7 +32,7 @@
     "react-select": "^5.2.2",
     "react-slick": "^0.28.1",
     "reactjs-popup": "^2.0.5",
-    "recoil": "^0.7.1"
+    "recoil": "0.7.1"
   },
   "devDependencies": {
     "eslint": "^8.12.0",
