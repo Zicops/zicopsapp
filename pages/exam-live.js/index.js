@@ -3,8 +3,9 @@ import ExamLandingPage from "../../components/LearnerExamComp/ExamLandingPage";
 
 const ExamLive = () => {
     return ( 
-        <LearnerExamComponent />
+        // <LearnerExamComponent />
         // <ExamLandingPage/>
+        <></>
      );
 }
  

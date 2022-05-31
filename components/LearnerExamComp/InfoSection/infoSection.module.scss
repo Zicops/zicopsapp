@@ -3,18 +3,20 @@
 
 .info_section {
     // border: 1px solid red;
-    width: 94%;
+    width: 100%;
 
     .info_section_button_boxes_container {
         width: 100%;
         padding: 0 15px;
         display: flex;
-        justify-content: space-between;
+        align-items: center;
+        justify-content: space-around;
 
         .info_button {
             border: none;
             background: transparent;
             display: flex;
+            align-items: center;
             cursor: pointer;
             color: $darkThree;
 
@@ -23,7 +25,11 @@
                 height: 20px;
                 border: 1px solid black;
                 background: $primary;
-                margin-right: 10px;
+                margin-right: 3px;
+            }
+
+            .info_button_boxes_attempted {
+                background: $primary;
             }
 
             .info_button_boxes_marked {
@@ -31,9 +37,23 @@
             }
 
             .info_button_boxes_unattempted {
-                background: $primary;
+                background: $secondary;
+            }
+
+            .info_button_boxes_unvisited {
+                background: $secondaryBlack;
             }
         }
+
+    }
+
+    .info_section_seeAll_button_container{
+
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
 
         .info_section_seeAll_button {
             border: none;
@@ -44,23 +64,27 @@
         }
     }
 
+
+
     .info_section_answer_details {
         width: 100%;
         padding: 0 15px;
         text-align: center;
         margin-top: 10px;
 
+
         .info_section_answer_details_marks {
-            font-size: 1.5rem;
+            font-size: 20px;
             color: $primary;
             font-weight: 600;
         }
+
+        p {
+            font-size: 16px;
+            color: $darkThree;
+        }
     }
 
-    .info_section_answer_details p {
-        font-size: 1.5rem;
-        color: $darkThree;
-    }
 
     .info_section_exam_info_button_container {
         width: 100%;
@@ -73,9 +97,9 @@
         .info_section_exam_info_button {
             width: 80%;
             margin-top: 10px;
-            height: 45px;
-            font-size: 20px;
-            border-radius: 10px;
+            height: 30px;
+            font-size: 16px;
+            border-radius: 3px;
             cursor: pointer;
             color: $white;
         }
@@ -92,16 +116,15 @@
     }
 
     .info_section_watch{
-        width: 100%;
+        width: 80%;
         text-align: center;
-        margin-top: 10px;
-        // border: 1px solid red;
-        font-family: 'Orbitron', sans-serif;
+        margin: 10px auto;
 
         .info_section_watch_time{
-            font-size: 2.4rem;
-            margin-top: 10px;
+            font-size: 30px;
+            padding-top: 20px;
             color: $primary;
+            font-family: 'Orbitron', sans-serif;
         }
     }
 }

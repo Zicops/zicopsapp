@@ -34,6 +34,8 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     border: 'none',
     borderBottom: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f02b' : '#3030302b'}`,
     fontSize: '16px',
+    maxHeight: '250px !important',
+    whiteSpace: 'break-spaces !important'
     // color: '#868686'
   },
   // '& .MuiDataGrid-cell:hover': {
@@ -45,8 +47,9 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   '& .MuiDataGrid-columnHeaderTitleContainerContent': {
     overflow: 'visible'
   },
-  '& .MuiDataGrid-row:hover': {
-    // backgroundColor: '#7373732b'
+  '& .MuiDataGrid-row': {
+    // backgroundColor: '#7373732b ',
+    maxHeight: '250px !important'
   },
   '& .MuiDataGrid-row:hover .MuiDataGrid-cell': {
     color: 'var(--primary)'

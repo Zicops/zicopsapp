@@ -10,6 +10,7 @@ export default function TextInputWithFile({
   fileInputHandler,
   fileNmae
 }) {
+  console.log(fileNmae);
   return (
     <>
       <div className={`w-100 ${styles.container}`}>

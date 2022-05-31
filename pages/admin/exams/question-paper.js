@@ -1,10 +1,11 @@
+import QuestionMaster from '../../../components/AdminExamComps/QuestionBanks/QuestionMasterTab/QuestionMaster';
 import AdminHeader from '../../../components/common/AdminHeader';
 import MainBody from '../../../components/common/MainBody';
 import MainBodyBox from '../../../components/common/MainBodyBox';
 import Sidebar from '../../../components/common/Sidebar';
 import { examSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
 import AddQuestionBank from '../../../components/examComps/AddQuestionBank';
-import QuestionMaster from '../../../components/examComps/QuestionMasterTab/QuestionMaster';
+
 import ExamsTabs from '../../../components/examComps/ExamsTabs';
 import ExamFooter from '../../../components/examComps/ExamsTabs/ExamFooter';
 import QuestionPaperMaster from '../../../components/examComps/ExamsTabs/QuestionPaperMaster';

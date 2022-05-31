@@ -37,11 +37,7 @@ export default function AddQuestionMetaData() {
         />
       </div>
 
-      {isUploadSelected ? (
-        <UploadNewQuestionBank />
-      ) : (
-        <ExistingQuestion newMetaData={newMetaData} setNewMetaData={setNewMetaData} />
-      )}
+      {isUploadSelected ? <UploadNewQuestionBank /> : <ExistingQuestion />}
 
       <section className={`${styles.footerBtns}`}>
         <Button text="Add" clickHandler={handleSaveMetaData} isDisabled={!isNewMetaDataReady} />
