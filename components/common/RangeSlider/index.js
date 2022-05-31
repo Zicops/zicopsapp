@@ -41,7 +41,7 @@ const RangeSlider = () => {
   return (
     <>
       <div className={`${styles.rsliderContainer}`}>
-        <Slider
+        {/* <Slider
           //   aria-label="Temperature"
           defaultValue={3}
           //   getAriaValueText="no"
@@ -57,7 +57,7 @@ const RangeSlider = () => {
               width: '10px'
             }
           }}
-        />
+        /> */}
         <StyledSlider //   aria-label="Temperature"
           defaultValue={3}
           //   getAriaValueText="no"

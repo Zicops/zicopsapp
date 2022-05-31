@@ -18,7 +18,7 @@ export default function useHandleTabs(courseContextData) {
   // recoil state
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
-  
+
   const [fileData, setFileData] = useState({});
   const [isPreviewPopUpOpen, setIsPreviewPopUpOpen] = useState(false);
   const [previewFileData, setPreviewFileData] = useState(null);
@@ -141,7 +141,6 @@ export default function useHandleTabs(courseContextData) {
   }
 
   function handleChange(e) {
-    console.log(e);
     if (e.target.type === 'checkbox') {
       if (e.target.name.includes('is_')) {
         // toggle button

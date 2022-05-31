@@ -80,7 +80,9 @@
     width: 50%;
 
     &:last-child {
-      padding-left: 20px;
+      label{
+        padding-left: 15%;
+      }
     }
   }
 }

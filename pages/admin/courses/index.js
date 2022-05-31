@@ -10,13 +10,13 @@ import CourseTabs from '../../../components/Tabs';
 import { courseContext } from '../../../state/contexts/CourseContext';
 
 export default function AddCoursePage() {
-    const { updateCourseMaster } = useContext(courseContext);
+  const { updateCourseMaster } = useContext(courseContext);
 
-    // reset context state
-    useEffect(() => {
-      updateCourseMaster({});
-    }, []);
-  
+  // reset context state
+  useEffect(() => {
+    updateCourseMaster({});
+  }, []);
+
   return (
     <>
       <Sidebar sidebarItemsArr={courseSidebarData} />

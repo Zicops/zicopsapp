@@ -18,7 +18,10 @@ const DragDrop = ({ data, contextData }) => {
   return (
     <>
       <div className="row" style={{ alignItems: 'center' }}>
-        <DragDropContext onDragStart={highlightDroppable} onDragEnd={handleOnDragEnd}>
+        <DragDropContext
+          style={{ overflow: 'auto' }}
+          onDragStart={highlightDroppable}
+          onDragEnd={handleOnDragEnd}>
           <label htmlFor="name3" className="col_25">
             Additional Categories / Sub-categories
           </label>
@@ -38,6 +41,8 @@ const DragDrop = ({ data, contextData }) => {
                 {(provided) => (
                   <div id="dca" {...provided.droppableProps} ref={provided.innerRef}>
                     {draglist.map(({ rank, name }, index) => {
+                      if (!name.toLowerCase().includes(searchQuery)) return null;
+
                       return (
                         <Draggable key={name + rank} draggableId={'drag_' + rank} index={index}>
                           {(provided) => (
@@ -87,7 +92,7 @@ const DragDrop = ({ data, contextData }) => {
                             <div className="Sr_no">{index + 1}</div>
                             <div className="inner_drop_ele">
                               {name}
-                              <span data-index={[rank, name, index]} onClick={removeItem}>
+                              <span data-index={`${rank}::${name}::${index}`} onClick={removeItem}>
                                 x
                               </span>
                             </div>
@@ -164,6 +169,9 @@ const DragDrop = ({ data, contextData }) => {
             color: #858f8f;
           }
           .inner_drop_ele {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             background-color: #202222;
             /* margin: 10px; */
             border-radius: 5px;

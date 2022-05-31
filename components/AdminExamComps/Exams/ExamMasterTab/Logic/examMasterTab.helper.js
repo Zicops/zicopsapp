@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { ExamMasterAtom } from '../../../../../state/atoms/exams.atoms';
+import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import Configuration from '../Configuration';
 import ExamMaster from '../ExamMaster';
 import Schedule from '../Schedule';
@@ -7,7 +7,7 @@ import Schedule from '../Schedule';
 export const ExamMasterTabDataSelector = selector({
   key: 'ExamMasterTabData',
   get: ({ get }) => {
-    const isScheduledExam = get(ExamMasterAtom).type;
+    const isScheduledExam = get(ExamTabDataAtom).type;
 
     if (isScheduledExam === 'scheduled') return getTabData();
 

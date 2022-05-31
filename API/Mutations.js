@@ -737,6 +737,7 @@ export const ADD_QUESTION_BANK_QUESTION = gql`
 
 export const UPDATE_QUESTION_BANK_QUESTION = gql`
   mutation updateQuestionBankQuestion(
+    $id: ID
     $description: String
     $type: String
     $difficulty: Int
@@ -750,6 +751,7 @@ export const UPDATE_QUESTION_BANK_QUESTION = gql`
   ) {
     updateQuestionBankQuestion(
       input: {
+        id: $id
         Description: $description
         Type: $type
         Difficulty: $difficulty
@@ -819,6 +821,7 @@ export const ADD_QUESTION_OPTIONS = gql`
 
 export const UPDATE_QUESTION_OPTIONS = gql`
   mutation updateQuestionOptions(
+    $id: ID
     $qmId: String
     $description: String
     $isCorrect: Boolean
@@ -830,6 +833,7 @@ export const UPDATE_QUESTION_OPTIONS = gql`
   ) {
     updateQuestionOptions(
       input: {
+        id: $id
         QmId: $qmId
         Description: $description
         IsCorrect: $isCorrect
@@ -903,27 +907,27 @@ export const UPDATE_QUESTION_PAPER = gql`
   mutation updateQuestionPaper(
     $name: String
     $category: String
-    $subCategory: String
+    $sub_category: String
     $createdBy: String
     $updatedBy: String
     $isActive: Boolean
-    $difficultyLevel: String
-    $sectionWise: Boolean
+    $difficulty_level: String
+    $section_wise: Boolean
     $description: String
-    $suggestedDuration: String
+    $suggested_duration: String
   ) {
     updateQuestionPaper(
       input: {
         name: $name
         Category: $category
-        SubCategory: $subCategory
+        SubCategory: $sub_category
         CreatedBy: $createdBy
         UpdatedBy: $updatedBy
         IsActive: $isActive
-        DifficultyLevel: $difficultyLevel
-        SectionWise: $sectionWise
+        DifficultyLevel: $difficulty_level
+        SectionWise: $section_wise
         Description: $description
-        SuggestedDuration: $suggestedDuration
+        SuggestedDuration: $suggested_duration
       }
     ) {
       id
@@ -980,6 +984,173 @@ export const ADD_QUESTION_PAPER_SECTION = gql`
       Type
       DifficultyLevel
       TotalQuestions
+    }
+  }
+`;
+
+export const MAP_SECTION_TO_BANK = gql`
+  mutation mapSectionToBank(
+    $qbId: String
+    $sectionId: String
+    $difficultyLevel: String
+    $totalQuestions: Int
+    $questionMarks: String
+    $questionType: String
+    $retrieveType: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    mapSectionToBank(
+      input: {
+        QbId: $qbId
+        SectionId: $sectionId
+        DifficultyLevel: $difficultyLevel
+        TotalQuestions: $totalQuestions
+        QuestionMarks: $questionMarks
+        QuestionType: $questionType
+        RetrieveType: $retrieveType
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      QbId
+      SectionId
+      DifficultyLevel
+      TotalQuestions
+      QuestionMarks
+      QuestionType
+      RetrieveType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const ADD_EXAM = gql`
+  mutation addExam(
+    $name: String
+    $description: String
+    $code: String
+    $qpId: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+    $type: String
+    $scheduleType: String
+    $duration: Int
+    $status: String
+    $category: String
+    $sub_category: String
+  ) {
+    addExam(
+      input: {
+        Name: $name
+        Description: $description
+        Code: $code
+        QpId: $qpId
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+        Type: $type
+        ScheduleType: $scheduleType
+        Duration: $duration
+        Status: $status
+        Category: $category
+        SubCategory: $sub_category
+      }
+    ) {
+      id
+      Name
+      Description
+      Code
+      QpId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      ScheduleType
+      Duration
+      Status
+      Category
+      SubCategory
+    }
+  }
+`;
+
+export const ADD_EXAM_SCHEDULE = gql`
+  mutation addExamSchedule(
+    $examId: String
+    $start: Int
+    $end: Int
+    $bufferTime: Int
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    addExamSchedule(
+      input: {
+        ExamId: $examId
+        Start: $start
+        End: $end
+        BufferTime: $bufferTime
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      Start
+      End
+      BufferTime
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const ADD_EXAM_INSTRUCTION = gql`
+  mutation addExamInstruction(
+    $examId: String
+    $passingCriteria: String
+    $noAttempts: Int
+    $accessType: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    addExamInstruction(
+      input: {
+        ExamId: $examId
+        PassingCriteria: $passingCriteria
+        NoAttempts: $noAttempts
+        AccessType: $accessType
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      PassingCriteria
+      NoAttempts
+      AccessType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
     }
   }
 `;

@@ -152,7 +152,7 @@
   width: 150px;
   border-bottom: 1px solid #ffffff80;
 }
-.nav_search:focus{
+.nav_search:focus, .nav_search_long{
   width: 250px;
   border-bottom: 1px solid $primary;
 }
@@ -240,7 +240,7 @@ select.nav_search_dropdow:selected {
     transform-origin: top center;
     animation: scaleZ 500ms $var*60ms ease-in-out forwards;
     &:hover{
-      background-color: $darkOne !important;
+      background-color: $bgHeader !important;
     }
   }
 }

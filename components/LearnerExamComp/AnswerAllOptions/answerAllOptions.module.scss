@@ -15,11 +15,13 @@
 }
 
 .answer_all_options_buttons_container {
+    position: absolute;
+    bottom: -20px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    height: 10%;
-    width: 100%;
+    padding-top: 20px;
+    width: 80%;
     background: $tertiaryBlack;
 
     .answer_all_options_button {

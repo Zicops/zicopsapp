@@ -32,3 +32,69 @@
   grid-template-columns: 50% 50%;
   justify-items: start;
 }
+
+.instructionsContainer {
+  display: flex;
+  gap: 20px;
+  margin-left: 25%;
+}
+
+.passingCriteriaContainer {
+  display: flex;
+  align-items: center;
+  margin-left: 25%;
+  margin-bottom: 20px;
+
+  input {
+    padding: 10px;
+    margin: 0;
+    height: 100%;
+    background-color: $darkTwo;
+
+    color: $secondaryBlack;
+    font-size: 13px;
+    font-family: 'Open Sans';
+
+    border: 2px solid $darkThree;
+
+    &:not(:placeholder-shown) {
+      /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+      color: $white;
+      border: 2px solid $primary;
+    }
+    &:focus {
+      border: 2px solid $primary;
+      box-shadow: 0px 0px 10px 0px $primary;
+      outline: 0;
+      color: $white;
+    }
+  }
+}
+
+.totalMarksSection {
+  display: grid;
+  grid-template-columns: 50% 30% 20%;
+
+  div {
+    &:first-child {
+      input {
+        width: 40%;
+      }
+    }
+
+    &:last-child {
+      margin-left: 10px;
+    }
+  }
+}
+
+.attemptsContainer {
+  display: flex;
+  margin-bottom: 20px;
+
+  > div {
+    &:first-child {
+      margin-left: 25%;
+    }
+  }
+}

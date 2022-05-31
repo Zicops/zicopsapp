@@ -1,9 +1,11 @@
 import TextInputWithFile from '../../../../../common/TextInputWithFile';
+import { imageTypes } from '../../../../Logic/questionBank.helper';
 import styles from '../../../questionMasterTab.module.scss';
 
 export default function InputWithCheckbox({
   labelCount,
   isCorrectHandler,
+  optionData,
   inputChangeHandler,
   fileInputHandler
 }) {
@@ -16,17 +18,25 @@ export default function InputWithCheckbox({
           </div>
           <div>
             <label className={styles.checkboxContainer}>
-              <input type="checkbox" name="isCorrect" onChange={isCorrectHandler} />
+              <input
+                type="checkbox"
+                checked={optionData?.isCorrect}
+                name={labelCount}
+                onChange={isCorrectHandler}
+              />
               <span className={styles.checkmark}></span>
             </label>
           </div>
         </div>
         <TextInputWithFile
           type="option"
+          fileNmae={optionData?.file?.name || optionData?.attachment}
+          value={optionData?.description}
           inputName="description"
+          accept={imageTypes.join(', ')}
           fileInputHandler={fileInputHandler}
           changeHandler={inputChangeHandler}
-          text="Enter answer in less than 160 characters"
+          text="Enter anser in less than 160 characters"
         />
       </div>
     </>

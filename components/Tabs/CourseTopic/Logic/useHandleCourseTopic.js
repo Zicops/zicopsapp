@@ -73,7 +73,7 @@ export default function useHandleCourseTopic() {
       updateTopicData([]);
       return;
     }
-    
+
     loadModuleData({ variables: { course_id: courseId } }).then(({ data }) => {
       const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence');
       updateModuleData(sortedData);

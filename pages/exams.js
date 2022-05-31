@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { bigImages, sliderImages } from '../API/DemoSliderData';
 import CommonCalendar from '../components/common/CommonCalendar';
@@ -8,6 +9,7 @@ import BigCardSlider from '../components/medium/BigCardSlider';
 import ZicopsCarousel from '../components/ZicopsCarousel';
 
 export default function LearnerExams() {
+  const router = useRouter();
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -62,7 +64,11 @@ export default function LearnerExams() {
       handleClick: () => setShowTable(!showTable),
       isActive: showTable
     },
-    { name: 'Open Available Exams', isActive: false },
+    {
+      name: 'Open Available Exams',
+      handleClick: () => router.push('/exam-screen'),
+      isActive: false
+    },
     { name: 'Completed Exams', isActive: false }
   ];
 
@@ -207,19 +213,28 @@ export default function LearnerExams() {
   ];
 
   const simpleTableRef = useRef(null);
-  
-  // useEffect(() => {
-  //   document.addEventListener('scroll', function (e) {
-  //     // lastKnownScrollPosition = window.scrollY;
-  //     simpleTableRef.current?.scrollIntoView({
-  //       behavior: 'auto',
-  //       block: 'end',
-  //       inline: 'center'
-  //     });
-  //     console.log('ref', simpleTableRef);
-  //   });
-  // }, []);
-  
+  useEffect(() => {
+    // let isSnapped = false;
+    // const observer = new IntersectionObserver((entries) => {
+    //   if (entries[0].isIntersecting && !isSnapped) {
+    //     simpleTableRef.current?.scrollIntoView(false);
+    //     isSnapped = true;
+    //   } else {
+    //     isSnapped = false;
+    //   }
+    // });
+    // observer.observe(simpleTableRef.current);
+    // document.addEventListener('scroll', function (e) {
+    //   // lastKnownScrollPosition = window.scrollY;
+    //   simpleTableRef.current?.scrollIntoView({
+    //     behavior: 'auto',
+    //     block: 'end',
+    //     inline: 'center'
+    //   });
+    //   console.log('ref', simpleTableRef);
+    // });
+  }, []);
+
   return (
     <div
       className="scrollsnap"
