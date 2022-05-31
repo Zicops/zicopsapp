@@ -1,0 +1,17 @@
+@import '../../../styles/base.scss';
+.CongratulationsScreenButton button{
+    background-color: $black;
+    width:310px; 
+    color:$primary;
+    padding: 7px 10px;
+    border: 2px solid $primary;
+    border-radius: 3px;
+    font-size: 16px;
+}
+.CongratulationsScreenButton button:hover{
+    background-color: $primary;
+    color: $black;
+    cursor: pointer;
+    transition: 0.5s ;
+
+}
