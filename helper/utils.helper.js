@@ -47,3 +47,16 @@ export const TableResponsiveRows = [
     pageSize: 12
   }
 ];
+
+export function getPageSizeBasedOnScreen() {
+  if (!process.browser) return 6;
+
+  const screenWidth = window.screen.width;
+  let pageSize = 6;
+
+  TableResponsiveRows.forEach((r) => {
+    if (r.breakpoint <= screenWidth) pageSize = r.pageSize;
+  });
+
+  return pageSize;
+}

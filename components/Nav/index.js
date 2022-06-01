@@ -72,12 +72,18 @@ export default function Nav() {
             <input
               type="search"
               ref={searchInputRef}
-              className={styles.nav_search}
+              className={`${styles.nav_search} ${searchQuery ? styles.nav_search_long : ''}`}
               placeholder="Search..."
               onInput={handleSearch}
-              autoFocus={true}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  searchQuery && router.push(`/search-page?q=${searchQuery}`);
+                }
+              }}
             />
-            <button className={styles.nav_search_btn}></button>
+            <button
+              className={styles.nav_search_btn}
+              onClick={() => searchQuery && router.push(`/search-page?q=${searchQuery}`)}></button>
           </div>
         )}
 

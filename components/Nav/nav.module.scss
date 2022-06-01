@@ -152,7 +152,7 @@
   width: 150px;
   border-bottom: 1px solid #ffffff80;
 }
-.nav_search:focus{
+.nav_search:focus, .nav_search_long{
   width: 250px;
   border-bottom: 1px solid $primary;
 }
@@ -234,10 +234,14 @@ select.nav_search_dropdow:selected {
   .dropdown_item_#{$var} {
     opacity: 0;
     width: 250px;
+    padding: 7px 10px !important;
     color: $primary !important;
     background-color: $bgHeader !important;
     transform-origin: top center;
     animation: scaleZ 500ms $var*60ms ease-in-out forwards;
+    &:hover{
+      background-color: $bgHeader !important;
+    }
   }
 }
 

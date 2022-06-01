@@ -6,9 +6,9 @@ export default function useHandleDragDrop(courseContextData) {
   const { fullCourse, updateCourseMaster } = courseContextData;
   const { data } = getQueryData(GET_CATS_N_SUB_CATS);
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [draglist, updateDraglist] = useState([]);
-  const [filteredDraglist, updateFilteredDraglist] = useState([]);
-  const [droplist, updateDropList] = useState(fullCourse.sub_categories || []);
+  const [droplist, updateDroplist] = useState(fullCourse.sub_categories || []);
   const [isDragOn, setIsDragOn] = useState(0);
 
   // load and set data
@@ -35,13 +35,9 @@ export default function useHandleDragDrop(courseContextData) {
       subCategoriesForDroplist = droplist.filter((c) => c.name);
 
       updateDraglist(subCategoriesForDraglist);
-      updateDropList(subCategoriesForDroplist);
+      updateDroplist(subCategoriesForDroplist);
     }
   }, []);
-
-  useEffect(() => {
-    updateFilteredDraglist(draglist);
-  }, [draglist]);
 
   useEffect(() => {
     updateCourseMaster({
@@ -52,31 +48,40 @@ export default function useHandleDragDrop(courseContextData) {
 
   function handleOnDragEnd(result) {
     setIsDragOn(2);
-    const previousDraglist = [...draglist];
-    const previousDroplist = [...droplist];
+    // local array of state
+    const prevDraglist = [...draglist];
+    const prevDroplist = droplist.length ? [...droplist] : [];
+
+    // return if the item is not dropped in the subcat box
     if (result.destination?.droppableId !== 'subcategories') return;
+    // return if selected items are 5
+    if (prevDroplist.length >= 5) return;
 
-    if (result.source?.droppableId === 'subcategories') {
-      const [reorderedItem] = previousDroplist.splice(result.source.index, 1);
-      previousDroplist.splice(result.destination.index, 0, reorderedItem);
-      previousDroplist.map((e, i) => (e.rank = i));
+    // rearrange the rank in subcat box
+    if (result.source.droppableId === 'subcategories') {
+      const [reorderedItem] = prevDroplist.splice(result.source.index, 1);
+      prevDroplist.splice(result.destination.index, 0, reorderedItem);
+      prevDroplist.map((e, i) => (e.rank = i));
 
-      return updateDropList(previousDroplist);
+      return updateDroplist(prevDroplist);
     }
 
-    if (previousDroplist.length >= 5) {
+    // remove item from drag list and add in drop list
+    if (result.destination?.droppableId === 'subcategories') {
+      const dragItemIndex = result.source.index;
+      const [dragItem] = prevDraglist.splice(dragItemIndex, 1);
+      dragItem['rank'] = prevDroplist.length;
+      prevDroplist.push(dragItem);
+
+      updateDroplist(prevDroplist);
+      updateDraglist(prevDraglist);
+
       return;
     }
-
-    const [reorderedItem] = previousDraglist.splice(result.source.index, 1);
-    reorderedItem['rank'] = previousDroplist.length;
-    previousDroplist.push(reorderedItem);
-    updateDropList(previousDroplist);
-    updateDraglist(previousDraglist);
   }
 
   function removeItem(e) {
-    const [rank, name, index] = e.target.getAttribute('data-index').split(',');
+    const [rank, name, index] = e.target.getAttribute('data-index').split('::');
 
     const previousDroplist = [...droplist];
     const previousDraglist = [...draglist];
@@ -84,22 +89,15 @@ export default function useHandleDragDrop(courseContextData) {
     previousDroplist.splice(index, 1);
     previousDraglist.push({ rank, name });
 
-    updateDropList(previousDroplist);
+    updateDroplist(previousDroplist);
     updateDraglist(previousDraglist);
-
-    if (previousDroplist.length == 0) {
-      setIsDragOn(0);
-    }
+    if (previousDroplist.length === 0) setIsDragOn(0);
   }
 
   function handleSearch(e) {
-    const searchQuery = e.target.value.toLowerCase().trim();
-    const currentDraglist = [...draglist];
-    const filteredList = currentDraglist.filter((category) =>
-      category.name.toLowerCase().includes(searchQuery)
-    );
+    const query = e.target.value.toLowerCase().trim();
 
-    updateFilteredDraglist(filteredList);
+    setSearchQuery(query);
   }
 
   function highlightDroppable() {
@@ -107,9 +105,10 @@ export default function useHandleDragDrop(courseContextData) {
   }
 
   return {
-    draglist: filteredDraglist,
+    draglist,
     droplist,
     isDragOn,
+    searchQuery,
     handleSearch,
     highlightDroppable,
     handleOnDragEnd,

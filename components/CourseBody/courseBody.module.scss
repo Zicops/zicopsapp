@@ -35,3 +35,24 @@
    box-shadow: 0px 0px 55px 0px $darkOne;
    border-radius: 50%;
   }
+.carouselButtonGroup {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+
+  .btn {
+    position: absolute;
+    transform: translateY(-50%);
+
+    height: 30px;
+    width: 30px;
+
+    &.left {
+      left: 30px;
+    }
+
+    &.right {
+      right: 30px;
+    }
+  }
+}

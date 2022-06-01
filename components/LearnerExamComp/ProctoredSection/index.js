@@ -11,9 +11,9 @@ const ProctoredSection = () => {
             <button className={`${styles.proctor_section_btn}`}>Chat</button>
         </div>
         <div className={`${styles.proctor_section_img}`}>
-            <Image src={proctorImage} width='260px' height='150px' />
+            {/*<img src={'/images/courses/2.png'} width='100%' height='150px' alt={'camera'}/>*/}
         </div>
-        <div >
+        <div className={`${styles.proctor_full_width}`}>
           <div className={`${styles.proctor_section_info}`}>
             <p>Name</p>
             <p>ID</p>

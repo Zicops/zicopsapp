@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import PopUp from '../common/PopUp';
-import ViewDoc from '../common/ViewDoc';
-import styles from './courseResourcesLoop.module.scss';
+import PopUp from '../../common/PopUp';
+import ViewDoc from '../../common/ViewDoc';
+import styles from '../courseResourcesOpen.module.scss';
 
 const CourseResourceLoop = ({ resource }) => {
   const [showDoc, setShowDoc] = useState(false);

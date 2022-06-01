@@ -1,5 +1,5 @@
 @import '../../styles/base.scss';
-
+@import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Open+Sans:wght@400;500;600;700&display=swap');
 .videoContainer {
   position: relative;
   // padding-bottom: 56.25%;
@@ -285,7 +285,6 @@
   &.increaseDistanceFromBottom {
     bottom: 120px;
   }
-
 }
 .controls {
   display: flex;
@@ -475,17 +474,17 @@
 // draggable div
 
 .draggableDiv {
-  height: 100px;
-  width: 100px;
-
-  background-color: red;
-
+  height: 150px;
+  width: 150px;
+  padding: 5px;
+  background-color: $primary;
+  font-family: 'Grape Nuts';
   position: absolute;
   top: 100px;
   left: 100px;
   z-index: 15;
-
+  cursor: move;
   &:hover {
-    background-color: green;
+    background-color: $primary;
   }
 }

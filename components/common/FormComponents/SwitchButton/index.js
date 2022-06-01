@@ -15,7 +15,6 @@ export default function SwitchButton({
         }
         label={label}
         labelPlacement={labelPlacement}
-
       />
     </>
   );

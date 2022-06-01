@@ -1,78 +1,49 @@
+import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { QuestionBankAtom } from '../../../state/atoms/exams.atoms';
+import { GET_LATEST_QUESTION_BANK, queryClient } from '../../../API/Queries';
+import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
+import { getQuestionBankObject, SelectedQuestionBankAtom } from '../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
+import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
 import AddQuestionBank from './AddQuestionBank';
 
-// TODO: delete later, temporary data, replaced from backend later
-const data = [
-  {
-    id: 'c9vi5778u0hjj4gm4c00',
-    name: 'Question Bank 2',
-    category: 'Design',
-    sub_category: 'UI Design',
-    noOfQuestions: 200,
-    as: 1
-  },
-  {
-    id: 2,
-    name: 'Effective Communication',
-    category: 'Soft Skill',
-    sub_category: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 3,
-    name: 'Core Java Fundamentals',
-    category: 'IT Development',
-    sub_category: 'Java',
-    noOfQuestions: 200
-  },
-  {
-    id: 4,
-    name: 'Design Basics',
-    category: 'Design',
-    sub_category: 'UI Design',
-    noOfQuestions: 200
-  },
-  {
-    id: 5,
-    name: 'Effective Communication',
-    category: 'Soft Skill',
-    sub_category: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 6,
-    name: 'Core Java Fundamentals',
-    category: 'IT Development',
-    sub_category: 'Java',
-    noOfQuestions: 200
-  },
-  {
-    id: 7,
-    name: 'Effective Communication',
-    category: 'Soft Skill',
-    sub_category: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 8,
-    name: 'Design Basics',
-    category: 'Design',
-    sub_category: 'UI Design',
-    noOfQuestions: 200
-  }
-];
 export default function QuestionBankTable({ isEdit = false }) {
-  // const { pageSize } = useHandlePagesize();
+  const [loadQuestionBank, { error: errorQuestionBankData, refetch: refetchQuestionBank }] =
+    useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
+
   const router = useRouter();
-  const [editQuestionBankId, setEditQuestionBankId] = useState(null);
-  const [questionBank, setQuestionBank] = useRecoilState(QuestionBankAtom);
-  const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('editQuestionBank'));
+  const [addPopUp, setAddPopUp] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
+  const [editPopUp, setEditPopUp] = useRecoilState(PopUpStatesAtomFamily('editQuestionBank'));
+  const [selectedQB, setSelectedQB] = useRecoilState(SelectedQuestionBankAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  // state for storing table data
+  const [questionBank, setQuestionBank] = useState([]);
+
+  // load table data
+  useEffect(() => {
+    const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
+
+    loadQuestionBank({ variables: queryVariables }).then(({ data }) => {
+      if (errorQuestionBankData)
+        return setToastMsg({ type: 'danger', message: 'question bank load error' });
+
+      setQuestionBank(data?.getLatestQuestionBank?.questionBanks || []);
+    });
+  }, []);
+
+  function refetchBankData() {
+    refetchQuestionBank().then(({ data: { getLatestQuestionBank } }) => {
+      setQuestionBank(getLatestQuestionBank?.questionBanks);
+    });
+
+    if (errorQuestionBankData)
+      return setToastMsg({ type: 'danger', message: 'Question Bank Refetch Error' });
+  }
 
   const columns = [
     {
@@ -116,8 +87,8 @@ export default function QuestionBankTable({ isEdit = false }) {
                   border: '0'
                 }}
                 onClick={() => {
-                  setEditQuestionBankId(params.row.id);
-                  udpatePopUpState(true);
+                  setSelectedQB(getQuestionBankObject(params.row));
+                  setEditPopUp(true);
                 }}>
                 <img src="/images/edit-icon.png" width={20}></img>
               </button>
@@ -130,7 +101,10 @@ export default function QuestionBankTable({ isEdit = false }) {
                 outline: '0',
                 border: '0'
               }}
-              onClick={() => router.push(router.asPath + `/${params.row.id}`)}>
+              onClick={() => {
+                setSelectedQB(getQuestionBankObject(params.row));
+                router.push(router.asPath + `/${params.row.id}`);
+              }}>
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>
           </>
@@ -140,36 +114,38 @@ export default function QuestionBankTable({ isEdit = false }) {
     }
   ];
 
-  const closeBtn = {
-    handleClick: () => udpatePopUpState(false)
-  };
-
-  // TODO: remove this later or replace with api get query
-  useEffect(() => {
-    setQuestionBank([...questionBank, ...data]);
-  }, []);
-
   return (
     <>
       <ZicopsTable
         columns={columns}
         data={questionBank}
-        pageSize={7}
+        pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
       />
 
       {/* add question bank pop up */}
-      {/* edit id: "c9vi5778u0hjj4gm4c00" */}
+      <PopUp
+        title="Add Question Bank"
+        isPopUpOpen={addPopUp}
+        closeBtn={{ handleClick: () => setAddPopUp(false) }}
+        isFooterVisible={false}>
+        <AddQuestionBank
+          refetchQuestionBank={refetchBankData}
+          closePopUp={() => setAddPopUp(false)}
+        />
+      </PopUp>
+
+      {/* edit question bank pop up */}
       <PopUp
         title="Edit Question Bank"
-        isPopUpOpen={popUpState}
-        closeBtn={closeBtn}
+        isPopUpOpen={editPopUp}
+        closeBtn={{ handleClick: () => setEditPopUp(false) }}
         isFooterVisible={false}>
         <AddQuestionBank
           isEdit={true}
-          editQuestionBankId={editQuestionBankId}
-          closePopUp={() => udpatePopUpState(false)}
+          refetchQuestionBank={refetchBankData}
+          closePopUp={() => setEditPopUp(false)}
         />
       </PopUp>
     </>

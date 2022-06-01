@@ -1,7 +1,5 @@
 import { MenuList, Paper } from '@mui/material';
 import Button from '@mui/material/Button';
-import Fade from '@mui/material/Fade';
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import '@reach/menu-button/styles.css';
 import Image from 'next/image';
@@ -62,6 +60,7 @@ export default function RightDropDownMenu() {
     },
     { id: 6, class: 'dropdown-submenu-justifycontent-right', name: 'Logout' }
   ];
+
   return (
     <>
       <Button
@@ -104,11 +103,7 @@ export default function RightDropDownMenu() {
                       // margin: '2px',
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
-                      // alignItems: 'center',
-                      '&:hover': {
-                        background: 'red',
-                        color: 'var(--primary)'
-                      }
+                      padding: 0,
                     }
                   }}
                   style={item.styles ? item.styles : {}}
@@ -123,7 +118,7 @@ export default function RightDropDownMenu() {
       {/* <Menu
         // {...languages}
         // {...preferences}
-        id="fade-menu"
+	id="fade-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -142,6 +137,7 @@ export default function RightDropDownMenu() {
           '& .MuiMenuItem-root': {
             border: '1px solid var(--primary)',
             // margin: '2px',
+            backgroundColor: 'var(--header-bg)',
             justifyContent: 'flex-end',
             // alignItems: 'center',
             '&:hover': {
@@ -153,10 +149,12 @@ export default function RightDropDownMenu() {
             width: '500px',
             height: '450px',
             background: 'transparent',
-            boxShadow: 'none'
+            boxShadow: 'none',
+            paddingTop: '70px',
+            top: '0px !important'
           }
         }}>
-        <MenuItem
+      <MenuItem
           className={`${styles.dropdown_item_1}`}
           style={{
             display: 'flex',
@@ -170,7 +168,6 @@ export default function RightDropDownMenu() {
           <h2>Powered by Zicops</h2>
         </MenuItem>
         <MenuItem className={`${styles.dropdown_item_2}`}>
-
           <DropDownSubMenu
             subData={languages}
             menuIcon={LeftArrow}
@@ -186,7 +183,6 @@ export default function RightDropDownMenu() {
           My Dashboard
         </MenuItem>
         <MenuItem className={`${styles.dropdown_item_5}`}>
-
           <DropDownSubMenu
             subData={preferences}
             menuIcon={LeftArrow}

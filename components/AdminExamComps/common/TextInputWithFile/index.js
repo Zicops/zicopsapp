@@ -4,10 +4,13 @@ import styles from './textInputWithFile.module.scss';
 export default function TextInputWithFile({
   inputName,
   type = 'question',
+  accept,
+  value,
   changeHandler,
   fileInputHandler,
   fileNmae
 }) {
+  console.log(fileNmae);
   return (
     <>
       <div className={`w-100 ${styles.container}`}>
@@ -15,6 +18,7 @@ export default function TextInputWithFile({
           <input
             type="text"
             name={inputName}
+            value={value}
             placeholder={`Enter ${type} in less than 160 characters`}
             onChange={changeHandler}
           />
@@ -40,7 +44,12 @@ export default function TextInputWithFile({
                 Video
               </span>
 
-              <input type="file" onChange={fileInputHandler} name="quiz_attachment" />
+              <input
+                type="file"
+                onChange={fileInputHandler}
+                accept={accept}
+                name="quiz_attachment"
+              />
             </div>
           </div>
         </div>

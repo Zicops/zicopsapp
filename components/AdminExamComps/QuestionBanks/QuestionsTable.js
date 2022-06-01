@@ -1,63 +1,62 @@
+import { useLazyQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { GET_QUESTION_BANK_QUESTIONS, queryClient } from '../../../API/Queries';
+import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
+import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
+import { imageTypes } from './Logic/questionBank.helper';
 import McqCard from './McqCard';
 
-// TODO: delete later, temporary data, replaced from backend later
-const data = [
-  {
-    id: 1,
-    question: 'Number of primitive datatypes in Java are?',
-    type: 'MCQ'
-  },
-  {
-    id: 2,
-    question: 'Automatic type conversion is possible in which of the possible cases?',
-    type: 'MCQ'
-  },
-  {
-    id: 3,
-    question:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam eveniet odit laudantium?',
-    type: 'MCQ'
-  },
-  {
-    id: 4,
-    question: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit?',
-    type: 'MCQ'
-  },
-  {
-    id: 5,
-    question: 'Automatic type conversion is possible in which of the possible cases?',
-    type: 'MCQ'
-  },
-  {
-    id: 6,
-    question:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam eveniet odit laudantium?',
-    type: 'MCQ'
-  },
-  {
-    id: 7,
-    question: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit?',
-    type: 'MCQ'
-  }
-];
-
 export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
-  // const { pageSize } = useHandlePagesize();
+  const [loadQBQuestions, { error: errorQBQuestionsData }] = useLazyQuery(
+    GET_QUESTION_BANK_QUESTIONS,
+    { client: queryClient }
+  );
+
+  const router = useRouter();
+  const questionBankId = router?.query?.questionBankId;
+
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('viewQuestions'));
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const [qbQuestions, setQbQuestions] = useState([]);
+  const [viewQuestion, setViewQuestion] = useState(null);
+
+  // load table data
+  useEffect(() => {
+    loadQBQuestions({ variables: { question_bank_id: questionBankId } }).then(({ data }) => {
+      if (errorQBQuestionsData)
+        return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
+
+      if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
+    });
+  }, [questionBankId]);
 
   const columns = [
     {
-      field: 'question',
+      field: 'Description',
       headerName: 'Questions',
       headerClassName: 'course-list-header',
-      flex: 5
+      flex: 5,
+      renderCell: (params) => {
+        return (
+          <div style={{ padding: '10px 0' }}>
+            {params.row?.Description}
+            {imageTypes.includes(params.row?.AttachmentType) && (
+              <div style={{ paddingTop: '10px' }}>
+                <img src={params.row?.Attachment} height={100} alt="" />
+              </div>
+            )}
+          </div>
+        );
+      }
     },
     {
-      field: 'type',
+      field: 'Type',
       headerClassName: 'course-list-header',
       headerName: 'Type',
       flex: 0.5
@@ -78,10 +77,11 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                   outline: '0',
                   border: '0'
                 }}
-                onClick={openEditQuestionMasterTab}>
+                onClick={() => openEditQuestionMasterTab(params.row)}>
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
               </button>
             )}
+
             <button
               style={{
                 cursor: 'pointer',
@@ -89,7 +89,16 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                 outline: '0',
                 border: '0'
               }}
-              onClick={() => udpatePopUpState(true)}>
+              onClick={() => {
+                setViewQuestion({
+                  id: params.row.id,
+                  description: params.row.Description,
+                  hint: params.row.Hint,
+                  attachment: params.row.Attachment,
+                  attachmentType: params.row.AttachmentType
+                });
+                udpatePopUpState(true);
+              }}>
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>
           </>
@@ -103,19 +112,20 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
     <>
       <ZicopsTable
         columns={columns}
-        data={data}
-        pageSize={7}
+        data={qbQuestions}
+        pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
       />
 
+      {/* view question pop up */}
       <PopUp
         isFooterVisible={false}
-        title="Question 1"
+        title="View Question"
         isPopUpOpen={popUpState}
         closeBtn={{ handleClick: () => udpatePopUpState(false) }}>
         <McqCard
-          question={'This is a question that you have to answer?'}
+          questionData={viewQuestion}
           closePopUp={() => udpatePopUpState(false)}
           openEditQuestionMasterTab={
             isEdit

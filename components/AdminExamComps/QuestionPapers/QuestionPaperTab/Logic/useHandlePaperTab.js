@@ -1,8 +1,15 @@
 import { useMutation } from '@apollo/client/react';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { ADD_QUESTION_PAPER, mutationClient } from '../../../../../API/Mutations';
-import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
+import {
+  ADD_QUESTION_PAPER,
+  ADD_QUESTION_PAPER_SECTION,
+  mutationClient
+} from '../../../../../API/Mutations';
+import {
+  CustomSectionAtom,
+  QuestionPaperTabDataAtom
+} from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import getQuestionPaperMasterObject, {
   paperTabData,
@@ -13,15 +20,31 @@ export default function useHandlePaperTab() {
   const [addQuestionPaper, { error: addQuestionPaperError }] = useMutation(ADD_QUESTION_PAPER, {
     client: mutationClient
   });
+  const [addPaperSection, { error: addPaperSectionError }] = useMutation(
+    ADD_QUESTION_PAPER_SECTION,
+    { client: mutationClient }
+  );
 
   // recoil state
   const [tab, setTab] = useRecoilState(QuestionPaperTabAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
+  const [customSection, udpateCustomSection] = useRecoilState(CustomSectionAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local state
+  // TODO: replace with get query
+  const data = questionPaperTabData?.questionPaperMaster;
   const [questionPaperMaster, setQuestionPaperMaster] = useState(
-    getQuestionPaperMasterObject(questionPaperTabData?.questionPaperMaster)
+    getQuestionPaperMasterObject({
+      id: data?.id,
+      name: data?.name || '',
+      category: data?.category || '',
+      sub_category: data?.sub_category || '',
+      description: data?.description || '',
+      section_wise: data?.section_wise || false,
+      difficulty_level: data?.difficulty_level || 0,
+      suggested_duration: data?.suggested_duration || ''
+    })
   );
 
   useEffect(() => {
@@ -71,17 +94,44 @@ export default function useHandlePaperTab() {
     });
     console.log(questionPaperRes?.data);
 
-    // TODO: update later
     const res = questionPaperRes?.data?.addQuestionPaper;
+
+    // create a default section
+    if (!sendData.section_wise) {
+      const defaultSectionData = {
+        qpId: res?.id,
+        name: 'Default',
+        description: '',
+        difficulty_level: '',
+
+        // TODO: update later
+        total_questions: 0,
+        type: 'default',
+        is_active: true,
+        createdBy: 'Zicops',
+        updatedBy: 'Zicops'
+      };
+
+      const paperSectionRes = await addPaperSection({ variables: defaultSectionData }).catch(
+        (err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Add Default Paper Section Error' });
+        }
+      );
+      udpateCustomSection([paperSectionRes?.data?.addQuestionPaperSection]);
+    }
+
+    // TODO: update later
     const responseData = {
-      id: res.id,
-      name: res.name || '',
-      category: res.Category || '',
-      sub_category: res.SubCategory || '',
-      description: res.Description || '',
-      section_wise: res.SectionWise || false,
-      difficulty_level: res.DifficultyLevel || 0,
-      suggested_duration: res.SuggestedDuration || ''
+      id: res?.id,
+      name: res?.name || '',
+      category: res?.Category || '',
+      sub_category: res?.SubCategory || '',
+      description: res?.Description || '',
+      section_wise: res?.SectionWise || false,
+      difficulty_level: res?.DifficultyLevel || 0,
+      suggested_duration: res?.SuggestedDuration || ''
     };
 
     setQuestionPaperTabData({

@@ -2,9 +2,9 @@
 
 .exam_landing {
     height: 100vh;
-    margin-top: 70px;
     width: 100%;
-    padding: .5rem 1rem;
+    // padding: .5rem 1rem;
+    padding: 50px;
     background: $black;
 
     .blank_space{
@@ -59,7 +59,7 @@
         flex-direction: column;
         align-items: center;
         color: $white;
-        height: 65%;
+        height: 80%;
         justify-content: center;
 
         #exam_landing_info_testSeries {
