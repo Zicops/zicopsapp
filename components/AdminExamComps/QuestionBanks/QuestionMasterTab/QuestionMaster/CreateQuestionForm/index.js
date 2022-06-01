@@ -1,35 +1,51 @@
 import { changeHandler } from '../../../../../../helper/common.helper';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
 import LabeledTextarea from '../../../../../common/FormComponents/LabeledTextarea';
+import Accordion from '../../../../../small/Accordion';
 import TextInputWithFile from '../../../../common/TextInputWithFile';
-import useHandleQuestionBankQuestion from '../../../Logic/useHandleQuestionBankQuestion';
+import { imageTypes } from '../../../Logic/questionBank.helper';
+import McqCard from '../../../McqCard';
 import styles from '../../questionMasterTab.module.scss';
 import InputWithCheckbox from './InputWithCheckbox';
 
-export default function CreateQuestionForm() {
+export default function CreateQuestionForm({ data, isEdit }) {
   const {
+    questionsArr,
     questionData,
     setQuestionData,
     optionData,
     questionFileInputHandler,
-    optionInputHandler
-  } = useHandleQuestionBankQuestion();
+    optionInputHandler,
+    activateEdit,
+    saveQuestion
+  } = data;
 
   const NUMBER_OF_OPTIONS = 4;
   const difficultyOptions = [
-    { label: '0', value: 1 },
-    { label: '1', value: 2 },
-    { label: '2', value: 3 },
-    { label: '4', value: 4 },
-    { label: '5', value: 5 },
-    { label: '6', value: 6 },
-    { label: '7', value: 7 },
-    { label: '8', value: 8 },
-    { label: '9', value: 9 },
-    { label: '10', value: 10 }
+    { label: 1, value: 1 },
+    { label: 2, value: 2 },
+    { label: 3, value: 3 },
+    { label: 4, value: 4 },
+    { label: 5, value: 5 }
   ];
+
   return (
     <>
+      {questionsArr?.map((data, index) => {
+        return (
+          <Accordion
+            title={data.question.description}
+            content={
+              <McqCard
+                questionData={data.question}
+                optionData={data.options}
+                handleEdit={() => activateEdit(index)}
+              />
+            }
+          />
+        );
+      })}
+
       <LabeledDropdown
         dropdownOptions={{
           inputName: 'type',
@@ -44,7 +60,7 @@ export default function CreateQuestionForm() {
         changeHandler={(e) => changeHandler(e, questionData, setQuestionData, 'type')}
       />
 
-      {questionData.type === 'MCQ' && (
+      {questionData?.type === 'MCQ' && (
         <>
           <LabeledDropdown
             styleClass={styles.marginTop}
@@ -69,7 +85,9 @@ export default function CreateQuestionForm() {
               Enter Question:
               <TextInputWithFile
                 inputName="description"
-                fileNmae={questionData?.file?.name}
+                value={questionData?.description}
+                fileNmae={questionData?.file?.name || questionData?.attachment}
+                accept={imageTypes.join(', ')}
                 changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
                 fileInputHandler={questionFileInputHandler}
               />
@@ -85,13 +103,15 @@ export default function CreateQuestionForm() {
                 inputOptions={{
                   inputName: 'hint',
                   placeholder: 'Enter hint in less than 300 characters.',
-                  rows: 4
+                  rows: 4,
+                  value: questionData?.hint
                 }}
                 changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
               />
             </label>
           </div>
 
+          {/* options */}
           <div className={styles.marginTop}>
             <label>
               Enter Options:
@@ -104,13 +124,19 @@ export default function CreateQuestionForm() {
                     isCorrectHandler={(e) => {
                       optionInputHandler(e, index);
                     }}
-                    fileNmae={optionData[index]?.file?.name}
+                    optionData={optionData[index]}
                     inputChangeHandler={(e) => optionInputHandler(e, index)}
                     fileInputHandler={(e) => optionInputHandler(e, index)}
                   />
                 ))}
             </label>
           </div>
+
+          {!isEdit && (
+            <div className={`center-element-with-flex`}>
+              <button onClick={saveQuestion}>Add the Question</button>
+            </div>
+          )}
         </>
       )}
     </>

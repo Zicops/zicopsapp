@@ -12,7 +12,6 @@ const Search = () => {
         minHeight: '90vh'
       }}>
       <SearchHeader />
-      <SearchBody />
       <SearchBookmarks />
       <SearchBody />
     </div>

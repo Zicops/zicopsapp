@@ -1,20 +1,33 @@
 import { useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { CREATE_QUESTION_BANK, mutationClient } from '../../../../API/Mutations';
-import { getQuestionBankObject, QuestionBankAtom } from '../../../../state/atoms/exams.atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  CREATE_QUESTION_BANK,
+  mutationClient,
+  UPDATE_QUESTION_BANK
+} from '../../../../API/Mutations';
+import {
+  getQuestionBankObject,
+  SelectedQuestionBankAtom
+} from '../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
-export default function useHandleQuestionBank(editQuestionBankId) {
-  const [createQuestionBank, { loading, error }] = useMutation(CREATE_QUESTION_BANK, {
+export default function useHandleQuestionBank(refetchQuestionBank) {
+  const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
+    client: mutationClient
+  });
+  const [updateBank, { error: updateError }] = useMutation(UPDATE_QUESTION_BANK, {
     client: mutationClient
   });
 
   // recoil state
-  const [questionBank, setQuestionBank] = useRecoilState(QuestionBankAtom);
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [addPopUp, setAddPopUp] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
+  const [editPopUp, setEditPopUp] = useRecoilState(PopUpStatesAtomFamily('editQuestionBank'));
+
+  // for edit data
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const selectedQB = useRecoilValue(SelectedQuestionBankAtom);
 
   // local state
   const [questionBankData, setQuestionBankData] = useState(getQuestionBankObject());
@@ -27,11 +40,16 @@ export default function useHandleQuestionBank(editQuestionBankId) {
     );
   }, [questionBankData]);
 
+  // set local state to selected edit question bank
   useEffect(() => {
-    const filteredQuestionBank = questionBank.filter((qb) => qb.id === editQuestionBankId);
+    setQuestionBankData(getQuestionBankObject(selectedQB));
+  }, [selectedQB]);
 
-    setQuestionBankData(getQuestionBankObject({ ...filteredQuestionBank[0] }));
-  }, [editQuestionBankId]);
+  // error notification
+  useEffect(() => {
+    if (createError) return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
+    if (updateError) return setToastMsg({ type: 'danger', message: 'Question Bank Update Error' });
+  }, [createError, updateError]);
 
   async function createNewQuestionBank() {
     const sendData = {
@@ -41,31 +59,55 @@ export default function useHandleQuestionBank(editQuestionBankId) {
       sub_category: questionBankData.sub_category,
 
       //TODO: extra data for success, remove or make this dynamic
-      created_by: 'Zicops',
-      updated_by: 'Zicops',
-      is_active: true,
-      is_default: true,
-      owner: 'Zicops'
+      created_by: questionBankData.created_by || 'Zicops',
+      updated_by: questionBankData.updated_by || 'Zicops',
+      is_active: questionBankData.is_active || true,
+      is_default: questionBankData.is_default || true,
+      owner: questionBankData.owner || 'Zicops'
     };
 
     let isError = false;
-    const { data } = await createQuestionBank({ variables: sendData }).catch((err) => {
+    await createQuestionBank({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
     });
 
-    console.log(data);
-    setQuestionBank([...questionBank, data.createQuestionBank]);
-
-    if (error) return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
-    if (!isError) setToastMsg({ type: 'success', message: 'New Question Bank Created' });
-
+    if (!isError) {
+      setToastMsg({ type: 'success', message: 'New Question Bank Created' });
+      refetchQuestionBank();
+    }
     setAddPopUp(false);
   }
 
   async function updateQuestionBank() {
-    return setToastMsg({ type: 'info', message: 'Not Yet Implemented, wait for it' });
+    const sendData = {
+      id: questionBankData.id,
+      name: questionBankData.name,
+      //   description: questionBankData.description,
+      category: questionBankData.category,
+      sub_category: questionBankData.sub_category,
+
+      //TODO: extra data for success, remove or make this dynamic
+      created_by: questionBankData.created_by || 'Zicops',
+      updated_by: questionBankData.updated_by || 'Zicops',
+      is_active: questionBankData.is_active || true,
+      is_default: questionBankData.is_default || true,
+      owner: questionBankData.owner || 'Zicops'
+    };
+
+    let isError = false;
+    await updateBank({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Question Bank Update Error' });
+    });
+
+    if (!isError) {
+      setToastMsg({ type: 'success', message: 'New Question Bank Updated' });
+      refetchQuestionBank();
+    }
+    setEditPopUp(false);
   }
 
   return {

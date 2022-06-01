@@ -6,6 +6,7 @@ import {
 import { PopUpStatesAtomFamily } from '../../../../../state/atoms/popUp.atom';
 import IconButton from '../../../../common/IconButton';
 import PopUp from '../../../../common/PopUp';
+import { NewQuestionMetaDataAtom } from '../Logic/questionPaperTab.helper';
 import styles from '../questionPaperTab.module.scss';
 import AddCustomSection from './AddCustomSection';
 import AddQuestionMetaData from './AddQuestionMetaData';
@@ -20,7 +21,8 @@ export default function Questions() {
   );
   const customSection = useRecoilValue(CustomSectionAtom);
   const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
-  console.log(questionPaperTabData);
+  const [newMetaData, setNewMetaData] = useRecoilState(NewQuestionMetaDataAtom);
+
   return (
     <div className={`${customSection.length ? '' : 'h-100'}`}>
       <div
@@ -42,7 +44,13 @@ export default function Questions() {
           <IconButton
             text="Add Question"
             styleClass="btnGrey"
-            handleClick={() => udpateAddQuestionMetaDataPopUp(true)}
+            handleClick={() => {
+              udpateAddQuestionMetaDataPopUp(true);
+              setNewMetaData({
+                ...newMetaData,
+                sectionId: customSection[0]?.id
+              });
+            }}
           />
         )}
       </div>
@@ -60,8 +68,9 @@ export default function Questions() {
       <PopUp
         isFooterVisible={false}
         isPopUpOpen={addQuestionMetaDataPopUp}
+        title="Add Question Meta Data"
         closeBtn={{ handleClick: () => udpateAddQuestionMetaDataPopUp(false) }}>
-        <AddQuestionMetaData handleCancel={() => udpateAddQuestionMetaDataPopUp(false)} />
+        <AddQuestionMetaData />
       </PopUp>
     </div>
   );

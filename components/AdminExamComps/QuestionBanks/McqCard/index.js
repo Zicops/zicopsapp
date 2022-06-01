@@ -1,14 +1,44 @@
+import { useLazyQuery } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { GET_QUESTION_OPTIONS, queryClient } from '../../../../API/Queries';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import Button from '../../../common/Button';
+import { imageTypes } from '../Logic/questionBank.helper';
 import styles from './mcqCard.module.scss';
 import McqOption from './McqOption';
 
 // update this comp later
-export default function McqCard({ question, closePopUp, openEditQuestionMasterTab }) {
-  const obj = {
-    option: 'a',
-    hint: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.'
-  };
-  obj.src = '/images/courses/1.png';
+export default function McqCard({ questionData, optionData, handleCancel, handleEdit }) {
+  const [loadOptions, { error: errorOptionsData }] = useLazyQuery(GET_QUESTION_OPTIONS, {
+    client: queryClient
+  });
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    if (optionData?.length) return setOptions(optionData);
+
+    loadOptions({
+      variables: { question_id: questionData.id }
+    }).then(({ data }) => {
+      if (errorOptionsData) return setToastMsg({ type: 'danger', message: 'options load error' });
+
+      const optionsArr = [];
+
+      data?.getOptionsForQuestions[0].options.forEach((option) => {
+        optionsArr.push({
+          description: option.Description,
+          attachment: option.Attachment,
+          attachmentType: option.AttachmentType,
+          isCorrect: option.IsCorrect
+        });
+      });
+      setOptions(optionsArr);
+    });
+  }, []);
+
   return (
     <>
       <div className={`${styles.mcq_container}`}>
@@ -17,37 +47,30 @@ export default function McqCard({ question, closePopUp, openEditQuestionMasterTa
           <p className={`${styles.span_element}`}>
             {/* TODO : Add difficulty lebel */}
             <span>Q.</span>
-            {question}
+            {questionData.description}
           </p>
-        </div>
-        {/* <div className={`${styles.span_element}`}>Options:</div> */}
-        <section className={`${styles.option_container}`}>
-          <McqOption obj={{ ...obj, option: 'a' }} />
-          <McqOption obj={{ ...obj, option: 'b', checked: true }} />
-          <McqOption obj={{ ...obj, option: 'c' }} />
-          <McqOption obj={{ ...obj, option: 'd' }} />
-          {/* <McqOption
-            obj={{ ...obj, text: 'Wrong Answer', src: undefined, option: 'a' }}
-          />
-          <McqOption
-            obj={{ ...obj, text: 'Wong Answer', src: undefined, option: 'b' }}
-          />
-          <McqOption
-            obj={{ ...obj, text: 'Correct Answer', src: undefined, option: 'c', checked: true }}
-          />
-          <McqOption
-            obj={{ ...obj, text: 'Not Correct Answer', src: undefined, option: 'd'  }}
-          /> */}
-          {/* <McqOption obj={{ ...obj, option: 'c', src: '/images/Back.png' }} />
-          <McqOption obj={{ ...obj, option: 'd' }} /> */}
-        </section>
-        <span className={`${styles.span_element}`}>Hint:</span>
-        <div className={`${styles.hint}`}>{obj.hint}</div>
-        <div className={`${styles.btn}`}>
-          {openEditQuestionMasterTab && (
-            <Button text={'Edit'} clickHandler={openEditQuestionMasterTab} />
+
+          {imageTypes.includes(questionData.attachmentType) && (
+            <div className={`${styles.quesImg}`}>
+              <img src={questionData.attachment} alt="" />
+            </div>
           )}
-          <Button text={'Cancel'} clickHandler={closePopUp} />
+        </div>
+
+        <p className={`${styles.optionsTitle}`}>Options</p>
+
+        <section className={`${styles.option_container}`}>
+          {options.map((option, i) => (
+            <McqOption option={option} index={i} />
+          ))}
+        </section>
+
+        <span className={`${styles.span_element}`}>Hint:</span>
+        <div className={`${styles.hint}`}>{questionData.hint}</div>
+
+        <div className={`${styles.btn}`}>
+          {handleEdit && <Button text={'Edit'} clickHandler={handleEdit} />}
+          {handleCancel && <Button text={'Cancel'} clickHandler={handleCancel} />}
         </div>
       </div>
     </>

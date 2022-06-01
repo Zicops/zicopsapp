@@ -1,5 +1,6 @@
 export function getQuestionBankQuestionObject(data = {}) {
   return {
+    id: data.id || null,
     description: data.description || '',
     type: data.type || '',
     difficulty: data.difficulty || 0,
@@ -15,6 +16,7 @@ export function getQuestionBankQuestionObject(data = {}) {
 
 export function getQuestionOptionsObject(data = {}) {
   return {
+    id: data.id || null,
     description: data.description || '',
     isCorrect: data.isCorrect || false,
 
@@ -25,3 +27,5 @@ export function getQuestionOptionsObject(data = {}) {
     isActive: data.isActive || false
   };
 }
+
+export const imageTypes = ['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'];

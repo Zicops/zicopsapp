@@ -94,7 +94,7 @@ export default function QuestionPaperMaster() {
 
         <LabeledInput
           isFiftyFifty={true}
-          styleClass={styles.inputField}
+          styleClass={`${styles.inputField}`}
           inputOptions={{
             inputName: 'suggested_duration',
             label: 'Suggested Duration:',

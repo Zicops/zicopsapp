@@ -5,44 +5,57 @@ import { useRecoilState } from 'recoil';
 import {
   ADD_QUESTION_BANK_QUESTION,
   ADD_QUESTION_OPTIONS,
-  mutationClient
+  mutationClient,
+  UPDATE_QUESTION_BANK_QUESTION,
+  UPDATE_QUESTION_OPTIONS
 } from '../../../../API/Mutations';
-import { QuestionTabDataAtom } from '../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
-import { getQuestionBankQuestionObject, getQuestionOptionsObject } from './questionBank.helper';
+import {
+  getQuestionBankQuestionObject,
+  getQuestionOptionsObject,
+  imageTypes
+} from './questionBank.helper';
 
-export default function useHandleQuestionBankQuestion() {
+export default function useHandleQuestionBankQuestion(editData, closeQuestionMasterTab) {
   const [addQuestion, { error: addQuestionError }] = useMutation(ADD_QUESTION_BANK_QUESTION, {
     client: mutationClient
   });
   const [addOption, { error: addOptionError }] = useMutation(ADD_QUESTION_OPTIONS, {
     client: mutationClient
   });
+  const [updateQuestion, { error: updateQuestionError }] = useMutation(
+    UPDATE_QUESTION_BANK_QUESTION,
+    { client: mutationClient }
+  );
+  const [updateOption, { error: updateOptionError }] = useMutation(UPDATE_QUESTION_OPTIONS, {
+    client: mutationClient
+  });
+
   const router = useRouter();
+  const questionBankId = router.query?.questionBankId;
 
   // recoil state
-  const [questionMaster, setQuestionMaster] = useRecoilState(QuestionTabDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local state
+  const [questionsArr, setQuestionsArr] = useState([]);
   const [questionData, setQuestionData] = useState(
-    getQuestionBankQuestionObject({ qbmId: router.query?.questionBankId })
+    getQuestionBankQuestionObject({ qbmId: questionBankId })
   );
   const [optionData, setOptionData] = useState(Array(4).fill(getQuestionOptionsObject()));
-  const [isAddQuestionReady, setIsAddQuestionReady] = useState(false);
+  const [isUploading, setIsUploading] = useState(null);
 
-  // udpate recoil state when data is upadted
   useEffect(() => {
-    setQuestionMaster({
-      question: questionData,
-      options: optionData
-    });
-  }, [questionData, optionData]);
+    if (!editData) return;
+
+    setQuestionData(editData.question);
+    setOptionData(editData.options);
+  }, [editData]);
 
   // disable submit if data not complete
   function validateInput() {
-    const question = questionMaster.question;
-    const options = questionMaster.options;
+    const question = questionData;
+    const options = optionData;
     let isOptionsCompleted = false,
       isOneChecked = false;
 
@@ -62,10 +75,26 @@ export default function useHandleQuestionBankQuestion() {
     );
   }
 
+  // validation for only taking only accepted type images
+  function isImageValid(e) {
+    if (e.target.type === 'file') {
+      const file = e.target.files[0];
+      if (!file) return false;
+      if (!imageTypes.includes(file?.type)) {
+        setToastMsg({ type: 'danger', message: `${imageTypes.join(', ')} only accepted` });
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // file input handler for question
   function questionFileInputHandler(e) {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (!isImageValid(e)) return;
 
     setQuestionData({
       ...questionData,
@@ -82,6 +111,7 @@ export default function useHandleQuestionBankQuestion() {
     if (e.target.type === 'file') {
       const file = e.target.files[0];
       if (!file) return;
+      if (!isImageValid(e)) return;
 
       updatedOption.file = e.target.files[0];
       updatedOption.attachmentType = e.target.files[0].type;
@@ -94,45 +124,136 @@ export default function useHandleQuestionBankQuestion() {
     setOptionData(optionData.map((o, i) => (i === optionIndex ? updatedOption : o)));
   }
 
-  async function addQuestionAndOptions() {
+  // add question data to array to show in accordion
+  function saveQuestion() {
     if (!validateInput())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
-    console.log(questionMaster);
-    const { question, options } = questionMaster;
+    setQuestionsArr([...questionsArr, { question: questionData, options: optionData }]);
+
+    // reset form data
+    setQuestionData(getQuestionBankQuestionObject({ qbmId: questionBankId }));
+    setOptionData(Array(4).fill(getQuestionOptionsObject()));
+  }
+
+  // edit question data from accordion
+  function activateEdit(index) {
+    const allQuestions = [...questionsArr];
+    const [removedQuestion] = allQuestions.splice(index, 1);
+
+    setQuestionData(removedQuestion.question);
+    setOptionData(removedQuestion.options);
+    setQuestionsArr(allQuestions);
+  }
+
+  async function addQuestionAndOptions() {
+    if (!questionsArr.length)
+      return setToastMsg({ type: 'danger', message: 'Add at least one question' });
+    setIsUploading(true);
+
+    for (let index = 0; index < questionsArr.length; index++) {
+      const { question, options } = questionsArr[index];
+      const sendQuestionData = {
+        description: question.description || '',
+        type: question.type || '',
+        difficulty: question.difficulty || 0,
+        hint: question.hint || '',
+        qbmId: question.qbmId || null,
+        attachmentType: question.attachmentType || '',
+
+        // TODO: remove or update later
+        createdBy: 'Zicops',
+        updatedBy: 'Zicops',
+        status: 'SAVED'
+      };
+
+      if (question.file) {
+        sendQuestionData.file = question.file;
+      }
+      let isError = false;
+      // add question
+      const questionRes = await addQuestion({ variables: sendQuestionData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+      });
+
+      // add option
+      for (let i = 0; i < options.length; i++) {
+        const option = options[i];
+        const sendOptionData = {
+          description: option.description || '',
+          isCorrect: option.isCorrect || false,
+          qmId: questionRes?.data?.addQuestionBankQuestion?.id,
+          isActive: option.isActive || false,
+          attachmentType: option.attachmentType || '',
+
+          // TODO: remove or update later
+          createdBy: 'Zicops',
+          updatedBy: 'Zicops'
+        };
+
+        if (option.file) {
+          sendOptionData.file = option.file;
+        }
+
+        await addOption({ variables: sendOptionData }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+        });
+      }
+      if (addQuestionError) return setToastMsg({ type: 'danger', message: `Add Question Error` });
+      if (addOptionError) return setToastMsg({ type: 'danger', message: `Add Option Error` });
+
+      if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
+    }
+
+    setIsUploading(null);
+    closeQuestionMasterTab();
+  }
+
+  async function updateQuestionAndOptions() {
+    setIsUploading(true);
+    if (!validateInput())
+      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
+
+    const question = questionData;
+    const options = optionData;
     const sendQuestionData = {
+      id: question.id,
       description: question.description || '',
       type: question.type || '',
       difficulty: question.difficulty || 0,
       hint: question.hint || '',
       qbmId: question.qbmId || null,
+      attachmentType: question.attachmentType || '',
 
       // TODO: remove or update later
       createdBy: 'Zicops',
       updatedBy: 'Zicops',
-      status: 'Success'
+      status: 'SAVED'
     };
 
     if (question.file) {
       sendQuestionData.file = question.file;
-      sendQuestionData.attachmentType = question.attachmentType || '';
     }
-    console.log('sendQuestionData', sendQuestionData);
     let isError = false;
-    const questionRes = await addQuestion({ variables: sendQuestionData }).catch((err) => {
+    await updateQuestion({ variables: sendQuestionData }).catch((err) => {
       console.log(err);
       isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+      return setToastMsg({ type: 'danger', message: 'Update Question Error' });
     });
-    console.log(questionRes?.data?.addQuestionBankQuestion);
 
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
       const sendOptionData = {
+        id: option.id,
         description: option.description || '',
         isCorrect: option.isCorrect || false,
-        qmId: questionRes?.data?.addQuestionBankQuestion?.id,
+        qmId: option.qmId,
         isActive: option.isActive || false,
+        attachmentType: option.attachmentType || '',
 
         // TODO: remove or update later
         createdBy: 'Zicops',
@@ -141,29 +262,37 @@ export default function useHandleQuestionBankQuestion() {
 
       if (option.file) {
         sendOptionData.file = option.file;
-        sendOptionData.attachmentType = option.attachmentType || '';
       }
-
-      const optionRes = await addOption({ variables: sendOptionData }).catch((err) => {
+      console.log(sendOptionData, option);
+      // continue;
+      await updateOption({ variables: sendOptionData }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+        return setToastMsg({ type: 'danger', message: `Update Option (${i + 1}) Error` });
       });
-      console.log(optionRes);
     }
-    if (addOptionError) return setToastMsg({ type: 'danger', message: `Add Option Error` });
-    if (addOptionError) return setToastMsg({ type: 'danger', message: `Add Question Error` });
+    if (updateQuestionError)
+      return setToastMsg({ type: 'danger', message: `Update Question Error` });
+    if (updateOptionError) return setToastMsg({ type: 'danger', message: `Update Option Error` });
 
-    if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
+    if (!isError) setToastMsg({ type: 'success', message: 'Question and Options Updated' });
+
+    setIsUploading(null);
+    closeQuestionMasterTab();
   }
 
   return {
+    questionsArr,
     questionData,
     setQuestionData,
     optionData,
+    activateEdit,
     questionFileInputHandler,
     optionInputHandler,
-    isAddQuestionReady,
-    addQuestionAndOptions
+    addQuestionAndOptions,
+    updateQuestionAndOptions,
+    saveQuestion,
+
+    isUploading
   };
 }

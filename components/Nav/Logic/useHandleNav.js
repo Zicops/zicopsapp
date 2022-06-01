@@ -14,9 +14,9 @@ export function useHandleNav(isAdmin, setAdmin) {
   }, []);
 
   // whenever input is render it should be on focus
-  useEffect(() => {
-    searchInputRef.current?.focus();
-  }, [searchInputRef.current]);
+  // useEffect(() => {
+  //   searchInputRef.current?.focus();
+  // }, [searchInputRef.current]);
 
   function gotoAdmin() {
     setAdmin(1);

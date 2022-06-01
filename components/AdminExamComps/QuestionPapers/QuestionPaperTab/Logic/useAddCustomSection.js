@@ -61,7 +61,17 @@ export default function useAddCustomSection() {
     console.log(paperSectionRes?.data);
 
     if (!isError) setToastMsg({ type: 'success', message: 'New Question Paper Added' });
-    udpateCustomSection([...customSection, newCustomSection]);
+    const newResData = paperSectionRes?.data?.addQuestionPaperSection;
+    udpateCustomSection([
+      ...customSection,
+      {
+        qpId: newResData?.QpId,
+        name: newResData?.Name || '',
+        description: newResData?.Description || '',
+        difficulty_level: newResData?.DifficultyLevel || '',
+        id: newResData?.id
+      }
+    ]);
     udpateCustomSectionPopUp(false);
   }
 

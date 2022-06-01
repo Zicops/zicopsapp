@@ -255,3 +255,141 @@ export const GET_TOPIC_RESOURCES_BY_COURSE_ID = gql`
     }
   }
 `;
+
+export const GET_LATEST_QUESTION_BANK = gql`
+  query latestQuestionBank($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestQuestionBank(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      questionBanks {
+        id
+        name
+        category
+        sub_category
+        created_at
+        updated_at
+        created_by
+        updated_by
+        is_active
+        is_default
+        owner
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_QUESTION_BANK_QUESTIONS = gql`
+  query questionBankQuestions($question_bank_id: String) {
+    getQuestionBankQuestions(question_bank_id: $question_bank_id) {
+      id
+      Description
+      Type
+      Difficulty
+      Attachment
+      AttachmentType
+      Hint
+      QbmId
+      Status
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+    }
+  }
+`;
+
+export const GET_QUESTION_OPTIONS = gql`
+  query questionBankOptions($question_id: String) {
+    getOptionsForQuestions(question_ids: [$question_id]) {
+      question_id
+      options {
+        id
+        QmId
+        Description
+        IsCorrect
+        CreatedAt
+        UpdatedAt
+        CreatedBy
+        UpdatedBy
+        AttachmentType
+        Attachment
+        IsActive
+      }
+    }
+  }
+`;
+
+export const GET_LATEST_QUESTION_PAPERS = gql`
+  query latestQuestionPapers($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestQuestionPapers(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      questionPapers {
+        id
+        name
+        Category
+        SubCategory
+        CreatedAt
+        UpdatedAt
+        CreatedBy
+        UpdatedBy
+        IsActive
+        DifficultyLevel
+        SectionWise
+        Description
+        SuggestedDuration
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_QUESTION_PAPER_SECTION = gql`
+  query questionPaperSections($question_paper_id: String) {
+    getQuestionPaperSections(question_paper_id: $question_paper_id) {
+      id
+      QpId
+      Name
+      Description
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      DifficultyLevel
+      TotalQuestions
+    }
+  }
+`;
+
+export const GET_QUESTION_PAPER_BANK_MAPPING = gql`
+  query qpBankMappingByQPId($question_paper_id: String) {
+    getQPBankMappingByQPId(question_paper_id: $question_paper_id) {
+      id
+      QbId
+      SectionId
+      DifficultyLevel
+      TotalQuestions
+      QuestionMarks
+      QuestionType
+      RetrieveType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;

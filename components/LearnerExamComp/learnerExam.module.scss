@@ -1,19 +1,32 @@
 @import '../../styles/base.scss';
 
+
 .questionSection{
-    height: 125vh;
-    width: 100vw;
-    // margin-top: 70px;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+     //margin-top: 70px;
     display: flex;
 
     .questionSection_questions{
-        width: 80vw;
-        // border: 1px solid red;
-        
+        width: calc(100% - 250px);
+        height: 100vh;
+        overflow-y: scroll;
+        background: #121212;
     }
+    /* width */
+    .questionSection_questions::-webkit-scrollbar {
+        width: 5px;
+    }
+
     .proctor_section{
-        width: 20vw;
+        width: 250px;
         background: $darkOne;
-        border-left: 2px solid var(--primary);
+        height: 100vh;
+        overflow-y: scroll;
+        //border-left: 2px solid var(--primary);
+    }
+    .proctor_section::-webkit-scrollbar {
+        width: 5px;
     }
 }
