@@ -38,7 +38,7 @@ const QuestionCountButtonSection = ({data, setData, current, setCurrent, filterD
                 }
                 {
                     filterData === 'unvisited' && data.filter(obj => obj.isVisited === false).map((each)=>{
-                        return <QuestionButton each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
+                        return <QuestionButton filterData={filterData} each={each} data={data} setData={setData} current={current} setCurrent={setCurrent}/>
                     })
                 }
             </div>

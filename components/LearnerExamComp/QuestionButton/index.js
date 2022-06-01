@@ -2,7 +2,7 @@ import styles from './questionButtonStyles.module.scss';
 import {useEffect, useState} from "react";
 import {Grid} from "@mui/material";
 
-const QuestionButton = ({each, data, setData, current, setCurrent, setOption}) => {
+const QuestionButton = ({each, data, setData, current, setCurrent, setOption, filterData}) => {
   const { question_button_marked , question_button_attempted , question_button_unattempted, question_button_notVisited, question_button_current} = styles ;
   let classNameBe ;
   if(each.isVisited===false) {

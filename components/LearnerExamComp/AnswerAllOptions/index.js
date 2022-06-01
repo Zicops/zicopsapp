@@ -101,26 +101,19 @@ const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter
           }
         </Grid>
       </Box>
-      {/*<div className={`${styles.answer_all_options}`} >*/}
-      {/*  {*/}
-      {/*    current.options.map((each) => (*/}
-      {/*        <AnswerSingleOption currentData={current} optionData={each} option={option} setOption={setOption}/>*/}
-      {/*    ))*/}
-      {/*  }*/}
-      {/*</div>*/}
       <div className={`${styles.answer_all_options_buttons_container}`}>
-      <button onClick={() => {
+      <button disabled={!option} onClick={() => {
         if(filter !== 'all') setFilter('all')
         setOption(null)
-      }} className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_clear}`}>Clear<span>all options</span></button>
+      }} className={`${styles.answer_all_options_button} ${option ? styles.answer_all_options_button_clear : styles.answer_all_options_button_clear_disabled}`}>Clear<span>all options</span></button>
       <button onClick={() => {
         if(filter !== 'all') setFilter('all')
         setMark(!mark)
         setMarkTrigger(true);
       }} className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_unmark}`}>{mark ? 'Unmark' : 'Mark'}<span>from review</span></button>
-      <button onClick={() => {
+      <button disabled={current.id === 1} onClick={() => {
         setPreviousTrigger(true)
-      }} className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_previous}`} >Previous<span>Question</span></button>
+      }} className={`${styles.answer_all_options_button} ${current.id === 1 ? styles.answer_all_options_button_previous_disabled : styles.answer_all_options_button_previous}`} >Previous<span>Question</span></button>
       <button onClick={() => {
         // console.log(option)
         setNextTrigger(true)

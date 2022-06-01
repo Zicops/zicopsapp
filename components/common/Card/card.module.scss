@@ -1,8 +1,8 @@
 @import '../../../styles/base.scss';
 
 .zicopsCard{
-    width: 15%;
-    height: 16vh;
+    width: calc(100%/5 - 20px + 20px/5);
+    height: 20vh;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     margin-bottom: 40px;
     background-color: $darkTwo;
@@ -49,6 +49,13 @@
     }
 }
 
+@media only screen and (min-width: 1600px) {
+    // 100% of container by no of cards - gap + (1 missing gap/ no of cards)
+    .zicopsCard {
+        width: calc(100%/6 - 20px + 20px/6);
+        height: 16vh;
+    }
+}
 
 // .coursenamesmall {
 //     margin-top: 50px;
