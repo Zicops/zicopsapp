@@ -69,6 +69,9 @@ const ExamInstruction = () => {
           </span>
         </div>
       </div>
+      <div className={`${styles.viewHistory}`}>
+        <a>View Attempt History</a>
+      </div>
       <div className={`${styles.instructions}`}>
         <div className={`${styles.genInfo}`}>
           <span>A. General Information:</span>
