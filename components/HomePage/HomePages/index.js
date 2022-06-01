@@ -22,6 +22,7 @@ const HomePages = ({ item }) => {
           <a href="/home">Log In</a>
         </div>
       </header>
+
       <div className={`${styles.HomeBody}`}>
         <div className={`${styles.scrollContainer}`}>
           <ScrollItems item={item} />
@@ -31,6 +32,7 @@ const HomePages = ({ item }) => {
         </div>
         <HomeInputField />
       </div>
+
       <div className={`${styles.HomeFooter}`}>
         <div className={`${styles.HomeFooterInner}`}>
           <a href="/home">Zicops About</a>

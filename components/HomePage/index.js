@@ -4,13 +4,13 @@ import { data } from './Logic/homePage.helper';
 
 const HomePage = () => {
   return (
-    <>
+    <div className={`${styles.container}`}>
       {data.map((item) => (
-        <div className={`${styles.HomeMainContainer}`}>
+        <section>
           <HomePages item={item} />
-        </div>
+        </section>
       ))}
-    </>
+    </div>
   );
 };
 
