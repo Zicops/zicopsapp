@@ -5,6 +5,7 @@ export default function LabeledDropdown({
   dropdownOptions,
   styleClass,
   changeHandler,
+  filterOption,
   isFiftyFifty = false
 }) {
   const { inputName, label, placeholder, options, value, isDisabled, isSearchEnable, isMulti } =
@@ -121,6 +122,7 @@ export default function LabeledDropdown({
       <Select
         options={options}
         value={selectedValue}
+        filterOption={filterOption}
         name={inputName}
         placeholder={placeholder}
         onChange={changeHandler}

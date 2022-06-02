@@ -7,7 +7,7 @@ const HomePage = () => {
     <div className={`${styles.container}`}>
       {data.map((item) => (
         <section>
-          <HomePages item={item} />
+          <HomePages item={item} key={item.id} />
         </section>
       ))}
     </div>

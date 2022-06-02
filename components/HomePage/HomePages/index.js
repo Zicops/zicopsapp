@@ -32,7 +32,6 @@ const HomePages = ({ item }) => {
         </div>
         <HomeInputField />
       </div>
-
       <div className={`${styles.HomeFooter}`}>
         <div className={`${styles.HomeFooterInner}`}>
           <a href="/home">Zicops About</a>

@@ -1,12 +1,10 @@
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { GET_LATEST_COURSES, queryClient } from '../../../learning/API/Queries';
-import { ToastMsgAtom } from '../../state/atoms/toast.atom';
-import Card from '../common/Card';
-import styles from './searchBody.module.scss';
+import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
+import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 
-const SearchBody = () => {
+export default function useHandleSearch() {
   const [loadCourses, { error: loadCoursesError, refetch: refetchCourses }] = useLazyQuery(
     GET_LATEST_COURSES,
     { client: queryClient }
@@ -21,6 +19,14 @@ const SearchBody = () => {
   const [pageCursor, setPageCursor] = useState(null);
   const [refetchData, setRefetchData] = useState(null);
 
+  // filters in search header
+  const [filters, setFilters] = useState({
+    lang: null,
+    category: null,
+    subCategory: null,
+    type: null
+  });
+
   // load table data
   useEffect(() => {
     const queryVariables = { publish_time: Date.now(), pageSize: 10, pageCursor: '' };
@@ -33,17 +39,6 @@ const SearchBody = () => {
       setCourses(courseData?.courses || []);
     });
   }, []);
-
-  function refetchNextCourses() {
-    if (!pageCursor) return;
-    refetchCourses({ pageCursor: pageCursor }).then(({ data: { latestCourses } }) => {
-      console.log('refecth', 'course length', courses.length + latestCourses?.courses?.length);
-      setPageCursor(latestCourses?.pageCursor || null);
-      setCourses([...courses, ...latestCourses?.courses]);
-    });
-
-    if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
-  }
 
   // for reloading new courses
   useEffect(() => {
@@ -67,18 +62,26 @@ const SearchBody = () => {
     }
   }, [refetchData]);
 
-  return (
-    <>
-      <div className={`${styles.searchBodyTitle}`}>Search Results</div>
-      <div className={`${styles.searchBody}`}>
-        {courses.map((course) => (
-          <Card data={course} key={course.id} />
-        ))}
-      </div>
+  function refetchNextCourses() {
+    if (!pageCursor) return;
+    refetchCourses({ pageCursor: pageCursor }).then(({ data: { latestCourses } }) => {
+      console.log('refecth', 'course length', courses.length + latestCourses?.courses?.length);
+      setPageCursor(latestCourses?.pageCursor || null);
+      setCourses([...courses, ...latestCourses?.courses]);
+    });
 
-      <span ref={lastItemRef}></span>
-    </>
-  );
-};
+    if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
+  }
 
-export default SearchBody;
+  function clearAllFilters() {
+    setFilters({ lang: null, category: null, subCategory: null, type: null });
+  }
+
+  return {
+    courses,
+    lastItemRef,
+    filters,
+    setFilters,
+    clearAllFilters
+  };
+}
