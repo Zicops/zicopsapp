@@ -3,10 +3,11 @@
 .searchBody{
     margin: 0 calc(4% + 10px);
     padding-bottom: 20px;
+    box-sizing: border-box;
+
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    box-sizing: border-box;
+    justify-content: flex-start;
     gap: 20px;
 }  
 
