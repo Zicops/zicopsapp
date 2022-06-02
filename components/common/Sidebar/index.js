@@ -20,15 +20,14 @@ export default function Sidebar({ sidebarItemsArr }) {
             const isActive = currentUrl === pathUrl[pathUrl.length - 1];
 
             return (
-              <Link
-                href={val.link}
-                key={key}
-                className="row"
-                // id={router.pathname == val.link ? 'active' : ''}
-                onClick={() => {
-                  router.pathname = val.link;
-                }}>
-                <a className={isActive ? styles.active : ''}>{val.title}</a>
+              <Link href={val.link} key={key} className="row">
+                <a
+                  className={isActive ? styles.active : ''}
+                  onClick={() => {
+                    router.pathname = val.link;
+                  }}>
+                  {val.title}
+                </a>
               </Link>
             );
           })}

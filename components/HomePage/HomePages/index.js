@@ -22,6 +22,7 @@ const HomePages = ({ item }) => {
           <a href="/home">Log In</a>
         </div>
       </header>
+
       <div className={`${styles.HomeBody}`}>
         <div className={`${styles.scrollContainer}`}>
           <ScrollItems item={item} />

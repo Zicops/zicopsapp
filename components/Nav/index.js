@@ -77,13 +77,13 @@ export default function Nav() {
               onInput={handleSearch}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  searchQuery && router.push(`/search-page?q=${searchQuery}`);
+                  searchQuery && router.push(`/search-page/${searchQuery}`);
                 }
               }}
             />
             <button
               className={styles.nav_search_btn}
-              onClick={() => searchQuery && router.push(`/search-page?q=${searchQuery}`)}></button>
+              onClick={() => searchQuery && router.push(`/search-page/${searchQuery}`)}></button>
           </div>
         )}
 
