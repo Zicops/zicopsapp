@@ -6,7 +6,7 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 import Dropdown from '../../common/Dropdown';
 import CourseResourcesOpen from '../../CourseResourcesOpen';
 import Header from '../Header';
-import ItemSlider from '../ItemSlider';
+import TopicFileSlider from '../TopicFileSlider';
 import useShowData from '../Logic/useShowData';
 
 export default function CourseBodyResources() {
@@ -47,7 +47,7 @@ export default function CourseBodyResources() {
         expertise={currentModule?.level?.split(',').join(' | ')}
       />
 
-      <ItemSlider
+      <TopicFileSlider
         key={selectedModule?.value}
         itemsArr={filteredAndSortedData}
         showResources={showResources}

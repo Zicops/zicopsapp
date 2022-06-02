@@ -34,7 +34,7 @@ export default function CourseBody({ isPreview = false }) {
       {isPreview && (
         <div className={navbarOverrideElement}>
           This is Preview Page
-          <Link href={`/admin/courses?courseId=${courseContextData?.fullCourse.id}`}>
+          <Link href={`/admin/courses/${courseContextData?.fullCourse.id}`}>
             <a className={navbarOverrideElementClose}>
               {/* X */}
               <img src="/images/circular-cross.png" alt="" width={50} />

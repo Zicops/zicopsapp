@@ -1,12 +1,19 @@
-export default function TopicFiles({ fileCount, topic, handleClick, isResourceShown }) {
-  const isResourceActive = isResourceShown?.includes(topic.id);
+import { useRecoilValue } from 'recoil';
+import { ResourcesAtom } from '../../../../state/atoms/module.atoms';
+import { getResourceCount } from '../../Logic/courseBody.helper';
+
+export default function TopicFiles({ data, handleClick, isResourceShown }) {
+  const isResourceActive = isResourceShown?.includes(data.id);
+
+  const resources = useRecoilValue(ResourcesAtom);
+  const fileCount = getResourceCount(resources, data?.id);
 
   return (
     <>
       <div
         className={`topic ${isResourceActive ? 'highlight' : ''}`}
-        onClick={() => handleClick(topic)}>
-        <div className="topic_head">{topic.name}</div>
+        onClick={() => handleClick(data)}>
+        <div className="topic_head">{data.name}</div>
         <div className="topic_body">
           <div className="topic_data">
             <p>{fileCount} Files</p>

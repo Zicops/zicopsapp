@@ -1,23 +1,65 @@
 @import '../../styles/base.scss';
 
-.HomeMainContainer {
-  height: 100vh;
-  scroll-snap-type: y mandatory;
-}
-
-.HomeContainer {
+.container {
   font-family: 'Open Sans';
   background-image: url('../../public/images/starrySky2.png');
   background-position: center;
   background-size: cover;
+
+  display: flex;
+  overflow: auto;
+  outline: 1px dashed lightgray;
+  flex: none;
   height: 100vh;
-  scroll-snap-align: start;
+  width: 100vw;
+  flex-flow: column nowrap;
+  scroll-snap-type: y mandatory;
+
+  section {
+    height: 100%;
+    width: 100%;
+  }
 }
 
-//Home Header
+.zoomIn {
+  transform: scale(1);
+  animation: zoomIn 2s;
+}
+.zoomOut {
+  transform: scale(3);
+  animation: zoomOut 2s;
+}
 
+@keyframes zoomIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(3);
+  }
+}
+// .HomeContainer {
+//   font-family: 'Open Sans';
+//   background-image: url('../../public/images/starrySky2.png');
+//   background-position: center;
+//   background-size: cover;
+//   height: 100vh;
+//   scroll-snap-align: start;
+// }
+
+//Home Header
 .HomeHeader {
-  //   background-color: $darkTwo;
+  position: fixed;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -56,7 +98,9 @@
 }
 
 //HomeBody
-
+.scrollItems{
+  height: 100%;
+}
 .HomeBody {
   //   background-color: $darkTwo;
   display: flex;
@@ -177,10 +221,10 @@
 //Footer
 
 .HomeFooter {
-  position: relative;
+  position: fixed;
   width: 100%;
   height: 27px;
-  top: 70px;
+  bottom: 70px;
   // left: 0px;
   //   background-color: $darkTwo;
   font-size: small;
