@@ -12,17 +12,6 @@ const HomePages = ({ item }) => {
   //   }, []);
 
   return (
-    <div className={`${styles.HomeContainer}`}>
-      <header className={`${styles.HomeHeader}`}>
-        <div className={`${styles.ZicopsLogo}`}>
-          <img src="./images/zicops-header-logo.png" alt="not found" />
-        </div>
-        <div className={`${styles.Login}`}>
-          <img src="./images/Union1.png" alt="not found" />
-          <a href="/home">Log In</a>
-        </div>
-      </header>
-
       <div className={`${styles.HomeBody}`}>
         <div className={`${styles.scrollContainer}`}>
           <ScrollItems item={item} />
@@ -32,16 +21,6 @@ const HomePages = ({ item }) => {
         </div>
         <HomeInputField />
       </div>
-      <div className={`${styles.HomeFooter}`}>
-        <div className={`${styles.HomeFooterInner}`}>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-        </div>
-      </div>
-    </div>
   );
 };
 

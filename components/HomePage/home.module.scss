@@ -1,6 +1,11 @@
 @import '../../styles/base.scss';
 
 .container {
+  font-family: 'Open Sans';
+  background-image: url('../../public/images/starrySky2.png');
+  background-position: center;
+  background-size: cover;
+
   display: flex;
   overflow: auto;
   outline: 1px dashed lightgray;
@@ -42,19 +47,19 @@
     transform: scale(3);
   }
 }
-.HomeContainer {
-  font-family: 'Open Sans';
-  background-image: url('../../public/images/starrySky2.png');
-  background-position: center;
-  background-size: cover;
-  height: 100vh;
-  scroll-snap-align: start;
-}
+// .HomeContainer {
+//   font-family: 'Open Sans';
+//   background-image: url('../../public/images/starrySky2.png');
+//   background-position: center;
+//   background-size: cover;
+//   height: 100vh;
+//   scroll-snap-align: start;
+// }
 
 //Home Header
-
 .HomeHeader {
-  //   background-color: $darkTwo;
+  position: fixed;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -93,7 +98,9 @@
 }
 
 //HomeBody
-
+.scrollItems{
+  height: 100%;
+}
 .HomeBody {
   //   background-color: $darkTwo;
   display: flex;
@@ -214,10 +221,10 @@
 //Footer
 
 .HomeFooter {
-  position: relative;
+  position: fixed;
   width: 100%;
   height: 27px;
-  top: 70px;
+  bottom: 70px;
   // left: 0px;
   //   background-color: $darkTwo;
   font-size: small;
