@@ -905,6 +905,7 @@ export const ADD_QUESTION_PAPER = gql`
 
 export const UPDATE_QUESTION_PAPER = gql`
   mutation updateQuestionPaper(
+    $id: ID
     $name: String
     $category: String
     $sub_category: String
@@ -918,6 +919,7 @@ export const UPDATE_QUESTION_PAPER = gql`
   ) {
     updateQuestionPaper(
       input: {
+        id: $id
         name: $name
         Category: $category
         SubCategory: $sub_category
@@ -988,30 +990,73 @@ export const ADD_QUESTION_PAPER_SECTION = gql`
   }
 `;
 
+export const UPDATE_QUESTION_PAPER_SECTION = gql`
+  mutation updateQuestionPaperSection(
+    $id: ID
+    $qpId: String
+    $name: String
+    $description: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+    $type: String
+    $difficulty_level: String
+    $total_questions: Int
+  ) {
+    updateQuestionPaperSection(
+      input: {
+        id: $id
+        QpId: $qpId
+        Name: $name
+        Description: $description
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+        Type: $type
+        DifficultyLevel: $difficulty_level
+        TotalQuestions: $total_questions
+      }
+    ) {
+      id
+      QpId
+      Name
+      Description
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      DifficultyLevel
+      TotalQuestions
+    }
+  }
+`;
+
 export const MAP_SECTION_TO_BANK = gql`
   mutation mapSectionToBank(
     $qbId: String
     $sectionId: String
-    $difficultyLevel: String
-    $totalQuestions: Int
-    $questionMarks: String
-    $questionType: String
-    $retrieveType: String
-    $createdBy: String
-    $updatedBy: String
+    $difficulty_level: String
+    $total_questions: Int
+    $question_marks: String
+    $question_type: String
+    $retrieve_type: String
+    $created_by: String
+    $updated_by: String
     $is_active: Boolean
   ) {
     mapSectionToBank(
       input: {
         QbId: $qbId
         SectionId: $sectionId
-        DifficultyLevel: $difficultyLevel
-        TotalQuestions: $totalQuestions
-        QuestionMarks: $questionMarks
-        QuestionType: $questionType
-        RetrieveType: $retrieveType
-        CreatedBy: $createdBy
-        UpdatedBy: $updatedBy
+        DifficultyLevel: $difficulty_level
+        TotalQuestions: $total_questions
+        QuestionMarks: $question_marks
+        QuestionType: $question_type
+        RetrieveType: $retrieve_type
+        CreatedBy: $created_by
+        UpdatedBy: $updated_by
         IsActive: $is_active
       }
     ) {
@@ -1023,6 +1068,120 @@ export const MAP_SECTION_TO_BANK = gql`
       QuestionMarks
       QuestionType
       RetrieveType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const UPDATE_MAP_SECTION_TO_BANK = gql`
+  mutation updateMapSectionToBank(
+    $id: ID
+    $qbId: String
+    $sectionId: String
+    $difficulty_level: String
+    $total_questions: Int
+    $question_marks: String
+    $question_type: String
+    $retrieve_type: String
+    $created_by: String
+    $updated_by: String
+    $is_active: Boolean
+  ) {
+    updateSectionToBank(
+      input: {
+        id: $id
+        QbId: $qbId
+        SectionId: $sectionId
+        DifficultyLevel: $difficulty_level
+        TotalQuestions: $total_questions
+        QuestionMarks: $question_marks
+        QuestionType: $question_type
+        RetrieveType: $retrieve_type
+        CreatedBy: $created_by
+        UpdatedBy: $updated_by
+        IsActive: $is_active
+      }
+    ) {
+      id
+      QbId
+      SectionId
+      DifficultyLevel
+      TotalQuestions
+      QuestionMarks
+      QuestionType
+      RetrieveType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const ADD_SECTION_FIXED_QUESTIONS = gql`
+  mutation addSectionFixedQuestions(
+    $sectionId: String
+    $questionId: String
+    $created_at: String
+    $updated_at: String
+    $created_by: String
+    $updated_by: String
+    $is_active: Boolean
+  ) {
+    addSectionFixedQuestions(
+      input: {
+        SqbId: $sectionId
+        QuestionId: $questionId
+        CreatedAt: $created_at
+        UpdatedAt: $updated_at
+        CreatedBy: $created_by
+        UpdatedBy: $updated_by
+        IsActive: $is_active
+      }
+    ) {
+      id
+      SqbId
+      QuestionId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const UPDATE_SECTION_FIXED_QUESTIONS = gql`
+  mutation udpateSectionFixedQuestions(
+    $id: ID
+    $sectionId: String
+    $questionId: String
+    $created_at: String
+    $updated_at: String
+    $created_by: String
+    $updated_by: String
+    $is_active: Boolean
+  ) {
+    udpateSectionFixedQuestions(
+      input: {
+        id: $id
+        SqbId: $sectionId
+        QuestionId: $questionId
+        CreatedAt: $created_at
+        UpdatedAt: $updated_at
+        CreatedBy: $created_by
+        UpdatedBy: $updated_by
+        IsActive: $is_active
+      }
+    ) {
+      id
+      SqbId
+      QuestionId
       CreatedAt
       UpdatedAt
       CreatedBy

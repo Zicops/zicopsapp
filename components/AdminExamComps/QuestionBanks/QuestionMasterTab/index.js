@@ -25,8 +25,8 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
       description: editQuestionData.Description,
       type: editQuestionData.Type,
       difficulty: editQuestionData.Difficulty,
+      attachment: editQuestionData.Attachment,
       attachmentType: editQuestionData.AttachmentType,
-      attachmentType: editQuestionData.Attachment,
       hint: editQuestionData.Hint,
       qbmId: editQuestionData.QbmId
     };

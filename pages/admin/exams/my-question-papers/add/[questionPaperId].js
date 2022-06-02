@@ -10,7 +10,7 @@ export default function AddQuestionPaper() {
     <>
       <Sidebar sidebarItemsArr={examSidebarData} />
       <MainBody>
-        <AdminHeader title="Add Question Papers" />
+        <AdminHeader title="Edit Question Papers" />
 
         <MainBodyBox>
           <QuestionPaperTab />

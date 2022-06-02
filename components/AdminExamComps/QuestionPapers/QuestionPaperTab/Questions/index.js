@@ -1,27 +1,57 @@
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  CustomSectionAtom,
-  QuestionPaperTabDataAtom
-} from '../../../../../state/atoms/exams.atoms';
+import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../state/atoms/popUp.atom';
+import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import IconButton from '../../../../common/IconButton';
 import PopUp from '../../../../common/PopUp';
-import { NewQuestionMetaDataAtom } from '../Logic/questionPaperTab.helper';
+import { paperTabData, QuestionPaperTabAtom } from '../Logic/questionPaperTab.helper';
 import styles from '../questionPaperTab.module.scss';
 import AddCustomSection from './AddCustomSection';
 import AddQuestionMetaData from './AddQuestionMetaData';
 import SectionBox from './SectionBox';
 
 export default function Questions() {
-  const [customSectionPopUp, udpateCustomSectionPopUp] = useRecoilState(
+  const [addSectionPopUp, udpateAddSectionPopUp] = useRecoilState(
     PopUpStatesAtomFamily('addCustomSection')
+  );
+  const [editSectionPopUp, udpateEditSectionPopUp] = useRecoilState(
+    PopUpStatesAtomFamily('editCustomSection')
   );
   const [addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp] = useRecoilState(
     PopUpStatesAtomFamily('addQuestionMetaData')
   );
-  const customSection = useRecoilValue(CustomSectionAtom);
+  const [editQuestionMetaDataPopUp, udpateEditQuestionMetaDataPopUp] = useRecoilState(
+    PopUpStatesAtomFamily('editQuestionMetaData')
+  );
+  const [tab, setTab] = useRecoilState(QuestionPaperTabAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
-  const [newMetaData, setNewMetaData] = useRecoilState(NewQuestionMetaDataAtom);
+
+  const [selectedSectionData, setSelectedSectionData] = useState(null);
+  const [editMetaData, setEditMetaData] = useState(null);
+
+  const customSection = questionPaperTabData.sectionData;
+
+  // reset data on close
+  useEffect(() => {
+    if (!(editSectionPopUp || addQuestionMetaDataPopUp)) setSelectedSectionData(null);
+
+    // if no section is present, show error
+    if (addQuestionMetaDataPopUp && !selectedSectionData) {
+      setToastMsg({ type: 'danger', message: 'No Section Present' });
+      udpateAddQuestionMetaDataPopUp(false);
+    }
+  }, [editSectionPopUp, addQuestionMetaDataPopUp]);
+
+  // if id is not present return to first tab
+  function disableIfIdNotPresent() {
+    if (questionPaperTabData?.paperMaster?.id) return false;
+
+    setTab(paperTabData[0].name);
+    setToastMsg({ type: 'danger', message: 'Please fill and save question paper master first' });
+    return true;
+  }
 
   return (
     <div className={`${customSection.length ? '' : 'h-100'}`}>
@@ -29,49 +59,80 @@ export default function Questions() {
         className={`${customSection.length ? 'w-100' : 'h-100 center-element-with-flex'} ${
           styles.sectionBoxContainer
         }`}>
+        {/* show section like module */}
         {customSection.map((section) => (
-          <SectionBox section={section} />
+          <SectionBox
+            key={section?.id}
+            section={section}
+            setSectionData={() => setSelectedSectionData(section)}
+            setEditMetaData={setEditMetaData}
+          />
         ))}
 
-        {questionPaperTabData.questionPaperMaster?.section_wise && (
+        {/* show add section button if section wise is true */}
+        {questionPaperTabData.paperMaster?.section_wise && (
           <IconButton
             text="Add Section"
             styleClass="btnBlack"
-            handleClick={() => udpateCustomSectionPopUp(true)}
+            handleClick={() => {
+              if (disableIfIdNotPresent()) return;
+              udpateAddSectionPopUp(true);
+            }}
           />
         )}
-        {!questionPaperTabData.questionPaperMaster?.section_wise && !customSection.length && (
+
+        {/* show add question if not section wise and no section added */}
+        {!questionPaperTabData.paperMaster?.section_wise && !customSection.length && (
           <IconButton
             text="Add Question"
             styleClass="btnGrey"
             handleClick={() => {
+              if (disableIfIdNotPresent()) return;
               udpateAddQuestionMetaDataPopUp(true);
-              setNewMetaData({
-                ...newMetaData,
-                sectionId: customSection[0]?.id
-              });
             }}
           />
         )}
       </div>
 
-      {/* custom section */}
+      {/* add custom section */}
       <PopUp
         isFooterVisible={false}
-        isPopUpOpen={customSectionPopUp}
+        isPopUpOpen={addSectionPopUp}
         title="Add Custom Section"
-        closeBtn={{ handleClick: () => udpateCustomSectionPopUp(false) }}>
+        closeBtn={{ handleClick: () => udpateAddSectionPopUp(false) }}>
         <AddCustomSection />
       </PopUp>
 
-      {/* meta data of question */}
+      {/* edit custom section */}
       <PopUp
         isFooterVisible={false}
-        isPopUpOpen={addQuestionMetaDataPopUp}
-        title="Add Question Meta Data"
-        closeBtn={{ handleClick: () => udpateAddQuestionMetaDataPopUp(false) }}>
-        <AddQuestionMetaData />
+        isPopUpOpen={editSectionPopUp}
+        title="Edit Custom Section"
+        closeBtn={{ handleClick: () => udpateEditSectionPopUp(false) }}>
+        <AddCustomSection editData={selectedSectionData} />
       </PopUp>
+
+      {/* edit meta data of question */}
+      {!!selectedSectionData?.id && (
+        <PopUp
+          isFooterVisible={false}
+          isPopUpOpen={addQuestionMetaDataPopUp}
+          title="Add Question Meta Data"
+          closeBtn={{ handleClick: () => udpateAddQuestionMetaDataPopUp(false) }}>
+          <AddQuestionMetaData sectionId={selectedSectionData?.id} />
+        </PopUp>
+      )}
+
+      {/* edit meta data of question */}
+      {!!selectedSectionData?.id && (
+        <PopUp
+          isFooterVisible={false}
+          isPopUpOpen={editQuestionMetaDataPopUp}
+          title="Add Question Meta Data"
+          closeBtn={{ handleClick: () => udpateEditQuestionMetaDataPopUp(false) }}>
+          <AddQuestionMetaData sectionId={selectedSectionData?.id} editData={editMetaData} />
+        </PopUp>
+      )}
     </div>
   );
 }

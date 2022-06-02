@@ -117,7 +117,7 @@ export default function Home() {
       }
     }).then(({ data }) => {
       console.log(data);
-      setLatestCourseData(data.latestCourses.courses);
+      setLatestCourseData(data?.latestCourses?.courses || []);
 
       if (error) alert('Course Load Error');
     });

@@ -374,9 +374,9 @@ export const GET_QUESTION_PAPER_SECTION = gql`
   }
 `;
 
-export const GET_QUESTION_PAPER_BANK_MAPPING = gql`
-  query qpBankMappingByQPId($question_paper_id: String) {
-    getQPBankMappingByQPId(question_paper_id: $question_paper_id) {
+export const GET_QB_SECTION_MAPPING_BY_SECTION = gql`
+  query getQPBankMappingBySectionId($section_id: String) {
+    getQPBankMappingBySectionId(section_id: $section_id) {
       id
       QbId
       SectionId

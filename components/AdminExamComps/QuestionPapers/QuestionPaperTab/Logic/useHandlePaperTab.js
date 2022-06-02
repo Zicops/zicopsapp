@@ -1,23 +1,24 @@
 import { useMutation } from '@apollo/client/react';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   ADD_QUESTION_PAPER,
   ADD_QUESTION_PAPER_SECTION,
-  mutationClient
+  mutationClient,
+  UPDATE_QUESTION_PAPER
 } from '../../../../../API/Mutations';
-import {
-  CustomSectionAtom,
+import getQuestionPaperMasterObject, {
   QuestionPaperTabDataAtom
 } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
-import getQuestionPaperMasterObject, {
-  paperTabData,
-  QuestionPaperTabAtom
-} from './questionPaperTab.helper';
+import { paperTabData, QuestionPaperTabAtom } from './questionPaperTab.helper';
 
 export default function useHandlePaperTab() {
-  const [addQuestionPaper, { error: addQuestionPaperError }] = useMutation(ADD_QUESTION_PAPER, {
+  const [addQuestionPaper, { error: addPaperError }] = useMutation(ADD_QUESTION_PAPER, {
+    client: mutationClient
+  });
+  const [updatePaper, { error: updatePaperError }] = useMutation(UPDATE_QUESTION_PAPER, {
     client: mutationClient
   });
   const [addPaperSection, { error: addPaperSectionError }] = useMutation(
@@ -25,37 +26,54 @@ export default function useHandlePaperTab() {
     { client: mutationClient }
   );
 
+  const router = useRouter();
+  const questionPaperId = router.query?.questionPaperId;
   // recoil state
   const [tab, setTab] = useRecoilState(QuestionPaperTabAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
-  const [customSection, udpateCustomSection] = useRecoilState(CustomSectionAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  // local state
-  // TODO: replace with get query
-  const data = questionPaperTabData?.questionPaperMaster;
-  const [questionPaperMaster, setQuestionPaperMaster] = useState(
-    getQuestionPaperMasterObject({
-      id: data?.id,
-      name: data?.name || '',
-      category: data?.category || '',
-      sub_category: data?.sub_category || '',
-      description: data?.description || '',
-      section_wise: data?.section_wise || false,
-      difficulty_level: data?.difficulty_level || 0,
-      suggested_duration: data?.suggested_duration || ''
-    })
-  );
-
+  // reset state if add question paper form
   useEffect(() => {
+    if (questionPaperId || questionPaperTabData?.paperMaster?.id) return;
+
     setQuestionPaperTabData({
       ...questionPaperTabData,
-      questionPaperMaster: questionPaperMaster
+      paperMaster: getQuestionPaperMasterObject(),
+      sectionData: []
     });
-  }, [questionPaperMaster]);
+  }, []);
 
+  // error notification
+  useEffect(() => {
+    if (addPaperError) return setToastMsg({ type: 'danger', message: `Add Paper Error` });
+    if (updatePaperError) return setToastMsg({ type: 'danger', message: `Update Paper Error` });
+
+    if (addPaperSectionError) return setToastMsg({ type: 'danger', message: `Add Section Error` });
+  }, [addPaperError, addPaperSectionError, updatePaperError]);
+
+  // question paper master input handler
+  function handleInput(e, inputName = null) {
+    const questionPaperMaster = {
+      ...questionPaperTabData.paperMaster
+    };
+    // for react select
+    if (inputName) questionPaperMaster[inputName] = e.value;
+    // for checkbox
+    if (e?.target?.type === 'checkbox') questionPaperMaster[e.target.name] = e.target.checked;
+    // for normal input
+    if (e?.target?.type !== 'checkbox' && !inputName)
+      questionPaperMaster[e.target.name] = e.target.value;
+
+    setQuestionPaperTabData({
+      ...questionPaperTabData,
+      paperMaster: questionPaperMaster
+    });
+  }
+
+  // data validation before add or update
   function isDataValid() {
-    const paperMaster = questionPaperTabData.questionPaperMaster;
+    const paperMaster = questionPaperTabData.paperMaster;
     return (
       paperMaster.name &&
       paperMaster.description &&
@@ -65,22 +83,23 @@ export default function useHandlePaperTab() {
     );
   }
 
-  async function handleSubmit(tabIndex) {
+  async function addNewQuestionPaper(tabIndex) {
     if (!isDataValid())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
-    const questionPaperMaster = questionPaperTabData.questionPaperMaster;
+    const tabData = { ...questionPaperTabData };
+    const questionPaperData = questionPaperTabData.paperMaster;
     const sendData = {
-      name: questionPaperMaster.name || '',
-      category: questionPaperMaster.category || '',
-      sub_category: questionPaperMaster.sub_category || '',
-      description: questionPaperMaster.description || '',
-      section_wise: questionPaperMaster.section_wise || false,
-      difficulty_level: questionPaperMaster.difficulty_level || 0,
-      suggested_duration: questionPaperMaster.suggested_duration || '',
+      name: questionPaperData.name || '',
+      category: questionPaperData.category || '',
+      sub_category: questionPaperData.sub_category || '',
+      description: questionPaperData.description || '',
+      section_wise: questionPaperData.section_wise || false,
+      difficulty_level: questionPaperData.difficulty_level || 0,
+      suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
-      is_active: questionPaperMaster.is_active || false,
+      is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
     };
@@ -95,6 +114,8 @@ export default function useHandlePaperTab() {
     console.log(questionPaperRes?.data);
 
     const res = questionPaperRes?.data?.addQuestionPaper;
+
+    if (isError) return setToastMsg({ type: 'danger', message: 'Add Question Paper Error' });
 
     // create a default section
     if (!sendData.section_wise) {
@@ -119,11 +140,80 @@ export default function useHandlePaperTab() {
           return setToastMsg({ type: 'danger', message: 'Add Default Paper Section Error' });
         }
       );
-      udpateCustomSection([paperSectionRes?.data?.addQuestionPaperSection]);
+      const data = paperSectionRes?.data?.addQuestionPaperSection;
+
+      if (!data) return setToastMsg({ type: 'danger', message: 'Add Section Error' });
+      const sectionData = {
+        id: data?.id,
+        qpId: data?.QpId,
+        name: data?.Name,
+        description: data?.Description,
+        type: data?.Type,
+        difficulty_level: data?.DifficultyLevel,
+        total_questions: data?.TotalQuestions,
+        created_at: data?.CreatedAt,
+        updated_at: data?.UpdatedAt,
+        created_by: data?.CreatedBy,
+        updated_by: data?.UpdatedBy,
+        is_active: data?.IsActive
+      };
+
+      tabData['sectionData'] = [sectionData];
     }
 
-    // TODO: update later
-    const responseData = {
+    const paperMaster = {
+      id: res?.id,
+      name: res?.name || '',
+      category: res?.Category || '',
+      sub_category: res?.SubCategory || '',
+      description: res?.Description || '',
+      section_wise: res?.SectionWise || false,
+      difficulty_level: res?.DifficultyLevel || 0,
+      suggested_duration: res?.SuggestedDuration || ''
+    };
+    tabData[paperMaster] = paperMaster;
+
+    setQuestionPaperTabData(tabData);
+
+    if (!isError) setToastMsg({ type: 'success', message: 'New Question Paper Added' });
+    if (!isNaN(+tabIndex)) setTab(paperTabData[tabIndex].name);
+  }
+
+  async function updateQuestionPaper(tabIndex) {
+    if (!isDataValid())
+      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
+
+    const questionPaperData = questionPaperTabData.paperMaster;
+    const sendData = {
+      id: questionPaperData.id,
+      name: questionPaperData.name || '',
+      category: questionPaperData.category || '',
+      sub_category: questionPaperData.sub_category || '',
+      description: questionPaperData.description || '',
+      section_wise: questionPaperData.section_wise || false,
+      difficulty_level: questionPaperData.difficulty_level || 0,
+      suggested_duration: questionPaperData.suggested_duration || '',
+
+      // TODO: update later
+      is_active: questionPaperData.is_active || false,
+      createdBy: 'Zicops',
+      updatedBy: 'Zicops'
+    };
+
+    console.log(sendData);
+    let isError = false;
+    const questionPaperRes = await updatePaper({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Update Question Paper Error' });
+    });
+    console.log(questionPaperRes?.data);
+
+    const res = questionPaperRes?.data?.updateQuestionPaper;
+    if (!res || isError)
+      return setToastMsg({ type: 'danger', message: 'Update Question Paper Error' });
+
+    const paperMaster = {
       id: res?.id,
       name: res?.name || '',
       category: res?.Category || '',
@@ -136,16 +226,16 @@ export default function useHandlePaperTab() {
 
     setQuestionPaperTabData({
       ...questionPaperTabData,
-      questionPaperMaster: responseData
+      paperMaster: paperMaster
     });
 
-    if (!isError) setToastMsg({ type: 'success', message: 'New Question Paper Added' });
+    if (!isError) setToastMsg({ type: 'success', message: 'Question Paper Updated' });
     if (!isNaN(+tabIndex)) setTab(paperTabData[tabIndex].name);
   }
 
   return {
-    questionPaperMaster,
-    setQuestionPaperMaster,
-    handleSubmit
+    handleInput,
+    addNewQuestionPaper,
+    updateQuestionPaper
   };
 }
