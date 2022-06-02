@@ -2,7 +2,7 @@ import styles from './questionButtonStyles.module.scss';
 import {useEffect, useState} from "react";
 import {Grid} from "@mui/material";
 
-const QuestionButton = ({each, data, setData, current, setCurrent, setOption, filterData}) => {
+const QuestionButton = ({each, data, setData, current, setCurrent, setOption, filterData, setIsQuestion}) => {
   const { question_button_marked , question_button_attempted , question_button_unattempted, question_button_notVisited, question_button_current} = styles ;
   let classNameBe ;
   if(each.isVisited===false) {
@@ -46,6 +46,7 @@ const QuestionButton = ({each, data, setData, current, setCurrent, setOption, fi
         setCurrent(data.filter(e => e.id === (each.id))[0])
         setData(handleChange());
         setOption(data?.filter(e => e.id === (each.id))[0]?.selectedOption)
+        setIsQuestion(false);
         // setTrigger(true)
       }} className={`${styles.question_buttons} ${classNameBe} ${current.id === each.id ? styles.question_button_current : ''} `}>{each.id}
       </button>

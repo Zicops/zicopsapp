@@ -47,6 +47,7 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
         <QuestionCountButtonSection
           filterData={filter}
           setOption={setOption}
+          setIsQuestion={setIsQuestion}
           data={data}
           setData={setData}
           current={current}
