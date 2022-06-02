@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Button from '../../common/Button';
+import Button from '../common/Button';
 import styles from './attemptHistory.module.scss';
 import { tableData } from './Logic/attemptHistory.helper';
 // const data = [tableData];

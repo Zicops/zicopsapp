@@ -1,8 +1,8 @@
-import CongratulationsBody from '../common/CongratulationsBody';
-import CongratulationsFooter from '../common/CongratulationsFooter';
-import CongratulationsHead from '../common/CongratulationsHead';
-import { data } from '../common/CongratulationsHead/Logic/congratulationsHead.helper';
-import CongratulationsScreen from '../common/CongratulationsScreen';
+import CongratulationsBody from './CongratulationsBody';
+import CongratulationsFooter from './CongratulationsFooter';
+import CongratulationsHead from './CongratulationsHead';
+import { data } from './CongratulationsHead/Logic/congratulationsHead.helper';
+import CongratulationsScreen from './CongratulationsScreen';
 import CongratulationsScreenButton from '../common/CongratulationsScreenButton';
 const Congratulations = () => {
   const failImage = '/images/fail.png';

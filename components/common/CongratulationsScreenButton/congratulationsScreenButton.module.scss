@@ -1,7 +1,11 @@
 @import '../../../styles/base.scss';
+.CongratulationsScreenButton{
+    flex: 1;
+}
 .CongratulationsScreenButton button{
-    background-color: $black;
-    width:310px; 
+    background-color: transparent;
+    width: 100%;
+    flex: 1;
     color:$primary;
     padding: 7px 10px;
     border: 2px solid $primary;

@@ -9,20 +9,22 @@ const CongratulationsScreen = ({ children }) => {
         {`
           .congratulations_Screen {
             width: 100%;
-            height: 380px;
+            height: 400px;
             background-color: #323232;
-            padding: 50px;
-            // position: relative;
+            padding: 30px 50px;
             box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.2);
-            // text-align: center;
-          }
-          .background_img {
-            height: 300px;
-            // background-image: url(/images/Union.png);
+            background-image: url('/images/svg/Union.svg');
             background-position: center center;
             background-repeat: no-repeat;
-            background-size: contain;
+            background-size: 290px;
           }
+          // .background_img {
+          //   height: 300px;
+          //   background-image: url('/images/svg/Union.svg');
+          //   background-position: center center;
+          //   background-repeat: no-repeat;
+          //   background-size: contain;
+          // }
         `}
       </style>
     </>
