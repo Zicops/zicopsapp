@@ -58,6 +58,12 @@
     }
 
     .answer_all_options_button_unmark{
+        color: $white;
+        border: 3px solid $secondary;
+        background: $tertiaryBlack;
+        font-size: 1.3rem;
+    }
+    .answer_all_options_button_mark{
         background: $primary;
         border: 2px solid $secondary;
     }

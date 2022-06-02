@@ -13,13 +13,7 @@ const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter
 
   const handleChange = (temp) => {
     return data.map(function (obj) {
-      if (obj.id === current.id) {
-        return {
-          ...obj,
-          selectedOption: option,
-        };
-      }
-      else if (obj.id === current.id + temp) {
+      if (obj.id === current.id + temp) {
         return {
           ...obj,
           isVisited: true,
@@ -42,18 +36,24 @@ const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter
       }
     });
   }
-  // const changeVisited = (temp) => {
-  //   return data.map(function (obj) {
-  //     if (obj.id === current.id + temp) {
-  //       return {
-  //         ...obj,
-  //         isVisited: true,
-  //       };
-  //     } else {
-  //       return {...obj};
-  //     }
-  //   });
-  // }
+
+
+  useEffect(() => {
+    setData(handleOptionChange())
+  }, [option])
+  const handleOptionChange = () => {
+    return data.map(function (obj) {
+      if (obj.id === current.id) {
+        return {
+          ...obj,
+          selectedOption: option,
+        };
+      }
+      else {
+        return {...obj};
+      }
+    });
+  }
 
 
   useEffect(() => {
@@ -91,12 +91,12 @@ const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter
         <Grid spacing={4} container direction="row" justifyContent="center" alignItems="flex-start">
           {
             current.options.slice(0, 2).map((each) => (
-                <AnswerSingleOption currentData={current} optionData={each} option={option} setOption={setOption}/>
+                <AnswerSingleOption handleChange={handleOptionChange} currentData={current} optionData={each} option={option} setOption={setOption}/>
             ))
           }
           {
             current.options.slice(2, 4).map((each) => (
-                <AnswerSingleOption currentData={current} optionData={each} option={option} setOption={setOption}/>
+                <AnswerSingleOption handleChange={handleOptionChange} currentData={current} optionData={each} option={option} setOption={setOption}/>
             ))
           }
         </Grid>
@@ -110,14 +110,14 @@ const AnswerAllOptions = ({data, setData, current, setCurrent, filter, setFilter
         if(filter !== 'all') setFilter('all')
         setMark(!mark)
         setMarkTrigger(true);
-      }} className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_unmark}`}>{mark ? 'Unmark' : 'Mark'}<span>from review</span></button>
+      }} className={`${styles.answer_all_options_button} ${!mark ? styles.answer_all_options_button_unmark : styles.answer_all_options_button_mark}`}>{mark ? 'Unmark' : 'Mark'}<span>from review</span></button>
       <button disabled={current.id === 1} onClick={() => {
         setPreviousTrigger(true)
       }} className={`${styles.answer_all_options_button} ${current.id === 1 ? styles.answer_all_options_button_previous_disabled : styles.answer_all_options_button_previous}`} >Previous<span>Question</span></button>
       <button onClick={() => {
         // console.log(option)
         setNextTrigger(true)
-      }} className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_next}`}>Next<span>Question</span></button>
+      }} className={`${styles.answer_all_options_button} ${current.id === data.length ? styles.answer_all_options_button_next_disabled : styles.answer_all_options_button_next}`}>Next<span>Question</span></button>
     </div>
     </>
   )
