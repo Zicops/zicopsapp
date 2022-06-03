@@ -44,7 +44,7 @@ export const UserMenu = [
   },
   {
     title: 'Classroom',
-    link: '/'
+    link: '/classroom'
   },
   {
     title: 'Events',

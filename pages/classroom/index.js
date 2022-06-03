@@ -1,12 +1,35 @@
-import { useEffect } from 'react';
-import { bigImages, sliderImages } from '../API/DemoSliderData';
-import CommonCalendar from '../components/common/CommonCalendar';
-import SimpleTable from '../components/common/SimpleTable';
-import FavouriteDndCourses from '../components/FavouriteDndCourses';
-import BigCardSlider from '../components/medium/BigCardSlider';
-import ZicopsCarousel from '../components/ZicopsCarousel';
+import { useEffect, useState } from 'react';
+import { bigImages, sliderImages } from '../../API/DemoSliderData';
+import CommonCalendar from '../../components/common/CommonCalendar';
+import { useRouter } from 'next/router';
+import Options from '../../components/Exams/Options';
+import SimpleTable from '../../components/common/SimpleTable';
+import HeroSliderContainer from '../../components/HeroSliderContainer';
+import FavouriteDndCourses from '../../components/FavouriteDndCourses';
+import BigCardSlider from '../../components/medium/BigCardSlider';
+import ZicopsCarousel from '../../components/ZicopsCarousel';
 
-export default function Self() {
+const Classroom = () => {
+  const router = useRouter();
+  const buttonObj = {
+    style: { margin: '0px 10px', padding: '2px 10px', border: '1px solid var(--primary)' }
+  };
+  const [showTable, setShowTable] = useState(false);
+
+  const btnOptions = [
+    { name: 'Schedule Exams', isActive: false },
+    {
+      name: 'Take Anytime Exams',
+      handleClick: () => setShowTable(!showTable),
+      isActive: showTable
+    },
+    {
+      name: 'Open Available Exams',
+      handleClick: () => router.push('/exam-screen'),
+      isActive: false
+    },
+    { name: 'Completed Exams', isActive: false }
+  ];
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -107,10 +130,54 @@ export default function Self() {
         backgroundColor: 'var(--tile-bg)',
         overflow: 'hidden',
         margin: 0,
-        padding: '70px 0 0 0'
+        padding: '0 0 0 0'
       }}>
-      {/*<HeroSlider />*/}
-      <FavouriteDndCourses />
+      <HeroSliderContainer>
+        <FavouriteDndCourses />
+        <div
+          style={{
+            display: 'flex',
+            backgroundColor: 'var(--black)',
+            height: '75vh',
+            overflow: 'hidden'
+          }}>
+          <div
+            className={`${showTable ? 'w-20' : 'w-65'} border_right`}
+            style={{ margin: 'auto', padding: '60px 0px' }}>
+            <Options
+              question={showTable ? '' : 'Q. Select the required Option.'}
+              btnOptions={btnOptions}
+            />
+          </div>
+
+          {showTable && (
+            <div
+              className="w-45 border_right"
+              style={{ background: 'var(--black)', margin: 'auto' }}>
+              <SimpleTable
+                tableData={tableData}
+                lastCellObj={buttonObj}
+                tableHeading="Take Anytime Exams"
+                headingStyle={{
+                  color: 'var(--white)',
+                  fontSize: '16px',
+                  fontWeight: '400',
+                  textAlign: 'left',
+                  margin: '0',
+                  marginLeft: '60px',
+                  textShadow: 'none',
+                  textTransform: 'none',
+                  letterSpacing: '1px'
+                }}
+              />
+            </div>
+          )}
+
+          <div className="w-35 calender_box">
+            <CommonCalendar />
+          </div>
+        </div>
+      </HeroSliderContainer>
       <ZicopsCarousel title="Subscribed Classroom Courses" data={sliderImages} />
       <ZicopsCarousel title="Recomended For You" data={sliderImages} />
 
@@ -139,4 +206,6 @@ export default function Self() {
       </Link> */}
     </div>
   );
-}
+};
+
+export default Classroom;
