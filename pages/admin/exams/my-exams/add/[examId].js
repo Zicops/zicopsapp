@@ -5,12 +5,12 @@ import MainBodyBox from '../../../../../components/common/MainBodyBox';
 import Sidebar from '../../../../../components/common/Sidebar';
 import { examSidebarData } from '../../../../../components/common/Sidebar/Logic/sidebar.helper';
 
-export default function AddExam() {
+export default function EditExam() {
   return (
     <>
       <Sidebar sidebarItemsArr={examSidebarData} />
       <MainBody>
-        <AdminHeader title="Create Exam" />
+        <AdminHeader title="Edit Exam " />
 
         <MainBodyBox>
           <ExamMasterTab />

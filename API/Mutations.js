@@ -1195,20 +1195,75 @@ export const ADD_EXAM = gql`
   mutation addExam(
     $name: String
     $description: String
-    $code: String
     $qpId: String
-    $createdBy: String
-    $updatedBy: String
-    $is_active: Boolean
     $type: String
     $scheduleType: String
     $duration: Int
-    $status: String
+    $code: String
     $category: String
     $sub_category: String
+    $status: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
   ) {
     addExam(
       input: {
+        Name: $name
+        Description: $description
+        Code: $code
+        QpId: $qpId
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+        Type: $type
+        ScheduleType: $scheduleType
+        Duration: $duration
+        Status: $status
+        Category: $category
+        SubCategory: $sub_category
+      }
+    ) {
+      id
+      Name
+      Description
+      Code
+      QpId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      ScheduleType
+      Duration
+      Status
+      Category
+      SubCategory
+    }
+  }
+`;
+
+export const UPDATE_EXAM = gql`
+  mutation updateExam(
+    $id: ID
+    $name: String
+    $description: String
+    $qpId: String
+    $type: String
+    $scheduleType: String
+    $duration: Int
+    $code: String
+    $category: String
+    $sub_category: String
+    $status: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    updateExam(
+      input: {
+        id: $id
         Name: $name
         Description: $description
         Code: $code
@@ -1279,6 +1334,43 @@ export const ADD_EXAM_SCHEDULE = gql`
   }
 `;
 
+export const UPDATE_EXAM_SCHEDULE = gql`
+  mutation updateExamSchedule(
+    $id: ID
+    $examId: String
+    $start: Int
+    $end: Int
+    $bufferTime: Int
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    updateExamSchedule(
+      input: {
+        id: $id
+        ExamId: $examId
+        Start: $start
+        End: $end
+        BufferTime: $bufferTime
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      Start
+      End
+      BufferTime
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
 export const ADD_EXAM_INSTRUCTION = gql`
   mutation addExamInstruction(
     $examId: String
@@ -1310,6 +1402,121 @@ export const ADD_EXAM_INSTRUCTION = gql`
       CreatedBy
       UpdatedBy
       IsActive
+    }
+  }
+`;
+
+export const UPDATE_EXAM_INSTRUCTION = gql`
+  mutation updateExamInstruction(
+    $id: ID
+    $examId: String
+    $passingCriteria: String
+    $noAttempts: Int
+    $accessType: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    updateExamInstruction(
+      input: {
+        id: $id
+        ExamId: $examId
+        PassingCriteria: $passingCriteria
+        NoAttempts: $noAttempts
+        AccessType: $accessType
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      PassingCriteria
+      NoAttempts
+      AccessType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const ADD_EXAM_CONFIGURATION = gql`
+  mutation addExamConfiguration(
+    $examId: String
+    $shuffle: Boolean
+    $showResult: Boolean
+    $showAnswer: Boolean
+    $displayHints: Boolean
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    addExamConfiguration(
+      input: {
+        ExamId: $examId
+        Shuffle: $shuffle
+        DisplayHints: $displayHints
+        ShowAnswer: $showAnswer
+        ShowResult: $showResult
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      Shuffle
+      DisplayHints
+      ShowAnswer
+      ShowResult
+      CreatedBy
+      UpdatedBy
+      IsActive
+      CreatedAt
+      UpdatedAt
+    }
+  }
+`;
+
+export const UPDATE_EXAM_CONFIGURATION = gql`
+  mutation updateExamConfiguration(
+    $id: ID
+    $examId: String
+    $shuffle: Boolean
+    $showResult: Boolean
+    $showAnswer: Boolean
+    $displayHints: Boolean
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    updateExamConfiguration(
+      input: {
+        id: $id
+        ExamId: $examId
+        Shuffle: $shuffle
+        DisplayHints: $displayHints
+        ShowAnswer: $showAnswer
+        ShowResult: $showResult
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      Shuffle
+      DisplayHints
+      ShowAnswer
+      ShowResult
+      CreatedBy
+      UpdatedBy
+      IsActive
+      CreatedAt
+      UpdatedAt
     }
   }
 `;

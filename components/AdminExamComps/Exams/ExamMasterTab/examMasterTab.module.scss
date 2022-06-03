@@ -20,6 +20,12 @@
   display: grid;
   grid-template-columns: 50% 50%;
   grid-gap: 30px;
+
+  > section {
+    label {
+      margin-right: 25%;
+    }
+  }
 }
 
 .stretchDuration {
@@ -95,6 +101,45 @@
   > div {
     &:first-child {
       margin-left: 25%;
+    }
+  }
+}
+.passingCriteriaOuterContainer{
+  display: flex;
+  align-items: center;
+  margin-left: 25%;
+  margin-bottom: 30px;
+  label{
+    width: 25%;
+  }
+  .passingCriteriaInnerContainer{
+    display: flex;
+    border: 2px solid $darkThree;
+    padding : 5px;
+    width: 75%;
+    input{
+      flex: 0.75;
+      color: $darkThree;
+      background-color: $darkTwo;
+      border: 0;
+      &:focus{
+        outline: 0;
+
+        // border: 2px solid $primary;
+        // box-shadow: 0px 0px 10px 0px $primary;
+        // color: $white;
+      }
+    }
+    select{
+      flex: 0.25;
+      padding: 5px;
+      color: $darkThree;
+      background-color: $darkTwo;
+      border: 0;
+      border-left: 2px solid $darkThree;
+      &:focus {
+        outline: 0;
+      }
     }
   }
 }

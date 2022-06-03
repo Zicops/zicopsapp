@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
-import { QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
+import { ExamTabDataAtom, QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ZicopsTable from '../../common/ZicopsTable';
 
@@ -16,6 +16,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
   const router = useRouter();
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
+  const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
   const [questionPaper, setQuestionPaper] = useState([]);
 
@@ -83,7 +84,13 @@ export default function QuestionPaperTable({ isEdit = false }) {
                   <img src="/images/svg/edit-box-line.svg" width={20}></img>
                 </button>
                 <button
-                  onClick={() => router.push('/admin/exams/my-exams/add')}
+                  onClick={() => {
+                    router.push('/admin/exams/my-exams/add');
+                    setExamTabData({
+                      ...examTabData,
+                      qpId: params.row.id
+                    });
+                  }}
                   style={{ background: 'var(--primary)', color: 'var(--black)' }}>
                   + Create Exams
                 </button>
