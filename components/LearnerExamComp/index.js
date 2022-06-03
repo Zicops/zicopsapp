@@ -4,7 +4,7 @@ import QuestionCountButtonSection from './QuestionCountButton';
 import styles from './learnerExam.module.scss'
 import AnswerAllOptions from './AnswerAllOptions';
 import InfoSection from './InfoSection';
-import {useState} from "react";
+import {useState, useRef} from "react";
 import QuestionPaperView2 from "../examComps/QuestionPaperView2/QuestionPaperPreview";
 import NewQuestionPaperPreview from '../examComps/NewQuestionPaperPreview';
 
@@ -13,9 +13,9 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
     const [filter, setFilter] = useState('all')
     const [option, setOption] = useState(current?.selectedOption);
     const [isQuestion, setIsQuestion] = useState(false)
-
+    const examRef = useRef(null);
   return (
-    <div className={`${styles.questionSection}`}>
+    <div className={`${styles.questionSection}`} ref={examRef}>
       <div className={`${styles.questionSection_questions}`}>
         {isQuestion ? (
           <NewQuestionPaperPreview
@@ -27,7 +27,7 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
             setCurrent={setCurrent}
           />
         ) : (
-          <>
+          <div>
             <ExamAllQuestions current={current} />
             <AnswerAllOptions
               option={option}
@@ -38,8 +38,9 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
               setCurrent={setCurrent}
               filter={filter}
               setFilter={setFilter}
+              examRef={examRef}
             />
-          </>
+          </div>
         )}
       </div>
       <div className={`${styles.proctor_section}`}>
