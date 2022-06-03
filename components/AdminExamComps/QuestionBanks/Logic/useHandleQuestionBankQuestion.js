@@ -17,17 +17,17 @@ import {
 } from './questionBank.helper';
 
 export default function useHandleQuestionBankQuestion(editData, closeQuestionMasterTab) {
-  const [addQuestion, { error: addQuestionError }] = useMutation(ADD_QUESTION_BANK_QUESTION, {
+  const [addQuestion, { error: addQuestionErr }] = useMutation(ADD_QUESTION_BANK_QUESTION, {
     client: mutationClient
   });
-  const [addOption, { error: addOptionError }] = useMutation(ADD_QUESTION_OPTIONS, {
+  const [addOption, { error: addOptionErr }] = useMutation(ADD_QUESTION_OPTIONS, {
     client: mutationClient
   });
-  const [updateQuestion, { error: updateQuestionError }] = useMutation(
+  const [updateQuestion, { error: updateQuestionErr }] = useMutation(
     UPDATE_QUESTION_BANK_QUESTION,
     { client: mutationClient }
   );
-  const [updateOption, { error: updateOptionError }] = useMutation(UPDATE_QUESTION_OPTIONS, {
+  const [updateOption, { error: updateOptionErr }] = useMutation(UPDATE_QUESTION_OPTIONS, {
     client: mutationClient
   });
 
@@ -45,12 +45,27 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   const [optionData, setOptionData] = useState(Array(4).fill(getQuestionOptionsObject()));
   const [isUploading, setIsUploading] = useState(null);
 
+  // set edit data in local state
   useEffect(() => {
     if (!editData) return;
 
     setQuestionData(editData.question);
     setOptionData(editData.options);
   }, [editData]);
+
+  // set is uploading to null if error msg is showen
+  useEffect(() => {
+    if (toastMsg[0]?.type === 'danger') setIsUploading(null);
+  }, [toastMsg]);
+
+  // error notification
+  useEffect(() => {
+    if (addQuestionErr) return setToastMsg({ type: 'danger', message: `Add Question Error` });
+    if (addOptionErr) return setToastMsg({ type: 'danger', message: `Add Option Error` });
+
+    if (updateQuestionErr) return setToastMsg({ type: 'danger', message: `Update Question Error` });
+    if (updateOptionErr) return setToastMsg({ type: 'danger', message: `Update Option Error` });
+  }, [addQuestionErr, addOptionErr, updateQuestionErr, updateOptionErr]);
 
   // disable submit if data not complete
   function validateInput() {
@@ -178,6 +193,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
         return setToastMsg({ type: 'danger', message: 'Add Question Error' });
       });
 
+      if (!questionRes || isError)
+        return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+
       // add option
       for (let i = 0; i < options.length; i++) {
         const option = options[i];
@@ -203,8 +221,6 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
           return setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
         });
       }
-      if (addQuestionError) return setToastMsg({ type: 'danger', message: `Add Question Error` });
-      if (addOptionError) return setToastMsg({ type: 'danger', message: `Add Option Error` });
 
       if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
     }
@@ -271,9 +287,6 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
         return setToastMsg({ type: 'danger', message: `Update Option (${i + 1}) Error` });
       });
     }
-    if (updateQuestionError)
-      return setToastMsg({ type: 'danger', message: `Update Question Error` });
-    if (updateOptionError) return setToastMsg({ type: 'danger', message: `Update Option Error` });
 
     if (!isError) setToastMsg({ type: 'success', message: 'Question and Options Updated' });
 

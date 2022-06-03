@@ -1,83 +1,24 @@
+import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../API/Queries';
+import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
+import { ExamTabDataAtom, QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
+import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ZicopsTable from '../../common/ZicopsTable';
 
-const data = [
-  {
-    id: 1,
-    name: 'Design Basics',
-    type: 'Take Anytime',
-    status: 'Saved',
-    category: 'Design',
-    subcategory: 'UI Design',
-    noOfQuestions: 200
-  },
-  {
-    id: 2,
-    name: 'Effective Communication',
-    type: 'Schedule',
-    status: 'Started',
-    category: 'Soft Skill',
-    subcategory: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 3,
-    name: 'Core Java Fundamentals',
-    type: 'Take Anytime',
-    status: 'Saved',
-    category: 'IT Development',
-    subcategory: 'Java',
-    noOfQuestions: 200
-  },
-  {
-    id: 4,
-    name: 'Design Basics',
-    type: 'Schedule',
-    status: 'Saved',
-    category: 'Design',
-    subcategory: 'UI Design',
-    noOfQuestions: 200
-  },
-  {
-    id: 5,
-    name: 'Effective Communication',
-    type: 'Take Anytime',
-    status: 'Saved',
-    category: 'Soft Skill',
-    subcategory: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 6,
-    name: 'Core Java Fundamentals',
-    type: 'Schedule',
-    status: 'Saved',
-    category: 'IT Development',
-    subcategory: 'Java',
-    noOfQuestions: 200
-  },
-  {
-    id: 7,
-    name: 'Effective Communication',
-    type: 'Take Anytime',
-    status: 'Saved',
-    category: 'Soft Skill',
-    subcategory: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 8,
-    name: 'Design Basics',
-    type: 'Schedule',
-    status: 'Saved',
-    category: 'Design',
-    subcategory: 'UI Design',
-    noOfQuestions: 200
-  }
-];
 export default function QuestionPaperTable({ isEdit = false }) {
-  // const { pageSize } = useHandlePagesize();
+  const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
+    GET_LATEST_QUESTION_PAPERS,
+    { client: queryClient }
+  );
   const router = useRouter();
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
+  const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
+
+  const [questionPaper, setQuestionPaper] = useState([]);
 
   const columns = [
     {
@@ -118,7 +59,22 @@ export default function QuestionPaperTable({ isEdit = false }) {
             {isEdit && (
               <>
                 <button
-                  onClick={() => router.push(router.asPath + `/add/${params.row.id}`)}
+                  onClick={() => {
+                    setQuestionPaperTabData({
+                      ...questionPaperTabData,
+                      paperMaster: {
+                        id: params.row.id,
+                        name: params.row.name,
+                        description: params.row.Description,
+                        category: params.row.Category,
+                        sub_category: params.row.SubCategory,
+                        difficulty_level: params.row.DifficultyLevel,
+                        section_wise: params.row.SectionWise,
+                        suggested_duration: params.row.SuggestedDuration
+                      }
+                    });
+                    router.push(router.asPath + `/add/${params.row.id}`);
+                  }}
                   style={{
                     cursor: 'pointer',
                     backgroundColor: 'transparent',
@@ -128,7 +84,13 @@ export default function QuestionPaperTable({ isEdit = false }) {
                   <img src="/images/svg/edit-box-line.svg" width={20}></img>
                 </button>
                 <button
-                  onClick={() => router.push('/admin/exams/my-exams/add')}
+                  onClick={() => {
+                    router.push('/admin/exams/my-exams/add');
+                    setExamTabData({
+                      ...examTabData,
+                      qpId: params.row.id
+                    });
+                  }}
                   style={{ background: 'var(--primary)', color: 'var(--black)' }}>
                   + Create Exams
                 </button>
@@ -137,16 +99,29 @@ export default function QuestionPaperTable({ isEdit = false }) {
           </>
         );
       },
-      flex: isEdit? 1: 0.5
+      flex: isEdit ? 1 : 0.5
     }
   ];
+
+  // load table data
+  useEffect(() => {
+    const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
+
+    loadQuestionPaper({ variables: queryVariables }).then(({ data }) => {
+      if (errorQuestionPaperData)
+        return setToastMsg({ type: 'danger', message: 'question paper load error' });
+
+      if (data?.getLatestQuestionPapers?.questionPapers)
+        setQuestionPaper(data.getLatestQuestionPapers.questionPapers);
+    });
+  }, []);
 
   return (
     <>
       <ZicopsTable
         columns={columns}
-        data={data}
-        pageSize={7}
+        data={questionPaper}
+        pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
       />

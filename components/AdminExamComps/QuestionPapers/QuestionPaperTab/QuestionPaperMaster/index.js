@@ -1,5 +1,5 @@
-import { useRecoilState } from 'recoil';
-import { changeHandler } from '../../../../../helper/common.helper';
+import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
 import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
@@ -16,7 +16,11 @@ export default function QuestionPaperMaster() {
     { value: 'Engg', label: 'Engg' }
   ];
 
-  const { questionPaperMaster, setQuestionPaperMaster, handleSubmit } = useHandlePaperTab();
+  const router = useRouter();
+  const questionPaperId = router.query?.questionPaperId;
+  const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
+
+  const { handleInput, addNewQuestionPaper, updateQuestionPaper } = useHandlePaperTab();
 
   return (
     <div className={`${styles.qb_container}`}>
@@ -25,9 +29,9 @@ export default function QuestionPaperMaster() {
           inputName: 'name',
           label: 'Question Paper Name:',
           placeholder: 'Enter name of the course (Upto 60 characters)',
-          value: questionPaperMaster.name
+          value: questionPaperTabData.paperMaster?.name
         }}
-        changeHandler={(e) => changeHandler(e, questionPaperMaster, setQuestionPaperMaster)}
+        changeHandler={(e) => handleInput(e)}
         styleClass={`${styles.inputField}`}
       />
       <LabeledInput
@@ -36,9 +40,9 @@ export default function QuestionPaperMaster() {
           inputName: 'description',
           label: 'Description:',
           placeholder: 'Enter name of the course (Upto 160 characters)',
-          value: questionPaperMaster.description
+          value: questionPaperTabData.paperMaster?.description
         }}
-        changeHandler={(e) => changeHandler(e, questionPaperMaster, setQuestionPaperMaster)}
+        changeHandler={(e) => handleInput(e)}
       />
       <LabeledDropdown
         styleClass={styles.inputField}
@@ -47,13 +51,12 @@ export default function QuestionPaperMaster() {
           label: 'Category:',
           placeholder: 'Select the category of the course',
           options: categoryOption,
-          value: questionPaperMaster?.category
-            ? { value: questionPaperMaster.category, label: questionPaperMaster.category }
-            : null
+          value: {
+            value: questionPaperTabData.paperMaster?.category,
+            label: questionPaperTabData.paperMaster?.category
+          }
         }}
-        changeHandler={(e) =>
-          changeHandler(e, questionPaperMaster, setQuestionPaperMaster, 'category')
-        }
+        changeHandler={(e) => handleInput(e, 'category')}
       />
       <LabeledDropdown
         styleClass={styles.inputField}
@@ -62,13 +65,12 @@ export default function QuestionPaperMaster() {
           label: 'Sub-Category:',
           placeholder: 'Select the sub category of the course',
           options: categoryOption,
-          value: questionPaperMaster?.sub_category
-            ? { value: questionPaperMaster.sub_category, label: questionPaperMaster.sub_category }
-            : null
+          value: {
+            value: questionPaperTabData.paperMaster?.sub_category,
+            label: questionPaperTabData.paperMaster?.sub_category
+          }
         }}
-        changeHandler={(e) =>
-          changeHandler(e, questionPaperMaster, setQuestionPaperMaster, 'sub_category')
-        }
+        changeHandler={(e) => handleInput(e, 'sub_category')}
       />
 
       <div className={`${styles.twoInputContainers}`}>
@@ -80,28 +82,24 @@ export default function QuestionPaperMaster() {
             label: 'Difficulty Level:',
             placeholder: 'Select the difficulty level',
             options: categoryOption,
-            value: questionPaperMaster?.difficulty_level
-              ? {
-                  value: questionPaperMaster.difficulty_level,
-                  label: questionPaperMaster.difficulty_level
-                }
-              : null
+            value: {
+              value: questionPaperTabData.paperMaster?.difficulty_level,
+              label: questionPaperTabData.paperMaster?.difficulty_level
+            }
           }}
-          changeHandler={(e) =>
-            changeHandler(e, questionPaperMaster, setQuestionPaperMaster, 'difficulty_level')
-          }
+          changeHandler={(e) => handleInput(e, 'difficulty_level')}
         />
 
         <LabeledInput
           isFiftyFifty={true}
-          styleClass={`${styles.inputField}`}
+          styleClass={styles.inputField}
           inputOptions={{
             inputName: 'suggested_duration',
             label: 'Suggested Duration:',
             placeholder: 'Enter duration',
-            value: questionPaperMaster.suggested_duration
+            value: questionPaperTabData.paperMaster?.suggested_duration
           }}
-          changeHandler={(e) => changeHandler(e, questionPaperMaster, setQuestionPaperMaster)}
+          changeHandler={(e) => handleInput(e)}
         />
       </div>
 
@@ -109,12 +107,17 @@ export default function QuestionPaperMaster() {
         <LabeledRadioCheckbox
           type="checkbox"
           label="Section Wise"
-          isChecked={questionPaperMaster.section_wise}
           name="section_wise"
-          changeHandler={(e) => changeHandler(e, questionPaperMaster, setQuestionPaperMaster)}
+          isDisabled={!!questionPaperId}
+          isChecked={questionPaperTabData.paperMaster?.section_wise}
+          changeHandler={(e) => handleInput(e)}
         />
 
-        <NextButton clickHandler={() => handleSubmit(1)} />
+        <NextButton
+          clickHandler={() => {
+            questionPaperId ? updateQuestionPaper(1) : addNewQuestionPaper(1);
+          }}
+        />
       </div>
     </div>
   );

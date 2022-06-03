@@ -1,20 +1,16 @@
-import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../../../helper/common.helper';
 import LabeledDropdown from '../../../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
-import { NewQuestionMetaDataAtom } from '../../../Logic/questionPaperTab.helper';
 import styles from '../addQuestionMetaData.module.scss';
 
-export default function ExistingQuestion() {
+export default function ExistingQuestion({ metaData, setMetaData, questionBankOptions }) {
   const categoryOption = [
     { value: 'Accounting', label: 'Accounting' },
     { value: 'Bussiness', label: 'Bussiness' },
     { value: 'Developement', label: 'Developement' },
     { value: 'Engg', label: 'Engg' }
   ];
-  const questionBankOption = [{ value: 'c9vi5778u0hjj4gm4c00', label: 'c9vi5778u0hjj4gm4c00' }];
-  const [newMetaData, setNewMetaData] = useRecoilState(NewQuestionMetaDataAtom);
 
   return (
     <>
@@ -26,13 +22,14 @@ export default function ExistingQuestion() {
             label: 'Category:',
             placeholder: 'Select category',
             options: categoryOption,
-            value: newMetaData?.category
-              ? { value: newMetaData.category, label: newMetaData.category }
+            value: metaData?.category
+              ? { value: metaData?.category, label: metaData?.category }
               : null
           }}
-          changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData, 'category')}
+          changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'category')}
           isFiftyFifty={true}
         />
+
         <LabeledDropdown
           styleClass={`${styles.halfInputField} ${styles.paddingToLabel}`}
           dropdownOptions={{
@@ -40,61 +37,78 @@ export default function ExistingQuestion() {
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
             options: categoryOption,
-            value: newMetaData?.sub_category
-              ? { value: newMetaData.sub_category, label: newMetaData.sub_category }
-              : null
+            value: { value: metaData?.sub_category, label: metaData?.sub_category }
           }}
-          changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData, 'sub_category')}
+          changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'sub_category')}
           isFiftyFifty={true}
         />
       </div>
 
       <LabeledDropdown
         styleClass={styles.inputField}
-        dropdownOptions={{
-          inputName: 'difficultyLevel',
-          label: 'Difficulty:',
-          placeholder: 'Select difficulty level',
-          options: categoryOption,
-          value: newMetaData?.difficultyLevel
-            ? { value: newMetaData.difficultyLevel, label: newMetaData.difficultyLevel }
-            : null
+        filterOption={(s) => {
+          if (!metaData?.category && !metaData?.sub_category) return true;
+
+          return (
+            s?.data?.category === metaData?.category ||
+            s?.data?.sub_category === metaData?.sub_category
+          );
         }}
-        changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData, 'difficultyLevel')}
-      />
-      <LabeledDropdown
-        styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'qbId',
           label: 'Question Bank:',
           placeholder: 'Select the question bank to choose question from',
-          options: questionBankOption,
-          value: newMetaData?.qbId ? { value: newMetaData.qbId, label: newMetaData?.qbId } : null
+          options: questionBankOptions,
+          value: questionBankOptions?.filter((option) => option?.value === metaData?.qbId)[0],
+          isSearchEnable: true
         }}
-        changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData, 'qbId')}
+        changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'qbId')}
+      />
+
+      <LabeledDropdown
+        styleClass={styles.inputField}
+        dropdownOptions={{
+          inputName: 'difficulty_level',
+          label: 'Difficulty:',
+          placeholder: 'Select difficulty level',
+          options: categoryOption,
+          value: { value: metaData?.difficulty_level, label: metaData?.difficulty_level }
+        }}
+        changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'difficulty_level')}
       />
 
       <div className={styles.twoInputContainer}>
         <LabeledInput
           styleClass={styles.inputField}
           inputOptions={{
-            inputName: 'questionMarks',
+            inputName: 'question_marks',
             label: 'Marks Per Question:',
             placeholder: 'Enter Marks Per Question',
-            value: newMetaData?.questionMarks
+            value: metaData?.question_marks
           }}
-          changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData)}
+          changeHandler={(e) => changeHandler(e, metaData, setMetaData)}
           isFiftyFifty={true}
         />
+
         <LabeledInput
           styleClass={`${styles.paddingToLabel}`}
           inputOptions={{
-            inputName: 'totalQuestions',
+            inputName: 'total_questions',
             label: 'No. of Question:',
             placeholder: 'Enter No. of Question',
-            value: newMetaData?.totalQuestions
+            value: metaData?.total_questions
           }}
-          changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData)}
+          changeHandler={(e) => {
+            // validation for entering total question should not be greater than available questions
+            const questionAvailable =
+              questionBankOptions?.filter((option) => option.value === metaData.qbId)[0]
+                ?.noOfQuestions || 10;
+
+            if (parseInt(e.target.value) > questionAvailable)
+              return setMetaData({ ...metaData, total_questions: questionAvailable });
+
+            changeHandler(e, metaData, setMetaData);
+          }}
           isFiftyFifty={true}
         />
       </div>
@@ -105,27 +119,23 @@ export default function ExistingQuestion() {
           inputName: 'total',
           label: 'Total Marks:',
           placeholder: 'Total Marks',
-          value: newMetaData?.totalQuestions * newMetaData?.questionMarks || 0,
+          value: metaData?.total_questions * metaData?.question_marks || 0,
           isDisabled: true
         }}
       />
 
       <div className={`${styles.radioContainer} ${styles.inputField}`}>
         <label>Question Pick:</label>
-        <LabeledRadioCheckbox
-          type="radio"
-          label="Random"
-          name="retrieveType"
-          value={'Random'}
-          changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData)}
-        />
-        <LabeledRadioCheckbox
-          type="radio"
-          label="Manual"
-          name="retrieveType"
-          value={'Manual'}
-          changeHandler={(e) => changeHandler(e, newMetaData, setNewMetaData)}
-        />
+        {['Manual', 'Random'].map((label) => (
+          <LabeledRadioCheckbox
+            type="radio"
+            label={label}
+            name="retrieve_type"
+            value={label.toLowerCase()}
+            isChecked={metaData?.retrieve_type === label.toLowerCase()}
+            changeHandler={(e) => changeHandler(e, metaData, setMetaData)}
+          />
+        ))}
       </div>
     </>
   );
