@@ -1,11 +1,11 @@
 import InstructionLayout from './InstructionLayout';
 import InstructionPage from './InstructionPage';
 
-const ExamInstructions = () => {
+const ExamInstructions = ({ setIsLearner }) => {
   const examType = 'Scheduled';
   return (
     <InstructionLayout>
-      <InstructionPage type={examType} />
+      <InstructionPage type={examType} setIsLearner={setIsLearner} />
     </InstructionLayout>
   );
 };

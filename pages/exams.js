@@ -66,7 +66,7 @@ export default function LearnerExams() {
     },
     {
       name: 'Open Available Exams',
-      handleClick: () => router.push('/exam-screen'),
+      handleClick: () => router.push('/exam'),
       isActive: false
     },
     { name: 'Completed Exams', isActive: false }

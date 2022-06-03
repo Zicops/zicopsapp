@@ -13,87 +13,111 @@
     grid-template-rows: repeat(2, 40%);
     grid-template-columns: repeat(2, 35%);
 }
-
-.answer_all_options_buttons_container {
-    position: absolute;
-    bottom: -20px;
+.livePageFooter {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    padding-top: 20px;
-    width: 80%;
-    background: $tertiaryBlack;
+    position: absolute;
+    bottom: 10px;
+    width: calc(100% - 260px);
 
-    .answer_all_options_button {
-        height: 63%;
-        width: 12%;
+    .fsBtn {
         display: flex;
-        flex-direction: column;
         justify-content: center;
-        margin-right: 20px;
-        margin-bottom: 35px;
-        border-radius: 10px;
-        font-size: 1.5rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        cursor: pointer;
+        align-items: center;
+        gap: 20px;
+        padding-top: 3px;
+        background-color: $black;
+        width: 100px;
+        margin-left: 35px;
+        button {
+            background-color: transparent;
+            border: 0;
+            padding: 0;
+        }
     }
-
-    .answer_all_options_button span {
-        font-size: 12px;
-        font-weight: 500;
-        text-transform: lowercase;
-    }
-
-    .answer_all_options_button_clear {
-        background: $black;
-        border: 2px solid $white;
-        color: $white;
-    }
-    .answer_all_options_button_clear_disabled {
+    .answer_all_options_buttons_container {
+        // position: absolute;
+        // bottom: -20px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding-top: 20px;
+        width: 80%;
         background: $tertiaryBlack;
-        border: 2px solid $secondaryWhite;
-        color: $secondaryWhite;
-        cursor: default;
+    
+        .answer_all_options_button {
+            height: 63%;
+            width: 12%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-right: 20px;
+            margin-bottom: 35px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+    
+        .answer_all_options_button span {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: lowercase;
+        }
+    
+        .answer_all_options_button_clear {
+            background: $black;
+            border: 2px solid $white;
+            color: $white;
+        }
+        .answer_all_options_button_clear_disabled {
+            background: $tertiaryBlack;
+            border: 2px solid $secondaryWhite;
+            color: $secondaryWhite;
+            cursor: default;
+        }
+    
+        .answer_all_options_button_unmark{
+            color: $white;
+            border: 3px solid $secondary;
+            background: $tertiaryBlack;
+            font-size: 1.3rem;
+        }
+        .answer_all_options_button_mark{
+            background: $primary;
+            border: 2px solid $secondary;
+        }
+    
+        .answer_all_options_button_previous{
+            color: $white;
+            border: 3px solid $primary;
+            background: $tertiaryBlack;
+            font-size: 1.3rem;
+        }
+        .answer_all_options_button_previous_disabled{
+            color: $secondary;
+            background: $black;
+            border: 1px solid black;
+            font-size: 1.3rem;
+            cursor: default;
+        }
+    
+        .answer_all_options_button_next{
+            color: $white;
+            border: 3px solid $primary;
+            background: $tertiaryBlack;
+            font-size: 1.3rem;
+        }
+        .answer_all_options_button_next_disabled{
+            color: $secondary;
+            background: $black;
+            border: 1px solid black;
+            font-size: 1.3rem;
+            cursor: default;
+        }
+    
     }
-
-    .answer_all_options_button_unmark{
-        color: $white;
-        border: 3px solid $secondary;
-        background: $tertiaryBlack;
-        font-size: 1.3rem;
-    }
-    .answer_all_options_button_mark{
-        background: $primary;
-        border: 2px solid $secondary;
-    }
-
-    .answer_all_options_button_previous{
-        color: $white;
-        border: 3px solid $primary;
-        background: $tertiaryBlack;
-        font-size: 1.3rem;
-    }
-    .answer_all_options_button_previous_disabled{
-        color: $secondary;
-        background: $black;
-        border: 1px solid black;
-        font-size: 1.3rem;
-        cursor: default;
-    }
-
-    .answer_all_options_button_next{
-        color: $white;
-        border: 3px solid $primary;
-        background: $tertiaryBlack;
-        font-size: 1.3rem;
-    }
-    .answer_all_options_button_next_disabled{
-        color: $secondary;
-        background: $black;
-        border: 1px solid black;
-        font-size: 1.3rem;
-        cursor: default;
-    }
-
 }
+
