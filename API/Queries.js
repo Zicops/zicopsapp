@@ -374,9 +374,9 @@ export const GET_QUESTION_PAPER_SECTION = gql`
   }
 `;
 
-export const GET_QUESTION_PAPER_BANK_MAPPING = gql`
-  query qpBankMappingByQPId($question_paper_id: String) {
-    getQPBankMappingByQPId(question_paper_id: $question_paper_id) {
+export const GET_QB_SECTION_MAPPING_BY_SECTION = gql`
+  query getQPBankMappingBySectionId($section_id: String) {
+    getQPBankMappingBySectionId(section_id: $section_id) {
       id
       QbId
       SectionId
@@ -390,6 +390,58 @@ export const GET_QUESTION_PAPER_BANK_MAPPING = gql`
       CreatedBy
       UpdatedBy
       IsActive
+    }
+  }
+`;
+
+export const GET_EXAM_INSTRUCTION = gql`
+  query getExamInstruction($exam_id: String) {
+    getExamInstruction(exam_id: $exam_id) {
+      id
+      ExamId
+      PassingCriteria
+      NoAttempts
+      AccessType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const GET_EXAM_SCHEDULE = gql`
+  query getExamSchedule($exam_id: String) {
+    getExamSchedule(exam_id: $exam_id) {
+      id
+      ExamId
+      Start
+      End
+      BufferTime
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const GET_EXAM_CONFIG = gql`
+  query getExamConfiguration($exam_id: String) {
+    getExamConfiguration(exam_id: $exam_id) {
+      id
+      ExamId
+      Shuffle
+      DisplayHints
+      ShowAnswer
+      ShowResult
+      CreatedBy
+      UpdatedBy
+      IsActive
+      CreatedAt
+      UpdatedAt
     }
   }
 `;

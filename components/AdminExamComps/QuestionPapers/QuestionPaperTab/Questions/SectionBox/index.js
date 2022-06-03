@@ -1,69 +1,72 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  CustomSectionAtom,
-  QuestionMetaDataAtom,
-  QuestionPaperTabDataAtom
-} from '../../../../../../state/atoms/exams.atoms';
+import { QuestionPaperTabDataAtom } from '../../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../../state/atoms/popUp.atom';
 import BlackBox from '../../../../../common/BlackBox';
 import BlackRow from '../../../../../common/BlackRow';
 import IconButton from '../../../../../common/IconButton';
-import PopUp from '../../../../../common/PopUp';
-import { NewQuestionMetaDataAtom } from '../../Logic/questionPaperTab.helper';
 import styles from '../../questionPaperTab.module.scss';
-import AddQuestionMetaData from '../AddQuestionMetaData';
 
-export default function SectionBox({ section }) {
+export default function SectionBox({ section, setSectionData, setEditMetaData }) {
   const [addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp] = useRecoilState(
     PopUpStatesAtomFamily('addQuestionMetaData')
   );
-  const [newMetaData, setNewMetaData] = useRecoilState(NewQuestionMetaDataAtom);
-  const customSection = useRecoilValue(CustomSectionAtom);
-  const questionMetaData = useRecoilValue(QuestionMetaDataAtom);
+  const [editQuestionMetaDataPopUp, udpateEditQuestionMetaDataPopUp] = useRecoilState(
+    PopUpStatesAtomFamily('editQuestionMetaData')
+  );
+  const [customSectionPopUp, udpateCustomSectionPopUp] = useRecoilState(
+    PopUpStatesAtomFamily('editCustomSection')
+  );
   const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
 
-  if (!customSection.length) return null;
+  // return if no section present
+  if (!questionPaperTabData.sectionData.length) return null;
 
   return (
     <>
       <BlackBox>
-        {questionPaperTabData.questionPaperMaster?.section_wise && (
-          <BlackRow type="large" title={section.name} editHandler={() => {}} />
+        {/* render large section row */}
+        {questionPaperTabData.paperMaster?.section_wise && (
+          <BlackRow
+            type="large"
+            title={section.name}
+            editHandler={() => {
+              setSectionData();
+              udpateCustomSectionPopUp(true);
+            }}
+          />
         )}
 
-        {questionMetaData.map((metaData, index) => (
-          <BlackRow
-            key={index}
-            type="large"
-            title={metaData.qbId}
-            extraComp={
-              <span className={`${styles.numberOfQuestions}`}>[{metaData.totalQuestions}]</span>
-            }
-            editHandler={() => {}}
-          />
-        ))}
+        {questionPaperTabData.mappedQb?.map((metaData, index) => {
+          // return if qb map does belong current section
+          if (metaData?.sectionId !== section.id) return null;
+
+          // render small qb maping row
+          return (
+            <BlackRow
+              key={index}
+              type="small"
+              title={metaData?.qbId}
+              extraComp={
+                <span className={`${styles.numberOfQuestions}`}>[{metaData?.total_questions}]</span>
+              }
+              editHandler={() => {
+                setEditMetaData(metaData);
+                setSectionData();
+                udpateEditQuestionMetaDataPopUp(true);
+              }}
+            />
+          );
+        })}
 
         <IconButton
           text="Add Question"
           styleClass="btnGrey"
           handleClick={() => {
-            console.log(section);
+            setSectionData();
             udpateAddQuestionMetaDataPopUp(true);
-            setNewMetaData({
-              ...newMetaData,
-              sectionId: section.id
-            });
           }}
         />
       </BlackBox>
-
-      {/* meta data of question */}
-      <PopUp
-        isFooterVisible={false}
-        isPopUpOpen={addQuestionMetaDataPopUp}
-        closeBtn={{ handleClick: () => udpateAddQuestionMetaDataPopUp(false) }}>
-        <AddQuestionMetaData />
-      </PopUp>
     </>
   );
 }

@@ -905,6 +905,7 @@ export const ADD_QUESTION_PAPER = gql`
 
 export const UPDATE_QUESTION_PAPER = gql`
   mutation updateQuestionPaper(
+    $id: ID
     $name: String
     $category: String
     $sub_category: String
@@ -918,6 +919,7 @@ export const UPDATE_QUESTION_PAPER = gql`
   ) {
     updateQuestionPaper(
       input: {
+        id: $id
         name: $name
         Category: $category
         SubCategory: $sub_category
@@ -988,30 +990,73 @@ export const ADD_QUESTION_PAPER_SECTION = gql`
   }
 `;
 
+export const UPDATE_QUESTION_PAPER_SECTION = gql`
+  mutation updateQuestionPaperSection(
+    $id: ID
+    $qpId: String
+    $name: String
+    $description: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+    $type: String
+    $difficulty_level: String
+    $total_questions: Int
+  ) {
+    updateQuestionPaperSection(
+      input: {
+        id: $id
+        QpId: $qpId
+        Name: $name
+        Description: $description
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+        Type: $type
+        DifficultyLevel: $difficulty_level
+        TotalQuestions: $total_questions
+      }
+    ) {
+      id
+      QpId
+      Name
+      Description
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      DifficultyLevel
+      TotalQuestions
+    }
+  }
+`;
+
 export const MAP_SECTION_TO_BANK = gql`
   mutation mapSectionToBank(
     $qbId: String
     $sectionId: String
-    $difficultyLevel: String
-    $totalQuestions: Int
-    $questionMarks: String
-    $questionType: String
-    $retrieveType: String
-    $createdBy: String
-    $updatedBy: String
+    $difficulty_level: String
+    $total_questions: Int
+    $question_marks: String
+    $question_type: String
+    $retrieve_type: String
+    $created_by: String
+    $updated_by: String
     $is_active: Boolean
   ) {
     mapSectionToBank(
       input: {
         QbId: $qbId
         SectionId: $sectionId
-        DifficultyLevel: $difficultyLevel
-        TotalQuestions: $totalQuestions
-        QuestionMarks: $questionMarks
-        QuestionType: $questionType
-        RetrieveType: $retrieveType
-        CreatedBy: $createdBy
-        UpdatedBy: $updatedBy
+        DifficultyLevel: $difficulty_level
+        TotalQuestions: $total_questions
+        QuestionMarks: $question_marks
+        QuestionType: $question_type
+        RetrieveType: $retrieve_type
+        CreatedBy: $created_by
+        UpdatedBy: $updated_by
         IsActive: $is_active
       }
     ) {
@@ -1032,24 +1077,193 @@ export const MAP_SECTION_TO_BANK = gql`
   }
 `;
 
+export const UPDATE_MAP_SECTION_TO_BANK = gql`
+  mutation updateMapSectionToBank(
+    $id: ID
+    $qbId: String
+    $sectionId: String
+    $difficulty_level: String
+    $total_questions: Int
+    $question_marks: String
+    $question_type: String
+    $retrieve_type: String
+    $created_by: String
+    $updated_by: String
+    $is_active: Boolean
+  ) {
+    updateSectionToBank(
+      input: {
+        id: $id
+        QbId: $qbId
+        SectionId: $sectionId
+        DifficultyLevel: $difficulty_level
+        TotalQuestions: $total_questions
+        QuestionMarks: $question_marks
+        QuestionType: $question_type
+        RetrieveType: $retrieve_type
+        CreatedBy: $created_by
+        UpdatedBy: $updated_by
+        IsActive: $is_active
+      }
+    ) {
+      id
+      QbId
+      SectionId
+      DifficultyLevel
+      TotalQuestions
+      QuestionMarks
+      QuestionType
+      RetrieveType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const ADD_SECTION_FIXED_QUESTIONS = gql`
+  mutation addSectionFixedQuestions(
+    $sectionId: String
+    $questionId: String
+    $created_at: String
+    $updated_at: String
+    $created_by: String
+    $updated_by: String
+    $is_active: Boolean
+  ) {
+    addSectionFixedQuestions(
+      input: {
+        SqbId: $sectionId
+        QuestionId: $questionId
+        CreatedAt: $created_at
+        UpdatedAt: $updated_at
+        CreatedBy: $created_by
+        UpdatedBy: $updated_by
+        IsActive: $is_active
+      }
+    ) {
+      id
+      SqbId
+      QuestionId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const UPDATE_SECTION_FIXED_QUESTIONS = gql`
+  mutation udpateSectionFixedQuestions(
+    $id: ID
+    $sectionId: String
+    $questionId: String
+    $created_at: String
+    $updated_at: String
+    $created_by: String
+    $updated_by: String
+    $is_active: Boolean
+  ) {
+    udpateSectionFixedQuestions(
+      input: {
+        id: $id
+        SqbId: $sectionId
+        QuestionId: $questionId
+        CreatedAt: $created_at
+        UpdatedAt: $updated_at
+        CreatedBy: $created_by
+        UpdatedBy: $updated_by
+        IsActive: $is_active
+      }
+    ) {
+      id
+      SqbId
+      QuestionId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
 export const ADD_EXAM = gql`
   mutation addExam(
     $name: String
     $description: String
-    $code: String
     $qpId: String
-    $createdBy: String
-    $updatedBy: String
-    $is_active: Boolean
     $type: String
     $scheduleType: String
     $duration: Int
-    $status: String
+    $code: String
     $category: String
     $sub_category: String
+    $status: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
   ) {
     addExam(
       input: {
+        Name: $name
+        Description: $description
+        Code: $code
+        QpId: $qpId
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+        Type: $type
+        ScheduleType: $scheduleType
+        Duration: $duration
+        Status: $status
+        Category: $category
+        SubCategory: $sub_category
+      }
+    ) {
+      id
+      Name
+      Description
+      Code
+      QpId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      ScheduleType
+      Duration
+      Status
+      Category
+      SubCategory
+    }
+  }
+`;
+
+export const UPDATE_EXAM = gql`
+  mutation updateExam(
+    $id: ID
+    $name: String
+    $description: String
+    $qpId: String
+    $type: String
+    $scheduleType: String
+    $duration: Int
+    $code: String
+    $category: String
+    $sub_category: String
+    $status: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    updateExam(
+      input: {
+        id: $id
         Name: $name
         Description: $description
         Code: $code
@@ -1120,6 +1334,43 @@ export const ADD_EXAM_SCHEDULE = gql`
   }
 `;
 
+export const UPDATE_EXAM_SCHEDULE = gql`
+  mutation updateExamSchedule(
+    $id: ID
+    $examId: String
+    $start: Int
+    $end: Int
+    $bufferTime: Int
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    updateExamSchedule(
+      input: {
+        id: $id
+        ExamId: $examId
+        Start: $start
+        End: $end
+        BufferTime: $bufferTime
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      Start
+      End
+      BufferTime
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
 export const ADD_EXAM_INSTRUCTION = gql`
   mutation addExamInstruction(
     $examId: String
@@ -1151,6 +1402,121 @@ export const ADD_EXAM_INSTRUCTION = gql`
       CreatedBy
       UpdatedBy
       IsActive
+    }
+  }
+`;
+
+export const UPDATE_EXAM_INSTRUCTION = gql`
+  mutation updateExamInstruction(
+    $id: ID
+    $examId: String
+    $passingCriteria: String
+    $noAttempts: Int
+    $accessType: String
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    updateExamInstruction(
+      input: {
+        id: $id
+        ExamId: $examId
+        PassingCriteria: $passingCriteria
+        NoAttempts: $noAttempts
+        AccessType: $accessType
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      PassingCriteria
+      NoAttempts
+      AccessType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const ADD_EXAM_CONFIGURATION = gql`
+  mutation addExamConfiguration(
+    $examId: String
+    $shuffle: Boolean
+    $showResult: Boolean
+    $showAnswer: Boolean
+    $displayHints: Boolean
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    addExamConfiguration(
+      input: {
+        ExamId: $examId
+        Shuffle: $shuffle
+        DisplayHints: $displayHints
+        ShowAnswer: $showAnswer
+        ShowResult: $showResult
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      Shuffle
+      DisplayHints
+      ShowAnswer
+      ShowResult
+      CreatedBy
+      UpdatedBy
+      IsActive
+      CreatedAt
+      UpdatedAt
+    }
+  }
+`;
+
+export const UPDATE_EXAM_CONFIGURATION = gql`
+  mutation updateExamConfiguration(
+    $id: ID
+    $examId: String
+    $shuffle: Boolean
+    $showResult: Boolean
+    $showAnswer: Boolean
+    $displayHints: Boolean
+    $createdBy: String
+    $updatedBy: String
+    $is_active: Boolean
+  ) {
+    updateExamConfiguration(
+      input: {
+        id: $id
+        ExamId: $examId
+        Shuffle: $shuffle
+        DisplayHints: $displayHints
+        ShowAnswer: $showAnswer
+        ShowResult: $showResult
+        CreatedBy: $createdBy
+        UpdatedBy: $updatedBy
+        IsActive: $is_active
+      }
+    ) {
+      id
+      ExamId
+      Shuffle
+      DisplayHints
+      ShowAnswer
+      ShowResult
+      CreatedBy
+      UpdatedBy
+      IsActive
+      CreatedAt
+      UpdatedAt
     }
   }
 `;
