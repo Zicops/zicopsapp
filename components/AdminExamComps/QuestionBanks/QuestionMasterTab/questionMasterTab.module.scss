@@ -3,6 +3,9 @@
 .questionMasterContainer {
   gap: 100px;
   font-weight: 600;
+  height: 90%;
+  display: flex;
+  align-items: center;
 }
 
 .formContainer {
@@ -419,4 +422,32 @@
   color: $primary;
   font-weight: bold;
   padding-top: 2px;
+}
+
+.radioBox{
+  border: 2px solid $primary;
+  border-radius: 5px;
+  height: 200px;
+  width: 250px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover{
+    box-shadow: 0 0 20px 0 $primary;
+  }
+  .radioBoxIcon{
+    margin-bottom: 20px;
+  }
+  .radioBoxText{
+    width: 101%;
+    text-align: center;
+    color: $darkTwo;
+    background-color: $primary;
+    position: absolute;
+    padding: 10px;
+    bottom: 0;
+  }
 }

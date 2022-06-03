@@ -15,7 +15,19 @@ export default function QuestionMaster({ isEdit, data }) {
     <>
       {visibleForm === null && (
         <div className={`center-element-with-flex ${styles.questionMasterContainer}`}>
-          <LabeledRadioCheckbox
+          <div className={`${styles.radioBox}`} onClick={() => setVisibleForm('create')}>
+            <div className={`${styles.radioBoxIcon}`}>
+              <img src="/images/svg/add-line.svg" />
+            </div>
+            <div className={`${styles.radioBoxText}`}>Create Question</div>
+          </div>
+          <div className={`${styles.radioBox}`} onClick={() => setVisibleForm('upload')}>
+            <div className={`${styles.radioBoxIcon}`}>
+              <img src="/images/svg/upload-cloud-line.svg" />
+            </div>
+            <div className={`${styles.radioBoxText}`}>Upload Question</div>
+          </div>
+          {/* <LabeledRadioCheckbox
             type="radio"
             label="Create Question"
             name="questionMaster"
@@ -28,7 +40,7 @@ export default function QuestionMaster({ isEdit, data }) {
             name="questionMaster"
             isChecked={visibleForm === 'upload'}
             changeHandler={() => setVisibleForm('upload')}
-          />
+          /> */}
         </div>
       )}
 
