@@ -133,49 +133,17 @@ const Classroom = () => {
         padding: '0 0 0 0'
       }}>
       <HeroSliderContainer>
-        <FavouriteDndCourses />
-        <div
-          style={{
-            display: 'flex',
-            backgroundColor: 'var(--black)',
-            height: '75vh',
-            overflow: 'hidden'
-          }}>
-          <div
-            className={`${showTable ? 'w-20' : 'w-65'} border_right`}
-            style={{ margin: 'auto', padding: '60px 0px' }}>
-            <Options
-              question={showTable ? '' : 'Q. Select the required Option.'}
-              btnOptions={btnOptions}
-            />
-          </div>
-
-          {showTable && (
-            <div
-              className="w-45 border_right"
-              style={{ background: 'var(--black)', margin: 'auto' }}>
-              <SimpleTable
-                tableData={tableData}
-                lastCellObj={buttonObj}
-                tableHeading="Take Anytime Exams"
-                headingStyle={{
-                  color: 'var(--white)',
-                  fontSize: '16px',
-                  fontWeight: '400',
-                  textAlign: 'left',
-                  margin: '0',
-                  marginLeft: '60px',
-                  textShadow: 'none',
-                  textTransform: 'none',
-                  letterSpacing: '1px'
-                }}
-              />
-            </div>
-          )}
-
-          <div className="w-35 calender_box">
-            <CommonCalendar />
-          </div>
+        <div>
+          <img src="images/TopSectioncopy.png" alt="" />
+        </div>
+        <div>
+          <img src="images/bg-new.png" alt="" />
+        </div>
+        <div>
+          <img src="images/bg-new.png" alt="" />
+        </div>
+        <div>
+          <img src="images/TopSectioncopy.png" alt="" />
         </div>
       </HeroSliderContainer>
       <ZicopsCarousel title="Subscribed Classroom Courses" data={sliderImages} />

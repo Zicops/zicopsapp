@@ -44,20 +44,7 @@ const HeroSliderContainer = ({ children }) => {
           {children}
         </Carousel>
       </div>
-      <div
-        className={`${styles.dropup}`}
-        style={{
-          background: '#000000',
-          background:
-            'linear-gradient(180deg, #00000000 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.9) 100%)',
-          height: '20px',
-          padding: 0,
-          marginTop: '-15px',
-          marginBottom: '5px',
-          position: 'relative',
-          zIndex: '2',
-          opacity: '0.3'
-        }}></div>
+      <div className={`${styles.dropUp}`}></div>
     </>
   );
 };
