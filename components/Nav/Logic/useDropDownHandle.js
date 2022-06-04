@@ -46,8 +46,9 @@ export function useDropDownHandle (){
 
       if (classList.includes('MuiMenuItem-root')) return;
     }
-
-    setAnchorEl(null);
+    setTimeout(() => {
+      setAnchorEl(null);
+    }, 800);
   };  
 
     return {isAdmin,gotoAdmin,gotoUser,open,anchorEl,handleClick,handleClose};
