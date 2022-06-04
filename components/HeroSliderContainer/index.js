@@ -21,7 +21,7 @@ const HeroSliderContainer = ({ children }) => {
   };
   return (
     <>
-      <div className={`${styles.carouselContainer}`}>
+      <div className={`${styles.heroContainer}`}>
         <Carousel
           pauseOnHover={true}
           swipeable={false}
@@ -40,7 +40,7 @@ const HeroSliderContainer = ({ children }) => {
           deviceType="Laptop"
           dotListClass="custom-dot-list-style"
           // customDot={<CustomDot />}
-          itemClass="carousel-item-padding-40-px">
+          itemClass={`${styles.itemContainer}`}>
           {children}
         </Carousel>
       </div>
