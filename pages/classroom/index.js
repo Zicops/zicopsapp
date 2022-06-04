@@ -120,6 +120,13 @@ const Classroom = () => {
     ]
   };
 
+  const imageLink = [
+    'images/TopSectioncopy.png',
+    'images/universe-gd6be558e6_1920.jpg',
+    'images/bg-new.png',
+    'images/pocket-watch-g4b6aee647_1920.jpg'
+  ];
+
   useEffect(() => {
     console.log(screen.width);
   }, []);
@@ -133,18 +140,9 @@ const Classroom = () => {
         padding: '0 0 0 0'
       }}>
       <HeroSliderContainer>
-        <div>
-          <img src="images/TopSectioncopy.png" alt="" />
-        </div>
-        <div>
-          <img src="images/bg-new.png" alt="" />
-        </div>
-        <div>
-          <img src="images/bg-new.png" alt="" />
-        </div>
-        <div>
-          <img src="images/TopSectioncopy.png" alt="" />
-        </div>
+        {imageLink.map((item) => (
+          <img src={item} alt="" />
+        ))}
       </HeroSliderContainer>
       <ZicopsCarousel title="Subscribed Classroom Courses" data={sliderImages} />
       <ZicopsCarousel title="Recomended For You" data={sliderImages} />
