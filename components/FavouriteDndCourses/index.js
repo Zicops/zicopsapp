@@ -139,7 +139,7 @@ export default function FavouriteDndCourses() {
       <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <Box
           bgcolor={'#101216'}
-          mt={9}
+          mt={0}
           height={'75vh'}
           width={'100%'}
           color={'#FFF'}
