@@ -21,7 +21,8 @@
   --dark_two: #202222;
   --dark_three: #868f8f;
   --tile-bg: #1a1d21;
-  --header-bg: #222529;
+  /* --header-bg: #222529; */
+  --header-bg: #0b0c0d;
   --skeleton-dark: dimgray;
 }
 

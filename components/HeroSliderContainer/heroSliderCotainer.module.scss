@@ -1,0 +1,43 @@
+@import '../../styles/base.scss';
+
+.heroContainer {
+  margin-top: 70px;
+  padding: 40px;
+  height: 75vh;
+  background-color: $black;
+}
+
+.header_carousel_container {
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  z-index: 0 !important;
+  border-radius: 20px;
+  height: 65vh;
+}
+
+.itemContainer {
+  img {
+    width: 100%;
+    height: 65vh;
+  }
+}
+
+.dropUp {
+  // background: #00000000;
+  // background: linear-gradient(
+  //   180deg,
+  //   #00000000 0%,
+  //   rgba(0, 0, 0, 0.5) 60%,
+  //   rgba(0, 0, 0, 0.9) 100%
+  // );
+  background: $black;
+  height: 18px;
+  padding: 0;
+  margin-top: -15px;
+  margin-bottom: 5px;
+  position: relative;
+  z-index: 2;
+  opacity: 0.3;
+}
