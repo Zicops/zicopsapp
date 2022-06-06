@@ -190,8 +190,6 @@
     justify-content: flex-end;
     align-items: center;
     font-family: 'Open Sans';
-    // position: absolute;
-    // right: 3%;
     button:first-child {
       cursor: pointer;
       background-color: $primary;
@@ -205,6 +203,10 @@
       font-weight: 600;
       border-radius: 2px;
       margin-right: 15px;
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
     }
     button:last-child {
       cursor: pointer;

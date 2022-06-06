@@ -82,7 +82,7 @@ export default function RightDropDownMenu() {
           sx={{
             position: 'absolute',
             top: '70px',
-            right: '30px',
+            right: '5px',
             padding: '0px',
             background: 'transparent'
           }}>
@@ -103,7 +103,7 @@ export default function RightDropDownMenu() {
                       // margin: '2px',
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
-                      padding: 0,
+                      padding: 0
                     }
                   }}
                   style={item.styles ? item.styles : {}}

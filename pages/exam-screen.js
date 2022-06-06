@@ -426,7 +426,7 @@ const ExamScreen = () => {
 
   const [data, setData] = useState(examData);
   const [current, setCurrent] = useState(data[0]);
-
+  const [isFullScreen, setIsFullScreen] = useState(0);
   const [isLearner, setIsLearner] = useState(false);
 
   return (
@@ -437,10 +437,16 @@ const ExamScreen = () => {
           setData={setData}
           current={current}
           setCurrent={setCurrent}
+          isFullScreen={isFullScreen}
+          setIsFullScreen={setIsFullScreen}
         />
       ) : (
         // <ExamLandingPage setIsLearner={setIsLearner} />
-        <ExamInstruction setIsLearner={setIsLearner} />
+        <ExamInstruction
+          setIsLearner={setIsLearner}
+          isFullScreen={isFullScreen}
+          setIsFullScreen={setIsFullScreen}
+        />
       )}
     </>
   );
