@@ -27,22 +27,9 @@ export default function LeftMenuDropdown({ navmenuicon }) {
   return (
     <>
       <MyButton id="fade-button" style={{ height: '70px' }} handleClick={handleClick}>
-        <Image src={navmenuicon} alt="" height="20px" width="30px" />
+        <Image src={navmenuicon} alt="" height="15px" width="20px" />
       </MyButton>
-      {/* <Button
-      // {...navmenuicon}
-        disableRipple
-        // id="fade-button"
-        // aria-controls={open ? 'fade-menu' : undefined}
-        // aria-haspopup="true"
-        // aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-        onMouseEnter={handleClick}
-        style={{
-          height: '70px'
-        }}>
-        <Image src={navmenuicon} alt="" height="20px" width="30px" />
-      </Button> */}
+
       <Menu
         {...languages}
         {...preferences}

@@ -1,19 +1,24 @@
+import { useRef, useState } from "react";
+import NewQuestionPaperPreview from '../examComps/NewQuestionPaperPreview';
+import AnswerAllOptions from './AnswerAllOptions';
 import ExamAllQuestions from './ExamAllQuestions';
+import InfoSection from './InfoSection';
+import styles from './learnerExam.module.scss';
 import ProctoredSection from './ProctoredSection';
 import QuestionCountButtonSection from './QuestionCountButton';
-import styles from './learnerExam.module.scss'
-import AnswerAllOptions from './AnswerAllOptions';
-import InfoSection from './InfoSection';
-import {useState, useRef} from "react";
-import QuestionPaperView2 from "../examComps/QuestionPaperView2/QuestionPaperPreview";
-import NewQuestionPaperPreview from '../examComps/NewQuestionPaperPreview';
 
-const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
-
-    const [filter, setFilter] = useState('all')
-    const [option, setOption] = useState(current?.selectedOption);
-    const [isQuestion, setIsQuestion] = useState(false)
-    const examRef = useRef(null);
+const LearnerExamComponent = ({
+  data,
+  setData,
+  current,
+  setCurrent,
+  isFullScreen,
+  setIsFullScreen
+}) => {
+  const [filter, setFilter] = useState('all');
+  const [option, setOption] = useState(current?.selectedOption);
+  const [isQuestion, setIsQuestion] = useState(false);
+  const examRef = useRef(null);
   return (
     <div className={`${styles.questionSection}`} ref={examRef}>
       <div className={`${styles.questionSection_questions}`}>
@@ -30,6 +35,8 @@ const LearnerExamComponent = ({data, setData, current, setCurrent}) => {
           <div>
             <ExamAllQuestions current={current} />
             <AnswerAllOptions
+              isFullScreen={isFullScreen}
+              setIsFullScreen={setIsFullScreen}
               option={option}
               setOption={setOption}
               data={data}
