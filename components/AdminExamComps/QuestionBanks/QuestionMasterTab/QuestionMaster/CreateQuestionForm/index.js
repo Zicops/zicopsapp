@@ -31,14 +31,14 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
   return (
     <>
-      {questionsArr?.map((data, index) => {
+      {questionsArr?.map((d, index) => {
         return (
           <Accordion
-            title={data.question.description}
+            title={d.question.description}
             content={
               <McqCard
-                questionData={data.question}
-                optionData={data.options}
+                questionData={d.question}
+                optionData={d.options}
                 handleEdit={() => activateEdit(index)}
               />
             }

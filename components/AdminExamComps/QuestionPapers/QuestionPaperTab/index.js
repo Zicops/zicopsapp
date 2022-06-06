@@ -89,7 +89,7 @@ export default function QuestionPaperTab() {
     }
 
     // reloading qb section map after add or edit
-    async function reloadQBSectionMapping(sectionId) {
+    async function refetchQBSectionMapping(sectionId) {
       // refetch question bank section mapping
       let isError = false;
       const mappingRes = await refetchMapping({
@@ -131,7 +131,7 @@ export default function QuestionPaperTab() {
       ...questionPaperTabData,
       sectionData: sectionData,
       mappedQb: mappedQb,
-      reloadQBSectionMapping: reloadQBSectionMapping
+      refetchQBSectionMapping: refetchQBSectionMapping
     });
   }, [questionPaperId]);
 

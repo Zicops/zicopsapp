@@ -1,5 +1,24 @@
 import { atom } from 'recoil';
 
+// refetch queries are saved here
+export const RefetchDataAtom = atom({
+  key: 'RefetchData',
+  default: {
+    questionBank: function () {},
+    questionBankQuestions: function () {},
+    questionBankOptions: function () {},
+    questionPaper: function () {},
+    questionPaperSections: function () {},
+    QbSectionsMapping: function () {},
+    fixedQuestion: function () {},
+    exam: function () {},
+    examMaster: function () {},
+    examInstruction: function () {},
+    examSchedule: function () {},
+    examConfiguration: function () {}
+  }
+});
+
 // atom for storing single active question bank used for edit, or reference for questions from bank
 export const SelectedQuestionBankAtom = atom({
   key: 'SelectedQuestionBank',
@@ -10,6 +29,7 @@ export function getQuestionBankObject(data = {}) {
   return {
     id: data.id || null,
     name: data.name || '',
+    description: data.description || '',
     category: data.category || '',
     sub_category: data.sub_category || '',
 
@@ -38,7 +58,8 @@ export function getQuestionPaperTabDataObject(data = {}) {
     paperMaster: data.paperMaster || {},
     sectionData: data.sectionData || [],
     qbSectionMapData: data.qbSectionMapData || [],
-    mappedQb: data.mappedQb || []
+    mappedQb: data.mappedQb || [],
+    refetchQBSectionMapping: async function () {}
   };
 }
 

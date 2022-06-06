@@ -276,6 +276,7 @@ export const GET_LATEST_QUESTION_BANK = gql`
         is_active
         is_default
         owner
+        description
       }
       pageCursor
       direction

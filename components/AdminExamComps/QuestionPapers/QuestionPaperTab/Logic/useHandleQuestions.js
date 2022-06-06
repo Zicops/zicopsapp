@@ -169,7 +169,7 @@ export default function useHandleQuestions(sectionId) {
     setMetaData(currentMetaData);
     if (currentMetaData.retrieve_type === 'manual') await saveFixedQuestions();
 
-    const mappedQb = await questionPaperTabData?.reloadQBSectionMapping(sendData.sectionId);
+    const mappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
     if (mappedQb === null) return udpateAddQuestionMetaDataPopUp(false);
 
     setQuestionPaperTabData({
@@ -256,7 +256,7 @@ export default function useHandleQuestions(sectionId) {
       return data;
     });
 
-    const mappedQb = await questionPaperTabData?.reloadQBSectionMapping(sendData.sectionId);
+    const mappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
     if (mappedQb === null) return udpateEditQuestionMetaDataPopUp(false);
 
     setQuestionPaperTabData({

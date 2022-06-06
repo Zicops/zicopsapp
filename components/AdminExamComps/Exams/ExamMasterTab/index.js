@@ -35,7 +35,6 @@ export default function ExamMasterTab() {
   const router = useRouter();
   useEffect(async () => {
     const examId = router.query?.examId || null;
-    console.log(router, examId);
     if (!examId) return setExamTabData(getExamTabDataObject());
 
     // load instructions
@@ -93,10 +92,8 @@ export default function ExamMasterTab() {
       is_config_active: confData?.IsActive || false
     };
 
-    console.log({ ...examTabData, ...insObj, ...schObj, ...confObj, id: examId });
     setExamTabData({
       ...examTabData,
-      scheduleType: 'scheduled',
       ...insObj,
       ...schObj,
       ...confObj,

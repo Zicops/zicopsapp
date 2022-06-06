@@ -8,12 +8,13 @@ import {
 } from '../../../../API/Mutations';
 import {
   getQuestionBankObject,
+  RefetchDataAtom,
   SelectedQuestionBankAtom
 } from '../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
-export default function useHandleQuestionBank(refetchQuestionBank) {
+export default function useHandleQuestionBank() {
   const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
     client: mutationClient
   });
@@ -24,6 +25,7 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
   // recoil state
   const [addPopUp, setAddPopUp] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
   const [editPopUp, setEditPopUp] = useRecoilState(PopUpStatesAtomFamily('editQuestionBank'));
+  const refetchData = useRecoilValue(RefetchDataAtom);
 
   // for edit data
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -54,7 +56,7 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
   async function createNewQuestionBank() {
     const sendData = {
       name: questionBankData.name,
-      //   description: questionBankData.description,
+      description: questionBankData.description,
       category: questionBankData.category,
       sub_category: questionBankData.sub_category,
 
@@ -75,7 +77,7 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
 
     if (!isError) {
       setToastMsg({ type: 'success', message: 'New Question Bank Created' });
-      refetchQuestionBank();
+      refetchData.questionBank();
     }
     setAddPopUp(false);
   }
@@ -84,7 +86,7 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
     const sendData = {
       id: questionBankData.id,
       name: questionBankData.name,
-      //   description: questionBankData.description,
+      description: questionBankData.description,
       category: questionBankData.category,
       sub_category: questionBankData.sub_category,
 
@@ -105,7 +107,7 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
 
     if (!isError) {
       setToastMsg({ type: 'success', message: 'New Question Bank Updated' });
-      refetchQuestionBank();
+      refetchData.questionBank();
     }
     setEditPopUp(false);
   }

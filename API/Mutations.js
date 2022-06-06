@@ -616,6 +616,7 @@ export const UPDATE_TOPIC_CONTENT = gql`
 export const CREATE_QUESTION_BANK = gql`
   mutation createQuestionBank(
     $name: String
+    $description: String
     $category: String
     $sub_category: String
     $created_by: String
@@ -627,6 +628,7 @@ export const CREATE_QUESTION_BANK = gql`
     createQuestionBank(
       input: {
         name: $name
+        description: $description
         category: $category
         sub_category: $sub_category
         created_by: $created_by
@@ -638,6 +640,7 @@ export const CREATE_QUESTION_BANK = gql`
     ) {
       id
       name
+      description
       category
       sub_category
       created_at
@@ -655,6 +658,7 @@ export const UPDATE_QUESTION_BANK = gql`
   mutation updateQuestionBank(
     $id: ID
     $name: String
+    $description: String
     $category: String
     $sub_category: String
     $created_by: String
@@ -667,6 +671,7 @@ export const UPDATE_QUESTION_BANK = gql`
       input: {
         id: $id
         name: $name
+        description: $description
         category: $category
         sub_category: $sub_category
         created_by: $created_by
@@ -678,6 +683,7 @@ export const UPDATE_QUESTION_BANK = gql`
     ) {
       id
       name
+      description
       category
       sub_category
       created_at
@@ -693,6 +699,7 @@ export const UPDATE_QUESTION_BANK = gql`
 
 export const ADD_QUESTION_BANK_QUESTION = gql`
   mutation addQuestionBankQuestion(
+    $name: String
     $description: String
     $type: String
     $difficulty: Int
@@ -706,6 +713,7 @@ export const ADD_QUESTION_BANK_QUESTION = gql`
   ) {
     addQuestionBankQuestion(
       input: {
+        Name: $name
         Description: $description
         Type: $type
         Difficulty: $difficulty
@@ -719,6 +727,7 @@ export const ADD_QUESTION_BANK_QUESTION = gql`
       }
     ) {
       id
+      Name
       Description
       Type
       Difficulty
@@ -738,6 +747,7 @@ export const ADD_QUESTION_BANK_QUESTION = gql`
 export const UPDATE_QUESTION_BANK_QUESTION = gql`
   mutation updateQuestionBankQuestion(
     $id: ID
+    $name: String
     $description: String
     $type: String
     $difficulty: Int
@@ -752,6 +762,7 @@ export const UPDATE_QUESTION_BANK_QUESTION = gql`
     updateQuestionBankQuestion(
       input: {
         id: $id
+        Name: $name
         Description: $description
         Type: $type
         Difficulty: $difficulty
@@ -765,6 +776,7 @@ export const UPDATE_QUESTION_BANK_QUESTION = gql`
       }
     ) {
       id
+      Name
       Description
       Type
       Difficulty

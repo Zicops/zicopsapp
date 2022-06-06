@@ -12,19 +12,15 @@ export default function McqOption({ option, index }) {
         {`${bullets[index]}.  `}
 
         <div className={`${styles.option}`}>
-          {option.attachment ? (
+          <b>{option.description}</b>
+
+          {imageTypes?.includes(option?.attachmentType) && (
             <div className={`${styles.img_container}`}>
-              {imageTypes?.includes(option?.attachmentType) && (
-                <img src={`${option.attachment}`} alt="" />
-              )}
-              <McqCheckBox checked={isCorrect} />
+              {option?.attachment && <img src={option.attachment} alt="" />}
+              {option?.file && <img src={URL.createObjectURL(option.file)} alt="" />}
             </div>
-          ) : (
-            <b>
-              {option.description}
-              <McqCheckBox checked={isCorrect} />
-            </b>
           )}
+          <McqCheckBox checked={isCorrect} />
         </div>
       </div>
     </>
