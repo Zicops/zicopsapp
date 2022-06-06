@@ -1,16 +1,17 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
+import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
 import QuizCorrectAnswer from '../../../examComps/QuizOptionInput/QuizCheckBox';
 import styles from '../../learnerExam.module.scss';
 import { data } from '../Logic/examInstruction.helper';
 
-const InstructionPage = ({ setIsLearner, type }) => {
+const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) => {
   const [isType, setIsType] = useState({
     schedule: true,
     takeAnyTime: true
   });
-  const [isFullScreen, setIsFullScreen] = useState(0);
+  const [terms, setTerms] = useState(false);
   useEffect(() => {
     if (type === 'Take Anytime') {
       setIsType((prevValue) => ({ ...prevValue, takeAnyTime: !prevValue.takeAnyTime }));
@@ -214,17 +215,21 @@ const InstructionPage = ({ setIsLearner, type }) => {
             </button>
           </div>
           <div className={`${styles.agreeText}`}>
-            <QuizCorrectAnswer
-              labelText={
-                'I have read and understood all the instructions given above and agree to adhere to them'
-              }
+            <LabeledRadioCheckbox 
+            label="I have read and understood all the instructions given above and agree to adhere to them." 
+            type="checkbox" 
+            changeHandler={()=>setTerms(!terms)}
             />
           </div>
 
           <div className={`${styles.btn}`}>
-            <button onClick={()=>{
-              setIsLearner(1)
-            }}>Start</button>
+            <button
+              onClick={() => {
+                setIsLearner(1);
+              }}
+              disabled={!terms}>
+              Start
+            </button>
             <button onClick={() => router.back()}>Back</button>
           </div>
         </div>

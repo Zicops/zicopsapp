@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 const AnswerAllOptions = ({
   examRef,
+  isFullScreen,
+  setIsFullScreen,
   data,
   setData,
   current,
@@ -20,7 +22,7 @@ const AnswerAllOptions = ({
   const [markTrigger, setMarkTrigger] = useState(false);
   const [mark, setMark] = useState(false);
   const router = useRouter();
-  const [isFullScreen, setIsFullScreen] = useState(0);
+
   const handleChange = (temp) => {
     return data.map(function (obj) {
       if (obj.id === current.id + temp) {
@@ -89,6 +91,19 @@ const AnswerAllOptions = ({
   useEffect(() => {
     setMark(current?.isMarked || false);
   }, [current]);
+
+  useEffect(() => {
+    if (isFullScreen) {
+      setTimeout(() => {
+        openFullscreen(examRef.current);
+      }, 1);
+    } else if (document.fullscreenElement) {
+      setTimeout(() => {
+        closeFullscreen();
+      }, 1);
+    }
+  }, [isFullScreen]);
+
   /* View in fullscreen */
   function openFullscreen(elem) {
     if (elem?.requestFullscreen) {

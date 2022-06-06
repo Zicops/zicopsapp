@@ -97,9 +97,9 @@ export default function Nav() {
             <li>
               <img src="/images/bell.png" />
             </li>
-            <li>
+            {/* <li>
               <img src="/images/chat.png" />
-            </li>
+            </li> */}
           </ul>
         </div>
 
