@@ -121,6 +121,7 @@ const Classroom = () => {
   };
 
   const imageLink = [
+    'images/TopSectioncopy.png',
     'images/universe-gd6be558e6_1920.jpg',
     'images/bg-new.png',
     'images/pocket-watch-g4b6aee647_1920.jpg'
