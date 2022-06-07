@@ -4,16 +4,24 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   GET_QB_SECTION_MAPPING_BY_SECTION,
+  GET_QUESTION_PAPER_META,
   GET_QUESTION_PAPER_SECTION,
   queryClient
 } from '../../../../API/Queries';
-import { QuestionPaperTabDataAtom } from '../../../../state/atoms/exams.atoms';
+import {
+  getQuestionPaperMasterObject,
+  getQuestionPaperTabDataObject,
+  QuestionPaperTabDataAtom
+} from '../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import TabContainer from '../../../common/TabContainer';
 import { paperTabData, QuestionPaperTabAtom } from './Logic/questionPaperTab.helper';
 import useHandlePaperTab from './Logic/useHandlePaperTab';
 
 export default function QuestionPaperTab() {
+  const [loadPaperMeta, { error: loadMetaError }] = useLazyQuery(GET_QUESTION_PAPER_META, {
+    client: queryClient
+  });
   const [loadPaperSection, { error: loadSectionError }] = useLazyQuery(GET_QUESTION_PAPER_SECTION, {
     client: queryClient
   });
@@ -29,13 +37,36 @@ export default function QuestionPaperTab() {
 
   // load section data and qb mappings
   useEffect(async () => {
-    if (!questionPaperId) return setTab(paperTabData[0].name);
+    if (!questionPaperId) {
+      setQuestionPaperTabData(getQuestionPaperTabDataObject());
+      setTab(paperTabData[0].name);
+      return;
+    }
 
     const sectionData = [];
     let mappedQb = [];
 
     // load sections
     let isError = false;
+    const metaRes = await loadPaperMeta({
+      variables: { question_paper_id: [questionPaperId] }
+    }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
+    });
+    if (isError) return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
+    const paperMasterData = metaRes.data.getQPMeta[0];
+    const paperMaster = getQuestionPaperMasterObject({
+      ...paperMasterData,
+      category: paperMasterData?.Category,
+      sub_category: paperMasterData?.SubCategory,
+      description: paperMasterData?.Description,
+      section_wise: paperMasterData?.SectionWise,
+      difficulty_level: paperMasterData?.DifficultyLevel,
+      suggested_duration: paperMasterData?.SuggestedDuration
+    });
+
     const sectionRes = await loadPaperSection({
       variables: { question_paper_id: questionPaperId }
     }).catch((err) => {
@@ -129,6 +160,7 @@ export default function QuestionPaperTab() {
 
     setQuestionPaperTabData({
       ...questionPaperTabData,
+      paperMaster: paperMaster,
       sectionData: sectionData,
       mappedQb: mappedQb,
       refetchQBSectionMapping: refetchQBSectionMapping

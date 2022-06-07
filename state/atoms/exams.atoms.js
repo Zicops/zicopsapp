@@ -46,25 +46,21 @@ export function getQuestionBankObject(data = {}) {
 
 export const QuestionPaperTabDataAtom = atom({
   key: 'QuestionPaperTabData',
-  default: getQuestionPaperTabDataObject({
-    paperMaster: getQuestionPaperMasterObject(),
-    sectionData: [],
-    qbSectionMapData: [],
-    mappedQb: []
-  })
+  default: getQuestionPaperTabDataObject()
 });
 
 export function getQuestionPaperTabDataObject(data = {}) {
   return {
-    paperMaster: data.paperMaster || {},
+    paperMaster: data.paperMaster || getQuestionPaperMasterObject(),
     sectionData: data.sectionData || [],
     qbSectionMapData: data.qbSectionMapData || [],
     mappedQb: data.mappedQb || [],
+    currentFixedQuestion: data.currentFixedQuestion || getFixedQuestionObject(),
     refetchQBSectionMapping: async function () {}
   };
 }
 
-export default function getQuestionPaperMasterObject(data = {}) {
+export function getQuestionPaperMasterObject(data = {}) {
   return {
     id: data.id || null,
     name: data.name || '',
@@ -105,16 +101,29 @@ export function getCustomSectionObject(data = {}) {
 export function getQuestionMetaDataObject(data = {}) {
   return {
     id: data?.id || null,
-    qpId: data?.qpId || '',
     sectionId: data?.sectionId || '',
+    qbId: data.qbId || '',
     difficulty_level: data?.difficulty_level || '',
     category: data.category || '',
     sub_category: data.sub_category || '',
-    qbId: data.qbId || '',
     total_questions: data?.total_questions || 0,
     question_marks: data?.question_marks || 0,
     question_type: data?.question_type || 0,
-    retrieve_type: data?.retrieve_type || 'manual',
+    retrieve_type: data?.retrieve_type || 'random',
+
+    is_active: data?.is_active || '',
+    created_at: data?.created_at || '',
+    updated_at: data?.updated_at || '',
+    created_by: data?.Created_by || '',
+    updated_by: data?.updated_by || ''
+  };
+}
+
+export function getFixedQuestionObject(data = {}) {
+  return {
+    id: data?.id || null,
+    mappingId: data?.mappingId || '',
+    questionId: data?.questionId || '',
 
     is_active: data?.is_active || '',
     created_at: data?.created_at || '',

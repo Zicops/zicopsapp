@@ -5,46 +5,40 @@ import {
   ADD_SECTION_FIXED_QUESTIONS,
   MAP_SECTION_TO_BANK,
   mutationClient,
-  UPDATE_MAP_SECTION_TO_BANK
+  UPDATE_MAP_SECTION_TO_BANK,
+  UPDATE_SECTION_FIXED_QUESTIONS
 } from '../../../../../API/Mutations';
-import {
-  GET_LATEST_QUESTION_BANK,
-  GET_QB_SECTION_MAPPING_BY_SECTION,
-  queryClient
-} from '../../../../../API/Queries';
+import { GET_LATEST_QUESTION_BANK, queryClient } from '../../../../../API/Queries';
 import {
   getQuestionMetaDataObject,
-  QuestionMetaDataAtom,
   QuestionPaperTabDataAtom
 } from '../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 
 export default function useHandleQuestions(sectionId) {
-  const [addMapToSection, { error: addMapToSectionError }] = useMutation(MAP_SECTION_TO_BANK, {
+  const [addMapToSection, { error: addMapErr }] = useMutation(MAP_SECTION_TO_BANK, {
     client: mutationClient
   });
-  const [updateMapToSection, { error: updateMapToSectionError }] = useMutation(
-    UPDATE_MAP_SECTION_TO_BANK,
-    { client: mutationClient }
-  );
-  const [addQuestionsToSection, { error: addQuestionsToSectionError }] = useMutation(
-    ADD_SECTION_FIXED_QUESTIONS,
+  const [updateMapToSection, { error: updateMapErr }] = useMutation(UPDATE_MAP_SECTION_TO_BANK, {
+    client: mutationClient
+  });
+  const [addFixedQuestion, { error: addFixedErr }] = useMutation(ADD_SECTION_FIXED_QUESTIONS, {
+    client: mutationClient
+  });
+  const [updateFixedQuestion, { error: updateFixedError }] = useMutation(
+    UPDATE_SECTION_FIXED_QUESTIONS,
     { client: mutationClient }
   );
   const [loadQuestionBank, { error: loadQBError }] = useLazyQuery(GET_LATEST_QUESTION_BANK, {
     client: queryClient
   });
-  const [loadQBSectionMapping, { error: loadQBSectionMapError }] = useLazyQuery(
-    GET_QB_SECTION_MAPPING_BY_SECTION,
-    { client: queryClient }
-  );
 
   // recoil state
-  const [addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp] = useRecoilState(
+  const [addMetaDataPopUp, udpateAddMetaDataPopUp] = useRecoilState(
     PopUpStatesAtomFamily('addQuestionMetaData')
   );
-  const [editQuestionMetaDataPopUp, udpateEditQuestionMetaDataPopUp] = useRecoilState(
+  const [editMetaDataPopUp, udpateEditMetaDataPopUp] = useRecoilState(
     PopUpStatesAtomFamily('editQuestionMetaData')
   );
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
@@ -79,12 +73,14 @@ export default function useHandleQuestions(sectionId) {
 
   // error notifier
   useEffect(() => {
-    if (addMapToSectionError) setToastMsg({ type: 'danger', message: 'Add Mapping error' });
-    if (updateMapToSectionError) setToastMsg({ type: 'danger', message: 'Update Mapping error' });
     if (loadQBError) setToastMsg({ type: 'danger', message: 'Question Bank Load Error' });
 
-    if (addMapToSectionError) setToastMsg({ type: 'danger', message: 'Add Question Error' });
-  }, [addMapToSectionError, updateMapToSectionError, loadQBError, addMapToSectionError]);
+    if (addMapErr) setToastMsg({ type: 'danger', message: 'Add Mapping error' });
+    if (updateMapErr) setToastMsg({ type: 'danger', message: 'Update Mapping error' });
+
+    if (addFixedErr) setToastMsg({ type: 'danger', message: 'Add Fixed Question Error' });
+    if (updateFixedError) setToastMsg({ type: 'danger', message: 'Update Fixed Question Error' });
+  }, [addMapErr, updateMapErr, loadQBError, addFixedErr, updateFixedError]);
 
   // disable next button if data in complete
   useEffect(() => {
@@ -167,42 +163,51 @@ export default function useHandleQuestions(sectionId) {
     mapData.push(currentMetaData);
 
     setMetaData(currentMetaData);
-    if (currentMetaData.retrieve_type === 'manual') await saveFixedQuestions();
+    if (currentMetaData.retrieve_type === 'manual') await saveFixedQuestions(resData.id);
 
     const mappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
-    if (mappedQb === null) return udpateAddQuestionMetaDataPopUp(false);
+    if (mappedQb === null) return udpateAddMetaDataPopUp(false);
 
     setQuestionPaperTabData({
       ...questionPaperTabData,
       qbSectionMapData: mapData,
       mappedQb: mappedQb
     });
-    udpateAddQuestionMetaDataPopUp(false);
+    udpateAddMetaDataPopUp(false);
   }
 
-  async function saveFixedQuestions() {
+  async function saveFixedQuestions(mappingId, isUpdate) {
     const sendData = {
-      sectionId: metaData.sectionId || null,
+      mappingId: metaData.id || mappingId,
       questionId: selectedQuestionIds.join(','),
 
-      // TODO: update later
       is_active: metaData.is_active || false,
       created_by: 'Zicops',
       updated_by: 'Zicops'
     };
 
-    console.log(sendData);
     let isError = false;
-    const addMapToSectionRes = await addQuestionsToSection({ variables: sendData }).catch((err) => {
+    console.log(sendData);
+    if (isUpdate && questionPaperTabData.currentFixedQuestion.id) {
+      sendData.id = questionPaperTabData.currentFixedQuestion.id;
+      await updateFixedQuestion({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update Fixed Question Error' });
+      });
+
+      if (isError) return;
+      if (!isError) return setToastMsg({ type: 'success', message: 'Updated Fixed Question' });
+    }
+
+    await addFixedQuestion({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Add Fixed Question Error' });
     });
 
-    if (isError) return setToastMsg({ type: 'danger', message: 'Add Fixed Question Error' });
-    if (!isError) setToastMsg({ type: 'success', message: 'Add Fixed Question Error' });
-
-    console.log(addMapToSectionRes);
+    if (isError) return;
+    if (!isError) setToastMsg({ type: 'success', message: 'Added Fixed Question' });
   }
 
   async function updateMetaData() {
@@ -221,12 +226,6 @@ export default function useHandleQuestions(sectionId) {
       created_by: 'Zicops',
       updated_by: 'Zicops'
     };
-
-    if (sendData.retrieve_type === 'manual')
-      return setToastMsg({
-        type: 'danger',
-        message: 'Update Question Meta Data for manual not implemented'
-      });
 
     console.log(sendData);
     let isError = false;
@@ -256,17 +255,17 @@ export default function useHandleQuestions(sectionId) {
       return data;
     });
 
+    if (updatedMetaData.retrieve_type === 'manual') await saveFixedQuestions(resData.id, true);
+
     const mappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
-    if (mappedQb === null) return udpateEditQuestionMetaDataPopUp(false);
+    if (mappedQb === null) return udpateEditMetaDataPopUp(false);
 
     setQuestionPaperTabData({
       ...questionPaperTabData,
       qbSectionMapData: mapData,
       mappedQb: mappedQb
     });
-    if (updatedMetaData.retrieve_type === 'random') return udpateEditQuestionMetaDataPopUp(false);
-
-    setShowQuestionTable(true);
+    udpateEditMetaDataPopUp(false);
   }
 
   return {
@@ -276,6 +275,8 @@ export default function useHandleQuestions(sectionId) {
     isMetaDataReady,
     handleSelectedQuestions,
     addMetaData,
+    selectedQuestionIds,
+    setSelectedQuestionIds,
     showQuestionTable,
     isFixedDataReady,
     setShowQuestionTable,

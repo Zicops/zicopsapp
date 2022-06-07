@@ -128,7 +128,7 @@ export default function Questions() {
         <PopUp
           isFooterVisible={false}
           isPopUpOpen={editQuestionMetaDataPopUp}
-          title="Add Question Meta Data"
+          title="Edit Question Meta Data"
           closeBtn={{ handleClick: () => udpateEditQuestionMetaDataPopUp(false) }}>
           <AddQuestionMetaData sectionId={selectedSectionData?.id} editData={editMetaData} />
         </PopUp>

@@ -1,4 +1,10 @@
+import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { GET_LATEST_EXAMS, queryClient } from '../../../API/Queries';
+import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
+import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ZicopsTable from '../../common/ZicopsTable';
 
 const data = [
@@ -76,24 +82,39 @@ const data = [
   }
 ];
 export default function ExamsTable({ isEdit = false }) {
-  // const { pageSize } = useHandlePagesize();
+  const [loadExams, { error }] = useLazyQuery(GET_LATEST_EXAMS, { client: queryClient });
+
   const router = useRouter();
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const [exams, setExams] = useState([]);
+
+  // load table data
+  useEffect(() => {
+    const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
+
+    loadExams({ variables: queryVariables }).then(({ data }) => {
+      if (error) return setToastMsg({ type: 'danger', message: 'exams load error' });
+
+      if (data?.getLatestExams?.exams) setExams(data.getLatestExams.exams);
+    });
+  }, []);
 
   const columns = [
     {
-      field: 'name',
+      field: 'Name',
       headerName: 'Name',
       headerClassName: 'course-list-header',
       flex: 1.5
     },
     {
-      field: 'type',
+      field: 'Type',
       headerClassName: 'course-list-header',
       headerName: 'Type',
       flex: 1
     },
     {
-      field: 'status',
+      field: 'Status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
       flex: 1
@@ -140,8 +161,8 @@ export default function ExamsTable({ isEdit = false }) {
     <>
       <ZicopsTable
         columns={columns}
-        data={data}
-        pageSize={7}
+        data={exams}
+        pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
       />

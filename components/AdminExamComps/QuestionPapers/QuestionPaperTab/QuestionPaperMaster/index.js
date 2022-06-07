@@ -99,7 +99,7 @@ export default function QuestionPaperMaster() {
           inputOptions={{
             inputName: 'suggested_duration',
             label: 'Suggested Duration:',
-            placeholder: 'Enter duration',
+            placeholder: 'Enter duration in Minutes',
             value: questionPaperTabData.paperMaster?.suggested_duration
           }}
           changeHandler={(e) => handleInput(e)}
@@ -117,9 +117,7 @@ export default function QuestionPaperMaster() {
         />
 
         <NextButton
-          clickHandler={() => {
-            questionPaperId ? updateQuestionPaper(1) : addNewQuestionPaper(1);
-          }}
+          clickHandler={() => (questionPaperId ? updateQuestionPaper(1) : addNewQuestionPaper(1))}
         />
       </div>
     </div>

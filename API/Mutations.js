@@ -1137,7 +1137,7 @@ export const UPDATE_MAP_SECTION_TO_BANK = gql`
 
 export const ADD_SECTION_FIXED_QUESTIONS = gql`
   mutation addSectionFixedQuestions(
-    $sectionId: String
+    $mappingId: String
     $questionId: String
     $created_at: String
     $updated_at: String
@@ -1147,7 +1147,7 @@ export const ADD_SECTION_FIXED_QUESTIONS = gql`
   ) {
     addSectionFixedQuestions(
       input: {
-        SqbId: $sectionId
+        SqbId: $mappingId
         QuestionId: $questionId
         CreatedAt: $created_at
         UpdatedAt: $updated_at
@@ -1169,9 +1169,9 @@ export const ADD_SECTION_FIXED_QUESTIONS = gql`
 `;
 
 export const UPDATE_SECTION_FIXED_QUESTIONS = gql`
-  mutation udpateSectionFixedQuestions(
+  mutation updateSectionFixedQuestions(
     $id: ID
-    $sectionId: String
+    $mappingId: String
     $questionId: String
     $created_at: String
     $updated_at: String
@@ -1179,10 +1179,10 @@ export const UPDATE_SECTION_FIXED_QUESTIONS = gql`
     $updated_by: String
     $is_active: Boolean
   ) {
-    udpateSectionFixedQuestions(
+    updateSectionFixedQuestions(
       input: {
         id: $id
-        SqbId: $sectionId
+        SqbId: $mappingId
         QuestionId: $questionId
         CreatedAt: $created_at
         UpdatedAt: $updated_at

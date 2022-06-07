@@ -1,19 +1,23 @@
-import { useEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import TabContainer from '../../../common/TabContainer';
-import { ExamMasterTabAtom, ExamMasterTabDataSelector } from './Logic/examMasterTab.helper';
-import useHandleExamTab from './Logic/useHandleExamTab';
-import { ExamTabDataAtom, getExamTabDataObject } from '../../../../state/atoms/exams.atoms';
 import {
   GET_EXAM_CONFIG,
   GET_EXAM_INSTRUCTION,
+  GET_EXAM_META,
   GET_EXAM_SCHEDULE,
   queryClient
 } from '../../../../API/Queries';
-import { useLazyQuery } from '@apollo/client';
+import { ExamTabDataAtom, getExamTabDataObject } from '../../../../state/atoms/exams.atoms';
+import TabContainer from '../../../common/TabContainer';
+import { ExamMasterTabAtom, ExamMasterTabDataSelector } from './Logic/examMasterTab.helper';
+import useHandleExamTab from './Logic/useHandleExamTab';
 
 export default function ExamMasterTab() {
+  const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
+    client: queryClient
+  });
   const [loadInstructions, { error: loadInsError }] = useLazyQuery(GET_EXAM_INSTRUCTION, {
     client: queryClient
   });
@@ -37,8 +41,31 @@ export default function ExamMasterTab() {
     const examId = router.query?.examId || null;
     if (!examId) return setExamTabData(getExamTabDataObject());
 
-    // load instructions
+    // load master data
     let isError = false;
+    const masterRes = await loadMaster({ variables: { exam_id: examId } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Instructions load error' });
+    });
+    if (isError) return;
+    const masterData = masterRes?.data?.getExamsMeta;
+    const masterObj = {
+      id: masterData.id,
+      name: masterData.Name,
+      Description: masterData.Description,
+      Code: masterData.Code,
+      QpId: masterData.QpId,
+      type: masterData.Type,
+      sub_category: masterData.SubCategory,
+      category: masterData.Category,
+      schedule_type: masterData.ScheduleType,
+      duration: masterData.Duration,
+      status: masterData.Status,
+      is_exam_active: masterData.IsActive
+    };
+
+    // load instructions
     const insRes = await loadInstructions({ variables: { exam_id: examId } }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -94,10 +121,10 @@ export default function ExamMasterTab() {
 
     setExamTabData({
       ...examTabData,
+      ...masterObj,
       ...insObj,
       ...schObj,
-      ...confObj,
-      id: examId
+      ...confObj
     });
   }, [router.query]);
 
