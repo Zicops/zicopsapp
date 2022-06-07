@@ -6,24 +6,32 @@ const HeroSliderContainer = ({ children }) => {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
       items: 1,
-      slidesToSlide: 1 // optional, default to 1.
+      slidesToSlide: 1, // optional, default to 1.
+      partialVisibilityGutter: 20
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
       items: 1,
-      slidesToSlide: 1 // optional, default to 1.
+      slidesToSlide: 1,
+      partialVisibilityGutter: 20 // optional, default to 1.
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 1,
-      slidesToSlide: 1 // optional, default to 1.
+      slidesToSlide: 1,
+      partialVisibilityGutter: 20 // optional, default to 1.
+    },
+    laptop: {
+      breakpoint: { max: 1530, min: 1024 },
+      items: 1,
+      slidesToSlide: 1,
+      partialVisibilityGutter: 20
     }
   };
   return (
     <>
       <div className={`${styles.heroContainer}`}>
         <Carousel
-          pauseOnHover={true}
           swipeable={false}
           draggable={false}
           showDots={true}
@@ -36,15 +44,17 @@ const HeroSliderContainer = ({ children }) => {
           customTransition="all 1s"
           transitionDuration={1000}
           containerClass={`${styles.header_carousel_container}`}
-          removeArrowOnDeviceType={['tablet', 'mobile', 'desktop']}
+          sliderClass={`${styles.carousel_track}`}
+          removeArrowOnDeviceType={['tablet', 'mobile', 'desktop', 'laptop']}
           deviceType="Laptop"
           dotListClass="custom-dot-list-style"
           // customDot={<CustomDot />}
+          // partialVisbile={true}
           itemClass={`${styles.itemContainer}`}>
           {children}
         </Carousel>
       </div>
-      <div className={`${styles.dropUp}`}></div>
+      {/* <div className={`${styles.dropUp}`}></div> */}
     </>
   );
 };
