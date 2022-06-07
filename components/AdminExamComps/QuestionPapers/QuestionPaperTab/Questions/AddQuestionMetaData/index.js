@@ -79,6 +79,13 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
       )}
 
       <section className={`${styles.footerBtns}`}>
+        <Button
+          text="Cancel"
+          clickHandler={() => {
+            udpateAddQuestionMetaDataPopUp(false);
+            udpateEditQuestionMetaDataPopUp(false);
+          }}
+        />
         {showQuestionTable ? (
           <Button
             text="Save"
@@ -101,13 +108,6 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
             isDisabled={!isMetaDataReady}
           />
         )}
-        <Button
-          text="Cancel"
-          clickHandler={() => {
-            udpateAddQuestionMetaDataPopUp(false);
-            udpateEditQuestionMetaDataPopUp(false);
-          }}
-        />
       </section>
     </>
   );

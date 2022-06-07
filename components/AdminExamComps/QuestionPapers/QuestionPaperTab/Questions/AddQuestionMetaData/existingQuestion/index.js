@@ -6,6 +6,7 @@ import styles from '../addQuestionMetaData.module.scss';
 
 export default function ExistingQuestion({ metaData, setMetaData, questionBankOptions }) {
   const categoryOption = [
+    { value: '', label: '-- Select --' },
     { value: 'Accounting', label: 'Accounting' },
     { value: 'Bussiness', label: 'Bussiness' },
     { value: 'Developement', label: 'Developement' },

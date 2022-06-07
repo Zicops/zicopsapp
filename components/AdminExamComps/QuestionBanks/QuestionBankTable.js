@@ -60,6 +60,10 @@ export default function QuestionBankTable({ isEdit = false }) {
     });
   }, []);
 
+  useEffect(() => {
+    if (addPopUp) setSelectedQB(getQuestionBankObject());
+  }, [addPopUp]);
+
   const columns = [
     {
       field: 'name',

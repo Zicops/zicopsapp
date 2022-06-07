@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import {
   ADD_QUESTION_BANK_QUESTION,
   ADD_QUESTION_OPTIONS,
@@ -9,7 +9,6 @@ import {
   UPDATE_QUESTION_BANK_QUESTION,
   UPDATE_QUESTION_OPTIONS
 } from '../../../../API/Mutations';
-import { RefetchDataAtom } from '../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import {
   getQuestionBankQuestionObject,
@@ -37,7 +36,6 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   // recoil state
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const refetchData = useRecoilValue(RefetchDataAtom);
 
   // local state
   const [questionsArr, setQuestionsArr] = useState([]);
@@ -228,9 +226,8 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
     }
 
-    refetchData.questionBankQuestions();
     setIsUploading(null);
-    closeQuestionMasterTab();
+    closeQuestionMasterTab(true);
   }
 
   async function updateQuestionAndOptions() {
@@ -295,9 +292,8 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
     if (!isError) setToastMsg({ type: 'success', message: 'Question and Options Updated' });
 
-    refetchData.questionBankQuestions();
     setIsUploading(null);
-    closeQuestionMasterTab();
+    closeQuestionMasterTab(true);
   }
 
   return {

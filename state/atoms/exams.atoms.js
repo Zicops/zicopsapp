@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 
 // refetch queries are saved here
+// maybe not required, delete later if not used
 export const RefetchDataAtom = atom({
   key: 'RefetchData',
   default: {

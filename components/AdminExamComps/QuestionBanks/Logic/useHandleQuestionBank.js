@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   CREATE_QUESTION_BANK,
@@ -21,6 +22,8 @@ export default function useHandleQuestionBank() {
   const [updateBank, { error: updateError }] = useMutation(UPDATE_QUESTION_BANK, {
     client: mutationClient
   });
+
+  const router = useRouter();
 
   // recoil state
   const [addPopUp, setAddPopUp] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
@@ -69,7 +72,7 @@ export default function useHandleQuestionBank() {
     };
 
     let isError = false;
-    await createQuestionBank({ variables: sendData }).catch((err) => {
+    const res = await createQuestionBank({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
@@ -80,6 +83,9 @@ export default function useHandleQuestionBank() {
       refetchData.questionBank();
     }
     setAddPopUp(false);
+
+    const questionTableRoute = `${router.asPath}/${res.data.createQuestionBank.id}`;
+    router.push(`${questionTableRoute}?isTabOpen=true`, questionTableRoute);
   }
 
   async function updateQuestionBank() {
@@ -99,7 +105,7 @@ export default function useHandleQuestionBank() {
     };
 
     let isError = false;
-    await updateBank({ variables: sendData }).catch((err) => {
+    const res = await updateBank({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Question Bank Update Error' });

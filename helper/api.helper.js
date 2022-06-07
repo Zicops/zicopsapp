@@ -31,5 +31,5 @@ export function loadQueryData(QUERY, variablesObj = {}) {
   if (error) return setToastMsg({ type: 'danger', message: 'load data error' });
   if (!response?.data) return {};
 
-  return response?.data;
+  return response?.data || {};
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
 import QuestionMasterTab from '../../../../components/AdminExamComps/QuestionBanks/QuestionMasterTab';
 import QuestionsTable from '../../../../components/AdminExamComps/QuestionBanks/QuestionsTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
@@ -14,10 +15,15 @@ export default function MyQuestionBanks() {
 
   const [showQuestionForm, setShowQuestionForm] = useState(null);
   const [editQuestionData, setEditQuestionData] = useState(null);
+  const [shouldDataBeRefetched, setShouldDataBeRefetched] = useState(false);
 
+  const router = useRouter();
+  const isTabOpen = !!router.query.isTabOpen;
+
+  // open question master tab
   useEffect(() => {
-    if (!showQuestionForm) setEditQuestionData(null);
-  }, [showQuestionForm]);
+    setShowQuestionForm(isTabOpen);
+  }, [isTabOpen]);
 
   return (
     <>
@@ -26,19 +32,23 @@ export default function MyQuestionBanks() {
         <AdminHeader
           title={selectedQB.name || 'Questions'}
           isAddShown={!showQuestionForm}
-          // pageRoute="/admin/exams/question-bank"
           handleClickForPlus={() => setShowQuestionForm(true)}
         />
         <MainBodyBox>
           {showQuestionForm ? (
             <QuestionMasterTab
-              isEdit={editQuestionData !== null}
+              isEdit={editQuestionData != null}
               editQuestionData={editQuestionData}
-              closeQuestionMasterTab={() => setShowQuestionForm(false)}
+              closeQuestionMasterTab={(isDataLoaded) => {
+                setShouldDataBeRefetched(!!isDataLoaded);
+                setEditQuestionData(null);
+                setShowQuestionForm(false);
+              }}
             />
           ) : (
             <QuestionsTable
               isEdit={true}
+              shouldDataBeRefetched={shouldDataBeRefetched}
               openEditQuestionMasterTab={(questionData) => {
                 setEditQuestionData(questionData);
                 setShowQuestionForm(true);

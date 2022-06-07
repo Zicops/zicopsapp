@@ -12,7 +12,11 @@ import ZicopsTable from '../../common/ZicopsTable';
 import { imageTypes } from './Logic/questionBank.helper';
 import McqCard from './McqCard';
 
-export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
+export default function QuestionsTable({
+  openEditQuestionMasterTab,
+  isEdit,
+  shouldDataBeRefetched
+}) {
   const [loadQBQuestions, { error: errorQBQuestionsData, refetch }] = useLazyQuery(
     GET_QUESTION_BANK_QUESTIONS,
     { client: queryClient }
@@ -30,33 +34,25 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
 
   // load table data
   useEffect(() => {
-    console.log('qb id', questionBankId);
+    if (shouldDataBeRefetched) {
+      refetch({ question_bank_id: questionBankId }).then(
+        ({ data: { getQuestionBankQuestions } }) => {
+          setQbQuestions(getQuestionBankQuestions);
+        }
+      );
+
+      if (errorQBQuestionsData)
+        return setToastMsg({ type: 'danger', message: 'QB Questions reload error' });
+      return;
+    }
+
     loadQBQuestions({ variables: { question_bank_id: questionBankId } }).then(({ data }) => {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
-      console.log('load qb questions');
       if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
     });
   }, [questionBankId]);
-
-  // set refetch query in recoil
-  useEffect(() => {
-    function refetchQbQuestions() {
-      console.log('qb question reloaded');
-      refetch().then(({ data: { getQuestionBankQuestions } }) => {
-        setQbQuestions(getQuestionBankQuestions);
-      });
-
-      if (errorQBQuestionsData)
-        return setToastMsg({ type: 'danger', message: 'QB Questions reload error' });
-    }
-
-    setRefetchData({
-      ...refetchData,
-      questionBankQuestions: refetchQbQuestions
-    });
-  }, []);
 
   useEffect(() => {
     console.log(qbQuestions);

@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
+import { GET_CATS_N_SUB_CATS } from '../../../../../API/Queries';
+import { loadQueryData } from '../../../../../helper/api.helper';
 import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
@@ -9,12 +11,13 @@ import useHandlePaperTab from '../Logic/useHandlePaperTab';
 import styles from '../questionPaperTab.module.scss';
 
 export default function QuestionPaperMaster() {
-  const categoryOption = [
-    { value: 'Accounting', label: 'Accounting' },
-    { value: 'Bussiness', label: 'Bussiness' },
-    { value: 'Developement', label: 'Developement' },
-    { value: 'Engg', label: 'Engg' }
-  ];
+  const categoryOption = [];
+  const subCategoryOption = [];
+
+  // load categories
+  const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
+  allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
+  allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
 
   const router = useRouter();
   const questionPaperId = router.query?.questionPaperId;
@@ -64,7 +67,7 @@ export default function QuestionPaperMaster() {
           inputName: 'sub_category',
           label: 'Sub-Category:',
           placeholder: 'Select the sub category of the course',
-          options: categoryOption,
+          options: subCategoryOption,
           value: {
             value: questionPaperTabData.paperMaster?.sub_category,
             label: questionPaperTabData.paperMaster?.sub_category

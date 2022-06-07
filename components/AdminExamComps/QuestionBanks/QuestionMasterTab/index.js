@@ -75,7 +75,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
           submitDisplay: isEdit ? 'Update' : 'Save',
           disableSubmit: isUploading,
           handleSubmit: isEdit ? updateQuestionAndOptions : addQuestionAndOptions,
-          handleCancel: closeQuestionMasterTab
+          handleCancel: () => closeQuestionMasterTab(false)
         }}
       />
     </>
