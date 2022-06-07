@@ -491,6 +491,7 @@ export const GET_EXAM_INSTRUCTION = gql`
     getExamInstruction(exam_id: $exam_id) {
       id
       ExamId
+      Instructions
       PassingCriteria
       NoAttempts
       AccessType

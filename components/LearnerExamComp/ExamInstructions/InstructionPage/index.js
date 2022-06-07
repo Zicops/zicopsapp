@@ -76,7 +76,7 @@ const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) 
             {isType.takeAnyTime && (
               <span>
                 <img src="./images/ExamInstructions/schedule.png" alt="cannot found" /> Exam Start
-                Time<span>:</span> <span>{data.examStartTime}</span>
+                Time<span>:</span> <span>{data.exam_start_time}</span>
               </span>
             )}
             <span>
@@ -104,7 +104,7 @@ const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) 
             {isType.takeAnyTime && (
               <span>
                 <img src="./images/ExamInstructions/timer.png" alt="cannot found" /> Exam end time
-                <span>:</span> <span>{data.examEndTime}</span>
+                <span>:</span> <span>{data.exam_end_time}</span>
               </span>
             )}
             {isType.takeAnyTime && (
@@ -215,10 +215,10 @@ const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) 
             </button>
           </div>
           <div className={`${styles.agreeText}`}>
-            <LabeledRadioCheckbox 
-            label="I have read and understood all the instructions given above and agree to adhere to them." 
-            type="checkbox" 
-            changeHandler={()=>setTerms(!terms)}
+            <LabeledRadioCheckbox
+              label="I have read and understood all the instructions given above and agree to adhere to them."
+              type="checkbox"
+              changeHandler={() => setTerms(!terms)}
             />
           </div>
 

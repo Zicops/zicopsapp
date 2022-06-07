@@ -145,7 +145,7 @@ export function getExamTabDataObject(data = {}) {
     description: data.description || '',
     qpId: data.qpId || '',
     duration: data.duration || 0,
-    scheduleType: data.scheduleType || '',
+    schedule_type: data.schedule_type || '',
 
     code: data.code || '',
     type: data.type || '',
@@ -157,29 +157,30 @@ export function getExamTabDataObject(data = {}) {
 
     // instruction
     instructionId: data.instructionId || null,
-    passingCriteria: data.passingCriteria || '',
-    passingCriteriaType: data.passingCriteriaType || 'Marks',
-    isAttemptsVisible: data.isAttemptsVisible || false,
-    noAttempts: data.noAttempts || 0,
-    accessType: data.accessType || '',
+    passing_criteria: data.passing_criteria || '',
+    passing_criteria_type: data.passing_criteria_type || 'Marks',
+    is_attempts_visible: data.is_attempts_visible || false,
+    no_attempts: data.no_attempts || 0,
+    instructions: data.instructions || '',
+    access_type: data.access_type || '',
     is_ins_active: data.is_ins_active || '',
 
     // schedule
     scheduleId: data.schedule || null,
-    examStartDate: data.examStartDate || Date.now(),
-    examStartTime: data.examStartTime || Date.now(),
-    examEndDate: data.examEndDate || Date.now(),
-    examEndTime: data.examEndTime || Date.now(),
-    bufferTime: data.bufferTime || 0,
-    isStretch: data.isStretch || false,
+    exam_start_date: data.exam_start_date || Date.now(),
+    exam_start_time: data.exam_start_time || Date.now(),
+    exam_end_date: data.exam_end_date || Date.now(),
+    exam_end_time: data.exam_end_time || Date.now(),
+    buffer_time: data.buffer_time || 0,
+    is_stretch: data.is_stretch || false,
     is_schedule_active: data.is_schedule_active || false,
 
     // configuration
     configId: data.configId || null,
     shuffle: data.shuffle || false,
-    showResult: data.showResult || false,
-    showAnswer: data.showAnswer || false,
-    displayHints: data.displayHints || false,
+    show_result: data.show_result || false,
+    show_answer: data.show_answer || false,
+    display_hints: data.display_hints || false,
     is_config_active: data.is_config_active || false
   };
 }

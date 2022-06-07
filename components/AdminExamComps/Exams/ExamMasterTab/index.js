@@ -39,83 +39,99 @@ export default function ExamMasterTab() {
   const router = useRouter();
   useEffect(async () => {
     const examId = router.query?.examId || null;
-    if (!examId) return setExamTabData(getExamTabDataObject());
+    const qpId = router.query?.qpId || null;
+    if (!examId) return setExamTabData(getExamTabDataObject({ qpId }));
 
     // load master data
     let isError = false;
-    const masterRes = await loadMaster({ variables: { exam_id: examId } }).catch((err) => {
+    const masterRes = await loadMaster({
+      variables: { exam_ids: [examId] },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Instructions load error' });
+      return setToastMsg({ type: 'danger', message: 'Exam Master load error' });
     });
     if (isError) return;
-    const masterData = masterRes?.data?.getExamsMeta;
+    const masterData = masterRes?.data?.getExamsMeta[0];
     const masterObj = {
       id: masterData.id,
+      qpId: masterData.QpId,
       name: masterData.Name,
-      Description: masterData.Description,
-      Code: masterData.Code,
-      QpId: masterData.QpId,
+      description: masterData.Description,
+      duration: masterData.Duration,
+      schedule_type: masterData.ScheduleType,
+
+      code: masterData.Code,
       type: masterData.Type,
       sub_category: masterData.SubCategory,
       category: masterData.Category,
-      schedule_type: masterData.ScheduleType,
-      duration: masterData.Duration,
+
       status: masterData.Status,
       is_exam_active: masterData.IsActive
     };
 
     // load instructions
-    const insRes = await loadInstructions({ variables: { exam_id: examId } }).catch((err) => {
+    const insRes = await loadInstructions({
+      variables: { exam_id: examId },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Instructions load error' });
     });
     if (isError) return;
-    const insData = insRes?.data?.getExamInstruction;
+    const insData = insRes?.data?.getExamInstruction[0];
     const insObj = {
       instructionId: insData?.id || null,
-      passingCriteria: insData?.PassingCriteria?.split('-')[0],
-      passingCriteriaType: insData?.PassingCriteria?.split('-')[1] || 'Marks',
-      isAttemptsVisible: insData?.NoAttempts > 1,
-      noAttempts: insData?.NoAttempts,
-      accessType: insData?.AccessType || '',
+      passing_criteria: insData?.PassingCriteria?.split('-')[0],
+      passing_criteria_type: insData?.PassingCriteria?.split('-')[1] || 'Marks',
+      is_attempts_visible: insData?.NoAttempts > 1,
+      no_attempts: insData?.NoAttempts,
+      instructions: insData?.Instructions || '',
+      access_type: insData?.AccessType || '',
       is_ins_active: insData?.IsActive || ''
     };
 
     // load schedule
-    const schRes = await loadSchedule({ variables: { exam_id: examId } }).catch((err) => {
+    const schRes = await loadSchedule({
+      variables: { exam_id: examId },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Schedule load error' });
     });
     if (isError) return;
-    const schData = schRes?.data?.getExamSchedule;
+    const schData = schRes?.data?.getExamSchedule[0];
     const schObj = {
       scheduleId: schData?.id || null,
-      examStartDate: new Date(+schData?.Start),
-      examStartTime: new Date(+schData?.Start),
-      examEndDate: new Date(+schData?.End),
-      examEndTime: new Date(+schData?.End),
-      bufferTime: schData?.BufferTime || 0,
-      isStretch: !!schData?.End,
+      exam_start_date: new Date(+schData?.Start),
+      exam_start_time: new Date(+schData?.Start),
+      exam_end_date: new Date(+schData?.End),
+      exam_end_time: new Date(+schData?.End),
+      buffer_time: schData?.BufferTime || 0,
+      is_stretch: !!schData?.End,
       is_schedule_active: schData?.IsActive || false
     };
 
     // load config
-    const confRes = await loadConfig({ variables: { exam_id: examId } }).catch((err) => {
+    const confRes = await loadConfig({
+      variables: { exam_id: examId },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Instructions load error' });
     });
     if (isError) return;
-    const confData = confRes?.data?.getExamConfiguration;
+    const confData = confRes?.data?.getExamConfiguration[0];
     const confObj = {
       configId: confData?.id || null,
       shuffle: confData?.Shuffle || false,
-      displayHints: confData?.DisplayHints || false,
-      showResult: confData?.ShowResult || false,
-      showAnswer: confData?.ShowAnswer || false,
+      display_hints: confData?.DisplayHints || false,
+      show_result: confData?.ShowResult || false,
+      show_answer: confData?.ShowAnswer || false,
       is_config_active: confData?.IsActive || false
     };
 
@@ -133,7 +149,11 @@ export default function ExamMasterTab() {
       tabData={examMasterTabData}
       tab={tab}
       setTab={setTab}
-      footerObj={{ submitDisplay: 'Save', handleSubmit: saveExamData }}
+      footerObj={{
+        submitDisplay: 'Save',
+        handleSubmit: saveExamData,
+        handleCancel: () => router.push('/admin/exams/my-exams/')
+      }}
     />
   );
 }

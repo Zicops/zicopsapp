@@ -17,10 +17,10 @@ export default function Schedule() {
       <section>
         <label htmlFor="examDate">Exam Start Date:</label>
         <InputDatePicker
-          selectedDate={examTabData?.examStartDate}
+          selectedDate={examTabData?.exam_start_date}
           changeHandler={(date) => {
             console.log(date);
-            setExamTabData({ ...examTabData, examStartDate: date });
+            setExamTabData({ ...examTabData, exam_start_date: date });
           }}
         />
       </section>
@@ -29,8 +29,8 @@ export default function Schedule() {
       <section>
         <label htmlFor="examDate">Exam Start Time:</label>
         <TimePicker
-          selected={examTabData?.examStartTime}
-          changeHandler={(date) => setExamTabData({ ...examTabData, examStartTime: date })}
+          selected={examTabData?.exam_start_time}
+          changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
         />
       </section>
       {/* <LabeledDropdown
@@ -73,30 +73,30 @@ export default function Schedule() {
             { value: 4, label: '4' },
             { value: 5, label: '5' }
           ],
-          value: { value: examTabData?.bufferTime, label: examTabData?.bufferTime }
+          value: { value: examTabData?.buffer_time, label: examTabData?.buffer_time }
         }}
         isFiftyFifty={true}
-        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'bufferTime')}
+        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'buffer_time')}
       />
 
       <div className={`${styles.stretchDuration}`}>
         <LabeledRadioCheckbox
           type="checkbox"
           label="Stretch Examination Conduct Duration"
-          name="isStretch"
-          value={examTabData?.isStretch}
+          name="is_stretch"
+          value={examTabData?.is_stretch}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
       </div>
 
-      {examTabData?.isStretch && (
+      {examTabData?.is_stretch && (
         <>
           {/* Exam end Date */}
           <section>
             <label htmlFor="examDate">Exam End Date:</label>
             <InputDatePicker
-              selectedDate={examTabData?.examEndDate}
-              changeHandler={(date) => setExamTabData({ ...examTabData, examEndDate: date })}
+              selectedDate={examTabData?.exam_end_date}
+              changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_date: date })}
             />
           </section>
 
@@ -104,8 +104,8 @@ export default function Schedule() {
           <section>
             <label htmlFor="examDate">Exam End Time:</label>
             <TimePicker
-              selected={examTabData?.examEndTime}
-              changeHandler={(date) => setExamTabData({ ...examTabData, examEndTime: date })}
+              selected={examTabData?.exam_end_time}
+              changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_time: date })}
             />
           </section>
         </>
