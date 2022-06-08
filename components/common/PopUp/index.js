@@ -1,4 +1,4 @@
-import { bool, func, shape, string } from 'prop-types';
+import { bool, func, oneOf, shape, string } from 'prop-types';
 import Popup from 'reactjs-popup';
 import styles from './popUp.module.scss';
 
@@ -7,13 +7,28 @@ export default function PopUp({
   title,
   closeBtn = {},
   submitBtn = {},
-  children,
-  isFooterVisible = true
+  isFooterVisible = true,
+  positionLeft = '',
+  size = 'medium',
+  children
 }) {
+  const customStyles = { width: '800px' };
+
+  if (positionLeft) customStyles.left = positionLeft;
+
+  if (size === 'large') {
+    customStyles.width = '70vw';
+    customStyles.height = '75vh';
+  }
+
+  if (size === 'small') {
+    customStyles.width = '700px';
+  }
+
   return (
     <>
       <Popup open={isPopUpOpen} closeOnDocumentClick={false}>
-        <div className={`${styles.popUpContainer}`}>
+        <div className={`${styles.popUpContainer}`} style={customStyles}>
           <div className={`${styles.popUp}`}>
             <div className={`${styles.header}`}>
               <div className={`${styles.title}`}>{title} </div>
@@ -71,7 +86,11 @@ const btnObj = shape({
 });
 
 PopUp.propTypes = {
+  isPopUpOpen: bool,
   title: string,
   closeBtn: btnObj,
-  submitBtn: btnObj
+  submitBtn: btnObj,
+  isFooterVisible: bool,
+  positionLeft: string,
+  size: oneOf(['large', 'medium', 'small'])
 };

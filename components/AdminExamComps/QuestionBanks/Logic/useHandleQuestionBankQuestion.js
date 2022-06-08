@@ -227,7 +227,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     }
 
     setIsUploading(null);
-    closeQuestionMasterTab(true);
+    closeQuestionMasterTab();
   }
 
   async function updateQuestionAndOptions() {
@@ -257,6 +257,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       sendQuestionData.file = question.file;
     }
     let isError = false;
+
+    if (!question.id) return setToastMsg({ type: 'danger', message: `Question id missing` });
+
     await updateQuestion({ variables: sendQuestionData }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -265,6 +268,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
+      if (!option.id)
+        return setToastMsg({ type: 'danger', message: `Option (${i + 1}) id missing` });
+
       const sendOptionData = {
         id: option.id,
         description: option.description || '',
@@ -293,7 +299,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     if (!isError) setToastMsg({ type: 'success', message: 'Question and Options Updated' });
 
     setIsUploading(null);
-    closeQuestionMasterTab(true);
+    closeQuestionMasterTab();
   }
 
   return {

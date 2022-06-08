@@ -4,7 +4,7 @@ import LabeledTextarea from '../../../../../common/FormComponents/LabeledTextare
 import Accordion from '../../../../../small/Accordion';
 import TextInputWithFile from '../../../../common/TextInputWithFile';
 import { imageTypes } from '../../../Logic/questionBank.helper';
-import McqCard from '../../../McqCard';
+import McqCard from '../../../../common/McqCard';
 import styles from '../../questionMasterTab.module.scss';
 import InputWithCheckbox from './InputWithCheckbox';
 
@@ -120,6 +120,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
                 .fill(null)
                 .map((value, index) => (
                   <InputWithCheckbox
+                    key={index}
                     labelCount={index + 1}
                     isCorrectHandler={(e) => {
                       optionInputHandler(e, index);

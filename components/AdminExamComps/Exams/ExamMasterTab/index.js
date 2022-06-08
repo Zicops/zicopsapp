@@ -94,26 +94,29 @@ export default function ExamMasterTab() {
     };
 
     // load schedule
-    const schRes = await loadSchedule({
-      variables: { exam_id: examId },
-      fetchPolicy: 'no-cache'
-    }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Schedule load error' });
-    });
-    if (isError) return;
-    const schData = schRes?.data?.getExamSchedule[0];
-    const schObj = {
-      scheduleId: schData?.id || null,
-      exam_start_date: new Date(+schData?.Start),
-      exam_start_time: new Date(+schData?.Start),
-      exam_end_date: new Date(+schData?.End),
-      exam_end_time: new Date(+schData?.End),
-      buffer_time: schData?.BufferTime || 0,
-      is_stretch: !!schData?.End,
-      is_schedule_active: schData?.IsActive || false
-    };
+    let schObj = {};
+    if (masterObj.schedule_type === 'scheduled') {
+      const schRes = await loadSchedule({
+        variables: { exam_id: examId },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Schedule load error' });
+      });
+      if (isError) return;
+      const schData = schRes?.data?.getExamSchedule[0];
+      schObj = {
+        scheduleId: schData?.id || null,
+        exam_start_date: new Date(+schData?.Start),
+        exam_start_time: new Date(+schData?.Start),
+        exam_end_date: new Date(+schData?.End),
+        exam_end_time: new Date(+schData?.End),
+        buffer_time: schData?.BufferTime || 0,
+        is_stretch: !!schData?.End,
+        is_schedule_active: schData?.IsActive || false
+      };
+    }
 
     // load config
     const confRes = await loadConfig({
@@ -143,6 +146,14 @@ export default function ExamMasterTab() {
       ...confObj
     });
   }, [router.query]);
+
+  // error notification
+  useEffect(() => {
+    if (loadMasterError) return setToastMsg({ type: 'danger', message: 'Exam Master load error' });
+    if (loadInsError) return setToastMsg({ type: 'danger', message: 'Instructions load error' });
+    if (loadScheduleError) return setToastMsg({ type: 'danger', message: 'Schedule load error' });
+    if (loadConfigError) return setToastMsg({ type: 'danger', message: 'Config load error' });
+  }, [loadMasterError, loadInsError, loadScheduleError, loadConfigError]);
 
   return (
     <TabContainer

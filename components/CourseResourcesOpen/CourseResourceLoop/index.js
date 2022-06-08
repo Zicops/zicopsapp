@@ -23,6 +23,8 @@ const CourseResourceLoop = ({ resource }) => {
       <PopUp
         isPopUpOpen={showDoc}
         title={resource.name}
+        size="large"
+        positionLeft="50%"
         isFooterVisible={false}
         closeBtn={{ handleClick: () => setShowDoc(false) }}>
         <ViewDoc url={resource.url} />

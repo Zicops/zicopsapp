@@ -1,6 +1,6 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { useRouter } from 'next/router';
 import QuestionMasterTab from '../../../../components/AdminExamComps/QuestionBanks/QuestionMasterTab';
 import QuestionsTable from '../../../../components/AdminExamComps/QuestionBanks/QuestionsTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
@@ -15,7 +15,6 @@ export default function MyQuestionBanks() {
 
   const [showQuestionForm, setShowQuestionForm] = useState(null);
   const [editQuestionData, setEditQuestionData] = useState(null);
-  const [shouldDataBeRefetched, setShouldDataBeRefetched] = useState(false);
 
   const router = useRouter();
   const isTabOpen = !!router.query.isTabOpen;
@@ -39,8 +38,7 @@ export default function MyQuestionBanks() {
             <QuestionMasterTab
               isEdit={editQuestionData != null}
               editQuestionData={editQuestionData}
-              closeQuestionMasterTab={(isDataLoaded) => {
-                setShouldDataBeRefetched(!!isDataLoaded);
+              closeQuestionMasterTab={() => {
                 setEditQuestionData(null);
                 setShowQuestionForm(false);
               }}
@@ -48,7 +46,6 @@ export default function MyQuestionBanks() {
           ) : (
             <QuestionsTable
               isEdit={true}
-              shouldDataBeRefetched={shouldDataBeRefetched}
               openEditQuestionMasterTab={(questionData) => {
                 setEditQuestionData(questionData);
                 setShowQuestionForm(true);
