@@ -101,7 +101,14 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
-      if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
+      if (data?.getQuestionBankQuestions) {
+        const questions = data.getQuestionBankQuestions?.filter((q) => {
+          // TODO: add some filter conditon based on difficulty
+          // q.Difficulty, metaData.difficulty_level
+          return q;
+        });
+        setQbQuestions(questions);
+      }
     });
   }, [metaData.qbId]);
 

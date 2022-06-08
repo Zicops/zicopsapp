@@ -55,7 +55,7 @@ export default function QuestionPaperTab() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
     });
-    if (isError) return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
+    if (isError) return;
     const paperMasterData = metaRes.data.getQPMeta[0];
     const paperMaster = getQuestionPaperMasterObject({
       ...paperMasterData,
@@ -74,7 +74,7 @@ export default function QuestionPaperTab() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Section load error' });
     });
-    if (isError) return setToastMsg({ type: 'danger', message: 'Section load error' });
+    if (isError) return;
 
     // parse and set section data
     const sections = sectionRes?.data?.getQuestionPaperSections;
@@ -167,11 +167,13 @@ export default function QuestionPaperTab() {
     });
   }, [questionPaperId]);
 
+  // error notification
   useEffect(() => {
+    if (loadMetaError) return setToastMsg({ type: 'danger', message: 'Master load error' });
     if (loadSectionError) return setToastMsg({ type: 'danger', message: 'Section load error' });
     if (loadQBSectionMapError)
       return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
-  }, [loadSectionError, loadQBSectionMapError]);
+  }, [loadMetaError, loadSectionError, loadQBSectionMapError]);
 
   const { addNewQuestionPaper, updateQuestionPaper } = useHandlePaperTab();
 

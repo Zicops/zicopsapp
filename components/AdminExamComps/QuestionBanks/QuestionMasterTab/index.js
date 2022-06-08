@@ -18,7 +18,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
   useEffect(async () => {
     if (!editQuestionData) return;
 
-    let allOptions = [];
+    let allOptions = Array(4).fill({});
     // set questions
     const question = {
       id: editQuestionData.id,
@@ -75,7 +75,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
           submitDisplay: isEdit ? 'Update' : 'Save',
           disableSubmit: isUploading,
           handleSubmit: isEdit ? updateQuestionAndOptions : addQuestionAndOptions,
-          handleCancel: () => closeQuestionMasterTab(false)
+          handleCancel: () => closeQuestionMasterTab()
         }}
       />
     </>
