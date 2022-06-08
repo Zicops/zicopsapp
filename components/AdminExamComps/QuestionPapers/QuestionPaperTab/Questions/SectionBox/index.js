@@ -17,6 +17,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
     PopUpStatesAtomFamily('editCustomSection')
   );
   const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
+  const isSectionWise = questionPaperTabData.paperMaster?.section_wise;
 
   // return if no section present
   if (!questionPaperTabData.sectionData.length) return null;
@@ -25,7 +26,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
     <>
       <BlackBox>
         {/* render large section row */}
-        {questionPaperTabData.paperMaster?.section_wise && (
+        {isSectionWise && (
           <BlackRow
             type="large"
             title={section.name}
@@ -44,7 +45,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
           return (
             <BlackRow
               key={index}
-              type="small"
+              type={isSectionWise ? 'small' : 'large'}
               title={metaData?.qbId}
               extraComp={
                 <span className={`${styles.numberOfQuestions}`}>[{metaData?.total_questions}]</span>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_QUESTION_BANK_QUESTIONS, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
+import { RefetchDataAtom } from '../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
@@ -11,8 +12,12 @@ import ZicopsTable from '../../common/ZicopsTable';
 import { imageTypes } from './Logic/questionBank.helper';
 import McqCard from './McqCard';
 
-export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
-  const [loadQBQuestions, { error: errorQBQuestionsData }] = useLazyQuery(
+export default function QuestionsTable({
+  openEditQuestionMasterTab,
+  isEdit,
+  shouldDataBeRefetched
+}) {
+  const [loadQBQuestions, { error: errorQBQuestionsData, refetch }] = useLazyQuery(
     GET_QUESTION_BANK_QUESTIONS,
     { client: queryClient }
   );
@@ -22,12 +27,25 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
 
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('viewQuestions'));
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [refetchData, setRefetchData] = useRecoilState(RefetchDataAtom);
 
   const [qbQuestions, setQbQuestions] = useState([]);
   const [viewQuestion, setViewQuestion] = useState(null);
 
   // load table data
   useEffect(() => {
+    if (shouldDataBeRefetched) {
+      refetch({ question_bank_id: questionBankId }).then(
+        ({ data: { getQuestionBankQuestions } }) => {
+          setQbQuestions(getQuestionBankQuestions);
+        }
+      );
+
+      if (errorQBQuestionsData)
+        return setToastMsg({ type: 'danger', message: 'QB Questions reload error' });
+      return;
+    }
+
     loadQBQuestions({ variables: { question_bank_id: questionBankId } }).then(({ data }) => {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
@@ -35,6 +53,10 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
       if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
     });
   }, [questionBankId]);
+
+  useEffect(() => {
+    console.log(qbQuestions);
+  }, [qbQuestions]);
 
   const columns = [
     {

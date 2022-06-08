@@ -1,5 +1,25 @@
 import { atom } from 'recoil';
 
+// refetch queries are saved here
+// maybe not required, delete later if not used
+export const RefetchDataAtom = atom({
+  key: 'RefetchData',
+  default: {
+    questionBank: function () {},
+    questionBankQuestions: function () {},
+    questionBankOptions: function () {},
+    questionPaper: function () {},
+    questionPaperSections: function () {},
+    QbSectionsMapping: function () {},
+    fixedQuestion: function () {},
+    exam: function () {},
+    examMaster: function () {},
+    examInstruction: function () {},
+    examSchedule: function () {},
+    examConfiguration: function () {}
+  }
+});
+
 // atom for storing single active question bank used for edit, or reference for questions from bank
 export const SelectedQuestionBankAtom = atom({
   key: 'SelectedQuestionBank',
@@ -10,6 +30,7 @@ export function getQuestionBankObject(data = {}) {
   return {
     id: data.id || null,
     name: data.name || '',
+    description: data.description || '',
     category: data.category || '',
     sub_category: data.sub_category || '',
 
@@ -25,24 +46,21 @@ export function getQuestionBankObject(data = {}) {
 
 export const QuestionPaperTabDataAtom = atom({
   key: 'QuestionPaperTabData',
-  default: getQuestionPaperTabDataObject({
-    paperMaster: getQuestionPaperMasterObject(),
-    sectionData: [],
-    qbSectionMapData: [],
-    mappedQb: []
-  })
+  default: getQuestionPaperTabDataObject()
 });
 
 export function getQuestionPaperTabDataObject(data = {}) {
   return {
-    paperMaster: data.paperMaster || {},
+    paperMaster: data.paperMaster || getQuestionPaperMasterObject(),
     sectionData: data.sectionData || [],
     qbSectionMapData: data.qbSectionMapData || [],
-    mappedQb: data.mappedQb || []
+    mappedQb: data.mappedQb || [],
+    currentFixedQuestion: data.currentFixedQuestion || getFixedQuestionObject(),
+    refetchQBSectionMapping: async function () {}
   };
 }
 
-export default function getQuestionPaperMasterObject(data = {}) {
+export function getQuestionPaperMasterObject(data = {}) {
   return {
     id: data.id || null,
     name: data.name || '',
@@ -83,16 +101,29 @@ export function getCustomSectionObject(data = {}) {
 export function getQuestionMetaDataObject(data = {}) {
   return {
     id: data?.id || null,
-    qpId: data?.qpId || '',
     sectionId: data?.sectionId || '',
+    qbId: data.qbId || '',
     difficulty_level: data?.difficulty_level || '',
     category: data.category || '',
     sub_category: data.sub_category || '',
-    qbId: data.qbId || '',
     total_questions: data?.total_questions || 0,
     question_marks: data?.question_marks || 0,
     question_type: data?.question_type || 0,
-    retrieve_type: data?.retrieve_type || 'manual',
+    retrieve_type: data?.retrieve_type || 'random',
+
+    is_active: data?.is_active || '',
+    created_at: data?.created_at || '',
+    updated_at: data?.updated_at || '',
+    created_by: data?.Created_by || '',
+    updated_by: data?.updated_by || ''
+  };
+}
+
+export function getFixedQuestionObject(data = {}) {
+  return {
+    id: data?.id || null,
+    mappingId: data?.mappingId || '',
+    questionId: data?.questionId || '',
 
     is_active: data?.is_active || '',
     created_at: data?.created_at || '',
@@ -114,7 +145,7 @@ export function getExamTabDataObject(data = {}) {
     description: data.description || '',
     qpId: data.qpId || '',
     duration: data.duration || 0,
-    scheduleType: data.scheduleType || '',
+    schedule_type: data.schedule_type || '',
 
     code: data.code || '',
     type: data.type || '',
@@ -126,29 +157,30 @@ export function getExamTabDataObject(data = {}) {
 
     // instruction
     instructionId: data.instructionId || null,
-    passingCriteria: data.passingCriteria || '',
-    passingCriteriaType: data.passingCriteriaType || 'Marks',
-    isAttemptsVisible: data.isAttemptsVisible || false,
-    noAttempts: data.noAttempts || 0,
-    accessType: data.accessType || '',
+    passing_criteria: data.passing_criteria || '',
+    passing_criteria_type: data.passing_criteria_type || 'Marks',
+    is_attempts_visible: data.is_attempts_visible || false,
+    no_attempts: data.no_attempts || 0,
+    instructions: data.instructions || '',
+    access_type: data.access_type || '',
     is_ins_active: data.is_ins_active || '',
 
     // schedule
     scheduleId: data.schedule || null,
-    examStartDate: data.examStartDate || Date.now(),
-    examStartTime: data.examStartTime || Date.now(),
-    examEndDate: data.examEndDate || Date.now(),
-    examEndTime: data.examEndTime || Date.now(),
-    bufferTime: data.bufferTime || 0,
-    isStretch: data.isStretch || false,
+    exam_start_date: data.exam_start_date || Date.now(),
+    exam_start_time: data.exam_start_time || Date.now(),
+    exam_end_date: data.exam_end_date || Date.now(),
+    exam_end_time: data.exam_end_time || Date.now(),
+    buffer_time: data.buffer_time || 0,
+    is_stretch: data.is_stretch || false,
     is_schedule_active: data.is_schedule_active || false,
 
     // configuration
     configId: data.configId || null,
     shuffle: data.shuffle || false,
-    showResult: data.showResult || false,
-    showAnswer: data.showAnswer || false,
-    displayHints: data.displayHints || false,
+    show_result: data.show_result || false,
+    show_answer: data.show_answer || false,
+    display_hints: data.display_hints || false,
     is_config_active: data.is_config_active || false
   };
 }

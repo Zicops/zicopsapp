@@ -169,6 +169,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     for (let index = 0; index < questionsArr.length; index++) {
       const { question, options } = questionsArr[index];
       const sendQuestionData = {
+        name: question.name || '',
         description: question.description || '',
         type: question.type || '',
         difficulty: question.difficulty || 0,
@@ -226,7 +227,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     }
 
     setIsUploading(null);
-    closeQuestionMasterTab();
+    closeQuestionMasterTab(true);
   }
 
   async function updateQuestionAndOptions() {
@@ -238,6 +239,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     const options = optionData;
     const sendQuestionData = {
       id: question.id,
+      name: question.name || '',
       description: question.description || '',
       type: question.type || '',
       difficulty: question.difficulty || 0,
@@ -291,7 +293,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     if (!isError) setToastMsg({ type: 'success', message: 'Question and Options Updated' });
 
     setIsUploading(null);
-    closeQuestionMasterTab();
+    closeQuestionMasterTab(true);
   }
 
   return {

@@ -616,6 +616,7 @@ export const UPDATE_TOPIC_CONTENT = gql`
 export const CREATE_QUESTION_BANK = gql`
   mutation createQuestionBank(
     $name: String
+    $description: String
     $category: String
     $sub_category: String
     $created_by: String
@@ -627,6 +628,7 @@ export const CREATE_QUESTION_BANK = gql`
     createQuestionBank(
       input: {
         name: $name
+        description: $description
         category: $category
         sub_category: $sub_category
         created_by: $created_by
@@ -638,6 +640,7 @@ export const CREATE_QUESTION_BANK = gql`
     ) {
       id
       name
+      description
       category
       sub_category
       created_at
@@ -655,6 +658,7 @@ export const UPDATE_QUESTION_BANK = gql`
   mutation updateQuestionBank(
     $id: ID
     $name: String
+    $description: String
     $category: String
     $sub_category: String
     $created_by: String
@@ -667,6 +671,7 @@ export const UPDATE_QUESTION_BANK = gql`
       input: {
         id: $id
         name: $name
+        description: $description
         category: $category
         sub_category: $sub_category
         created_by: $created_by
@@ -678,6 +683,7 @@ export const UPDATE_QUESTION_BANK = gql`
     ) {
       id
       name
+      description
       category
       sub_category
       created_at
@@ -693,6 +699,7 @@ export const UPDATE_QUESTION_BANK = gql`
 
 export const ADD_QUESTION_BANK_QUESTION = gql`
   mutation addQuestionBankQuestion(
+    $name: String
     $description: String
     $type: String
     $difficulty: Int
@@ -706,6 +713,7 @@ export const ADD_QUESTION_BANK_QUESTION = gql`
   ) {
     addQuestionBankQuestion(
       input: {
+        Name: $name
         Description: $description
         Type: $type
         Difficulty: $difficulty
@@ -719,6 +727,7 @@ export const ADD_QUESTION_BANK_QUESTION = gql`
       }
     ) {
       id
+      Name
       Description
       Type
       Difficulty
@@ -738,6 +747,7 @@ export const ADD_QUESTION_BANK_QUESTION = gql`
 export const UPDATE_QUESTION_BANK_QUESTION = gql`
   mutation updateQuestionBankQuestion(
     $id: ID
+    $name: String
     $description: String
     $type: String
     $difficulty: Int
@@ -752,6 +762,7 @@ export const UPDATE_QUESTION_BANK_QUESTION = gql`
     updateQuestionBankQuestion(
       input: {
         id: $id
+        Name: $name
         Description: $description
         Type: $type
         Difficulty: $difficulty
@@ -765,6 +776,7 @@ export const UPDATE_QUESTION_BANK_QUESTION = gql`
       }
     ) {
       id
+      Name
       Description
       Type
       Difficulty
@@ -1125,7 +1137,7 @@ export const UPDATE_MAP_SECTION_TO_BANK = gql`
 
 export const ADD_SECTION_FIXED_QUESTIONS = gql`
   mutation addSectionFixedQuestions(
-    $sectionId: String
+    $mappingId: String
     $questionId: String
     $created_at: String
     $updated_at: String
@@ -1135,7 +1147,7 @@ export const ADD_SECTION_FIXED_QUESTIONS = gql`
   ) {
     addSectionFixedQuestions(
       input: {
-        SqbId: $sectionId
+        SqbId: $mappingId
         QuestionId: $questionId
         CreatedAt: $created_at
         UpdatedAt: $updated_at
@@ -1157,9 +1169,9 @@ export const ADD_SECTION_FIXED_QUESTIONS = gql`
 `;
 
 export const UPDATE_SECTION_FIXED_QUESTIONS = gql`
-  mutation udpateSectionFixedQuestions(
+  mutation updateSectionFixedQuestions(
     $id: ID
-    $sectionId: String
+    $mappingId: String
     $questionId: String
     $created_at: String
     $updated_at: String
@@ -1167,10 +1179,10 @@ export const UPDATE_SECTION_FIXED_QUESTIONS = gql`
     $updated_by: String
     $is_active: Boolean
   ) {
-    udpateSectionFixedQuestions(
+    updateSectionFixedQuestions(
       input: {
         id: $id
-        SqbId: $sectionId
+        SqbId: $mappingId
         QuestionId: $questionId
         CreatedAt: $created_at
         UpdatedAt: $updated_at
@@ -1197,7 +1209,7 @@ export const ADD_EXAM = gql`
     $description: String
     $qpId: String
     $type: String
-    $scheduleType: String
+    $schedule_type: String
     $duration: Int
     $code: String
     $category: String
@@ -1217,7 +1229,7 @@ export const ADD_EXAM = gql`
         UpdatedBy: $updatedBy
         IsActive: $is_active
         Type: $type
-        ScheduleType: $scheduleType
+        ScheduleType: $schedule_type
         Duration: $duration
         Status: $status
         Category: $category
@@ -1251,7 +1263,7 @@ export const UPDATE_EXAM = gql`
     $description: String
     $qpId: String
     $type: String
-    $scheduleType: String
+    $schedule_type: String
     $duration: Int
     $code: String
     $category: String
@@ -1272,7 +1284,7 @@ export const UPDATE_EXAM = gql`
         UpdatedBy: $updatedBy
         IsActive: $is_active
         Type: $type
-        ScheduleType: $scheduleType
+        ScheduleType: $schedule_type
         Duration: $duration
         Status: $status
         Category: $category
@@ -1304,7 +1316,7 @@ export const ADD_EXAM_SCHEDULE = gql`
     $examId: String
     $start: Int
     $end: Int
-    $bufferTime: Int
+    $buffer_time: Int
     $createdBy: String
     $updatedBy: String
     $is_active: Boolean
@@ -1314,7 +1326,7 @@ export const ADD_EXAM_SCHEDULE = gql`
         ExamId: $examId
         Start: $start
         End: $end
-        BufferTime: $bufferTime
+        BufferTime: $buffer_time
         CreatedBy: $createdBy
         UpdatedBy: $updatedBy
         IsActive: $is_active
@@ -1340,7 +1352,7 @@ export const UPDATE_EXAM_SCHEDULE = gql`
     $examId: String
     $start: Int
     $end: Int
-    $bufferTime: Int
+    $buffer_time: Int
     $createdBy: String
     $updatedBy: String
     $is_active: Boolean
@@ -1351,7 +1363,7 @@ export const UPDATE_EXAM_SCHEDULE = gql`
         ExamId: $examId
         Start: $start
         End: $end
-        BufferTime: $bufferTime
+        BufferTime: $buffer_time
         CreatedBy: $createdBy
         UpdatedBy: $updatedBy
         IsActive: $is_active
@@ -1374,9 +1386,10 @@ export const UPDATE_EXAM_SCHEDULE = gql`
 export const ADD_EXAM_INSTRUCTION = gql`
   mutation addExamInstruction(
     $examId: String
-    $passingCriteria: String
-    $noAttempts: Int
-    $accessType: String
+    $instructions: String
+    $passing_criteria: String
+    $no_attempts: Int
+    $access_type: String
     $createdBy: String
     $updatedBy: String
     $is_active: Boolean
@@ -1384,9 +1397,10 @@ export const ADD_EXAM_INSTRUCTION = gql`
     addExamInstruction(
       input: {
         ExamId: $examId
-        PassingCriteria: $passingCriteria
-        NoAttempts: $noAttempts
-        AccessType: $accessType
+        Instructions: $instructions
+        PassingCriteria: $passing_criteria
+        NoAttempts: $no_attempts
+        AccessType: $access_type
         CreatedBy: $createdBy
         UpdatedBy: $updatedBy
         IsActive: $is_active
@@ -1394,6 +1408,7 @@ export const ADD_EXAM_INSTRUCTION = gql`
     ) {
       id
       ExamId
+      Instructions
       PassingCriteria
       NoAttempts
       AccessType
@@ -1409,10 +1424,11 @@ export const ADD_EXAM_INSTRUCTION = gql`
 export const UPDATE_EXAM_INSTRUCTION = gql`
   mutation updateExamInstruction(
     $id: ID
+    $instructions: String
     $examId: String
-    $passingCriteria: String
-    $noAttempts: Int
-    $accessType: String
+    $passing_criteria: String
+    $no_attempts: Int
+    $access_type: String
     $createdBy: String
     $updatedBy: String
     $is_active: Boolean
@@ -1421,15 +1437,17 @@ export const UPDATE_EXAM_INSTRUCTION = gql`
       input: {
         id: $id
         ExamId: $examId
-        PassingCriteria: $passingCriteria
-        NoAttempts: $noAttempts
-        AccessType: $accessType
+        Instructions: $instructions
+        PassingCriteria: $passing_criteria
+        NoAttempts: $no_attempts
+        AccessType: $access_type
         CreatedBy: $createdBy
         UpdatedBy: $updatedBy
         IsActive: $is_active
       }
     ) {
       id
+      Instructions
       ExamId
       PassingCriteria
       NoAttempts
@@ -1447,9 +1465,9 @@ export const ADD_EXAM_CONFIGURATION = gql`
   mutation addExamConfiguration(
     $examId: String
     $shuffle: Boolean
-    $showResult: Boolean
-    $showAnswer: Boolean
-    $displayHints: Boolean
+    $show_result: Boolean
+    $show_answer: Boolean
+    $display_hints: Boolean
     $createdBy: String
     $updatedBy: String
     $is_active: Boolean
@@ -1458,9 +1476,9 @@ export const ADD_EXAM_CONFIGURATION = gql`
       input: {
         ExamId: $examId
         Shuffle: $shuffle
-        DisplayHints: $displayHints
-        ShowAnswer: $showAnswer
-        ShowResult: $showResult
+        DisplayHints: $display_hints
+        ShowAnswer: $show_answer
+        ShowResult: $show_result
         CreatedBy: $createdBy
         UpdatedBy: $updatedBy
         IsActive: $is_active
@@ -1486,9 +1504,9 @@ export const UPDATE_EXAM_CONFIGURATION = gql`
     $id: ID
     $examId: String
     $shuffle: Boolean
-    $showResult: Boolean
-    $showAnswer: Boolean
-    $displayHints: Boolean
+    $show_result: Boolean
+    $show_answer: Boolean
+    $display_hints: Boolean
     $createdBy: String
     $updatedBy: String
     $is_active: Boolean
@@ -1498,9 +1516,9 @@ export const UPDATE_EXAM_CONFIGURATION = gql`
         id: $id
         ExamId: $examId
         Shuffle: $shuffle
-        DisplayHints: $displayHints
-        ShowAnswer: $showAnswer
-        ShowResult: $showResult
+        DisplayHints: $display_hints
+        ShowAnswer: $show_answer
+        ShowResult: $show_result
         CreatedBy: $createdBy
         UpdatedBy: $updatedBy
         IsActive: $is_active

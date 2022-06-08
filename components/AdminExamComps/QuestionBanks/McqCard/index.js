@@ -52,7 +52,8 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
 
           {imageTypes.includes(questionData.attachmentType) && (
             <div className={`${styles.quesImg}`}>
-              <img src={questionData.attachment} alt="" />
+              {questionData.attachment && <img src={questionData.attachment} alt="" />}
+              {questionData?.file && <img src={URL.createObjectURL(questionData.file)} alt="" />}
             </div>
           )}
         </div>

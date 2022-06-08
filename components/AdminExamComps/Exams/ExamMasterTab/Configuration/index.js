@@ -17,20 +17,20 @@ export default function Configuration() {
       />
       <SwitchButton
         text={'Display Answer Hints'}
-        inputName="displayHints"
-        isChecked={examTabData.displayHints}
+        inputName="display_hints"
+        isChecked={examTabData.display_hints}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
       <SwitchButton
         text={'Show right Answers on finish'}
-        inputName="showAnswer"
-        isChecked={examTabData.showAnswer}
+        inputName="show_answer"
+        isChecked={examTabData.show_answer}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
       <SwitchButton
         text={'Show result on finish'}
-        inputName="showResult"
-        isChecked={examTabData.showResult}
+        inputName="show_result"
+        isChecked={examTabData.show_result}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
     </div>

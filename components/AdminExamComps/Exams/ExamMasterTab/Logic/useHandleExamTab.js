@@ -53,17 +53,13 @@ export default function useHandleExamTab() {
 
   // disable submit if data not complete
   function validateInput() {
-    const { name, description, qpId, duration, scheduleType, passingCriteria, accessType } =
+    const { name, description, qpId, duration, schedule_type, passing_criteria, instructions } =
       examTabData;
-    const isExamValid = name && description && qpId && duration && scheduleType;
+    const isExamValid = name && description && qpId && duration && schedule_type;
 
-    const isInstructionsValid = passingCriteria && accessType;
+    const isInstructionsValid = passing_criteria && instructions;
     return isExamValid && isInstructionsValid;
   }
-
-  useEffect(() => {
-    console.log(examTabData);
-  }, [examTabData]);
 
   // error notifications
   useEffect(() => {
@@ -96,7 +92,7 @@ export default function useHandleExamTab() {
       qpId: examTabData.qpId,
 
       duration: +examTabData.duration || 0,
-      scheduleType: examTabData.scheduleType,
+      schedule_type: examTabData.schedule_type,
 
       category: examTabData.category || '',
       sub_category: examTabData.sub_category || '',
@@ -134,9 +130,10 @@ export default function useHandleExamTab() {
   async function saveInstructions(examId) {
     const sendData = {
       examId: examId,
-      passingCriteria: `${examTabData.passingCriteria}-${examTabData.passingCriteriaType}`,
-      noAttempts: examTabData.noAttempts || 1,
-      accessType: examTabData.accessType || '',
+      passing_criteria: `${examTabData.passing_criteria}-${examTabData.passing_criteria_type}`,
+      no_attempts: examTabData.no_attempts || 1,
+      instructions: examTabData.instructions || '',
+      access_type: examTabData.access_type || '',
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_ins_active || true
@@ -164,20 +161,20 @@ export default function useHandleExamTab() {
   }
 
   async function saveSchedule(examId) {
-    const startDateTime = getDateTime(examTabData.examStartDate, examTabData.examStartTime);
+    const startDateTime = getDateTime(examTabData.exam_start_date, examTabData.exam_start_time);
     const sendData = {
       examId: examId,
       start: startDateTime,
       end: 0,
-      bufferTime: examTabData.bufferTime || 1,
+      buffer_time: examTabData.buffer_time || 1,
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_ins_active || true
     };
 
     console.log(sendData);
-    if (examTabData?.examEndDate && examTabData?.examEndTime) {
-      sendData.end = getDateTime(examTabData.examEndDate, examTabData.examEndTime);
+    if (examTabData?.exam_end_date && examTabData?.exam_end_time) {
+      sendData.end = getDateTime(examTabData.exam_end_date, examTabData.exam_end_time);
     }
 
     let response = {};
@@ -206,9 +203,9 @@ export default function useHandleExamTab() {
     const sendData = {
       examId: examId,
       shuffle: examTabData.shuffle || false,
-      showResult: examTabData.showResult || false,
-      displayHints: examTabData.displayHints || false,
-      showAnswer: examTabData.showAnswer || false,
+      show_result: examTabData.show_result || false,
+      display_hints: examTabData.display_hints || false,
+      show_answer: examTabData.show_answer || false,
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_config_active || true
@@ -236,7 +233,6 @@ export default function useHandleExamTab() {
   }
 
   async function saveExamData() {
-    await saveSchedule(examTabData.id);
     console.log(examTabData);
     if (!validateInput())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
@@ -247,7 +243,7 @@ export default function useHandleExamTab() {
     const insRes = await saveInstructions(examId || examTabData.id);
 
     let schRes = null;
-    if (examTabData.scheduleType === 'scheduled')
+    if (examTabData.schedule_type === 'scheduled')
       schRes = await saveSchedule(examId || examTabData.id);
 
     const confRes = await saveConfig(examId || examTabData.id);

@@ -8,7 +8,8 @@ import {
   mutationClient,
   UPDATE_QUESTION_PAPER
 } from '../../../../../API/Mutations';
-import getQuestionPaperMasterObject, {
+import {
+  getQuestionPaperTabDataObject,
   QuestionPaperTabDataAtom
 } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
@@ -37,11 +38,7 @@ export default function useHandlePaperTab() {
   useEffect(() => {
     if (questionPaperId || questionPaperTabData?.paperMaster?.id) return;
 
-    setQuestionPaperTabData({
-      ...questionPaperTabData,
-      paperMaster: getQuestionPaperMasterObject(),
-      sectionData: []
-    });
+    setQuestionPaperTabData(getQuestionPaperTabDataObject());
   }, []);
 
   // error notification
@@ -176,7 +173,10 @@ export default function useHandlePaperTab() {
     setQuestionPaperTabData(tabData);
 
     if (!isError) setToastMsg({ type: 'success', message: 'New Question Paper Added' });
-    if (!isNaN(+tabIndex)) setTab(paperTabData[tabIndex].name);
+    if (!isNaN(+tabIndex)) {
+      router.push(`${router.asPath}/${paperMaster.id}`);
+      setTab(paperTabData[tabIndex].name);
+    }
   }
 
   async function updateQuestionPaper(tabIndex) {
