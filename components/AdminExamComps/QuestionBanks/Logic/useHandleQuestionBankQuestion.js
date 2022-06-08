@@ -75,12 +75,10 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       isOneChecked = false;
 
     options.forEach((option) => {
-      console.log(option);
       isOptionsCompleted = !!option.description;
 
       if (option.isCorrect && !isOneChecked) isOneChecked = true;
     });
-    console.log(isOneChecked, isOptionsCompleted);
 
     return (
       question.type &&
