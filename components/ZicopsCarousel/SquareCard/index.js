@@ -23,6 +23,13 @@ const SquareCard = ({ image }) => {
               </p>
             </div>
             <div className={`${styles.cbDiscription}`}>{backSide.Discription}</div>
+            <div className={`${styles.category}`}>
+              <ul>
+                {/* <li>{courseData.category || " Category 1"}</li> */}
+                <li>{' Category that is longer'}</li>
+                <li>{' Category longer'}</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
