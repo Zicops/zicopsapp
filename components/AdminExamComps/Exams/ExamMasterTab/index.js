@@ -156,9 +156,11 @@ export default function ExamMasterTab() {
     if (loadConfigError) return setToastMsg({ type: 'danger', message: 'Config load error' });
   }, [loadMasterError, loadInsError, loadScheduleError, loadConfigError]);
 
+  // make exam master active tab if schedule is not selected
   useEffect(() => {
-    
-  },[])
+    if (tab === 'Schedule' && examTabData.schedule_type !== 'scheduled')
+      setTab(examMasterTabData[0].name);
+  }, [examTabData?.schedule_type]);
 
   return (
     <TabContainer
