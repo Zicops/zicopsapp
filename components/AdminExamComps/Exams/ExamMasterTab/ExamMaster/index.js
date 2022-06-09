@@ -160,7 +160,8 @@ export default function ExamMaster() {
           inputName: 'name',
           label: 'Exam Name:',
           placeholder: 'Enter name of the paper (Upto 60 characters)',
-          value: examTabData?.name
+          value: examTabData?.name,
+          maxLength: 60
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
@@ -172,7 +173,8 @@ export default function ExamMaster() {
           inputName: 'description',
           label: 'Description:',
           placeholder: 'Enter description (Upto 60 characters)',
-          value: examTabData.description
+          value: examTabData.description,
+          maxLength: 160
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />

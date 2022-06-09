@@ -40,7 +40,7 @@ export default function AddCustomSection({ editData }) {
           label: 'Description',
           placeholder: 'Enter description in less than 160 characters',
           value: customSection.description,
-          maxLength: 60
+          maxLength: 160
         }}
         changeHandler={(e) => changeHandler(e, customSection, setCustomSection)}
       />

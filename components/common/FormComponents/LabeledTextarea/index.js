@@ -8,7 +8,7 @@ export default function LabeledTextarea({ inputOptions, styleClass, changeHandle
     label,
     placeholder = ' ',
     value,
-    maxLength,
+    maxLength = 300,
     isRequired,
     isDisabled,
     isAutoComplete
