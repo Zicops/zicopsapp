@@ -40,6 +40,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
 
   return (
     <div className={`${styles.questionBankContainer}`}>
+      {/* bank name */}
       <LabeledInput
         styleClass={`${styles.inputField}`}
         inputOptions={{
@@ -47,11 +48,13 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           label: 'Name:',
           placeholder: 'Enter name of the course (Upto 60 characters)',
           value: questionBankData?.name,
-          isDisabled: !isPopUp
+          isDisabled: !isPopUp,
+          maxLength: 60
         }}
         changeHandler={(e) => changeHandler(e, questionBankData, setQuestionBankData)}
       />
 
+      {/* bank description */}
       <LabeledInput
         styleClass={styles.inputField}
         inputOptions={{
@@ -59,7 +62,8 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           label: 'Description:',
           placeholder: 'Enter name of the course (Upto 60 characters)',
           value: questionBankData?.description,
-          isDisabled: !isPopUp
+          isDisabled: !isPopUp,
+          maxLength: 160
         }}
         changeHandler={(e) => changeHandler(e, questionBankData, setQuestionBankData)}
       />

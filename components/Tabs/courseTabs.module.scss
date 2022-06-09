@@ -43,19 +43,19 @@
   }
 
   .tags {
-      width: max-content;
-      margin-bottom: 10px;
-      margin-right: 10px;
-      padding-left: 10px;
+    width: max-content;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
 
-      border: 1px solid $primary;
-      border-radius: 5px;
-      background-color: $primary;
-      white-space: nowrap;
-      color: $white;
-      button {
-        padding: 10px;
-      }
+    border: 1px solid $primary;
+    border-radius: 5px;
+    background-color: $primary;
+    white-space: nowrap;
+    color: $white;
+    button {
+      padding: 10px;
+    }
   }
 
   .bullets {
@@ -125,6 +125,11 @@
     &:last-child {
       margin-bottom: 0;
     }
+  }
+
+  .resourceType {
+    max-width: 250px;
+    margin: auto auto 20px;
   }
 
   .isChapterWiseLabelContainer {
@@ -375,9 +380,8 @@
 //     transform: rotate(45deg);
 //   }
 
-
 // course configuration
-.courseConfigContainer{
+.courseConfigContainer {
   display: flex;
 }
 

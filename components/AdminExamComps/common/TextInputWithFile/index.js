@@ -8,7 +8,8 @@ export default function TextInputWithFile({
   value,
   changeHandler,
   fileInputHandler,
-  fileNmae
+  fileNmae,
+  maxLength = 160
 }) {
   return (
     <>
@@ -18,6 +19,7 @@ export default function TextInputWithFile({
             type="text"
             name={inputName}
             value={value}
+            maxLength={maxLength}
             placeholder={`Enter ${type} in less than 160 characters`}
             onChange={changeHandler}
           />
