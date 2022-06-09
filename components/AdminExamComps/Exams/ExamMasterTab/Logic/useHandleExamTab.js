@@ -78,9 +78,9 @@ export default function useHandleExamTab() {
     newDateObj.setDate(dateObj.getDate());
     newDateObj.setMonth(dateObj.getMonth());
     newDateObj.setFullYear(dateObj.getFullYear());
-    newDateObj.setFullYear(timeObj.getHours());
-    newDateObj.setFullYear(timeObj.getMinutes());
-    newDateObj.setFullYear(timeObj.getSeconds());
+    newDateObj.setHours(timeObj.getHours());
+    newDateObj.setMinutes(timeObj.getMinutes());
+    newDateObj.setSeconds(timeObj.getSeconds());
 
     return Math.floor(newDateObj.getTime() / 1000) || 0;
   }
@@ -173,7 +173,7 @@ export default function useHandleExamTab() {
     };
 
     console.log(sendData);
-    if (examTabData?.exam_end_date && examTabData?.exam_end_time) {
+    if (examTabData.is_stretch && examTabData?.exam_end_date && examTabData?.exam_end_time) {
       sendData.end = getDateTime(examTabData.exam_end_date, examTabData.exam_end_time);
     }
 

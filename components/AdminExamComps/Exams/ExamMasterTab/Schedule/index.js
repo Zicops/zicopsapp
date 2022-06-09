@@ -1,10 +1,10 @@
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../helper/common.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
+import InputTimePicker from '../../../../common/FormComponents/InputTimePicker';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
-import TimePicker from '../../../../common/FormComponents/TimePicker';
 import InputDatePicker from '../../../../common/InputDatePicker';
 import styles from '../examMasterTab.module.scss';
 
@@ -19,16 +19,14 @@ export default function Schedule() {
         <InputDatePicker
           selectedDate={examTabData?.exam_start_date}
           changeHandler={(date) => {
-            console.log(date);
             setExamTabData({ ...examTabData, exam_start_date: date });
           }}
         />
       </section>
-
       {/* exam start time */}
       <section>
         <label htmlFor="examDate">Exam Start Time:</label>
-        <TimePicker
+        <InputTimePicker
           selected={examTabData?.exam_start_time}
           changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
         />
@@ -46,7 +44,6 @@ export default function Schedule() {
         isFiftyFifty={true}
         changeHandler={(e) => changeHandler(e, newCustomSection, setNewCustomSection, 'type')}
       /> */}
-
       {/* Exam Duration */}
       <LabeledInput
         isFiftyFifty={true}
@@ -60,7 +57,6 @@ export default function Schedule() {
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
-
       {/* buffer time */}
       <LabeledDropdown
         dropdownOptions={{
@@ -78,13 +74,12 @@ export default function Schedule() {
         isFiftyFifty={true}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'buffer_time')}
       />
-
       <div className={`${styles.stretchDuration}`}>
         <LabeledRadioCheckbox
           type="checkbox"
           label="Stretch Examination Conduct Duration"
           name="is_stretch"
-          value={examTabData?.is_stretch}
+          isChecked={examTabData?.is_stretch}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
       </div>
@@ -103,7 +98,7 @@ export default function Schedule() {
           {/* exam end time */}
           <section>
             <label htmlFor="examDate">Exam End Time:</label>
-            <TimePicker
+            <InputTimePicker
               selected={examTabData?.exam_end_time}
               changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_time: date })}
             />
