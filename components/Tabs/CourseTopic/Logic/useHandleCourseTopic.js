@@ -74,24 +74,30 @@ export default function useHandleCourseTopic() {
       return;
     }
 
-    loadModuleData({ variables: { course_id: courseId } }).then(({ data }) => {
-      const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence');
-      updateModuleData(sortedData);
+    loadModuleData({ variables: { course_id: courseId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence');
+        updateModuleData(sortedData);
 
-      if (errorModuleData) setToastMsg({ type: 'danger', message: 'Module Load Error' });
-    });
+        if (errorModuleData) setToastMsg({ type: 'danger', message: 'Module Load Error' });
+      }
+    );
 
-    loadChapterData({ variables: { course_id: courseId } }).then(({ data }) => {
-      updateChapterData(data.getCourseChapters);
+    loadChapterData({ variables: { course_id: courseId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        updateChapterData(data.getCourseChapters);
 
-      if (errorChapterData) setToastMsg({ type: 'danger', message: 'Chapter Load Error' });
-    });
+        if (errorChapterData) setToastMsg({ type: 'danger', message: 'Chapter Load Error' });
+      }
+    );
 
-    loadTopicData({ variables: { course_id: courseId } }).then(({ data }) => {
-      updateTopicData(data.getTopics);
+    loadTopicData({ variables: { course_id: courseId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        updateTopicData(data.getTopics);
 
-      if (errorTopicData) setToastMsg({ type: 'danger', message: 'Topic Load Error' });
-    });
+        if (errorTopicData) setToastMsg({ type: 'danger', message: 'Topic Load Error' });
+      }
+    );
   }, [courseId]);
 
   function togglePopUp(popUpName, value) {
