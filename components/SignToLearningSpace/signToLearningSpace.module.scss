@@ -1,0 +1,102 @@
+@import '../../styles/base.scss';
+
+.signToLearningSpace{
+
+  font-family: 'Open Sans';
+  background-image: url('../../public/images/starrySky2.png');
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  overflow: auto;
+  outline: 1px dashed lightgray;
+  flex: none;
+  height: 100vh;
+  width: 100vw;
+  flex-flow: column nowrap;
+  scroll-snap-type: y mandatory;
+  justify-content: center;
+  align-items: center;
+}
+// 040404
+.heading{
+    font-size: 25px;
+    color:$white;
+    font-weight: bold;
+    padding:30px 0px 13px 0px;
+}
+.sub_heading{
+    font-size: 22px;
+    color:$secondaryBlack;
+    font-weight: bold;
+
+}
+.text{
+    font-size: 16px;
+    color:$white;
+    font-weight: 500;
+    padding: 50px 0px;
+
+}
+.enter_code{
+     display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 30px;
+    //  input{
+    //     padding: 0;
+    //     margin: 0;
+    //     border: 0;
+    //     width: 20px;
+    //     margin:5px 10px;
+    //      color: #ffffff;
+    //      font-size: 27px;
+    //      text-align: center;
+    // }
+    // input:focus{
+    //     padding: 0;
+    //     border: 0;
+    //     border-bottom: 3px solid $white;
+    //     outline: 0;
+    //     box-shadow: none;
+       
+    // }
+    // .value{
+    //     width: 50px;
+    //     border-bottom: 3px solid $secondaryBlack ;
+    //     background-color: transparent;
+    // }
+    
+}
+//  .after {
+//     min-width: 80px;
+//     color: #ffffff;
+//     font-size: 17px;
+//     margin-left: 20px;
+//   }
+.login_button{
+ width: 400px;
+}
+.small_text{
+    font-size: 14px;
+    color:$secondaryBlack;
+    font-weight: bold;
+    padding: 15px 0px;
+}
+.small_text span a {
+    color: $primary;
+    text-decoration: underline;
+}
+.small_text span a:hover{
+    cursor: pointer;
+}
+.signInFooter{
+    display: flex;
+    justify-content: space-around;
+    width: 500px;
+    padding-top: 50px;
+    .foot_text{
+    font-size: 14px;
+    color:$white;
+
+    }
+}
