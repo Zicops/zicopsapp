@@ -7,6 +7,7 @@ import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '../../../../common/InputDatePicker';
 import styles from '../examMasterTab.module.scss';
+import {Box, Grid} from "@mui/material";
 
 export default function Schedule() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
@@ -25,11 +26,17 @@ export default function Schedule() {
       </section>
       {/* exam start time */}
       <section>
-        <label htmlFor="examDate">Exam Start Time:</label>
-        <InputTimePicker
-          selected={examTabData?.exam_start_time}
-          changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
-        />
+          <Grid container spacing={0} alignItems={'center'}>
+              <Grid item xs={7}>
+                  <label htmlFor="examDate">Exam Start Time:</label>
+              </Grid>
+              <Grid item xs={5}>
+                    <InputTimePicker
+                        selected={examTabData?.exam_start_time}
+                        changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
+                    />
+              </Grid>
+          </Grid>
       </section>
       {/* <LabeledDropdown
         dropdownOptions={{
@@ -96,13 +103,19 @@ export default function Schedule() {
           </section>
 
           {/* exam end time */}
-          <section>
-            <label htmlFor="examDate">Exam End Time:</label>
-            <InputTimePicker
-              selected={examTabData?.exam_end_time}
-              changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_time: date })}
-            />
-          </section>
+            <section>
+                <Grid container spacing={0} alignItems={'center'}>
+                    <Grid item xs={7}>
+                        <label htmlFor="examDate">Exam Start Time:</label>
+                    </Grid>
+                    <Grid item xs={5}>
+                        <InputTimePicker
+                            selected={examTabData?.exam_start_time}
+                            changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
+                        />
+                    </Grid>
+                </Grid>
+            </section>
         </>
       )}
     </div>
