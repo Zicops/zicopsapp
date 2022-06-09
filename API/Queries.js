@@ -285,6 +285,25 @@ export const GET_LATEST_QUESTION_BANK = gql`
   }
 `;
 
+export const GET_QUESTION_BANK_META = gql`
+  query getQPMeta($question_bank_id: [String]) {
+    getQBMeta(qb_ids: $question_bank_id) {
+      id
+      name
+      description
+      category
+      sub_category
+      created_at
+      updated_at
+      created_by
+      updated_by
+      is_active
+      is_default
+      owner
+    }
+  }
+`;
+
 export const GET_QUESTION_BANK_QUESTIONS = gql`
   query questionBankQuestions($question_bank_id: String) {
     getQuestionBankQuestions(question_bank_id: $question_bank_id) {
