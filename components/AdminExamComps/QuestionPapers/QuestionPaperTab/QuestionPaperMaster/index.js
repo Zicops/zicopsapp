@@ -32,7 +32,8 @@ export default function QuestionPaperMaster() {
           inputName: 'name',
           label: 'Question Paper Name:',
           placeholder: 'Enter name of the course (Upto 60 characters)',
-          value: questionPaperTabData.paperMaster?.name
+          value: questionPaperTabData.paperMaster?.name,
+          maxLength: 60
         }}
         changeHandler={(e) => handleInput(e)}
         styleClass={`${styles.inputField}`}
@@ -43,7 +44,8 @@ export default function QuestionPaperMaster() {
           inputName: 'description',
           label: 'Description:',
           placeholder: 'Enter name of the course (Upto 160 characters)',
-          value: questionPaperTabData.paperMaster?.description
+          value: questionPaperTabData.paperMaster?.description,
+          maxLength: 160
         }}
         changeHandler={(e) => handleInput(e)}
       />
