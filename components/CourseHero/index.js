@@ -21,7 +21,7 @@ export default function CourseHero({ isPreview = false }) {
   useEffect(() => {
     setVideoData(getVideoObject());
   }, []);
-  
+
   const ShowPlayer = () => {
     setVideoData({
       ...videoData,
@@ -50,7 +50,6 @@ export default function CourseHero({ isPreview = false }) {
     }
   }, [courseData]);
 
-  const provisionedBy = 'Zicops';
   const {
     name: courseTitle,
     benefits,
@@ -62,7 +61,8 @@ export default function CourseHero({ isPreview = false }) {
     mustFor,
     category,
     sub_category: subCategory,
-    duration
+    duration,
+    owner: provisionedBy
   } = courseContextData?.fullCourse;
 
   return (
@@ -71,8 +71,7 @@ export default function CourseHero({ isPreview = false }) {
       style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover' }}>
       <div className={`${style.gradient}`}>
         <span onClick={() => (isPreview ? '' : router?.back())}>
-          <Link
-            href={isPreview ? `/admin/courses/${courseContextData?.fullCourse.id}` : ''}>
+          <Link href={isPreview ? `/admin/courses/${courseContextData?.fullCourse.id}` : ''}>
             <a className={`${style.back_btn}`}>
               <img src="/images/bigarrowleft.png" alt="" />
             </a>
