@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import LearnerPageContainer from '../common/LearnerPageContainer';
 import LineText from '../common/LineText';
 import CourseResourceLoop from './CourseResourceLoop';
@@ -18,13 +19,13 @@ const CourseResourcesOpen = ({ isResourceShown, resources }) => {
         ) : (
           <>
             <div className={`${styles.gridThree}`}>
-              {resources.map((r) => (
-                <>
+              {resources.map((r, i) => (
+                <Fragment key={r.name + i}>
                   {prevType !== r.type && (
                     <h2 className={`${styles.resourceType}`}>{(prevType = r.type)}</h2>
                   )}
-                  <CourseResourceLoop resource={r} key={r.name + r.created_at + Math.random()} />
-                </>
+                  <CourseResourceLoop resource={r} />
+                </Fragment>
               ))}
             </div>
           </>
