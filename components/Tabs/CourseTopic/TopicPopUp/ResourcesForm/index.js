@@ -36,7 +36,7 @@ export default function ResourcesForm({ courseId, topicId }) {
       {isResourcesFormVisible && (
         <>
           <div className={`${styles.popUpFormContainer}`}>
-            <div className="center-element-with-flex w-100">
+            <div className={`center-element-with-flex ${styles.resourceType}`}>
               <LabeledDropdown
                 dropdownOptions={{
                   inputName: 'type',

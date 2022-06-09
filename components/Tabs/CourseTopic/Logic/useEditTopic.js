@@ -96,67 +96,69 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
     setIsEditTopicFormVisible(false);
 
     // topic content load
-    loadTopicContentData({ variables: { topic_id: topicId } }).then(({ data }) => {
-      const topicContentArray = [];
-      const topicVideoArray = [];
-      const topicSubtitleArray = [];
+    loadTopicContentData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        const topicContentArray = [];
+        const topicVideoArray = [];
+        const topicSubtitleArray = [];
 
-      topicContentData.toggleTopicContentForm(data.getTopicContent.length === 0);
-      data.getTopicContent.forEach((content, index) => {
-        const contentData = {
-          topicId: content.topicId,
-          id: content.id,
-          language: content.language,
-          type: content.type,
-          duration: content.duration,
-          is_default: content.is_default
-        };
-        const topicVideoData = {
-          courseId: content.courseId,
-          contentId: content.id,
-          contentUrl: content.contentUrl,
-          file: null
-        };
-
-        topicContentArray.push(contentData);
-        topicVideoArray.push(topicVideoData);
-
-        for (let i = 0; i < content?.subtitleUrl?.length; i++) {
-          const subtitle = content?.subtitleUrl[i];
-          topicSubtitleArray.push({
-            courseId: content.courseId,
+        topicContentData.toggleTopicContentForm(data.getTopicContent.length === 0);
+        data.getTopicContent.forEach((content, index) => {
+          const contentData = {
             topicId: content.topicId,
-            subtitleUrl: subtitle.url,
-            language: subtitle.language,
-            file: null
-          });
-        }
-
-        if (index === 0) {
-          // binge data
-          const startTimeMin = Math.floor(parseInt(content.startTime) / 60);
-          const startTimeSec = parseInt(content.startTime) - startTimeMin * 60;
-          const showTime = content.fromEndTime || content.nextShowTime;
-          const showTimeMin = Math.floor(parseInt(showTime) / 60);
-          const showTimeSec = parseInt(showTime) - showTimeMin * 60;
-
-          const bingeData = {
-            startTimeMin: startTimeMin,
-            startTimeSec: startTimeSec,
-            skipIntroDuration: content.skipIntroDuration,
-            showTimeMin: showTimeMin,
-            showTimeSec: showTimeSec,
-            isFromEnd: content.fromEndTime > 0
+            id: content.id,
+            language: content.language,
+            type: content.type,
+            duration: content.duration,
+            is_default: content.is_default
           };
-          updateBinge(bingeData);
-        }
-      });
-      updateTopicContent(topicContentArray);
-      updateTopicVideo(topicVideoArray);
-      updateTopicSubtitle(topicSubtitleArray);
+          const topicVideoData = {
+            courseId: content.courseId,
+            contentId: content.id,
+            contentUrl: content.contentUrl,
+            file: null
+          };
 
-      if (errorContentData) setToastMsg({ type: 'danger', message: 'Topic Content Load Error' });
-    });
+          topicContentArray.push(contentData);
+          topicVideoArray.push(topicVideoData);
+
+          for (let i = 0; i < content?.subtitleUrl?.length; i++) {
+            const subtitle = content?.subtitleUrl[i];
+            topicSubtitleArray.push({
+              courseId: content.courseId,
+              topicId: content.topicId,
+              subtitleUrl: subtitle.url,
+              language: subtitle.language,
+              file: null
+            });
+          }
+
+          if (index === 0) {
+            // binge data
+            const startTimeMin = Math.floor(parseInt(content.startTime) / 60);
+            const startTimeSec = parseInt(content.startTime) - startTimeMin * 60;
+            const showTime = content.fromEndTime || content.nextShowTime;
+            const showTimeMin = Math.floor(parseInt(showTime) / 60);
+            const showTimeSec = parseInt(showTime) - showTimeMin * 60;
+
+            const bingeData = {
+              startTimeMin: startTimeMin,
+              startTimeSec: startTimeSec,
+              skipIntroDuration: content.skipIntroDuration,
+              showTimeMin: showTimeMin,
+              showTimeSec: showTimeSec,
+              isFromEnd: content.fromEndTime > 0
+            };
+            updateBinge(bingeData);
+          }
+        });
+        updateTopicContent(topicContentArray);
+        updateTopicVideo(topicVideoArray);
+        updateTopicSubtitle(topicSubtitleArray);
+
+        if (errorContentData) setToastMsg({ type: 'danger', message: 'Topic Content Load Error' });
+      }
+    );
 
     // resources
     loadResourcesData({ variables: { topic_id: topicId } }).then(({ data }) => {

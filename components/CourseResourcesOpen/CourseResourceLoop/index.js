@@ -15,7 +15,13 @@ const CourseResourceLoop = ({ resource }) => {
         <div className={`${styles.data}`}>
           <div className={`${styles.data_title}`}>{resource.name}</div>
           <div className={`${styles.data_btn}`}>
-            <button onClick={() => setShowDoc(true)}>view</button>
+            {resource.type === 'LINK' ? (
+              <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                Visit Link
+              </a>
+            ) : (
+              <button onClick={() => setShowDoc(true)}>view</button>
+            )}
           </div>
         </div>
       </div>
