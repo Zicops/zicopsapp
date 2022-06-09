@@ -13,36 +13,50 @@ export default function useHandleDragDrop(courseContextData) {
 
   // load and set data
   useEffect(() => {
-    let subCategoriesForDraglist = [];
-    let subCategoriesForDroplist = [];
+    let newDraglist = [];
+    let newDroplist = [];
 
     if (data?.allSubCategories) {
       data.allSubCategories.forEach(function (e, i) {
-        subCategoriesForDraglist.push({ rank: i.toString(), name: e });
+        newDraglist.push({ dragOrder: i, name: e });
       });
 
-      // remove selected categories
-      subCategoriesForDraglist = subCategoriesForDraglist.filter((category) => {
-        const index = droplist.findIndex(
-          (selectedCategory) => selectedCategory.name === category.name
-        );
+      console.log(newDraglist);
 
-        return index < 0;
+      // remove selected categories
+      const selectedItems = [];
+      newDraglist = newDraglist.filter((item) => {
+        const index = droplist.findIndex((selected) => selected.name === item.name);
+        const isSelected = index < 0;
+        if (!isSelected) selectedItems.push(item);
+
+        return isSelected;
       });
 
       // remove falsy values
-      subCategoriesForDraglist = subCategoriesForDraglist.filter((c) => c.name);
-      subCategoriesForDroplist = droplist.filter((c) => c.name);
+      newDraglist = newDraglist.filter((c) => c.name);
+      newDroplist = selectedItems
+        ?.map((item) => {
+          const index = droplist.findIndex((selected) => selected.name === item.name);
+          const selectedItemOrder = droplist[index]?.rank;
 
-      updateDraglist(subCategoriesForDraglist);
-      updateDroplist(subCategoriesForDroplist);
+          return { name: item.name, dragOrder: item.dragOrder, rank: selectedItemOrder };
+        })
+        .sort((item1, item2) => item1.rank - item2.rank);
+
+      console.log(newDraglist, droplist, newDroplist, selectedItems);
+
+      updateDraglist(newDraglist);
+      updateDroplist(newDroplist);
     }
   }, []);
 
   useEffect(() => {
     updateCourseMaster({
       ...fullCourse,
-      sub_categories: droplist
+      sub_categories: droplist.map((item) => {
+        return { name: item.name, rank: item.rank };
+      })
     });
   }, [droplist]);
 
@@ -54,17 +68,18 @@ export default function useHandleDragDrop(courseContextData) {
 
     // return if the item is not dropped in the subcat box
     if (result.destination?.droppableId !== 'subcategories') return;
-    // return if selected items are 5
-    if (prevDroplist.length >= 5) return;
 
-    // rearrange the rank in subcat box
+    // rearrange the dragOrder in subcat box
     if (result.source.droppableId === 'subcategories') {
-      const [reorderedItem] = prevDroplist.splice(result.source.index, 1);
-      prevDroplist.splice(result.destination.index, 0, reorderedItem);
+      const [rerankedItem] = prevDroplist.splice(result.source.index, 1);
+      prevDroplist.splice(result.destination.index, 0, rerankedItem);
       prevDroplist.map((e, i) => (e.rank = i));
 
       return updateDroplist(prevDroplist);
     }
+
+    // return if selected items are 5
+    if (prevDroplist.length >= 5) return;
 
     // remove item from drag list and add in drop list
     if (result.destination?.droppableId === 'subcategories') {
@@ -81,13 +96,16 @@ export default function useHandleDragDrop(courseContextData) {
   }
 
   function removeItem(e) {
-    const [rank, name, index] = e.target.getAttribute('data-index').split('::');
+    const [dragOrder, name, index, rank] = e.target.getAttribute('data-index').split('::');
 
+    console.log(dragOrder, name, index, rank);
     const previousDroplist = [...droplist];
     const previousDraglist = [...draglist];
 
     previousDroplist.splice(index, 1);
-    previousDraglist.push({ rank, name });
+    previousDraglist.splice(dragOrder, 0, { dragOrder, name });
+
+    console.log(previousDraglist);
 
     updateDroplist(previousDroplist);
     updateDraglist(previousDraglist);
@@ -100,7 +118,8 @@ export default function useHandleDragDrop(courseContextData) {
     setSearchQuery(query);
   }
 
-  function highlightDroppable() {
+  function highlightDroppable(a, b, c) {
+    console.log(a, b, c);
     setIsDragOn(1);
   }
 

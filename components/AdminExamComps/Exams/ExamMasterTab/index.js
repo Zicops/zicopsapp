@@ -106,14 +106,15 @@ export default function ExamMasterTab() {
       });
       if (isError) return;
       const schData = schRes?.data?.getExamSchedule[0];
+
       schObj = {
         scheduleId: schData?.id || null,
-        exam_start_date: new Date(+schData?.Start),
-        exam_start_time: new Date(+schData?.Start),
-        exam_end_date: new Date(+schData?.End),
-        exam_end_time: new Date(+schData?.End),
+        exam_start_date: new Date(+schData?.Start * 1000),
+        exam_start_time: new Date(+schData?.Start * 1000),
+        exam_end_date: new Date(+schData?.End * 1000),
+        exam_end_time: new Date(+schData?.End * 1000),
         buffer_time: schData?.BufferTime || 0,
-        is_stretch: !!schData?.End,
+        is_stretch: !!+schData?.End,
         is_schedule_active: schData?.IsActive || false
       };
     }
@@ -154,6 +155,12 @@ export default function ExamMasterTab() {
     if (loadScheduleError) return setToastMsg({ type: 'danger', message: 'Schedule load error' });
     if (loadConfigError) return setToastMsg({ type: 'danger', message: 'Config load error' });
   }, [loadMasterError, loadInsError, loadScheduleError, loadConfigError]);
+
+  // make exam master active tab if schedule is not selected
+  useEffect(() => {
+    if (tab === 'Schedule' && examTabData.schedule_type !== 'scheduled')
+      setTab(examMasterTabData[0].name);
+  }, [examTabData?.schedule_type]);
 
   return (
     <TabContainer

@@ -90,6 +90,7 @@ export default function CourseDetails() {
               fileName: fileData.uploadCourseVideo,
               filePath: courseVideo?.file || fullCourse.previewVideo
             }}
+            acceptedTypes="video/*"
             inputName="uploadCourseVideo"
             isActive={fileData.uploadCourseVideo}
           />

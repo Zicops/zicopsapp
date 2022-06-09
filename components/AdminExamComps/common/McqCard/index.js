@@ -42,12 +42,13 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
   return (
     <>
       <div className={`${styles.mcq_container}`}>
-        {/* <span className={`${styles.qtitle}`}>QUESTION</span> */}
         <div className={`${styles.qcontent}`}>
           <p className={`${styles.span_element}`}>
             {/* TODO : Add difficulty lebel */}
             <span>Q.</span>
             {questionData?.description}
+
+            <span>Difficulty Level: {questionData?.difficulty || 0}</span>
           </p>
 
           {imageTypes.includes(questionData?.attachmentType) && (

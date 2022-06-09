@@ -102,7 +102,8 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                   description: params.row.Description,
                   hint: params.row.Hint,
                   attachment: params.row.Attachment,
-                  attachmentType: params.row.AttachmentType
+                  attachmentType: params.row.AttachmentType,
+                  difficulty: params.row.Difficulty
                 });
                 udpatePopUpState(true);
               }}>
