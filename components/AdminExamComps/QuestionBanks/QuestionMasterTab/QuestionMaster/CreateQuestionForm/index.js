@@ -122,6 +122,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
                   <InputWithCheckbox
                     key={index}
                     labelCount={index + 1}
+                    acceptedTypes={imageTypes.join(', ')}
                     isCorrectHandler={(e) => {
                       optionInputHandler(e, index);
                     }}
