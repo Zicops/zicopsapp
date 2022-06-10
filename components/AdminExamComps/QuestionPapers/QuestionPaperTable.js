@@ -30,9 +30,9 @@ export default function QuestionPaperTable({ isEdit = false }) {
       flex: 1.5
     },
     {
-      field: 'type',
+      field: 'Category',
       headerClassName: 'course-list-header',
-      headerName: 'Type',
+      headerName: 'Category',
       flex: 1
     },
     {
