@@ -27,10 +27,10 @@ export default function Schedule() {
       {/* exam start time */}
       <section>
           <Grid container spacing={0} alignItems={'center'}>
-              <Grid item xs={7}>
+              <Grid item xs={8}>
                   <label htmlFor="examDate">Exam Start Time:</label>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={4}>
                     <InputTimePicker
                         selected={examTabData?.exam_start_time}
                         changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
@@ -105,10 +105,10 @@ export default function Schedule() {
           {/* exam end time */}
             <section>
                 <Grid container spacing={0} alignItems={'center'}>
-                    <Grid item xs={7}>
+                    <Grid item xs={8}>
                         <label htmlFor="examDate">Exam Start Time:</label>
                     </Grid>
-                    <Grid item xs={5}>
+                    <Grid item xs={4}>
                         <InputTimePicker
                             selected={examTabData?.exam_start_time}
                             changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
