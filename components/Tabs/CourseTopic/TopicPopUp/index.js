@@ -18,6 +18,7 @@ import BingeForm from './BingeForm';
 import ResourcesForm from './ResourcesForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentView from './TopicContentView';
+import QuizForm from './QuizForm';
 
 export default function TopicPopUp({
   addTopicData = {},
@@ -63,9 +64,7 @@ export default function TopicPopUp({
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
     closeBtnObj.name = 'Design Later';
     closeBtnObj.handleClick = () => {
-      const shouldCloseModal = confirm(
-        'Are you sure? Your unsaved data will be lost!'
-      ).valueOf();
+      const shouldCloseModal = confirm('Are you sure? Your unsaved data will be lost!').valueOf();
 
       if (shouldCloseModal) {
         closeModal();
@@ -157,7 +156,7 @@ export default function TopicPopUp({
                 }}
               />
 
-              {/* binge accordion */}
+              {/* subtitles accordion */}
               <Accordion
                 title="Subtitles"
                 content={
@@ -167,8 +166,20 @@ export default function TopicPopUp({
                   />
                 }
               />
+
+              {/* binge */}
               <Accordion title="Binge it" content={<BingeForm topicVideo={topicVideo} />} />
-              <Accordion title="Quiz" content={<Quiz />} />
+
+              {/* quiz */}
+              <Accordion
+                title="Quiz"
+                content={
+                  <QuizForm topicId={editTopic?.id || ''} courseId={editTopic?.courseId || ''} />
+                }
+              />
+              {/* <Accordion title="Quiz" content={<Quiz />} /> */}
+
+              {/* resources */}
               <Accordion
                 title="Resources"
                 content={

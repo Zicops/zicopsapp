@@ -1,5 +1,5 @@
 import { truncateToN } from '../../../../helper/common.helper';
-import styles from './textInputWithFile.module.scss';
+import styles from '../inputWithCheckbox.module.scss';
 
 export default function TextInputWithFile({
   inputName,
@@ -13,7 +13,7 @@ export default function TextInputWithFile({
 }) {
   return (
     <>
-      <div className={`w-100 ${styles.container}`}>
+      <div className={`w-100 ${styles.inputFileContainer}`}>
         <div className={styles.box}>
           <input
             type="text"

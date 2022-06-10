@@ -1,12 +1,12 @@
 import { changeHandler } from '../../../../../../helper/common.helper';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
 import LabeledTextarea from '../../../../../common/FormComponents/LabeledTextarea';
+import InputWithCheckbox from '../../../../../common/InputWithCheckbox';
+import TextInputWithFile from '../../../../../common/InputWithCheckbox/TextInputWithFile';
 import Accordion from '../../../../../small/Accordion';
-import TextInputWithFile from '../../../../common/TextInputWithFile';
-import { imageTypes } from '../../../Logic/questionBank.helper';
 import McqCard from '../../../../common/McqCard';
+import { imageTypes } from '../../../Logic/questionBank.helper';
 import styles from '../../questionMasterTab.module.scss';
-import InputWithCheckbox from './InputWithCheckbox';
 
 export default function CreateQuestionForm({ data, isEdit }) {
   const {
@@ -122,10 +122,16 @@ export default function CreateQuestionForm({ data, isEdit }) {
                   <InputWithCheckbox
                     key={index}
                     labelCount={index + 1}
+                    acceptedTypes={imageTypes.join(', ')}
                     isCorrectHandler={(e) => {
                       optionInputHandler(e, index);
                     }}
-                    optionData={optionData[index]}
+                    optionData={{
+                      fileName: optionData[index]?.file?.name || optionData[index]?.attachment,
+                      inputValue: optionData[index]?.description,
+                      inputName: 'description',
+                      isCorrect: optionData[index]?.isCorrect
+                    }}
                     inputChangeHandler={(e) => optionInputHandler(e, index)}
                     fileInputHandler={(e) => optionInputHandler(e, index)}
                   />

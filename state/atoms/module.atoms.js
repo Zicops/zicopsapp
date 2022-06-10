@@ -40,6 +40,11 @@ export const ResourcesAtom = atom({
   default: []
 });
 
+export const QuizAtom = atom({
+  key: 'Quiz',
+  default: []
+});
+
 export const isLoadingAtom = atom({
   key: 'isLoading',
   default: false
@@ -138,5 +143,27 @@ export function getResourcesObject(data) {
     type: data.type || '',
     url: data.url || null,
     file: data.file || null
+  };
+}
+
+export function getQuizObject(data) {
+  return {
+    courseId: data.courseId,
+    topicId: data.topicId,
+    name: data.name || '',
+    isMandatory: data.isMandatory || false,
+    formType: data.formType || null,
+    type: data.type || 'MCQ',
+
+    question: data.question || '',
+    questionFile: data.questionFile || null,
+
+    options: [
+      Array(4).fill({
+        option: data.option || '',
+        file: data.file || null,
+        isCorrect: data.isCorrect || false
+      })
+    ]
   };
 }

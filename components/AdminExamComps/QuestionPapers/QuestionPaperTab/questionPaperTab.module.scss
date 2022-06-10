@@ -80,7 +80,7 @@
     width: 50%;
 
     &:last-child {
-      label{
+      label {
         padding-left: 15%;
       }
     }
@@ -94,5 +94,24 @@
 
   .footerBtns {
     text-align: end;
+  }
+}
+
+.topbarTable {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% - 40px);
+  margin: auto 30px;
+
+  p {
+    color: $primary;
+    font-weight: 600;
+  }
+
+  & > div {
+    input {
+      width: 100%;
+    }
   }
 }
