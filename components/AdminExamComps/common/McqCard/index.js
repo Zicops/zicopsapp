@@ -48,7 +48,15 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
             <span>Q.</span>
             {questionData?.description}
 
-            <span>Difficulty Level: {questionData?.difficulty || 0}</span>
+            {questionData?.question_marks ? (
+              <>
+                <span>Marks: {questionData?.question_marks || 0}</span>
+              </>
+            ) : (
+              <>
+                <span>Difficulty Level: {questionData?.difficulty || 0}</span>
+              </>
+            )}
           </p>
 
           {imageTypes.includes(questionData?.attachmentType) && (

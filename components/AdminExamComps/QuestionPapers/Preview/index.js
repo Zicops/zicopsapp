@@ -153,7 +153,8 @@ export default function Preview({ masterData }) {
             attachment: q.Attachment,
             attachmentType: q.AttachmentType,
             hint: q.Hint,
-            qbmId: q.QbmId
+            qbmId: q.QbmId,
+            question_marks: mapping?.question_marks
           };
         });
 
@@ -201,7 +202,7 @@ export default function Preview({ masterData }) {
       totalMarks += mapping?.question_marks * questions?.length || 0;
     }
 
-    // console.log(data, sectionData, mappedQb, questionAndOptions);
+    // console.log(data, sectionData, mappedQb, totalQuestions, totalMarks);
     setData({ ...data, sections: sectionData, totalQuestions, totalMarks });
   }, [questionPaperId]);
 

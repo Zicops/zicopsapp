@@ -3,7 +3,6 @@ import McqCard from '../../../common/McqCard';
 import styles from './questionSection.module.scss';
 
 const QuestionSection = ({ data }) => {
-  console.log(data);
   return (
     <>
       <div className={`${styles.sectionContainer}`}>

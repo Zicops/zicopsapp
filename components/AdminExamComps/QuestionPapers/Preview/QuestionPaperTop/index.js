@@ -31,7 +31,7 @@ export default function QuestionPaperTop({ data }) {
             Total Marks: <span>{data?.totalMarks}</span>
           </p>
           <p>
-            Section Wise: <span>{data.section_wise ? 'True' : 'False'}</span>
+            Section Wise: <span>{data.section_wise ? 'Yes' : 'No'}</span>
           </p>
         </div>
       </div>
