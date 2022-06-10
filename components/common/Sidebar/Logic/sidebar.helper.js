@@ -47,3 +47,14 @@ export const examSidebarData = [
     link: '/admin/exams/my-exams'
   }
 ];
+
+export const userSideBarData = [
+  {
+    title: 'My Users',
+    link: '/admin/user/my-users'
+  },
+  {
+    title: 'User Roles',
+    link: '/admin/user/user-roles'
+  }
+];
