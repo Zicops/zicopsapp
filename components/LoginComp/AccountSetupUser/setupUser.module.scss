@@ -1,0 +1,80 @@
+@import '../../../styles/base.scss';
+
+.container{
+  width: 100%;
+
+  .labeledInputWrapper {
+    display: flex;
+    align-items: baseline;
+    label {
+      width: 25%;
+      color: $white;
+    }
+
+    .upload{
+      width: 75%;
+      display: flex;
+      align-items: center;
+
+      div{
+        color: #ACACAC;
+        font-size: 12px;
+        margin-left: 16px;
+      }
+    }
+
+    .navigation{
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .emailContainer{
+      width: 75%;
+      padding: 10px;
+      border: 2px solid $darkThree;
+      background-color: $darkTwo;
+      display: flex;
+      align-items: center;
+
+    }
+
+    .emailContainer_focus{
+      width: 75%;
+      padding: 10px;
+      background-color: $darkTwo;
+      display: flex;
+      align-items: center;
+      border: 2px solid $primary;
+      box-shadow: 0 0 10px 0 $primary;
+      outline: 0;
+      color: $white;
+    }
+
+    .code{
+      width: 70px;
+      border-right: 1px solid #747474;
+    }
+    .number{
+      padding-left: 10px;
+    }
+
+    input {
+      outline: 0;
+      border: 0;
+      background-color: $darkTwo;
+      color: $white;
+      font-size: 13px;
+      font-family: 'Open Sans';
+
+      //&:not(:placeholder-shown) {
+      //  /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+      //  color: $white;
+      //  border: 2px solid $primary;
+      //}
+      //&:focus {
+      //}
+    }
+  }
+}
