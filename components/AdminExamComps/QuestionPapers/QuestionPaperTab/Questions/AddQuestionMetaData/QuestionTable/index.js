@@ -1,13 +1,29 @@
+import { useEffect, useState } from 'react';
 import { getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.helper';
+import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '../../../../../../common/ZicopsTable';
 import { imageTypes } from '../../../../../QuestionBanks/Logic/questionBank.helper';
+import styles from '../../../questionPaperTab.module.scss';
 
 export default function QuestionTable({
   qbQuestions,
+  selectedQb,
   handleSelectedQuestions,
   selectedQuestionIds
 }) {
+  const [searchQuery, setSearchQuery] = useState(null);
+  const [allQb, setAllQb] = useState(qbQuestions);
+  const [filteredQb, setFilteredQb] = useState(qbQuestions);
+
+  useEffect(() => {
+    if (!searchQuery) return;
+
+    setFilteredQb(
+      allQb.filter((qb) => qb?.Description?.toLowerCase().includes(searchQuery?.toLowerCase()))
+    );
+  }, [searchQuery]);
+
   const columns = [
     {
       field: 'Description',
@@ -43,9 +59,22 @@ export default function QuestionTable({
 
   return (
     <>
+      <div className={styles.topbarTable}>
+        <p className="w-100">{selectedQb?.name}</p>
+
+        <LabeledInput
+          inputOptions={{
+            inputName: 'qbFilter',
+            placeholder: 'Search Question Bank',
+            value: searchQuery
+          }}
+          changeHandler={({ target: { value } }) => setSearchQuery(value)}
+          isFiftyFifty={true}
+        />
+      </div>
       <ZicopsTable
         columns={columns}
-        data={qbQuestions}
+        data={filteredQb}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="50vh"
