@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import useSaveCourse from '../../Logic/useSaveCourse';
-import { nextBtn } from '../../tabs.module.scss';
+import { nextBtn } from '../../courseTabs.module.scss';
 import { useContext } from 'react';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 

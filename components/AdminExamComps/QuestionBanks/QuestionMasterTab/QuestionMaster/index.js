@@ -25,7 +25,7 @@ export default function QuestionMaster({ isEdit, data }) {
             <div className={`${styles.radioBoxIcon}`}>
               <img src="/images/svg/upload-cloud-line.svg" />
             </div>
-            <div className={`${styles.radioBoxText}`}>Upload Question</div>
+            <div className={`${styles.radioBoxText}`}>Upload Questions</div>
           </div>
           {/* <LabeledRadioCheckbox
             type="radio"

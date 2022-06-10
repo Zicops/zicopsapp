@@ -2,11 +2,11 @@ import { changeHandler } from '../../../../../../helper/common.helper';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
 import LabeledTextarea from '../../../../../common/FormComponents/LabeledTextarea';
 import Accordion from '../../../../../small/Accordion';
-import TextInputWithFile from '../../../../common/TextInputWithFile';
 import { imageTypes } from '../../../Logic/questionBank.helper';
 import McqCard from '../../../../common/McqCard';
 import styles from '../../questionMasterTab.module.scss';
-import InputWithCheckbox from './InputWithCheckbox';
+import TextInputWithFile from '../../../../../common/InputWithCheckbox/TextInputWithFile';
+import InputWithCheckbox from '../../../../../common/InputWithCheckbox';
 
 export default function CreateQuestionForm({ data, isEdit }) {
   const {
@@ -125,7 +125,11 @@ export default function CreateQuestionForm({ data, isEdit }) {
                     isCorrectHandler={(e) => {
                       optionInputHandler(e, index);
                     }}
-                    optionData={optionData[index]}
+                    optionData={{
+                      fileName: optionData[index]?.file?.name || optionData[index]?.attachment,
+                      inputValue: optionData[index]?.description,
+                      inputName: 'description'
+                    }}
                     inputChangeHandler={(e) => optionInputHandler(e, index)}
                     fileInputHandler={(e) => optionInputHandler(e, index)}
                   />

@@ -1,14 +1,16 @@
-import TextInputWithFile from '../../../../../common/TextInputWithFile';
-import { imageTypes } from '../../../../Logic/questionBank.helper';
-import styles from '../../../questionMasterTab.module.scss';
+import styles from './inputWithCheckbox.module.scss';
+import TextInputWithFile from './TextInputWithFile';
 
 export default function InputWithCheckbox({
   labelCount,
   isCorrectHandler,
   optionData,
   inputChangeHandler,
-  fileInputHandler
+  fileInputHandler,
+  acceptedTypes
 }) {
+  const { fileName, inputValue, inputName } = optionData;
+
   return (
     <>
       <div className={`${styles.optionContainer}`}>
@@ -30,10 +32,10 @@ export default function InputWithCheckbox({
         </div>
         <TextInputWithFile
           type="option"
-          fileNmae={optionData?.file?.name || optionData?.attachment}
-          value={optionData?.description}
-          inputName="description"
-          accept={imageTypes.join(', ')}
+          fileNmae={fileName}
+          value={inputValue}
+          inputName={inputName}
+          accept={acceptedTypes}
           fileInputHandler={fileInputHandler}
           changeHandler={inputChangeHandler}
           text="Enter anser in less than 160 characters"
