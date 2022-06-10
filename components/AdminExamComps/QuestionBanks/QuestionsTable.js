@@ -39,10 +39,6 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
     });
   }, [questionBankId]);
 
-  useEffect(() => {
-    console.log(qbQuestions);
-  }, [qbQuestions]);
-
   const columns = [
     {
       field: 'Description',

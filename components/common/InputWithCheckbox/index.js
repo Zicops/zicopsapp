@@ -9,7 +9,7 @@ export default function InputWithCheckbox({
   fileInputHandler,
   acceptedTypes
 }) {
-  const { fileName, inputValue, inputName } = optionData;
+  const { fileName, inputValue, inputName, isCorrect } = optionData;
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function InputWithCheckbox({
             <label className={styles.checkboxContainer}>
               <input
                 type="checkbox"
-                checked={optionData?.isCorrect}
+                checked={isCorrect}
                 name={labelCount}
                 onChange={isCorrectHandler}
               />

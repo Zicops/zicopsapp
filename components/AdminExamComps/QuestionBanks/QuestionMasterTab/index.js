@@ -19,7 +19,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
   useEffect(async () => {
     if (!editQuestionData) return;
 
-    let allOptions = Array(4).fill({});
+    let allOptions = [];
     // set questions
     const question = {
       id: editQuestionData.id,
@@ -48,6 +48,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
         });
       });
     }
+    if (!allOptions?.length) setToastMsg({ type: 'danger', message: 'No Options Available' });
 
     setQuestionData({
       question: question,
