@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Select from 'react-select';
 import { useRecoilValue } from 'recoil';
 import { SiteMapAtom } from '../../../state/atoms/sitemap.atom';
@@ -8,6 +9,7 @@ import styles from './missionControl.module.scss';
 export default function MissionControlHeader() {
   const [showSearch, setShowSearch] = useState(false);
   const siteMap = useRecoilValue(SiteMapAtom);
+  const router = useRouter();
 
   const customStyles = {
     container: (provided, state) => ({
@@ -116,14 +118,14 @@ export default function MissionControlHeader() {
                   return option.label?.toLowerCase()?.includes(searchQuery?.toLowerCase().trim());
                 }}
                 placeholder="Search"
-                // onChange={changeHandler}
+                onChange={(e) => router.push(e.value)}
                 className="w-100"
                 styles={customStyles}
                 isSearchable={true}
                 isClearable={false}
                 onBlur={() => setShowSearch(false)}
                 ref={(elem) => elem?.focus()}
-                noOptionsMessage={() => 'Start Typing'}
+                noOptionsMessage={({ inputValue }) => (inputValue ? 'No Options' : 'Start Typing')}
               />
             )}
 
