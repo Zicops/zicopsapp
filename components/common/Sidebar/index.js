@@ -6,33 +6,53 @@ import styles from './sidebar.module.scss';
 export default function Sidebar({ sidebarItemsArr }) {
   const router = useRouter();
   return (
-    <div className={styles.sidebar}>
-      <div className={styles.course_management}>
-        <img src={ sidebarItemsArr.image || "/images/sidebar_img.png" } className={styles.sidebar_img} alt="" />
-        <h3>{sidebarItemsArr.heading || "Admin Management"}</h3>
+    <>
+      <div className={styles.sidebar}>
+        <div className={styles.course_management}>
+          <img
+            src={sidebarItemsArr.image || '/images/sidebar_img.png'}
+            className={styles.sidebar_img}
+            alt=""
+          />
+          <h3>{sidebarItemsArr.heading || 'Admin Management'}</h3>
+        </div>
+
+        <div className={styles.sidebar_menu}>
+          <ul>
+            {sidebarItemsArr.data.map((val, key) => {
+              const currentUrl = router.pathname.split('/')[3];
+              const pathUrl = val.link.split('/');
+              const isActive = currentUrl === pathUrl[pathUrl.length - 1];
+
+              return (
+                <Link href={val.link} key={key} className="row">
+                  <a
+                    className={isActive ? styles.active : ''}
+                    onClick={() => {
+                      router.pathname = val.link;
+                    }}>
+                    {val.title}
+                  </a>
+                </Link>
+              );
+            })}
+          </ul>
+        </div>
       </div>
-
-      <div className={styles.sidebar_menu}>
+      <div className={styles.sidebar_footer_menu}>
         <ul>
-          {sidebarItemsArr.data.map((val, key) => {
-            const currentUrl = router.pathname.split('/')[3];
-            const pathUrl = val.link.split('/');
-            const isActive = currentUrl === pathUrl[pathUrl.length - 1];
-
-            return (
-              <Link href={val.link} key={key} className="row">
-                <a
-                  className={isActive ? styles.active : ''}
-                  onClick={() => {
-                    router.pathname = val.link;
-                  }}>
-                  {val.title}
-                </a>
-              </Link>
-            );
-          })}
+          <Link href="/admin" className="row">
+            <a
+              className=""
+              // onClick={() => {
+              //   hre;
+              // }}
+            >
+              <span>Back to Home</span>
+            </a>
+          </Link>
         </ul>
       </div>
-    </div>
+    </>
   );
 }
