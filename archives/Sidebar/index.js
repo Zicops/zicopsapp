@@ -4,13 +4,13 @@ import styles from '../../styles/Sidebar.module.css';
 import { sidebarData } from './Logic/sidebar.helper';
 
 // move the styles in sidebar.module.scss in this folder
-export default function Sidebar() {
+export default function Sidebar({image, header}) {
   const router = useRouter();
   return (
     <div className={styles.sidebar}>
       <div className={styles.course_management}>
-        <img src="/images/sidebar_img.png" className={styles.sidebar_img} alt="" />
-        <h3>Course Management</h3>
+        <img src={image || '/images/sidebar_img.png'} className={styles.sidebar_img} alt="" />
+        <h3>{header || "Zicops Management"}</h3>
       </div>
 
       <div className={styles.sidebar_menu}>
@@ -25,7 +25,15 @@ export default function Sidebar() {
                 onClick={() => {
                   router.pathname = val.link;
                 }}>
-                <a className={router.pathname == val.link || (router.route.includes('admin/courses') && val.link == '/admin/my-courses') ? styles.active : ''}>{val.title}</a>
+                <a
+                  className={
+                    router.pathname == val.link ||
+                    (router.route.includes('admin/courses') && val.link == '/admin/my-courses')
+                      ? styles.active
+                      : ''
+                  }>
+                  {val.title}
+                </a>
               </Link>
             );
           })}

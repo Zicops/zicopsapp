@@ -9,20 +9,29 @@
     float: left;
     z-index: 3;
     box-shadow: 2px 0px 0px 0px #888888;
-    /* position: fixed; */
-    padding-top: 100px;
+    position: relative;
+    padding-top: 80px;
     z-index: 5;
 }
 
-.sidebar_img {
-    border: 2px solid #63c0c0;
-    border-radius: 50%;
-}
+
 
 .course_management {
     padding: 30px;
+    margin-bottom: 20px;
+    .sidebar_img {
+        border: 2px solid #63c0c0;
+        border-radius: 50%;
+        height: 80px;
+        width: 80px;
+        padding: 10px;
+    }
 }
-
+.sidebar_menu{
+    position: absolute;
+    width: 100%;
+    top: 280px;
+}
 .sidebar_menu ul {
     list-style-type: none;
     margin: 0;
