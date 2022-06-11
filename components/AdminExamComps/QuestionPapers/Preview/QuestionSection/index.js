@@ -28,7 +28,7 @@ const QuestionSection = ({ data }) => {
                 <div className={`${styles.questionTop}`}>
                   <p>{section?.description}</p>
                   <p>
-                    Questions: <span>{section?.total_questions}</span>
+                    Questions: <span>{section?.questions?.length}</span>
                   </p>
                 </div>
 

@@ -19,6 +19,7 @@ import ResourcesForm from './ResourcesForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentView from './TopicContentView';
 import QuizForm from './QuizForm';
+import AssessmentForm from './AssessmentForm';
 
 export default function TopicPopUp({
   addTopicData = {},
@@ -106,7 +107,6 @@ export default function TopicPopUp({
               }}
             />
 
-            {/* add topic content form section */}
             <div className={`${styles.topicContentContainer}`}>
               {/* edit topic form */}
               <div ref={editTopicFormRef}>
@@ -126,69 +126,79 @@ export default function TopicPopUp({
                 )}
               </div>
 
-              {/* topic content title */}
-              <div className={`${styles.titleWithLineAtSide}`}>Content</div>
+              {editTopic?.type === 'Assessment' && <AssessmentForm topicData={editTopic} />}
 
-              <div ref={addTopicContentRef}>
-                {isTopicContentFormVisible && (
-                  <AddTopicContentForm
+              {/* add topic content form section */}
+              {editTopic?.type === 'Content' && (
+                <>
+                  {/* topic content title */}
+                  <div className={`${styles.titleWithLineAtSide}`}>Content</div>
+
+                  <div ref={addTopicContentRef}>
+                    {isTopicContentFormVisible && (
+                      <AddTopicContentForm
+                        topicContent={filteredTopicContent}
+                        setNewTopicContent={setNewTopicContent}
+                        data={addTopicContentLocalStates}
+                        inputHandlers={inputHandlers}
+                        addNewTopicContent={addNewTopicContent}
+                        isAddTopicContentReady={isAddTopicContentReady}
+                      />
+                    )}
+                  </div>
+
+                  {/* all the topic content added and saved */}
+                  <TopicContentView
                     topicContent={filteredTopicContent}
-                    setNewTopicContent={setNewTopicContent}
-                    data={addTopicContentLocalStates}
-                    inputHandlers={inputHandlers}
-                    addNewTopicContent={addNewTopicContent}
-                    isAddTopicContentReady={isAddTopicContentReady}
+                    toggleTopicContentForm={() => {
+                      if (!isTopicContentFormVisible)
+                        addTopicContentRef.current?.scrollIntoView({
+                          behavior: 'smooth',
+                          block: 'center',
+                          inline: 'center'
+                        });
+                      toggleTopicContentForm();
+                    }}
                   />
-                )}
-              </div>
 
-              {/* all the topic content added and saved */}
-              <TopicContentView
-                topicContent={filteredTopicContent}
-                toggleTopicContentForm={() => {
-                  if (!isTopicContentFormVisible)
-                    addTopicContentRef.current?.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'center',
-                      inline: 'center'
-                    });
-                  toggleTopicContentForm();
-                }}
-              />
-
-              {/* subtitles accordion */}
-              <Accordion
-                title="Subtitles"
-                content={
-                  <SubtitleForm
-                    topicId={editTopic?.id || ''}
-                    courseId={editTopic?.courseId || ''}
+                  {/* subtitles accordion */}
+                  <Accordion
+                    title="Subtitles"
+                    content={
+                      <SubtitleForm
+                        topicId={editTopic?.id || ''}
+                        courseId={editTopic?.courseId || ''}
+                      />
+                    }
                   />
-                }
-              />
 
-              {/* binge */}
-              <Accordion title="Binge it" content={<BingeForm topicVideo={topicVideo} />} />
+                  {/* binge */}
+                  <Accordion title="Binge it" content={<BingeForm topicVideo={topicVideo} />} />
 
-              {/* quiz */}
-              <Accordion
-                title="Quiz"
-                content={
-                  <QuizForm topicId={editTopic?.id || ''} courseId={editTopic?.courseId || ''} />
-                }
-              />
-              {/* <Accordion title="Quiz" content={<Quiz />} /> */}
-
-              {/* resources */}
-              <Accordion
-                title="Resources"
-                content={
-                  <ResourcesForm
-                    topicId={editTopic?.id || ''}
-                    courseId={editTopic?.courseId || ''}
+                  {/* quiz */}
+                  <Accordion
+                    title="Quiz"
+                    content={
+                      <QuizForm
+                        topicId={editTopic?.id || ''}
+                        courseId={editTopic?.courseId || ''}
+                      />
+                    }
                   />
-                }
-              />
+                  {/* <Accordion title="Quiz" content={<Quiz />} /> */}
+
+                  {/* resources */}
+                  <Accordion
+                    title="Resources"
+                    content={
+                      <ResourcesForm
+                        topicId={editTopic?.id || ''}
+                        courseId={editTopic?.courseId || ''}
+                      />
+                    }
+                  />
+                </>
+              )}
             </div>
           </>
         )}
