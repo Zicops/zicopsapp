@@ -38,20 +38,13 @@ export default function Sidebar({ sidebarItemsArr }) {
             })}
           </ul>
         </div>
-      </div>
       <div className={styles.sidebar_footer_menu}>
         <ul>
           <Link href="/admin" className="row">
-            <a
-              className=""
-              // onClick={() => {
-              //   hre;
-              // }}
-            >
-              <span>Back to Home</span>
-            </a>
+            <a><span>Back to Home</span></a>
           </Link>
         </ul>
+      </div>
       </div>
     </>
   );

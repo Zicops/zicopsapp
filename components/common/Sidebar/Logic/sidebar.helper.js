@@ -68,13 +68,17 @@ export const examSidebarData = {
   ]
 };
 
-export const userSideBarData = [
-  {
-    title: 'My Users',
-    link: '/admin/user/my-users'
-  },
-  {
-    title: 'User Roles',
-    link: '/admin/user/user-roles'
-  }
-];
+export const userSideBarData = {
+  image: '/images/UserManagement.png',
+  heading: 'User Management',
+  data: [
+    {
+      title: 'My Users',
+      link: '/admin/user/my-users'
+    },
+    {
+      title: 'User Roles',
+      link: '/admin/user/user-roles'
+    }
+  ]
+};
