@@ -202,7 +202,7 @@ export default function Preview({ masterData }) {
       totalMarks += mapping?.question_marks * questions?.length || 0;
     }
 
-    // console.log(data, sectionData, mappedQb, totalQuestions, totalMarks);
+    console.log(data, sectionData, mappedQb, totalQuestions, totalMarks);
     setData({ ...data, sections: sectionData, totalQuestions, totalMarks });
   }, [questionPaperId]);
 
