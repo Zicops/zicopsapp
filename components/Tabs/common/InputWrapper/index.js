@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../tabs.module.scss';
+import styles from '../../courseTabs.module.scss';
 
 export default function InputWrapper({ inputName, label, children, isFullWidth = true }) {
   return (

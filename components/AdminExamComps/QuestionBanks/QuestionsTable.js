@@ -9,10 +9,10 @@ import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
 import { imageTypes } from './Logic/questionBank.helper';
-import McqCard from './McqCard';
+import McqCard from '../common/McqCard';
 
 export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
-  const [loadQBQuestions, { error: errorQBQuestionsData }] = useLazyQuery(
+  const [loadQBQuestions, { error: errorQBQuestionsData, refetch }] = useLazyQuery(
     GET_QUESTION_BANK_QUESTIONS,
     { client: queryClient }
   );
@@ -28,7 +28,10 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
 
   // load table data
   useEffect(() => {
-    loadQBQuestions({ variables: { question_bank_id: questionBankId } }).then(({ data }) => {
+    loadQBQuestions({
+      variables: { question_bank_id: questionBankId },
+      fetchPolicy: 'no-cache'
+    }).then(({ data }) => {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
@@ -95,7 +98,8 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                   description: params.row.Description,
                   hint: params.row.Hint,
                   attachment: params.row.Attachment,
-                  attachmentType: params.row.AttachmentType
+                  attachmentType: params.row.AttachmentType,
+                  difficulty: params.row.Difficulty
                 });
                 udpatePopUpState(true);
               }}>

@@ -13,7 +13,7 @@ export default function LabeledInput({
     label,
     placeholder = ' ',
     value,
-    maxLength,
+    maxLength = 160,
     isRequired,
     isDisabled,
     isAutoComplete

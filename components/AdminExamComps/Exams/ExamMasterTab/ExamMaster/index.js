@@ -1,6 +1,5 @@
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import Select from 'react-select';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../../../API/Queries';
 import { changeHandler } from '../../../../../helper/common.helper';
@@ -161,7 +160,8 @@ export default function ExamMaster() {
           inputName: 'name',
           label: 'Exam Name:',
           placeholder: 'Enter name of the paper (Upto 60 characters)',
-          value: examTabData?.name
+          value: examTabData?.name,
+          maxLength: 60
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
@@ -173,7 +173,8 @@ export default function ExamMaster() {
           inputName: 'description',
           label: 'Description:',
           placeholder: 'Enter description (Upto 60 characters)',
-          value: examTabData.description
+          value: examTabData.description,
+          maxLength: 160
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
@@ -207,7 +208,7 @@ export default function ExamMaster() {
       </div>
 
       <div className={`${styles.passingCriteriaOuterContainer}`}>
-        <label htmlFor="passingCriteria" aria-label="passingCriteria">
+        <label htmlFor="passing_criteria" aria-label="passing_criteria">
           Passing Criteria:
         </label>
 
@@ -215,51 +216,21 @@ export default function ExamMaster() {
           <input
             type="text"
             className="w-75"
-            name="passingCriteria"
+            name="passing_criteria"
             placeholder="Passing Criteria"
-            value={examTabData?.passingCriteria}
+            value={examTabData?.passing_criteria}
             onChange={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
           <select
             onChange={(e) =>
-              setExamTabData({ ...examTabData, passingCriteriaType: e.target.value })
+              setExamTabData({ ...examTabData, passing_criteria_type: e.target.value })
             }
-            value={examTabData?.passingCriteriaType}>
+            value={examTabData?.passing_criteria_type}>
             <option value="Marks">Marks</option>
             <option value="Percentage">Percentage</option>
           </select>
         </div>
       </div>
-      {/* <div className={`${styles.passingCriteriaContainer}`}>
-        <label htmlFor="passingCriteria" aria-label="passingCriteria" className="w-45">
-          Passing Criteria:
-        </label>
-
-        <input
-          type="text"
-          className="w-75"
-          name="passingCriteria"
-          placeholder="Passing Criteria"
-          value={examTabData?.passingCriteria}
-          onChange={(e) => changeHandler(e, examTabData, setExamTabData)}
-        />
-
-        <Select
-          options={[
-            { value: 'Marks', label: 'Marks' },
-            { value: 'Percentage', label: 'Percentage' }
-          ]}
-          value={{
-            value: examTabData?.passingCriteriaType,
-            label: examTabData?.passingCriteriaType
-          }}
-          onChange={(e) => setExamTabData({ ...examTabData, passingCriteriaType: e.value })}
-          className="w-60"
-          styles={customStyles}
-          isSearchable={false}
-          isClearable={false}
-        />
-      </div> */}
 
       <div className={`${styles.totalMarksSection}`}></div>
 
@@ -268,24 +239,24 @@ export default function ExamMaster() {
           <LabeledRadioCheckbox
             type="checkbox"
             label="Set Max. Attempts Limit"
-            name="isAttemptsVisible"
-            isChecked={examTabData?.isAttemptsVisible}
+            name="is_attempts_visible"
+            isChecked={examTabData?.is_attempts_visible}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
         </div>
 
-        {examTabData?.isAttemptsVisible && (
+        {examTabData?.is_attempts_visible && (
           <div className="w-65">
             <LabeledDropdown
               dropdownOptions={{
-                inputName: 'noAttempts',
+                inputName: 'no_attempts',
                 label: 'Max Attempts:',
                 placeholder: 'Select Max Attempts',
                 options: maxAttemptsOptions,
-                value: { value: examTabData?.noAttempts, label: examTabData?.noAttempts }
+                value: { value: examTabData?.no_attempts, label: examTabData?.no_attempts }
               }}
               isFiftyFifty={true}
-              changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'noAttempts')}
+              changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'no_attempts')}
             />
           </div>
         )}
@@ -307,7 +278,7 @@ export default function ExamMaster() {
         <div className="w-65">
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'noAttempts',
+              inputName: 'no_attempts',
               label: 'Neg. marks per Question:',
               placeholder: 'Select Max Attempts',
               options: [
@@ -328,10 +299,10 @@ export default function ExamMaster() {
           <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
-              inputName: 'accessType',
+              inputName: 'instructions',
               placeholder: 'Enter instructions in less than 300 characters.',
               rows: 4,
-              value: examTabData?.accessType
+              value: examTabData?.instructions
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
@@ -342,19 +313,19 @@ export default function ExamMaster() {
         <LabeledRadioCheckbox
           type="radio"
           label="Scheduled"
-          name="scheduleType"
+          name="schedule_type"
           value="scheduled"
           isDisabled={!!examTabData?.id}
-          isChecked={examTabData.scheduleType === 'scheduled'}
+          isChecked={examTabData.schedule_type === 'scheduled'}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
         <LabeledRadioCheckbox
           type="radio"
           label="Take Anytime"
-          name="scheduleType"
+          name="schedule_type"
           value="anytime"
           isDisabled={!!examTabData?.id}
-          isChecked={examTabData.scheduleType === 'anytime'}
+          isChecked={examTabData.schedule_type === 'anytime'}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
       </div>

@@ -90,14 +90,20 @@
 }
 
 .span_element {
-  float: left;
   position: relative;
+  width: 100%;
   color: $white;
   font-weight: 600;
   margin-right: 10px;
   margin-bottom: 10px;
+
   span {
     margin-right: 20px;
+
+    &:last-child{
+      position: absolute;
+      right: 0;
+    }
   }
 }
 

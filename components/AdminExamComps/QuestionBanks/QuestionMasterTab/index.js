@@ -6,6 +6,7 @@ import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import TabContainer from '../../../common/TabContainer';
 import useHandleQuestionBankQuestion from '../Logic/useHandleQuestionBankQuestion';
 import QuestionMaster from './QuestionMaster';
+import AddQuestionBank from '../AddQuestionBank';
 
 export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuestionMasterTab }) {
   const [loadOptions, { error: errorOptionsData }] = useLazyQuery(GET_QUESTION_OPTIONS, {
@@ -47,6 +48,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
         });
       });
     }
+    if (!allOptions?.length) setToastMsg({ type: 'danger', message: 'No Options Available' });
 
     setQuestionData({
       question: question,
@@ -59,11 +61,15 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
 
   const tabData = [
     {
+      name: 'Question Bank',
+      component: <AddQuestionBank isPopUp={false} />
+    },
+    {
       name: 'Question Master',
       component: <QuestionMaster data={data} isEdit={isEdit} />
     }
   ];
-  const [tab, setTab] = useState(tabData[0].name);
+  const [tab, setTab] = useState(tabData[1].name);
 
   return (
     <>
@@ -75,7 +81,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
           submitDisplay: isEdit ? 'Update' : 'Save',
           disableSubmit: isUploading,
           handleSubmit: isEdit ? updateQuestionAndOptions : addQuestionAndOptions,
-          handleCancel: closeQuestionMasterTab
+          handleCancel: () => closeQuestionMasterTab()
         }}
       />
     </>

@@ -276,10 +276,30 @@ export const GET_LATEST_QUESTION_BANK = gql`
         is_active
         is_default
         owner
+        description
       }
       pageCursor
       direction
       pageSize
+    }
+  }
+`;
+
+export const GET_QUESTION_BANK_META = gql`
+  query getQPMeta($question_bank_id: [String]) {
+    getQBMeta(qb_ids: $question_bank_id) {
+      id
+      name
+      description
+      category
+      sub_category
+      created_at
+      updated_at
+      created_by
+      updated_by
+      is_active
+      is_default
+      owner
     }
   }
 `;
@@ -355,6 +375,26 @@ export const GET_LATEST_QUESTION_PAPERS = gql`
   }
 `;
 
+export const GET_QUESTION_PAPER_META = gql`
+  query getQPMeta($question_paper_id: [String]) {
+    getQPMeta(question_papers_ids: $question_paper_id) {
+      id
+      name
+      Category
+      SubCategory
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      DifficultyLevel
+      SectionWise
+      Description
+      SuggestedDuration
+    }
+  }
+`;
+
 export const GET_QUESTION_PAPER_SECTION = gql`
   query questionPaperSections($question_paper_id: String) {
     getQuestionPaperSections(question_paper_id: $question_paper_id) {
@@ -394,11 +434,83 @@ export const GET_QB_SECTION_MAPPING_BY_SECTION = gql`
   }
 `;
 
+export const GET_FIXED_QUESTION = gql`
+  query getSectionFixedQuestions($mapping_id: String) {
+    getSectionFixedQuestions(section_id: $mapping_id) {
+      id
+      SqbId
+      QuestionId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const GET_LATEST_EXAMS = gql`
+  query getLatestExams($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestExams(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      exams {
+        id
+        Name
+        Description
+        Code
+        QpId
+        CreatedAt
+        UpdatedAt
+        CreatedBy
+        UpdatedBy
+        IsActive
+        Type
+        ScheduleType
+        Duration
+        Status
+        Category
+        SubCategory
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_EXAM_META = gql`
+  query getExamsMeta($exam_ids: [String]) {
+    getExamsMeta(exam_ids: $exam_ids) {
+      id
+      Name
+      Description
+      Code
+      QpId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      ScheduleType
+      Duration
+      Status
+      Category
+      SubCategory
+    }
+  }
+`;
+
 export const GET_EXAM_INSTRUCTION = gql`
   query getExamInstruction($exam_id: String) {
     getExamInstruction(exam_id: $exam_id) {
       id
       ExamId
+      Instructions
       PassingCriteria
       NoAttempts
       AccessType

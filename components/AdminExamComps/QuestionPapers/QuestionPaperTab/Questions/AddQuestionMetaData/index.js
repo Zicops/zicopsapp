@@ -1,6 +1,17 @@
+import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import {
+  GET_FIXED_QUESTION,
+  GET_QUESTION_BANK_QUESTIONS,
+  queryClient
+} from '../../../../../../API/Queries';
+import {
+  getFixedQuestionObject,
+  QuestionPaperTabDataAtom
+} from '../../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../../state/atoms/popUp.atom';
+import { ToastMsgAtom } from '../../../../../../state/atoms/toast.atom';
 import Button from '../../../../../common/Button';
 import LabeledRadioCheckbox from '../../../../../common/FormComponents/LabeledRadioCheckbox';
 import useHandleQuestions from '../../Logic/useHandleQuestions';
@@ -10,18 +21,22 @@ import QuestionTable from './QuestionTable';
 import UploadNewQuestionBank from './uploadNew';
 
 export default function AddQuestionMetaData({ sectionId, editData }) {
-  const [addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp] = useRecoilState(
-    PopUpStatesAtomFamily('addQuestionMetaData')
+  const [loadQBQuestions, { error: errorQBQuestionsData }] = useLazyQuery(
+    GET_QUESTION_BANK_QUESTIONS,
+    { client: queryClient }
   );
-  const [editQuestionMetaDataPopUp, udpateEditQuestionMetaDataPopUp] = useRecoilState(
-    PopUpStatesAtomFamily('editQuestionMetaData')
+  const [loadFixedQuestions, { error: errorFixedQuestionsData }] = useLazyQuery(
+    GET_FIXED_QUESTION,
+    { client: queryClient }
   );
-  const [isUploadSelected, setIsUploadSelected] = useState(false);
 
+  // custom hook from logic
   const {
     metaData,
     setMetaData,
     questionBankOptions,
+    selectedQuestionIds,
+    setSelectedQuestionIds,
     isMetaDataReady,
     handleSelectedQuestions,
     showQuestionTable,
@@ -31,6 +46,73 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
     updateMetaData
   } = useHandleQuestions(sectionId);
 
+  const [addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp] = useRecoilState(
+    PopUpStatesAtomFamily('addQuestionMetaData')
+  );
+  const [editQuestionMetaDataPopUp, udpateEditQuestionMetaDataPopUp] = useRecoilState(
+    PopUpStatesAtomFamily('editQuestionMetaData')
+  );
+  const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const [qbQuestions, setQbQuestions] = useState(null);
+  const [isUploadSelected, setIsUploadSelected] = useState(false);
+  const [originalQbId, setOriginalQbId] = useState(null);
+
+  // set inital qbid
+  useEffect(() => {
+    if (!originalQbId) return setOriginalQbId(metaData.qbId);
+  }, [metaData.qbId]);
+
+  // load fixed questions
+  useEffect(() => {
+    if (!metaData.id) return;
+    if (originalQbId !== metaData.qbId) return setSelectedQuestionIds([]);
+
+    loadFixedQuestions({ variables: { mapping_id: metaData.id }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        if (errorFixedQuestionsData)
+          return setToastMsg({ type: 'danger', message: 'Fixed Questions load error' });
+
+        if (!data?.getSectionFixedQuestions) return;
+
+        const questionsData = data.getSectionFixedQuestions[0];
+        if (!questionsData || metaData.id !== questionsData.SqbId) return;
+
+        setQuestionPaperTabData({
+          ...questionPaperTabData,
+          currentFixedQuestion: getFixedQuestionObject({
+            ...questionsData,
+            mappingId: questionsData?.SqbId,
+            questionId: questionsData?.QuestionId
+          })
+        });
+
+        setSelectedQuestionIds(questionsData?.QuestionId?.split(','));
+      }
+    );
+  }, [metaData, originalQbId]);
+
+  // load questions data
+  useEffect(() => {
+    if (!metaData.qbId) return;
+
+    loadQBQuestions({ variables: { question_bank_id: metaData.qbId } }).then(({ data }) => {
+      if (errorQBQuestionsData)
+        return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
+
+      if (data?.getQuestionBankQuestions) {
+        const questions = data.getQuestionBankQuestions?.filter((q) => {
+          // TODO: add some filter conditon based on difficulty
+          // q.Difficulty, metaData.difficulty_level
+          return q;
+        });
+        setQbQuestions(questions);
+      }
+    });
+  }, [metaData.qbId]);
+
+  // reset meta data
   useEffect(() => {
     if (editData?.id) setMetaData(editData);
   }, [editData]);
@@ -65,7 +147,9 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
             <ExistingQuestion
               questionBankOptions={questionBankOptions}
               metaData={metaData}
+              totalQuestions={qbQuestions?.length}
               setMetaData={setMetaData}
+              isEdit={!!editData?.id}
             />
           )}
         </>
@@ -73,12 +157,26 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
 
       {!!showQuestionTable && (
         <QuestionTable
-          questionBankId={metaData.qbId}
+          qbQuestions={qbQuestions}
+          selectedQb={questionBankOptions.filter((qb) => qb?.id === metaData?.qbId)[0]}
+          selectedQuestionIds={selectedQuestionIds}
           handleSelectedQuestions={handleSelectedQuestions}
         />
       )}
 
       <section className={`${styles.footerBtns}`}>
+        {/* cancel button */}
+        <Button
+          text="Cancel"
+          clickHandler={() => {
+            if (showQuestionTable) return setShowQuestionTable(false);
+
+            udpateAddQuestionMetaDataPopUp(false);
+            udpateEditQuestionMetaDataPopUp(false);
+          }}
+        />
+
+        {/* next or save  button */}
         {showQuestionTable ? (
           <Button
             text="Save"
@@ -101,13 +199,6 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
             isDisabled={!isMetaDataReady}
           />
         )}
-        <Button
-          text="Cancel"
-          clickHandler={() => {
-            udpateAddQuestionMetaDataPopUp(false);
-            udpateEditQuestionMetaDataPopUp(false);
-          }}
-        />
       </section>
     </>
   );

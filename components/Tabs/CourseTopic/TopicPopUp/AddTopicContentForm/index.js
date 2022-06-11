@@ -96,7 +96,7 @@ export default function AddTopicContentForm({
                 handleFileUpload={handleTopicVideoInput}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
-                acceptedTypes={newTopicContent.type}
+                acceptedTypes={['video/*'].join(', ')}
                 hidePreviewBtns={true}
               />
             </div>

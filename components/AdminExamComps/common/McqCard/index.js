@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import { GET_QUESTION_OPTIONS, queryClient } from '../../../../API/Queries';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import Button from '../../../common/Button';
-import { imageTypes } from '../Logic/questionBank.helper';
+import { imageTypes } from '../../QuestionBanks/Logic/questionBank.helper';
 import styles from './mcqCard.module.scss';
 import McqOption from './McqOption';
 
@@ -21,7 +21,7 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
     if (optionData?.length) return setOptions(optionData);
 
     loadOptions({
-      variables: { question_id: questionData.id }
+      variables: { question_id: questionData?.id }
     }).then(({ data }) => {
       if (errorOptionsData) return setToastMsg({ type: 'danger', message: 'options load error' });
 
@@ -42,17 +42,27 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
   return (
     <>
       <div className={`${styles.mcq_container}`}>
-        {/* <span className={`${styles.qtitle}`}>QUESTION</span> */}
         <div className={`${styles.qcontent}`}>
           <p className={`${styles.span_element}`}>
             {/* TODO : Add difficulty lebel */}
             <span>Q.</span>
-            {questionData.description}
+            {questionData?.description}
+
+            {questionData?.question_marks ? (
+              <>
+                <span>Marks: {questionData?.question_marks || 0}</span>
+              </>
+            ) : (
+              <>
+                <span>Difficulty Level: {questionData?.difficulty || 0}</span>
+              </>
+            )}
           </p>
 
-          {imageTypes.includes(questionData.attachmentType) && (
+          {imageTypes.includes(questionData?.attachmentType) && (
             <div className={`${styles.quesImg}`}>
-              <img src={questionData.attachment} alt="" />
+              {questionData?.attachment && <img src={questionData?.attachment} alt="" />}
+              {questionData?.file && <img src={URL.createObjectURL(questionData?.file)} alt="" />}
             </div>
           )}
         </div>
@@ -66,7 +76,7 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
         </section>
 
         <span className={`${styles.span_element}`}>Hint:</span>
-        <div className={`${styles.hint}`}>{questionData.hint}</div>
+        <div className={`${styles.hint}`}>{questionData?.hint}</div>
 
         <div className={`${styles.btn}`}>
           {handleEdit && <Button text={'Edit'} clickHandler={handleEdit} />}

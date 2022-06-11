@@ -7,7 +7,7 @@ import Schedule from '../Schedule';
 export const ExamMasterTabDataSelector = selector({
   key: 'ExamMasterTabData',
   get: ({ get }) => {
-    const isScheduledExam = get(ExamTabDataAtom).scheduleType;
+    const isScheduledExam = get(ExamTabDataAtom).schedule_type;
 
     if (isScheduledExam === 'scheduled') return getTabData();
 

@@ -1,5 +1,5 @@
 import { truncateToN } from '../../../../helper/common.helper';
-import styles from './textInputWithFile.module.scss';
+import styles from '../inputWithCheckbox.module.scss';
 
 export default function TextInputWithFile({
   inputName,
@@ -8,16 +8,18 @@ export default function TextInputWithFile({
   value,
   changeHandler,
   fileInputHandler,
-  fileNmae
+  fileNmae,
+  maxLength = 160
 }) {
   return (
     <>
-      <div className={`w-100 ${styles.container}`}>
+      <div className={`w-100 ${styles.inputFileContainer}`}>
         <div className={styles.box}>
           <input
             type="text"
             name={inputName}
             value={value}
+            maxLength={maxLength}
             placeholder={`Enter ${type} in less than 160 characters`}
             onChange={changeHandler}
           />

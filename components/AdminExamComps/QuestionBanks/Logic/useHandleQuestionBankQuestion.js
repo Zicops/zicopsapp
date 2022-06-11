@@ -71,22 +71,31 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   function validateInput() {
     const question = questionData;
     const options = optionData;
-    let isOptionsCompleted = false,
+    let isOptionsCompleted = 0,
       isOneChecked = false;
 
     options.forEach((option) => {
-      isOptionsCompleted = !!option.description;
+      isOptionsCompleted += option?.description || option?.file ? 1 : 0;
 
-      if (option.isCorrect && !isOneChecked) isOneChecked = true;
+      if (option?.isCorrect && !isOneChecked) isOneChecked = true;
     });
+
+    let errorMsg = '';
+    if (!question.type) errorMsg = 'Select Question Type';
+    if (!question.description && !errorMsg) errorMsg = 'Add Question';
+    if (!question.difficulty && !errorMsg) errorMsg = 'Add Question Difficulty';
+    if (isOptionsCompleted < 2 && !errorMsg) errorMsg = 'Add at least 2 option';
+    if (!isOneChecked && !errorMsg) errorMsg = 'Select at least 1 correct option';
+
+    if (errorMsg) setToastMsg({ type: 'danger', message: errorMsg });
 
     return (
       question.type &&
       question.description &&
       question.difficulty &&
       question.qbmId &&
-      isOneChecked &&
-      isOptionsCompleted
+      isOptionsCompleted >= 2 &&
+      isOneChecked
     );
   }
 
@@ -141,8 +150,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   // add question data to array to show in accordion
   function saveQuestion() {
-    if (!validateInput())
-      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
+    if (!validateInput()) return;
 
     setQuestionsArr([...questionsArr, { question: questionData, options: optionData }]);
 
@@ -169,6 +177,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     for (let index = 0; index < questionsArr.length; index++) {
       const { question, options } = questionsArr[index];
       const sendQuestionData = {
+        name: question.name || '',
         description: question.description || '',
         type: question.type || '',
         difficulty: question.difficulty || 0,
@@ -199,6 +208,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       // add option
       for (let i = 0; i < options.length; i++) {
         const option = options[i];
+        console.log(option.description, option.file);
+        if (!option.description && !option.file) continue;
+
         const sendOptionData = {
           description: option.description || '',
           isCorrect: option.isCorrect || false,
@@ -238,6 +250,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     const options = optionData;
     const sendQuestionData = {
       id: question.id,
+      name: question.name || '',
       description: question.description || '',
       type: question.type || '',
       difficulty: question.difficulty || 0,
@@ -255,6 +268,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       sendQuestionData.file = question.file;
     }
     let isError = false;
+
+    if (!question.id) return setToastMsg({ type: 'danger', message: `Question id missing` });
+
     await updateQuestion({ variables: sendQuestionData }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -263,6 +279,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
+      if (!option.id)
+        return setToastMsg({ type: 'danger', message: `Option (${i + 1}) id missing` });
+
       const sendOptionData = {
         id: option.id,
         description: option.description || '',

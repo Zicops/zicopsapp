@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
+import { GET_CATS_N_SUB_CATS } from '../../../../../API/Queries';
+import { loadQueryData } from '../../../../../helper/api.helper';
 import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
@@ -9,12 +11,13 @@ import useHandlePaperTab from '../Logic/useHandlePaperTab';
 import styles from '../questionPaperTab.module.scss';
 
 export default function QuestionPaperMaster() {
-  const categoryOption = [
-    { value: 'Accounting', label: 'Accounting' },
-    { value: 'Bussiness', label: 'Bussiness' },
-    { value: 'Developement', label: 'Developement' },
-    { value: 'Engg', label: 'Engg' }
-  ];
+  const categoryOption = [];
+  const subCategoryOption = [];
+
+  // load categories
+  const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
+  allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
+  allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
 
   const router = useRouter();
   const questionPaperId = router.query?.questionPaperId;
@@ -29,7 +32,8 @@ export default function QuestionPaperMaster() {
           inputName: 'name',
           label: 'Question Paper Name:',
           placeholder: 'Enter name of the course (Upto 60 characters)',
-          value: questionPaperTabData.paperMaster?.name
+          value: questionPaperTabData.paperMaster?.name,
+          maxLength: 60
         }}
         changeHandler={(e) => handleInput(e)}
         styleClass={`${styles.inputField}`}
@@ -40,7 +44,8 @@ export default function QuestionPaperMaster() {
           inputName: 'description',
           label: 'Description:',
           placeholder: 'Enter name of the course (Upto 160 characters)',
-          value: questionPaperTabData.paperMaster?.description
+          value: questionPaperTabData.paperMaster?.description,
+          maxLength: 160
         }}
         changeHandler={(e) => handleInput(e)}
       />
@@ -64,7 +69,7 @@ export default function QuestionPaperMaster() {
           inputName: 'sub_category',
           label: 'Sub-Category:',
           placeholder: 'Select the sub category of the course',
-          options: categoryOption,
+          options: subCategoryOption,
           value: {
             value: questionPaperTabData.paperMaster?.sub_category,
             label: questionPaperTabData.paperMaster?.sub_category
@@ -96,7 +101,7 @@ export default function QuestionPaperMaster() {
           inputOptions={{
             inputName: 'suggested_duration',
             label: 'Suggested Duration:',
-            placeholder: 'Enter duration',
+            placeholder: 'Enter duration in Minutes',
             value: questionPaperTabData.paperMaster?.suggested_duration
           }}
           changeHandler={(e) => handleInput(e)}
@@ -114,9 +119,7 @@ export default function QuestionPaperMaster() {
         />
 
         <NextButton
-          clickHandler={() => {
-            questionPaperId ? updateQuestionPaper(1) : addNewQuestionPaper(1);
-          }}
+          clickHandler={() => (questionPaperId ? updateQuestionPaper(1) : addNewQuestionPaper(1))}
         />
       </div>
     </div>
