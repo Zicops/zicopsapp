@@ -23,7 +23,8 @@ export default function RightDropDownMenu() {
         border: 'none',
         fontSize: '10px',
         alignItems: 'flex-end',
-        backgroundColor: 'var(--header-bg)'
+        backgroundColor: 'var(--header-bg)',
+        padding: '15px 10px'
       },
       comp: (
         <>
@@ -35,13 +36,13 @@ export default function RightDropDownMenu() {
     {
       id: 2,
       comp: (
-        <DropDownSubMenu
-          subData={languages}
-          menuIcon={LeftArrow}
-          submenutext="My Profile"
-          arrowpositon="left"
-          submenurowdirection={true}
-        />
+          <DropDownSubMenu
+            subData={languages}
+            menuIcon={LeftArrow}
+            submenutext="My Profile"
+            arrowpositon="left"
+            submenurowdirection={true}
+          />
       )
     },
     { id: 3, class: 'dropdown-submenu-justifycontent-right', name: 'My Certificates' },
@@ -103,8 +104,9 @@ export default function RightDropDownMenu() {
                       // margin: '2px',
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
-                      padding: 0
-                    }
+                      padding: '0px'
+                    },
+
                   }}
                   style={item.styles ? item.styles : {}}
                   className={`${item.class} ${styles[`dropdown_item_${item.id}`]}`}>

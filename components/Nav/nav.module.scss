@@ -236,7 +236,7 @@ select.nav_search_dropdow:selected {
   .dropdown_item_#{$var} {
     opacity: 0;
     width: 250px;
-    padding: 7px 10px !important;
+    // padding: 7px 10px !important;
     color: $primary !important;
     background-color: $bgHeader !important;
     transform-origin: top center;
