@@ -1,0 +1,13 @@
+@import '../../../styles/base.scss';
+.login_Footer{
+    display: flex;
+    justify-content: center;
+    width:100%;
+    padding-top: 120px;
+    gap: 100px;
+   
+}
+ .foot_text a{ 
+    font-size: 14px;
+    color:$white;
+}

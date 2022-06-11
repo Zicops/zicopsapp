@@ -15,7 +15,13 @@ const SignToLearningSpace = () => {
           Enter the security code sent on your registered email id !
         </div>
         <div className={`${styles.enter_code}`}>
-          var otpValue = 6; for(i = 0 ; i > otpValue ; i++ ){<OtpInput num={6} />}
+          {/* var otpValue = 6; for(i = 0 ; i > otpValue ; i++ ){<OtpInput num={6} />} */}
+          <OtpInput />
+          <OtpInput />
+          <OtpInput />
+          <OtpInput />
+          <OtpInput />
+          <OtpInput />
         </div>
 
         <div className={`${styles.login_button}`}>

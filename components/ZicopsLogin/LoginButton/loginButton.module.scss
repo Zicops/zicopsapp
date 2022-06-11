@@ -1,0 +1,37 @@
+@import '../../../styles/base.scss';
+
+.login_Button{
+    flex: 1;
+      margin: 10px 0px;
+}
+.login_Button button{
+    background-color: $primary;
+    width: 100%;
+    flex: 1;
+    color: $black;
+    padding: 7px 10px;
+    border-radius: 3px;
+    font-size: 16px;
+}
+.login_Button button:hover{
+    background-color: transparent;
+    color:  $primary;
+    cursor: pointer;
+    transition: 0.5s ;
+    border: 2px solid $primary;
+
+}
+.small_text{
+    font-size: 14px;
+    color:$secondaryBlack;
+    font-weight: bold;
+    // padding: 15px 0px;
+    text-align: center;
+}
+.small_text span a {
+    color: $primary;
+    text-decoration: underline;
+}
+.small_text span a:hover{
+    cursor: pointer;
+}
