@@ -5,8 +5,11 @@ import Select from 'react-select';
 import { useRecoilValue } from 'recoil';
 import { SiteMapAtom } from '../../../state/atoms/sitemap.atom';
 import styles from './missionControl.module.scss';
+import Sitemap from '../../CourseHead/Sitemap';
+import PopUp from '../../common/PopUp';
 
 export default function MissionControlHeader() {
+  const [showSitemap, setShowSitemap] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const siteMap = useRecoilValue(SiteMapAtom);
   const router = useRouter();
@@ -110,7 +113,7 @@ export default function MissionControlHeader() {
             {showSearch && (
               <Select
                 options={siteMap.map((val) => {
-                  return { value: val, label: val };
+                  return { value: val.route, label: val.route };
                 })}
                 filterOption={(option, searchQuery) => {
                   if (!searchQuery?.trim()) return false;
@@ -154,10 +157,22 @@ export default function MissionControlHeader() {
               alt=""
               height={'40px'}
               width={'50px'}
+              onClick={() => setShowSitemap(true)}
             />
           </div>
         </div>
       </div>
+
+      {/* sitemap pop up */}
+      <PopUp
+        isFooterVisible={false}
+        title="Sitemap"
+        isPopUpOpen={showSitemap}
+        size="large"
+        closeBtn={{ handleClick: () => setShowSitemap(false) }}>
+        <Sitemap />
+      </PopUp>
+
       <style jsx>
         {`
           .mission_control_header {
