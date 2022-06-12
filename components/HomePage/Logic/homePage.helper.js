@@ -18,10 +18,5 @@ export const data = [
     id: 4,
     icon: '/images/Zicops-logo-icon3.png',
     text: 'Entire Learning Ecosystem in a single platform.'
-  },
-  {
-    id: 5,
-    icon: '/images/Zicops-logo-icon3.png',
-    text: 'New data added.'
   }
 ];
