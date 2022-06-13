@@ -52,18 +52,6 @@ export const examSidebarData = {
     {
       title: 'My Exams',
       link: '/admin/exams/my-exams'
-    },
-    {
-      title: 'My Question Papers',
-      link: '/admin/exams/my-question-papers'
-    },
-    {
-      title: 'Zicops Exams',
-      link: '/admin/exams/zicops-exam'
-    },
-    {
-      title: 'My Exams',
-      link: '/admin/exams/my-exams'
     }
   ]
 };
