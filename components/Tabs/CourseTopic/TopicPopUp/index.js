@@ -129,7 +129,7 @@ export default function TopicPopUp({
               {editTopic?.type === 'Assessment' && <AssessmentForm topicData={editTopic} />}
 
               {/* add topic content form section */}
-              {editTopic?.type === 'Content' && (
+              {editTopic?.type && (
                 <>
                   {/* topic content title */}
                   <div className={`${styles.titleWithLineAtSide}`}>Content</div>

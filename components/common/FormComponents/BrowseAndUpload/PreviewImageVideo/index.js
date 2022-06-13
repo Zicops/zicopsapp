@@ -11,7 +11,7 @@ export default function PreviewImageVideo({ fileName, filePath, isVideo, handleC
       .catch((err) => console.log('Error in PreviewImageVideo:', err));
   }
 
-  if (!fileSrc) return null;
+  if (!filePath && !fileSrc) return null;
 
   return (
     <>
@@ -21,11 +21,13 @@ export default function PreviewImageVideo({ fileName, filePath, isVideo, handleC
         isFooterVisible={false}>
         {isVideo ? (
           <div style={{ position: 'relative', width: '100%' }}>
-            <video controls src={fileSrc} style={{ width: '100%' }}></video>
+            <video controls src={fileSrc || filePath} style={{ width: '100%' }}></video>
           </div>
         ) : (
           <div style={{ position: 'relative', width: '100%', paddingBottom: '60%' }}>
-            {filePath && <Image src={fileSrc} layout="fill" objectFit="contain" alt="" />}
+            {filePath && (
+              <Image src={fileSrc || filePath} layout="fill" objectFit="contain" alt="" />
+            )}
           </div>
         )}
       </PopUp>
