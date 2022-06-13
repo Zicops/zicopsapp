@@ -27,9 +27,13 @@ const Card = ({ image, text, width }) => {
             margin: 20px;
             cursor: pointer;
           }
-          .card::hover {
-            background-color: var(--dark_two);
-            box-shadow: -5px 5px 10px 0 #00000080, 5px -5px 10px 0 #86868640;
+          .card:hover {
+            background-color: var(--tile-bg);
+            box-shadow: 0px 0px 10px 0 #86868640, 10px 0px 10px 0 #00000080;
+          }
+          .card:active {
+            background-color: var(--tile-bg);
+            box-shadow: inset 0px 0px 10px 0 #86868640, 10px 0px 10px 0 #00000080;
           }
           .card_icon {
           }
@@ -79,7 +83,7 @@ const MissionControlCards = () => {
           }
           .contain_icons {
             position: absolute;
-            top: 50%;
+            top: 37%;
             left: 50%;
             transform: translate(-50%, -50%);
           }

@@ -4,8 +4,8 @@ import ZicopsSubcatsList from "../../components/adminComps/ZicopsCourses/ZicopsS
 const Admin = () => {
       return (
         <div>
-            <Sidebar />
-            <ZicopsSubcatsList />
+            {/* <Sidebar />
+            <ZicopsSubcatsList /> */}
         </div>
     )
 }

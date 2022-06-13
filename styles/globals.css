@@ -1367,8 +1367,13 @@ transition: All 0.3s ease;
 .dropdown-submenu-justifycontent-right {
   display: flex;
   justify-content: flex-end;
+  padding: 7px 10px !important;
 }
-
+.dropdown-submenu-justifycontent-space-between{
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 10px !important;
+}
 /* Common calendar styles  */
 /* 
 .react-datepicker.common_calendar {

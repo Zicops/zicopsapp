@@ -11,7 +11,7 @@ export default function DropDownSubMenu({ subData, menuIcon, submenutext, arrowp
   
   return (
     <>
-      <div style={{ width: '100%' }}>
+      <div style={{ width: '100%'}}>
         <div
           className={`dropdown-submenu-justifycontent-space-between`}
           ref={ref}
@@ -52,13 +52,6 @@ export default function DropDownSubMenu({ subData, menuIcon, submenutext, arrowp
           })}
         </ControlledMenu>
       </div>
-      <style jsx>{`
-        .dropdown-submenu-justifycontent-space-between {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-      `}</style>
     </>
   );
 }

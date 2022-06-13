@@ -62,9 +62,10 @@
   color: $header;
   cursor: pointer;
   margin: 0 15px;
+  border-bottom: 1px solid transparent;
 }
 .menu ul li.active {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: $primary;
   cursor: pointer;
@@ -87,9 +88,9 @@
 .special_menu ul li img {
   width: 25px;
   height: 25px;
-  padding: 5px;
+  padding: 3px;
   margin: 5px 5px 0;
-  border: 1px solid var(--primary);
+  // border: 1px solid var(--primary);
   cursor: pointer;
 }
 
@@ -235,7 +236,7 @@ select.nav_search_dropdow:selected {
   .dropdown_item_#{$var} {
     opacity: 0;
     width: 250px;
-    padding: 7px 10px !important;
+    // padding: 7px 10px !important;
     color: $primary !important;
     background-color: $bgHeader !important;
     transform-origin: top center;

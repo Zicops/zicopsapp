@@ -23,7 +23,8 @@ export default function ExamMaster() {
 
   // load table data
   useEffect(() => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
+    const LARGE_PAGE_SIZE = 999999999999;
+    const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
 
     loadQuestionPaper({ variables: queryVariables }).then(({ data }) => {
       if (errorQuestionPaperData)

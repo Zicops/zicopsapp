@@ -61,7 +61,7 @@ export default function Nav() {
 
       <div className={styles.right} onBlur={deactivateSearch}>
         {/* {searchQuery !== null && ( */}
-        {1 && (
+        {!isAdmin && (
           <div className={`${styles.search_menu}`} id="search_menu">
             {/* <select className={styles.nav_search_dropdown} placeholder="Search...">
               {['All', 'Self Paced', 'Classroom', 'Labs', 'Exam', 'Blogs'].map((opt) => (
