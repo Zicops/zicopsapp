@@ -5,7 +5,7 @@ import Select from 'react-select';
 import { useRecoilValue } from 'recoil';
 import { SiteMapAtom } from '../../../state/atoms/sitemap.atom';
 import styles from './missionControl.module.scss';
-import Sitemap from '../../CourseHead/Sitemap';
+import Sitemap from '../../common/AdminHeader/Sitemap';
 import PopUp from '../../common/PopUp';
 
 export default function MissionControlHeader() {
@@ -169,6 +169,7 @@ export default function MissionControlHeader() {
         title="Sitemap"
         isPopUpOpen={showSitemap}
         size="large"
+        positionLeft="50%"
         closeBtn={{ handleClick: () => setShowSitemap(false) }}>
         <Sitemap />
       </PopUp>
