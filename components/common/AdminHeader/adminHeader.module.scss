@@ -163,6 +163,12 @@ $lineColor: $darkThree;
       left: 0px;
       top: 50%;
     }
+
+    a {
+      &:focus-visible {
+        border: none;
+      }
+    }
   }
 }
 
