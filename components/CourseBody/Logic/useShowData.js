@@ -38,8 +38,6 @@ export default function useShowData(courseContextData) {
     }
   }, [activeCourseTab]);
 
-
-
   // recoil states
   const [moduleData, updateModuleData] = useRecoilState(ModuleAtom);
   const [chapter, updateChapterData] = useRecoilState(ChapterAtom);
@@ -52,9 +50,7 @@ export default function useShowData(courseContextData) {
   // module, chapter, topic data query obj
   const [loadModuleData, { error: errorModuleData, loading: loadingModuleData }] = useLazyQuery(
     GET_COURSE_MODULES,
-    {
-      client: queryClient
-    }
+    { client: queryClient }
   );
   const [loadChapterData, { error: errorChapterData, loading: loadingChapterData }] = useLazyQuery(
     GET_COURSE_CHAPTERS,
@@ -79,38 +75,48 @@ export default function useShowData(courseContextData) {
       loadingModuleData && loadingChapterData && loadingTopicData && loadingResourceData
     );
 
-    loadModuleData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      if (errorModuleData) alert('Module Load Error');
+    loadModuleData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        if (errorModuleData) alert('Module Load Error');
 
-      const sortedData = sortArrByKeyInOrder([...data.getCourseModules], "sequence", 1);
-      updateModuleData(sortedData || []);
+        const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence', 1);
+        updateModuleData(sortedData || []);
 
-      setSelectedModule(getModuleOptions(sortedData)[0] || {});
-    });
+        setSelectedModule(getModuleOptions(sortedData)[0] || {});
+      }
+    );
 
-    loadChapterData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      if (errorChapterData) alert('Chapter Load Error');
+    loadChapterData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        if (errorChapterData) alert('Chapter Load Error');
 
-      updateChapterData(data.getCourseChapters || []);
-    });
+        updateChapterData(data.getCourseChapters || []);
+      }
+    );
 
-    loadTopicData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      if (errorTopicData) alert('Topic Load Error');
+    loadTopicData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        if (errorTopicData) alert('Topic Load Error');
 
-      updateTopicData(data.getTopics || []);
-    });
+        updateTopicData(data.getTopics || []);
+      }
+    );
 
-    loadResourcesData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      if (errorResourcesData) alert('Resources Load Error');
+    loadResourcesData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        if (errorResourcesData) alert('Resources Load Error');
 
-      updateResources(data.getResourcesByCourseId || []);
-    });
+        updateResources(data.getResourcesByCourseId || []);
+      }
+    );
 
-    loadTopicContentData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      if (errorTopicContentData) alert('Topic Content Load Error');
+    loadTopicContentData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        if (errorTopicContentData) alert('Topic Content Load Error');
 
-      updateTopicContent(data.getTopicContentByCourseId || []);
-    });
+        updateTopicContent(data.getTopicContentByCourseId || []);
+      }
+    );
   }, [fullCourse]);
 
   // function saveContentInState(data) {
