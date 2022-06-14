@@ -304,6 +304,15 @@ export const GET_QUESTION_BANK_META = gql`
   }
 `;
 
+export const GET_QUESTION_BANK_NAME = gql`
+  query getQPName($question_bank_id: [String]) {
+    getQBMeta(qb_ids: $question_bank_id) {
+      id
+      name
+    }
+  }
+`;
+
 export const GET_QUESTION_BANK_QUESTIONS = gql`
   query questionBankQuestions($question_bank_id: String) {
     getQuestionBankQuestions(question_bank_id: $question_bank_id) {

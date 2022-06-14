@@ -108,7 +108,7 @@ export default function ExamsTable({ isEdit = false }) {
       flex: 1.5
     },
     {
-      field: 'Type',
+      field: 'ScheduleType',
       headerClassName: 'course-list-header',
       headerName: 'Type',
       flex: 1
