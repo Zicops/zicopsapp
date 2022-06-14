@@ -88,7 +88,8 @@ export default function CourseDetails() {
             handleRemove={() => removeSavedFile('uploadCourseVideo')}
             previewData={{
               fileName: fileData.uploadCourseVideo,
-              filePath: courseVideo?.file || fullCourse.previewVideo
+              filePath: courseVideo?.file || fullCourse.previewVideo,
+              isVideo: true
             }}
             acceptedTypes="video/*"
             inputName="uploadCourseVideo"
