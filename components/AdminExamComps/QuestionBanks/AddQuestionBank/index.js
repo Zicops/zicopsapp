@@ -46,7 +46,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         inputOptions={{
           inputName: 'name',
           label: 'Name:',
-          placeholder: 'Enter name of the course (Upto 60 characters)',
+          placeholder: 'Enter the name in less than 60 characters',
           value: questionBankData?.name,
           isDisabled: !isPopUp,
           maxLength: 60
@@ -60,7 +60,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         inputOptions={{
           inputName: 'description',
           label: 'Description:',
-          placeholder: 'Enter name of the course (Upto 60 characters)',
+          placeholder: 'Enter the name in less than 160 characters',
           value: questionBankData?.description,
           isDisabled: !isPopUp,
           maxLength: 160

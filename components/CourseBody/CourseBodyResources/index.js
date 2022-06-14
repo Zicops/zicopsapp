@@ -1,21 +1,17 @@
 import { useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import { filterAndSortTopicsBasedOnModuleId, filterModule } from '../../../helper/data.helper';
-import { TopicAtom, ModuleAtom } from '../../../state/atoms/module.atoms';
+import { ModuleAtom, TopicAtom } from '../../../state/atoms/module.atoms';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import Dropdown from '../../common/Dropdown';
 import CourseResourcesOpen from '../../CourseResourcesOpen';
 import Header from '../Header';
-import TopicFileSlider from '../TopicFileSlider';
 import useShowData from '../Logic/useShowData';
+import TopicFileSlider from '../TopicFileSlider';
 
 export default function CourseBodyResources() {
   const courseContextData = useContext(courseContext);
   const {
-    myRef,
-    showActiveTab,
-    activeCourseTab,
-    setActiveCourseTab,
     getModuleOptions,
     // moduleData,
     handleModuleChange,
@@ -29,9 +25,7 @@ export default function CourseBodyResources() {
   const options = getModuleOptions();
   const currentModule = filterModule(moduleData, selectedModule?.value);
 
-  const { fullCourse } = courseContextData;
   const topicData = useRecoilValue(TopicAtom);
-  // const { chapter: chapterData, topic, topicContent } = moduleContextData;
 
   const filteredAndSortedData = filterAndSortTopicsBasedOnModuleId(
     topicData,
