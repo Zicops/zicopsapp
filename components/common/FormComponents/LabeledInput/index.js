@@ -11,7 +11,7 @@ export default function LabeledInput({
     inputName,
     type = 'text',
     label,
-    placeholder = ' ',
+    placeholder = 'Enter the name in less than 160 characters',
     value,
     maxLength = 160,
     isRequired,
