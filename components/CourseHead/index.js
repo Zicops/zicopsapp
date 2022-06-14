@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { useRouter } from 'next/router';
 import styles from './courseHead.module.scss';
 import PopUp from '../common/PopUp';
-import Sitemap from './Sitemap';
+import Sitemap from '../common/AdminHeader/Sitemap';
 
 export default function CourseHead({ title }) {
   const [showSitemap, setShowSitemap] = useState(false);
@@ -19,6 +19,7 @@ export default function CourseHead({ title }) {
   function gotoAddcourse() {
     router.push('/admin/courses');
   }
+  console.log(showSitemap);
   return (
     <div className={`${styles.courseHead}`}>
       <div className={`${styles.header}`}>

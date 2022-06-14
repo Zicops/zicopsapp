@@ -11,7 +11,6 @@ import styles from '../nav.module.scss';
 
 export default function RightDropDownMenu() {
   const { anchorEl, handleClick, handleClose, open } = useDropDownHandle();
-  let today = new Date();
   let date = new Date().toUTCString().slice(5, 16);
 
   const menuItemList = [
@@ -36,13 +35,13 @@ export default function RightDropDownMenu() {
     {
       id: 2,
       comp: (
-          <DropDownSubMenu
-            subData={languages}
-            menuIcon={LeftArrow}
-            submenutext="My Profile"
-            arrowpositon="left"
-            submenurowdirection={true}
-          />
+        <DropDownSubMenu
+          subData={languages}
+          menuIcon={LeftArrow}
+          submenutext="My Profile"
+          arrowpositon="left"
+          submenurowdirection={true}
+        />
       )
     },
     { id: 3, class: 'dropdown-submenu-justifycontent-right', name: 'My Certificates' },
@@ -78,6 +77,7 @@ export default function RightDropDownMenu() {
         }}>
         <Image src="/images/arrow2.png" alt="" height="20px" width="25px" />
       </Button>
+
       {anchorEl && (
         <Paper
           sx={{
@@ -105,8 +105,7 @@ export default function RightDropDownMenu() {
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
                       padding: '0px'
-                    },
-
+                    }
                   }}
                   style={item.styles ? item.styles : {}}
                   className={`${item.class} ${styles[`dropdown_item_${item.id}`]}`}>
