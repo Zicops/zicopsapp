@@ -11,7 +11,7 @@ export default function TwoRowCarousel({ carouselProps, itemsArr, CardComp, card
           {itemsArr.map((dt, i) => {
             if (i + 1 == itemsArr.length) {
               return (
-                <>
+                <Fragment key={dt.id + i + prevItem?.id}>
                   {prevItem && (
                     <div style={{ padding: '5px' }}>
                       <CardComp data={prevItem} {...cardProps} />
@@ -20,7 +20,7 @@ export default function TwoRowCarousel({ carouselProps, itemsArr, CardComp, card
                   <div style={{ padding: '5px' }}>
                     <CardComp data={dt} {...cardProps} />
                   </div>
-                </>
+                </Fragment>
               );
             }
             if (i % 2 == 0) {
