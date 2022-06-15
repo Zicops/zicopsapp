@@ -23,7 +23,7 @@ export const RefetchDataAtom = atom({
 // atom for storing single active question bank used for edit, or reference for questions from bank
 export const SelectedQuestionBankAtom = atom({
   key: 'SelectedQuestionBank',
-  default: {}
+  default: getQuestionBankObject()
 });
 
 export function getQuestionBankObject(data = {}) {
