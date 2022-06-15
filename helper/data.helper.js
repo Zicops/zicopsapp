@@ -1,4 +1,6 @@
+import { useLazyQuery } from '@apollo/client';
 import { useRecoilState } from 'recoil';
+import { queryClient } from '../API/Queries';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
 
@@ -112,4 +114,28 @@ export function sortArrByKeyInOrder(array, key = 'sequence', isAsc = true) {
     desVal = -1;
   }
   return localArr?.sort((a, b) => (a[key] > b[key] ? ascVal : desVal));
+}
+
+// https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
+function getNestedValueByString(obj, path) {
+  return path
+    .replace(/\[|\]\.?/g, '.')
+    .split('.')
+    .filter((s) => s)
+    .reduce((acc, val) => acc && acc[val], obj);
+}
+
+export async function isNameDuplicate(QUERY, name, objPath) {
+  const LONG_PAGE_SIZE = 999999999999;
+  const queryVariables = { publish_time: Date.now(), pageSize: LONG_PAGE_SIZE, pageCursor: '' };
+  const results = await queryClient.query({ query: QUERY, variables: queryVariables });
+
+  const arrayOfNames = getNestedValueByString(results?.data, objPath) || [];
+
+  const isNameExist = arrayOfNames.some((obj) => {
+    const _name = obj.Name || obj.name;
+    return _name?.toLowerCase() === name?.toLowerCase();
+  });
+
+  return isNameExist;
 }

@@ -13,6 +13,8 @@ import {
   UPDATE_EXAM_INSTRUCTION,
   UPDATE_EXAM_SCHEDULE
 } from '../../../../../API/Mutations';
+import { GET_LATEST_EXAMS_NAMES } from '../../../../../API/Queries';
+import { isNameDuplicate } from '../../../../../helper/data.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 
@@ -117,6 +119,11 @@ export default function useHandleExamTab() {
       return response?.data?.updateExam;
     }
 
+    // duplicate name check
+    if (await isNameDuplicate(GET_LATEST_EXAMS_NAMES, examTabData.name, 'getLatestExams.exams')) {
+      setToastMsg({ type: 'danger', message: 'Exam with same name already exist' });
+      return false;
+    }
     // add new exam
     response = await addExam({ variables: sendData }).catch((err) => {
       console.log(err);
@@ -237,8 +244,9 @@ export default function useHandleExamTab() {
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
     const examRes = await saveExam();
-    const examId = examRes?.id;
+    if (!examRes) return;
 
+    const examId = examRes?.id;
     const insRes = await saveInstructions(examId || examTabData.id);
 
     let schRes = null;

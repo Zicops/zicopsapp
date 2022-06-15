@@ -42,6 +42,7 @@ export default function ExamMasterTab() {
     const qpId = router.query?.qpId || null;
     if (!examId) return setExamTabData(getExamTabDataObject({ qpId }));
 
+    console.log(!examId);
     // load master data
     let isError = false;
     const masterRes = await loadMaster({
@@ -54,6 +55,7 @@ export default function ExamMasterTab() {
     });
     if (isError) return;
     const masterData = masterRes?.data?.getExamsMeta[0];
+    if (!masterData) return;
     const masterObj = {
       id: masterData.id,
       qpId: masterData.QpId,

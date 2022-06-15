@@ -491,6 +491,22 @@ export const GET_LATEST_EXAMS = gql`
   }
 `;
 
+export const GET_LATEST_EXAMS_NAMES = gql`
+  query getLatestExams($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestExams(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      exams {
+        id
+        Name
+      }
+    }
+  }
+`;
+
 export const GET_EXAM_META = gql`
   query getExamsMeta($exam_ids: [String]) {
     getExamsMeta(exam_ids: $exam_ids) {
