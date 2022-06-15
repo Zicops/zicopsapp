@@ -73,7 +73,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         dropdownOptions={{
           inputName: 'category',
           label: 'Category:',
-          placeholder: 'Select the category of the course',
+          placeholder: 'Select Category',
           options: categoryOption,
           value: { value: questionBankData?.category, label: questionBankData?.category },
           isDisabled: !isPopUp
@@ -86,7 +86,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         dropdownOptions={{
           inputName: 'sub_category',
           label: 'Sub-Category:',
-          placeholder: 'Select the sub category of the course',
+          placeholder: 'Select Sub-Category',
           options: subCategoryOption,
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },
           isDisabled: !isPopUp
