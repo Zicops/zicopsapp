@@ -48,7 +48,7 @@ export default function Board(props) {
                     <div
                       className={`${styles.container} ${i < 5 ? styles.fromBottom : ''} ${
                         activeRoom?.id === index ? styles.activeRoom : ''
-                      }`}
+                      } ${cell === 3 && i === 5 ? styles.longImg : ''}`}
                       onClick={() => {
                         alert(roomData[index].route);
                       }}>

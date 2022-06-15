@@ -153,6 +153,13 @@ $doorColor: $secondaryWhite;
 
       left: calc($cellHeightWidth * -2);
 
+      &.longImg {
+        height: calc($cellHeightWidth * 3);
+        width: calc($cellHeightWidth * 5);
+
+        left: calc($cellHeightWidth * -3);
+      }
+
       &.fromBottom {
         top: calc($cellHeightWidth * -2);
       }
@@ -201,7 +208,7 @@ $side: calc($cellHeightWidth - $diff);
   top: 0px;
   left: 0px;
 
-  transition: 200ms ease-out;
+  transition: left 200ms ease-out, top 200ms ease-out;
   z-index: 10;
 
   // https://codepen.io/wilman/pen/KKjOQR
@@ -260,6 +267,7 @@ $side: calc($cellHeightWidth - $diff);
     );
   }
 }
+
 @keyframes pac {
   from {
     height: calc(($cellHeightWidth / 2) - ($diff / 2));

@@ -16,10 +16,10 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH) {
     [0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0],
     [0, 0, 3, 0, 2, 2, 2, 2, 0, 0, 3, 0, 1, 2, 2, 2, 2, 1, 0, 0, 3, 0, 2, 2, 2, 2, 0, 0, 3, 0],
     [1, 1, 4, 1, 2, 2, 2, 2, 1, 1, 4, 1, 1, 2, 2, 2, 2, 1, 1, 1, 4, 1, 2, 2, 2, 2, 1, 1, 4, 1],
-    [2, 2, 2, 1, 1, 1, 1, 4, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 4, 1, 1, 1, 2, 2, 2],
-    [2, 2, 2, 1, 1, 0, 0, 3, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 3, 0, 1, 1, 2, 2, 2],
-    [2, 2, 2, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 2, 2, 2],
-    [2, 2, 2, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 2, 2, 2],
+    [2, 2, 2, 1, 1, 1, 1, 4, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 4, 1, 1, 2, 2, 2],
+    [2, 2, 2, 1, 0, 0, 0, 3, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 3, 0, 1, 2, 2, 2],
+    [2, 2, 2, 1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 1, 2, 2, 2],
+    [2, 2, 2, 1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 1, 2, 2, 2],
     [2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2],
     [1, 1, 4, 1, 2, 2, 2, 2, 1, 1, 4, 1, 1, 2, 2, 2, 2, 1, 1, 1, 4, 1, 2, 2, 2, 2, 1, 1, 4, 1],
     [0, 0, 3, 0, 2, 2, 2, 2, 0, 0, 3, 0, 1, 2, 2, 2, 2, 1, 0, 0, 3, 0, 2, 2, 2, 2, 0, 0, 3, 0],
@@ -33,7 +33,7 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH) {
     { id: 2, img: '/images/dnd1.jpg', route: '/blizJs', x: 2, y: 20 },
     { id: 3, img: '/images/dnd3.jpg', route: '/redwoodJs', x: 2, y: 28 },
     { id: 4, img: '/images/dnd1.jpg', route: '/golang', x: 5, y: 7 },
-    { id: 5, img: '/images/dnd2.jpg', route: '/c++', x: 5, y: 23 },
+    { id: 5, img: '/images/dnd2.jpg', route: '/c++', x: 5, y: 24 },
     { id: 6, img: '/images/dnd1.jpg', route: '/rust', x: 10, y: 2 },
     { id: 7, img: '/images/dnd3.jpg', route: '/angularJs', x: 10, y: 10 },
     { id: 8, img: '/images/dnd1.jpg', route: '/reactJs', x: 10, y: 20 },
@@ -117,6 +117,14 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH) {
       if (x > x + aX) pacmanRef.current?.classList.add(styles.up);
       if (y < y + aY) pacmanRef.current?.classList.add(styles.right);
       if (y > y + aY) pacmanRef.current?.classList.add(styles.left);
+
+      // if (y + aY < 0) {
+      //   console.log(PACMAN_HEIGHT_WIDTH * cols - 2);
+      //   return { ...prev, y: cols - 2, left: PACMAN_HEIGHT_WIDTH * cols - 3 };
+      // }
+      // if (y + aY < cols) {
+      //   return { ...prev, y: 0, left: 0 };
+      // }
 
       if (x + aX < 0 || x + aX >= rows) return prev;
       if (y + aY < 0 || y + aY >= cols) return prev;
