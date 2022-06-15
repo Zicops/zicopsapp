@@ -8,16 +8,16 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
     width: '10px',
     marginTop: '-4px',
     marginLeft: '0',
-    backgroundColor: '#6bcfcf',
-    color: '#6bcfcf'
+    backgroundColor: 'var(--white)',
+    color: 'var(--white)'
   },
   '& .MuiSlider-markActive': {
-    backgroundColor: '#6bcfcf',
+    backgroundColor: 'var(--white)',
     opacity: '1'
   },
 
   '& .MuiSlider-rail': {
-    backgroundColor: '#737373',
+    backgroundColor: 'var(--secondary_black)',
     height: '3px'
   },
   '& .MuiSlider-mark': {
@@ -25,18 +25,18 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
     width: '10px',
     marginTop: '-3px',
     borderRadius: '0',
-    color: '#737373'
+    color: 'var(--secondary_black)'
     // backgroundColor: '#737373'
   },
   '& .MuiSlider-markLabel': {
     marginLeft: '5px',
-    color: '#737373'
+    color: 'var(--secondary_black)'
   },
   '& .MuiSlider-markLabelActive': {
-    color: '#6bcfcf'
+    color: 'var(--white)'
   },
   '& .MuiSlider-track': {
-    backgroundColor: '#6bcfcf',
+    backgroundColor: 'var(--primary)',
     height: '3px'
   },
 

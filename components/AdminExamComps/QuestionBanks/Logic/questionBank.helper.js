@@ -28,4 +28,12 @@ export function getQuestionOptionsObject(data = {}) {
   };
 }
 
-export const imageTypes = ['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'];
+export const acceptedFileTypes = [
+  'image/png',
+  'image/gif',
+  'image/jpeg',
+  'image/svg+xml',
+  'audio/mpeg',
+  'audio/mp3',
+  'video/mp4'
+];

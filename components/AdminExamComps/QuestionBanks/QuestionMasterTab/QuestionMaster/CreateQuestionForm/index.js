@@ -1,11 +1,12 @@
 import { changeHandler } from '../../../../../../helper/common.helper';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
 import LabeledTextarea from '../../../../../common/FormComponents/LabeledTextarea';
+import RangeSlider from '../../../../../common/FormComponents/RangeSlider';
 import InputWithCheckbox from '../../../../../common/InputWithCheckbox';
 import TextInputWithFile from '../../../../../common/InputWithCheckbox/TextInputWithFile';
 import Accordion from '../../../../../small/Accordion';
 import McqCard from '../../../../common/McqCard';
-import { imageTypes } from '../../../Logic/questionBank.helper';
+import { acceptedFileTypes } from '../../../Logic/questionBank.helper';
 import styles from '../../questionMasterTab.module.scss';
 
 export default function CreateQuestionForm({ data, isEdit }) {
@@ -21,13 +22,10 @@ export default function CreateQuestionForm({ data, isEdit }) {
   } = data;
 
   const NUMBER_OF_OPTIONS = 4;
-  const difficultyOptions = [
-    { label: 1, value: 1 },
-    { label: 2, value: 2 },
-    { label: 3, value: 3 },
-    { label: 4, value: 4 },
-    { label: 5, value: 5 }
-  ];
+  const difficultyOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => ({
+    label: val,
+    value: val
+  }));
 
   return (
     <>
@@ -62,21 +60,11 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
       {questionData?.type === 'MCQ' && (
         <>
-          <LabeledDropdown
-            styleClass={styles.marginTop}
-            dropdownOptions={{
-              inputName: 'difficulty',
-              label: 'Select Question Difficulty: ',
-              placeholder: 'Select question difficulty',
-              options: difficultyOptions,
-              value: questionData?.difficulty
-                ? {
-                    value: questionData.difficulty,
-                    label: difficultyOptions[questionData.difficulty - 1].label
-                  }
-                : null
-            }}
-            changeHandler={(e) => changeHandler(e, questionData, setQuestionData, 'difficulty')}
+          <RangeSlider
+            options={difficultyOptions}
+            inputName="difficulty"
+            selected={questionData.difficulty}
+            changeHandler={(e, val) => setQuestionData({ ...questionData, difficulty: val })}
           />
 
           {/* question with file */}
@@ -87,7 +75,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
                 inputName="description"
                 value={questionData?.description}
                 fileNmae={questionData?.file?.name || questionData?.attachment}
-                accept={imageTypes.join(', ')}
+                accept={acceptedFileTypes.join(', ')}
                 changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
                 fileInputHandler={questionFileInputHandler}
               />
@@ -122,7 +110,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
                   <InputWithCheckbox
                     key={index}
                     labelCount={index + 1}
-                    acceptedTypes={imageTypes.join(', ')}
+                    acceptedTypes={acceptedFileTypes.join(', ')}
                     isCorrectHandler={(e) => {
                       optionInputHandler(e, index);
                     }}
