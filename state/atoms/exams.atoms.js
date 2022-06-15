@@ -151,6 +151,7 @@ export function getExamTabDataObject(data = {}) {
     type: data.type || '',
     category: data.category || '',
     sub_category: data.sub_category || '',
+    total_marks: data.total_marks || 0,
 
     is_exam_active: data.is_exam_active || false,
     status: data.status || '',

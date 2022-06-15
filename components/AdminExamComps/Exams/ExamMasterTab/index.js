@@ -42,7 +42,6 @@ export default function ExamMasterTab() {
     const qpId = router.query?.qpId || null;
     if (!examId) return setExamTabData(getExamTabDataObject({ qpId }));
 
-    console.log(!examId);
     // load master data
     let isError = false;
     const masterRes = await loadMaster({

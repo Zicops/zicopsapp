@@ -614,3 +614,22 @@ export const GET_EXAM_CONFIG = gql`
     }
   }
 `;
+
+// !temporary queries
+export const GET_QUESTION_PAPER_SECTION_ID = gql`
+  query questionPaperSections($question_paper_id: String) {
+    getQuestionPaperSections(question_paper_id: $question_paper_id) {
+      id
+    }
+  }
+`;
+
+export const GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION = gql`
+  query getQPBankMappingBySectionId($section_id: String) {
+    getQPBankMappingBySectionId(section_id: $section_id) {
+      id
+      TotalQuestions
+      QuestionMarks
+    }
+  }
+`;
