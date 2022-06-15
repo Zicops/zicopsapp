@@ -8,8 +8,8 @@ import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
-import { imageTypes } from './Logic/questionBank.helper';
 import McqCard from '../common/McqCard';
+import { acceptedFileTypes } from './Logic/questionBank.helper';
 
 export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
   const [loadQBQuestions, { error: errorQBQuestionsData, refetch }] = useLazyQuery(
@@ -46,12 +46,19 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
       headerClassName: 'course-list-header',
       flex: 5,
       renderCell: (params) => {
+        const type = params.row?.AttachmentType;
+        let fileSrc = null;
+        if (params.row?.Attachment) fileSrc = params.row?.Attachment;
+
         return (
           <div style={{ padding: '10px 0' }}>
             {params.row?.Description}
-            {imageTypes.includes(params.row?.AttachmentType) && (
+
+            {acceptedFileTypes.includes(type) && (
               <div style={{ paddingTop: '10px' }}>
-                <img src={params.row?.Attachment} height={100} alt="" />
+                {type?.includes('image') && <img src={fileSrc} height={100} alt="" />}
+                {type?.includes('video') && <video controls src={fileSrc} height={100} />}
+                {type?.includes('audio') && <audio controls src={fileSrc} />}
               </div>
             )}
           </div>

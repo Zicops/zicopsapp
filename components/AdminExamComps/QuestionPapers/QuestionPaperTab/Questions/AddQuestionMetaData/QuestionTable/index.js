@@ -3,7 +3,7 @@ import { getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.help
 import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '../../../../../../common/ZicopsTable';
-import { imageTypes } from '../../../../../QuestionBanks/Logic/questionBank.helper';
+import { acceptedFileTypes } from '../../../../../QuestionBanks/Logic/questionBank.helper';
 import styles from '../../../questionPaperTab.module.scss';
 
 export default function QuestionTable({
@@ -40,7 +40,7 @@ export default function QuestionTable({
             />
             {params.row?.Description}
 
-            {imageTypes.includes(params.row?.AttachmentType) && (
+            {acceptedFileTypes.includes(params.row?.AttachmentType) && (
               <div>
                 <img src={params.row?.Attachment} height={30} alt="" />
               </div>

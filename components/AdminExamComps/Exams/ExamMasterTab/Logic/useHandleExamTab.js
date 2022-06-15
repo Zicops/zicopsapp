@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
@@ -13,6 +13,13 @@ import {
   UPDATE_EXAM_INSTRUCTION,
   UPDATE_EXAM_SCHEDULE
 } from '../../../../../API/Mutations';
+import {
+  GET_LATEST_EXAMS_NAMES,
+  GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION,
+  GET_QUESTION_PAPER_SECTION_ID,
+  queryClient
+} from '../../../../../API/Queries';
+import { isNameDuplicate } from '../../../../../helper/data.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 
@@ -45,6 +52,13 @@ export default function useHandleExamTab() {
     UPDATE_EXAM_CONFIGURATION,
     { client: mutationClient }
   );
+  const [loadSectionId, { error: loadSectionError }] = useLazyQuery(GET_QUESTION_PAPER_SECTION_ID, {
+    client: queryClient
+  });
+  const [loadMappingData, { error: loadMappingError }] = useLazyQuery(
+    GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION,
+    { client: queryClient }
+  );
 
   const router = useRouter();
   // recoil state
@@ -69,6 +83,37 @@ export default function useHandleExamTab() {
     if (addExamScheduleError)
       return setToastMsg({ type: 'danger', message: `Add Exam Schedule Error` });
   }, [addExamError, addExamInstructionError, addExamScheduleError]);
+
+  // update total marks on qp id change
+  useEffect(async () => {
+    const qpId = examTabData?.qpId;
+    if (!qpId) return setExamTabData({ ...examTabData, total_marks: 0 });
+
+    // load section data
+    let isError = false;
+    const sectionRes = await loadSectionId({ variables: { question_paper_id: qpId } }).catch(
+      (err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Section Id load error' });
+      }
+    );
+    if (isError) return;
+    const sectionId = sectionRes?.data?.getQuestionPaperSections[0]?.id;
+    if (!sectionId) return;
+
+    // load instructions
+    const mapRes = await loadMappingData({ variables: { section_id: sectionId } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Mapping load error' });
+    });
+    if (isError) return;
+    const mapData = mapRes?.data?.getQPBankMappingBySectionId[0];
+    const total_marks = mapData?.TotalQuestions * mapData?.QuestionMarks;
+
+    setExamTabData({ ...examTabData, total_marks: total_marks || 0 });
+  }, [examTabData?.qpId]);
 
   function getDateTime(dateObj, timeObj) {
     dateObj = new Date(dateObj);
@@ -117,6 +162,11 @@ export default function useHandleExamTab() {
       return response?.data?.updateExam;
     }
 
+    // duplicate name check
+    if (await isNameDuplicate(GET_LATEST_EXAMS_NAMES, examTabData.name, 'getLatestExams.exams')) {
+      setToastMsg({ type: 'danger', message: 'Exam with same name already exist' });
+      return false;
+    }
     // add new exam
     response = await addExam({ variables: sendData }).catch((err) => {
       console.log(err);
@@ -237,8 +287,9 @@ export default function useHandleExamTab() {
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
     const examRes = await saveExam();
-    const examId = examRes?.id;
+    if (!examRes) return;
 
+    const examId = examRes?.id;
     const insRes = await saveInstructions(examId || examTabData.id);
 
     let schRes = null;
