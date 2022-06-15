@@ -285,6 +285,22 @@ export const GET_LATEST_QUESTION_BANK = gql`
   }
 `;
 
+export const GET_LATEST_QUESTION_BANK_NAMES = gql`
+  query latestQuestionBank($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestQuestionBank(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      questionBanks {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_QUESTION_BANK_META = gql`
   query getQPMeta($question_bank_id: [String]) {
     getQBMeta(qb_ids: $question_bank_id) {

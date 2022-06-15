@@ -14,6 +14,8 @@ import {
 } from '../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+import { isNameDuplicate } from '../../../../helper/data.helper';
+import { GET_LATEST_QUESTION_BANK_NAMES } from '../../../../API/Queries';
 
 export default function useHandleQuestionBank() {
   const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
@@ -57,6 +59,17 @@ export default function useHandleQuestionBank() {
   }, [createError, updateError]);
 
   async function createNewQuestionBank() {
+    // duplicate name check
+    if (
+      await isNameDuplicate(
+        GET_LATEST_QUESTION_BANK_NAMES,
+        questionBankData?.name,
+        'getLatestQuestionBank.questionBanks'
+      )
+    ) {
+      return setToastMsg({ type: 'danger', message: 'Bank with same name already exist' });
+    }
+
     const sendData = {
       name: questionBankData.name,
       description: questionBankData.description,
