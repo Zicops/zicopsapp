@@ -23,7 +23,7 @@ export const RefetchDataAtom = atom({
 // atom for storing single active question bank used for edit, or reference for questions from bank
 export const SelectedQuestionBankAtom = atom({
   key: 'SelectedQuestionBank',
-  default: {}
+  default: getQuestionBankObject()
 });
 
 export function getQuestionBankObject(data = {}) {
@@ -71,6 +71,7 @@ export function getQuestionPaperMasterObject(data = {}) {
     difficulty_level: data.difficulty_level || 0,
     suggested_duration: data.suggested_duration || '',
 
+    status: data.status || 'DRAFT',
     is_active: data.is_active || false,
     is_default: data.is_default || false,
     created_at: data.created_at || '',

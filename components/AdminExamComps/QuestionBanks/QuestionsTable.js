@@ -6,6 +6,7 @@ import { GET_QUESTION_BANK_QUESTIONS, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
+import Button from '../../common/Button';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
 import McqCard from '../common/McqCard';
@@ -135,18 +136,32 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         title="View Question"
         isPopUpOpen={popUpState}
         closeBtn={{ handleClick: () => udpatePopUpState(false) }}>
-        <McqCard
-          questionData={viewQuestion}
-          closePopUp={() => udpatePopUpState(false)}
-          openEditQuestionMasterTab={
-            isEdit
-              ? () => {
-                  udpatePopUpState(false);
-                  openEditQuestionMasterTab();
-                }
-              : null
-          }
-        />
+        <>
+          <McqCard
+            questionData={viewQuestion}
+            closePopUp={() => udpatePopUpState(false)}
+            openEditQuestionMasterTab={
+              isEdit
+                ? () => {
+                    udpatePopUpState(false);
+                    openEditQuestionMasterTab();
+                  }
+                : null
+            }
+          />
+
+          <div style={{ float: 'right', marginTop: '-30px' }}>
+            <Button text={'Cancel'} clickHandler={() => udpatePopUpState(false)} />
+            <Button
+              text={'isEdit'}
+              isDisabled={!isEdit}
+              clickHandler={() => {
+                udpatePopUpState(false);
+                openEditQuestionMasterTab();
+              }}
+            />
+          </div>
+        </>
       </PopUp>
     </>
   );

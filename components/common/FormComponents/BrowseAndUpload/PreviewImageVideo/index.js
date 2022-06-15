@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { truncateToN } from '../../../../../helper/common.helper';
+import Button from '../../../Button';
 import PopUp from '../../../PopUp';
 
 export default function PreviewImageVideo({ fileName, filePath, isVideo, handleClose }) {
@@ -35,6 +36,9 @@ export default function PreviewImageVideo({ fileName, filePath, isVideo, handleC
             )}
           </div>
         )}
+        <div style={{ float: 'right' }}>
+          <Button clickHandler={handleClose} text="Cancel" />
+        </div>
       </PopUp>
     </>
   );

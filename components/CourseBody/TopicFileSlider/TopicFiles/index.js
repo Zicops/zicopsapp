@@ -10,7 +10,8 @@ export default function TopicFiles({ data, handleClick, isResourceShown }) {
 
   const styles = {
     fontSize: '1.25vw',
-    padding: '10px'
+    padding: '10px',
+    wordBreak: 'break-all'
   };
   if (data?.name?.length > 30) {
     styles.fontSize = '1.1vw';

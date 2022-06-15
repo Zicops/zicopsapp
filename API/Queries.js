@@ -392,6 +392,7 @@ export const GET_LATEST_QUESTION_PAPERS = gql`
         SectionWise
         Description
         SuggestedDuration
+        Status
       }
       pageCursor
       direction
