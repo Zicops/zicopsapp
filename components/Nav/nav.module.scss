@@ -150,11 +150,12 @@
   padding: 5px 35px 5px 3px;
   transition: all 0.2s;
 }
-.nav_search{
+.nav_search {
   width: 150px;
   border-bottom: 1px solid #ffffff80;
 }
-.nav_search:focus, .nav_search_long{
+.nav_search:focus,
+.nav_search_long {
   width: 250px;
   border-bottom: 1px solid $primary;
 }
@@ -218,7 +219,6 @@ select.nav_search_dropdow:selected {
   }
 }
 
-
 // Rajeev's dropdown animation
 // .dropdown_menu {
 //   cursor: pointer;
@@ -240,8 +240,8 @@ select.nav_search_dropdow:selected {
     color: $primary !important;
     background-color: $bgHeader !important;
     transform-origin: top center;
-    animation: scaleZ 500ms $var*60ms ease-in-out forwards;
-    &:hover{
+    animation: scaleZ 500ms $var * 60ms ease-in-out forwards;
+    &:hover {
       background-color: $bgHeader !important;
     }
   }
@@ -261,9 +261,6 @@ select.nav_search_dropdow:selected {
   }
 }
 
-
-
-
 @keyframes growDown {
   0% {
     transform: scaleY(0);
@@ -276,4 +273,15 @@ select.nav_search_dropdow:selected {
   100% {
     transform: scaleY(1);
   }
+}
+
+.menuItem,
+.subMenuItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 10px !important;
+}
+
+.subMenuItem {
+  max-width: 160px;
 }

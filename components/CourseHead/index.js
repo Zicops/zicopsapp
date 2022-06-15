@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
 import { useRouter } from 'next/router';
 import styles from './courseHead.module.scss';
+import PopUp from '../common/PopUp';
+import Sitemap from '../common/AdminHeader/Sitemap';
 
 export default function CourseHead({ title }) {
+  const [showSitemap, setShowSitemap] = useState(false);
+
   const router = useRouter();
   const options = [
     { value: 'self-paced', label: 'Self Paced' },
@@ -15,6 +19,7 @@ export default function CourseHead({ title }) {
   function gotoAddcourse() {
     router.push('/admin/courses');
   }
+  console.log(showSitemap);
   return (
     <div className={`${styles.courseHead}`}>
       <div className={`${styles.header}`}>
@@ -39,8 +44,23 @@ export default function CourseHead({ title }) {
           />
         )}
         <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
-        <img src="/images/sitemap_icon.png" className="rightside_icon" alt="" />
+        <img
+          src="/images/sitemap_icon.png"
+          className="rightside_icon"
+          alt=""
+          onClick={() => setShowSitemap(true)}
+        />
       </div>
+
+      {/* sitemap pop up */}
+      <PopUp
+        isFooterVisible={false}
+        title="Sitemap"
+        isPopUpOpen={showSitemap}
+        size="large"
+        closeBtn={{ handleClick: () => setShowSitemap(false) }}>
+        <Sitemap />
+      </PopUp>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import LineText from '../common/LineText';
 import CourseResourceLoop from './CourseResourceLoop';
 import styles from './courseResourcesOpen.module.scss';
 
-const CourseResourcesOpen = ({ isResourceShown, resources }) => {
+export default function CourseResourcesOpen({ isResourceShown, resources }) {
   // sort based on type, making similar type consecutive
   resources = resources.sort((r1, r2) => r1.type.localeCompare(r2.type));
   if (!isResourceShown) return null;
@@ -33,6 +33,4 @@ const CourseResourcesOpen = ({ isResourceShown, resources }) => {
       </LearnerPageContainer>
     </>
   );
-};
-
-export default CourseResourcesOpen;
+}

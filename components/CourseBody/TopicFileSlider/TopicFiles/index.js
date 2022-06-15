@@ -8,16 +8,33 @@ export default function TopicFiles({ data, handleClick, isResourceShown }) {
   const resources = useRecoilValue(ResourcesAtom);
   const fileCount = getResourceCount(resources, data?.id);
 
+  const styles = {
+    fontSize: '1.25vw',
+    padding: '10px'
+  };
+  if (data?.name?.length > 30) {
+    styles.fontSize = '1.1vw';
+    styles.padding = '0px';
+  }
+  if (data?.name?.length > 40) {
+    styles.fontSize = '1vw';
+    styles.padding = '0px';
+  }
+
   return (
     <>
       <div
         className={`topic ${isResourceActive ? 'highlight' : ''}`}
         onClick={() => handleClick(data)}>
-        <div className="topic_head">{data.name}</div>
+        <div className="topic_head" style={styles}>
+          {data.name}
+        </div>
+
         <div className="topic_body">
           <div className="topic_data">
             <p>{fileCount} Files</p>
           </div>
+
           <div className={`arrow_img ${isResourceActive ? 'rotate' : ''}`}>
             <img src="/images/right-arrow-white.png" alt="" />
           </div>
@@ -41,6 +58,9 @@ export default function TopicFiles({ data, handleClick, isResourceShown }) {
             border: 1px solid rgb(81, 190, 188);
           }
           .topic_head {
+            display: flex;
+            min-height: 50px;
+            align-items: center;
             color: var(--primary);
             font-weight: 700;
             font-size: 1.25vw;
