@@ -384,6 +384,22 @@ export const GET_LATEST_QUESTION_PAPERS = gql`
   }
 `;
 
+export const GET_LATEST_QUESTION_PAPERS_NAMES = gql`
+  query latestQuestionPapers($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestQuestionPapers(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      questionPapers {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_QUESTION_PAPER_META = gql`
   query getQPMeta($question_paper_id: [String]) {
     getQPMeta(question_papers_ids: $question_paper_id) {
