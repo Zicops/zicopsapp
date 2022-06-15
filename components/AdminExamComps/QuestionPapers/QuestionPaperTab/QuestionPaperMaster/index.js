@@ -43,7 +43,7 @@ export default function QuestionPaperMaster() {
         inputOptions={{
           inputName: 'description',
           label: 'Description:',
-          placeholder: 'Enter name in less than 160 characters',
+          placeholder: 'Enter description in less than 160 characters',
           value: questionPaperTabData.paperMaster?.description,
           maxLength: 160
         }}

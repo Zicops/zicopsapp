@@ -39,6 +39,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
       field: 'status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
+      renderCell: (params) => params?.rows?.status || 'DRAFT',
       flex: 1
     },
     {

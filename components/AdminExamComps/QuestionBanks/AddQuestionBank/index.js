@@ -60,7 +60,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         inputOptions={{
           inputName: 'description',
           label: 'Description:',
-          placeholder: 'Enter the name in less than 160 characters',
+          placeholder: 'Enter the description in less than 160 characters',
           value: questionBankData?.description,
           isDisabled: !isPopUp,
           maxLength: 160

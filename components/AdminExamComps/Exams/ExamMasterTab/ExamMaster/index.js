@@ -76,7 +76,7 @@ export default function ExamMaster() {
         inputOptions={{
           inputName: 'description',
           label: 'Description:',
-          placeholder: 'Enter description (Upto 60 characters)',
+          placeholder: 'Enter description (Upto 160 characters)',
           value: examTabData.description,
           maxLength: 160
         }}
