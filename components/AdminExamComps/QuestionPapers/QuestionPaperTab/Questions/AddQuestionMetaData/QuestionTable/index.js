@@ -62,15 +62,19 @@ export default function QuestionTable({
       <div className={styles.topbarTable}>
         <p className="w-100">{selectedQb?.name}</p>
 
-        <LabeledInput
-          inputOptions={{
-            inputName: 'qbFilter',
-            placeholder: 'Search Question Bank',
-            value: searchQuery
-          }}
-          changeHandler={({ target: { value } }) => setSearchQuery(value)}
-          isFiftyFifty={true}
-        />
+        <div className={styles.searchInputContainer}>
+          <img src="/images/magnifier.png" height={20} alt="" />
+
+          <LabeledInput
+            inputOptions={{
+              inputName: 'qbFilter',
+              placeholder: 'Search Questions',
+              value: searchQuery
+            }}
+            changeHandler={({ target: { value } }) => setSearchQuery(value)}
+            isFiftyFifty={true}
+          />
+        </div>
       </div>
       <ZicopsTable
         columns={columns}
