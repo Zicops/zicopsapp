@@ -13,6 +13,11 @@ import styles from '../questionPaperTab.module.scss';
 export default function QuestionPaperMaster() {
   const categoryOption = [];
   const subCategoryOption = [];
+  const difficultyOptions = [
+    { value: 'Beginner', label: 'Beginner' },
+    { value: 'Competent', label: 'Competent' },
+    { value: 'Proficient', label: 'Proficient' }
+  ];
 
   // load categories
   const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
@@ -86,7 +91,7 @@ export default function QuestionPaperMaster() {
             inputName: 'difficulty_level',
             label: 'Difficulty Level:',
             placeholder: 'Select the difficulty level',
-            options: categoryOption,
+            options: difficultyOptions,
             value: {
               value: questionPaperTabData.paperMaster?.difficulty_level,
               label: questionPaperTabData.paperMaster?.difficulty_level
