@@ -8,13 +8,36 @@ import styles from '../../../questionPaperTab.module.scss';
 
 export default function QuestionTable({
   qbQuestions,
+  metaData,
   selectedQb,
   handleSelectedQuestions,
-  selectedQuestionIds
+  selectedQuestionIds,
+  setSelectedQuestionIds
 }) {
   const [searchQuery, setSearchQuery] = useState(null);
   const [allQb, setAllQb] = useState(qbQuestions);
   const [filteredQb, setFilteredQb] = useState(qbQuestions);
+
+  const difficulty = {
+    Beginner: [0, 1, 2, 3],
+    Competent: [4, 5, 6, 7],
+    Proficient: [8, 9, 10]
+  };
+  useEffect(() => {
+    const filteredBasedOnDifficulty = allQb.filter((qb) => {
+      return difficulty[metaData?.difficulty_level]?.includes(qb?.Difficulty);
+    });
+
+    // clear selected id if one of selected question id is filtered due to difficulty
+    if (
+      !filteredBasedOnDifficulty?.length ||
+      filteredBasedOnDifficulty.some((qb) => !selectedQuestionIds?.includes(qb?.id))
+    ) {
+      setSelectedQuestionIds([]);
+    }
+    setAllQb(filteredBasedOnDifficulty);
+    setFilteredQb(filteredBasedOnDifficulty);
+  }, []);
 
   useEffect(() => {
     if (!searchQuery) return;
@@ -69,7 +92,7 @@ export default function QuestionTable({
             inputOptions={{
               inputName: 'qbFilter',
               placeholder: 'Search Questions',
-              value: searchQuery
+              value: searchQuery || ''
             }}
             changeHandler={({ target: { value } }) => setSearchQuery(value)}
             isFiftyFifty={true}

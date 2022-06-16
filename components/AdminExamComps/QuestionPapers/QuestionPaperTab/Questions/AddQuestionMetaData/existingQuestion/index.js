@@ -18,6 +18,11 @@ export default function ExistingQuestion({
 }) {
   const categoryOption = [{ value: '', label: '-- Select --' }];
   const subCategoryOption = [{ value: '', label: '-- Select --' }];
+  const difficultyOptions = [
+    { value: 'Beginner', label: 'Beginner' },
+    { value: 'Competent', label: 'Competent' },
+    { value: 'Proficient', label: 'Proficient' }
+  ];
 
   // load categories
   const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
@@ -94,7 +99,7 @@ export default function ExistingQuestion({
           inputName: 'difficulty_level',
           label: 'Difficulty:',
           placeholder: 'Select difficulty level',
-          options: categoryOption,
+          options: difficultyOptions,
           value: { value: metaData?.difficulty_level, label: metaData?.difficulty_level }
         }}
         changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'difficulty_level')}
