@@ -126,7 +126,11 @@ export default function Preview({ masterData }) {
       const fixedData = fixedRes?.data?.getSectionFixedQuestions[0];
       const allQuestionIds = fixedData?.QuestionId?.split(',') || [];
 
-      if (!allQuestionIds?.length) continue;
+      if (!allQuestionIds?.length) {
+        totalQuestions += mapping?.total_questions;
+        totalMarks += mapping?.question_marks * mapping?.total_questions || 0;
+        continue;
+      }
 
       // load all bank questions which is mapped in every mapping
       const questionRes = await loadQBQuestions({

@@ -99,20 +99,29 @@ export default function useHandleExamTab() {
       }
     );
     if (isError) return;
-    const sectionId = sectionRes?.data?.getQuestionPaperSections[0]?.id;
-    if (!sectionId) return;
+    const sections = sectionRes?.data?.getQuestionPaperSections;
+    let totalMarks = 0;
+    if (!sections.length) return;
 
-    // load instructions
-    const mapRes = await loadMappingData({ variables: { section_id: sectionId } }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Mapping load error' });
-    });
-    if (isError) return;
-    const mapData = mapRes?.data?.getQPBankMappingBySectionId[0];
-    const total_marks = mapData?.TotalQuestions * mapData?.QuestionMarks;
+    for (let i = 0; i < sections.length; i++) {
+      const sectionId = sections[i]?.id;
+      // load map
+      const mapRes = await loadMappingData({ variables: { section_id: sectionId } }).catch(
+        (err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Mapping load error' });
+        }
+      );
+      if (isError) return;
+      const mapData = mapRes?.data?.getQPBankMappingBySectionId || [];
+      totalMarks = mapData?.reduce(
+        (total, item) => (total += item?.QuestionMarks * item?.TotalQuestions),
+        totalMarks
+      );
+    }
 
-    setExamTabData({ ...examTabData, total_marks: total_marks || 0 });
+    setExamTabData({ ...examTabData, total_marks: totalMarks || 0 });
   }, [examTabData?.qpId]);
 
   function getDateTime(dateObj, timeObj) {
