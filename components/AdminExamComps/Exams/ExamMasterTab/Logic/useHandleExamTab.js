@@ -22,6 +22,7 @@ import {
 import { isNameDuplicate } from '../../../../../helper/data.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
+import { SCHEDULE_TYPE } from './examMasterTab.helper';
 
 export default function useHandleExamTab() {
   const [addExam, { error: addExamError }] = useMutation(ADD_EXAM, {
@@ -302,7 +303,7 @@ export default function useHandleExamTab() {
     const insRes = await saveInstructions(examId || examTabData.id);
 
     let schRes = null;
-    if (examTabData.schedule_type === 'scheduled')
+    if (examTabData.schedule_type === SCHEDULE_TYPE[0])
       schRes = await saveSchedule(examId || examTabData.id);
 
     const confRes = await saveConfig(examId || examTabData.id);

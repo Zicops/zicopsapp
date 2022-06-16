@@ -1,0 +1,36 @@
+@import '../../../styles/base.scss';
+
+.examPreview {
+  width: 100%;
+  text-align: center;
+
+  h1 {
+    color: $primary;
+  }
+
+  p {
+    color: $darkThree;
+    span {
+      color: $white;
+    }
+  }
+}
+
+// info comp
+.info {
+  display: flex;
+  width: 100%;
+  color: $white;
+
+  strong {
+    color: $primary;
+    width: 50%;
+    text-align: right;
+  }
+
+  span {
+    width: 50%;
+    padding-left: 10px;
+    text-align: left;
+  }
+}

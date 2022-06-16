@@ -4,12 +4,14 @@ import Configuration from '../Configuration';
 import ExamMaster from '../ExamMaster';
 import Schedule from '../Schedule';
 
+export const SCHEDULE_TYPE = ['scheduled', 'anytime'];
+
 export const ExamMasterTabDataSelector = selector({
   key: 'ExamMasterTabData',
   get: ({ get }) => {
     const isScheduledExam = get(ExamTabDataAtom).schedule_type;
 
-    if (isScheduledExam === 'scheduled') return getTabData();
+    if (isScheduledExam === SCHEDULE_TYPE[0]) return getTabData();
 
     return getTabData().filter((data) => data.name !== 'Schedule');
   }
