@@ -10,6 +10,7 @@ import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
 import styles from '../examMasterTab.module.scss';
+import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
 
 export default function ExamMaster() {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -218,7 +219,7 @@ export default function ExamMaster() {
           type="radio"
           label="Scheduled"
           name="schedule_type"
-          value="scheduled"
+          value={SCHEDULE_TYPE[0]}
           isDisabled={!!examTabData?.id}
           isChecked={examTabData.schedule_type === 'scheduled'}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
@@ -227,7 +228,7 @@ export default function ExamMaster() {
           type="radio"
           label="Take Anytime"
           name="schedule_type"
-          value="anytime"
+          value={SCHEDULE_TYPE[1]}
           isDisabled={!!examTabData?.id}
           isChecked={examTabData.schedule_type === 'anytime'}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}

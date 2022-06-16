@@ -22,6 +22,7 @@ import {
 import { isNameDuplicate } from '../../../../../helper/data.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
+import { SCHEDULE_TYPE } from './examMasterTab.helper';
 
 export default function useHandleExamTab() {
   const [addExam, { error: addExamError }] = useMutation(ADD_EXAM, {
@@ -99,20 +100,29 @@ export default function useHandleExamTab() {
       }
     );
     if (isError) return;
-    const sectionId = sectionRes?.data?.getQuestionPaperSections[0]?.id;
-    if (!sectionId) return;
+    const sections = sectionRes?.data?.getQuestionPaperSections;
+    let totalMarks = 0;
+    if (!sections.length) return;
 
-    // load instructions
-    const mapRes = await loadMappingData({ variables: { section_id: sectionId } }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Mapping load error' });
-    });
-    if (isError) return;
-    const mapData = mapRes?.data?.getQPBankMappingBySectionId[0];
-    const total_marks = mapData?.TotalQuestions * mapData?.QuestionMarks;
+    for (let i = 0; i < sections.length; i++) {
+      const sectionId = sections[i]?.id;
+      // load map
+      const mapRes = await loadMappingData({ variables: { section_id: sectionId } }).catch(
+        (err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Mapping load error' });
+        }
+      );
+      if (isError) return;
+      const mapData = mapRes?.data?.getQPBankMappingBySectionId || [];
+      totalMarks = mapData?.reduce(
+        (total, item) => (total += item?.QuestionMarks * item?.TotalQuestions),
+        totalMarks
+      );
+    }
 
-    setExamTabData({ ...examTabData, total_marks: total_marks || 0 });
+    setExamTabData({ ...examTabData, total_marks: totalMarks || 0 });
   }, [examTabData?.qpId]);
 
   function getDateTime(dateObj, timeObj) {
@@ -293,7 +303,7 @@ export default function useHandleExamTab() {
     const insRes = await saveInstructions(examId || examTabData.id);
 
     let schRes = null;
-    if (examTabData.schedule_type === 'scheduled')
+    if (examTabData.schedule_type === SCHEDULE_TYPE[0])
       schRes = await saveSchedule(examId || examTabData.id);
 
     const confRes = await saveConfig(examId || examTabData.id);
