@@ -25,14 +25,16 @@ export default function ExamPreview({ data = {} }) {
       </p>
 
       <section>
+        <Info
+          title="Schedule:"
+          value={
+            scheduleType === SCHEDULE_TYPE[0]
+              ? `${date?.getDate()} ${months[date?.getMonth()]}, ${date?.getFullYear()}`
+              : 'N/A'
+          }
+        />
         {scheduleType === SCHEDULE_TYPE[0] && (
-          <>
-            <Info
-              title="Schedule:"
-              value={`${date?.getDate()} ${months[date?.getMonth()]}, ${date?.getFullYear()}`}
-            />
-            <Info value={date?.toTimeString()} customStyles={{ color: 'var(--dark_three)' }} />
-          </>
+          <Info value={date?.toTimeString()} customStyles={{ color: 'var(--dark_three)' }} />
         )}
         <Info title="Expertise Level:" value={difficulty} />
         <Info title="Proctoring:" value={isProctoring ? 'Yes' : 'No'} />
