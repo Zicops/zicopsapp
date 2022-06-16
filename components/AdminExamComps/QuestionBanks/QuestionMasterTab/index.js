@@ -21,16 +21,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
 
     let allOptions = [];
     // set questions
-    const question = {
-      id: editQuestionData.id,
-      description: editQuestionData.Description,
-      type: editQuestionData.Type,
-      difficulty: editQuestionData.Difficulty,
-      attachment: editQuestionData.Attachment,
-      attachmentType: editQuestionData.AttachmentType,
-      hint: editQuestionData.Hint,
-      qbmId: editQuestionData.QbmId
-    };
+    const question = { ...editQuestionData };
 
     // load and set all options
     const { data } = await loadOptions({ variables: { question_id: editQuestionData.id } });

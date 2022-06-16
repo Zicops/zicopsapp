@@ -36,7 +36,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
       flex: 1
     },
     {
-      field: 'status',
+      field: 'Status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
       flex: 1

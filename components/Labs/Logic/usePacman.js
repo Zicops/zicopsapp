@@ -1,44 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from '../labs.module.scss';
 
-export default function usePacman(PACMAN_HEIGHT_WIDTH) {
+export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
   const pacmanRef = useRef(null);
   const [activeRoom, setActiveRoom] = useState(null);
   const [activeBtn, setActiveBtn] = useState(null);
-
-  // 0 is room
-  // 1 is path
-  // 2 is wall blocks
-  // 3 is room entrance
-  // 4 is door so that entrace cell is visible
-  const board = [
-    [0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0],
-    [0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0],
-    [0, 0, 3, 0, 2, 2, 2, 2, 0, 0, 3, 0, 1, 2, 2, 2, 2, 1, 0, 0, 3, 0, 2, 2, 2, 2, 0, 0, 3, 0],
-    [1, 1, 4, 1, 2, 2, 2, 2, 1, 1, 4, 1, 1, 2, 2, 2, 2, 1, 1, 1, 4, 1, 2, 2, 2, 2, 1, 1, 4, 1],
-    [2, 2, 2, 1, 1, 1, 1, 4, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 4, 1, 1, 1, 2, 2, 2],
-    [2, 2, 2, 1, 1, 0, 0, 3, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 3, 0, 1, 1, 2, 2, 2],
-    [2, 2, 2, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 2, 2, 2],
-    [2, 2, 2, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 2, 2, 2],
-    [2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2],
-    [1, 1, 4, 1, 2, 2, 2, 2, 1, 1, 4, 1, 1, 2, 2, 2, 2, 1, 1, 1, 4, 1, 2, 2, 2, 2, 1, 1, 4, 1],
-    [0, 0, 3, 0, 2, 2, 2, 2, 0, 0, 3, 0, 1, 2, 2, 2, 2, 1, 0, 0, 3, 0, 2, 2, 2, 2, 0, 0, 3, 0],
-    [0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0],
-    [0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0]
-  ];
-
-  const roomData = [
-    { id: 0, img: '/images/dnd1.jpg', route: '/c', x: 2, y: 2 },
-    { id: 1, img: '/images/dnd2.jpg', route: '/css', x: 2, y: 10 },
-    { id: 2, img: '/images/dnd1.jpg', route: '/blizJs', x: 2, y: 20 },
-    { id: 3, img: '/images/dnd3.jpg', route: '/redwoodJs', x: 2, y: 28 },
-    { id: 4, img: '/images/dnd1.jpg', route: '/golang', x: 5, y: 7 },
-    { id: 5, img: '/images/dnd2.jpg', route: '/c++', x: 5, y: 23 },
-    { id: 6, img: '/images/dnd1.jpg', route: '/rust', x: 10, y: 2 },
-    { id: 7, img: '/images/dnd3.jpg', route: '/angularJs', x: 10, y: 10 },
-    { id: 8, img: '/images/dnd1.jpg', route: '/reactJs', x: 10, y: 20 },
-    { id: 9, img: '/images/dnd3.jpg', route: '/php', x: 10, y: 28 }
-  ];
 
   // pac man positions,  should be multiples of PACMAN_HEIGHT_WIDTH constant
   const firstRowValueIndex = board.findIndex((row, i) => row[0] === 1);
@@ -65,6 +31,15 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH) {
 
     pacmanRef.current.activeRoom = activeRoom;
   }, [activeRoom]);
+
+  // reset display none to ''
+  useEffect(() => {
+    if (!pacmanRef?.current?.style?.display) return;
+
+    setTimeout(() => {
+      pacmanRef.current.style.display = '';
+    }, 0);
+  }, [pacmanData]);
 
   // activate keydown evt listner
   useEffect(() => {
@@ -107,26 +82,66 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH) {
     setTimeout(() => pacmanRef.current?.classList.remove(styles.animate), 500);
   }
 
+  function teleport(_x, _y, prev) {
+    const isLeft = _y < 0;
+    const isRight = _y === cols;
+
+    const isTop = _x < 0;
+    const isBottom = _x === rows;
+
+    if (!(isLeft || isRight || isBottom || isTop)) return null;
+
+    let newData = { ...prev };
+    pacmanRef.current.style.display = 'none';
+    if (isLeft) {
+      newData.y = cols - 1;
+      newData.left = PACMAN_HEIGHT_WIDTH * (cols - 1);
+    }
+    if (isTop) {
+      newData.x = rows - 1;
+      newData.top = PACMAN_HEIGHT_WIDTH * (rows - 1);
+    }
+    if (isRight) {
+      newData.y = 0;
+      newData.left = 0;
+    }
+    if (isBottom) {
+      newData.x = 0;
+      newData.top = 0;
+    }
+
+    return { ...prev, ...newData };
+  }
+
   // update the pacman location and other related states
   function updateState(aX = 0, aY = 0, aTop = 0, aLeft = 0, index) {
     setPacmanData((prev) => {
       const { top, left, x, y } = prev;
 
+      // udpate the pacman face direction
       removePreviousDirections();
       if (x < x + aX) pacmanRef.current?.classList.add(styles.down);
       if (x > x + aX) pacmanRef.current?.classList.add(styles.up);
       if (y < y + aY) pacmanRef.current?.classList.add(styles.right);
       if (y > y + aY) pacmanRef.current?.classList.add(styles.left);
 
+      // corner wall teleportation
+      const isTeleporting = teleport(x + aX, y + aY, prev);
+      if (isTeleporting) return isTeleporting;
+
       if (x + aX < 0 || x + aX >= rows) return prev;
       if (y + aY < 0 || y + aY >= cols) return prev;
 
       const boardValue = board[x + aX][y + aY];
-      if (![1, 3, 4].includes(boardValue)) return prev;
+      if (![1, 4].includes(boardValue)) return prev;
 
-      if (boardValue === 3) {
+      if (boardValue === 4) {
         const room = roomData.filter((room) => room.x === x + aX && room.y === y + aY)[0];
         setActiveRoom(room);
+
+        // face pacman towards the room image
+        removePreviousDirections();
+        pacmanRef.current?.classList.add(x + aX < 4 ? styles.up : styles.down);
       } else {
         setActiveRoom(null);
       }

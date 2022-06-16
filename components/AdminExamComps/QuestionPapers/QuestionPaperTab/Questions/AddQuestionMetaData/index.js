@@ -157,9 +157,11 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
 
       {!!showQuestionTable && (
         <QuestionTable
+          metaData={metaData}
           qbQuestions={qbQuestions}
           selectedQb={questionBankOptions.filter((qb) => qb?.id === metaData?.qbId)[0]}
           selectedQuestionIds={selectedQuestionIds}
+          setSelectedQuestionIds={setSelectedQuestionIds}
           handleSelectedQuestions={handleSelectedQuestions}
         />
       )}

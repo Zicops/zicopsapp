@@ -8,6 +8,8 @@ import {
   mutationClient,
   UPDATE_QUESTION_PAPER
 } from '../../../../../API/Mutations';
+import { GET_LATEST_QUESTION_PAPERS_NAMES } from '../../../../../API/Queries';
+import { isNameDuplicate } from '../../../../../helper/data.helper';
 import {
   getQuestionPaperTabDataObject,
   QuestionPaperTabDataAtom
@@ -86,6 +88,17 @@ export default function useHandlePaperTab() {
 
     const tabData = { ...questionPaperTabData };
     const questionPaperData = questionPaperTabData.paperMaster;
+    // duplicate name check
+    if (
+      await isNameDuplicate(
+        GET_LATEST_QUESTION_PAPERS_NAMES,
+        questionPaperData?.name,
+        'getLatestQuestionPapers.questionPapers'
+      )
+    ) {
+      return setToastMsg({ type: 'danger', message: 'Paper with same name already exist' });
+    }
+
     const sendData = {
       name: questionPaperData.name || '',
       category: questionPaperData.category || '',
@@ -96,6 +109,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
+      status: questionPaperData.status || 'DRAFT',
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
@@ -195,6 +209,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
+      status: questionPaperData.status || 'DRAFT',
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'

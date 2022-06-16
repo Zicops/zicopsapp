@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import { GET_QUESTION_OPTIONS, queryClient } from '../../../../API/Queries';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import Button from '../../../common/Button';
-import { imageTypes } from '../../QuestionBanks/Logic/questionBank.helper';
+import { acceptedFileTypes } from '../../QuestionBanks/Logic/questionBank.helper';
 import styles from './mcqCard.module.scss';
 import McqOption from './McqOption';
 
@@ -39,6 +39,11 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
     });
   }, []);
 
+  let fileSrc = null;
+
+  if (questionData?.file) fileSrc = URL.createObjectURL(questionData?.file);
+  if (questionData?.attachment) fileSrc = questionData?.attachment;
+
   return (
     <>
       <div className={`${styles.mcq_container}`}>
@@ -59,10 +64,11 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
             )}
           </p>
 
-          {imageTypes.includes(questionData?.attachmentType) && (
+          {acceptedFileTypes.includes(questionData?.attachmentType) && fileSrc && (
             <div className={`${styles.quesImg}`}>
-              {questionData?.attachment && <img src={questionData?.attachment} alt="" />}
-              {questionData?.file && <img src={URL.createObjectURL(questionData?.file)} alt="" />}
+              {questionData?.attachmentType?.includes('image') && <img src={fileSrc} alt="" />}
+              {questionData?.attachmentType?.includes('video') && <video controls src={fileSrc} />}
+              {questionData?.attachmentType?.includes('audio') && <audio controls src={fileSrc} />}
             </div>
           )}
         </div>

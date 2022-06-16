@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../../../../../API/Queries';
 import { loadQueryData } from '../../../../../../../helper/api.helper';
@@ -17,6 +18,11 @@ export default function ExistingQuestion({
 }) {
   const categoryOption = [{ value: '', label: '-- Select --' }];
   const subCategoryOption = [{ value: '', label: '-- Select --' }];
+  const difficultyOptions = [
+    { value: 'Beginner', label: 'Beginner' },
+    { value: 'Competent', label: 'Competent' },
+    { value: 'Proficient', label: 'Proficient' }
+  ];
 
   // load categories
   const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
@@ -24,6 +30,16 @@ export default function ExistingQuestion({
   allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  // set meta data cat and sub cat
+  useEffect(() => {
+    setMetaData({
+      ...metaData,
+      category: questionBankOptions?.filter((op) => op?.value === metaData?.qbId)[0]?.category,
+      sub_category: questionBankOptions?.filter((op) => op?.value === metaData?.qbId)[0]
+        ?.sub_category
+    });
+  }, [questionBankOptions]);
 
   return (
     <>
@@ -83,7 +99,7 @@ export default function ExistingQuestion({
           inputName: 'difficulty_level',
           label: 'Difficulty:',
           placeholder: 'Select difficulty level',
-          options: categoryOption,
+          options: difficultyOptions,
           value: { value: metaData?.difficulty_level, label: metaData?.difficulty_level }
         }}
         changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'difficulty_level')}

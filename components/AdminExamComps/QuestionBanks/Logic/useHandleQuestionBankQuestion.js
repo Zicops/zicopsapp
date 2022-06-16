@@ -13,7 +13,7 @@ import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import {
   getQuestionBankQuestionObject,
   getQuestionOptionsObject,
-  imageTypes
+  acceptedFileTypes
 } from './questionBank.helper';
 
 export default function useHandleQuestionBankQuestion(editData, closeQuestionMasterTab) {
@@ -103,9 +103,10 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   function isImageValid(e) {
     if (e.target.type === 'file') {
       const file = e.target.files[0];
+      console.log(file);
       if (!file) return false;
-      if (!imageTypes.includes(file?.type)) {
-        setToastMsg({ type: 'danger', message: `${imageTypes.join(', ')} only accepted` });
+      if (!acceptedFileTypes.includes(file?.type)) {
+        setToastMsg({ type: 'danger', message: `${acceptedFileTypes.join(', ')} only accepted` });
         return false;
       }
     }
