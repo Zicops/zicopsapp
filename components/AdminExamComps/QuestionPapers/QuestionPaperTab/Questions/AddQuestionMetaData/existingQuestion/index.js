@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../../../../../API/Queries';
 import { loadQueryData } from '../../../../../../../helper/api.helper';
@@ -25,6 +26,16 @@ export default function ExistingQuestion({
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
+  // set meta data cat and sub cat
+  useEffect(() => {
+    setMetaData({
+      ...metaData,
+      category: questionBankOptions?.filter((op) => op?.value === metaData?.qbId)[0]?.category,
+      sub_category: questionBankOptions?.filter((op) => op?.value === metaData?.qbId)[0]
+        ?.sub_category
+    });
+  }, [questionBankOptions]);
+
   return (
     <>
       <div className={styles.twoInputContainer}>
@@ -35,9 +46,7 @@ export default function ExistingQuestion({
             label: 'Category:',
             placeholder: 'Select category',
             options: categoryOption,
-            value: questionBankOptions
-              ?.filter((op) => op?.value === metaData?.qbId)
-              .map((op) => ({ value: op?.category, label: op?.category }))[0]
+            value: { value: metaData?.category, label: metaData?.category }
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'category')}
           isFiftyFifty={true}
@@ -50,9 +59,7 @@ export default function ExistingQuestion({
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
             options: subCategoryOption,
-            value: questionBankOptions
-              ?.filter((op) => op?.value === metaData?.qbId)
-              .map((op) => ({ value: op?.sub_category, label: op?.sub_category }))[0]
+            value: { value: metaData?.sub_category, label: metaData?.sub_category }
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'sub_category')}
           isFiftyFifty={true}
