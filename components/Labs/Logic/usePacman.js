@@ -118,13 +118,13 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH) {
       if (y < y + aY) pacmanRef.current?.classList.add(styles.right);
       if (y > y + aY) pacmanRef.current?.classList.add(styles.left);
 
-      // if (y + aY < 0) {
-      //   console.log(PACMAN_HEIGHT_WIDTH * cols - 2);
-      //   return { ...prev, y: cols - 2, left: PACMAN_HEIGHT_WIDTH * cols - 3 };
-      // }
-      // if (y + aY < cols) {
-      //   return { ...prev, y: 0, left: 0 };
-      // }
+      if (y + aY < 0) {
+        console.log(PACMAN_HEIGHT_WIDTH * cols - 2);
+        return { ...prev, y: cols - 2, left: PACMAN_HEIGHT_WIDTH * cols - 3 };
+      }
+      if (y + aY < cols) {
+        return { ...prev, y: 0, left: 0 };
+      }
 
       if (x + aX < 0 || x + aX >= rows) return prev;
       if (y + aY < 0 || y + aY >= cols) return prev;
