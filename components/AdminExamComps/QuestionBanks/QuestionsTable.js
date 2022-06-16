@@ -78,6 +78,16 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
       headerName: 'Display',
       sortable: false,
       renderCell: (params) => {
+        const data = {
+          id: params.row.id,
+          description: params.row.Description,
+          type: params.row.Type,
+          difficulty: params.row.Difficulty,
+          attachment: params.row.Attachment,
+          attachmentType: params.row.AttachmentType,
+          hint: params.row.Hint,
+          qbmId: params.row.QbmId
+        };
         return (
           <>
             {isEdit && (
@@ -88,7 +98,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                   outline: '0',
                   border: '0'
                 }}
-                onClick={() => openEditQuestionMasterTab(params.row)}>
+                onClick={() => openEditQuestionMasterTab(data)}>
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
               </button>
             )}
@@ -101,14 +111,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                 border: '0'
               }}
               onClick={() => {
-                setViewQuestion({
-                  id: params.row.id,
-                  description: params.row.Description,
-                  hint: params.row.Hint,
-                  attachment: params.row.Attachment,
-                  attachmentType: params.row.AttachmentType,
-                  difficulty: params.row.Difficulty
-                });
+                setViewQuestion(data);
                 udpatePopUpState(true);
               }}>
               <img src="/images/svg/eye-line.svg" width={20}></img>
@@ -153,11 +156,11 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
           <div style={{ float: 'right', marginTop: '-30px' }}>
             <Button text={'Cancel'} clickHandler={() => udpatePopUpState(false)} />
             <Button
-              text={'isEdit'}
+              text={'Edit'}
               isDisabled={!isEdit}
               clickHandler={() => {
                 udpatePopUpState(false);
-                openEditQuestionMasterTab();
+                openEditQuestionMasterTab(viewQuestion);
               }}
             />
           </div>
