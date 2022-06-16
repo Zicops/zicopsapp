@@ -93,7 +93,8 @@ export default function ExamMaster() {
             inputName: 'duration',
             label: 'Exam Duration:',
             placeholder: 'Enter duration of the exam',
-            value: examTabData.duration?.toString()
+            value: examTabData.duration?.toString(),
+            isNumericOnly: true
           }}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
@@ -123,6 +124,10 @@ export default function ExamMaster() {
             className="w-75"
             name="passing_criteria"
             placeholder="Passing Criteria"
+            onKeyPress={(e) => {
+              const regexForNumber = /[0-9]/;
+              if (!regexForNumber.test(e.key)) e.preventDefault();
+            }}
             value={examTabData?.passing_criteria}
             onChange={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
