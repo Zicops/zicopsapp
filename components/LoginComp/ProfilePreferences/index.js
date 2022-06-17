@@ -17,10 +17,11 @@ const ProfilePreferences = ({setCurrentComponent}) => {
     const [selected, setSelected] = useState([])
     const [isFiltered, setIsFiltered] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
-    const [searchQuery, setSearchQuery] = useState('')
+    // const [searchQuery, setSearchQuery] = useState('')
     const [filteredData, setFilteredData] = useState([])
     const [searchedData, setSearchedData] = useState([])
     const [searched, setSearched] = useState(false)
+    const [primary, setPrimary] = useState('')
 
     const handleIcon = () => {
         setIsOpen(!isOpen);
@@ -66,7 +67,7 @@ const ProfilePreferences = ({setCurrentComponent}) => {
 
     const handleQuery = (event) => {
         const query = event.target.value;
-        setSearchQuery(query)
+        // setSearchQuery(query)
         if(query.length > 0){
             setSearched(true)
             setSearchedData([])
@@ -122,9 +123,8 @@ const ProfilePreferences = ({setCurrentComponent}) => {
     },[])
 
     useEffect(() => {
-        if(searchQuery.length > 0 || isOpen)
-            scrollRef.current.scrollTo(0, scrollRef.current.offsetTop)
-    },[searchQuery, isOpen])
+        setIsOpen(false)
+    },[isVisible])
 
 
 
@@ -270,15 +270,14 @@ const ProfilePreferences = ({setCurrentComponent}) => {
                     selected > 0 && <Box mt={4} />
                 }
                 <div>
-                    {selected.length > 0 && <div className={`${styles.title}`}>Selected Sub-Category</div>}
+                    {selected.length > 0 && <div className={`${styles.selected_title}`}>Selected Sub-Category</div>}
                     {
                         <Grid container spacing={2}>
                             {selected.map((subCategory) => (
                                 <Grid item xs={4}>
-                                    <div className={`${styles.checkbox_container}`}
+                                    <div className={`${primary === subCategory ? styles.checkbox_container_selected : styles.checkbox_container}`}
                                          onClick={() => {
-                                             setData(handleClick(subCategory))
-                                             deleteObject(subCategory)
+                                            setPrimary(subCategory)
                                          }}
                                     >
                                         <div>

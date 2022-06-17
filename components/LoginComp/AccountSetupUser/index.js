@@ -60,6 +60,17 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                 <Box mt={3} />
                 <LabeledInput
                     inputOptions={{
+                        inputName: 'base-lang',
+                        label: 'Base Language:',
+                        placeholder: 'Select base language',
+                        // value: ,
+                        maxLength: 60
+                    }}
+                    // changeHandler={() => {}}
+                />
+                <Box mt={3} />
+                <LabeledInput
+                    inputOptions={{
                         inputName: 'email',
                         label: 'Email:',
                         placeholder: 'Enter Email (ab@zicops.com)',
