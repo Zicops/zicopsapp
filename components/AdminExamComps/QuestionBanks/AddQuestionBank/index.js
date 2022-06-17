@@ -50,7 +50,10 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
 
   // load questions
   useEffect(() => {
-    loadQBQuestions({ variables: { question_bank_id: selectedQb?.id } }).then(({ data }) => {
+    loadQBQuestions({
+      variables: { question_bank_id: selectedQb?.id },
+      fetchPolicy: 'no-cache'
+    }).then(({ data }) => {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
