@@ -52,7 +52,7 @@ export const UserMenu = [
   },
   {
     title: 'Labs',
-    link: '/'
+    link: '/labs'
   },
   {
     title: 'Exams',

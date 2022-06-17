@@ -21,8 +21,6 @@ export default function useHandleDragDrop(courseContextData) {
         newDraglist.push({ dragOrder: i, name: e });
       });
 
-      console.log(newDraglist);
-
       // remove selected categories
       const selectedItems = [];
       newDraglist = newDraglist.filter((item) => {
@@ -43,8 +41,6 @@ export default function useHandleDragDrop(courseContextData) {
           return { name: item.name, dragOrder: item.dragOrder, rank: selectedItemOrder };
         })
         .sort((item1, item2) => item1.rank - item2.rank);
-
-      console.log(newDraglist, droplist, newDroplist, selectedItems);
 
       updateDraglist(newDraglist);
       updateDroplist(newDroplist);
@@ -98,14 +94,11 @@ export default function useHandleDragDrop(courseContextData) {
   function removeItem(e) {
     const [dragOrder, name, index, rank] = e.target.getAttribute('data-index').split('::');
 
-    console.log(dragOrder, name, index, rank);
     const previousDroplist = [...droplist];
     const previousDraglist = [...draglist];
 
     previousDroplist.splice(index, 1);
     previousDraglist.splice(dragOrder, 0, { dragOrder, name });
-
-    console.log(previousDraglist);
 
     updateDroplist(previousDroplist);
     updateDraglist(previousDraglist);
@@ -118,8 +111,7 @@ export default function useHandleDragDrop(courseContextData) {
     setSearchQuery(query);
   }
 
-  function highlightDroppable(a, b, c) {
-    console.log(a, b, c);
+  function highlightDroppable() {
     setIsDragOn(1);
   }
 

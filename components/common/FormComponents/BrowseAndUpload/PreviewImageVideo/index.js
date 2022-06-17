@@ -1,33 +1,44 @@
 import Image from 'next/image';
 import { useState } from 'react';
+import { truncateToN } from '../../../../../helper/common.helper';
+import Button from '../../../Button';
 import PopUp from '../../../PopUp';
 
 export default function PreviewImageVideo({ fileName, filePath, isVideo, handleClose }) {
   const [fileSrc, setFileSrc] = useState('');
 
   if (typeof filePath === 'object') {
+    console.log(filePath);
     convertFileToUrl(filePath)
-      .then((src) => setFileSrc(src))
+      .then((src) => {
+        setFileSrc(src);
+        console.log('src: ', src);
+      })
       .catch((err) => console.log('Error in PreviewImageVideo:', err));
   }
 
-  if (!fileSrc) return null;
+  if (typeof filePath === 'object' && !fileSrc) return null;
 
   return (
     <>
       <PopUp
         closeBtn={{ handleClick: handleClose }}
-        title={`Image Preview (${fileName})`}
+        title={`${isVideo ? 'Video' : 'Image'} Preview (${truncateToN(fileName, 50)})`}
         isFooterVisible={false}>
         {isVideo ? (
           <div style={{ position: 'relative', width: '100%' }}>
-            <video controls src={fileSrc} style={{ width: '100%' }}></video>
+            <video controls src={fileSrc || filePath} style={{ width: '100%' }}></video>
           </div>
         ) : (
           <div style={{ position: 'relative', width: '100%', paddingBottom: '60%' }}>
-            {filePath && <Image src={fileSrc} layout="fill" objectFit="contain" alt="" />}
+            {(filePath || fileSrc) && (
+              <Image src={fileSrc || filePath} layout="fill" objectFit="contain" alt="" />
+            )}
           </div>
         )}
+        <div style={{ float: 'right' }}>
+          <Button clickHandler={handleClose} text="Cancel" />
+        </div>
       </PopUp>
     </>
   );

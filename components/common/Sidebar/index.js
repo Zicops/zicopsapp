@@ -1,13 +1,32 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useRef, useState } from 'react';
 import styles from './sidebar.module.scss';
 
 // move the styles in sidebar.module.scss in this folder
 export default function Sidebar({ sidebarItemsArr }) {
   const router = useRouter();
+  const lastItem = useRef();
+  const [isSidebarBottomReached, setIsSidebarBottomReached] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      setIsSidebarBottomReached(entries[0].isIntersecting);
+    });
+
+    if (lastItem?.current) observer.observe(lastItem?.current);
+  }, []);
+
   return (
     <>
-      <div className={styles.sidebar}>
+      <div
+        className={styles.sidebar}
+        onScroll={(e) => {
+          const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+          console.log(bottom);
+          setIsSidebarBottomReached(bottom);
+        }}>
         <div className={styles.course_management}>
           <img
             src={sidebarItemsArr.image || '/images/sidebar_img.png'}
@@ -38,13 +57,20 @@ export default function Sidebar({ sidebarItemsArr }) {
             })}
           </ul>
         </div>
-      <div className={styles.sidebar_footer_menu}>
-        <ul>
-          <Link href="/admin" className="row">
-            <a><span>Back to Home</span></a>
-          </Link>
-        </ul>
-      </div>
+
+        <div
+          className={styles.sidebar_footer_menu}
+          style={isSidebarBottomReached ? { position: 'absolute' } : {}}>
+          <ul>
+            <Link href="/admin" className="row">
+              <a>
+                <span>Back to Home</span>
+              </a>
+            </Link>
+          </ul>
+        </div>
+
+        <div ref={lastItem} className={styles.lastItem}></div>
       </div>
     </>
   );

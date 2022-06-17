@@ -115,3 +115,19 @@
     }
   }
 }
+
+.searchInputContainer {
+  position: relative;
+  width: 400px;
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+  }
+
+  input {
+    padding-left: 30px;
+  }
+}

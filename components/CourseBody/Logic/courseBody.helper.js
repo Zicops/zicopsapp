@@ -1,7 +1,5 @@
-import { useRecoilState } from 'recoil';
 import { filterAndSortTopicsBasedOnModuleId } from '../../../helper/data.helper';
-import { VideoAtom } from '../../../state/atoms/video.atom';
-import CourseBodyNotes from '../../large/CourseBodyNotes';
+import CourseBodyNotes from '../CourseBodyNotes';
 import CourseBodyAbout from '../CourseBodyAbout';
 import CourseBodyResources from '../CourseBodyResources';
 import CourseBodyTopics from '../CourseBodyTopics';
@@ -54,7 +52,7 @@ export function updateVideoData(
     startPlayer: true,
     isPreview: false,
     currentTopicIndex: currentTopicIndex,
-    
+
     topicContent: topicContent,
     currentTopicContentIndex: 0,
     currentSubtitleIndex: 0,

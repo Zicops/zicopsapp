@@ -54,6 +54,7 @@ export default function ExamMasterTab() {
     });
     if (isError) return;
     const masterData = masterRes?.data?.getExamsMeta[0];
+    if (!masterData) return;
     const masterObj = {
       id: masterData.id,
       qpId: masterData.QpId,

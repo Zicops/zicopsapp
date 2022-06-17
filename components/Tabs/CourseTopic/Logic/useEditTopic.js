@@ -161,11 +161,13 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
     );
 
     // resources
-    loadResourcesData({ variables: { topic_id: topicId } }).then(({ data }) => {
-      updateResources(data.getTopicResources);
+    loadResourcesData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        updateResources(data.getTopicResources);
 
-      if (errorResourcesData) setToastMsg({ type: 'danger', message: 'Resources Load Error' });
-    });
+        if (errorResourcesData) setToastMsg({ type: 'danger', message: 'Resources Load Error' });
+      }
+    );
 
     const filteredTopicContent = filterTopicContent(topicContent, topicId);
     topicContentData.toggleTopicContentForm(filteredTopicContent.length === 0);

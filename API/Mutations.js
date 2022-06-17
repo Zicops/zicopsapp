@@ -883,6 +883,7 @@ export const ADD_QUESTION_PAPER = gql`
     $section_wise: Boolean
     $description: String
     $suggested_duration: String
+    $status: String
   ) {
     addQuestionPaper(
       input: {
@@ -896,6 +897,7 @@ export const ADD_QUESTION_PAPER = gql`
         SectionWise: $section_wise
         Description: $description
         SuggestedDuration: $suggested_duration
+        Status: $status
       }
     ) {
       id
@@ -911,6 +913,7 @@ export const ADD_QUESTION_PAPER = gql`
       SectionWise
       Description
       SuggestedDuration
+      Status
     }
   }
 `;
@@ -928,6 +931,7 @@ export const UPDATE_QUESTION_PAPER = gql`
     $section_wise: Boolean
     $description: String
     $suggested_duration: String
+    $status: String
   ) {
     updateQuestionPaper(
       input: {
@@ -942,6 +946,7 @@ export const UPDATE_QUESTION_PAPER = gql`
         SectionWise: $section_wise
         Description: $description
         SuggestedDuration: $suggested_duration
+        Status: $status
       }
     ) {
       id
@@ -957,6 +962,7 @@ export const UPDATE_QUESTION_PAPER = gql`
       SectionWise
       Description
       SuggestedDuration
+      Status
     }
   }
 `;

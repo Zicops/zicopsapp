@@ -38,7 +38,9 @@
   margin-top: 20px;
   color: $darkThree;
   font-weight: bold;
-  img {
+  img,
+  video,
+  audio {
     height: 100px;
     width: 200px;
     object-fit: contain;
@@ -100,7 +102,7 @@
   span {
     margin-right: 20px;
 
-    &:last-child{
+    &:last-child {
       position: absolute;
       right: 0;
     }
@@ -123,12 +125,16 @@
 }
 
 // mcq options
-.options img {
-  height: 100px;
-  width: 200px;
-  top: 20px;
-  object-fit: contain;
-  object-position: left;
+.options {
+  img,
+  video,
+  audio {
+    height: 100px;
+    width: 200px;
+    top: 20px;
+    object-fit: contain;
+    object-position: left;
+  }
 }
 
 .options {

@@ -5,82 +5,10 @@ import { useRecoilState } from 'recoil';
 import { GET_LATEST_EXAMS, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
+import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
+import Preview from './Preview';
 
-const data = [
-  {
-    id: 1,
-    name: 'Design Basics',
-    type: 'Take Anytime',
-    status: 'Saved',
-    category: 'Design',
-    subcategory: 'UI Design',
-    noOfQuestions: 200
-  },
-  {
-    id: 2,
-    name: 'Effective Communication',
-    type: 'Schedule',
-    status: 'Started',
-    category: 'Soft Skill',
-    subcategory: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 3,
-    name: 'Core Java Fundamentals',
-    type: 'Take Anytime',
-    status: 'Saved',
-    category: 'IT Development',
-    subcategory: 'Java',
-    noOfQuestions: 200
-  },
-  {
-    id: 4,
-    name: 'Design Basics',
-    type: 'Schedule',
-    status: 'Saved',
-    category: 'Design',
-    subcategory: 'UI Design',
-    noOfQuestions: 200
-  },
-  {
-    id: 5,
-    name: 'Effective Communication',
-    type: 'Take Anytime',
-    status: 'Saved',
-    category: 'Soft Skill',
-    subcategory: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 6,
-    name: 'Core Java Fundamentals',
-    type: 'Schedule',
-    status: 'Saved',
-    category: 'IT Development',
-    subcategory: 'Java',
-    noOfQuestions: 200
-  },
-  {
-    id: 7,
-    name: 'Effective Communication',
-    type: 'Take Anytime',
-    status: 'Saved',
-    category: 'Soft Skill',
-    subcategory: 'Communication',
-    noOfQuestions: 200
-  },
-  {
-    id: 8,
-    name: 'Design Basics',
-    type: 'Schedule',
-    status: 'Saved',
-    category: 'Design',
-    subcategory: 'UI Design',
-    noOfQuestions: 200
-  }
-];
 export default function ExamsTable({ isEdit = false }) {
   const [loadExams, { error }] = useLazyQuery(GET_LATEST_EXAMS, { client: queryClient });
 
@@ -88,6 +16,7 @@ export default function ExamsTable({ isEdit = false }) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [exams, setExams] = useState([]);
+  const [examData, setExamData] = useState(null);
 
   // load table data
   useEffect(() => {
@@ -108,7 +37,7 @@ export default function ExamsTable({ isEdit = false }) {
       flex: 1.5
     },
     {
-      field: 'Type',
+      field: 'ScheduleType',
       headerClassName: 'course-list-header',
       headerName: 'Type',
       flex: 1
@@ -125,6 +54,19 @@ export default function ExamsTable({ isEdit = false }) {
       headerName: 'Action',
       sortable: false,
       renderCell: (params) => {
+        const data = {
+          id: params.row.id,
+          name: params.row.Name,
+          description: params.row.Description,
+          code: params.row.Code,
+          qpId: params.row.QpId,
+          type: params.row.Type,
+          scheduleType: params.row.ScheduleType,
+          duration: params.row.Duration,
+          category: params.row.Category,
+          sub_category: params.row.SubCategory
+        };
+
         return (
           <>
             <button
@@ -133,7 +75,8 @@ export default function ExamsTable({ isEdit = false }) {
                 backgroundColor: 'transparent',
                 outline: '0',
                 border: '0'
-              }}>
+              }}
+              onClick={() => setExamData(data)}>
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>
             {isEdit && (
@@ -166,6 +109,15 @@ export default function ExamsTable({ isEdit = false }) {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
       />
+
+      {/* preview popup */}
+      <PopUp
+        title={examData?.name}
+        isPopUpOpen={!!examData}
+        closeBtn={{ handleClick: () => setExamData(null) }}
+        isFooterVisible={false}>
+        <Preview examData={examData || {}} />
+      </PopUp>
     </>
   );
 }

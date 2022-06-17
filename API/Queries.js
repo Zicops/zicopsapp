@@ -285,6 +285,22 @@ export const GET_LATEST_QUESTION_BANK = gql`
   }
 `;
 
+export const GET_LATEST_QUESTION_BANK_NAMES = gql`
+  query latestQuestionBank($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestQuestionBank(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      questionBanks {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_QUESTION_BANK_META = gql`
   query getQPMeta($question_bank_id: [String]) {
     getQBMeta(qb_ids: $question_bank_id) {
@@ -300,6 +316,15 @@ export const GET_QUESTION_BANK_META = gql`
       is_active
       is_default
       owner
+    }
+  }
+`;
+
+export const GET_QUESTION_BANK_NAME = gql`
+  query getQPName($question_bank_id: [String]) {
+    getQBMeta(qb_ids: $question_bank_id) {
+      id
+      name
     }
   }
 `;
@@ -367,10 +392,27 @@ export const GET_LATEST_QUESTION_PAPERS = gql`
         SectionWise
         Description
         SuggestedDuration
+        Status
       }
       pageCursor
       direction
       pageSize
+    }
+  }
+`;
+
+export const GET_LATEST_QUESTION_PAPERS_NAMES = gql`
+  query latestQuestionPapers($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestQuestionPapers(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      questionPapers {
+        id
+        name
+      }
     }
   }
 `;
@@ -482,6 +524,22 @@ export const GET_LATEST_EXAMS = gql`
   }
 `;
 
+export const GET_LATEST_EXAMS_NAMES = gql`
+  query getLatestExams($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestExams(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      exams {
+        id
+        Name
+      }
+    }
+  }
+`;
+
 export const GET_EXAM_META = gql`
   query getExamsMeta($exam_ids: [String]) {
     getExamsMeta(exam_ids: $exam_ids) {
@@ -554,6 +612,25 @@ export const GET_EXAM_CONFIG = gql`
       IsActive
       CreatedAt
       UpdatedAt
+    }
+  }
+`;
+
+// !temporary queries
+export const GET_QUESTION_PAPER_SECTION_ID = gql`
+  query questionPaperSections($question_paper_id: String) {
+    getQuestionPaperSections(question_paper_id: $question_paper_id) {
+      id
+    }
+  }
+`;
+
+export const GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION = gql`
+  query getQPBankMappingBySectionId($section_id: String) {
+    getQPBankMappingBySectionId(section_id: $section_id) {
+      id
+      TotalQuestions
+      QuestionMarks
     }
   }
 `;

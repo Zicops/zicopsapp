@@ -1,6 +1,11 @@
-import { useEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { GET_CATS_N_SUB_CATS } from '../../../../API/Queries';
+import {
+  GET_CATS_N_SUB_CATS,
+  GET_QUESTION_BANK_QUESTIONS,
+  queryClient
+} from '../../../../API/Queries';
 import { loadQueryData } from '../../../../helper/api.helper';
 import { changeHandler } from '../../../../helper/common.helper';
 import {
@@ -14,7 +19,12 @@ import useHandleQuestionBank from '../Logic/useHandleQuestionBank';
 import styles from './addQuestionBank.module.scss';
 
 export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = true }) {
+  const [loadQBQuestions, { error: errorQBQuestionsData }] = useLazyQuery(
+    GET_QUESTION_BANK_QUESTIONS,
+    { client: queryClient }
+  );
   const selectedQb = useRecoilValue(SelectedQuestionBankAtom);
+  const [isQuestionsPresent, setIsQuestionsPresent] = useState(false);
 
   const categoryOption = [];
   const subCategoryOption = [];
@@ -38,6 +48,16 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
     setQuestionBankData(getQuestionBankObject(selectedQb));
   }, [selectedQb]);
 
+  // load questions
+  useEffect(() => {
+    loadQBQuestions({ variables: { question_bank_id: selectedQb?.id } }).then(({ data }) => {
+      if (errorQBQuestionsData)
+        return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
+
+      setIsQuestionsPresent(!!data?.getQuestionBankQuestions?.length);
+    });
+  }, [selectedQb?.id]);
+
   return (
     <div className={`${styles.questionBankContainer}`}>
       {/* bank name */}
@@ -46,7 +66,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         inputOptions={{
           inputName: 'name',
           label: 'Name:',
-          placeholder: 'Enter name of the course (Upto 60 characters)',
+          placeholder: 'Enter the name in less than 60 characters',
           value: questionBankData?.name,
           isDisabled: !isPopUp,
           maxLength: 60
@@ -60,7 +80,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         inputOptions={{
           inputName: 'description',
           label: 'Description:',
-          placeholder: 'Enter name of the course (Upto 60 characters)',
+          placeholder: 'Enter the description in less than 160 characters',
           value: questionBankData?.description,
           isDisabled: !isPopUp,
           maxLength: 160
@@ -73,10 +93,10 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         dropdownOptions={{
           inputName: 'category',
           label: 'Category:',
-          placeholder: 'Select the category of the course',
+          placeholder: 'Select Category',
           options: categoryOption,
           value: { value: questionBankData?.category, label: questionBankData?.category },
-          isDisabled: !isPopUp
+          isDisabled: isQuestionsPresent || !isPopUp
         }}
         changeHandler={(e) => changeHandler(e, questionBankData, setQuestionBankData, 'category')}
       />
@@ -86,10 +106,10 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         dropdownOptions={{
           inputName: 'sub_category',
           label: 'Sub-Category:',
-          placeholder: 'Select the sub category of the course',
+          placeholder: 'Select Sub-Category',
           options: subCategoryOption,
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },
-          isDisabled: !isPopUp
+          isDisabled: isQuestionsPresent || !isPopUp
         }}
         changeHandler={(e) =>
           changeHandler(e, questionBankData, setQuestionBankData, 'sub_category')

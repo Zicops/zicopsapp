@@ -3,18 +3,41 @@ import { getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.help
 import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '../../../../../../common/ZicopsTable';
-import { imageTypes } from '../../../../../QuestionBanks/Logic/questionBank.helper';
+import { acceptedFileTypes } from '../../../../../QuestionBanks/Logic/questionBank.helper';
 import styles from '../../../questionPaperTab.module.scss';
 
 export default function QuestionTable({
   qbQuestions,
+  metaData,
   selectedQb,
   handleSelectedQuestions,
-  selectedQuestionIds
+  selectedQuestionIds,
+  setSelectedQuestionIds
 }) {
   const [searchQuery, setSearchQuery] = useState(null);
   const [allQb, setAllQb] = useState(qbQuestions);
   const [filteredQb, setFilteredQb] = useState(qbQuestions);
+
+  const difficulty = {
+    Beginner: [0, 1, 2, 3],
+    Competent: [4, 5, 6, 7],
+    Proficient: [8, 9, 10]
+  };
+  useEffect(() => {
+    const filteredBasedOnDifficulty = allQb.filter((qb) => {
+      return difficulty[metaData?.difficulty_level]?.includes(qb?.Difficulty);
+    });
+
+    // clear selected id if one of selected question id is filtered due to difficulty
+    if (
+      !filteredBasedOnDifficulty?.length ||
+      filteredBasedOnDifficulty.some((qb) => !selectedQuestionIds?.includes(qb?.id))
+    ) {
+      setSelectedQuestionIds([]);
+    }
+    setAllQb(filteredBasedOnDifficulty);
+    setFilteredQb(filteredBasedOnDifficulty);
+  }, []);
 
   useEffect(() => {
     if (!searchQuery) return;
@@ -40,7 +63,7 @@ export default function QuestionTable({
             />
             {params.row?.Description}
 
-            {imageTypes.includes(params.row?.AttachmentType) && (
+            {acceptedFileTypes.includes(params.row?.AttachmentType) && (
               <div>
                 <img src={params.row?.Attachment} height={30} alt="" />
               </div>
@@ -62,15 +85,19 @@ export default function QuestionTable({
       <div className={styles.topbarTable}>
         <p className="w-100">{selectedQb?.name}</p>
 
-        <LabeledInput
-          inputOptions={{
-            inputName: 'qbFilter',
-            placeholder: 'Search Question Bank',
-            value: searchQuery
-          }}
-          changeHandler={({ target: { value } }) => setSearchQuery(value)}
-          isFiftyFifty={true}
-        />
+        <div className={styles.searchInputContainer}>
+          <img src="/images/magnifier.png" height={20} alt="" />
+
+          <LabeledInput
+            inputOptions={{
+              inputName: 'qbFilter',
+              placeholder: 'Search Questions',
+              value: searchQuery || ''
+            }}
+            changeHandler={({ target: { value } }) => setSearchQuery(value)}
+            isFiftyFifty={true}
+          />
+        </div>
       </div>
       <ZicopsTable
         columns={columns}
