@@ -1,9 +1,9 @@
 import UserTable from './UserTable';
 
-export default function MyUser() {
+export default function MyUser({ getUser }) {
   return (
     <>
-      <UserTable />
+      <UserTable selectedUser={getUser} />
     </>
   );
 }

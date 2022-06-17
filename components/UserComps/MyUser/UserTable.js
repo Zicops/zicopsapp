@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import EllipsisMenu from '../../common/EllipsisMenu';
 import LabeledRadioCheckbox from '../../common/FormComponents/LabeledRadioCheckbox';
@@ -5,7 +6,7 @@ import ZicopsTable from '../../common/ZicopsTable';
 
 const data = [
   {
-    id: 1,
+    id: 'uniwfcno3wo1oe31u9qdj',
     emailId: 'abc@zicops.com',
     firstName: 'ABC',
     lastName: 'DEF',
@@ -70,7 +71,13 @@ const data = [
   }
 ];
 
-export default function UserTable() {
+export default function UserTable({ selectedUser }) {
+  const [userId, setUserId] = useState([]);
+
+  useEffect(() => {
+    selectedUser(userId);
+  }, [userId]);
+
   const columns = [
     {
       field: 'emailId',
@@ -80,8 +87,10 @@ export default function UserTable() {
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
             type="checkbox"
-            //   isChecked={selectedQuestionIds?.includes(params.row.id)}
-            //   changeHandler={(e) => handleSelectedQuestions(params.row.id, e.target.checked)}
+            isChecked={userId.length === data.length}
+            changeHandler={(e) => {
+              setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
+            }}
           />
           Email Id
         </div>
@@ -91,8 +100,19 @@ export default function UserTable() {
           <div className="center-elements-with-flex">
             <LabeledRadioCheckbox
               type="checkbox"
-              //   isChecked={selectedQuestionIds?.includes(params.row.id)}
-              //   changeHandler={(e) => handleSelectedQuestions(params.row.id, e.target.checked)}
+              isChecked={userId?.includes(params.id)}
+              changeHandler={(e) => {
+                const userList = [...userId];
+
+                if (e.target.checked) {
+                  userList.push(params.id);
+                } else {
+                  const index = userList.findIndex((id) => id === params.id);
+                  userList.splice(index, 1);
+                }
+
+                setUserId(userList);
+              }}
             />
             {params.row?.emailId}
           </div>

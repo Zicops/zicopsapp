@@ -1,11 +1,7 @@
 import styles from './adminHeader.module.scss';
 
-export default function AdminSubHeader({
-  extraLeftCompArr = [],
-  leftBtnData = [],
-  dropdownData = {}
-}) {
-  const [btn1, btn2] = leftBtnData;
+export default function AdminSubHeader({ leftBtnData = [], dropdownData = {} }) {
+  const [btn1, btn2, ...extraLeftCompArr] = leftBtnData;
   const { label, isHidden = false, handleChange, inputName } = dropdownData;
 
   return (
@@ -18,7 +14,12 @@ export default function AdminSubHeader({
         {!!btn2 && btn2?.isHidden !== true && (
           <button onClick={btn2?.handleClick}>{btn2?.text}</button>
         )}
-        {extraLeftCompArr}
+        {extraLeftCompArr.map((btn) => {
+          if (!btn) return null;
+          if (btn?.isHidden === true) return null;
+
+          return <button onClick={btn?.handleClick}>{btn?.text}</button>;
+        })}
       </div>
 
       {!isHidden && (
