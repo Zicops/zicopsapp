@@ -190,3 +190,50 @@ $lineColor: $darkThree;
     transform: translateY(-50%);
   }
 }
+
+// subheader
+.subHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  color: $white;
+  padding: 0 10px;
+
+  .left {
+    button {
+      color: $primary;
+      background-color: transparent;
+      border: 1px solid $primary;
+      outline: none;
+      padding: 5px 15px;
+      cursor: pointer;
+
+      font-weight: 600;
+    }
+  }
+
+  .right {
+    select {
+      width: 150px;
+
+      background-color: transparent;
+      color: $white;
+      padding: 5px;
+      margin-left: 20px;
+      border: 1px solid $white;
+      border-radius: 0px;
+      cursor: pointer;
+
+      &:focus-visible {
+        border-radius: 0px;
+        outline: none;
+      }
+
+      option {
+        background-color: $black;
+        color: $white;
+      }
+    }
+  }
+}

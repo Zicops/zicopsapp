@@ -4,13 +4,15 @@ import { useRouter } from 'next/router';
 import styles from './adminHeader.module.scss';
 import PopUp from '../PopUp';
 import Sitemap from './Sitemap';
+import AdminSubHeader from './AdminSubHeader';
 
 export default function AdminHeader({
   title,
   pageRoute,
   handleClickForPlus,
   isAddShown = false,
-  isShowOption = false
+  isShowOption = false,
+  subHeaderData = null
 }) {
   const [showSitemap, setShowSitemap] = useState(false);
   const router = useRouter();
@@ -28,49 +30,53 @@ export default function AdminHeader({
     router.push(pageRoute);
   }
   return (
-    <div className={`${styles.courseHead}`}>
-      <div className={`${styles.header}`}>
-        <h2>{title}</h2>
-        {isShowOption && (
-          <Select
-            instanceId="coursehead_coursetype"
-            options={options}
-            defaultValue={{ value: 'self-paced', label: 'Self Paced' }}
-            className="zicops_select_container"
-            classNamePrefix="zicops_select"
-            isSearchable={false}
-          />
-        )}
-      </div>
+    <div>
+      <div className={`${styles.courseHead}`}>
+        <div className={`${styles.header}`}>
+          <h2>{title}</h2>
+          {isShowOption && (
+            <Select
+              instanceId="coursehead_coursetype"
+              options={options}
+              defaultValue={{ value: 'self-paced', label: 'Self Paced' }}
+              className="zicops_select_container"
+              classNamePrefix="zicops_select"
+              isSearchable={false}
+            />
+          )}
+        </div>
 
-      <div className={styles.icons}>
-        {/* TODO: remove first condition */}
-        {!route.includes('admin/courses') && isAddShown && (
+        <div className={styles.icons}>
+          {/* TODO: remove first condition */}
+          {!route.includes('admin/courses') && isAddShown && (
+            <img
+              src="/images/plus_big.png"
+              className="rightside_icon"
+              alt=""
+              onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+            />
+          )}
+          <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
           <img
-            src="/images/plus_big.png"
+            src="/images/sitemap_icon.png"
             className="rightside_icon"
             alt=""
-            onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+            onClick={() => setShowSitemap(true)}
           />
-        )}
-        <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
-        <img
-          src="/images/sitemap_icon.png"
-          className="rightside_icon"
-          alt=""
-          onClick={() => setShowSitemap(true)}
-        />
+        </div>
+
+        {/* sitemap pop up */}
+        <PopUp
+          isFooterVisible={false}
+          title="Sitemap"
+          isPopUpOpen={showSitemap}
+          size="large"
+          closeBtn={{ handleClick: () => setShowSitemap(false) }}>
+          <Sitemap />
+        </PopUp>
       </div>
 
-      {/* sitemap pop up */}
-      <PopUp
-        isFooterVisible={false}
-        title="Sitemap"
-        isPopUpOpen={showSitemap}
-        size="large"
-        closeBtn={{ handleClick: () => setShowSitemap(false) }}>
-        <Sitemap />
-      </PopUp>
+      {subHeaderData && <AdminSubHeader {...subHeaderData} />}
     </div>
   );
 }
