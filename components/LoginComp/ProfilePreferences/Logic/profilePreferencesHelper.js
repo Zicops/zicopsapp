@@ -11,8 +11,8 @@ export const languages = [
 
 export const categories = [
     'Design',
-    // 'Development',
-    // 'Cloud',
+    'Development',
+    'Cloud',
     // 'Technology',
 ]
 
@@ -94,6 +94,14 @@ export const subCategories = [
     {
         category: 'Development',
         name: 'Micro Service'
+    },
+    {
+        category: 'Development',
+        name: 'System Design'
+    },
+    {
+        category: 'Development',
+        name: 'Arc Design'
     },
 
     {

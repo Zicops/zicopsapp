@@ -1,0 +1,33 @@
+@import '../../../../styles/base.scss';
+
+.container {
+  width: 100%;
+  margin-bottom: 24px;
+
+  .category_title_container{
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .category_title_line{
+    width: 80%;
+    height: 2px;
+    background: $secondaryWhite;
+  }
+  .transform_text{
+    text-transform: none;
+  }
+
+  .checkbox_container{
+    padding: 0 0 0 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+    cursor: pointer;
+    background: $secondaryWhite;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
