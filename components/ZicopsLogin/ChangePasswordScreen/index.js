@@ -2,7 +2,8 @@ import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
 import LoginHeadOne from '../LoginHeadOne';
-const ChangePasswordScreen = () => {
+const ChangePasswordScreen = ({ setPage }) => {
+
   return (
     <>
       <ZicopsLogin>
@@ -16,7 +17,8 @@ const ChangePasswordScreen = () => {
           <LoginEmail type={'password'} placeholder={'Re-enter new password'} />
           <div className="change_buttons">
             <LoginButton title={'Cancel'} />
-            <LoginButton title={'Change'} />
+            <LoginButton title={'Change'} handleClick={()=>
+    setPage(1)} />
           </div>
         </div>
       </ZicopsLogin>
