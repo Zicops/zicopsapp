@@ -1,4 +1,4 @@
-import styles from './LoginEmail.module.scss';
+import styles from './loginEmail.module.scss';
 const LoginEmail = ({ chngeHandle, type, placeholder }) => {
   return (
     <div className={`${styles.login_email}`}>
