@@ -12,8 +12,6 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
 const ProfilePreferences = ({setCurrentComponent}) => {
 
-    const [selectedLanguage, setSelectedLanguage] = useState('English')
-
     const [selected, setSelected] = useState([])
     const [isFiltered, setIsFiltered] = useState(false)
     const [isOpen, setIsOpen] = useState(false)

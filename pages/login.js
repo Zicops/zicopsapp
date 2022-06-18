@@ -1,6 +1,5 @@
 import LoginComp from '../components/LoginComp/index'
 
-
 const Login = () => {
     return(
         <>

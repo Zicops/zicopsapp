@@ -8,7 +8,7 @@ import ProfilePreferences from "./ProfilePreferences";
 
 const LoginComp = () => {
 
-    const [currentComponent, setCurrentComponent]  = useState(2)
+    const [currentComponent, setCurrentComponent]  = useState(0)
 
     return (
         <ThemeProvider theme={createTheme({

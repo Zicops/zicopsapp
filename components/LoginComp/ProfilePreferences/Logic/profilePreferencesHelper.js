@@ -1,12 +1,18 @@
 export const languages = [
-    'English',
-    'English (UK)',
-    'Italiano',
-    'Filipino',
-    'Dansk',
-    'Magyar',
-    'Indonesia',
-    'Deutsch',
+    {
+        label: 'English',
+        value: 'English'
+    },
+    {
+        label: 'English (UK)',
+        value: 'English (UK)'
+    },
+    // 'Italiano',
+    // 'Filipino',
+    // 'Dansk',
+    // 'Magyar',
+    // 'Indonesia',
+    // 'Deutsch',
 ]
 
 export const categories = [

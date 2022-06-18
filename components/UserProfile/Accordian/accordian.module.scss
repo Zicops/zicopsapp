@@ -1,0 +1,12 @@
+@import '../../../styles/base.scss';
+
+.container{
+  overflow-y: auto;
+}
+.container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.container::-webkit-scrollbar-thumb {
+ background: $header;
+}

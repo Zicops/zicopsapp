@@ -9,15 +9,21 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    div{
+      padding-right: 4px;
+    }
   }
+
   .category_title_line{
-    width: 80%;
+    flex: 1;
     height: 2px;
     background: $secondaryWhite;
   }
   .transform_text{
     text-transform: none;
   }
+
 
   .checkbox_container{
     padding: 0 0 0 12px;
