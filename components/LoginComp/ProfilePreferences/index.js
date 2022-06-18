@@ -10,7 +10,7 @@ import FilterListSharpIcon from '@mui/icons-material/FilterListSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
 
-const ProfilePreferences = ({setCurrentComponent}) => {
+const ProfilePreferences = ({setCurrentComponent, setPage}) => {
 
     const [selected, setSelected] = useState([])
     const [isFiltered, setIsFiltered] = useState(false)
@@ -310,7 +310,10 @@ const ProfilePreferences = ({setCurrentComponent}) => {
                                     // result.map((each) => {delete each.isSelected});
                                     // console.log("result", result);
                                     // console.log("selected", selected);
-                                    console.log("filtered", filteredData);
+                                    // console.log("filtered", filteredData);
+                                    
+                                      setPage(0);
+                                    
                                 }}
                                 // onClick={() => {setCurrentComponent(3)}}
                         >

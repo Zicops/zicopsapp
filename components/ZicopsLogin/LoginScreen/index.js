@@ -15,7 +15,7 @@ const LoginScreen = ({setPage}) => {
           <LoginEmail type={'email'} placeholder={'Email address'} />
           <LoginEmail type={'password'} placeholder={'Password'} />
           <div className="small_text">Forgot Password?</div>
-          <LoginButton title={'Login'} handleClick={() => setPage(0)} />
+          <LoginButton title={'Login'} handleClick={() => setPage(3)} />
         </div>
       </ZicopsLogin>
       <style jsx>{`
