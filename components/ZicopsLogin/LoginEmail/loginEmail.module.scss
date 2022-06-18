@@ -1,0 +1,23 @@
+@import '../../../styles/base.scss';
+
+.login_email{
+    // flex: 1;
+    margin: 5px 0px;
+}
+input .mail{
+ border: 2px solid $primary !important;
+}
+.login_email input{
+    background-color: $darkOne;
+    width: 100%;
+    // flex: 1;
+    color: $secondaryBlack;
+    padding: 7px 10px;
+    border-radius: 3px;
+    font-size: 16px;
+  
+    // background-image:url('/images/svg/visibility.svg'); 
+    // background-repeat: no-repeat;
+    // background-position: center;
+    // border: 2px solid $primary;
+}
