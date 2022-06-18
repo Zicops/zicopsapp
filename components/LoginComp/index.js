@@ -19,8 +19,8 @@ const LoginComp = () => {
                 mode: 'dark',
             },
         })}>
-            <div className={`${styles.container}`}>
-                <Container maxWidth={'md'} sx={{px: 12, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+            <div className={`${styles.bgContainer}`}>
+                <Container maxWidth={'md'} className={`${styles.container}`}>
                     <div className={`${styles.ZicopsLogo}`}>
                         <img src="./images/zicops-header-logo.png" alt="not found" />
                     </div>

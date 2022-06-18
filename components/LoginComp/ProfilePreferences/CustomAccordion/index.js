@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import styles from './customAccordion.module.scss';
 import {Box, Button, Checkbox, Grid} from "@mui/material";
+import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 
-const CustomAccordion = ({ data, setData, category }) => {
+const CustomAccordion = ({ selected, setSelected, searched, searchedData, data, setData, category }) => {
 
     const [isActive, setIsActive] = useState(false);
 
-    const filteredLength = data.filter((each) => each.category === category).length
+    const filteredLength =  (searched ? searchedData : data).filter((each) => each.category === category).length
 
     const handleClick = (subCategory) => {
         return data.map(function (obj) {
@@ -20,45 +22,57 @@ const CustomAccordion = ({ data, setData, category }) => {
             }
         });
     };
+
+    const deleteObject = (subCategory) => {
+        const temp = selected;
+        const index = selected.findIndex(obj => obj.name === subCategory.name);
+        temp.splice(index,1);
+        setSelected(temp);
+    }
+
     return (
         <>
             {
-                data.filter((each) => each.category === category).length > 0 && (
-                    <Box width={'100%'} color={'#FFF'} mb={3}>
-                        <Box mb={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-                            <Box>
+                (searched ? searchedData : data).filter((each) => each.category === category).length > 0 && (
+                    <div className={`${styles.container}`}>
+                        <div className={`${styles.category_title_container}`}>
+                            <div>
                                 {category}
-                            </Box>
-                            <Button sx={{textTransform: 'none'}} onClick={() => {setIsActive(!isActive)}} disabled={filteredLength < 6}>
+                            </div>
+                            <div className={`${styles.category_title_line}`} />
+                            <Button className={`${styles.transform_text}`} onClick={() => {setIsActive(!isActive)}} disabled={filteredLength < 6}>
                                 {isActive ? 'See less' : 'See all'}
                             </Button>
-                        </Box>
+                        </div>
                         <Grid container spacing={2}>
-                            {data.filter((each) => each.category === category).slice(0, isActive ? filteredLength : 6).map((subCategory) => (
-                                <Grid item xs={4} onClick={() => {setData(handleClick(subCategory))}}>
-                                    <Box pl={1.5} py={0.5} borderRadius={'5px'} width={'100%'} sx={{cursor: 'pointer'}}
-                                         bgcolor={'#484848'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}
-                                    >
-                                        <Box>
-                                            {subCategory.name}
-                                        </Box>
-                                        <Checkbox
-                                            checked={subCategory.isSelected}
-                                            onChange={() => {
-                                                setData(handleClick(subCategory))
-                                                // console.log(data)
-                                                // setSelected([...selected, subCategory])
-                                                // if(selected.some(obj => obj.name === subCategory.name)){
-                                                //     deleteObject(subCategory)
-                                                // }
-                                                // else setSelected([...selected, subCategory])
-                                            }}
-                                        />
-                                    </Box>
-                                </Grid>
-                            ))}
+
+                            {
+                                (searched ? searchedData : data).filter((each) => each.category === category).slice(0, isActive ? filteredLength : 6).map((subCategory) => (
+                                    <Grid item xs={4}>
+                                        <div className={`${styles.checkbox_container}`} onClick={() => {
+                                            setData(handleClick(subCategory))
+                                            if(selected.some(obj => obj.name === subCategory.name)){
+                                                deleteObject(subCategory)
+                                            }
+                                            else setSelected([...selected, subCategory])
+                                        }}>
+                                            <div>
+                                                {subCategory.name}
+                                            </div>
+                                            <Checkbox
+                                                size={'small'}
+                                                // checked={subCategory.isSelected}
+                                                checked={selected.some(obj => obj.name === subCategory.name)}
+                                                // onChange={() => {
+                                                //     setData(handleClick(subCategory))
+                                                // }}
+                                            />
+                                        </div>
+                                    </Grid>
+                                ))
+                            }
                         </Grid>
-                    </Box>
+                    </div>
                 )
             }
         </>

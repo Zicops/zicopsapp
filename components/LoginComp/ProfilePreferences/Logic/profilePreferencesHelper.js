@@ -1,18 +1,24 @@
 export const languages = [
-    'English',
-    'English (UK)',
-    'Italiano',
-    'Filipino',
-    'Dansk',
-    'Magyar',
-    'Indonesia',
-    'Deutsch',
+    {
+        label: 'English',
+        value: 'English'
+    },
+    {
+        label: 'English (UK)',
+        value: 'English (UK)'
+    },
+    // 'Italiano',
+    // 'Filipino',
+    // 'Dansk',
+    // 'Magyar',
+    // 'Indonesia',
+    // 'Deutsch',
 ]
 
 export const categories = [
     'Design',
-    // 'Development',
-    // 'Cloud',
+    'Development',
+    'Cloud',
     // 'Technology',
 ]
 
@@ -94,6 +100,14 @@ export const subCategories = [
     {
         category: 'Development',
         name: 'Micro Service'
+    },
+    {
+        category: 'Development',
+        name: 'System Design'
+    },
+    {
+        category: 'Development',
+        name: 'Arc Design'
     },
 
     {

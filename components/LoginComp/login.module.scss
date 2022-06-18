@@ -1,7 +1,7 @@
 
 @import '../../styles/base.scss';
 
-.container {
+.bgContainer {
   font-family: 'Open Sans';
   background-image: url('../../public/images/starrySky2.png');
   background-position: center;
@@ -21,6 +21,12 @@
   //  height: 100%;
   //  width: 100%;
   //}
+  .container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
 
   .ZicopsLogo {
     height: 63px;
@@ -34,7 +40,7 @@
   }
 
   .progress_container{
-    margin: 32px 0 8px;
+    margin: 8px 0 4px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -69,9 +75,9 @@
 
   .account_setup_title{
     color: $white;
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 600;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
 
 }
