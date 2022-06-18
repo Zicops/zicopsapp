@@ -304,3 +304,36 @@
 .timePicker {
   color: red !important;
 }
+
+// OtpINputField scss
+.otp {
+   
+    padding: 0;
+    margin: 0;
+    border: 0;
+    width: 20px;
+    margin: 5px 10px;
+    color: #ffffff;
+    font-size: 27px;
+    text-align: center;
+  
+ &:focus {
+    padding: 0;
+    border: 0;
+    border-bottom: 3px solid $white;
+    outline: 0;
+    box-shadow: none;
+  }
+  &.value {
+    width: 50px;
+    border-bottom: 3px solid $secondaryBlack;
+    background-color: transparent;
+  }
+}
+
+.after {
+  min-width: 80px;
+  color: #ffffff;
+  font-size: 17px;
+  margin-left: 20px;
+}

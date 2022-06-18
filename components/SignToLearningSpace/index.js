@@ -1,8 +1,15 @@
 import styles from './signToLearningSpace.module.scss';
 import CongratulationsScreenButton from '../../components/common/CongratulationsScreenButton';
-import OtpInput from '../common/OtpInput';
+
+import OtpInputField from '../common/FormComponents/OtpInputField';
+import { useState, useEffect } from 'react';
 
 const SignToLearningSpace = () => {
+  const [otpValue, setotpValue] = useState(0);
+  useEffect(() => {
+    console.log(otpValue);
+  }, [otpValue]);
+
   return (
     <>
       <div className={`${styles.signToLearningSpace}`}>
@@ -16,12 +23,7 @@ const SignToLearningSpace = () => {
         </div>
         <div className={`${styles.enter_code}`}>
           {/* var otpValue = 6; for(i = 0 ; i > otpValue ; i++ ){<OtpInput num={6} />} */}
-          <OtpInput />
-          <OtpInput />
-          <OtpInput />
-          <OtpInput />
-          <OtpInput />
-          <OtpInput />
+          <OtpInputField otpLength={6} setotpValue={setotpValue} />
         </div>
 
         <div className={`${styles.login_button}`}>
