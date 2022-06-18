@@ -4,7 +4,7 @@ import CongratulationsScreenButton from '../../components/common/Congratulations
 import OtpInputField from '../common/FormComponents/OtpInputField';
 import { useState, useEffect } from 'react';
 
-const SignToLearningSpace = () => {
+const SignToLearningSpace = ( {setPage} ) => {
   const [otpValue, setotpValue] = useState(0);
   useEffect(() => {
     console.log(otpValue);
@@ -27,7 +27,7 @@ const SignToLearningSpace = () => {
         </div>
 
         <div className={`${styles.login_button}`}>
-          <CongratulationsScreenButton title={'Login'} />
+          <CongratulationsScreenButton title={'Login'} handleClick={()=>setPage(2)} />
         </div>
         <div className={`${styles.small_text}`}>
           Your code expires in 00:00 minutes.

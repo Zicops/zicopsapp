@@ -8,6 +8,7 @@ import {
 import HomePages from './HomePages';
 import styles from './home.module.scss';
 import { data } from './Logic/homePage.helper';
+import Link from 'next/link';
 
 const HomePage = () => {
   const [scrollDown, setScrollDown] = useState(0);
@@ -35,10 +36,12 @@ const HomePage = () => {
         <div className={`${styles.ZicopsLogo}`}>
           <img src="./images/zicops-header-logo.png" alt="not found" />
         </div>
-        <div className={`${styles.Login}`}>
-          <img src="./images/Union1.png" alt="not found" />
-          <a href="/home">Log In</a>
-        </div>
+          <Link href="/login">
+            <div className={`${styles.Login}`}>
+              <img src="./images/Union1.png" alt="not found" />
+              <a>Log In</a>
+            </div>
+          </Link>
       </header>
       <CSSTransition
         in={slide}
