@@ -54,7 +54,8 @@ export default function Card({hover, isDrag, id, dragId , title, topic, tag, box
             fontSize={'12px'}
             px={1}
             py={0.3}
-            sx={{ borderRadius: '7px' }}>
+            sx={{ borderRadius: '7px' }}
+          >
             {tag}
           </Box>
           <Box position={'absolute'} bottom={20} left={20}>

@@ -3,6 +3,10 @@ import LabeledInput from "../../common/FormComponents/LabeledInput";
 import styles from './setupUser.module.scss';
 import {useEffect, useRef, useState} from "react";
 import { styled } from '@mui/material/styles';
+import {changeHandler} from "../../../helper/common.helper";
+import LabeledDropdown from "../../common/FormComponents/LabeledDropdown";
+import {languages} from '../ProfilePreferences/Logic/profilePreferencesHelper'
+
 
 const Input = styled('input')({
     display: 'none',
@@ -11,6 +15,7 @@ const Input = styled('input')({
 const AccountSetupUser = ({setCurrentComponent}) => {
 
     const [isPhoneFocus, setIsPhoneFocus] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState()
 
     const myRef = useRef(null);
     function useOutsideAlerter(ref) {
@@ -56,6 +61,16 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                         maxLength: 60
                     }}
                     // changeHandler={() => {}}
+                />
+                <Box mt={3} />
+                <LabeledDropdown
+                    dropdownOptions={{
+                        label: 'Base Language:',
+                        placeholder: 'Select Language',
+                        options: languages,
+                        value: { value: selectedLanguage, label: selectedLanguage }
+                    }}
+                    changeHandler={(e) => setIsPhoneFocus(e.value)}
                 />
                 <Box mt={3} />
                 <LabeledInput
