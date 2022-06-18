@@ -46,7 +46,7 @@ const HeroSliderContainer = ({ children }) => {
           transitionDuration={1000}
           containerClass={`${styles.header_carousel_container}`}
           sliderClass={`${styles.carousel_track}`}
-          removeArrowOnDeviceType={['tablet', 'mobile', 'desktop']}
+          //removeArrowOnDeviceType={['tablet', 'mobile', 'desktop']}
           deviceType="Laptop"
           dotListClass="custom-dot-list-style"
           // customDot={<CustomDot />}
