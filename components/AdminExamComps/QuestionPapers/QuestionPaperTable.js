@@ -36,12 +36,6 @@ export default function QuestionPaperTable({ isEdit = false }) {
       flex: 1
     },
     {
-      field: 'Status',
-      headerClassName: 'course-list-header',
-      headerName: 'Status',
-      flex: 1
-    },
-    {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
@@ -106,6 +100,15 @@ export default function QuestionPaperTable({ isEdit = false }) {
       flex: isEdit ? 1 : 0.5
     }
   ];
+
+  if (isEdit) {
+    columns.splice(2, 0, {
+      field: 'Status',
+      headerClassName: 'course-list-header',
+      headerName: 'Status',
+      flex: 1
+    });
+  }
 
   // load table data
   useEffect(() => {
