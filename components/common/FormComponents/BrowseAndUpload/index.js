@@ -54,7 +54,8 @@ export default function BrowseAndUpload({
           fileName={previewData.fileName}
           filePath={previewData.filePath}
           isVideo={previewData.isVideo}
-          handleClose={() => setShowPreview(false)}
+          setShowPreview={setShowPreview}
+          showPreview={showPreview}
         />
       )}
     </>

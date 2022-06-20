@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../../helper/data.helper';
 import {
   TopicContentAtom,
@@ -9,22 +9,22 @@ import {
 import BlackRow from '../../../common/BlackRow';
 import Button from '../../../common/Button';
 import PopUp from '../../../common/PopUp';
-import styles from '../../courseTabs.module.scss';
-import Quiz from '../../../medium/Quiz';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 import Accordion from '../../../small/Accordion';
+import styles from '../../courseTabs.module.scss';
 import AddTopicContentForm from './AddTopicContentForm';
 import AddTopicForm from './AddTopicForm';
+import AssessmentForm from './AssessmentForm';
 import BingeForm from './BingeForm';
+import QuizForm from './QuizForm';
 import ResourcesForm from './ResourcesForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentView from './TopicContentView';
-import QuizForm from './QuizForm';
-import AssessmentForm from './AssessmentForm';
 
 export default function TopicPopUp({
   addTopicData = {},
   editTopicData = {},
-  closeModal,
+  popUpState = [],
   isEdit = false
 }) {
   const { newTopicData, setNewTopicData, addNewTopic, isAddTopicReady } = addTopicData;
@@ -51,7 +51,10 @@ export default function TopicPopUp({
     handleClick: addNewTopic,
     disabled: !isAddTopicReady
   };
-  const closeBtnObj = { name: 'Cancel', handleClick: closeModal };
+  const closeBtnObj = {
+    name: 'Cancel'
+    // handleClick: closeModal
+  };
 
   let topicVideo,
     filteredTopicContent = null;
@@ -60,17 +63,12 @@ export default function TopicPopUp({
 
   const topicContent = useRecoilValue(TopicContentAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   if (isEdit) {
+    if (!isPopUpDataPresent) setIsPopUpDataPresent(true);
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
     closeBtnObj.name = 'Design Later';
-    closeBtnObj.handleClick = () => {
-      const shouldCloseModal = confirm('Are you sure? Your unsaved data will be lost!').valueOf();
-
-      if (shouldCloseModal) {
-        closeModal();
-      }
-    };
     closeBtnObj.disabled = !!uploadStatus;
 
     submitBtnObj.name = 'Design';
@@ -86,6 +84,7 @@ export default function TopicPopUp({
       <PopUp
         title={`Topic ${newTopicData?.sequence || editTopic?.sequence}`}
         submitBtn={submitBtnObj}
+        popUpState={popUpState}
         closeBtn={closeBtnObj}>
         {/* add topic form popup */}
         {!isEdit && <AddTopicForm setTopicData={setNewTopicData} topicData={newTopicData} />}

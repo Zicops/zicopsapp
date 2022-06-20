@@ -97,18 +97,16 @@ export default function Questions() {
       {/* add custom section */}
       <PopUp
         isFooterVisible={false}
-        isPopUpOpen={addSectionPopUp}
-        title="Add Custom Section"
-        closeBtn={{ handleClick: () => udpateAddSectionPopUp(false) }}>
+        popUpState={[addSectionPopUp, udpateAddSectionPopUp]}
+        title="Add Custom Section">
         <AddCustomSection />
       </PopUp>
 
       {/* edit custom section */}
       <PopUp
         isFooterVisible={false}
-        isPopUpOpen={editSectionPopUp}
-        title="Edit Custom Section"
-        closeBtn={{ handleClick: () => udpateEditSectionPopUp(false) }}>
+        popUpState={[editSectionPopUp, udpateEditSectionPopUp]}
+        title="Edit Custom Section">
         <AddCustomSection editData={selectedSectionData} />
       </PopUp>
 
@@ -116,9 +114,8 @@ export default function Questions() {
       {!!selectedSectionData?.id && (
         <PopUp
           isFooterVisible={false}
-          isPopUpOpen={addQuestionMetaDataPopUp}
-          title="Add Question Meta Data"
-          closeBtn={{ handleClick: () => udpateAddQuestionMetaDataPopUp(false) }}>
+          popUpState={[addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp]}
+          title="Add Question Meta Data">
           <AddQuestionMetaData sectionId={selectedSectionData?.id} />
         </PopUp>
       )}
@@ -127,9 +124,8 @@ export default function Questions() {
       {!!selectedSectionData?.id && (
         <PopUp
           isFooterVisible={false}
-          isPopUpOpen={editQuestionMetaDataPopUp}
-          title="Edit Question Meta Data"
-          closeBtn={{ handleClick: () => udpateEditQuestionMetaDataPopUp(false) }}>
+          popUpState={[editQuestionMetaDataPopUp, udpateEditQuestionMetaDataPopUp]}
+          title="Edit Question Meta Data">
           <AddQuestionMetaData sectionId={selectedSectionData?.id} editData={editMetaData} />
         </PopUp>
       )}

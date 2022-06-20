@@ -19,10 +19,10 @@ export default function useAddTopicContent(topic) {
 
   // local state
   const [newTopicContent, setNewTopicContent] = useState(
-    getTopicContentObject({ topicId: topic.id })
+    getTopicContentObject({ topicId: topic?.id })
   );
   const [newTopicVideo, setNewTopicVideo] = useState(
-    getTopicVideoObject({ courseId: topic.courseId })
+    getTopicVideoObject({ courseId: topic?.courseId })
   );
   const [isTopicContentFormVisible, setIsTopicContentFormVisible] = useState(false);
   const [isAddTopicContentReady, setIsAddTopicContentReady] = useState(false);
@@ -41,8 +41,8 @@ export default function useAddTopicContent(topic) {
   // add topic id
   useEffect(() => {
     const isDefault = filterTopicContent(topicContent, topic?.id).length === 0;
-    setNewTopicContent(getTopicContentObject({ topicId: topic.id, is_default: isDefault }));
-    setNewTopicVideo(getTopicVideoObject({ courseId: topic.courseId }));
+    setNewTopicContent(getTopicContentObject({ topicId: topic?.id, is_default: isDefault }));
+    setNewTopicVideo(getTopicVideoObject({ courseId: topic?.courseId }));
   }, [topic]);
 
   function toggleTopicContentForm(value) {
@@ -154,8 +154,8 @@ export default function useAddTopicContent(topic) {
     setIsTopicContentFormVisible(false);
 
     // reset local state
-    setNewTopicContent(getTopicContentObject({ topicId: topic.id }));
-    setNewTopicVideo(getTopicVideoObject({ courseId: topic.id }));
+    setNewTopicContent(getTopicContentObject({ topicId: topic?.id }));
+    setNewTopicVideo(getTopicVideoObject({ courseId: topic?.id }));
   }
 
   const inputHandlers = {

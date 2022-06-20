@@ -133,8 +133,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
       {/* preview popup */}
       <PopUp
         title={masterData?.name}
-        isPopUpOpen={!!masterData}
-        closeBtn={{ handleClick: () => setMasterData(null) }}
+        popUpState={[!!masterData, setMasterData]}
         isFooterVisible={false}>
         <Preview masterData={masterData || {}} />
       </PopUp>

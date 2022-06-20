@@ -1,10 +1,11 @@
-import { bool, func, oneOf, shape, string } from 'prop-types';
+import { array, bool, func, oneOf, shape, string } from 'prop-types';
 import Popup from 'reactjs-popup';
+import useHandlePopUp from './Logic/useHandlePopUp';
 import styles from './popUp.module.scss';
 
 export default function PopUp({
-  isPopUpOpen = true,
   title,
+  popUpState = [],
   closeBtn = {},
   submitBtn = {},
   isFooterVisible = true,
@@ -12,8 +13,10 @@ export default function PopUp({
   size = 'medium',
   children
 }) {
-  const customStyles = { width: '800px' };
+  const { isOpen, closePopUp } = useHandlePopUp(popUpState);
 
+  // modify popup styles based on props
+  const customStyles = { width: '800px' };
   if (positionLeft) customStyles.left = positionLeft;
 
   if (size === 'large') {
@@ -27,12 +30,12 @@ export default function PopUp({
 
   return (
     <>
-      <Popup open={isPopUpOpen} closeOnDocumentClick={false}>
+      <Popup open={isOpen} closeOnDocumentClick={false} closeOnEscape={false}>
         <div className={`${styles.popUpContainer}`} style={customStyles}>
           <div className={`${styles.popUp}`}>
             <div className={`${styles.header}`}>
               <div className={`${styles.title}`}>{title} </div>
-              <div className={`${styles.cross_img}`} onClick={closeBtn.handleClick}>
+              <div className={`${styles.cross_img}`} onClick={closePopUp}>
                 <img src="/images/circular-cross.png" alt="" />
               </div>
             </div>
@@ -52,7 +55,7 @@ export default function PopUp({
                           closeBtn.disabled ? styles.btn_cancel_add_disabled : styles.btn_cancel_add
                         }`}
                         disabled={closeBtn.disabled}
-                        onClick={closeBtn.handleClick}>
+                        onClick={closePopUp}>
                         {closeBtn.name || 'Close'}
                       </button>
                       <button
@@ -87,6 +90,7 @@ const btnObj = shape({
 
 PopUp.propTypes = {
   isPopUpOpen: bool,
+  popUpState: array,
   title: string,
   closeBtn: btnObj,
   submitBtn: btnObj,

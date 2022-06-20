@@ -9,12 +9,8 @@ import Sidebar from '../../../../components/common/Sidebar';
 import { examSidebarData } from '../../../../components/common/Sidebar/Logic/sidebar.helper';
 import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 
-const ZicopsQuestionBanks = () => {
+export default function ZicopsQuestionBanks() {
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
-
-  const closeBtn = {
-    handleClick: () => udpatePopUpState(false)
-  };
 
   return (
     <>
@@ -30,17 +26,6 @@ const ZicopsQuestionBanks = () => {
           <QuestionBankTable />
         </MainBodyBox>
       </MainBody>
-
-      {/* add question bank pop up */}
-      <PopUp
-        title="Add Question Bank"
-        isPopUpOpen={popUpState}
-        closeBtn={closeBtn}
-        isFooterVisible={false}>
-        <AddQuestionBank closePopUp={() => udpatePopUpState(false)} />
-      </PopUp>
     </>
   );
-};
-
-export default ZicopsQuestionBanks;
+}
