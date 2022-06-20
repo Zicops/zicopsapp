@@ -17,7 +17,7 @@ export const UserMenu = [
   { title: 'Self', link: '/self-landing' },
   { title: 'Classroom', link: '/classroom' },
   { title: 'Events', link: '/' },
-  { title: 'Labs', link: '/' },
+  { title: 'Labs', link: '/labs' },
   { title: 'Exams', link: '/exams' },
   { title: 'Community', link: '/courses' }
 ];
