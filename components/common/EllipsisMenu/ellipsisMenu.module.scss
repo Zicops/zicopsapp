@@ -45,26 +45,40 @@ $color: $secondaryBlack;
   }
 
   .dropdown {
-    padding: 30px;
     position: absolute;
     top: -15px;
     right: -30px;
+
+    padding: 30px;
+
+    width: fit-content;
     z-index: 1;
 
     ul {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
       list-style: none;
       background-color: $black;
-      padding: 1px;
+      padding: 5px;
 
       li {
-        background-color: $darkOne;
-        color: $darkThree;
-        margin: 5px;
-        padding: 5px 10px;
+        button {
+          width: 70px;
+          background-color: $darkOne;
+          color: $darkThree;
 
-        &:hover {
-          background-color: $darkTwo;
-          color: $white;
+          text-align: start;
+          padding: 5px 10px;
+
+          border: none;
+          outline: none;
+
+          &:hover {
+            background-color: $darkTwo;
+            color: $white;
+          }
         }
       }
     }

@@ -1,7 +1,9 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import EllipsisMenu from '../../common/EllipsisMenu';
 import LabeledRadioCheckbox from '../../common/FormComponents/LabeledRadioCheckbox';
+import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
 
 const data = [
@@ -77,6 +79,7 @@ export default function UserTable({ selectedUser }) {
   useEffect(() => {
     selectedUser(userId);
   }, [userId]);
+  const router = useRouter();
 
   const columns = [
     {
@@ -150,7 +153,13 @@ export default function UserTable({ selectedUser }) {
       flex: 0.5,
       renderCell: (params) => (
         <>
-          <EllipsisMenu buttonArr={[<li>Disable</li>]} />
+          <EllipsisMenu
+            buttonArr={[
+              { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
+              { handleClick: () => alert(`Edit ${params.id}`) },
+              { text: 'Disable', handleClick: () => alert(`Disable ${params.id}`) }
+            ]}
+          />
         </>
       )
     }
@@ -165,6 +174,8 @@ export default function UserTable({ selectedUser }) {
         rowsPerPageOptions={[3]}
         tableHeight="75vh"
       />
+
+      {/* <PopUp  /> */}
     </>
   );
 }
