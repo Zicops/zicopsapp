@@ -2,15 +2,16 @@
 @import '../../styles/base.scss';
 
 .bgContainer {
-  position: relative;
+  // position: relative;
   font-family: 'Open Sans';
-  background-image: url('../../public/images/starrySky2.png');
-  background-position: center;
+  background-image: url('/images/starrySky2.png');
+  background-position: fixed;
   background-size: cover;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   overflow: auto;
   outline: 1px dashed lightgray;
   height: 100vh;
@@ -22,23 +23,25 @@
   //  height: 100%;
   //  width: 100%;
   //}
-  .container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding-top: 22vh;
-  }
-  .header{
-    position: fixed;
+  .header {
+    // position: fixed;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     max-width: 900px;
-    top: 5vh;
+    padding-bottom: 3vh;
   }
+  .container{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    height: 60vh;
+    overflow: auto;
+  }
+
 
   .ZicopsLogo {
     height: 63px;

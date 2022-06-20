@@ -62,7 +62,6 @@ const ProfilePreferences = ({setCurrentComponent, setPage}) => {
         setFilteredData([...temp]);
     }
 
-
     const handleQuery = (event) => {
         const query = event.target.value;
         // setSearchQuery(query)
@@ -84,13 +83,13 @@ const ProfilePreferences = ({setCurrentComponent, setPage}) => {
     }
 
     const myRef = useRef(null);
-    function useOutsideAlerter(ref) {
+    // function useOutsideAlerter(ref) {
         useEffect(() => {
             /**
              * close dialog if clicked on outside of element
              */
             function handleClickOutside(event) {
-                if (ref.current && !ref.current.contains(event.target)) {
+                if (myRef.current && !myRef.current.contains(event.target)) {
                     setIsOpen(false)
                 }
             }
@@ -100,18 +99,17 @@ const ProfilePreferences = ({setCurrentComponent, setPage}) => {
                 // Unbind the event listener on clean up
                 document.removeEventListener("mousedown", handleClickOutside);
             };
-        }, [ref]);
-    }
-    useOutsideAlerter(myRef);
+        }, [myRef]);
+    // }
+    // useOutsideAlerter(myRef);
 
     const [isVisible, setIsVisible] = useState(true);
     const scrollRef = useRef(null);
 
     const controlSearch = (e) => {
         // console.log(e.deltaY)
-        if(e.deltaY > 0)
-            setIsVisible(false)
-        else setIsVisible(true)
+        if (e.deltaY > 0 && (isFiltered || searched)) setIsVisible(false);
+        else setIsVisible(true);
         // if(myRef.current.scrollY > 10)
         //     setIsVisible(false)
         // else setIsVisible(true)
