@@ -1,4 +1,5 @@
 import { changeHandler } from '../../../../../../helper/common.helper';
+import Button from '../../../../../common/Button';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
 import LabeledTextarea from '../../../../../common/FormComponents/LabeledTextarea';
 import RangeSlider from '../../../../../common/FormComponents/RangeSlider';
@@ -129,7 +130,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
           {!isEdit && (
             <div className={`center-element-with-flex`}>
-              <button onClick={saveQuestion}>Add the Question</button>
+              <Button text="Add the Question" clickHandler={saveQuestion} />
             </div>
           )}
         </>
