@@ -37,7 +37,8 @@ export default function UploadNewQuestionBank({ text }) {
             inputName: 'category',
             label: 'Category:',
             placeholder: 'Select category',
-            options: categoryOption
+            options: categoryOption,
+            isSearchEnable: true
           }}
           isFiftyFifty={true}
         />
@@ -47,7 +48,8 @@ export default function UploadNewQuestionBank({ text }) {
             inputName: 'sub_category',
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
-            options: categoryOption
+            options: categoryOption,
+            isSearchEnable: true
           }}
           isFiftyFifty={true}
         />

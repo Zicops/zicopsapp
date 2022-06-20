@@ -64,7 +64,8 @@ export default function QuestionPaperMaster() {
           value: {
             value: questionPaperTabData.paperMaster?.category,
             label: questionPaperTabData.paperMaster?.category
-          }
+          },
+          isSearchEnable: true
         }}
         changeHandler={(e) => handleInput(e, 'category')}
       />
@@ -78,7 +79,8 @@ export default function QuestionPaperMaster() {
           value: {
             value: questionPaperTabData.paperMaster?.sub_category,
             label: questionPaperTabData.paperMaster?.sub_category
-          }
+          },
+          isSearchEnable: true
         }}
         changeHandler={(e) => handleInput(e, 'sub_category')}
       />

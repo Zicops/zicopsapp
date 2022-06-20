@@ -53,7 +53,8 @@ export default function ExamMaster() {
           label: 'Question Paper:',
           placeholder: 'Select Question Paper',
           options: questionPaperOptions,
-          value: questionPaperOptions?.filter((option) => option?.value === examTabData?.qpId)[0]
+          value: questionPaperOptions?.filter((option) => option?.value === examTabData?.qpId)[0],
+          isSearchEnable: true
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'qpId')}
       />

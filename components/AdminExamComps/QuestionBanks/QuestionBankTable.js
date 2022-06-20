@@ -61,6 +61,7 @@ export default function QuestionBankTable({ isEdit = false }) {
   }, []);
 
   useEffect(() => {
+    console.log(addPopUp);
     if (addPopUp) setSelectedQB(getQuestionBankObject());
   }, [addPopUp]);
 

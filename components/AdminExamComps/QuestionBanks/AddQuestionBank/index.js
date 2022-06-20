@@ -99,7 +99,8 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           placeholder: 'Select Category',
           options: categoryOption,
           value: { value: questionBankData?.category, label: questionBankData?.category },
-          isDisabled: isQuestionsPresent || !isPopUp
+          isDisabled: isQuestionsPresent || !isPopUp,
+          isSearchEnable: true
         }}
         changeHandler={(e) => changeHandler(e, questionBankData, setQuestionBankData, 'category')}
       />
@@ -112,7 +113,8 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           placeholder: 'Select Sub-Category',
           options: subCategoryOption,
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },
-          isDisabled: isQuestionsPresent || !isPopUp
+          isDisabled: isQuestionsPresent || !isPopUp,
+          isSearchEnable: true
         }}
         changeHandler={(e) =>
           changeHandler(e, questionBankData, setQuestionBankData, 'sub_category')

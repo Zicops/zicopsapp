@@ -51,7 +51,8 @@ export default function ExistingQuestion({
             label: 'Category:',
             placeholder: 'Select category',
             options: categoryOption,
-            value: { value: metaData?.category, label: metaData?.category }
+            value: { value: metaData?.category, label: metaData?.category },
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'category')}
           isFiftyFifty={true}
@@ -64,7 +65,8 @@ export default function ExistingQuestion({
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
             options: subCategoryOption,
-            value: { value: metaData?.sub_category, label: metaData?.sub_category }
+            value: { value: metaData?.sub_category, label: metaData?.sub_category },
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'sub_category')}
           isFiftyFifty={true}
