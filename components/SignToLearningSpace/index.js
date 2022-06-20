@@ -3,8 +3,9 @@ import CongratulationsScreenButton from '../../components/common/Congratulations
 
 import OtpInputField from '../common/FormComponents/OtpInputField';
 import { useState, useEffect } from 'react';
+import Button from '../common/Button';
 
-const SignToLearningSpace = ( {setPage} ) => {
+const SignToLearningSpace = ({ setPage }) => {
   const [otpValue, setotpValue] = useState(0);
   useEffect(() => {
     console.log(otpValue);
@@ -22,12 +23,17 @@ const SignToLearningSpace = ( {setPage} ) => {
           Enter the security code sent on your registered email id !
         </div>
         <div className={`${styles.enter_code}`}>
-          {/* var otpValue = 6; for(i = 0 ; i > otpValue ; i++ ){<OtpInput num={6} />} */}
-          <OtpInputField otpLength={6} setotpValue={setotpValue} />
+          <OtpInputField otpLength={6} setotpValue={setotpValue} autoFill="SONAL" />
         </div>
 
         <div className={`${styles.login_button}`}>
-          <CongratulationsScreenButton title={'Login'} handleClick={()=>setPage(2)} />
+          <Button
+            text="LOGIN"
+            type="button"
+            clickHandler={() => setPage(2)}
+            styleClass={`${styles.CongratulationsScreenButton}`}
+            isDisabled={!otpValue}
+          />
         </div>
         <div className={`${styles.small_text}`}>
           Your code expires in 00:00 minutes.
