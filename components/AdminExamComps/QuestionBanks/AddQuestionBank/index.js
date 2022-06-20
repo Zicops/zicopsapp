@@ -127,6 +127,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           <Button
             text={isEdit ? 'Update' : 'Add'}
             isDisabled={!isAddQuestionBankReady}
+            styleClass={isAddQuestionBankReady ? 'bg-primary' : ''}
             clickHandler={() => {
               isEdit ? updateQuestionBank() : createNewQuestionBank();
             }}
