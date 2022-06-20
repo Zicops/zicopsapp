@@ -122,4 +122,16 @@ export const subCategories = [
         category: 'Cloud',
         name: 'OneDrive'
     },
+    {
+        category: 'Cloud',
+        name: 'AWS1'
+    },
+    {
+        category: 'Cloud',
+        name: 'iCloud1'
+    },
+    {
+        category: 'Cloud',
+        name: 'OneDrive1'
+    },
 ]

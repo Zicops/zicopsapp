@@ -82,6 +82,10 @@
     font-weight: bold;
     padding: 15px 0px;
 }
+
+.small_text:hover{
+  color: $primary;
+}
 .small_text span a {
     color: $primary;
     text-decoration: underline;

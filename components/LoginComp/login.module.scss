@@ -2,6 +2,7 @@
 @import '../../styles/base.scss';
 
 .bgContainer {
+  position: relative;
   font-family: 'Open Sans';
   background-image: url('../../public/images/starrySky2.png');
   background-position: center;
@@ -26,6 +27,17 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    padding-top: 22vh;
+  }
+  .header{
+    position: fixed;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 900px;
+    top: 5vh;
   }
 
   .ZicopsLogo {
