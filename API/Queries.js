@@ -433,6 +433,7 @@ export const GET_QUESTION_PAPER_META = gql`
       SectionWise
       Description
       SuggestedDuration
+      Status
     }
   }
 `;

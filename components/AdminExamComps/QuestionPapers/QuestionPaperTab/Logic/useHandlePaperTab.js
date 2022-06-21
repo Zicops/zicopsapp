@@ -128,7 +128,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
-      status: questionPaperData.status || 'DRAFT',
+      status: questionPaperData.status || STATUS[0],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
@@ -171,6 +171,7 @@ export default function useHandlePaperTab() {
   }
 
   async function updateQuestionPaper(tabIndex) {
+    setStatus('UPDATING');
     if (!isDataValid())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
@@ -186,7 +187,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
-      status: questionPaperData.status || 'DRAFT',
+      status: questionPaperData.status || STATUS[0],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
@@ -225,6 +226,8 @@ export default function useHandlePaperTab() {
 
     if (!isError) setToastMsg({ type: 'success', message: 'Question Paper Updated' });
     if (!isNaN(+tabIndex)) setTab(paperTabData[tabIndex].name);
+
+    setStatus(STATUS[0]);
   }
 
   return {

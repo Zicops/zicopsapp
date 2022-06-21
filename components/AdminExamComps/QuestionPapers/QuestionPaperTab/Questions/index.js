@@ -36,13 +36,6 @@ export default function Questions() {
   // reset data on close
   useEffect(() => {
     if (!(editSectionPopUp || addQuestionMetaDataPopUp)) setSelectedSectionData(null);
-
-    // if no section is present, show error
-    // if (addQuestionMetaDataPopUp && !selectedSectionData) {
-    //   setToastMsg({ type: 'danger', message: 'No Section Present' });
-    // udpateAddQuestionMetaDataPopUp(false);
-    // }
-    console.log(addQuestionMetaDataPopUp);
   }, [editSectionPopUp, addQuestionMetaDataPopUp]);
 
   // if id is not present return to first tab
