@@ -89,7 +89,13 @@ export default function ExistingQuestion({
           label: 'Question Bank:',
           placeholder: 'Select the question bank to choose question from',
           options: questionBankOptions,
-          value: questionBankOptions?.filter((option) => option?.value === metaData?.qbId)[0],
+          value: questionBankOptions?.filter((option) => {
+            option.label = `${option.name} [${option?.noOfQuestions || 0}]`;
+            const isSelected = option?.value === metaData?.qbId;
+
+            if (isSelected) option.label = `${option.name} [${totalQuestions}]`;
+            return isSelected;
+          })[0],
           isSearchEnable: true
         }}
         changeHandler={(e) => setMetaData({ ...metaData, total_questions: 0, qbId: e.value })}

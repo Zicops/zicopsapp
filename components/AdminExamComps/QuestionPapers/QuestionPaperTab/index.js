@@ -68,7 +68,8 @@ export default function QuestionPaperTab() {
     });
 
     const sectionRes = await loadPaperSection({
-      variables: { question_paper_id: questionPaperId }
+      variables: { question_paper_id: questionPaperId },
+      fetchPolicy: 'no-cache'
     }).catch((err) => {
       console.log(err);
       isError = !!err;

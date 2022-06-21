@@ -9,6 +9,7 @@ import {
 import { DIFFICULTY } from '../../../../../../helper/utils.helper';
 import {
   getFixedQuestionObject,
+  getQuestionMetaDataObject,
   QuestionPaperTabDataAtom
 } from '../../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../../state/atoms/popUp.atom';
@@ -65,6 +66,11 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
   useEffect(() => {
     if (!originalQbId) return setOriginalQbId(metaData.qbId);
   }, [metaData.qbId]);
+
+  // reset on first load
+  useEffect(() => {
+    setMetaData(getQuestionMetaDataObject({ sectionId }));
+  }, []);
 
   // load fixed questions
   useEffect(() => {
