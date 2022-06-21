@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { changeHandler } from '../../../../../../helper/common.helper';
 import Button from '../../../../../common/Button';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
@@ -29,6 +31,19 @@ export default function CreateQuestionForm({ data, isEdit }) {
     value: val
   }));
 
+  const [shouldCloseAccordion, setShouldCloseAccordion] = useState(null);
+
+  useEffect(() => {
+    console.log(questionData, shouldCloseAccordion);
+    if (questionData?.type === 'MCQ') return setShouldCloseAccordion(true);
+
+    setShouldCloseAccordion(null);
+  }, [questionData, questionsArr]);
+
+  useEffect(() => {
+    console.log(shouldCloseAccordion);
+  }, [shouldCloseAccordion]);
+
   return (
     <>
       {questionsArr?.map((d, index) => {
@@ -42,6 +57,13 @@ export default function CreateQuestionForm({ data, isEdit }) {
                 handleEdit={() => activateEdit(index)}
               />
             }
+            closeAccordion={shouldCloseAccordion}
+            onClose={() => {
+              console.log(shouldCloseAccordion);
+              if (questionData?.type === 'MCQ') return;
+              console.log(1);
+              setShouldCloseAccordion(null);
+            }}
           />
         );
       })}
@@ -131,9 +153,9 @@ export default function CreateQuestionForm({ data, isEdit }) {
             <div className={`center-element-with-flex`}>
               <Button
                 text={
-                  questionsArr.length
-                    ? 'Add Next Question'
-                    : `${isEditQuestion ? 'Update' : 'Add'} the Question`
+                  isEditQuestion
+                    ? 'Update Question'
+                    : `Add ${questionsArr.length ? 'Next' : 'the'} Question`
                 }
                 clickHandler={saveQuestion}
               />
