@@ -35,7 +35,10 @@ export default function CreateQuestionForm({ data, isEdit }) {
   const [showQuestionForm, setShowQuestionForm] = useState(false);
 
   useEffect(() => {
-    if (questionData?.type === 'MCQ') return setShouldCloseAccordion(true);
+    if (questionData?.type === 'MCQ') {
+      setShowQuestionForm(true);
+      return setShouldCloseAccordion(true);
+    }
 
     setShouldCloseAccordion(null);
     setShowQuestionForm(false);
@@ -43,33 +46,36 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
   useEffect(() => {
     if (isEdit) setShowQuestionForm(true);
+    if (showQuestionForm) setShouldCloseAccordion(true);
   }, [isEdit]);
 
   return (
     <>
-      {questionsArr?.map((d, index) => {
-        return (
-          <div className={styles.accordionContainer}>
-            <Accordion
-              title={d.question.description}
-              content={
-                <McqCard
-                  questionData={d.question}
-                  optionData={d.options}
-                  handleEdit={() => activateEdit(index)}
-                />
-              }
-              closeAccordion={shouldCloseAccordion}
-              onClose={() => {
-                console.log(shouldCloseAccordion);
-                if (questionData?.type === 'MCQ') return;
-                console.log(1);
-                setShouldCloseAccordion(null);
-              }}
-            />
-          </div>
-        );
-      })}
+      <div className={styles.accordionContainer}>
+        {questionsArr?.map((d, index) => {
+          return (
+            <div className={styles.container}>
+              <Accordion
+                title={d.question.description}
+                content={
+                  <McqCard
+                    questionData={d.question}
+                    optionData={d.options}
+                    handleEdit={() => activateEdit(index)}
+                  />
+                }
+                closeAccordion={shouldCloseAccordion}
+                onClose={() => {
+                  console.log(shouldCloseAccordion);
+                  if (questionData?.type === 'MCQ') return;
+                  console.log(1);
+                  setShouldCloseAccordion(null);
+                }}
+              />
+            </div>
+          );
+        })}
+      </div>
 
       {!showQuestionForm ? (
         <div className={`center-element-with-flex`}>

@@ -76,7 +76,10 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       isOneChecked = false;
 
     options.forEach((option) => {
-      isOptionsCompleted += option?.description || option?.file ? 1 : 0;
+      const isComplete = option?.description || option?.file;
+      isOptionsCompleted += isComplete ? 1 : 0;
+
+      if (!isComplete) return;
 
       if (option?.isCorrect && !isOneChecked) isOneChecked = true;
     });
@@ -133,7 +136,11 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     var optionArr = optionData.map(function (op) {
       return op.description;
     });
-    var isDuplicate = optionArr.some((op, i) => optionArr.indexOf(op) != i);
+    var isDuplicate = optionArr.some((op, i) => {
+      if (!op) return;
+
+      return optionArr.indexOf(op) != i;
+    });
     console.log(isDuplicate);
 
     if (isDuplicate) setToastMsg({ type: 'danger', message: 'Options cannot be same.' });
