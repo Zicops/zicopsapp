@@ -3,17 +3,21 @@
 .container {
   width: 100%;
   color: $white;
+}
 
-  .input_margin_transform{
-    margin-left: 16px;
-    text-transform: none;
-  }
-  .transform_text{
-    text-transform: none;
-  }
+.input_margin_transform{
+  margin-left: 16px;
+  text-transform: none;
+}
+.transform_text{
+  text-transform: none;
+}
 
-  .navigator{
-    display: flex;
-    justify-content: space-between;
-  }
+.navigator{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-image: url('/images/starrySky2.png');
+  background-position: fixed;
+  background-size: cover;
 }

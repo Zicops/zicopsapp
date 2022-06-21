@@ -40,7 +40,7 @@ const CustomAccordion = ({ selected, setSelected, searched, searchedData, data, 
                                 {category}
                             </div>
                             <div className={`${styles.category_title_line}`} />
-                            <Button className={`${styles.transform_text}`} onClick={() => {setIsActive(!isActive)}} disabled={filteredLength < 6}>
+                            <Button className={`${styles.transform_text}`} onClick={() => {setIsActive(!isActive)}} disabled={filteredLength <= 6}>
                                 {isActive ? 'See less' : 'See all'}
                             </Button>
                         </div>

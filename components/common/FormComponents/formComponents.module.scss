@@ -13,6 +13,7 @@
     background-color: $darkTwo;
     color: $secondaryBlack;
     font-size: 13px;
+    border-radius: 3px;
     font-family: 'Open Sans';
 
     &:not(:placeholder-shown) {

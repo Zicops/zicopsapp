@@ -2,14 +2,16 @@
 @import '../../styles/base.scss';
 
 .bgContainer {
+   //position: relative;
   font-family: 'Open Sans';
-  background-image: url('../../public/images/starrySky2.png');
-  background-position: center;
+  background-image: url('/images/starrySky2.png');
+  background-position: fixed;
   background-size: cover;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   overflow: auto;
   outline: 1px dashed lightgray;
   height: 100vh;
@@ -21,26 +23,42 @@
   //  height: 100%;
   //  width: 100%;
   //}
-  .container{
+  .header {
+    // position: fixed;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    max-width: 860px;
+    padding-bottom: 3vh;
   }
+  .container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    position: relative;
+    height: 60vh;
+    overflow: auto;
+  }
+
+  .container::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+
 
   .ZicopsLogo {
     height: 63px;
+    padding-right: 10px;
     img {
       object-fit: contain;
-    }
-    .setUp{
-      color: #FFFFFF;
-      font-size: 20px;
     }
   }
 
   .progress_container{
-    margin: 8px 0 4px;
+    margin: 8px 0 8px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -74,10 +92,23 @@
   }
 
   .account_setup_title{
+    display: flex;
+    align-items: center;
     color: $white;
-    font-size: 24px;
-    font-weight: 600;
     margin-bottom: 16px;
+
+    div{
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    p{
+      padding-top: 3px;
+      margin-left: 10px;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
   }
 
 }

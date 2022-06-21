@@ -2,6 +2,9 @@ import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
 import LoginHeadOne from '../LoginHeadOne';
+import InfoIcon from '@mui/icons-material/Info';
+import {Tooltip} from "@mui/material";
+import styles from "../zicopsLogin.module.scss";
 const ChangePasswordScreen = ({ setPage }) => {
 
   return (
@@ -12,9 +15,14 @@ const ChangePasswordScreen = ({ setPage }) => {
           sub_heading={'You are required to change the default password!'}
         />
         <div className="login_body">
-          <LoginEmail type={'password'} placeholder={'Enter current password'} />
-          <LoginEmail type={'password'} placeholder={'Enter new password'} />
-          <LoginEmail type={'password'} placeholder={'Re-enter new password'} />
+          <LoginEmail placeholder={'Enter current password'} />
+          <div className={`${styles.login_body} ${styles.password_info_container}`}>
+            <LoginEmail placeholder={'Enter new password'} />
+            <Tooltip placement="right" title="Password info goes here" arrow className={`${styles.password_info}`}>
+              <InfoIcon fontSize={'small'} color={'primary'} />
+            </Tooltip>
+          </div>
+          <LoginEmail placeholder={'Re-enter new password'} />
           <div className="change_buttons">
             <LoginButton title={'Cancel'} />
             <LoginButton title={'Change'} handleClick={()=>
