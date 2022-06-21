@@ -1,8 +1,5 @@
-import { useLazyQuery } from '@apollo/client';
-import { useRecoilState } from 'recoil';
 import { queryClient } from '../API/Queries';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
-import { ToastMsgAtom } from '../state/atoms/toast.atom';
 
 export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {

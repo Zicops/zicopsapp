@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.helper';
+import { DIFFICULTY, getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.helper';
 import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '../../../../../../common/ZicopsTable';
@@ -18,20 +18,15 @@ export default function QuestionTable({
   const [allQb, setAllQb] = useState(qbQuestions);
   const [filteredQb, setFilteredQb] = useState(qbQuestions);
 
-  const difficulty = {
-    Beginner: [0, 1, 2, 3],
-    Competent: [4, 5, 6, 7],
-    Proficient: [8, 9, 10]
-  };
   useEffect(() => {
-    const filteredBasedOnDifficulty = allQb.filter((qb) => {
-      return difficulty[metaData?.difficulty_level]?.includes(qb?.Difficulty);
+    const filteredBasedOnDifficulty = allQb.filter((q) => {
+      return DIFFICULTY[metaData?.difficulty_level]?.includes(q?.Difficulty);
     });
 
     // clear selected id if one of selected question id is filtered due to difficulty
     if (
       !filteredBasedOnDifficulty?.length ||
-      filteredBasedOnDifficulty.some((qb) => !selectedQuestionIds?.includes(qb?.id))
+      filteredBasedOnDifficulty.some((q) => !selectedQuestionIds?.includes(q?.id))
     ) {
       setSelectedQuestionIds([]);
     }
@@ -43,7 +38,7 @@ export default function QuestionTable({
     if (!searchQuery) return;
 
     setFilteredQb(
-      allQb.filter((qb) => qb?.Description?.toLowerCase().includes(searchQuery?.toLowerCase()))
+      allQb.filter((q) => q?.Description?.toLowerCase().includes(searchQuery?.toLowerCase()))
     );
   }, [searchQuery]);
 

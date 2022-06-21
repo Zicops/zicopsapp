@@ -104,7 +104,9 @@ export default function ExistingQuestion({
           options: difficultyOptions,
           value: { value: metaData?.difficulty_level, label: metaData?.difficulty_level }
         }}
-        changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'difficulty_level')}
+        changeHandler={(e) =>
+          setMetaData({ ...metaData, total_questions: 0, difficulty_level: e.value })
+        }
       />
 
       <div className={styles.twoInputContainer}>
@@ -141,13 +143,22 @@ export default function ExistingQuestion({
               setToastMsg({ type: 'danger', message: 'Select Question Bank First' });
             }
 
+            // no difficulty level selected
+            if (!metaData?.difficulty_level) {
+              questionsCount = 0;
+              setToastMsg({ type: 'danger', message: 'Select Difficulty First' });
+            }
+
             if (questionAvailable === 0) {
               questionsCount = 0;
               setToastMsg({ type: 'danger', message: 'Bank does not have questions' });
             }
 
             if (questionsCount > questionAvailable) {
-              setToastMsg({ type: 'danger', message: `Bank has ${questionAvailable} question` });
+              setToastMsg({
+                type: 'danger',
+                message: `Bank has only ${questionAvailable} question with ${metaData?.difficulty_level} level`
+              });
               questionsCount = questionAvailable;
             }
 
@@ -173,6 +184,7 @@ export default function ExistingQuestion({
         {['Manual', 'Random'].map((label) => (
           <LabeledRadioCheckbox
             type="radio"
+            key={label}
             label={label}
             name="retrieve_type"
             value={label.toLowerCase()}
