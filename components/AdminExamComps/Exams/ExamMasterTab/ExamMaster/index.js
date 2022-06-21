@@ -22,7 +22,7 @@ export default function ExamMaster() {
 
   const [questionPaperOptions, setQuestionPaperOptions] = useState([]);
 
-  // load table data
+  // load question paper data
   useEffect(() => {
     const LARGE_PAGE_SIZE = 999999999999;
     const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
@@ -35,7 +35,9 @@ export default function ExamMaster() {
 
       const options = [];
       if (paperData)
-        paperData.forEach((paper) => options.push({ value: paper.id, label: paper.name }));
+        paperData.forEach((paper) =>
+          options.push({ value: paper.id, label: paper.name, ...paper })
+        );
 
       setQuestionPaperOptions(options);
     });
@@ -56,7 +58,15 @@ export default function ExamMaster() {
           value: questionPaperOptions?.filter((option) => option?.value === examTabData?.qpId)[0],
           isSearchEnable: true
         }}
-        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'qpId')}
+        changeHandler={(e) => {
+          const selectedQp = questionPaperOptions?.filter((option) => option?.value === e.value)[0];
+
+          setExamTabData({
+            ...examTabData,
+            duration: selectedQp?.SuggestedDuration || 0,
+            qpId: e.value
+          });
+        }}
       />
 
       {/* exam name */}
