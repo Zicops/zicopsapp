@@ -14,29 +14,10 @@ const Input = styled('input')({
 
 const AccountSetupUser = ({setCurrentComponent}) => {
 
-    const [isPhoneFocus, setIsPhoneFocus] = useState(false);
+    // const [isPhoneFocus, setIsPhoneFocus] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState()
 
     const myRef = useRef(null);
-    function useOutsideAlerter(ref) {
-        useEffect(() => {
-            /**
-             * close dialog if clicked on outside of element
-             */
-            function handleClickOutside(event) {
-                if (ref.current && !ref.current.contains(event.target)) {
-                    setIsPhoneFocus(false)
-                }
-            }
-            // Bind the event listener
-            document.addEventListener("mousedown", handleClickOutside);
-            return () => {
-                // Unbind the event listener on clean up
-                document.removeEventListener("mousedown", handleClickOutside);
-            };
-        }, [ref]);
-    }
-    useOutsideAlerter(myRef);
 
     return(
         <>
@@ -70,7 +51,7 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                         options: languages,
                         value: { value: selectedLanguage, label: selectedLanguage }
                     }}
-                    changeHandler={(e) => setIsPhoneFocus(e.value)}
+                    changeHandler={(e) => setSelectedLanguage(e.value)}
                 />
                 <Box mt={3} />
                 <LabeledInput
@@ -84,33 +65,43 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                     // changeHandler={() => {}}
                 />
                 <Box mt={3} />
-                <div className={`${styles.labeledInputWrapper}`}>
-                    <label className="w-100">
-                        Contact Number:
-                    </label>
-                    <div ref={myRef} className={`${isPhoneFocus ? styles.emailContainer_focus : styles.emailContainer}`}
-                         onClick={() => {setIsPhoneFocus(true)}}
-                    >
-                        <input
-                            // type={type}
-                            className={`${styles.code} w-100`}
-                            name={'ISD=Code'}
-                            placeholder={'ISD Code'}
-                            // value={value}
-                            // onChange={() => {}}
-                            maxLength={100}
-                        />
-                        <input
-                            // type={type}
-                            className={`${styles.number} w-100`}
-                            name={'Number'}
-                            placeholder={'Number'}
-                            // value={value}
-                            // onChange={() => {}}
-                            maxLength={100}
-                        />
-                    </div>
-                </div>
+                <LabeledInput
+                    inputOptions={{
+                        inputName: 'number',
+                        label: 'Contact Number:',
+                        placeholder: 'Enter Phone',
+                        // value: ,
+                        maxLength: 60
+                    }}
+                    // changeHandler={() => {}}
+                />
+                {/*<div className={`${styles.labeledInputWrapper}`}>*/}
+                {/*    <label className="w-100">*/}
+                {/*        Contact Number:*/}
+                {/*    </label>*/}
+                {/*    <div ref={myRef} className={`${isPhoneFocus ? styles.emailContainer_focus : styles.emailContainer}`}*/}
+                {/*         onClick={() => {setIsPhoneFocus(true)}}*/}
+                {/*    >*/}
+                {/*        <input*/}
+                {/*            // type={type}*/}
+                {/*            className={`${styles.code} w-100`}*/}
+                {/*            name={'ISD=Code'}*/}
+                {/*            placeholder={'ISD Code'}*/}
+                {/*            // value={value}*/}
+                {/*            // onChange={() => {}}*/}
+                {/*            maxLength={100}*/}
+                {/*        />*/}
+                {/*        <input*/}
+                {/*            // type={type}*/}
+                {/*            className={`${styles.number} w-100`}*/}
+                {/*            name={'Number'}*/}
+                {/*            placeholder={'Number'}*/}
+                {/*            // value={value}*/}
+                {/*            // onChange={() => {}}*/}
+                {/*            maxLength={100}*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*</div>*/}
                 <Box mt={3} />
                 <div className={`${styles.labeledInputWrapper}`}>
                     <label className="w-100">
@@ -131,21 +122,20 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                         </Button>
                     </div>
                 </div>
-                <Box mt={3} />
-                <div className={`${styles.navigator}`}>
-                    <span />
-                    <div>
-                        <Button variant={'outlined'} className={`${styles.transform_text}`} disabled>
-                            Back
-                        </Button>
-                        <Button variant={'contained'} className={`${styles.input_margin_transform}`}
-                                onClick={() => {setCurrentComponent(1)}}
-                        >
-                            Next
-                        </Button>
-                    </div>
+                <Box mt={2} />
+            </div>
+            <div className={`${styles.navigator}`}>
+                <span />
+                <div>
+                    <Button variant={'outlined'} className={`${styles.transform_text}`} disabled>
+                        Back
+                    </Button>
+                    <Button variant={'contained'} className={`${styles.input_margin_transform}`}
+                            onClick={() => {setCurrentComponent(1)}}
+                    >
+                        Next
+                    </Button>
                 </div>
-
             </div>
         </>
     );

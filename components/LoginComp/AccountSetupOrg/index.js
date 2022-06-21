@@ -1,9 +1,13 @@
 import {Box, Button} from "@mui/material";
 import LabeledInput from "../../common/FormComponents/LabeledInput";
 import styles from './setupOrg.module.scss';
+import LabeledDropdown from "../../common/FormComponents/LabeledDropdown";
+import {roleList} from "../ProfilePreferences/Logic/profilePreferencesHelper";
+import {useState} from "react";
 
 const AccountSetupOrg = ({setCurrentComponent}) => {
 
+    const [role, setRole] = useState()
 
     return(
         <>
@@ -41,15 +45,14 @@ const AccountSetupOrg = ({setCurrentComponent}) => {
                     // changeHandler={() => {}}
                 />
                 <Box mt={3} />
-                <LabeledInput
-                    inputOptions={{
-                        inputName: 'org-role',
+                <LabeledDropdown
+                    dropdownOptions={{
                         label: 'Organization Role:',
                         placeholder: ' Select Role in the Organization',
-                        // value: ,
-                        maxLength: 60
+                        options: roleList,
+                        value: { value: role, label: role }
                     }}
-                    // changeHandler={() => {}}
+                    changeHandler={(e) => setRole(e.value)}
                 />
                 <Box mt={3} />
                 <LabeledInput
@@ -63,22 +66,21 @@ const AccountSetupOrg = ({setCurrentComponent}) => {
                     // changeHandler={() => {}}
                 />
                 <Box mt={3} />
-                <div className={`${styles.navigator}`}>
-                    <span />
-                    <div>
-                        <Button variant={'outlined'} className={`${styles.transform_text}`}
-                                onClick={() => {setCurrentComponent(0)}}
-                        >
-                            Back
-                        </Button>
-                        <Button variant={'contained'} className={`${styles.input_margin_transform}`}
-                                onClick={() => {setCurrentComponent(2)}}
-                        >
-                            Next
-                        </Button>
-                    </div>
+            </div>
+            <div className={`${styles.navigator}`}>
+                <span />
+                <div>
+                    <Button variant={'outlined'} className={`${styles.transform_text}`}
+                            onClick={() => {setCurrentComponent(0)}}
+                    >
+                        Back
+                    </Button>
+                    <Button variant={'contained'} className={`${styles.input_margin_transform}`}
+                            onClick={() => {setCurrentComponent(2)}}
+                    >
+                        Next
+                    </Button>
                 </div>
-
             </div>
         </>
     );

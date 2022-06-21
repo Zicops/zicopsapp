@@ -23,7 +23,7 @@ const Login = () => {
         {page === 0 && <ChangePasswordScreen setPage={setPage} />}
         {page === 1 && <SignToLearningSpace setPage={setPage} />}
         {page === 2 && <LoginScreen setPage={setPage} />}
-        {page === 3 && <LoginComp setPage={setPage} />}
+        {page === 3 && <LoginComp />}
       </ThemeProvider>
 
     </>

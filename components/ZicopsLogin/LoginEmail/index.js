@@ -23,6 +23,7 @@ const LoginEmail = ({ chngeHandle, type, placeholder }) => {
         type={show ? 'text' : 'password'}
         placeholder={placeholder}
         onFocus={chngeHandle}
+        autoComplete={'off'}
         // style={{ margin: '5px 0px' }}
       />
         <button onClick={handleShowPassword}>

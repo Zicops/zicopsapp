@@ -7,12 +7,41 @@ export const languages = [
         label: 'English (UK)',
         value: 'English (UK)'
     },
-    // 'Italiano',
-    // 'Filipino',
-    // 'Dansk',
-    // 'Magyar',
-    // 'Indonesia',
-    // 'Deutsch',
+    {
+        label: 'Italiano',
+        value: 'Italiano'
+    },
+    {
+        label: 'Filipino',
+        value: 'Filipino'
+    },
+    {
+        label: 'Indonesia',
+        value: 'Indonesia'
+    },
+    {
+        label: 'Deutsch',
+        value: 'Deutsch'
+    },
+    {
+        label: 'Magyar',
+        value: 'Magyar'
+    },
+]
+
+export const roleList = [
+    {
+        label: 'Role1',
+        value: 'Role1'
+    },
+    {
+        label: 'Role2',
+        value: 'Role2'
+    },
+    {
+        label: 'Role3',
+        value: 'Role3'
+    },
 ]
 
 export const categories = [
