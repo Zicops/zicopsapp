@@ -424,7 +424,7 @@
   padding-top: 2px;
 }
 
-.radioBox{
+.radioBox {
   border: 2px solid $primary;
   border-radius: 5px;
   height: 200px;
@@ -435,13 +435,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  &:hover{
+  &:hover {
     box-shadow: 0 0 20px 0 $primary;
   }
-  .radioBoxIcon{
+  .radioBoxIcon {
     margin-bottom: 20px;
   }
-  .radioBoxText{
+  .radioBoxText {
     width: 101%;
     text-align: center;
     color: $darkTwo;
@@ -450,4 +450,8 @@
     padding: 10px;
     bottom: 0;
   }
+}
+
+.accordionContainer {
+  margin: 20px auto;
 }

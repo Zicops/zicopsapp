@@ -8,7 +8,6 @@ const Accordion = ({ title, content, closeAccordion, onClose }) => {
         if (closeAccordion == null) return 
 
         setIsActive(!closeAccordion)
-        console.log(closeAccordion);
     },[closeAccordion])
 
     useEffect(() => {
