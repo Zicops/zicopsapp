@@ -2,6 +2,7 @@ import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
 import LoginHeadOne from '../LoginHeadOne';
+import styles from "../LoginEmail/loginEmail.module.scss";
 
 const LoginScreen = ({setPage}) => {
   return (
@@ -12,9 +13,19 @@ const LoginScreen = ({setPage}) => {
           sub_heading={'Start your first step to learning here!'}
         />
         <div className="login_body">
-          <LoginEmail type={'email'} placeholder={'Email address'} />
+            <input
+                className={`${styles.login_email_input}`}
+                type={'email'}
+                placeholder={'Email address'}
+                // onFocus={chngeHandle}
+                // style={{ margin: '5px 0px' }}
+            />
           <LoginEmail type={'password'} placeholder={'Password'} />
-          <div className="small_text">Forgot Password?</div>
+            <div className={`${styles.small_text}`}>
+                <span />
+                <p>Forgot Password?</p>
+            </div>
+
           <LoginButton title={'Login'} handleClick={() => setPage(3)} />
         </div>
       </ZicopsLogin>
