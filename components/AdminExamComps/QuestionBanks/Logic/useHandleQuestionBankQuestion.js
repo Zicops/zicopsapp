@@ -44,6 +44,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   );
   const [optionData, setOptionData] = useState(Array(4).fill(getQuestionOptionsObject()));
   const [isUploading, setIsUploading] = useState(null);
+  const [isEditQuestion, setIsEditQuestion] = useState(false);
 
   // set edit data in local state
   useEffect(() => {
@@ -170,6 +171,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     // reset form data
     setQuestionData(getQuestionBankQuestionObject({ qbmId: questionBankId }));
     setOptionData(Array(4).fill(getQuestionOptionsObject()));
+    setIsEditQuestion(false);
   }
 
   // edit question data from accordion
@@ -180,6 +182,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setQuestionData(removedQuestion.question);
     setOptionData(removedQuestion.options);
     setQuestionsArr(allQuestions);
+    setIsEditQuestion(true);
   }
 
   async function addQuestionAndOptions() {
@@ -332,6 +335,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setQuestionData,
     optionData,
     activateEdit,
+    isEditQuestion,
     questionFileInputHandler,
     optionInputHandler,
     addQuestionAndOptions,

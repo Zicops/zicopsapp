@@ -19,6 +19,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
     questionFileInputHandler,
     optionInputHandler,
     activateEdit,
+    isEditQuestion,
     saveQuestion
   } = data;
 
@@ -112,9 +113,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
                     key={index}
                     labelCount={index + 1}
                     acceptedTypes={acceptedFileTypes.join(', ')}
-                    isCorrectHandler={(e) => {
-                      optionInputHandler(e, index);
-                    }}
+                    isCorrectHandler={(e) => optionInputHandler(e, index)}
                     optionData={{
                       fileName: optionData[index]?.file?.name || optionData[index]?.attachment,
                       inputValue: optionData[index]?.description,
@@ -130,7 +129,14 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
           {!isEdit && (
             <div className={`center-element-with-flex`}>
-              <Button text="Add the Question" clickHandler={saveQuestion} />
+              <Button
+                text={
+                  questionsArr.length
+                    ? 'Add Next Question'
+                    : `${isEditQuestion ? 'Update' : 'Add'} the Question`
+                }
+                clickHandler={saveQuestion}
+              />
             </div>
           )}
         </>
