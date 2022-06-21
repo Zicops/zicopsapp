@@ -211,6 +211,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
 
               setShowQuestionTable(true);
             }}
+            styleClass={isMetaDataReady ? 'bg-primary' : ''}
             isDisabled={!isMetaDataReady}
           />
         )}
