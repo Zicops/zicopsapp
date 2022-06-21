@@ -4,7 +4,13 @@ import { truncateToN } from '../../../../../helper/common.helper';
 import Button from '../../../Button';
 import PopUp from '../../../PopUp';
 
-export default function PreviewImageVideo({ fileName, filePath, isVideo, handleClose }) {
+export default function PreviewImageVideo({
+  fileName,
+  filePath,
+  isVideo,
+  showPreview,
+  setShowPreview
+}) {
   const [fileSrc, setFileSrc] = useState('');
 
   if (typeof filePath === 'object') {
@@ -22,7 +28,7 @@ export default function PreviewImageVideo({ fileName, filePath, isVideo, handleC
   return (
     <>
       <PopUp
-        closeBtn={{ handleClick: handleClose }}
+        popUpState={[showPreview, setShowPreview]}
         title={`${isVideo ? 'Video' : 'Image'} Preview (${truncateToN(fileName, 50)})`}
         isFooterVisible={false}>
         {isVideo ? (
@@ -37,7 +43,7 @@ export default function PreviewImageVideo({ fileName, filePath, isVideo, handleC
           </div>
         )}
         <div style={{ float: 'right' }}>
-          <Button clickHandler={handleClose} text="Cancel" />
+          <Button clickHandler={() => setShowPreview(false)} text="Cancel" />
         </div>
       </PopUp>
     </>

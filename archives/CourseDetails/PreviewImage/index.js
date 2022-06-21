@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import PopUp from '../../common/PopUp';
+import PopUp from '../../../components/common/PopUp';
 
 export default function PreviewImage({ fileName, filePath, isVideo, popUpData }) {
   const { closeBtn, submitBtn } = popUpData;

@@ -28,7 +28,8 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
     borderRight: `0px solid ${theme.palette.mode === 'light' ? '#f0f0f02b' : '#3030302b'}`,
     fontWeight: '500',
-    fontSize: '18px'
+    fontSize: '18px',
+    overflow: 'unset !important'
   },
   '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
     border: 'none',

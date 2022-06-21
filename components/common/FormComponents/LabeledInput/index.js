@@ -63,7 +63,8 @@ const LabeledInputObj = shape({
   maxLength: number,
   isRequired: bool,
   isDisabled: bool,
-  isAutoComplete: bool
+  isAutoComplete: bool,
+  isNumericOnly: bool
 });
 
 LabeledInput.propTypes = {

@@ -114,7 +114,7 @@ export default function ExamsTable({ isEdit = false }) {
       <PopUp
         title={examData?.name}
         isPopUpOpen={!!examData}
-        closeBtn={{ handleClick: () => setExamData(null) }}
+        popUpState={[!!examData, setExamData]}
         isFooterVisible={false}>
         <Preview examData={examData || {}} />
       </PopUp>

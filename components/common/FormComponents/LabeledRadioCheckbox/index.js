@@ -1,5 +1,13 @@
 import { labeledRadioCheckboxWrapper, checkmark, radiomark } from '../formComponents.module.scss';
-const LabeledRadioCheckbox = ({ label, type, name, value, isChecked, isDisabled, changeHandler }) => {
+const LabeledRadioCheckbox = ({
+  label,
+  type,
+  name,
+  value,
+  isChecked,
+  isDisabled,
+  changeHandler = function () {}
+}) => {
   return (
     <label className={labeledRadioCheckboxWrapper}>
       <input

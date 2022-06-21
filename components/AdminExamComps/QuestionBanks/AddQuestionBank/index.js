@@ -50,7 +50,10 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
 
   // load questions
   useEffect(() => {
-    loadQBQuestions({ variables: { question_bank_id: selectedQb?.id } }).then(({ data }) => {
+    loadQBQuestions({
+      variables: { question_bank_id: selectedQb?.id },
+      fetchPolicy: 'no-cache'
+    }).then(({ data }) => {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
@@ -96,7 +99,8 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           placeholder: 'Select Category',
           options: categoryOption,
           value: { value: questionBankData?.category, label: questionBankData?.category },
-          isDisabled: isQuestionsPresent || !isPopUp
+          isDisabled: isQuestionsPresent || !isPopUp,
+          isSearchEnable: true
         }}
         changeHandler={(e) => changeHandler(e, questionBankData, setQuestionBankData, 'category')}
       />
@@ -109,7 +113,8 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           placeholder: 'Select Sub-Category',
           options: subCategoryOption,
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },
-          isDisabled: isQuestionsPresent || !isPopUp
+          isDisabled: isQuestionsPresent || !isPopUp,
+          isSearchEnable: true
         }}
         changeHandler={(e) =>
           changeHandler(e, questionBankData, setQuestionBankData, 'sub_category')
@@ -122,6 +127,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           <Button
             text={isEdit ? 'Update' : 'Add'}
             isDisabled={!isAddQuestionBankReady}
+            styleClass={isAddQuestionBankReady ? 'bg-primary' : ''}
             clickHandler={() => {
               isEdit ? updateQuestionBank() : createNewQuestionBank();
             }}

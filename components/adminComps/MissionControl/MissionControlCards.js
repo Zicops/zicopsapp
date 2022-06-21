@@ -53,7 +53,11 @@ const MissionControlCards = () => {
         <div className="contain_icons">
           <div className="new_row">
             <Card image="/images/Analytics.png" text="Analytics" width="70px" />
-            <Card image="/images/UserManagement.png" text="User Management" width="70px" />
+            <Link href="/admin/user/my-users">
+              <a>
+                <Card image="/images/UserManagement.png" text="User Management" width="70px" />
+              </a>
+            </Link>
             <Link href="/admin/course/my-courses">
               <a>
                 <Card image="/images/CourseManagement.png" text="Course Management" width="70px" />

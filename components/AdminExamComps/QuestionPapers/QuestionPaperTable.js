@@ -36,12 +36,6 @@ export default function QuestionPaperTable({ isEdit = false }) {
       flex: 1
     },
     {
-      field: 'Status',
-      headerClassName: 'course-list-header',
-      headerName: 'Status',
-      flex: 1
-    },
-    {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
@@ -107,6 +101,15 @@ export default function QuestionPaperTable({ isEdit = false }) {
     }
   ];
 
+  if (isEdit) {
+    columns.splice(2, 0, {
+      field: 'Status',
+      headerClassName: 'course-list-header',
+      headerName: 'Status',
+      flex: 1
+    });
+  }
+
   // load table data
   useEffect(() => {
     const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
@@ -133,8 +136,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
       {/* preview popup */}
       <PopUp
         title={masterData?.name}
-        isPopUpOpen={!!masterData}
-        closeBtn={{ handleClick: () => setMasterData(null) }}
+        popUpState={[!!masterData, setMasterData]}
         isFooterVisible={false}>
         <Preview masterData={masterData || {}} />
       </PopUp>

@@ -56,9 +56,8 @@ export default function CourseHead({ title }) {
       <PopUp
         isFooterVisible={false}
         title="Sitemap"
-        isPopUpOpen={showSitemap}
-        size="large"
-        closeBtn={{ handleClick: () => setShowSitemap(false) }}>
+        popUpState={[showSitemap, setShowSitemap]}
+        size="large">
         <Sitemap />
       </PopUp>
     </div>

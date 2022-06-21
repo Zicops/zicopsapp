@@ -14,6 +14,7 @@ import {
   QuestionPaperTabDataAtom
 } from '../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+import { StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
 import { paperTabData, QuestionPaperTabAtom } from './Logic/questionPaperTab.helper';
 import useHandlePaperTab from './Logic/useHandlePaperTab';
@@ -32,6 +33,7 @@ export default function QuestionPaperTab() {
   const questionPaperId = router.query?.questionPaperId;
 
   const [tab, setTab] = useRecoilState(QuestionPaperTabAtom);
+  const [status, setStatus] = useRecoilState(StatusAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
 
@@ -57,6 +59,7 @@ export default function QuestionPaperTab() {
     });
     if (isError) return;
     const paperMasterData = metaRes.data.getQPMeta[0];
+
     const paperMaster = getQuestionPaperMasterObject({
       ...paperMasterData,
       category: paperMasterData?.Category,
@@ -64,11 +67,15 @@ export default function QuestionPaperTab() {
       description: paperMasterData?.Description,
       section_wise: paperMasterData?.SectionWise,
       difficulty_level: paperMasterData?.DifficultyLevel,
-      suggested_duration: paperMasterData?.SuggestedDuration
+      suggested_duration: paperMasterData?.SuggestedDuration,
+      status: paperMasterData?.Status
     });
 
+    setStatus(paperMasterData?.Status);
+
     const sectionRes = await loadPaperSection({
-      variables: { question_paper_id: questionPaperId }
+      variables: { question_paper_id: questionPaperId },
+      fetchPolicy: 'no-cache'
     }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -185,9 +192,10 @@ export default function QuestionPaperTab() {
         tab={tab}
         setTab={setTab}
         footerObj={{
+          status: status,
           submitDisplay: questionPaperId ? 'Update' : 'Save',
           handleSubmit: questionPaperId ? updateQuestionPaper : addNewQuestionPaper,
-          handleCancel: () => router.back()
+          handleCancel: () => router.push('/admin/exams/my-question-papers')
         }}
       />
     </>

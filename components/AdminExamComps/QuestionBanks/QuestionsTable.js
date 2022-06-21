@@ -137,8 +137,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
       <PopUp
         isFooterVisible={false}
         title="View Question"
-        isPopUpOpen={popUpState}
-        closeBtn={{ handleClick: () => udpatePopUpState(false) }}>
+        popUpState={[popUpState, udpatePopUpState]}>
         <>
           <McqCard
             questionData={viewQuestion}

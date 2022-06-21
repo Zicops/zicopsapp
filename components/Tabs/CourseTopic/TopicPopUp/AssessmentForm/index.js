@@ -49,8 +49,9 @@ export default function AssessmentForm({ topicData }) {
             inputName: 'category',
             label: 'Category:',
             placeholder: 'Select category',
-            options: categoryOption
-            // value: { value: metaData?.category, label: metaData?.category }
+            options: categoryOption,
+            isSearchEnable: true
+            // value: { value: metaData?.category, label: metaData?.category },
           }}
           //   changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'category')}
           isFiftyFifty={true}
@@ -62,7 +63,8 @@ export default function AssessmentForm({ topicData }) {
             inputName: 'sub_category',
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
-            options: subCategoryOption
+            options: subCategoryOption,
+            isSearchEnable: true
             // value: { value: metaData?.sub_category, label: metaData?.sub_category }
           }}
           //   changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'sub_category')}

@@ -10,6 +10,7 @@ import {
   queryClient
 } from '../../../../API/Queries';
 import { ExamTabDataAtom, getExamTabDataObject } from '../../../../state/atoms/exams.atoms';
+import { StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
 import { ExamMasterTabAtom, ExamMasterTabDataSelector } from './Logic/examMasterTab.helper';
 import useHandleExamTab from './Logic/useHandleExamTab';
@@ -30,6 +31,7 @@ export default function ExamMasterTab() {
 
   // recoil
   const [tab, setTab] = useRecoilState(ExamMasterTabAtom);
+  const [status, setStatus] = useRecoilState(StatusAtom);
   const examMasterTabData = useRecoilValue(ExamMasterTabDataSelector);
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
@@ -71,6 +73,8 @@ export default function ExamMasterTab() {
       status: masterData.Status,
       is_exam_active: masterData.IsActive
     };
+
+    setStatus(masterObj.status);
 
     // load instructions
     const insRes = await loadInstructions({
@@ -169,6 +173,7 @@ export default function ExamMasterTab() {
       tab={tab}
       setTab={setTab}
       footerObj={{
+        status: status,
         submitDisplay: 'Save',
         handleSubmit: saveExamData,
         handleCancel: () => router.push('/admin/exams/my-exams/')

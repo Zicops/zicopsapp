@@ -167,10 +167,9 @@ export default function MissionControlHeader() {
       <PopUp
         isFooterVisible={false}
         title="Sitemap"
-        isPopUpOpen={showSitemap}
+        popUpState={[showSitemap, setShowSitemap]}
         size="large"
-        positionLeft="50%"
-        closeBtn={{ handleClick: () => setShowSitemap(false) }}>
+        positionLeft="50%">
         <Sitemap />
       </PopUp>
 

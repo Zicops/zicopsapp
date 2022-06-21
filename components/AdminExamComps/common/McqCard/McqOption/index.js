@@ -11,6 +11,8 @@ export default function McqOption({ option, index }) {
   if (option?.file) fileSrc = URL.createObjectURL(option?.file);
   if (option?.attachment) fileSrc = option?.attachment;
 
+  if (!option?.description && !fileSrc) return null;
+
   return (
     <>
       <div className={`${styles.options}`}>
