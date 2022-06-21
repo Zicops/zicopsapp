@@ -49,9 +49,22 @@ export default function useAddCustomSection() {
     if (editSectionError) return setToastMsg({ type: 'danger', message: `Update Section Error` });
   }, [addSectionError, editSectionError]);
 
+  function isDuplicate() {
+    const sections = questionPaperTabData?.sectionData || [];
+    if (!sections?.length) return false;
+
+    const isExist = sections.some(
+      (sect) => sect?.name?.toLowerCase() === customSection?.name?.toLowerCase()
+    );
+
+    if (isExist) setToastMsg({ type: 'danger', message: 'Section with name already exist' });
+    return isExist;
+  }
+
   async function addNewSection() {
     if (!questionPaperTabData.paperMaster.id)
       return setToastMsg({ type: 'danger', message: 'Add Question Paper First' });
+    if (isDuplicate()) return;
 
     const sendData = {
       qpId: questionPaperTabData.paperMaster.id,
