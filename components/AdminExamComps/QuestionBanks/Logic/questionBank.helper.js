@@ -3,7 +3,7 @@ export function getQuestionBankQuestionObject(data = {}) {
     id: data.id || null,
     description: data.description || '',
     type: data.type || '',
-    difficulty: data.difficulty || 0,
+    difficulty: data.difficulty || 1,
     hint: data.hint || '',
 
     file: data.file || null,

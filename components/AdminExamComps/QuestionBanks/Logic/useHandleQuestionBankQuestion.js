@@ -103,7 +103,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   function isImageValid(e) {
     if (e.target.type === 'file') {
       const file = e.target.files[0];
-      console.log(file);
+
       if (!file) return false;
       if (!acceptedFileTypes.includes(file?.type)) {
         setToastMsg({ type: 'danger', message: `${acceptedFileTypes.join(', ')} only accepted` });
@@ -126,6 +126,17 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       file: e.target.files[0],
       attachmentType: e.target.files[0].type
     });
+  }
+
+  function isOptionsDuplicate() {
+    var optionArr = optionData.map(function (op) {
+      return op.description;
+    });
+    var isDuplicate = optionArr.some((op, i) => optionArr.indexOf(op) != i);
+    console.log(isDuplicate);
+
+    if (isDuplicate) setToastMsg({ type: 'danger', message: 'Options cannot be same.' });
+    return isDuplicate;
   }
 
   // checkbox, file and text input handler for option
@@ -152,6 +163,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   // add question data to array to show in accordion
   function saveQuestion() {
     if (!validateInput()) return;
+    if (isOptionsDuplicate()) return;
 
     setQuestionsArr([...questionsArr, { question: questionData, options: optionData }]);
 
