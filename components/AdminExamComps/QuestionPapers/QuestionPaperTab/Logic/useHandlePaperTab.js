@@ -68,6 +68,10 @@ export default function useHandlePaperTab() {
     if (addPaperSectionError) return setToastMsg({ type: 'danger', message: `Add Section Error` });
   }, [addPaperError, addPaperSectionError, updatePaperError]);
 
+  useEffect(() => {
+    if (toastMsg[0]?.type === 'danger') setStatus(STATUS[0]);
+  }, [toastMsg]);
+
   // question paper master input handler
   function handleInput(e, inputName = null) {
     const questionPaperMaster = {
@@ -187,7 +191,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
-      status: questionPaperData.status || STATUS[0],
+      status: questionPaperData.status || STATUS[1],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
@@ -227,7 +231,7 @@ export default function useHandlePaperTab() {
     if (!isError) setToastMsg({ type: 'success', message: 'Question Paper Updated' });
     if (!isNaN(+tabIndex)) setTab(paperTabData[tabIndex].name);
 
-    setStatus(STATUS[0]);
+    setStatus(STATUS[1]);
   }
 
   return {

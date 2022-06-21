@@ -5,4 +5,4 @@ export const StatusAtom = atom({
   default: null
 });
 
-export const STATUS = ['DRAFT'];
+export const STATUS = ['DRAFT', 'SAVED'];

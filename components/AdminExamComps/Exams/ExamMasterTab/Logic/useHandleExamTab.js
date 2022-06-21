@@ -22,6 +22,7 @@ import {
 import { isNameDuplicate } from '../../../../../helper/data.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
+import { STATUS, StatusAtom } from '../../../../../state/atoms/utils.atoms';
 import { SCHEDULE_TYPE } from './examMasterTab.helper';
 
 export default function useHandleExamTab() {
@@ -65,6 +66,7 @@ export default function useHandleExamTab() {
   // recoil state
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [status, setStatus] = useRecoilState(StatusAtom);
 
   // disable submit if data not complete
   function validateInput() {
@@ -75,6 +77,10 @@ export default function useHandleExamTab() {
     const isInstructionsValid = passing_criteria && instructions;
     return isExamValid && isInstructionsValid;
   }
+
+  useEffect(() => {
+    if (toastMsg[0]?.type === 'danger') setStatus(STATUS[0]);
+  }, [toastMsg]);
 
   // error notifications
   useEffect(() => {
@@ -153,7 +159,7 @@ export default function useHandleExamTab() {
       code: examTabData.code || '',
       type: examTabData.type || '',
 
-      status: examTabData.status || 'SAVED',
+      status: examTabData.status || STATUS[1],
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_exam_active || true
@@ -293,6 +299,7 @@ export default function useHandleExamTab() {
 
   async function saveExamData() {
     console.log(examTabData);
+    setStatus('UPDATING');
     if (!validateInput())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
@@ -317,6 +324,7 @@ export default function useHandleExamTab() {
     });
 
     setToastMsg({ type: 'success', message: 'Exam Saved' });
+    setStatus(STATUS[1]);
     if (!router.query?.examId) return router.push(`${router.asPath}/${examId}`);
   }
 
