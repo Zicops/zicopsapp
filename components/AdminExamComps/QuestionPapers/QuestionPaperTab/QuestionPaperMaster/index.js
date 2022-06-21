@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../../../API/Queries';
 import { loadQueryData } from '../../../../../helper/api.helper';
@@ -120,7 +121,7 @@ export default function QuestionPaperMaster() {
           type="checkbox"
           label="Section Wise"
           name="section_wise"
-          isDisabled={!!questionPaperId}
+          isDisabled={!!questionPaperTabData?.sectionData?.length}
           isChecked={questionPaperTabData.paperMaster?.section_wise}
           changeHandler={(e) => handleInput(e)}
         />

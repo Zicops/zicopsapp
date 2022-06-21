@@ -15,6 +15,7 @@ import {
   QuestionPaperTabDataAtom
 } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
+import { STATUS, StatusAtom } from '../../../../../state/atoms/utils.atoms';
 import { paperTabData, QuestionPaperTabAtom } from './questionPaperTab.helper';
 
 export default function useHandlePaperTab() {
@@ -33,15 +34,31 @@ export default function useHandlePaperTab() {
   const questionPaperId = router.query?.questionPaperId;
   // recoil state
   const [tab, setTab] = useRecoilState(QuestionPaperTabAtom);
+  const [status, setStatus] = useRecoilState(StatusAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // reset state if add question paper form
   useEffect(() => {
     if (questionPaperId || questionPaperTabData?.paperMaster?.id) return;
+    if (questionPaperTabData?.paperMaster?.isUpdated) return;
 
     setQuestionPaperTabData(getQuestionPaperTabDataObject());
   }, []);
+
+  useEffect(() => {
+    if (!questionPaperId) return;
+    if (status !== STATUS[0]) return;
+
+    // after saving paper master for first time
+    if (toastMsg[0]?.type === 'success') return;
+
+    if (questionPaperTabData.paperMaster?.isUpdated && tab === paperTabData[1].name) {
+      setTab(paperTabData[0].name);
+      setToastMsg({ type: 'danger', message: 'Please save Question Paper Master data' });
+      return;
+    }
+  }, [tab]);
 
   // error notification
   useEffect(() => {
@@ -64,6 +81,7 @@ export default function useHandlePaperTab() {
     if (e?.target?.type !== 'checkbox' && !inputName)
       questionPaperMaster[e.target.name] = e.target.value;
 
+    questionPaperMaster.isUpdated = true;
     setQuestionPaperTabData({
       ...questionPaperTabData,
       paperMaster: questionPaperMaster
@@ -83,6 +101,7 @@ export default function useHandlePaperTab() {
   }
 
   async function addNewQuestionPaper(tabIndex) {
+    setStatus('UPDATING');
     if (!isDataValid())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
@@ -128,50 +147,6 @@ export default function useHandlePaperTab() {
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Add Question Paper Error' });
 
-    // create a default section
-    if (!sendData.section_wise) {
-      const defaultSectionData = {
-        qpId: res?.id,
-        name: 'Default',
-        description: '',
-        difficulty_level: '',
-
-        // TODO: update later
-        total_questions: 0,
-        type: 'default',
-        is_active: true,
-        createdBy: 'Zicops',
-        updatedBy: 'Zicops'
-      };
-
-      const paperSectionRes = await addPaperSection({ variables: defaultSectionData }).catch(
-        (err) => {
-          console.log(err);
-          isError = !!err;
-          return setToastMsg({ type: 'danger', message: 'Add Default Paper Section Error' });
-        }
-      );
-      const data = paperSectionRes?.data?.addQuestionPaperSection;
-
-      if (!data) return setToastMsg({ type: 'danger', message: 'Add Section Error' });
-      const sectionData = {
-        id: data?.id,
-        qpId: data?.QpId,
-        name: data?.Name,
-        description: data?.Description,
-        type: data?.Type,
-        difficulty_level: data?.DifficultyLevel,
-        total_questions: data?.TotalQuestions,
-        created_at: data?.CreatedAt,
-        updated_at: data?.UpdatedAt,
-        created_by: data?.CreatedBy,
-        updated_by: data?.UpdatedBy,
-        is_active: data?.IsActive
-      };
-
-      tabData['sectionData'] = [sectionData];
-    }
-
     const paperMaster = {
       id: res?.id,
       name: res?.name || '',
@@ -191,6 +166,8 @@ export default function useHandlePaperTab() {
       router.push(`${router.asPath}/${paperMaster.id}`);
       setTab(paperTabData[tabIndex].name);
     }
+
+    setStatus(STATUS[0]);
   }
 
   async function updateQuestionPaper(tabIndex) {
@@ -236,7 +213,9 @@ export default function useHandlePaperTab() {
       description: res?.Description || '',
       section_wise: res?.SectionWise || false,
       difficulty_level: res?.DifficultyLevel || 0,
-      suggested_duration: res?.SuggestedDuration || ''
+      suggested_duration: res?.SuggestedDuration || '',
+
+      isUpdated: null
     };
 
     setQuestionPaperTabData({

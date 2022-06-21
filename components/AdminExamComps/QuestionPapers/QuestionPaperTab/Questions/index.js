@@ -38,10 +38,11 @@ export default function Questions() {
     if (!(editSectionPopUp || addQuestionMetaDataPopUp)) setSelectedSectionData(null);
 
     // if no section is present, show error
-    if (addQuestionMetaDataPopUp && !selectedSectionData) {
-      setToastMsg({ type: 'danger', message: 'No Section Present' });
-      udpateAddQuestionMetaDataPopUp(false);
-    }
+    // if (addQuestionMetaDataPopUp && !selectedSectionData) {
+    //   setToastMsg({ type: 'danger', message: 'No Section Present' });
+    // udpateAddQuestionMetaDataPopUp(false);
+    // }
+    console.log(addQuestionMetaDataPopUp);
   }, [editSectionPopUp, addQuestionMetaDataPopUp]);
 
   // if id is not present return to first tab
@@ -111,14 +112,12 @@ export default function Questions() {
       </PopUp>
 
       {/* edit meta data of question */}
-      {!!selectedSectionData?.id && (
-        <PopUp
-          isFooterVisible={false}
-          popUpState={[addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp]}
-          title="Add Question Meta Data">
-          <AddQuestionMetaData sectionId={selectedSectionData?.id} />
-        </PopUp>
-      )}
+      <PopUp
+        isFooterVisible={false}
+        popUpState={[addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp]}
+        title="Add Question Meta Data">
+        <AddQuestionMetaData sectionId={selectedSectionData?.id} />
+      </PopUp>
 
       {/* edit meta data of question */}
       {!!selectedSectionData?.id && (
