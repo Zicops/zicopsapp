@@ -92,7 +92,7 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
           background-color: #202222;
           height: 60vh;
           overflow: auto;
-          padding: 20px 50px;
+          padding: 30px 50px;
         }
 
         .tabSection::-webkit-scrollbar {

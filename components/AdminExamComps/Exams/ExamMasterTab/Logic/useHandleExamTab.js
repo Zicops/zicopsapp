@@ -231,7 +231,7 @@ export default function useHandleExamTab() {
       examId: examId,
       start: startDateTime,
       end: 0,
-      buffer_time: examTabData.buffer_time || 1,
+      buffer_time: examTabData.buffer_time || 0,
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_ins_active || true
@@ -240,6 +240,7 @@ export default function useHandleExamTab() {
     console.log(sendData);
     if (examTabData.is_stretch && examTabData?.exam_end_date && examTabData?.exam_end_time) {
       sendData.end = getDateTime(examTabData.exam_end_date, examTabData.exam_end_time);
+      sendData.buffer_time = 0;
     }
 
     let response = {};

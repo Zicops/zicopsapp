@@ -118,7 +118,7 @@ export default function ExamMaster() {
             inputName: 'total_marks',
             label: 'Total Marks:',
             placeholder: 'Total Marks',
-            value: examTabData?.total_marks,
+            value: examTabData?.total_marks?.toString(),
             isDisabled: true
           }}
         />
