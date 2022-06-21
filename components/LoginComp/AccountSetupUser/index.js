@@ -117,7 +117,7 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                         <div>
                             320 x 320 pixels (Recommended)
                         </div>
-                        <Button className={`${styles.input_margin_transform}`}>
+                        <Button className={`${styles.input_margin_transform_white}`}>
                             Preview
                         </Button>
                     </div>

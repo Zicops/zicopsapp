@@ -31,11 +31,12 @@
     justify-content: center;
     flex-direction: column;
     max-width: 860px;
-    padding-bottom: 3vh;
+    padding-bottom: 5vh;
   }
   .container{
     display: flex;
     align-items: center;
+    //justify-content: flex-start;  <- to fix the next and back btn
     justify-content: space-between;
     flex-direction: column;
     position: relative;

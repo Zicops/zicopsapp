@@ -13,15 +13,15 @@ const ChangePasswordScreen = ({ setPage }) => {
         <LoginHeadOne
           heading={'Change Password'}
           sub_heading={'You are required to change the default password!'}
+          info={(
+              <Tooltip placement="right" title="Password info goes here" arrow className={`${styles.password_info}`}>
+                <InfoIcon fontSize={'small'} color={'primary'} />
+              </Tooltip>
+          )}
         />
         <div className="login_body">
           <LoginEmail placeholder={'Enter current password'} />
-          <div className={`${styles.login_body} ${styles.password_info_container}`}>
-            <LoginEmail placeholder={'Enter new password'} />
-            <Tooltip placement="right" title="Password info goes here" arrow className={`${styles.password_info}`}>
-              <InfoIcon fontSize={'small'} color={'primary'} />
-            </Tooltip>
-          </div>
+          <LoginEmail placeholder={'Enter new password'} />
           <LoginEmail placeholder={'Re-enter new password'} />
           <div className="change_buttons">
             <LoginButton title={'Cancel'} />

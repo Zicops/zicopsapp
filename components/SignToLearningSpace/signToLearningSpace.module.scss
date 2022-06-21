@@ -83,15 +83,16 @@
     padding: 15px 0px;
 }
 
-.small_text:hover{
-  color: $primary;
-}
+//.small_text:hover{
+//  color: $primary;
+//}
 .small_text span a {
-    color: $primary;
-    text-decoration: underline;
+    color: $secondaryBlack;
+    //text-decoration: underline;
 }
 .small_text span a:hover{
     cursor: pointer;
+  color: $primary;
 }
 .signInFooter{
     display: flex;
