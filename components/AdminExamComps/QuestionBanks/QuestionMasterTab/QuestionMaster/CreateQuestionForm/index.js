@@ -125,12 +125,12 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
           {/* options */}
           <div className={styles.marginTop}>
-            <label>
-              Enter Options:
-              <span className={`${styles.hint}`}>Select the checkbox for the right option.</span>
-              {Array(NUMBER_OF_OPTIONS)
-                .fill(null)
-                .map((value, index) => (
+            Enter Options:
+            <span className={`${styles.hint}`}>Select the checkbox for the right option.</span>
+            {Array(NUMBER_OF_OPTIONS)
+              .fill(null)
+              .map((value, index) => (
+                <label>
                   <InputWithCheckbox
                     key={index}
                     labelCount={index + 1}
@@ -145,8 +145,8 @@ export default function CreateQuestionForm({ data, isEdit }) {
                     inputChangeHandler={(e) => optionInputHandler(e, index)}
                     fileInputHandler={(e) => optionInputHandler(e, index)}
                   />
-                ))}
-            </label>
+                </label>
+              ))}
           </div>
 
           {!isEdit && (
