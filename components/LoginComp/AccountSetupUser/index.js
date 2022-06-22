@@ -1,23 +1,38 @@
-import {Box, Button, IconButton} from "@mui/material";
+import {Box, Button, Dialog, IconButton} from "@mui/material";
 import LabeledInput from "../../common/FormComponents/LabeledInput";
 import styles from './setupUser.module.scss';
 import {useEffect, useRef, useState} from "react";
-import { styled } from '@mui/material/styles';
-import {changeHandler} from "../../../helper/common.helper";
+
+import CloseIcon from "@mui/icons-material/Close";
 import LabeledDropdown from "../../common/FormComponents/LabeledDropdown";
 import {languages} from '../ProfilePreferences/Logic/profilePreferencesHelper'
-
-
-const Input = styled('input')({
-    display: 'none',
-});
 
 const AccountSetupUser = ({setCurrentComponent}) => {
 
     // const [isPhoneFocus, setIsPhoneFocus] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState()
+    const [image, setImage] = useState();
+    const [preview, setPreview] = useState('');
+    const [pop, setPop] = useState(false);
+    const handleClick = (event) => {
+        setPop(true);
+    };
+    const handleClose = () => {
+        setPop(false);
+    };
 
     const myRef = useRef(null);
+
+    useEffect(() => {
+        if(image){
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result)
+            }
+            reader.readAsDataURL(image)
+        }
+        else setPreview('')
+    }, [image])
 
     return(
         <>
@@ -75,6 +90,9 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                     }}
                     // changeHandler={() => {}}
                 />
+
+                {/*code for ISD Code*/}
+
                 {/*<div className={`${styles.labeledInputWrapper}`}>*/}
                 {/*    <label className="w-100">*/}
                 {/*        Contact Number:*/}
@@ -108,18 +126,75 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                         Profile Picture:
                     </label>
                     <div className={`${styles.upload}`}>
-                        <label htmlFor="icon-button-file">
-                            <Input accept="image/*" id="icon-button-file" type="file" />
-                            <Button variant={'contained'} className={`${styles.transform_text}`} aria-label="upload picture" component="span">
-                                Upload Photo
-                            </Button>
-                        </label>
+                        <input
+                            accept="image/*"
+                            onChange={(e) => {
+                               const file = e.target.files[0]
+                                if(file) setImage(file)
+                                else setImage(null)
+                            }}
+                            id={"materialUpload"}
+                            style={{ display: "none" }}
+                            type="file"
+                        />
+                        <Button variant={'contained'} className={`${styles.transform_text}`}
+                                onClick={() => {
+                                    document.getElementById("materialUpload").click();
+                                }}
+                        >
+                            Upload Photo
+                        </Button>
                         <div>
                             320 x 320 pixels (Recommended)
                         </div>
-                        <Button className={`${styles.input_margin_transform_white}`}>
+                        <Button onClick={handleClick} disabled={preview === ''} className={`${styles.input_margin_transform_white}`}>
                             Preview
                         </Button>
+                        <Dialog
+                            open={pop}
+                            onClose={handleClose}
+                        >
+                            <Box
+                                py={3}
+                                px={3}
+                                zIndex={1}
+                                width={"450px"}
+                                display={"flex"}
+                                flexDirection={"column"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                            >
+                                <Box
+                                    width={"100%"}
+                                    display={"flex"}
+                                    justifyContent={"space-between"}
+                                    alignItems={"center"}
+                                    px={2}
+                                >
+                                    <Box fontSize={"27px"} fontWeight={600} color={'#FFF'}>
+                                        Preview
+                                    </Box>
+                                    <IconButton onClick={handleClose}>
+                                        <CloseIcon sx={{ color: "#FFF" }} />
+                                    </IconButton>
+                                </Box>
+                                <Box mb={5} />
+                                <Box
+                                    display={"flex"}
+                                    alignItems={"center"}
+                                    justifyContent={"center"}
+                                    width={"300px"}
+                                    height={"300px"}
+                                    border={"4px dashed #6bcfcf"}
+                                    borderRadius={"50%"}
+                                    overflow={"hidden"}
+                                    m={'auto'}
+                                >
+                                    <img src={preview} alt={"logo"} height={"100%"} />
+                                </Box>
+                                <Box mb={4} />
+                            </Box>
+                        </Dialog>
                     </div>
                 </div>
                 <Box mt={2} />

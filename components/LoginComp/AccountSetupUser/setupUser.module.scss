@@ -3,6 +3,22 @@
 .container{
   width: 100%;
 
+  //.dialog_container{
+  //  padding: 24px 16px;
+  //  width: 450px;
+  //  display: flex;
+  //  align-items: center;
+  //  justify-content: center;
+  //  flex-direction: column;
+  //}
+
+  .dialog_title{
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .labeledInputWrapper {
     display: flex;
     align-items: baseline;
