@@ -7,7 +7,7 @@ import PopUp from '../../../common/PopUp';
 import styles from '../../courseTabs.module.scss';
 
 export default function ModulePopUp({
-  closeModal,
+  popUpState,
   moduleData,
   setModuleData,
   isAddModuleReady,
@@ -24,12 +24,9 @@ export default function ModulePopUp({
     handleClick: handleSubmit,
     disabled: !isAddModuleReady
   };
-  console.log(moduleData);
+
   return (
-    <PopUp
-      closeBtn={{ handleClick: closeModal }}
-      submitBtn={submitBtnObj}
-      title={`Module ${moduleData.sequence}`}>
+    <PopUp popUpState={popUpState} submitBtn={submitBtnObj} title={`Module ${moduleData.sequence}`}>
       <div className={`${styles.popUpFormContainer}`}>
         <LabeledInput
           inputOptions={{

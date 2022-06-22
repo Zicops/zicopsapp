@@ -1,4 +1,3 @@
-import AssignedCourses from '../../../components/AssignedCourses';
 import AdminHeader from '../../../components/common/AdminHeader';
 import MainBody from '../../../components/common/MainBody';
 import MainBodyBox from '../../../components/common/MainBodyBox';
@@ -11,6 +10,7 @@ import CoursesAccordian from '../../../components/UserProfile/CoursesAccordian';
 import CohortAccordian from '../../../components/UserProfile/CohortAccordian';
 import LearningDashboardAccordian from '../../../components/UserProfile/LearningDashboardAccordian';
 
+
 export default function User() {
   return (
     <>
@@ -20,7 +20,6 @@ export default function User() {
         <MainBodyBox customClass={`a`}>
           <UserProfile />
         </MainBodyBox>
-
         <MainBodyBox customStyle={{ padding: '20px' }}>
           <CoursesAccordian />
           <CohortAccordian />

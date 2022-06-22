@@ -73,7 +73,8 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
             isSearchEnable: true,
             placeholder: 'Category',
             options: Type,
-            value: { value: filters.category, label: filters.category }
+            value: { value: filters.category, label: filters.category },
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'category')}
         />
@@ -82,7 +83,8 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
             isSearchEnable: true,
             placeholder: 'Sub-category',
             options: Type,
-            value: { value: filters.subCategory, label: filters.subCategory }
+            value: { value: filters.subCategory, label: filters.subCategory },
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'subCategory')}
         />

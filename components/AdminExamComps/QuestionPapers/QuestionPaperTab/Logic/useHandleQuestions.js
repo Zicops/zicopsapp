@@ -2,6 +2,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
+  ADD_QUESTION_PAPER_SECTION,
   ADD_SECTION_FIXED_QUESTIONS,
   MAP_SECTION_TO_BANK,
   mutationClient,
@@ -28,6 +29,10 @@ export default function useHandleQuestions(sectionId) {
   });
   const [updateFixedQuestion, { error: updateFixedError }] = useMutation(
     UPDATE_SECTION_FIXED_QUESTIONS,
+    { client: mutationClient }
+  );
+  const [addPaperSection, { error: addPaperSectionError }] = useMutation(
+    ADD_QUESTION_PAPER_SECTION,
     { client: mutationClient }
   );
   const [loadQuestionBank, { error: loadQBError }] = useLazyQuery(GET_LATEST_QUESTION_BANK, {
@@ -118,10 +123,56 @@ export default function useHandleQuestions(sectionId) {
   }
 
   async function addMetaData() {
+    // create a default section
+    let isError = false,
+      sectionData = null;
+    if (!questionPaperTabData?.paperMaster?.section_wise) {
+      const defaultSectionData = {
+        qpId: questionPaperTabData?.paperMaster?.id,
+        name: 'Default',
+        description: '',
+        difficulty_level: '',
+
+        // TODO: update later
+        total_questions: 0,
+        type: 'default',
+        is_active: true,
+        createdBy: 'Zicops',
+        updatedBy: 'Zicops'
+      };
+
+      const paperSectionRes = await addPaperSection({ variables: defaultSectionData }).catch(
+        (err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Add Default Paper Section Error' });
+        }
+      );
+      const data = paperSectionRes?.data?.addQuestionPaperSection;
+
+      if (!data) return setToastMsg({ type: 'danger', message: 'Add Section Error' });
+      sectionData = [
+        {
+          id: data?.id,
+          qpId: data?.QpId,
+          name: data?.Name,
+          description: data?.Description,
+          type: data?.Type,
+          difficulty_level: data?.DifficultyLevel,
+          total_questions: data?.TotalQuestions,
+          created_at: data?.CreatedAt,
+          updated_at: data?.UpdatedAt,
+          created_by: data?.CreatedBy,
+          updated_by: data?.UpdatedBy,
+          is_active: data?.IsActive
+        }
+      ];
+    }
+
     // return;
     const sendData = {
       qbId: metaData.qbId || null,
-      sectionId: metaData.sectionId || null,
+      sectionId: metaData.sectionId || sectionData[0].id || null,
       difficulty_level: metaData.difficulty_level || '',
       total_questions: metaData.total_questions || 0,
       question_marks: metaData.question_marks || 0,
@@ -135,7 +186,6 @@ export default function useHandleQuestions(sectionId) {
     };
 
     console.log(sendData);
-    let isError = false;
     const addMapToSectionRes = await addMapToSection({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -171,7 +221,8 @@ export default function useHandleQuestions(sectionId) {
     setQuestionPaperTabData({
       ...questionPaperTabData,
       qbSectionMapData: mapData,
-      mappedQb: mappedQb
+      mappedQb: mappedQb,
+      sectionData: sectionData
     });
     udpateAddMetaDataPopUp(false);
   }

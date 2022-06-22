@@ -77,7 +77,9 @@ export function getQuestionPaperMasterObject(data = {}) {
     created_at: data.created_at || '',
     updated_at: data.updated_at || '',
     created_by: data.created_by || '',
-    updated_by: data.updated_by || ''
+    updated_by: data.updated_by || '',
+
+    isUpdated: data.isUpdated || null
   };
 }
 

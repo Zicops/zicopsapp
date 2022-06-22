@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../../../API/Queries';
 import { loadQueryData } from '../../../../../helper/api.helper';
@@ -64,7 +65,8 @@ export default function QuestionPaperMaster() {
           value: {
             value: questionPaperTabData.paperMaster?.category,
             label: questionPaperTabData.paperMaster?.category
-          }
+          },
+          isSearchEnable: true
         }}
         changeHandler={(e) => handleInput(e, 'category')}
       />
@@ -78,7 +80,8 @@ export default function QuestionPaperMaster() {
           value: {
             value: questionPaperTabData.paperMaster?.sub_category,
             label: questionPaperTabData.paperMaster?.sub_category
-          }
+          },
+          isSearchEnable: true
         }}
         changeHandler={(e) => handleInput(e, 'sub_category')}
       />
@@ -118,7 +121,7 @@ export default function QuestionPaperMaster() {
           type="checkbox"
           label="Section Wise"
           name="section_wise"
-          isDisabled={!!questionPaperId}
+          isDisabled={!!questionPaperTabData?.sectionData?.length}
           isChecked={questionPaperTabData.paperMaster?.section_wise}
           changeHandler={(e) => handleInput(e)}
         />

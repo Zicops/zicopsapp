@@ -3,10 +3,12 @@ import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ADD_COURSE_CHAPTER } from '../../../../API/Mutations';
 import { ChapterAtom, getChapterObject } from '../../../../state/atoms/module.atoms';
+import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 
-export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
+export default function useAddChapter(refetchDataAndUpdateRecoil) {
   const { fullCourse } = useContext(courseContext);
 
   const [createCourseChapter, { loading, error }] = useMutation(ADD_COURSE_CHAPTER);
@@ -14,6 +16,8 @@ export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
   // recoil state
   const chapterData = useRecoilValue(ChapterAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+  const [addChapterPopUp, setAddChapterPopUp] = useRecoilState(PopUpStatesAtomFamily('addChapter'));
 
   // local states
   const [isAddChapterReady, setIsAddChapterReady] = useState(false);
@@ -24,6 +28,7 @@ export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
   // disable save button if data is not correct
   useEffect(() => {
     setIsAddChapterReady(!!newChapterData.name && !!newChapterData.description);
+    setIsPopUpDataPresent(!!newChapterData.name || !!newChapterData.description);
   }, [newChapterData]);
 
   // udpate sequence number with recoil state is updated
@@ -38,7 +43,7 @@ export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
   function constructChapterData(courseId, moduleId, sequence) {
     setNewChapterData(getChapterObject({ courseId, moduleId, sequence }));
 
-    togglePopUp('addChapter', true);
+    setAddChapterPopUp(true);
   }
 
   // save course in database
@@ -59,7 +64,7 @@ export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
     );
     if (!isError) setToastMsg({ type: 'success', message: 'New Chapter Created' });
 
-    togglePopUp('addChapter', false);
+    setAddChapterPopUp(false);
   }
 
   return {

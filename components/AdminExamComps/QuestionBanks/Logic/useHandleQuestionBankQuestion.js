@@ -44,6 +44,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   );
   const [optionData, setOptionData] = useState(Array(4).fill(getQuestionOptionsObject()));
   const [isUploading, setIsUploading] = useState(null);
+  const [isEditQuestion, setIsEditQuestion] = useState(false);
 
   // set edit data in local state
   useEffect(() => {
@@ -75,7 +76,10 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       isOneChecked = false;
 
     options.forEach((option) => {
-      isOptionsCompleted += option?.description || option?.file ? 1 : 0;
+      const isComplete = option?.description || option?.file;
+      isOptionsCompleted += isComplete ? 1 : 0;
+
+      if (!isComplete) return;
 
       if (option?.isCorrect && !isOneChecked) isOneChecked = true;
     });
@@ -103,7 +107,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   function isImageValid(e) {
     if (e.target.type === 'file') {
       const file = e.target.files[0];
-      console.log(file);
+
       if (!file) return false;
       if (!acceptedFileTypes.includes(file?.type)) {
         setToastMsg({ type: 'danger', message: `${acceptedFileTypes.join(', ')} only accepted` });
@@ -126,6 +130,21 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       file: e.target.files[0],
       attachmentType: e.target.files[0].type
     });
+  }
+
+  function isOptionsDuplicate() {
+    var optionArr = optionData.map(function (op) {
+      return op.description;
+    });
+    var isDuplicate = optionArr.some((op, i) => {
+      if (!op) return;
+
+      return optionArr.indexOf(op) != i;
+    });
+    console.log(isDuplicate);
+
+    if (isDuplicate) setToastMsg({ type: 'danger', message: 'Options cannot be same.' });
+    return isDuplicate;
   }
 
   // checkbox, file and text input handler for option
@@ -152,12 +171,14 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   // add question data to array to show in accordion
   function saveQuestion() {
     if (!validateInput()) return;
+    if (isOptionsDuplicate()) return;
 
     setQuestionsArr([...questionsArr, { question: questionData, options: optionData }]);
 
     // reset form data
     setQuestionData(getQuestionBankQuestionObject({ qbmId: questionBankId }));
     setOptionData(Array(4).fill(getQuestionOptionsObject()));
+    setIsEditQuestion(false);
   }
 
   // edit question data from accordion
@@ -168,6 +189,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setQuestionData(removedQuestion.question);
     setOptionData(removedQuestion.options);
     setQuestionsArr(allQuestions);
+    setIsEditQuestion(true);
   }
 
   async function addQuestionAndOptions() {
@@ -320,6 +342,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setQuestionData,
     optionData,
     activateEdit,
+    isEditQuestion,
     questionFileInputHandler,
     optionInputHandler,
     addQuestionAndOptions,

@@ -31,7 +31,7 @@ import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 import useAddTopicContent from './useAddTopicContent';
 
-export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
+export default function useEditTopic(refetchDataAndUpdateRecoil) {
   const { fullCourse } = useContext(courseContext);
   // topic content, chapter, topic data query obj
   const [loadTopicContentData, { error: errorContentData, refetch: refetchTopicContent }] =
@@ -79,7 +79,7 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   useEffect(() => {
     updateBinge(getBingeObject());
 
-    setIsEditTopicReady(!!editTopic.name && !!editTopic.description);
+    setIsEditTopicReady(!!editTopic?.name && !!editTopic?.description);
   }, [editTopic]);
 
   // set local state to edit topic data for form
@@ -92,7 +92,6 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
       setEditTopic(topicData[index]);
     }
 
-    togglePopUp('editTopic', true);
     setIsEditTopicFormVisible(false);
 
     // topic content load
@@ -183,14 +182,14 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   // save edit topic in function
   async function updateTopicAndContext() {
     const sendTopicData = {
-      id: editTopic.id,
-      name: editTopic.name,
-      description: editTopic.description,
-      type: editTopic.type,
-      moduleId: editTopic.moduleId,
-      chapterId: editTopic.chapterId,
-      courseId: editTopic.courseId,
-      sequence: editTopic.sequence
+      id: editTopic?.id,
+      name: editTopic?.name,
+      description: editTopic?.description,
+      type: editTopic?.type,
+      moduleId: editTopic?.moduleId,
+      chapterId: editTopic?.chapterId,
+      courseId: editTopic?.courseId,
+      sequence: editTopic?.sequence
     };
 
     let isError = false;
@@ -336,8 +335,7 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
     setUploadStatus(null);
     console.log('Topic Content and resources Uploaded');
     setToastMsg({ type: 'success', message: 'Topic Content and Resources Uploaded' });
-
-    togglePopUp('editTopic', false);
+    setEditTopic(getTopicObject({ courseId: fullCourse.id }));
   }
 
   return {

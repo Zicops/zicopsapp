@@ -39,5 +39,3 @@ export function loadQueryData(QUERY, variablesObj = {}, options = {}) {
 
   return response?.data || {};
 }
-
-export function getDataFromMultipleQuery() {}

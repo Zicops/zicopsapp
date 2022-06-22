@@ -1,12 +1,14 @@
 import { useMutation } from '@apollo/client';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   CREATE_QUESTION_BANK,
   mutationClient,
   UPDATE_QUESTION_BANK
 } from '../../../../API/Mutations';
+import { GET_LATEST_QUESTION_BANK_NAMES } from '../../../../API/Queries';
+import { isNameDuplicate } from '../../../../helper/data.helper';
 import {
   getQuestionBankObject,
   RefetchDataAtom,
@@ -14,8 +16,7 @@ import {
 } from '../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
-import { isNameDuplicate } from '../../../../helper/data.helper';
-import { GET_LATEST_QUESTION_BANK_NAMES } from '../../../../API/Queries';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 
 export default function useHandleQuestionBank() {
   const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
@@ -34,6 +35,7 @@ export default function useHandleQuestionBank() {
 
   // for edit data
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const selectedQB = useRecoilValue(SelectedQuestionBankAtom);
 
   // local state
@@ -43,7 +45,17 @@ export default function useHandleQuestionBank() {
   // disable submit if data not complete
   useEffect(() => {
     setIsAddQuestionBankReady(
-      questionBankData.name && questionBankData.category && questionBankData.sub_category
+      questionBankData.name &&
+        questionBankData.description &&
+        questionBankData.category &&
+        questionBankData.sub_category
+    );
+
+    setIsPopUpDataPresent(
+      questionBankData.name ||
+        questionBankData.description ||
+        questionBankData.category ||
+        questionBankData.sub_category
     );
   }, [questionBankData]);
 

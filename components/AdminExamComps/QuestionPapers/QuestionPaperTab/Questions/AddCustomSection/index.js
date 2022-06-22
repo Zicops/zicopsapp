@@ -75,6 +75,7 @@ export default function AddCustomSection({ editData }) {
           text={customSection.id ? 'Update' : 'Add'}
           clickHandler={customSection.id ? updateSection : addNewSection}
           isDisabled={!isCustomSectionReady}
+          styleClass={isCustomSectionReady ? 'bg-primary' : ''}
         />
       </section>
     </div>

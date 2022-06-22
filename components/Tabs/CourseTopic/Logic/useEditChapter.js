@@ -5,8 +5,9 @@ import { UPDATE_COURSE_CHAPTER } from '../../../../API/Mutations';
 import { ChapterAtom, getChapterObject } from '../../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 
-export default function useEditChapter(togglePopUp, refetchDataAndUpdateRecoil) {
+export default function useEditChapter(refetchDataAndUpdateRecoil) {
   const { fullCourse } = useContext(courseContext);
 
   const [updateCourseChapter, { loading, error }] = useMutation(UPDATE_COURSE_CHAPTER);
@@ -14,6 +15,7 @@ export default function useEditChapter(togglePopUp, refetchDataAndUpdateRecoil) 
   // recoil state
   const chapterData = useRecoilValue(ChapterAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   // local state
   const [editChapter, setEditChapter] = useState(getChapterObject({ courseId: fullCourse.id }));
@@ -21,7 +23,8 @@ export default function useEditChapter(togglePopUp, refetchDataAndUpdateRecoil) 
 
   // disable submit button if data is incomplete
   useEffect(() => {
-    setIsEditChapterReady(!!editChapter.name && !!editChapter.description);
+    setIsEditChapterReady(!!editChapter?.name && !!editChapter?.description);
+    setIsPopUpDataPresent(!!editChapter?.name || !!editChapter?.description);
   }, [editChapter]);
 
   // set local state to edit chapter data for form
@@ -31,7 +34,6 @@ export default function useEditChapter(togglePopUp, refetchDataAndUpdateRecoil) 
     if (index < 0) return;
 
     setEditChapter(chapterData[index]);
-    togglePopUp('editChapter', true);
   }
 
   // save to db and update context with refetch
@@ -49,10 +51,8 @@ export default function useEditChapter(togglePopUp, refetchDataAndUpdateRecoil) 
     refetchDataAndUpdateRecoil('chapter');
 
     // reset local data and close module
-    setEditChapter(getChapterObject({ courseId: fullCourse.id }));
+    setEditChapter(null);
     if (!isError) setToastMsg({ type: 'success', message: 'Chapter Updated' });
-
-    togglePopUp('editChapter', false);
   }
 
   return {

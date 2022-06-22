@@ -9,13 +9,16 @@ import {MobileTimePicker} from "@mui/x-date-pickers";
 
 export default function InputTimePicker({
   selected = new Date(),
-  timeIntervals = 15,
+  minTime = null,
   changeHandler
 }) {
 
   const RedditTextField = styled((props) => (
       <TextField InputProps={{ disableUnderline: true }} {...props} />
   ))(({ theme }) => ({
+    "&.MuiFormControl-root": {
+      width: '100%',
+    },
     "& .MuiOutlinedInput-root": {
       border: "2px solid #6bcfcf",
       color: '#FFF',
@@ -62,7 +65,8 @@ export default function InputTimePicker({
                       {...params}
                       InputProps={{ disableUnderline: true }}
                   />
-              )}
+            )}
+            minTime={minTime? new Date(minTime): null}
           />
         </LocalizationProvider>
       </ThemeProvider>
