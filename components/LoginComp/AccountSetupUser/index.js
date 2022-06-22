@@ -14,7 +14,7 @@ const AccountSetupUser = ({setCurrentComponent}) => {
     const [image, setImage] = useState();
     const [preview, setPreview] = useState('');
     const [pop, setPop] = useState(false);
-    const handleClick = (event) => {
+    const handleClick = () => {
         setPop(true);
     };
     const handleClose = () => {
