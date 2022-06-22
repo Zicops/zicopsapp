@@ -39,13 +39,6 @@
       }
     }
 
-    .navigation{
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      width: 100%;
-    }
-
     .emailContainer{
       width: 75%;
       padding: 10px;
@@ -76,24 +69,22 @@
       padding-left: 10px;
     }
 
-
-    input {
-      outline: 0;
-      border: 0;
-      background-color: $darkTwo;
-      color: $white;
-      font-size: 13px;
-      font-family: 'Open Sans';
-
-      //&:not(:placeholder-shown) {
-      //  /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
-      //  color: $white;
-      //  border: 2px solid $primary;
-      //}
-      //&:focus {
-      //}
-    }
   }
+}
+
+.navigator{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-image: url('/images/starrySky2.png');
+  background-position: fixed;
+  background-size: cover;
+}
+
+.navigatorBtns{
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .input_margin_transform_white{
@@ -110,11 +101,4 @@
   text-transform: none;
 }
 
-.navigator{
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  background-image: url('/images/starrySky2.png');
-  background-position: fixed;
-  background-size: cover;
-}
+
