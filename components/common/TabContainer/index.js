@@ -9,7 +9,8 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
     disableSubmit = false,
     handleSubmit = function () {},
     cancelDisplay = 'Cancel',
-    handleCancel = function () {}
+    handleCancel = function () {},
+    showFooter = true
   } = footerObj;
 
   function showActiveTab(tab) {
@@ -39,18 +40,20 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
       <section className="tabSection">{showActiveTab(tab)}</section>
 
       {/* footer */}
-      <div className="content-panel">
-        <div className="left-text">
-          <h3>Status: {status}</h3>
-        </div>
+      {showFooter && (
+        <div className="content-panel">
+          <div className="left-text">
+            <h3>Status: {status}</h3>
+          </div>
 
-        {children}
+          {children}
 
-        <div className="right-text">
-          <Button clickHandler={handleCancel} text={cancelDisplay} />
-          <Button clickHandler={handleSubmit} isDisabled={disableSubmit} text={submitDisplay} />
+          <div className="right-text">
+            <Button clickHandler={handleCancel} text={cancelDisplay} />
+            <Button clickHandler={handleSubmit} isDisabled={disableSubmit} text={submitDisplay} />
+          </div>
         </div>
-      </div>
+      )}
       {/* TODO: add the style in the scss file */}
       <style jsx>{`
         .tabHeader {
@@ -80,7 +83,7 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
         }
         .tabSection {
           background-color: #202222;
-          height: 60vh;
+          // height: 60vh;
           overflow: auto;
           padding: 20px 50px;
         }
