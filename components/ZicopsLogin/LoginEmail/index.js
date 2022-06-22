@@ -14,7 +14,7 @@ const LoginEmail = ({ chngeHandle, type, placeholder }) => {
     }, [show])
 
     const handleShowPassword = () => {
-      setShow(true)
+      setShow(!show)
     }
 
   return (

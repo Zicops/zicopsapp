@@ -2,7 +2,6 @@ import {Box, Button, Dialog, IconButton} from "@mui/material";
 import LabeledInput from "../../common/FormComponents/LabeledInput";
 import styles from './setupUser.module.scss';
 import {useEffect, useRef, useState} from "react";
-import CustomButton from "../../common/Button/index"
 import CloseIcon from "@mui/icons-material/Close";
 import LabeledDropdown from "../../common/FormComponents/LabeledDropdown";
 import {languages} from '../ProfilePreferences/Logic/profilePreferencesHelper'
@@ -201,13 +200,7 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                 <div className={`${styles.navigator}`}>
                     <span />
                     <div className={`${styles.navigatorBtns}`}>
-                        {/*<CustomButton*/}
-                        {/*    text={'Back'}*/}
-                        {/*/>*/}
-                        {/*<CustomButton*/}
-                        {/*    text={'Next'}*/}
-                        {/*/>*/}
-                        <Button variant={'outlined'} className={`${styles.transform_text}`} disabled>
+                        <Button variant={'outlined'} className={`${styles.transform_text}`}>
                             Back
                         </Button>
                         <Button variant={'contained'} className={`${styles.input_margin_transform}`}

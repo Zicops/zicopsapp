@@ -5,12 +5,18 @@
   color: $white;
 }
 
-.input_margin_transform{
-  margin-left: 16px;
-  text-transform: none;
-}
-.transform_text{
-  text-transform: none;
+.navigatorBtns{
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+
+  .input_margin_transform{
+    margin-left: 16px;
+    text-transform: none;
+  }
+  .transform_text{
+    text-transform: none;
+  }
 }
 
 .navigator{
