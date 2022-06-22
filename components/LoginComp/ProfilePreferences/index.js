@@ -1,6 +1,4 @@
 import {Badge, Box, Button, Checkbox, Grid, Grow, IconButton, InputAdornment, TextField} from "@mui/material";
-import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
-import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
 import styles from "./profilePreferences.module.scss";
 import {languages, categories, subCategories} from './Logic/profilePreferencesHelper'
 import React, {useEffect, useRef, useState} from "react";
@@ -183,7 +181,7 @@ const ProfilePreferences = ({setCurrentComponent, selected, setSelected}) => {
                                         </Grid>
                                         <div className={`${styles.apply_btn}`}>
                                             <span />
-                                            <div >
+                                            <div className={`${styles.navigatorBtns}`}>
                                                 <Button disabled={!isFiltered} size={'small'} variant={'outlined'} className={`${styles.transform_text}`}
                                                         onClick={() => {
                                                             setIsFiltered(false)
