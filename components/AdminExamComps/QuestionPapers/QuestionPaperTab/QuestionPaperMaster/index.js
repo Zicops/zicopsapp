@@ -98,7 +98,8 @@ export default function QuestionPaperMaster() {
             value: {
               value: questionPaperTabData.paperMaster?.difficulty_level,
               label: questionPaperTabData.paperMaster?.difficulty_level
-            }
+            },
+            menuPlacement: 'top'
           }}
           changeHandler={(e) => handleInput(e, 'difficulty_level')}
         />

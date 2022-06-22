@@ -62,7 +62,7 @@ export default function AssessmentForm({ topicData }) {
           dropdownOptions={{
             inputName: 'sub_category',
             label: 'Sub-Category:',
-            placeholder: 'Select sub-category',
+            placeholder: 'Sub-Category',
             options: subCategoryOption,
             isSearchEnable: true
             // value: { value: metaData?.sub_category, label: metaData?.sub_category }
