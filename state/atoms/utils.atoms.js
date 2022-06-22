@@ -1,8 +1,8 @@
 import { atom } from 'recoil';
 
+export const STATUS = ['DRAFT', 'SAVED'];
+
 export const StatusAtom = atom({
   key: 'Status',
-  default: null
+  default: STATUS[0]
 });
-
-export const STATUS = ['DRAFT', 'SAVED'];

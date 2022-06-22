@@ -20,7 +20,7 @@ import {
   queryClient
 } from '../../../../../API/Queries';
 import { isNameDuplicate } from '../../../../../helper/data.helper';
-import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
+import { ExamTabDataAtom, getExamTabDataObject } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import { STATUS, StatusAtom } from '../../../../../state/atoms/utils.atoms';
 import { SCHEDULE_TYPE } from './examMasterTab.helper';
@@ -63,6 +63,9 @@ export default function useHandleExamTab() {
   );
 
   const router = useRouter();
+  const examId = router.query?.examId || null;
+  const paperId = router.query?.qpId || null;
+
   // recoil state
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -93,6 +96,8 @@ export default function useHandleExamTab() {
 
   // update total marks on qp id change
   useEffect(async () => {
+    if (router.asPath === '/admin/exams/my-exams/add') return;
+
     const qpId = examTabData?.qpId;
     if (!qpId) return setExamTabData({ ...examTabData, total_marks: 0 });
 

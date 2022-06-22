@@ -18,12 +18,17 @@
 
 .scheduleContainer {
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-gap: 30px;
+  grid-template-columns: repeat(2, 45%);
+  grid-row-gap: 20px;
+  grid-column-gap: 10%;
 
   > section {
-    label {
-      margin-right: 25%;
+    display: flex;
+    justify-content: space-between;
+
+    > label,
+    > div {
+      width: 100%;
     }
   }
 }
@@ -41,8 +46,15 @@
 
 .instructionsContainer {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   margin-left: 25%;
+
+  > div:nth-child(2) {
+    label {
+      text-align: right;
+      padding-right: 40px;
+    }
+  }
 }
 
 .passingCriteriaContainer {
@@ -104,25 +116,25 @@
     }
   }
 }
-.passingCriteriaOuterContainer{
+.passingCriteriaOuterContainer {
   display: flex;
   align-items: center;
   margin-left: 25%;
   margin-bottom: 30px;
-  label{
+  label {
     width: 25%;
   }
-  .passingCriteriaInnerContainer{
+  .passingCriteriaInnerContainer {
     display: flex;
     border: 2px solid $darkThree;
-    padding : 5px;
+    padding: 5px;
     width: 75%;
-    input{
+    input {
       flex: 0.75;
       color: $darkThree;
       background-color: $darkTwo;
       border: 0;
-      &:focus{
+      &:focus {
         outline: 0;
 
         // border: 2px solid $primary;
@@ -130,7 +142,7 @@
         // color: $white;
       }
     }
-    select{
+    select {
       flex: 0.25;
       padding: 5px;
       color: $darkThree;
