@@ -3,12 +3,14 @@ import LabeledInput from "../../common/FormComponents/LabeledInput";
 import styles from './setupUser.module.scss';
 import {useEffect, useRef, useState} from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from '@mui/icons-material/Edit';
 import LabeledDropdown from "../../common/FormComponents/LabeledDropdown";
 import {languages} from '../ProfilePreferences/Logic/profilePreferencesHelper'
+import ImageCropper from "../../ImageCropper";
 
 const AccountSetupUser = ({setCurrentComponent}) => {
 
-    // const [isPhoneFocus, setIsPhoneFocus] = useState(false);
+    const [previewPage, setPreviewPage] = useState(0);
     const [selectedLanguage, setSelectedLanguage] = useState()
     const [image, setImage] = useState();
     const [preview, setPreview] = useState('');
@@ -23,6 +25,7 @@ const AccountSetupUser = ({setCurrentComponent}) => {
     const myRef = useRef(null);
 
     useEffect(() => {
+        setPreview('');
         if(image){
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -32,6 +35,7 @@ const AccountSetupUser = ({setCurrentComponent}) => {
         }
         else setPreview('')
     }, [image])
+
 
     return(
         <>
@@ -89,36 +93,6 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                     }}
                     // changeHandler={() => {}}
                 />
-
-                {/*code for ISD Code*/}
-
-                {/*<div className={`${styles.labeledInputWrapper}`}>*/}
-                {/*    <label className="w-100">*/}
-                {/*        Contact Number:*/}
-                {/*    </label>*/}
-                {/*    <div ref={myRef} className={`${isPhoneFocus ? styles.emailContainer_focus : styles.emailContainer}`}*/}
-                {/*         onClick={() => {setIsPhoneFocus(true)}}*/}
-                {/*    >*/}
-                {/*        <input*/}
-                {/*            // type={type}*/}
-                {/*            className={`${styles.code} w-100`}*/}
-                {/*            name={'ISD=Code'}*/}
-                {/*            placeholder={'ISD Code'}*/}
-                {/*            // value={value}*/}
-                {/*            // onChange={() => {}}*/}
-                {/*            maxLength={100}*/}
-                {/*        />*/}
-                {/*        <input*/}
-                {/*            // type={type}*/}
-                {/*            className={`${styles.number} w-100`}*/}
-                {/*            name={'Number'}*/}
-                {/*            placeholder={'Number'}*/}
-                {/*            // value={value}*/}
-                {/*            // onChange={() => {}}*/}
-                {/*            maxLength={100}*/}
-                {/*        />*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <Box mt={3} />
                 <div className={`${styles.labeledInputWrapper}`}>
                     <label className="w-100">
@@ -159,39 +133,65 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                                 zIndex={1}
                                 width={"450px"}
                                 display={"flex"}
-                                flexDirection={"column"}
                                 justifyContent={"center"}
                                 alignItems={"center"}
                             >
-                                <Box
-                                    width={"100%"}
-                                    display={"flex"}
-                                    justifyContent={"space-between"}
-                                    alignItems={"center"}
-                                    px={2}
-                                >
-                                    <Box fontSize={"27px"} fontWeight={600} color={'#FFF'}>
-                                        Preview
-                                    </Box>
-                                    <IconButton onClick={handleClose}>
-                                        <CloseIcon sx={{ color: "#FFF" }} />
-                                    </IconButton>
-                                </Box>
-                                <Box mb={5} />
-                                <Box
-                                    display={"flex"}
-                                    alignItems={"center"}
-                                    justifyContent={"center"}
-                                    width={"300px"}
-                                    height={"300px"}
-                                    border={"4px dashed #6bcfcf"}
-                                    borderRadius={"50%"}
-                                    overflow={"hidden"}
-                                    m={'auto'}
-                                >
-                                    <img src={preview} alt={"logo"} height={"100%"} />
-                                </Box>
-                                <Box mb={4} />
+                                {
+                                    previewPage ===  0 && (
+                                        <Box
+                                            width={"100%"}
+                                            display={"flex"}
+                                            justifyContent={"center"}
+                                            alignItems={"center"}
+                                            flexDirection={"column"}
+                                        >
+                                            <Box
+                                                width={"100%"}
+                                                display={"flex"}
+                                                justifyContent={"space-between"}
+                                                alignItems={"center"}
+                                                px={2}
+                                            >
+                                                <Box fontSize={"27px"} fontWeight={600} color={'#FFF'}>
+                                                    Preview
+                                                </Box>
+                                                <Box>
+                                                    <IconButton onClick={() => {
+                                                        setPreviewPage(1)
+                                                    }}>
+                                                        <EditIcon sx={{ color: "#FFF" }} />
+                                                    </IconButton>
+                                                    <IconButton onClick={handleClose}>
+                                                        <CloseIcon sx={{ color: "#FFF" }} />
+                                                    </IconButton>
+                                                </Box>
+
+                                            </Box>
+                                            <Box mb={5} />
+                                            <Box
+                                                display={"flex"}
+                                                alignItems={"center"}
+                                                justifyContent={"center"}
+                                                width={"320px"}
+                                                height={"320px"}
+                                                border={"4px dashed #6bcfcf"}
+                                                borderRadius={"50%"}
+                                                overflow={"hidden"}
+                                                m={'auto'}
+                                            >
+                                                <img src={preview} alt={"logo"} width={'320px'} height={'320px'} style={{objectFit: 'cover'}} />
+                                            </Box>
+                                            <Box mb={4} />
+                                        </Box>
+                                    )
+                                }
+                                {
+                                    previewPage === 1 && (
+                                        <ImageCropper initial={image} preview={preview} setPreview={setPreview} setPreviewPage={setPreviewPage} />
+                                    )
+                                }
+
+
                             </Box>
                         </Dialog>
                     </div>

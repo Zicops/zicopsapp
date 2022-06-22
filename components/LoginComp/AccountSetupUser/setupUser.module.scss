@@ -69,6 +69,22 @@
       padding-left: 10px;
     }
 
+    .input_margin_transform_white{
+      margin-left: 16px;
+      color: $white;
+      text-transform: none;
+    }
+    .input_margin_transform_white:disabled{
+      color: $secondaryBlack;
+    }
+
+    .input_margin_transform{
+      margin-left: 16px;
+      text-transform: none;
+    }
+    .transform_text{
+      text-transform: none;
+    }
   }
 }
 
@@ -95,18 +111,5 @@
   }
 }
 
-.input_margin_transform_white{
-  margin-left: 16px;
-  color: $white;
-  text-transform: none;
-}
-
-.input_margin_transform{
-  margin-left: 16px;
-  text-transform: none;
-}
-.transform_text{
-  text-transform: none;
-}
 
 

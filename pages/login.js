@@ -7,7 +7,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 
 const Login = () => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(3);
 
   return (
     <>
