@@ -13,6 +13,7 @@ import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
 import { customSelectStyles } from '../../../../common/FormComponents/Logic/formComponents.helper';
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
+import RTE from '../../../../common/FormComponents/RTE';
 
 export default function ExamMaster() {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -247,15 +248,21 @@ export default function ExamMaster() {
       <div>
         <label>
           Enter Instructions/Guidelines:
-          <LabeledTextarea
+          {/* <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
-              inputName: 'instructions',
-              placeholder: 'Enter instructions in less than 300 characters.',
+              inputName: 'instructions',,
               rows: 4,
               value: examTabData?.instructions
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+          /> */}
+          <RTE
+            changeHandler={(e) => {
+              setExamTabData({ ...examTabData, instructions: e.target.innerHTML });
+            }}
+            placeholder="Enter instructions in less than 300 characters."
+            value={examTabData?.instructions}
           />
         </label>
       </div>

@@ -344,17 +344,16 @@
 }
 // OtpINputField scss
 .otp {
-   
-    padding: 0;
-    margin: 0;
-    border: 0;
-    width: 20px;
-    margin: 5px 10px;
-    color: #ffffff;
-    font-size: 27px;
-    text-align: center;
-  
- &:focus {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  width: 20px;
+  margin: 5px 10px;
+  color: #ffffff;
+  font-size: 27px;
+  text-align: center;
+
+  &:focus {
     padding: 0;
     border: 0;
     border-bottom: 3px solid $white;
@@ -373,4 +372,27 @@
   color: #ffffff;
   font-size: 17px;
   margin-left: 20px;
+}
+
+.rte {
+  * {
+    background-color: $darkTwo;
+    color: $white;
+    border: 0px;
+    border-radius: 0px;
+  }
+
+  :global(.mantine-RichTextEditor-toolbarInner) {
+    > div {
+      margin: 0px;
+
+      button {
+        background-color: transparent;
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+  }
 }

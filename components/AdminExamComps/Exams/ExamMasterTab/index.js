@@ -39,10 +39,10 @@ export default function ExamMasterTab() {
 
   // update id
   const router = useRouter();
-  const examId = router.query?.examId || null;
-  const qpId = router.query?.qpId || null;
 
   useEffect(async () => {
+    const examId = router.query?.examId || null;
+    const qpId = router.query?.qpId || null;
     if (!examId) return setExamTabData(getExamTabDataObject({ qpId }));
 
     // load master data
@@ -146,7 +146,6 @@ export default function ExamMasterTab() {
     };
 
     setExamTabData({
-      ...examTabData,
       ...masterObj,
       ...insObj,
       ...schObj,
