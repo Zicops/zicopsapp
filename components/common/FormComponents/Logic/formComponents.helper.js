@@ -6,23 +6,25 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
       width: isFiftyFifty ? '50%' : containerWidth,
       boxShadow: state.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
     }),
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: 'var(--dark_two)',
-      border: isReadonly
-        ? 'none'
-        : state.isDisabled
-        ? '2px solid var(--dark_three)'
-        : !state.isFocused && !state.hasValue
-        ? '2px solid var(--dark_three)'
-        : '2px solid var(--primary)',
-      borderRadius: 0,
-      boxShadow: 'none',
-      fontSize: '14px',
-      '&:hover': {
-        borderWidth: '2px'
-      }
-    }),
+    control: (provided, state) => {
+      let borderStyle = '2px solid var(--dark_three)';
+
+      if (state.isFocused || state.hasValue) borderStyle = '2px solid var(--primary)';
+      if (state.isDisabled) borderStyle = '2px solid var(--dark_three)';
+      if (isReadonly) borderStyle = 'none';
+
+      return {
+        ...provided,
+        backgroundColor: 'var(--dark_two)',
+        border: borderStyle,
+        borderRadius: 0,
+        boxShadow: 'none',
+        fontSize: '14px',
+        '&:hover': {
+          borderWidth: '2px'
+        }
+      };
+    },
     input: (provided, state) => ({ ...provided, color: 'var(--white)' }),
     indicatorSeparator: (provided, state) => ({
       ...provided,
