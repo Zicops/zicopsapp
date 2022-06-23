@@ -26,10 +26,15 @@
     padding-top: 30px;
 }
 .sub_heading{
+  display: flex;
+  align-items: center;
+  padding: 10px 0 30px;
+
+  p{
     font-size: 20px;
     color:$secondaryBlack;
     font-weight: 700;
-    padding: 10px 0px 30px 0px;
+  }
 
 }
 .text{

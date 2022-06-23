@@ -85,6 +85,20 @@
   }
 }
 
+.navigatorBtns{
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+
+  .input_margin_transform{
+    margin-left: 16px;
+    text-transform: none;
+  }
+  .transform_text{
+    text-transform: none;
+  }
+}
+
 .navigator{
   background-image: url('/images/starrySky2.png');
   background-position: fixed;
