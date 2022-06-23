@@ -1,4 +1,7 @@
 import { arrayOf, element, shape, string } from 'prop-types';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { StatusAtom } from '../../../state/atoms/utils.atoms';
 import Button from '../Button';
 import styles from './tabContainer.module.scss';
 // Add proptype for extra added props
@@ -12,6 +15,13 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
     handleCancel = function () {},
     showFooter = true
   } = footerObj;
+
+  const [tabStatus, setTabStatus] = useRecoilState(StatusAtom);
+
+  // reset for new tab view
+  useEffect(() => {
+    setTabStatus(null);
+  }, []);
 
   function showActiveTab(tab) {
     const index = tabData.findIndex((t) => {

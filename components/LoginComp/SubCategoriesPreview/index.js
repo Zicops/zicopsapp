@@ -65,7 +65,7 @@ const SubCategoriesPreview = ({setCurrentComponent, selected, setSelected}) => {
             </div>
             <div className={`${styles.navigator}`}>
                 <span />
-                <div>
+                <div className={`${styles.navigatorBtns}`}>
                     <Button variant={'outlined'} className={`${styles.transform_text}`}
                             onClick={() => {setCurrentComponent(2)}}
                     >

@@ -1,14 +1,11 @@
-import AssignedCourses from '../../../components/AssignedCourses';
 import AdminHeader from '../../../components/common/AdminHeader';
 import MainBody from '../../../components/common/MainBody';
 import MainBodyBox from '../../../components/common/MainBodyBox';
 import Sidebar from '../../../components/common/Sidebar';
 import { userSideBarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
-import Accordian from '../../../components/UserProfile/Accordian';
-import CoursesCard from '../../../components/UserProfile/CoursesCard';
 import UserProfile from '../../../components/UserProfile';
-import CoursesAccordian from '../../../components/UserProfile/CoursesAccordian';
 import CohortAccordian from '../../../components/UserProfile/CohortAccordian';
+import CoursesAccordian from '../../../components/UserProfile/CoursesAccordian';
 import LearningDashboardAccordian from '../../../components/UserProfile/LearningDashboardAccordian';
 import styles from './user.module.scss';
 

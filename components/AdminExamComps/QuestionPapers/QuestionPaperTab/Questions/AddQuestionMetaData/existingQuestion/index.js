@@ -51,7 +51,8 @@ export default function ExistingQuestion({
             label: 'Category:',
             placeholder: 'Select category',
             options: categoryOption,
-            value: { value: metaData?.category, label: metaData?.category }
+            value: { value: metaData?.category, label: metaData?.category },
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'category')}
           isFiftyFifty={true}
@@ -64,7 +65,8 @@ export default function ExistingQuestion({
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
             options: subCategoryOption,
-            value: { value: metaData?.sub_category, label: metaData?.sub_category }
+            value: { value: metaData?.sub_category, label: metaData?.sub_category },
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'sub_category')}
           isFiftyFifty={true}
@@ -87,7 +89,13 @@ export default function ExistingQuestion({
           label: 'Question Bank:',
           placeholder: 'Select the question bank to choose question from',
           options: questionBankOptions,
-          value: questionBankOptions?.filter((option) => option?.value === metaData?.qbId)[0],
+          value: questionBankOptions?.filter((option) => {
+            option.label = `${option.name} [${option?.noOfQuestions || 0}]`;
+            const isSelected = option?.value === metaData?.qbId;
+
+            if (isSelected) option.label = `${option.name} [${totalQuestions}]`;
+            return isSelected;
+          })[0],
           isSearchEnable: true
         }}
         changeHandler={(e) => setMetaData({ ...metaData, total_questions: 0, qbId: e.value })}
@@ -102,7 +110,9 @@ export default function ExistingQuestion({
           options: difficultyOptions,
           value: { value: metaData?.difficulty_level, label: metaData?.difficulty_level }
         }}
-        changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'difficulty_level')}
+        changeHandler={(e) =>
+          setMetaData({ ...metaData, total_questions: 0, difficulty_level: e.value })
+        }
       />
 
       <div className={styles.twoInputContainer}>
@@ -139,13 +149,22 @@ export default function ExistingQuestion({
               setToastMsg({ type: 'danger', message: 'Select Question Bank First' });
             }
 
+            // no difficulty level selected
+            if (!metaData?.difficulty_level) {
+              questionsCount = 0;
+              setToastMsg({ type: 'danger', message: 'Select Difficulty First' });
+            }
+
             if (questionAvailable === 0) {
               questionsCount = 0;
               setToastMsg({ type: 'danger', message: 'Bank does not have questions' });
             }
 
             if (questionsCount > questionAvailable) {
-              setToastMsg({ type: 'danger', message: `Bank has ${questionAvailable} question` });
+              setToastMsg({
+                type: 'danger',
+                message: `Bank has only ${questionAvailable} question with ${metaData?.difficulty_level} level`
+              });
               questionsCount = questionAvailable;
             }
 
@@ -171,6 +190,7 @@ export default function ExistingQuestion({
         {['Manual', 'Random'].map((label) => (
           <LabeledRadioCheckbox
             type="radio"
+            key={label}
             label={label}
             name="retrieve_type"
             value={label.toLowerCase()}

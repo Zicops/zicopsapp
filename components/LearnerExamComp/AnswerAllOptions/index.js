@@ -5,9 +5,6 @@ import { Box, Grid } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 const AnswerAllOptions = ({
-  examRef,
-  isFullScreen,
-  setIsFullScreen,
   data,
   setData,
   current,
@@ -92,58 +89,6 @@ const AnswerAllOptions = ({
     setMark(current?.isMarked || false);
   }, [current]);
 
-  useEffect(() => {
-    if (isFullScreen) {
-      setTimeout(() => {
-        openFullscreen(examRef.current);
-      }, 1);
-    } else if (document.fullscreenElement) {
-      setTimeout(() => {
-        closeFullscreen();
-      }, 1);
-    }
-  }, [isFullScreen]);
-
-  /* View in fullscreen */
-  function openFullscreen(elem) {
-    if (elem?.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem?.webkitRequestFullscreen) {
-      /* Safari */
-      elem.webkitRequestFullscreen();
-    } else if (elem?.msRequestFullscreen) {
-      /* IE11 */
-      elem.msRequestFullscreen();
-    }
-  }
-
-  /* Close fullscreen */
-  function closeFullscreen() {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      /* Safari */
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      /* IE11 */
-      document.msExitFullscreen();
-    }
-  }
-
-  // fix fullscreen issue
-  function toggleFullScreen() {
-    if (!document.fullscreenElement) {
-      // videoContainer.current?.requestFullscreen();
-      openFullscreen(examRef.current);
-      setIsFullScreen(1);
-    } else {
-      // document.exitFullscreen();
-      setIsFullScreen(0);
-      closeFullscreen();
-    }
-
-    // setPlayPauseActivated(!document.fullscreenElement ? 'enterFullScreen' : 'exitFullScreen');
-  }
   return (
     <>
       <Box p={4} width={'100%'} mb={10}>
@@ -169,19 +114,8 @@ const AnswerAllOptions = ({
         </Grid>
       </Box>
       <div className={`${styles.livePageFooter}`}>
-        <div className={`${styles.fsBtn}`}>
-          <button onClick={toggleFullScreen}>
-            {isFullScreen ? (
-              <Image src="/images/svg/fullscreen_exit.svg" height={30} width={30} />
-            ) : (
-              <Image src="/images/svg/fullscreen.svg" height={30} width={30} />
-            )}
-            {/* <Image src="/images/svg/fullscreen.svg" height={30} width={30} /> */}
-          </button>
-          <button onClick={() => router.push('/exam')}>
-            <Image src="/images/svg/clear.svg" height={30} width={30} />
-          </button>
-        </div>
+         <div>
+        </div> 
         <div className={`${styles.answer_all_options_buttons_container}`}>
           <button
             disabled={!option}

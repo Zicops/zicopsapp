@@ -21,7 +21,8 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
     if (optionData?.length) return setOptions(optionData);
 
     loadOptions({
-      variables: { question_id: questionData?.id }
+      variables: { question_id: questionData?.id },
+      fetchPolicy: 'no-cache'
     }).then(({ data }) => {
       if (errorOptionsData) return setToastMsg({ type: 'danger', message: 'options load error' });
 

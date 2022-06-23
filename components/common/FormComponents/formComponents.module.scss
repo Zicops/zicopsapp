@@ -306,6 +306,42 @@
   color: red !important;
 }
 
+.uploadForm {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 50px;
+
+  .download {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+
+    button {
+      background-color: $primary;
+      font-weight: 600;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 3px;
+      outline: none;
+    }
+  }
+
+  .upload {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+
+    span {
+      position: absolute;
+      top: -20px;
+      right: 0px;
+      font-size: 13px;
+      color: $darkThree;
+    }
+  }
+}
 // OtpINputField scss
 .otp {
    

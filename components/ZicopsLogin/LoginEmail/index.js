@@ -14,7 +14,7 @@ const LoginEmail = ({ chngeHandle, type, placeholder }) => {
     }, [show])
 
     const handleShowPassword = () => {
-      setShow(true)
+      setShow(!show)
     }
 
   return (
@@ -28,7 +28,7 @@ const LoginEmail = ({ chngeHandle, type, placeholder }) => {
       />
         <button onClick={handleShowPassword}>
             {
-               show ? (<VisibilityOff color={'primary'} />) : (<Visibility color={'primary'}/>)
+               show ? (<Visibility color={'primary'}/>) : (<VisibilityOff sx={{color: '#737373'}} />)
             }
 
         </button>

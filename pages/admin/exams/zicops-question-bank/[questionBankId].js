@@ -9,7 +9,7 @@ import Sidebar from '../../../../components/common/Sidebar';
 import { examSidebarData } from '../../../../components/common/Sidebar/Logic/sidebar.helper';
 import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 
-const MyQuestionBanks = () => {
+export default function MyQuestionBanks() {
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
 
   const closeBtn = {
@@ -34,13 +34,11 @@ const MyQuestionBanks = () => {
       {/* add question bank pop up */}
       <PopUp
         title="Add Question Bank"
-        isPopUpOpen={popUpState}
+        popUpState={[popUpState, udpatePopUpState]}
         closeBtn={closeBtn}
         isFooterVisible={false}>
         <AddQuestionBank closePopUp={() => udpatePopUpState(false)} />
       </PopUp>
     </>
   );
-};
-
-export default MyQuestionBanks;
+}

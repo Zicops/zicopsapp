@@ -30,6 +30,7 @@ export default function InputWithCheckbox({
             </label>
           </div>
         </div>
+
         <TextInputWithFile
           type="option"
           fileNmae={fileName}

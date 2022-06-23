@@ -6,8 +6,10 @@ import {
   GET_QUESTION_BANK_QUESTIONS,
   queryClient
 } from '../../../../../../API/Queries';
+import { DIFFICULTY } from '../../../../../../helper/utils.helper';
 import {
   getFixedQuestionObject,
+  getQuestionMetaDataObject,
   QuestionPaperTabDataAtom
 } from '../../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../../state/atoms/popUp.atom';
@@ -56,6 +58,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [qbQuestions, setQbQuestions] = useState(null);
+  const [qbFilteredQuestions, setQbFilteredQuestions] = useState(null);
   const [isUploadSelected, setIsUploadSelected] = useState(false);
   const [originalQbId, setOriginalQbId] = useState(null);
 
@@ -63,6 +66,11 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
   useEffect(() => {
     if (!originalQbId) return setOriginalQbId(metaData.qbId);
   }, [metaData.qbId]);
+
+  // reset on first load
+  useEffect(() => {
+    setMetaData(getQuestionMetaDataObject({ sectionId }));
+  }, []);
 
   // load fixed questions
   useEffect(() => {
@@ -102,15 +110,20 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
       if (data?.getQuestionBankQuestions) {
-        const questions = data.getQuestionBankQuestions?.filter((q) => {
-          // TODO: add some filter conditon based on difficulty
-          // q.Difficulty, metaData.difficulty_level
-          return q;
-        });
-        setQbQuestions(questions);
+        setQbQuestions(data.getQuestionBankQuestions);
       }
     });
   }, [metaData.qbId]);
+
+  useEffect(() => {
+    if (!qbQuestions) return;
+
+    setQbFilteredQuestions(
+      qbQuestions.filter((q) => {
+        return DIFFICULTY[metaData?.difficulty_level]?.includes(q.Difficulty);
+      })
+    );
+  }, [qbQuestions, metaData?.difficulty_level]);
 
   // reset meta data
   useEffect(() => {
@@ -147,7 +160,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
             <ExistingQuestion
               questionBankOptions={questionBankOptions}
               metaData={metaData}
-              totalQuestions={qbQuestions?.length}
+              totalQuestions={qbFilteredQuestions?.length}
               setMetaData={setMetaData}
               isEdit={!!editData?.id}
             />
@@ -158,7 +171,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
       {!!showQuestionTable && (
         <QuestionTable
           metaData={metaData}
-          qbQuestions={qbQuestions}
+          qbQuestions={qbFilteredQuestions}
           selectedQb={questionBankOptions.filter((qb) => qb?.id === metaData?.qbId)[0]}
           selectedQuestionIds={selectedQuestionIds}
           setSelectedQuestionIds={setSelectedQuestionIds}
@@ -198,6 +211,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
 
               setShowQuestionTable(true);
             }}
+            styleClass={isMetaDataReady ? 'bg-primary' : ''}
             isDisabled={!isMetaDataReady}
           />
         )}

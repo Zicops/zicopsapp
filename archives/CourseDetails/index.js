@@ -229,13 +229,13 @@ export default function CourseDetails() {
 
       {previewFileData && (
         <PreviewImage
-          fileName={previewFileData.fileName}
-          filePath={previewFileData.filePath}
-          isVideo={previewFileData.isVideo}
-          popUpData={{
-            closeBtn: { name: 'Close', handleClick: togglePreviewPopUp },
-            submitBtn: { name: 'Download' }
-          }}
+          // fileName={previewFileData.fileName}
+          // filePath={previewFileData.filePath}
+          // isVideo={previewFileData.isVideo}
+          // popUpData={{
+          //   closeBtn: { name: 'Close', handleClick: togglePreviewPopUp },
+          //   submitBtn: { name: 'Download' }
+          // }}
         />
       )}
     </div>

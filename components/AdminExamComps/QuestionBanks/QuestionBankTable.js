@@ -61,6 +61,7 @@ export default function QuestionBankTable({ isEdit = false }) {
   }, []);
 
   useEffect(() => {
+    console.log(addPopUp);
     if (addPopUp) setSelectedQB(getQuestionBankObject());
   }, [addPopUp]);
 
@@ -144,19 +145,14 @@ export default function QuestionBankTable({ isEdit = false }) {
       />
 
       {/* add question bank pop up */}
-      <PopUp
-        title="Add Question Bank"
-        isPopUpOpen={addPopUp}
-        closeBtn={{ handleClick: () => setAddPopUp(false) }}
-        isFooterVisible={false}>
+      <PopUp title="Add Question Bank" popUpState={[addPopUp, setAddPopUp]} isFooterVisible={false}>
         <AddQuestionBank closePopUp={() => setAddPopUp(false)} />
       </PopUp>
 
       {/* edit question bank pop up */}
       <PopUp
         title="Edit Question Bank"
-        isPopUpOpen={editPopUp}
-        closeBtn={{ handleClick: () => setEditPopUp(false) }}
+        popUpState={[editPopUp, setEditPopUp]}
         isFooterVisible={false}>
         <AddQuestionBank isEdit={true} closePopUp={() => setEditPopUp(false)} />
       </PopUp>

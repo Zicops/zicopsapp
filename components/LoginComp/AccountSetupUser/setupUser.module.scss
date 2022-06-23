@@ -3,6 +3,22 @@
 .container{
   width: 100%;
 
+  //.dialog_container{
+  //  padding: 24px 16px;
+  //  width: 450px;
+  //  display: flex;
+  //  align-items: center;
+  //  justify-content: center;
+  //  flex-direction: column;
+  //}
+
+  .dialog_title{
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .labeledInputWrapper {
     display: flex;
     align-items: baseline;
@@ -21,13 +37,6 @@
         font-size: 12px;
         margin-left: 16px;
       }
-    }
-
-    .navigation{
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      width: 100%;
     }
 
     .emailContainer{
@@ -60,32 +69,23 @@
       padding-left: 10px;
     }
 
-
-    input {
-      outline: 0;
-      border: 0;
-      background-color: $darkTwo;
+    .input_margin_transform_white{
+      margin-left: 16px;
       color: $white;
-      font-size: 13px;
-      font-family: 'Open Sans';
+      text-transform: none;
+    }
+    .input_margin_transform_white:disabled{
+      color: $secondaryBlack;
+    }
 
-      //&:not(:placeholder-shown) {
-      //  /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
-      //  color: $white;
-      //  border: 2px solid $primary;
-      //}
-      //&:focus {
-      //}
+    .input_margin_transform{
+      margin-left: 16px;
+      text-transform: none;
+    }
+    .transform_text{
+      text-transform: none;
     }
   }
-}
-
-.input_margin_transform{
-  margin-left: 16px;
-  text-transform: none;
-}
-.transform_text{
-  text-transform: none;
 }
 
 .navigator{
@@ -96,3 +96,20 @@
   background-position: fixed;
   background-size: cover;
 }
+
+.navigatorBtns{
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+
+  .input_margin_transform{
+    margin-left: 16px;
+    text-transform: none;
+  }
+  .transform_text{
+    text-transform: none;
+  }
+}
+
+
+
