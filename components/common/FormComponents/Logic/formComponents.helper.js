@@ -1,5 +1,5 @@
 // labeled dropdown react multi select styles
-export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%') {
+export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%', isReadonly) {
   return {
     container: (provided, state) => ({
       ...provided,
@@ -9,10 +9,13 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
     control: (provided, state) => ({
       ...provided,
       backgroundColor: 'var(--dark_two)',
-      border:
-        !state.isFocused && !state.hasValue
-          ? '2px solid var(--dark_three)'
-          : '2px solid var(--primary)',
+      border: isReadonly
+        ? 'none'
+        : state.isDisabled
+        ? '2px solid var(--dark_three)'
+        : !state.isFocused && !state.hasValue
+        ? '2px solid var(--dark_three)'
+        : '2px solid var(--primary)',
       borderRadius: 0,
       boxShadow: 'none',
       fontSize: '14px',
@@ -25,6 +28,13 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
       ...provided,
       display: 'none !important'
     }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      svg: {
+        fill: isReadonly ? 'none' : ''
+      }
+    }),
+
     menuList: (provided, state) => ({
       ...provided,
       padding: 0,
