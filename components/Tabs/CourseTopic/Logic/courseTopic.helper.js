@@ -16,3 +16,19 @@ export function getSequenceNumber(arrayOfObj, moduleId) {
 
   return filteredObjByModule.length + 1;
 }
+
+export function getAssessmentObj(data = {}) {
+  return {
+    id: data.id || null,
+    topicId: data.topicId || '',
+    courseId: data.courseId || '',
+    examId: data.examId || '',
+    language: data.language || '',
+
+    category: data.category || null,
+    sub_category: data.sub_category || null,
+
+    created_at: data.created_at || '',
+    updated_at: data.updated_at || ''
+  };
+}
