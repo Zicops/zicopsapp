@@ -16,6 +16,7 @@ import {
 } from '../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
+import { IsDataPresentAtom } from '../../../../common/PopUp/Logic/popUp.helper';
 
 export default function useHandleQuestions(sectionId) {
   const [addMapToSection, { error: addMapErr }] = useMutation(MAP_SECTION_TO_BANK, {
@@ -49,6 +50,7 @@ export default function useHandleQuestions(sectionId) {
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
   const [metaData, setMetaData] = useState(getQuestionMetaDataObject({ sectionId }));
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   // local state
   const [showQuestionTable, setShowQuestionTable] = useState(null);
@@ -95,6 +97,13 @@ export default function useHandleQuestions(sectionId) {
         metaData.total_questions &&
         metaData.question_marks &&
         metaData.retrieve_type
+    );
+
+    setIsPopUpDataPresent(
+      metaData.qbId ||
+        metaData.difficulty_level ||
+        metaData.total_questions ||
+        metaData.question_marks
     );
   }, [metaData]);
 
