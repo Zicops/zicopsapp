@@ -1,6 +1,4 @@
 import {Badge, Box, Button, Checkbox, Grid, Grow, IconButton, InputAdornment, TextField} from "@mui/material";
-import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
-import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
 import styles from "./profilePreferences.module.scss";
 import {languages, categories, subCategories} from './Logic/profilePreferencesHelper'
 import React, {useEffect, useRef, useState} from "react";
@@ -86,7 +84,10 @@ const ProfilePreferences = ({setCurrentComponent, selected, setSelected}) => {
 
     const controlSearch = (e) => {
         // console.log(e.deltaY)
-        if (e.deltaY > 0 && (isFiltered || searched)) setIsVisible(false);
+        if (e.deltaY > 0 ) {
+            setIsVisible(false);
+        }
+
         else setIsVisible(true);
         // if(myRef.current.scrollY > 10)
         //     setIsVisible(false)
@@ -105,7 +106,7 @@ const ProfilePreferences = ({setCurrentComponent, selected, setSelected}) => {
     return(
         <>
             <div ref={myRef} className={`${styles.container}`}>
-                <Grow in={isVisible}>
+                <Grow in={isVisible || isFiltered || searched}>
                     <div className={`${styles.filter_main_container}`}>
                         <div className={`${styles.title}`}>
                             Sub-Category Selection
@@ -131,9 +132,13 @@ const ProfilePreferences = ({setCurrentComponent, selected, setSelected}) => {
                                                 onClick={handleIcon}
                                                 edge="end"
                                             >
-                                                <Badge color="error" variant="dot" invisible={!isFiltered}>
-                                                    {!isOpen && <FilterListSharpIcon />}
-                                                </Badge>
+                                                {
+                                                    !isOpen && (
+                                                        <Badge color="error" variant="dot" invisible={!isFiltered}>
+                                                            <FilterListSharpIcon />
+                                                        </Badge>
+                                                    )
+                                                }
                                                 {
                                                     isOpen && <CloseSharpIcon />
                                                 }
@@ -176,10 +181,11 @@ const ProfilePreferences = ({setCurrentComponent, selected, setSelected}) => {
                                         </Grid>
                                         <div className={`${styles.apply_btn}`}>
                                             <span />
-                                            <div >
+                                            <div className={`${styles.navigatorBtns}`}>
                                                 <Button disabled={!isFiltered} size={'small'} variant={'outlined'} className={`${styles.transform_text}`}
                                                         onClick={() => {
                                                             setIsFiltered(false)
+                                                            setIsOpen(false)
                                                             setFilteredData([])
                                                         }}
                                                 >
@@ -217,7 +223,7 @@ const ProfilePreferences = ({setCurrentComponent, selected, setSelected}) => {
             </div>
             <div className={`${styles.navigator}`}>
                 <span />
-                <div className={`${styles.btn_container}`}>
+                <div className={`${styles.navigatorBtns}`}>
                     <Button variant={'outlined'} className={`${styles.transform_text}`}
                             onClick={() => {setCurrentComponent(1)}}
                     >

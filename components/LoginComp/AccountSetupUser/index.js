@@ -1,23 +1,41 @@
-import {Box, Button, IconButton} from "@mui/material";
+import {Box, Button, Dialog, IconButton} from "@mui/material";
 import LabeledInput from "../../common/FormComponents/LabeledInput";
 import styles from './setupUser.module.scss';
 import {useEffect, useRef, useState} from "react";
-import { styled } from '@mui/material/styles';
-import {changeHandler} from "../../../helper/common.helper";
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from '@mui/icons-material/Edit';
 import LabeledDropdown from "../../common/FormComponents/LabeledDropdown";
 import {languages} from '../ProfilePreferences/Logic/profilePreferencesHelper'
-
-
-const Input = styled('input')({
-    display: 'none',
-});
+import ImageCropper from "../../ImageCropper";
 
 const AccountSetupUser = ({setCurrentComponent}) => {
 
-    // const [isPhoneFocus, setIsPhoneFocus] = useState(false);
+    const [previewPage, setPreviewPage] = useState(0);
     const [selectedLanguage, setSelectedLanguage] = useState()
+    const [image, setImage] = useState();
+    const [preview, setPreview] = useState('');
+    const [pop, setPop] = useState(false);
+    const handleClick = () => {
+        setPop(true);
+    };
+    const handleClose = () => {
+        setPop(false);
+    };
 
     const myRef = useRef(null);
+
+    useEffect(() => {
+        setPreview('');
+        if(image){
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result)
+            }
+            reader.readAsDataURL(image)
+        }
+        else setPreview('')
+    }, [image])
+
 
     return(
         <>
@@ -75,66 +93,122 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                     }}
                     // changeHandler={() => {}}
                 />
-                {/*<div className={`${styles.labeledInputWrapper}`}>*/}
-                {/*    <label className="w-100">*/}
-                {/*        Contact Number:*/}
-                {/*    </label>*/}
-                {/*    <div ref={myRef} className={`${isPhoneFocus ? styles.emailContainer_focus : styles.emailContainer}`}*/}
-                {/*         onClick={() => {setIsPhoneFocus(true)}}*/}
-                {/*    >*/}
-                {/*        <input*/}
-                {/*            // type={type}*/}
-                {/*            className={`${styles.code} w-100`}*/}
-                {/*            name={'ISD=Code'}*/}
-                {/*            placeholder={'ISD Code'}*/}
-                {/*            // value={value}*/}
-                {/*            // onChange={() => {}}*/}
-                {/*            maxLength={100}*/}
-                {/*        />*/}
-                {/*        <input*/}
-                {/*            // type={type}*/}
-                {/*            className={`${styles.number} w-100`}*/}
-                {/*            name={'Number'}*/}
-                {/*            placeholder={'Number'}*/}
-                {/*            // value={value}*/}
-                {/*            // onChange={() => {}}*/}
-                {/*            maxLength={100}*/}
-                {/*        />*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <Box mt={3} />
                 <div className={`${styles.labeledInputWrapper}`}>
                     <label className="w-100">
                         Profile Picture:
                     </label>
                     <div className={`${styles.upload}`}>
-                        <label htmlFor="icon-button-file">
-                            <Input accept="image/*" id="icon-button-file" type="file" />
-                            <Button variant={'contained'} className={`${styles.transform_text}`} aria-label="upload picture" component="span">
-                                Upload Photo
-                            </Button>
-                        </label>
+                        <input
+                            accept="image/*"
+                            onChange={(e) => {
+                               const file = e.target.files[0]
+                                if(file) setImage(file)
+                                else setImage(null)
+                            }}
+                            id={"materialUpload"}
+                            style={{ display: "none" }}
+                            type="file"
+                        />
+                        <Button variant={'contained'} className={`${styles.transform_text}`}
+                                onClick={() => {
+                                    document.getElementById("materialUpload").click();
+                                }}
+                        >
+                            Upload Photo
+                        </Button>
                         <div>
                             320 x 320 pixels (Recommended)
                         </div>
-                        <Button className={`${styles.input_margin_transform}`}>
+                        <Button onClick={handleClick} disabled={preview === ''} className={`${styles.input_margin_transform_white}`}>
                             Preview
                         </Button>
+                        <Dialog
+                            open={pop}
+                            onClose={handleClose}
+                        >
+                            <Box
+                                py={3}
+                                px={3}
+                                zIndex={1}
+                                width={"450px"}
+                                display={"flex"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                            >
+                                {
+                                    previewPage ===  0 && (
+                                        <Box
+                                            width={"100%"}
+                                            display={"flex"}
+                                            justifyContent={"center"}
+                                            alignItems={"center"}
+                                            flexDirection={"column"}
+                                        >
+                                            <Box
+                                                width={"100%"}
+                                                display={"flex"}
+                                                justifyContent={"space-between"}
+                                                alignItems={"center"}
+                                                px={2}
+                                            >
+                                                <Box fontSize={"27px"} fontWeight={600} color={'#FFF'}>
+                                                    Preview
+                                                </Box>
+                                                <Box>
+                                                    <IconButton onClick={() => {
+                                                        setPreviewPage(1)
+                                                    }}>
+                                                        <EditIcon sx={{ color: "#FFF" }} />
+                                                    </IconButton>
+                                                    <IconButton onClick={handleClose}>
+                                                        <CloseIcon sx={{ color: "#FFF" }} />
+                                                    </IconButton>
+                                                </Box>
+
+                                            </Box>
+                                            <Box mb={5} />
+                                            <Box
+                                                display={"flex"}
+                                                alignItems={"center"}
+                                                justifyContent={"center"}
+                                                width={"320px"}
+                                                height={"320px"}
+                                                border={"4px dashed #6bcfcf"}
+                                                borderRadius={"50%"}
+                                                overflow={"hidden"}
+                                                m={'auto'}
+                                            >
+                                                <img src={preview} alt={"logo"} width={'320px'} height={'320px'} style={{objectFit: 'cover'}} />
+                                            </Box>
+                                            <Box mb={4} />
+                                        </Box>
+                                    )
+                                }
+                                {
+                                    previewPage === 1 && (
+                                        <ImageCropper initial={image} preview={preview} setPreview={setPreview} setPreviewPage={setPreviewPage} />
+                                    )
+                                }
+
+
+                            </Box>
+                        </Dialog>
                     </div>
                 </div>
                 <Box mt={2} />
-            </div>
-            <div className={`${styles.navigator}`}>
-                <span />
-                <div>
-                    <Button variant={'outlined'} className={`${styles.transform_text}`} disabled>
-                        Back
-                    </Button>
-                    <Button variant={'contained'} className={`${styles.input_margin_transform}`}
-                            onClick={() => {setCurrentComponent(1)}}
-                    >
-                        Next
-                    </Button>
+                <div className={`${styles.navigator}`}>
+                    <span />
+                    <div className={`${styles.navigatorBtns}`}>
+                        <Button variant={'outlined'} className={`${styles.transform_text}`}>
+                            Back
+                        </Button>
+                        <Button variant={'contained'} className={`${styles.input_margin_transform}`}
+                                onClick={() => {setCurrentComponent(1)}}
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
             </div>
         </>
