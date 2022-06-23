@@ -635,3 +635,17 @@ export const GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION = gql`
     }
   }
 `;
+
+export const GET_TOPIC_EXAMS = gql`
+  query getTopicExams($topic_id: String) {
+    getTopicExams(topic_id: $topic_id) {
+      id
+      topicId
+      examId
+      courseId
+      created_at
+      updated_at
+      language
+    }
+  }
+`;

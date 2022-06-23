@@ -104,7 +104,7 @@ export default function Questions() {
         <AddCustomSection editData={selectedSectionData} />
       </PopUp>
 
-      {/* edit meta data of question */}
+      {/* add meta data of question */}
       <PopUp
         isFooterVisible={false}
         popUpState={[addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp]}

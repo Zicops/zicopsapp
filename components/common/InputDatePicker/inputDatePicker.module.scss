@@ -8,6 +8,10 @@
 .inputDatePickerContainer {
   display: inline-block;
 
+  input {
+    width: 100%;
+  }
+
   input,
   select {
     padding: 10px;

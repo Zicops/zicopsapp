@@ -12,6 +12,7 @@ import PopUp from '../../../common/PopUp';
 import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 import Accordion from '../../../small/Accordion';
 import styles from '../../courseTabs.module.scss';
+import useAddAssessment from '../Logic/useAddAssessment';
 import AddTopicContentForm from './AddTopicContentForm';
 import AddTopicForm from './AddTopicForm';
 import AssessmentForm from './AssessmentForm';
@@ -65,6 +66,8 @@ export default function TopicPopUp({
   const uploadStatus = useRecoilValue(uploadStatusAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
+  const assessmentData = useAddAssessment(editTopic?.id, setEditTopic);
+
   if (isEdit) {
     if (!isPopUpDataPresent) setIsPopUpDataPresent(true);
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
@@ -77,6 +80,11 @@ export default function TopicPopUp({
 
     if (!filteredTopicContent.length) submitBtnObj.disabled = true;
     topicVideo = useRecoilValue(TopicVideoAtom)[0] || addTopicContentLocalStates.newTopicVideo;
+  }
+
+  if (editTopic?.type === 'Assessment') {
+    submitBtnObj.handleClick = assessmentData.saveAssessment;
+    submitBtnObj.disabled = !assessmentData.assessmentData?.examId;
   }
 
   return (
@@ -125,7 +133,7 @@ export default function TopicPopUp({
                 )}
               </div>
 
-              {editTopic?.type === 'Assessment' && <AssessmentForm topicData={editTopic} />}
+              {editTopic?.type === 'Assessment' && <AssessmentForm data={assessmentData} />}
 
               {editTopic?.type === 'Lab' && <div style={{ textAlign: 'center' }}>This is Labs</div>}
 
