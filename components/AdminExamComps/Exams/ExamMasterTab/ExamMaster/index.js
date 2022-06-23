@@ -250,22 +250,22 @@ export default function ExamMaster() {
       <div>
         <label>
           Enter Instructions/Guidelines:
-          {/* <LabeledTextarea
+          <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
-              inputName: 'instructions',,
+              inputName: 'instructions',
               rows: 4,
               value: examTabData?.instructions
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-          /> */}
-          <RTE
+          />
+          {/* <RTE
             changeHandler={(e) => {
               setExamTabData({ ...examTabData, instructions: e.target.innerHTML });
             }}
             placeholder="Enter instructions in less than 300 characters."
             value={examTabData?.instructions}
-          />
+          /> */}
         </label>
       </div>
 

@@ -7,7 +7,6 @@ import CourseContextProvider from '../state/contexts/CourseContext';
 import UserContextProvider from '../state/contexts/UserContext';
 import '../styles/global.scss';
 import '../styles/globals.css';
-import 'react-quill/dist/quill.snow.css';
 
 function MyApp({ Component, pageProps }) {
   return (
