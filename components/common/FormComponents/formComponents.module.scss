@@ -13,7 +13,7 @@
     background-color: $darkTwo;
     color: $secondaryBlack;
     font-size: 13px;
-    border-radius: 3px;
+    border-radius: 0px;
     font-family: 'Open Sans';
 
     &:not(:placeholder-shown) {
@@ -27,6 +27,9 @@
       outline: 0;
       color: $white;
     }
+    // &:disabled {
+    //   background-color: #dddddd;
+    // }
   }
 }
 .labeledDropdownWrapper {

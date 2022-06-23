@@ -166,7 +166,7 @@ select.nav_search_dropdow:selected {
   width: 100%;
 }
 .nav_search:after {
-  content: 'searvh';
+  content: 'search';
 }
 .nav_search_btn {
   background-image: url('/images/magnifier.png');
@@ -194,7 +194,6 @@ select.nav_search_dropdow:selected {
 }
 
 .leftMenuDropdown {
-  background-color: red;
   .reachMenuButton {
     background-color: 'transparent';
     border: 0;
