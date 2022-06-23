@@ -1,0 +1,21 @@
+@import '../../../../styles/base.scss';
+
+.quizOptionsGrid {
+  background: $darkOne;
+  width: 100%;
+  display: grid;
+
+  row-gap: 10%;
+  justify-content: space-around;
+
+  height: 60%;
+  grid-template-rows: repeat(2, 40%);
+  grid-template-columns: repeat(2, 35%);
+  margin: 0 5%;
+}
+
+.quizOptionsRow {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}

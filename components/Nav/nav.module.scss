@@ -4,8 +4,8 @@
 .navbar {
   width: 100%;
   height: $headerHeight;
-  padding: 0px 30px;
-  background-color: var(--header-bg);
+  padding: 0px 5px;
+  background-color: $bgHeader;
 
   display: flex;
   align-items: center;
@@ -41,7 +41,7 @@
   margin-right: 20px;
   min-width: 200px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .logo img {
   max-width: 200px;
@@ -59,12 +59,13 @@
 .menu ul li {
   font-size: 14px;
   font-weight: 600;
-  color: var(--dark_three);
+  color: $header;
   cursor: pointer;
   margin: 0 15px;
+  border-bottom: 1px solid transparent;
 }
 .menu ul li.active {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: $primary;
   cursor: pointer;
@@ -72,7 +73,7 @@
   border-bottom: 1px solid $primary;
 }
 .menu ul li:hover {
-  color: #c2d1d1;
+  color: $primary;
 }
 .special_menu {
   display: flex;
@@ -87,9 +88,9 @@
 .special_menu ul li img {
   width: 25px;
   height: 25px;
-  padding: 5px;
+  padding: 3px;
   margin: 5px 5px 0;
-  border: 1px solid var(--primary);
+  // border: 1px solid var(--primary);
   cursor: pointer;
 }
 
@@ -110,6 +111,7 @@
   align-items: center;
   margin-left: 30px;
   /* margin-right: 50px; */
+  min-width: 220px;
 }
 .profilepic {
   padding-right: 10px;
@@ -145,8 +147,17 @@
   color: white;
   border: 0;
   outline: 0;
+  padding: 5px 35px 5px 3px;
+  transition: all 0.2s;
+}
+.nav_search {
+  width: 150px;
   border-bottom: 1px solid #ffffff80;
-  padding: 5px 35px 5px 10px;
+}
+.nav_search:focus,
+.nav_search_long {
+  width: 250px;
+  border-bottom: 1px solid $primary;
 }
 select.nav_search_dropdown {
   width: 50px;
@@ -206,4 +217,71 @@ select.nav_search_dropdow:selected {
     padding: 8px;
     margin: 3px;
   }
+}
+
+// Rajeev's dropdown animation
+// .dropdown_menu {
+//   cursor: pointer;
+//   transform-origin: top left;
+//   animation: scaleZ 500ms 0ms ease-in-out forwards;
+// }
+
+// .dropdown_menu_right {
+//   cursor: pointer;
+//   transform-origin: top right;
+//   animation: scaleZ 500ms 0ms ease-in-out forwards;
+// }
+
+@for $var from 1 to 7 {
+  .dropdown_item_#{$var} {
+    opacity: 0;
+    width: 250px;
+    // padding: 7px 10px !important;
+    color: $primary !important;
+    background-color: $bgHeader !important;
+    transform-origin: top center;
+    animation: scaleZ 500ms $var * 60ms ease-in-out forwards;
+    &:hover {
+      background-color: $bgHeader !important;
+    }
+  }
+}
+
+@keyframes scaleZ {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  80% {
+    transform: scale(1.07);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes growDown {
+  0% {
+    transform: scaleY(0);
+  }
+
+  80% {
+    transform: scaleY(1.1);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.menuItem,
+.subMenuItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 10px !important;
+}
+
+.subMenuItem {
+  max-width: 160px;
 }

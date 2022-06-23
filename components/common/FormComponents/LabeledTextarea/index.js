@@ -8,7 +8,7 @@ export default function LabeledTextarea({ inputOptions, styleClass, changeHandle
     label,
     placeholder = ' ',
     value,
-    maxLength,
+    maxLength = 300,
     isRequired,
     isDisabled,
     isAutoComplete
@@ -29,7 +29,7 @@ export default function LabeledTextarea({ inputOptions, styleClass, changeHandle
         maxLength={maxLength}
         required={!!isRequired}
         disabled={!!isDisabled}
-        autoComplete={!!isAutoComplete}></textarea>
+        autoComplete={isAutoComplete?.toString()}></textarea>
     </div>
   );
 }

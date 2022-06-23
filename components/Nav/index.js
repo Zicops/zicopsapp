@@ -60,39 +60,46 @@ export default function Nav() {
       </div>
 
       <div className={styles.right} onBlur={deactivateSearch}>
-        {searchQuery !== null && (
+        {/* {searchQuery !== null && ( */}
+        {!isAdmin && (
           <div className={`${styles.search_menu}`} id="search_menu">
-            <select className={styles.nav_search_dropdown} placeholder="Search...">
+            {/* <select className={styles.nav_search_dropdown} placeholder="Search...">
               {['All', 'Self Paced', 'Classroom', 'Labs', 'Exam', 'Blogs'].map((opt) => (
                 <option key={opt}>{opt}</option>
               ))}
-            </select>
+            </select> */}
 
             <input
-              type="text"
+              type="search"
               ref={searchInputRef}
-              className={styles.nav_search}
+              className={`${styles.nav_search} ${searchQuery ? styles.nav_search_long : ''}`}
               placeholder="Search..."
               onInput={handleSearch}
-              autoFocus={true}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  searchQuery && router.push(`/search-page/${searchQuery}`);
+                }
+              }}
             />
-            <button className={styles.nav_search_btn}></button>
+            <button
+              className={styles.nav_search_btn}
+              onClick={() => searchQuery && router.push(`/search-page/${searchQuery}`)}></button>
           </div>
         )}
 
         <div className={styles.special_menu}>
           <ul>
-            {!isAdmin && searchQuery === null && (
+            {/* {!isAdmin && searchQuery === null && (
               <li onClick={() => activateSearch(true)}>
                 <img src="/images/search.png" />
               </li>
-            )}
+            )} */}
             <li>
               <img src="/images/bell.png" />
             </li>
-            <li>
+            {/* <li>
               <img src="/images/chat.png" />
-            </li>
+            </li> */}
           </ul>
         </div>
 

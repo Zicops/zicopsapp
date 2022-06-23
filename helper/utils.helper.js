@@ -1,17 +1,3 @@
-export const years = [
-  '2025',
-  '2024',
-  '2023',
-  '2022',
-  '2021',
-  '2020',
-  '2019',
-  '2018',
-  '2017',
-  '2016',
-  '2015'
-];
-
 export const months = [
   'January',
   'February',
@@ -26,6 +12,16 @@ export const months = [
   'November',
   'December'
 ];
+
+export function getYearsFromNow(numberOfYearsFromNow) {
+  const currentYear = new Date().getFullYear();
+  const years = [currentYear];
+  for (let i = 0; i < numberOfYearsFromNow; i++) {
+    years.push(++currentYear);
+  }
+
+  return years;
+}
 
 export function secondsToMinutes(seconds) {
   const min = ('0' + Math.floor(seconds / 60)).substr(-2);
@@ -51,3 +47,23 @@ export const TableResponsiveRows = [
     pageSize: 12
   }
 ];
+
+export function getPageSizeBasedOnScreen() {
+  if (!process.browser) return 6;
+
+  const screenWidth = window.screen.width;
+  let pageSize = 6;
+
+  TableResponsiveRows.forEach((r) => {
+    if (r.breakpoint <= screenWidth) pageSize = r.pageSize;
+  });
+
+  return pageSize;
+}
+
+// difficulty string to number mapping
+export const DIFFICULTY = {
+  Beginner: [0, 1, 2, 3],
+  Competent: [4, 5, 6, 7],
+  Proficient: [8, 9, 10]
+};

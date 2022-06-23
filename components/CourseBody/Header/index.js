@@ -15,7 +15,7 @@ export default function Header({ title, description, expertise }) {
         <div className="subheading">
           {/* Description: */}
           <span>
-            {'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non temporibus vel nemo! Quaerat nam laborum, placeat repellat minima eius distinctio iure. Doloribus repellat quas suscipit.' || (
+            {description || (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={10} width={150} />
             )}
           </span>

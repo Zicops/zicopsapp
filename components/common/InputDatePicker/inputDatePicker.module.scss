@@ -1,9 +1,38 @@
 @import '../../../styles/base.scss';
 
 .customHeader {
-  margin: 10px;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+}
+
+.inputDatePickerContainer {
+  display: inline-block;
+
+  input,
+  select {
+    padding: 10px;
+    border: 2px solid $darkThree;
+    background-color: $darkTwo;
+    color: $secondaryBlack;
+    font-size: 13px;
+    font-family: 'Open Sans';
+
+    &:not(:placeholder-shown) {
+      /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+      color: $white;
+      border: 2px solid $primary;
+    }
+    &:focus {
+      border: 2px solid $primary;
+      box-shadow: 0px 0px 10px 0px $primary;
+      outline: 0;
+      color: $white;
+    }
+  }
+
+  select {
+    padding: 5px 10px;
+  }
 }
 
 .inlineCalender {
@@ -21,14 +50,26 @@
 
   :global(.react-datepicker__month) {
     overflow: hidden;
-    margin: auto 10px;
+    margin: auto 10px 10px;
+  }
+
+  :global(.react-datepicker__day-name) {
+    color: $white;
+  }
+
+  :global(.react-datepicker__day--outside-month),
+  :global(.react-datepicker__day--disabled) {
+    color: $darkThree !important;
+    pointer-events: none;
+    background: $black !important;
   }
 
   .calanderDates {
     position: relative;
 
-    color: $darkThree;
-    background-color: $darkTwo;
+    background: $darkTwo;
+    color: $white;
+    // border: 1px solid $darkThree;
     outline: 2px solid $darkTwo;
     z-index: 1;
 

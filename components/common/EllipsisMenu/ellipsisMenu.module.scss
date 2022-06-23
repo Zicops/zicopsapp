@@ -1,0 +1,86 @@
+@import '../../../styles/base.scss';
+
+$size: 5px;
+$color: $secondaryBlack;
+
+.container {
+  position: relative;
+  margin-left: 20px;
+  width: calc($size + 20px);
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  .ellipsis {
+    position: relative;
+    height: $size;
+    width: $size;
+    background-color: $color;
+    border-radius: 50%;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0px;
+      left: calc($size + 5px);
+
+      height: $size;
+      width: $size;
+      background-color: $color;
+      border-radius: 50%;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0px;
+      left: calc($size + 15px);
+
+      height: $size;
+      width: $size;
+      background-color: $color;
+      border-radius: 50%;
+    }
+  }
+
+  .dropdown {
+    position: absolute;
+    top: -15px;
+    right: -30px;
+
+    padding: 30px;
+
+    width: fit-content;
+    z-index: 1;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      list-style: none;
+      background-color: $black;
+      padding: 5px;
+
+      li {
+        button {
+          width: 70px;
+          background-color: $darkOne;
+          color: $darkThree;
+
+          text-align: start;
+          padding: 5px 10px;
+
+          border: none;
+          outline: none;
+
+          &:hover {
+            background-color: $darkTwo;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+}

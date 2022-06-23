@@ -1,5 +1,6 @@
 import { Skeleton } from '@mui/material';
 import { useRecoilValue } from 'recoil';
+import { truncateToN } from '../../../helper/common.helper';
 import { isLoadingAtom } from '../../../state/atoms/module.atoms';
 
 export default function Info({ name, data }) {
@@ -22,7 +23,7 @@ export default function Info({ name, data }) {
           {isLoading ? (
             <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={100} />
           ) : data ? (
-            data
+            truncateToN(data, 60)
           ) : (
             'N/A'
           )}

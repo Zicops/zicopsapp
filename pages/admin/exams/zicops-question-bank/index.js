@@ -1,12 +1,17 @@
+import { useRecoilState } from 'recoil';
+import AddQuestionBank from '../../../../components/AdminExamComps/QuestionBanks/AddQuestionBank';
+import QuestionBankTable from '../../../../components/AdminExamComps/QuestionBanks/QuestionBankTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
+import PopUp from '../../../../components/common/PopUp';
 import Sidebar from '../../../../components/common/Sidebar';
 import { examSidebarData } from '../../../../components/common/Sidebar/Logic/sidebar.helper';
-import QuestionBankCard from '../../../../components/examComps/AddQuestionBank';
-import ZicopsQuestionBank from '../../../../components/examComps/ExamTables/ZicopsQuestionBank';
+import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 
-const ZicopsQuestionBanks = () => {
+export default function ZicopsQuestionBanks() {
+  const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
+
   return (
     <>
       <Sidebar sidebarItemsArr={examSidebarData} />
@@ -14,14 +19,13 @@ const ZicopsQuestionBanks = () => {
         <AdminHeader
           title="Zicops Question Banks"
           isAddShown={true}
-          pageRoute="/admin/exams/question-bank"
+          // pageRoute="/admin/exams/question-bank"
+          handleClickForPlus={() => udpatePopUpState(true)}
         />
         <MainBodyBox>
-          <ZicopsQuestionBank />
+          <QuestionBankTable />
         </MainBodyBox>
       </MainBody>
     </>
   );
-};
-
-export default ZicopsQuestionBanks;
+}

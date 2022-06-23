@@ -1,21 +1,55 @@
 import styles from './questionButtonStyles.module.scss';
+import {useEffect, useState} from "react";
+import {Grid} from "@mui/material";
 
-const QuestionButton = ({ data,check }) => {
-  const { question_button_marked , question_button_attempted , question_button_unattempted} = styles ;
+const QuestionButton = ({each, data, setData, current, setCurrent, setOption, filterData, setIsQuestion}) => {
+  const { question_button_marked , question_button_attempted , question_button_unattempted, question_button_notVisited, question_button_current} = styles ;
   let classNameBe ;
-  if(check==='marked'){
-    classNameBe= question_button_marked ;
-  }else if(check==='attempted'){
-    classNameBe=question_button_attempted ;
-  }else{
+  if(each.isVisited===false) {
+    classNameBe = question_button_notVisited
+  }else if(each.isVisited===true && each.isMarked){
+      classNameBe=question_button_marked ;
+  }else if(each.isVisited===true && each.selectedOption){
+      classNameBe=question_button_attempted ;
+  }else if(each.isVisited === true){
     classNameBe= question_button_unattempted ;
   }
 
-  console.log(classNameBe);
+  // const [trigger, setTrigger] = useState(false);
+
+  const handleChange = () => {
+    return data.map(function (obj) {
+      if (obj.id === each.id) {
+        return {
+          ...obj,
+          isVisited: true,
+        };
+      }
+      else {
+        return {...obj};
+      }
+    });
+  }
+
+  // useEffect(() => {
+  //   if(trigger){
+  //     setCurrent(data.filter(e => e.id === (each.id))[0])
+  //     setData(handleChange());
+  //   }
+  // }, [trigger])
 
   return (
     <>
-      <button className={`${styles.question_buttons} ${classNameBe} `}>{data}</button>
+      {/*<Grid item lg={2.4} md={2.4} sm={2.4} xs={2.4} display={'flex'} justifyContent={'center'} alignItems={'center'}>*/}
+      {/*</Grid>*/}
+      <button onClick={() => {
+        setCurrent(data.filter(e => e.id === (each.id))[0])
+        setData(handleChange());
+        setOption(data?.filter(e => e.id === (each.id))[0]?.selectedOption)
+        setIsQuestion(false);
+        // setTrigger(true)
+      }} className={`${styles.question_buttons} ${classNameBe} ${current.id === each.id ? styles.question_button_current : ''} `}>{each.id}
+      </button>
     </>
   );
 };

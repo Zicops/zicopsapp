@@ -1,4 +1,6 @@
 import { Skeleton } from '@mui/material';
+import { truncateToN } from '../../../helper/common.helper';
+
 import style from './courseHeader.module.scss';
 
 export default function CourseHeader({
@@ -16,7 +18,7 @@ export default function CourseHeader({
           {isLoading ? (
             <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={50} width={400} />
           ) : courseTitle ? (
-            courseTitle
+            truncateToN(courseTitle, 55)
           ) : (
             'N/A'
           )}

@@ -1,5 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
-import { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   GET_COURSE_CHAPTERS,
@@ -9,10 +10,14 @@ import {
 } from '../../../../API/Queries';
 import { sortArrByKeyInOrder } from '../../../../helper/data.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
-import { courseContext } from '../../../../state/contexts/CourseContext';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+import { CourseTabAtom, tabData } from '../../Logic/tabs.helper';
 
 export default function useHandleCourseTopic() {
-  const { fullCourse, setTab } = useContext(courseContext);
+  const router = useRouter();
+  const courseId = router.query?.courseId;
+  // const
+  const [tab, setTab] = useRecoilState(CourseTabAtom);
 
   // pop up states
   const [isAddModulePopUpOpen, setIsAddModulePopUpOpen] = useState(false);
@@ -40,6 +45,7 @@ export default function useHandleCourseTopic() {
   const [moduleData, updateModuleData] = useRecoilState(ModuleAtom);
   const [chapterData, updateChapterData] = useRecoilState(ChapterAtom);
   const [topicData, updateTopicData] = useRecoilState(TopicAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // module, chapter, topic data query obj
   const [loadModuleData, { error: errorModuleData, refetch: refetchModule }] = useLazyQuery(
@@ -61,33 +67,47 @@ export default function useHandleCourseTopic() {
 
   // load module, chapter, topic data and set in recoil
   useEffect(() => {
-    loadModuleData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      const sortedData = sortArrByKeyInOrder([...data.getCourseModules], "sequence");
-      updateModuleData(sortedData);
+    if (!courseId) {
+      updateModuleData([]);
+      updateChapterData([]);
+      updateTopicData([]);
+      return;
+    }
 
-      if (errorModuleData) alert('Module Load Error');
-    });
+    loadModuleData({ variables: { course_id: courseId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence');
+        updateModuleData(sortedData);
 
-    loadChapterData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      updateChapterData(data.getCourseChapters);
+        if (errorModuleData) setToastMsg({ type: 'danger', message: 'Module Load Error' });
+      }
+    );
 
-      if (errorChapterData) alert('Chapter Load Error');
-    });
+    loadChapterData({ variables: { course_id: courseId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        updateChapterData(data.getCourseChapters);
 
-    loadTopicData({ variables: { course_id: fullCourse.id } }).then(({ data }) => {
-      updateTopicData(data.getTopics);
+        if (errorChapterData) setToastMsg({ type: 'danger', message: 'Chapter Load Error' });
+      }
+    );
 
-      if (errorTopicData) alert('Topic Load Error');
-    });
-  }, []);
+    loadTopicData({ variables: { course_id: courseId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        updateTopicData(data.getTopics);
+
+        if (errorTopicData) setToastMsg({ type: 'danger', message: 'Topic Load Error' });
+      }
+    );
+  }, [courseId]);
 
   function togglePopUp(popUpName, value) {
     popUpStates.some((popUp) => {
       const isPopNameMatched = popUp.name.match(new RegExp(popUpName, 'gi'));
       if (isPopNameMatched) {
-        if (!fullCourse.id) {
+        if (!courseId) {
           setTab(tabData[0].name);
-          alert('Add course first');
+          setToastMsg({ type: 'danger', message: 'Add course first' });
+          return;
         }
 
         popUp.update(typeof value === 'boolean' ? value : !popUp.state);
@@ -100,28 +120,32 @@ export default function useHandleCourseTopic() {
   function refetchDataAndUpdateRecoil(name) {
     if (name.match(new RegExp('module', 'gi'))) {
       refetchModule().then(({ data: { getCourseModules } }) => {
-        updateModuleData(getCourseModules);
+        const sortedData = sortArrByKeyInOrder(getCourseModules);
+        updateModuleData(sortedData);
       });
 
-      if (errorModuleData) return alert('Module Refetch Error');
+      if (errorModuleData) return setToastMsg({ type: 'danger', message: 'Module Refetch Error' });
       return 'SUCCESS';
     }
 
     if (name.match(new RegExp('chapter', 'gi'))) {
       refetchChapter().then(({ data: { getCourseChapters } }) => {
-        updateChapterData(getCourseChapters);
+        const sortedData = sortArrByKeyInOrder(getCourseChapters);
+        updateChapterData(sortedData);
       });
 
-      if (errorChapterData) return alert('Chapter Refetch Error');
+      if (errorChapterData)
+        return setToastMsg({ type: 'danger', message: 'Chapter Refetch Error' });
       return 'SUCCESS';
     }
 
     if (name.match(new RegExp('topic', 'gi'))) {
       refetchTopic().then(({ data: { getTopics } }) => {
-        updateTopicData(getTopics);
+        const sortedData = sortArrByKeyInOrder(getTopics);
+        updateTopicData(sortedData);
       });
 
-      if (errorChapterData) return alert('Topic Refetch Error');
+      if (errorChapterData) return setToastMsg({ type: 'danger', message: 'Topic Refetch Error' });
       return 'SUCCESS';
     }
   }

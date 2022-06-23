@@ -1,0 +1,55 @@
+@import '../../styles/base.scss';
+.resultTable {
+  width: 100%;
+  height: auto;
+  background-color: #323232;
+  border-radius: 16px;
+  padding: 50px;
+  position: relative;
+
+  h2 {
+    color: $primary;
+    text-align: center;
+  }
+  table {
+    text-align: center;
+    width: 100%;
+    margin: auto;
+    font-size: 18px;
+    padding: 20px 0px;
+    thead tr td {
+      //   padding: 10px 20px;
+      text-align: center;
+      color: $bgBody;
+      font-weight: 500;
+    }
+    tbody {
+      text-align: center;
+      color: $bgBody;
+      font-weight: 500;
+      tr {
+        // margin: 10px 0px;
+        border: 1px solid $bgBody !important;
+
+        td {
+          background-color: transparent;
+          padding: 10px 15px;
+          //   border: 1px solid $bgBody;
+        }
+      }
+    }
+  }
+
+  .closeBtn {
+    background-color: $primary;
+    border-radius: 5px;
+    color: #000000;
+    padding: 10px;
+    display: block;
+    position: absolute;
+    right: 50px;
+    bottom: 10px;
+    width: 100px;
+    font-size: 18px;
+  }
+}

@@ -20,10 +20,18 @@ export function changeHandler(e, state, setState, inputName = null) {
       ...state,
       [inputName]: e.value
     });
-    console.log(e, state);
     return;
   }
-  
+
+  // for checkbox  select
+  if (e.target.type === 'checkbox') {
+    setState({
+      ...state,
+      [e.target.name]: e.target.checked
+    });
+    return;
+  }
+
   // for normal HTML input
   setState({
     ...state,

@@ -1,9 +1,14 @@
 import { useRecoilValue } from 'recoil';
 import { ResourcesAtom } from '../../../../../state/atoms/module.atoms';
-import styles from '../../../../../styles/CourseMaster.module.css';
+import styles from '../../../courseTabs.module.scss';
 import Bar from '../../../../common/Bar';
 import IconButton from '../../../../common/IconButton';
 import useAddResources from '../../Logic/useAddResources';
+import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
+import BrowseAndUpload from '../../../../common/FormComponents/BrowseAndUpload';
+import Button from '../../../../common/Button';
+import LabeledInput from '../../../../common/FormComponents/LabeledInput';
+import { truncateToN } from '../../../../../helper/common.helper';
 
 export default function ResourcesForm({ courseId, topicId }) {
   const {
@@ -16,6 +21,11 @@ export default function ResourcesForm({ courseId, topicId }) {
   } = useAddResources(courseId, topicId);
 
   const resources = useRecoilValue(ResourcesAtom);
+
+  const fileTypes = ['PDF', 'EXCEL', 'DOC', 'LINK'];
+  const resourceTypesOptions = [];
+  fileTypes.map((t) => resourceTypesOptions.push({ value: t, label: t }));
+
   return (
     <>
       {resources &&
@@ -25,133 +35,87 @@ export default function ResourcesForm({ courseId, topicId }) {
 
       {isResourcesFormVisible && (
         <>
-          <div className={styles.center_row}>
-            <select name="type" onChange={handleResourceInput} value={newResource.type}>
-              <option hidden>Select Resources Type</option>
-              <option>PDF</option>
-              <option>EXCEL</option>
-              <option>DOC</option>
-              <option>LINK</option>
-            </select>
-          </div>
-
-          <div
-            className="row"
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '10px',
-              padding: '0px'
-            }}>
-            <input
-              type="text"
-              autoComplete="name"
-              id="name"
-              placeholder="Enter document name"
-              required
-              name="name"
-              onChange={handleResourceInput}
-              value={newResource.name}
-            />
-            {console.log(newResource.type)}
-            {newResource.type === 'LINK' ? (
-              <input
-                type="url"
-                placeholder="Enter document url"
-                name="url"
-                required
-                onChange={handleResourceInput}
-                value={newResource.url}
+          <div className={`${styles.popUpFormContainer}`}>
+            <div className={`center-element-with-flex ${styles.resourceType}`}>
+              <LabeledDropdown
+                dropdownOptions={{
+                  inputName: 'type',
+                  placeholder: 'Select Resources Type',
+                  options: resourceTypesOptions,
+                  isSearchEnable: false,
+                  value: newResource.type
+                    ? { value: newResource.type, label: newResource.type }
+                    : null
+                }}
+                changeHandler={handleResourceInput}
               />
-            ) : (
-              <div className={styles.upload_btn_wrapper} style={{}}>
-                <button className={styles.btn}>
-                  <span className={styles.input_icon}>
-                    <span>
-                      <img src="/images/upload.png" alt="" />
-                    </span>
-                  </span>
-                  Browse & upload
-                </button>
-                <input
-                  type="file"
-                  name="file"
-                  accept={`
-                  ${newResource.type === 'EXCEL' ? '.csv, .xls, .xlsx' : ''} 
-                  ${newResource.type === 'DOC' ? '.doc, .docx' : ''} 
-                  ${newResource.type === 'PDF' ? '.pdf' : ''}
-                `}
-                  onChange={handleResourceInput}
+            </div>
+
+            <div className={`${styles.flexCenterWithGap}`}>
+              {/* language */}
+              <div className="w-35">
+                <LabeledInput
+                  inputOptions={{
+                    inputName: 'name',
+                    placeholder: 'Enter document name',
+                    maxLength: 20,
+                    value: newResource.name
+                  }}
+                  changeHandler={handleResourceInput}
                 />
               </div>
-            )}
-          </div>
-          <div id="resourceFile" style={{ textAlign: 'center' }}>
-            {/* {resInput.current} */}
-          </div>
-          <div
-            className="row"
-            style={{
-              justifyContent: 'center',
-              marginTop: '10px',
-              padding: '0px'
-            }}>
-            <button
-              type="button"
-              onClick={toggleResourceForm}
-              style={{
-                padding: '10px 20px',
-                borderRadius: '30px',
-                backgroundColor: 'transparent',
-                border: 'solid 3px #868f8f',
-                color: '#868f8f',
-                margin: '10px',
-                cursor: 'pointer'
-              }}>
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={addNewResource}
-              className={isResourceReady ? 'button_single' : 'btn_disable'}
-              disabled={!isResourceReady}>
-              Add
-            </button>
+
+              {/* subtitle file */}
+              <div className="w-35">
+                {newResource.type !== 'LINK' ? (
+                  <BrowseAndUpload
+                    handleFileUpload={handleResourceInput}
+                    inputName="file"
+                    isActive={newResource?.file?.name}
+                    hidePreviewBtns={true}
+                    acceptedTypes={`
+                    ${newResource.type === 'EXCEL' ? '.csv, .xls, .xlsx' : ''}
+                    ${newResource.type === 'DOC' ? '.doc, .docx' : ''} 
+                    ${newResource.type === 'PDF' ? '.pdf' : ''}
+                  `}
+                  />
+                ) : (
+                  <LabeledInput
+                    inputOptions={{
+                      inputName: 'url',
+                      placeholder: 'Enter document url',
+                      value: newResource.url
+                    }}
+                    changeHandler={handleResourceInput}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* file name display */}
+            <div className={`w-100 text-center`}>{truncateToN(newResource?.file?.name, 180)}</div>
+
+            {/* footer btn */}
+            <div className="center-element-with-flex">
+              <Button
+                text="Cancel"
+                clickHandler={toggleResourceForm}
+                styleClass={styles.topicContentSmallBtn}
+              />
+              <Button
+                text="Add"
+                clickHandler={addNewResource}
+                styleClass={styles.topicContentSmallBtn}
+                isDisabled={!isResourceReady}
+              />
+            </div>
           </div>
         </>
       )}
 
-      <div className="row my_30">
+      <div className={`${styles.centerAccordinBtn}`}>
         <IconButton styleClass="btnBlack" text="Add Resources" handleClick={toggleResourceForm} />
       </div>
-
-      {/* move to .scss */}
-      <style jsx>
-        {`
-          .button_single{
-            padding: '10px 20px',
-            borderRadius: '30px',
-            backgroundColor: 'transparent',
-            border: 'solid 1px #868f8f',
-            color: '#868f8f',
-            margin: '10px',
-            cursor: 'pointer'
-          }
-          
-          .btn_disable {
-            padding: 10px 40px;
-            background-color: transparent;
-            color: #858f8f;
-            border: 1px solid #303131;
-            border-radius: 35px;
-            margin: auto;
-            margin: 10px;
-
-            cursor: no-drop;
-            opacity: 0.5;
-          }
-        `}
-      </style>
     </>
   );
 }

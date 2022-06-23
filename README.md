@@ -64,11 +64,17 @@ zicopsapp (root directory)
 
 ```
 
-Classname should be add like this
+## Module classes
+Module Classname should be add like this
 `` classname={`${styles.ComponentClass} globalClassName`} ``
 
 classname should be in camelCase
 
+
 pageName/index.js+styles.scss
 
-components/  pageComponent/subcompoent1/subcomp2
+compoennts/  pageComponent/subcompoent1/subcomp2
+
+## Global classes
+
+class name should be in kebab case (class-name)

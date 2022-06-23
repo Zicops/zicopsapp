@@ -25,6 +25,7 @@ export default function SkipButtons({ nextBtnObj, stayBtnObj }) {
       )}
       {nextIsVisible && (
         <div className={`${nextClasses}`} style={nextStyles}>
+
           <div onClick={nextClickHandler}>{nextBtnText}</div>
         </div>
       )}

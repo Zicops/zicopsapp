@@ -2,11 +2,13 @@ import React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import useHandleDragDrop from '../../Logic/useHandleDragDrop';
 
+// TODO: update this component later
 const DragDrop = ({ data, contextData }) => {
   const {
     draglist,
     droplist,
     isDragOn,
+    searchQuery,
     handleSearch,
     highlightDroppable,
     handleOnDragEnd,
@@ -16,7 +18,10 @@ const DragDrop = ({ data, contextData }) => {
   return (
     <>
       <div className="row" style={{ alignItems: 'center' }}>
-        <DragDropContext onDragStart={highlightDroppable} onDragEnd={handleOnDragEnd}>
+        <DragDropContext
+          style={{ overflow: 'auto' }}
+          onDragStart={highlightDroppable}
+          onDragEnd={handleOnDragEnd}>
           <label htmlFor="name3" className="col_25">
             Additional Categories / Sub-categories
           </label>
@@ -29,14 +34,27 @@ const DragDrop = ({ data, contextData }) => {
                   id="search"
                   placeholder="Search"
                   autoComplete="off"
+                  value={searchQuery}
                   onInput={handleSearch}></input>
               </div>
               <Droppable droppableId="categories">
                 {(provided) => (
                   <div id="dca" {...provided.droppableProps} ref={provided.innerRef}>
-                    {draglist.map(({ rank, name }, index) => {
+                    {draglist.map(({ dragOrder, name }, index) => {
+                      if (!name.toLowerCase().includes(searchQuery)) return null;
+                      // console.log(
+                      //   name,
+                      //   index,
+                      //   dragOrder,
+                      //   searchQuery,
+                      //   name.toLowerCase().includes(searchQuery)
+                      // );
+
                       return (
-                        <Draggable key={name + rank} draggableId={'drag_' + rank} index={index}>
+                        <Draggable
+                          key={name + dragOrder + index}
+                          draggableId={'drag_' + dragOrder}
+                          index={index}>
                           {(provided) => (
                             <div
                               className="inner_drag_ele"
@@ -69,22 +87,22 @@ const DragDrop = ({ data, contextData }) => {
                   }`}
                   {...provided.droppableProps}
                   ref={provided.innerRef}>
-                  {droplist.map(({ rank, name }, index) => {
+                  {droplist.map(({ dragOrder, name, rank }, index) => {
+                    // console.log(dragOrder, name, index);
                     return (
-                      <Draggable
-                        key={name + rank}
-                        draggableId={'drop_' + rank.toString()}
-                        index={index}>
+                      <Draggable key={name + rank} draggableId={'drop_' + rank} index={index}>
                         {(provided) => (
                           <div
                             className="wrap_drop disableTextSelection"
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}>
-                            <div className="Sr_no">{index + 1}</div>
+                            <div className="Sr_no">{rank + 1}</div>
                             <div className="inner_drop_ele">
                               {name}
-                              <span data-index={[rank, name, index]} onClick={removeItem}>
+                              <span
+                                data-index={`${dragOrder}::${name}::${index}::${rank}`}
+                                onClick={removeItem}>
                                 x
                               </span>
                             </div>
@@ -108,42 +126,43 @@ const DragDrop = ({ data, contextData }) => {
       <style jsx>
         {`
           .lgrey {
-            border: 2px solid var(--dark_three) !important;
+            brank: 2px solid var(--dark_three) !important;
           }
           .green {
-            border: 2px solid #00ff00 !important;
+            brank: 2px solid #00ff00 !important;
           }
           .primary {
-            border: 2px solid var(--primary);
+            brank: 2px solid var(--primary);
             box-shadow: 0 0 10px 0 var(--primary);
           }
           .drop_category_area,
           .drag_category_area {
+            position: relative;
             height: 180px;
             overflow-y: auto;
             margin: 10px;
             background-color: #1a1a1a;
-            border-radius: 10px;
+            brank-radius: 10px;
           }
           /* Scrollbar */
           /* width */
           .drop_category_area::-webkit-scrollbar,
           .drag_category_area::-webkit-scrollbar {
             width: 5px;
-            border-radius: 7px;
+            brank-radius: 7px;
             cursor: pointer;
           }
           /* Track */
           .drop_category_area::-webkit-scrollbar-track
             .drag_category_area::-webkit-scrollbar-track {
             background: #2a2e31;
-            border-radius: 7px;
+            brank-radius: 7px;
           }
           /* Handle */
           .drop_category_area::-webkit-scrollbar-thumb
             .drag_category_area::-webkit-scrollbar-thumb {
             background: #969a9d;
-            border-radius: 7px;
+            brank-radius: 7px;
           }
           /* Handle on hover */
           .drop_category_area::-webkit-scrollbar-thumb::hover
@@ -154,15 +173,18 @@ const DragDrop = ({ data, contextData }) => {
           .inner_drag_ele {
             background-color: #202222;
             margin: 10px;
-            border-radius: 5px;
+            brank-radius: 5px;
             padding: 3px 15px;
             font-size: 13px;
             color: #858f8f;
           }
           .inner_drop_ele {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             background-color: #202222;
             /* margin: 10px; */
-            border-radius: 5px;
+            brank-radius: 5px;
             padding: 3px 15px;
             font-size: 13px;
             color: #858f8f;
@@ -177,7 +199,7 @@ const DragDrop = ({ data, contextData }) => {
             // width: 20px;
             // padding-bottom: 3px;
             // margin-left: 20px;
-            // border-radius: 50%;
+            // brank-radius: 50%;
             // text-align: center;
           }
           .handdrag {
@@ -186,12 +208,15 @@ const DragDrop = ({ data, contextData }) => {
             margin: auto;
           }
           .inner_drag_srch {
+            position: sticky;
+            background-color: #1a1a1a;
+            top: 0;
             margin-bottom: 0;
           }
           .inner_drag_srch input {
             background-color: #202222;
-            border: 1px solid #858f8f;
-            border-radius: 5px;
+            brank: 1px solid #858f8f;
+            brank-radius: 5px;
             padding: 3px 15px;
             font-size: 13px;
             color: #858f8f;
@@ -204,7 +229,7 @@ const DragDrop = ({ data, contextData }) => {
             background-repeat: no-repeat;
           }
           .inner_drag_srch input:focus {
-            border-radius: 5px;
+            brank-radius: 5px;
             outline: 0;
           }
 

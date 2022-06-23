@@ -4,6 +4,7 @@ import { VideoAtom } from '../../state/atoms/video.atom';
 import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
+import DraggableDiv from './DraggableDiv';
 import useVideoPlayer from './Logic/useHandleVideo';
 import SkipButtons from './SkipButtons';
 import UiComponents from './UiComponents';
@@ -42,13 +43,13 @@ export default function CustomVideo({ set }) {
     playPreviousVideo,
     setVideoTime,
     moveVideoProgressBySeconds
-  } = useVideoPlayer(videoElement, videoContainer, videoData.type);
+  } = useVideoPlayer(videoElement, videoContainer);
 
   useEffect(() => {
     set(true);
 
     // reset video progress when unmounted
-    return () => handleMouseMove({ target: { value: 0 } });
+    // return () => handleMouseMove({ target: { value: 0 } });
   }, []);
 
   useEffect(() => {
@@ -74,9 +75,9 @@ export default function CustomVideo({ set }) {
     // add logic for preventing binge button for last video
     if (topicContent && showBingeButtons !== null) {
       const isStartTime = topicContent[0]?.nextShowTime > 0;
-       const buttonShowTime = isStartTime
-         ? topicContent[currentTopicContentIndex]?.nextShowTime
-         : videoElement.current?.duration - topicContent[currentTopicContentIndex]?.fromEndTime;
+      const buttonShowTime = isStartTime
+        ? topicContent[currentTopicContentIndex]?.nextShowTime
+        : videoElement.current?.duration - topicContent[currentTopicContentIndex]?.fromEndTime;
 
       if (!buttonShowTime) return;
       setShowBingeButtons(buttonShowTime < videoElement.current?.currentTime);
@@ -131,6 +132,9 @@ export default function CustomVideo({ set }) {
       {/* </div> */}
       {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}
 
+      {/* <DraggableDiv> "Hi" </DraggableDiv>
+      <DraggableDiv> "Hello" </DraggableDiv> */}
+
       <div className="video_wrapper">
         {/* video player */}
         <VideoPlayer
@@ -139,6 +143,7 @@ export default function CustomVideo({ set }) {
           playerState={playerState}
           handleClick={togglePlay}
           handleKeyDown={handleKeyDownEvents}
+          isControlBarVisible={hideControls}
         />
 
         {/* skip intro button */}
@@ -148,13 +153,13 @@ export default function CustomVideo({ set }) {
               nextBtnObj={{
                 text: 'Skip Intro',
                 classes: styles.skipIntroBtn,
-                customStyles: {
-                  background: `linear-gradient(90deg, var(--primary) ${
-                    ((videoElement.current?.currentTime - topicContent[0]?.startTime) /
-                      topicContent[0].skipIntroDuration) *
-                      100 || 0
-                  }%, var(--dark_one) 0%, var(--dark_one) 100%)`,
-                },
+                // customStyles: {
+                //   background: `linear-gradient(90deg, var(--primary) ${
+                //     ((videoElement.current?.currentTime - topicContent[0]?.startTime) /
+                //       topicContent[0].skipIntroDuration) *
+                //       100 || 0
+                //   }%, var(--dark_one) 0%, var(--dark_one) 100%)`
+                // },
                 clickHandler: () => {
                   const skipIntroTime = topicContent[0]?.startTime;
                   const skipIntroDuration = topicContent[0]?.skipIntroDuration;

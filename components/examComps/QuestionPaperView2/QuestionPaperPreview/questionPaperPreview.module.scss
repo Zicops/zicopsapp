@@ -1,0 +1,155 @@
+@import '../../../../styles/base.scss';
+
+.paperContainer {
+  height: 100vh;
+  overflow: auto;
+  padding-right: 5px;
+
+  background-color: $darkTwo;
+}
+
+
+//QuestionSection
+// .line {
+//   content: '';
+//   height: 3px;
+//   margin-top: 12px;
+//   background-color: $white;
+//   width: 100%;
+//   margin-bottom: 20px;
+// }
+
+.sectionContainer {
+  margin-top: 20px;
+  border-radius: 10px;
+  background-color: $darkOne;
+  color: $darkThree;
+  padding: 5px;
+}
+
+.questionTop {
+  color: $white;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 10px;
+  p {
+    font-weight: 600;
+    color: $darkThree;
+    font-size: 16px;
+    span {
+      color: $white;
+    }
+  }
+}
+
+.QuestionContainer {
+  margin: 10px;
+  background-color: $black;
+  border-radius: 5px;
+}
+
+.qstatusContainer {
+  text-align: right;
+  margin-right: 20px;
+}
+
+.questionInnerContainer {
+  margin-top: 10px;
+}
+
+.questionContainerInnerContainer {
+  border: 2px solid transparent;
+}
+.questionContainerInnerContainer:hover {
+  border: 2px solid $white;
+}
+
+//questionTop
+.container {
+  color: $darkThree;
+}
+
+// .upperSection {
+//   display: flex;
+//   justify-content: space-between;
+//   margin: 0 5px;
+//   margin-top: 30px;
+//   font-weight: bold;
+//   span {
+//     color: $white;
+//   }
+  // p:nth-child(3) {
+  //   margin-right: 80px;
+  // }
+  // p:nth-child(1) {
+  //   margin-left: -30px;
+  // }
+//   p:nth-child(2) {
+//     margin-left: -30px;
+//   }
+// }
+
+.middleSection {
+  text-align: center;
+  margin: 30px 80px;
+  p {
+      font-size: 24px;
+      color: $primary;
+      font-weight: 700;
+    p {
+      margin-top: 20px;
+      font-size: 15px;
+      color: $darkThree;
+      font-weight: 400;
+    }
+  }
+}
+
+.lowerSection {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 25px;
+  font-size: 18px;
+  span {
+    color: $white;
+  }
+  // p:nth-child(3) {
+  //   margin-right: 80px;
+  // }
+  // p:nth-child(1) {
+  //   margin-left: -30px;
+  // }
+  // p:nth-child(2) {
+  //   margin-left: -40px;
+  // }
+}
+
+//Question Status
+
+@mixin inputField($property, $value) {
+  input[type='checkbox'] {
+    appearance: none;
+    content: ' ';
+    #{$property}: $value;
+    margin: 0;
+    border-radius: 1px;
+    height: 10px;
+    width: 10px;
+    margin-right: 10px;
+  }
+}
+
+.attempted {
+  // color: $primary;
+  @include inputField(background-color, $primary);
+}
+
+.unattempted {
+  color: $darkThree;
+  @include inputField(background-color, $darkThree);
+}
+
+.marked {
+  color: $white;
+  @include inputField(background-color, $white);
+}

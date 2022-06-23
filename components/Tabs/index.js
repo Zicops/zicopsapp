@@ -1,24 +1,67 @@
-import { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useContext } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../state/contexts/CourseContext';
-import ModuleContextProvider from '../../state/contexts/ModuleContext';
-import Tab from '../common/Tab';
-import useHandleTabs from './Logic/useHandleTabs';
-import { contentPanel } from './tabs.module.scss';
+import Button from '../common/Button';
+import TabContainer from '../common/TabContainer';
+import styles from './courseTabs.module.scss';
+import { CourseTabAtom, getDateTimeFromUnix, isCourseUploadingAtom, tabData } from './Logic/tabs.helper';
+import useSaveCourse from './Logic/useSaveCourse';
 
 export default function CourseTabs() {
   const courseContextData = useContext(courseContext);
-  const { tabData } = useHandleTabs(courseContextData);
 
-  const { tab, setTab } = courseContextData;
-  useEffect(() => {
-    setTab(tabData[0].name);
-  }, []);
+  const { fullCourse, saveCourseData } = useSaveCourse(courseContextData);
+  const router = useRouter();
+
+  const [tab, setTab] = useRecoilState(CourseTabAtom);
+  const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
+
+  // TODO: set to first tab when new course is opened
+  // useEffect(() => {
+  //   console.log(router);
+  //   setTab(tabData[0].name);
+  // }, [fullCourse?.id]);
+
+  const displayTime =
+    fullCourse.updated_at || fullCourse.created_at
+      ? `(at ${getDateTimeFromUnix(fullCourse.updated_at || fullCourse.created_at)})`
+      : '';
 
   return (
     <>
-      <ModuleContextProvider>
-        <Tab tabData={tabData} tab={tab} setTab={setTab} />
-      </ModuleContextProvider>
+      <TabContainer
+        tabData={tabData}
+        tab={tab}
+        setTab={setTab}
+        footerObj={{
+          status: isCourseUploading ? (
+            isCourseUploading
+          ) : (
+            <>
+              {fullCourse.status}{' '}
+              <span style={{ fontSize: '12px', fontWeight: '400' }}>
+                {isCourseUploading ? '' : displayTime}
+              </span>
+            </>
+          ),
+          submitDisplay: fullCourse.id ? 'Update' : 'Save',
+          handleSubmit: () => saveCourseData(false),
+          cancelDisplay: 'Cancel',
+          handleCancel: () => router.push('/admin/zicops-courses')
+        }}>
+        {fullCourse.id && (
+          <div className={`${styles.previewButtonContainer}`}>
+            <Button
+              clickHandler={async () => {
+                await saveCourseData(false, 0, false);
+                router.push(`/preview?courseId=${fullCourse.id}`);
+              }}
+              text="Preview"
+            />
+          </div>
+        )}
+      </TabContainer>
     </>
   );
 }

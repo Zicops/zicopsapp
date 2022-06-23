@@ -18,17 +18,11 @@ export default function Question() {
       />
       <IconButton text="View MCQ" styleClass="btnBlack" handleClick={() => setShowMcqCard(true)} />
 
-      <PopUp
-        isFooterVisible={false}
-        title="Question 1"
-        isPopUpOpen={showMcqCard}
-        closeBtn={{ handleClick: () => setShowMcqCard(false) }}>
+      <PopUp isFooterVisible={false} title="Question 1" popUpState={[showMcqCard, setShowMcqCard]}>
         <McqCard question={'This is a question that you have to answer?'} />
       </PopUp>
-      <PopUp
-        isFooterVisible={false}
-        isPopUpOpen={showSectionPopup}
-        closeBtn={{ handleClick: () => setShowSectionPopup(false) }}>
+
+      <PopUp isFooterVisible={false} popUpState={[showSectionPopup, setShowSectionPopup]}>
         <AddCustomSection />
       </PopUp>
     </div>

@@ -1,6 +1,7 @@
+import { queryClient } from '../API/Queries';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
 
-export function createCourseAndUpdateContext(courseContextData, createCourse) {
+export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
     fullCourse,
     setTab,
@@ -15,46 +16,33 @@ export function createCourseAndUpdateContext(courseContextData, createCourse) {
 
   if (!fullCourse.name || !fullCourse.category || !fullCourse.sub_category || !fullCourse.owner) {
     setTab(tabData[0].name);
-    return alert('Please fill all the Course Master Details');
+    return { type: 'info', message: 'Please fill all the Course Master Details' };
   }
 
   const { id, created_at, updated_at, ...sendData } = fullCourse;
 
-  createCourse({
-    variables: {
-      ...sendData,
-      status: 'SAVED'
-    }
-  })
-    .then((res) => {
-      if (!res || !res?.data?.addCourse?.id) return;
-      alert('course created');
-      console.log('course created', res);
+  const res = await createCourse({ variables: { ...sendData, status: 'SAVED' } }).catch((err) => {
+    console.log('Course Add Error: ', err);
+    return { type: 'danger', message: 'Course Create Error' };
+  });
 
-      updateCourseMaster(res.data.addCourse);
+  if (!res || !res?.data?.addCourse?.id)
+    return { type: 'danger', message: 'Course Id not recieved in response' };
 
-      const courseId = res.data.addCourse.id;
-      setCourseVideo({
-        ...courseVideo,
-        courseId: courseId
-      });
-      setCourseImage({
-        ...courseImage,
-        courseId: courseId
-      });
-      setCourseTileImage({
-        ...courseTileImage,
-        courseId: courseId
-      });
+  console.log('course created', res);
+  updateCourseMaster(res.data.addCourse);
 
-      // go to next tab
-      setTimeout(() => {
-        setTab(tabData[1].name);
-      }, 50);
-    })
-    .catch((err) => {
-      console.log('Course Add Error: ', err);
-    });
+  const courseId = res.data.addCourse.id;
+  setCourseVideo({ ...courseVideo, courseId: courseId });
+  setCourseImage({ ...courseImage, courseId: courseId });
+  setCourseTileImage({ ...courseTileImage, courseId: courseId });
+
+  // go to next tab
+  setTimeout(() => {
+    setTab(tabData[1].name);
+  }, 50);
+
+  return { type: 'success', message: 'Course Created', courseId: courseId };
 }
 
 export function filterAndSortChapter(chapters, moduleId) {
@@ -112,11 +100,39 @@ export function sortTopicContentByIsDefault(topicContent) {
   return topicContent.sort((content) => content.is_default);
 }
 
-export function sortArrByKeyInOrder(array, key, isAsc = true) {
-  let ascVal = -1, desVal = 1;
+export function sortArrByKeyInOrder(array, key = 'sequence', isAsc = true) {
+  if (!array.length) return [];
+
+  const localArr = [...array];
+  let ascVal = -1,
+    desVal = 1;
   if (isAsc) {
     ascVal = 1;
     desVal = -1;
-  } 
-  return array?.sort((a, b) => (a[key] > b[key] ? ascVal : desVal));
+  }
+  return localArr?.sort((a, b) => (a[key] > b[key] ? ascVal : desVal));
+}
+
+// https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
+function getNestedValueByString(obj, path) {
+  return path
+    .replace(/\[|\]\.?/g, '.')
+    .split('.')
+    .filter((s) => s)
+    .reduce((acc, val) => acc && acc[val], obj);
+}
+
+export async function isNameDuplicate(QUERY, name, objPath) {
+  const LONG_PAGE_SIZE = 999999999999;
+  const queryVariables = { publish_time: Date.now(), pageSize: LONG_PAGE_SIZE, pageCursor: '' };
+  const results = await queryClient.query({ query: QUERY, variables: queryVariables });
+
+  const arrayOfNames = getNestedValueByString(results?.data, objPath) || [];
+
+  const isNameExist = arrayOfNames.some((obj) => {
+    const _name = obj.Name || obj.name;
+    return _name?.toLowerCase() === name?.toLowerCase();
+  });
+
+  return isNameExist;
 }

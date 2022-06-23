@@ -1,0 +1,73 @@
+@import '../../../styles/base.scss';
+
+.cardContainer {
+  background-color: transparent;
+  perspective: 1000px;
+  width: 300px;
+  height: 300px;
+}
+
+.cardInnerContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.cardFrontSide,
+.cardBackSide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.cardFrontSide img {
+  width: 100%;
+  height: 100%;
+}
+
+.cardBackSide {
+  padding: 10px;
+  border: 5px solid $primary;
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgb(34, 37, 41) 0%, rgba(0, 0, 0, 1) 100%);
+  transform: rotateY(180deg);
+  .cbTitle {
+    font-size: large;
+    font-weight: bold;
+    margin: 10px 0;
+    max-width: 80%;
+    color: $white;
+  }
+
+  .cbType {
+    color: $primary;
+    margin-bottom: 20px;
+  }
+
+  .cbInfo {
+    display: flex;
+    justify-content: space-between;
+    font-size: small;
+    color: $white;
+    span {
+      color: $darkThree;
+    }
+  }
+
+  .cbDiscription {
+    margin-top: 10px;
+    font-size: small;
+    color: $darkThree;
+  }
+}
+
+.cardContainer:hover .cardInnerContainer {
+  transform: rotateY(180deg);
+}

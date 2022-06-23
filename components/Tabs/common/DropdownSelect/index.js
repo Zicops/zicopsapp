@@ -1,4 +1,4 @@
-import styles from '../../tabs.module.scss';
+import styles from '../../courseTabs.module.scss';
 
 export default function DropdownSelect({ data, inputData, classes }) {
   // remove falsy values

@@ -1,0 +1,29 @@
+@import '../../../styles/base.scss';
+
+.container {
+  width: 100%;
+  color: $white;
+}
+
+.navigatorBtns{
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+
+  .input_margin_transform{
+    margin-left: 16px;
+    text-transform: none;
+  }
+  .transform_text{
+    text-transform: none;
+  }
+}
+
+.navigator{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-image: url('/images/starrySky2.png');
+  background-position: fixed;
+  background-size: cover;
+}

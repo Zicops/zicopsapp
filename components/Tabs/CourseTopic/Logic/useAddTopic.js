@@ -1,71 +1,71 @@
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ADD_COURSE_TOPIC } from '../../../../API/Mutations';
 import { getTopicObject, TopicAtom } from '../../../../state/atoms/module.atoms';
+import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 
-export default function useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, activateEditTopic) {
+export default function useAddTopic(refetchDataAndUpdateRecoil, activateEditTopic) {
   const { fullCourse } = useContext(courseContext);
   const [createCourseTopic, { loading, error }] = useMutation(ADD_COURSE_TOPIC);
 
   // recoil state
   const topicData = useRecoilValue(TopicAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+  const [addTopicPopUp, setAddTopicPopUp] = useRecoilState(PopUpStatesAtomFamily('addTopic'));
 
   // local states
   const [isAddTopicReady, setIsAddTopicReady] = useState(false);
   const [newTopicData, setNewTopicData] = useState(
-    getTopicObject({ courseId: fullCourse.id, sequence: topicData.length + 1 })
+    getTopicObject({ courseId: fullCourse.id, sequence: topicData?.length + 1 })
   );
 
   // disable save button if data is not correct
   useEffect(() => {
     setIsAddTopicReady(!!newTopicData.name && !!newTopicData.type && !!newTopicData.description);
+    setIsPopUpDataPresent(!!newTopicData.name || !!newTopicData.type || !!newTopicData.description);
   }, [newTopicData]);
 
   // udpate sequence number with recoil state is updated
   useEffect(() => {
-    setNewTopicData({
-      ...newTopicData,
-      sequence: topicData.length + 1
-    });
+    setNewTopicData({ ...newTopicData, sequence: topicData.length + 1 });
   }, [topicData]);
 
   // set module id, chapter id on add topic on button click
   function constructTopicData(courseId, moduleId, sequence, chapterId = '') {
     setNewTopicData(getTopicObject({ courseId, moduleId, chapterId, sequence }));
-
-    togglePopUp('addTopic', true);
-  }
-
-  // update local state which will be later saved in database on submit
-  function handleTopicInput(e) {
-    setNewTopicData({
-      ...newTopicData,
-      [e.target.name]: e.target.value
-    });
+    setAddTopicPopUp(true);
   }
 
   // save in database
   async function addNewTopic() {
-    const { data } = await createCourseTopic({ variables: { ...newTopicData } });
+    let isError = false;
+    const { data } = await createCourseTopic({ variables: { ...newTopicData } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Topic Create Error' });
+    });
 
-    if (error) return alert('Topic Create Error');
+    if (error) return setToastMsg({ type: 'danger', message: 'Topic Create Error' });
 
     refetchDataAndUpdateRecoil('topic');
 
     setNewTopicData(getTopicObject({ courseId: fullCourse.id, sequence: topicData.length + 1 }));
-    alert('New Topic Created');
+    if (!isError) setToastMsg({ type: 'success', message: 'New Topic Created' });
 
-    togglePopUp('addTopic', false);
+    setAddTopicPopUp(false);
     activateEditTopic(data.addCourseTopic.id, data.addCourseTopic);
   }
 
   return {
     newTopicData,
+    setNewTopicData,
     constructTopicData,
     isAddTopicReady,
-    handleTopicInput,
     addNewTopic
   };
 }

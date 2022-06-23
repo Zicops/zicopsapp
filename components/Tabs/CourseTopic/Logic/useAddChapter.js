@@ -1,17 +1,23 @@
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ADD_COURSE_CHAPTER } from '../../../../API/Mutations';
 import { ChapterAtom, getChapterObject } from '../../../../state/atoms/module.atoms';
+import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 
-export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
+export default function useAddChapter(refetchDataAndUpdateRecoil) {
   const { fullCourse } = useContext(courseContext);
 
   const [createCourseChapter, { loading, error }] = useMutation(ADD_COURSE_CHAPTER);
 
   // recoil state
   const chapterData = useRecoilValue(ChapterAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+  const [addChapterPopUp, setAddChapterPopUp] = useRecoilState(PopUpStatesAtomFamily('addChapter'));
 
   // local states
   const [isAddChapterReady, setIsAddChapterReady] = useState(false);
@@ -22,6 +28,7 @@ export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
   // disable save button if data is not correct
   useEffect(() => {
     setIsAddChapterReady(!!newChapterData.name && !!newChapterData.description);
+    setIsPopUpDataPresent(!!newChapterData.name || !!newChapterData.description);
   }, [newChapterData]);
 
   // udpate sequence number with recoil state is updated
@@ -36,39 +43,35 @@ export default function useAddChapter(togglePopUp, refetchDataAndUpdateRecoil) {
   function constructChapterData(courseId, moduleId, sequence) {
     setNewChapterData(getChapterObject({ courseId, moduleId, sequence }));
 
-    togglePopUp('addChapter', true);
-  }
-
-  // update local state which will be later saved in database on submit
-
-  function handleChapterInput(e) {
-    setNewChapterData({
-      ...newChapterData,
-      [e.target.name]: e.target.value
-    });
+    setAddChapterPopUp(true);
   }
 
   // save course in database
   async function addNewChapter() {
-    console.log(newChapterData);
-    await createCourseChapter({ variables: { ...newChapterData } });
+    let isError = false;
+    await createCourseChapter({ variables: { ...newChapterData } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Chapter Create Error' });
+    });
 
-    if (error) return alert('Chapter Create Error');
+    if (error) return setToastMsg({ type: 'danger', message: 'Chapter Create Error' });
 
     refetchDataAndUpdateRecoil('chapter');
 
     setNewChapterData(
       getChapterObject({ courseId: fullCourse.id, sequence: chapterData.length + 1 })
     );
-    togglePopUp('addChapter', false);
-    alert('New Chapter Created');
+    if (!isError) setToastMsg({ type: 'success', message: 'New Chapter Created' });
+
+    setAddChapterPopUp(false);
   }
 
   return {
     newChapterData,
+    setNewChapterData,
     isAddChapterReady,
     constructChapterData,
-    handleChapterInput,
     addNewChapter
   };
 }

@@ -1,14 +1,9 @@
-import CourseDetails from '../CourseDetails';
+import { atom } from 'recoil';
+import CourseConfiguration from '../CourseConfiguration';
 import CourseAbout from '../CourseAbout';
-import CourseConfiguration from '../../CourseConfiguration';
+import CourseDetails from '../CourseDetails';
 import CourseMaster from '../CourseMaster';
 import CourseTopic from '../CourseTopic';
-import { atom } from 'recoil';
-
-export const isCourseUploadingAtom = atom({
-  key: 'isCourseUploading',
-  default: null
-});
 
 export const tabData = [
   {
@@ -32,6 +27,16 @@ export const tabData = [
     component: <CourseConfiguration />
   }
 ];
+
+export const isCourseUploadingAtom = atom({
+  key: 'isCourseUploading',
+  default: null
+});
+
+export const CourseTabAtom = atom({
+  key: 'CourseTab',
+  default: tabData[0]?.name
+});
 
 export function getDateTimeFromUnix(unixTimestamp) {
   if (!unixTimestamp) return '';

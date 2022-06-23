@@ -5,20 +5,51 @@ import 'react-multi-carousel/lib/styles.css';
 import CardSliderHeader from '../small/CardSliderHeader';
 import { CustomLeftArrow, CustomRightArrow } from '../small/SliderArrows';
 import SmallCard from './SmallCard';
+import SquareCard from './SquareCard';
+import CircleCard from './CircleCard';
+import styles from './zicopsCarousel.module.scss';
 
-const CardSlider = ({ deviceType, title, type, data }) => {
+const CardSlider = ({ deviceType, title, type = 'small', data }) => {
   const carouselRef = useRef(0);
+  // type=sqaure cardShape changes /circle/ . Have to override hover from global scss
+  let variableClass = 'card_ietms';
+  let itemCount = {
+    desktop: 0,
+    laptop: 0,
+    shape: null,
+    shapeStyle: undefined
+  };
 
+  const { square, circle, card_ietms } = styles;
+  switch (type) {
+    case 'small':
+      itemCount.desktop = 6;
+      itemCount.laptop = 5;
+      itemCount.shapeStyle = card_ietms;
+      break;
+    case 'square':
+      itemCount.desktop = 4;
+      itemCount.laptop = 4;
+      itemCount.shape = square;
+      variableClass = 'sqaure';
+      break;
+    case 'circle':
+      itemCount.desktop = 3;
+      itemCount.laptop = 3;
+      itemCount.shape = circle;
+      variableClass = 'circle';
+      break;
+  }
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
-      items: 6,
-      slidesToSlide: 6
+      items: itemCount.desktop,
+      slidesToSlide: itemCount.desktop
     },
     laptop: {
       breakpoint: { max: 1530, min: 1024 },
-      items: 5,
-      slidesToSlide: 5
+      items: itemCount.laptop,
+      slidesToSlide: itemCount.laptop
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
@@ -77,7 +108,7 @@ const CardSlider = ({ deviceType, title, type, data }) => {
           deviceType={deviceType}
           sliderClass="carousel_track"
           containerClass="carousel_container"
-          itemClass={data.every((d) => !d) ? '' : `card_ietms`}
+          itemClass={data.every((d) => !d) ? '' : `${variableClass}`}
           // removeArrowOnDeviceType={["tablet", "mobile"]}
           customLeftArrow={<CustomLeftArrow />}
           customRightArrow={<CustomRightArrow />}>
@@ -92,18 +123,24 @@ const CardSlider = ({ deviceType, title, type, data }) => {
                   height={120}
                 />
               );
-
-            return (
-              <SmallCard
-                key={index}
-                styleClass={index === 0 ? 'card_ietms_start' : ''}
-                carouselRefData={carouselRef.current}
-                image={d.img}
-                courseData={d}
-              />
-            );
+            if (type === 'small')
+              return (
+                <SmallCard
+                  key={index}
+                  styleClass={index === 0 ? 'card_ietms_start' : ''}
+                  carouselRefData={carouselRef.current}
+                  image={d.img}
+                  courseData={d}
+                />
+              );
+            if (type === 'square') return <SquareCard image={d.img} />;
+            if (type === 'circle') return <CircleCard image={d.img} />;
           })}
-          {data.every((d) => d) ? <div className="last-text">See All</div> : <></>}
+          {data.every((d) => d) ? (
+            <div className={`${styles.last_text} ${itemCount.shape}`}>See All</div>
+          ) : (
+            <></>
+          )}
         </Carousel>
 
         {/* move to .scss */}

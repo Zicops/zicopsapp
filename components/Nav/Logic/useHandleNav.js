@@ -7,16 +7,16 @@ export function useHandleNav(isAdmin, setAdmin) {
   const searchInputRef = useRef(null);
 
   useEffect(() => {
-    const route = router.route;
+    const route = router.asPath;
     window.localStorage.setItem('isAdmin', route.includes('admin') ? 1 : 0);
 
     setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
   }, []);
 
   // whenever input is render it should be on focus
-  useEffect(() => {
-    searchInputRef.current?.focus();
-  }, [searchInputRef.current]);
+  // useEffect(() => {
+  //   searchInputRef.current?.focus();
+  // }, [searchInputRef.current]);
 
   function gotoAdmin() {
     setAdmin(1);

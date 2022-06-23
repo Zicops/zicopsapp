@@ -1,51 +1,27 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { ADD_COURSE } from '../../../API/Mutations';
-import { GET_COURSE, queryClient } from '../../../API/Queries';
-import { tabData } from './tabs.helper';
+import { useRecoilState } from 'recoil';
+import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
+import { CourseTabAtom, tabData } from './tabs.helper';
 
 export default function useHandleTabs(courseContextData) {
   const {
     fullCourse,
-    tab,
-    setTab,
     updateCourseMaster,
     courseVideo,
     setCourseVideo,
     courseImage,
     setCourseImage,
     courseTileImage,
-    setCourseTileImage,
-    isDataLoaded,
-    setIsDataLoaded
+    setCourseTileImage
   } = courseContextData;
 
-  const router = useRouter();
-  const { query: courseId } = router;
-  const editCourseId = courseId.courseId || null;
-  // const { data: courseData } = getQueryData(, { course_id: editCourseId });
-  const [loadCourseData, { error: errorCourseData, refetch: refetchCourse }] = useLazyQuery(
-    GET_COURSE,
-    { client: queryClient }
-  );
-  const [createCourse, { loading, error, data }] = useMutation(ADD_COURSE);
+  // recoil state
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [tab, setTab] = useRecoilState(CourseTabAtom);
+
   const [fileData, setFileData] = useState({});
   const [isPreviewPopUpOpen, setIsPreviewPopUpOpen] = useState(false);
   const [previewFileData, setPreviewFileData] = useState(null);
-
-  useEffect(() => {
-    if (!editCourseId) return;
-    loadCourseData({ variables: { course_id: editCourseId } }).then(({ data }) => {
-      if (errorCourseData) return alert('course load error');
-
-      if (data?.getCourse && !isDataLoaded) {
-        updateCourseMaster(data.getCourse);
-
-        setIsDataLoaded(true);
-      }
-    });
-  }, [editCourseId]);
 
   useEffect(() => {
     setCouseIdForFileContext();
@@ -213,7 +189,7 @@ export default function useHandleTabs(courseContextData) {
   function handleFileInput(e) {
     if (!fullCourse.id) {
       setTab(tabData[0].name);
-      alert('Add Course Master First');
+      setToastMsg({ type: 'danger', message: 'Add Course Master First' });
       return;
     }
 
@@ -269,7 +245,6 @@ export default function useHandleTabs(courseContextData) {
 
   return {
     fullCourse,
-    tabData,
     fileData,
     handleChange,
     updateCourseMaster,

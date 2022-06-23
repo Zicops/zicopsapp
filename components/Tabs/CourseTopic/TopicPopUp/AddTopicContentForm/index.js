@@ -1,6 +1,12 @@
-import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
-import { TopicContentAtom } from '../../../../../state/atoms/module.atoms';
+import { useContext, useEffect } from 'react';
+import { truncateToN } from '../../../../../helper/common.helper';
+import { courseContext } from '../../../../../state/contexts/CourseContext';
+import Button from '../../../../common/Button';
+import BrowseAndUpload from '../../../../common/FormComponents/BrowseAndUpload';
+import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
+import LabeledInput from '../../../../common/FormComponents/LabeledInput';
+import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
+import styles from '../../../courseTabs.module.scss';
 
 export default function AddTopicContentForm({
   inputHandlers,
@@ -10,176 +16,117 @@ export default function AddTopicContentForm({
   isAddTopicContentReady,
   topicContent
 }) {
-  const { newTopicContent, newTopicVideo, newTopicSubtitle } = data;
-  const { handleTopicContentInput, handleTopicSubtitleInput, handleTopicVideoInput } =
-    inputHandlers;
+  const { fullCourse } = useContext(courseContext);
+  const { newTopicContent, newTopicVideo } = data;
+  const { handleTopicContentInput, handleTopicVideoInput } = inputHandlers;
 
   // to set state based on if topic content is present or not
   useEffect(() => {
     if (topicContent?.length > 0) {
       setNewTopicContent({
         ...newTopicContent,
-        type: topicContent[0]?.type
+        type: topicContent[0]?.type,
+        is_default: false
       });
     } else {
       console.log(true);
-      // setNewTopicContent({
-      //   ...newTopicContent,
-      //   is_default: true
-      // });
+      setNewTopicContent({
+        ...newTopicContent,
+        is_default: true
+      });
     }
   }, []);
-  console.log(newTopicContent);
+
+  const languageOptions = [];
+  fullCourse?.language?.map((lang) => languageOptions.push({ value: lang, label: lang }));
+
+  const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
+  const typeOptions = [];
+  types?.map((type) => typeOptions.push({ value: type, label: type }));
 
   return (
-    <>
-      <div className="row my_30">
-        <div className="col_25"></div>
-        <div className="col_50">
-          <div className="checkbox_mark">
-            <label className="checkbox_container">
-              <input
-                type="checkbox"
-                name="is_default"
-                checked={newTopicContent?.is_default}
-                onChange={handleTopicContentInput}
-              />
-              <span className="checkmark"></span>is Default
-            </label>
-          </div>
-        </div>
-        <div className="col_25"></div>
+    <div className={`${styles.popUpFormContainer}`}>
+      {/* is default */}
+      <div className={`center-element-with-flex`}>
+        <LabeledRadioCheckbox
+          type="checkbox"
+          label="is Default"
+          name="is_default"
+          isChecked={newTopicContent?.is_default}
+          changeHandler={handleTopicContentInput}
+        />
       </div>
 
-      <div className="form_row">
-        <label htmlFor="language" className="col_25">
-          Select Language
-        </label>
-        <select
-          className="col_75"
-          name="language"
-          onChange={handleTopicContentInput}
-          value={newTopicContent.language || ''}>
-          <option hidden>Language of the content</option>
-          {['English', 'Hindi', 'Bengali', 'Marathi'].map((lang) => (
-            <option key={lang} value={lang}>
-              {lang}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* language */}
+      <LabeledDropdown
+        dropdownOptions={{
+          inputName: 'language',
+          label: 'Select Language:',
+          placeholder: 'Language of the content',
+          options: languageOptions,
+          value: { value: newTopicContent.language, label: newTopicContent.language }
+        }}
+        changeHandler={(e) => handleTopicContentInput(e, 'language')}
+      />
 
-      <div className="form_row">
-        <label htmlFor="name1" className="col_25">
-          Type of content
-        </label>
-        <select
-          className="col_75"
-          name="type"
-          disabled={topicContent?.length > 0}
-          onChange={handleTopicContentInput}
-          value={newTopicContent.type}>
-          <option hidden>Type of content</option>
-          {['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'].map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* type */}
+      <LabeledDropdown
+        dropdownOptions={{
+          inputName: 'type',
+          label: 'Type of content:',
+          placeholder: 'Type of the content',
+          options: typeOptions,
+          isDisabled: topicContent?.length > 0,
+          value: { value: newTopicContent.type, label: newTopicContent.type }
+        }}
+        changeHandler={(e) => handleTopicContentInput(e, 'type')}
+      />
 
       {newTopicContent.type === 'mp4' ? (
         <>
-          <div className="form_row">
-            <label htmlFor="name3" className="col_25">
-              Upload Content
-            </label>
-            <div className="col_75">
-              <div className="upload_btn_wrapper">
-                <button className="btn">
-                  <span className="input_icon">
-                    <span>
-                      <img src="/images/upload.png" alt="" />
-                    </span>
-                  </span>
-                  Browse & upload
-                </button>
-                <input
-                  type="file"
-                  name="upload_content"
-                  onChange={handleTopicVideoInput}
-                  accept={`.${newTopicContent.type}`}
-                />
-                <div id="upload_content">{newTopicVideo.file ? newTopicVideo.file.name : ''}</div>
-              </div>
+          {/* Upload Course Video */}
+          <div className={`center-element-with-flex ${styles.marginBottom}`}>
+            <label className={`w-25`}>Upload Content:</label>
+            <div className={`w-35`}>
+              <BrowseAndUpload
+                handleFileUpload={handleTopicVideoInput}
+                inputName="upload_content"
+                isActive={newTopicVideo.file}
+                acceptedTypes={['video/*'].join(', ')}
+                hidePreviewBtns={true}
+              />
+            </div>
+            <div className={`w-40 ${styles.fileName}`}>
+              {newTopicVideo.file ? truncateToN(newTopicVideo.file.name, 55) : ''}
             </div>
           </div>
 
-          <div className="form_row">
-            <label htmlFor="name1" className="col_25">
-              Duration
-            </label>
-            <input
-              className="col_50"
-              type="text"
-              name="duration"
-              disabled
-              onChange={handleTopicContentInput}
-              value={newTopicContent.duration}
-            />
-            <div className="col_25">seconds</div>
-          </div>
-
-          <div className="form_row">
-            <label htmlFor="name3" className="col_25">
-              Upload Subtitle
-            </label>
-            <div className="col_75">
-              <div className="upload_btn_wrapper">
-                <button className="btn">
-                  <span className="input_icon">
-                    <span>
-                      <img src="/images/upload.png" alt="" />
-                    </span>
-                  </span>
-                  Browse & upload
-                </button>
-                <input type="file" name="subtitle" onChange={handleTopicSubtitleInput} />
-                <div id="subtitle">{newTopicSubtitle.file ? newTopicSubtitle.file.name : ''}</div>
-              </div>
+          <div className={`${styles.flexContainerWithSpace}`}>
+            <div className="w-50">
+              <LabeledInput
+                isFiftyFifty={true}
+                inputOptions={{
+                  inputName: 'duration',
+                  label: 'Duration:',
+                  maxLength: 16,
+                  isDisabled: true,
+                  value: newTopicContent.duration || 0
+                }}
+              />
             </div>
+            <div className="w-45">seconds</div>
           </div>
         </>
       ) : null}
 
-      <div className="form_row">
-        <button
-          type="button"
-          value="add"
-          className={isAddTopicContentReady ? 'button_single' : 'btn_disable'}
-          onClick={addNewTopicContent}
-          disabled={!isAddTopicContentReady}>
-          Add
-        </button>
+      <div className="center-element-with-flex">
+        <Button
+          text="Add"
+          styleClass={styles.topicContentSmallBtn}
+          isDisabled={!isAddTopicContentReady}
+          clickHandler={addNewTopicContent}
+        />
       </div>
-
-      {/* move to .scss */}
-      <style jsx>
-        {`
-          .btn_disable {
-            padding: 10px 40px;
-            background-color: transparent;
-            color: #858f8f;
-            border: 1px solid #303131;
-            border-radius: 35px;
-            margin: auto;
-            margin: 10px;
-
-            cursor: no-drop;
-            opacity: 0.5;
-          }
-        `}
-      </style>
-    </>
+    </div>
   );
 }

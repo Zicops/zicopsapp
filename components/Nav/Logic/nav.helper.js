@@ -3,63 +3,21 @@ export function truncateTo16(str) {
 }
 
 export const AdminMenu = [
-  {
-    title: 'Users',
-    link: '/'
-  },
-  {
-    title: 'Course',
-    link: '/admin/course/my-courses'
-  },
-  {
-    title: 'Training',
-    link: '/'
-  },
-  {
-    title: 'Exams',
-    link: '/admin/exams/my-question-bank'
-  },
-  {
-    title: 'Vendor',
-    link: '/'
-  },
-  {
-    title: 'Lab',
-    link: '/'
-  },
-  {
-    title: 'Analytics',
-    link: '/'
-  },
-  {
-    title: 'Administration',
-    link: '/'
-  }
+  { title: 'Users', link: '/admin/user/my-users' },
+  { title: 'Course', link: '/admin/course/my-courses' },
+  { title: 'Training', link: '/' },
+  { title: 'Exams', link: '/admin/exams/my-question-bank' },
+  { title: 'Vendor', link: '/' },
+  { title: 'Lab', link: '/' },
+  { title: 'Analytics', link: '/' },
+  { title: 'Administration', link: '/' }
 ];
 
 export const UserMenu = [
-  {
-    title: 'Self',
-    link: '/self-landing'
-  },
-  {
-    title: 'Classroom',
-    link: '/'
-  },
-  {
-    title: 'Events',
-    link: '/'
-  },
-  {
-    title: 'Labs',
-    link: '/'
-  },
-  {
-    title: 'Exams',
-    link: '/exams'
-  },
-  {
-    title: 'Community',
-    link: '/courses'
-  }
+  { title: 'Self', link: '/self-landing' },
+  { title: 'Classroom', link: '/classroom' },
+  { title: 'Events', link: '/' },
+  { title: 'Labs', link: '/labs' },
+  { title: 'Exams', link: '/exams' },
+  { title: 'Community', link: '/courses' }
 ];

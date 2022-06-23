@@ -1,22 +1,28 @@
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { UPDATE_COURSE_MODULE } from '../../../../API/Mutations';
 import { getModuleObject, ModuleAtom } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 
-export default function useEditModule(togglePopUp, refetchDataAndUpdateRecoil) {
+export default function useEditModule(refetchDataAndUpdateRecoil) {
   const { fullCourse } = useContext(courseContext);
   const [updateCourseModule, { loading, error }] = useMutation(UPDATE_COURSE_MODULE);
 
+  // recoil state
   const moduleData = useRecoilValue(ModuleAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   const [editModule, setEditModule] = useState(getModuleObject({ courseId: fullCourse.id }));
   const [isEditModuleReady, setIsEditModuleReady] = useState(false);
 
   // disable submit button if data is incomplete
   useEffect(() => {
-    setIsEditModuleReady(!!editModule.name && !!editModule.level && !!editModule.description);
+    setIsEditModuleReady(!!editModule?.name && !!editModule?.level && !!editModule?.description);
+    setIsPopUpDataPresent(!!editModule?.name || !!editModule?.level || !!editModule?.description);
   }, [editModule]);
 
   // set local state to edit module data for form
@@ -26,42 +32,32 @@ export default function useEditModule(togglePopUp, refetchDataAndUpdateRecoil) {
     if (index < 0) return;
 
     setEditModule(moduleData[index]);
-    togglePopUp('editModule', true);
-  }
-
-  // update local state which will be saved in db and context on submit
-  function handleEditModuleInput(e) {
-    let value = e.target.value;
-    if (e.target.type === 'checkbox') {
-      value = e.target.checked;
-    }
-
-    setEditModule({
-      ...editModule,
-      [e.target.name]: value
-    });
   }
 
   // save to db and update context with refetch
   async function handleEditModuleSubmit() {
-    console.log(editModule);
+    let isError = false;
     // save in db
-    await updateCourseModule({ variables: { ...editModule } });
+    await updateCourseModule({ variables: { ...editModule } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Module Update Error' });
+    });
 
-    if (error) return alert('Module Update Error');
+    if (error) return setToastMsg({ type: 'danger', message: 'Module Update Error' });
 
     refetchDataAndUpdateRecoil('module');
 
     // reset local data and close module
-    setEditModule(getModuleObject({ courseId: fullCourse.id }));
-    togglePopUp('editModule', false);
+    setEditModule(null);
+    if (!isError) setToastMsg({ type: 'success', message: 'Module Updated' });
   }
 
   return {
     editModule,
+    setEditModule,
     activateEditModule,
     isEditModuleReady,
-    handleEditModuleInput,
     handleEditModuleSubmit
   };
 }

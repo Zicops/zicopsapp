@@ -1,7 +1,7 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ModuleAtom } from '../../../state/atoms/module.atoms';
+import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
 import IconButton from '../../common/IconButton';
-import NextButton from '../common/NextButton';
 import ChapterPopUp from './ChapterPopUp';
 import useAddChapter from './Logic/useAddChapter';
 import useAddModule from './Logic/useAddModule';
@@ -25,57 +25,74 @@ export default function CourseTopic() {
     isEditTopicPopUpOpen
   } = popUpValues;
 
+  // recoil state
+  const [addModulePopUp, setAddModulePopUp] = useRecoilState(PopUpStatesAtomFamily('addModule'));
+  const [editModulePopUp, setEditModulePopUp] = useRecoilState(PopUpStatesAtomFamily('editModule'));
+
+  const [addChapterPopUp, setAddChapterPopUp] = useRecoilState(PopUpStatesAtomFamily('addChapter'));
+  const [editChapterPopUp, setEditChapterPopUp] = useRecoilState(
+    PopUpStatesAtomFamily('editChapter')
+  );
+
+  const [addTopicPopUp, setAddTopicPopUp] = useRecoilState(PopUpStatesAtomFamily('addTopic'));
+  const [editTopicPopUp, setEditTopicPopUp] = useRecoilState(PopUpStatesAtomFamily('editTopic'));
+
   const moduleData = useRecoilValue(ModuleAtom);
 
   // add module
-  const { newModuleData, handleModuleInput, isAddModuleReady, addNewModule } = useAddModule(
-    togglePopUp,
+  const { newModuleData, setNewModuleData, isAddModuleReady, addNewModule } = useAddModule(
     refetchDataAndUpdateRecoil
   );
 
   // edit module
   const {
     editModule,
+    setEditModule,
     activateEditModule,
     isEditModuleReady,
-    handleEditModuleInput,
     handleEditModuleSubmit
-  } = useEditModule(togglePopUp, refetchDataAndUpdateRecoil);
+  } = useEditModule(refetchDataAndUpdateRecoil);
 
   // add chapter
   const {
     newChapterData,
+    setNewChapterData,
     constructChapterData,
     isAddChapterReady,
-    handleChapterInput,
     addNewChapter
-  } = useAddChapter(togglePopUp, refetchDataAndUpdateRecoil);
+  } = useAddChapter(refetchDataAndUpdateRecoil);
 
   // edit chapter
   const {
     editChapter,
+    setEditChapter,
     activateEditChapter,
     isEditChapterReady,
-    handleEditChapterInput,
     handleEditChapterSubmit
-  } = useEditChapter(togglePopUp, refetchDataAndUpdateRecoil);
+  } = useEditChapter(refetchDataAndUpdateRecoil);
 
   // edit topic
   const {
     editTopic,
+    setEditTopic,
     activateEditTopic,
     topicContentData,
     handleEditTopicSubmit,
     toggleEditTopicForm,
     isEditTopicFormVisible,
     isEditTopicReady,
-    handleEditTopicInput,
     updateTopicAndContext
-  } = useEditTopic(togglePopUp, refetchDataAndUpdateRecoil);
+  } = useEditTopic(refetchDataAndUpdateRecoil);
 
   // add topic
-  const { newTopicData, constructTopicData, isAddTopicReady, handleTopicInput, addNewTopic } =
-    useAddTopic(togglePopUp, refetchDataAndUpdateRecoil, activateEditTopic);
+  const {
+    newTopicData,
+    setNewTopicData,
+    constructTopicData,
+    isAddTopicReady,
+    handleTopicInput,
+    addNewTopic
+  } = useAddTopic(refetchDataAndUpdateRecoil, activateEditTopic);
 
   return (
     <>
@@ -95,38 +112,32 @@ export default function CourseTopic() {
           />
         ))}
 
-      <div>
-        {/* add module pop up */}
-        <div className="row modbtn">
-          <IconButton
-            text="Add Module"
-            styleClass="btnBlack"
-            handleClick={() => togglePopUp('addModule', true)}
-          />
-        </div>
+      {/* add module pop up */}
+      <div className="center-element-with-flex">
+        <IconButton
+          text="Add Module"
+          styleClass="btnBlack"
+          handleClick={() => setAddModulePopUp(true)}
+        />
       </div>
 
-      {/* <div style={{marginRight: '5%'}}>
-              <NextButton tabIndex={4}/>
-            </div> */}
-
       {/* add module pop up */}
-      {isAddModulePopUpOpen && (
+      {addModulePopUp && (
         <ModulePopUp
-          closeModal={() => togglePopUp('addModule', false)}
-          moduleData={newModuleData}
-          handleInput={handleModuleInput}
+          popUpState={[addModulePopUp, setAddModulePopUp]}
+          moduleData={newModuleData || {}}
+          setModuleData={setNewModuleData}
           handleSubmit={addNewModule}
           isAddModuleReady={isAddModuleReady}
         />
       )}
 
       {/* edit module pop up */}
-      {isEditModulePopUpOpen && (
+      {editModule?.id && (
         <ModulePopUp
-          closeModal={() => togglePopUp('editModule', false)}
-          moduleData={editModule}
-          handleInput={handleEditModuleInput}
+          popUpState={[!!editModule?.id, setEditModule]}
+          moduleData={editModule || {}}
+          setModuleData={setEditModule}
           handleSubmit={handleEditModuleSubmit}
           isAddModuleReady={isEditModuleReady}
           isEdit={true}
@@ -134,64 +145,59 @@ export default function CourseTopic() {
       )}
 
       {/* add chapter pop up */}
-      {isAddChapterPopUpOpen && (
+      {addChapterPopUp && (
         <ChapterPopUp
-          closeModal={() => togglePopUp('addChapter', false)}
-          chapterData={newChapterData}
-          handleInput={handleChapterInput}
+          popUpState={[addChapterPopUp, setAddChapterPopUp]}
+          setChapterData={setNewChapterData}
+          chapterData={newChapterData || {}}
           handleSubmit={addNewChapter}
           isChapterAddReady={isAddChapterReady}
         />
       )}
 
       {/* edit chapter pop up */}
-      {isEditChapterPopUpOpen && (
+      {editChapter?.id && (
         <ChapterPopUp
-          closeModal={() => togglePopUp('editChapter', false)}
-          chapterData={editChapter}
-          handleInput={handleEditChapterInput}
+          popUpState={[!!editChapter?.id, setEditChapter]}
+          chapterData={editChapter || {}}
+          setChapterData={setEditChapter}
           handleSubmit={handleEditChapterSubmit}
           isChapterAddReady={isEditChapterReady}
+          isEdit={true}
         />
       )}
 
       {/* add topic pop up */}
-      {isAddTopicPopUpOpen && (
+      {addTopicPopUp && (
         <TopicPopUp
-          closeModal={() => togglePopUp('addTopic', false)}
-          addTopicData={{ newTopicData, handleTopicInput, addNewTopic, isAddTopicReady }}
+          popUpState={[addTopicPopUp, setAddTopicPopUp]}
+          addTopicData={{
+            newTopicData,
+            setNewTopicData,
+            handleTopicInput,
+            addNewTopic,
+            isAddTopicReady
+          }}
         />
       )}
 
       {/* edit topic pop up */}
-      {isEditTopicPopUpOpen && (
+      {editTopic?.id && (
         <TopicPopUp
-          closeModal={() => togglePopUp('editTopic', false)}
+          popUpState={[editTopic?.id, setEditTopic]}
           editTopicData={{
             editTopic,
+            setEditTopic,
             ...topicContentData,
             handleEditTopicSubmit,
             toggleEditTopicForm,
             isEditTopicFormVisible,
             isEditTopicReady,
-            handleEditTopicInput,
             updateTopicAndContext
           }}
           isEdit={true}
         />
       )}
-
-      {/* move styles to .scss */}
-      <style jsx>
-        {`
-          .modbtn {
-            padding: 30px;
-          }
-          .buttongap {
-            margin: 10px 0;
-          }
-        `}
-      </style>
     </>
   );
 }

@@ -1,17 +1,21 @@
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { UPDATE_COURSE_CHAPTER } from '../../../../API/Mutations';
 import { ChapterAtom, getChapterObject } from '../../../../state/atoms/module.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 
-export default function useEditChapter(togglePopUp, refetchDataAndUpdateRecoil) {
+export default function useEditChapter(refetchDataAndUpdateRecoil) {
   const { fullCourse } = useContext(courseContext);
 
   const [updateCourseChapter, { loading, error }] = useMutation(UPDATE_COURSE_CHAPTER);
 
   // recoil state
   const chapterData = useRecoilValue(ChapterAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   // local state
   const [editChapter, setEditChapter] = useState(getChapterObject({ courseId: fullCourse.id }));
@@ -19,7 +23,8 @@ export default function useEditChapter(togglePopUp, refetchDataAndUpdateRecoil) 
 
   // disable submit button if data is incomplete
   useEffect(() => {
-    setIsEditChapterReady(!!editChapter.name && !!editChapter.description);
+    setIsEditChapterReady(!!editChapter?.name && !!editChapter?.description);
+    setIsPopUpDataPresent(!!editChapter?.name || !!editChapter?.description);
   }, [editChapter]);
 
   // set local state to edit chapter data for form
@@ -29,37 +34,32 @@ export default function useEditChapter(togglePopUp, refetchDataAndUpdateRecoil) 
     if (index < 0) return;
 
     setEditChapter(chapterData[index]);
-    togglePopUp('editChapter', true);
-  }
-
-  // update local state which will be saved in db and context on submit
-  function handleEditChapterInput(e) {
-    setEditChapter({
-      ...editChapter,
-      [e.target.name]: e.target.value
-    });
   }
 
   // save to db and update context with refetch
   async function handleEditChapterSubmit() {
-    console.log(editChapter);
+    let isError = false;
     // save in db
-    await updateCourseChapter({ variables: { ...editChapter } });
+    await updateCourseChapter({ variables: { ...editChapter } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Chapter Update Error' });
+    });
 
-    if (error) return alert('Chapter Update Error');
+    if (error) return setToastMsg({ type: 'success', message: 'Chapter Update Error' });
 
     refetchDataAndUpdateRecoil('chapter');
 
     // reset local data and close module
-    setEditChapter(getChapterObject({ courseId: fullCourse.id }));
-    togglePopUp('editChapter', false);
+    setEditChapter(null);
+    if (!isError) setToastMsg({ type: 'success', message: 'Chapter Updated' });
   }
 
   return {
     editChapter,
+    setEditChapter,
     activateEditChapter,
     isEditChapterReady,
-    handleEditChapterInput,
     handleEditChapterSubmit
   };
 }

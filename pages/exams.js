@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
 import { bigImages, sliderImages } from '../API/DemoSliderData';
 import CommonCalendar from '../components/common/CommonCalendar';
 import SimpleTable from '../components/common/SimpleTable';
@@ -8,6 +9,7 @@ import BigCardSlider from '../components/medium/BigCardSlider';
 import ZicopsCarousel from '../components/ZicopsCarousel';
 
 export default function LearnerExams() {
+  const router = useRouter();
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -62,7 +64,11 @@ export default function LearnerExams() {
       handleClick: () => setShowTable(!showTable),
       isActive: showTable
     },
-    { name: 'Open Available Exams', isActive: false },
+    {
+      name: 'Open Available Exams',
+      handleClick: () => router.push('/exam'),
+      isActive: false
+    },
     { name: 'Completed Exams', isActive: false }
   ];
 
@@ -75,7 +81,7 @@ export default function LearnerExams() {
     },
     {
       field: 'endDate',
-      headerClassName: 'course-list-header',
+      headerName: 'End Date',
       headerClassName: 'course-list-header',
       flex: 1
     },
@@ -103,117 +109,150 @@ export default function LearnerExams() {
     },
     {
       id: 2,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'Leom Ipsum Dolor1',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '22%',
       sortable: false
     },
     {
       id: 3,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'Leom Ipsum r3',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '43%',
       sortable: false
     },
     {
       id: 4,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'Leom 32r Dolor',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '34%',
       sortable: false
     },
-    {
-      id: 4,
-      courseName: 'Leom Ipsum Dolor',
-      endDate: '21-3-2022',
-      subCategory: 'Java',
-      completion: '21%',
-      sortable: false
-    },
+
     {
       id: 5,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'Leom Ipsum fd3w4',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '34%',
       sortable: false
     },
     {
       id: 6,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'Leom Ipsum 12e13fw',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '3%',
       sortable: false
     },
     {
       id: 7,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'Lecaeom Ipsum Dolor',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '2%',
       sortable: false,
       cellClassName: 'super-app'
     },
     {
       id: 8,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'dwefae Ipsum Dolor',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '121%',
       sortable: false,
       cellClassName: 'super-app'
     },
     {
       id: 9,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'xaweca Ipsum Dolor',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '221%',
       sortable: false,
       cellClassName: 'super-app'
     },
     {
       id: 10,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: ' bdgf Ipsum Dolor',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '98%',
       sortable: false,
       cellClassName: 'super-app'
     },
     {
       id: 11,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'myum Ipsum Dolor',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '217%',
       sortable: false,
       cellClassName: 'super-app'
     },
     {
       id: 12,
-      courseName: 'Leom Ipsum Dolor',
+      courseName: 'LAst Ipsum Dolor',
       endDate: '21-3-2022',
       subCategory: 'Java',
-      completion: '21%',
+      completion: '100%',
       sortable: false,
       cellClassName: 'super-app'
+    },
+    {
+      id: 13,
+      courseName: 'Leom hbed Dolor',
+      endDate: '21-3-2022',
+      subCategory: 'Java',
+      completion: '2761%',
+      sortable: false
     }
   ];
 
+  const simpleTableRef = useRef(null);
+  useEffect(() => {
+    // let isSnapped = false;
+    // const observer = new IntersectionObserver((entries) => {
+    //   if (entries[0].isIntersecting && !isSnapped) {
+    //     simpleTableRef.current?.scrollIntoView(false);
+    //     isSnapped = true;
+    //   } else {
+    //     isSnapped = false;
+    //   }
+    // });
+    // observer.observe(simpleTableRef.current);
+    // document.addEventListener('scroll', function (e) {
+    //   // lastKnownScrollPosition = window.scrollY;
+    //   simpleTableRef.current?.scrollIntoView({
+    //     behavior: 'auto',
+    //     block: 'end',
+    //     inline: 'center'
+    //   });
+    //   console.log('ref', simpleTableRef);
+    // });
+  }, []);
+
   return (
     <div
+      className="scrollsnap"
       style={{
         backgroundColor: 'var(--tile-bg)',
         overflow: 'hidden',
         margin: 0,
         padding: 0
       }}>
-      <div style={{ display: 'flex', marginTop: '70px', padding: '60px 0 70px', backgroundColor: 'var(--black)', height: '75vh', overflow: 'hidden' }}>
+      <div
+        style={{
+          display: 'flex',
+          marginTop: '70px',
+          padding: '60px 0 70px',
+          backgroundColor: 'var(--black)',
+          height: '75vh',
+          overflow: 'hidden'
+        }}>
         <div
           className={`${showTable ? 'w-20' : 'w-65'} border_right`}
           style={{ margin: 'auto', padding: '60px 0px' }}>
@@ -224,9 +263,7 @@ export default function LearnerExams() {
         </div>
 
         {showTable && (
-          <div
-            className="w-45 border_right"
-            style={{ background: 'var(--black)', margin: 'auto'}}>
+          <div className="w-45 border_right" style={{ background: 'var(--black)', margin: 'auto' }}>
             <SimpleTable
               tableData={tableData}
               lastCellObj={buttonObj}
@@ -258,13 +295,13 @@ export default function LearnerExams() {
       <BigCardSlider title="X-Athons" data={bigImages} slide={realSquare} />
 
       <div>
-        <div className="w-100 border_right resultContainer">
+        <div className="resultContainer" ref={simpleTableRef}>
           <ZicopsSimpleTable
             columns={columns}
             data={data}
-            pageSize={6}
-            rowsPerPageOptions={6}
-            tableHeight="72vh"
+            pageSize={5}
+            rowsPerPageOptions={4}
+            tableHeight="58vh"
             tableHeading="Your Results"
             headingStyle={{
               color: 'var(--white)',
@@ -281,8 +318,17 @@ export default function LearnerExams() {
       {/* <QuestionSection /> */}
       <style jsx>{`
         .resultContainer {
-          background: var(--background_content);
-          border: 4px solid var(--white);
+          background: var(--black);
+          border: 4px solid var(--primary);
+          height: calc(100vh - 70px);
+          box-shadow: inset 0 0 30px 0 #6bcfcf80;
+          padding: 50px;
+          scroll-snap-align: start;
+        }
+        .scrollsnap {
+          scroll-snap-type: y mandatory;
+          scroll-snap-type: mandatory;
+          scroll-snap-points-y: repeat(300px);
         }
       `}</style>
     </div>

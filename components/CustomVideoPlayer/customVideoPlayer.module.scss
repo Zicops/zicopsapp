@@ -1,5 +1,5 @@
 @import '../../styles/base.scss';
-
+@import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Open+Sans:wght@400;500;600;700&display=swap');
 .videoContainer {
   position: relative;
   // padding-bottom: 56.25%;
@@ -42,11 +42,7 @@
       rgba(0, 0, 0, 0.7) 75%,
       rgba(0, 0, 0, 0) 100%
     );
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.7) 0%,
-      rgba(0, 0, 0, 0) 80%
-    );
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 80%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
 
     .topIconsContainer {
@@ -119,66 +115,50 @@
       // box-shadow: 0 0 50px 0 $white;
 
       color: $white;
+      width: 240px;
       height: 140px;
       padding: 3px;
 
       overflow: hidden;
-      div {
-          opacity: 1;
-          overflow-y: auto;
-          overflow-x: hidden;
-      
-          &:first-child {
-            padding-right: 5px;
-            border-right: 1px solid $primary;
-          }
-      
-          &::-webkit-scrollbar {
-            width: 5px;
-          }
-      
-          h4 {
-            text-align: center;
-          }
-      
-          button {
-            background-color: transparent;
-            margin: 3px;
-            padding: 5px 10px;
-            width: 100px;
-            border: 1px solid $primary;
-            color: $primary;
-            cursor: pointer;
-      
-            &:hover {
-              background-color: $primary;
-              color: $bgContent;
-            }
-          }
-      
-          .languageBtnActive {
-            background-color: $white;
+	div {
+        flex: 1;
+        opacity: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        &:first-child {
+          padding-right: 5px;
+          border-right: 1px solid $primary;
+        }
+
+        &::-webkit-scrollbar {
+          width: 5px;
+        }
+
+        h4 {
+          text-align: center;
+        }
+
+        button {
+          background-color: transparent;
+          margin: 3px;
+          padding: 5px 10px;
+          width: 100px;
+          border: 1px solid $primary;
+          color: $primary;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $primary;
             color: $bgContent;
           }
         }
-      // button {
-      //   background-color: transparent;
-      //   margin: 3px;
-      //   padding: 5px 10px;
-      //   width: 100px;
-      //   border: 1px solid $white;
-      //   color: $white;
-      //   cursor: pointer;
-      //   &:hover {
-      //     background-color: $white;
-      //     color: $bgContent;
-      //   }
-      // }
-    
-      // .languageBtnActive {
-      //   background-color: $primary;
-      //   color: $bgContent;
-      // }
+
+        .languageBtnActive {
+          background-color: $white;
+          color: $bgContent;
+        }
+      }
     }
     .bookmarksInput {
       position: absolute;
@@ -195,7 +175,7 @@
         border-radius: 0;
         border-color: $bgHeader;
         opacity: 1;
-        
+
         &:focus {
           border-radius: 0;
           outline: 0;
@@ -249,7 +229,7 @@
     &::cue {
       color: $white;
       background-color: #00000080;
-      font: 22px "Open Sans";
+      font: 36px 'Open Sans';
     }
   }
 
@@ -259,22 +239,53 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: $darkThree;
+    background-color: $darkOne;
     z-index: 15;
 
-    display: flex;
+    // display: flex;
     // flex-direction: column;
     // justify-content: space-between;
-    align-items: center;
+    // align-items: center;
 
     .footerBtns {
       width: 90%;
       text-align: end;
       margin: 50px auto;
+      button {
+        padding: 10px 20px;
+        background-color: transparent;
+        color: $white;
+        border-radius: 50px;
+        min-width: 155px;
+        margin: 5px;
+        font-family: 'Open Sans';
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0 0 10px 0 $secondaryBlack;
+          color: $white;
+          background-color: $black;
+        }
+      }
     }
   }
 }
 
+.subtitles {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: $white;
+  background-color: #00000080;
+  transition: all 0.3s;
+  // transition-delay: 0.2s;
+  font-size: 24px;
+  &.increaseDistanceFromBottom {
+    bottom: 120px;
+  }
+}
 .controls {
   display: flex;
   align-items: center;
@@ -307,7 +318,7 @@
   transition: all 0.3s ease-in-out;
 }
 
-.videoBookmark{
+.videoBookmark {
   height: 30px;
   width: 30px;
   background: url('/images/svg/bookmark-line.svg') no-repeat center;
@@ -321,7 +332,7 @@
     opacity: 1;
   }
 }
-.videoQuiz{
+.videoQuiz {
   height: 30px;
   width: 30px;
   background: url('/images/svg/quiz.svg') no-repeat center;
@@ -335,7 +346,6 @@
     opacity: 1;
   }
 }
-
 
 .centerFlashIcon {
   background-color: #00000050;
@@ -357,7 +367,7 @@
   //   opacity: 0;
   // }
 }
-.centerFlashIconImg{
+.centerFlashIconImg {
   opacity: 0.8;
 }
 .fallbackForVideo {
@@ -369,18 +379,17 @@
   font-size: larger;
 }
 
-.bingeClasses{
+.bingeClasses {
   position: absolute;
   bottom: 140px;
   right: 2%;
-  > div{
+  > div {
     margin-bottom: 15px;
   }
 }
 .watchCreditsBtn,
-.nextPlayBtn, 
-.skipIntroBtn{
-  
+.nextPlayBtn,
+.skipIntroBtn {
   border-radius: 0;
   padding: 10px;
   width: 200px;
@@ -388,14 +397,14 @@
   text-align: center;
   cursor: pointer;
 }
-.watchCreditsBtn{
+.watchCreditsBtn {
   border: 4px solid var(--dark_three);
   background-color: transparent;
   background-position: left top;
   background-size: 200% 100%;
   color: $darkThree;
 }
-.watchCreditsBtn:hover{
+.watchCreditsBtn:hover {
   border: 4px solid var(--primary);
 }
 .nextPlayBtn {
@@ -461,3 +470,21 @@
 //     mix-blend-mode: difference;
 //   }
 // }
+
+// draggable div
+
+.draggableDiv {
+  height: 150px;
+  width: 150px;
+  padding: 5px;
+  background-color: $primary;
+  font-family: 'Grape Nuts';
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  z-index: 15;
+  cursor: move;
+  &:hover {
+    background-color: $primary;
+  }
+}

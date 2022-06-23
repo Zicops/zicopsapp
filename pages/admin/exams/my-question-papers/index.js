@@ -1,11 +1,11 @@
+import QuestionPaperTable from '../../../../components/AdminExamComps/QuestionPapers/QuestionPaperTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
 import Sidebar from '../../../../components/common/Sidebar';
 import { examSidebarData } from '../../../../components/common/Sidebar/Logic/sidebar.helper';
-import ZicopsQuestionsTable from '../../../../components/examComps/ExamTables/ZicopsQuestions';
 
-const MyQuestionPapers = () => {
+export default function MyQuestionPapers() {
   return (
     <>
       <Sidebar sidebarItemsArr={examSidebarData} />
@@ -13,14 +13,13 @@ const MyQuestionPapers = () => {
         <AdminHeader
           title="My Question Papers"
           isAddShown={true}
-          pageRoute="/admin/exams/question-paper"
+          pageRoute="/admin/exams/my-question-papers/add"
         />
+
         <MainBodyBox>
-          <ZicopsQuestionsTable />
+          <QuestionPaperTable isEdit={true} />
         </MainBodyBox>
       </MainBody>
     </>
   );
-};
-
-export default MyQuestionPapers;
+}
