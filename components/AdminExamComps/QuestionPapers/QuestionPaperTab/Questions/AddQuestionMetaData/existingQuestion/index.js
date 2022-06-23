@@ -93,7 +93,7 @@ export default function ExistingQuestion({
             option.label = `${option.name} [${option?.noOfQuestions || 0}]`;
             const isSelected = option?.value === metaData?.qbId;
 
-            if (isSelected) option.label = `${option.name} [${totalQuestions}]`;
+            if (isSelected) option.label = `${option.name} [${totalQuestions || 0}]`;
             return isSelected;
           })[0],
           isSearchEnable: true
@@ -143,31 +143,32 @@ export default function ExistingQuestion({
                 ?.noOfQuestions || totalQuestions;
 
             let questionsCount = +e.target.value;
+            let errorMsg = null;
             // no bank selected
             if (questionAvailable == null) {
               questionsCount = 0;
-              setToastMsg({ type: 'danger', message: 'Select Question Bank First' });
+              errorMsg = 'Select Question Bank First';
             }
 
             // no difficulty level selected
+            console.log(!metaData?.difficulty_level);
             if (!metaData?.difficulty_level) {
               questionsCount = 0;
-              setToastMsg({ type: 'danger', message: 'Select Difficulty First' });
+              if (!errorMsg) errorMsg = 'Select Difficulty First';
             }
 
             if (questionAvailable === 0) {
               questionsCount = 0;
-              setToastMsg({ type: 'danger', message: 'Bank does not have questions' });
+              if (!errorMsg) errorMsg = 'Bank does not have questions';
             }
 
             if (questionsCount > questionAvailable) {
-              setToastMsg({
-                type: 'danger',
-                message: `Bank has only ${questionAvailable} question with ${metaData?.difficulty_level} level`
-              });
               questionsCount = questionAvailable;
+              if (!errorMsg)
+                errorMsg = `Bank has only ${questionAvailable} question with ${metaData?.difficulty_level} level`;
             }
 
+            if (errorMsg) setToastMsg({ type: 'danger', message: errorMsg });
             return setMetaData({ ...metaData, total_questions: questionsCount });
           }}
           isFiftyFifty={true}

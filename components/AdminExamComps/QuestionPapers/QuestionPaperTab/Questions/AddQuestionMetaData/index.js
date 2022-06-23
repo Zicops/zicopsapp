@@ -120,6 +120,8 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
 
     setQbFilteredQuestions(
       qbQuestions.filter((q) => {
+        if (!metaData?.difficulty_level) return true;
+
         return DIFFICULTY[metaData?.difficulty_level]?.includes(q.Difficulty);
       })
     );
