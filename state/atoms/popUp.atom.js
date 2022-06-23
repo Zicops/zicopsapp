@@ -3,12 +3,21 @@ import { atomFamily, selectorFamily } from 'recoil';
 
 // all popUp states
 const popUpStates = {
+  // exams
   addQuestionBank: false,
   editQuestionBank: false,
   editQuestions: false,
   viewQuestions: false,
   addCustomSection: false,
-  addQuestionMetaData: false
+  addQuestionMetaData: false,
+
+  // course
+  addModule: false,
+  editModule: false,
+  addChapter: false,
+  editChapter: false,
+  addTopic: false,
+  editTopic: false
 };
 
 export const PopUpStatesAtomFamily = atomFamily({

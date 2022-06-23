@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../../helper/data.helper';
 import {
   TopicContentAtom,
@@ -9,12 +9,15 @@ import {
 import BlackRow from '../../../common/BlackRow';
 import Button from '../../../common/Button';
 import PopUp from '../../../common/PopUp';
-import styles from '../../courseTabs.module.scss';
-import Quiz from '../../../medium/Quiz';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 import Accordion from '../../../small/Accordion';
+import styles from '../../courseTabs.module.scss';
+import useAddAssessment from '../Logic/useAddAssessment';
 import AddTopicContentForm from './AddTopicContentForm';
 import AddTopicForm from './AddTopicForm';
+import AssessmentForm from './AssessmentForm';
 import BingeForm from './BingeForm';
+import QuizForm from './QuizForm';
 import ResourcesForm from './ResourcesForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentView from './TopicContentView';
@@ -22,7 +25,7 @@ import TopicContentView from './TopicContentView';
 export default function TopicPopUp({
   addTopicData = {},
   editTopicData = {},
-  closeModal,
+  popUpState = [],
   isEdit = false
 }) {
   const { newTopicData, setNewTopicData, addNewTopic, isAddTopicReady } = addTopicData;
@@ -49,7 +52,10 @@ export default function TopicPopUp({
     handleClick: addNewTopic,
     disabled: !isAddTopicReady
   };
-  const closeBtnObj = { name: 'Cancel', handleClick: closeModal };
+  const closeBtnObj = {
+    name: 'Cancel'
+    // handleClick: closeModal
+  };
 
   let topicVideo,
     filteredTopicContent = null;
@@ -58,19 +64,14 @@ export default function TopicPopUp({
 
   const topicContent = useRecoilValue(TopicContentAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+
+  const assessmentData = useAddAssessment(editTopic?.id, setEditTopic);
 
   if (isEdit) {
+    if (!isPopUpDataPresent) setIsPopUpDataPresent(true);
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
     closeBtnObj.name = 'Design Later';
-    closeBtnObj.handleClick = () => {
-      const shouldCloseModal = confirm(
-        'Are you sure? Your unsaved data will be lost!'
-      ).valueOf();
-
-      if (shouldCloseModal) {
-        closeModal();
-      }
-    };
     closeBtnObj.disabled = !!uploadStatus;
 
     submitBtnObj.name = 'Design';
@@ -81,11 +82,17 @@ export default function TopicPopUp({
     topicVideo = useRecoilValue(TopicVideoAtom)[0] || addTopicContentLocalStates.newTopicVideo;
   }
 
+  if (editTopic?.type === 'Assessment') {
+    submitBtnObj.handleClick = assessmentData.saveAssessment;
+    submitBtnObj.disabled = !assessmentData.assessmentData?.examId;
+  }
+
   return (
     <>
       <PopUp
         title={`Topic ${newTopicData?.sequence || editTopic?.sequence}`}
         submitBtn={submitBtnObj}
+        popUpState={popUpState}
         closeBtn={closeBtnObj}>
         {/* add topic form popup */}
         {!isEdit && <AddTopicForm setTopicData={setNewTopicData} topicData={newTopicData} />}
@@ -107,7 +114,6 @@ export default function TopicPopUp({
               }}
             />
 
-            {/* add topic content form section */}
             <div className={`${styles.topicContentContainer}`}>
               {/* edit topic form */}
               <div ref={editTopicFormRef}>
@@ -127,57 +133,81 @@ export default function TopicPopUp({
                 )}
               </div>
 
-              {/* topic content title */}
-              <div className={`${styles.titleWithLineAtSide}`}>Content</div>
+              {editTopic?.type === 'Assessment' && <AssessmentForm data={assessmentData} />}
 
-              <div ref={addTopicContentRef}>
-                {isTopicContentFormVisible && (
-                  <AddTopicContentForm
+              {editTopic?.type === 'Lab' && <div style={{ textAlign: 'center' }}>This is Labs</div>}
+
+              {/* add topic content form section */}
+              {editTopic?.type === 'Content' && (
+                <>
+                  {/* topic content title */}
+                  <div className={`${styles.titleWithLineAtSide}`}>Content</div>
+
+                  <div ref={addTopicContentRef}>
+                    {isTopicContentFormVisible && (
+                      <AddTopicContentForm
+                        topicContent={filteredTopicContent}
+                        setNewTopicContent={setNewTopicContent}
+                        data={addTopicContentLocalStates}
+                        inputHandlers={inputHandlers}
+                        addNewTopicContent={addNewTopicContent}
+                        isAddTopicContentReady={isAddTopicContentReady}
+                      />
+                    )}
+                  </div>
+
+                  {/* all the topic content added and saved */}
+                  <TopicContentView
                     topicContent={filteredTopicContent}
-                    setNewTopicContent={setNewTopicContent}
-                    data={addTopicContentLocalStates}
-                    inputHandlers={inputHandlers}
-                    addNewTopicContent={addNewTopicContent}
-                    isAddTopicContentReady={isAddTopicContentReady}
+                    toggleTopicContentForm={() => {
+                      if (!isTopicContentFormVisible)
+                        addTopicContentRef.current?.scrollIntoView({
+                          behavior: 'smooth',
+                          block: 'center',
+                          inline: 'center'
+                        });
+                      toggleTopicContentForm();
+                    }}
                   />
-                )}
-              </div>
 
-              {/* all the topic content added and saved */}
-              <TopicContentView
-                topicContent={filteredTopicContent}
-                toggleTopicContentForm={() => {
-                  if (!isTopicContentFormVisible)
-                    addTopicContentRef.current?.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'center',
-                      inline: 'center'
-                    });
-                  toggleTopicContentForm();
-                }}
-              />
+                  {/* subtitles accordion */}
+                  <Accordion
+                    title="Subtitles"
+                    content={
+                      <SubtitleForm
+                        topicId={editTopic?.id || ''}
+                        courseId={editTopic?.courseId || ''}
+                      />
+                    }
+                  />
 
-              {/* binge accordion */}
-              <Accordion
-                title="Subtitles"
-                content={
-                  <SubtitleForm
-                    topicId={editTopic?.id || ''}
-                    courseId={editTopic?.courseId || ''}
+                  {/* binge */}
+                  <Accordion title="Binge it" content={<BingeForm topicVideo={topicVideo} />} />
+
+                  {/* quiz */}
+                  <Accordion
+                    title="Quiz"
+                    content={
+                      <QuizForm
+                        topicId={editTopic?.id || ''}
+                        courseId={editTopic?.courseId || ''}
+                      />
+                    }
                   />
-                }
-              />
-              <Accordion title="Binge it" content={<BingeForm topicVideo={topicVideo} />} />
-              <Accordion title="Quiz" content={<Quiz />} />
-              <Accordion
-                title="Resources"
-                content={
-                  <ResourcesForm
-                    topicId={editTopic?.id || ''}
-                    courseId={editTopic?.courseId || ''}
+                  {/* <Accordion title="Quiz" content={<Quiz />} /> */}
+
+                  {/* resources */}
+                  <Accordion
+                    title="Resources"
+                    content={
+                      <ResourcesForm
+                        topicId={editTopic?.id || ''}
+                        courseId={editTopic?.courseId || ''}
+                      />
+                    }
                   />
-                }
-              />
+                </>
+              )}
             </div>
           </>
         )}

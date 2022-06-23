@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
-import { ExamTabDataAtom, QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
+import { QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
+import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
+import Preview from './Preview';
 
 export default function QuestionPaperTable({ isEdit = false }) {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -16,9 +18,9 @@ export default function QuestionPaperTable({ isEdit = false }) {
   const router = useRouter();
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
-  const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
   const [questionPaper, setQuestionPaper] = useState([]);
+  const [masterData, setMasterData] = useState(null);
 
   const columns = [
     {
@@ -28,15 +30,9 @@ export default function QuestionPaperTable({ isEdit = false }) {
       flex: 1.5
     },
     {
-      field: 'type',
+      field: 'Category',
       headerClassName: 'course-list-header',
-      headerName: 'Type',
-      flex: 1
-    },
-    {
-      field: 'status',
-      headerClassName: 'course-list-header',
-      headerName: 'Status',
+      headerName: 'Category',
       flex: 1
     },
     {
@@ -45,6 +41,17 @@ export default function QuestionPaperTable({ isEdit = false }) {
       headerName: 'Action',
       sortable: false,
       renderCell: (params) => {
+        const paperMasterData = {
+          id: params.row.id,
+          name: params.row.name,
+          description: params.row.Description,
+          category: params.row.Category,
+          sub_category: params.row.SubCategory,
+          difficulty_level: params.row.DifficultyLevel,
+          section_wise: params.row.SectionWise,
+          suggested_duration: params.row.SuggestedDuration
+        };
+
         return (
           <>
             <button
@@ -53,7 +60,8 @@ export default function QuestionPaperTable({ isEdit = false }) {
                 backgroundColor: 'transparent',
                 outline: '0',
                 border: '0'
-              }}>
+              }}
+              onClick={() => setMasterData(paperMasterData)}>
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>
             {isEdit && (
@@ -62,16 +70,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
                   onClick={() => {
                     setQuestionPaperTabData({
                       ...questionPaperTabData,
-                      paperMaster: {
-                        id: params.row.id,
-                        name: params.row.name,
-                        description: params.row.Description,
-                        category: params.row.Category,
-                        sub_category: params.row.SubCategory,
-                        difficulty_level: params.row.DifficultyLevel,
-                        section_wise: params.row.SectionWise,
-                        suggested_duration: params.row.SuggestedDuration
-                      }
+                      paperMaster: paperMasterData
                     });
                     router.push(router.asPath + `/add/${params.row.id}`);
                   }}
@@ -85,11 +84,10 @@ export default function QuestionPaperTable({ isEdit = false }) {
                 </button>
                 <button
                   onClick={() => {
-                    router.push('/admin/exams/my-exams/add');
-                    setExamTabData({
-                      ...examTabData,
-                      qpId: params.row.id
-                    });
+                    router.push(
+                      `/admin/exams/my-exams/add?qpId=${params.row.id}`,
+                      '/admin/exams/my-exams/add'
+                    );
                   }}
                   style={{ background: 'var(--primary)', color: 'var(--black)' }}>
                   + Create Exams
@@ -102,6 +100,15 @@ export default function QuestionPaperTable({ isEdit = false }) {
       flex: isEdit ? 1 : 0.5
     }
   ];
+
+  if (isEdit) {
+    columns.splice(2, 0, {
+      field: 'Status',
+      headerClassName: 'course-list-header',
+      headerName: 'Status',
+      flex: 1
+    });
+  }
 
   // load table data
   useEffect(() => {
@@ -125,6 +132,14 @@ export default function QuestionPaperTable({ isEdit = false }) {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
       />
+
+      {/* preview popup */}
+      <PopUp
+        title={masterData?.name}
+        popUpState={[!!masterData, setMasterData]}
+        isFooterVisible={false}>
+        <Preview masterData={masterData || {}} />
+      </PopUp>
     </>
   );
 }

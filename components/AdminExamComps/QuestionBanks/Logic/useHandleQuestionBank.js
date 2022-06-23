@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -6,14 +7,18 @@ import {
   mutationClient,
   UPDATE_QUESTION_BANK
 } from '../../../../API/Mutations';
+import { GET_LATEST_QUESTION_BANK_NAMES } from '../../../../API/Queries';
+import { isNameDuplicate } from '../../../../helper/data.helper';
 import {
   getQuestionBankObject,
+  RefetchDataAtom,
   SelectedQuestionBankAtom
 } from '../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 
-export default function useHandleQuestionBank(refetchQuestionBank) {
+export default function useHandleQuestionBank() {
   const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
     client: mutationClient
   });
@@ -21,12 +26,16 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
     client: mutationClient
   });
 
+  const router = useRouter();
+
   // recoil state
   const [addPopUp, setAddPopUp] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
   const [editPopUp, setEditPopUp] = useRecoilState(PopUpStatesAtomFamily('editQuestionBank'));
+  const refetchData = useRecoilValue(RefetchDataAtom);
 
   // for edit data
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const selectedQB = useRecoilValue(SelectedQuestionBankAtom);
 
   // local state
@@ -36,7 +45,17 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
   // disable submit if data not complete
   useEffect(() => {
     setIsAddQuestionBankReady(
-      questionBankData.name && questionBankData.category && questionBankData.sub_category
+      questionBankData.name &&
+        questionBankData.description &&
+        questionBankData.category &&
+        questionBankData.sub_category
+    );
+
+    setIsPopUpDataPresent(
+      questionBankData.name ||
+        questionBankData.description ||
+        questionBankData.category ||
+        questionBankData.sub_category
     );
   }, [questionBankData]);
 
@@ -52,9 +71,20 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
   }, [createError, updateError]);
 
   async function createNewQuestionBank() {
+    // duplicate name check
+    if (
+      await isNameDuplicate(
+        GET_LATEST_QUESTION_BANK_NAMES,
+        questionBankData?.name,
+        'getLatestQuestionBank.questionBanks'
+      )
+    ) {
+      return setToastMsg({ type: 'danger', message: 'Bank with same name already exist' });
+    }
+
     const sendData = {
       name: questionBankData.name,
-      //   description: questionBankData.description,
+      description: questionBankData.description,
       category: questionBankData.category,
       sub_category: questionBankData.sub_category,
 
@@ -67,7 +97,7 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
     };
 
     let isError = false;
-    await createQuestionBank({ variables: sendData }).catch((err) => {
+    const res = await createQuestionBank({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
@@ -75,16 +105,19 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
 
     if (!isError) {
       setToastMsg({ type: 'success', message: 'New Question Bank Created' });
-      refetchQuestionBank();
+      refetchData.questionBank();
     }
     setAddPopUp(false);
+
+    const questionTableRoute = `${router.asPath}/${res.data.createQuestionBank.id}`;
+    router.push(`${questionTableRoute}?isTabOpen=true`, questionTableRoute);
   }
 
   async function updateQuestionBank() {
     const sendData = {
       id: questionBankData.id,
       name: questionBankData.name,
-      //   description: questionBankData.description,
+      description: questionBankData.description,
       category: questionBankData.category,
       sub_category: questionBankData.sub_category,
 
@@ -97,7 +130,7 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
     };
 
     let isError = false;
-    await updateBank({ variables: sendData }).catch((err) => {
+    const res = await updateBank({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Question Bank Update Error' });
@@ -105,7 +138,7 @@ export default function useHandleQuestionBank(refetchQuestionBank) {
 
     if (!isError) {
       setToastMsg({ type: 'success', message: 'New Question Bank Updated' });
-      refetchQuestionBank();
+      refetchData.questionBank();
     }
     setEditPopUp(false);
   }

@@ -1,0 +1,115 @@
+@import '../../../styles/base.scss';
+
+.container{
+  width: 100%;
+
+  //.dialog_container{
+  //  padding: 24px 16px;
+  //  width: 450px;
+  //  display: flex;
+  //  align-items: center;
+  //  justify-content: center;
+  //  flex-direction: column;
+  //}
+
+  .dialog_title{
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .labeledInputWrapper {
+    display: flex;
+    align-items: baseline;
+    label {
+      width: 25%;
+      color: $white;
+    }
+
+    .upload{
+      width: 75%;
+      display: flex;
+      align-items: center;
+
+      div{
+        color: #ACACAC;
+        font-size: 12px;
+        margin-left: 16px;
+      }
+    }
+
+    .emailContainer{
+      width: 75%;
+      padding: 10px;
+      border: 2px solid $darkThree;
+      background-color: $darkTwo;
+      display: flex;
+      align-items: center;
+
+    }
+
+    .emailContainer_focus{
+      width: 75%;
+      padding: 10px;
+      background-color: $darkTwo;
+      display: flex;
+      align-items: center;
+      border: 2px solid $primary;
+      box-shadow: 0 0 10px 0 $primary;
+      outline: 0;
+      color: $white;
+    }
+
+    .code{
+      width: 70px;
+      border-right: 1px solid #747474;
+    }
+    .number{
+      padding-left: 10px;
+    }
+
+    .input_margin_transform_white{
+      margin-left: 16px;
+      color: $white;
+      text-transform: none;
+    }
+    .input_margin_transform_white:disabled{
+      color: $secondaryBlack;
+    }
+
+    .input_margin_transform{
+      margin-left: 16px;
+      text-transform: none;
+    }
+    .transform_text{
+      text-transform: none;
+    }
+  }
+}
+
+.navigator{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-image: url('/images/starrySky2.png');
+  background-position: fixed;
+  background-size: cover;
+}
+
+.navigatorBtns{
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+
+  .input_margin_transform{
+    margin-left: 16px;
+    text-transform: none;
+  }
+  .transform_text{
+    text-transform: none;
+  }
+}
+
+
+

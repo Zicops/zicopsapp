@@ -4,16 +4,25 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   GET_QB_SECTION_MAPPING_BY_SECTION,
+  GET_QUESTION_PAPER_META,
   GET_QUESTION_PAPER_SECTION,
   queryClient
 } from '../../../../API/Queries';
-import { QuestionPaperTabDataAtom } from '../../../../state/atoms/exams.atoms';
+import {
+  getQuestionPaperMasterObject,
+  getQuestionPaperTabDataObject,
+  QuestionPaperTabDataAtom
+} from '../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+import { StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
 import { paperTabData, QuestionPaperTabAtom } from './Logic/questionPaperTab.helper';
 import useHandlePaperTab from './Logic/useHandlePaperTab';
 
 export default function QuestionPaperTab() {
+  const [loadPaperMeta, { error: loadMetaError }] = useLazyQuery(GET_QUESTION_PAPER_META, {
+    client: queryClient
+  });
   const [loadPaperSection, { error: loadSectionError }] = useLazyQuery(GET_QUESTION_PAPER_SECTION, {
     client: queryClient
   });
@@ -24,26 +33,55 @@ export default function QuestionPaperTab() {
   const questionPaperId = router.query?.questionPaperId;
 
   const [tab, setTab] = useRecoilState(QuestionPaperTabAtom);
+  const [status, setStatus] = useRecoilState(StatusAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
 
   // load section data and qb mappings
   useEffect(async () => {
-    if (!questionPaperId) return setTab(paperTabData[0].name);
+    if (!questionPaperId) {
+      setQuestionPaperTabData(getQuestionPaperTabDataObject());
+      setTab(paperTabData[0].name);
+      return;
+    }
 
     const sectionData = [];
     let mappedQb = [];
 
     // load sections
     let isError = false;
+    const metaRes = await loadPaperMeta({
+      variables: { question_paper_id: [questionPaperId] }
+    }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
+    });
+    if (isError) return;
+    const paperMasterData = metaRes.data.getQPMeta[0];
+
+    const paperMaster = getQuestionPaperMasterObject({
+      ...paperMasterData,
+      category: paperMasterData?.Category,
+      sub_category: paperMasterData?.SubCategory,
+      description: paperMasterData?.Description,
+      section_wise: paperMasterData?.SectionWise,
+      difficulty_level: paperMasterData?.DifficultyLevel,
+      suggested_duration: paperMasterData?.SuggestedDuration,
+      status: paperMasterData?.Status
+    });
+
+    setStatus(paperMasterData?.Status);
+
     const sectionRes = await loadPaperSection({
-      variables: { question_paper_id: questionPaperId }
+      variables: { question_paper_id: questionPaperId },
+      fetchPolicy: 'no-cache'
     }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Section load error' });
     });
-    if (isError) return setToastMsg({ type: 'danger', message: 'Section load error' });
+    if (isError) return;
 
     // parse and set section data
     const sections = sectionRes?.data?.getQuestionPaperSections;
@@ -89,7 +127,7 @@ export default function QuestionPaperTab() {
     }
 
     // reloading qb section map after add or edit
-    async function reloadQBSectionMapping(sectionId) {
+    async function refetchQBSectionMapping(sectionId) {
       // refetch question bank section mapping
       let isError = false;
       const mappingRes = await refetchMapping({
@@ -129,17 +167,20 @@ export default function QuestionPaperTab() {
 
     setQuestionPaperTabData({
       ...questionPaperTabData,
+      paperMaster: paperMaster,
       sectionData: sectionData,
       mappedQb: mappedQb,
-      reloadQBSectionMapping: reloadQBSectionMapping
+      refetchQBSectionMapping: refetchQBSectionMapping
     });
   }, [questionPaperId]);
 
+  // error notification
   useEffect(() => {
+    if (loadMetaError) return setToastMsg({ type: 'danger', message: 'Master load error' });
     if (loadSectionError) return setToastMsg({ type: 'danger', message: 'Section load error' });
     if (loadQBSectionMapError)
       return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
-  }, [loadSectionError, loadQBSectionMapError]);
+  }, [loadMetaError, loadSectionError, loadQBSectionMapError]);
 
   const { addNewQuestionPaper, updateQuestionPaper } = useHandlePaperTab();
 
@@ -151,9 +192,10 @@ export default function QuestionPaperTab() {
         tab={tab}
         setTab={setTab}
         footerObj={{
+          status: status,
           submitDisplay: questionPaperId ? 'Update' : 'Save',
           handleSubmit: questionPaperId ? updateQuestionPaper : addNewQuestionPaper,
-          handleCancel: () => router.back()
+          handleCancel: () => router.push('/admin/exams/my-question-papers')
         }}
       />
     </>

@@ -8,6 +8,10 @@
 .inputDatePickerContainer {
   display: inline-block;
 
+  input {
+    width: 100%;
+  }
+
   input,
   select {
     padding: 10px;
@@ -29,7 +33,7 @@
       color: $white;
     }
   }
-  
+
   select {
     padding: 5px 10px;
   }
@@ -57,7 +61,8 @@
     color: $white;
   }
 
-  :global(.react-datepicker__day--outside-month) {
+  :global(.react-datepicker__day--outside-month),
+  :global(.react-datepicker__day--disabled) {
     color: $darkThree !important;
     pointer-events: none;
     background: $black !important;

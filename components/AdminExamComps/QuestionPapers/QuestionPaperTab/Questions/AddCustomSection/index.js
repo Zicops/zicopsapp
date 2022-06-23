@@ -22,6 +22,12 @@ export default function AddCustomSection({ editData }) {
     if (editData) setCustomSection(editData);
   }, [editData]);
 
+  const difficultyOptions = [
+    { value: 'Beginner', label: 'Beginner' },
+    { value: 'Competent', label: 'Competent' },
+    { value: 'Proficient', label: 'Proficient' }
+  ];
+
   return (
     <div className={`${styles.popUpFormContainer}`}>
       <LabeledInput
@@ -40,7 +46,7 @@ export default function AddCustomSection({ editData }) {
           label: 'Description',
           placeholder: 'Enter description in less than 160 characters',
           value: customSection.description,
-          maxLength: 60
+          maxLength: 160
         }}
         changeHandler={(e) => changeHandler(e, customSection, setCustomSection)}
       />
@@ -52,26 +58,24 @@ export default function AddCustomSection({ editData }) {
           label: 'Difficulty Level:',
           placeholder: 'Select Difficulty Level',
           value: { label: customSection.difficulty_level, value: customSection.difficulty_level },
-          options: [
-            { value: '1', label: 'easy' },
-            { value: '2', label: 'hard' }
-          ]
+          options: difficultyOptions
         }}
         changeHandler={(e) => changeHandler(e, customSection, setCustomSection, 'difficulty_level')}
       />
 
       <section className={`${styles.footerBtns}`}>
         <Button
-          text={customSection.id ? 'Update' : 'Add'}
-          clickHandler={customSection.id ? updateSection : addNewSection}
-          isDisabled={!isCustomSectionReady}
-        />
-        <Button
           text="Cancel"
           clickHandler={() => {
             udpateSectionPopUp(false);
             udpateEditSectionPopUp(false);
           }}
+        />
+        <Button
+          text={customSection.id ? 'Update' : 'Add'}
+          clickHandler={customSection.id ? updateSection : addNewSection}
+          isDisabled={!isCustomSectionReady}
+          styleClass={isCustomSectionReady ? 'bg-primary' : ''}
         />
       </section>
     </div>

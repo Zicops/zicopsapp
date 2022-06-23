@@ -1,13 +1,13 @@
-import { changeHandler } from '../../../../helper/common.helper';
 import LabeledInput from '../../../common/FormComponents/LabeledInput';
+import { changeHandler } from '../../../../helper/common.helper';
 import LabeledTextarea from '../../../common/FormComponents/LabeledTextarea';
 import PopUp from '../../../common/PopUp';
 import styles from '../../courseTabs.module.scss';
 
 export default function ChapterPopUp({
+  popUpState,
   chapterData,
   setChapterData,
-  closeModal,
   isChapterAddReady,
   handleSubmit,
   isEdit = false
@@ -20,7 +20,7 @@ export default function ChapterPopUp({
   return (
     <>
       <PopUp
-        closeBtn={{ handleClick: closeModal }}
+        popUpState={popUpState}
         submitBtn={submitBtnObj}
         title={`Chapter ${chapterData.sequence}`}>
         <div className={`${styles.popUpFormContainer}`}>

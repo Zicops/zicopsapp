@@ -62,9 +62,10 @@
   color: $header;
   cursor: pointer;
   margin: 0 15px;
+  border-bottom: 1px solid transparent;
 }
 .menu ul li.active {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: $primary;
   cursor: pointer;
@@ -87,9 +88,9 @@
 .special_menu ul li img {
   width: 25px;
   height: 25px;
-  padding: 5px;
+  padding: 3px;
   margin: 5px 5px 0;
-  border: 1px solid var(--primary);
+  // border: 1px solid var(--primary);
   cursor: pointer;
 }
 
@@ -149,11 +150,12 @@
   padding: 5px 35px 5px 3px;
   transition: all 0.2s;
 }
-.nav_search{
+.nav_search {
   width: 150px;
   border-bottom: 1px solid #ffffff80;
 }
-.nav_search:focus, .nav_search_long{
+.nav_search:focus,
+.nav_search_long {
   width: 250px;
   border-bottom: 1px solid $primary;
 }
@@ -164,7 +166,7 @@ select.nav_search_dropdow:selected {
   width: 100%;
 }
 .nav_search:after {
-  content: 'searvh';
+  content: 'search';
 }
 .nav_search_btn {
   background-image: url('/images/magnifier.png');
@@ -192,7 +194,6 @@ select.nav_search_dropdow:selected {
 }
 
 .leftMenuDropdown {
-  background-color: red;
   .reachMenuButton {
     background-color: 'transparent';
     border: 0;
@@ -217,7 +218,6 @@ select.nav_search_dropdow:selected {
   }
 }
 
-
 // Rajeev's dropdown animation
 // .dropdown_menu {
 //   cursor: pointer;
@@ -235,12 +235,12 @@ select.nav_search_dropdow:selected {
   .dropdown_item_#{$var} {
     opacity: 0;
     width: 250px;
-    padding: 7px 10px !important;
+    // padding: 7px 10px !important;
     color: $primary !important;
     background-color: $bgHeader !important;
     transform-origin: top center;
-    animation: scaleZ 500ms $var*60ms ease-in-out forwards;
-    &:hover{
+    animation: scaleZ 500ms $var * 60ms ease-in-out forwards;
+    &:hover {
       background-color: $bgHeader !important;
     }
   }
@@ -260,9 +260,6 @@ select.nav_search_dropdow:selected {
   }
 }
 
-
-
-
 @keyframes growDown {
   0% {
     transform: scaleY(0);
@@ -275,4 +272,15 @@ select.nav_search_dropdow:selected {
   100% {
     transform: scaleY(1);
   }
+}
+
+.menuItem,
+.subMenuItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 10px !important;
+}
+
+.subMenuItem {
+  max-width: 160px;
 }

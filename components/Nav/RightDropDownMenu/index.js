@@ -11,7 +11,6 @@ import styles from '../nav.module.scss';
 
 export default function RightDropDownMenu() {
   const { anchorEl, handleClick, handleClose, open } = useDropDownHandle();
-  let today = new Date();
   let date = new Date().toUTCString().slice(5, 16);
 
   const menuItemList = [
@@ -23,7 +22,8 @@ export default function RightDropDownMenu() {
         border: 'none',
         fontSize: '10px',
         alignItems: 'flex-end',
-        backgroundColor: 'var(--header-bg)'
+        backgroundColor: 'var(--header-bg)',
+        padding: '15px 10px'
       },
       comp: (
         <>
@@ -77,6 +77,7 @@ export default function RightDropDownMenu() {
         }}>
         <Image src="/images/arrow2.png" alt="" height="20px" width="25px" />
       </Button>
+
       {anchorEl && (
         <Paper
           sx={{
@@ -103,7 +104,7 @@ export default function RightDropDownMenu() {
                       // margin: '2px',
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
-                      padding: 0
+                      padding: '0px'
                     }
                   }}
                   style={item.styles ? item.styles : {}}

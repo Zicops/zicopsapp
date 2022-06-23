@@ -15,16 +15,23 @@ const CourseResourceLoop = ({ resource }) => {
         <div className={`${styles.data}`}>
           <div className={`${styles.data_title}`}>{resource.name}</div>
           <div className={`${styles.data_btn}`}>
-            <button onClick={() => setShowDoc(true)}>view</button>
+            {resource.type === 'LINK' ? (
+              <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                Visit Link
+              </a>
+            ) : (
+              <button onClick={() => setShowDoc(true)}>view</button>
+            )}
           </div>
         </div>
       </div>
 
       <PopUp
-        isPopUpOpen={showDoc}
         title={resource.name}
-        isFooterVisible={false}
-        closeBtn={{ handleClick: () => setShowDoc(false) }}>
+        popUpState={[showDoc, setShowDoc]}
+        size="large"
+        positionLeft="50%"
+        isFooterVisible={false}>
         <ViewDoc url={resource.url} />
       </PopUp>
     </>

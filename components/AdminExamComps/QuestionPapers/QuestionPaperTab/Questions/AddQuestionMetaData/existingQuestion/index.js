@@ -1,16 +1,45 @@
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { GET_CATS_N_SUB_CATS } from '../../../../../../../API/Queries';
+import { loadQueryData } from '../../../../../../../helper/api.helper';
 import { changeHandler } from '../../../../../../../helper/common.helper';
+import { ToastMsgAtom } from '../../../../../../../state/atoms/toast.atom';
 import LabeledDropdown from '../../../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
 import styles from '../addQuestionMetaData.module.scss';
 
-export default function ExistingQuestion({ metaData, setMetaData, questionBankOptions }) {
-  const categoryOption = [
-    { value: 'Accounting', label: 'Accounting' },
-    { value: 'Bussiness', label: 'Bussiness' },
-    { value: 'Developement', label: 'Developement' },
-    { value: 'Engg', label: 'Engg' }
+export default function ExistingQuestion({
+  metaData,
+  totalQuestions,
+  setMetaData,
+  questionBankOptions,
+  isEdit
+}) {
+  const categoryOption = [{ value: '', label: '-- Select --' }];
+  const subCategoryOption = [{ value: '', label: '-- Select --' }];
+  const difficultyOptions = [
+    { value: 'Beginner', label: 'Beginner' },
+    { value: 'Competent', label: 'Competent' },
+    { value: 'Proficient', label: 'Proficient' }
   ];
+
+  // load categories
+  const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
+  allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
+  allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  // set meta data cat and sub cat
+  useEffect(() => {
+    setMetaData({
+      ...metaData,
+      category: questionBankOptions?.filter((op) => op?.value === metaData?.qbId)[0]?.category,
+      sub_category: questionBankOptions?.filter((op) => op?.value === metaData?.qbId)[0]
+        ?.sub_category
+    });
+  }, [questionBankOptions]);
 
   return (
     <>
@@ -22,9 +51,8 @@ export default function ExistingQuestion({ metaData, setMetaData, questionBankOp
             label: 'Category:',
             placeholder: 'Select category',
             options: categoryOption,
-            value: metaData?.category
-              ? { value: metaData?.category, label: metaData?.category }
-              : null
+            value: { value: metaData?.category, label: metaData?.category },
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'category')}
           isFiftyFifty={true}
@@ -36,8 +64,9 @@ export default function ExistingQuestion({ metaData, setMetaData, questionBankOp
             inputName: 'sub_category',
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
-            options: categoryOption,
-            value: { value: metaData?.sub_category, label: metaData?.sub_category }
+            options: subCategoryOption,
+            value: { value: metaData?.sub_category, label: metaData?.sub_category },
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'sub_category')}
           isFiftyFifty={true}
@@ -46,12 +75,13 @@ export default function ExistingQuestion({ metaData, setMetaData, questionBankOp
 
       <LabeledDropdown
         styleClass={styles.inputField}
-        filterOption={(s) => {
+        filterOption={(option, searchQuery) => {
+          if (searchQuery) return option.label?.toLowerCase()?.includes(searchQuery?.toLowerCase());
           if (!metaData?.category && !metaData?.sub_category) return true;
 
           return (
-            s?.data?.category === metaData?.category ||
-            s?.data?.sub_category === metaData?.sub_category
+            option?.data?.category === metaData?.category ||
+            option?.data?.sub_category === metaData?.sub_category
           );
         }}
         dropdownOptions={{
@@ -59,10 +89,16 @@ export default function ExistingQuestion({ metaData, setMetaData, questionBankOp
           label: 'Question Bank:',
           placeholder: 'Select the question bank to choose question from',
           options: questionBankOptions,
-          value: questionBankOptions?.filter((option) => option?.value === metaData?.qbId)[0],
+          value: questionBankOptions?.filter((option) => {
+            option.label = `${option.name} [${option?.noOfQuestions || 0}]`;
+            const isSelected = option?.value === metaData?.qbId;
+
+            if (isSelected) option.label = `${option.name} [${totalQuestions || 0}]`;
+            return isSelected;
+          })[0],
           isSearchEnable: true
         }}
-        changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'qbId')}
+        changeHandler={(e) => setMetaData({ ...metaData, total_questions: 0, qbId: e.value })}
       />
 
       <LabeledDropdown
@@ -71,10 +107,12 @@ export default function ExistingQuestion({ metaData, setMetaData, questionBankOp
           inputName: 'difficulty_level',
           label: 'Difficulty:',
           placeholder: 'Select difficulty level',
-          options: categoryOption,
+          options: difficultyOptions,
           value: { value: metaData?.difficulty_level, label: metaData?.difficulty_level }
         }}
-        changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'difficulty_level')}
+        changeHandler={(e) =>
+          setMetaData({ ...metaData, total_questions: 0, difficulty_level: e.value })
+        }
       />
 
       <div className={styles.twoInputContainer}>
@@ -102,12 +140,36 @@ export default function ExistingQuestion({ metaData, setMetaData, questionBankOp
             // validation for entering total question should not be greater than available questions
             const questionAvailable =
               questionBankOptions?.filter((option) => option.value === metaData.qbId)[0]
-                ?.noOfQuestions || 10;
+                ?.noOfQuestions || totalQuestions;
 
-            if (parseInt(e.target.value) > questionAvailable)
-              return setMetaData({ ...metaData, total_questions: questionAvailable });
+            let questionsCount = +e.target.value;
+            let errorMsg = null;
+            // no bank selected
+            if (questionAvailable == null) {
+              questionsCount = 0;
+              errorMsg = 'Select Question Bank First';
+            }
 
-            changeHandler(e, metaData, setMetaData);
+            // no difficulty level selected
+            console.log(!metaData?.difficulty_level);
+            if (!metaData?.difficulty_level) {
+              questionsCount = 0;
+              if (!errorMsg) errorMsg = 'Select Difficulty First';
+            }
+
+            if (questionAvailable === 0) {
+              questionsCount = 0;
+              if (!errorMsg) errorMsg = 'Bank does not have questions';
+            }
+
+            if (questionsCount > questionAvailable) {
+              questionsCount = questionAvailable;
+              if (!errorMsg)
+                errorMsg = `Bank has only ${questionAvailable} question with ${metaData?.difficulty_level} level`;
+            }
+
+            if (errorMsg) setToastMsg({ type: 'danger', message: errorMsg });
+            return setMetaData({ ...metaData, total_questions: questionsCount });
           }}
           isFiftyFifty={true}
         />
@@ -129,9 +191,11 @@ export default function ExistingQuestion({ metaData, setMetaData, questionBankOp
         {['Manual', 'Random'].map((label) => (
           <LabeledRadioCheckbox
             type="radio"
+            key={label}
             label={label}
             name="retrieve_type"
             value={label.toLowerCase()}
+            isDisabled={isEdit}
             isChecked={metaData?.retrieve_type === label.toLowerCase()}
             changeHandler={(e) => changeHandler(e, metaData, setMetaData)}
           />

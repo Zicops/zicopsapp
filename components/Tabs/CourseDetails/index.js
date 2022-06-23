@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { truncateToN } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import BrowseAndUpload from '../../common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
@@ -88,13 +89,17 @@ export default function CourseDetails() {
             handleRemove={() => removeSavedFile('uploadCourseVideo')}
             previewData={{
               fileName: fileData.uploadCourseVideo,
-              filePath: courseVideo?.file || fullCourse.previewVideo
+              filePath: courseVideo?.file || fullCourse.previewVideo,
+              isVideo: true
             }}
+            acceptedTypes="video/*"
             inputName="uploadCourseVideo"
             isActive={fileData.uploadCourseVideo}
           />
         </div>
-        <div className={`w-50 ${styles.fileName}`}>{fileData.uploadCourseVideo}</div>
+        <div className={`w-50 ${styles.fileName}`}>
+          {truncateToN(fileData.uploadCourseVideo, 55)}
+        </div>
       </div>
 
       {/* Upload Course Image */}
@@ -112,7 +117,9 @@ export default function CourseDetails() {
             isActive={fileData.uploadCourseImage}
           />
         </div>
-        <div className={`w-50 ${styles.fileName}`}>{fileData.uploadCourseImage}</div>
+        <div className={`w-50 ${styles.fileName}`}>
+          {truncateToN(fileData.uploadCourseImage, 55)}
+        </div>
       </div>
 
       {/* Upload Course Page Display Picture */}
@@ -130,7 +137,7 @@ export default function CourseDetails() {
             isActive={fileData.myfile}
           />
         </div>
-        <div className={`w-50 ${styles.fileName}`}>{fileData.myfile}</div>
+        <div className={`w-50 ${styles.fileName}`}>{truncateToN(fileData.myfile, 55)}</div>
       </div>
 
       {/* Course Summary */}

@@ -12,15 +12,12 @@ const LearnerExamComponent = ({
   setData,
   current,
   setCurrent,
-  isFullScreen,
-  setIsFullScreen
 }) => {
   const [filter, setFilter] = useState('all');
   const [option, setOption] = useState(current?.selectedOption);
   const [isQuestion, setIsQuestion] = useState(false);
-  const examRef = useRef(null);
   return (
-    <div className={`${styles.questionSection}`} ref={examRef}>
+    <div className={`${styles.questionSection}`}>
       <div className={`${styles.questionSection_questions}`}>
         {isQuestion ? (
           <NewQuestionPaperPreview
@@ -35,8 +32,6 @@ const LearnerExamComponent = ({
           <div>
             <ExamAllQuestions current={current} />
             <AnswerAllOptions
-              isFullScreen={isFullScreen}
-              setIsFullScreen={setIsFullScreen}
               option={option}
               setOption={setOption}
               data={data}
@@ -45,7 +40,6 @@ const LearnerExamComponent = ({
               setCurrent={setCurrent}
               filter={filter}
               setFilter={setFilter}
-              examRef={examRef}
             />
           </div>
         )}

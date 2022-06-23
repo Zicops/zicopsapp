@@ -11,12 +11,13 @@ export default function LabeledInput({
     inputName,
     type = 'text',
     label,
-    placeholder = ' ',
+    placeholder = 'Enter the name in less than 160 characters',
     value,
-    maxLength,
+    maxLength = 160,
     isRequired,
     isDisabled,
-    isAutoComplete
+    isAutoComplete,
+    isNumericOnly = false
   } = inputOptions;
   return (
     <div className={`${labeledInputWrapper} ${isFiftyFifty ? halfInputWrapper : ''} ${styleClass}`}>
@@ -32,6 +33,12 @@ export default function LabeledInput({
         name={inputName}
         placeholder={placeholder}
         value={value}
+        onKeyPress={(e) => {
+          if (!isNumericOnly) return;
+
+          const regexForNumber = /[0-9]/;
+          if (!regexForNumber.test(e.key)) e.preventDefault();
+        }}
         onChange={changeHandler}
         maxLength={maxLength}
         required={!!isRequired}
@@ -56,7 +63,8 @@ const LabeledInputObj = shape({
   maxLength: number,
   isRequired: bool,
   isDisabled: bool,
-  isAutoComplete: bool
+  isAutoComplete: bool,
+  isNumericOnly: bool
 });
 
 LabeledInput.propTypes = {

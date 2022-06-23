@@ -31,14 +31,16 @@ import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 import useAddTopicContent from './useAddTopicContent';
 
-export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
+export default function useEditTopic(refetchDataAndUpdateRecoil) {
   const { fullCourse } = useContext(courseContext);
   // topic content, chapter, topic data query obj
-  const [loadTopicContentData, { error: errorContentData, refetch: refetchTopicContent }] =
-    useLazyQuery(GET_COURSE_TOPICS_CONTENT, { client: queryClient });
-
-  const [loadResourcesData, { error: errorResourcesData, refetch: refetchResources }] =
-    useLazyQuery(GET_TOPIC_RESOURCES, { client: queryClient });
+  const [loadTopicContentData, { error: errorContentData }] = useLazyQuery(
+    GET_COURSE_TOPICS_CONTENT,
+    { client: queryClient }
+  );
+  const [loadResourcesData, { error: errorResourcesData }] = useLazyQuery(GET_TOPIC_RESOURCES, {
+    client: queryClient
+  });
 
   // recoil state
   const [topicData, updateTopicData] = useRecoilState(TopicAtom);
@@ -79,91 +81,99 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   useEffect(() => {
     updateBinge(getBingeObject());
 
-    setIsEditTopicReady(!!editTopic.name && !!editTopic.description);
+    setIsEditTopicReady(!!editTopic?.name && !!editTopic?.description);
   }, [editTopic]);
 
   // set local state to edit topic data for form
   function activateEditTopic(topicId, topicDataFromAddTopic) {
+    let currentTopic = null;
     if (topicDataFromAddTopic) {
-      setEditTopic(topicDataFromAddTopic);
+      currentTopic = topicDataFromAddTopic;
     } else {
       const index = topicData.findIndex((t) => t.id === topicId);
       if (index < 0) return;
-      setEditTopic(topicData[index]);
+      currentTopic = topicData[index];
     }
 
-    togglePopUp('editTopic', true);
+    setEditTopic(currentTopic);
     setIsEditTopicFormVisible(false);
 
-    // topic content load
-    loadTopicContentData({ variables: { topic_id: topicId } }).then(({ data }) => {
-      const topicContentArray = [];
-      const topicVideoArray = [];
-      const topicSubtitleArray = [];
+    if (currentTopic?.type === 'Content') {
+      // topic content load
+      loadTopicContentData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
+        ({ data }) => {
+          const topicContentArray = [];
+          const topicVideoArray = [];
+          const topicSubtitleArray = [];
 
-      topicContentData.toggleTopicContentForm(data.getTopicContent.length === 0);
-      data.getTopicContent.forEach((content, index) => {
-        const contentData = {
-          topicId: content.topicId,
-          id: content.id,
-          language: content.language,
-          type: content.type,
-          duration: content.duration,
-          is_default: content.is_default
-        };
-        const topicVideoData = {
-          courseId: content.courseId,
-          contentId: content.id,
-          contentUrl: content.contentUrl,
-          file: null
-        };
+          topicContentData.toggleTopicContentForm(data.getTopicContent.length === 0);
+          data.getTopicContent.forEach((content, index) => {
+            const contentData = {
+              topicId: content.topicId,
+              id: content.id,
+              language: content.language,
+              type: content.type,
+              duration: content.duration,
+              is_default: content.is_default
+            };
+            const topicVideoData = {
+              courseId: content.courseId,
+              contentId: content.id,
+              contentUrl: content.contentUrl,
+              file: null
+            };
 
-        topicContentArray.push(contentData);
-        topicVideoArray.push(topicVideoData);
+            topicContentArray.push(contentData);
+            topicVideoArray.push(topicVideoData);
 
-        for (let i = 0; i < content?.subtitleUrl?.length; i++) {
-          const subtitle = content?.subtitleUrl[i];
-          topicSubtitleArray.push({
-            courseId: content.courseId,
-            topicId: content.topicId,
-            subtitleUrl: subtitle.url,
-            language: subtitle.language,
-            file: null
+            for (let i = 0; i < content?.subtitleUrl?.length; i++) {
+              const subtitle = content?.subtitleUrl[i];
+              topicSubtitleArray.push({
+                courseId: content.courseId,
+                topicId: content.topicId,
+                subtitleUrl: subtitle.url,
+                language: subtitle.language,
+                file: null
+              });
+            }
+
+            if (index === 0) {
+              // binge data
+              const startTimeMin = Math.floor(parseInt(content.startTime) / 60);
+              const startTimeSec = parseInt(content.startTime) - startTimeMin * 60;
+              const showTime = content.fromEndTime || content.nextShowTime;
+              const showTimeMin = Math.floor(parseInt(showTime) / 60);
+              const showTimeSec = parseInt(showTime) - showTimeMin * 60;
+
+              const bingeData = {
+                startTimeMin: startTimeMin,
+                startTimeSec: startTimeSec,
+                skipIntroDuration: content.skipIntroDuration,
+                showTimeMin: showTimeMin,
+                showTimeSec: showTimeSec,
+                isFromEnd: content.fromEndTime > 0
+              };
+              updateBinge(bingeData);
+            }
           });
+          updateTopicContent(topicContentArray);
+          updateTopicVideo(topicVideoArray);
+          updateTopicSubtitle(topicSubtitleArray);
+
+          if (errorContentData)
+            setToastMsg({ type: 'danger', message: 'Topic Content Load Error' });
         }
+      );
 
-        if (index === 0) {
-          // binge data
-          const startTimeMin = Math.floor(parseInt(content.startTime) / 60);
-          const startTimeSec = parseInt(content.startTime) - startTimeMin * 60;
-          const showTime = content.fromEndTime || content.nextShowTime;
-          const showTimeMin = Math.floor(parseInt(showTime) / 60);
-          const showTimeSec = parseInt(showTime) - showTimeMin * 60;
+      // resources
+      loadResourcesData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
+        ({ data }) => {
+          updateResources(data.getTopicResources);
 
-          const bingeData = {
-            startTimeMin: startTimeMin,
-            startTimeSec: startTimeSec,
-            skipIntroDuration: content.skipIntroDuration,
-            showTimeMin: showTimeMin,
-            showTimeSec: showTimeSec,
-            isFromEnd: content.fromEndTime > 0
-          };
-          updateBinge(bingeData);
+          if (errorResourcesData) setToastMsg({ type: 'danger', message: 'Resources Load Error' });
         }
-      });
-      updateTopicContent(topicContentArray);
-      updateTopicVideo(topicVideoArray);
-      updateTopicSubtitle(topicSubtitleArray);
-
-      if (errorContentData) setToastMsg({ type: 'danger', message: 'Topic Content Load Error' });
-    });
-
-    // resources
-    loadResourcesData({ variables: { topic_id: topicId } }).then(({ data }) => {
-      updateResources(data.getTopicResources);
-
-      if (errorResourcesData) setToastMsg({ type: 'danger', message: 'Resources Load Error' });
-    });
+      );
+    }
 
     const filteredTopicContent = filterTopicContent(topicContent, topicId);
     topicContentData.toggleTopicContentForm(filteredTopicContent.length === 0);
@@ -179,14 +189,14 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
   // save edit topic in function
   async function updateTopicAndContext() {
     const sendTopicData = {
-      id: editTopic.id,
-      name: editTopic.name,
-      description: editTopic.description,
-      type: editTopic.type,
-      moduleId: editTopic.moduleId,
-      chapterId: editTopic.chapterId,
-      courseId: editTopic.courseId,
-      sequence: editTopic.sequence
+      id: editTopic?.id,
+      name: editTopic?.name,
+      description: editTopic?.description,
+      type: editTopic?.type,
+      moduleId: editTopic?.moduleId,
+      chapterId: editTopic?.chapterId,
+      courseId: editTopic?.courseId,
+      sequence: editTopic?.sequence
     };
 
     let isError = false;
@@ -276,19 +286,6 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
         }).catch((err) => console.log(err));
 
         console.log(`Topic Video Uploaded with language ${content.language}`);
-
-        // if (topicSubtitle[index].file) {
-        //   const sendSubtitleData = {
-        //     contentId: data.addTopicContent?.id || content.id,
-        //     courseId: topicSubtitle[index].courseId,
-        //     file: topicSubtitle[index].file
-        //   };
-        //   await uploadCourseContentSubtitle({ variables: sendSubtitleData }).catch((err) =>
-        //     console.log(err)
-        //   );
-
-        //   console.log(`Topic Subtitle Uploaded with language ${content.language}`);
-        // }
       }
     }
 
@@ -332,8 +329,7 @@ export default function useEditTopic(togglePopUp, refetchDataAndUpdateRecoil) {
     setUploadStatus(null);
     console.log('Topic Content and resources Uploaded');
     setToastMsg({ type: 'success', message: 'Topic Content and Resources Uploaded' });
-
-    togglePopUp('editTopic', false);
+    setEditTopic(getTopicObject({ courseId: fullCourse.id }));
   }
 
   return {

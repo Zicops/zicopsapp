@@ -276,10 +276,55 @@ export const GET_LATEST_QUESTION_BANK = gql`
         is_active
         is_default
         owner
+        description
       }
       pageCursor
       direction
       pageSize
+    }
+  }
+`;
+
+export const GET_LATEST_QUESTION_BANK_NAMES = gql`
+  query latestQuestionBank($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestQuestionBank(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      questionBanks {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const GET_QUESTION_BANK_META = gql`
+  query getQPMeta($question_bank_id: [String]) {
+    getQBMeta(qb_ids: $question_bank_id) {
+      id
+      name
+      description
+      category
+      sub_category
+      created_at
+      updated_at
+      created_by
+      updated_by
+      is_active
+      is_default
+      owner
+    }
+  }
+`;
+
+export const GET_QUESTION_BANK_NAME = gql`
+  query getQPName($question_bank_id: [String]) {
+    getQBMeta(qb_ids: $question_bank_id) {
+      id
+      name
     }
   }
 `;
@@ -347,10 +392,48 @@ export const GET_LATEST_QUESTION_PAPERS = gql`
         SectionWise
         Description
         SuggestedDuration
+        Status
       }
       pageCursor
       direction
       pageSize
+    }
+  }
+`;
+
+export const GET_LATEST_QUESTION_PAPERS_NAMES = gql`
+  query latestQuestionPapers($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestQuestionPapers(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      questionPapers {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const GET_QUESTION_PAPER_META = gql`
+  query getQPMeta($question_paper_id: [String]) {
+    getQPMeta(question_papers_ids: $question_paper_id) {
+      id
+      name
+      Category
+      SubCategory
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      DifficultyLevel
+      SectionWise
+      Description
+      SuggestedDuration
+      Status
     }
   }
 `;
@@ -394,11 +477,99 @@ export const GET_QB_SECTION_MAPPING_BY_SECTION = gql`
   }
 `;
 
+export const GET_FIXED_QUESTION = gql`
+  query getSectionFixedQuestions($mapping_id: String) {
+    getSectionFixedQuestions(section_id: $mapping_id) {
+      id
+      SqbId
+      QuestionId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const GET_LATEST_EXAMS = gql`
+  query getLatestExams($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestExams(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      exams {
+        id
+        Name
+        Description
+        Code
+        QpId
+        CreatedAt
+        UpdatedAt
+        CreatedBy
+        UpdatedBy
+        IsActive
+        Type
+        ScheduleType
+        Duration
+        Status
+        Category
+        SubCategory
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_LATEST_EXAMS_NAMES = gql`
+  query getLatestExams($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getLatestExams(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      exams {
+        id
+        Name
+      }
+    }
+  }
+`;
+
+export const GET_EXAM_META = gql`
+  query getExamsMeta($exam_ids: [String]) {
+    getExamsMeta(exam_ids: $exam_ids) {
+      id
+      Name
+      Description
+      Code
+      QpId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      Type
+      ScheduleType
+      Duration
+      Status
+      Category
+      SubCategory
+    }
+  }
+`;
+
 export const GET_EXAM_INSTRUCTION = gql`
   query getExamInstruction($exam_id: String) {
     getExamInstruction(exam_id: $exam_id) {
       id
       ExamId
+      Instructions
       PassingCriteria
       NoAttempts
       AccessType
@@ -442,6 +613,39 @@ export const GET_EXAM_CONFIG = gql`
       IsActive
       CreatedAt
       UpdatedAt
+    }
+  }
+`;
+
+// !temporary queries
+export const GET_QUESTION_PAPER_SECTION_ID = gql`
+  query questionPaperSections($question_paper_id: String) {
+    getQuestionPaperSections(question_paper_id: $question_paper_id) {
+      id
+    }
+  }
+`;
+
+export const GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION = gql`
+  query getQPBankMappingBySectionId($section_id: String) {
+    getQPBankMappingBySectionId(section_id: $section_id) {
+      id
+      TotalQuestions
+      QuestionMarks
+    }
+  }
+`;
+
+export const GET_TOPIC_EXAMS = gql`
+  query getTopicExams($topic_id: String) {
+    getTopicExams(topic_id: $topic_id) {
+      id
+      topicId
+      examId
+      courseId
+      created_at
+      updated_at
+      language
     }
   }
 `;

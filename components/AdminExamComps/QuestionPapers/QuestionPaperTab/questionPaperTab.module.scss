@@ -20,8 +20,6 @@
 }
 
 .qb_container {
-  margin-top: 30px;
-
   button {
     position: relative;
     float: right;
@@ -80,7 +78,7 @@
     width: 50%;
 
     &:last-child {
-      label{
+      label {
         padding-left: 15%;
       }
     }
@@ -94,5 +92,40 @@
 
   .footerBtns {
     text-align: end;
+  }
+}
+
+.topbarTable {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% - 40px);
+  margin: auto 30px;
+
+  p {
+    color: $primary;
+    font-weight: 600;
+  }
+
+  & > div {
+    input {
+      width: 100%;
+    }
+  }
+}
+
+.searchInputContainer {
+  position: relative;
+  width: 400px;
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+  }
+
+  input {
+    padding-left: 30px;
   }
 }

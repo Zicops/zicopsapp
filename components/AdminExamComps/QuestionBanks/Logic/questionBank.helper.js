@@ -3,7 +3,7 @@ export function getQuestionBankQuestionObject(data = {}) {
     id: data.id || null,
     description: data.description || '',
     type: data.type || '',
-    difficulty: data.difficulty || 0,
+    difficulty: data.difficulty || 1,
     hint: data.hint || '',
 
     file: data.file || null,
@@ -28,4 +28,12 @@ export function getQuestionOptionsObject(data = {}) {
   };
 }
 
-export const imageTypes = ['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'];
+export const acceptedFileTypes = [
+  'image/png',
+  'image/gif',
+  'image/jpeg',
+  'image/svg+xml',
+  'audio/mpeg',
+  'audio/mp3',
+  'video/mp4'
+];

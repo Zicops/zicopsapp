@@ -1,0 +1,81 @@
+@import '../../../styles/base.scss';
+
+.container {
+  width: 100%;
+  color: $white;
+
+  .title{
+    margin-bottom: 4px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .subtitle{
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  .checkbox_container{
+    padding: 8px 0;
+    font-size: 14px;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    border: 2px solid $secondaryWhite;
+    background: $secondaryWhite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .checkbox_container_selected{
+    //padding: 8px 0;
+    //font-size: 14px;
+    //border-radius: 5px;
+    border: 2px solid $primary;
+    color: $primary;
+    //width: 100%;
+    //cursor: pointer;
+    //background: $secondaryWhite;
+    //display: flex;
+    //align-items: center;
+    //justify-content: center;
+    //position: relative;
+  }
+}
+
+.input_margin_transform{
+  margin-left: 16px;
+  text-transform: none;
+}
+.transform_text{
+  text-transform: none;
+}
+
+.navigatorBtns{
+  width: 230px;
+  display: flex;
+  justify-content: space-between;
+
+  .input_margin_transform{
+    margin-left: 16px;
+    text-transform: none;
+  }
+  .transform_text{
+    text-transform: none;
+  }
+}
+
+.navigator{
+  width: 100%;
+  background-image: url('/images/starrySky2.png');
+  background-position: fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: space-between;
+}
+
+.container::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}

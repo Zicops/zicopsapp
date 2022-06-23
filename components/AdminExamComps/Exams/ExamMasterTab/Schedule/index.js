@@ -1,15 +1,24 @@
+import { Grid } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../helper/common.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
-import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
+import InputTimePicker from '../../../../common/FormComponents/InputTimePicker';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
-import TimePicker from '../../../../common/FormComponents/TimePicker';
 import InputDatePicker from '../../../../common/InputDatePicker';
 import styles from '../examMasterTab.module.scss';
 
 export default function Schedule() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
+
+  function getMinExamEndTime() {
+    const startTime = new Date(examTabData?.exam_start_time);
+    const duration = +examTabData?.duration || 0;
+
+    const endTime = startTime.setMinutes(startTime.getMinutes() + duration);
+
+    return endTime;
+  }
 
   return (
     <div className={`${styles.scheduleContainer}`}>
@@ -17,21 +26,25 @@ export default function Schedule() {
       <section>
         <label htmlFor="examDate">Exam Start Date:</label>
         <InputDatePicker
-          selectedDate={examTabData?.examStartDate}
+          selectedDate={examTabData?.exam_start_date}
           changeHandler={(date) => {
-            console.log(date);
-            setExamTabData({ ...examTabData, examStartDate: date });
+            setExamTabData({ ...examTabData, exam_start_date: date });
           }}
         />
       </section>
-
       {/* exam start time */}
       <section>
-        <label htmlFor="examDate">Exam Start Time:</label>
-        <TimePicker
-          selected={examTabData?.examStartTime}
-          changeHandler={(date) => setExamTabData({ ...examTabData, examStartTime: date })}
-        />
+        <Grid container spacing={0} alignItems={'center'}>
+          <Grid item xs={6}>
+            <label htmlFor="examDate">Exam Start Time:</label>
+          </Grid>
+          <Grid item xs={6}>
+            <InputTimePicker
+              selected={examTabData?.exam_start_time}
+              changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
+            />
+          </Grid>
+        </Grid>
       </section>
       {/* <LabeledDropdown
         dropdownOptions={{
@@ -46,7 +59,6 @@ export default function Schedule() {
         isFiftyFifty={true}
         changeHandler={(e) => changeHandler(e, newCustomSection, setNewCustomSection, 'type')}
       /> */}
-
       {/* Exam Duration */}
       <LabeledInput
         isFiftyFifty={true}
@@ -62,51 +74,56 @@ export default function Schedule() {
       />
 
       {/* buffer time */}
-      <LabeledDropdown
-        dropdownOptions={{
-          label: 'Buffer Time:',
-          placeholder: 'Select buffer time in hours',
-          options: [
-            { value: 1, label: '1' },
-            { value: 2, label: '2' },
-            { value: 3, label: '3' },
-            { value: 4, label: '4' },
-            { value: 5, label: '5' }
-          ],
-          value: { value: examTabData?.bufferTime, label: examTabData?.bufferTime }
-        }}
+      <LabeledInput
         isFiftyFifty={true}
-        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'bufferTime')}
+        styleClass={`${styles.inputField}`}
+        inputOptions={{
+          inputName: 'buffer_time',
+          label: 'Buffer Time:',
+          placeholder: 'Enter Select buffer time in minutes',
+          value: examTabData.buffer_time,
+          isNumericOnly: true,
+          isDisabled: examTabData?.is_stretch
+        }}
+        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
 
       <div className={`${styles.stretchDuration}`}>
         <LabeledRadioCheckbox
           type="checkbox"
           label="Stretch Examination Conduct Duration"
-          name="isStretch"
-          value={examTabData?.isStretch}
+          name="is_stretch"
+          isChecked={examTabData?.is_stretch}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
       </div>
 
-      {examTabData?.isStretch && (
+      {examTabData?.is_stretch && (
         <>
           {/* Exam end Date */}
           <section>
             <label htmlFor="examDate">Exam End Date:</label>
             <InputDatePicker
-              selectedDate={examTabData?.examEndDate}
-              changeHandler={(date) => setExamTabData({ ...examTabData, examEndDate: date })}
+              selectedDate={examTabData?.exam_end_date}
+              minDate={examTabData?.exam_start_date}
+              changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_date: date })}
             />
           </section>
 
           {/* exam end time */}
           <section>
-            <label htmlFor="examDate">Exam End Time:</label>
-            <TimePicker
-              selected={examTabData?.examEndTime}
-              changeHandler={(date) => setExamTabData({ ...examTabData, examEndTime: date })}
-            />
+            <Grid container spacing={0} alignItems={'center'}>
+              <Grid item xs={6}>
+                <label htmlFor="examDate">Exam End Time:</label>
+              </Grid>
+              <Grid item xs={6}>
+                <InputTimePicker
+                  selected={examTabData?.exam_end_time}
+                  changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_time: date })}
+                  minTime={getMinExamEndTime()}
+                />
+              </Grid>
+            </Grid>
           </section>
         </>
       )}

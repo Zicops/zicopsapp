@@ -1,34 +1,46 @@
-import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { GET_QUESTION_BANK_QUESTIONS, queryClient } from '../../../../../../../API/Queries';
-import { getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.helper';
-import { QuestionPaperTabDataAtom } from '../../../../../../../state/atoms/exams.atoms';
-import { ToastMsgAtom } from '../../../../../../../state/atoms/toast.atom';
+import { DIFFICULTY, getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.helper';
+import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '../../../../../../common/ZicopsTable';
-import { imageTypes } from '../../../../../QuestionBanks/Logic/questionBank.helper';
+import { acceptedFileTypes } from '../../../../../QuestionBanks/Logic/questionBank.helper';
+import styles from '../../../questionPaperTab.module.scss';
 
-export default function QuestionTable({ questionBankId, handleSelectedQuestions }) {
-  const [loadQBQuestions, { error: errorQBQuestionsData }] = useLazyQuery(
-    GET_QUESTION_BANK_QUESTIONS,
-    { client: queryClient }
-  );
+export default function QuestionTable({
+  qbQuestions,
+  metaData,
+  selectedQb,
+  handleSelectedQuestions,
+  selectedQuestionIds,
+  setSelectedQuestionIds
+}) {
+  const [searchQuery, setSearchQuery] = useState(null);
+  const [allQb, setAllQb] = useState(qbQuestions);
+  const [filteredQb, setFilteredQb] = useState(qbQuestions);
 
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const { fixedQuestionData } = useRecoilValue(QuestionPaperTabDataAtom);
-
-  const [qbQuestions, setQbQuestions] = useState([]);
-
-  // load table data
   useEffect(() => {
-    loadQBQuestions({ variables: { question_bank_id: questionBankId } }).then(({ data }) => {
-      if (errorQBQuestionsData)
-        return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
-
-      if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
+    const filteredBasedOnDifficulty = allQb.filter((q) => {
+      return DIFFICULTY[metaData?.difficulty_level]?.includes(q?.Difficulty);
     });
-  }, [questionBankId]);
+
+    // clear selected id if one of selected question id is filtered due to difficulty
+    if (
+      !filteredBasedOnDifficulty?.length ||
+      filteredBasedOnDifficulty.some((q) => !selectedQuestionIds?.includes(q?.id))
+    ) {
+      setSelectedQuestionIds([]);
+    }
+    setAllQb(filteredBasedOnDifficulty);
+    setFilteredQb(filteredBasedOnDifficulty);
+  }, []);
+
+  useEffect(() => {
+    if (!searchQuery) return;
+
+    setFilteredQb(
+      allQb.filter((q) => q?.Description?.toLowerCase().includes(searchQuery?.toLowerCase()))
+    );
+  }, [searchQuery]);
 
   const columns = [
     {
@@ -41,11 +53,12 @@ export default function QuestionTable({ questionBankId, handleSelectedQuestions 
           <div>
             <LabeledRadioCheckbox
               type="checkbox"
+              isChecked={selectedQuestionIds?.includes(params.row.id)}
               changeHandler={(e) => handleSelectedQuestions(params.row.id, e.target.checked)}
             />
             {params.row?.Description}
 
-            {imageTypes.includes(params.row?.AttachmentType) && (
+            {acceptedFileTypes.includes(params.row?.AttachmentType) && (
               <div>
                 <img src={params.row?.Attachment} height={30} alt="" />
               </div>
@@ -64,9 +77,26 @@ export default function QuestionTable({ questionBankId, handleSelectedQuestions 
 
   return (
     <>
+      <div className={styles.topbarTable}>
+        <p className="w-100">{selectedQb?.name}</p>
+
+        <div className={styles.searchInputContainer}>
+          <img src="/images/magnifier.png" height={20} alt="" />
+
+          <LabeledInput
+            inputOptions={{
+              inputName: 'qbFilter',
+              placeholder: 'Search Questions',
+              value: searchQuery || ''
+            }}
+            changeHandler={({ target: { value } }) => setSearchQuery(value)}
+            isFiftyFifty={true}
+          />
+        </div>
+      </div>
       <ZicopsTable
         columns={columns}
-        data={qbQuestions}
+        data={filteredQb}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="50vh"

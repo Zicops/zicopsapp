@@ -22,12 +22,10 @@
 }
 
 .zoomIn {
-  transform: scale(1);
-  animation: zoomIn 2s;
+  animation: zoomIn .2s;
 }
 .zoomOut {
-  transform: scale(3);
-  animation: zoomOut 2s;
+  animation: zoomOut .2s;
 }
 
 @keyframes zoomIn {
@@ -45,6 +43,7 @@
   }
   100% {
     transform: scale(3);
+    opacity: 0;
   }
 }
 // .HomeContainer {
@@ -71,19 +70,23 @@
     justify-content: space-between;
     align-items: center;
 
-    width: 60px;
+    width: 65px;
     height: 80%;
-
+    cursor: pointer;
     margin-right: 33px;
 
-    font-size: small;
+
+    font-size: 14px;
     font-weight: 600;
 
     color: $primary;
     // border: 1px solid $primary;
+    &:hover{
+      color: $white;
+    }
     img {
       object-fit: contain;
-      height: 50%;
+      height: 40%;
     }
   }
 
@@ -117,7 +120,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-
+    min-height: 220px;
     .scrollItems {
       display: flex;
       flex-direction: column;
@@ -199,9 +202,7 @@
   }
 
   .btn {
-    // outline: none;
-    // border: 2px solid $primary;
-    // background-color: transparent;
+    padding: 20px 0;
     button {
       outline: none;
       border: 2px solid $primary;
@@ -210,6 +211,7 @@
       border-radius: 18px;
       font-family: 'Open Sans';
       color: $primary;
+      cursor: pointer;
       &:hover {
         background: $primary;
         color: $white;
@@ -239,4 +241,9 @@
     // gap: 20px;
     color: $white;
   }
+}
+
+// Animation for homepage scroll
+.animated{
+  margin-top: 120px;
 }

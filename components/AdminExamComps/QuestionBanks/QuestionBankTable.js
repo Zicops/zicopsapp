@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_BANK, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
-import { getQuestionBankObject, SelectedQuestionBankAtom } from '../../../state/atoms/exams.atoms';
+import {
+  getQuestionBankObject,
+  RefetchDataAtom,
+  SelectedQuestionBankAtom
+} from '../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
@@ -12,14 +16,17 @@ import ZicopsTable from '../../common/ZicopsTable';
 import AddQuestionBank from './AddQuestionBank';
 
 export default function QuestionBankTable({ isEdit = false }) {
-  const [loadQuestionBank, { error: errorQuestionBankData, refetch: refetchQuestionBank }] =
-    useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
+  const [loadQuestionBank, { error: errorQuestionBankData, refetch }] = useLazyQuery(
+    GET_LATEST_QUESTION_BANK,
+    { client: queryClient }
+  );
 
   const router = useRouter();
   const [addPopUp, setAddPopUp] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
   const [editPopUp, setEditPopUp] = useRecoilState(PopUpStatesAtomFamily('editQuestionBank'));
   const [selectedQB, setSelectedQB] = useRecoilState(SelectedQuestionBankAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [refetchData, setRefetchData] = useRecoilState(RefetchDataAtom);
 
   // state for storing table data
   const [questionBank, setQuestionBank] = useState([]);
@@ -36,14 +43,27 @@ export default function QuestionBankTable({ isEdit = false }) {
     });
   }, []);
 
-  function refetchBankData() {
-    refetchQuestionBank().then(({ data: { getLatestQuestionBank } }) => {
-      setQuestionBank(getLatestQuestionBank?.questionBanks);
-    });
+  // set refetch query in recoil
+  useEffect(() => {
+    function refetchBankData() {
+      refetch().then(({ data: { getLatestQuestionBank } }) => {
+        setQuestionBank(getLatestQuestionBank?.questionBanks);
+      });
 
-    if (errorQuestionBankData)
-      return setToastMsg({ type: 'danger', message: 'Question Bank Refetch Error' });
-  }
+      if (errorQuestionBankData)
+        return setToastMsg({ type: 'danger', message: 'Question Bank Refetch Error' });
+    }
+
+    setRefetchData({
+      ...refetchData,
+      questionBank: refetchBankData
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(addPopUp);
+    if (addPopUp) setSelectedQB(getQuestionBankObject());
+  }, [addPopUp]);
 
   const columns = [
     {
@@ -125,28 +145,16 @@ export default function QuestionBankTable({ isEdit = false }) {
       />
 
       {/* add question bank pop up */}
-      <PopUp
-        title="Add Question Bank"
-        isPopUpOpen={addPopUp}
-        closeBtn={{ handleClick: () => setAddPopUp(false) }}
-        isFooterVisible={false}>
-        <AddQuestionBank
-          refetchQuestionBank={refetchBankData}
-          closePopUp={() => setAddPopUp(false)}
-        />
+      <PopUp title="Add Question Bank" popUpState={[addPopUp, setAddPopUp]} isFooterVisible={false}>
+        <AddQuestionBank closePopUp={() => setAddPopUp(false)} />
       </PopUp>
 
       {/* edit question bank pop up */}
       <PopUp
         title="Edit Question Bank"
-        isPopUpOpen={editPopUp}
-        closeBtn={{ handleClick: () => setEditPopUp(false) }}
+        popUpState={[editPopUp, setEditPopUp]}
         isFooterVisible={false}>
-        <AddQuestionBank
-          isEdit={true}
-          refetchQuestionBank={refetchBankData}
-          closePopUp={() => setEditPopUp(false)}
-        />
+        <AddQuestionBank isEdit={true} closePopUp={() => setEditPopUp(false)} />
       </PopUp>
     </>
   );

@@ -1,4 +1,5 @@
 import Carousel from 'react-multi-carousel';
+import { CustomLeftArrow, CustomRightArrow } from '../small/SliderArrows';
 import styles from './heroSliderCotainer.module.scss';
 
 const HeroSliderContainer = ({ children }) => {
@@ -45,11 +46,13 @@ const HeroSliderContainer = ({ children }) => {
           transitionDuration={1000}
           containerClass={`${styles.header_carousel_container}`}
           sliderClass={`${styles.carousel_track}`}
-          removeArrowOnDeviceType={['tablet', 'mobile', 'desktop', 'laptop']}
+          //removeArrowOnDeviceType={['tablet', 'mobile', 'desktop']}
           deviceType="Laptop"
           dotListClass="custom-dot-list-style"
           // customDot={<CustomDot />}
           // partialVisbile={true}
+          customLeftArrow={<CustomLeftArrow />}
+          customRightArrow={<CustomRightArrow />}
           itemClass={`${styles.itemContainer}`}>
           {children}
         </Carousel>

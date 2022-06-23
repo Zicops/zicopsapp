@@ -1,12 +1,16 @@
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { changeHandler } from '../../../../../../helper/common.helper';
+import Button from '../../../../../common/Button';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
 import LabeledTextarea from '../../../../../common/FormComponents/LabeledTextarea';
+import RangeSlider from '../../../../../common/FormComponents/RangeSlider';
+import InputWithCheckbox from '../../../../../common/InputWithCheckbox';
+import TextInputWithFile from '../../../../../common/InputWithCheckbox/TextInputWithFile';
 import Accordion from '../../../../../small/Accordion';
-import TextInputWithFile from '../../../../common/TextInputWithFile';
-import { imageTypes } from '../../../Logic/questionBank.helper';
-import McqCard from '../../../McqCard';
+import McqCard from '../../../../common/McqCard';
+import { acceptedFileTypes } from '../../../Logic/questionBank.helper';
 import styles from '../../questionMasterTab.module.scss';
-import InputWithCheckbox from './InputWithCheckbox';
 
 export default function CreateQuestionForm({ data, isEdit }) {
   const {
@@ -17,125 +21,164 @@ export default function CreateQuestionForm({ data, isEdit }) {
     questionFileInputHandler,
     optionInputHandler,
     activateEdit,
+    isEditQuestion,
     saveQuestion
   } = data;
 
   const NUMBER_OF_OPTIONS = 4;
-  const difficultyOptions = [
-    { label: 1, value: 1 },
-    { label: 2, value: 2 },
-    { label: 3, value: 3 },
-    { label: 4, value: 4 },
-    { label: 5, value: 5 }
-  ];
+  const difficultyOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => ({
+    label: val,
+    value: val
+  }));
+
+  const [shouldCloseAccordion, setShouldCloseAccordion] = useState(null);
+  const [showQuestionForm, setShowQuestionForm] = useState(false);
+
+  useEffect(() => {
+    if (questionData?.type === 'MCQ') {
+      setShowQuestionForm(true);
+      return setShouldCloseAccordion(true);
+    }
+
+    setShouldCloseAccordion(null);
+    setShowQuestionForm(false);
+  }, [questionData, questionsArr]);
+
+  useEffect(() => {
+    if (isEdit) setShowQuestionForm(true);
+    if (showQuestionForm) setShouldCloseAccordion(true);
+  }, [isEdit]);
 
   return (
     <>
-      {questionsArr?.map((data, index) => {
-        return (
-          <Accordion
-            title={data.question.description}
-            content={
-              <McqCard
-                questionData={data.question}
-                optionData={data.options}
-                handleEdit={() => activateEdit(index)}
+      <div className={styles.accordionContainer}>
+        {questionsArr?.map((d, index) => {
+          return (
+            <div className={styles.container}>
+              <Accordion
+                title={d.question.description}
+                content={
+                  <McqCard
+                    questionData={d.question}
+                    optionData={d.options}
+                    handleEdit={() => activateEdit(index)}
+                  />
+                }
+                closeAccordion={shouldCloseAccordion}
+                onClose={() => {
+                  console.log(shouldCloseAccordion);
+                  if (questionData?.type === 'MCQ') return;
+                  console.log(1);
+                  setShouldCloseAccordion(null);
+                }}
               />
-            }
-          />
-        );
-      })}
+            </div>
+          );
+        })}
+      </div>
 
-      <LabeledDropdown
-        dropdownOptions={{
-          inputName: 'type',
-          label: 'Select Question Type: ',
-          placeholder: 'Select question type',
-          options: [
-            { label: 'MCQ', value: 'MCQ' },
-            { label: 'Descriptive', value: 'Descriptive', disabled: true }
-          ],
-          value: questionData?.type ? { value: questionData.type, label: questionData.type } : null
-        }}
-        changeHandler={(e) => changeHandler(e, questionData, setQuestionData, 'type')}
-      />
-
-      {questionData?.type === 'MCQ' && (
+      {!showQuestionForm ? (
+        <div className={`center-element-with-flex`}>
+          <Button text="Add Question" clickHandler={() => setShowQuestionForm(true)} />
+        </div>
+      ) : (
         <>
           <LabeledDropdown
-            styleClass={styles.marginTop}
             dropdownOptions={{
-              inputName: 'difficulty',
-              label: 'Select Question Difficulty: ',
-              placeholder: 'Select question difficulty',
-              options: difficultyOptions,
-              value: questionData?.difficulty
-                ? {
-                    value: questionData.difficulty,
-                    label: difficultyOptions[questionData.difficulty - 1].label
-                  }
+              inputName: 'type',
+              label: 'Select Question Type: ',
+              placeholder: 'Select question type',
+              options: [
+                { label: 'MCQ', value: 'MCQ' },
+                { label: 'Descriptive', value: 'Descriptive', disabled: true }
+              ],
+              value: questionData?.type
+                ? { value: questionData.type, label: questionData.type }
                 : null
             }}
-            changeHandler={(e) => changeHandler(e, questionData, setQuestionData, 'difficulty')}
+            changeHandler={(e) => changeHandler(e, questionData, setQuestionData, 'type')}
           />
 
-          {/* question with file */}
-          <div className={styles.marginTop}>
-            <label>
-              Enter Question:
-              <TextInputWithFile
-                inputName="description"
-                value={questionData?.description}
-                fileNmae={questionData?.file?.name || questionData?.attachment}
-                accept={imageTypes.join(', ')}
-                changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
-                fileInputHandler={questionFileInputHandler}
+          {questionData?.type === 'MCQ' && (
+            <>
+              <RangeSlider
+                options={difficultyOptions}
+                inputName="difficulty"
+                selected={questionData.difficulty}
+                changeHandler={(e, val) => setQuestionData({ ...questionData, difficulty: val })}
               />
-            </label>
-          </div>
 
-          {/* exam hint */}
-          <div className={styles.marginTop}>
-            <label>
-              Enter Hint:
-              <LabeledTextarea
-                styleClass={styles.inputLabelGap}
-                inputOptions={{
-                  inputName: 'hint',
-                  placeholder: 'Enter hint in less than 300 characters.',
-                  rows: 4,
-                  value: questionData?.hint
-                }}
-                changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
-              />
-            </label>
-          </div>
-
-          {/* options */}
-          <div className={styles.marginTop}>
-            <label>
-              Enter Options:
-              <span className={`${styles.hint}`}>Select the checkbox for the right option.</span>
-              {Array(NUMBER_OF_OPTIONS)
-                .fill(null)
-                .map((value, index) => (
-                  <InputWithCheckbox
-                    labelCount={index + 1}
-                    isCorrectHandler={(e) => {
-                      optionInputHandler(e, index);
-                    }}
-                    optionData={optionData[index]}
-                    inputChangeHandler={(e) => optionInputHandler(e, index)}
-                    fileInputHandler={(e) => optionInputHandler(e, index)}
+              {/* question with file */}
+              <div className={styles.marginTop}>
+                <label>
+                  Enter Question:
+                  <TextInputWithFile
+                    inputName="description"
+                    value={questionData?.description}
+                    fileNmae={questionData?.file?.name || questionData?.attachment}
+                    accept={acceptedFileTypes.join(', ')}
+                    changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
+                    fileInputHandler={questionFileInputHandler}
                   />
-                ))}
-            </label>
-          </div>
+                </label>
+              </div>
 
-          {!isEdit && (
-            <div className={`center-element-with-flex`}>
-              <button onClick={saveQuestion}>Add the Question</button>
-            </div>
+              {/* exam hint */}
+              <div className={styles.marginTop}>
+                <label>
+                  Enter Hint:
+                  <LabeledTextarea
+                    styleClass={styles.inputLabelGap}
+                    inputOptions={{
+                      inputName: 'hint',
+                      placeholder: 'Enter hint in less than 300 characters.',
+                      rows: 4,
+                      value: questionData?.hint
+                    }}
+                    changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
+                  />
+                </label>
+              </div>
+
+              {/* options */}
+              <div className={styles.marginTop}>
+                Enter Options:
+                <span className={`${styles.hint}`}>Select the checkbox for the right option.</span>
+                {Array(NUMBER_OF_OPTIONS)
+                  .fill(null)
+                  .map((value, index) => (
+                    <label>
+                      <InputWithCheckbox
+                        key={index}
+                        labelCount={index + 1}
+                        acceptedTypes={acceptedFileTypes.join(', ')}
+                        isCorrectHandler={(e) => optionInputHandler(e, index)}
+                        optionData={{
+                          fileName: optionData[index]?.file?.name || optionData[index]?.attachment,
+                          inputValue: optionData[index]?.description,
+                          inputName: 'description',
+                          isCorrect: optionData[index]?.isCorrect
+                        }}
+                        inputChangeHandler={(e) => optionInputHandler(e, index)}
+                        fileInputHandler={(e) => optionInputHandler(e, index)}
+                      />
+                    </label>
+                  ))}
+              </div>
+
+              {!isEdit && (
+                <div className={`center-element-with-flex`}>
+                  <Button
+                    text={
+                      isEditQuestion
+                        ? 'Update Question'
+                        : `Add ${questionsArr.length ? 'Next' : 'the'} Question`
+                    }
+                    clickHandler={saveQuestion}
+                  />
+                </div>
+              )}
+            </>
           )}
         </>
       )}

@@ -36,12 +36,6 @@ export default function Questions() {
   // reset data on close
   useEffect(() => {
     if (!(editSectionPopUp || addQuestionMetaDataPopUp)) setSelectedSectionData(null);
-
-    // if no section is present, show error
-    if (addQuestionMetaDataPopUp && !selectedSectionData) {
-      setToastMsg({ type: 'danger', message: 'No Section Present' });
-      udpateAddQuestionMetaDataPopUp(false);
-    }
   }, [editSectionPopUp, addQuestionMetaDataPopUp]);
 
   // if id is not present return to first tab
@@ -97,39 +91,33 @@ export default function Questions() {
       {/* add custom section */}
       <PopUp
         isFooterVisible={false}
-        isPopUpOpen={addSectionPopUp}
-        title="Add Custom Section"
-        closeBtn={{ handleClick: () => udpateAddSectionPopUp(false) }}>
+        popUpState={[addSectionPopUp, udpateAddSectionPopUp]}
+        title="Add Custom Section">
         <AddCustomSection />
       </PopUp>
 
       {/* edit custom section */}
       <PopUp
         isFooterVisible={false}
-        isPopUpOpen={editSectionPopUp}
-        title="Edit Custom Section"
-        closeBtn={{ handleClick: () => udpateEditSectionPopUp(false) }}>
+        popUpState={[editSectionPopUp, udpateEditSectionPopUp]}
+        title="Edit Custom Section">
         <AddCustomSection editData={selectedSectionData} />
+      </PopUp>
+
+      {/* add meta data of question */}
+      <PopUp
+        isFooterVisible={false}
+        popUpState={[addQuestionMetaDataPopUp, udpateAddQuestionMetaDataPopUp]}
+        title="Add Question Meta Data">
+        <AddQuestionMetaData sectionId={selectedSectionData?.id} />
       </PopUp>
 
       {/* edit meta data of question */}
       {!!selectedSectionData?.id && (
         <PopUp
           isFooterVisible={false}
-          isPopUpOpen={addQuestionMetaDataPopUp}
-          title="Add Question Meta Data"
-          closeBtn={{ handleClick: () => udpateAddQuestionMetaDataPopUp(false) }}>
-          <AddQuestionMetaData sectionId={selectedSectionData?.id} />
-        </PopUp>
-      )}
-
-      {/* edit meta data of question */}
-      {!!selectedSectionData?.id && (
-        <PopUp
-          isFooterVisible={false}
-          isPopUpOpen={editQuestionMetaDataPopUp}
-          title="Add Question Meta Data"
-          closeBtn={{ handleClick: () => udpateEditQuestionMetaDataPopUp(false) }}>
+          popUpState={[editQuestionMetaDataPopUp, udpateEditQuestionMetaDataPopUp]}
+          title="Edit Question Meta Data">
           <AddQuestionMetaData sectionId={selectedSectionData?.id} editData={editMetaData} />
         </PopUp>
       )}

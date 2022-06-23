@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const Accordion = ({ title, content }) => {
+const Accordion = ({ title, content, closeAccordion, onClose= function(){} }) => {
 
     const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        if (closeAccordion == null) return 
+
+        setIsActive(!closeAccordion)
+    },[closeAccordion])
+
+    useEffect(() => {
+        if(!isActive) onClose()
+    }, [isActive])
+
     return (
       <>
         <div className="accordion">

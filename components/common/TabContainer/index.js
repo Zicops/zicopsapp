@@ -1,4 +1,7 @@
 import { arrayOf, element, shape, string } from 'prop-types';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { StatusAtom } from '../../../state/atoms/utils.atoms';
 import Button from '../Button';
 
 // Add proptype for extra added props
@@ -11,6 +14,13 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
     cancelDisplay = 'Cancel',
     handleCancel = function () {}
   } = footerObj;
+
+  const [tabStatus, setTabStatus] = useRecoilState(StatusAtom);
+
+  // reset for new tab view
+  useEffect(() => {
+    setTabStatus(null);
+  }, []);
 
   function showActiveTab(tab) {
     const index = tabData.findIndex((t) => {
@@ -82,7 +92,7 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
           background-color: #202222;
           height: 60vh;
           overflow: auto;
-          padding: 20px 50px;
+          padding: 30px 50px;
         }
 
         .tabSection::-webkit-scrollbar {

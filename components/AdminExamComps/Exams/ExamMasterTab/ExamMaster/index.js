@@ -10,7 +10,10 @@ import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
+import { customSelectStyles } from '../../../../common/FormComponents/Logic/formComponents.helper';
 import styles from '../examMasterTab.module.scss';
+import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
+import RTE from '../../../../common/FormComponents/RTE';
 
 export default function ExamMaster() {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -22,9 +25,10 @@ export default function ExamMaster() {
 
   const [questionPaperOptions, setQuestionPaperOptions] = useState([]);
 
-  // load table data
+  // load question paper data
   useEffect(() => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
+    const LARGE_PAGE_SIZE = 999999999999;
+    const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
 
     loadQuestionPaper({ variables: queryVariables }).then(({ data }) => {
       if (errorQuestionPaperData)
@@ -34,110 +38,25 @@ export default function ExamMaster() {
 
       const options = [];
       if (paperData)
-        paperData.forEach((paper) => options.push({ value: paper.id, label: paper.name }));
+        paperData.forEach((paper) =>
+          options.push({ value: paper.id, label: paper.name, ...paper })
+        );
 
       setQuestionPaperOptions(options);
     });
   }, []);
 
+  const maxAttemptsOptions = [1, 2, 3, 4, 5].map((val) => ({ value: val, label: val }));
+
+  const defaultStyles = customSelectStyles();
   const customStyles = {
-    container: (provided, state) => ({
-      ...provided,
-      width: '100%',
-      boxShadow: state.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
-    }),
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: 'var(--dark_two)',
-      border:
-        !state.isFocused && !state.hasValue
-          ? '2px solid var(--dark_three)'
-          : '2px solid var(--primary)',
-      borderRadius: 0,
-      boxShadow: 'none',
-      fontSize: '14px',
-      '&:hover': {
-        borderWidth: '2px'
-      }
-    }),
-    input: (provided, state) => ({ ...provided, color: 'var(--white)' }),
-    indicatorSeparator: (provided, state) => ({
-      ...provided,
-      display: 'none !important'
-    }),
-    menuList: (provided, state) => ({
-      ...provided,
-      padding: 0,
-      borderRadius: 0,
-      maxHeight: '200px',
-      /* width */
-      '&::-webkit-scrollbar': {
-        width: '5px',
-        borderRadius: '0px',
-        cursor: 'pointer'
-      },
-      /* Track */
-      '&::-webkit-scrollbar-track': {
-        background: '#2a2e31',
-        borderRadius: '7px'
-      },
-      /* Handle */
-      '&::-webkit-scrollbar-thumb': {
-        background: '#969a9d',
-        borderRadius: '7px',
-        /* Handle on hover */
-        '&:hover': {
-          background: '#555'
-        }
-      }
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isFocused ? 'var(--black)' : 'var(--dark_two)',
-      color: state.isSelected ? 'var(--white)' : 'var(--dark_three)',
-      borderRadius: 0,
-      boxShadow: 'none',
-      fontSize: '14px',
-      cursor: 'pointer',
-      '&:hover': {
-        backgroundColor: 'var(--black)'
-      }
-    }),
-    singleValue: (provided, state) => ({ ...provided, color: 'var(--white)' }),
-    multiValue: (provided, state) => ({
-      ...provided,
-      backgroundColor: 'var(--primary)'
-    }),
-    multiValueLabel: (provided, state) => ({
-      ...provided,
-      color: 'var(--dark_one)',
-      fontSize: '14px',
-      padding: '5px'
-    }),
-    multiValueRemove: (provided, state) => ({
-      ...provided,
-      color: 'var(--dark_one)',
-      cursor: 'pointer',
-      '&:hover': {
-        backgroundColor: 'var(--primary)'
-      }
-    }),
-    noOptionsMessage: (provided) => ({
-      ...provided,
-      borderRadius: '0',
-      backgroundColor: 'var(--dark_two)',
-      color: 'var(--dark_three)',
-      fontSize: '14px'
+    ...defaultStyles,
+    container: () => ({
+      ...defaultStyles.container,
+      margin: '0px',
+      padding: '0px'
     })
   };
-
-  const maxAttemptsOptions = [
-    { value: 1, label: '1' },
-    { value: 2, label: '2' },
-    { value: 3, label: '3' },
-    { value: 4, label: '2' },
-    { value: 5, label: '5' }
-  ];
 
   return (
     <>
@@ -149,9 +68,20 @@ export default function ExamMaster() {
           label: 'Question Paper:',
           placeholder: 'Select Question Paper',
           options: questionPaperOptions,
-          value: questionPaperOptions?.filter((option) => option?.value === examTabData?.qpId)[0]
+          value: questionPaperOptions?.filter((option) => option?.value === examTabData?.qpId)[0],
+          isSearchEnable: true
         }}
-        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'qpId')}
+        changeHandler={(e) => {
+          const selectedQp = questionPaperOptions?.filter((option) => option?.value === e.value)[0];
+
+          setExamTabData({
+            ...examTabData,
+            category: selectedQp?.Category,
+            sub_category: selectedQp?.SubCategory,
+            duration: selectedQp?.SuggestedDuration || 0,
+            qpId: e.value
+          });
+        }}
       />
 
       {/* exam name */}
@@ -161,7 +91,8 @@ export default function ExamMaster() {
           inputName: 'name',
           label: 'Exam Name:',
           placeholder: 'Enter name of the paper (Upto 60 characters)',
-          value: examTabData?.name
+          value: examTabData?.name,
+          maxLength: 60
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
@@ -172,8 +103,9 @@ export default function ExamMaster() {
         inputOptions={{
           inputName: 'description',
           label: 'Description:',
-          placeholder: 'Enter description (Upto 60 characters)',
-          value: examTabData.description
+          placeholder: 'Enter description (Upto 160 characters)',
+          value: examTabData.description,
+          maxLength: 160
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
@@ -187,7 +119,8 @@ export default function ExamMaster() {
             inputName: 'duration',
             label: 'Exam Duration:',
             placeholder: 'Enter duration of the exam',
-            value: examTabData.duration?.toString()
+            value: examTabData.duration?.toString(),
+            isDisabled: true
           }}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
@@ -197,17 +130,17 @@ export default function ExamMaster() {
           isFiftyFifty={true}
           styleClass={`${styles.inputField}`}
           inputOptions={{
-            inputName: 'totalMarks',
+            inputName: 'total_marks',
             label: 'Total Marks:',
             placeholder: 'Total Marks',
-            // value: examTabData?.totalMarks
+            value: examTabData?.total_marks?.toString(),
             isDisabled: true
           }}
         />
       </div>
 
       <div className={`${styles.passingCriteriaOuterContainer}`}>
-        <label htmlFor="passingCriteria" aria-label="passingCriteria">
+        <label htmlFor="passing_criteria" aria-label="passing_criteria">
           Passing Criteria:
         </label>
 
@@ -215,51 +148,43 @@ export default function ExamMaster() {
           <input
             type="text"
             className="w-75"
-            name="passingCriteria"
+            name="passing_criteria"
             placeholder="Passing Criteria"
-            value={examTabData?.passingCriteria}
+            onKeyPress={(e) => {
+              const regexForNumber = /[0-9]/;
+              if (!regexForNumber.test(e.key)) e.preventDefault();
+            }}
+            value={examTabData?.passing_criteria}
             onChange={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
+
+          {/* <div>
+            <Select
+              options={[
+                { label: 'Marks', value: 'Marks' },
+                { label: 'Percentage', value: 'Percentage' }
+              ]}
+              value={{
+                label: examTabData?.passing_criteria_type,
+                value: examTabData?.passing_criteria_type
+              }}
+              name="passing_criteria_type"
+              className="w-100"
+              styles={customStyles}
+              isSearchable={false}
+              onChange={(e) => setExamTabData({ ...examTabData, passing_criteria_type: e.value })}
+            />
+          </div> */}
           <select
             onChange={(e) =>
-              setExamTabData({ ...examTabData, passingCriteriaType: e.target.value })
+              setExamTabData({ ...examTabData, passing_criteria_type: e.target.value })
             }
-            value={examTabData?.passingCriteriaType}>
+            value={examTabData?.passing_criteria_type}>
             <option value="Marks">Marks</option>
             <option value="Percentage">Percentage</option>
           </select>
         </div>
       </div>
-      {/* <div className={`${styles.passingCriteriaContainer}`}>
-        <label htmlFor="passingCriteria" aria-label="passingCriteria" className="w-45">
-          Passing Criteria:
-        </label>
-
-        <input
-          type="text"
-          className="w-75"
-          name="passingCriteria"
-          placeholder="Passing Criteria"
-          value={examTabData?.passingCriteria}
-          onChange={(e) => changeHandler(e, examTabData, setExamTabData)}
-        />
-
-        <Select
-          options={[
-            { value: 'Marks', label: 'Marks' },
-            { value: 'Percentage', label: 'Percentage' }
-          ]}
-          value={{
-            value: examTabData?.passingCriteriaType,
-            label: examTabData?.passingCriteriaType
-          }}
-          onChange={(e) => setExamTabData({ ...examTabData, passingCriteriaType: e.value })}
-          className="w-60"
-          styles={customStyles}
-          isSearchable={false}
-          isClearable={false}
-        />
-      </div> */}
 
       <div className={`${styles.totalMarksSection}`}></div>
 
@@ -268,24 +193,24 @@ export default function ExamMaster() {
           <LabeledRadioCheckbox
             type="checkbox"
             label="Set Max. Attempts Limit"
-            name="isAttemptsVisible"
-            isChecked={examTabData?.isAttemptsVisible}
+            name="is_attempts_visible"
+            isChecked={examTabData?.is_attempts_visible}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
         </div>
 
-        {examTabData?.isAttemptsVisible && (
+        {examTabData?.is_attempts_visible && (
           <div className="w-65">
             <LabeledDropdown
               dropdownOptions={{
-                inputName: 'noAttempts',
+                inputName: 'no_attempts',
                 label: 'Max Attempts:',
                 placeholder: 'Select Max Attempts',
                 options: maxAttemptsOptions,
-                value: { value: examTabData?.noAttempts, label: examTabData?.noAttempts }
+                value: { value: examTabData?.no_attempts, label: examTabData?.no_attempts }
               }}
               isFiftyFifty={true}
-              changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'noAttempts')}
+              changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'no_attempts')}
             />
           </div>
         )}
@@ -307,7 +232,7 @@ export default function ExamMaster() {
         <div className="w-65">
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'noAttempts',
+              inputName: 'no_attempts',
               label: 'Neg. marks per Question:',
               placeholder: 'Select Max Attempts',
               options: [
@@ -328,13 +253,19 @@ export default function ExamMaster() {
           <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
-              inputName: 'accessType',
-              placeholder: 'Enter instructions in less than 300 characters.',
+              inputName: 'instructions',
               rows: 4,
-              value: examTabData?.accessType
+              value: examTabData?.instructions
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
+          {/* <RTE
+            changeHandler={(e) => {
+              setExamTabData({ ...examTabData, instructions: e.target.innerHTML });
+            }}
+            placeholder="Enter instructions in less than 300 characters."
+            value={examTabData?.instructions}
+          /> */}
         </label>
       </div>
 
@@ -342,19 +273,19 @@ export default function ExamMaster() {
         <LabeledRadioCheckbox
           type="radio"
           label="Scheduled"
-          name="scheduleType"
-          value="scheduled"
+          name="schedule_type"
+          value={SCHEDULE_TYPE[0]}
           isDisabled={!!examTabData?.id}
-          isChecked={examTabData.scheduleType === 'scheduled'}
+          isChecked={examTabData.schedule_type === 'scheduled'}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
         <LabeledRadioCheckbox
           type="radio"
           label="Take Anytime"
-          name="scheduleType"
-          value="anytime"
+          name="schedule_type"
+          value={SCHEDULE_TYPE[1]}
           isDisabled={!!examTabData?.id}
-          isChecked={examTabData.scheduleType === 'anytime'}
+          isChecked={examTabData.schedule_type === 'anytime'}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
       </div>

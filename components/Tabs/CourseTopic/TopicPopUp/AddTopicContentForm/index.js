@@ -64,9 +64,7 @@ export default function AddTopicContentForm({
           label: 'Select Language:',
           placeholder: 'Language of the content',
           options: languageOptions,
-          value: newTopicContent.language
-            ? { value: newTopicContent.language, label: newTopicContent.language }
-            : null
+          value: { value: newTopicContent.language, label: newTopicContent.language }
         }}
         changeHandler={(e) => handleTopicContentInput(e, 'language')}
       />
@@ -79,9 +77,7 @@ export default function AddTopicContentForm({
           placeholder: 'Type of the content',
           options: typeOptions,
           isDisabled: topicContent?.length > 0,
-          value: newTopicContent.type
-            ? { value: newTopicContent.type, label: newTopicContent.type }
-            : null
+          value: { value: newTopicContent.type, label: newTopicContent.type }
         }}
         changeHandler={(e) => handleTopicContentInput(e, 'type')}
       />
@@ -96,7 +92,7 @@ export default function AddTopicContentForm({
                 handleFileUpload={handleTopicVideoInput}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
-                acceptedTypes={newTopicContent.type}
+                acceptedTypes={['video/*'].join(', ')}
                 hidePreviewBtns={true}
               />
             </div>

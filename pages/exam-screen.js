@@ -1,10 +1,14 @@
 import QuestionSection from '../components/LearnerExamComp';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import LearnerExamComponent from '../components/LearnerExamComp';
 import ExamLandingPage from '../components/LearnerExamComp/ExamLandingPage';
 import ExamInstruction from '../components/LearnerExamComp/ExamInstructions';
+import Image from 'next/image';
+import { flexbox } from '@mui/system';
 
 const ExamScreen = () => {
+  const router = useRouter();
   const examData = [
     {
       id: 1,
@@ -428,9 +432,49 @@ const ExamScreen = () => {
   const [current, setCurrent] = useState(data[0]);
   const [isFullScreen, setIsFullScreen] = useState(0);
   const [isLearner, setIsLearner] = useState(false);
+  const refFullscreen = useRef(null);
+
+  /* View in fullscreen */
+  function openFullscreen(elem) {
+    if (elem?.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem?.webkitRequestFullscreen) {
+      /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem?.msRequestFullscreen) {
+      /* IE11 */
+      elem.msRequestFullscreen();
+    }
+  }
+  /* Close fullscreen */
+  function closeFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      /* Safari */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      /* IE11 */
+      document.msExitFullscreen();
+    }
+  }
+  // fix fullscreen issue
+  function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      // videoContainer.current?.requestFullscreen();
+      openFullscreen(refFullscreen.current);
+      setIsFullScreen(1);
+    } else {
+      // document.exitFullscreen();
+      setIsFullScreen(0);
+      closeFullscreen();
+    }
+
+    // setPlayPauseActivated(!document.fullscreenElement ? 'enterFullScreen' : 'exitFullScreen');
+  }
 
   return (
-    <>
+    <div ref={refFullscreen}>
       {isLearner ? (
         <LearnerExamComponent
           data={data}
@@ -448,7 +492,26 @@ const ExamScreen = () => {
           setIsFullScreen={setIsFullScreen}
         />
       )}
-    </>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          display: 'flex',
+          gap: '10px',
+          marginLeft: '40px'
+        }}>
+        <div onClick={toggleFullScreen}>
+          {isFullScreen ? (
+            <Image src="/images/svg/fullscreen_exit.svg" height={30} width={30} />
+          ) : (
+            <Image src="/images/svg/fullscreen.svg" height={30} width={30} />
+          )}
+        </div>
+        <div onClick={() => router.push('/exam')}>
+          <Image src="/images/svg/clear.svg" height={30} width={30} />
+        </div>
+      </div>
+    </div>
   );
 };
 

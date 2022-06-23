@@ -13,7 +13,7 @@ import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import {
   getQuestionBankQuestionObject,
   getQuestionOptionsObject,
-  imageTypes
+  acceptedFileTypes
 } from './questionBank.helper';
 
 export default function useHandleQuestionBankQuestion(editData, closeQuestionMasterTab) {
@@ -44,6 +44,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   );
   const [optionData, setOptionData] = useState(Array(4).fill(getQuestionOptionsObject()));
   const [isUploading, setIsUploading] = useState(null);
+  const [isEditQuestion, setIsEditQuestion] = useState(false);
 
   // set edit data in local state
   useEffect(() => {
@@ -71,22 +72,34 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   function validateInput() {
     const question = questionData;
     const options = optionData;
-    let isOptionsCompleted = false,
+    let isOptionsCompleted = 0,
       isOneChecked = false;
 
     options.forEach((option) => {
-      isOptionsCompleted = !!option.description;
+      const isComplete = option?.description || option?.file;
+      isOptionsCompleted += isComplete ? 1 : 0;
 
-      if (option.isCorrect && !isOneChecked) isOneChecked = true;
+      if (!isComplete) return;
+
+      if (option?.isCorrect && !isOneChecked) isOneChecked = true;
     });
+
+    let errorMsg = '';
+    if (!question.type) errorMsg = 'Select Question Type';
+    if (!question.description && !errorMsg) errorMsg = 'Add Question';
+    if (!question.difficulty && !errorMsg) errorMsg = 'Add Question Difficulty';
+    if (isOptionsCompleted < 2 && !errorMsg) errorMsg = 'Add at least 2 option';
+    if (!isOneChecked && !errorMsg) errorMsg = 'Select at least 1 correct option';
+
+    if (errorMsg) setToastMsg({ type: 'danger', message: errorMsg });
 
     return (
       question.type &&
       question.description &&
       question.difficulty &&
       question.qbmId &&
-      isOneChecked &&
-      isOptionsCompleted
+      isOptionsCompleted >= 2 &&
+      isOneChecked
     );
   }
 
@@ -94,9 +107,10 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   function isImageValid(e) {
     if (e.target.type === 'file') {
       const file = e.target.files[0];
+
       if (!file) return false;
-      if (!imageTypes.includes(file?.type)) {
-        setToastMsg({ type: 'danger', message: `${imageTypes.join(', ')} only accepted` });
+      if (!acceptedFileTypes.includes(file?.type)) {
+        setToastMsg({ type: 'danger', message: `${acceptedFileTypes.join(', ')} only accepted` });
         return false;
       }
     }
@@ -116,6 +130,21 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       file: e.target.files[0],
       attachmentType: e.target.files[0].type
     });
+  }
+
+  function isOptionsDuplicate() {
+    var optionArr = optionData.map(function (op) {
+      return op.description;
+    });
+    var isDuplicate = optionArr.some((op, i) => {
+      if (!op) return;
+
+      return optionArr.indexOf(op) != i;
+    });
+    console.log(isDuplicate);
+
+    if (isDuplicate) setToastMsg({ type: 'danger', message: 'Options cannot be same.' });
+    return isDuplicate;
   }
 
   // checkbox, file and text input handler for option
@@ -141,14 +170,15 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   // add question data to array to show in accordion
   function saveQuestion() {
-    if (!validateInput())
-      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
+    if (!validateInput()) return;
+    if (isOptionsDuplicate()) return;
 
     setQuestionsArr([...questionsArr, { question: questionData, options: optionData }]);
 
     // reset form data
     setQuestionData(getQuestionBankQuestionObject({ qbmId: questionBankId }));
     setOptionData(Array(4).fill(getQuestionOptionsObject()));
+    setIsEditQuestion(false);
   }
 
   // edit question data from accordion
@@ -159,6 +189,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setQuestionData(removedQuestion.question);
     setOptionData(removedQuestion.options);
     setQuestionsArr(allQuestions);
+    setIsEditQuestion(true);
   }
 
   async function addQuestionAndOptions() {
@@ -169,6 +200,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     for (let index = 0; index < questionsArr.length; index++) {
       const { question, options } = questionsArr[index];
       const sendQuestionData = {
+        name: question.name || '',
         description: question.description || '',
         type: question.type || '',
         difficulty: question.difficulty || 0,
@@ -199,6 +231,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       // add option
       for (let i = 0; i < options.length; i++) {
         const option = options[i];
+        console.log(option.description, option.file);
+        if (!option.description && !option.file) continue;
+
         const sendOptionData = {
           description: option.description || '',
           isCorrect: option.isCorrect || false,
@@ -238,6 +273,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     const options = optionData;
     const sendQuestionData = {
       id: question.id,
+      name: question.name || '',
       description: question.description || '',
       type: question.type || '',
       difficulty: question.difficulty || 0,
@@ -255,6 +291,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       sendQuestionData.file = question.file;
     }
     let isError = false;
+
+    if (!question.id) return setToastMsg({ type: 'danger', message: `Question id missing` });
+
     await updateQuestion({ variables: sendQuestionData }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -263,6 +302,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
+      if (!option.id)
+        return setToastMsg({ type: 'danger', message: `Option (${i + 1}) id missing` });
+
       const sendOptionData = {
         id: option.id,
         description: option.description || '',
@@ -300,6 +342,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setQuestionData,
     optionData,
     activateEdit,
+    isEditQuestion,
     questionFileInputHandler,
     optionInputHandler,
     addQuestionAndOptions,

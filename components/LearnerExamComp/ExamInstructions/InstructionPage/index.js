@@ -19,47 +19,8 @@ const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) 
   }, []);
 
   const router = useRouter();
-  const examInstructionContainer = useRef(null);
-  /* View in fullscreen */
-  function openFullscreen(elem) {
-    if (elem?.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem?.webkitRequestFullscreen) {
-      /* Safari */
-      elem.webkitRequestFullscreen();
-    } else if (elem?.msRequestFullscreen) {
-      /* IE11 */
-      elem.msRequestFullscreen();
-    }
-  }
-  /* Close fullscreen */
-  function closeFullscreen() {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      /* Safari */
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      /* IE11 */
-      document.msExitFullscreen();
-    }
-  }
-  // fix fullscreen issue
-  function toggleFullScreen() {
-    if (!document.fullscreenElement) {
-      // videoContainer.current?.requestFullscreen();
-      openFullscreen(examInstructionContainer.current);
-      setIsFullScreen(1);
-    } else {
-      // document.exitFullscreen();
-      setIsFullScreen(0);
-      closeFullscreen();
-    }
 
-    // setPlayPauseActivated(!document.fullscreenElement ? 'enterFullScreen' : 'exitFullScreen');
-  }
   return (
-    <div className={isFullScreen ? `${styles.fsContainer}` : ''} ref={examInstructionContainer}>
       <div className={`${styles.examInstContainer}`}>
         <div
           className={
@@ -76,7 +37,7 @@ const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) 
             {isType.takeAnyTime && (
               <span>
                 <img src="./images/ExamInstructions/schedule.png" alt="cannot found" /> Exam Start
-                Time<span>:</span> <span>{data.examStartTime}</span>
+                Time<span>:</span> <span>{data.exam_start_time}</span>
               </span>
             )}
             <span>
@@ -104,7 +65,7 @@ const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) 
             {isType.takeAnyTime && (
               <span>
                 <img src="./images/ExamInstructions/timer.png" alt="cannot found" /> Exam end time
-                <span>:</span> <span>{data.examEndTime}</span>
+                <span>:</span> <span>{data.exam_end_time}</span>
               </span>
             )}
             {isType.takeAnyTime && (
@@ -201,24 +162,23 @@ const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) 
           </div>
         </div>
         <div className={`${styles.instructionFooter}`}>
-          <div className={`${styles.fsBtn}`}>
-            <button onClick={toggleFullScreen}>
+           <div>
+          {/*  <button onClick={toggleFullScreen}>
               {isFullScreen ? (
                 <Image src="/images/svg/fullscreen_exit.svg" height={30} width={30} />
               ) : (
                 <Image src="/images/svg/fullscreen.svg" height={30} width={30} />
               )}
-              {/* <Image src="/images/svg/fullscreen.svg" height={30} width={30} /> */}
             </button>
             <button onClick={() => router.back()}>
               <Image src="/images/svg/clear.svg" height={30} width={30} />
-            </button>
+            </button> */}
           </div>
           <div className={`${styles.agreeText}`}>
-            <LabeledRadioCheckbox 
-            label="I have read and understood all the instructions given above and agree to adhere to them." 
-            type="checkbox" 
-            changeHandler={()=>setTerms(!terms)}
+            <LabeledRadioCheckbox
+              label="I have read and understood all the instructions given above and agree to adhere to them."
+              type="checkbox"
+              changeHandler={() => setTerms(!terms)}
             />
           </div>
 
@@ -234,7 +194,6 @@ const InstructionPage = ({ setIsLearner, type, isFullScreen, setIsFullScreen }) 
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

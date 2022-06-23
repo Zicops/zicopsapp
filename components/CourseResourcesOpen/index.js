@@ -1,9 +1,10 @@
+import { Fragment } from 'react';
 import LearnerPageContainer from '../common/LearnerPageContainer';
 import LineText from '../common/LineText';
 import CourseResourceLoop from './CourseResourceLoop';
 import styles from './courseResourcesOpen.module.scss';
 
-const CourseResourcesOpen = ({ isResourceShown, resources }) => {
+export default function CourseResourcesOpen({ isResourceShown, resources }) {
   // sort based on type, making similar type consecutive
   resources = resources.sort((r1, r2) => r1.type.localeCompare(r2.type));
   if (!isResourceShown) return null;
@@ -18,13 +19,13 @@ const CourseResourcesOpen = ({ isResourceShown, resources }) => {
         ) : (
           <>
             <div className={`${styles.gridThree}`}>
-              {resources.map((r) => (
-                <>
+              {resources.map((r, i) => (
+                <Fragment key={r.name + i}>
                   {prevType !== r.type && (
                     <h2 className={`${styles.resourceType}`}>{(prevType = r.type)}</h2>
                   )}
-                  <CourseResourceLoop resource={r} key={r.name + r.created_at + Math.random()} />
-                </>
+                  <CourseResourceLoop resource={r} />
+                </Fragment>
               ))}
             </div>
           </>
@@ -32,6 +33,4 @@ const CourseResourcesOpen = ({ isResourceShown, resources }) => {
       </LearnerPageContainer>
     </>
   );
-};
-
-export default CourseResourcesOpen;
+}

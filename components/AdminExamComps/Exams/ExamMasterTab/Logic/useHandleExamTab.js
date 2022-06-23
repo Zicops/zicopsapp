@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
@@ -13,8 +13,17 @@ import {
   UPDATE_EXAM_INSTRUCTION,
   UPDATE_EXAM_SCHEDULE
 } from '../../../../../API/Mutations';
+import {
+  GET_LATEST_EXAMS_NAMES,
+  GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION,
+  GET_QUESTION_PAPER_SECTION_ID,
+  queryClient
+} from '../../../../../API/Queries';
+import { isNameDuplicate } from '../../../../../helper/data.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
+import { STATUS, StatusAtom } from '../../../../../state/atoms/utils.atoms';
+import { SCHEDULE_TYPE } from './examMasterTab.helper';
 
 export default function useHandleExamTab() {
   const [addExam, { error: addExamError }] = useMutation(ADD_EXAM, {
@@ -45,34 +54,112 @@ export default function useHandleExamTab() {
     UPDATE_EXAM_CONFIGURATION,
     { client: mutationClient }
   );
+  const [loadSectionId, { error: loadSectionError }] = useLazyQuery(GET_QUESTION_PAPER_SECTION_ID, {
+    client: queryClient
+  });
+  const [loadMappingData, { error: loadMappingError }] = useLazyQuery(
+    GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION,
+    { client: queryClient }
+  );
 
   const router = useRouter();
+  const examId = router.query?.examId;
+
   // recoil state
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [status, setStatus] = useRecoilState(StatusAtom);
 
   // disable submit if data not complete
   function validateInput() {
-    const { name, description, qpId, duration, scheduleType, passingCriteria, accessType } =
+    const { name, description, qpId, duration, schedule_type, passing_criteria, instructions } =
       examTabData;
-    const isExamValid = name && description && qpId && duration && scheduleType;
+    const isExamValid = name && description && qpId && duration && schedule_type;
 
-    const isInstructionsValid = passingCriteria && accessType;
+    const isInstructionsValid = passing_criteria && instructions;
     return isExamValid && isInstructionsValid;
   }
 
   useEffect(() => {
-    console.log(examTabData);
-  }, [examTabData]);
+    if (toastMsg[0]?.type === 'danger') setStatus(STATUS[0]);
+  }, [toastMsg]);
 
   // error notifications
   useEffect(() => {
     if (addExamError) return setToastMsg({ type: 'danger', message: `Add Exam Error` });
+    if (updateExamError) return setToastMsg({ type: 'danger', message: `Update Exam Error` });
+
     if (addExamInstructionError)
       return setToastMsg({ type: 'danger', message: `Add Exam Instruction Error` });
+    if (updateExamInstructionError)
+      return setToastMsg({ type: 'danger', message: `Update Exam Instruction Error` });
+
     if (addExamScheduleError)
       return setToastMsg({ type: 'danger', message: `Add Exam Schedule Error` });
-  }, [addExamError, addExamInstructionError, addExamScheduleError]);
+    if (udpateExamScheduleError)
+      return setToastMsg({ type: 'danger', message: `Update Exam Schedule Error` });
+
+    if (addExamConfigError)
+      return setToastMsg({ type: 'danger', message: `Add Exam Configuration Error` });
+    if (updateExamConfigError)
+      return setToastMsg({ type: 'danger', message: `Update Exam Configuration Error` });
+
+    if (loadSectionError) return setToastMsg({ type: 'danger', message: `Load Section Error` });
+    if (loadMappingError) return setToastMsg({ type: 'danger', message: `Load Mapping Error` });
+  }, [
+    addExamError,
+    updateExamError,
+    addExamInstructionError,
+    updateExamInstructionError,
+    addExamScheduleError,
+    udpateExamScheduleError,
+    addExamConfigError,
+    updateExamConfigError,
+    loadSectionError,
+    loadMappingError
+  ]);
+
+  // update total marks on qp id change
+  useEffect(async () => {
+    if (examTabData?.id !== null || examId !== examTabData?.id) return;
+
+    const qpId = examTabData?.qpId;
+    if (!qpId) return setExamTabData({ ...examTabData, total_marks: 0 });
+
+    // load section data
+    let isError = false;
+    const sectionRes = await loadSectionId({ variables: { question_paper_id: qpId } }).catch(
+      (err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Section Id load error' });
+      }
+    );
+    if (isError) return;
+    const sections = sectionRes?.data?.getQuestionPaperSections;
+    let totalMarks = 0;
+    if (!sections.length) return;
+
+    for (let i = 0; i < sections.length; i++) {
+      const sectionId = sections[i]?.id;
+      // load map
+      const mapRes = await loadMappingData({ variables: { section_id: sectionId } }).catch(
+        (err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Mapping load error' });
+        }
+      );
+      if (isError) return;
+      const mapData = mapRes?.data?.getQPBankMappingBySectionId || [];
+      totalMarks = mapData?.reduce(
+        (total, item) => (total += item?.QuestionMarks * item?.TotalQuestions),
+        totalMarks
+      );
+    }
+
+    setExamTabData({ ...examTabData, total_marks: totalMarks || 0 });
+  }, [examTabData?.qpId]);
 
   function getDateTime(dateObj, timeObj) {
     dateObj = new Date(dateObj);
@@ -82,9 +169,9 @@ export default function useHandleExamTab() {
     newDateObj.setDate(dateObj.getDate());
     newDateObj.setMonth(dateObj.getMonth());
     newDateObj.setFullYear(dateObj.getFullYear());
-    newDateObj.setFullYear(timeObj.getHours());
-    newDateObj.setFullYear(timeObj.getMinutes());
-    newDateObj.setFullYear(timeObj.getSeconds());
+    newDateObj.setHours(timeObj.getHours());
+    newDateObj.setMinutes(timeObj.getMinutes());
+    newDateObj.setSeconds(timeObj.getSeconds());
 
     return Math.floor(newDateObj.getTime() / 1000) || 0;
   }
@@ -94,16 +181,15 @@ export default function useHandleExamTab() {
       name: examTabData.name,
       description: examTabData.description,
       qpId: examTabData.qpId,
-
       duration: +examTabData.duration || 0,
-      scheduleType: examTabData.scheduleType,
+      schedule_type: examTabData.schedule_type,
 
       category: examTabData.category || '',
       sub_category: examTabData.sub_category || '',
       code: examTabData.code || '',
       type: examTabData.type || '',
 
-      status: examTabData.status || 'SAVED',
+      status: examTabData.status || STATUS[1],
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_exam_active || true
@@ -122,6 +208,11 @@ export default function useHandleExamTab() {
       return response?.data?.updateExam;
     }
 
+    // duplicate name check
+    if (await isNameDuplicate(GET_LATEST_EXAMS_NAMES, examTabData.name, 'getLatestExams.exams')) {
+      setToastMsg({ type: 'danger', message: 'Exam with same name already exist' });
+      return false;
+    }
     // add new exam
     response = await addExam({ variables: sendData }).catch((err) => {
       console.log(err);
@@ -134,9 +225,10 @@ export default function useHandleExamTab() {
   async function saveInstructions(examId) {
     const sendData = {
       examId: examId,
-      passingCriteria: `${examTabData.passingCriteria}-${examTabData.passingCriteriaType}`,
-      noAttempts: examTabData.noAttempts || 1,
-      accessType: examTabData.accessType || '',
+      passing_criteria: `${examTabData.passing_criteria}-${examTabData.passing_criteria_type}`,
+      no_attempts: examTabData.no_attempts || 1,
+      instructions: examTabData.instructions || '',
+      access_type: examTabData.access_type || '',
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_ins_active || true
@@ -164,20 +256,21 @@ export default function useHandleExamTab() {
   }
 
   async function saveSchedule(examId) {
-    const startDateTime = getDateTime(examTabData.examStartDate, examTabData.examStartTime);
+    const startDateTime = getDateTime(examTabData.exam_start_date, examTabData.exam_start_time);
     const sendData = {
       examId: examId,
       start: startDateTime,
       end: 0,
-      bufferTime: examTabData.bufferTime || 1,
+      buffer_time: examTabData.buffer_time || 0,
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_ins_active || true
     };
 
     console.log(sendData);
-    if (examTabData?.examEndDate && examTabData?.examEndTime) {
-      sendData.end = getDateTime(examTabData.examEndDate, examTabData.examEndTime);
+    if (examTabData.is_stretch && examTabData?.exam_end_date && examTabData?.exam_end_time) {
+      sendData.end = getDateTime(examTabData.exam_end_date, examTabData.exam_end_time);
+      sendData.buffer_time = 0;
     }
 
     let response = {};
@@ -206,9 +299,9 @@ export default function useHandleExamTab() {
     const sendData = {
       examId: examId,
       shuffle: examTabData.shuffle || false,
-      showResult: examTabData.showResult || false,
-      displayHints: examTabData.displayHints || false,
-      showAnswer: examTabData.showAnswer || false,
+      show_result: examTabData.show_result || false,
+      display_hints: examTabData.display_hints || false,
+      show_answer: examTabData.show_answer || false,
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_config_active || true
@@ -236,18 +329,19 @@ export default function useHandleExamTab() {
   }
 
   async function saveExamData() {
-    await saveSchedule(examTabData.id);
     console.log(examTabData);
+    setStatus('UPDATING');
     if (!validateInput())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
     const examRes = await saveExam();
-    const examId = examRes?.id;
+    if (!examRes) return;
 
+    const examId = examRes?.id;
     const insRes = await saveInstructions(examId || examTabData.id);
 
     let schRes = null;
-    if (examTabData.scheduleType === 'scheduled')
+    if (examTabData.schedule_type === SCHEDULE_TYPE[0])
       schRes = await saveSchedule(examId || examTabData.id);
 
     const confRes = await saveConfig(examId || examTabData.id);
@@ -261,10 +355,9 @@ export default function useHandleExamTab() {
     });
 
     setToastMsg({ type: 'success', message: 'Exam Saved' });
+    setStatus(STATUS[1]);
     if (!router.query?.examId) return router.push(`${router.asPath}/${examId}`);
   }
 
-  return {
-    saveExamData
-  };
+  return { saveExamData };
 }
