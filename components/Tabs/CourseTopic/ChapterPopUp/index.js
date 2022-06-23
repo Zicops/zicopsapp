@@ -1,5 +1,5 @@
-import { changeHandler } from '../../../../helper/common.helper';
 import LabeledInput from '../../../common/FormComponents/LabeledInput';
+import { changeHandler } from '../../../../helper/common.helper';
 import LabeledTextarea from '../../../common/FormComponents/LabeledTextarea';
 import PopUp from '../../../common/PopUp';
 import styles from '../../courseTabs.module.scss';
