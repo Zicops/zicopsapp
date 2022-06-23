@@ -10,6 +10,7 @@ import UserProfile from '../../../components/UserProfile';
 import CoursesAccordian from '../../../components/UserProfile/CoursesAccordian';
 import CohortAccordian from '../../../components/UserProfile/CohortAccordian';
 import LearningDashboardAccordian from '../../../components/UserProfile/LearningDashboardAccordian';
+import styles from './user.module.scss';
 
 export default function User() {
   return (
@@ -17,15 +18,14 @@ export default function User() {
       <Sidebar sidebarItemsArr={userSideBarData} />
       <MainBody>
         <AdminHeader title="Profile" pageRoute="/admin/user" isAddShown={true} />
-        <MainBodyBox customClass={`a`}>
+        <MainBodyBox>
           <UserProfile />
         </MainBodyBox>
-
-        <MainBodyBox customStyle={{ padding: '20px' }}>
+        <div className={`${styles.accordianContainer}`}>
           <CoursesAccordian />
           <CohortAccordian />
           <LearningDashboardAccordian />
-        </MainBodyBox>
+        </div>
       </MainBody>
     </>
   );

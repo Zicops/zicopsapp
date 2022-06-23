@@ -22,8 +22,8 @@ const Index = ({ height, children, acc_title }) => {
           width={'100%'}
           boxShadow={'0px 0px 45px 5px rgba(0, 0, 0, 0.55)'}
           bgcolor={'#1E1F1F'}
-          px={3}
-          pt={2}
+          px={2}
+          py={1}
           my={2}
           pb={isActive ? 3 : 2}
           borderRadius={'15px'}
