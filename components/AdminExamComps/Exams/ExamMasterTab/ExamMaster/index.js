@@ -76,6 +76,8 @@ export default function ExamMaster() {
 
           setExamTabData({
             ...examTabData,
+            category: selectedQp?.Category,
+            sub_category: selectedQp?.SubCategory,
             duration: selectedQp?.SuggestedDuration || 0,
             qpId: e.value
           });

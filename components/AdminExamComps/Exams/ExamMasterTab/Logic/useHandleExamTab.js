@@ -87,11 +87,37 @@ export default function useHandleExamTab() {
   // error notifications
   useEffect(() => {
     if (addExamError) return setToastMsg({ type: 'danger', message: `Add Exam Error` });
+    if (updateExamError) return setToastMsg({ type: 'danger', message: `Update Exam Error` });
+
     if (addExamInstructionError)
       return setToastMsg({ type: 'danger', message: `Add Exam Instruction Error` });
+    if (updateExamInstructionError)
+      return setToastMsg({ type: 'danger', message: `Update Exam Instruction Error` });
+
     if (addExamScheduleError)
       return setToastMsg({ type: 'danger', message: `Add Exam Schedule Error` });
-  }, [addExamError, addExamInstructionError, addExamScheduleError]);
+    if (udpateExamScheduleError)
+      return setToastMsg({ type: 'danger', message: `Update Exam Schedule Error` });
+
+    if (addExamConfigError)
+      return setToastMsg({ type: 'danger', message: `Add Exam Configuration Error` });
+    if (updateExamConfigError)
+      return setToastMsg({ type: 'danger', message: `Update Exam Configuration Error` });
+
+    if (loadSectionError) return setToastMsg({ type: 'danger', message: `Load Section Error` });
+    if (loadMappingError) return setToastMsg({ type: 'danger', message: `Load Mapping Error` });
+  }, [
+    addExamError,
+    updateExamError,
+    addExamInstructionError,
+    updateExamInstructionError,
+    addExamScheduleError,
+    udpateExamScheduleError,
+    addExamConfigError,
+    updateExamConfigError,
+    loadSectionError,
+    loadMappingError
+  ]);
 
   // update total marks on qp id change
   useEffect(async () => {

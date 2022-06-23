@@ -174,7 +174,7 @@ export default function ExamMasterTab() {
       setTab={setTab}
       footerObj={{
         status: status,
-        submitDisplay: 'Save',
+        submitDisplay: examTabData?.id ? 'Update' : 'Save',
         handleSubmit: saveExamData,
         handleCancel: () => router.push('/admin/exams/my-exams/')
       }}

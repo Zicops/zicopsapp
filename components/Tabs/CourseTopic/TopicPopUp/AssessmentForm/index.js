@@ -50,7 +50,7 @@ export default function AssessmentForm({ data }) {
           if (!assessmentData?.category && !assessmentData?.sub_category) return true;
 
           return (
-            option?.data?.SubCategory === assessmentData?.category ||
+            option?.data?.Category === assessmentData?.category ||
             option?.data?.SubCategory === assessmentData?.sub_category
           );
         }}

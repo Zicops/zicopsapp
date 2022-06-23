@@ -31,14 +31,15 @@ export default function useAddAssessment(topicId, setEditTopic) {
   }, [fullCourse?.id, topicId]);
 
   // load table data
-  useEffect(() => {
+  useEffect(async () => {
     const LARGE_PAGE_SIZE = 999999999999;
     const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
+    let examData = null;
 
-    loadExams({ variables: queryVariables }).then(({ data }) => {
+    await loadExams({ variables: queryVariables }).then(({ data }) => {
       if (errorLoadExam) return setToastMsg({ type: 'danger', message: 'exam load error' });
 
-      const examData = data?.getLatestExams?.exams;
+      examData = data?.getLatestExams?.exams;
 
       const options = [];
       if (examData)
@@ -48,10 +49,21 @@ export default function useAddAssessment(topicId, setEditTopic) {
     });
 
     // topic exam
-    loadTopicExamsData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
+    await loadTopicExamsData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
-        if (data?.getTopicExams[0]) setAssessmentData(data.getTopicExams[0]);
-        if (errorTopicExamData) setToastMsg({ type: 'danger', message: 'Topic Exams Load Error' });
+        if (errorTopicExamData)
+          return setToastMsg({ type: 'danger', message: 'Topic Exams Load Error' });
+
+        const topicExam = data?.getTopicExams[0];
+        if (!topicExam) return;
+
+        const selectedExam = examData?.filter((ex) => ex?.id === topicExam?.examId)[0];
+
+        setAssessmentData({
+          ...topicExam,
+          category: selectedExam?.Category,
+          sub_category: selectedExam?.SubCategory
+        });
       }
     );
   }, []);
