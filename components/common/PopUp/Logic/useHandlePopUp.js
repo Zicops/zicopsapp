@@ -19,24 +19,23 @@ export default function useHandlePopUp(popUpState = []) {
     if (!isPopUpDataPresent) {
       setPopUpParentState(false);
       setIsOpen(false);
-      return true;
+      return;
     }
 
     const isConfirmed = confirm('Are you sure you want to close the pop up?');
     setIsOpen(!isConfirmed);
     setIsPopUpDataPresent(!isConfirmed);
     setPopUpParentState((prev) => {
-      console.log(prev, isConfirmed);
+      const isPrevBool = typeof prev === 'boolean';
 
       //  pop up is open and data is not modified
-      if (isConfirmed === false) return prev;
+      if (isConfirmed === false) return isPrevBool ? !prev : prev;
 
       // if prev data is boolean
-      if (typeof prev === 'boolean') return false;
+      if (isPrevBool) return false;
 
       return null;
     });
-    return isConfirmed;
   }
 
   return { isOpen, closePopUp };

@@ -9,8 +9,20 @@ export default function LabeledDropdown({
   filterOption,
   isFiftyFifty = false
 }) {
-  const { inputName, label, placeholder, options, value, isDisabled, isSearchEnable, isMulti } =
-    dropdownOptions;
+  let {
+    inputName,
+    label,
+    placeholder,
+    options,
+    value,
+    isDisabled,
+    isReadonly,
+    isSearchEnable,
+    isMulti,
+    menuPlacement = 'auto'
+  } = dropdownOptions;
+
+  if (isReadonly) isDisabled = true;
 
   let containerWidth = '75%';
   if (!label) containerWidth = '100%';
@@ -37,7 +49,8 @@ export default function LabeledDropdown({
         placeholder={placeholder}
         onChange={changeHandler}
         className={`${label ? '' : 'w-100'}`}
-        styles={customSelectStyles(isFiftyFifty, containerWidth)}
+        menuPlacement={menuPlacement}
+        styles={customSelectStyles(isFiftyFifty, containerWidth, isReadonly)}
         isSearchable={!!isSearchEnable}
         isDisabled={!!isDisabled}
         isOptionDisabled={(option) => option.disabled}

@@ -1544,3 +1544,47 @@ export const UPDATE_EXAM_CONFIGURATION = gql`
     }
   }
 `;
+
+export const ADD_TOPIC_EXAM = gql`
+  mutation addTopicExam($topicId: String, $examId: String, $courseId: String, $language: String) {
+    addTopicExam(
+      topicId: $topicId
+      courseId: $courseId
+      exam: { examId: $examId, language: $language }
+    ) {
+      id
+      topicId
+      examId
+      courseId
+      created_at
+      updated_at
+      language
+    }
+  }
+`;
+
+export const UPDATE_TOPIC_EXAM = gql`
+  mutation updateTopicExam(
+    $id: ID
+    $topicId: String
+    $examId: String
+    $language: String
+  ) {
+    updateTopicExam(
+      exam: {
+        id: $id
+        topicId: $topicId
+        examId: $examId
+        language: $language
+      }
+    ) {
+      id
+      topicId
+      examId
+      courseId
+      created_at
+      updated_at
+      language
+    }
+  }
+`;

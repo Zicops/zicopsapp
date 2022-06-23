@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Accordion = ({ title, content, closeAccordion, onClose }) => {
+const Accordion = ({ title, content, closeAccordion, onClose= function(){} }) => {
 
     const [isActive, setIsActive] = useState(false);
 

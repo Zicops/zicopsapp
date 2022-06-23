@@ -15,27 +15,12 @@ import ModulePopUp from './ModulePopUp';
 import TopicPopUp from './TopicPopUp';
 
 export default function CourseTopic() {
-  const { popUpValues, togglePopUp, refetchDataAndUpdateRecoil } = useHandleCourseTopic();
-  const {
-    isAddModulePopUpOpen,
-    isEditModulePopUpOpen,
-    isAddChapterPopUpOpen,
-    isEditChapterPopUpOpen,
-    isAddTopicPopUpOpen,
-    isEditTopicPopUpOpen
-  } = popUpValues;
+  const { refetchDataAndUpdateRecoil } = useHandleCourseTopic();
 
   // recoil state
   const [addModulePopUp, setAddModulePopUp] = useRecoilState(PopUpStatesAtomFamily('addModule'));
-  const [editModulePopUp, setEditModulePopUp] = useRecoilState(PopUpStatesAtomFamily('editModule'));
-
   const [addChapterPopUp, setAddChapterPopUp] = useRecoilState(PopUpStatesAtomFamily('addChapter'));
-  const [editChapterPopUp, setEditChapterPopUp] = useRecoilState(
-    PopUpStatesAtomFamily('editChapter')
-  );
-
   const [addTopicPopUp, setAddTopicPopUp] = useRecoilState(PopUpStatesAtomFamily('addTopic'));
-  const [editTopicPopUp, setEditTopicPopUp] = useRecoilState(PopUpStatesAtomFamily('editTopic'));
 
   const moduleData = useRecoilValue(ModuleAtom);
 

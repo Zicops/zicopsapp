@@ -39,6 +39,7 @@ export default function ExamMasterTab() {
 
   // update id
   const router = useRouter();
+
   useEffect(async () => {
     const examId = router.query?.examId || null;
     const qpId = router.query?.qpId || null;
@@ -145,7 +146,6 @@ export default function ExamMasterTab() {
     };
 
     setExamTabData({
-      ...examTabData,
       ...masterObj,
       ...insObj,
       ...schObj,
@@ -174,7 +174,7 @@ export default function ExamMasterTab() {
       setTab={setTab}
       footerObj={{
         status: status,
-        submitDisplay: 'Save',
+        submitDisplay: examTabData?.id ? 'Update' : 'Save',
         handleSubmit: saveExamData,
         handleCancel: () => router.push('/admin/exams/my-exams/')
       }}

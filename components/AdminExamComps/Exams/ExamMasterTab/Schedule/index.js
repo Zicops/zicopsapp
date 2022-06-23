@@ -11,6 +11,15 @@ import styles from '../examMasterTab.module.scss';
 export default function Schedule() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
+  function getMinExamEndTime() {
+    const startTime = new Date(examTabData?.exam_start_time);
+    const duration = +examTabData?.duration || 0;
+
+    const endTime = startTime.setMinutes(startTime.getMinutes() + duration);
+
+    return endTime;
+  }
+
   return (
     <div className={`${styles.scheduleContainer}`}>
       {/* Exam start date */}
@@ -111,7 +120,7 @@ export default function Schedule() {
                 <InputTimePicker
                   selected={examTabData?.exam_end_time}
                   changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_time: date })}
-                  minTime={examTabData?.exam_start_time}
+                  minTime={getMinExamEndTime()}
                 />
               </Grid>
             </Grid>

@@ -1,5 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import Select from 'react-select';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../../../API/Queries';
 import { changeHandler } from '../../../../../helper/common.helper';
@@ -9,8 +10,10 @@ import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
+import { customSelectStyles } from '../../../../common/FormComponents/Logic/formComponents.helper';
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
+import RTE from '../../../../common/FormComponents/RTE';
 
 export default function ExamMaster() {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -45,6 +48,16 @@ export default function ExamMaster() {
 
   const maxAttemptsOptions = [1, 2, 3, 4, 5].map((val) => ({ value: val, label: val }));
 
+  const defaultStyles = customSelectStyles();
+  const customStyles = {
+    ...defaultStyles,
+    container: () => ({
+      ...defaultStyles.container,
+      margin: '0px',
+      padding: '0px'
+    })
+  };
+
   return (
     <>
       {/* question paper dropdown (name and id) */}
@@ -63,6 +76,8 @@ export default function ExamMaster() {
 
           setExamTabData({
             ...examTabData,
+            category: selectedQp?.Category,
+            sub_category: selectedQp?.SubCategory,
             duration: selectedQp?.SuggestedDuration || 0,
             qpId: e.value
           });
@@ -105,7 +120,7 @@ export default function ExamMaster() {
             label: 'Exam Duration:',
             placeholder: 'Enter duration of the exam',
             value: examTabData.duration?.toString(),
-            isNumericOnly: true
+            isDisabled: true
           }}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
@@ -142,6 +157,24 @@ export default function ExamMaster() {
             value={examTabData?.passing_criteria}
             onChange={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
+
+          {/* <div>
+            <Select
+              options={[
+                { label: 'Marks', value: 'Marks' },
+                { label: 'Percentage', value: 'Percentage' }
+              ]}
+              value={{
+                label: examTabData?.passing_criteria_type,
+                value: examTabData?.passing_criteria_type
+              }}
+              name="passing_criteria_type"
+              className="w-100"
+              styles={customStyles}
+              isSearchable={false}
+              onChange={(e) => setExamTabData({ ...examTabData, passing_criteria_type: e.value })}
+            />
+          </div> */}
           <select
             onChange={(e) =>
               setExamTabData({ ...examTabData, passing_criteria_type: e.target.value })
@@ -221,12 +254,18 @@ export default function ExamMaster() {
             styleClass={styles.inputLabelGap}
             inputOptions={{
               inputName: 'instructions',
-              placeholder: 'Enter instructions in less than 300 characters.',
               rows: 4,
               value: examTabData?.instructions
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
+          {/* <RTE
+            changeHandler={(e) => {
+              setExamTabData({ ...examTabData, instructions: e.target.innerHTML });
+            }}
+            placeholder="Enter instructions in less than 300 characters."
+            value={examTabData?.instructions}
+          /> */}
         </label>
       </div>
 
