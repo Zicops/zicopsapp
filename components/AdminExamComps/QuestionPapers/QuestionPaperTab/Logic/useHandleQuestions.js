@@ -126,7 +126,7 @@ export default function useHandleQuestions(sectionId) {
     // create a default section
     let isError = false,
       sectionData = null;
-    if (!questionPaperTabData?.paperMaster?.section_wise) {
+    if (!questionPaperTabData?.paperMaster?.section_wise && !metaData.sectionId) {
       const defaultSectionData = {
         qpId: questionPaperTabData?.paperMaster?.id,
         name: 'Default',
