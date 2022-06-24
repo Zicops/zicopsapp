@@ -121,8 +121,6 @@ export default function useHandleExamTab() {
 
   // update total marks on qp id change
   useEffect(async () => {
-    if (examTabData?.id !== null || examId !== examTabData?.id) return;
-
     const qpId = examTabData?.qpId;
     if (!qpId) return setExamTabData({ ...examTabData, total_marks: 0 });
 

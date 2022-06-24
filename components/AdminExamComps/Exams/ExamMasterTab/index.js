@@ -176,7 +176,10 @@ export default function ExamMasterTab() {
         status: status,
         submitDisplay: examTabData?.id ? 'Update' : 'Save',
         handleSubmit: saveExamData,
-        handleCancel: () => router.push('/admin/exams/my-exams/')
+        handleCancel: () => {
+          setExamTabData(getExamTabDataObject());
+          router.push('/admin/exams/my-exams/');
+        }
       }}
     />
   );
