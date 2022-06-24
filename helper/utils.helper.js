@@ -67,3 +67,40 @@ export const DIFFICULTY = {
   Competent: [4, 5, 6, 7],
   Proficient: [8, 9, 10]
 };
+
+// ----- FULLSCREEN
+/* View in fullscreen */
+export function openFullscreen(elem) {
+  if (elem?.requestFullscreen) return elem.requestFullscreen();
+
+  /* Safari */
+  if (elem?.webkitRequestFullscreen) return elem.webkitRequestFullscreen();
+
+  /* IE11 */
+  if (elem?.msRequestFullscreen) return elem.msRequestFullscreen();
+
+  return false;
+}
+
+/* Close fullscreen */
+export function closeFullscreen() {
+  if (document.exitFullscreen) return document.exitFullscreen();
+
+  /* Safari */
+  if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+
+  /* IE11 */
+  if (document.msExitFullscreen) return document.msExitFullscreen();
+}
+
+// return true if switched to fullscreen otherwise false
+export function toggleFullScreen(elem) {
+  if (!document.fullscreenElement) {
+    openFullscreen(elem);
+
+    return true;
+  }
+
+  closeFullscreen();
+  return false;
+}

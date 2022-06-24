@@ -16,7 +16,6 @@ export default function Layout({ children }) {
   ];
 
   useEffect(() => {
-    console.log(router.pathname);
     if (fullHeightPageArray.includes(router.pathname)) {
       setIsFullHeight(1);
     } else {
