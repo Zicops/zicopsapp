@@ -39,3 +39,13 @@ export function loadQueryData(QUERY, variablesObj = {}, options = {}) {
 
   return response?.data || {};
 }
+
+export async function loadQueryDataAsync(QUERY, variableObj = {}, options = {}) {
+  const response = await queryClient
+    .query({ query: QUERY, variables: variableObj, ...options })
+    .catch((err) => {
+      console.log(`Load Data error:`, err);
+    });
+
+  return response?.data || {};
+}
