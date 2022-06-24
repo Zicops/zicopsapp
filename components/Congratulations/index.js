@@ -1,10 +1,10 @@
 import CongratulationsBody from './CongratulationsBody';
 import CongratulationsFooter from './CongratulationsFooter';
 import CongratulationsHead from './CongratulationsHead';
-import { data } from './CongratulationsHead/Logic/congratulationsHead.helper';
+import { data } from './Logic/congratulationsHead.helper';
 import CongratulationsScreen from './CongratulationsScreen';
 import CongratulationsScreenButton from '../common/CongratulationsScreenButton';
-const Congratulations = () => {
+const Congratulations = ({ result }) => {
   const failImage = '/images/fail.png';
   const passImage = '/images/pass.png';
   const completedImage = '/images/completed.png';
@@ -13,7 +13,7 @@ const Congratulations = () => {
     width: '',
     imgLink: ''
   };
-  switch (data[0].result) {
+  switch (data[result].result) {
     case 'PASS':
       style.imgLink = passImage;
       style.color = '#26BA4D';
@@ -32,15 +32,15 @@ const Congratulations = () => {
       break;
   }
   return (
-    <div>
+    <div style={{ width: '70%' }}>
       <CongratulationsScreen>
         <CongratulationsHead
           user_name={'pallav'}
           exam_name={'Fundamentals Of Java Programming'}
-          data={data[0]}
+          data={data[result]}
           style={style}
         />
-        <CongratulationsBody data={data[0]} style={style} />
+        <CongratulationsBody data={data[result]} style={style} />
       </CongratulationsScreen>
       <CongratulationsFooter>
         <CongratulationsScreenButton title={'Download Result'} />
