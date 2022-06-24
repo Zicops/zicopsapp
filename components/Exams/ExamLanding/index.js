@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   GET_EXAM_INSTRUCTION,
@@ -9,6 +9,7 @@ import {
   GET_QUESTION_PAPER_META,
   queryClient
 } from '../../../API/Queries';
+import { LearnerExamAtom } from '../../../state/atoms/exams.atoms';
 import { TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
@@ -30,8 +31,7 @@ export default function ExamLanding() {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
-
-  const [examData, setExamData] = useState(null);
+  const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
 
   const router = useRouter();
 
@@ -58,12 +58,12 @@ export default function ExamLanding() {
       name: masterData.Name,
       description: masterData.Description,
       duration: masterData.Duration,
-      schedule_type: masterData.ScheduleType,
+      scheduleType: masterData.ScheduleType,
 
       code: masterData.Code,
       type: masterData.Type,
-      sub_category: masterData.SubCategory,
       category: masterData.Category,
+      subCategory: masterData.SubCategory,
 
       status: masterData.Status,
       is_exam_active: masterData.IsActive
@@ -81,13 +81,16 @@ export default function ExamLanding() {
 
     const paperMaster = {
       category: paperMasterData?.Category,
-      sub_category: paperMasterData?.SubCategory,
+      subCategory: paperMasterData?.SubCategory,
       description: paperMasterData?.Description,
       section_wise: paperMasterData?.SectionWise,
-      difficulty_level: paperMasterData?.DifficultyLevel,
+      difficultyLevel: paperMasterData?.DifficultyLevel,
       suggested_duration: paperMasterData?.SuggestedDuration,
       status: paperMasterData?.Status
     };
+
+    masterObj.category = paperMaster.category;
+    masterObj.subCategory = paperMaster.subCategory;
 
     // load instructions
     const insRes = await loadInstructions({
@@ -102,18 +105,16 @@ export default function ExamLanding() {
     const insData = insRes?.data?.getExamInstruction[0];
     const insObj = {
       instructionId: insData?.id || null,
-      passing_criteria: insData?.PassingCriteria?.split('-')[0],
-      passing_criteria_type: insData?.PassingCriteria?.split('-')[1] || 'Marks',
-      is_attempts_visible: insData?.NoAttempts > 1,
-      no_attempts: insData?.NoAttempts,
+      passingCriteria: insData?.PassingCriteria,
+      noAttempts: insData?.NoAttempts,
       instructions: insData?.Instructions || '',
-      access_type: insData?.AccessType || '',
+      accessType: insData?.AccessType || '',
       is_ins_active: insData?.IsActive || ''
     };
 
     // load schedule
     let schObj = {};
-    if (masterObj.schedule_type === 'scheduled') {
+    if (masterObj.scheduleType === 'scheduled') {
       const schRes = await loadSchedule({
         variables: { exam_id: examId },
         fetchPolicy: 'no-cache'
@@ -127,29 +128,28 @@ export default function ExamLanding() {
 
       schObj = {
         scheduleId: schData?.id || null,
-        exam_start_date: new Date(+schData?.Start * 1000),
-        exam_start_time: new Date(+schData?.Start * 1000),
-        exam_end_date: new Date(+schData?.End * 1000),
-        exam_end_time: new Date(+schData?.End * 1000),
-        buffer_time: schData?.BufferTime || 0,
-        is_stretch: !!+schData?.End,
+        examStart: new Date(+schData?.Start * 1000),
+        examEnd: new Date(+schData?.End * 1000),
+        bufferTime: schData?.BufferTime || 0,
         is_schedule_active: schData?.IsActive || false
       };
     }
 
-    setExamData({
-      testSeries: 'PMP Test Series',
-      testSequence: 'M1A4',
-      proctoring: 'No',
-      totalQuestions: 0,
-      negativeMarking: 'No',
-
-      testName: masterObj?.name,
-      schedule: +schObj?.[0]?.exam_start_date || null,
-      isScheduled: masterObj?.schedule_type,
-      expertiseLevel: paperMaster?.difficulty_level,
-      duration: paperMaster?.suggested_duration,
-      numberOfAttempts: insObj?.no_attempts
+    setLearnerExamData({
+      ...learnerExamData,
+      examData: {
+        ...masterObj,
+        ...insObj,
+        ...schObj
+      },
+      landingPageData: {
+        testSeries: 'PMP Test Series',
+        testSequence: 'M1A4',
+        isProctoring: 'No',
+        totalQuestions: 0,
+        isNegativeMarking: 'No',
+        expertiseLevel: paperMaster?.difficultyLevel
+      }
     });
   }, []);
 
@@ -164,14 +164,26 @@ export default function ExamLanding() {
           <img src="./images/Back.png" />
         </button>
         <div className={`${styles.exam_landing_head_container}`}>
-          <p id={`${styles.exam_landing_head_testSeries}`}>{examData?.testSeries}</p>
+          <p id={`${styles.exam_landing_head_testSeries}`}>
+            {learnerExamData?.landingPageData?.testSeries}
+          </p>
           <p id={`${styles.exam_landing_head_testDescription}`}>
-            {examData?.testSequence} : {examData?.testName}
+            {learnerExamData?.landingPageData?.testSequence} : {learnerExamData?.examData?.name}
           </p>
         </div>
       </div>
 
-      <ExamPreview data={examData || {}} />
+      <ExamPreview
+        examName={learnerExamData?.examData?.name}
+        scheduleType={learnerExamData?.examData?.scheduleType}
+        scheduleDate={learnerExamData?.examData?.examStart || new Date()}
+        difficulty={learnerExamData?.landingPageData?.expertiseLevel}
+        duration={learnerExamData?.examData?.duration}
+        isProctoring={learnerExamData?.landingPageData?.isProctoring}
+        totalQuestions={learnerExamData?.landingPageData?.totalQuestions}
+        isNegativeMarking={learnerExamData?.landingPageData?.isNegativeMarking}
+        noAttempt={learnerExamData?.examData?.noAttempts}
+      />
 
       <div className={`${styles.exam_landing_btn_container}`}>
         <section style={{ marginRight: '5%' }}>

@@ -188,19 +188,6 @@ export function getExamTabDataObject(data = {}) {
     is_config_active: data.is_config_active || false
   };
 }
-// rethink about the atoms below here
-
-// this needs to be removed, in progress, removed from 3 files
-
-// export const QuestionTabDataAtom = atom({
-//   key: 'QuestionTabData',
-//   default: getQuestionTabDataObject()
-// });
-
-// export const QBQuestionsaAtom = atom({
-//   key: 'QBQuestions',
-//   default: []
-// });
 
 export const CustomSectionAtom = atom({
   key: 'CustomSection',
@@ -212,29 +199,72 @@ export const QuestionMetaDataAtom = atom({
   default: []
 });
 
-// export function getQuestionBankObject(data = {}) {
-//   return {
-//     id: data.id || null,
-//     name: data.name || '',
-//     category: data.category || '',
-//     sub_category: data.sub_category || '',
+// learner exam recoil state
+export const LearnerExamAtom = atom({
+  key: 'LearnerExam',
+  default: {
+    examData: getExamData(),
+    landingPageData: getLandingPageData(),
+    insPageData: getInsPageObj(),
+    sectionData: []
+  }
+});
 
-//     // maybe discarded
-//     is_active: data.is_active || '',
-//     is_default: data.is_default || '',
-//     owner: data.owner || ''
-//   };
-// }
+export function getLandingPageData(data = {}) {
+  return {
+    testSeries: data?.testSeries || '',
+    testSequence: data?.testSequence || '',
+    isProctoring: data?.isProctoring || '',
+    totalQuestions: data?.totalQuestions || '',
+    isNegativeMarking: data?.isNegativeMarking || '',
+    expertiseLevel: data?.expertiseLevel || ''
+  };
+}
 
-// export function getQuestionTabDataObject(data = {}) {
-//   return {
-//     question: data.question || {},
-//     options: data.options || []
-//   };
-// }
+export function getInsPageObj(data = {}) {
+  return {
+    examTimeStandard: data?.examTimeStandard || '',
+    attempts: data?.attempts || ''
+  };
+}
 
-// remove later below
+export function getExamData(data = {}) {
+  return {
+    // exam data
+    id: data.id || null,
+    name: data.name || '',
+    description: data.description || '',
+    qpId: data.qpId || '',
+    duration: data.duration || 0,
+    scheduleType: data.scheduleType || '',
 
+    code: data.code || '',
+    type: data.type || '',
+    category: data.category || '',
+    subCategory: data.subCategory || '',
+    totalMarks: data.totalMarks || 0,
+
+    is_exam_active: data.is_exam_active || false,
+    status: data.status || '',
+
+    // instruction
+    instructionId: data.instructionId || null,
+    passingCriteria: data.passingCriteria || '',
+    noAttempts: data.noAttempts || 0,
+    instructions: data.instructions || '',
+    accessType: data.accessType || '',
+    is_ins_active: data.is_ins_active || '',
+
+    // schedule
+    scheduleId: data.schedule || null,
+    examStart: data.examStart || new Date(),
+    examEnd: data.examEnd || new Date(),
+    bufferTime: data.bufferTime || 0,
+    is_schedule_active: data.is_schedule_active || false
+  };
+}
+
+// !delete this later
 export const examRadioButton = atom({
   key: 'examRadioButton', // unique ID (with respect to other atoms/selectors)
   default: [] // default value (aka initial value)
