@@ -27,9 +27,14 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
 
   const [qbData, setQbData] = useState([]);
 
-  useEffect(async () => {
+  useEffect(() => {
+    loadBankData();
+  }, [questionPaperTabData?.mappedQb]);
+
+  async function loadBankData() {
     const allQuestionBankIds = [];
     questionPaperTabData.mappedQb?.forEach((map) => allQuestionBankIds.push(map?.qbId));
+    if (!allQuestionBankIds.length) return;
 
     // load qb names
     let isError = false;
@@ -42,9 +47,9 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
     });
     if (isError) return;
 
+    console.log('loaded', metaRes?.data);
     setQbData(metaRes?.data?.getQBMeta || []);
-  }, []);
-
+  }
   // return if no section present
   if (!questionPaperTabData?.sectionData?.length) return null;
 
@@ -73,7 +78,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
             <BlackRow
               key={index}
               type={isSectionWise ? 'small' : 'large'}
-              title={`Question Bank ${index + 1}: ${bankName?.name}`}
+              title={`Question Bank ${index + 1}: ${bankName?.name || ''}`}
               extraComp={
                 <span className={`${styles.numberOfQuestions}`}>[{metaData?.total_questions}]</span>
               }
