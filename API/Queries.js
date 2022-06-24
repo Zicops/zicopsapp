@@ -23,6 +23,12 @@ export const GET_SUB_CATS = gql`
   }
 `;
 
+export const GET_SUB_CATS_BY_CAT = gql`
+  query allSubCatsByCat($category: String) {
+    allSubCatsByCat(category: $category)
+  }
+`;
+
 export const GET_LATEST_COURSES = gql`
   query LatestCourses($publish_time: Int, $pageCursor: String, $pageSize: Int) {
     latestCourses(

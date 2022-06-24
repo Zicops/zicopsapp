@@ -1,7 +1,7 @@
 import Info from './Info';
 import styles from './examPreview.module.scss';
-import { months } from '../../../helper/utils.helper';
-import { SCHEDULE_TYPE } from '../../AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import { months } from '../../../../helper/utils.helper';
+import { SCHEDULE_TYPE } from '../../../AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 
 export default function ExamPreview({ data = {} }) {
   const {

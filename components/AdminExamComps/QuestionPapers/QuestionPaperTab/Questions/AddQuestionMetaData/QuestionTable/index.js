@@ -24,12 +24,12 @@ export default function QuestionTable({
     });
 
     // clear selected id if one of selected question id is filtered due to difficulty
-    if (
-      !filteredBasedOnDifficulty?.length ||
-      filteredBasedOnDifficulty.some((q) => !selectedQuestionIds?.includes(q?.id))
-    ) {
-      setSelectedQuestionIds([]);
-    }
+    const isAllIdPresent = selectedQuestionIds?.every((id) => {
+      const index = filteredBasedOnDifficulty?.findIndex((q) => q?.id === id);
+      return index >= 0;
+    });
+    if (!isAllIdPresent) setSelectedQuestionIds([]);
+
     setAllQb(filteredBasedOnDifficulty);
     setFilteredQb(filteredBasedOnDifficulty);
   }, []);

@@ -109,7 +109,7 @@ export default function useHandleQuestions(sectionId) {
 
   // disable save button if data in complete
   useEffect(() => {
-    if (!selectedQuestionIds.length) return;
+    if (!selectedQuestionIds.length) return setIsFixedDataReady(false);
     setIsFixedDataReady(+metaData.total_questions === selectedQuestionIds.length);
 
     if (selectedQuestionIds.length > +metaData.total_questions)
@@ -178,7 +178,6 @@ export default function useHandleQuestions(sectionId) {
       ];
     }
 
-    // return;
     const sendData = {
       qbId: metaData.qbId || null,
       sectionId: metaData.sectionId || sectionData[0].id || null,
@@ -231,8 +230,10 @@ export default function useHandleQuestions(sectionId) {
       ...questionPaperTabData,
       qbSectionMapData: mapData,
       mappedQb: mappedQb,
-      sectionData: sectionData
+      sectionData: sectionData ? sectionData : questionPaperTabData?.sectionData
     });
+
+    setIsPopUpDataPresent(false);
     udpateAddMetaDataPopUp(false);
   }
 
@@ -325,6 +326,8 @@ export default function useHandleQuestions(sectionId) {
       qbSectionMapData: mapData,
       mappedQb: mappedQb
     });
+
+    setIsPopUpDataPresent(false);
     udpateEditMetaDataPopUp(false);
   }
 
