@@ -178,7 +178,6 @@ export default function useHandleQuestions(sectionId) {
       ];
     }
 
-    // return;
     const sendData = {
       qbId: metaData.qbId || null,
       sectionId: metaData.sectionId || sectionData[0].id || null,
@@ -233,6 +232,8 @@ export default function useHandleQuestions(sectionId) {
       mappedQb: mappedQb,
       sectionData: sectionData
     });
+
+    setIsPopUpDataPresent(false);
     udpateAddMetaDataPopUp(false);
   }
 
@@ -325,6 +326,8 @@ export default function useHandleQuestions(sectionId) {
       qbSectionMapData: mapData,
       mappedQb: mappedQb
     });
+
+    setIsPopUpDataPresent(false);
     udpateEditMetaDataPopUp(false);
   }
 
