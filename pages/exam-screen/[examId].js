@@ -575,7 +575,7 @@ const ExamScreen = () => {
       schObj = {
         scheduleId: schData?.id || null,
         examStart: new Date(+schData?.Start * 1000),
-        examEnd: new Date(+schData?.End * 1000),
+        examEnd: +schData?.End ? new Date(+schData?.End * 1000) : null,
         bufferTime: schData?.BufferTime || 0,
         is_schedule_active: schData?.IsActive || false
       };

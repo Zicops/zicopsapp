@@ -148,7 +148,6 @@ export function loadCatSubCat(state, setState, category = null) {
   const [loadSubCat, { error: loadSubCatErr }] = useLazyQuery(GET_SUB_CATS_BY_CAT, {
     client: queryClient
   });
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   useEffect(async () => {
     const data = { allCategories: [], allSubCategories: [], allSubCatsByCat: [] };

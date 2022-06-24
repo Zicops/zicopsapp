@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../../../API/Queries';
 import { loadQueryData } from '../../../../../helper/api.helper';
+import { loadCatSubCat } from '../../../../../helper/data.helper';
 import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
@@ -21,15 +22,24 @@ export default function QuestionPaperMaster() {
   ];
 
   // load categories
-  const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
-  allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
-  allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
+  // const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
+  // allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
+  // allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
 
   const router = useRouter();
   const questionPaperId = router.query?.questionPaperId;
   const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
 
   const { handleInput, addNewQuestionPaper, updateQuestionPaper } = useHandlePaperTab();
+
+  // cat and sub cat
+  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // update sub cat based on cat
+  loadCatSubCat(
+    catAndSubCatOption,
+    setCatAndSubCatOption,
+    questionPaperTabData.paperMaster?.category
+  );
 
   return (
     <div className={`${styles.qb_container}`}>
@@ -61,7 +71,7 @@ export default function QuestionPaperMaster() {
           inputName: 'category',
           label: 'Category:',
           placeholder: 'Select Category',
-          options: categoryOption,
+          options: catAndSubCatOption?.cat,
           value: {
             value: questionPaperTabData.paperMaster?.category,
             label: questionPaperTabData.paperMaster?.category
@@ -76,12 +86,13 @@ export default function QuestionPaperMaster() {
           inputName: 'sub_category',
           label: 'Sub-Category:',
           placeholder: 'Select Sub-Category',
-          options: subCategoryOption,
+          options: catAndSubCatOption?.subCat,
           value: {
             value: questionPaperTabData.paperMaster?.sub_category,
             label: questionPaperTabData.paperMaster?.sub_category
           },
-          isSearchEnable: true
+          isSearchEnable: true,
+          menuPlacement: 'auto'
         }}
         changeHandler={(e) => handleInput(e, 'sub_category')}
       />

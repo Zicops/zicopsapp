@@ -1,16 +1,15 @@
+import { useState } from 'react';
 import { GET_CATS_N_SUB_CATS } from '../../../../../API/Queries';
 import { loadQueryData } from '../../../../../helper/api.helper';
+import { loadCatSubCat } from '../../../../../helper/data.helper';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import styles from '../../../courseTabs.module.scss';
 
 export default function AssessmentForm({ data }) {
-  const categoryOption = [{ value: '', label: '-- Select --' }];
-  const subCategoryOption = [{ value: '', label: '-- Select --' }];
-
-  // load categories
-  const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
-  allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
-  allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
+  // cat and sub cat
+  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // update sub cat based on cat
+  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, assessmentData?.category);
 
   const { examOptions, assessmentData, setAssessmentData, saveAssessment } = data;
 
@@ -22,7 +21,7 @@ export default function AssessmentForm({ data }) {
             inputName: 'category',
             label: 'Category:',
             placeholder: 'Select category',
-            options: categoryOption,
+            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.cat],
             isSearchEnable: true,
             value: { value: assessmentData?.category, label: assessmentData?.category }
           }}
@@ -35,7 +34,7 @@ export default function AssessmentForm({ data }) {
             inputName: 'sub_category',
             label: 'Sub-Category:',
             placeholder: 'Sub-Category',
-            options: subCategoryOption,
+            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.subCat],
             isSearchEnable: true,
             value: { value: assessmentData?.sub_category, label: assessmentData?.sub_category }
           }}

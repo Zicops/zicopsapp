@@ -206,8 +206,6 @@ export default function useHandleQuestions(sectionId) {
     console.log(addMapToSectionRes);
     const resData = addMapToSectionRes?.data?.mapSectionToBank;
 
-    // add response data to array and udpate state
-    const mapData = [...questionPaperTabData.qbSectionMapData];
     const currentMetaData = {
       id: resData.id,
       qbId: resData.QbId || null,
@@ -218,18 +216,27 @@ export default function useHandleQuestions(sectionId) {
       question_type: resData.QuestionType || '',
       retrieve_type: resData.RetrieveType || ''
     };
-    mapData.push(currentMetaData);
 
     setMetaData(currentMetaData);
     if (currentMetaData.retrieve_type === 'manual') await saveFixedQuestions(resData.id);
 
-    const mappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
-    if (mappedQb === null) return udpateAddMetaDataPopUp(false);
+    const updatedMappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
+    if (updatedMappedQb == null) return udpateAddMetaDataPopUp(false);
+
+    const allMappedQb = [];
+    questionPaperTabData?.mappedQb?.forEach((mapQb) => {
+      const isPresent = allMappedQb.find((allMapQb) => allMapQb?.id === mapQb?.id);
+      if (!isPresent) allMappedQb.push(mapQb);
+    });
+
+    updatedMappedQb?.forEach((mapQb) => {
+      const isPresent = allMappedQb.find((allMapQb) => allMapQb?.id === mapQb?.id);
+      if (!isPresent) allMappedQb.push(mapQb);
+    });
 
     setQuestionPaperTabData({
       ...questionPaperTabData,
-      qbSectionMapData: mapData,
-      mappedQb: mappedQb,
+      mappedQb: allMappedQb,
       sectionData: sectionData ? sectionData : questionPaperTabData?.sectionData
     });
 
@@ -311,20 +318,26 @@ export default function useHandleQuestions(sectionId) {
       question_type: resData.QuestionType || '',
       retrieve_type: resData.RetrieveType || ''
     };
-    const mapData = [...questionPaperTabData.qbSectionMapData].map((data) => {
-      if (data.id === resData.id) return updatedMetaData;
-      return data;
-    });
 
     if (updatedMetaData.retrieve_type === 'manual') await saveFixedQuestions(resData.id, true);
 
-    const mappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
-    if (mappedQb === null) return udpateEditMetaDataPopUp(false);
+    const updatedMappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
+    if (updatedMappedQb == null) return udpateEditMetaDataPopUp(false);
+
+    const allMappedQb = [];
+    questionPaperTabData?.mappedQb?.forEach((mapQb) => {
+      const isPresent = allMappedQb.find((allMapQb) => allMapQb?.id === mapQb?.id);
+      if (!isPresent) allMappedQb.push(mapQb);
+    });
+
+    updatedMappedQb?.forEach((mapQb) => {
+      const isPresent = allMappedQb.find((allMapQb) => allMapQb?.id === mapQb?.id);
+      if (!isPresent) allMappedQb.push(mapQb);
+    });
 
     setQuestionPaperTabData({
       ...questionPaperTabData,
-      qbSectionMapData: mapData,
-      mappedQb: mappedQb
+      mappedQb: allMappedQb
     });
 
     setIsPopUpDataPresent(false);

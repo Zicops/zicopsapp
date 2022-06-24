@@ -47,6 +47,17 @@ export default function ExamMaster() {
         );
 
       setQuestionPaperOptions(options);
+
+      if (examTabData?.qpId) {
+        const selectedQp = options?.filter((option) => option?.value === examTabData?.qpId)[0];
+
+        setExamTabData({
+          ...examTabData,
+          category: selectedQp?.Category,
+          sub_category: selectedQp?.SubCategory,
+          duration: selectedQp?.SuggestedDuration || 0
+        });
+      }
     });
   }, []);
 
@@ -267,7 +278,8 @@ export default function ExamMaster() {
               inputName: 'instructions',
               rows: 4,
               value: examTabData?.instructions,
-              isDisabled: isPreview
+              isDisabled: isPreview,
+              maxLength: 3000
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />

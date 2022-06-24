@@ -147,22 +147,20 @@ export default function CreateQuestionForm({ data, isEdit }) {
                 {Array(NUMBER_OF_OPTIONS)
                   .fill(null)
                   .map((value, index) => (
-                    <label>
-                      <InputWithCheckbox
-                        key={index}
-                        labelCount={index + 1}
-                        acceptedTypes={acceptedFileTypes.join(', ')}
-                        isCorrectHandler={(e) => optionInputHandler(e, index)}
-                        optionData={{
-                          fileName: optionData[index]?.file?.name || optionData[index]?.attachment,
-                          inputValue: optionData[index]?.description,
-                          inputName: 'description',
-                          isCorrect: optionData[index]?.isCorrect
-                        }}
-                        inputChangeHandler={(e) => optionInputHandler(e, index)}
-                        fileInputHandler={(e) => optionInputHandler(e, index)}
-                      />
-                    </label>
+                    <InputWithCheckbox
+                      key={index}
+                      labelCount={index + 1}
+                      acceptedTypes={acceptedFileTypes.join(', ')}
+                      isCorrectHandler={(e) => optionInputHandler(e, index)}
+                      optionData={{
+                        fileName: optionData[index]?.file?.name || optionData[index]?.attachment,
+                        inputValue: optionData[index]?.description,
+                        inputName: 'description',
+                        isCorrect: optionData[index]?.isCorrect
+                      }}
+                      inputChangeHandler={(e) => optionInputHandler(e, index)}
+                      fileInputHandler={(e) => optionInputHandler(e, index)}
+                    />
                   ))}
               </div>
 
