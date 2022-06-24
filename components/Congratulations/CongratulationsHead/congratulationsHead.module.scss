@@ -1,12 +1,13 @@
 @import '../../../styles/base.scss';
 .Congratulations_Head{
-    width: 72%;
+    width: 100%;
     // height: 400px;
     // margin-right: 100px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-align: center;
+    color:$white;
 }
 .congratulations_img{
     // margin-right: 20%;

@@ -6,7 +6,7 @@ const ProfilePersonelDetail = () => {
     <>
       <div className={`${styles.profileDetailsContainer}`}>
         <div className={`${styles.profilePicContainer}`}>
-          <img src="./images/profile_picture.png" alt="not found" />
+          <img src="/images/profile_picture.png" alt="not found" width={200} />
         </div>
         <div className={`${styles.profileDetails}`}>
           {Object.keys(userProfileDetailsData).map((item, i) => (
