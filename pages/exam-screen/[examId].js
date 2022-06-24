@@ -474,7 +474,7 @@ const ExamScreen = () => {
 
   const [data, setData] = useState(examData);
   const [questionData, setQuestionData] = useState([]);
-  const [current, setCurrent] = useState(data[0]);
+  const [current, setCurrent] = useState({});
   const [isFullScreen, setIsFullScreen] = useState(0);
   const [isLearner, setIsLearner] = useState(false);
   const refFullscreen = useRef(null);
@@ -743,7 +743,7 @@ const ExamScreen = () => {
           question: q,
           options: q?.options,
 
-          isVisited: false,
+          isVisited: quesData?.length === 0,
           isMarked: false,
           selectedOption: null
         });
@@ -756,6 +756,7 @@ const ExamScreen = () => {
     console.log(sectionData, quesData, mappedQb, totalQuestions, totalMarks);
 
     setQuestionData(quesData);
+    setCurrent(quesData[0]);
 
     setLearnerExamData({
       ...learnerExamData,
