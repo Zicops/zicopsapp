@@ -1,8 +1,8 @@
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { GET_EXAM_INSTRUCTION, GET_EXAM_SCHEDULE, queryClient } from '../../../../API/Queries';
-import ExamPreview from '../../../common/ExamPreview';
-import { SCHEDULE_TYPE } from '../ExamMasterTab/Logic/examMasterTab.helper';
+import { GET_EXAM_INSTRUCTION, GET_EXAM_SCHEDULE, queryClient } from '../../API/Queries';
+import ExamPreview from '../../components/common/ExamPreview';
+import { SCHEDULE_TYPE } from '../../components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 
 export default function Preview({ examData }) {
   const [loadInstructions, { error: loadInsError }] = useLazyQuery(GET_EXAM_INSTRUCTION, {

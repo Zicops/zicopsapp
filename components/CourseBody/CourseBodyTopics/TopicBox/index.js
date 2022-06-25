@@ -1,8 +1,10 @@
 import { Skeleton } from '@mui/material';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
+import { loadQueryDataAsync } from '../../../../helper/api.helper';
 import { filterAndSortTopicsBasedOnModuleId } from '../../../../helper/data.helper';
-import { isLoadingAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
+import { isLoadingAtom, TopicAtom, TopicExamAtom } from '../../../../state/atoms/module.atoms';
 import { VideoAtom } from '../../../../state/atoms/video.atom';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 
@@ -22,6 +24,7 @@ export default function TopicBox({
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
+  const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
   const { allModuleTopic, currentTopicIndex } = videoData;
@@ -63,11 +66,30 @@ export default function TopicBox({
     }
   }, [currrentModule]);
 
+  async function loadTopicExam() {
+    if (topic?.type !== 'Assessment') return;
+
+    const topicExam = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic.id }).then(
+      (res) => res.getTopicExams[0]
+    );
+
+    // reset recoil and set new data
+    setTopicExamData({
+      id: topicExam.id,
+      topicId: topicExam.topicId,
+      courseId: topicExam.courseId,
+      examId: topicExam.examId,
+      language: topicExam.language
+    });
+  }
+
   return (
     <>
       <div
         className="topic"
         onClick={() => {
+          loadTopicExam();
+
           if (!topicContent.length) return;
           updateVideoData(
             videoData,

@@ -199,6 +199,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
             text="Save"
             clickHandler={() => (metaData.id ? updateMetaData() : addMetaData())}
             isDisabled={!isFixedDataReady}
+            styleClass={isFixedDataReady ? 'bg-primary' : ''}
           />
         ) : (
           <Button

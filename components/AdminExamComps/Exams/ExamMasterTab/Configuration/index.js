@@ -3,36 +3,32 @@ import SwitchButton from '../../../../common/SwitchButton';
 import { useRecoilState } from 'recoil';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { changeHandler } from '../../../../../helper/common.helper';
+import { useRouter } from 'next/router';
 
 export default function Configuration() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
+  const router = useRouter();
+  const isPreview = router.query?.isPreview || false;
+
+  const btns = [
+    { name: 'shuffle', label: 'Question Shuffling' },
+    { name: 'display_hints', label: 'Display Answer Hints' },
+    { name: 'show_answer', label: 'Show right Answers on finish' },
+    { name: 'show_result', label: 'Show result on finish' }
+  ];
+
   return (
     <div className={`${styles.configurationContainer}`}>
-      <SwitchButton
-        text={'Question Shuffling'}
-        inputName="shuffle"
-        isChecked={examTabData.shuffle}
-        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-      />
-      <SwitchButton
-        text={'Display Answer Hints'}
-        inputName="display_hints"
-        isChecked={examTabData.display_hints}
-        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-      />
-      <SwitchButton
-        text={'Show right Answers on finish'}
-        inputName="show_answer"
-        isChecked={examTabData.show_answer}
-        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-      />
-      <SwitchButton
-        text={'Show result on finish'}
-        inputName="show_result"
-        isChecked={examTabData.show_result}
-        changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-      />
+      {btns.map(({ name, label }) => (
+        <SwitchButton
+          text={label}
+          inputName={name}
+          isChecked={examTabData[name]}
+          isDisabled={isPreview}
+          changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+        />
+      ))}
     </div>
   );
 }

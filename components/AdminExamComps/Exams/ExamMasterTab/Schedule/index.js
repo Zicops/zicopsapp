@@ -1,4 +1,5 @@
 import { Grid } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../helper/common.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
@@ -10,6 +11,9 @@ import styles from '../examMasterTab.module.scss';
 
 export default function Schedule() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
+
+  const router = useRouter();
+  const isPreview = router.query?.isPreview || false;
 
   function getMinExamEndTime() {
     const startTime = new Date(examTabData?.exam_start_time);
@@ -30,6 +34,7 @@ export default function Schedule() {
           changeHandler={(date) => {
             setExamTabData({ ...examTabData, exam_start_date: date });
           }}
+          isDisabled={isPreview}
         />
       </section>
       {/* exam start time */}
@@ -42,23 +47,12 @@ export default function Schedule() {
             <InputTimePicker
               selected={examTabData?.exam_start_time}
               changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
+              isDisabled={isPreview}
             />
           </Grid>
         </Grid>
       </section>
-      {/* <LabeledDropdown
-        dropdownOptions={{
-          inputName: 'type',
-          label: 'Exam Date:',
-          placeholder: 'Select question Bank',
-          options: [
-            { value: 'MCQ', label: 'MCQ' },
-            { value: 'Descriptive', label: 'Descriptive' }
-          ]
-        }}
-        isFiftyFifty={true}
-        changeHandler={(e) => changeHandler(e, newCustomSection, setNewCustomSection, 'type')}
-      /> */}
+
       {/* Exam Duration */}
       <LabeledInput
         isFiftyFifty={true}
@@ -83,7 +77,7 @@ export default function Schedule() {
           placeholder: 'Enter Select buffer time in minutes',
           value: examTabData.buffer_time,
           isNumericOnly: true,
-          isDisabled: examTabData?.is_stretch
+          isDisabled: isPreview || examTabData?.is_stretch
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
@@ -94,6 +88,7 @@ export default function Schedule() {
           label="Stretch Examination Conduct Duration"
           name="is_stretch"
           isChecked={examTabData?.is_stretch}
+          isDisabled={isPreview}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
       </div>
@@ -107,6 +102,7 @@ export default function Schedule() {
               selectedDate={examTabData?.exam_end_date}
               minDate={examTabData?.exam_start_date}
               changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_date: date })}
+              isDisabled={isPreview}
             />
           </section>
 
@@ -121,6 +117,7 @@ export default function Schedule() {
                   selected={examTabData?.exam_end_time}
                   changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_time: date })}
                   minTime={getMinExamEndTime()}
+                  isDisabled={isPreview}
                 />
               </Grid>
             </Grid>

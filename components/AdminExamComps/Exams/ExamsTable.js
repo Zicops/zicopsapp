@@ -5,9 +5,7 @@ import { useRecoilState } from 'recoil';
 import { GET_LATEST_EXAMS, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
-import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
-import Preview from './Preview';
 
 export default function ExamsTable({ isEdit = false }) {
   const [loadExams, { error }] = useLazyQuery(GET_LATEST_EXAMS, { client: queryClient });
@@ -16,7 +14,6 @@ export default function ExamsTable({ isEdit = false }) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [exams, setExams] = useState([]);
-  const [examData, setExamData] = useState(null);
 
   // load table data
   useEffect(() => {
@@ -54,18 +51,7 @@ export default function ExamsTable({ isEdit = false }) {
       headerName: 'Action',
       sortable: false,
       renderCell: (params) => {
-        const data = {
-          id: params.row.id,
-          name: params.row.Name,
-          description: params.row.Description,
-          code: params.row.Code,
-          qpId: params.row.QpId,
-          type: params.row.Type,
-          scheduleType: params.row.ScheduleType,
-          duration: params.row.Duration,
-          category: params.row.Category,
-          sub_category: params.row.SubCategory
-        };
+        const addRoute = router.asPath + `/add/${params.row.id}`;
 
         return (
           <>
@@ -76,13 +62,13 @@ export default function ExamsTable({ isEdit = false }) {
                 outline: '0',
                 border: '0'
               }}
-              onClick={() => setExamData(data)}>
+              onClick={() => router.push(`${addRoute}?isPreview=true`, addRoute)}>
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>
             {isEdit && (
               <>
                 <button
-                  onClick={() => router.push(router.asPath + `/add/${params.row.id}`)}
+                  onClick={() => router.push(addRoute)}
                   style={{
                     cursor: 'pointer',
                     backgroundColor: 'transparent',
@@ -109,15 +95,6 @@ export default function ExamsTable({ isEdit = false }) {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
       />
-
-      {/* preview popup */}
-      <PopUp
-        title={examData?.name}
-        isPopUpOpen={!!examData}
-        popUpState={[!!examData, setExamData]}
-        isFooterVisible={false}>
-        <Preview examData={examData || {}} />
-      </PopUp>
     </>
   );
 }

@@ -5,7 +5,8 @@ import styles from './inputDatePicker.module.scss';
 export default function InputDatePicker({
   selectedDate = new Date(),
   minDate = null,
-  changeHandler = function () {}
+  changeHandler = function () {},
+  isDisabled = false
 }) {
   return (
     <div className={`${styles.inputDatePickerContainer}`}>
@@ -14,6 +15,7 @@ export default function InputDatePicker({
         renderCustomHeader={CustomHeader}
         selected={selectedDate}
         onChange={changeHandler}
+        disabled={isDisabled}
         minDate={minDate ? new Date(minDate) : null}
         calendarClassName={styles.inlineCalender}
         dayClassName={() => styles.calanderDates}

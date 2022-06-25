@@ -107,6 +107,7 @@ export default function useHandleQuestionBank() {
       setToastMsg({ type: 'success', message: 'New Question Bank Created' });
       refetchData.questionBank();
     }
+    setIsPopUpDataPresent(false);
     setAddPopUp(false);
 
     const questionTableRoute = `${router.asPath}/${res.data.createQuestionBank.id}`;
@@ -140,6 +141,7 @@ export default function useHandleQuestionBank() {
       setToastMsg({ type: 'success', message: 'New Question Bank Updated' });
       refetchData.questionBank();
     }
+    setIsPopUpDataPresent(false);
     setEditPopUp(false);
   }
 
