@@ -6,11 +6,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from '@mui/icons-material/Edit';
 import LabeledDropdown from "../../common/FormComponents/LabeledDropdown";
 import {languages} from '../ProfilePreferences/Logic/profilePreferencesHelper'
-import ImageCropper from "../../ImageCropper";
+import ImageCropper from "../../common/ImageCropper";
 
 const AccountSetupUser = ({setCurrentComponent}) => {
 
-    const [previewPage, setPreviewPage] = useState(0);
     const [selectedLanguage, setSelectedLanguage] = useState()
     const [image, setImage] = useState();
     const [preview, setPreview] = useState('');
@@ -35,6 +34,18 @@ const AccountSetupUser = ({setCurrentComponent}) => {
         }
         else setPreview('')
     }, [image])
+
+    const dataURLtoFile = (dataUrl, filename) => {
+        let arr = dataUrl.split(","),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+    };
 
 
     return(
@@ -136,62 +147,50 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                                 justifyContent={"center"}
                                 alignItems={"center"}
                             >
-                                {
-                                    previewPage ===  0 && (
-                                        <Box
-                                            width={"100%"}
-                                            display={"flex"}
-                                            justifyContent={"center"}
-                                            alignItems={"center"}
-                                            flexDirection={"column"}
-                                        >
-                                            <Box
-                                                width={"100%"}
-                                                display={"flex"}
-                                                justifyContent={"space-between"}
-                                                alignItems={"center"}
-                                                px={2}
-                                            >
-                                                <Box fontSize={"27px"} fontWeight={600} color={'#FFF'}>
-                                                    Preview
-                                                </Box>
-                                                <Box>
-                                                    <IconButton onClick={() => {
-                                                        setPreviewPage(1)
-                                                    }}>
-                                                        <EditIcon sx={{ color: "#FFF" }} />
-                                                    </IconButton>
-                                                    <IconButton onClick={handleClose}>
-                                                        <CloseIcon sx={{ color: "#FFF" }} />
-                                                    </IconButton>
-                                                </Box>
-
-                                            </Box>
-                                            <Box mb={5} />
-                                            <Box
-                                                display={"flex"}
-                                                alignItems={"center"}
-                                                justifyContent={"center"}
-                                                width={"320px"}
-                                                height={"320px"}
-                                                border={"4px dashed #6bcfcf"}
-                                                borderRadius={"50%"}
-                                                overflow={"hidden"}
-                                                m={'auto'}
-                                            >
-                                                <img src={preview} alt={"logo"} width={'320px'} height={'320px'} style={{objectFit: 'cover'}} />
-                                            </Box>
-                                            <Box mb={4} />
+                                <Box
+                                    width={"100%"}
+                                    display={"flex"}
+                                    justifyContent={"center"}
+                                    alignItems={"center"}
+                                    flexDirection={"column"}
+                                >
+                                    <Box
+                                        width={"100%"}
+                                        display={"flex"}
+                                        justifyContent={"space-between"}
+                                        alignItems={"center"}
+                                        px={2}
+                                    >
+                                        <Box fontSize={"27px"} fontWeight={600} color={'#FFF'}>
+                                            Preview
                                         </Box>
-                                    )
-                                }
-                                {
-                                    previewPage === 1 && (
-                                        <ImageCropper initial={image} preview={preview} setPreview={setPreview} setPreviewPage={setPreviewPage} />
-                                    )
-                                }
-
-
+                                        <Box>
+                                            <ImageCropper
+                                                initialImage={image}
+                                                setCroppedImage={setPreview}
+                                                aspectRatio={1}
+                                            />
+                                            <IconButton onClick={handleClose}>
+                                                <CloseIcon sx={{ color: "#FFF" }} />
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
+                                    <Box mb={5} />
+                                    <Box
+                                        display={"flex"}
+                                        alignItems={"center"}
+                                        justifyContent={"center"}
+                                        width={"320px"}
+                                        height={"320px"}
+                                        border={"4px dashed #6bcfcf"}
+                                        borderRadius={"50%"}
+                                        overflow={"hidden"}
+                                        m={'auto'}
+                                    >
+                                        <img src={preview} alt={"logo"} width={'320px'} height={'320px'} style={{objectFit: 'cover'}} />
+                                    </Box>
+                                    <Box mb={4} />
+                                </Box>
                             </Box>
                         </Dialog>
                     </div>
