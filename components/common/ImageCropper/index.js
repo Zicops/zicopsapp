@@ -27,7 +27,7 @@ const ImageCropper = ({initialImage, setCroppedImage, aspectRatio}) => {
             setImage(reader.result)
         }
         reader.readAsDataURL(initialImage)
-    }, )
+    }, [initialImage])
 
     const getCropData = () => {
         if (typeof cropper !== "undefined") {
