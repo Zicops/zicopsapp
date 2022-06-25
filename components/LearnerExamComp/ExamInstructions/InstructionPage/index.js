@@ -22,6 +22,8 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
 
   const router = useRouter();
 
+  console.log(learnerExamData)
+
   return (
     <div className={`${styles.examInstContainer}`}>
       <div

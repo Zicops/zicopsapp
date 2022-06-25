@@ -1,5 +1,15 @@
 @import '../../styles/base.scss';
 
+.loadingExamScreen {
+  height: 100vh;
+  width: 100%;
+  overflow: auto;
+  background-color: $darkOne;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .questionSection {
   height: 100vh;
   width: 100%;

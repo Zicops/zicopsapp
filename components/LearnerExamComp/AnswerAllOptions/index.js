@@ -89,7 +89,8 @@ const AnswerAllOptions = ({
     setMark(current?.isMarked || false);
   }, [current]);
 
-  const index = 0;
+  let index = 0;
+
   return (
     <>
       <Box p={4} width={'100%'} mb={10}>
