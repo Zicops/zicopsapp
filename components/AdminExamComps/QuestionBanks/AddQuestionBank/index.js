@@ -1,13 +1,9 @@
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  GET_CATS_N_SUB_CATS,
-  GET_QUESTION_BANK_QUESTIONS,
-  queryClient
-} from '../../../../API/Queries';
-import { loadQueryData } from '../../../../helper/api.helper';
+import { GET_QUESTION_BANK_QUESTIONS, queryClient } from '../../../../API/Queries';
 import { changeHandler } from '../../../../helper/common.helper';
+import { loadCatSubCat } from '../../../../helper/data.helper';
 import {
   getQuestionBankObject,
   SelectedQuestionBankAtom
@@ -26,13 +22,12 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
   const selectedQb = useRecoilValue(SelectedQuestionBankAtom);
   const [isQuestionsPresent, setIsQuestionsPresent] = useState(false);
 
+  // cat and sub cat
+  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, questionBankData?.category);
+
   const categoryOption = [];
   const subCategoryOption = [];
-
-  // load categories
-  const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
-  allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
-  allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
 
   const {
     questionBankData,
@@ -97,7 +92,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           inputName: 'category',
           label: 'Category:',
           placeholder: 'Select Category',
-          options: categoryOption,
+          options: catAndSubCatOption.cat,
           value: { value: questionBankData?.category, label: questionBankData?.category },
           isDisabled: isQuestionsPresent || !isPopUp,
           isSearchEnable: true
@@ -111,7 +106,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           inputName: 'sub_category',
           label: 'Sub-Category:',
           placeholder: 'Select Sub-Category',
-          options: subCategoryOption,
+          options: catAndSubCatOption.subCat,
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },
           isDisabled: isQuestionsPresent || !isPopUp,
           isSearchEnable: true

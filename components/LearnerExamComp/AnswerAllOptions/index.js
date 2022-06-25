@@ -89,6 +89,7 @@ const AnswerAllOptions = ({
     setMark(current?.isMarked || false);
   }, [current]);
 
+  let index = 0;
   return (
     <>
       <Box p={4} width={'100%'} mb={10}>
@@ -98,6 +99,7 @@ const AnswerAllOptions = ({
               handleChange={handleOptionChange}
               currentData={current}
               optionData={each}
+              index={index++}
               option={option}
               setOption={setOption}
             />
@@ -108,14 +110,14 @@ const AnswerAllOptions = ({
               currentData={current}
               optionData={each}
               option={option}
+              index={index++}
               setOption={setOption}
             />
           ))}
         </Grid>
       </Box>
       <div className={`${styles.livePageFooter}`}>
-         <div>
-        </div> 
+        <div></div>
         <div className={`${styles.answer_all_options_buttons_container}`}>
           <button
             disabled={!option}

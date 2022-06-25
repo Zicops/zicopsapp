@@ -2,7 +2,12 @@ import styles from '../questionPaperPreview.module.scss';
 import { obj } from './Logic/questionTop';
 import CloseIcon from '@mui/icons-material/Close';
 import {IconButton} from "@mui/material";
-const QuestionPaperTop = ({data, setIsQuestion}) => {
+import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
+import { useRecoilValue } from 'recoil';
+const QuestionPaperTop = ({ data, setIsQuestion }) => {
+  
+  const learnerExamData = useRecoilValue(LearnerExamAtom);
+  console.log(data, learnerExamData);
   return (
     <>
       <div className={`${styles.container}`}>

@@ -1,5 +1,9 @@
-import { queryClient } from '../API/Queries';
+import { useLazyQuery } from '@apollo/client';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { GET_CATS_N_SUB_CATS, GET_SUB_CATS_BY_CAT, queryClient } from '../API/Queries';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
+import { ToastMsgAtom } from '../state/atoms/toast.atom';
 
 export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
@@ -135,4 +139,52 @@ export async function isNameDuplicate(QUERY, name, objPath) {
   });
 
   return isNameExist;
+}
+
+export function loadCatSubCat(state, setState, category = null) {
+  const [loadCatSubCat, { error: loadCatErr }] = useLazyQuery(GET_CATS_N_SUB_CATS, {
+    client: queryClient
+  });
+  const [loadSubCat, { error: loadSubCatErr }] = useLazyQuery(GET_SUB_CATS_BY_CAT, {
+    client: queryClient
+  });
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  useEffect(async () => {
+    const data = { allCategories: [], allSubCategories: [], allSubCatsByCat: [] };
+
+    if (!state?.cat?.length) {
+      const {
+        data: { allCategories, allSubCategories }
+      } = await loadCatSubCat().catch((err) => {
+        console.log(err);
+        if (err) return setToastMsg({ type: 'danger', message: 'category load error' });
+      });
+
+      data.allCategories = allCategories?.map((val) => ({ value: val, label: val }));
+      data.allSubCategories = allSubCategories?.map((val) => ({ value: val, label: val }));
+    }
+
+    if (category) {
+      const {
+        data: { allSubCatsByCat }
+      } = await loadSubCat({ variables: { category } }).catch((err) => {
+        console.log(err);
+        if (err) return setToastMsg({ type: 'danger', message: 'sub category load error' });
+      });
+
+      data.allSubCatsByCat = allSubCatsByCat?.map((val) => ({ value: val, label: val }));
+    }
+
+    setState({
+      ...state,
+      cat: state?.cat?.length ? state?.cat : data.allCategories,
+      subCat: data.allSubCatsByCat?.length ? data.allSubCatsByCat : data.allSubCategories
+    });
+  }, [category]);
+
+  useEffect(() => {
+    if (loadCatErr) return setToastMsg({ type: 'danger', message: 'category load error' });
+    if (loadSubCatErr) return setToastMsg({ type: 'danger', message: 'sub category load  error' });
+  }, [loadCatErr, loadSubCatErr]);
 }

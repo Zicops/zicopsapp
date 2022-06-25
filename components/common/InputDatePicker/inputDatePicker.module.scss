@@ -32,6 +32,9 @@
       outline: 0;
       color: $white;
     }
+    &:disabled {
+      border: 2px solid $darkThree;
+    }
   }
 
   select {

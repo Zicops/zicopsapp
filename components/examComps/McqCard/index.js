@@ -26,7 +26,9 @@ const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCu
     });
   }
 
-  const isImage = !!each.question?.image;
+  const hasAttachment = !!each.question?.attachment;
+
+  let index = 0;
 
   return (
       <>
@@ -40,19 +42,44 @@ const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCu
             <p className={`${styles.span_element}`}>
               {/* TODO : Add difficulty lebel */}
               <span>Q{each.id}.</span>
-              <span>{each.question.text}</span>
+              <span>{each.question.description}</span>
             </p>
           </div>
           {
-              isImage && (
+              hasAttachment && (
                   <Box width={'100%'} display={'flex'} justifyContent={'center'} mb={4}>
-                    <Image src={each.question?.image} width="150px" height="90px" />
+                    {
+                        each.question.attachmentType.includes('image') &&
+                        <img
+                            src={each.question.attachment}
+                            alt="image"
+                            width="150px" height="90px"
+                        />
+                    }
+                    {
+                        each.question.attachmentType.includes('video') &&
+                        <video
+                            controls
+                            src={each.question.attachment}
+                            alt="video"
+                            width="150px" height="90px"
+                        />
+                    }
+                    {
+                        each.question.attachmentType.includes('audio') &&
+                        <audio
+                            controls
+                            src={each.question.attachment}
+                            alt="audio"
+                            // width="150px" height="90px"
+                        />
+                    }
                   </Box>
               )
           }
           <section className={`${styles.option_container}`}>
             {each.options.map((option) => (
-                <McqOption optionData={option} checked={each.selectedOption}/>
+                <McqOption index={index++} optionData={option} checked={each.selectedOption}/>
             ))}
           </section>
           <span className={`${styles.span_element}`}>Hint:</span>

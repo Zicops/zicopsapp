@@ -7,7 +7,13 @@ import { useRouter } from 'next/router';
 export default function Layout({ children }) {
   const [isFullHeight, setIsFullHeight] = useState(0);
   const router = useRouter();
-  const fullHeightPageArray = ['/home', '/exam-live', '/exam-screen', '/login'];
+  const fullHeightPageArray = [
+    '/home',
+    '/exam-live',
+    '/exam-screen',
+    '/exam-screen/[examId]',
+    '/login'
+  ];
 
   useEffect(() => {
     if (fullHeightPageArray.includes(router.pathname)) {

@@ -48,13 +48,13 @@ export default function Questions() {
   }
 
   return (
-    <div className={`${customSection.length ? '' : 'h-100'}`}>
+    <div className={`${customSection?.length ? '' : 'h-100'}`}>
       <div
-        className={`${customSection.length ? 'w-100' : 'h-100 center-element-with-flex'} ${
+        className={`${customSection?.length ? 'w-100' : 'h-100 center-element-with-flex'} ${
           styles.sectionBoxContainer
         }`}>
         {/* show section like module */}
-        {customSection.map((section) => (
+        {customSection?.map((section) => (
           <SectionBox
             key={section?.id}
             section={section}
@@ -64,7 +64,7 @@ export default function Questions() {
         ))}
 
         {/* show add section button if section wise is true */}
-        {questionPaperTabData.paperMaster?.section_wise && (
+        {questionPaperTabData?.paperMaster?.section_wise && (
           <IconButton
             text="Add Section"
             styleClass="btnBlack"
@@ -76,7 +76,7 @@ export default function Questions() {
         )}
 
         {/* show add question if not section wise and no section added */}
-        {!questionPaperTabData.paperMaster?.section_wise && !customSection.length && (
+        {!questionPaperTabData.paperMaster?.section_wise && !customSection?.length && (
           <IconButton
             text="Add Question"
             styleClass="btnGrey"

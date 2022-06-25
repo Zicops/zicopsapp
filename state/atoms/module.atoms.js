@@ -20,6 +20,11 @@ export const TopicContentAtom = atom({
   default: []
 });
 
+export const TopicExamAtom = atom({
+  key: 'TopicExam',
+  default: getTopicExamObj()
+});
+
 export const TopicVideoAtom = atom({
   key: 'TopicVideo',
   default: []
@@ -103,6 +108,16 @@ export function getTopicContentObject(data) {
     type: data.type || '',
     duration: data.duration || 0,
     is_default: data.is_default || false
+  };
+}
+
+export function getTopicExamObj(data = {}) {
+  return {
+    id: data.id || null,
+    topicId: data.topicId,
+    courseId: data.courseId,
+    examId: data.examId,
+    language: data.language || ''
   };
 }
 

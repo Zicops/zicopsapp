@@ -46,7 +46,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
   }, []);
 
   // return if no section present
-  if (!questionPaperTabData.sectionData.length) return null;
+  if (!questionPaperTabData?.sectionData?.length) return null;
 
   return (
     <>
@@ -63,7 +63,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
           />
         )}
 
-        {questionPaperTabData.mappedQb?.map((metaData, index) => {
+        {questionPaperTabData?.mappedQb?.map((metaData, index) => {
           // return if qb map does belong current section
           if (metaData?.sectionId !== section.id) return null;
 

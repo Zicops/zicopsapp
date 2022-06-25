@@ -5,10 +5,8 @@ import {
   GET_COURSE_CHAPTERS,
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
-  GET_COURSE_TOPICS_CONTENT,
   GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID,
   GET_TOPIC_RESOURCES_BY_COURSE_ID,
-  GET_TOPIC_RESOURCES,
   queryClient
 } from '../../../API/Queries';
 import { filterResources, sortArrByKeyInOrder } from '../../../helper/data.helper';

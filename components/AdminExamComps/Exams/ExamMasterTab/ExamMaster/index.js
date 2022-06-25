@@ -14,6 +14,7 @@ import { customSelectStyles } from '../../../../common/FormComponents/Logic/form
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
 import RTE from '../../../../common/FormComponents/RTE';
+import { useRouter } from 'next/router';
 
 export default function ExamMaster() {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -24,6 +25,9 @@ export default function ExamMaster() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
   const [questionPaperOptions, setQuestionPaperOptions] = useState([]);
+
+  const router = useRouter();
+  const isPreview = router.query?.isPreview || false;
 
   // load question paper data
   useEffect(() => {
@@ -69,7 +73,8 @@ export default function ExamMaster() {
           placeholder: 'Select Question Paper',
           options: questionPaperOptions,
           value: questionPaperOptions?.filter((option) => option?.value === examTabData?.qpId)[0],
-          isSearchEnable: true
+          isSearchEnable: true,
+          isDisabled: isPreview
         }}
         changeHandler={(e) => {
           const selectedQp = questionPaperOptions?.filter((option) => option?.value === e.value)[0];
@@ -92,7 +97,8 @@ export default function ExamMaster() {
           label: 'Exam Name:',
           placeholder: 'Enter name of the paper (Upto 60 characters)',
           value: examTabData?.name,
-          maxLength: 60
+          maxLength: 60,
+          isDisabled: isPreview
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
@@ -105,7 +111,8 @@ export default function ExamMaster() {
           label: 'Description:',
           placeholder: 'Enter description (Upto 160 characters)',
           value: examTabData.description,
-          maxLength: 160
+          maxLength: 160,
+          isDisabled: isPreview
         }}
         changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
       />
@@ -155,6 +162,7 @@ export default function ExamMaster() {
               if (!regexForNumber.test(e.key)) e.preventDefault();
             }}
             value={examTabData?.passing_criteria}
+            disabled={isPreview}
             onChange={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
 
@@ -176,6 +184,7 @@ export default function ExamMaster() {
             />
           </div> */}
           <select
+            disabled={isPreview}
             onChange={(e) =>
               setExamTabData({ ...examTabData, passing_criteria_type: e.target.value })
             }
@@ -195,6 +204,7 @@ export default function ExamMaster() {
             label="Set Max. Attempts Limit"
             name="is_attempts_visible"
             isChecked={examTabData?.is_attempts_visible}
+            isDisabled={isPreview}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
         </div>
@@ -207,7 +217,8 @@ export default function ExamMaster() {
                 label: 'Max Attempts:',
                 placeholder: 'Select Max Attempts',
                 options: maxAttemptsOptions,
-                value: { value: examTabData?.no_attempts, label: examTabData?.no_attempts }
+                value: { value: examTabData?.no_attempts, label: examTabData?.no_attempts },
+                isDisabled: isPreview
               }}
               isFiftyFifty={true}
               changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'no_attempts')}
@@ -255,7 +266,8 @@ export default function ExamMaster() {
             inputOptions={{
               inputName: 'instructions',
               rows: 4,
-              value: examTabData?.instructions
+              value: examTabData?.instructions,
+              isDisabled: isPreview
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
