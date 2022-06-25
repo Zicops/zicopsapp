@@ -15,6 +15,7 @@ import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
 import RTE from '../../../../common/FormComponents/RTE';
 import { useRouter } from 'next/router';
+import useHandleExamTab from '../Logic/useHandleExamTab';
 
 export default function ExamMaster() {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -28,6 +29,8 @@ export default function ExamMaster() {
 
   const router = useRouter();
   const isPreview = router.query?.isPreview || false;
+
+  const { getTotalMarks } = useHandleExamTab();
 
   // load question paper data
   useEffect(() => {
@@ -47,19 +50,25 @@ export default function ExamMaster() {
         );
 
       setQuestionPaperOptions(options);
-
-      if (examTabData?.qpId) {
-        const selectedQp = options?.filter((option) => option?.value === examTabData?.qpId)[0];
-
-        setExamTabData({
-          ...examTabData,
-          category: selectedQp?.Category,
-          sub_category: selectedQp?.SubCategory,
-          duration: selectedQp?.SuggestedDuration || 0
-        });
-      }
     });
   }, []);
+
+  useEffect(() => {
+    const qpId = router.query?.qpId;
+    if (!questionPaperOptions?.length) return;
+    if (!examTabData?.qpId || qpId !== examTabData?.qpId) return;
+
+    const selectedQp = questionPaperOptions?.filter(
+      (option) => option?.value === examTabData?.qpId
+    )[0];
+
+    setExamTabData({
+      ...examTabData,
+      category: selectedQp?.Category,
+      sub_category: selectedQp?.SubCategory,
+      duration: selectedQp?.SuggestedDuration || 0
+    });
+  }, [questionPaperOptions, router.query]);
 
   const maxAttemptsOptions = [1, 2, 3, 4, 5].map((val) => ({ value: val, label: val }));
 
@@ -87,7 +96,7 @@ export default function ExamMaster() {
           isSearchEnable: true,
           isDisabled: isPreview
         }}
-        changeHandler={(e) => {
+        changeHandler={async (e) => {
           const selectedQp = questionPaperOptions?.filter((option) => option?.value === e.value)[0];
 
           setExamTabData({
@@ -95,7 +104,8 @@ export default function ExamMaster() {
             category: selectedQp?.Category,
             sub_category: selectedQp?.SubCategory,
             duration: selectedQp?.SuggestedDuration || 0,
-            qpId: e.value
+            qpId: e.value,
+            total_marks: await getTotalMarks()
           });
         }}
       />

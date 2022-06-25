@@ -10,6 +10,7 @@ import {
   queryClient
 } from '../../../../API/Queries';
 import { ExamTabDataAtom, getExamTabDataObject } from '../../../../state/atoms/exams.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
 import { ExamMasterTabAtom, ExamMasterTabDataSelector } from './Logic/examMasterTab.helper';
@@ -32,10 +33,11 @@ export default function ExamMasterTab() {
   // recoil
   const [tab, setTab] = useRecoilState(ExamMasterTabAtom);
   const [status, setStatus] = useRecoilState(StatusAtom);
-  const examMasterTabData = useRecoilValue(ExamMasterTabDataSelector);
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const examMasterTabData = useRecoilValue(ExamMasterTabDataSelector);
 
-  const { saveExamData } = useHandleExamTab();
+  const { saveExamData, getTotalMarks } = useHandleExamTab();
 
   // update id
   const router = useRouter();
@@ -43,7 +45,11 @@ export default function ExamMasterTab() {
   useEffect(async () => {
     const examId = router.query?.examId || null;
     const qpId = router.query?.qpId || null;
-    if (!examId) return setExamTabData(getExamTabDataObject({ qpId }));
+    if (!examId) {
+      return setExamTabData(
+        getExamTabDataObject({ qpId: qpId, total_marks: await getTotalMarks() })
+      );
+    }
 
     // load master data
     let isError = false;
@@ -175,7 +181,7 @@ export default function ExamMasterTab() {
       footerObj={{
         status: status,
         submitDisplay: examTabData?.id ? 'Update' : 'Save',
-        handleSubmit: saveExamData,
+        handleSubmit: () => saveExamData(),
         handleCancel: () => {
           setExamTabData(getExamTabDataObject());
           router.push('/admin/exams/my-exams/');

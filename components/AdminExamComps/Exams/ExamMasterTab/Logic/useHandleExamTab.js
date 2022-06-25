@@ -63,7 +63,6 @@ export default function useHandleExamTab() {
   );
 
   const router = useRouter();
-  const examId = router.query?.examId;
 
   // recoil state
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
@@ -119,10 +118,9 @@ export default function useHandleExamTab() {
     loadMappingError
   ]);
 
-  // update total marks on qp id change
-  useEffect(async () => {
+  async function getTotalMarks() {
     const qpId = examTabData?.qpId;
-    if (!qpId) return setExamTabData({ ...examTabData, total_marks: 0 });
+    if (!qpId) return;
 
     // load section data
     let isError = false;
@@ -155,9 +153,8 @@ export default function useHandleExamTab() {
         totalMarks
       );
     }
-
-    setExamTabData({ ...examTabData, total_marks: totalMarks || 0 });
-  }, [examTabData?.qpId]);
+    return totalMarks;
+  }
 
   function getDateTime(dateObj, timeObj) {
     dateObj = new Date(dateObj);
@@ -357,5 +354,5 @@ export default function useHandleExamTab() {
     if (!router.query?.examId) return router.push(`${router.asPath}/${examId}`);
   }
 
-  return { saveExamData };
+  return { saveExamData, getTotalMarks };
 }
