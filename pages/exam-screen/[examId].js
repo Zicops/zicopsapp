@@ -23,6 +23,9 @@ import ExamInstruction from '../../components/LearnerExamComp/ExamInstructions';
 import styles from '../../components/LearnerExamComp/learnerExam.module.scss';
 import { toggleFullScreen } from '../../helper/utils.helper';
 import { LearnerExamAtom } from '../../state/atoms/exams.atoms';
+import styles from "../../components/LearnerExamComp/learnerExam.module.scss";
+import {CircularProgress} from "@mui/material";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const ExamScreen = () => {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
@@ -57,7 +60,7 @@ const ExamScreen = () => {
   });
 
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const examData = [
     {
       id: 1,
@@ -487,7 +490,7 @@ const ExamScreen = () => {
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
 
   useEffect(async () => {
-    setLoading(true);
+    setLoading(true)
     const examId = router.query?.examId || null;
     if (!examId) return;
 
@@ -786,7 +789,7 @@ const ExamScreen = () => {
       },
       sectionData: sectionData
     });
-    setLoading(false);
+    setLoading(false)
   }, [router.query]);
 
   // update full screen state
@@ -802,38 +805,44 @@ const ExamScreen = () => {
     });
   }, []);
 
+  async function loadQuestionsAndOptions() {}
   return (
     <div ref={refFullscreen}>
-      {loading ? (
-        <div className={styles.loadingExamScreen}>
-          <ThemeProvider
-            theme={createTheme({
-              palette: {
-                primary: {
-                  main: '#6bcfcf'
-                }
-              }
-            })}>
-            <CircularProgress />
-          </ThemeProvider>
-        </div>
-      ) : isLearner ? (
-        <LearnerExamComponent
-          data={questionData}
-          setData={setQuestionData}
-          current={current}
-          setCurrent={setCurrent}
-          isFullScreen={isFullScreen}
-          setIsFullScreen={setIsFullScreen}
-        />
-      ) : (
-        // <ExamLandingPage setIsLearner={setIsLearner} />
-        <ExamInstruction
-          setIsLearner={setIsLearner}
-          isFullScreen={isFullScreen}
-          setIsFullScreen={setIsFullScreen}
-        />
-      )}
+      {
+        loading ? (
+            <div className={styles.loadingExamScreen}>
+              <ThemeProvider
+                  theme={createTheme({
+                    palette: {
+                      primary: {
+                        main: '#6bcfcf'
+                      }
+                    }
+                  })}>
+                <CircularProgress />
+              </ThemeProvider>
+
+            </div>
+        ) : (
+            isLearner ? (
+                <LearnerExamComponent
+                    data={questionData}
+                    setData={setQuestionData}
+                    current={current}
+                    setCurrent={setCurrent}
+                    isFullScreen={isFullScreen}
+                    setIsFullScreen={setIsFullScreen}
+                />
+            ) : (
+                // <ExamLandingPage setIsLearner={setIsLearner} />
+                <ExamInstruction
+                    setIsLearner={setIsLearner}
+                    isFullScreen={isFullScreen}
+                    setIsFullScreen={setIsFullScreen}
+                />
+            )
+        )
+      }
       <div
         style={{
           position: 'absolute',
