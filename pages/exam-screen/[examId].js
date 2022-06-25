@@ -802,9 +802,6 @@ const ExamScreen = () => {
   }, []);
 
   async function loadQuestionsAndOptions() {}
-
-  console.log(questionData)
-
   return (
     <div ref={refFullscreen}>
       {

@@ -5,6 +5,7 @@ import {Box, Grid} from "@mui/material";
 
 const ExamAllQuestions = ({current}) => {
     const hasAttachment = !!current.question?.attachment;
+
   return (
       <>
           <Box bgcolor={'#040404'} color={'#FFF'} width={'100%'} height={'220px'} pt={1} px={3} pb={4}>

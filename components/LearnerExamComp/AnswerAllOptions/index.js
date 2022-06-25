@@ -90,6 +90,7 @@ const AnswerAllOptions = ({
   }, [current]);
 
   let index = 0;
+
   return (
     <>
       <Box p={4} width={'100%'} mb={10}>
