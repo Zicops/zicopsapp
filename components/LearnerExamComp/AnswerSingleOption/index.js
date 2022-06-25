@@ -1,5 +1,6 @@
 import styles from './answerSingleOption.module.scss';
 import {Box, Grid} from "@mui/material";
+import {acceptedFileTypes} from "../../AdminExamComps/QuestionBanks/Logic/questionBank.helper";
 
 const AnswerSingleOption = ({ optionData, currentData, option, index, setOption }) => {
     const count = ['a', 'b', 'c', 'd'];
@@ -14,11 +15,32 @@ const AnswerSingleOption = ({ optionData, currentData, option, index, setOption 
                 {
                     optionData.attachment && (
                         <div className={`${styles.answer_single_option_img_container}`}>
-                            <img
-                                className={` ${styles.answer_single_option_img} `}
-                                src={`${optionData.attachment}`}
-                                alt="refresh"
-                            />
+                            {
+                                optionData.attachmentType.includes('image') &&
+                                <img
+                                    className={` ${styles.answer_single_option_img} `}
+                                    src={optionData.attachment}
+                                    alt="image"
+                                />
+                            }
+                            {
+                                optionData.attachmentType.includes('video') &&
+                                <video
+                                    controls
+                                    className={` ${styles.answer_single_option_img} `}
+                                    src={optionData.attachment}
+                                    alt="video"
+                                />
+                            }
+                            {
+                                optionData.attachmentType.includes('audio') &&
+                                <audio
+                                    controls
+                                    className={` ${styles.answer_single_option_img} `}
+                                    src={optionData.attachment}
+                                    alt="audio"
+                                />
+                            }
                         </div>
                     )
                 }

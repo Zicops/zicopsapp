@@ -17,7 +17,7 @@ export default function TopicBox({
   currrentModule,
   setSelectedModule
 }) {
-  const { name, description } = topic;
+  const { name, description, type } = topic;
   const duration = topicContent[0]?.duration.toString();
   const topicData = useRecoilValue(TopicAtom);
 
@@ -29,6 +29,21 @@ export default function TopicBox({
 
   const { allModuleTopic, currentTopicIndex } = videoData;
   const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
+
+  // Set default topic image
+  let topicImage;// = '/images/media-container.png';
+  //check the type of content inside the topic
+  switch (type) {
+    case 'Lab':
+      topicImage = '/images/pdfIcon.png';
+      break;
+    case 'Assessment':
+      topicImage = '/images/media-container.png';
+      break;
+    case 'Content':
+      topicImage = '/images/topicImage.png';
+      break;
+  }
 
   // auto play video when next or previous button clciked (module switch)
   useEffect(() => {
@@ -83,6 +98,7 @@ export default function TopicBox({
     });
   }
 
+  // console.log(type);
   return (
     <>
       <div
@@ -115,7 +131,7 @@ export default function TopicBox({
 
         <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
           <div className="topic_img">
-            <img src="images/topicImage.png" alt="" />
+            <img src={`${topicImage}`} alt="" />
           </div>
 
           <div className="topic_text">
@@ -149,30 +165,66 @@ export default function TopicBox({
               </p>
             </div>
           </div>
-          <div className="topic_player">
-            <div className="progress_bar">
-              <img src="images/progressTriangle.png" alt="" />
-            </div>
-            <div className="details">
-              <div>Video + Quiz</div>
-              <div>
-                <span>
-                  {isLoading ? (
-                    <Skeleton
-                      sx={{ bgcolor: 'dimgray' }}
-                      variant="rectangular"
-                      height={20}
-                      width={100}
-                    />
-                  ) : duration ? (
-                    `Duration : ${duration}`
-                  ) : (
-                    'N/A'
-                  )}
-                </span>
+          {type === 'Content' && (
+            <div className="topic_player">
+              <div className="progress_bar">
+                <img src="images/progressTriangle.png" alt="" />
+              </div>
+              <div className="details">
+                <div>Video + Quiz</div>
+                <div>
+                  <span>
+                    {isLoading ? (
+                      <Skeleton
+                        sx={{ bgcolor: 'dimgray' }}
+                        variant="rectangular"
+                        height={20}
+                        width={100}
+                      />
+                    ) : duration ? (
+                      `Duration : ${duration}`
+                    ) : (
+                      'N/A'
+                    )}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
+          {type === 'Assessment' && (
+            <div className="topic_player">
+              {/* <div className="progress_bar"> */}
+                {/* <img src="images/progressTriangle.png" alt="" /> */}
+              {/* </div> */}
+              Exam block is getting ready!
+            </div>
+          )}
+          {type === 'Lab' && (
+            <div className="topic_player">
+              <div className="progress_bar">
+                <img src="images/progressTriangle.png" alt="" />
+              </div>
+              <div className="details">
+                <div>Video + Quiz</div>
+                <div>
+                  <span>
+                    {isLoading ? (
+                      <Skeleton
+                        sx={{ bgcolor: 'dimgray' }}
+                        variant="rectangular"
+                        height={20}
+                        width={100}
+                      />
+                    ) : duration ? (
+                      `Duration : ${duration}`
+                    ) : (
+                      'N/A'
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

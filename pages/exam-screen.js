@@ -5,7 +5,6 @@ import LearnerExamComponent from '../components/LearnerExamComp';
 import ExamLandingPage from '../components/LearnerExamComp/ExamLandingPage';
 import ExamInstruction from '../components/LearnerExamComp/ExamInstructions';
 import Image from 'next/image';
-import { flexbox } from '@mui/system';
 
 const ExamScreen = () => {
   const router = useRouter();

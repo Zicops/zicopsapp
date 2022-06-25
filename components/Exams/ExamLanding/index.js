@@ -15,7 +15,7 @@ import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
 import styles from './examLanding.module.scss';
 
-export default function ExamLanding() {
+export default function ExamLanding({ testType = 'Quiz' }) {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
     client: queryClient
   });
@@ -32,6 +32,7 @@ export default function ExamLanding() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
+  var btnStyle;
 
   const router = useRouter();
 
@@ -153,6 +154,10 @@ export default function ExamLanding() {
     });
   }, []);
 
+  const { exam_landing_btn_container, exam_landing_btn_container1 } = styles;
+
+  btnStyle = testType === 'Quiz' ? exam_landing_btn_container : exam_landing_btn_container1;
+
   return (
     <div
       className={`${styles.exam_landing}`}
@@ -185,32 +190,36 @@ export default function ExamLanding() {
         noAttempt={learnerExamData?.examData?.noAttempts}
       />
 
-      <div className={`${styles.exam_landing_btn_container}`}>
-        <section style={{ marginRight: '5%' }}>
+      <div className={`${btnStyle}`}>
+        <section>
           <button className={`${styles.exam_landing_btn}`}>Take Sample Test</button>
           <button
             onClick={() => router.push(`/exam-screen/${topicExamData?.examId}`)}
             className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>
             Take Exam Now
           </button>
-          <div>
-            <p
-              style={{
-                color: 'var(--white)',
-                fontSize: '10px',
-                textAlign: 'right',
-                marginTop: '10px'
-              }}>
-              This link will be active 15 minutes before the exam
-            </p>
-          </div>
+          {testType === 'Exam' && (
+            <div>
+              <p
+                style={{
+                  color: 'var(--white)',
+                  fontSize: '10px',
+                  textAlign: 'right',
+                  marginTop: '10px'
+                }}>
+                This link will be active 15 minutes before the exam
+              </p>
+            </div>
+          )}
         </section>
-        <section>
-          <button className={`${styles.exam_landing_btn}`}>View Full Course</button>
-          <button className={`${styles.exam_landing_btn}`} style={{ color: 'var(--dark_three' }}>
-            Skip Exam
-          </button>
-        </section>
+        {testType === 'Exam' && (
+          <section>
+            <button className={`${styles.exam_landing_btn}`}>View Full Course</button>
+            <button className={`${styles.exam_landing_btn}`} style={{ color: 'var(--dark_three' }}>
+              Skip Exam
+            </button>
+          </section>
+        )}
       </div>
     </div>
   );

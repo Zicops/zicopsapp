@@ -16,7 +16,6 @@ const NewQuestionPaperPreview = ({
         <QuestionPaperTop setIsQuestion={setIsQuestion} data={data} />
         <QuestionSection
           setIsQuestion={setIsQuestion}
-          // quesSection={quesSection}
           setOption={setOption}
           data={data}
           setData={setData}
