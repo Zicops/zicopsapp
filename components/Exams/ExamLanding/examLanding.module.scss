@@ -1,10 +1,13 @@
 @import '../../../styles/base.scss';
 
 .exam_landing {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin-top: 50px;
   height: 75vh;
   width: 100%;
-  padding: 50px;
+  padding: 50px 40px 0 10px;
   background: $black;
 
   .blank_space {
@@ -97,15 +100,21 @@
     }
   }
 
-  .exam_landing_btn_container {
+  .exam_landing_btn_container1 {
     display: flex;
     justify-content: flex-end;
+  }
+
+  .exam_landing_btn_container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
   }
 
   .exam_landing_btn {
     width: 190px;
     height: 40px;
-    margin-right: 25px;
+    margin: 5px;
     font-size: 1rem;
     cursor: pointer;
     color: $primary;
