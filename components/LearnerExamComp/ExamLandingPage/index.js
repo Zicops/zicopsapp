@@ -23,7 +23,7 @@ const ExamLandingPage = () => {
     <div className={`${styles.exam_landing}`}>
       <div className={`${styles.exam_landing_head}`}>
         <button className={`${styles.exam_landing_head_btn}`} onClick={() => router.back()}>
-          <img src="./images/Back.png" />
+          <img src="/images/Back.png" />
         </button>
         <div className={`${styles.exam_landing_head_container}`}>
           <p id={`${styles.exam_landing_head_testSeries}`}>{data[0].testSeries}</p>

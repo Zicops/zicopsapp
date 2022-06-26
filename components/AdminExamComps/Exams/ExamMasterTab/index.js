@@ -47,7 +47,7 @@ export default function ExamMasterTab() {
     const qpId = router.query?.qpId || null;
     if (!examId) {
       return setExamTabData(
-        getExamTabDataObject({ qpId: qpId, total_marks: await getTotalMarks() })
+        getExamTabDataObject({ qpId: qpId, total_marks: await getTotalMarks(qpId) })
       );
     }
 

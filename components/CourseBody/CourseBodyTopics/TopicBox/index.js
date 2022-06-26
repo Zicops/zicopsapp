@@ -1,11 +1,17 @@
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
 import { filterAndSortTopicsBasedOnModuleId } from '../../../../helper/data.helper';
-import { isLoadingAtom, TopicAtom, TopicExamAtom } from '../../../../state/atoms/module.atoms';
-import { VideoAtom } from '../../../../state/atoms/video.atom';
+import {
+  getTopicExamObj,
+  isLoadingAtom,
+  TopicAtom,
+  TopicExamAtom
+} from '../../../../state/atoms/module.atoms';
+import { getVideoObject, VideoAtom } from '../../../../state/atoms/video.atom';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 
 export default function TopicBox({
@@ -26,12 +32,13 @@ export default function TopicBox({
 
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const { allModuleTopic, currentTopicIndex } = videoData;
   const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
 
   // Set default topic image
-  let topicImage;// = '/images/media-container.png';
+  let topicImage; // = '/images/media-container.png';
   //check the type of content inside the topic
   switch (type) {
     case 'Lab':
@@ -88,7 +95,10 @@ export default function TopicBox({
       (res) => res.getTopicExams[0]
     );
 
+    if (!topicExam) return setToastMsg({ type: 'danger', message: 'No Exam Added!' });
+
     // reset recoil and set new data
+    setVideoData(getVideoObject());
     setTopicExamData({
       id: topicExam.id,
       topicId: topicExam.topicId,
@@ -98,15 +108,17 @@ export default function TopicBox({
     });
   }
 
-  // console.log(type);
   return (
     <>
       <div
         className="topic"
         onClick={() => {
-          loadTopicExam();
+          if (type === 'Assessment') return loadTopicExam();
 
+          // if (type === 'Content') {
           if (!topicContent.length) return;
+
+          setTopicExamData(getTopicExamObj());
           updateVideoData(
             videoData,
             setVideoData,
@@ -117,6 +129,7 @@ export default function TopicBox({
             currrentModule,
             setSelectedModule
           );
+          // }
         }}>
         <div className="preclassName">
           <div>
@@ -194,7 +207,7 @@ export default function TopicBox({
           {type === 'Assessment' && (
             <div className="topic_player">
               {/* <div className="progress_bar"> */}
-                {/* <img src="images/progressTriangle.png" alt="" /> */}
+              {/* <img src="images/progressTriangle.png" alt="" /> */}
               {/* </div> */}
               Exam block is getting ready!
             </div>

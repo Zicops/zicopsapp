@@ -45,7 +45,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
       field: 'Description',
       headerName: 'Questions',
       headerClassName: 'course-list-header',
-      flex: 5,
+      flex: 4,
       renderCell: (params) => {
         const type = params.row?.AttachmentType;
         let fileSrc = null;

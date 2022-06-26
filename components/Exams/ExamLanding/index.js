@@ -11,12 +11,12 @@ import {
   queryClient
 } from '../../../API/Queries';
 import { LearnerExamAtom } from '../../../state/atoms/exams.atoms';
-import { TopicExamAtom } from '../../../state/atoms/module.atoms';
+import { getTopicExamObj, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
 import styles from './examLanding.module.scss';
 
-export default function ExamLanding({ testType = 'Quiz' }) {
+export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = false }) {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
     client: queryClient
   });
@@ -180,9 +180,16 @@ export default function ExamLanding({ testType = 'Quiz' }) {
         elem?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
       }>
       <div className={`${styles.exam_landing_head}`}>
-        <button className={`${styles.exam_landing_head_btn}`} onClick={() => router.back()}>
+        <button
+          className={`${styles.exam_landing_head_btn}`}
+          onClick={() => {
+            if (isDisplayedInCourse) return setTopicExamData(getTopicExamObj());
+
+            router.back();
+          }}>
           <img src="./images/Back.png" />
         </button>
+
         <div className={`${styles.exam_landing_head_container}`}>
           <p id={`${styles.exam_landing_head_testSeries}`}>
             {learnerExamData?.landingPageData?.testSeries}

@@ -43,7 +43,7 @@ export default function PreviewCourse() {
               margin: 0,
               padding: 0
             }}>
-            {topicExamData?.id && <ExamLanding />}
+            {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
 
             {startPlayer && <CustomVideo set={setStartPlayer} isPreview={true} />}
 
