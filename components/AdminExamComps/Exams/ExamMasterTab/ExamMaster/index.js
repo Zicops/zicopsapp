@@ -53,7 +53,7 @@ export default function ExamMaster() {
     });
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     const qpId = router.query?.qpId;
     if (!questionPaperOptions?.length) return;
     if (!examTabData?.qpId || qpId !== examTabData?.qpId) return;
@@ -61,12 +61,13 @@ export default function ExamMaster() {
     const selectedQp = questionPaperOptions?.filter(
       (option) => option?.value === examTabData?.qpId
     )[0];
-
+    console.log('ss');
     setExamTabData({
       ...examTabData,
       category: selectedQp?.Category,
       sub_category: selectedQp?.SubCategory,
-      duration: selectedQp?.SuggestedDuration || 0
+      duration: selectedQp?.SuggestedDuration || 0,
+      total_marks: await getTotalMarks(qpId)
     });
   }, [questionPaperOptions, router.query]);
 

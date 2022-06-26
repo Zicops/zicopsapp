@@ -121,10 +121,8 @@ export default function ExamMasterTab() {
 
       schObj = {
         scheduleId: schData?.id || null,
-        exam_start_date: new Date(+schData?.Start * 1000),
-        exam_start_time: new Date(+schData?.Start * 1000),
-        exam_end_date: new Date(+schData?.End * 1000),
-        exam_end_time: new Date(+schData?.End * 1000),
+        exam_start: new Date(+schData?.Start * 1000),
+        exam_end: new Date(+schData?.End * 1000),
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
         is_schedule_active: schData?.IsActive || false
@@ -155,7 +153,8 @@ export default function ExamMasterTab() {
       ...masterObj,
       ...insObj,
       ...schObj,
-      ...confObj
+      ...confObj,
+      total_marks: await getTotalMarks(masterObj?.qpId)
     });
   }, [router.query]);
 
