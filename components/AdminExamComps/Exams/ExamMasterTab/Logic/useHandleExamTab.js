@@ -1,3 +1,4 @@
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -63,7 +64,6 @@ export default function useHandleExamTab() {
   );
 
   const router = useRouter();
-  const examId = router.query?.examId;
 
   // recoil state
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
@@ -119,12 +119,9 @@ export default function useHandleExamTab() {
     loadMappingError
   ]);
 
-  // update total marks on qp id change
-  useEffect(async () => {
-    if (examTabData?.id !== null || examId !== examTabData?.id) return;
-
-    const qpId = examTabData?.qpId;
-    if (!qpId) return setExamTabData({ ...examTabData, total_marks: 0 });
+  async function getTotalMarks(id = null) {
+    const qpId = id || examTabData?.qpId;
+    if (!qpId) return;
 
     // load section data
     let isError = false;
@@ -157,23 +154,8 @@ export default function useHandleExamTab() {
         totalMarks
       );
     }
-
-    setExamTabData({ ...examTabData, total_marks: totalMarks || 0 });
-  }, [examTabData?.qpId]);
-
-  function getDateTime(dateObj, timeObj) {
-    dateObj = new Date(dateObj);
-    timeObj = new Date(timeObj);
-    const newDateObj = new Date();
-
-    newDateObj.setDate(dateObj.getDate());
-    newDateObj.setMonth(dateObj.getMonth());
-    newDateObj.setFullYear(dateObj.getFullYear());
-    newDateObj.setHours(timeObj.getHours());
-    newDateObj.setMinutes(timeObj.getMinutes());
-    newDateObj.setSeconds(timeObj.getSeconds());
-
-    return Math.floor(newDateObj.getTime() / 1000) || 0;
+    console.log(totalMarks);
+    return totalMarks;
   }
 
   async function saveExam() {
@@ -256,10 +238,9 @@ export default function useHandleExamTab() {
   }
 
   async function saveSchedule(examId) {
-    const startDateTime = getDateTime(examTabData.exam_start_date, examTabData.exam_start_time);
     const sendData = {
       examId: examId,
-      start: startDateTime,
+      start: getUnixFromDate(examTabData.exam_start),
       end: 0,
       buffer_time: examTabData.buffer_time || 0,
       createdBy: examTabData.createdBy || 'Zicops',
@@ -267,11 +248,11 @@ export default function useHandleExamTab() {
       is_active: examTabData.is_ins_active || true
     };
 
-    console.log(sendData);
-    if (examTabData.is_stretch && examTabData?.exam_end_date && examTabData?.exam_end_time) {
-      sendData.end = getDateTime(examTabData.exam_end_date, examTabData.exam_end_time);
+    if (examTabData.is_stretch && examTabData?.exam_end) {
+      sendData.end = getUnixFromDate(examTabData.exam_end);
       sendData.buffer_time = 0;
     }
+    console.log(sendData);
 
     let response = {};
     // update
@@ -359,5 +340,5 @@ export default function useHandleExamTab() {
     if (!router.query?.examId) return router.push(`${router.asPath}/${examId}`);
   }
 
-  return { saveExamData };
+  return { saveExamData, getTotalMarks };
 }

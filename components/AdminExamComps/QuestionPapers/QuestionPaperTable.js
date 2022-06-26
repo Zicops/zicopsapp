@@ -82,6 +82,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
                   }}>
                   <img src="/images/svg/edit-box-line.svg" width={20}></img>
                 </button>
+
                 <button
                   onClick={() => {
                     router.push(

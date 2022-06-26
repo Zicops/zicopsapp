@@ -52,7 +52,7 @@ export default function McqCard({ questionData, optionData, handleCancel, handle
           <p className={`${styles.span_element}`}>
             {/* TODO : Add difficulty lebel */}
             <span>Q.</span>
-            {questionData?.description}
+            <span style={{ maxWidth: '65%' }}>{questionData?.description}</span>
 
             {questionData?.question_marks ? (
               <>

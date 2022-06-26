@@ -19,7 +19,6 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
       setIsType((prevValue) => ({ ...prevValue, takeAnyTime: !prevValue.takeAnyTime }));
     }
   }, []);
-
   const router = useRouter();
 
   console.log(learnerExamData)
@@ -36,7 +35,10 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
         <div className={`${styles.leftAbout}`}>
           <span>
             <img src="/images/ExamInstructions/assignment.png" alt="cannot found" /> Exam Type
-            <span>:</span> <span>{learnerExamData?.examData?.scheduleType}</span>
+            <span>:</span>{' '}
+            <span style={{ textTransform: 'capitalize' }}>
+              {learnerExamData?.examData?.scheduleType}
+            </span>
           </span>
           {isType.takeAnyTime && (
             <span>
@@ -53,7 +55,11 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             <span>
               <img src="/images/ExamInstructions/event.png" alt="cannot found" /> End date
               <span>:</span>
-              <span>{learnerExamData?.examData?.examEnd?.toDateString()}</span>
+              <span>
+                {learnerExamData?.examData?.examEnd
+                  ? learnerExamData?.examData?.examEnd?.toDateString()
+                  : 'N/A'}
+              </span>
             </span>
           )}
         </div>
@@ -69,7 +75,12 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
           {isType.takeAnyTime && (
             <span>
               <img src="/images/ExamInstructions/timer.png" alt="cannot found" /> Exam end time
-              <span>:</span> <span>{learnerExamData?.examData?.examEnd?.toLocaleTimeString()}</span>
+              <span>:</span>
+              <span>
+                {learnerExamData?.examData?.examEnd
+                  ? learnerExamData?.examData?.examEnd?.toLocaleTimeString()
+                  : 'N/A'}
+              </span>
             </span>
           )}
           {isType.takeAnyTime && (

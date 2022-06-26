@@ -53,7 +53,6 @@ export function getQuestionPaperTabDataObject(data = {}) {
   return {
     paperMaster: data.paperMaster || getQuestionPaperMasterObject(),
     sectionData: data.sectionData || [],
-    qbSectionMapData: data.qbSectionMapData || [],
     mappedQb: data.mappedQb || [],
     currentFixedQuestion: data.currentFixedQuestion || getFixedQuestionObject(),
     refetchQBSectionMapping: async function () {}
@@ -171,10 +170,9 @@ export function getExamTabDataObject(data = {}) {
 
     // schedule
     scheduleId: data.schedule || null,
-    exam_start_date: data.exam_start_date || Date.now(),
-    exam_start_time: data.exam_start_time || Date.now(),
-    exam_end_date: data.exam_end_date || Date.now(),
-    exam_end_time: data.exam_end_time || Date.now(),
+    exam_start: data.exam_start || new Date(),
+    exam_end: data.exam_end || new Date(),
+
     buffer_time: data.buffer_time || 0,
     is_stretch: data.is_stretch || false,
     is_schedule_active: data.is_schedule_active || false,
@@ -258,7 +256,7 @@ export function getExamData(data = {}) {
     // schedule
     scheduleId: data.schedule || null,
     examStart: data.examStart || new Date(),
-    examEnd: data.examEnd || new Date(),
+    examEnd: data.examEnd || null,
     bufferTime: data.bufferTime || 0,
     is_schedule_active: data.is_schedule_active || false
   };

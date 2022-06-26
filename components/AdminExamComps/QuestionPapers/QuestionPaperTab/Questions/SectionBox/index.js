@@ -27,9 +27,14 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
 
   const [qbData, setQbData] = useState([]);
 
-  useEffect(async () => {
+  useEffect(() => {
+    loadBankData();
+  }, [questionPaperTabData?.mappedQb]);
+
+  async function loadBankData() {
     const allQuestionBankIds = [];
     questionPaperTabData.mappedQb?.forEach((map) => allQuestionBankIds.push(map?.qbId));
+    if (!allQuestionBankIds.length) return;
 
     // load qb names
     let isError = false;
@@ -42,9 +47,10 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
     });
     if (isError) return;
 
+    console.log('loaded', metaRes?.data);
     setQbData(metaRes?.data?.getQBMeta || []);
-  }, []);
-
+  }
+  console.log('questionPaperTabData', questionPaperTabData);
   // return if no section present
   if (!questionPaperTabData?.sectionData?.length) return null;
 
@@ -65,7 +71,11 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
 
         {questionPaperTabData?.mappedQb?.map((metaData, index) => {
           // return if qb map does belong current section
-          if (metaData?.sectionId !== section.id) return null;
+          let sequence = 0;
+          if (metaData?.sectionId !== section.id) {
+            --sequence;
+            return null;
+          }
 
           // render small qb maping row
           const bankName = qbData?.find((qb) => qb.id === metaData?.qbId);
@@ -73,7 +83,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
             <BlackRow
               key={index}
               type={isSectionWise ? 'small' : 'large'}
-              title={`Question Bank ${index + 1}: ${bankName?.name}`}
+              title={`Question Bank ${++sequence}: ${bankName?.name || ''}`}
               extraComp={
                 <span className={`${styles.numberOfQuestions}`}>[{metaData?.total_questions}]</span>
               }

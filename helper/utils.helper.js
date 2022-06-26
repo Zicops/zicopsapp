@@ -104,3 +104,9 @@ export function toggleFullScreen(elem) {
   closeFullscreen();
   return false;
 }
+
+export function getUnixFromDate(dateObj) {
+  const newDate = new Date(dateObj);
+
+  return Math.floor(newDate.getTime() / 1000) || 0;
+}

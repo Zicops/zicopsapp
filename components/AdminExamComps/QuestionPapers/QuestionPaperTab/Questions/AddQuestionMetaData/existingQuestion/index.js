@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../../../../../API/Queries';
 import { loadQueryData } from '../../../../../../../helper/api.helper';
 import { changeHandler } from '../../../../../../../helper/common.helper';
+import { loadCatSubCat } from '../../../../../../../helper/data.helper';
 import { ToastMsgAtom } from '../../../../../../../state/atoms/toast.atom';
 import LabeledDropdown from '../../../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
@@ -16,18 +17,11 @@ export default function ExistingQuestion({
   questionBankOptions,
   isEdit
 }) {
-  const categoryOption = [{ value: '', label: '-- Select --' }];
-  const subCategoryOption = [{ value: '', label: '-- Select --' }];
   const difficultyOptions = [
     { value: 'Beginner', label: 'Beginner' },
     { value: 'Competent', label: 'Competent' },
     { value: 'Proficient', label: 'Proficient' }
   ];
-
-  // load categories
-  const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
-  allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
-  allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -41,6 +35,11 @@ export default function ExistingQuestion({
     });
   }, [questionBankOptions]);
 
+  // cat and sub cat
+  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // update sub cat based on cat
+  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, metaData?.category);
+
   return (
     <>
       <div className={styles.twoInputContainer}>
@@ -50,7 +49,7 @@ export default function ExistingQuestion({
             inputName: 'category',
             label: 'Category:',
             placeholder: 'Select category',
-            options: categoryOption,
+            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.cat],
             value: { value: metaData?.category, label: metaData?.category },
             isSearchEnable: true
           }}
@@ -64,7 +63,7 @@ export default function ExistingQuestion({
             inputName: 'sub_category',
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
-            options: subCategoryOption,
+            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.subCat],
             value: { value: metaData?.sub_category, label: metaData?.sub_category },
             isSearchEnable: true
           }}
@@ -79,8 +78,11 @@ export default function ExistingQuestion({
           if (searchQuery) return option.label?.toLowerCase()?.includes(searchQuery?.toLowerCase());
           if (!metaData?.category && !metaData?.sub_category) return true;
 
+          if (!metaData?.category) return option?.data?.sub_category === metaData?.sub_category;
+          if (!metaData?.sub_category) return option?.data?.category === metaData?.category;
+
           return (
-            option?.data?.category === metaData?.category ||
+            option?.data?.category === metaData?.category &&
             option?.data?.sub_category === metaData?.sub_category
           );
         }}

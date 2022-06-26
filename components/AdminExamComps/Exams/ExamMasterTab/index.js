@@ -10,6 +10,7 @@ import {
   queryClient
 } from '../../../../API/Queries';
 import { ExamTabDataAtom, getExamTabDataObject } from '../../../../state/atoms/exams.atoms';
+import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
 import { ExamMasterTabAtom, ExamMasterTabDataSelector } from './Logic/examMasterTab.helper';
@@ -32,10 +33,11 @@ export default function ExamMasterTab() {
   // recoil
   const [tab, setTab] = useRecoilState(ExamMasterTabAtom);
   const [status, setStatus] = useRecoilState(StatusAtom);
-  const examMasterTabData = useRecoilValue(ExamMasterTabDataSelector);
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const examMasterTabData = useRecoilValue(ExamMasterTabDataSelector);
 
-  const { saveExamData } = useHandleExamTab();
+  const { saveExamData, getTotalMarks } = useHandleExamTab();
 
   // update id
   const router = useRouter();
@@ -43,7 +45,11 @@ export default function ExamMasterTab() {
   useEffect(async () => {
     const examId = router.query?.examId || null;
     const qpId = router.query?.qpId || null;
-    if (!examId) return setExamTabData(getExamTabDataObject({ qpId }));
+    if (!examId) {
+      return setExamTabData(
+        getExamTabDataObject({ qpId: qpId, total_marks: await getTotalMarks() })
+      );
+    }
 
     // load master data
     let isError = false;
@@ -115,10 +121,8 @@ export default function ExamMasterTab() {
 
       schObj = {
         scheduleId: schData?.id || null,
-        exam_start_date: new Date(+schData?.Start * 1000),
-        exam_start_time: new Date(+schData?.Start * 1000),
-        exam_end_date: new Date(+schData?.End * 1000),
-        exam_end_time: new Date(+schData?.End * 1000),
+        exam_start: new Date(+schData?.Start * 1000),
+        exam_end: new Date(+schData?.End * 1000),
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
         is_schedule_active: schData?.IsActive || false
@@ -149,7 +153,8 @@ export default function ExamMasterTab() {
       ...masterObj,
       ...insObj,
       ...schObj,
-      ...confObj
+      ...confObj,
+      total_marks: await getTotalMarks(masterObj?.qpId)
     });
   }, [router.query]);
 
@@ -175,8 +180,11 @@ export default function ExamMasterTab() {
       footerObj={{
         status: status,
         submitDisplay: examTabData?.id ? 'Update' : 'Save',
-        handleSubmit: saveExamData,
-        handleCancel: () => router.push('/admin/exams/my-exams/')
+        handleSubmit: () => saveExamData(),
+        handleCancel: () => {
+          setExamTabData(getExamTabDataObject());
+          router.push('/admin/exams/my-exams/');
+        }
       }}
     />
   );

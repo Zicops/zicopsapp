@@ -19,7 +19,7 @@ export default function LabeledDropdown({
     isReadonly,
     isSearchEnable,
     isMulti,
-    menuPlacement = 'auto'
+    menuPlacement = 'bottom'
   } = dropdownOptions;
 
   if (isReadonly) isDisabled = true;

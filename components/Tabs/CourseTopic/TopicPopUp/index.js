@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../../helper/data.helper';
 import {
@@ -62,14 +62,18 @@ export default function TopicPopUp({
   const editTopicFormRef = useRef(null),
     addTopicContentRef = useRef(null);
 
+  // recoil state
   const topicContent = useRecoilValue(TopicContentAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   const assessmentData = useAddAssessment(editTopic?.id, setEditTopic);
 
+  useEffect(() => {
+    if (isEdit && !isPopUpDataPresent) setIsPopUpDataPresent(true);
+  }, []);
+
   if (isEdit) {
-    if (!isPopUpDataPresent) setIsPopUpDataPresent(true);
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
     closeBtnObj.name = 'Design Later';
     closeBtnObj.disabled = !!uploadStatus;

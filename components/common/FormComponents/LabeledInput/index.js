@@ -32,7 +32,7 @@ export default function LabeledInput({
         className={label ? 'w-75' : 'w-100'}
         name={inputName}
         placeholder={placeholder}
-        value={value}
+        value={value?.toString() || ''}
         onKeyPress={(e) => {
           if (!isNumericOnly) return;
 

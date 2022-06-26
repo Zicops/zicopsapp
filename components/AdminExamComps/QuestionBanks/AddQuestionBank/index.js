@@ -22,13 +22,6 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
   const selectedQb = useRecoilValue(SelectedQuestionBankAtom);
   const [isQuestionsPresent, setIsQuestionsPresent] = useState(false);
 
-  // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
-  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, questionBankData?.category);
-
-  const categoryOption = [];
-  const subCategoryOption = [];
-
   const {
     questionBankData,
     setQuestionBankData,
@@ -36,6 +29,11 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
     createNewQuestionBank,
     updateQuestionBank
   } = useHandleQuestionBank();
+
+  // cat and sub cat
+  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // update sub cat based on cat
+  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, questionBankData?.category);
 
   useEffect(() => {
     if (!selectedQb) return;
@@ -49,8 +47,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
       variables: { question_bank_id: selectedQb?.id },
       fetchPolicy: 'no-cache'
     }).then(({ data }) => {
-      if (errorQBQuestionsData)
-        return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
+      if (errorQBQuestionsData) return console.log('QB Questions load error');
 
       setIsQuestionsPresent(!!data?.getQuestionBankQuestions?.length);
     });
@@ -86,6 +83,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         changeHandler={(e) => changeHandler(e, questionBankData, setQuestionBankData)}
       />
 
+      {/* cat */}
       <LabeledDropdown
         styleClass={styles.inputField}
         dropdownOptions={{
@@ -97,7 +95,13 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           isDisabled: isQuestionsPresent || !isPopUp,
           isSearchEnable: true
         }}
-        changeHandler={(e) => changeHandler(e, questionBankData, setQuestionBankData, 'category')}
+        changeHandler={(e) => {
+          setQuestionBankData({
+            ...questionBankData,
+            category: e.value,
+            sub_category: null
+          });
+        }}
       />
 
       <LabeledDropdown

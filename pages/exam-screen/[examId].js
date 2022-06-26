@@ -15,13 +15,14 @@ import {
   GET_QUESTION_PAPER_SECTION,
   queryClient
 } from '../../API/Queries';
-import LearnerExamComponent from '../../components/LearnerExamComp';
+// import LearnerExamComponent from '../../components/LearnerExamComp';
+import LearnerExamComponent from '@/components/LearnerExamComp';
+import { CircularProgress } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ExamInstruction from '../../components/LearnerExamComp/ExamInstructions';
+import styles from '../../components/LearnerExamComp/learnerExam.module.scss';
 import { toggleFullScreen } from '../../helper/utils.helper';
 import { LearnerExamAtom } from '../../state/atoms/exams.atoms';
-import styles from "../../components/LearnerExamComp/learnerExam.module.scss";
-import {CircularProgress} from "@mui/material";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const ExamScreen = () => {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
@@ -580,7 +581,7 @@ const ExamScreen = () => {
       schObj = {
         scheduleId: schData?.id || null,
         examStart: new Date(+schData?.Start * 1000),
-        examEnd: new Date(+schData?.End * 1000),
+        examEnd: +schData?.End ? new Date(+schData?.End * 1000) : null,
         bufferTime: schData?.BufferTime || 0,
         is_schedule_active: schData?.IsActive || false
       };
