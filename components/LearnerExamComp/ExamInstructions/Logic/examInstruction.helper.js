@@ -1,16 +1,22 @@
 export const data = {
-  title: 'Core Java Fundamentals',
-  examType: 'Scheduled',
-  examDuration: '3 hrs',
-  exam_start_time: '7 Am',
-  examNQuestions: '50',
-  examPassingCriteria: '60%',
-  examMaxAttempt: '3 Attempts',
-  examDate: '25/05/2022',
-  examTimeStandard: 'IST',
-  examBufferTime: '30 mins',
-  exam_end_time: '10:30 Am',
-  examTotalMarks: '100',
-  examProctored: 'No',
-  examAttempt: '1/3'
+  examData: {
+    name: 'Core Java Fundamentals',
+    scheduleType: 'Scheduled',
+    duration: '3 hrs',
+    examStart: new Date(1656417600000),
+    examEnd: new Date(1656428400000),
+    noAttempts: '3',
+    totalMarks: '100',
+    passingCriteria: '60-Marks',
+    bufferTime: '30'
+  },
+  landingPageData: {
+    isProctoring: 'No',
+    totalQuestions: '50',
+    isNegativeMarking: ''
+  },
+  insPageData: {
+    examTimeStandard: 'IST',
+    attempts: '1'
+  }
 };
