@@ -1,5 +1,6 @@
 import { Grid } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../helper/common.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
@@ -8,21 +9,25 @@ import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '../../../../common/InputDatePicker';
 import styles from '../examMasterTab.module.scss';
+import useValidateScheduleDates from '../Logic/useValidateScheduleDates';
 
 export default function Schedule() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
   const router = useRouter();
   const isPreview = router.query?.isPreview || false;
+  const { isEndTimeBehind, updateDate, updateTime, getMinExamEndTime, getTimeWithDuration } =
+    useValidateScheduleDates();
 
-  function getMinExamEndTime() {
-    const startTime = new Date(examTabData?.exam_start_time);
-    const duration = +examTabData?.duration || 0;
+  // update end date if duration updated
+  useEffect(() => {
+    const isBehind = isEndTimeBehind(examTabData?.exam_end);
 
-    const endTime = startTime.setMinutes(startTime.getMinutes() + duration);
-
-    return endTime;
-  }
+    setExamTabData({
+      ...examTabData,
+      exam_end: isBehind ? getTimeWithDuration() : examTabData?.exam_end
+    });
+  }, [examTabData?.duration]);
 
   return (
     <div className={`${styles.scheduleContainer}`}>
@@ -30,9 +35,17 @@ export default function Schedule() {
       <section>
         <label htmlFor="examDate">Exam Start Date:</label>
         <InputDatePicker
-          selectedDate={examTabData?.exam_start_date}
+          selectedDate={examTabData?.exam_start}
           changeHandler={(date) => {
-            setExamTabData({ ...examTabData, exam_start_date: date });
+            const startDate = updateDate(date, examTabData?.exam_start);
+
+            const isNewDateAfterEnd = startDate > examTabData?.exam_end;
+
+            setExamTabData({
+              ...examTabData,
+              exam_start: startDate,
+              exam_end: isNewDateAfterEnd ? getTimeWithDuration(startDate) : examTabData?.exam_end
+            });
           }}
           isDisabled={isPreview}
         />
@@ -45,8 +58,16 @@ export default function Schedule() {
           </Grid>
           <Grid item xs={6}>
             <InputTimePicker
-              selected={examTabData?.exam_start_time}
-              changeHandler={(date) => setExamTabData({ ...examTabData, exam_start_time: date })}
+              selected={examTabData?.exam_start}
+              changeHandler={(date) => {
+                const endTime = updateTime(date, examTabData?.exam_start);
+
+                setExamTabData({
+                  ...examTabData,
+                  exam_start: endTime,
+                  exam_end: getTimeWithDuration(endTime)
+                });
+              }}
               isDisabled={isPreview}
             />
           </Grid>
@@ -89,7 +110,13 @@ export default function Schedule() {
           name="is_stretch"
           isChecked={examTabData?.is_stretch}
           isDisabled={isPreview}
-          changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+          changeHandler={(e) => {
+            setExamTabData({
+              ...examTabData,
+              is_stretch: e.target.checked,
+              exam_end: getTimeWithDuration(examTabData?.exam_start)
+            });
+          }}
         />
       </div>
 
@@ -99,9 +126,18 @@ export default function Schedule() {
           <section>
             <label htmlFor="examDate">Exam End Date:</label>
             <InputDatePicker
-              selectedDate={examTabData?.exam_end_date}
-              minDate={examTabData?.exam_start_date}
-              changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_date: date })}
+              selectedDate={examTabData?.exam_end}
+              minDate={examTabData?.exam_start}
+              changeHandler={(date) => {
+                const endDate = updateDate(date, examTabData?.exam_end);
+
+                const isBehind = isEndTimeBehind(endDate);
+
+                setExamTabData({
+                  ...examTabData,
+                  exam_end: isBehind ? getTimeWithDuration() : endDate
+                });
+              }}
               isDisabled={isPreview}
             />
           </section>
@@ -114,8 +150,13 @@ export default function Schedule() {
               </Grid>
               <Grid item xs={6}>
                 <InputTimePicker
-                  selected={examTabData?.exam_end_time}
-                  changeHandler={(date) => setExamTabData({ ...examTabData, exam_end_time: date })}
+                  selected={examTabData?.exam_end}
+                  changeHandler={(date) => {
+                    setExamTabData({
+                      ...examTabData,
+                      exam_end: updateTime(date, examTabData?.exam_end)
+                    });
+                  }}
                   minTime={getMinExamEndTime()}
                   isDisabled={isPreview}
                 />

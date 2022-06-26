@@ -170,10 +170,14 @@ export function getExamTabDataObject(data = {}) {
 
     // schedule
     scheduleId: data.schedule || null,
+    exam_start: data.exam_start || new Date(),
+    exam_end: data.exam_end || new Date(),
+
     exam_start_date: data.exam_start_date || Date.now(),
     exam_start_time: data.exam_start_time || Date.now(),
     exam_end_date: data.exam_end_date || Date.now(),
     exam_end_time: data.exam_end_time || Date.now(),
+
     buffer_time: data.buffer_time || 0,
     is_stretch: data.is_stretch || false,
     is_schedule_active: data.is_schedule_active || false,
