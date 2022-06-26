@@ -1,49 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import { courseContext } from '@/state/contexts/CourseContext';
+import { useContext, useState } from 'react';
 import styles from '../../courseTabs.module.scss';
 
-export default function BulletPointInput({
-  placeholder,
-  name,
-  course,
-  updateCourse,
-  isBullet = true
-}) {
-  let nameArr = !!course[name] && course[name].length > 0 ? course[name] : [];
+export default function BulletPointInput({ placeholder, name, isBullet = true }) {
+  const { fullCourse, updateCourseMaster } = useContext(courseContext);
 
   const [input, setInput] = useState('');
-  const [tags, setTags] = useState(nameArr);
   const [isKeyReleased, setIsKeyReleased] = useState(false);
+
+  function addTag(newTag) {
+    const tagsAdded = [...fullCourse[name]];
+    tagsAdded.push(newTag);
+
+    updateCourseMaster({
+      ...fullCourse,
+      [name]: tagsAdded
+    });
+    setInput('');
+  }
 
   function onKeyDown(e) {
     const { key } = e;
     const trimmedInput = input.trim();
+    const tagsAdded = [...fullCourse[name]];
 
-    if (key === 'Enter' && trimmedInput.length && !tags.includes(trimmedInput)) {
+    if (
+      (key === 'Enter' || key === 'Tab') &&
+      trimmedInput.length &&
+      !tagsAdded.includes(trimmedInput)
+    ) {
       e.preventDefault();
-      setTags((prevState) => [...prevState, trimmedInput]);
-      setInput('');
+      addTag(trimmedInput);
     }
 
-    if (key === 'Backspace' && !input.length && tags.length && isKeyReleased) {
-      const tagsCopy = [...tags];
-      const poppedTag = tagsCopy.pop();
+    if (key === 'Backspace' && !input.length && tagsAdded.length && isKeyReleased) {
+      const poppedTag = tagsAdded.pop();
       e.preventDefault();
-      setTags(tagsCopy);
+
+      updateCourseMaster({
+        ...fullCourse,
+        [name]: tagsAdded
+      });
       setInput(poppedTag);
     }
-
     setIsKeyReleased(false);
   }
-  function deleteTag(index) {
-    setTags((prevState) => prevState.filter((tag, i) => i !== index));
-  }
 
-  useEffect(() => {
-    updateCourse({
-      ...course,
-      [name]: tags
+  function deleteTag(index) {
+    const tagsAdded = [...fullCourse[name]];
+    const updatedTags = tagsAdded.filter((tag, i) => i !== index);
+
+    updateCourseMaster({
+      ...fullCourse,
+      [name]: updatedTags
     });
-  }, [tags]);
+  }
 
   return (
     <>
@@ -52,12 +63,12 @@ export default function BulletPointInput({
           isBullet ? '' : styles.tagsContainer
         }`}>
         {/* <ul> */}
-          {tags.map((tag, index) => (
-            <span key={index} className={`w-100 ${isBullet ? styles.bullets : styles.tags}`}>
-              {tag}
-              <button onClick={() => deleteTag(index)}>x</button>
-            </span>
-          ))}
+        {fullCourse[name]?.map((tag, index) => (
+          <span key={index} className={`w-100 ${isBullet ? styles.bullets : styles.tags}`}>
+            {tag}
+            <button onClick={() => deleteTag(index)}>x</button>
+          </span>
+        ))}
         {/* </ul> */}
         <input
           name={name}
@@ -65,6 +76,10 @@ export default function BulletPointInput({
           placeholder={placeholder}
           onKeyDown={onKeyDown}
           onKeyUp={() => setIsKeyReleased(true)}
+          onBlur={(e) => {
+            const newTag = e?.target?.value;
+            if (newTag?.length) addTag(newTag);
+          }}
           onChange={(e) => setInput(e.target.value)}
         />
       </div>

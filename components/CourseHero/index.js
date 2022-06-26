@@ -40,7 +40,7 @@ export default function CourseHero({ isPreview = false }) {
     data: courseData,
     loading,
     error
-  } = getQueryData(GET_COURSE, { course_id: router?.query?.courseId });
+  } = getQueryData(GET_COURSE, { course_id: router?.query?.courseId }, { fetchPolicy: 'no-cache' });
 
   useEffect(() => {
     if (courseData?.getCourse && !isDataLoaded) {

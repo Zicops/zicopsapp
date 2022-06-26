@@ -22,8 +22,6 @@ export default function CourseAbout() {
           <BulletPointInput
             placeholder="Add Learning Objectives/Outcomes and press enter"
             name="outcomes"
-            course={fullCourse}
-            updateCourse={updateCourseMaster}
           />
         </div>
       </div>
@@ -37,8 +35,6 @@ export default function CourseAbout() {
           <BulletPointInput
             placeholder="Add Program Highlights/Benefits and press enter"
             name="benefits"
-            course={fullCourse}
-            updateCourse={updateCourseMaster}
           />
         </div>
       </div>
@@ -67,12 +63,7 @@ export default function CourseAbout() {
           Pre-requisites:
         </label>
         <div className="w-75">
-          <BulletPointInput
-            placeholder="Add Pre-requisites and press enter"
-            name="prequisites"
-            course={fullCourse}
-            updateCourse={updateCourseMaster}
-          />
+          <BulletPointInput placeholder="Add Pre-requisites and press enter" name="prequisites" />
         </div>
       </div>
 
@@ -82,24 +73,14 @@ export default function CourseAbout() {
           Good For:
         </label>
         <div className="w-25">
-          <BulletPointInput
-            placeholder="Add Good For and press enter"
-            name="goodFor"
-            course={fullCourse}
-            updateCourse={updateCourseMaster}
-          />
+          <BulletPointInput placeholder="Add Good For and press enter" name="goodFor" />
         </div>
 
         <label htmlFor="mustFor" className="w-25" style={{ textAlign: 'center' }}>
           Must For:
         </label>
         <div className="w-25">
-          <BulletPointInput
-            placeholder="Add Must For and press enter"
-            name="mustFor"
-            course={fullCourse}
-            updateCourse={updateCourseMaster}
-          />
+          <BulletPointInput placeholder="Add Must For and press enter" name="mustFor" />
         </div>
       </div>
 
@@ -112,8 +93,6 @@ export default function CourseAbout() {
           <BulletPointInput
             placeholder="Add Related Skills"
             name="related_skills"
-            course={fullCourse}
-            updateCourse={updateCourseMaster}
             isBullet={false}
           />
           {/* <TagInput
