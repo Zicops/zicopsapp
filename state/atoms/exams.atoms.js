@@ -200,13 +200,17 @@ export const QuestionMetaDataAtom = atom({
 // learner exam recoil state
 export const LearnerExamAtom = atom({
   key: 'LearnerExam',
-  default: {
+  default: getLearnerExamObj()
+});
+
+export function getLearnerExamObj() {
+  return {
     examData: getExamData(),
     landingPageData: getLandingPageData(),
     insPageData: getInsPageObj(),
     sectionData: []
-  }
-});
+  };
+}
 
 export function getLandingPageData(data = {}) {
   return {

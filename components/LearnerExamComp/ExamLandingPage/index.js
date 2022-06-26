@@ -5,8 +5,8 @@ const ExamLandingPage = () => {
   const data = [
     {
       testSeries: 'PMP Test Series',
-      testDescription: 'M1A4 : PMP Practice Test II',
-      testNumber:'PMP Practice Test II',
+      testDescription: 'M1A4 : PMP Practice Test',
+      testNumber:'PMP Practice Demo',
       schedule: '25 March, 2022',
       isScheduled:'Scheduled',
       time: '3 PM IST(Indian Standard Time)',
@@ -62,10 +62,12 @@ const ExamLandingPage = () => {
       </div>
       <div className={`${styles.exam_landing_btn_container}`}>
         <section style={{ marginRight: '5%' }}>
-          <button className={`${styles.exam_landing_btn}`}>Take Sample Test</button>
           <button
-            onClick={() => router.push('/exam-screen')}
-            className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>
+            className={`${styles.exam_landing_btn}`}
+            onClick={() => router.push('/exam-screen')}>
+            Take Sample Test
+          </button>
+          <button disabled className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>
             Take Exam Now
           </button>
           <div>
