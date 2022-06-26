@@ -1,3 +1,5 @@
+import ExamLanding from '@/components/Exams/ExamLanding';
+import { getTopicExamObj, TopicExamAtom } from '@/state/atoms/module.atoms';
 import { ApolloProvider } from '@apollo/client';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
@@ -13,6 +15,7 @@ import ModuleContextProvider from '../../state/contexts/ModuleContext';
 
 export default function Course() {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const startPlayer = videoData.startPlayer;
 
   function setStartPlayer(val) {
@@ -25,6 +28,7 @@ export default function Course() {
   useEffect(() => {
     setVideoData(getVideoObject());
     setStartPlayer(false);
+    setTopicExamData(getTopicExamObj());
   }, []);
 
   return (
@@ -39,11 +43,11 @@ export default function Course() {
               margin: 0,
               padding: 0
             }}>
-            {startPlayer ? (
-              <CustomVideo set={setStartPlayer} />
-            ) : (
-              <CourseHero set={setStartPlayer} />
-            )}
+            {topicExamData?.id && <ExamLanding />}
+
+            {startPlayer && <CustomVideo set={setStartPlayer} />}
+
+            {!startPlayer && !topicExamData?.id && <CourseHero set={setStartPlayer} />}
 
             <CourseBody />
             <CardSlider title="Your Other Subscribed Courses" data={sliderImages} />

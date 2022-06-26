@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
+  GET_EXAM_CONFIG,
   GET_EXAM_INSTRUCTION,
   GET_EXAM_META,
   GET_EXAM_SCHEDULE,
@@ -28,6 +29,9 @@ export default function ExamLanding({ testType = 'Quiz' }) {
   const [loadSchedule, { error: loadScheduleError }] = useLazyQuery(GET_EXAM_SCHEDULE, {
     client: queryClient
   });
+  const [loadConfig, { error: loadConfigError }] = useLazyQuery(GET_EXAM_CONFIG, {
+    client: queryClient
+  });
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
@@ -42,10 +46,7 @@ export default function ExamLanding({ testType = 'Quiz' }) {
 
     // load master data
     let isError = false;
-    const masterRes = await loadMaster({
-      variables: { exam_ids: [examId] },
-      fetchPolicy: 'no-cache'
-    }).catch((err) => {
+    const masterRes = await loadMaster({ variables: { exam_ids: [examId] } }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Exam Master load error' });
@@ -116,10 +117,7 @@ export default function ExamLanding({ testType = 'Quiz' }) {
     // load schedule
     let schObj = {};
     if (masterObj.scheduleType === 'scheduled') {
-      const schRes = await loadSchedule({
-        variables: { exam_id: examId },
-        fetchPolicy: 'no-cache'
-      }).catch((err) => {
+      const schRes = await loadSchedule({ variables: { exam_id: examId } }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Schedule load error' });
@@ -136,12 +134,29 @@ export default function ExamLanding({ testType = 'Quiz' }) {
       };
     }
 
+    // load config
+    const confRes = await loadConfig({ variables: { exam_id: examId } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Config load error' });
+    });
+    if (isError) return;
+    const confData = confRes?.data?.getExamConfiguration[0];
+    const confObj = {
+      configId: confData?.id || null,
+      shuffle: confData?.Shuffle || false,
+      display_hints: confData?.DisplayHints || false,
+      show_result: confData?.ShowResult || false,
+      show_answer: confData?.ShowAnswer || false,
+      is_config_active: confData?.IsActive || false
+    };
     setLearnerExamData({
       ...learnerExamData,
       examData: {
         ...masterObj,
         ...insObj,
-        ...schObj
+        ...schObj,
+        ...confObj
       },
       landingPageData: {
         testSeries: 'PMP Test Series',

@@ -136,7 +136,7 @@ export default function ExamMasterTab() {
     }).catch((err) => {
       console.log(err);
       isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Instructions load error' });
+      return setToastMsg({ type: 'danger', message: 'Config load error' });
     });
     if (isError) return;
     const confData = confRes?.data?.getExamConfiguration[0];
