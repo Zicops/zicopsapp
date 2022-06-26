@@ -7,6 +7,7 @@ import { filterAndSortTopicsBasedOnModuleId } from '../../../../helper/data.help
 import { isLoadingAtom, TopicAtom, TopicExamAtom } from '../../../../state/atoms/module.atoms';
 import { VideoAtom } from '../../../../state/atoms/video.atom';
 import { updateVideoData } from '../../Logic/courseBody.helper';
+import styles from '../../courseBody.module.scss';
 
 export default function TopicBox({
   topicCount,
@@ -30,8 +31,31 @@ export default function TopicBox({
   const { allModuleTopic, currentTopicIndex } = videoData;
   const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
 
+  //dummy data for examTopic part
+  const topicAssData = [
+    {
+      type: 'Take Anytime',
+      duration: '3hrs',
+      attempts: '0/1',
+      marks: 100,
+      passingCriteria: '60%',
+      expertiseLevel: 'Competent'
+    },
+    {
+      type: 'Schedule',
+      duration: '3hrs',
+      attempts: '0/1',
+      date: '25th June, 2022',
+      startTime: '11:00AM',
+      endTime: '2:00PM',
+      marks: 100,
+      passingCriteria: '60%',
+      expertiseLevel: 'Beginner'
+    }
+  ];
+
   // Set default topic image
-  let topicImage;// = '/images/media-container.png';
+  let topicImage; // = '/images/media-container.png';
   //check the type of content inside the topic
   switch (type) {
     case 'Lab':
@@ -85,7 +109,7 @@ export default function TopicBox({
     if (topic?.type !== 'Assessment') return;
 
     const topicExam = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic.id }).then(
-      (res) => res.getTopicExams[0]
+      (res) => console.log(res)
     );
 
     // reset recoil and set new data
@@ -98,11 +122,10 @@ export default function TopicBox({
     });
   }
 
-  // console.log(type);
   return (
     <>
       <div
-        className="topic"
+        className={`${styles.topic}`}
         onClick={() => {
           loadTopicExam();
 
@@ -118,7 +141,7 @@ export default function TopicBox({
             setSelectedModule
           );
         }}>
-        <div className="preclassName">
+        <div className={`${styles.preclassName}`}>
           <div>
             <img src="images/resourcesicon.png" />
             <p>Resources</p>
@@ -130,12 +153,12 @@ export default function TopicBox({
         </div>
 
         <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
-          <div className="topic_img">
+          <div className={`${styles.topic_img}`}>
             <img src={`${topicImage}`} alt="" />
           </div>
 
-          <div className="topic_text">
-            <div className="topic_heading">
+          <div className={`${styles.topic_text}`}>
+            <div className={`${styles.topic_heading}`}>
               <h4>
                 <span>
                   {isLoading ? (
@@ -153,7 +176,15 @@ export default function TopicBox({
                 )}
               </h4>
             </div>
-            <div className="topic_description">
+            <div className={`${styles.topicKeyword}`}>
+              {type === 'Assessment' && (
+                <>
+                  <span>Marks: {topicAssData[1].marks}</span>
+                  <span>Passing Criteria: {topicAssData[1].passingCriteria}</span>
+                </>
+              )}
+            </div>
+            <div className={`${styles.topic_description}`}>
               <p>
                 {isLoading ? (
                   <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
@@ -166,11 +197,11 @@ export default function TopicBox({
             </div>
           </div>
           {type === 'Content' && (
-            <div className="topic_player">
-              <div className="progress_bar">
+            <div className={`${styles.topic_player}`}>
+              <div className={`${styles.progress_bar}`}>
                 <img src="images/progressTriangle.png" alt="" />
               </div>
-              <div className="details">
+              <div className={`${styles.details}`}>
                 <div>Video + Quiz</div>
                 <div>
                   <span>
@@ -192,11 +223,25 @@ export default function TopicBox({
             </div>
           )}
           {type === 'Assessment' && (
-            <div className="topic_player">
-              {/* <div className="progress_bar"> */}
-                {/* <img src="images/progressTriangle.png" alt="" /> */}
-              {/* </div> */}
-              Exam block is getting ready!
+            <div className={`${styles.topic_assesment}`}>
+              <div className={`${styles.assesmentType}`}>
+                {topicAssData[1].type === 'Schedule' ? (
+                  <div>
+                    <span>{topicAssData[1].date}</span>
+                    <span>
+                      {topicAssData[1].startTime}-{topicAssData[1].endTime}
+                    </span>
+                    <span>{topicAssData[1].type}</span>
+                  </div>
+                ) : (
+                  <h4>Take Anytime</h4>
+                )}
+              </div>
+              <div className={`${styles.assesmentInfo}`}>
+                <span>{topicAssData[1].expertiseLevel}</span>
+                <span>Attempt: {topicAssData[1].attempts}</span>
+                <span>Duration: {topicAssData[1].duration}</span>
+              </div>
             </div>
           )}
           {type === 'Lab' && (
@@ -204,7 +249,7 @@ export default function TopicBox({
               <div className="progress_bar">
                 <img src="images/progressTriangle.png" alt="" />
               </div>
-              <div className="details">
+              <div className={`${styles.details}`}>
                 <div>Video + Quiz</div>
                 <div>
                   <span>
@@ -231,32 +276,7 @@ export default function TopicBox({
       {/* move to .scss */}
       <style>
         {`
-                .topic{
-                    display: flex;
-                    flex-direction: column;
-                    padding: 0 5%;
-                    padding-bottom: 50px;
-                }
                 
-                .topic .preclassName{
-                    font-size: 12px;
-                    color: #858f8f;
-                    display: flex;
-                    justify-content: right;
-                }
-                .topic .preclassName div{
-                    margin: 10px;
-                    display: flex;
-                    align-items: center;
-                    cursor: pointer;
-                }
-                .topic .preclassName div:hover{
-                    color: #ffffff;
-                }
-                .topic .preclassName img{
-                    width: 20px;
-                    margin-right: 10px;
-                }
                 .topic-loop{
                     display: flex;
                     align-items: center;
@@ -270,68 +290,7 @@ export default function TopicBox({
                     box-shadow: 0 0 10px 0 #6bcfcf;
                     transform: scale(1.02);
                     background-color: #000000;
-                }
-                .topic_img{
-                    width: 80px;
-                    height: 80px;
-                    margin: 5px;
-                    margin-right: 5%;
-                    border: 1px solid #858f8f;
-                }
-                .topic_img img{
-                    width: 80px;
-                    height: 80px;
-                    object-fit: cover;
-                }
-                .topic_text{
-                    width: 50%;
-                    margin-right: 5%;
-                }
-                .topic_text .topic_heading h4{
-                    font-size: 14px;
-                    color: #ffffff;
-                }
-                .topic_text .topic_description {
-                    font-size: 12px;
-                    color: #858f8f;
-                    padding: 5px 0 0 0;
-                }
-                .topic_player{
-                    width: 40%;
-                    margin-right: 5%;
-                    font-size: 12px;
-                    color: #858f8f;
-                }
-                .topic_player .details{
-                    display: flex;
-                    justify-content: space-between;
-                    padding-top: 20px;
-                }
-                .progress_bar{
-                    width: 100%;
-                    height: 10px;
-                    margin: auto;
-                    background: #343535;
-                    border: 1px solid #ffffff;
-                    position: relative;
-                }
-                .progress_bar:after{
-                    content: '';
-                    width: 50%;
-                    height: 8px;
-                    background: #858f8f;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                }
-                .progress_bar img{
-                    position: absolute;
-                    top: 0;
-                    left: 50%;
-                    transform: translate(-50%, -33%);
-                    width: 30px;
-                    z-index: 2;
-                }
+                
                 `}
       </style>
     </>
