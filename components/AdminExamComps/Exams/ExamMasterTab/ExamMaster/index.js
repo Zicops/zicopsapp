@@ -61,7 +61,6 @@ export default function ExamMaster() {
     const selectedQp = questionPaperOptions?.filter(
       (option) => option?.value === examTabData?.qpId
     )[0];
-    console.log('ss');
     setExamTabData({
       ...examTabData,
       category: selectedQp?.Category,
@@ -106,7 +105,7 @@ export default function ExamMaster() {
             sub_category: selectedQp?.SubCategory,
             duration: selectedQp?.SuggestedDuration || 0,
             qpId: e.value,
-            total_marks: await getTotalMarks()
+            total_marks: await getTotalMarks(e.value)
           });
         }}
       />

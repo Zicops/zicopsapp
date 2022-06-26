@@ -5,7 +5,12 @@ import { courseContext } from '../../state/contexts/CourseContext';
 import Button from '../common/Button';
 import TabContainer from '../common/TabContainer';
 import styles from './courseTabs.module.scss';
-import { CourseTabAtom, getDateTimeFromUnix, isCourseUploadingAtom, tabData } from './Logic/tabs.helper';
+import {
+  CourseTabAtom,
+  getDateTimeFromUnix,
+  isCourseUploadingAtom,
+  tabData
+} from './Logic/tabs.helper';
 import useSaveCourse from './Logic/useSaveCourse';
 
 export default function CourseTabs() {
@@ -46,9 +51,10 @@ export default function CourseTabs() {
             </>
           ),
           submitDisplay: fullCourse.id ? 'Update' : 'Save',
+          disableSubmit: !!isCourseUploading,
           handleSubmit: () => saveCourseData(false),
           cancelDisplay: 'Cancel',
-          handleCancel: () => router.push('/admin/zicops-courses')
+          handleCancel: () => router.push('/admin/course/my-courses')
         }}>
         {fullCourse.id && (
           <div className={`${styles.previewButtonContainer}`}>

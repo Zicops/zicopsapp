@@ -4,10 +4,11 @@ import { useRecoilState } from 'recoil';
 import { queryClient } from '../API/Queries';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
 
-export function getQueryData(QUERY, variablesObj = {}) {
+export function getQueryData(QUERY, variablesObj = {}, options = {}) {
   const data = useQuery(QUERY, {
     variables: variablesObj,
-    client: queryClient
+    client: queryClient,
+    ...options
   });
 
   useEffect(() => {

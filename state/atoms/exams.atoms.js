@@ -200,13 +200,17 @@ export const QuestionMetaDataAtom = atom({
 // learner exam recoil state
 export const LearnerExamAtom = atom({
   key: 'LearnerExam',
-  default: {
+  default: getLearnerExamObj()
+});
+
+export function getLearnerExamObj() {
+  return {
     examData: getExamData(),
     landingPageData: getLandingPageData(),
     insPageData: getInsPageObj(),
     sectionData: []
-  }
-});
+  };
+}
 
 export function getLandingPageData(data = {}) {
   return {
@@ -258,7 +262,13 @@ export function getExamData(data = {}) {
     examStart: data.examStart || new Date(),
     examEnd: data.examEnd || null,
     bufferTime: data.bufferTime || 0,
-    is_schedule_active: data.is_schedule_active || false
+    is_schedule_active: data.is_schedule_active || false,
+
+    // configuration
+    shuffle: data.shuffle || false,
+    show_result: data.show_result || false,
+    show_answer: data.show_answer || false,
+    display_hints: data.display_hints || false
   };
 }
 

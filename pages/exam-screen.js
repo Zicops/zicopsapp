@@ -12,27 +12,27 @@ const ExamScreen = () => {
     {
       id: 1,
       question: {
-        text: 'Wimbledon is the oldest tennis tournament in the world, and is widely considered the most prestigious. It has been always held at the All England Club in Wimbledon, London. In which year was the first championship held?',
+        description: 'Wimbledon is the oldest tennis tournament in the world, and is widely considered the most prestigious. It has been always held at the All England Club in Wimbledon, London. In which year was the first championship held?',
         image: '/images/bg-new.png'
       },
       options: [
         {
           id: 'a',
-          text: '1864',
+          description: '1864',
           image: '/images/bg-new.png'
         },
         {
           id: 'b',
-          text: '1877'
+          description: '1877'
         },
         {
           id: 'c',
-          text: '1894',
+          description: '1894',
           image: '/images/bg-new.png'
         },
         {
           id: 'd',
-          text: '1902',
+          description: '1902',
           image: '/images/bg-new.png'
         }
       ]
@@ -40,7 +40,7 @@ const ExamScreen = () => {
     {
       id: 2,
       question: {
-        text: "He is a former professional ice hockey player who played with the Montreal Canadiens in the National Hockey League (NHL) from 1955 to 1975. He won 11 Stanley Cups, more than any other player in NHL history. He was given the nick name 'Pocket Rocket'. Who was he?"
+        description: "He is a former professional ice hockey player who played with the Montreal Canadiens in the National Hockey League (NHL) from 1955 to 1975. He won 11 Stanley Cups, more than any other player in NHL history. He was given the nick name 'Pocket Rocket'. Who was he?"
       },
       options: [
         {
@@ -68,7 +68,7 @@ const ExamScreen = () => {
     {
       id: 3,
       question: {
-        text: "He became two-time inductee into the Basketball Hall of Fame ? being enshrined in 2002 for his individual career, and again in 2010 as a member of the 'Dream Team'. He was rated the greatest National Basketball Association (NBA) point guard of all time by ESPN in 2007. Who is this legendary basketball player who played for the Lakers?"
+        description: "He became two-time inductee into the Basketball Hall of Fame ? being enshrined in 2002 for his individual career, and again in 2010 as a member of the 'Dream Team'. He was rated the greatest National Basketball Association (NBA) point guard of all time by ESPN in 2007. Who is this legendary basketball player who played for the Lakers?"
       },
       options: [
         {
@@ -96,253 +96,253 @@ const ExamScreen = () => {
     {
       id: 4,
       question: {
-        text: 'It is a traditional ball game played in Assam. In this game, the players take turns throwing the ball at the opponent to knock them out of the game, while seeking to catch the ball and evade other players. It is a test of speed, stamina, and acrobatic skills. Which game is this? ',
+        description: 'It is a traditional ball game played in Assam. In this game, the players take turns throwing the ball at the opponent to knock them out of the game, while seeking to catch the ball and evade other players. It is a test of speed, stamina, and acrobatic skills. Which game is this? ',
         image: '/images/bg-new.png'
       },
       options: [
         {
           id: 'a',
-          text: 'Dhopkhel'
+          description: 'Dhopkhel'
         },
         {
           id: 'b',
-          text: 'Kith kith'
+          description: 'Kith kith'
         },
         {
           id: 'c',
-          text: 'Pallankuzhi'
+          description: 'Pallankuzhi'
         },
         {
           id: 'd',
-          text: 'Satoliya'
+          description: 'Satoliya'
         }
       ]
     },
     {
       id: 5,
       question: {
-        text: '"Float like a butterfly, sting like a bee. The hands can\'t hit what the eyes can\'t see." To which of the following sportspersons does this memorable quote attributed to?'
+        description: '"Float like a butterfly, sting like a bee. The hands can\'t hit what the eyes can\'t see." To which of the following sportspersons does this memorable quote attributed to?'
       },
       options: [
         {
           id: 'a',
-          text: 'Floyd Mayweather Jr'
+          description: 'Floyd Mayweather Jr'
         },
         {
           id: 'b',
-          text: 'Mike Tyson'
+          description: 'Mike Tyson'
         },
         {
           id: 'c',
-          text: 'Muhammad Ali'
+          description: 'Muhammad Ali'
         },
         {
           id: 'd',
-          text: 'Sugar Ray Robinson'
+          description: 'Sugar Ray Robinson'
         }
       ]
     },
     {
       id: 6,
       question: {
-        text: "This vault is considered the hardest vault performed in women's artistic gymnastics. The first person to complete it successfully in 1999 was a Russian after whom it is named. This vault is also called the 'vault of death' due to its difficulty and likelihood of injury. What is the name of the vault?",
+        description: "This vault is considered the hardest vault performed in women's artistic gymnastics. The first person to complete it successfully in 1999 was a Russian after whom it is named. This vault is also called the 'vault of death' due to its difficulty and likelihood of injury. What is the name of the vault?",
         image: '/images/bg-new.png'
       },
       options: [
         {
           id: 'a',
-          text: 'Yurchenko'
+          description: 'Yurchenko'
         },
         {
           id: 'b',
-          text: 'Demidova'
+          description: 'Demidova'
         },
         {
           id: 'c',
-          text: 'Produnova'
+          description: 'Produnova'
         },
         {
           id: 'd',
-          text: 'Tsukahara'
+          description: 'Tsukahara'
         }
       ]
     },
     {
       id: 7,
       question: {
-        text: 'Which of the following is not a type of sailboats used in competitive sailing?',
+        description: 'Which of the following is not a type of sailboats used in competitive sailing?',
         image: '/images/bg-new.png'
       },
       options: [
         {
           id: 'a',
-          text: '49er'
+          description: '49er'
         },
         {
           id: 'b',
-          text: 'Tornado'
+          description: 'Tornado'
         },
         {
           id: 'c',
-          text: 'Luff'
+          description: 'Luff'
         },
         {
           id: 'd',
-          text: 'Europe'
+          description: 'Europe'
         }
       ]
     },
     {
       id: 8,
       question: {
-        text: 'Which of the following is not a standard international racing distance in the sport canoeing and kayaking?'
+        description: 'Which of the following is not a standard international racing distance in the sport canoeing and kayaking?'
       },
       options: [
         {
           id: 'a',
-          text: '200m'
+          description: '200m'
         },
         {
           id: 'b',
-          text: '500m'
+          description: '500m'
         },
         {
           id: 'c',
-          text: '1000m'
+          description: '1000m'
         },
         {
           id: 'd',
-          text: '2500m'
+          description: '2500m'
         }
       ]
     },
     {
       id: 9,
       question: {
-        text: 'In a tennis match, the choice of the server in the first game is decided by a coin toss. The player who wins may choose to have the opponent serve first. How many chances to serve does the player who serves get?',
+        description: 'In a tennis match, the choice of the server in the first game is decided by a coin toss. The player who wins may choose to have the opponent serve first. How many chances to serve does the player who serves get?',
         image: '/images/bg-new.png'
       },
       options: [
         {
           id: 'a',
-          text: '1'
+          description: '1'
         },
         {
           id: 'b',
-          text: '2'
+          description: '2'
         },
         {
           id: 'c',
-          text: '3'
+          description: '3'
         },
         {
           id: 'd',
-          text: '4'
+          description: '4'
         }
       ]
     },
     {
       id: 10,
       question: {
-        text: 'The Queens-berry rules endorsed by the Marquess of Queens-berry in the 19th century is a code of generally accepted rules in the sport of boxing. Which of the following is not one of the accepted Queensberry rules?',
+        description: 'The Queens-berry rules endorsed by the Marquess of Queens-berry in the 19th century is a code of generally accepted rules in the sport of boxing. Which of the following is not one of the accepted Queensberry rules?',
         image: '/images/bg-new.png'
       },
       options: [
         {
           id: 'a',
-          text: 'No wrestling or hugging is allowed.'
+          description: 'No wrestling or hugging is allowed.'
         },
         {
           id: 'b',
-          text: 'The boxers must wear protective headgear.'
+          description: 'The boxers must wear protective headgear.'
         },
         {
           id: 'c',
-          text: 'Fights are divided into 3 minutes rounds, separated by 1 minute rest periods.\n'
+          description: 'Fights are divided into 3 minutes rounds, separated by 1 minute rest periods.\n'
         },
         {
           id: 'd',
-          text: 'A 10 second count is mandatory if a boxer is knocked down.'
+          description: 'A 10 second count is mandatory if a boxer is knocked down.'
         }
       ]
     },
     {
       id: 11,
       question: {
-        text: 'This championship is a domestic first- class cricket championship played in India between teams representing regional cricket associations. The competition is named after first Indian cricketer who played international cricket for England. Who was the player after whom it is named?'
+        description: 'This championship is a domestic first- class cricket championship played in India between teams representing regional cricket associations. The competition is named after first Indian cricketer who played international cricket for England. Who was the player after whom it is named?'
       },
       options: [
         {
           id: 'a',
-          text: 'B B Nimbalkar'
+          description: 'B B Nimbalkar'
         },
         {
           id: 'b',
-          text: 'Vijay Merchant'
+          description: 'Vijay Merchant'
         },
         {
           id: 'c',
-          text: 'K S Ranjitsinhji'
+          description: 'K S Ranjitsinhji'
         },
         {
           id: 'd',
-          text: 'Mansoor Ali Khan Pataudi'
+          description: 'Mansoor Ali Khan Pataudi'
         }
       ]
     },
     {
       id: 12,
       question: {
-        text: 'Who won the 2022 Thomas Cup?',
+        description: 'Who won the 2022 Thomas Cup?',
         image: '/images/bg-new.png'
       },
       options: [
         {
           id: 'a',
-          text: 'India'
+          description: 'India'
         },
         {
           id: 'b',
-          text: 'Indonesia'
+          description: 'Indonesia'
         },
         {
           id: 'c',
-          text: 'Japan'
+          description: 'Japan'
         },
         {
           id: 'd',
-          text: 'China'
+          description: 'China'
         }
       ]
     },
     {
       id: 13,
       question: {
-        text: "The World Table Tennis Championships have been held since 1926, biennia since 1957. Seven different events presented by different trophies are currently held with individual events in odd numbered years and team events in even-numbered years. Which of the following trophies is awarded to the women's team champion?"
+        description: "The World Table Tennis Championships have been held since 1926, biennia since 1957. Seven different events presented by different trophies are currently held with individual events in odd numbered years and team events in even-numbered years. Which of the following trophies is awarded to the women's team champion?"
       },
       options: [
         {
           id: 'a',
-          text: 'Swaythling Cup'
+          description: 'Swaythling Cup'
         },
         {
           id: 'b',
-          text: 'Heydusek Cup'
+          description: 'Heydusek Cup'
         },
         {
           id: 'c',
-          text: 'Iran Cup'
+          description: 'Iran Cup'
         },
         {
           id: 'd',
-          text: 'Corbillon Cup '
+          description: 'Corbillon Cup '
         }
       ]
     },
     {
       id: 14,
       question: {
-        text: 'This trophy is a biennial world amateur team golf championship for men organized by the International Golf Federation. It is named after the then President of United States when the tournament was first played. Which US President is it named after?'
+        description: 'This trophy is a biennial world amateur team golf championship for men organized by the International Golf Federation. It is named after the then President of United States when the tournament was first played. Which US President is it named after?'
       },
       options: [
         {
@@ -370,50 +370,50 @@ const ExamScreen = () => {
     {
       id: 15,
       question: {
-        text: "Season 4 of the Pro-kabaddi League in 2016 saw  the launch of first professional woman kabaddi league, Women's Kabaddi Challenge (WKC). Three teams battled it out to be the first ever WKC champions. Which of the following was not one of the participants of the WKC?",
+        description: "Season 4 of the Pro-kabaddi League in 2016 saw  the launch of first professional woman kabaddi league, Women's Kabaddi Challenge (WKC). Three teams battled it out to be the first ever WKC champions. Which of the following was not one of the participants of the WKC?",
         image: '/images/bg-new.png'
       },
       options: [
         {
           id: 'a',
-          text: 'Pink Panthers'
+          description: 'Pink Panthers'
         },
         {
           id: 'b',
-          text: 'Fire Birds'
+          description: 'Fire Birds'
         },
         {
           id: 'c',
-          text: 'Ice Divas'
+          description: 'Ice Divas'
         },
         {
           id: 'd',
-          text: 'Storm Queens'
+          description: 'Storm Queens'
         }
       ]
     }
     // {
     //     id: ,
     //     question: {
-    //         text: '',
+    //         description: '',
     //         image: '/images/bg-new.png'
     //     },
     //     options: [
     //         {
     //             id: 'a',
-    //             text: '',
+    //             description: '',
     //         },
     //         {
     //             id: 'b',
-    //             text: '',
+    //             description: '',
     //         },
     //         {
     //             id: 'c',
-    //             text: '',
+    //             description: '',
     //         },
     //         {
     //             id: 'd',
-    //             text: '',
+    //             description: '',
     //         },
     //     ]
     // },
@@ -479,7 +479,7 @@ const ExamScreen = () => {
           data={data}
           setData={setData}
           current={current}
-          setCurrent={setCurrent}
+          setCurrent={setCurrent} 
           isFullScreen={isFullScreen}
           setIsFullScreen={setIsFullScreen}
         />
