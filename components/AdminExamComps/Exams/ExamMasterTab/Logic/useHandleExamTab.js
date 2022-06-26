@@ -154,7 +154,6 @@ export default function useHandleExamTab() {
         totalMarks
       );
     }
-    console.log(totalMarks);
     return totalMarks;
   }
 

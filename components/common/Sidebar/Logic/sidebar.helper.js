@@ -66,7 +66,13 @@ export const userSideBarData = {
     },
     {
       title: 'User Roles',
-      link: '/admin/user/user-roles'
+      // link: '/admin/user/users-roles'
+      link: ''
+    },
+    {
+      title: 'User Cohort',
+      // link: '/admin/user/user-cohort'
+      link: ''
     }
   ]
 };

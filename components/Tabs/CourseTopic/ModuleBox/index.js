@@ -31,6 +31,7 @@ export default function ModuleBox({ mod, activateHandlers }) {
     filteredAndSortedData = filterAndSortTopics(topicData, mod.id);
   }
 
+  // let topicIndex = 0;
   return (
     <div className={`w-100`}>
       <BlackBox>
@@ -55,12 +56,12 @@ export default function ModuleBox({ mod, activateHandlers }) {
                     />
 
                     {filteredTopics &&
-                      filteredTopics.map((topic) => {
+                      filteredTopics.map((topic, index) => {
                         return (
                           <BlackRow
                             key={topic.id}
                             type="small"
-                            title={`Topic ${topic.sequence} : ${topic.name}`}
+                            title={`Topic ${index + 1} : ${topic.name}`}
                             editHandler={() => activateEditTopic(topic.id)}
                           />
                         );
@@ -100,12 +101,12 @@ export default function ModuleBox({ mod, activateHandlers }) {
         ) : (
           <>
             {filteredAndSortedData &&
-              filteredAndSortedData.map((topic) => {
+              filteredAndSortedData.map((topic, index) => {
                 return (
                   <BlackRow
                     key={topic.id}
                     type="small"
-                    title={`Topic ${topic.sequence} : ${topic.name}`}
+                    title={`Topic ${index + 1} : ${topic.name}`}
                     editHandler={() => activateEditTopic(topic.id)}
                   />
                 );

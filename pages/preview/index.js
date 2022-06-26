@@ -8,14 +8,14 @@ import CourseHero from '../../components/CourseHero';
 import CustomVideo from '../../components/CustomVideoPlayer';
 import ExamLanding from '../../components/Exams/ExamLanding';
 import CardSlider from '../../components/medium/CardSlider';
-import { TopicExamAtom } from '../../state/atoms/module.atoms';
+import { getTopicExamObj, TopicExamAtom } from '../../state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '../../state/atoms/video.atom';
 import CourseContextProvider from '../../state/contexts/CourseContext';
 import ModuleContextProvider from '../../state/contexts/ModuleContext';
 
 export default function PreviewCourse() {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
-  const topicExamData = useRecoilValue(TopicExamAtom);
+  const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const startPlayer = videoData.startPlayer;
 
   function setStartPlayer(val) {
@@ -28,6 +28,7 @@ export default function PreviewCourse() {
   useEffect(() => {
     setVideoData(getVideoObject());
     setStartPlayer(false);
+    setTopicExamData(getTopicExamObj());
   }, []);
 
   return (
@@ -42,7 +43,7 @@ export default function PreviewCourse() {
               margin: 0,
               padding: 0
             }}>
-            {topicExamData?.id && <ExamLanding />}
+            {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
 
             {startPlayer && <CustomVideo set={setStartPlayer} isPreview={true} />}
 

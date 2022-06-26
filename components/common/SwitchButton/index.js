@@ -12,8 +12,7 @@ const SwitchButton = ({
 }) => {
   return (
     <>
-      <button
-        style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}>
+      <button className={styles.switchContainer}>
         <Switch
           {...label}
           defaultChecked

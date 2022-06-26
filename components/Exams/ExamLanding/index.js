@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
+  GET_EXAM_CONFIG,
   GET_EXAM_INSTRUCTION,
   GET_EXAM_META,
   GET_EXAM_SCHEDULE,
@@ -10,12 +11,12 @@ import {
   queryClient
 } from '../../../API/Queries';
 import { LearnerExamAtom } from '../../../state/atoms/exams.atoms';
-import { TopicExamAtom } from '../../../state/atoms/module.atoms';
+import { getTopicExamObj, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
 import styles from './examLanding.module.scss';
 
-export default function ExamLanding({ testType = 'Quiz' }) {
+export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = false }) {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
     client: queryClient
   });
@@ -26,6 +27,9 @@ export default function ExamLanding({ testType = 'Quiz' }) {
     client: queryClient
   });
   const [loadSchedule, { error: loadScheduleError }] = useLazyQuery(GET_EXAM_SCHEDULE, {
+    client: queryClient
+  });
+  const [loadConfig, { error: loadConfigError }] = useLazyQuery(GET_EXAM_CONFIG, {
     client: queryClient
   });
 
@@ -42,10 +46,7 @@ export default function ExamLanding({ testType = 'Quiz' }) {
 
     // load master data
     let isError = false;
-    const masterRes = await loadMaster({
-      variables: { exam_ids: [examId] },
-      fetchPolicy: 'no-cache'
-    }).catch((err) => {
+    const masterRes = await loadMaster({ variables: { exam_ids: [examId] } }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Exam Master load error' });
@@ -116,10 +117,7 @@ export default function ExamLanding({ testType = 'Quiz' }) {
     // load schedule
     let schObj = {};
     if (masterObj.scheduleType === 'scheduled') {
-      const schRes = await loadSchedule({
-        variables: { exam_id: examId },
-        fetchPolicy: 'no-cache'
-      }).catch((err) => {
+      const schRes = await loadSchedule({ variables: { exam_id: examId } }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Schedule load error' });
@@ -136,12 +134,29 @@ export default function ExamLanding({ testType = 'Quiz' }) {
       };
     }
 
+    // load config
+    const confRes = await loadConfig({ variables: { exam_id: examId } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Config load error' });
+    });
+    if (isError) return;
+    const confData = confRes?.data?.getExamConfiguration[0];
+    const confObj = {
+      configId: confData?.id || null,
+      shuffle: confData?.Shuffle || false,
+      display_hints: confData?.DisplayHints || false,
+      show_result: confData?.ShowResult || false,
+      show_answer: confData?.ShowAnswer || false,
+      is_config_active: confData?.IsActive || false
+    };
     setLearnerExamData({
       ...learnerExamData,
       examData: {
         ...masterObj,
         ...insObj,
-        ...schObj
+        ...schObj,
+        ...confObj
       },
       landingPageData: {
         testSeries: 'PMP Test Series',
@@ -165,9 +180,16 @@ export default function ExamLanding({ testType = 'Quiz' }) {
         elem?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
       }>
       <div className={`${styles.exam_landing_head}`}>
-        <button className={`${styles.exam_landing_head_btn}`} onClick={() => router.back()}>
+        <button
+          className={`${styles.exam_landing_head_btn}`}
+          onClick={() => {
+            if (isDisplayedInCourse) return setTopicExamData(getTopicExamObj());
+
+            router.back();
+          }}>
           <img src="./images/Back.png" />
         </button>
+
         <div className={`${styles.exam_landing_head_container}`}>
           <p id={`${styles.exam_landing_head_testSeries}`}>
             {learnerExamData?.landingPageData?.testSeries}

@@ -1,11 +1,17 @@
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
 import { filterAndSortTopicsBasedOnModuleId } from '../../../../helper/data.helper';
-import { isLoadingAtom, TopicAtom, TopicExamAtom } from '../../../../state/atoms/module.atoms';
-import { VideoAtom } from '../../../../state/atoms/video.atom';
+import {
+  getTopicExamObj,
+  isLoadingAtom,
+  TopicAtom,
+  TopicExamAtom
+} from '../../../../state/atoms/module.atoms';
+import { getVideoObject, VideoAtom } from '../../../../state/atoms/video.atom';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import styles from '../../courseBody.module.scss';
 
@@ -27,6 +33,7 @@ export default function TopicBox({
 
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const { allModuleTopic, currentTopicIndex } = videoData;
   const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
@@ -112,7 +119,10 @@ export default function TopicBox({
       (res) => console.log(res)
     );
 
+    if (!topicExam) return setToastMsg({ type: 'danger', message: 'No Exam Added!' });
+
     // reset recoil and set new data
+    setVideoData(getVideoObject());
     setTopicExamData({
       id: topicExam.id,
       topicId: topicExam.topicId,
@@ -127,9 +137,12 @@ export default function TopicBox({
       <div
         className={`${styles.topic}`}
         onClick={() => {
-          loadTopicExam();
+          if (type === 'Assessment') return loadTopicExam();
 
+          // if (type === 'Content') {
           if (!topicContent.length) return;
+
+          setTopicExamData(getTopicExamObj());
           updateVideoData(
             videoData,
             setVideoData,
@@ -140,6 +153,7 @@ export default function TopicBox({
             currrentModule,
             setSelectedModule
           );
+          // }
         }}>
         <div className={`${styles.preclassName}`}>
           <div>
@@ -223,6 +237,7 @@ export default function TopicBox({
             </div>
           )}
           {type === 'Assessment' && (
+<<<<<<< HEAD
             <div className={`${styles.topic_assesment}`}>
               <div className={`${styles.assesmentType}`}>
                 {topicAssData[1].type === 'Schedule' ? (
@@ -242,6 +257,13 @@ export default function TopicBox({
                 <span>Attempt: {topicAssData[1].attempts}</span>
                 <span>Duration: {topicAssData[1].duration}</span>
               </div>
+=======
+            <div className="topic_player">
+              {/* <div className="progress_bar"> */}
+              {/* <img src="images/progressTriangle.png" alt="" /> */}
+              {/* </div> */}
+              Exam block is getting ready!
+>>>>>>> ef7e4e1af7b2ea7127d725cc401ed1f548124af4
             </div>
           )}
           {type === 'Lab' && (

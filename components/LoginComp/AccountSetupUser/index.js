@@ -196,6 +196,7 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                     </div>
                 </div>
                 <Box mt={2} />
+            </div>
                 <div className={`${styles.navigator}`}>
                     <span />
                     <div className={`${styles.navigatorBtns}`}>
@@ -209,7 +210,7 @@ const AccountSetupUser = ({setCurrentComponent}) => {
                         </Button>
                     </div>
                 </div>
-            </div>
+
         </>
     );
 }

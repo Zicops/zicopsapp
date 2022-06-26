@@ -4,9 +4,12 @@ import { useRecoilValue } from 'recoil';
 import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
 import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
 import styles from '../../learnerExam.module.scss';
+import { data } from '../Logic/examInstruction.helper';
 
 const InstructionPage = ({ setIsLearner, isFullScreen }) => {
-  const learnerExamData = useRecoilValue(LearnerExamAtom);
+  let learnerExamData = useRecoilValue(LearnerExamAtom);
+
+  if (!learnerExamData?.examData?.id) learnerExamData = data;
 
   const [isType, setIsType] = useState({
     schedule: true,
@@ -21,7 +24,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
   }, []);
   const router = useRouter();
 
-  console.log(learnerExamData)
+  console.log(learnerExamData, data);
 
   return (
     <div className={`${styles.examInstContainer}`}>
@@ -136,48 +139,54 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             : `${styles.instructions}`
         }>
         {learnerExamData?.examData?.instructions}
-        {/* <div className={`${styles.genInfo}`}>
-          <span>
-            A. General Information<span>:</span>
-          </span>
-          <ol>
-            <li>
-              The examination will comprise of Objective type Multiple Choice Questions (MCQs)
-            </li>
-            <li>All questions are compulsory and each carries One mark.</li>
-            <li>
-              The total number of questions, duration of examination, will be different based on the
-              course, the detail is available on your screen.
-            </li>
-            <li>The Subjects or topics covered in the exam will be as per the Syllabus.</li>
-            <li>There will be NO NEGATIVE MARKING for the wrong answers.</li>
-          </ol>
-        </div>
-        <div className={`${styles.genInfo}`}>
-          <span>
-            B. Information & Instructions<span>:</span>
-          </span>
-          <ol>
-            <li>The examination does not require using any paper, pen, pencil and calculator.</li>
-            <li>Every student will take the examination on a Laptop/Desktop/Smart Phone.</li>
-            <li>
-              On computer screen every student will be given objective type type Multiple Choice
-              Questions (MCQs).
-            </li>
-            <li>
-              Each student will get questions and answers in different order selected randomly from
-              a fixed Question Databank.
-            </li>
-            <li>
-              The students just need to click on the Right Choice / Correct option from the multiple
-              choices /options given with each question.
-            </li>
-            <span>
-              For Multiple Choice Questions, each question has four options, and the candidate has
-              to click the appropriate option.
-            </span>
-          </ol>
-        </div> */}
+        {!learnerExamData?.examData?.id && (
+          <>
+            <div className={`${styles.genInfo}`}>
+              <span>
+                A. General Information<span>:</span>
+              </span>
+              <ol>
+                <li>
+                  The examination will comprise of Objective type Multiple Choice Questions (MCQs)
+                </li>
+                <li>All questions are compulsory and each carries One mark.</li>
+                <li>
+                  The total number of questions, duration of examination, will be different based on
+                  the course, the detail is available on your screen.
+                </li>
+                <li>The Subjects or topics covered in the exam will be as per the Syllabus.</li>
+                <li>There will be NO NEGATIVE MARKING for the wrong answers.</li>
+              </ol>
+            </div>
+            <div className={`${styles.genInfo}`}>
+              <span>
+                B. Information & Instructions<span>:</span>
+              </span>
+              <ol>
+                <li>
+                  The examination does not require using any paper, pen, pencil and calculator.
+                </li>
+                <li>Every student will take the examination on a Laptop/Desktop/Smart Phone.</li>
+                <li>
+                  On computer screen every student will be given objective type type Multiple Choice
+                  Questions (MCQs).
+                </li>
+                <li>
+                  Each student will get questions and answers in different order selected randomly
+                  from a fixed Question Databank.
+                </li>
+                <li>
+                  The students just need to click on the Right Choice / Correct option from the
+                  multiple choices /options given with each question.
+                </li>
+                <span>
+                  For Multiple Choice Questions, each question has four options, and the candidate
+                  has to click the appropriate option.
+                </span>
+              </ol>
+            </div>
+          </>
+        )}
       </div>
       <div className={`${styles.instructionFooter}`}>
         <div>
