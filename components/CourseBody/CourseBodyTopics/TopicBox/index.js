@@ -50,6 +50,28 @@ export default function TopicBox({
   const { allModuleTopic, currentTopicIndex } = videoData;
   const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
 
+  //dummy data for examTopic part
+  const topicAssData = [
+    {
+      type: 'Take Anytime',
+      duration: '3hrs',
+      attempts: '0/1',
+      marks: 100,
+      passingCriteria: '60%',
+      expertiseLevel: 'Competent'
+    },
+    {
+      type: 'Schedule',
+      duration: '3hrs',
+      attempts: '0/1',
+      date: '25th June, 2022',
+      startTime: '11:00AM',
+      endTime: '2:00PM',
+      marks: 100,
+      passingCriteria: '60%',
+      expertiseLevel: 'Beginner'
+    }
+  ];
   // calculate topic Index with generator function
   useEffect(() => {
     if (isFirstChapter) getTopicsIndex(true).next();
@@ -114,7 +136,7 @@ export default function TopicBox({
     if (topic?.type !== 'Assessment') return;
 
     const topicExam = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic.id }).then(
-      (res) => console.log(res)
+      (res) => res.getTopicExams[0]
     );
 
     if (!topicExam) return setToastMsg({ type: 'danger', message: 'No Exam Added!' });
