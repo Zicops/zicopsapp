@@ -49,6 +49,8 @@ export default function CourseBodyTopics() {
     filteredAndSortedData = filterAndSortTopics(topic, selectedModule?.value);
   }
 
+  let topicIndex = 0;
+
   return (
     <>
       <Dropdown options={options} handleChange={handleModuleChange} value={selectedModule} />
@@ -65,7 +67,7 @@ export default function CourseBodyTopics() {
               topics={topic}
               name={chapter.name}
               description={chapter.description}
-              index={index + 1}
+              chapterIndex={index + 1}
               key={chapter.name}
               chapterId={chapter.id}
               moduleId={selectedModule.value}
@@ -82,6 +84,7 @@ export default function CourseBodyTopics() {
                 key={topic.name}
                 topicCount={index + 1}
                 topic={topic}
+                topicIndex={++topicIndex}
                 topicContent={filteredTopicContent}
                 moduleId={selectedModule?.value}
                 getModuleOptions={getModuleOptions}

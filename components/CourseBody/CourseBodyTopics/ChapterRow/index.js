@@ -8,7 +8,7 @@ import style from './chapter.module.scss';
 export default function ChapterRow({
   topics,
   name,
-  index,
+  chapterIndex,
   description,
   chapterId,
   moduleId,
@@ -29,7 +29,7 @@ export default function ChapterRow({
             {isLoading ? (
               <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={80} />
             ) : (
-              index
+              chapterIndex
             )}
             :{' '}
             <span>
@@ -64,6 +64,7 @@ export default function ChapterRow({
             key={topic.name}
             topicCount={index + 1}
             topic={topic}
+            isFirstChapter={chapterIndex === 1 && index === 0}
             topicContent={filteredTopicContent}
             moduleId={moduleId}
             getModuleOptions={getModuleOptions}

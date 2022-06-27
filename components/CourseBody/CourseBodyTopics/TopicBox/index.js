@@ -1,6 +1,6 @@
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
@@ -14,10 +14,20 @@ import {
 import { getVideoObject, VideoAtom } from '../../../../state/atoms/video.atom';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 
+let topicInstance = 0;
+
+function* getTopicsIndex(isReset = null) {
+  if (isReset) topicInstance = -1;
+
+  yield ++topicInstance;
+}
+
 export default function TopicBox({
   topicCount,
   topic,
+  topicIndex = null,
   topicContent,
+  isFirstChapter = false,
   moduleId,
   getModuleOptions,
   currrentModule,
@@ -34,8 +44,19 @@ export default function TopicBox({
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
+  const [topicCountDisplay, setTopicCountDisplay] = useState(0);
+
   const { allModuleTopic, currentTopicIndex } = videoData;
   const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
+
+  // calculate topic Index with generator function
+  useEffect(() => {
+    if (isFirstChapter) getTopicsIndex(true).next();
+    if (topicIndex) return setTopicCountDisplay(topicIndex);
+
+    setTopicCountDisplay(getTopicsIndex().next()?.value);
+    return () => getTopicsIndex(true).next();
+  }, []);
 
   // Set default topic image
   let topicImage; // = '/images/media-container.png';
@@ -154,7 +175,7 @@ export default function TopicBox({
                   {isLoading ? (
                     <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
                   ) : (
-                    topicCount + '. '
+                    topicCountDisplay + '. '
                   )}
                 </span>
                 {isLoading ? (
