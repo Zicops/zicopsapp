@@ -61,6 +61,7 @@ export default function ExamMaster() {
     const selectedQp = questionPaperOptions?.filter(
       (option) => option?.value === examTabData?.qpId
     )[0];
+
     setExamTabData({
       ...examTabData,
       category: selectedQp?.Category,
@@ -68,7 +69,7 @@ export default function ExamMaster() {
       duration: selectedQp?.SuggestedDuration || 0,
       total_marks: await getTotalMarks(qpId)
     });
-  }, [questionPaperOptions, router.query]);
+  }, [questionPaperOptions, router.query, examTabData?.qpId]);
 
   const maxAttemptsOptions = [1, 2, 3, 4, 5].map((val) => ({ value: val, label: val }));
 

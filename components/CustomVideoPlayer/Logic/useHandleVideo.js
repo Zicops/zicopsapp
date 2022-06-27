@@ -100,10 +100,10 @@ export default function useVideoPlayer(videoElement, videoContainer) {
 
   // volume = 0 is mute, volume > 0 is unmute
   useEffect(() => {
-    if (playerState.volume <= 0 && !playerState.isMuted ) return toggleMute();
+    if (playerState.volume <= 0 && !playerState.isMuted) return toggleMute();
     if (playerState.volume > 0 && playerState.isMuted) return toggleMute();
   }, [playerState.volume]);
-  
+
   // TODO : Change this to Ref OR change entire input range to DIV
   // progress bar color update on video play
   useEffect(() => {
@@ -155,9 +155,22 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     }
   }
 
+  function setTooltipPosition(tooltipPosition) {
+    // 10 is added for scrollbar gap and margin left
+    const elemWidth = 100;
+    const margin = 20;
+
+    const diff = screen.width - tooltipPosition - margin;
+    const positionLeft =
+      diff < elemWidth ? tooltipPosition - (elemWidth - diff) : tooltipPosition + margin / 2;
+
+    tooltip.current.style.left = positionLeft + 'px';
+  }
+
   function handleMouseMove(e) {
     if (!videoElement.current) return;
-    tooltip.current.style.left = e.pageX + 'px';
+
+    setTooltipPosition(e.pageX);
 
     var videoDuration = videoElement.current?.duration;
     const timestamp = (e.pageX / screen.width) * videoDuration;
@@ -274,7 +287,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
   function handleVideoProgress(event) {
     const manualChange = Number(event.target.value);
     setVideoTime(manualChange);
-  };
+  }
 
   function moveVideoProgressBySeconds(seconds) {
     let time = Math.floor(videoElement.current?.currentTime);
@@ -348,8 +361,10 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     });
 
     setPlayPauseActivated(isForward ? 'forward' : 'backward');
+
     // postion is not accurate
-    tooltip.current.style.left = (time / videoElement.current.duration) * screen.width + 'px';
+    const tooltipPos = (time / videoElement.current.duration) * screen.width;
+    setTooltipPosition(tooltipPos);
 
     const timeObj = secondsToMinutes(time);
     if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
