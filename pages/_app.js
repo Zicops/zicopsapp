@@ -5,6 +5,7 @@ import Toaster from '../components/common/Toaster';
 import Layout from '../components/Layout';
 import CourseContextProvider from '../state/contexts/CourseContext';
 import UserContextProvider from '../state/contexts/UserContext';
+import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
 import '../styles/global.scss';
 import '../styles/globals.css';
 
@@ -17,17 +18,19 @@ function MyApp({ Component, pageProps }) {
       </Head>
 
       <ErrorBoundary>
-        <RecoilRoot>
-          <CourseContextProvider>
-            <UserContextProvider>
-              <Layout>
-                <Component {...pageProps} />
+        <AuthUserProvider>
+          <RecoilRoot>
+            <CourseContextProvider>
+              <UserContextProvider>
+                <Layout>
+                  <Component {...pageProps} />
 
-                <Toaster />
-              </Layout>
-            </UserContextProvider>
-          </CourseContextProvider>
-        </RecoilRoot>
+                  <Toaster />
+                </Layout>
+              </UserContextProvider>
+            </CourseContextProvider>
+          </RecoilRoot>
+        </AuthUserProvider>
       </ErrorBoundary>
     </>
   );
