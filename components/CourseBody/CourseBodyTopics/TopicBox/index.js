@@ -50,30 +50,6 @@ export default function TopicBox({
   const { allModuleTopic, currentTopicIndex } = videoData;
   const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
 
-<<<<<<< HEAD
-  //dummy data for examTopic part
-  const topicAssData = [
-    {
-      type: 'Take Anytime',
-      duration: '3hrs',
-      attempts: '0/1',
-      marks: 100,
-      passingCriteria: '60%',
-      expertiseLevel: 'Competent'
-    },
-    {
-      type: 'Schedule',
-      duration: '3hrs',
-      attempts: '0/1',
-      date: '25th June, 2022',
-      startTime: '11:00AM',
-      endTime: '2:00PM',
-      marks: 100,
-      passingCriteria: '60%',
-      expertiseLevel: 'Beginner'
-    }
-  ];
-=======
   // calculate topic Index with generator function
   useEffect(() => {
     if (isFirstChapter) getTopicsIndex(true).next();
@@ -82,7 +58,6 @@ export default function TopicBox({
     setTopicCountDisplay(getTopicsIndex().next()?.value);
     return () => getTopicsIndex(true).next();
   }, []);
->>>>>>> 0149852f08dc2b000ed4fb2b40b215948e01478a
 
   // Set default topic image
   let topicImage; // = '/images/media-container.png';
@@ -260,7 +235,6 @@ export default function TopicBox({
             </div>
           )}
           {type === 'Assessment' && (
-<<<<<<< HEAD
             <div className={`${styles.topic_assesment}`}>
               <div className={`${styles.assesmentType}`}>
                 {topicAssData[1].type === 'Schedule' ? (
@@ -280,13 +254,6 @@ export default function TopicBox({
                 <span>Attempt: {topicAssData[1].attempts}</span>
                 <span>Duration: {topicAssData[1].duration}</span>
               </div>
-=======
-            <div className="topic_player">
-              {/* <div className="progress_bar"> */}
-              {/* <img src="images/progressTriangle.png" alt="" /> */}
-              {/* </div> */}
-              Exam block is getting ready!
->>>>>>> ef7e4e1af7b2ea7127d725cc401ed1f548124af4
             </div>
           )}
           {type === 'Lab' && (
