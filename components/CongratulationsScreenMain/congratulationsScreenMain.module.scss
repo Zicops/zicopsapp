@@ -1,0 +1,41 @@
+@import '../../styles/base.scss';
+.congratulatonsScreen{
+    width: 70%;
+    height: 400px;
+    background-color: #323232;
+    padding: 30px 50px;
+    box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  
+}
+.head{
+    color: rgb(38, 186, 77);
+    font-size: 32px;
+    text-transform: uppercase;
+    font-weight: bold;
+  
+ 
+}
+.head span{
+    color: $white;
+}
+.textHead{
+font-weight: 200;
+font-size: 18px;
+color: $white;
+padding-top: 20px;
+
+}
+
+.textHead span{
+    text-transform: capitalize;
+}
+.buttons{
+    padding: 20px 0px;
+    display: flex;
+    gap: 20px;
+
+}
+.customStyle{
+    background-color: $primary;
+}
