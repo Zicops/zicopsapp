@@ -1,6 +1,10 @@
+import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
+import { useRecoilValue } from 'recoil';
 import styles from './congratulationsBody.module.scss';
 
 const CongratulationsBody = ({ data, style }) => {
+  const learnerExamData = useRecoilValue(LearnerExamAtom);
+
   return (
     <>
       <div className={`${styles.congratulations_Body}`}>
@@ -15,7 +19,10 @@ const CongratulationsBody = ({ data, style }) => {
           <tbody>
             <tr>
               <td>1/3</td>
-              <td>10/100</td>
+              <td>
+                {learnerExamData?.resultData?.examScore || 0} /{' '}
+                {learnerExamData?.examData?.totalMarks || 0}
+              </td>
               <td style={{ color: style.color }}>{data.result}</td>
             </tr>
           </tbody>

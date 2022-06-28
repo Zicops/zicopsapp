@@ -4,7 +4,11 @@ import CongratulationsHead from './CongratulationsHead';
 import { data } from './Logic/congratulationsHead.helper';
 import CongratulationsScreen from './CongratulationsScreen';
 import CongratulationsScreenButton from '../common/CongratulationsScreenButton';
+import { useRecoilValue } from 'recoil';
+import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 const Congratulations = ({ result }) => {
+  const learnerExamData = useRecoilValue(LearnerExamAtom);
+
   const failImage = '/images/fail.png';
   const passImage = '/images/pass.png';
   const completedImage = '/images/completed.png';
@@ -36,7 +40,7 @@ const Congratulations = ({ result }) => {
       <CongratulationsScreen>
         <CongratulationsHead
           user_name={'pallav'}
-          exam_name={'Fundamentals Of Java Programming'}
+          exam_name={learnerExamData?.examData?.name || ''}
           data={data[result]}
           style={style}
         />

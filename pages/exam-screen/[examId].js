@@ -10,7 +10,7 @@ import {
   GET_FIXED_QUESTION,
   GET_QB_SECTION_MAPPING_BY_SECTION,
   GET_QUESTION_BANK_QUESTIONS,
-  GET_QUESTION_OPTIONS,
+  GET_QUESTION_OPTIONS_WITHOUT_ANSWER,
   GET_QUESTION_PAPER_META,
   GET_QUESTION_PAPER_SECTION,
   queryClient
@@ -52,12 +52,13 @@ const ExamScreen = () => {
     GET_QUESTION_BANK_QUESTIONS,
     { client: queryClient }
   );
-  const [loadOptions, { error: errorOptionsData }] = useLazyQuery(GET_QUESTION_OPTIONS, {
-    client: queryClient
-  });
+  const [loadOptions, { error: errorOptionsData }] = useLazyQuery(
+    GET_QUESTION_OPTIONS_WITHOUT_ANSWER,
+    { client: queryClient }
+  );
 
   const router = useRouter();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const examData = [
     {
       id: 1,
@@ -487,7 +488,7 @@ const ExamScreen = () => {
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
 
   useEffect(async () => {
-    setLoading(true)
+    setLoading(true);
     const examId = router.query?.examId || null;
     if (!examId) return;
 
@@ -532,6 +533,7 @@ const ExamScreen = () => {
     const paperMasterData = metaRes.data.getQPMeta[0];
 
     const paperMaster = {
+      name: paperMasterData?.name,
       category: paperMasterData?.Category,
       subCategory: paperMasterData?.SubCategory,
       description: paperMasterData?.Description,
@@ -543,6 +545,7 @@ const ExamScreen = () => {
 
     masterObj.category = paperMaster.category;
     masterObj.subCategory = paperMaster.subCategory;
+    masterObj.paperName = paperMaster.name;
 
     // load instructions
     const insRes = await loadInstructions({
@@ -773,8 +776,8 @@ const ExamScreen = () => {
         totalMarks: totalMarks || '0'
       },
       landingPageData: {
-        testSeries: 'PMP Test Series',
-        testSequence: 'M1A4',
+        // testSeries: 'PMP Test Series',
+        // testSequence: 'M1A4',
         isProctoring: 'No',
         totalQuestions: totalQuestions || '0',
         isNegativeMarking: 'No',
@@ -786,7 +789,7 @@ const ExamScreen = () => {
       },
       sectionData: sectionData
     });
-    setLoading(false)
+    setLoading(false);
   }, [router.query]);
 
   // update full screen state
@@ -805,41 +808,36 @@ const ExamScreen = () => {
   async function loadQuestionsAndOptions() {}
   return (
     <div ref={refFullscreen}>
-      {
-        loading ? (
-            <div className={styles.loadingExamScreen}>
-              <ThemeProvider
-                  theme={createTheme({
-                    palette: {
-                      primary: {
-                        main: '#6bcfcf'
-                      }
-                    }
-                  })}>
-                <CircularProgress />
-              </ThemeProvider>
-
-            </div>
-        ) : (
-            isLearner ? (
-                <LearnerExamComponent
-                    data={questionData}
-                    setData={setQuestionData}
-                    current={current}
-                    setCurrent={setCurrent}
-                    isFullScreen={isFullScreen}
-                    setIsFullScreen={setIsFullScreen}
-                />
-            ) : (
-                // <ExamLandingPage setIsLearner={setIsLearner} />
-                <ExamInstruction
-                    setIsLearner={setIsLearner}
-                    isFullScreen={isFullScreen}
-                    setIsFullScreen={setIsFullScreen}
-                />
-            )
-        )
-      }
+      {loading ? (
+        <div className={styles.loadingExamScreen}>
+          <ThemeProvider
+            theme={createTheme({
+              palette: {
+                primary: {
+                  main: '#6bcfcf'
+                }
+              }
+            })}>
+            <CircularProgress />
+          </ThemeProvider>
+        </div>
+      ) : isLearner ? (
+        <LearnerExamComponent
+          data={questionData}
+          setData={setQuestionData}
+          current={current}
+          setCurrent={setCurrent}
+          isFullScreen={isFullScreen}
+          setIsFullScreen={setIsFullScreen}
+        />
+      ) : (
+        // <ExamLandingPage setIsLearner={setIsLearner} />
+        <ExamInstruction
+          setIsLearner={setIsLearner}
+          isFullScreen={isFullScreen}
+          setIsFullScreen={setIsFullScreen}
+        />
+      )}
       <div
         style={{
           position: 'absolute',

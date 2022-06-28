@@ -208,7 +208,15 @@ export function getLearnerExamObj() {
     examData: getExamData(),
     landingPageData: getLandingPageData(),
     insPageData: getInsPageObj(),
-    sectionData: []
+    sectionData: [],
+    resultData: getResultsObj()
+  };
+}
+
+export function getResultsObj(data = {}) {
+  return {
+    examScore: 0,
+    isPassed: false
   };
 }
 
@@ -248,6 +256,8 @@ export function getExamData(data = {}) {
 
     is_exam_active: data.is_exam_active || false,
     status: data.status || '',
+
+    paperName: data.paperName || '',
 
     // instruction
     instructionId: data.instructionId || null,

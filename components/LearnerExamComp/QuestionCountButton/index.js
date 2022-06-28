@@ -7,7 +7,6 @@ import {Grid} from "@mui/material";
 const QuestionCountButtonSection = ({data, setData, current, setCurrent, filterData, setOption, setIsQuestion}) => {
 
     const height = data.length / 5;
-    console.log(height)
 
     return (
         <>
