@@ -8,13 +8,15 @@ const CongratulatonsScreenMain = ({ userName, examName }) => {
       </div>
       <div className={`${styles.textHead}`}>
         You have successfully completed the exam:<span> {examName}</span>
-        Programming.
       </div>
       <img src="/images/completed.png" width={200} />
       <div className={`${styles.buttons}`}>
-        <CongratulationsScreenButton title={'View Result'} />
-        <CongratulationsScreenButton title={'View Answer Key'} />
-        <CongratulationsScreenButton title={'Exit And Return To Main Screen'} />
+        <CongratulationsScreenButton title={'View Result'} customClass={`${styles.newStyle}`} />
+        <CongratulationsScreenButton title={'View Answer Key'} customClass={`${styles.newStyle}`} />
+        <CongratulationsScreenButton
+          title={'Exit And Return To Main Screen'}
+          customClass={`${styles.newStyle}`}
+        />
       </div>
     </div>
   );
