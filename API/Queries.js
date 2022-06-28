@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 
 // Set query Client
 export const queryClient = new ApolloClient({
@@ -364,6 +364,40 @@ export const GET_QUESTION_OPTIONS = gql`
         QmId
         Description
         IsCorrect
+        CreatedAt
+        UpdatedAt
+        CreatedBy
+        UpdatedBy
+        AttachmentType
+        Attachment
+        IsActive
+      }
+    }
+  }
+`;
+
+export const GET_QUESTION_OPTIONS_WITH_ANSWER = gql`
+  query questionBankOptions($question_id: [String]) {
+    getOptionsForQuestions(question_ids: $question_id) {
+      question_id
+      options {
+        id
+        QmId
+        IsCorrect
+        IsActive
+      }
+    }
+  }
+`;
+
+export const GET_QUESTION_OPTIONS_WITHOUT_ANSWER = gql`
+  query questionBankOptions($question_id: String) {
+    getOptionsForQuestions(question_ids: [$question_id]) {
+      question_id
+      options {
+        id
+        QmId
+        Description
         CreatedAt
         UpdatedAt
         CreatedBy
