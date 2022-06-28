@@ -39,29 +39,29 @@ export default function useFirebaseAuth() {
     setLoading(false);
   };
 
-  const signIn = (email, password) =>
+  const signIn = (email, password) => {
+    console.log(email, password);
     signInWithEmailAndPassword(auth, email, password)
       .then((authUser) => {
-        //console.log(auth.currentUser);
+        console.log(auth.currentUser);
       })
       .catch((error) => {
         console.log(error.message);
       });
+  };
 
-  const signUp = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+  // const signUp = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 
   const logOut = () => signOut(auth).then(clear);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, authStateChanged);
-    return unsubscribe;
+    onAuthStateChanged(auth, authStateChanged);
   }, []);
 
   return {
     authUser,
     loading,
     signIn,
-    signUp,
     logOut
   };
 }

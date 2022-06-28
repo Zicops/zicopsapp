@@ -22,7 +22,7 @@ const LoginEmail = ({ chngeHandle, type, placeholder }) => {
       <input
         type={show ? 'text' : 'password'}
         placeholder={placeholder}
-        // onFocus={chngeHandle}
+        onChange={chngeHandle}
         autoComplete={'off'}
         // style={{ margin: '5px 0px' }}
       />

@@ -6,6 +6,7 @@ import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
 import LoginHeadOne from '../LoginHeadOne';
 import styles from '../LoginEmail/loginEmail.module.scss';
+import { isEmail } from '@/helper/common.helper';
 
 const LoginScreen = ({ setPage }) => {
   const [email, setEmail] = useState('');
@@ -16,13 +17,27 @@ const LoginScreen = ({ setPage }) => {
 
   const { signIn, authUser, loading, logOut } = useAuthUserContext();
 
-  const onSubmit = (event) => {
-    signIn(email, password);
-    event.preventDefault();
-    router.push('/');
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
   };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    const checkEmail = isEmail(email);
+    if (checkEmail) {
+      signIn(email, password);
+      console.log(authUser);
+    } else {
+      console.log('error');
+    }
+  };
+
   useEffect(() => {
-    signIn((email = 'contact.zicops@gmail.com'), (password = 'Demo@123'));
+    // signIn(email, password);
+    console.log(authUser);
   }, []);
 
   //to check if our user is logged in or not
@@ -42,16 +57,17 @@ const LoginScreen = ({ setPage }) => {
             className={`${styles.login_email_input}`}
             type={'email'}
             placeholder={'Email address'}
+            onChange={handleEmail}
             // onFocus={chngeHandle}
             // style={{ margin: '5px 0px' }}
           />
-          <LoginEmail type={'password'} placeholder={'Password'} />
+          <LoginEmail type={'password'} placeholder={'Password'} chngeHandle={handlePassword} />
           <div className={`${styles.small_text}`}>
             <span />
             <p>Forgot Password?</p>
           </div>
 
-          <LoginButton title={'Login'} handleClick={onSubmit} />
+          <LoginButton title={'Login'} handleClick={handleSubmit} />
         </div>
       </ZicopsLogin>
       <style jsx>{`

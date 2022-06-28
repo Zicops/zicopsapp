@@ -9,7 +9,7 @@ export function changeHandler(e, state, setState, inputName = null) {
   if (inputName === 'language') {
     setState({
       ...state,
-      [inputName]: e.map(el=>el.value)
+      [inputName]: e.map((el) => el.value)
     });
     return;
   }
@@ -37,4 +37,10 @@ export function changeHandler(e, state, setState, inputName = null) {
     ...state,
     [e.target.name]: e.target.value
   });
+}
+
+//Email validation
+
+export function isEmail(email) {
+  return /[\w\d\.-]+@[\w\d\.-]+\.[\w\d\.-]+/.test(email);
 }
