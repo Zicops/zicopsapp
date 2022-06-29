@@ -13,7 +13,7 @@ export default function Card({ data, styleClass }) {
           <div className={`${styles.coursename}`}> {data.name} </div>
           <div className={`${styles.courseowner}`}> {data.owner} </div>
         </div>
-        <img src={data.image || '/images/dnd1.jpg'} alt="" />
+        <img src={data.tileImage || '/images/dnd1.jpg'} alt="" />
       </div>
     </>
   );

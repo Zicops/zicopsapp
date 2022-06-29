@@ -1,3 +1,4 @@
+import { isEmail } from '@/helper/common.helper';
 import { useState } from 'react';
 import Select from 'react-select';
 import { customSelectStyles } from '../../common/FormComponents/Logic/formComponents.helper';
@@ -53,10 +54,6 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
 
   function isInList(email) {
     return items.includes(email);
-  }
-
-  function isEmail(email) {
-    return /[\w\d\.-]+@[\w\d\.-]+\.[\w\d\.-]+/.test(email);
   }
 
   const defaultStyles = customSelectStyles();
