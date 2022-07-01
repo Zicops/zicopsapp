@@ -2,13 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCiaxV70znBE3Q7hpPbQMitK1QVrNLFGiQ',
-  authDomain: 'zicops-app.firebaseapp.com',
-  projectId: 'zicops-app',
-  storageBucket: 'zicops-app.appspot.com',
-  messagingSenderId: '414174583675',
-  appId: '1:414174583675:web:f326a3f335f9fbf672fbde',
-  measurementId: 'G-3TBV52MMGC'
+  apiKey: 'AIzaSyD05Uj8S-YumeJUiM4xuO8YFP7rjLJbrP8',
+  authDomain: 'zicops-one.firebaseapp.com',
+  projectId: 'zicops-one',
+  storageBucket: 'zicops-one.appspot.com',
+  messagingSenderId: '359144709511',
+  appId: '1:359144709511:web:d8d41fb236983ea45f4722'
 };
 
 export const app = initializeApp(firebaseConfig);

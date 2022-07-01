@@ -43,7 +43,7 @@ export default function useFirebaseAuth() {
     console.log(email, password);
     signInWithEmailAndPassword(auth, email, password)
       .then((authUser) => {
-        console.log(auth.currentUser);
+        // console.log(auth.currentUser);
       })
       .catch((error) => {
         console.log(error.message);

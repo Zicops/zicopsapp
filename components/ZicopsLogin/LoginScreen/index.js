@@ -16,7 +16,8 @@ const LoginScreen = ({ setPage }) => {
   const router = useRouter();
 
   const { signIn, authUser, loading, logOut } = useAuthUserContext();
-
+  // contact.zicops@gmail.com
+  //Zicops@259
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
@@ -30,6 +31,7 @@ const LoginScreen = ({ setPage }) => {
     if (checkEmail) {
       signIn(email, password);
       console.log(authUser);
+      localStorage.setItem('keyToken', JSON.stringify(authUser?.token));
     } else {
       console.log('error');
     }
