@@ -6,7 +6,7 @@ import LoginScreen from '../components/ZicopsLogin/LoginScreen';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const Login = () => {
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
 
   return (
     <>

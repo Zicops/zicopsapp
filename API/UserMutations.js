@@ -1,4 +1,4 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
@@ -21,3 +21,28 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache()
 });
+
+export const USER_LOGIN = gql`
+  mutation {
+    login {
+      user {
+        id
+        firstName
+        lastName
+        Status
+        Role
+        IsVerified
+        IsActive
+        Gender
+        CreatedBy
+        UpdatedBy
+        CreatedAt
+        UpdatedAt
+        Email
+        Phone
+        PhotoUrl
+      }
+      access_token
+    }
+  }
+`;
