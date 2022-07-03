@@ -17,7 +17,7 @@ const SignUp = () => {
       router.push('/');
       return;
     }
-    router.push('/signup');
+    router.push('/login');
   }, [userState]);
 
   return (

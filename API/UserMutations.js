@@ -31,18 +31,27 @@ export const USER_LOGIN = gql`
         lastName
         Status
         Role
-        IsVerified
-        IsActive
-        Gender
-        CreatedBy
-        UpdatedBy
-        CreatedAt
-        UpdatedAt
-        Email
-        Phone
-        PhotoUrl
+        IsVerified 
+        IsActive 
+        Gender 
+        CreatedBy 
+        UpdatedBy 
+        CreatedAt 
+        UpdatedAt 
+        Email 
+        Phone 
+        PhotoUrl 
       }
       access_token
     }
   }
 `;
+
+// account created for super User(at backend manual) -> login with that account /login ->
+// 1). firebase call for email and password then return uid and tokenId. from this token we will call our UserMutation.
+// IT WILL return tokenZ(custom Token from backend) and user detail. save in browser storage
+// validate tokenZ with backend on app initialization. ( after sometime tokenZ will be expired from backend)
+
+//2). for first time user login. after receiving tokenZ check IsVerified
+
+//3). 

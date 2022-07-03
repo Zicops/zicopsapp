@@ -46,7 +46,7 @@ const LoginScreen = ({ setPage }) => {
     await signIn(email, password);
     console.log(authUser);
     console.log(errorMsg);
-    if (errorMsg) return;
+    // if (errorMsg) return;
 
     localStorage.setItem('keyToken', JSON.stringify(authUser?.token));
 
@@ -60,6 +60,7 @@ const LoginScreen = ({ setPage }) => {
     if (isError) return;
 
     // setUserData({ authUser });
+    // router.push('/');
   };
 
   useEffect(() => {

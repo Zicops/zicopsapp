@@ -5,7 +5,7 @@ import OtpInputField from '../common/FormComponents/OtpInputField';
 import { useState, useEffect } from 'react';
 import Button from '../common/Button';
 
-const SignToLearningSpace = ({ setPage }) => {
+const SignToLearningSpace = () => {
   const [otpValue, setotpValue] = useState(0);
   useEffect(() => {
     console.log(otpValue);
@@ -30,7 +30,7 @@ const SignToLearningSpace = ({ setPage }) => {
           <Button
             text="LOGIN"
             type="button"
-            clickHandler={() => setPage(2)}
+            // clickHandler={() => setPage(2)}
             styleClass={`${styles.CongratulationsScreenButton}`}
             isDisabled={!otpValue}
           />
