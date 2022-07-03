@@ -39,15 +39,15 @@ export default function useFirebaseAuth() {
     setLoading(false);
   };
 
-  const signIn = (email, password) => {
+  const signIn = async (email, password) => {
     console.log(email, password);
-    signInWithEmailAndPassword(auth, email, password)
+    await signInWithEmailAndPassword(auth, email, password)
       .then((authUser) => {
         // console.log(auth.currentUser);
       })
       .catch((error) => {
+        console.log(error.code.slice(5).split('-').join(' '));
         setErrorMsg(error.code.slice(5).split('-').join(' '));
-        console.log(JSON.stringify(error.code.slice(5).split('-').join(' ')));
       });
   };
 
@@ -64,6 +64,10 @@ export default function useFirebaseAuth() {
   useEffect(() => {
     onAuthStateChanged(auth, authStateChanged);
   }, []);
+
+  useEffect(() => {
+    console.log(errorMsg);
+  }, [errorMsg]);
 
   return {
     authUser,
