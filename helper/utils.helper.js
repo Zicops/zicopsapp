@@ -63,7 +63,7 @@ export function getPageSizeBasedOnScreen() {
 
 // difficulty string to number mapping
 export const DIFFICULTY = {
-  Beginner: [0, 1, 2, 3],
+  Beginner: [1, 2, 3],
   Competent: [4, 5, 6, 7],
   Proficient: [8, 9, 10]
 };

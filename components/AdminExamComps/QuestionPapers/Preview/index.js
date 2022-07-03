@@ -1,3 +1,4 @@
+import { DIFFICULTY } from '@/helper/utils.helper';
 import { useLazyQuery } from '@apollo/client';
 import { Box, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -109,8 +110,25 @@ export default function Preview({ masterData }) {
     }
 
     // loop to get fixed questions
+    const alreadyAvailableQuestionsId = [];
     for (let i = 0; i < mappedQb.length; i++) {
       const mapping = mappedQb[i];
+
+      if (mapping?.retrieve_type === 'random') {
+        alreadyAvailableQuestionsId.push(...Array(mapping?.total_questions || 0).fill(mapping));
+        totalQuestions += mapping?.total_questions;
+        totalMarks += +mapping?.question_marks * +mapping?.total_questions || 0;
+
+        const sectionIndex = sectionData.findIndex((section) => section.id === mapping.sectionId);
+        if (sectionIndex < 0) continue;
+
+        if (!sectionData[sectionIndex]?.questions) sectionData[sectionIndex].questions = [];
+
+        sectionData[sectionIndex].questions.push(
+          ...Array(mapping?.total_questions || 0).fill(null)
+        );
+        continue;
+      }
 
       // get fixed question for each mapping
       const fixedRes = await loadFixedQuestions({
@@ -121,16 +139,12 @@ export default function Preview({ masterData }) {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'fixed load error' });
       });
-      if (isError) return;
+      if (isError) continue;
 
       const fixedData = fixedRes?.data?.getSectionFixedQuestions[0];
       const allQuestionIds = fixedData?.QuestionId?.split(',') || [];
 
-      if (!allQuestionIds?.length) {
-        totalQuestions += mapping?.total_questions;
-        totalMarks += mapping?.question_marks * mapping?.total_questions || 0;
-        continue;
-      }
+      alreadyAvailableQuestionsId.push(...allQuestionIds);
 
       // load all bank questions which is mapped in every mapping
       const questionRes = await loadQBQuestions({
@@ -202,8 +216,55 @@ export default function Preview({ masterData }) {
       if (!sectionData[sectionIndex]?.questions) sectionData[sectionIndex].questions = [];
 
       questions.forEach((q) => sectionData[sectionIndex].questions.push(q));
-      totalQuestions += questions?.length || 0;
-      totalMarks += mapping?.question_marks * questions?.length || 0;
+      totalQuestions += mapping?.total_questions || 0;
+      totalMarks += mapping?.question_marks * mapping?.total_questions || 0;
+    }
+
+    // random questions
+    for (let i = 0; i < alreadyAvailableQuestionsId.length; i++) {
+      const obj = alreadyAvailableQuestionsId[i];
+      if (typeof obj === 'string') continue;
+      console.log('mapping: ', obj, alreadyAvailableQuestionsId);
+
+      const difficulty = DIFFICULTY[obj?.difficulty_level] || [];
+      const randomRes = await loadQBQuestions({
+        variables: {
+          question_bank_id: obj?.qbId,
+          difficultyStart: difficulty[0] || 1,
+          difficultyEnd: difficulty[difficulty?.length - 1] || 1,
+          totalQuestions: obj?.total_questions,
+          excludedQuestionIds: alreadyAvailableQuestionsId.filter((obj) => typeof obj === 'string')
+        },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'random load error' });
+      });
+      if (isError) continue;
+
+      const sectionIndex = sectionData.findIndex((section) => section.id === obj?.sectionId);
+      if (sectionIndex < 0) continue;
+
+      const questionIndex = sectionData[sectionIndex].questions?.findIndex(
+        (section) => section === null
+      );
+      if (questionIndex < 0) continue;
+
+      const q = randomRes?.data?.getQuestionBankQuestions[0];
+      const question = {
+        id: q.id,
+        description: q.Description,
+        type: q.Type,
+        difficulty: q.Difficulty,
+        attachment: q.Attachment,
+        attachmentType: q.AttachmentType,
+        hint: q.Hint,
+        qbmId: q.QbmId,
+        question_marks: obj?.question_marks
+      };
+      alreadyAvailableQuestionsId[i] = q.id;
+      sectionData[sectionIndex].questions[questionIndex] = question;
     }
 
     console.log(data, sectionData, mappedQb, totalQuestions, totalMarks);
