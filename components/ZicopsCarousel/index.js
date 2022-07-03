@@ -133,8 +133,8 @@ const CardSlider = ({ deviceType, title, type = 'small', data }) => {
                   courseData={d}
                 />
               );
-            if (type === 'square') return <SquareCard image={d.img} />;
-            if (type === 'circle') return <CircleCard image={d.img} />;
+            if (type === 'square') return <SquareCard key={index} image={d.img} />;
+            if (type === 'circle') return <CircleCard key={index} image={d.img} />;
           })}
           {data.every((d) => d) ? (
             <div className={`${styles.last_text} ${itemCount.shape}`}>See All</div>
