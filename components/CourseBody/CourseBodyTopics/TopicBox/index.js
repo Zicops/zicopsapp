@@ -148,7 +148,9 @@ export default function TopicBox({
       topicId: topicExam.topicId,
       courseId: topicExam.courseId,
       examId: topicExam.examId,
-      language: topicExam.language
+      language: topicExam.language,
+      currentModule: currrentModule,
+      currentTopic: topic
     });
   }
 

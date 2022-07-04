@@ -52,7 +52,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
           )}
           <span>
             <img src="/images/ExamInstructions/hourglass_empty.png" alt="cannot found" /> Exam
-            Duration<span>:</span> <span>{learnerExamData?.examData?.duration}</span>
+            Duration<span>:</span> <span>{learnerExamData?.examData?.duration} mins</span>
           </span>
           {isType.takeAnyTime && (
             <span>
@@ -104,7 +104,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
           {isType.takeAnyTime && (
             <span>
               <img src="/images/ExamInstructions/rotate_right.png" alt="cannot found" /> Buffer Time
-              <span>:</span> <span>{learnerExamData?.examData?.bufferTime}</span>
+              <span>:</span> <span>{learnerExamData?.examData?.bufferTime} mins</span>
             </span>
           )}
 
@@ -138,7 +138,8 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             ? `${styles.instructions} ${styles.instructionsFs}`
             : `${styles.instructions}`
         }>
-        {learnerExamData?.examData?.instructions}
+        <div dangerouslySetInnerHTML={{ __html: learnerExamData?.examData?.instructions }}></div>
+        {/* {learnerExamData?.examData?.instructions} */}
         {!learnerExamData?.examData?.id && (
           <>
             <div className={`${styles.genInfo}`}>

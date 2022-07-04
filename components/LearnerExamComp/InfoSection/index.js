@@ -4,11 +4,10 @@ import { GET_QUESTION_OPTIONS_WITH_ANSWER, queryClient } from 'API/Queries';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { getPassingMarks } from '../Logic/exam.helper';
 import TimerDropdown from '../TimerDropdown';
 import styles from './infoSection.module.scss';
 
-const InfoSection = ({ data, setIsQuestion, setFilter }) => {
+const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
   const [loadOptions, { error: errorOptionsData }] = useLazyQuery(
     GET_QUESTION_OPTIONS_WITH_ANSWER,
     { client: queryClient }
@@ -35,59 +34,6 @@ const InfoSection = ({ data, setIsQuestion, setFilter }) => {
     let attempted = 0;
     for (let i = 0; i < data.length; i++) if (data[i].selectedOption) attempted++;
     return attempted + '/' + data.length;
-  };
-
-  const handleEndButton = async () => {
-    // const result = JSON.stringify(data);
-    // localStorage.setItem('exam/1', result);
-    const marks = 0;
-    const allQuestionIds = [];
-    const allOptions = [];
-    data?.forEach((obj) => allQuestionIds.push(obj?.question?.id));
-
-    let isError = false;
-    const optionsRes = await loadOptions({ variables: { question_id: allQuestionIds } }).catch(
-      (err) => {
-        console.log('Options Load Err', err);
-        isError = !!err;
-      }
-    );
-    if (isError) return;
-
-    if (optionsRes?.data?.getOptionsForQuestions) {
-      optionsRes?.data?.getOptionsForQuestions.forEach((obj) => {
-        obj?.options.forEach((option) => {
-          allOptions.push({ id: option.id, qmId: option.QmId, isCorrect: option.IsCorrect });
-        });
-      });
-    }
-
-    learnerExamData?.sectionData?.forEach((section) => {
-      section?.questions.forEach((id) => {
-        const ques = data?.filter((q) => q?.question?.id === id)[0];
-        const selectedOption = ques?.selectedOption
-          ? allOptions?.find((op) => op?.id === ques?.selectedOption)
-          : null;
-        const isCorrect = selectedOption?.isCorrect || false;
-
-        marks += isCorrect ? +ques?.question?.question_marks : 0;
-      });
-    });
-
-    const passingMarks = getPassingMarks(
-      learnerExamData?.examData?.passingCriteria,
-      learnerExamData?.examData?.totalMarks
-    );
-
-    setLearnerExamData({
-      ...learnerExamData,
-      resultData: {
-        examScore: marks,
-        isPassed: passingMarks <= marks
-      }
-    });
-
-    router.push('/exam-result');
   };
 
   return (
@@ -151,9 +97,7 @@ const InfoSection = ({ data, setIsQuestion, setFilter }) => {
       </div>
       <div className={`${styles.info_section_exam_info_button_container}`}>
         <button
-          onClick={() => {
-            setIsQuestion(true);
-          }}
+          onClick={() => setIsQuestion(true)}
           className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_question}`}>
           Question Paper
         </button>
