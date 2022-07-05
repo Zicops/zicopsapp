@@ -252,6 +252,8 @@ export default function Preview({ masterData }) {
       if (questionIndex < 0) continue;
 
       const q = randomRes?.data?.getQuestionBankQuestions[0];
+      if (!q) continue;
+
       const question = {
         id: q.id,
         description: q.Description,
