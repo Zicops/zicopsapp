@@ -1,5 +1,6 @@
 import { array, bool, func, oneOf, shape, string } from 'prop-types';
 import Popup from 'reactjs-popup';
+import ConfirmPopUp from '../ConfirmPopUp';
 import useHandlePopUp from './Logic/useHandlePopUp';
 import styles from './popUp.module.scss';
 
@@ -13,7 +14,7 @@ export default function PopUp({
   size = 'medium',
   children
 }) {
-  const { isOpen, closePopUp } = useHandlePopUp(popUpState);
+  const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState);
 
   // modify popup styles based on props
   const customStyles = { width: '800px' };
@@ -77,6 +78,16 @@ export default function PopUp({
             )}
           </div>
         </div>
+
+        {typeof confirmMsg === 'string' && (
+          <ConfirmPopUp
+            title={confirmMsg}
+            btnObj={{
+              handleClickLeft: () => setConfirmMsg(true),
+              handleClickRight: () => setConfirmMsg(false)
+            }}
+          />
+        )}
       </Popup>
     </>
   );
