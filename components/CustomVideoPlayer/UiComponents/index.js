@@ -1,4 +1,3 @@
-import SwitchButton from '@/components/common/FormComponents/SwitchButton';
 import Image from 'next/image';
 import { useContext, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -10,7 +9,9 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 import Button from '../Button';
 import styles from '../customVideoPlayer.module.scss';
 import useSaveData from '../Logic/useSaveData';
+import Notes from './Notes';
 import Quiz from './Quiz';
+import SubtitleBox from './SubtitleBox';
 
 export default function UiComponents({
   refs,
@@ -27,9 +28,11 @@ export default function UiComponents({
   const moduleData = useRecoilValue(ModuleAtom);
   const { fullCourse } = useContext(courseContext);
 
-  const [showSubtitles, setShowSubtitles] = subtitleState;
-
   const {
+    showBox,
+    setShowBox,
+    BOX,
+    switchBox,
     states,
     toggleStates,
     handleBookmarkChange,
@@ -61,19 +64,16 @@ export default function UiComponents({
     ? 'Preview Video'
     : `${displaySequence} ${currentTopic?.name || ''}`;
 
-  useEffect(() => {
-    setShowLanguageSubtitles(false);
-  }, [videoData.videoSrc]);
-
   // useEffect(() => {
-  //   if (isTopBarHidden) {
-  //     setShowBookmark(false);
-  //     setShowLanguageSubtitles(false);
-  //     setShowQuiz(false);
-  //   }
-  // }, [isTopBarHidden]);
+  //   setShowLanguageSubtitles(false);
+  // }, [videoData.videoSrc]);
 
-  const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
+  useEffect(() => {
+    // TODO: remove later
+    // return;
+
+    if (isTopBarHidden) setShowBox(null);
+  }, [isTopBarHidden]);
 
   return (
     <>
@@ -93,86 +93,23 @@ export default function UiComponents({
                     alt=""
                     height="30px"
                     width="28px"
-                    onClick={() => {
-                      toggleStates(setShowLanguageSubtitles, showLanguageSubtitles);
-                    }}
+                    onClick={() => switchBox(0)}
                   />
                 </Button>
 
                 {/* subtitle and language element */}
-                {showLanguageSubtitles && (
-                  <div className={`${styles.languageList}`}>
-                    {/* for topic content language  */}
-                    <div>
-                      <h4>Audio </h4>
-                      <section>
-                        {videoData?.topicContent &&
-                          videoData.topicContent.map((c, i) => (
-                            <button
-                              key={c.id}
-                              className={`${
-                                i === videoData.currentTopicContentIndex
-                                  ? styles.languageBtnActive
-                                  : ''
-                              }`}
-                              onClick={() => {
-                                setVideoData({
-                                  ...videoData,
-                                  currentTopicContentIndex: i,
-                                  videoSrc: videoData.topicContent[i].contentUrl
-                                });
-                              }}>
-                              {c.language}
-                            </button>
-                          ))}
-                      </section>
-                    </div>
-
-                    {/* for topic content subtitles */}
-                    <div>
-                      <h4>
-                        Subtitles
-                        <SwitchButton
-                          styles={{
-                            marginLeft: '5px'
-                          }}
-                          type="antSwitch"
-                          color="success"
-                          isChecked={showSubtitles}
-                          handleChange={() => setShowSubtitles(!showSubtitles)}
-                        />
-                      </h4>
-                      {topicContent &&
-                        topicContent[currentTopicContentIndex]?.subtitleUrl?.map((s, i) => (
-                          <button
-                            key={s.language}
-                            className={`${
-                              i === currentSubtitleIndex ? styles.languageBtnActive : ''
-                            }`}
-                            onClick={() => {
-                              setVideoData({
-                                ...videoData,
-                                currentSubtitleIndex: i
-                              });
-                            }}>
-                            {s.language}
-                          </button>
-                        ))}
-                    </div>
-
-                    {(videoData?.topicContent?.length ||
-                      topicContent[currentTopicContentIndex]?.subtitleUrl?.length) > 3 && (
-                      <div className={`${styles.scrollArrow}`}>
-                        <img src="/images/bigarrowleft.png" alt="" />
-                      </div>
-                    )}
-                  </div>
-                )}
+                {showBox === BOX[0] && <SubtitleBox subtitleState={subtitleState} />}
               </div>
 
               {/* something I dont know, update comment later */}
               <Button>
-                <Image src="/images/pot-plant-icon.png" alt="" height="30px" width="30px" />
+                <Image
+                  src="/images/pot-plant-icon.png"
+                  alt=""
+                  height="30px"
+                  width="30px"
+                  onClick={() => switchBox(1)}
+                />
               </Button>
 
               {/* something to do with discussion, update later */}
@@ -182,6 +119,7 @@ export default function UiComponents({
                   alt=""
                   height="30px"
                   width="30px"
+                  onClick={() => switchBox(2)}
                 />
               </Button>
             </div>
@@ -203,12 +141,12 @@ export default function UiComponents({
                   <div
                     className={`${styles.videoBookmark}`}
                     onClick={() => {
-                      toggleStates(setShowBookmark, showBookmark);
-                      updateIsPlayingTo(false);
+                      switchBox(3);
+                      if (playerState?.isPlaying) updateIsPlayingTo(false);
                     }}></div>
                 </Button>
 
-                {showBookmark && (
+                {showBox === BOX[3] && (
                   <div className={`${styles.bookmarksInput}`}>
                     <input
                       className={`${styles.bookmarksField}`}
@@ -230,19 +168,27 @@ export default function UiComponents({
               </div>
 
               {/* notes btn */}
-              <Button>
-                <Image src="/images/Notes Icon2.png" alt="" height="25px" width="25px" />
-              </Button>
+              <div className={`position-relative`}>
+                <Button>
+                  <Image
+                    src="/images/Notes Icon2.png"
+                    alt=""
+                    height="25px"
+                    width="25px"
+                    onClick={() => switchBox(4)}
+                  />
+                </Button>
+
+                {showBox === BOX[4] && <Notes />}
+              </div>
 
               {/* quiz btn */}
               <div className={`position-relative`}>
                 <Button>
-                  <div
-                    className={`${styles.videoQuiz}`}
-                    onClick={() => toggleStates(setShowQuizDropdown, showQuizDropdown)}></div>
+                  <div className={`${styles.videoQuiz}`} onClick={() => switchBox(5)}></div>
                 </Button>
 
-                {showQuizDropdown && (
+                {showBox === BOX[5] && (
                   <div className={`${styles.quizDropdown}`}>
                     <button
                       onClick={() => {

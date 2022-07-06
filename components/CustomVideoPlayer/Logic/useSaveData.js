@@ -9,8 +9,17 @@ export default function useSaveData(videoElement) {
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
 
+  const [showBox, setShowBox] = useState(null);
+  const BOX = ['subtitles', 'resources', 'discussion', 'bookmark', 'notes', 'quiz'];
+
   function toggleStates(setState, state) {
     setState(!state);
+  }
+
+  function switchBox(boxNumber) {
+    if (showBox === BOX[boxNumber]) return setShowBox(null);
+
+    setShowBox(BOX[boxNumber] || null);
   }
 
   const [bookmarkData, setBookmarkData] = useState({
@@ -108,6 +117,10 @@ export default function useSaveData(videoElement) {
     setShowQuiz
   };
   return {
+    showBox,
+    setShowBox,
+    switchBox,
+    BOX,
     states,
     toggleStates,
     handleBookmarkChange,

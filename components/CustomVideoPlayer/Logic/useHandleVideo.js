@@ -25,6 +25,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
   const tooltip = useRef(null);
 
   // hide control bar if no mouse movement for 2.5 sec
+
   const duration = 2500;
   let timeout;
   useEffect(() => {
@@ -33,8 +34,9 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     updateIsPlayingTo(true);
 
     function switchControls(value) {
-      setHideControls(0);
-      setHideTopBar(0);
+      // TODO: update the 0
+      setHideControls(value);
+      setHideTopBar(value);
     }
 
     addCallbackToEvent(videoContainer.current, [
@@ -44,7 +46,6 @@ export default function useVideoPlayer(videoElement, videoContainer) {
           if (videoData.type !== 'mp4') return;
           switchControls(0);
           clearTimeout(timeout);
-
           timeout = setTimeout(() => switchControls(1), duration);
         }
       },
@@ -53,6 +54,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
         callback: () => {
           if (videoData.type !== 'mp4') return;
           switchControls(0);
+          clearTimeout(timeout);
         }
       },
       {
@@ -60,6 +62,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
         callback: () => {
           if (videoData.type !== 'mp4') return;
           switchControls(0);
+          clearTimeout(timeout);
         }
       }
     ]);
@@ -221,7 +224,6 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     const topicId = videoData.allModuleTopic[videoData.currentTopicIndex + 1].id;
     const filteredTopicContent = filterTopicContent(topicContent, topicId);
     const isTopicContentPresent = filteredTopicContent.length > 0;
-    console.log(filteredTopicContent);
 
     updateVideoData({
       ...videoData,
