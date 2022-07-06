@@ -16,6 +16,7 @@ export default function CustomVideo({ set }) {
   const { isPreview, topicContent, currentTopicContentIndex } = videoData;
   const [showBingeButtons, setShowBingeButtons] = useState(false);
   const [showSkipIntroButtons, setShowSkipIntroButtons] = useState(false);
+  const [showSubtitles, setShowSubtitles] = useState(true);
 
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
@@ -127,6 +128,8 @@ export default function CustomVideo({ set }) {
         set={set}
         refs={{ videoElement, videoContainer }}
         playerState={playerState}
+        isTopBarHidden={hideTopBar}
+        subtitleState={[showSubtitles, setShowSubtitles]}
         moveVideoProgressBySeconds={moveVideoProgressBySeconds}
       />
       {/* </div> */}
@@ -144,6 +147,7 @@ export default function CustomVideo({ set }) {
           handleClick={togglePlay}
           handleKeyDown={handleKeyDownEvents}
           isControlBarVisible={hideControls}
+          isSubtitleShown={showSubtitles}
         />
 
         {/* skip intro button */}

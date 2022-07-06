@@ -1,3 +1,4 @@
+import SwitchButton from '@/components/common/FormComponents/SwitchButton';
 import Image from 'next/image';
 import { useContext, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -16,13 +17,17 @@ export default function UiComponents({
   updateIsPlayingTo,
   set,
   playerState,
+  isTopBarHidden,
   styleClass,
-  moveVideoProgressBySeconds
+  moveVideoProgressBySeconds,
+  subtitleState
 }) {
   const { videoElement, videoContainer } = refs;
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
   const { fullCourse } = useContext(courseContext);
+
+  const [showSubtitles, setShowSubtitles] = subtitleState;
 
   const {
     states,
@@ -60,6 +65,14 @@ export default function UiComponents({
     setShowLanguageSubtitles(false);
   }, [videoData.videoSrc]);
 
+  // useEffect(() => {
+  //   if (isTopBarHidden) {
+  //     setShowBookmark(false);
+  //     setShowLanguageSubtitles(false);
+  //     setShowQuiz(false);
+  //   }
+  // }, [isTopBarHidden]);
+
   const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
 
   return (
@@ -92,33 +105,50 @@ export default function UiComponents({
                     {/* for topic content language  */}
                     <div>
                       <h4>Audio </h4>
-                      {videoData?.topicContent &&
-                        videoData.topicContent.map((c, i) => (
-                          <button
-                            key={c.id}
-                            className={`${i === videoData.currentTopicContentIndex ? styles.languageBtnActive : ''
+                      <section>
+                        {videoData?.topicContent &&
+                          videoData.topicContent.map((c, i) => (
+                            <button
+                              key={c.id}
+                              className={`${
+                                i === videoData.currentTopicContentIndex
+                                  ? styles.languageBtnActive
+                                  : ''
                               }`}
-                            onClick={() => {
-                              setVideoData({
-                                ...videoData,
-                                currentTopicContentIndex: i,
-                                videoSrc: videoData.topicContent[i].contentUrl
-                              });
-                            }}>
-                            {c.language}
-                          </button>
-                        ))}
+                              onClick={() => {
+                                setVideoData({
+                                  ...videoData,
+                                  currentTopicContentIndex: i,
+                                  videoSrc: videoData.topicContent[i].contentUrl
+                                });
+                              }}>
+                              {c.language}
+                            </button>
+                          ))}
+                      </section>
                     </div>
 
                     {/* for topic content subtitles */}
                     <div>
-                      <h4>Subtitles</h4>
+                      <h4>
+                        Subtitles
+                        <SwitchButton
+                          styles={{
+                            marginLeft: '5px'
+                          }}
+                          type="antSwitch"
+                          color="success"
+                          isChecked={showSubtitles}
+                          handleChange={() => setShowSubtitles(!showSubtitles)}
+                        />
+                      </h4>
                       {topicContent &&
                         topicContent[currentTopicContentIndex]?.subtitleUrl?.map((s, i) => (
                           <button
                             key={s.language}
-                            className={`${i === currentSubtitleIndex ? styles.languageBtnActive : ''
-                              }`}
+                            className={`${
+                              i === currentSubtitleIndex ? styles.languageBtnActive : ''
+                            }`}
                             onClick={() => {
                               setVideoData({
                                 ...videoData,
@@ -149,7 +179,7 @@ export default function UiComponents({
               </Button>
             </div>
           )}
-          
+
           {/* video title */}
           <div className={`${styles.centerText}`}>
             <div className={`${styles.centerTextHeading}`}>{truncateToN(fullCourse?.name, 60)}</div>

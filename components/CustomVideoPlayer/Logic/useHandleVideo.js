@@ -33,8 +33,8 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     updateIsPlayingTo(true);
 
     function switchControls(value) {
-      setHideControls(value);
-      setHideTopBar(value);
+      setHideControls(0);
+      setHideTopBar(0);
     }
 
     addCallbackToEvent(videoContainer.current, [

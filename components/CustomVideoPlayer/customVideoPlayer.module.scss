@@ -107,56 +107,77 @@
 
       position: absolute;
       top: 50px;
-      left: 50%;
+      left: 0%;
 
-      transform: translateX(-50%);
-      background-color: $bgContent;
+      // transform: translateX(-50%);
+      background-color: transparent;
       border: 1px solid $white;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: $bgContent;
+
+        z-index: -1;
+
+        opacity: 0.5;
+      }
       // box-shadow: 0 0 50px 0 $white;
 
       color: $white;
-      width: 240px;
+      width: 250px;
       height: 140px;
-      padding: 3px;
+      padding: 3px 0px;
 
       overflow: hidden;
-	div {
+
+      div {
         flex: 1;
         opacity: 1;
-        overflow-y: auto;
-        overflow-x: hidden;
+        padding: 0px 5px;
 
         &:first-child {
           padding-right: 5px;
           border-right: 1px solid $primary;
         }
 
-        &::-webkit-scrollbar {
-          width: 5px;
-        }
-
         h4 {
           text-align: center;
         }
 
-        button {
-          background-color: transparent;
-          margin: 3px;
-          padding: 5px 10px;
-          width: 100px;
-          border: 1px solid $primary;
-          color: $primary;
-          cursor: pointer;
+        section {
+          overflow-y: auto;
+          overflow-x: hidden;
+          height: 80%;
+          width: 100%;
 
-          &:hover {
-            background-color: $primary;
+          &::-webkit-scrollbar {
+            width: 0px;
+          }
+
+          button {
+            background-color: transparent;
+            margin: 3px auto;
+            padding: 5px 10px;
+            width: 100%;
+            border: 1px solid $primary;
+            color: $primary;
+            cursor: pointer;
+
+            &:hover {
+              background-color: $primary;
+              color: $bgContent;
+            }
+          }
+
+          .languageBtnActive {
+            background-color: $white;
             color: $bgContent;
           }
-        }
-
-        .languageBtnActive {
-          background-color: $white;
-          color: $bgContent;
         }
       }
     }
