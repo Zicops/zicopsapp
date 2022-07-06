@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
 import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
 import styles from '../../learnerExam.module.scss';
+import { getIsExamAccessible } from '../../Logic/exam.helper';
 import { data } from '../Logic/examInstruction.helper';
 
 const InstructionPage = ({ setIsLearner, isFullScreen }) => {
@@ -16,15 +17,18 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
     takeAnyTime: true
   });
   const [terms, setTerms] = useState(false);
+  const [isExamAccessible, setIsExamAccessible] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (learnerExamData?.examData?.scheduleType === 'Take Anytime') {
       setIsType((prevValue) => ({ ...prevValue, takeAnyTime: !prevValue.takeAnyTime }));
     }
   }, []);
-  const router = useRouter();
 
-  console.log(learnerExamData, data);
+  useEffect(() => {
+    setIsExamAccessible(terms && getIsExamAccessible(learnerExamData));
+  }, [terms]);
 
   return (
     <div className={`${styles.examInstContainer}`}>
@@ -215,7 +219,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             onClick={() => {
               setIsLearner(1);
             }}
-            disabled={!terms}>
+            disabled={!isExamAccessible}>
             Start
           </button>
           <button onClick={() => router.back()}>Back</button>

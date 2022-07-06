@@ -2,9 +2,9 @@ import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 import { useLazyQuery } from '@apollo/client';
 import { GET_QUESTION_OPTIONS_WITH_ANSWER, queryClient } from 'API/Queries';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import TimerDropdown from '../TimerDropdown';
+import Timer from '../Timer';
 import styles from './infoSection.module.scss';
 
 const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
@@ -15,20 +15,7 @@ const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
   const router = useRouter();
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
 
-  const latestTime = () =>
-    new Date().toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      second: '2-digit'
-    });
-  const [currentTime, setCurrentTime] = useState(latestTime);
-
-  useEffect(() => {
-    setInterval(() => {
-      setCurrentTime(latestTime);
-    }, 1000);
-  }, []);
+  const [isShowTimeLeft, setIsShowTimeLeft] = useState(1);
 
   const attemptedQuestions = () => {
     let attempted = 0;
@@ -108,10 +95,7 @@ const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
         </button>
       </div>
       <div className={`${styles.info_section_watch}`}>
-        {/* <div className={`${styles.info_section_time}`}> */}
-        <TimerDropdown />
-        <span className={`${styles.info_section_watch_time}`}>{currentTime}</span>
-        {/* </div> */}
+        <Timer isShowTimeLeft={isShowTimeLeft} setIsShowTimeLeft={setIsShowTimeLeft} />
       </div>
     </div>
   );
