@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import RightDropDownMenu from './RightDropDownMenu';
 
 import HamburgerMenuIcon from '../../public/images/menu.png';
+import UserDisplay from './UserDisplay';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -103,15 +104,16 @@ export default function Nav() {
           </ul>
         </div>
 
-        <div className={styles.profile}>
+        {/* <div className={styles.profile}>
           <img className={styles.profilepic} src="/images/dp.png" />
           <div className={styles.profilename}>
             <div className={styles.name}>{truncateTo16('Abhishek Ghosh')}</div>
             <div className={styles.desg}>Zicops</div>
           </div>
-          {/* <img className={styles.dropdownicon} src="/images/arrow2.png" /> */}
+          <img className={styles.dropdownicon} src="/images/arrow2.png" />
           <RightDropDownMenu />
-        </div>
+        </div> */}
+        <UserDisplay />
       </div>
     </div>
   );

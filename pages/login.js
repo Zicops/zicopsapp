@@ -6,8 +6,6 @@ import LoginScreen from '../components/ZicopsLogin/LoginScreen';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const Login = () => {
-  const [page, setPage] = useState(2);
-
   return (
     <>
       <ThemeProvider
@@ -19,10 +17,7 @@ const Login = () => {
             mode: 'dark'
           }
         })}>
-        {page === 0 && <ChangePasswordScreen setPage={setPage} />}
-        {page === 1 && <SignToLearningSpace setPage={setPage} />}
-        {page === 2 && <LoginScreen setPage={setPage} />}
-        {page === 3 && <LoginComp />}
+        <LoginScreen />
       </ThemeProvider>
     </>
   );

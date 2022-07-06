@@ -17,6 +17,7 @@ const formatAuthUser = (user) => ({
 export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const router = useRouter();
   const authStateChanged = async (authState) => {
@@ -30,7 +31,6 @@ export default function useFirebaseAuth() {
     var formattedUser = formatAuthUser(authState);
 
     setAuthUser(formattedUser);
-
     setLoading(false);
   };
 
@@ -39,18 +39,25 @@ export default function useFirebaseAuth() {
     setLoading(false);
   };
 
-  const signIn = (email, password) => {
+  const signIn = async (email, password) => {
     console.log(email, password);
-    signInWithEmailAndPassword(auth, email, password)
+    await signInWithEmailAndPassword(auth, email, password)
       .then((authUser) => {
-        console.log(auth.currentUser);
+        // console.log(auth.currentUser);
       })
       .catch((error) => {
-        console.log(error.message);
+        console.log(error.code.slice(5).split('-').join(' '));
+        setErrorMsg(error.code.slice(5).split('-').join(' '));
       });
   };
 
-  // const signUp = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+  // const signUp = (email, password) => {
+  //   createUserWithEmailAndPassword(auth, email, password)
+  //     .then()
+  //     .catch((error) => {
+  //       console.log(error.message);
+  //     });
+  // };
 
   const logOut = () => signOut(auth).then(clear);
 
@@ -58,9 +65,14 @@ export default function useFirebaseAuth() {
     onAuthStateChanged(auth, authStateChanged);
   }, []);
 
+  useEffect(() => {
+    console.log(errorMsg);
+  }, [errorMsg]);
+
   return {
     authUser,
     loading,
+    errorMsg,
     signIn,
     logOut
   };
