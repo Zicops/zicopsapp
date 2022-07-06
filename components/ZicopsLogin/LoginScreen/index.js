@@ -29,8 +29,7 @@ const LoginScreen = ({ setPage }) => {
   const router = useRouter();
 
   const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
-  // contact.zicops@gmail.com
-  //Zicops@259
+
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
@@ -44,20 +43,21 @@ const LoginScreen = ({ setPage }) => {
     if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
 
     await signIn(email, password);
-    console.log(authUser);
-    console.log(errorMsg);
+
     // if (errorMsg) return;
 
     localStorage.setItem('keyToken', JSON.stringify(authUser?.token));
 
-    let isError = false;
-    const res = await userLogin().catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Login Error' });
-    });
-    console.log(res);
-    if (isError) return;
+    // let isError = false;
+    // const res = await userLogin().catch((err) => {
+    //   console.log(err);
+    //   isError = !!err;
+    //   return setToastMsg({ type: 'danger', message: 'Login Error' });
+    // });
+
+    // if (isError) return;
+    console.log(authUser);
+    return;
 
     // setUserData({ authUser });
     // router.push('/');
@@ -65,8 +65,9 @@ const LoginScreen = ({ setPage }) => {
 
   useEffect(() => {
     console.log(errorMsg);
+    console.log(authUser);
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
-  }, [errorMsg]);
+  }, [errorMsg, authUser]);
 
   //to check if our user is logged in or not
   useEffect(() => {
