@@ -103,6 +103,7 @@
 
     .languageList {
       display: flex;
+      flex-wrap: wrap;
       gap: 5px;
 
       position: absolute;
@@ -112,6 +113,14 @@
       // transform: translateX(-50%);
       background-color: transparent;
       border: 1px solid $white;
+
+      color: $white;
+      width: 250px;
+      height: 160px;
+      padding: 3px 0px;
+
+      overflow: hidden;
+      // box-shadow: 0 0 50px 0 $white;
 
       &::before {
         content: '';
@@ -126,14 +135,17 @@
 
         opacity: 0.5;
       }
-      // box-shadow: 0 0 50px 0 $white;
 
-      color: $white;
-      width: 250px;
-      height: 140px;
-      padding: 3px 0px;
+      .scrollArrow {
+        flex: 1;
+        flex-basis: 100%;
+        text-align: center;
 
-      overflow: hidden;
+        img {
+          height: 15px;
+          transform: rotate(-90deg);
+        }
+      }
 
       div {
         flex: 1;

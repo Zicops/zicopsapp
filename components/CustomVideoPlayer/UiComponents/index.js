@@ -159,6 +159,13 @@ export default function UiComponents({
                           </button>
                         ))}
                     </div>
+
+                    {(videoData?.topicContent?.length ||
+                      topicContent[currentTopicContentIndex]?.subtitleUrl?.length) > 3 && (
+                      <div className={`${styles.scrollArrow}`}>
+                        <img src="/images/bigarrowleft.png" alt="" />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
