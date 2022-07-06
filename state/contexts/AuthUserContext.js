@@ -1,8 +1,9 @@
-import { createContext, useContext, Context } from 'react';
+import { createContext, useContext } from 'react';
 import useFirebaseAuth from '@/helper/firebaseUtil/useFirebaseAuth';
 
 const authUserContext = createContext({
   authUser: null,
+  errorMsg: null,
   loading: true,
   signIn: async () => {},
   signUp: async () => {},
