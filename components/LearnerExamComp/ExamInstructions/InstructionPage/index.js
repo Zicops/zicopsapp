@@ -51,12 +51,12 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             <span>
               <img src="/images/ExamInstructions/schedule.png" alt="cannot found" /> Exam Start Time
               <span>:</span>{' '}
-              <span>{learnerExamData?.examData?.examStart?.toLocaleTimeString()}</span>
+              <span>{learnerExamData?.examData?.examStart?.toLocaleTimeString() || 'N/A'}</span>
             </span>
           )}
           <span>
             <img src="/images/ExamInstructions/hourglass_empty.png" alt="cannot found" /> Exam
-            Duration<span>:</span> <span>{learnerExamData?.examData?.duration} mins</span>
+            Duration<span>:</span> <span>{learnerExamData?.examData?.duration || '0'} mins</span>
           </span>
           {isType.takeAnyTime && (
             <span>
@@ -73,11 +73,12 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
         <div className={`${styles.rightAbout}`}>
           <span>
             <img src="/images/ExamInstructions/checklist_rtl.png" alt="cannot found" /> Total
-            questions<span>:</span> <span>{learnerExamData?.landingPageData?.totalQuestions}</span>
+            questions<span>:</span>{' '}
+            <span>{learnerExamData?.landingPageData?.totalQuestions || 0}</span>
           </span>
           <span>
             <img src="/images/ExamInstructions/percent.png" alt="cannot found" /> Passing criteria
-            <span>:</span> <span>{learnerExamData?.examData?.passingCriteria}</span>
+            <span>:</span> <span>{learnerExamData?.examData?.passingCriteria || 'N/A'}</span>
           </span>
           {isType.takeAnyTime && (
             <span>
@@ -93,7 +94,8 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
           {isType.takeAnyTime && (
             <span>
               <img src="/images/ExamInstructions/event.png" alt="cannot found" /> Exam Date
-              <span>:</span> <span>{learnerExamData?.examData?.examStart?.toDateString()}</span>
+              <span>:</span>{' '}
+              <span>{learnerExamData?.examData?.examStart?.toDateString() || 'N/A'}</span>
             </span>
           )}
           {isType.takeAnyTime && (
@@ -108,7 +110,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
           {isType.takeAnyTime && (
             <span>
               <img src="/images/ExamInstructions/rotate_right.png" alt="cannot found" /> Buffer Time
-              <span>:</span> <span>{learnerExamData?.examData?.bufferTime} mins</span>
+              <span>:</span> <span>{learnerExamData?.examData?.bufferTime || 0} mins</span>
             </span>
           )}
 
@@ -128,7 +130,8 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             <img src="/images/ExamInstructions/checklist.png" alt="cannot found" /> Attempts
             <span>:</span>{' '}
             <span>
-              {learnerExamData?.insPageData?.attempts}/{learnerExamData?.examData?.noAttempts}
+              {learnerExamData?.insPageData?.attempts || 0}/
+              {learnerExamData?.examData?.noAttempts || 0}
             </span>
           </span>
         </div>
