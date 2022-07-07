@@ -15,7 +15,7 @@ const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
   const router = useRouter();
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
 
-  const [isShowTimeLeft, setIsShowTimeLeft] = useState(1);
+  const [isShowTimeLeft, setIsShowTimeLeft] = useState(0);
 
   const attemptedQuestions = () => {
     let attempted = 0;
@@ -95,7 +95,11 @@ const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
         </button>
       </div>
       <div className={`${styles.info_section_watch}`}>
-        <Timer isShowTimeLeft={isShowTimeLeft} setIsShowTimeLeft={setIsShowTimeLeft} />
+        <Timer
+          isShowTimeLeft={isShowTimeLeft}
+          setIsShowTimeLeft={setIsShowTimeLeft}
+          submitPaper={handleEndButton}
+        />
       </div>
     </div>
   );

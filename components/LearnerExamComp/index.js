@@ -2,7 +2,7 @@ import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 import { useLazyQuery } from '@apollo/client';
 import { GET_QUESTION_OPTIONS_WITH_ANSWER, queryClient } from 'API/Queries';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import NewQuestionPaperPreview from '../examComps/NewQuestionPaperPreview';
 import AnswerAllOptions from './AnswerAllOptions';
