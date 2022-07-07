@@ -43,7 +43,10 @@ export default function useFirebaseAuth() {
     console.log(email, password);
     await signInWithEmailAndPassword(auth, email, password)
       .then((authUser) => {
-        // console.log(auth.currentUser);
+        auth.currentUser.getIdToken().then((token) => {
+          console.log(token);
+        });
+        console.log(authUser);
       })
       .catch((error) => {
         console.log(error.code.slice(5).split('-').join(' '));
@@ -64,10 +67,6 @@ export default function useFirebaseAuth() {
   useEffect(() => {
     onAuthStateChanged(auth, authStateChanged);
   }, []);
-
-  useEffect(() => {
-    console.log(errorMsg);
-  }, [errorMsg]);
 
   return {
     authUser,
