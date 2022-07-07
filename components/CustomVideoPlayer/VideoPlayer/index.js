@@ -9,7 +9,8 @@ export default function VideoPlayer({
   playerState,
   handleClick,
   handleKeyDown,
-  isControlBarVisible
+  isControlBarVisible,
+  isSubtitleShown
 }) {
   const videoData = useRecoilValue(VideoAtom);
 
@@ -17,6 +18,7 @@ export default function VideoPlayer({
 
   useEffect(() => {
     if (!videoElement?.current) return;
+    if (!isSubtitleShown) return;
 
     const track = videoElement?.current?.textTracks[0];
     const cues = track.cues;
@@ -54,7 +56,7 @@ export default function VideoPlayer({
     topicContent[currentTopicContentIndex] &&
     topicContent[currentTopicContentIndex]?.subtitleUrl &&
     topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex];
-  
+
   return (
     <>
       {!videoData.videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
@@ -71,16 +73,21 @@ export default function VideoPlayer({
             className={`${styles.videoElement}`}
             src={videoData.videoSrc}
             autoPlay={true}>
-            
-            <track
-              kind="subtitles"
-              label="English Subtitles"
-              srcLang="en"
-              default
-              hidden
-              src={isTrackSrcAvailable ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]?.url : ''}
-              // src={'/pineapple.vtt'}
-            />
+            {isSubtitleShown && (
+              <track
+                kind="subtitles"
+                label="English Subtitles"
+                srcLang="en"
+                default
+                hidden
+                src={
+                  isTrackSrcAvailable
+                    ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]?.url
+                    : ''
+                }
+                // src={'/pineapple.vtt'}
+              />
+            )}
             {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}
           </video>
           <span

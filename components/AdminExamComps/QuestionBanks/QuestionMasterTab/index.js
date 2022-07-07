@@ -24,7 +24,10 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
     const question = { ...editQuestionData };
 
     // load and set all options
-    const { data } = await loadOptions({ variables: { question_id: editQuestionData.id } });
+    const { data } = await loadOptions({
+      variables: { question_id: editQuestionData.id },
+      fetchPolicy: 'no-cache'
+    });
     if (errorOptionsData) return setToastMsg({ type: 'danger', message: 'options load error' });
 
     if (data?.getOptionsForQuestions[0]?.options) {

@@ -1,3 +1,4 @@
+import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -27,6 +28,7 @@ export default function QuestionBankTable({ isEdit = false }) {
   const [selectedQB, setSelectedQB] = useRecoilState(SelectedQuestionBankAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [refetchData, setRefetchData] = useRecoilState(RefetchDataAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   // state for storing table data
   const [questionBank, setQuestionBank] = useState([]);
@@ -61,8 +63,7 @@ export default function QuestionBankTable({ isEdit = false }) {
   }, []);
 
   useEffect(() => {
-    console.log(addPopUp);
-    if (addPopUp) setSelectedQB(getQuestionBankObject());
+    if (addPopUp && !isPopUpDataPresent) setSelectedQB(getQuestionBankObject());
   }, [addPopUp]);
 
   const columns = [

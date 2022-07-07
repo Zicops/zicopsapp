@@ -23,6 +23,24 @@ $bgFooter: #001111;
 // $bgHeader: #222529;
 $bgHeader: #0b0c0d;
 
-
 $headerHeight: 70px;
 $footerHeight: 100px;
+
+// mixins
+
+// to make background semi transparent
+@mixin transparentBackground($bgColor: $bgContent, $opacity: 0.5) {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: $bgColor;
+
+    z-index: -1;
+
+    opacity: $opacity;
+  }
+}

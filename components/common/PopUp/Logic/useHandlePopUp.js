@@ -5,6 +5,7 @@ import { IsDataPresentAtom } from './popUp.helper';
 export default function useHandlePopUp(popUpState = []) {
   const [popUpParentState = false, setPopUpParentState = function () {}] = popUpState;
   const [isOpen, setIsOpen] = useState(popUpParentState);
+  const [confirmMsg, setConfirmMsg] = useState(null);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   // make parent state and child state in sync
@@ -15,14 +16,12 @@ export default function useHandlePopUp(popUpState = []) {
     closePopUp();
   }, [popUpParentState]);
 
-  function closePopUp() {
-    if (!isPopUpDataPresent) {
-      setPopUpParentState(false);
-      setIsOpen(false);
-      return;
-    }
+  useEffect(() => {
+    if (typeof confirmMsg !== 'boolean') return;
 
-    const isConfirmed = confirm('Are you sure you want to close the pop up?');
+    const isConfirmed = confirmMsg;
+
+    setConfirmMsg(null);
     setIsOpen(!isConfirmed);
     setIsPopUpDataPresent(!isConfirmed);
     setPopUpParentState((prev) => {
@@ -36,7 +35,18 @@ export default function useHandlePopUp(popUpState = []) {
 
       return null;
     });
+  }, [confirmMsg]);
+
+  function closePopUp() {
+    setPopUpParentState(false);
+
+    if (!isPopUpDataPresent) {
+      setIsOpen(false);
+      return;
+    }
+
+    setConfirmMsg('Are you sure you want to close the pop up?');
   }
 
-  return { isOpen, closePopUp };
+  return { isOpen, closePopUp, confirmMsg, setConfirmMsg };
 }

@@ -117,7 +117,9 @@ export function getTopicExamObj(data = {}) {
     topicId: data.topicId,
     courseId: data.courseId,
     examId: data.examId,
-    language: data.language || ''
+    language: data.language || '',
+    currentModule: data.currentModule || {},
+    currentTopic: data.currentTopic || {}
   };
 }
 
