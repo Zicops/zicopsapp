@@ -1,18 +1,17 @@
-import DraggableDiv from '../DraggableDiv';
 import styles from '../customVideoPlayer.module.scss';
 
-export default function FolderBar() {
+export default function FolderBar({ onPlusClick, onMinusClick, onFolderClick }) {
   return (
     <div className={`${styles.folderBar}`}>
-      <section>
+      <section onClick={onPlusClick}>
         <img src="/images/plus_big.png" alt="" />
       </section>
 
-      <section>
+      <section onClick={onMinusClick}>
         <div></div>
       </section>
 
-      <section>
+      <section onClick={onFolderClick}>
         <img src="/images/svg/folder-primary.svg" alt="" />
       </section>
     </div>

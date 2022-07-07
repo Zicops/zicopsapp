@@ -4,8 +4,6 @@ import { userContext } from '../../../state/contexts/UserContext';
 export default function useSaveData(videoElement) {
   const { addBookmarkData, addNotes } = useContext(userContext);
 
-  const [showBookmark, setShowBookmark] = useState(false);
-  const [showLanguageSubtitles, setShowLanguageSubtitles] = useState(false);
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
 
@@ -33,10 +31,6 @@ export default function useSaveData(videoElement) {
     notes: ''
   });
 
-  useEffect(() => {
-    console.log(bookmarkData);
-  }, [bookmarkData]);
-
   function handleBookmarkChange(e) {
     console.log(e);
     setBookmarkData({
@@ -63,7 +57,7 @@ export default function useSaveData(videoElement) {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, w, h);
 
-    return canvas.toDataURL('image/png');
+    return canvas?.toDataURL('image/png');
   }
 
   function handleSaveBookmark(timestamp) {
@@ -107,10 +101,6 @@ export default function useSaveData(videoElement) {
   }
 
   const states = {
-    showBookmark,
-    setShowBookmark,
-    showLanguageSubtitles,
-    setShowLanguageSubtitles,
     showQuizDropdown,
     setShowQuizDropdown,
     showQuiz,

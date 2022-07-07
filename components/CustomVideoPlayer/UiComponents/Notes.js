@@ -4,7 +4,7 @@ import FolderBar from './FolderBar';
 
 export default function Notes() {
   return (
-    <div className={`${styles.notesContainer}`}>
+    <div className={`${styles.folderBarContainer}`}>
       <FolderBar />
 
       <div className={`${styles.notesCardsContainer}`}>

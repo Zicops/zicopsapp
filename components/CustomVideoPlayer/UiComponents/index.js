@@ -9,6 +9,7 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 import Button from '../Button';
 import styles from '../customVideoPlayer.module.scss';
 import useSaveData from '../Logic/useSaveData';
+import Bookmark from './Bookmark';
 import Notes from './Notes';
 import Quiz from './Quiz';
 import SubtitleBox from './SubtitleBox';
@@ -43,16 +44,7 @@ export default function UiComponents({
     handleSaveNotes
   } = useSaveData(videoElement);
 
-  const {
-    showBookmark,
-    setShowBookmark,
-    showLanguageSubtitles,
-    setShowLanguageSubtitles,
-    showQuizDropdown,
-    setShowQuizDropdown,
-    showQuiz,
-    setShowQuiz
-  } = states;
+  const { setShowQuizDropdown, showQuiz, setShowQuiz } = states;
   const playerClose = () => set(false);
 
   const activeModule = filterModule(moduleData, videoData.currentModuleId);
@@ -147,23 +139,13 @@ export default function UiComponents({
                 </Button>
 
                 {showBox === BOX[3] && (
-                  <div className={`${styles.bookmarksInput}`}>
-                    <input
-                      className={`${styles.bookmarksField}`}
-                      type="text"
-                      placeholder="add bookmark title"
-                      onChange={handleBookmarkChange}
-                      value={bookmarkData.title}
-                    />
-                    <button
-                      className={`${styles.bookmarksBtn}`}
-                      type="submit"
-                      onClick={() => {
-                        handleSaveBookmark(playerState.progress);
-                      }}>
-                      Save Bookmark
-                    </button>
-                  </div>
+                  <Bookmark
+                    handleChange={handleBookmarkChange}
+                    value={bookmarkData?.title}
+                    handleSave={() => handleSaveBookmark(playerState.progress)}
+                    updateIsPlayingTo={updateIsPlayingTo}
+                    playerState={playerState}
+                  />
                 )}
               </div>
 

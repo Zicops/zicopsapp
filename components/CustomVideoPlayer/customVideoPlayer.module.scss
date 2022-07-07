@@ -181,49 +181,11 @@
       }
     }
 
-    .bookmarksInput {
-      position: absolute;
-      right: 24%;
-      padding: 8px;
-      background-color: $darkOne;
-      // opacity: 0.75;
-      width: 200px;
-      box-shadow: 0 0 10px 0 $darkTwo;
-
-      .bookmarksField {
-        width: 100%;
-        padding: 10px;
-        border-radius: 0;
-        border-color: $bgHeader;
-        opacity: 1;
-
-        &:focus {
-          border-radius: 0;
-          outline: 0;
-          opacity: 1;
-        }
-      }
-
-      .bookmarksBtn {
-        background-color: $bgHeader;
-        color: $darkThree;
-        padding: 10px 5px;
-        border: 0;
-        border-radius: 0;
-        width: 100%;
-        cursor: pointer;
-        opacity: 1;
-
-        &:hover {
-          background-color: $bgHeader;
-          color: $white;
-        }
-      }
-    }
-
     .folderBar {
       display: flex;
       padding: 5px;
+      height: max-content;
+      position: relative;
 
       @include transparentBackground($bgContent);
 
@@ -250,18 +212,66 @@
       }
     }
 
-    .notesContainer {
+    .bookmarkContainer {
+      position: relative;
+
+      .bookmarksInput {
+        position: absolute;
+        top: 110%;
+        right: 50%;
+
+        padding: 8px;
+        background-color: $darkOne;
+        // opacity: 0.75;
+        width: 200px;
+        box-shadow: 0 0 10px 0 $darkTwo;
+
+        .bookmarksField {
+          width: 100%;
+          padding: 10px;
+          border-radius: 0;
+          border-color: $bgHeader;
+          opacity: 1;
+
+          &:focus {
+            border-radius: 0;
+            outline: 0;
+            opacity: 1;
+          }
+        }
+
+        .bookmarksBtn {
+          background-color: $bgHeader;
+          color: $darkThree;
+          padding: 10px 5px;
+          border: 0;
+          border-radius: 0;
+          width: 100%;
+          cursor: pointer;
+          opacity: 1;
+
+          &:hover {
+            background-color: $bgHeader;
+            color: $white;
+          }
+        }
+      }
+    }
+
+    .folderBarContainer {
       display: flex;
+      justify-content: center;
+      align-items: flex-start;
       flex-wrap: wrap;
-      overflow: hidden;
-      height: 200px;
 
       position: absolute;
       top: 50px;
       left: 50%;
 
       transform: translateX(-50%);
+    }
 
+    .notesContainer {
       .notesCardsContainer {
         // height: 100px;
         flex-basis: 100%;
