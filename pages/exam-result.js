@@ -86,8 +86,8 @@ export default function ExamResult() {
   const learnerExamData = useRecoilValue(LearnerExamAtom);
   const isShowResult = learnerExamData?.examData?.show_result || false;
 
-  let result = 2;
-  if (isShowResult) result = learnerExamData?.resultData?.isPassed ? 1 : 0;
+  let resultIndex = 2;
+  if (isShowResult) resultIndex = learnerExamData?.resultData?.isPassed ? 1 : 0;
 
   return (
     <>
@@ -111,7 +111,7 @@ export default function ExamResult() {
           height: '100vh',
           backgroundColor: 'var(--dark_one)'
         }}>
-        <Congratulations result={result} />
+        <Congratulations resultIndex={resultIndex} />
       </div>
     </>
   );

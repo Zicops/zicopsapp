@@ -3,8 +3,13 @@ import styles from './mcqCard.module.scss';
 import McqOption from './McqOption';
 import Image from 'next/image';
 import { Box } from '@mui/material';
+import { useRecoilValue } from 'recoil';
+import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 
 const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCurrent }) => {
+  const learnerExamData = useRecoilValue(LearnerExamAtom);
+  console.log(learnerExamData);
+
   const obj = {
     option: 'a',
     hint: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.'
@@ -75,8 +80,13 @@ const McqCard = ({ each, setIsQuestion, setOption, data, setData, current, setCu
             <McqOption index={index++} optionData={option} checked={each.selectedOption} />
           ))}
         </section>
-        <span className={`${styles.span_element}`}>Hint:</span>
-        <div className={`${styles.hint}`}>{obj.hint}</div>
+
+        {learnerExamData?.examData?.display_hints && (
+          <>
+            <span className={`${styles.span_element}`}>Hint:</span>
+            <div className={`${styles.hint}`}>{obj.hint}</div>
+          </>
+        )}
       </div>
     </>
   );

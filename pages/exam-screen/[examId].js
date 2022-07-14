@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
+  GET_EXAM_CONFIG,
   GET_EXAM_INSTRUCTION,
   GET_EXAM_META,
   GET_EXAM_SCHEDULE,
@@ -37,6 +38,10 @@ const ExamScreen = () => {
   const [loadSchedule, { error: loadScheduleError }] = useLazyQuery(GET_EXAM_SCHEDULE, {
     client: queryClient
   });
+  const [loadConfig, { error: loadConfigError }] = useLazyQuery(GET_EXAM_CONFIG, {
+    client: queryClient
+  });
+
   const [loadPaperSection, { error: loadSectionError }] = useLazyQuery(GET_QUESTION_PAPER_SECTION, {
     client: queryClient
   });
@@ -590,6 +595,23 @@ const ExamScreen = () => {
       };
     }
 
+    // load config
+    const confRes = await loadConfig({ variables: { exam_id: examId } }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Config load error' });
+    });
+    if (isError) return;
+    const confData = confRes?.data?.getExamConfiguration[0];
+    const confObj = {
+      configId: confData?.id || null,
+      shuffle: confData?.Shuffle || false,
+      display_hints: confData?.DisplayHints || false,
+      show_result: confData?.ShowResult || false,
+      show_answer: confData?.ShowAnswer || false,
+      is_config_active: confData?.IsActive || false
+    };
+
     const questionPaperId = masterObj?.qpId;
 
     // load section data and qb mappings
@@ -872,6 +894,7 @@ const ExamScreen = () => {
         ...masterObj,
         ...insObj,
         ...schObj,
+        ...confObj,
         totalMarks: totalMarks || '0'
       },
       landingPageData: {

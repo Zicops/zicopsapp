@@ -6,7 +6,7 @@ import CongratulationsScreen from './CongratulationsScreen';
 import CongratulationsScreenButton from '../common/CongratulationsScreenButton';
 import { useRecoilValue } from 'recoil';
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
-const Congratulations = ({ result }) => {
+const Congratulations = ({ resultIndex }) => {
   const learnerExamData = useRecoilValue(LearnerExamAtom);
 
   const failImage = '/images/fail.png';
@@ -17,7 +17,7 @@ const Congratulations = ({ result }) => {
     width: '',
     imgLink: ''
   };
-  switch (data[result].result) {
+  switch (data[resultIndex].result) {
     case 'PASS':
       style.imgLink = passImage;
       style.color = '#26BA4D';
@@ -41,10 +41,10 @@ const Congratulations = ({ result }) => {
         <CongratulationsHead
           user_name={'pallav'}
           exam_name={learnerExamData?.examData?.name || ''}
-          data={data[result]}
+          data={data[resultIndex]}
           style={style}
         />
-        <CongratulationsBody data={data[result]} style={style} />
+        <CongratulationsBody data={data[resultIndex]} style={style} />
       </CongratulationsScreen>
       <CongratulationsFooter>
         <CongratulationsScreenButton title={'Download Result'} />
