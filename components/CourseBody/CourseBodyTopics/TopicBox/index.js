@@ -17,6 +17,7 @@ import styles from '../../courseBody.module.scss';
 import useLoadExamData from '../../Logic/useLoadExamData';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
+import { displayMinToHMS } from '@/helper/utils.helper';
 
 let topicInstance = 0;
 
@@ -75,7 +76,8 @@ export default function TopicBox({
       (res) => res.getTopicExams[0]
     );
 
-    if (!topicExam) return setToastMsg({ type: 'danger', message: 'No Exam Added!' });
+    if (!topicExam)
+      return setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
 
     setExamData({
       id: topicExam.id,
@@ -122,13 +124,13 @@ export default function TopicBox({
   //check the type of content inside the topic
   switch (type) {
     case 'Lab':
-      topicImage = '/images/pdfIcon.png';
+      topicImage = '/images/PDF-icon.png';
       break;
     case 'Assessment':
       topicImage = '/images/media-container.png';
       break;
     case 'Content':
-      topicImage = '/images/topicImage.png';
+      topicImage = '/images/lightBrain-icon.png';
       break;
   }
 
@@ -318,7 +320,14 @@ export default function TopicBox({
                 </span>
                 <span>{data?.examData?.difficultyLevel}</span>
                 <span>Attempt: {data?.examData?.noAttempts}</span>
-                <span>Duration: {data?.examData?.duration}</span>
+                {!!data?.examData?.duration && (
+                  <span>
+                    Duration:{' '}
+                    {data?.examData?.duration > 60
+                      ? `${displayMinToHMS(data?.examData?.duration)} hrs`
+                      : `${data?.examData?.duration} mins`}
+                  </span>
+                )}
               </div>
             </div>
           )}
