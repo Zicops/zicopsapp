@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Select from 'react-select';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../../../API/Queries';
 import { changeHandler } from '../../../../../helper/common.helper';
@@ -13,8 +13,6 @@ import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
 import { customSelectStyles } from '../../../../common/FormComponents/Logic/formComponents.helper';
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
-import RTE from '../../../../common/FormComponents/RTE';
-import { useRouter } from 'next/router';
 import useHandleExamTab from '../Logic/useHandleExamTab';
 
 export default function ExamMaster() {
@@ -185,7 +183,24 @@ export default function ExamMaster() {
             }}
             value={examTabData?.passing_criteria}
             disabled={isPreview}
-            onChange={(e) => changeHandler(e, examTabData, setExamTabData)}
+            onChange={(e) => {
+              let value = +e.target.value;
+              const isMarks = examTabData?.passing_criteria_type === 'Marks';
+
+              if (isMarks && value > examTabData?.total_marks) {
+                value = examTabData?.total_marks;
+              }
+
+              if (!isMarks) {
+                if (value > 100) value = 100;
+                if (value < 0) value = 0;
+              }
+
+              setExamTabData({
+                ...examTabData,
+                passing_criteria: value
+              });
+            }}
           />
 
           {/* <div>
@@ -207,9 +222,24 @@ export default function ExamMaster() {
           </div> */}
           <select
             disabled={isPreview}
-            onChange={(e) =>
-              setExamTabData({ ...examTabData, passing_criteria_type: e.target.value })
-            }
+            onChange={(e) => {
+              let marks = examTabData?.passing_criteria;
+              const isMarks = e.target.value === 'Marks';
+
+              if (isMarks && marks > examTabData?.total_marks) {
+                marks = examTabData?.total_marks;
+              }
+              if (!isMarks) {
+                if (marks > 100) marks = 100;
+                if (marks < 0) marks = 0;
+              }
+
+              setExamTabData({
+                ...examTabData,
+                passing_criteria_type: e.target.value,
+                passing_criteria: marks
+              });
+            }}
             value={examTabData?.passing_criteria_type}>
             <option value="Marks">Marks</option>
             <option value="Percentage">Percentage</option>
