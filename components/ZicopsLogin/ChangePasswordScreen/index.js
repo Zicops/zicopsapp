@@ -55,7 +55,7 @@ const ChangePasswordScreen = ({ setPage }) => {
           }
         />
         <div className="login_body">
-          <LoginEmail placeholder={'Enter current password'} chngeHandle={handleCurrentPassword} />
+          {/* <LoginEmail placeholder={'Enter current password'} chngeHandle={handleCurrentPassword} /> */}
           <LoginEmail placeholder={'Enter new password'} />
           <LoginEmail placeholder={'Re-enter new password'} />
           <div className="change_buttons">

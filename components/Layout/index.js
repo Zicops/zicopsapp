@@ -13,7 +13,8 @@ export default function Layout({ children }) {
     '/exam-screen',
     '/exam-screen/[examId]',
     '/login',
-    '/signup'
+    '/reset-password',
+    '/account-setup'
   ];
 
   useEffect(() => {
