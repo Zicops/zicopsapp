@@ -45,10 +45,10 @@ export default function SubtitleBox({ subtitleState }) {
               styles={{
                 marginLeft: '5px'
               }}
-              type="antSwitch"
-              color="success"
+              type={null}
               isChecked={showSubtitles}
               handleChange={() => setShowSubtitles(!showSubtitles)}
+              size="small"
             />
           </h4>
 
