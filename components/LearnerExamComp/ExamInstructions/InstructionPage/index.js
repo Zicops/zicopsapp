@@ -51,7 +51,11 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             <span>
               <img src="/images/ExamInstructions/schedule.png" alt="cannot found" /> Exam Start Time
               <span>:</span>{' '}
-              <span>{learnerExamData?.examData?.examStart?.toLocaleTimeString() || 'N/A'}</span>
+              <span>
+                {learnerExamData?.examData?.examStart?.toLocaleTimeString
+                  ? learnerExamData?.examData?.examStart?.toLocaleTimeString()
+                  : 'N/A'}
+              </span>
             </span>
           )}
           <span>
@@ -63,7 +67,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
               <img src="/images/ExamInstructions/event.png" alt="cannot found" /> End date
               <span>:</span>
               <span>
-                {learnerExamData?.examData?.examEnd
+                {learnerExamData?.examData?.examEnd?.toDateString
                   ? learnerExamData?.examData?.examEnd?.toDateString()
                   : 'N/A'}
               </span>
@@ -85,7 +89,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
               <img src="/images/ExamInstructions/timer.png" alt="cannot found" /> Exam end time
               <span>:</span>
               <span>
-                {learnerExamData?.examData?.examEnd
+                {learnerExamData?.examData?.examEnd?.toLocaleTimeString
                   ? learnerExamData?.examData?.examEnd?.toLocaleTimeString()
                   : 'N/A'}
               </span>
@@ -95,7 +99,11 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             <span>
               <img src="/images/ExamInstructions/event.png" alt="cannot found" /> Exam Date
               <span>:</span>{' '}
-              <span>{learnerExamData?.examData?.examStart?.toDateString() || 'N/A'}</span>
+              <span>
+                {learnerExamData?.examData?.examStart?.toDateString
+                  ? learnerExamData?.examData?.examStart?.toDateString()
+                  : 'N/A'}
+              </span>
             </span>
           )}
           {isType.takeAnyTime && (
