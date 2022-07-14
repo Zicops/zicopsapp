@@ -15,6 +15,8 @@ import { getVideoObject, VideoAtom } from '../../../../state/atoms/video.atom';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import styles from '../../courseBody.module.scss';
 import useLoadExamData from '../../Logic/useLoadExamData';
+import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 
 let topicInstance = 0;
 
@@ -43,6 +45,7 @@ export default function TopicBox({
   const allModuleOptions = getModuleOptions();
 
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
+
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -59,8 +62,11 @@ export default function TopicBox({
     language: null
   });
 
-  let passingCriteria;
-  const data = useLoadExamData(examData?.examId);
+  const data = {};
+  let finalEndDate;
+  data.examData = useLoadExamData(examData?.examId);
+  if (data?.examData?.scheduleType === SCHEDULE_TYPE[0] && !data?.examData?.examEnd)
+    finalEndDate = new Date(getEndTime(data));
 
   useEffect(async () => {
     if (topic?.type !== 'Assessment') return;
@@ -101,8 +107,6 @@ export default function TopicBox({
       expertiseLevel: 'Beginner'
     }
   ];
-
-  //need to calculate end time with the help of buffertime.
 
   // calculate topic Index with generator function
   useEffect(() => {
@@ -283,16 +287,19 @@ export default function TopicBox({
           {type === 'Assessment' && (
             <div className={`${styles.topic_assesment}`}>
               <div className={`${styles.assesmentType}`}>
-                {data?.scheduleType === 'scheduled' ? (
+                {data?.examData?.scheduleType === SCHEDULE_TYPE[0] ? (
                   <div>
-                    <span>{topicAssData[1].date}</span>
+                    <span>{data?.examData?.examStart?.toDateString()}</span>
 
                     <span>
-                      {data?.examStart?.toLocaleTimeString()}-
-                      {data?.examEnd ? data?.examStart?.toLocaleTimeString() : ''}
+                      {data?.examData?.examStart?.toLocaleTimeString()}-
+                      {data?.examData?.examEnd
+                        ? data?.examData?.examEnd?.toLocaleTimeString()
+                        : finalEndDate.toLocaleTimeString()}
                     </span>
                     <span className={`${styles.scheduleType}`}>
-                      {data?.scheduleType.charAt(0).toUpperCase() + data?.scheduleType.slice(1)}
+                      {data?.examData?.scheduleType.charAt(0).toUpperCase() +
+                        data?.examData?.scheduleType.slice(1)}
                     </span>
                   </div>
                 ) : (
@@ -302,22 +309,22 @@ export default function TopicBox({
                 )}
               </div>
               <div className={`${styles.assesmentInfo}`}>
-                <span>Marks: {data?.totalMarks}</span>
+                <span>Marks: {data?.examData?.totalMarks}</span>
                 <span>
                   Passing Criteria:{' '}
-                  {data?.passingCriteria.split('-')[1] === 'Percentage'
-                    ? data?.passingCriteria.split('-')[0] + '%'
-                    : data?.passingCriteria.split('-')[0]}
+                  {data?.examData?.passingCriteria.split('-')[1] === 'Percentage'
+                    ? data?.examData?.passingCriteria.split('-')[0] + '%'
+                    : data?.examData?.passingCriteria.split('-')[0]}
                 </span>
-                <span>{data?.difficultyLevel}</span>
-                <span>Attempt: {data?.noAttempts}</span>
-                <span>Duration: {data?.duration}</span>
+                <span>{data?.examData?.difficultyLevel}</span>
+                <span>Attempt: {data?.examData?.noAttempts}</span>
+                <span>Duration: {data?.examData?.duration}</span>
               </div>
             </div>
           )}
           {type === 'Lab' && (
             <div className={`${styles.topic_player}`}>
-              <div className={`${styles.progress_bar}`}>
+              {/* <div className={`${styles.progress_bar}`}>
                 <img src="images/progressTriangle.png" alt="" />
               </div>
               <div className={`${styles.details}`}>
@@ -338,7 +345,7 @@ export default function TopicBox({
                     )}
                   </span>
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
         </div>
