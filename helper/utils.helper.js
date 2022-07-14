@@ -33,6 +33,18 @@ export function secondsToMinutes(seconds) {
   return { minute: min, second: sec };
 }
 
+export function secondsToHMS(secs) {
+  const hours = ('0' + Math.floor(secs / (60 * 60))).substr(-2) || '00';
+
+  const divisor_for_minutes = secs % (60 * 60);
+  const minutes = ('0' + Math.floor(divisor_for_minutes / 60)).substr(-2) || '00';
+
+  const divisor_for_seconds = divisor_for_minutes % 60;
+  const seconds = ('0' + Math.ceil(divisor_for_seconds)).substr(-2) || '00';
+
+  return `${hours}:${minutes}:${seconds}`;
+}
+
 export const TableResponsiveRows = [
   {
     breakpoint: 1200,
@@ -63,7 +75,7 @@ export function getPageSizeBasedOnScreen() {
 
 // difficulty string to number mapping
 export const DIFFICULTY = {
-  Beginner: [0, 1, 2, 3],
+  Beginner: [1, 2, 3],
   Competent: [4, 5, 6, 7],
   Proficient: [8, 9, 10]
 };

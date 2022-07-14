@@ -11,9 +11,9 @@ import {
 } from '../../../../API/Mutations';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import {
+  acceptedFileTypes,
   getQuestionBankQuestionObject,
-  getQuestionOptionsObject,
-  acceptedFileTypes
+  getQuestionOptionsObject
 } from './questionBank.helper';
 
 export default function useHandleQuestionBankQuestion(editData, closeQuestionMasterTab) {
@@ -51,7 +51,12 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     if (!editData) return;
 
     setQuestionData(editData.question);
-    setOptionData(editData.options);
+    const opts = Array(4).fill(getQuestionOptionsObject({ qmId: editData?.question?.id }));
+    opts?.forEach((op, i) => {
+      if (editData.options[i]) opts[i] = editData.options[i];
+    });
+
+    setOptionData(opts);
   }, [editData]);
 
   // set is uploading to null if error msg is showen
@@ -90,6 +95,11 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     if (!question.difficulty && !errorMsg) errorMsg = 'Add Question Difficulty';
     if (isOptionsCompleted < 2 && !errorMsg) errorMsg = 'Add at least 2 option';
     if (!isOneChecked && !errorMsg) errorMsg = 'Select at least 1 correct option';
+
+    if (editData?.options?.length > isOptionsCompleted) {
+      isOptionsCompleted = 0;
+      errorMsg = `${editData?.options?.length} options should be filled. Options cannot be deleted`;
+    }
 
     if (errorMsg) setToastMsg({ type: 'danger', message: errorMsg });
 
@@ -266,8 +276,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   async function updateQuestionAndOptions() {
     setIsUploading(true);
-    if (!validateInput())
-      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
+    if (!validateInput()) return;
 
     const question = questionData;
     const options = optionData;
@@ -302,9 +311,6 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
-      if (!option.id)
-        return setToastMsg({ type: 'danger', message: `Option (${i + 1}) id missing` });
-
       const sendOptionData = {
         id: option.id,
         description: option.description || '',
@@ -321,6 +327,18 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       if (option.file) {
         sendOptionData.file = option.file;
       }
+      if (!option.id) {
+        if (!option.description && !option.file) continue;
+
+        await addOption({ variables: sendOptionData }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+        });
+
+        continue;
+      }
+
       console.log(sendOptionData, option);
       // continue;
       await updateOption({ variables: sendOptionData }).catch((err) => {

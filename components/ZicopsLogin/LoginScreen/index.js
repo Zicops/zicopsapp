@@ -1,21 +1,34 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { isEmail } from '@/helper/common.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { userState } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
+import { userClient, USER_LOGIN } from 'API/UserMutations';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
-import LoginHeadOne from '../LoginHeadOne';
 import styles from '../LoginEmail/loginEmail.module.scss';
-import { isEmail } from '@/helper/common.helper';
+import LoginHeadOne from '../LoginHeadOne';
+import { useMutation } from '@apollo/client';
 
 const LoginScreen = ({ setPage }) => {
+  const [userLogin, { error: loginError }] = useMutation(USER_LOGIN, {
+    client: userClient
+  });
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const setUserData = useSetRecoilState(userState);
+
+  // const [error, setError] = useState(null);
 
   const router = useRouter();
 
-  const { signIn, authUser, loading, logOut } = useAuthUserContext();
+  const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -25,20 +38,36 @@ const LoginScreen = ({ setPage }) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     const checkEmail = isEmail(email);
-    if (checkEmail) {
-      signIn(email, password);
-      console.log(authUser);
-    } else {
-      console.log('error');
-    }
+    if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
+
+    await signIn(email, password);
+
+    // if (errorMsg) return;
+
+    localStorage.setItem('keyToken', JSON.stringify(authUser?.token));
+
+    // let isError = false;
+    // const res = await userLogin().catch((err) => {
+    //   console.log(err);
+    //   isError = !!err;
+    //   return setToastMsg({ type: 'danger', message: 'Login Error' });
+    // });
+
+    // if (isError) return;
+    console.log(authUser);
+    return;
+
+    // setUserData({ authUser });
+    // router.push('/');
   };
 
   useEffect(() => {
-    // signIn(email, password);
+    console.log(errorMsg);
     console.log(authUser);
-  }, []);
+    if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
+  }, [errorMsg, authUser]);
 
   //to check if our user is logged in or not
   useEffect(() => {

@@ -215,7 +215,7 @@ export function getLearnerExamObj() {
 
 export function getResultsObj(data = {}) {
   return {
-    examScore: 0,
+    examScore: null,
     isPassed: false
   };
 }
@@ -224,9 +224,9 @@ export function getLandingPageData(data = {}) {
   return {
     testSeries: data?.testSeries || '',
     testSequence: data?.testSequence || '',
-    isProctoring: data?.isProctoring || '',
+    isProctoring: data?.isProctoring || false,
     totalQuestions: data?.totalQuestions || '',
-    isNegativeMarking: data?.isNegativeMarking || '',
+    isNegativeMarking: data?.isNegativeMarking || false,
     expertiseLevel: data?.expertiseLevel || ''
   };
 }

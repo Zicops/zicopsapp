@@ -21,7 +21,7 @@ import { CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ExamInstruction from '../../components/LearnerExamComp/ExamInstructions';
 import styles from '../../components/LearnerExamComp/learnerExam.module.scss';
-import { toggleFullScreen } from '../../helper/utils.helper';
+import { DIFFICULTY, toggleFullScreen } from '../../helper/utils.helper';
 import { LearnerExamAtom } from '../../state/atoms/exams.atoms';
 
 const ExamScreen = () => {
@@ -58,7 +58,7 @@ const ExamScreen = () => {
   );
 
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const examData = [
     {
       id: 1,
@@ -653,9 +653,37 @@ const ExamScreen = () => {
       ];
     }
 
+    const alreadyAvailableQuestionsId = [];
     // loop to get fixed questions
     for (let i = 0; i < mappedQb.length; i++) {
       const mapping = mappedQb[i];
+
+      if (mapping?.retrieve_type === 'random') {
+        alreadyAvailableQuestionsId.push(...Array(mapping?.total_questions || 0).fill(mapping));
+        totalQuestions += mapping?.total_questions;
+        totalMarks += +mapping?.question_marks * +mapping?.total_questions || 0;
+
+        const sectionIndex = sectionData.findIndex((section) => section.id === mapping.sectionId);
+        if (sectionIndex < 0) continue;
+
+        if (!sectionData[sectionIndex]?.questions) sectionData[sectionIndex].questions = [];
+
+        const placeholderQues = Array(mapping?.total_questions || 0).fill(null);
+        placeholderQues?.forEach(() => {
+          quesData.push({
+            id: quesData?.length + 1,
+            question: null,
+            options: [],
+
+            isVisited: quesData?.length === 0,
+            isMarked: false,
+            selectedOption: null
+          });
+        });
+        sectionData[sectionIndex].questions.push(...placeholderQues);
+
+        continue;
+      }
 
       // get fixed question for each mapping
       const fixedRes = await loadFixedQuestions({
@@ -666,16 +694,12 @@ const ExamScreen = () => {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'fixed load error' });
       });
-      if (isError) return;
+      if (isError) continue;
 
       const fixedData = fixedRes?.data?.getSectionFixedQuestions[0];
       const allQuestionIds = fixedData?.QuestionId?.split(',') || [];
 
-      if (!allQuestionIds?.length) {
-        totalQuestions += mapping?.total_questions;
-        totalMarks += mapping?.question_marks * mapping?.total_questions || 0;
-        continue;
-      }
+      alreadyAvailableQuestionsId.push(...allQuestionIds);
 
       // load all bank questions which is mapped in every mapping
       const questionRes = await loadQBQuestions({
@@ -710,34 +734,32 @@ const ExamScreen = () => {
       if (!questions?.length) continue;
 
       // load all options for all questions
-      for (let j = 0; j < allQuestionIds.length; j++) {
-        for (let k = 0; k < questions.length; k++) {
-          const question = questions[k];
-          const allOptions = [];
-          const optionsRes = await loadOptions({
-            variables: { question_id: question.id },
-            fetchPolicy: 'no-cache'
-          }).catch((err) => {
-            console.log(err);
-            isError = !!err;
-            setToastMsg({ type: 'danger', message: 'Options load error' });
-          });
-          if (isError) continue;
+      for (let j = 0; j < questions.length; j++) {
+        const question = questions[j];
+        const allOptions = [];
+        const optionsRes = await loadOptions({
+          variables: { question_id: question.id },
+          fetchPolicy: 'no-cache'
+        }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          setToastMsg({ type: 'danger', message: 'Options load error' });
+        });
+        if (isError) continue;
 
-          if (optionsRes?.data?.getOptionsForQuestions[0]?.options) {
-            optionsRes?.data?.getOptionsForQuestions[0].options.map((option) => {
-              allOptions.push({
-                id: option.id,
-                qmId: option.QmId,
-                description: option.Description,
-                isCorrect: option.IsCorrect,
-                attachmentType: option.AttachmentType,
-                attachment: option.Attachment
-              });
+        if (optionsRes?.data?.getOptionsForQuestions[0]?.options) {
+          optionsRes?.data?.getOptionsForQuestions[0].options.map((option) => {
+            allOptions.push({
+              id: option.id,
+              qmId: option.QmId,
+              description: option.Description,
+              isCorrect: option.IsCorrect,
+              attachmentType: option.AttachmentType,
+              attachment: option.Attachment
             });
+          });
 
-            questions[k].options = allOptions;
-          }
+          questions[j].options = allOptions;
         }
       }
 
@@ -760,6 +782,83 @@ const ExamScreen = () => {
       });
       totalQuestions += questions?.length || 0;
       totalMarks += mapping?.question_marks * questions?.length || 0;
+    }
+
+    // random questions
+    for (let i = 0; i < alreadyAvailableQuestionsId.length; i++) {
+      const obj = alreadyAvailableQuestionsId[i];
+      if (typeof obj === 'string') continue;
+      console.log('mapping: ', obj, alreadyAvailableQuestionsId);
+
+      const difficulty = DIFFICULTY[obj?.difficulty_level] || [];
+      const randomRes = await loadQBQuestions({
+        variables: {
+          question_bank_id: obj?.qbId,
+          difficultyStart: difficulty[0] || 1,
+          difficultyEnd: difficulty[difficulty?.length - 1] || 1,
+          totalQuestions: obj?.total_questions,
+          excludedQuestionIds: alreadyAvailableQuestionsId.filter((obj) => typeof obj === 'string')
+        },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'random load error' });
+      });
+      if (isError) continue;
+
+      const q = randomRes?.data?.getQuestionBankQuestions[0];
+      if (!q) continue;
+      const question = {
+        id: q.id,
+        description: q.Description,
+        type: q.Type,
+        difficulty: q.Difficulty,
+        attachment: q.Attachment,
+        attachmentType: q.AttachmentType,
+        hint: q.Hint,
+        qbmId: q.QbmId,
+        question_marks: obj?.question_marks
+      };
+
+      const sectionIndex = sectionData.findIndex((section) => section.id === obj?.sectionId);
+      if (sectionIndex < 0) continue;
+
+      const questionIndex = sectionData[sectionIndex].questions?.findIndex(
+        (section) => section === null
+      );
+      if (questionIndex < 0) continue;
+
+      const quesIndex = quesData.findIndex((ques) => ques.question === null);
+      if (quesIndex < 0) continue;
+
+      alreadyAvailableQuestionsId[i] = q.id;
+      sectionData[sectionIndex].questions[questionIndex] = question.id;
+      quesData[quesIndex].question = question;
+
+      // load all options for all questions
+      const optionsRes = await loadOptions({
+        variables: { question_id: question.id },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        setToastMsg({ type: 'danger', message: 'Options load error' });
+      });
+      if (isError) continue;
+
+      if (optionsRes?.data?.getOptionsForQuestions[0]?.options) {
+        optionsRes?.data?.getOptionsForQuestions[0].options.map((option) => {
+          quesData[quesIndex].options.push({
+            id: option.id,
+            qmId: option.QmId,
+            description: option.Description,
+            isCorrect: option.IsCorrect,
+            attachmentType: option.AttachmentType,
+            attachment: option.Attachment
+          });
+        });
+      }
     }
 
     console.log(sectionData, quesData, mappedQb, totalQuestions, totalMarks);
@@ -805,23 +904,27 @@ const ExamScreen = () => {
     });
   }, []);
 
-  async function loadQuestionsAndOptions() {}
+  // loader screen till loading
+  if (loading) {
+    return (
+      <div className={styles.loadingExamScreen}>
+        <ThemeProvider
+          theme={createTheme({
+            palette: {
+              primary: {
+                main: '#6bcfcf'
+              }
+            }
+          })}>
+          <CircularProgress />
+        </ThemeProvider>
+      </div>
+    );
+  }
+
   return (
     <div ref={refFullscreen}>
-      {loading ? (
-        <div className={styles.loadingExamScreen}>
-          <ThemeProvider
-            theme={createTheme({
-              palette: {
-                primary: {
-                  main: '#6bcfcf'
-                }
-              }
-            })}>
-            <CircularProgress />
-          </ThemeProvider>
-        </div>
-      ) : isLearner ? (
+      {isLearner ? (
         <LearnerExamComponent
           data={questionData}
           setData={setQuestionData}

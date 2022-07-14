@@ -336,8 +336,22 @@ export const GET_QUESTION_BANK_NAME = gql`
 `;
 
 export const GET_QUESTION_BANK_QUESTIONS = gql`
-  query questionBankQuestions($question_bank_id: String) {
-    getQuestionBankQuestions(question_bank_id: $question_bank_id) {
+  query questionBankQuestions(
+    $question_bank_id: String
+    $difficultyStart: Int
+    $difficultyEnd: Int
+    $totalQuestions: Int
+    $excludedQuestionIds: [String]
+  ) {
+    getQuestionBankQuestions(
+      question_bank_id: $question_bank_id
+      filters: {
+        DifficultyStart: $difficultyStart
+        DifficultyEnd: $difficultyEnd
+        TotalQuestions: $totalQuestions
+        ExcludedQuestionIds: $excludedQuestionIds
+      }
+    ) {
       id
       Description
       Type

@@ -9,15 +9,20 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 import Button from '../Button';
 import styles from '../customVideoPlayer.module.scss';
 import useSaveData from '../Logic/useSaveData';
+import Bookmark from './Bookmark';
+import Notes from './Notes';
 import Quiz from './Quiz';
+import SubtitleBox from './SubtitleBox';
 
 export default function UiComponents({
   refs,
   updateIsPlayingTo,
   set,
   playerState,
+  isTopBarHidden,
   styleClass,
-  moveVideoProgressBySeconds
+  moveVideoProgressBySeconds,
+  subtitleState
 }) {
   const { videoElement, videoContainer } = refs;
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
@@ -25,6 +30,10 @@ export default function UiComponents({
   const { fullCourse } = useContext(courseContext);
 
   const {
+    showBox,
+    setShowBox,
+    BOX,
+    switchBox,
     states,
     toggleStates,
     handleBookmarkChange,
@@ -35,16 +44,7 @@ export default function UiComponents({
     handleSaveNotes
   } = useSaveData(videoElement);
 
-  const {
-    showBookmark,
-    setShowBookmark,
-    showLanguageSubtitles,
-    setShowLanguageSubtitles,
-    showQuizDropdown,
-    setShowQuizDropdown,
-    showQuiz,
-    setShowQuiz
-  } = states;
+  const { setShowQuizDropdown, showQuiz, setShowQuiz } = states;
   const playerClose = () => set(false);
 
   const activeModule = filterModule(moduleData, videoData.currentModuleId);
@@ -56,11 +56,16 @@ export default function UiComponents({
     ? 'Preview Video'
     : `${displaySequence} ${currentTopic?.name || ''}`;
 
-  useEffect(() => {
-    setShowLanguageSubtitles(false);
-  }, [videoData.videoSrc]);
+  // useEffect(() => {
+  //   setShowLanguageSubtitles(false);
+  // }, [videoData.videoSrc]);
 
-  const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
+  useEffect(() => {
+    // TODO: remove later
+    // return;
+
+    if (isTopBarHidden) setShowBox(null);
+  }, [isTopBarHidden]);
 
   return (
     <>
@@ -80,62 +85,23 @@ export default function UiComponents({
                     alt=""
                     height="30px"
                     width="28px"
-                    onClick={() => {
-                      toggleStates(setShowLanguageSubtitles, showLanguageSubtitles);
-                    }}
+                    onClick={() => switchBox(0)}
                   />
                 </Button>
 
                 {/* subtitle and language element */}
-                {showLanguageSubtitles && (
-                  <div className={`${styles.languageList}`}>
-                    {/* for topic content language  */}
-                    <div>
-                      <h4>Audio </h4>
-                      {videoData?.topicContent &&
-                        videoData.topicContent.map((c, i) => (
-                          <button
-                            key={c.id}
-                            className={`${i === videoData.currentTopicContentIndex ? styles.languageBtnActive : ''
-                              }`}
-                            onClick={() => {
-                              setVideoData({
-                                ...videoData,
-                                currentTopicContentIndex: i,
-                                videoSrc: videoData.topicContent[i].contentUrl
-                              });
-                            }}>
-                            {c.language}
-                          </button>
-                        ))}
-                    </div>
-
-                    {/* for topic content subtitles */}
-                    <div>
-                      <h4>Subtitles</h4>
-                      {topicContent &&
-                        topicContent[currentTopicContentIndex]?.subtitleUrl?.map((s, i) => (
-                          <button
-                            key={s.language}
-                            className={`${i === currentSubtitleIndex ? styles.languageBtnActive : ''
-                              }`}
-                            onClick={() => {
-                              setVideoData({
-                                ...videoData,
-                                currentSubtitleIndex: i
-                              });
-                            }}>
-                            {s.language}
-                          </button>
-                        ))}
-                    </div>
-                  </div>
-                )}
+                {showBox === BOX[0] && <SubtitleBox subtitleState={subtitleState} />}
               </div>
 
               {/* something I dont know, update comment later */}
               <Button>
-                <Image src="/images/pot-plant-icon.png" alt="" height="30px" width="30px" />
+                <Image
+                  src="/images/pot-plant-icon.png"
+                  alt=""
+                  height="30px"
+                  width="30px"
+                  onClick={() => switchBox(1)}
+                />
               </Button>
 
               {/* something to do with discussion, update later */}
@@ -145,11 +111,12 @@ export default function UiComponents({
                   alt=""
                   height="30px"
                   width="30px"
+                  onClick={() => switchBox(2)}
                 />
               </Button>
             </div>
           )}
-          
+
           {/* video title */}
           <div className={`${styles.centerText}`}>
             <div className={`${styles.centerTextHeading}`}>{truncateToN(fullCourse?.name, 60)}</div>
@@ -166,46 +133,44 @@ export default function UiComponents({
                   <div
                     className={`${styles.videoBookmark}`}
                     onClick={() => {
-                      toggleStates(setShowBookmark, showBookmark);
-                      updateIsPlayingTo(false);
+                      switchBox(3);
+                      if (playerState?.isPlaying) updateIsPlayingTo(false);
                     }}></div>
                 </Button>
 
-                {showBookmark && (
-                  <div className={`${styles.bookmarksInput}`}>
-                    <input
-                      className={`${styles.bookmarksField}`}
-                      type="text"
-                      placeholder="add bookmark title"
-                      onChange={handleBookmarkChange}
-                      value={bookmarkData.title}
-                    />
-                    <button
-                      className={`${styles.bookmarksBtn}`}
-                      type="submit"
-                      onClick={() => {
-                        handleSaveBookmark(playerState.progress);
-                      }}>
-                      Save Bookmark
-                    </button>
-                  </div>
+                {showBox === BOX[3] && (
+                  <Bookmark
+                    handleChange={handleBookmarkChange}
+                    value={bookmarkData?.title}
+                    handleSave={() => handleSaveBookmark(playerState.progress)}
+                    updateIsPlayingTo={updateIsPlayingTo}
+                    playerState={playerState}
+                  />
                 )}
               </div>
 
               {/* notes btn */}
-              <Button>
-                <Image src="/images/Notes Icon2.png" alt="" height="25px" width="25px" />
-              </Button>
+              <div className={`position-relative`}>
+                <Button>
+                  <Image
+                    src="/images/Notes Icon2.png"
+                    alt=""
+                    height="25px"
+                    width="25px"
+                    onClick={() => switchBox(4)}
+                  />
+                </Button>
+
+                {showBox === BOX[4] && <Notes />}
+              </div>
 
               {/* quiz btn */}
               <div className={`position-relative`}>
                 <Button>
-                  <div
-                    className={`${styles.videoQuiz}`}
-                    onClick={() => toggleStates(setShowQuizDropdown, showQuizDropdown)}></div>
+                  <div className={`${styles.videoQuiz}`} onClick={() => switchBox(5)}></div>
                 </Button>
 
-                {showQuizDropdown && (
+                {showBox === BOX[5] && (
                   <div className={`${styles.quizDropdown}`}>
                     <button
                       onClick={() => {
