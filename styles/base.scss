@@ -26,6 +26,11 @@ $bgHeader: #0b0c0d;
 $headerHeight: 70px;
 $footerHeight: 100px;
 
+// function for generating transparent color from base colors
+@function getLowOpacityColor($colorInHex, $opacityInHex) {
+  @return rgba($colorInHex, $opacityInHex);
+}
+
 // mixins
 
 // to make background semi transparent
