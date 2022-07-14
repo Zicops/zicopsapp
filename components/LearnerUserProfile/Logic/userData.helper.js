@@ -64,3 +64,15 @@ export const profilePref = [
     info: 'Java '
   }
 ];
+export const subCategory = [
+  'Git',
+  'Python',
+  'Java',
+  'Docker',
+  'AngularJs',
+  'Git',
+  'Python',
+  'Java',
+  'Docker',
+  'AngularJs'
+];
