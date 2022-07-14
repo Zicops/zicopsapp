@@ -1,4 +1,5 @@
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
+import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
 import Accordion from '../../../common/Accordion';
 import McqCard from '../../McqCard';
@@ -19,9 +20,9 @@ const QuestionSection = ({
   return (
     <>
       <div className={`${styles.sectionContainer}`}>
-        {learnerExamData?.sectionData?.map((section) => {
+        {learnerExamData?.sectionData?.map((section, i) => {
           return (
-            <>
+            <Fragment key={i}>
               <Accordion title={section?.name}>
                 <div className={`${styles.questionTop}`}>
                   <p>{section?.description}</p>
@@ -37,7 +38,7 @@ const QuestionSection = ({
                   if (!each) return null;
 
                   return (
-                    <div className={`${styles.questionInnerContainer}`}>
+                    <div className={`${styles.questionInnerContainer}`} key={each?.id}>
                       <div className={`${styles.qstatusContainer}`}>
                         <span />
                         <QuestionStatus each={each} />
@@ -59,7 +60,7 @@ const QuestionSection = ({
                   );
                 })}
               </Accordion>
-            </>
+            </Fragment>
           );
         })}
         {/* 

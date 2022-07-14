@@ -1,7 +1,5 @@
-import { questionData } from '../Logic/questionData.helper';
 import QuestionButton from '../QuestionButton';
 import styles from './questionCountStyle.module.scss';
-import { Grid } from '@mui/material';
 
 const QuestionCountButtonSection = ({
   data,
@@ -12,8 +10,6 @@ const QuestionCountButtonSection = ({
   setOption,
   setIsQuestion
 }) => {
-  const height = data.length / 5;
-
   return (
     <>
       {/*<Grid container spacing={1} pt={0.5} pb={1.5} pr={2} pl={2.5} sx={{width: '102%',height: `calc(54px * 6)`, background: '#040404', my: 2}}>*/}
@@ -22,11 +18,12 @@ const QuestionCountButtonSection = ({
 
       <div className={`${styles.questionCountContainer}`}>
         {filterData === 'all' &&
-          data.map((each) => {
+          data.map((each, i) => {
             return (
               <QuestionButton
                 setIsQuestion={setIsQuestion}
                 each={each}
+                key={i}
                 data={data}
                 setData={setData}
                 current={current}
@@ -38,11 +35,12 @@ const QuestionCountButtonSection = ({
         {filterData === 'attempted' &&
           data
             .filter((obj) => obj.selectedOption !== null)
-            .map((each) => {
+            .map((each, i) => {
               return (
                 <QuestionButton
                   setIsQuestion={setIsQuestion}
                   each={each}
+                  key={i}
                   data={data}
                   setData={setData}
                   current={current}
@@ -54,12 +52,13 @@ const QuestionCountButtonSection = ({
         {filterData === 'marked' &&
           data
             .filter((obj) => obj.isMarked === true)
-            .map((each) => {
+            .map((each, i) => {
               return (
                 <QuestionButton
                   setIsQuestion={setIsQuestion}
                   each={each}
                   data={data}
+                  key={i}
                   setData={setData}
                   current={current}
                   setCurrent={setCurrent}
@@ -70,11 +69,12 @@ const QuestionCountButtonSection = ({
         {filterData === 'unattempted' &&
           data
             .filter((obj) => obj.isVisited === true && obj.selectedOption === null)
-            .map((each) => {
+            .map((each, i) => {
               return (
                 <QuestionButton
                   setIsQuestion={setIsQuestion}
                   each={each}
+                  key={i}
                   data={data}
                   setData={setData}
                   current={current}
@@ -86,11 +86,12 @@ const QuestionCountButtonSection = ({
         {filterData === 'unvisited' &&
           data
             .filter((obj) => obj.isVisited === false)
-            .map((each) => {
+            .map((each, i) => {
               return (
                 <QuestionButton
                   setIsQuestion={setIsQuestion}
                   filterData={filterData}
+                  key={i}
                   each={each}
                   data={data}
                   setData={setData}
