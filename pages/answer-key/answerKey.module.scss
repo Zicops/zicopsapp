@@ -1,0 +1,43 @@
+@import '../../styles/base.scss';
+
+.answerKey {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+  margin-top: 70px;
+  background-color: $darkOne;
+  color: $white;
+
+  .backBtn {
+    width: 100%;
+    padding-left: 50px;
+    padding-top: 10px;
+
+    button {
+      border: 0px;
+      background-color: inherit;
+    }
+  }
+
+  h2 {
+    margin: 10px auto;
+  }
+
+  .dropdownInput {
+    flex: none;
+  }
+
+  .tableContainer {
+    text-align: center;
+    margin: 20px auto;
+    min-width: 600px;
+
+    div {
+      padding: 10px 0;
+    }
+  }
+}
