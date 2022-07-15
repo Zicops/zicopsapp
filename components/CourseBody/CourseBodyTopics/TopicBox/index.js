@@ -286,7 +286,7 @@ export default function TopicBox({
                 <span>{data?.examData?.difficultyLevel}</span>
                 <span>Attempt: {data?.examData?.noAttempts}</span>
                 {!!data?.examData?.duration && (
-                  <span>Duration: {`${displayMinToHMS(data?.examData?.duration)}`}</span>
+                  <span>Duration: {`${data?.examData?.duration} mins`}</span>
                 )}
               </div>
             </div>

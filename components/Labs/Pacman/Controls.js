@@ -28,7 +28,7 @@ export default function Controls(props) {
             options: floorOptions,
             value: { value: floor, label: floor }
           }}
-          isFiftyFifty={true}
+          // isFiftyFifty={true}
           changeHandler={(e) => setFloor(e.value)}
         />
       </div>
