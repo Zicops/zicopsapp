@@ -12,7 +12,7 @@ const Congratulations = ({ resultIndex }) => {
 
   const router = useRouter();
 
-  const style = getResultStyles(data[result].result);
+  const style = getResultStyles(data[resultIndex].result);
 
   return (
     <div style={{ width: '70%' }}>

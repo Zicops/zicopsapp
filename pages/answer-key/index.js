@@ -1,13 +1,15 @@
 import AttemptsTable from '@/components/common/AttemptsTable';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import QuestionOptionView from '@/components/common/QuestionOptionView';
 import { getResultStyles } from '@/components/Congratulations/Logic/congratulationsHead.helper';
-import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
+import { LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import styles from './answerKey.module.scss';
 
 export default function AnswerKeyPage() {
   const learnerExamData = useRecoilValue(LearnerExamAtom);
+  const questionOptionData = useRecoilValue(QuestionOptionDataAtom);
   const router = useRouter();
 
   return (
@@ -47,6 +49,9 @@ export default function AnswerKeyPage() {
           style={getResultStyles(learnerExamData?.resultData?.isPassed ? 'PASS' : 'FAIL')}
         />
       </div>
+
+      {/* questions */}
+      <QuestionOptionView />
     </div>
   );
 }

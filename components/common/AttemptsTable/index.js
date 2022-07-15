@@ -14,9 +14,9 @@ export default function AttemptsTable({ attemptData = [], totalAttempts = 1, sty
           </thead>
 
           <tbody>
-            {attemptData?.map((data) => {
+            {attemptData?.map((data, i) => {
               return (
-                <tr>
+                <tr key={i}>
                   <td>{data?.attempt || 1 / totalAttempts || 1}</td>
                   <td>
                     {data?.examScore || 0} / {data?.totalMarks || 0}

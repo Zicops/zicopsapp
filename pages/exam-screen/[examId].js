@@ -23,7 +23,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ExamInstruction from '../../components/LearnerExamComp/ExamInstructions';
 import styles from '../../components/LearnerExamComp/learnerExam.module.scss';
 import { DIFFICULTY, toggleFullScreen } from '../../helper/utils.helper';
-import { LearnerExamAtom } from '../../state/atoms/exams.atoms';
+import { LearnerExamAtom, QuestionOptionDataAtom } from '../../state/atoms/exams.atoms';
 
 const ExamScreen = () => {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
@@ -65,7 +65,7 @@ const ExamScreen = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
-  const [questionData, setQuestionData] = useState([]);
+  const [questionData, setQuestionData] = useRecoilState(QuestionOptionDataAtom);
   const [current, setCurrent] = useState({});
   const [isFullScreen, setIsFullScreen] = useState(0);
   const [isLearner, setIsLearner] = useState(false);
@@ -463,8 +463,6 @@ const ExamScreen = () => {
         });
       }
     }
-
-    console.log(sectionData, quesData, mappedQb, totalQuestions, totalMarks);
 
     setQuestionData(quesData);
     setCurrent(quesData[0]);
