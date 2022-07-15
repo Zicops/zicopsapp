@@ -219,7 +219,11 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
 
       <div className={`${btnStyle}`}>
         <section>
-          <button className={`${styles.exam_landing_btn}`}>Take Sample Test</button>
+          <button
+            className={`${styles.exam_landing_btn}`}
+            onClick={() => router.push('/exam-screen')}>
+            Take Sample Test
+          </button>
           <button
             onClick={() => router.push(`/exam-screen/${topicExamData?.examId}`)}
             className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>

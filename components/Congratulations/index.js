@@ -1,54 +1,47 @@
-import CongratulationsBody from './CongratulationsBody';
+import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
+import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
+import AttemptsTable from '../common/AttemptsTable';
+import CongratulationsScreenButton from '../common/CongratulationsScreenButton';
 import CongratulationsFooter from './CongratulationsFooter';
 import CongratulationsHead from './CongratulationsHead';
-import { data } from './Logic/congratulationsHead.helper';
 import CongratulationsScreen from './CongratulationsScreen';
-import CongratulationsScreenButton from '../common/CongratulationsScreenButton';
-import { useRecoilValue } from 'recoil';
-import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
-const Congratulations = ({ result }) => {
+import { data, getResultStyles } from './Logic/congratulationsHead.helper';
+const Congratulations = ({ resultIndex }) => {
   const learnerExamData = useRecoilValue(LearnerExamAtom);
 
-  const failImage = '/images/fail.png';
-  const passImage = '/images/pass.png';
-  const completedImage = '/images/completed.png';
-  const style = {
-    color: '',
-    width: '',
-    imgLink: ''
-  };
-  switch (data[result].result) {
-    case 'PASS':
-      style.imgLink = passImage;
-      style.color = '#26BA4D';
-      style.width = '72%';
+  const router = useRouter();
 
-      break;
-    case 'FAIL':
-      style.imgLink = failImage;
-      style.color = '#F53D41';
-      style.width = '66%';
-      break;
-    case 'Completed':
-      style.imgLink = completedImage;
-      style.color = '#26BA4D';
-      style.width = '72%';
-      break;
-  }
+  const style = getResultStyles(data[resultIndex].result);
+
   return (
     <div style={{ width: '70%' }}>
       <CongratulationsScreen>
         <CongratulationsHead
           user_name={'pallav'}
           exam_name={learnerExamData?.examData?.name || ''}
-          data={data[result]}
+          data={data[resultIndex]}
           style={style}
         />
-        <CongratulationsBody data={data[result]} style={style} />
+        <AttemptsTable
+          totalAttempts={3}
+          attemptData={[
+            {
+              attempt: 1,
+              examScore: learnerExamData?.resultData?.examScore,
+              totalMarks: learnerExamData?.examData?.totalMarks,
+              result: data[resultIndex].result
+            }
+          ]}
+          style={style}
+        />
       </CongratulationsScreen>
       <CongratulationsFooter>
         <CongratulationsScreenButton title={'Download Result'} />
-        <CongratulationsScreenButton title={'View Attempt History'} />
+        <CongratulationsScreenButton
+          handleClick={() => router.push('/answer-key')}
+          title={'View Attempt History'}
+        />
 
         <CongratulationsScreenButton title={'Exit And Return To Main Screen'} />
       </CongratulationsFooter>

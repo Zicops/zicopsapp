@@ -1,12 +1,22 @@
 @import '../../../styles/base.scss';
 
-.questionCountContainer{
-    width: 90%;
-    height: 250px;
-    padding: 10px;
-    background: $black;
-    display: grid;
-    grid-template-columns:repeat(5,40px) ;
-    grid-template-rows: repeat(auto-fill,38px);
-    margin: 5px auto;
+.questionCountContainer {
+  width: 90%;
+  height: 200px;
+
+  padding: 10px;
+  margin: 5px auto;
+  background: $black;
+
+  display: grid;
+  grid-template-columns: repeat(5, 40px);
+  grid-template-rows: repeat(auto-fill, 35px);
+  row-gap: 5px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 5px !important;
+  }
 }
