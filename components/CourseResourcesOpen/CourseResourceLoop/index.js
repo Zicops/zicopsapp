@@ -2,15 +2,17 @@ import { useState } from 'react';
 import PopUp from '../../common/PopUp';
 import ViewDoc from '../../common/ViewDoc';
 import styles from '../courseResourcesOpen.module.scss';
+import { imageResourceType } from '../Logic/courseResourceLoop.helper';
 
 const CourseResourceLoop = ({ resource }) => {
   const [showDoc, setShowDoc] = useState(false);
+  let resourceImageLink = imageResourceType(resource?.type);
 
   return (
     <>
       <div className={`${styles.resource_loop}`}>
         <div className={`${styles.image_box}`}>
-          <img src="/images/pdfIcon.png" alt="" />
+          <img src={`${resourceImageLink}`} alt="" />
         </div>
         <div className={`${styles.data}`}>
           <div className={`${styles.data_title}`}>{resource.name}</div>

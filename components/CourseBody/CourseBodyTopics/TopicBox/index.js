@@ -17,6 +17,8 @@ import styles from '../../courseBody.module.scss';
 import useLoadExamData from '../../Logic/useLoadExamData';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
+import { displayMinToHMS } from '@/helper/utils.helper';
+import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
 
 let topicInstance = 0;
 
@@ -75,7 +77,8 @@ export default function TopicBox({
       (res) => res.getTopicExams[0]
     );
 
-    if (!topicExam) return setToastMsg({ type: 'danger', message: 'No Exam Added!' });
+    if (!topicExam)
+      return setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
 
     setExamData({
       id: topicExam.id,
@@ -85,28 +88,8 @@ export default function TopicBox({
       language: topicExam.language
     });
   }, []);
-  //dummy data for examTopic part
-  const topicAssData = [
-    {
-      type: 'Take Anytime',
-      duration: '3hrs',
-      attempts: '0/1',
-      marks: 100,
-      passingCriteria: '60%',
-      expertiseLevel: 'Competent'
-    },
-    {
-      type: 'Schedule',
-      duration: '3hrs',
-      attempts: '0/1',
-      date: '25th June, 2022',
-      startTime: '11:00AM',
-      endTime: '2:00PM',
-      marks: 100,
-      passingCriteria: '60%',
-      expertiseLevel: 'Beginner'
-    }
-  ];
+
+  let topicImageLink = imageTypeTopicBox(type);
 
   // calculate topic Index with generator function
   useEffect(() => {
@@ -116,21 +99,6 @@ export default function TopicBox({
     setTopicCountDisplay(getTopicsIndex().next()?.value);
     return () => getTopicsIndex(true).next();
   }, []);
-
-  // Set default topic image
-  let topicImage; // = '/images/media-container.png';
-  //check the type of content inside the topic
-  switch (type) {
-    case 'Lab':
-      topicImage = '/images/pdfIcon.png';
-      break;
-    case 'Assessment':
-      topicImage = '/images/media-container.png';
-      break;
-    case 'Content':
-      topicImage = '/images/topicImage.png';
-      break;
-  }
 
   // auto play video when next or previous button clciked (module switch)
   useEffect(() => {
@@ -224,7 +192,7 @@ export default function TopicBox({
 
         <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
           <div className={`${styles.topic_img}`}>
-            <img src={`${topicImage}`} alt="" />
+            <img src={`${topicImageLink}`} alt="" />
           </div>
 
           <div className={`${styles.topic_text}`}>
@@ -309,16 +277,17 @@ export default function TopicBox({
                 )}
               </div>
               <div className={`${styles.assesmentInfo}`}>
-                <span>Marks: {data?.examData?.totalMarks}</span>
                 <span>
-                  Passing Criteria:{' '}
-                  {data?.examData?.passingCriteria.split('-')[1] === 'Percentage'
-                    ? data?.examData?.passingCriteria.split('-')[0] + '%'
-                    : data?.examData?.passingCriteria.split('-')[0]}
+                  Marks: {!!data?.examData?.totalMarks ? `${data?.examData?.totalMarks}M` : ''}
+                </span>
+                <span>
+                  Passing Criteria: {passingCriteriaSymbol(data?.examData?.passingCriteria)}
                 </span>
                 <span>{data?.examData?.difficultyLevel}</span>
                 <span>Attempt: {data?.examData?.noAttempts}</span>
-                <span>Duration: {data?.examData?.duration}</span>
+                {!!data?.examData?.duration && (
+                  <span>Duration: {`${data?.examData?.duration} mins`}</span>
+                )}
               </div>
             </div>
           )}

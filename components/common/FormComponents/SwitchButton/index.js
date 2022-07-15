@@ -8,24 +8,24 @@ export default function SwitchButton({
   isChecked,
   handleChange,
   styles = {},
-  type = null,
   size = null,
-  color = null
+  type = 'success',
+  isDisabled = false
 }) {
-  const props = {};
-  if (size) props.size = size;
-  if (color) props.color = color;
+  const props = { disabled: !!isDisabled };
+
+  if (type) props.color = type;
 
   return (
     <>
       <FormControlLabel
         control={
           <>
-            {type === null && (
+            {size === null && (
               <Switch name={inputName} checked={isChecked} {...props} onChange={handleChange} />
             )}
 
-            {type === 'antSwitch' && (
+            {size === 'small' && (
               <AntSwitch {...props} name={inputName} checked={isChecked} onChange={handleChange} />
             )}
           </>

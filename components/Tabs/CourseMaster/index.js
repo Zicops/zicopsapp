@@ -75,7 +75,6 @@ export default function CourseMaster() {
   ];
   const allSelectedLanguages = [];
 
-
   fullCourse?.language?.map((val) => allSelectedLanguages.push({ value: val, label: val }));
   const languageDropdownOptions = {
     inputName: 'language',
