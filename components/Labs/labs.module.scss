@@ -78,7 +78,7 @@ $boardBorderWidth: 5px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 5px;
-    width: 60%;
+    // width: 60%;
     align-self: center;
 
     & > div:first-child {
