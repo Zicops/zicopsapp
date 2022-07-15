@@ -4,7 +4,6 @@ import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
 
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import Link from 'next/link';
 import { MenuList, Paper } from '@mui/material';
 
 import { useContext } from 'react';
@@ -47,18 +46,16 @@ export default function LeftMenuDropdown() {
       styles: {
         display: 'flex',
         flexDirection: 'column',
-        border: 'solid 1px #6bcfcf',
+        border: 'solid 1px var(--primary)',
         fontSize: '16px',
         alignItems: 'flex-start',
         backgroundColor: 'var(--header-bg)',
-        padding: '10px 10px'
+        padding: '8px'
       },
       comp: (
-        <Link href={!isAdmin ? '/' : '/admin'}>
-          <a onClick={!isAdmin ? gotoAdmin : gotoUser}>
-            {!isAdmin ? 'Switch to Admin' : 'Switch to Learner'}
-          </a>
-        </Link>
+        <div onClick={!isAdmin ? gotoAdmin : gotoUser}>
+          {!isAdmin ? 'Switch to Admin' : 'Switch to Learner'}
+        </div>
       )
     }
   ];
@@ -103,6 +100,7 @@ export default function LeftMenuDropdown() {
             aria-labelledby="composition-button"
             style={{ padding: 0 }}
             onMouseLeave={handleClose}
+            onMouseEnter={handleClick}
             onKeyDown={handleClick}>
             {menuItemList.map((item) => {
               return (

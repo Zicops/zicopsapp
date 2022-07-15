@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 
 import { userContext } from '../../../state/contexts/UserContext';
+import { useRouter } from 'next/router';
 
 export function useDropDownHandle() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -8,7 +9,8 @@ export function useDropDownHandle() {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
-  // console.log("isAdmin :"+isAdmin);
+
+  const router = useRouter();
 
   useEffect(() => {
     let url = window.location.href;
@@ -28,9 +30,11 @@ export function useDropDownHandle() {
 
   function gotoAdmin() {
     makeAdmin(1);
+    router.push('/admin');
   }
   function gotoUser() {
     makeAdmin(0);
+    router.push('/');
   }
 
   function handleClick(event) {
@@ -41,7 +45,6 @@ export function useDropDownHandle() {
     // prevent closing if the pointer is over menu list
     if (e?.relatedTarget?.classList) {
       const classList = [...e?.relatedTarget?.classList];
-      console.log(classList);
 
       if (classList.includes('MuiMenuItem-root')) return;
     }
