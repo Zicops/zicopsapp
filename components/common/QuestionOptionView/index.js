@@ -9,7 +9,12 @@ import Option from './Option';
 import styles from './questionOptionView.module.scss';
 
 // update this comp later
-export default function QuestionOptionView({ questionData, optionData, showType = 'difficulty' }) {
+export default function QuestionOptionView({
+  questionData,
+  optionData,
+  showType = 'difficulty',
+  style = {}
+}) {
   const [loadOptions, { error: errorOptionsData }] = useLazyQuery(GET_QUESTION_OPTIONS, {
     client: queryClient
   });
@@ -48,7 +53,7 @@ export default function QuestionOptionView({ questionData, optionData, showType 
   console.log(options);
 
   return (
-    <div className={`${styles.container}`}>
+    <div className={`${styles.container}`} style={style}>
       <div className={`${styles.questionContainer}`}>
         <section>
           <div>
