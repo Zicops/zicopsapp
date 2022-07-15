@@ -53,9 +53,6 @@ export default function TopicBox({
 
   const [topicCountDisplay, setTopicCountDisplay] = useState(0);
 
-  const { allModuleTopic, currentTopicIndex } = videoData;
-  const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
-
   const [examData, setExamData] = useState({
     id: null,
     topicId: null,
@@ -155,6 +152,10 @@ export default function TopicBox({
       currentTopic: topic
     });
   }
+
+  const { allModuleTopic, currentTopicIndex } = videoData;
+  let isTopicActive = topicExamData?.topicId === topic.id;
+  if (allModuleTopic && allModuleTopic[currentTopicIndex]?.id === topic.id) isTopicActive = true;
 
   return (
     <>
