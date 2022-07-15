@@ -46,6 +46,7 @@ export function secondsToHMS(secs) {
 }
 
 export function displayMinToHMS(mins) {
+  if (!mins) return '00 mins';
   if (mins < 60) return `${mins} mins`;
 
   const hours = ('0' + Math.floor(mins / 60)).substr(-2) || '00';
@@ -55,8 +56,6 @@ export function displayMinToHMS(mins) {
   const seconds = ('0' + Math.ceil(divisor_for_seconds)).substr(-2) || '00';
 
   return `${hours}:${minutes}:${seconds} hrs`;
-
-  if (!!mins) return '00 mins';
 }
 
 export const TableResponsiveRows = [
