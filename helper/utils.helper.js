@@ -46,14 +46,17 @@ export function secondsToHMS(secs) {
 }
 
 export function displayMinToHMS(mins) {
+  if (mins < 60) return `${mins} mins`;
+
   const hours = ('0' + Math.floor(mins / 60)).substr(-2) || '00';
   const divisor_for_minutes = mins % 60;
   const minutes = ('0' + Math.floor(divisor_for_minutes / 60)).substr(-2) || '00';
-
   const divisor_for_seconds = divisor_for_minutes % 60;
   const seconds = ('0' + Math.ceil(divisor_for_seconds)).substr(-2) || '00';
 
-  return `${hours}:${minutes}:${seconds}`;
+  return `${hours}:${minutes}:${seconds} hrs`;
+
+  if (!!mins) return '00 mins';
 }
 
 export const TableResponsiveRows = [
