@@ -1,9 +1,11 @@
 import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Logic/questionBank.helper';
+import { useEffect, useState } from 'react';
 import styles from './questionOptionView.module.scss';
 
-export default function Option({ option, count }) {
+export default function Option({ option, count, compareCorrect, selectedAnswerId }) {
   const optionCount = ['a', 'b', 'c', 'd'];
-  const isCorrect = option?.isCorrect;
+  const isCorrect = option?.isCorrect == null ? selectedAnswerId === option.id : option.isCorrect;
+  const [isCorrectSelected, setIsCorrectSelected] = useState(null);
 
   let fileSrc = null;
 
@@ -11,6 +13,18 @@ export default function Option({ option, count }) {
   if (option?.attachment) fileSrc = option?.attachment;
 
   if (!option?.description && !fileSrc) return null;
+
+  useEffect(() => {
+    if (!compareCorrect) return;
+    if (selectedAnswerId !== option.id) return;
+
+    setIsCorrectSelected(option.isCorrect);
+  }, []);
+
+  let imgSrc = null;
+  if (isCorrect && isCorrectSelected == null) imgSrc = '/images/svg/green-tick.svg';
+  if (isCorrectSelected === true) imgSrc = '/images/svg/green-tick.svg';
+  if (isCorrectSelected === false) imgSrc = '/images/svg/red-cross.svg';
 
   return (
     <>
@@ -29,9 +43,7 @@ export default function Option({ option, count }) {
           )}
         </div>
 
-        <div className={`${styles.correctImgContainer}`}>
-          {isCorrect && <img src="/images/svg/green-tick.svg" />}
-        </div>
+        <div className={`${styles.correctImgContainer}`}>{imgSrc && <img src={imgSrc} />}</div>
       </div>
     </>
   );

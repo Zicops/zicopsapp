@@ -1,20 +1,12 @@
+import QuestionOptionView from '@/components/common/QuestionOptionView';
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
 import Accordion from '../../../common/Accordion';
-import McqCard from '../../McqCard';
 import styles from '../questionPaperPreview.module.scss';
 import QuestionStatus from '../QuestionStatus';
 
-const QuestionSection = ({
-  quesSection,
-  setIsQuestion,
-  setOption,
-  data,
-  setData,
-  current,
-  setCurrent
-}) => {
+export default function QuestionSection({ setIsQuestion, setOption, data, setData, setCurrent, isPreview }) {
   const learnerExamData = useRecoilValue(LearnerExamAtom);
 
   return (
@@ -44,8 +36,27 @@ const QuestionSection = ({
                         <QuestionStatus each={each} />
                       </div>
                       <div className={`${styles.QuestionContainer}`}>
-                        <div className={`${styles.questionContainerInnerContainer}`}>
-                          <McqCard
+                        <div
+                          className={`${styles.questionContainerInnerContainer}`}
+                          onClick={() => {
+                            setCurrent(data.filter((e) => e.id === each.id)[0]);
+                            setData(
+                              data.map((obj) => {
+                                if (obj.id === each.id) return { ...obj, isVisited: true };
+                                return obj;
+                              })
+                            );
+                            setOption(data.filter((e) => e.id === each.id)[0]?.selectedOption);
+                            setIsQuestion(false);
+                          }}>
+                          <QuestionOptionView
+                            questionCount={each.id}
+                            questionData={each.question}
+                            optionData={each.options}
+                            showType="none"
+                            showHints={learnerExamData?.examData?.display_hints}
+                          />
+                          {/* <McqCard
                             each={each}
                             setIsQuestion={setIsQuestion}
                             setOption={setOption}
@@ -53,7 +64,7 @@ const QuestionSection = ({
                             setData={setData}
                             current={current}
                             setCurrent={setCurrent}
-                          />
+                          /> */}
                         </div>
                       </div>
                     </div>
@@ -63,39 +74,7 @@ const QuestionSection = ({
             </Fragment>
           );
         })}
-        {/* 
-        <Accordion title={'Section A'}>
-          <div className={`${styles.questionTop}`}>
-            <p>Lorem ipsum is just some dummy text for use of our own.</p>
-            <p>
-              Questions: <span>{data.length}</span>
-            </p>
-          </div>
-          {data.map((each) => (
-            <div className={`${styles.questionInnerContainer}`}>
-              <div className={`${styles.qstatusContainer}`}>
-                <span />
-                <QuestionStatus each={each} />
-              </div>
-              <div className={`${styles.QuestionContainer}`}>
-                <div className={`${styles.questionContainerInnerContainer}`}>
-                  <McqCard
-                    each={each}
-                    setIsQuestion={setIsQuestion}
-                    setOption={setOption}
-                    data={data}
-                    setData={setData}
-                    current={current}
-                    setCurrent={setCurrent}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </Accordion> */}
       </div>
     </>
   );
-};
-
-export default QuestionSection;
+}

@@ -8,11 +8,14 @@ import { useRecoilState } from 'recoil';
 import Option from './Option';
 import styles from './questionOptionView.module.scss';
 
-// update this comp later
 export default function QuestionOptionView({
   questionData,
   optionData,
   showType = 'difficulty',
+  questionCount = null,
+  showHints = true,
+  compareCorrect = false,
+  selectedAnswerId = '',
   style = {}
 }) {
   const [loadOptions, { error: errorOptionsData }] = useLazyQuery(GET_QUESTION_OPTIONS, {
@@ -21,6 +24,7 @@ export default function QuestionOptionView({
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [options, setOptions] = useState([]);
+  const [isMarksObtained, setIsMarksObtained] = useState(null);
 
   useEffect(() => {
     if (optionData?.length) return setOptions(optionData);
@@ -34,7 +38,11 @@ export default function QuestionOptionView({
       const optionsArr = [];
 
       data?.getOptionsForQuestions[0].options.forEach((option) => {
+        if (compareCorrect && option.id === selectedAnswerId && isMarksObtained == null)
+          setIsMarksObtained(option.IsCorrect);
+
         optionsArr.push({
+          id: option.id,
           description: option.Description,
           attachment: option.Attachment,
           attachmentType: option.AttachmentType,
@@ -50,27 +58,34 @@ export default function QuestionOptionView({
   if (questionData?.file) fileSrc = URL.createObjectURL(questionData?.file);
   if (questionData?.attachment) fileSrc = questionData?.attachment;
 
-  console.log(options);
-
   return (
     <div className={`${styles.container}`} style={style}>
       <div className={`${styles.questionContainer}`}>
         <section>
-          <div>
-            <span className={`${styles.highlight}`}>Q. </span>
-            <p>
-              {questionData?.description} caiewvbareiv breiovbaeoilv bioaebkvnreoavhniaeokvbi
-              orekbvioenvoeiavi reovbkeiorlk
-            </p>
-          </div>
+          <span className={`${styles.highlight}`}>Q{questionCount ? questionCount : null}. </span>
+          <p>{questionData?.description}</p>
         </section>
 
-        <section>
+        <section className={`${styles.questionData}`}>
           {showType === 'difficulty' && (
             <span>Difficulty Level: {questionData?.difficulty || 0}</span>
           )}
 
           {showType === 'marks' && <span>Marks: {questionData?.question_marks || 0}</span>}
+          {showType === 'marksObtained' && (
+            <div>
+              <p>
+                {isMarksObtained ? (
+                  <span className={`${styles.correct}`}>Correct</span>
+                ) : (
+                  <span className={`${styles.inCorrect}`}>Incorrect</span>
+                )}
+                <span className={`${styles.highlight}`}>Marks Obtained:</span>
+                {isMarksObtained ? questionData?.question_marks : 0}/
+                {questionData?.question_marks || 0}
+              </p>
+            </div>
+          )}
         </section>
       </div>
 
@@ -88,15 +103,22 @@ export default function QuestionOptionView({
         <span className={`${styles.highlight}`}>Options </span>
         <section>
           {options.map((option, i) => (
-            <Option option={option} count={i} />
+            <Option
+              option={option}
+              count={i}
+              selectedAnswerId={selectedAnswerId}
+              compareCorrect={compareCorrect}
+            />
           ))}
         </section>
       </div>
 
-      <div className={`${styles.hintContainer}`}>
-        <span className={`${styles.span_element}`}>Hint:</span>
-        <div className={`${styles.hint}`}>{questionData?.hint}</div>
-      </div>
+      {showHints && questionData?.hint && (
+        <div className={`${styles.hintContainer}`}>
+          <span className={`${styles.highlight}`}>Hint:</span>
+          <p>{questionData?.hint}</p>
+        </div>
+      )}
     </div>
   );
 }
