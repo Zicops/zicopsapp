@@ -132,7 +132,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
-      status: questionPaperData.status || STATUS[1],
+      status: STATUS[1],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
@@ -191,7 +191,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
-      status: questionPaperData.status || STATUS[1],
+      status: STATUS[1],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
