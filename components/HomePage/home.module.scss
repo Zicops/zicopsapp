@@ -1,6 +1,7 @@
 @import '../../styles/base.scss';
 
-$DELAY : 1000ms;
+$DURATION : 1000ms;
+$DELAY : $DURATION / 2;
 
 .container {
   font-family: 'Open Sans';
@@ -26,21 +27,21 @@ $DELAY : 1000ms;
 }
 
 .wheeldownZoomOut {
-  animation: wheeldownZoomOut 2s;
+  animation: wheeldownZoomOut $DURATION ease-in;
   z-index: 99;
 }
 .wheeldownZoomIn {
-  animation: wheeldownZoomIn 2s;
+  animation: wheeldownZoomIn $DURATION ease-out;
   z-index: 99;
   animation-delay: ($DELAY/2 - $DELAY*.2);
 }
 
 .wheelupZoomIn {
-  animation: wheelupZoomIn 2s;
+  animation: wheelupZoomIn $DURATION ease-in;
   z-index: 99;
 }
 .wheelupZoomOut {
-  animation: wheelupZoomOut 2s;
+  animation: wheelupZoomOut $DURATION ease-out;
   z-index: 99;
   animation-delay: ($DELAY/2 - $DELAY*.2);
 }
@@ -50,7 +51,6 @@ $DELAY : 1000ms;
     margin-top: 0px;
     transform: scale(1);
   }
-
   100% {
     margin-top: 60px;
     transform: scale(4);
