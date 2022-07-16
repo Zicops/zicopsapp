@@ -14,7 +14,7 @@ import {
   QuestionPaperTabDataAtom
 } from '../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
-import { StatusAtom } from '../../../../state/atoms/utils.atoms';
+import { STATUS, StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
 import { paperTabData, QuestionPaperTabAtom } from './Logic/questionPaperTab.helper';
 import useHandlePaperTab from './Logic/useHandlePaperTab';
@@ -192,7 +192,7 @@ export default function QuestionPaperTab() {
         tab={tab}
         setTab={setTab}
         footerObj={{
-          status: status,
+          status: status || STATUS[0],
           submitDisplay: questionPaperId ? 'Update' : 'Save',
           handleSubmit: questionPaperId ? updateQuestionPaper : addNewQuestionPaper,
           handleCancel: () => router.push('/admin/exams/my-question-papers')

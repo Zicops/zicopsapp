@@ -76,6 +76,7 @@ export default function CourseBodyAbout() {
             margin: 25px;
             padding: 50px;
             border-radius: 5px;
+            word-break: break-all;
           }
         `}
       </style>
