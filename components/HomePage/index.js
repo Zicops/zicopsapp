@@ -14,6 +14,7 @@ export default function HomePage() {
     isLastScrollUp: false
   });
 
+  const DURATION = 1000;
   const maxSlideCount = 3;
 
   function showSlidesOnScroll(e) {
@@ -31,9 +32,10 @@ export default function HomePage() {
         });
       }
     setSlideIndex(index);
+      
     setTimeout(() => {
       seIsAnimationOngoing(0);
-    }, 2000);
+    }, (index === maxSlideCount || index === 0) ? 1 : DURATION);
   }
 
   return (
@@ -53,7 +55,7 @@ export default function HomePage() {
         return (
           <CSSTransition
             in={activeSlide === i}
-            timeout={2000}
+            timeout={DURATION}
             classNames={{
               enterActive: nextSlide === i ? outClass : inClass,
               exitActive: nextSlide === i ? inClass : outClass
