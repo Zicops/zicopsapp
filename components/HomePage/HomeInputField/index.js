@@ -1,3 +1,4 @@
+import ScrollDownAnimation from '@/components/common/ScrollDownAnimation';
 import styles from '../home.module.scss';
 
 const HomeInputField = () => {
@@ -11,6 +12,7 @@ const HomeInputField = () => {
           <input type="text" placeholder="Search your Organization" />
           <button>GO</button>
         </form>
+        <ScrollDownAnimation />
       </div>
       <footer className={`${styles.HomeFooter}`}>
         <div className={`${styles.HomeFooterInner}`}>

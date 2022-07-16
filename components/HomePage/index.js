@@ -5,6 +5,7 @@ import HomeHeader from './HomeHeader';
 import HomeInputField from './HomeInputField';
 import SingleSlide from './SingleSlide';
 import { data } from './Logic/homePage.helper';
+import ScrollDownAnimation from '../common/ScrollDownAnimation';
 
 export default function HomePage() {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -72,6 +73,7 @@ export default function HomePage() {
       })}
 
       <HomeInputField />
+
     </div>
   );
 }
