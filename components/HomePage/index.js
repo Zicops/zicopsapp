@@ -9,6 +9,8 @@ import HomePages from './HomePages';
 import styles from './home.module.scss';
 import { data } from './Logic/homePage.helper';
 import Link from 'next/link';
+import HomeInputField from './HomeInputField';
+import HomeHeader from './HomeHeader';
 
 const HomePage = () => {
   const [scrollDown, setScrollDown] = useState(0);
@@ -27,74 +29,48 @@ const HomePage = () => {
       setScrollDown(scrollDown);
     }
   }
+
+  function showImage() {
+    alert('enter');
+  }
+  function hideImage() {
+    alert('exit');
+  }
   // useEffect(() => {
   //   setSlide(() => scrollDown);
   // }, [scrollDown]);
   return (
     <div className={`${styles.container}`}>
-      <header className={`${styles.HomeHeader}`}>
-        <div className={`${styles.ZicopsLogo}`}>
-          <img src="./images/zicops-header-logo.png" alt="not found" />
-        </div>
-          <Link href="/login">
-            <div className={`${styles.Login}`}>
-              <img src="./images/Union1.png" alt="not found" />
-              <a>Log In</a>
-            </div>
-          </Link>
-      </header>
+      <HomeHeader />
       <CSSTransition
         in={slide}
         timeout={2000}
         classNames={{
+          appear: styles.zoomOut,
+          appearActive: styles.zoomOut,
+          appearDone: styles.zoomIn,
+          // enter: 'my-enter',
+          // enterActive: 'my-active-enter',
+          // enterDone: 'my-done-enter',
+          // exit: 'my-exit',
+          // exitActive: 'my-active-exit',
+          // exitDone: 'my-done-exit',
           enterActive: styles.zoomIn,
           exitActive: styles.zoomOut
         }}
         // onEnter={showImage}
+        // onEntering = {showImage}
         // onEntered={removeOpacity}
+        // onExit
+        // onExiting
         // onExited={hideImage}
-        className={`${styles.animated}`}>
+        // className={`${styles.mynode}`}
+      >
         <div className={`${styles.scrollItems}`} onWheel={handleScrollAndZoom}>
-          {/* {data.map((item) => ( */}
-          {/* <section> */}
-          {/* <HomePages item={slide} /> */}
-          {/* </section> */}
-          {/* ))} */}
-          <div className={`${styles.HomeBody}`}>
-            <div className={`${styles.scrollContainer}`}>
-              <div className={`${styles.scrollItems}`}>
-                <div className={`${styles.Lcontainer}`}>
-                  <img src={data[scrollDown].icon} />
-                  <img src="./images/Zicops-logo-text.png" />
-                </div>
-                <div className={`${styles.text}`}>
-                  <p>{data[scrollDown].text}</p>
-                </div>
-              </div>
-            </div>
-            <div className={`${styles.btn}`}>
-              <button>See More</button>
-            </div>
-            <form className={`${styles.formContainer}`}>
-              <span>
-                <img src="./images/search2.png" alt="not found" />
-              </span>
-              <input type="text" placeholder="Search your Organization" />
-              <button>GO</button>
-            </form>
-          </div>
+          <HomePages item={data[scrollDown]} />
         </div>
       </CSSTransition>
-
-      <footer className={`${styles.HomeFooter}`}>
-        <div className={`${styles.HomeFooterInner}`}>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-        </div>
-      </footer>
+      <HomeInputField />
     </div>
   );
 };
