@@ -1,6 +1,6 @@
 import styles from '../home.module.scss';
 
-const HomePages = ({ item }) => {
+const SingleSlide = ({ item }) => {
   return (
     <div className={`${styles.HomeBody}`}>
       <div className={`${styles.scrollContainer}`}>
@@ -21,4 +21,4 @@ const HomePages = ({ item }) => {
   );
 };
 
-export default HomePages;
+export default SingleSlide;

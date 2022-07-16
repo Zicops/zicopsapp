@@ -1,78 +1,77 @@
-import { useState, useEffect } from 'react';
-import {
-  CSSTransition,
-  SwitchTransition,
-  Transition,
-  TransitionGroup
-} from 'react-transition-group';
-import HomePages from './HomePages';
+import { useEffect, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 import styles from './home.module.scss';
-import { data } from './Logic/homePage.helper';
-import Link from 'next/link';
-import HomeInputField from './HomeInputField';
 import HomeHeader from './HomeHeader';
+import HomeInputField from './HomeInputField';
+import SingleSlide from './SingleSlide';
+import { data } from './Logic/homePage.helper';
 
-const HomePage = () => {
-  const [scrollDown, setScrollDown] = useState(0);
-  const [slide, setSlide] = useState(false);
+export default function HomePage() {
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [isAnimationOngoing, seIsAnimationOngoing] = useState(0);
+  const [slideData, setSlideData] = useState({
+    activeSlide: 0,
+    isLastScrollUp: false
+  });
 
-  function handleScrollAndZoom(e) {
-    setSlide(!slide);
-    if (e.deltaY < 0 && scrollDown > 0) {
-      setScrollDown(--scrollDown);
-    } else {
-      setScrollDown(scrollDown);
-    }
-    if (e.deltaY > 0 && scrollDown < 3) {
-      setScrollDown(++scrollDown);
-    } else {
-      setScrollDown(scrollDown);
-    }
+  const DURATION = 1000;
+  const maxSlideCount = 3;
+
+  function showSlidesOnScroll(e) {
+    if (isAnimationOngoing) return;
+    seIsAnimationOngoing(1);
+      const isScrollUp = e.deltaY > 0;
+      let index = slideIndex + (isScrollUp ? 1 : -1);
+      if (index < 0) index = 0;
+      if (index > maxSlideCount) index = maxSlideCount;
+      if (index !== slideIndex) {
+        setSlideData({
+          ...slideData,
+          activeSlide: index,
+          isLastScrollUp: isScrollUp
+        });
+      }
+    setSlideIndex(index);
+      
+    setTimeout(() => {
+      seIsAnimationOngoing(0);
+    }, (index === maxSlideCount || index === 0) ? 1 : DURATION);
   }
 
-  function showImage() {
-    alert('enter');
-  }
-  function hideImage() {
-    alert('exit');
-  }
-  // useEffect(() => {
-  //   setSlide(() => scrollDown);
-  // }, [scrollDown]);
   return (
     <div className={`${styles.container}`}>
       <HomeHeader />
-      <CSSTransition
-        in={slide}
-        timeout={2000}
-        classNames={{
-          appear: styles.zoomOut,
-          appearActive: styles.zoomOut,
-          appearDone: styles.zoomIn,
-          // enter: 'my-enter',
-          // enterActive: 'my-active-enter',
-          // enterDone: 'my-done-enter',
-          // exit: 'my-exit',
-          // exitActive: 'my-active-exit',
-          // exitDone: 'my-done-exit',
-          enterActive: styles.zoomIn,
-          exitActive: styles.zoomOut
-        }}
-        // onEnter={showImage}
-        // onEntering = {showImage}
-        // onEntered={removeOpacity}
-        // onExit
-        // onExiting
-        // onExited={hideImage}
-        // className={`${styles.mynode}`}
-      >
-        <div className={`${styles.scrollItems}`} onWheel={handleScrollAndZoom}>
-          <HomePages item={data[scrollDown]} />
-        </div>
-      </CSSTransition>
+
+      {[...Array(maxSlideCount + 1).fill(null)].map((v, i) => {
+        const { activeSlide, isLastScrollUp } = slideData;
+        let count = isLastScrollUp ? 1 : -1;
+        let nextSlide = activeSlide + count;
+
+        if (nextSlide < 0 || nextSlide > maxSlideCount) nextSlide = null;
+
+        const outClass = isLastScrollUp ? styles.wheeldownZoomOut : styles.wheelupZoomIn;
+        const inClass = isLastScrollUp ? styles.wheeldownZoomIn : styles.wheelupZoomOut;
+
+        return (
+          <CSSTransition
+            in={activeSlide === i}
+            timeout={DURATION}
+            classNames={{
+              enterActive: nextSlide === i ? outClass : inClass,
+              exitActive: nextSlide === i ? inClass : outClass
+            }}>
+            <div
+              className={`${styles.homepageSlides} ${
+                activeSlide === i ? styles.showActiveSlide : styles.hideOtherSlides
+              }`}
+              onWheel={showSlidesOnScroll}>
+              <SingleSlide item={data[i]} />
+            </div>
+          </CSSTransition>
+        );
+      })}
+
       <HomeInputField />
     </div>
   );
-};
-
-export default HomePage;
+}

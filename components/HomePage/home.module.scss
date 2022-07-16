@@ -1,10 +1,15 @@
 @import '../../styles/base.scss';
 
+$DURATION : 1000ms;
+$DELAY : $DURATION / 2;
+
 .container {
   font-family: 'Open Sans';
   background-image: url('/images/starrySky2.png');
   background-position: center;
   background-size: cover;
+
+  position: relative;
 
   display: flex;
   overflow: hidden;
@@ -21,17 +26,38 @@
   }
 }
 
-.zoomIn {
-  animation: zoomIn 2s;
+.wheeldownZoomOut {
+  animation: wheeldownZoomOut $DURATION ease-in;
   z-index: 99;
 }
-
-.zoomOut {
-  animation: zoomOut 2s;
+.wheeldownZoomIn {
+  animation: wheeldownZoomIn $DURATION ease-out;
   z-index: 99;
+  animation-delay: ($DELAY/2 - $DELAY*.2);
 }
 
-@keyframes zoomIn {
+.wheelupZoomIn {
+  animation: wheelupZoomIn $DURATION ease-in;
+  z-index: 99;
+}
+.wheelupZoomOut {
+  animation: wheelupZoomOut $DURATION ease-out;
+  z-index: 99;
+  animation-delay: ($DELAY/2 - $DELAY*.2);
+}
+
+@keyframes wheeldownZoomOut {
+  0% {
+    margin-top: 0px;
+    transform: scale(1);
+  }
+  100% {
+    margin-top: 60px;
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+@keyframes wheeldownZoomIn {
   0% {
     margin-top: -70px;
     transform: scale(0);
@@ -43,18 +69,44 @@
   }
 }
 
-@keyframes zoomOut {
+@keyframes wheelupZoomIn {
   0% {
     margin-top: 0px;
     transform: scale(1);
   }
 
   100% {
-    margin-top: 60px;
-    transform: scale(4);
-    opacity: 0;
+    margin-top: -70px;
+    transform: scale(0);
   }
 }
+@keyframes wheelupZoomOut {
+  0% {
+    margin-top: 0px;
+    transform: scale(4);
+  }
+
+  100% {
+    margin-top: 0px;
+    transform: scale(1);
+    // opacity: 0;
+  }
+}
+
+.homepageSlides {
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  transition-delay: $DELAY/2;
+}
+.showActiveSlide {
+  transform: scale(1);
+}
+.hideOtherSlides {
+  transform: scale(0);
+}
+
 
 // .HomeContainer {
 //   font-family: 'Open Sans';
@@ -85,7 +137,6 @@
     cursor: pointer;
     margin-right: 33px;
 
-
     font-size: 14px;
     font-weight: 600;
 
@@ -114,10 +165,6 @@
 }
 
 //HomeBody
-.scrollItems {
-  height: 100%;
-}
-
 .HomeBody {
   //background-color: $darkTwo;
   display: flex;
@@ -141,6 +188,7 @@
     min-height: 220px;
 
     .scrollItems {
+      // transform: scale(0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -178,8 +226,6 @@
       width: 505px;
     }
   }
-
-
 
   .btn {
     padding: 20px 0;
