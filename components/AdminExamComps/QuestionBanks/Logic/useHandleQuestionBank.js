@@ -115,6 +115,17 @@ export default function useHandleQuestionBank() {
   }
 
   async function updateQuestionBank() {
+    // duplicate name check
+    if (
+      await isNameDuplicate(
+        GET_LATEST_QUESTION_BANK_NAMES,
+        questionBankData?.name,
+        'getLatestQuestionBank.questionBanks'
+      )
+    ) {
+      return setToastMsg({ type: 'danger', message: 'Bank with same name already exist' });
+    }
+
     const sendData = {
       id: questionBankData.id,
       name: questionBankData.name,

@@ -5,7 +5,7 @@ import '@reach/menu-button/styles.css';
 import Image from 'next/image';
 import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
-import { languages, preferences } from '../Logic/subMenu.helper.js';
+import { languages, preferences, userProfile } from '../Logic/subMenu.helper.js';
 import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
 import styles from '../nav.module.scss';
 
@@ -36,7 +36,7 @@ export default function RightDropDownMenu() {
       id: 2,
       comp: (
         <DropDownSubMenu
-          subData={languages}
+          subData={userProfile}
           menuIcon={LeftArrow}
           submenutext="My Profile"
           arrowpositon="left"

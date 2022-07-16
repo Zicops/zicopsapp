@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
 import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
 import styles from '../../learnerExam.module.scss';
+import { getIsExamAccessible } from '../../Logic/exam.helper';
 import { data } from '../Logic/examInstruction.helper';
 
 const InstructionPage = ({ setIsLearner, isFullScreen }) => {
@@ -16,15 +17,18 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
     takeAnyTime: true
   });
   const [terms, setTerms] = useState(false);
+  const [isExamAccessible, setIsExamAccessible] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (learnerExamData?.examData?.scheduleType === 'Take Anytime') {
       setIsType((prevValue) => ({ ...prevValue, takeAnyTime: !prevValue.takeAnyTime }));
     }
   }, []);
-  const router = useRouter();
 
-  console.log(learnerExamData, data);
+  useEffect(() => {
+    setIsExamAccessible(terms && getIsExamAccessible(learnerExamData));
+  }, [terms]);
 
   return (
     <div className={`${styles.examInstContainer}`}>
@@ -47,19 +51,23 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             <span>
               <img src="/images/ExamInstructions/schedule.png" alt="cannot found" /> Exam Start Time
               <span>:</span>{' '}
-              <span>{learnerExamData?.examData?.examStart?.toLocaleTimeString()}</span>
+              <span>
+                {learnerExamData?.examData?.examStart?.toLocaleTimeString
+                  ? learnerExamData?.examData?.examStart?.toLocaleTimeString()
+                  : 'N/A'}
+              </span>
             </span>
           )}
           <span>
             <img src="/images/ExamInstructions/hourglass_empty.png" alt="cannot found" /> Exam
-            Duration<span>:</span> <span>{learnerExamData?.examData?.duration}</span>
+            Duration<span>:</span> <span>{learnerExamData?.examData?.duration || '0'} mins</span>
           </span>
           {isType.takeAnyTime && (
             <span>
               <img src="/images/ExamInstructions/event.png" alt="cannot found" /> End date
               <span>:</span>
               <span>
-                {learnerExamData?.examData?.examEnd
+                {learnerExamData?.examData?.examEnd?.toDateString
                   ? learnerExamData?.examData?.examEnd?.toDateString()
                   : 'N/A'}
               </span>
@@ -69,18 +77,19 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
         <div className={`${styles.rightAbout}`}>
           <span>
             <img src="/images/ExamInstructions/checklist_rtl.png" alt="cannot found" /> Total
-            questions<span>:</span> <span>{learnerExamData?.landingPageData?.totalQuestions}</span>
+            questions<span>:</span>{' '}
+            <span>{learnerExamData?.landingPageData?.totalQuestions || 0}</span>
           </span>
           <span>
             <img src="/images/ExamInstructions/percent.png" alt="cannot found" /> Passing criteria
-            <span>:</span> <span>{learnerExamData?.examData?.passingCriteria}</span>
+            <span>:</span> <span>{learnerExamData?.examData?.passingCriteria || 'N/A'}</span>
           </span>
           {isType.takeAnyTime && (
             <span>
               <img src="/images/ExamInstructions/timer.png" alt="cannot found" /> Exam end time
               <span>:</span>
               <span>
-                {learnerExamData?.examData?.examEnd
+                {learnerExamData?.examData?.examEnd?.toLocaleTimeString
                   ? learnerExamData?.examData?.examEnd?.toLocaleTimeString()
                   : 'N/A'}
               </span>
@@ -89,7 +98,12 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
           {isType.takeAnyTime && (
             <span>
               <img src="/images/ExamInstructions/event.png" alt="cannot found" /> Exam Date
-              <span>:</span> <span>{learnerExamData?.examData?.examStart?.toDateString()}</span>
+              <span>:</span>{' '}
+              <span>
+                {learnerExamData?.examData?.examStart?.toDateString
+                  ? learnerExamData?.examData?.examStart?.toDateString()
+                  : 'N/A'}
+              </span>
             </span>
           )}
           {isType.takeAnyTime && (
@@ -104,7 +118,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
           {isType.takeAnyTime && (
             <span>
               <img src="/images/ExamInstructions/rotate_right.png" alt="cannot found" /> Buffer Time
-              <span>:</span> <span>{learnerExamData?.examData?.bufferTime}</span>
+              <span>:</span> <span>{learnerExamData?.examData?.bufferTime || 0} mins</span>
             </span>
           )}
 
@@ -124,7 +138,8 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             <img src="/images/ExamInstructions/checklist.png" alt="cannot found" /> Attempts
             <span>:</span>{' '}
             <span>
-              {learnerExamData?.insPageData?.attempts}/{learnerExamData?.examData?.noAttempts}
+              {learnerExamData?.insPageData?.attempts || 0}/
+              {learnerExamData?.examData?.noAttempts || 0}
             </span>
           </span>
         </div>
@@ -138,7 +153,8 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             ? `${styles.instructions} ${styles.instructionsFs}`
             : `${styles.instructions}`
         }>
-        {learnerExamData?.examData?.instructions}
+        <div dangerouslySetInnerHTML={{ __html: learnerExamData?.examData?.instructions }}></div>
+        {/* {learnerExamData?.examData?.instructions} */}
         {!learnerExamData?.examData?.id && (
           <>
             <div className={`${styles.genInfo}`}>
@@ -214,7 +230,7 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
             onClick={() => {
               setIsLearner(1);
             }}
-            disabled={!terms}>
+            disabled={!isExamAccessible}>
             Start
           </button>
           <button onClick={() => router.back()}>Back</button>

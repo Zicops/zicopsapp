@@ -1,5 +1,5 @@
+import QuestionOptionView from '@/components/common/QuestionOptionView';
 import Accordion from '../../../../common/Accordion';
-import McqCard from '../../../common/McqCard';
 import styles from './questionSection.module.scss';
 
 const QuestionSection = ({ data }) => {
@@ -15,7 +15,11 @@ const QuestionSection = ({ data }) => {
                   return (
                     <div>
                       <div className={`${styles.line}`}></div>
-                      <McqCard questionData={question} />
+                      <QuestionOptionView
+                        questionData={question}
+                        showType="marks"
+                        style={{ background: 'transparent' }}
+                      />
                     </div>
                   );
                 })}
@@ -36,7 +40,11 @@ const QuestionSection = ({ data }) => {
                   return (
                     <div>
                       <div className={`${styles.line}`}></div>
-                      <McqCard questionData={question} />
+                      <QuestionOptionView
+                        questionData={question}
+                        showType="marks"
+                        style={{ background: 'transparent' }}
+                      />
                     </div>
                   );
                 })}

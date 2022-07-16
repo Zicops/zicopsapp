@@ -1,0 +1,109 @@
+@import '../../../styles/base.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 250px;
+  width: calc(100% - 50px);
+
+  background-color: $black;
+
+  margin: 10px auto;
+  font-size: 15px;
+
+  .highlight {
+    color: $darkThree;
+    height: 100%;
+
+    font-weight: bolder;
+    margin-right: 10px;
+  }
+
+  .imgContainer {
+    display: flex;
+    margin: 10px;
+
+    color: $darkThree;
+    font-weight: bold;
+
+    img,
+    video,
+    audio {
+      height: 100px;
+      width: 200px;
+      object-fit: contain;
+    }
+  }
+
+  .questionContainer {
+    display: grid;
+    grid-template-columns: 70% auto;
+
+    section {
+      display: flex;
+
+      &.questionData {
+        justify-content: flex-end;
+
+        .correct,
+        .inCorrect {
+          margin: 10px;
+        }
+        .correct {
+          color: rgb(3, 248, 3);
+        }
+        .inCorrect {
+          color: rgb(248, 3, 3);
+        }
+      }
+
+      p {
+        color: $white;
+      }
+    }
+  }
+
+  .questionImg {
+    margin: 10px 50px;
+  }
+
+  .optionsContainer {
+    margin: 0px 25px;
+    flex: 1;
+
+    section {
+      display: grid;
+      grid-template-columns: repeat(2, 50%);
+      gap: 10px;
+      margin: 10px;
+
+      .option {
+        display: flex;
+        min-height: 50px;
+
+        .optionWithImg {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      .correctImgContainer {
+        height: 15px;
+        margin-left: 10px;
+
+        img {
+          height: 100%;
+        }
+      }
+    }
+  }
+
+  .hintContainer {
+    position: relative;
+    bottom: 0;
+
+    p {
+      margin: 10px 0;
+    }
+  }
+}

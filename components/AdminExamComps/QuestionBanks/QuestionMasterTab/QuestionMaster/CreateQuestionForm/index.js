@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import QuestionOptionView from '@/components/common/QuestionOptionView';
+import { useEffect, useState } from 'react';
 import { changeHandler } from '../../../../../../helper/common.helper';
 import Button from '../../../../../common/Button';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
@@ -8,7 +8,6 @@ import RangeSlider from '../../../../../common/FormComponents/RangeSlider';
 import InputWithCheckbox from '../../../../../common/InputWithCheckbox';
 import TextInputWithFile from '../../../../../common/InputWithCheckbox/TextInputWithFile';
 import Accordion from '../../../../../small/Accordion';
-import McqCard from '../../../../common/McqCard';
 import { acceptedFileTypes } from '../../../Logic/questionBank.helper';
 import styles from '../../questionMasterTab.module.scss';
 
@@ -58,11 +57,21 @@ export default function CreateQuestionForm({ data, isEdit }) {
               <Accordion
                 title={d.question.description}
                 content={
-                  <McqCard
-                    questionData={d.question}
-                    optionData={d.options}
-                    handleEdit={() => activateEdit(index)}
-                  />
+                  <div className={`${styles.questionPreview}`}>
+                    <QuestionOptionView
+                      questionData={d.question}
+                      optionData={d.options}
+                      style={{ backgroundColor: 'transparent' }}
+                    />
+
+                    <div style={{ textAlign: 'right', marginRight: '10px' }}>
+                      <Button
+                        text={'Edit'}
+                        isDisabled={!isEdit}
+                        clickHandler={() => activateEdit(index)}
+                      />
+                    </div>
+                  </div>
                 }
                 closeAccordion={shouldCloseAccordion}
                 onClose={() => {

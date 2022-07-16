@@ -52,6 +52,7 @@ const BigCardSlider = ({deviceType, title, type, data, slide}) => {
                     if (!data)
                         return (
                             <Skeleton
+                            key={index}
                             sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
                             variant="rectangular"
                             height={396}
