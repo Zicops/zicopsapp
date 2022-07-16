@@ -17,14 +17,17 @@ export default function HomePage() {
 
   const maxSlideCount = 3;
   let wait = false;
-  useEffect(() => {
-    if (wait) return;
+  let handler = null;
+  function callback(e) {
+    // if (wait) return;
+    const deltaY = e.deltaY;
+    console.log(deltaY, handler);
+    clearTimeout(handler);
 
-    wait = true;
-    const handler = setTimeout(() => {
+    handler = setTimeout(() => {
       wait = false;
       const isScrollUp = deltaY > 0;
-      const index = slideIndex + (isScrollUp ? 1 : -1);
+      let index = slideIndex + (isScrollUp ? 1 : -1);
 
       if (index < 0) index = 0;
       if (index > maxSlideCount) index = maxSlideCount;
@@ -41,9 +44,7 @@ export default function HomePage() {
 
       setSlideIndex(index);
     }, 100);
-
-    return () => clearTimeout(handler);
-  }, [deltaY]);
+  }
 
   useEffect(() => {
     console.log(slideIndex);
@@ -70,17 +71,20 @@ export default function HomePage() {
 
         if (nextSlide < 0 || nextSlide > maxSlideCount) nextSlide = null;
 
+        const outClass = isLastScrollUp ? styles.zoomOut : styles.scaleOut;
+        const inClass = isLastScrollUp ? styles.zoomIn : styles.scaleIn;
+
         return (
           <CSSTransition
             in={activeSlide === i}
             timeout={2000}
             classNames={{
-              enterActive: nextSlide === i ? styles.zoomOut : styles.zoomIn,
-              exitActive: nextSlide === i ? styles.zoomIn : styles.zoomOut
+              enterActive: nextSlide === i ? outClass : inClass,
+              exitActive: nextSlide === i ? inClass : outClass
             }}>
             <div
               className={`${styles.scrollItems}  ${activeSlide === i ? '' : styles.scaleDown}`}
-              onWheel={(e) => setDeltaY(e.deltaY)}>
+              onWheel={(e) => callback(e)}>
               <HomePages item={data[i]} />
             </div>
           </CSSTransition>

@@ -25,11 +25,23 @@
 
 .zoomIn {
   animation: zoomIn 2s;
+  animation-delay: 500ms;
   z-index: 99;
 }
 
 .zoomOut {
   animation: zoomOut 2s;
+  z-index: 99;
+}
+
+.scaleIn {
+  animation: scaleIn 2s;
+  z-index: 99;
+}
+
+.scaleOut {
+  animation: scaleOut 2s;
+  animation-delay: 2s;
   z-index: 99;
 }
 
@@ -61,6 +73,31 @@
   100% {
     margin-top: 60px;
     transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    margin-top: -70px;
+    transform: scale(1);
+  }
+
+  100% {
+    margin-top: 0px;
+    transform: scale(0);
+  }
+}
+
+@keyframes scaleOut {
+  0% {
+    margin-top: 0px;
+    transform: scale(4);
+  }
+
+  100% {
+    margin-top: 60px;
+    transform: scale(1);
     opacity: 0;
   }
 }
@@ -149,6 +186,7 @@
     min-height: 220px;
 
     .scrollItems {
+      transform: scale(0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
