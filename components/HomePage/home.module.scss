@@ -6,6 +6,8 @@
   background-position: center;
   background-size: cover;
 
+  position: relative;
+
   display: flex;
   overflow: hidden;
   outline: 1px dashed lightgray;
@@ -29,6 +31,13 @@
 .zoomOut {
   animation: zoomOut 2s;
   z-index: 99;
+}
+
+.scaleDown {
+  // opacity: 0.5;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
 }
 
 @keyframes zoomIn {
@@ -84,7 +93,6 @@
     height: 80%;
     cursor: pointer;
     margin-right: 33px;
-
 
     font-size: 14px;
     font-weight: 600;
@@ -178,8 +186,6 @@
       width: 505px;
     }
   }
-
-
 
   .btn {
     padding: 20px 0;
