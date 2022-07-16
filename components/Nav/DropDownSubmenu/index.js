@@ -58,7 +58,7 @@ export default function DropDownSubMenu({
                   // background: 'var(--dark_one)'
                 }}
                 onClick={() => {
-                  router.push(`${link}?${title?.toLowerCase()}`, link);
+                  router.push(`${link}?tabName=${title}`, link);
                 }}>
                 {title}
               </MenuItem>
