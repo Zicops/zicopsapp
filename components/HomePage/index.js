@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import styles from './home.module.scss';
 import HomeHeader from './HomeHeader';
 import HomeInputField from './HomeInputField';
 import SingleSlide from './SingleSlide';
 import { data } from './Logic/homePage.helper';
-import ScrollDownAnimation from '../common/ScrollDownAnimation';
 
 export default function HomePage() {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -40,7 +39,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className={`${styles.container}`}>
+    <div className={`${styles.container}`} onWheel={showSlidesOnScroll}>
       <HomeHeader />
 
       {[...Array(maxSlideCount + 1).fill(null)].map((v, i) => {
@@ -65,7 +64,8 @@ export default function HomePage() {
               className={`${styles.homepageSlides} ${
                 activeSlide === i ? styles.showActiveSlide : styles.hideOtherSlides
               }`}
-              onWheel={showSlidesOnScroll}>
+              // onWheel={showSlidesOnScroll}
+            >
               <SingleSlide item={data[i]} />
             </div>
           </CSSTransition>
@@ -73,7 +73,6 @@ export default function HomePage() {
       })}
 
       <HomeInputField />
-
     </div>
   );
 }
