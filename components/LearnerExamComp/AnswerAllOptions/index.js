@@ -107,6 +107,7 @@ const AnswerAllOptions = ({
               currentData={current}
               optionData={each}
               index={index++}
+              key={index}
               option={option}
               setOption={setOption}
             />
@@ -118,6 +119,7 @@ const AnswerAllOptions = ({
               optionData={each}
               option={option}
               index={index++}
+              key={index}
               setOption={setOption}
             />
           ))}

@@ -282,6 +282,11 @@ export function getExamData(data = {}) {
   };
 }
 
+export const QuestionOptionDataAtom = atom({
+  key: 'QuestionOptionData',
+  default: []
+});
+
 // !delete this later
 export const examRadioButton = atom({
   key: 'examRadioButton', // unique ID (with respect to other atoms/selectors)

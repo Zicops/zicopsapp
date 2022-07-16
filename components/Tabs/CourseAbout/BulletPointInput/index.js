@@ -80,6 +80,7 @@ export default function BulletPointInput({ placeholder, name, isBullet = true })
             const newTag = e?.target?.value;
             if (newTag?.length) addTag(newTag);
           }}
+          maxLength={isBullet ? null : 60}
           onChange={(e) => setInput(e.target.value)}
         />
       </div>

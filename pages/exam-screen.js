@@ -1,18 +1,25 @@
-import QuestionSection from '../components/LearnerExamComp';
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
-import LearnerExamComponent from '../components/LearnerExamComp';
-import ExamLandingPage from '../components/LearnerExamComp/ExamLandingPage';
-import ExamInstruction from '../components/LearnerExamComp/ExamInstructions';
+import { getLearnerExamObj, LearnerExamAtom } from '@/state/atoms/exams.atoms';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import LearnerExamComponent from '../components/LearnerExamComp';
+import ExamInstruction from '../components/LearnerExamComp/ExamInstructions';
 
 const ExamScreen = () => {
+  let [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
+
+  useEffect(() => {
+    setLearnerExamData(getLearnerExamObj());
+  }, []);
+
   const router = useRouter();
   const examData = [
     {
       id: 1,
       question: {
-        description: 'Wimbledon is the oldest tennis tournament in the world, and is widely considered the most prestigious. It has been always held at the All England Club in Wimbledon, London. In which year was the first championship held?',
+        description:
+          'Wimbledon is the oldest tennis tournament in the world, and is widely considered the most prestigious. It has been always held at the All England Club in Wimbledon, London. In which year was the first championship held?',
         image: '/images/bg-new.png'
       },
       options: [
@@ -40,7 +47,8 @@ const ExamScreen = () => {
     {
       id: 2,
       question: {
-        description: "He is a former professional ice hockey player who played with the Montreal Canadiens in the National Hockey League (NHL) from 1955 to 1975. He won 11 Stanley Cups, more than any other player in NHL history. He was given the nick name 'Pocket Rocket'. Who was he?"
+        description:
+          "He is a former professional ice hockey player who played with the Montreal Canadiens in the National Hockey League (NHL) from 1955 to 1975. He won 11 Stanley Cups, more than any other player in NHL history. He was given the nick name 'Pocket Rocket'. Who was he?"
       },
       options: [
         {
@@ -68,7 +76,8 @@ const ExamScreen = () => {
     {
       id: 3,
       question: {
-        description: "He became two-time inductee into the Basketball Hall of Fame ? being enshrined in 2002 for his individual career, and again in 2010 as a member of the 'Dream Team'. He was rated the greatest National Basketball Association (NBA) point guard of all time by ESPN in 2007. Who is this legendary basketball player who played for the Lakers?"
+        description:
+          "He became two-time inductee into the Basketball Hall of Fame ? being enshrined in 2002 for his individual career, and again in 2010 as a member of the 'Dream Team'. He was rated the greatest National Basketball Association (NBA) point guard of all time by ESPN in 2007. Who is this legendary basketball player who played for the Lakers?"
       },
       options: [
         {
@@ -96,7 +105,8 @@ const ExamScreen = () => {
     {
       id: 4,
       question: {
-        description: 'It is a traditional ball game played in Assam. In this game, the players take turns throwing the ball at the opponent to knock them out of the game, while seeking to catch the ball and evade other players. It is a test of speed, stamina, and acrobatic skills. Which game is this? ',
+        description:
+          'It is a traditional ball game played in Assam. In this game, the players take turns throwing the ball at the opponent to knock them out of the game, while seeking to catch the ball and evade other players. It is a test of speed, stamina, and acrobatic skills. Which game is this? ',
         image: '/images/bg-new.png'
       },
       options: [
@@ -121,7 +131,8 @@ const ExamScreen = () => {
     {
       id: 5,
       question: {
-        description: '"Float like a butterfly, sting like a bee. The hands can\'t hit what the eyes can\'t see." To which of the following sportspersons does this memorable quote attributed to?'
+        description:
+          '"Float like a butterfly, sting like a bee. The hands can\'t hit what the eyes can\'t see." To which of the following sportspersons does this memorable quote attributed to?'
       },
       options: [
         {
@@ -145,7 +156,8 @@ const ExamScreen = () => {
     {
       id: 6,
       question: {
-        description: "This vault is considered the hardest vault performed in women's artistic gymnastics. The first person to complete it successfully in 1999 was a Russian after whom it is named. This vault is also called the 'vault of death' due to its difficulty and likelihood of injury. What is the name of the vault?",
+        description:
+          "This vault is considered the hardest vault performed in women's artistic gymnastics. The first person to complete it successfully in 1999 was a Russian after whom it is named. This vault is also called the 'vault of death' due to its difficulty and likelihood of injury. What is the name of the vault?",
         image: '/images/bg-new.png'
       },
       options: [
@@ -170,7 +182,8 @@ const ExamScreen = () => {
     {
       id: 7,
       question: {
-        description: 'Which of the following is not a type of sailboats used in competitive sailing?',
+        description:
+          'Which of the following is not a type of sailboats used in competitive sailing?',
         image: '/images/bg-new.png'
       },
       options: [
@@ -195,7 +208,8 @@ const ExamScreen = () => {
     {
       id: 8,
       question: {
-        description: 'Which of the following is not a standard international racing distance in the sport canoeing and kayaking?'
+        description:
+          'Which of the following is not a standard international racing distance in the sport canoeing and kayaking?'
       },
       options: [
         {
@@ -219,7 +233,8 @@ const ExamScreen = () => {
     {
       id: 9,
       question: {
-        description: 'In a tennis match, the choice of the server in the first game is decided by a coin toss. The player who wins may choose to have the opponent serve first. How many chances to serve does the player who serves get?',
+        description:
+          'In a tennis match, the choice of the server in the first game is decided by a coin toss. The player who wins may choose to have the opponent serve first. How many chances to serve does the player who serves get?',
         image: '/images/bg-new.png'
       },
       options: [
@@ -244,7 +259,8 @@ const ExamScreen = () => {
     {
       id: 10,
       question: {
-        description: 'The Queens-berry rules endorsed by the Marquess of Queens-berry in the 19th century is a code of generally accepted rules in the sport of boxing. Which of the following is not one of the accepted Queensberry rules?',
+        description:
+          'The Queens-berry rules endorsed by the Marquess of Queens-berry in the 19th century is a code of generally accepted rules in the sport of boxing. Which of the following is not one of the accepted Queensberry rules?',
         image: '/images/bg-new.png'
       },
       options: [
@@ -258,7 +274,8 @@ const ExamScreen = () => {
         },
         {
           id: 'c',
-          description: 'Fights are divided into 3 minutes rounds, separated by 1 minute rest periods.\n'
+          description:
+            'Fights are divided into 3 minutes rounds, separated by 1 minute rest periods.\n'
         },
         {
           id: 'd',
@@ -269,7 +286,8 @@ const ExamScreen = () => {
     {
       id: 11,
       question: {
-        description: 'This championship is a domestic first- class cricket championship played in India between teams representing regional cricket associations. The competition is named after first Indian cricketer who played international cricket for England. Who was the player after whom it is named?'
+        description:
+          'This championship is a domestic first- class cricket championship played in India between teams representing regional cricket associations. The competition is named after first Indian cricketer who played international cricket for England. Who was the player after whom it is named?'
       },
       options: [
         {
@@ -318,7 +336,8 @@ const ExamScreen = () => {
     {
       id: 13,
       question: {
-        description: "The World Table Tennis Championships have been held since 1926, biennia since 1957. Seven different events presented by different trophies are currently held with individual events in odd numbered years and team events in even-numbered years. Which of the following trophies is awarded to the women's team champion?"
+        description:
+          "The World Table Tennis Championships have been held since 1926, biennia since 1957. Seven different events presented by different trophies are currently held with individual events in odd numbered years and team events in even-numbered years. Which of the following trophies is awarded to the women's team champion?"
       },
       options: [
         {
@@ -342,7 +361,8 @@ const ExamScreen = () => {
     {
       id: 14,
       question: {
-        description: 'This trophy is a biennial world amateur team golf championship for men organized by the International Golf Federation. It is named after the then President of United States when the tournament was first played. Which US President is it named after?'
+        description:
+          'This trophy is a biennial world amateur team golf championship for men organized by the International Golf Federation. It is named after the then President of United States when the tournament was first played. Which US President is it named after?'
       },
       options: [
         {
@@ -370,7 +390,8 @@ const ExamScreen = () => {
     {
       id: 15,
       question: {
-        description: "Season 4 of the Pro-kabaddi League in 2016 saw  the launch of first professional woman kabaddi league, Women's Kabaddi Challenge (WKC). Three teams battled it out to be the first ever WKC champions. Which of the following was not one of the participants of the WKC?",
+        description:
+          "Season 4 of the Pro-kabaddi League in 2016 saw  the launch of first professional woman kabaddi league, Women's Kabaddi Challenge (WKC). Three teams battled it out to be the first ever WKC champions. Which of the following was not one of the participants of the WKC?",
         image: '/images/bg-new.png'
       },
       options: [
@@ -479,7 +500,7 @@ const ExamScreen = () => {
           data={data}
           setData={setData}
           current={current}
-          setCurrent={setCurrent} 
+          setCurrent={setCurrent}
           isFullScreen={isFullScreen}
           setIsFullScreen={setIsFullScreen}
         />

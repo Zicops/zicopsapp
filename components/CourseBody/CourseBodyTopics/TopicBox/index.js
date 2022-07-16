@@ -15,6 +15,10 @@ import { getVideoObject, VideoAtom } from '../../../../state/atoms/video.atom';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import styles from '../../courseBody.module.scss';
 import useLoadExamData from '../../Logic/useLoadExamData';
+import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
+import { displayMinToHMS } from '@/helper/utils.helper';
+import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
 
 let topicInstance = 0;
 
@@ -43,13 +47,11 @@ export default function TopicBox({
   const allModuleOptions = getModuleOptions();
 
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
+
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [topicCountDisplay, setTopicCountDisplay] = useState(0);
-
-  const { allModuleTopic, currentTopicIndex } = videoData;
-  const isTopicActive = allModuleTopic ? allModuleTopic[currentTopicIndex].id === topic.id : false;
 
   const [examData, setExamData] = useState({
     id: null,
@@ -59,8 +61,11 @@ export default function TopicBox({
     language: null
   });
 
-  let passingCriteria;
-  const data = useLoadExamData(examData?.examId);
+  const data = {};
+  let finalEndDate;
+  data.examData = useLoadExamData(examData?.examId);
+  if (data?.examData?.scheduleType === SCHEDULE_TYPE[0] && !data?.examData?.examEnd)
+    finalEndDate = new Date(getEndTime(data));
 
   useEffect(async () => {
     if (topic?.type !== 'Assessment') return;
@@ -69,7 +74,8 @@ export default function TopicBox({
       (res) => res.getTopicExams[0]
     );
 
-    if (!topicExam) return setToastMsg({ type: 'danger', message: 'No Exam Added!' });
+    if (!topicExam)
+      return setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
 
     setExamData({
       id: topicExam.id,
@@ -79,30 +85,8 @@ export default function TopicBox({
       language: topicExam.language
     });
   }, []);
-  //dummy data for examTopic part
-  const topicAssData = [
-    {
-      type: 'Take Anytime',
-      duration: '3hrs',
-      attempts: '0/1',
-      marks: 100,
-      passingCriteria: '60%',
-      expertiseLevel: 'Competent'
-    },
-    {
-      type: 'Schedule',
-      duration: '3hrs',
-      attempts: '0/1',
-      date: '25th June, 2022',
-      startTime: '11:00AM',
-      endTime: '2:00PM',
-      marks: 100,
-      passingCriteria: '60%',
-      expertiseLevel: 'Beginner'
-    }
-  ];
 
-  //need to calculate end time with the help of buffertime.
+  let topicImageLink = imageTypeTopicBox(type);
 
   // calculate topic Index with generator function
   useEffect(() => {
@@ -112,21 +96,6 @@ export default function TopicBox({
     setTopicCountDisplay(getTopicsIndex().next()?.value);
     return () => getTopicsIndex(true).next();
   }, []);
-
-  // Set default topic image
-  let topicImage; // = '/images/media-container.png';
-  //check the type of content inside the topic
-  switch (type) {
-    case 'Lab':
-      topicImage = '/images/pdfIcon.png';
-      break;
-    case 'Assessment':
-      topicImage = '/images/media-container.png';
-      break;
-    case 'Content':
-      topicImage = '/images/topicImage.png';
-      break;
-  }
 
   // auto play video when next or previous button clciked (module switch)
   useEffect(() => {
@@ -184,6 +153,10 @@ export default function TopicBox({
     });
   }
 
+  const { allModuleTopic, currentTopicIndex } = videoData;
+  let isTopicActive = topicExamData?.topicId === topic.id;
+  if (allModuleTopic && allModuleTopic[currentTopicIndex]?.id === topic.id) isTopicActive = true;
+
   return (
     <>
       <div
@@ -220,7 +193,7 @@ export default function TopicBox({
 
         <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
           <div className={`${styles.topic_img}`}>
-            <img src={`${topicImage}`} alt="" />
+            <img src={`${topicImageLink}`} alt="" />
           </div>
 
           <div className={`${styles.topic_text}`}>
@@ -283,16 +256,19 @@ export default function TopicBox({
           {type === 'Assessment' && (
             <div className={`${styles.topic_assesment}`}>
               <div className={`${styles.assesmentType}`}>
-                {data?.scheduleType === 'scheduled' ? (
+                {data?.examData?.scheduleType === SCHEDULE_TYPE[0] ? (
                   <div>
-                    <span>{topicAssData[1].date}</span>
+                    <span>{data?.examData?.examStart?.toDateString()}</span>
 
                     <span>
-                      {data?.examStart?.toLocaleTimeString()}-
-                      {data?.examEnd ? data?.examStart?.toLocaleTimeString() : ''}
+                      {data?.examData?.examStart?.toLocaleTimeString()}-
+                      {data?.examData?.examEnd
+                        ? data?.examData?.examEnd?.toLocaleTimeString()
+                        : finalEndDate.toLocaleTimeString()}
                     </span>
                     <span className={`${styles.scheduleType}`}>
-                      {data?.scheduleType.charAt(0).toUpperCase() + data?.scheduleType.slice(1)}
+                      {data?.examData?.scheduleType.charAt(0).toUpperCase() +
+                        data?.examData?.scheduleType.slice(1)}
                     </span>
                   </div>
                 ) : (
@@ -302,22 +278,23 @@ export default function TopicBox({
                 )}
               </div>
               <div className={`${styles.assesmentInfo}`}>
-                <span>Marks: {data?.totalMarks}</span>
                 <span>
-                  Passing Criteria:{' '}
-                  {data?.passingCriteria.split('-')[1] === 'Percentage'
-                    ? data?.passingCriteria.split('-')[0] + '%'
-                    : data?.passingCriteria.split('-')[0]}
+                  Marks: {!!data?.examData?.totalMarks ? `${data?.examData?.totalMarks}M` : ''}
                 </span>
-                <span>{data?.difficultyLevel}</span>
-                <span>Attempt: {data?.noAttempts}</span>
-                <span>Duration: {data?.duration}</span>
+                <span>
+                  Passing Criteria: {passingCriteriaSymbol(data?.examData?.passingCriteria)}
+                </span>
+                <span>{data?.examData?.difficultyLevel}</span>
+                <span>Attempt: {data?.examData?.noAttempts}</span>
+                {!!data?.examData?.duration && (
+                  <span>Duration: {`${data?.examData?.duration} mins`}</span>
+                )}
               </div>
             </div>
           )}
           {type === 'Lab' && (
             <div className={`${styles.topic_player}`}>
-              <div className={`${styles.progress_bar}`}>
+              {/* <div className={`${styles.progress_bar}`}>
                 <img src="images/progressTriangle.png" alt="" />
               </div>
               <div className={`${styles.details}`}>
@@ -338,7 +315,7 @@ export default function TopicBox({
                     )}
                   </span>
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
         </div>

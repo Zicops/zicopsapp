@@ -167,7 +167,7 @@
 }
 
 .topic_assesment {
-  width: 60%;
+  width: 40%;
   // height: 65px;
   margin-right: 3%;
   font-size: 15px;
@@ -196,7 +196,9 @@
 
   .assesmentInfo {
     display: flex;
-    align-items: flex-end;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    row-gap: 10px;
     span {
       color: $primary;
       font-size: small;

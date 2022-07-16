@@ -132,7 +132,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
-      status: questionPaperData.status || STATUS[1],
+      status: STATUS[1],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
@@ -175,6 +175,17 @@ export default function useHandlePaperTab() {
   }
 
   async function updateQuestionPaper(tabIndex) {
+    // duplicate name check
+    if (
+      await isNameDuplicate(
+        GET_LATEST_QUESTION_PAPERS_NAMES,
+        questionPaperData?.name,
+        'getLatestQuestionPapers.questionPapers'
+      )
+    ) {
+      return setToastMsg({ type: 'danger', message: 'Paper with same name already exist' });
+    }
+
     setStatus('UPDATING');
     if (!isDataValid())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
@@ -191,7 +202,7 @@ export default function useHandlePaperTab() {
       suggested_duration: questionPaperData.suggested_duration || '',
 
       // TODO: update later
-      status: questionPaperData.status || STATUS[1],
+      status: STATUS[1],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'

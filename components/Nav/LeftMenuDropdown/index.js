@@ -1,57 +1,131 @@
-import Image from 'next/image';
 import '@reach/menu-button/styles.css';
+import Image from 'next/image';
 import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
-import { MenuList, Paper } from '@mui/material';
 
 import Button from '@mui/material/Button';
-import MyButton from '../../common/MyButton/index.js';
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Fade from '@mui/material/Fade';
+import { MenuList, Paper } from '@mui/material';
 
 import { useContext } from 'react';
+import RightArrow from '../../../public/images/bigarrowright.png';
 import { userContext } from '../../../state/contexts/UserContext';
-
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { languages, preferences } from '../Logic/subMenu.helper.js';
-import RightArrow from '../../../public/images/bigarrowright.png';
 import styles from '../nav.module.scss';
+export default function LeftMenuDropdown() {
+  const { isAdmin } = useContext(userContext);
+  const { anchorEl, handleClick, handleClose, open, gotoAdmin, gotoUser } = useDropDownHandle();
 
-export default function LeftMenuDropdown({ navmenuicon }) {
-  const { isAdmin, makeAdmin } = useContext(userContext);
-  const { anchorEl, handleClick, handleClose, open, gotoAdmin, gotoUser } = useDropDownHandle(
-    isAdmin,
-    makeAdmin
-  );
   const menuItemList = [
-    { id: 1, class: 'dropdown-submenu-justifycontent-right', name: 'My Certificates' },
-    { id: 2, class: 'dropdown-submenu-justifycontent-right', name: 'My Dashboard' },
     {
-      id: 3,
+      id: 1,
+      comp: (
+        <DropDownSubMenu
+          subData={languages}
+          menuIcon={RightArrow}
+          submenutext="Language"
+          arrowpositon="right"
+          submenurowdirection={false}
+        />
+      )
+    },
+    {
+      id: 2,
       comp: (
         <DropDownSubMenu
           subData={preferences}
           menuIcon={RightArrow}
-          submenutext="Support"
+          submenutext="Preferences"
           arrowpositon="right"
-          submenurowdirection={true}
+          submenurowdirection={false}
         />
       )
     },
-    { id: 4, class: 'dropdown-submenu-justifycontent-right', name: 'Logout' }
+    {
+      id: 3,
+      styles: {
+        display: 'flex',
+        flexDirection: 'column',
+        border: 'solid 1px var(--primary)',
+        fontSize: '16px',
+        alignItems: 'flex-start',
+        backgroundColor: 'var(--header-bg)',
+        padding: '8px'
+      },
+      comp: (
+        <div onClick={!isAdmin ? gotoAdmin : gotoUser}>
+          {!isAdmin ? 'Switch to Admin' : 'Switch to Learner'}
+        </div>
+      )
+    }
   ];
-  const time = new Date();
+
   return (
     <>
-      <MyButton
+      {/* <MyButton
         id="fade-button"
         style={{ height: '70px' }}
         handleClick={handleClick}
         handleClose={handleClose}>
         <Image src={navmenuicon} alt="" height="15px" width="20px" />
-      </MyButton>
+      </MyButton> */}
 
-      <Menu
+      <Button
+        disableRipple
+        id="fade-button"
+        aria-controls={open ? 'fade-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        onMouseEnter={handleClick}
+        onMouseLeave={handleClose}
+        style={{
+          height: '70px'
+        }}>
+        <Image src="/images/menu.png" alt="" height="20px" width="25px" />
+      </Button>
+
+      {anchorEl && (
+        <Paper
+          sx={{
+            position: 'absolute',
+            top: '70px',
+            left: '20px',
+            padding: '0px',
+            background: 'transparent'
+          }}>
+          <MenuList
+            autoFocusItem={open}
+            id="composition-menu"
+            aria-labelledby="composition-button"
+            style={{ padding: 0 }}
+            onMouseLeave={handleClose}
+            onMouseEnter={handleClick}
+            onKeyDown={handleClick}>
+            {menuItemList.map((item) => {
+              return (
+                <MenuItem
+                  key={item.id}
+                  sx={{
+                    '&.MuiMenuItem-root': {
+                      border: '1px solid var(--primary)',
+                      // margin: '2px',
+                      backgroundColor: 'var(--header-bg)',
+                      justifyContent: 'flex-start',
+                      padding: '0px'
+                    }
+                  }}
+                  style={item.styles ? item.styles : {}}
+                  className={`${item.class} ${styles[`dropdown_item_${item.id}`]}`}>
+                  {item.name ? item.name : item.comp}
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </Paper>
+      )}
+
+      {/* <Menu
         // {...languages}
         // {...preferences}
         // id="fade-menu"
@@ -117,7 +191,7 @@ export default function LeftMenuDropdown({ navmenuicon }) {
           className={`${styles.LeftDropdownR_admin} ${styles[`dropdown_item_3`]}`}>
           {!isAdmin ? 'Switch to Admin' : 'Switch to Learner'}
         </MenuItem>
-      </Menu>
+      </Menu> */}
       {/* <MenuList
         autoFocusItem={open}
         id="composition-menu"
