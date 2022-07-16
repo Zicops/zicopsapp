@@ -31,3 +31,14 @@
     width :calc(100%/3 - 20px + 20px/3);
  
 }
+.imageContainer{
+    display: flex;
+    justify-content: end;
+    & img{
+        width: 25px;
+     margin:0px 0px 10px 10px;
+     &:hover{
+        cursor: pointer;
+     }
+    }
+}
