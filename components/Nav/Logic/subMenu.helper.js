@@ -47,22 +47,22 @@ export const preferences = [
 export const userProfile = [
   {
     title: 'About',
-    link: '/'
+    link: '/my-profile'
   },
   {
     title: 'Cohort',
-    link: '/'
+    link: '/my-profile'
   },
   {
     title: 'Courses',
-    link: '/'
+    link: '/my-profile'
   },
   {
     title: 'Learning dashboard',
-    link: '/'
+    link: '/my-profile'
   },
   {
     title: 'Calender',
-    link: '/'
+    link: '/my-profile'
   }
 ];
