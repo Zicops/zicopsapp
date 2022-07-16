@@ -57,7 +57,8 @@
   text-transform: capitalize;
   padding: 5px 0px;
 }
-.text , .category{
+.text,
+.category {
   color: $white;
   font-size: 1.2vw;
   text-transform: capitalize;
@@ -69,7 +70,7 @@
   padding: 20px;
   margin: 20px 0px;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 50% 50%;
 }
 .textEditIcon {
   display: flex;
@@ -107,22 +108,25 @@
 .userAboutTab {
   padding: 50px;
 }
-.categoryPreferences{
-    background-color: #262626;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 20px 0px;
-      // display: flex;
-      // gap: 10px;
+.categoryPreferences {
+  background-color: #262626;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0px;
+  // display: flex;
+  // gap: 10px;
 }
-.category{
+.category {
   display: flex;
   gap: 10px;
   padding-top: 20px;
-  
 }
-.textSubCategory{
+.textSubCategory {
   background-color: $black;
   border-radius: 8px;
   padding: 5px 20px;
+}
+
+.userTabContainer {
+  height: 75vh;
 }

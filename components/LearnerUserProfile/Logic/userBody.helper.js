@@ -1,4 +1,8 @@
 import UserAboutTab from '../UserAboutTab';
+import UserCalenderTab from '../UserCalenderTab';
+import UserCoursesTab from '../UserCoursesTab';
+import UserLearningDashboardTab from '../UserLearningDashboardTab';
+import UserCohortTab from '../UserCohortTab';
 
 export const tabs = [
   {
@@ -7,12 +11,12 @@ export const tabs = [
   },
   {
     name: 'Cohort',
-    comp: '<CourseBodyResources />'
+    comp: <UserCohortTab />
   },
   {
     name: 'Courses',
-    comp: '<CourseBodyNotes />'
+    comp: <UserCoursesTab />
   },
-  { name: 'Learning Dashboard', comp: ' ABCD ' },
-  { name: 'Calender', comp: ' XYZ ' }
+  { name: 'Learning Dashboard', comp: <UserLearningDashboardTab /> },
+  { name: 'Calender', comp: <UserCalenderTab /> }
 ];
