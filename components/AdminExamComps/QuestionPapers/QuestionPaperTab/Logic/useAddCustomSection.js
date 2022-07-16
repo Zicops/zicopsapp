@@ -114,6 +114,7 @@ export default function useAddCustomSection() {
   async function updateSection() {
     if (!questionPaperTabData.paperMaster.id)
       return setToastMsg({ type: 'danger', message: 'Add Question Paper First' });
+    if (isDuplicate()) return;
 
     const sendData = {
       id: customSection.id,

@@ -44,14 +44,14 @@
   background: none;
   color: $primary;
   padding: 2px;
-  margin-top: -4px;
+  margin-top: -4px !important;
 }
 
 .szh-menu--dir-left {
-  margin-left: 15px;
+  margin-left: 15px !important;
 }
 .szh-menu--dir-right {
-  margin-left: -15px;
+  margin-left: -15px !important;
 }
 .szh-menu__item {
   border-radius: 6px;
@@ -116,4 +116,10 @@
 
 .bg-primary {
   background-color: $primary !important;
+}
+
+// typography
+.h2 {
+  font-size: 25px;
+  font-weight: bolder;
 }

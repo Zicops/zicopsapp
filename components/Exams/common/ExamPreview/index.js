@@ -36,7 +36,7 @@ export default function ExamPreview({
         )}
         <Info title="Expertise Level:" value={difficulty} />
         <Info title="Proctoring:" value={isProctoring ? 'Yes' : 'No'} />
-        <Info title="Duration:" value={duration} />
+        <Info title="Duration:" value={`${duration} mins`} />
         <Info title="Total Number of Questions:" value={totalQuestions} />
         <Info title="Negative Marking:" value={isNegativeMarking ? 'Yes' : 'No'} />
         <Info title="Total Number of Attempts:" value={noAttempts} />

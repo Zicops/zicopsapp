@@ -12,7 +12,8 @@ const AnswerAllOptions = ({
   filter,
   setFilter,
   option,
-  setOption
+  setOption,
+  submitPaper
 }) => {
   const [nextTrigger, setNextTrigger] = useState(false);
   const [previousTrigger, setPreviousTrigger] = useState(false);
@@ -94,13 +95,19 @@ const AnswerAllOptions = ({
   return (
     <>
       <Box p={4} width={'100%'} mb={10}>
-        <Grid spacing={4} container direction="row" justifyContent="center" alignItems="flex-start">
+        <Grid
+          spacing={4}
+          container
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="flex-start">
           {current.options.slice(0, 2).map((each) => (
             <AnswerSingleOption
               handleChange={handleOptionChange}
               currentData={current}
               optionData={each}
               index={index++}
+              key={index}
               option={option}
               setOption={setOption}
             />
@@ -112,6 +119,7 @@ const AnswerAllOptions = ({
               optionData={each}
               option={option}
               index={index++}
+              key={index}
               setOption={setOption}
             />
           ))}
@@ -161,15 +169,19 @@ const AnswerAllOptions = ({
           </button>
           <button
             onClick={() => {
-              // console.log(option)
-              setNextTrigger(true);
+              current.id === data.length ? submitPaper() : setNextTrigger(true);
             }}
-            className={`${styles.answer_all_options_button} ${
-              current.id === data.length
-                ? styles.answer_all_options_button_next_disabled
-                : styles.answer_all_options_button_next
-            }`}>
-            Next<span>Question</span>
+            className={`${styles.answer_all_options_button} ${styles.answer_all_options_button_next}`}>
+            {current.id === data.length ? (
+              <>
+                Submit
+                <span>Paper</span>
+              </>
+            ) : (
+              <>
+                Next<span>Question</span>
+              </>
+            )}
           </button>
         </div>
       </div>

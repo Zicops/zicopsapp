@@ -1,5 +1,5 @@
 import styles from '../examMasterTab.module.scss';
-import SwitchButton from '../../../../common/SwitchButton';
+import SwitchButton from '../../../../common/FormComponents/SwitchButton';
 import { useRecoilState } from 'recoil';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { changeHandler } from '../../../../../helper/common.helper';
@@ -22,11 +22,12 @@ export default function Configuration() {
     <div className={`${styles.configurationContainer}`}>
       {btns.map(({ name, label }) => (
         <SwitchButton
-          text={label}
+          label={label}
+          labelPlacement="end"
           inputName={name}
           isChecked={examTabData[name]}
           isDisabled={isPreview}
-          changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+          handleChange={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
       ))}
     </div>

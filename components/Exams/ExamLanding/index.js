@@ -1,6 +1,7 @@
+import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   GET_EXAM_CONFIG,
@@ -11,12 +12,13 @@ import {
   queryClient
 } from '../../../API/Queries';
 import { LearnerExamAtom } from '../../../state/atoms/exams.atoms';
-import { getTopicExamObj, TopicExamAtom } from '../../../state/atoms/module.atoms';
+import { getTopicExamObj, TopicAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
 import styles from './examLanding.module.scss';
 
 export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = false }) {
+  const { fullCourse } = useContext(courseContext);
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
     client: queryClient
   });
@@ -150,6 +152,7 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
       show_answer: confData?.ShowAnswer || false,
       is_config_active: confData?.IsActive || false
     };
+
     setLearnerExamData({
       ...learnerExamData,
       examData: {
@@ -159,15 +162,17 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
         ...confObj
       },
       landingPageData: {
-        testSeries: 'PMP Test Series',
-        testSequence: 'M1A4',
-        isProctoring: 'No',
+        testSeries: fullCourse?.name,
+        testSequence: `M${topicExamData?.currentModule?.label.split(' ')[1]}A${
+          topicExamData?.currentTopic?.sequence
+        }`,
+        isProctoring: false,
         totalQuestions: 0,
-        isNegativeMarking: 'No',
+        isNegativeMarking: false,
         expertiseLevel: paperMaster?.difficultyLevel
       }
     });
-  }, []);
+  }, [topicExamData?.examId]);
 
   const { exam_landing_btn_container, exam_landing_btn_container1 } = styles;
 
@@ -214,7 +219,11 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
 
       <div className={`${btnStyle}`}>
         <section>
-          <button className={`${styles.exam_landing_btn}`}>Take Sample Test</button>
+          <button
+            className={`${styles.exam_landing_btn}`}
+            onClick={() => router.push('/exam-screen')}>
+            Take Sample Test
+          </button>
           <button
             onClick={() => router.push(`/exam-screen/${topicExamData?.examId}`)}
             className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>

@@ -6,7 +6,7 @@ import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
 import IconButton from '../../../../common/IconButton';
-import InputWithCheckbox from '../../../../common/InputWithCheckbox';
+import InputWithCheckbox from '@/common/InputWithCheckbox';
 import TextInputWithFile from '../../../../common/InputWithCheckbox/TextInputWithFile';
 import styles from '../../../courseTabs.module.scss';
 import useAddQuiz from '../../Logic/useAddQuiz';

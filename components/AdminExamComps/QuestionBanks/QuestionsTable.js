@@ -1,3 +1,4 @@
+import QuestionOptionView from '@/components/common/QuestionOptionView';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -9,7 +10,6 @@ import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import Button from '../../common/Button';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
-import McqCard from '../common/McqCard';
 import { acceptedFileTypes } from './Logic/questionBank.helper';
 
 export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
@@ -139,20 +139,9 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         title="View Question"
         popUpState={[popUpState, udpatePopUpState]}>
         <>
-          <McqCard
-            questionData={viewQuestion}
-            closePopUp={() => udpatePopUpState(false)}
-            openEditQuestionMasterTab={
-              isEdit
-                ? () => {
-                    udpatePopUpState(false);
-                    openEditQuestionMasterTab();
-                  }
-                : null
-            }
-          />
+          <QuestionOptionView questionData={viewQuestion} showType="difficulty" />
 
-          <div style={{ float: 'right', marginTop: '-30px' }}>
+          <div style={{ float: 'right' }}>
             <Button text={'Cancel'} clickHandler={() => udpatePopUpState(false)} />
             <Button
               text={'Edit'}

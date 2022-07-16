@@ -25,12 +25,13 @@ export default function EditCoursePage() {
 
   useEffect(() => {
     if (!editCourseId) return;
-    loadCourseData({ variables: { course_id: editCourseId } }).then(({ data }) => {
-      if (errorCourseData) return setToastMsg({ type: 'danger', message: 'course load error' });
+    loadCourseData({ variables: { course_id: editCourseId }, fetchPolicy: 'no-cache' }).then(
+      ({ data }) => {
+        if (errorCourseData) return setToastMsg({ type: 'danger', message: 'course load error' });
 
-
-      if (data?.getCourse) updateCourseMaster(data.getCourse);
-    });
+        if (data?.getCourse) updateCourseMaster(data.getCourse);
+      }
+    );
   }, [editCourseId]);
 
   return (

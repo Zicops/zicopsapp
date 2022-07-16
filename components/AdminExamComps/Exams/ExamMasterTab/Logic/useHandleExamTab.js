@@ -81,7 +81,7 @@ export default function useHandleExamTab() {
   }
 
   useEffect(() => {
-    if (toastMsg[0]?.type === 'danger') setStatus(STATUS[0]);
+    if (toastMsg[0]?.type === 'danger') setStatus(examTabData?.status || STATUS[0]);
   }, [toastMsg]);
 
   // error notifications
@@ -179,6 +179,12 @@ export default function useHandleExamTab() {
     // update exam
 
     console.log(sendData);
+
+    // duplicate name check
+    if (await isNameDuplicate(GET_LATEST_EXAMS_NAMES, examTabData.name, 'getLatestExams.exams')) {
+      setToastMsg({ type: 'danger', message: 'Exam with same name already exist' });
+      return false;
+    }
     if (examTabData?.id) {
       sendData.id = examTabData.id;
       response = await updateExam({ variables: sendData }).catch((err) => {
@@ -189,11 +195,6 @@ export default function useHandleExamTab() {
       return response?.data?.updateExam;
     }
 
-    // duplicate name check
-    if (await isNameDuplicate(GET_LATEST_EXAMS_NAMES, examTabData.name, 'getLatestExams.exams')) {
-      setToastMsg({ type: 'danger', message: 'Exam with same name already exist' });
-      return false;
-    }
     // add new exam
     response = await addExam({ variables: sendData }).catch((err) => {
       console.log(err);

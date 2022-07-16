@@ -71,8 +71,7 @@ export const userSideBarData = {
     },
     {
       title: 'User Cohort',
-      // link: '/admin/user/user-cohort'
-      link: ''
+      link: '/admin/user/user-cohort'
     }
   ]
 };

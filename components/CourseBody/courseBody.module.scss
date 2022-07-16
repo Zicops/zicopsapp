@@ -124,17 +124,6 @@
   }
 }
 
-.topicKeyword {
-  span {
-    color: $primary;
-    font-size: small;
-    border-radius: 5px;
-    padding: 5px 8px;
-    margin: 5px 10px 0 0;
-    background-color: #343535;
-  }
-}
-
 .topic_description {
   font-size: 12px;
   color: #858f8f;
@@ -179,8 +168,8 @@
 
 .topic_assesment {
   width: 40%;
-  height: 65px;
-  margin-right: 5%;
+  // height: 65px;
+  margin-right: 3%;
   font-size: 15px;
   color: $primary;
   display: flex;
@@ -199,15 +188,23 @@
     div {
       margin-bottom: 5px;
     }
+    // .scheduleType {
+    //   color: $primary;
+    //   font-weight: 600;
+    // }
   }
 
   .assesmentInfo {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    row-gap: 10px;
     span {
       color: $primary;
       font-size: small;
       border-radius: 5px;
-      padding: 5px 8px;
-      margin: 5px 0 0 10px;
+      padding: 4px 6px;
+      margin: 0 0 0 5px;
       background-color: #343535;
     }
   }

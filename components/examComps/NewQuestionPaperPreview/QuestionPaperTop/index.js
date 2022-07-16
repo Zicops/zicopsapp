@@ -41,7 +41,7 @@ const QuestionPaperTop = ({ setIsQuestion }) => {
             </span>
           </p>
           <p>
-            Duration: <span>{learnerExamData?.examData?.duration}</span>
+            Duration: <span>{learnerExamData?.examData?.duration} mins</span>
           </p>
         </div>
       </div>

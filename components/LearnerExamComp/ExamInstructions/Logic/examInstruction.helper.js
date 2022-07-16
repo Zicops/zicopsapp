@@ -1,18 +1,28 @@
+import moment from 'moment';
+
+const duration = 30;
+const bufferTime = 15;
+
+const startDate = moment().subtract('15', 'minutes').seconds(0);
+const endDate = moment()
+  .add(duration + bufferTime, 'minutes')
+  .seconds(0);
+
 export const data = {
   examData: {
     name: 'Core Java Fundamentals',
     scheduleType: 'Scheduled',
-    duration: '3 hrs',
-    examStart: new Date(1656417600000),
-    examEnd: new Date(1656428400000),
+    duration: duration,
+    examStart: new Date(startDate),
+    examEnd: new Date(endDate),
     noAttempts: '3',
     totalMarks: '100',
     passingCriteria: '60-Marks',
-    bufferTime: '30'
+    bufferTime: bufferTime
   },
   landingPageData: {
     isProctoring: 'No',
-    totalQuestions: '50',
+    totalQuestions: '15',
     isNegativeMarking: ''
   },
   insPageData: {

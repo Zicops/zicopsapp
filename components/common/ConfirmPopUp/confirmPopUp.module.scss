@@ -1,0 +1,92 @@
+@import '../../../styles/base.scss';
+
+.confirmPopUp {
+  width: 630px;
+  // height: 200px;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  background-color: $secondaryWhite;
+  color: $white;
+
+  padding: 30px 55px;
+  border-radius: 16px;
+
+  // animation: flicker 0.4s;
+}
+
+.cross {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  img {
+    background-color: $secondaryBlack;
+    border-radius: 50%;
+  }
+}
+
+.text {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.desc {
+  display: flex;
+  justify-content: center;
+
+  font-size: 15px;
+  padding-bottom: 20px;
+}
+
+.alert_text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  padding-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-flow: wrap;
+
+  div {
+    display: flex;
+    width: 100%;
+    flex: 1;
+
+    button {
+      width: max-content;
+      flex: 1;
+    }
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
