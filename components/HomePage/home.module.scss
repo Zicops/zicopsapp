@@ -1,15 +1,29 @@
 @import '../../styles/base.scss';
 
-$DURATION : 1000ms;
-$DELAY : $DURATION / 2;
+$DURATION: 1000ms;
+$DELAY: $DURATION / 2;
+
+.vrContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: -1;
+
+  .vrBackground {
+    overflow: hidden;
+  }
+}
 
 .container {
   font-family: 'Open Sans';
-  background-image: url('/images/starrySky2.png');
+  // background-image: url('/images/starrySky2.png');
   background-position: center;
   background-size: cover;
 
   position: relative;
+  pointer-events: none;
 
   display: flex;
   overflow: hidden;
@@ -33,7 +47,7 @@ $DELAY : $DURATION / 2;
 .wheeldownZoomIn {
   animation: wheeldownZoomIn $DURATION ease-out;
   z-index: 99;
-  animation-delay: ($DELAY/2 - $DELAY*.2);
+  animation-delay: ($DELAY/2 - $DELAY * 0.2);
 }
 
 .wheelupZoomIn {
@@ -43,7 +57,7 @@ $DELAY : $DURATION / 2;
 .wheelupZoomOut {
   animation: wheelupZoomOut $DURATION ease-out;
   z-index: 99;
-  animation-delay: ($DELAY/2 - $DELAY*.2);
+  animation-delay: ($DELAY/2 - $DELAY * 0.2);
 }
 
 @keyframes wheeldownZoomOut {
@@ -106,7 +120,6 @@ $DELAY : $DURATION / 2;
 .hideOtherSlides {
   transform: scale(0);
 }
-
 
 // .HomeContainer {
 //   font-family: 'Open Sans';
