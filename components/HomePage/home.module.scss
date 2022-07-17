@@ -1,15 +1,20 @@
 @import '../../styles/base.scss';
 
+$DURATION : 1000ms;
+$DELAY : $DURATION / 2;
+
 .container {
   font-family: 'Open Sans';
-  background-image: url('../../public/images/starrySky2.png');
+  background-image: url('/images/starrySky2.png');
   background-position: center;
   background-size: cover;
 
+  position: relative;
+
   display: flex;
-  overflow: auto;
+  overflow: hidden;
   outline: 1px dashed lightgray;
-  flex: none;
+  // flex: none;
   height: 100vh;
   width: 100vw;
   flex-flow: column nowrap;
@@ -21,31 +26,88 @@
   }
 }
 
-.zoomIn {
-  animation: zoomIn .2s;
+.wheeldownZoomOut {
+  animation: wheeldownZoomOut $DURATION ease-in;
+  z-index: 99;
 }
-.zoomOut {
-  animation: zoomOut .2s;
-}
-
-@keyframes zoomIn {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
+.wheeldownZoomIn {
+  animation: wheeldownZoomIn $DURATION ease-out;
+  z-index: 99;
+  animation-delay: ($DELAY/2 - $DELAY*.2);
 }
 
-@keyframes zoomOut {
+.wheelupZoomIn {
+  animation: wheelupZoomIn $DURATION ease-in;
+  z-index: 99;
+}
+.wheelupZoomOut {
+  animation: wheelupZoomOut $DURATION ease-out;
+  z-index: 99;
+  animation-delay: ($DELAY/2 - $DELAY*.2);
+}
+
+@keyframes wheeldownZoomOut {
   0% {
+    margin-top: 0px;
     transform: scale(1);
   }
   100% {
-    transform: scale(3);
+    margin-top: 60px;
+    transform: scale(4);
     opacity: 0;
   }
 }
+@keyframes wheeldownZoomIn {
+  0% {
+    margin-top: -70px;
+    transform: scale(0);
+  }
+
+  100% {
+    margin-top: 0px;
+    transform: scale(1);
+  }
+}
+
+@keyframes wheelupZoomIn {
+  0% {
+    margin-top: 0px;
+    transform: scale(1);
+  }
+
+  100% {
+    margin-top: -70px;
+    transform: scale(0);
+  }
+}
+@keyframes wheelupZoomOut {
+  0% {
+    margin-top: 0px;
+    transform: scale(4);
+  }
+
+  100% {
+    margin-top: 0px;
+    transform: scale(1);
+    // opacity: 0;
+  }
+}
+
+.homepageSlides {
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  transition-delay: $DELAY/2;
+}
+.showActiveSlide {
+  transform: scale(1);
+}
+.hideOtherSlides {
+  transform: scale(0);
+}
+
+
 // .HomeContainer {
 //   font-family: 'Open Sans';
 //   background-image: url('../../public/images/starrySky2.png');
@@ -75,15 +137,16 @@
     cursor: pointer;
     margin-right: 33px;
 
-
     font-size: 14px;
     font-weight: 600;
 
     color: $primary;
+
     // border: 1px solid $primary;
-    &:hover{
+    &:hover {
       color: $white;
     }
+
     img {
       object-fit: contain;
       height: 40%;
@@ -93,6 +156,7 @@
   .ZicopsLogo {
     width: 70px;
     height: 80%;
+
     img {
       object-fit: contain;
       height: 100%;
@@ -101,19 +165,20 @@
 }
 
 //HomeBody
-.scrollItems{
-  height: 100%;
-}
 .HomeBody {
-  //   background-color: $darkTwo;
+  //background-color: $darkTwo;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   align-items: center;
   height: 60%;
-  width: 60%;
-  margin: 40px auto 0px auto;
+  // width: 60%;
+  margin-top: 120px;
   // scroll-snap-type: y mandatory;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 99;
 
   .scrollContainer {
     display: flex;
@@ -121,7 +186,9 @@
     align-items: center;
     width: 100%;
     min-height: 220px;
+
     .scrollItems {
+      // transform: scale(0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -138,12 +205,14 @@
       width: 150px;
       // margin-bottom: 30px;
       padding: 5px;
+
       :nth-child(1) {
         width: 66%;
         height: 70%;
         margin-bottom: 10px;
         object-fit: contain;
       }
+
       :nth-child(2) {
         width: 66%;
       }
@@ -158,6 +227,37 @@
     }
   }
 
+  .btn {
+    padding: 20px 0;
+    margin-top: 10px;
+
+    button {
+      outline: none;
+      border: 2px solid $primary;
+      background-color: transparent;
+      padding: 5px 20px;
+      border-radius: 18px;
+      font-family: 'Open Sans';
+      color: $primary;
+      cursor: pointer;
+
+      &:hover {
+        background: $primary;
+        color: $white;
+      }
+    }
+  }
+}
+
+.formContainerWrapper {
+  width: 100%;
+  position: absolute;
+  bottom: 22%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  z-index: 5;
+  gap: 40px;
   .formContainer {
     display: flex;
     flex-direction: row;
@@ -200,24 +300,6 @@
       width: 38px;
     }
   }
-
-  .btn {
-    padding: 20px 0;
-    button {
-      outline: none;
-      border: 2px solid $primary;
-      background-color: transparent;
-      padding: 5px 20px;
-      border-radius: 18px;
-      font-family: 'Open Sans';
-      color: $primary;
-      cursor: pointer;
-      &:hover {
-        background: $primary;
-        color: $white;
-      }
-    }
-  }
 }
 
 //Footer
@@ -230,6 +312,7 @@
   // left: 0px;
   //   background-color: $darkTwo;
   font-size: small;
+
   .HomeFooterInner {
     display: flex;
     justify-content: space-evenly;
@@ -237,13 +320,13 @@
     font-family: 'Open Sans';
 
     max-width: 60%;
-    margin: 3px 300px 0 300px;
+    margin: auto;
     // gap: 20px;
     color: $white;
   }
 }
 
 // Animation for homepage scroll
-.animated{
+.animated {
   margin-top: 120px;
 }

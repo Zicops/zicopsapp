@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import '@reach/menu-button/styles.css';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { languages, preferences, userProfile } from '../Logic/subMenu.helper.js';
@@ -12,6 +13,7 @@ import styles from '../nav.module.scss';
 export default function RightDropDownMenu() {
   const { anchorEl, handleClick, handleClose, open } = useDropDownHandle();
   let date = new Date().toUTCString().slice(5, 16);
+  const router = useRouter();
 
   const menuItemList = [
     {
@@ -42,7 +44,10 @@ export default function RightDropDownMenu() {
           arrowpositon="left"
           submenurowdirection={true}
         />
-      )
+      ),
+      onClick: () => {
+        router.push('/my-profile');
+      }
     },
     { id: 3, class: 'dropdown-submenu-justifycontent-right', name: 'My Certificates' },
     { id: 4, class: 'dropdown-submenu-justifycontent-right', name: 'My Dashboard' },
@@ -107,6 +112,7 @@ export default function RightDropDownMenu() {
                       padding: '0px'
                     }
                   }}
+                  onClick={item?.onClick ? item.onClick : () => {}}
                   style={item.styles ? item.styles : {}}
                   className={`${item.class} ${styles[`dropdown_item_${item.id}`]}`}>
                   {item.name ? item.name : item.comp}

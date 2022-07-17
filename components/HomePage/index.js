@@ -1,102 +1,78 @@
-import { useState, useEffect } from 'react';
-import {
-  CSSTransition,
-  SwitchTransition,
-  Transition,
-  TransitionGroup
-} from 'react-transition-group';
-import HomePages from './HomePages';
+import { useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 import styles from './home.module.scss';
+import HomeHeader from './HomeHeader';
+import HomeInputField from './HomeInputField';
+import SingleSlide from './SingleSlide';
 import { data } from './Logic/homePage.helper';
-import Link from 'next/link';
 
-const HomePage = () => {
-  const [scrollDown, setScrollDown] = useState(0);
-  const [slide, setSlide] = useState(false);
+export default function HomePage() {
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [isAnimationOngoing, seIsAnimationOngoing] = useState(0);
+  const [slideData, setSlideData] = useState({
+    activeSlide: 0,
+    isLastScrollUp: false
+  });
 
-  function handleScrollAndZoom(e) {
-    setSlide(!slide);
-    if (e.deltaY < 0 && scrollDown > 0) {
-      setScrollDown(--scrollDown);
-    } else {
-      setScrollDown(scrollDown);
-    }
-    if (e.deltaY > 0 && scrollDown < 3) {
-      setScrollDown(++scrollDown);
-    } else {
-      setScrollDown(scrollDown);
-    }
+  const DURATION = 1000;
+  const maxSlideCount = 3;
+
+  function showSlidesOnScroll(e) {
+    if (isAnimationOngoing) return;
+    seIsAnimationOngoing(1);
+      const isScrollUp = e.deltaY > 0;
+      let index = slideIndex + (isScrollUp ? 1 : -1);
+      if (index < 0) index = 0;
+      if (index > maxSlideCount) index = maxSlideCount;
+      if (index !== slideIndex) {
+        setSlideData({
+          ...slideData,
+          activeSlide: index,
+          isLastScrollUp: isScrollUp
+        });
+      }
+    setSlideIndex(index);
+      
+    setTimeout(() => {
+      seIsAnimationOngoing(0);
+    }, (index === maxSlideCount || index === 0) ? 1 : DURATION);
   }
-  // useEffect(() => {
-  //   setSlide(() => scrollDown);
-  // }, [scrollDown]);
-  return (
-    <div className={`${styles.container}`}>
-      <header className={`${styles.HomeHeader}`}>
-        <div className={`${styles.ZicopsLogo}`}>
-          <img src="./images/zicops-header-logo.png" alt="not found" />
-        </div>
-          <Link href="/login">
-            <div className={`${styles.Login}`}>
-              <img src="./images/Union1.png" alt="not found" />
-              <a>Log In</a>
-            </div>
-          </Link>
-      </header>
-      <CSSTransition
-        in={slide}
-        timeout={2000}
-        classNames={{
-          enterActive: styles.zoomIn,
-          exitActive: styles.zoomOut
-        }}
-        // onEnter={showImage}
-        // onEntered={removeOpacity}
-        // onExited={hideImage}
-        className={`${styles.animated}`}>
-        <div className={`${styles.scrollItems}`} onWheel={handleScrollAndZoom}>
-          {/* {data.map((item) => ( */}
-          {/* <section> */}
-          {/* <HomePages item={slide} /> */}
-          {/* </section> */}
-          {/* ))} */}
-          <div className={`${styles.HomeBody}`}>
-            <div className={`${styles.scrollContainer}`}>
-              <div className={`${styles.scrollItems}`}>
-                <div className={`${styles.Lcontainer}`}>
-                  <img src={data[scrollDown].icon} />
-                  <img src="./images/Zicops-logo-text.png" />
-                </div>
-                <div className={`${styles.text}`}>
-                  <p>{data[scrollDown].text}</p>
-                </div>
-              </div>
-            </div>
-            <div className={`${styles.btn}`}>
-              <button>See More</button>
-            </div>
-            <form className={`${styles.formContainer}`}>
-              <span>
-                <img src="./images/search2.png" alt="not found" />
-              </span>
-              <input type="text" placeholder="Search your Organization" />
-              <button>GO</button>
-            </form>
-          </div>
-        </div>
-      </CSSTransition>
 
-      <footer className={`${styles.HomeFooter}`}>
-        <div className={`${styles.HomeFooterInner}`}>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-        </div>
-      </footer>
+  return (
+    <div className={`${styles.container}`} onWheel={showSlidesOnScroll}>
+      <HomeHeader />
+
+      {[...Array(maxSlideCount + 1).fill(null)].map((v, i) => {
+        const { activeSlide, isLastScrollUp } = slideData;
+        let count = isLastScrollUp ? 1 : -1;
+        let nextSlide = activeSlide + count;
+
+        if (nextSlide < 0 || nextSlide > maxSlideCount) nextSlide = null;
+
+        const outClass = isLastScrollUp ? styles.wheeldownZoomOut : styles.wheelupZoomIn;
+        const inClass = isLastScrollUp ? styles.wheeldownZoomIn : styles.wheelupZoomOut;
+
+        return (
+          <CSSTransition
+            in={activeSlide === i}
+            timeout={DURATION}
+            classNames={{
+              enterActive: nextSlide === i ? outClass : inClass,
+              exitActive: nextSlide === i ? inClass : outClass
+            }}>
+            <div
+              className={`${styles.homepageSlides} ${
+                activeSlide === i ? styles.showActiveSlide : styles.hideOtherSlides
+              }`}
+              // onWheel={showSlidesOnScroll}
+            >
+              <SingleSlide item={data[i]} />
+            </div>
+          </CSSTransition>
+        );
+      })}
+
+      <HomeInputField />
     </div>
   );
-};
-
-export default HomePage;
+}

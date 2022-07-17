@@ -1,0 +1,132 @@
+@import '../../styles/base.scss';
+.learnerUserProfile {
+  height: auto;
+  width: 100%;
+  overflow: auto;
+  background-color: #1e1e1e;
+}
+.userHead {
+  width: 100%;
+  margin-top: 70px;
+  height: 300px;
+  background-image: url('/images/userBackgroundImg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.editIcon img {
+  position: absolute;
+  right: 2%;
+  top: 13%;
+  width: 20px;
+}
+.userImage {
+  width: 150px;
+  height: 150px;
+  position: relative;
+}
+.userImage > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.editFillIcon img {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: $primary;
+  padding: 3px;
+  border-radius: 50%;
+  width: 30px;
+}
+
+.userName {
+  color: $white;
+  font-size: 2vw;
+  font-weight: bold;
+  text-transform: capitalize;
+  padding: 5px 0px;
+}
+.userRole {
+  color: $white;
+  font-size: 1vw;
+  text-transform: capitalize;
+  padding: 5px 0px;
+}
+.text,
+.category {
+  color: $white;
+  font-size: 1.2vw;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+.userInfoWraper {
+  background-color: #262626;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0px;
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+.textEditIcon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Icon img {
+  width: 1.5vw;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.singleWraper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  padding: 15px 0px;
+}
+.singleImage img {
+  width: 2.6vw;
+}
+.textWraper {
+  padding-left: 20px;
+}
+.smallText {
+  font-size: 1vw;
+  color: $bgBody;
+  // padding-bottom: 2px;
+}
+.largeText {
+  font-size: 1.2vw;
+  color: $white;
+}
+.userAboutTab {
+  padding: 50px;
+}
+.categoryPreferences {
+  background-color: #262626;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0px;
+  // display: flex;
+  // gap: 10px;
+}
+.category {
+  display: flex;
+  gap: 10px;
+  padding-top: 20px;
+}
+.textSubCategory {
+  background-color: $black;
+  border-radius: 8px;
+  padding: 5px 20px;
+}
+
+.userTabContainer {
+  height: 75vh;
+}

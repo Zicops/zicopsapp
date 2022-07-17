@@ -1,5 +1,5 @@
-import RangeSlider from '../common/FormComponents/RangeSlider';
-import LinearProgressWithLabel from '../UserProfile/LinearProgressWithLabel';
+import RangeSlider from '../../common/FormComponents/RangeSlider';
+import LinearProgressWithLabel from '../LinearProgressWithLabel';
 import styles from './assignedCourses.module.scss';
 const AssignedCourses = () => {
   return (
