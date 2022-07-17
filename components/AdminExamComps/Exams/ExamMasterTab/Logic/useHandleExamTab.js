@@ -181,7 +181,14 @@ export default function useHandleExamTab() {
     console.log(sendData);
 
     // duplicate name check
-    if (await isNameDuplicate(GET_LATEST_EXAMS_NAMES, examTabData.name, 'getLatestExams.exams')) {
+    if (
+      await isNameDuplicate(
+        GET_LATEST_EXAMS_NAMES,
+        examTabData.name,
+        'getLatestExams.exams',
+        examTabData?.id
+      )
+    ) {
       setToastMsg({ type: 'danger', message: 'Exam with same name already exist' });
       return false;
     }

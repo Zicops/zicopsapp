@@ -69,7 +69,8 @@ export default function useHandlePaperTab() {
   }, [addPaperError, addPaperSectionError, updatePaperError]);
 
   useEffect(() => {
-    if (toastMsg[0]?.type === 'danger') setStatus(STATUS[0]);
+    if (toastMsg[0]?.type === 'danger')
+      setStatus(questionPaperTabData.paperMaster?.status || STATUS[0]);
   }, [toastMsg]);
 
   // question paper master input handler
@@ -159,7 +160,8 @@ export default function useHandlePaperTab() {
       description: res?.Description || '',
       section_wise: res?.SectionWise || false,
       difficulty_level: res?.DifficultyLevel || 0,
-      suggested_duration: res?.SuggestedDuration || ''
+      suggested_duration: res?.SuggestedDuration || '',
+      status: res?.Status || ''
     };
     tabData[paperMaster] = paperMaster;
 
@@ -175,22 +177,23 @@ export default function useHandlePaperTab() {
   }
 
   async function updateQuestionPaper(tabIndex) {
-    // duplicate name check
-    if (
-      await isNameDuplicate(
-        GET_LATEST_QUESTION_PAPERS_NAMES,
-        questionPaperData?.name,
-        'getLatestQuestionPapers.questionPapers'
-      )
-    ) {
-      return setToastMsg({ type: 'danger', message: 'Paper with same name already exist' });
-    }
-
     setStatus('UPDATING');
     if (!isDataValid())
       return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
     const questionPaperData = questionPaperTabData.paperMaster;
+    // duplicate name check
+    if (
+      await isNameDuplicate(
+        GET_LATEST_QUESTION_PAPERS_NAMES,
+        questionPaperData?.name,
+        'getLatestQuestionPapers.questionPapers',
+        questionPaperData?.id
+      )
+    ) {
+      return setToastMsg({ type: 'danger', message: 'Paper with same name already exist' });
+    }
+
     const sendData = {
       id: questionPaperData.id,
       name: questionPaperData.name || '',
@@ -230,6 +233,7 @@ export default function useHandlePaperTab() {
       section_wise: res?.SectionWise || false,
       difficulty_level: res?.DifficultyLevel || 0,
       suggested_duration: res?.SuggestedDuration || '',
+      status: res?.Status || '',
 
       isUpdated: null
     };

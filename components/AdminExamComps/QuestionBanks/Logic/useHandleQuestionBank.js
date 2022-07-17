@@ -120,7 +120,8 @@ export default function useHandleQuestionBank() {
       await isNameDuplicate(
         GET_LATEST_QUESTION_BANK_NAMES,
         questionBankData?.name,
-        'getLatestQuestionBank.questionBanks'
+        'getLatestQuestionBank.questionBanks',
+        questionBankData?.id
       )
     ) {
       return setToastMsg({ type: 'danger', message: 'Bank with same name already exist' });
