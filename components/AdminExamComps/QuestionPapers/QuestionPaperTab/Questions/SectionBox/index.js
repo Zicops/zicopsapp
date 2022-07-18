@@ -26,6 +26,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
   const isSectionWise = questionPaperTabData.paperMaster?.section_wise;
 
   const [qbData, setQbData] = useState([]);
+  let sequence = 0;
 
   useEffect(() => {
     loadBankData();
@@ -69,7 +70,6 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
 
         {questionPaperTabData?.mappedQb?.map((metaData, index) => {
           // return if qb map does belong current section
-          let sequence = 0;
           if (metaData?.sectionId !== section.id) {
             --sequence;
             return null;
