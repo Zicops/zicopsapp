@@ -107,82 +107,70 @@ export default function CourseTopic() {
       </div>
 
       {/* add module pop up */}
-      {addModulePopUp && (
-        <ModulePopUp
-          popUpState={[addModulePopUp, setAddModulePopUp]}
-          moduleData={newModuleData || {}}
-          setModuleData={setNewModuleData}
-          handleSubmit={addNewModule}
-          isAddModuleReady={isAddModuleReady}
-        />
-      )}
+      <ModulePopUp
+        popUpState={[addModulePopUp, setAddModulePopUp]}
+        moduleData={newModuleData || {}}
+        setModuleData={setNewModuleData}
+        handleSubmit={addNewModule}
+        isAddModuleReady={isAddModuleReady}
+      />
 
       {/* edit module pop up */}
-      {editModule?.id && (
-        <ModulePopUp
-          popUpState={[!!editModule?.id, setEditModule]}
-          moduleData={editModule || {}}
-          setModuleData={setEditModule}
-          handleSubmit={handleEditModuleSubmit}
-          isAddModuleReady={isEditModuleReady}
-          isEdit={true}
-        />
-      )}
+      <ModulePopUp
+        popUpState={[!!editModule?.id, setEditModule]}
+        moduleData={editModule || {}}
+        setModuleData={setEditModule}
+        handleSubmit={handleEditModuleSubmit}
+        isAddModuleReady={isEditModuleReady}
+        isEdit={true}
+      />
 
       {/* add chapter pop up */}
-      {addChapterPopUp && (
-        <ChapterPopUp
-          popUpState={[addChapterPopUp, setAddChapterPopUp]}
-          setChapterData={setNewChapterData}
-          chapterData={newChapterData || {}}
-          handleSubmit={addNewChapter}
-          isChapterAddReady={isAddChapterReady}
-        />
-      )}
+      <ChapterPopUp
+        popUpState={[addChapterPopUp, setAddChapterPopUp]}
+        setChapterData={setNewChapterData}
+        chapterData={newChapterData || {}}
+        handleSubmit={addNewChapter}
+        isChapterAddReady={isAddChapterReady}
+      />
 
       {/* edit chapter pop up */}
-      {editChapter?.id && (
-        <ChapterPopUp
-          popUpState={[!!editChapter?.id, setEditChapter]}
-          chapterData={editChapter || {}}
-          setChapterData={setEditChapter}
-          handleSubmit={handleEditChapterSubmit}
-          isChapterAddReady={isEditChapterReady}
-          isEdit={true}
-        />
-      )}
+      <ChapterPopUp
+        popUpState={[!!editChapter?.id, setEditChapter]}
+        chapterData={editChapter || {}}
+        setChapterData={setEditChapter}
+        handleSubmit={handleEditChapterSubmit}
+        isChapterAddReady={isEditChapterReady}
+        isEdit={true}
+      />
 
       {/* add topic pop up */}
-      {addTopicPopUp && (
-        <TopicPopUp
-          popUpState={[addTopicPopUp, setAddTopicPopUp]}
-          addTopicData={{
-            newTopicData,
-            setNewTopicData,
-            handleTopicInput,
-            addNewTopic,
-            isAddTopicReady
-          }}
-        />
-      )}
+      <TopicPopUp
+        popUpState={[addTopicPopUp, setAddTopicPopUp]}
+        addTopicData={{
+          newTopicData,
+          setNewTopicData,
+          handleTopicInput,
+          addNewTopic,
+          isAddTopicReady
+        }}
+      />
 
       {/* edit topic pop up */}
-      {editTopic?.id && (
-        <TopicPopUp
-          popUpState={[editTopic?.id, setEditTopic]}
-          editTopicData={{
-            editTopic,
-            setEditTopic,
-            ...topicContentData,
-            handleEditTopicSubmit,
-            toggleEditTopicForm,
-            isEditTopicFormVisible,
-            isEditTopicReady,
-            updateTopicAndContext
-          }}
-          isEdit={true}
-        />
-      )}
+      <TopicPopUp
+        popUpState={[editTopic?.id, setEditTopic]}
+        editTopicData={{
+          editTopic,
+          setEditTopic,
+          ...topicContentData,
+          handleEditTopicSubmit,
+          toggleEditTopicForm,
+          isEditTopicFormVisible,
+          isEditTopicReady,
+          updateTopicAndContext
+        }}
+        isEdit={true}
+      />
     </>
   );
 }
