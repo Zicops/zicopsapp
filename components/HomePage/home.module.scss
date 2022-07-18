@@ -42,6 +42,27 @@ $DELAY: $DURATION / 2;
   }
 }
 
+.slideIndicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 3%;
+
+  // background-color: $darkThree;
+  border: 2px solid $darkThree;
+  border-radius: 10px;
+  
+  div {
+    height: 30px;
+    width: 5px;
+    background-color: $darkThree;
+    margin: 8px 5px;
+
+    &.active {
+      background-color: $primary;
+    }
+  }
+}
 .wheeldownZoomOut {
   animation: wheeldownZoomOut $DURATION ease-in;
   z-index: 99;

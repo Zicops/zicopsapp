@@ -12,6 +12,8 @@ import LoginEmail from '../LoginEmail';
 import styles from '../LoginEmail/loginEmail.module.scss';
 import LoginHeadOne from '../LoginHeadOne';
 import { useMutation } from '@apollo/client';
+import Link from 'next/link';
+import HomeHeader from '@/components/HomePage/HomeHeader';
 
 const LoginScreen = ({ setPage }) => {
   const [userLogin, { error: loginError }] = useMutation(USER_LOGIN, {
@@ -76,6 +78,8 @@ const LoginScreen = ({ setPage }) => {
 
   return (
     <>
+      <HomeHeader showLogin={false} />
+
       <ZicopsLogin>
         <LoginHeadOne
           heading={'Sign Into Your Learning Space'}
