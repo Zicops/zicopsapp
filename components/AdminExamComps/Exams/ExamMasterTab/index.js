@@ -11,7 +11,7 @@ import {
 } from '../../../../API/Queries';
 import { ExamTabDataAtom, getExamTabDataObject } from '../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
-import { StatusAtom } from '../../../../state/atoms/utils.atoms';
+import { STATUS, StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
 import { ExamMasterTabAtom, ExamMasterTabDataSelector } from './Logic/examMasterTab.helper';
 import useHandleExamTab from './Logic/useHandleExamTab';
@@ -178,7 +178,7 @@ export default function ExamMasterTab() {
       tab={tab}
       setTab={setTab}
       footerObj={{
-        status: status,
+        status: status || STATUS.display[0],
         submitDisplay: examTabData?.id ? 'Update' : 'Save',
         handleSubmit: () => saveExamData(),
         handleCancel: () => {

@@ -47,10 +47,8 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
     });
     if (isError) return;
 
-    console.log('loaded', metaRes?.data);
     setQbData(metaRes?.data?.getQBMeta || []);
   }
-  console.log('questionPaperTabData', questionPaperTabData);
   // return if no section present
   if (!questionPaperTabData?.sectionData?.length) return null;
 

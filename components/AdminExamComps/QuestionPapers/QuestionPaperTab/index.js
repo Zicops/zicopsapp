@@ -192,7 +192,7 @@ export default function QuestionPaperTab() {
         tab={tab}
         setTab={setTab}
         footerObj={{
-          status: status || STATUS[0],
+          status: status || STATUS.display[0],
           submitDisplay: questionPaperId ? 'Update' : 'Save',
           handleSubmit: questionPaperId ? updateQuestionPaper : addNewQuestionPaper,
           handleCancel: () => router.push('/admin/exams/my-question-papers')

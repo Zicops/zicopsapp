@@ -81,7 +81,7 @@ export default function useHandleExamTab() {
   }
 
   useEffect(() => {
-    if (toastMsg[0]?.type === 'danger') setStatus(examTabData?.status || STATUS[0]);
+    if (toastMsg[0]?.type === 'danger') setStatus(examTabData?.status || STATUS.display[1]);
   }, [toastMsg]);
 
   // error notifications
@@ -170,7 +170,7 @@ export default function useHandleExamTab() {
       code: examTabData.code || '',
       type: examTabData.type || '',
 
-      status: examTabData.status || STATUS[1],
+      status: examTabData.status || STATUS.flow[0],
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_exam_active || true
@@ -343,7 +343,7 @@ export default function useHandleExamTab() {
     });
 
     setToastMsg({ type: 'success', message: 'Exam Saved' });
-    setStatus(STATUS[1]);
+    setStatus(STATUS.flow[0]);
     if (!router.query?.examId) return router.push(`${router.asPath}/${examId}`);
   }
 

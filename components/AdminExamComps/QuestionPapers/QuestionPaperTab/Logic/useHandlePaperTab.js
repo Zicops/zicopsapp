@@ -46,19 +46,18 @@ export default function useHandlePaperTab() {
     setQuestionPaperTabData(getQuestionPaperTabDataObject());
   }, []);
 
-  useEffect(() => {
-    if (!questionPaperId) return;
-    if (status !== STATUS[0]) return;
+  // useEffect(() => {
+  //   if (!questionPaperId) return;
+  //   if (STATUS.flow.includes(status)) return;
 
-    // after saving paper master for first time
-    if (toastMsg[0]?.type === 'success') return;
-
-    if (questionPaperTabData.paperMaster?.isUpdated && tab === paperTabData[1].name) {
-      setTab(paperTabData[0].name);
-      setToastMsg({ type: 'danger', message: 'Please save Question Paper Master data' });
-      return;
-    }
-  }, [tab]);
+  //   // after saving paper master for first time
+  //   if (toastMsg[0]?.type === 'success') return;
+  //   if (questionPaperTabData.paperMaster?.isUpdated && tab === paperTabData[1].name) {
+  //     setTab(paperTabData[0].name);
+  //     setToastMsg({ type: 'danger', message: 'Please save Question Paper Master data' });
+  //     return;
+  //   }
+  // }, [tab]);
 
   // error notification
   useEffect(() => {
@@ -68,9 +67,17 @@ export default function useHandlePaperTab() {
     if (addPaperSectionError) return setToastMsg({ type: 'danger', message: `Add Section Error` });
   }, [addPaperError, addPaperSectionError, updatePaperError]);
 
+  // set the footer status
   useEffect(() => {
-    if (toastMsg[0]?.type === 'danger')
-      setStatus(questionPaperTabData.paperMaster?.status || STATUS[0]);
+    if (toastMsg[0]?.type === 'danger') {
+      setStatus(STATUS.display[1]);
+
+      if (questionPaperTabData.paperMaster?.status) {
+        setTimeout(() => {
+          setStatus(questionPaperTabData.paperMaster?.status || STATUS.display[1]);
+        }, 2000);
+      }
+    }
   }, [toastMsg]);
 
   // question paper master input handler
@@ -96,19 +103,22 @@ export default function useHandlePaperTab() {
   // data validation before add or update
   function isDataValid() {
     const paperMaster = questionPaperTabData.paperMaster;
-    return (
-      paperMaster.name &&
-      paperMaster.description &&
-      paperMaster.category &&
-      paperMaster.sub_category &&
-      paperMaster.difficulty_level
-    );
+
+    let errMsg = null;
+    if (!paperMaster.suggested_duration) errMsg = 'Please add paper suggested duration';
+    if (!paperMaster.difficulty_level) errMsg = 'Please add paper difficulty level';
+    if (!paperMaster.sub_category) errMsg = 'Please select paper sub category';
+    if (!paperMaster.category) errMsg = 'Please select paper category';
+    if (!paperMaster.description) errMsg = 'Please add paper description';
+    if (!paperMaster.name) errMsg = 'Please add paper name';
+
+    if (errMsg) setToastMsg({ type: 'danger', message: errMsg });
+    return !errMsg;
   }
 
   async function addNewQuestionPaper(tabIndex) {
     setStatus('UPDATING');
-    if (!isDataValid())
-      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
+    if (!isDataValid()) return;
 
     const tabData = { ...questionPaperTabData };
     const questionPaperData = questionPaperTabData.paperMaster;
@@ -130,10 +140,10 @@ export default function useHandlePaperTab() {
       description: questionPaperData.description || '',
       section_wise: questionPaperData.section_wise || false,
       difficulty_level: questionPaperData.difficulty_level || 0,
-      suggested_duration: questionPaperData.suggested_duration || '',
+      suggested_duration: questionPaperData.suggested_duration || '0',
 
       // TODO: update later
-      status: STATUS[1],
+      status: STATUS.flow[0],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
@@ -160,7 +170,7 @@ export default function useHandlePaperTab() {
       description: res?.Description || '',
       section_wise: res?.SectionWise || false,
       difficulty_level: res?.DifficultyLevel || 0,
-      suggested_duration: res?.SuggestedDuration || '',
+      suggested_duration: res?.SuggestedDuration || '0',
       status: res?.Status || ''
     };
     tabData[paperMaster] = paperMaster;
@@ -173,13 +183,12 @@ export default function useHandlePaperTab() {
       setTab(paperTabData[tabIndex].name);
     }
 
-    setStatus(STATUS[1]);
+    setStatus(STATUS.flow[0]);
   }
 
   async function updateQuestionPaper(tabIndex) {
     setStatus('UPDATING');
-    if (!isDataValid())
-      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
+    if (!isDataValid()) return;
 
     const questionPaperData = questionPaperTabData.paperMaster;
     // duplicate name check
@@ -202,10 +211,10 @@ export default function useHandlePaperTab() {
       description: questionPaperData.description || '',
       section_wise: questionPaperData.section_wise || false,
       difficulty_level: questionPaperData.difficulty_level || 0,
-      suggested_duration: questionPaperData.suggested_duration || '',
+      suggested_duration: questionPaperData.suggested_duration || '0',
 
       // TODO: update later
-      status: STATUS[1],
+      status: STATUS.flow[0],
       is_active: questionPaperData.is_active || false,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
@@ -232,7 +241,7 @@ export default function useHandlePaperTab() {
       description: res?.Description || '',
       section_wise: res?.SectionWise || false,
       difficulty_level: res?.DifficultyLevel || 0,
-      suggested_duration: res?.SuggestedDuration || '',
+      suggested_duration: res?.SuggestedDuration || '0',
       status: res?.Status || '',
 
       isUpdated: null
@@ -246,7 +255,7 @@ export default function useHandlePaperTab() {
     if (!isError) setToastMsg({ type: 'success', message: 'Question Paper Updated' });
     if (!isNaN(+tabIndex)) setTab(paperTabData[tabIndex].name);
 
-    setStatus(STATUS[1]);
+    setStatus(STATUS.flow[0]);
   }
 
   return { handleInput, addNewQuestionPaper, updateQuestionPaper };
