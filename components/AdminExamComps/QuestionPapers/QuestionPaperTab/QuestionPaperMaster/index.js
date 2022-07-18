@@ -47,9 +47,9 @@ export default function QuestionPaperMaster() {
         inputOptions={{
           inputName: 'name',
           label: 'Question Paper Name:',
-          placeholder: 'Enter name in less than 60 characters',
+          placeholder: 'Enter name in less than 160 characters',
           value: questionPaperTabData.paperMaster?.name,
-          maxLength: 60
+          maxLength: 160
         }}
         changeHandler={(e) => handleInput(e)}
         styleClass={`${styles.inputField}`}
