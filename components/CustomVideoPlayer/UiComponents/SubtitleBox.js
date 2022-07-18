@@ -52,20 +52,22 @@ export default function SubtitleBox({ subtitleState }) {
             />
           </h4>
 
-          {topicContent &&
-            topicContent[currentTopicContentIndex]?.subtitleUrl?.map((s, i) => (
-              <button
-                key={s.language}
-                className={`${i === currentSubtitleIndex ? styles.languageBtnActive : ''}`}
-                onClick={() => {
-                  setVideoData({
-                    ...videoData,
-                    currentSubtitleIndex: i
-                  });
-                }}>
-                {s.language}
-              </button>
-            ))}
+          <section>
+            {topicContent &&
+              topicContent[currentTopicContentIndex]?.subtitleUrl?.map((s, i) => (
+                <button
+                  key={s.language}
+                  className={`${i === currentSubtitleIndex ? styles.languageBtnActive : ''}`}
+                  onClick={() => {
+                    setVideoData({
+                      ...videoData,
+                      currentSubtitleIndex: i
+                    });
+                  }}>
+                  {s.language}
+                </button>
+              ))}
+          </section>
         </div>
 
         {(videoData?.topicContent?.length ||
