@@ -25,7 +25,7 @@ export default function HomePage() {
     let index = slideIndex + (isScrollUp ? 1 : -1);
     if (index < 0) index = 0;
     if (index > maxSlideCount - 1) index = maxSlideCount - 1;
-
+    
     setSlideIndex(index);
 
     if (index !== slideIndex) {
@@ -42,6 +42,36 @@ export default function HomePage() {
     );
   }
 
+  // Need to fix this later - add all slides with animation one after another
+  function showSlidesOnClick(gotoSlide) {
+    if (isAnimationOngoing) return;
+    seIsAnimationOngoing(1);
+
+    const isScrollUp = slideIndex < gotoSlide;
+    // let index = slideIndex + (isScrollUp ? 1 : -1);
+    // if (index < 0) index = 0;
+    // if (index > maxSlideCount - 1) index = maxSlideCount - 1;
+    // console.log('notReturned', index);
+      
+    // for (let j = slideIndex; j < Math.abs(slideIndex - gotoSlide) + 1; j++) {
+      // setTimeout(() => {
+        updateSlideByIndex(gotoSlide, isScrollUp);
+      // }, 2000);
+    // }
+  }
+
+  function updateSlideByIndex(gotoSlide, isScrollUp) {
+    setSlideIndex(gotoSlide);
+    setSlideData({
+      ...slideData,
+      activeSlide: gotoSlide,
+      isLastScrollUp: isScrollUp
+    });
+    setTimeout(
+      () => seIsAnimationOngoing(0),
+      gotoSlide === maxSlideCount || gotoSlide === 0 ? 1 : DURATION
+    );
+  }
   return (
     <div className={`${styles.container}`} onWheel={showSlidesOnScroll}>
       <HomeHeader />
@@ -49,7 +79,7 @@ export default function HomePage() {
       <SlideIndicator
         count={maxSlideCount}
         activeSlide={slideIndex}
-        showSlidesOnScroll={showSlidesOnScroll}
+        showSlidesOnScroll={showSlidesOnClick}
       />
 
       {[...Array(maxSlideCount).fill(null)].map((v, i) => {
