@@ -126,7 +126,7 @@ function getNestedValueByString(obj, path) {
     .reduce((acc, val) => acc && acc[val], obj);
 }
 
-export async function isNameDuplicate(QUERY, name, objPath) {
+export async function isNameDuplicate(QUERY, name, objPath, id = null) {
   const LONG_PAGE_SIZE = 999999999999;
   const queryVariables = { publish_time: Date.now(), pageSize: LONG_PAGE_SIZE, pageCursor: '' };
   const results = await queryClient.query({ query: QUERY, variables: queryVariables });
@@ -134,6 +134,9 @@ export async function isNameDuplicate(QUERY, name, objPath) {
   const arrayOfNames = getNestedValueByString(results?.data, objPath) || [];
 
   const isNameExist = arrayOfNames.some((obj) => {
+    console.log(id);
+    if (id && obj.id === id) return false;
+    console.log(obj, name);
     const _name = obj.Name || obj.name;
     return _name?.toLowerCase() === name?.toLowerCase();
   });

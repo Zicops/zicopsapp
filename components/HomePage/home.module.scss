@@ -1,11 +1,26 @@
 @import '../../styles/base.scss';
 
-$DURATION : 1000ms;
-$DELAY : $DURATION / 2;
+$DURATION: 1000ms;
+$DELAY: $DURATION / 2;
+
+.vrContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: -1;
+
+  // fallback if vr is not loaded
+  @include transparentBackground(url('/images/starrySky2.png'), 1);
+
+  .vrBackground {
+    overflow: hidden;
+  }
+}
 
 .container {
   font-family: 'Open Sans';
-  background-image: url('/images/starrySky2.png');
   background-position: center;
   background-size: cover;
 
@@ -33,7 +48,7 @@ $DELAY : $DURATION / 2;
 .wheeldownZoomIn {
   animation: wheeldownZoomIn $DURATION ease-out;
   z-index: 99;
-  animation-delay: ($DELAY/2 - $DELAY*.2);
+  animation-delay: ($DELAY/2 - $DELAY * 0.2);
 }
 
 .wheelupZoomIn {
@@ -43,7 +58,7 @@ $DELAY : $DURATION / 2;
 .wheelupZoomOut {
   animation: wheelupZoomOut $DURATION ease-out;
   z-index: 99;
-  animation-delay: ($DELAY/2 - $DELAY*.2);
+  animation-delay: ($DELAY/2 - $DELAY * 0.2);
 }
 
 @keyframes wheeldownZoomOut {
@@ -106,7 +121,6 @@ $DELAY : $DURATION / 2;
 .hideOtherSlides {
   transform: scale(0);
 }
-
 
 // .HomeContainer {
 //   font-family: 'Open Sans';
@@ -252,7 +266,7 @@ $DELAY : $DURATION / 2;
 .formContainerWrapper {
   width: 100%;
   position: absolute;
-  bottom: 22%;
+  bottom: 15%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -308,7 +322,7 @@ $DELAY : $DURATION / 2;
   position: fixed;
   width: 100%;
   height: 27px;
-  bottom: 70px;
+  bottom: 40px;
   // left: 0px;
   //   background-color: $darkTwo;
   font-size: small;

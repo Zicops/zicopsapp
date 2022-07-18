@@ -55,6 +55,7 @@ export default function HomePage() {
         return (
           <CSSTransition
             in={activeSlide === i}
+            key={i}
             timeout={DURATION}
             classNames={{
               enterActive: nextSlide === i ? outClass : inClass,
