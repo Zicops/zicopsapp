@@ -49,6 +49,8 @@ jobs:
     - run: |
         gcloud auth configure-docker -q
     - name: Push image to GCP
+      if:
+        - $GITHUB_REF_NAME == 'main'
       run: |
            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
@@ -58,6 +60,8 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
     - name: Deploy to zicops-one
+      if: 
+        - $GITHUB_REF_NAME == 'main'
       run: |
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE \
