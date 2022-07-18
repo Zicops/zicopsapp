@@ -124,7 +124,8 @@ export default function ExistingQuestion({
             inputName: 'question_marks',
             label: 'Marks Per Question:',
             placeholder: 'Enter Marks Per Question',
-            value: metaData?.question_marks
+            value: metaData?.question_marks,
+            isNumericOnly: true
           }}
           changeHandler={(e) => changeHandler(e, metaData, setMetaData)}
           isFiftyFifty={true}
@@ -136,7 +137,8 @@ export default function ExistingQuestion({
             inputName: 'total_questions',
             label: 'No. of Question:',
             placeholder: 'Enter No. of Question',
-            value: metaData?.total_questions
+            value: metaData?.total_questions,
+            isNumericOnly: true
           }}
           changeHandler={(e) => {
             // validation for entering total question should not be greater than available questions

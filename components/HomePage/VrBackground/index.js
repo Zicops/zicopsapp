@@ -7,7 +7,7 @@ export default function VrBackground() {
   useEffect(() => {
     let timer = null;
     function handleMouseMove(e) {
-      console.log(e);
+      // console.log(e);
       clearTimeout(timer);
 
       timer = setTimeout(() => {

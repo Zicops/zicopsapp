@@ -11,9 +11,13 @@ import {
 } from '../../../../API/Queries';
 import { ExamTabDataAtom, getExamTabDataObject } from '../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
-import { StatusAtom } from '../../../../state/atoms/utils.atoms';
+import { STATUS, StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
-import { ExamMasterTabAtom, ExamMasterTabDataSelector } from './Logic/examMasterTab.helper';
+import {
+  ExamMasterTabAtom,
+  ExamMasterTabDataSelector,
+  getTabData
+} from './Logic/examMasterTab.helper';
 import useHandleExamTab from './Logic/useHandleExamTab';
 
 export default function ExamMasterTab() {
@@ -45,6 +49,12 @@ export default function ExamMasterTab() {
   useEffect(async () => {
     const examId = router.query?.examId || null;
     const qpId = router.query?.qpId || null;
+    const tabIndex = +router.query?.tabIndex || null;
+    if (tabIndex) {
+      alert(tabIndex);
+      setTab(getTabData()[tabIndex].name);
+    }
+
     if (!examId) {
       return setExamTabData(
         getExamTabDataObject({ qpId: qpId, total_marks: await getTotalMarks(qpId) })
@@ -122,7 +132,7 @@ export default function ExamMasterTab() {
       schObj = {
         scheduleId: schData?.id || null,
         exam_start: new Date(+schData?.Start * 1000),
-        exam_end: new Date(+schData?.End * 1000),
+        exam_end: +schData?.End ? new Date(+schData?.End * 1000) : null,
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
         is_schedule_active: schData?.IsActive || false
@@ -178,7 +188,7 @@ export default function ExamMasterTab() {
       tab={tab}
       setTab={setTab}
       footerObj={{
-        status: status,
+        status: status || STATUS.display[0],
         submitDisplay: examTabData?.id ? 'Update' : 'Save',
         handleSubmit: () => saveExamData(),
         handleCancel: () => {

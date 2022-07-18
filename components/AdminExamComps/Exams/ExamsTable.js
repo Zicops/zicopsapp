@@ -2,28 +2,93 @@ import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { GET_LATEST_EXAMS, queryClient } from '../../../API/Queries';
+import {
+  GET_EXAM_SCHEDULE,
+  GET_LATEST_EXAMS,
+  GET_QUESTION_PAPER_META,
+  queryClient
+} from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ZicopsTable from '../../common/ZicopsTable';
 
 export default function ExamsTable({ isEdit = false }) {
-  const [loadExams, { error }] = useLazyQuery(GET_LATEST_EXAMS, { client: queryClient });
-
+  const [loadExams, { error: loadExamErr }] = useLazyQuery(GET_LATEST_EXAMS, {
+    client: queryClient
+  });
+  const [loadSchedule, { error: loadScheduleErr }] = useLazyQuery(GET_EXAM_SCHEDULE, {
+    client: queryClient
+  });
+  const [loadPaperMeta, { error: loadMetaError }] = useLazyQuery(GET_QUESTION_PAPER_META, {
+    client: queryClient
+  });
   const router = useRouter();
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [exams, setExams] = useState([]);
 
   // load table data
-  useEffect(() => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
+  useEffect(async () => {
+    const queryVariables = { publish_time: Date.now(), pageSize: 10, pageCursor: '' };
 
-    loadExams({ variables: queryVariables }).then(({ data }) => {
-      if (error) return setToastMsg({ type: 'danger', message: 'exams load error' });
+    const res = await loadExams({ variables: queryVariables });
+    if (loadExamErr) return setToastMsg({ type: 'danger', message: 'exams load error' });
+    if (!res.data?.getLatestExams?.exams) return;
 
-      if (data?.getLatestExams?.exams) setExams(data.getLatestExams.exams);
-    });
+    const loadedExams = res.data.getLatestExams.exams || [];
+    const exams = [];
+
+    for (let i = 0; i < loadedExams.length; i++) {
+      const exam = loadedExams[i];
+
+      if (exam?.ScheduleType !== 'scheduled') {
+        exams.push(exam);
+        continue;
+      }
+
+      const schRes = await loadSchedule({
+        variables: { exam_id: exam.id },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        console.log(err);
+        return setToastMsg({ type: 'danger', message: 'Schedule load error' });
+      });
+      const schData = schRes?.data?.getExamSchedule[0];
+
+      const schObj = {
+        scheduleId: schData?.id || null,
+        exam_start: new Date(+schData?.Start * 1000),
+        exam_end: +schData?.End ? new Date(+schData?.End * 1000) : null,
+        buffer_time: schData?.BufferTime || 0,
+        is_stretch: !!+schData?.End,
+        is_schedule_active: schData?.IsActive || false
+      };
+
+      if (!schObj.exam_end) {
+        const qpMetaRes = await loadPaperMeta({
+          variables: { question_paper_id: [exam.QpId] }
+        }).catch((err) => {
+          console.log(err);
+          return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
+        });
+
+        const paperDuration = qpMetaRes?.data?.getQPMeta[0]?.SuggestedDuration || 0;
+        schObj.exam_end = new Date(
+          schObj.exam_start.setMinutes(schObj.buffer_time + paperDuration)
+        );
+      }
+
+      const now = new Date();
+      let status = exam.status;
+
+      console.log(schObj);
+      if (schObj.exam_start <= now) status = 'STARTED';
+      if (schObj.exam_end <= now) status = 'ENDED';
+
+      exams.push({ ...exam, Status: status });
+    }
+
+    setExams(exams);
   }, []);
 
   const columns = [

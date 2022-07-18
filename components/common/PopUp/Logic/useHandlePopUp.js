@@ -28,7 +28,7 @@ export default function useHandlePopUp(popUpState = []) {
       const isPrevBool = typeof prev === 'boolean';
 
       //  pop up is open and data is not modified
-      if (isConfirmed === false) return isPrevBool ? !prev : prev;
+      if (isConfirmed === false) return isPrevBool ? true : prev;
 
       // if prev data is boolean
       if (isPrevBool) return false;
@@ -38,8 +38,6 @@ export default function useHandlePopUp(popUpState = []) {
   }, [confirmMsg]);
 
   function closePopUp() {
-    setPopUpParentState(false);
-
     if (!isPopUpDataPresent) {
       setIsOpen(false);
       return;

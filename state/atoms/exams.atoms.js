@@ -70,7 +70,7 @@ export function getQuestionPaperMasterObject(data = {}) {
     difficulty_level: data.difficulty_level || 0,
     suggested_duration: data.suggested_duration || '',
 
-    status: data.status || 'DRAFT',
+    status: data.status || null,
     is_active: data.is_active || false,
     is_default: data.is_default || false,
     created_at: data.created_at || '',

@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { GET_CATS_N_SUB_CATS } from '../../../../../API/Queries';
-import { loadQueryData } from '../../../../../helper/api.helper';
 import { loadCatSubCat } from '../../../../../helper/data.helper';
 import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
@@ -13,18 +11,11 @@ import useHandlePaperTab from '../Logic/useHandlePaperTab';
 import styles from '../questionPaperTab.module.scss';
 
 export default function QuestionPaperMaster() {
-  const categoryOption = [];
-  const subCategoryOption = [];
   const difficultyOptions = [
     { value: 'Beginner', label: 'Beginner' },
     { value: 'Competent', label: 'Competent' },
     { value: 'Proficient', label: 'Proficient' }
   ];
-
-  // load categories
-  // const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
-  // allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
-  // allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
 
   const router = useRouter();
   const questionPaperId = router.query?.questionPaperId;
@@ -47,9 +38,10 @@ export default function QuestionPaperMaster() {
         inputOptions={{
           inputName: 'name',
           label: 'Question Paper Name:',
-          placeholder: 'Enter name in less than 60 characters',
+          placeholder: 'Enter name in less than 160 characters',
           value: questionPaperTabData.paperMaster?.name,
-          maxLength: 60
+          maxLength: 160,
+          isDisabled: questionPaperTabData.paperMaster?.id
         }}
         changeHandler={(e) => handleInput(e)}
         styleClass={`${styles.inputField}`}
@@ -72,6 +64,7 @@ export default function QuestionPaperMaster() {
           label: 'Category:',
           placeholder: 'Select Category',
           options: catAndSubCatOption?.cat,
+          isDisabled: !!questionPaperTabData?.sectionData?.length,
           value: {
             value: questionPaperTabData.paperMaster?.category,
             label: questionPaperTabData.paperMaster?.category
@@ -87,6 +80,7 @@ export default function QuestionPaperMaster() {
           label: 'Sub-Category:',
           placeholder: 'Select Sub-Category',
           options: catAndSubCatOption?.subCat,
+          isDisabled: !!questionPaperTabData?.sectionData?.length,
           value: {
             value: questionPaperTabData.paperMaster?.sub_category,
             label: questionPaperTabData.paperMaster?.sub_category
@@ -106,6 +100,7 @@ export default function QuestionPaperMaster() {
             label: 'Difficulty Level:',
             placeholder: 'Select the difficulty level',
             options: difficultyOptions,
+            isDisabled: !!questionPaperTabData?.sectionData?.length,
             value: {
               value: questionPaperTabData.paperMaster?.difficulty_level,
               label: questionPaperTabData.paperMaster?.difficulty_level

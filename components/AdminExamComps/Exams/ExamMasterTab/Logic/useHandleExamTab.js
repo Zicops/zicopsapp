@@ -24,7 +24,7 @@ import { isNameDuplicate } from '../../../../../helper/data.helper';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import { STATUS, StatusAtom } from '../../../../../state/atoms/utils.atoms';
-import { SCHEDULE_TYPE } from './examMasterTab.helper';
+import { ExamMasterTabAtom, getTabData, SCHEDULE_TYPE } from './examMasterTab.helper';
 
 export default function useHandleExamTab() {
   const [addExam, { error: addExamError }] = useMutation(ADD_EXAM, {
@@ -69,19 +69,31 @@ export default function useHandleExamTab() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [status, setStatus] = useRecoilState(StatusAtom);
+  const [tab, setTab] = useRecoilState(ExamMasterTabAtom);
 
   // disable submit if data not complete
   function validateInput() {
     const { name, description, qpId, duration, schedule_type, passing_criteria, instructions } =
       examTabData;
-    const isExamValid = name && description && qpId && duration && schedule_type;
 
-    const isInstructionsValid = passing_criteria && instructions;
-    return isExamValid && isInstructionsValid;
+    let errMsg = null;
+    if (!instructions) errMsg = 'Please add instruction';
+    if (!passing_criteria) errMsg = 'Please add passing criteria';
+    if (!duration) errMsg = 'duration should have some value';
+    if (!schedule_type) errMsg = 'Please select schedule type';
+    if (!description) errMsg = 'Please add exam description';
+    if (!name) errMsg = 'Please add exam name';
+    if (!qpId) errMsg = 'Please select question paper';
+
+    if (errMsg) setToastMsg({ type: 'danger', message: errMsg });
+    return !errMsg;
   }
 
   useEffect(() => {
-    if (toastMsg[0]?.type === 'danger') setStatus(examTabData?.status || STATUS[0]);
+    if (toastMsg[0]?.type !== 'danger') return;
+
+    setStatus(STATUS.display[1]);
+    if (examTabData?.status) setTimeout(() => setStatus(examTabData?.status), 2000);
   }, [toastMsg]);
 
   // error notifications
@@ -170,7 +182,7 @@ export default function useHandleExamTab() {
       code: examTabData.code || '',
       type: examTabData.type || '',
 
-      status: examTabData.status || STATUS[1],
+      status: examTabData.status || STATUS.flow[0],
       createdBy: examTabData.createdBy || 'Zicops',
       updatedBy: examTabData.updatedBy || 'Zicops',
       is_active: examTabData.is_exam_active || true
@@ -316,11 +328,10 @@ export default function useHandleExamTab() {
     return response?.data?.addExamConfiguration;
   }
 
-  async function saveExamData() {
+  async function saveExamData(index = null) {
     console.log(examTabData);
     setStatus('UPDATING');
-    if (!validateInput())
-      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
+    if (!validateInput()) return;
 
     const examRes = await saveExam();
     if (!examRes) return;
@@ -343,8 +354,19 @@ export default function useHandleExamTab() {
     });
 
     setToastMsg({ type: 'success', message: 'Exam Saved' });
-    setStatus(STATUS[1]);
-    if (!router.query?.examId) return router.push(`${router.asPath}/${examId}`);
+    setStatus(STATUS.flow[0]);
+
+    if (!router.query?.examId) {
+      const route = `${router.asPath}/${examId}`;
+      const param = index ? `?=tabIndex${index}` : '';
+      return router.push(`${route}${param}`, route);
+    }
+
+    if (index) {
+      let tabIndex = index;
+      if (examTabData.schedule_type !== SCHEDULE_TYPE[0]) ++tabIndex;
+      setTab(getTabData()[tabIndex].name);
+    }
   }
 
   return { saveExamData, getTotalMarks };

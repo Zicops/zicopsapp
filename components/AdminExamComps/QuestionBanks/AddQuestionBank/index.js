@@ -63,7 +63,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           label: 'Name:',
           placeholder: 'Enter the name in less than 60 characters',
           value: questionBankData?.name,
-          isDisabled: !isPopUp,
+          isDisabled: questionBankData?.id || !isPopUp,
           maxLength: 60
         }}
         changeHandler={(e) => changeHandler(e, questionBankData, setQuestionBankData)}

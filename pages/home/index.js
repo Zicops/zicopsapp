@@ -16,11 +16,11 @@ const Home = () => {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
       </Head>
 
-      {mounted ? createPortal(<VrBackground />, ref.current) : null}
+      {mounted ? createPortal(<VrBackground />, ref.current) : null} */}
 
       <HomePage />
     </>

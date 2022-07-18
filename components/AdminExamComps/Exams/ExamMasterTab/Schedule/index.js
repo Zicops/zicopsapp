@@ -1,3 +1,4 @@
+import NextButton from '@/components/common/NextButton';
 import { Grid } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -9,6 +10,7 @@ import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '../../../../common/InputDatePicker';
 import styles from '../examMasterTab.module.scss';
+import useHandleExamTab from '../Logic/useHandleExamTab';
 import useValidateScheduleDates from '../Logic/useValidateScheduleDates';
 
 export default function Schedule() {
@@ -28,6 +30,8 @@ export default function Schedule() {
       exam_end: isBehind ? getTimeWithDuration() : examTabData?.exam_end
     });
   }, [examTabData?.duration]);
+
+  const { saveExamData } = useHandleExamTab();
 
   return (
     <div className={`${styles.scheduleContainer}`}>
@@ -165,6 +169,10 @@ export default function Schedule() {
           </section>
         </>
       )}
+
+      <div className={`${styles.nextBtn}`}>
+        <NextButton clickHandler={() => saveExamData(2)} />
+      </div>
     </div>
   );
 }

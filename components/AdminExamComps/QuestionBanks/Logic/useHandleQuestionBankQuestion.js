@@ -1,3 +1,4 @@
+import { STATUS } from '@/state/atoms/utils.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -221,7 +222,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
         // TODO: remove or update later
         createdBy: 'Zicops',
         updatedBy: 'Zicops',
-        status: 'SAVED'
+        status: STATUS.flow[0]
       };
 
       if (question.file) {
@@ -293,7 +294,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       // TODO: remove or update later
       createdBy: 'Zicops',
       updatedBy: 'Zicops',
-      status: 'SAVED'
+      status: STATUS.flow[0]
     };
 
     if (question.file) {

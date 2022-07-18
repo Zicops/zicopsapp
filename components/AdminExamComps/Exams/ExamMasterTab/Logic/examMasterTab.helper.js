@@ -22,7 +22,7 @@ export const ExamMasterTabAtom = atom({
   default: getTabData()[0].name
 });
 
-function getTabData() {
+export function getTabData() {
   return [
     {
       name: 'Exam Master',
