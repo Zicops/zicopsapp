@@ -13,7 +13,11 @@ import { ExamTabDataAtom, getExamTabDataObject } from '../../../../state/atoms/e
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { STATUS, StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
-import { ExamMasterTabAtom, ExamMasterTabDataSelector } from './Logic/examMasterTab.helper';
+import {
+  ExamMasterTabAtom,
+  ExamMasterTabDataSelector,
+  getTabData
+} from './Logic/examMasterTab.helper';
 import useHandleExamTab from './Logic/useHandleExamTab';
 
 export default function ExamMasterTab() {
@@ -45,6 +49,12 @@ export default function ExamMasterTab() {
   useEffect(async () => {
     const examId = router.query?.examId || null;
     const qpId = router.query?.qpId || null;
+    const tabIndex = +router.query?.tabIndex || null;
+    if (tabIndex) {
+      alert(tabIndex);
+      setTab(getTabData()[tabIndex].name);
+    }
+
     if (!examId) {
       return setExamTabData(
         getExamTabDataObject({ qpId: qpId, total_marks: await getTotalMarks(qpId) })

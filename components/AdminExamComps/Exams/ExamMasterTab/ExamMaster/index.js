@@ -1,3 +1,4 @@
+import NextButton from '@/components/common/NextButton';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -28,7 +29,7 @@ export default function ExamMaster() {
   const router = useRouter();
   const isPreview = router.query?.isPreview || false;
 
-  const { getTotalMarks } = useHandleExamTab();
+  const { getTotalMarks, saveExamData } = useHandleExamTab();
 
   // load question paper data
   useEffect(() => {
@@ -115,7 +116,7 @@ export default function ExamMaster() {
         inputOptions={{
           inputName: 'name',
           label: 'Exam Name:',
-          placeholder: 'Enter name of the paper (Upto 60 characters)',
+          placeholder: 'Enter name of the exam (Upto 60 characters)',
           value: examTabData?.name,
           maxLength: 60,
           isDisabled: isPreview
@@ -160,7 +161,7 @@ export default function ExamMaster() {
             inputName: 'total_marks',
             label: 'Total Marks:',
             placeholder: 'Total Marks',
-            value: examTabData?.total_marks?.toString(),
+            value: examTabData?.total_marks?.toString() || 0,
             isDisabled: true
           }}
         />
@@ -171,7 +172,12 @@ export default function ExamMaster() {
           Passing Criteria:
         </label>
 
-        <div className={`${styles.passingCriteriaInnerContainer}`}>
+        <div
+          className={`${styles.passingCriteriaInnerContainer} ${
+            examTabData?.passing_criteria?.length ? '' : styles.hasValue
+          }`}
+          onFocus={(e) => e.currentTarget.classList.add(styles.focus)}
+          onBlur={(e) => e.currentTarget.classList.remove(styles.focus)}>
           <input
             type="text"
             className="w-75"
@@ -317,10 +323,11 @@ export default function ExamMaster() {
             styleClass={styles.inputLabelGap}
             inputOptions={{
               inputName: 'instructions',
+              placeholder: 'Enter exam instructions (Upto 300 characters)',
               rows: 4,
               value: examTabData?.instructions,
               isDisabled: isPreview,
-              maxLength: 3000
+              maxLength: 300
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
@@ -334,25 +341,29 @@ export default function ExamMaster() {
         </label>
       </div>
 
-      <div className={`w-50 ${styles.checkboxContainer}`}>
-        <LabeledRadioCheckbox
-          type="radio"
-          label="Scheduled"
-          name="schedule_type"
-          value={SCHEDULE_TYPE[0]}
-          isDisabled={!!examTabData?.id}
-          isChecked={examTabData.schedule_type === 'scheduled'}
-          changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-        />
-        <LabeledRadioCheckbox
-          type="radio"
-          label="Take Anytime"
-          name="schedule_type"
-          value={SCHEDULE_TYPE[1]}
-          isDisabled={!!examTabData?.id}
-          isChecked={examTabData.schedule_type === 'anytime'}
-          changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-        />
+      <div className={`w-100 ${styles.examMasterLastRow}`}>
+        <div className={`w-50 ${styles.checkboxContainer}`}>
+          <LabeledRadioCheckbox
+            type="radio"
+            label="Scheduled"
+            name="schedule_type"
+            value={SCHEDULE_TYPE[0]}
+            isDisabled={!!examTabData?.id}
+            isChecked={examTabData.schedule_type === 'scheduled'}
+            changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+          />
+          <LabeledRadioCheckbox
+            type="radio"
+            label="Take Anytime"
+            name="schedule_type"
+            value={SCHEDULE_TYPE[1]}
+            isDisabled={!!examTabData?.id}
+            isChecked={examTabData.schedule_type === 'anytime'}
+            changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+          />
+        </div>
+
+        <NextButton clickHandler={() => saveExamData(1)} />
       </div>
 
       {/* exam access */}

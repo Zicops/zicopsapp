@@ -69,15 +69,11 @@ export default function useHandlePaperTab() {
 
   // set the footer status
   useEffect(() => {
-    if (toastMsg[0]?.type === 'danger') {
-      setStatus(STATUS.display[1]);
+    if (toastMsg[0]?.type !== 'danger') return;
 
-      if (questionPaperTabData.paperMaster?.status) {
-        setTimeout(() => {
-          setStatus(questionPaperTabData.paperMaster?.status || STATUS.display[1]);
-        }, 2000);
-      }
-    }
+    setStatus(STATUS.display[1]);
+    if (questionPaperTabData.paperMaster?.status)
+      setTimeout(() => setStatus(questionPaperTabData.paperMaster?.status), 2000);
   }, [toastMsg]);
 
   // question paper master input handler

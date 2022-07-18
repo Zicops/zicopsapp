@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { GET_CATS_N_SUB_CATS } from '../../../../../API/Queries';
-import { loadQueryData } from '../../../../../helper/api.helper';
 import { loadCatSubCat } from '../../../../../helper/data.helper';
 import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
@@ -13,18 +11,11 @@ import useHandlePaperTab from '../Logic/useHandlePaperTab';
 import styles from '../questionPaperTab.module.scss';
 
 export default function QuestionPaperMaster() {
-  const categoryOption = [];
-  const subCategoryOption = [];
   const difficultyOptions = [
     { value: 'Beginner', label: 'Beginner' },
     { value: 'Competent', label: 'Competent' },
     { value: 'Proficient', label: 'Proficient' }
   ];
-
-  // load categories
-  // const { allCategories, allSubCategories } = loadQueryData(GET_CATS_N_SUB_CATS);
-  // allCategories?.map((val) => categoryOption.push({ value: val, label: val }));
-  // allSubCategories?.map((val) => subCategoryOption.push({ value: val, label: val }));
 
   const router = useRouter();
   const questionPaperId = router.query?.questionPaperId;

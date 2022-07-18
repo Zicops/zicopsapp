@@ -18,18 +18,14 @@
 
     &:not(:placeholder-shown) {
       /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
-      color: $white;
-      border: 2px solid $primary;
+      @include inputStylesFor('hasValue');
     }
     &:focus {
-      border: 2px solid $primary;
-      box-shadow: 0px 0px 10px 0px $primary;
-      outline: 0;
-      color: $white;
+      @include inputStylesFor('focus');
     }
 
     &:disabled {
-      border: 2px solid $darkThree;
+      @include inputStylesFor('disabled');
     }
   }
 }
@@ -62,17 +58,14 @@
 
     &:not(:placeholder-shown) {
       /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
-      color: $white;
-      border: 2px solid $primary;
+      @include inputStylesFor('hasValue');
     }
     &:focus {
-      border: 2px solid $primary;
-      border-radius: 0;
-      box-shadow: 0px 0px 10px 0px $primary;
-      outline: 0;
+      @include inputStylesFor('focus');
     }
+
     &:disabled {
-      border: 2px solid $darkThree;
+      @include inputStylesFor('disabled');
     }
   }
 }
@@ -95,7 +88,7 @@
     width: 0;
 
     &:disabled {
-      border: 2px solid $darkThree;
+      @include inputStylesFor('disabled');
     }
   }
 
@@ -155,7 +148,7 @@
   }
 }
 
-.disabledInput{
+.disabledInput {
   border: 2px solid $darkThree;
 }
 
@@ -215,7 +208,7 @@
     width: 100%;
 
     &:disabled {
-      border: 2px solid $darkThree;
+      @include inputStylesFor('disabled');
     }
   }
 
