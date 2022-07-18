@@ -132,7 +132,7 @@ export default function ExamMasterTab() {
       schObj = {
         scheduleId: schData?.id || null,
         exam_start: new Date(+schData?.Start * 1000),
-        exam_end: new Date(+schData?.End * 1000),
+        exam_end: +schData?.End ? new Date(+schData?.End * 1000) : null,
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
         is_schedule_active: schData?.IsActive || false
