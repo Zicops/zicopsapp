@@ -55,9 +55,10 @@ export default function ExamsTable({ isEdit = false }) {
       });
       const schData = schRes?.data?.getExamSchedule[0];
 
+      const startDate = new Date(+schData?.Start * 1000);
       const schObj = {
         scheduleId: schData?.id || null,
-        exam_start: new Date(+schData?.Start * 1000),
+        exam_start: new Date(startDate),
         exam_end: +schData?.End ? new Date(+schData?.End * 1000) : null,
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
@@ -74,14 +75,14 @@ export default function ExamsTable({ isEdit = false }) {
 
         const paperDuration = qpMetaRes?.data?.getQPMeta[0]?.SuggestedDuration || 0;
         schObj.exam_end = new Date(
-          schObj.exam_start.setMinutes(schObj.buffer_time + paperDuration)
+          startDate.setMinutes(startDate.getMinutes() + +schObj.buffer_time + +paperDuration)
         );
       }
 
       const now = new Date();
-      let status = exam.status;
+      let status = exam.Status;
 
-      if (schObj.exam_start >= now) status = 'STARTED';
+      if (schObj.exam_start <= now) status = 'STARTED';
       if (schObj.exam_end <= now) status = 'ENDED';
 
       exams.push({ ...exam, Status: status });
