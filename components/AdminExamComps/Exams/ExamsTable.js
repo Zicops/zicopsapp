@@ -81,8 +81,7 @@ export default function ExamsTable({ isEdit = false }) {
       const now = new Date();
       let status = exam.status;
 
-      console.log(schObj);
-      if (schObj.exam_start <= now) status = 'STARTED';
+      if (schObj.exam_start >= now) status = 'STARTED';
       if (schObj.exam_end <= now) status = 'ENDED';
 
       exams.push({ ...exam, Status: status });
