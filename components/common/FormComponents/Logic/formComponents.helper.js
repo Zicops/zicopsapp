@@ -4,13 +4,13 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
     container: (provided, state) => ({
       ...provided,
       width: isFiftyFifty ? '50%' : containerWidth,
-      boxShadow: state.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
+      boxShadow: state?.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
     }),
     control: (provided, state) => {
       let borderStyle = '2px solid var(--dark_three)';
 
-      if (state.isFocused || state.hasValue) borderStyle = '2px solid var(--primary)';
-      if (state.isDisabled) borderStyle = '2px solid var(--dark_three)';
+      if (state?.isFocused || state?.hasValue) borderStyle = '2px solid var(--primary)';
+      if (state?.isDisabled) borderStyle = '2px solid var(--dark_three)';
       if (isReadonly) borderStyle = 'none';
 
       return {
@@ -65,8 +65,8 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused ? 'var(--black)' : 'var(--dark_two)',
-      color: state.isSelected ? 'var(--white)' : 'var(--dark_three)',
+      backgroundColor: state?.isFocused ? 'var(--black)' : 'var(--dark_two)',
+      color: state?.isSelected ? 'var(--white)' : 'var(--dark_three)',
       borderRadius: 0,
       boxShadow: 'none',
       fontSize: '14px',

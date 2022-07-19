@@ -20,3 +20,17 @@ export const data = [
     text: 'Entire Learning Ecosystem in a single platform.'
   }
 ];
+
+export const orgData = [
+  { id: 1, org: 'Tata Motors' },
+  { id: 2, org: 'Zicops' },
+  { id: 3, org: 'Google' },
+  { id: 4, org: 'Tesla' },
+  { id: 5, org: 'Facebook' },
+  { id: 6, org: 'Vinsys' },
+  { id: 7, org: 'Jio' },
+  { id: 8, org: 'Acer' },
+  { id: 9, org: 'Intel' },
+  { id: 9, org: 'Netflix' },
+  { id: 9, org: 'Byjus' }
+];
