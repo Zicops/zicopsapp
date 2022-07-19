@@ -5,6 +5,7 @@ import CoursesAccHead from '../CoursesAccHead';
 
 // import AssignedCourses from '../../AssignedCourses';
 import CoursesCard from '../CoursesCard';
+import GridCourseCards from '../GridCourseCards';
 import styles from './coursesAccordian.module.scss';
 const CoursesAccordian = () => {
   let course = ['', '', ''];
@@ -32,13 +33,7 @@ const CoursesAccordian = () => {
         </div>
 
         {isBoxView ? (
-          <div className={`${styles.course_loop}`}>
-            {course.map((course) => (
-              <div className={`${styles.course_card}`}>
-                <CoursesCard />
-              </div>
-            ))}
-          </div>
+          <GridCourseCards courses={course} />
         ) : (
           <>
             {course.map((course) => (

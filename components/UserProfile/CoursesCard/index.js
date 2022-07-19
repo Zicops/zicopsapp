@@ -25,7 +25,7 @@ const LinearProgressWithLabel = ({ value }) => {
   );
 };
 
-const Index = () => {
+const CoursesCard = () => {
   return (
     <>
       <ThemeProvider
@@ -79,4 +79,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default CoursesCard;
