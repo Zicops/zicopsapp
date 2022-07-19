@@ -77,6 +77,15 @@
   justify-content: space-between;
   align-items: center;
 }
+.inputField {
+  width: 400px;
+}
+.updateBtn {
+  border-radius: 5px;
+  background-color: $primary;
+  margin-left: 58px;
+  color: $black;
+}
 .Icon img {
   width: 1.5vw;
   &:hover {
@@ -128,5 +137,38 @@
 }
 
 .userTabContainer {
-  height: 75vh;
+  // height: 75vh;
+  padding: 10px 50px;
+  color: $white;
+
+  .cardContainer {
+    margin: 25px auto;
+
+    .courseTabHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .imageContainer {
+        display: flex;
+        align-items: center;
+
+        .seeAllBtn {
+          border: none;
+          outline: none;
+          background-color: transparent;
+          color: $white;
+
+          img {
+            height: 10px;
+            margin: auto 5px;
+          }
+        }
+      }
+    }
+
+    hr {
+      margin: 5px auto 20px;
+    }
+  }
 }

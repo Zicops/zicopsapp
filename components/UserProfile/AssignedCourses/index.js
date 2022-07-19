@@ -13,7 +13,7 @@ const AssignedCourses = ({ isLearner }) => {
             <div className={`${styles.course_name}`}>Core Java Resfresher</div>
             <div className={`${styles.selfDiv}`}>
               <div className={`${styles.self}`}>Self paced</div>
-              {!isRemoveable && (
+              {!isLearner && (
                 <div>
                   <img src="/images/svg/close.svg/" width={20} />
                 </div>
