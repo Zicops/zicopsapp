@@ -7,6 +7,7 @@ import TabContainer from '../../../common/TabContainer';
 import useHandleQuestionBankQuestion from '../Logic/useHandleQuestionBankQuestion';
 import QuestionMaster from './QuestionMaster';
 import AddQuestionBank from '../AddQuestionBank';
+import { STATUS, StatusAtom } from '@/state/atoms/utils.atoms';
 
 export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuestionMasterTab }) {
   const [loadOptions, { error: errorOptionsData }] = useLazyQuery(GET_QUESTION_OPTIONS, {
@@ -14,6 +15,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
   });
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [status, setStatus] = useRecoilState(StatusAtom);
   const [questionData, setQuestionData] = useState(null);
 
   useEffect(async () => {
@@ -48,6 +50,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
       question: question,
       options: allOptions
     });
+    setStatus(question.status);
   }, [isEdit, editQuestionData]);
 
   const data = useHandleQuestionBankQuestion(questionData, closeQuestionMasterTab);
@@ -74,6 +77,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
         footerObj={{
           submitDisplay: isEdit ? 'Update' : 'Save',
           disableSubmit: isUploading,
+          status: status || STATUS.display[0],
           handleSubmit: isEdit ? updateQuestionAndOptions : addQuestionAndOptions,
           handleCancel: () => closeQuestionMasterTab()
         }}
