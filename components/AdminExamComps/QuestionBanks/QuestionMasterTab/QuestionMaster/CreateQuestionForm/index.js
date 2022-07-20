@@ -65,11 +65,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
                     />
 
                     <div style={{ textAlign: 'right', marginRight: '10px' }}>
-                      <Button
-                        text={'Edit'}
-                        isDisabled={!isEdit}
-                        clickHandler={() => activateEdit(index)}
-                      />
+                      <Button text={'Edit'} clickHandler={() => activateEdit(index)} />
                     </div>
                   </div>
                 }
@@ -88,7 +84,13 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
       {!showQuestionForm ? (
         <div className={`center-element-with-flex`}>
-          <Button text="Add Question" clickHandler={() => setShowQuestionForm(true)} />
+          <Button
+            text="Add Question"
+            clickHandler={() => {
+              setShouldCloseAccordion(true);
+              setShowQuestionForm(true);
+            }}
+          />
         </div>
       ) : (
         <>

@@ -369,6 +369,29 @@ export const GET_QUESTION_BANK_QUESTIONS = gql`
   }
 `;
 
+export const GET_QUESTIONS_NAMES = gql`
+  query questionBankQuestions(
+    $question_bank_id: String
+    $difficultyStart: Int
+    $difficultyEnd: Int
+    $totalQuestions: Int
+    $excludedQuestionIds: [String]
+  ) {
+    getQuestionBankQuestions(
+      question_bank_id: $question_bank_id
+      filters: {
+        DifficultyStart: $difficultyStart
+        DifficultyEnd: $difficultyEnd
+        TotalQuestions: $totalQuestions
+        ExcludedQuestionIds: $excludedQuestionIds
+      }
+    ) {
+      id
+      Description
+    }
+  }
+`;
+
 export const GET_QUESTION_OPTIONS = gql`
   query questionBankOptions($question_id: String) {
     getOptionsForQuestions(question_ids: [$question_id]) {
