@@ -172,7 +172,7 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
         expertiseLevel: paperMaster?.difficultyLevel
       }
     });
-  }, [topicExamData?.examId]);
+  }, [topicExamData?.examId, topicExamData?.topicId]);
 
   const { exam_landing_btn_container, exam_landing_btn_container1 } = styles;
 

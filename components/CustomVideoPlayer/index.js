@@ -44,7 +44,7 @@ export default function CustomVideo({ set }) {
     playPreviousVideo,
     setVideoTime,
     moveVideoProgressBySeconds
-  } = useVideoPlayer(videoElement, videoContainer);
+  } = useVideoPlayer(videoElement, videoContainer, set);
 
   useEffect(() => {
     set(true);
