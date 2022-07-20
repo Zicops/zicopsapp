@@ -4,8 +4,7 @@ export function getPassingMarks(passingCriteria, totalMarks) {
   const [criteria, type] = passingCriteria?.split('-');
 
   if (type === 'Marks') return +criteria || 0;
-
-  return (+criteria * 100) / +totalMarks || 0;
+  return +totalMarks * (+criteria / 100) || 0;
 }
 export function getEndTime(learnerExamData) {
   let examEndDate = learnerExamData?.examData?.examEnd;
