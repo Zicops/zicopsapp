@@ -57,7 +57,7 @@ $DELAY: $DURATION / 2;
     width: 5px;
     background-color: $darkThree;
     margin: 8px 5px;
-
+    cursor: pointer;
     &.active {
       background-color: $primary;
     }
