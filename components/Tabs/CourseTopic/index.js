@@ -145,32 +145,36 @@ export default function CourseTopic() {
       />
 
       {/* add topic pop up */}
-      <TopicPopUp
-        popUpState={[addTopicPopUp, setAddTopicPopUp]}
-        addTopicData={{
-          newTopicData,
-          setNewTopicData,
-          handleTopicInput,
-          addNewTopic,
-          isAddTopicReady
-        }}
-      />
+      {addTopicPopUp && (
+        <TopicPopUp
+          popUpState={[addTopicPopUp, setAddTopicPopUp]}
+          addTopicData={{
+            newTopicData,
+            setNewTopicData,
+            handleTopicInput,
+            addNewTopic,
+            isAddTopicReady
+          }}
+        />
+      )}
 
       {/* edit topic pop up */}
-      <TopicPopUp
-        popUpState={[editTopic?.id, setEditTopic]}
-        editTopicData={{
-          editTopic,
-          setEditTopic,
-          ...topicContentData,
-          handleEditTopicSubmit,
-          toggleEditTopicForm,
-          isEditTopicFormVisible,
-          isEditTopicReady,
-          updateTopicAndContext
-        }}
-        isEdit={true}
-      />
+      {editTopic?.id && (
+        <TopicPopUp
+          popUpState={[editTopic?.id, setEditTopic]}
+          editTopicData={{
+            editTopic,
+            setEditTopic,
+            ...topicContentData,
+            handleEditTopicSubmit,
+            toggleEditTopicForm,
+            isEditTopicFormVisible,
+            isEditTopicReady,
+            updateTopicAndContext
+          }}
+          isEdit={true}
+        />
+      )}
     </>
   );
 }
