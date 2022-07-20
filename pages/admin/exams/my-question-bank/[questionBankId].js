@@ -76,7 +76,7 @@ export default function MyQuestionBanks() {
                   border: '0'
                 }}
                 onClick={() => setEditPopUp(true)}>
-                <img src="/images/svg/edit-box-line.svg" width={20}></img>
+                <img src="/images/svg/edit.svg" width={20} />
               </button>
             </>
           }
