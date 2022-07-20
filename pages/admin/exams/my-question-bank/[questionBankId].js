@@ -1,3 +1,6 @@
+import AddQuestionBank from '@/components/AdminExamComps/QuestionBanks/AddQuestionBank';
+import PopUp from '@/components/common/PopUp';
+import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -21,6 +24,7 @@ export default function MyQuestionBanks() {
     client: queryClient
   });
 
+  const [editPopUp, setEditPopUp] = useRecoilState(PopUpStatesAtomFamily('editQuestionBank'));
   const [selectedQB, setSelectedQb] = useRecoilState(SelectedQuestionBankAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -61,7 +65,21 @@ export default function MyQuestionBanks() {
       <Sidebar sidebarItemsArr={examSidebarData} />
       <MainBody>
         <AdminHeader
-          title={selectedQB.name || 'Questions'}
+          title={
+            <>
+              {selectedQB.name || 'Questions'}
+              <button
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0'
+                }}
+                onClick={() => setEditPopUp(true)}>
+                <img src="/images/svg/edit-box-line.svg" width={20}></img>
+              </button>
+            </>
+          }
           isAddShown={!showQuestionForm}
           handleClickForPlus={() => setShowQuestionForm(true)}
         />
@@ -86,6 +104,14 @@ export default function MyQuestionBanks() {
           )}
         </MainBodyBox>
       </MainBody>
+
+      {/* edit question bank pop up */}
+      <PopUp
+        title="Edit Question Bank"
+        popUpState={[editPopUp, setEditPopUp]}
+        isFooterVisible={false}>
+        <AddQuestionBank isEdit={true} closePopUp={() => setEditPopUp(false)} />
+      </PopUp>
     </>
   );
 }
