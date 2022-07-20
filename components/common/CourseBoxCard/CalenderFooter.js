@@ -1,4 +1,4 @@
-import styles from './courseListCard.module.scss';
+import styles from './courseBoxCard.module.scss';
 
 export default function CalenderFooter({ courseData }) {
   return (

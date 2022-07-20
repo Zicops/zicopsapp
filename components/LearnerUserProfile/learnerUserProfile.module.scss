@@ -142,7 +142,7 @@
   color: $white;
 
   .cardContainer {
-    margin: 25px auto;
+    margin: 25px auto 50px;
 
     .courseTabHeader {
       display: flex;
@@ -169,6 +169,21 @@
 
     hr {
       margin: 5px auto 20px;
+    }
+
+    .boxCardContainer {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 10px;
+
+      flex-wrap: wrap;
+    }
+
+    .listCardContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
   }
 }

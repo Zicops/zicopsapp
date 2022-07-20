@@ -2,6 +2,7 @@
 
 .cardContainer {
   max-width: 450px;
+  min-width: 250px;
 
   background-color: $black;
   color: $white;
@@ -40,7 +41,7 @@
   }
 
   .cardBody {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     .title {
       font-size: 20px;
@@ -59,6 +60,30 @@
 
     .imgIcon {
       width: 20px;
+    }
+  }
+
+  .progressBarFooter {
+    div {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+
+      .percent {
+        color: $primary;
+      }
+    }
+
+    .progress {
+      height: 5px;
+      background-color: $darkTwo;
+      margin-top: 10px;
+
+      span {
+        height: 100%;
+        background-color: $primary;
+      }
     }
   }
 }

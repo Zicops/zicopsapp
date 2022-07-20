@@ -12,12 +12,25 @@ const UserCoursesTab = () => {
   let course = ['', '', ''];
   const [isBoxView, setIsBoxView] = useState(true);
 
+  const courseSections = [
+    { displayType: 'Ongoing Courses', footerType: 'onGoing', data: courseData },
+    { displayType: 'Courses Added by Me', footerType: 'added', data: courseData },
+    { displayType: 'Assigned Course', footerType: 'assigned', data: courseData },
+    { displayType: 'Completed Course', footerType: 'completed', data: courseData }
+  ];
+
   return (
     <>
       <div className={`${styles.userTabContainer}`}>
-        <CardContainer type={'My Course'} courseData={courseData} />
-        <CardContainer type={'Assigned Course'} courseData={courseData} />
-        <CardContainer type={'Completed Course'} courseData={courseData} />
+        {courseSections.map((section) => {
+          return (
+            <CardContainer
+              type={section.displayType}
+              footerType={section.footerType}
+              courseData={section.data}
+            />
+          );
+        })}
       </div>
     </>
   );

@@ -1,12 +1,15 @@
 import CalenderFooter from './CalenderFooter';
-import styles from './courseListCard.module.scss';
+import styles from './courseBoxCard.module.scss';
+import ProgressBarFooter from './ProgressBarFooter';
 
-export default function CourseBoxCard({ courseData, footerType = 'calenderFooter', children }) {
+export default function CourseBoxCard({ courseData, footerType, cardWidth = 300, children }) {
   return (
-    <div className={`${styles.cardContainer}`}>
+    <div className={`${styles.cardContainer}`} style={{ width: `${cardWidth}px` }}>
       <div className={`${styles.imgContainer}`}>
+        {/* course img */}
         <img src={courseData?.tileImg || '/images/profile-card.png'} alt="" />
 
+        {/* level and type */}
         <div className={`${styles.dataOverImg}`}>
           <span>
             <img src="/images/media.png" alt="" className={`${styles.imgIcon}`} />
@@ -17,6 +20,7 @@ export default function CourseBoxCard({ courseData, footerType = 'calenderFooter
         </div>
       </div>
 
+      {/* title and cat sub cat */}
       <div className={`${styles.cardBody}`}>
         <p className={`${styles.title}`}>{courseData?.title || 'Start with Project Management'}</p>
 
@@ -27,17 +31,12 @@ export default function CourseBoxCard({ courseData, footerType = 'calenderFooter
 
       {/* footer */}
       <div>
-        {footerType === 'calenderFooter' && <CalenderFooter courseData={courseData} />}
-        {children}
-        {/* 
-        <div className={`${styles.courseCompletedFooter}`}>
-          <div>
-            <p>Duration: {courseData?.duration || 240} mins</p>
-            <p>Expected Completion by {courseData?.expectedCompletion || '22-06-2022'}</p>
-          </div>
+        {footerType === 'assigned' && <CalenderFooter courseData={courseData} />}
+        {['onGoing', 'completed'].includes(footerType) && (
+          <ProgressBarFooter courseData={courseData} isCompleted={footerType === 'completed'} />
+        )}
 
-          <img src="/images/svg/calendar-month.svg" alt="" className={`${styles.imgIcon}`} />
-        </div> */}
+        {children}
       </div>
     </div>
   );
