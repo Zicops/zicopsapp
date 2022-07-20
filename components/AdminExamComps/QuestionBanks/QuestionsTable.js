@@ -86,7 +86,8 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
           attachment: params.row.Attachment,
           attachmentType: params.row.AttachmentType,
           hint: params.row.Hint,
-          qbmId: params.row.QbmId
+          qbmId: params.row.QbmId,
+          status: params.row.Status
         };
         return (
           <>

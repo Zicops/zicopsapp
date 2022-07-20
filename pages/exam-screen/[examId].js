@@ -66,7 +66,11 @@ const ExamScreen = () => {
   const [loading, setLoading] = useState(true);
 
   const [questionData, setQuestionData] = useRecoilState(QuestionOptionDataAtom);
-  const [current, setCurrent] = useState({});
+  const [current, setCurrent] = useState({
+    id: 0,
+    question: {},
+    options: []
+  });
   const [isFullScreen, setIsFullScreen] = useState(0);
   const [isLearner, setIsLearner] = useState(false);
   const refFullscreen = useRef(null);
@@ -465,7 +469,7 @@ const ExamScreen = () => {
     }
 
     setQuestionData(quesData);
-    setCurrent(quesData[0]);
+    if (quesData[0]) setCurrent(quesData[0]);
 
     setLearnerExamData({
       ...learnerExamData,

@@ -171,7 +171,7 @@ export function getExamTabDataObject(data = {}) {
     // schedule
     scheduleId: data.schedule || null,
     exam_start: data.exam_start || new Date(),
-    exam_end: data.exam_end || new Date(),
+    exam_end: data.exam_end || 0,
 
     buffer_time: data.buffer_time || 0,
     is_stretch: data.is_stretch || false,

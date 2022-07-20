@@ -1,5 +1,6 @@
-import { STATUS } from '@/state/atoms/utils.atoms';
-import { useMutation } from '@apollo/client';
+import { STATUS, StatusAtom } from '@/state/atoms/utils.atoms';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { GET_QUESTIONS_NAMES, queryClient } from 'API/Queries';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -18,6 +19,9 @@ import {
 } from './questionBank.helper';
 
 export default function useHandleQuestionBankQuestion(editData, closeQuestionMasterTab) {
+  const [getQuestionNames, { error: questionNameLoadErr }] = useLazyQuery(GET_QUESTIONS_NAMES, {
+    client: queryClient
+  });
   const [addQuestion, { error: addQuestionErr }] = useMutation(ADD_QUESTION_BANK_QUESTION, {
     client: mutationClient
   });
@@ -37,6 +41,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   // recoil state
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [status, setStatus] = useRecoilState(StatusAtom);
 
   // local state
   const [questionsArr, setQuestionsArr] = useState([]);
@@ -49,7 +54,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   // set edit data in local state
   useEffect(() => {
-    if (!editData) return;
+    if (!editData) return setStatus(STATUS.display[0]);
 
     setQuestionData(editData.question);
     const opts = Array(4).fill(getQuestionOptionsObject({ qmId: editData?.question?.id }));
@@ -62,7 +67,10 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   // set is uploading to null if error msg is showen
   useEffect(() => {
-    if (toastMsg[0]?.type === 'danger') setIsUploading(null);
+    if (toastMsg[0]?.type === 'danger') {
+      setIsUploading(null);
+      setStatus(questionData?.status || STATUS.display[0]);
+    }
   }, [toastMsg]);
 
   // error notification
@@ -184,6 +192,12 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     if (!validateInput()) return;
     if (isOptionsDuplicate()) return;
 
+    let isDuplicate = questionsArr.some(
+      (q) => q?.question?.description?.toLowerCase() === questionData?.description?.toLowerCase()
+    );
+    if (isDuplicate)
+      return setToastMsg({ type: 'danger', message: 'Question with same name cannot be added!' });
+
     setQuestionsArr([...questionsArr, { question: questionData, options: optionData }]);
 
     // reset form data
@@ -203,7 +217,26 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setIsEditQuestion(true);
   }
 
+  async function isDuplicate(isEdit = false) {
+    const res = await getQuestionNames({ variables: { question_bank_id: questionBankId } });
+    const questions = res?.data?.getQuestionBankQuestions;
+
+    let isDuplicate = questions.some((q) => {
+      const ques = q?.Description?.toLowerCase();
+      if (q?.id === questionData?.id) return false;
+      if (isEdit) return ques === questionData?.description?.toLowerCase();
+
+      return !!questionsArr.find((obj) => ques === obj?.question?.description?.toLowerCase());
+    });
+    return isDuplicate;
+  }
+
   async function addQuestionAndOptions() {
+    // duplicate name check
+    if (await isDuplicate())
+      return setToastMsg({ type: 'danger', message: 'Question with same name cannot be added!' });
+
+    setStatus(STATUS.display[2]);
     if (!questionsArr.length)
       return setToastMsg({ type: 'danger', message: 'Add at least one question' });
     setIsUploading(true);
@@ -272,12 +305,17 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     }
 
     setIsUploading(null);
+    setStatus(STATUS.flow[0]);
     closeQuestionMasterTab();
   }
 
   async function updateQuestionAndOptions() {
+    setStatus(STATUS.display[2]);
     setIsUploading(true);
     if (!validateInput()) return;
+    // duplicate name check
+    if (await isDuplicate(true))
+      return setToastMsg({ type: 'danger', message: 'Question with same name cannot be added!' });
 
     const question = questionData;
     const options = optionData;
@@ -352,6 +390,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     if (!isError) setToastMsg({ type: 'success', message: 'Question and Options Updated' });
 
     setIsUploading(null);
+    setStatus(STATUS.flow[0]);
     closeQuestionMasterTab();
   }
 

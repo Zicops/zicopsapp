@@ -51,7 +51,7 @@ $DELAY: $DURATION / 2;
   // background-color: $darkThree;
   border: 2px solid $darkThree;
   border-radius: 10px;
-  
+
   div {
     height: 30px;
     width: 5px;
@@ -297,6 +297,9 @@ $DELAY: $DURATION / 2;
   .formContainer {
     display: flex;
     flex-direction: row;
+
+    position: relative;
+
     background-color: $black;
     border: 3px solid $primary;
     border-radius: 5px;
@@ -304,17 +307,30 @@ $DELAY: $DURATION / 2;
     height: 40px;
     padding: 3px;
 
-    input[type='text'] {
-      border: none;
-      width: 80%;
-      font-family: 'Open Sans';
-      background-color: $black;
-      color: $darkThree;
-    }
+    .searchBar {
+      width: calc(100%);
+      left: 0;
+      margin: -3px;
+      z-index: 1;
 
-    input:focus {
-      outline: none;
+      // to hide options after 3
+      :global(.search__option) {
+        &:nth-child(n + 4) {
+          display: none;
+        }
+      }
     }
+    // input[type='text'] {
+    //   border: none;
+    //   width: 80%;
+    //   font-family: 'Open Sans';
+    //   background-color: $black;
+    //   color: $darkThree;
+    // }
+
+    // input:focus {
+    //   outline: none;
+    // }
 
     button {
       border: 1px solid $primary;
@@ -327,13 +343,20 @@ $DELAY: $DURATION / 2;
       margin: -5px;
     }
 
-    img {
-      object-fit: contain;
+    span {
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 100%;
+
+      img {
+        object-fit: contain;
+        height: 100%;
+      }
     }
 
     span {
-      width: 38px;
+      width: 35px;
     }
   }
 }

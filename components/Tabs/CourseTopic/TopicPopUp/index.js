@@ -106,7 +106,7 @@ export default function TopicPopUp({
           <>
             <BlackRow
               type="large"
-              title={`Topic ${editTopic.sequence} : ${editTopic.name}`}
+              title={`Topic ${editTopic?.sequence} : ${editTopic?.name}`}
               editHandler={() => {
                 if (!isEditTopicFormVisible)
                   editTopicFormRef.current?.scrollIntoView({

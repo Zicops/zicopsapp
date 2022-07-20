@@ -1,0 +1,108 @@
+@import '../../../styles/base.scss';
+
+.cardContainer {
+  display: flex;
+  gap: 20px;
+
+  width: 100%;
+  max-height: 250px;
+  min-height: 200px;
+
+  background-color: $black;
+  color: $darkThree;
+  padding: 20px;
+  border-radius: 5px;
+
+  .imgContainer {
+    border-radius: 10px;
+    max-width: 20%;
+    height: 100%;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .cardBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex: 1;
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .title {
+        color: $white;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .levelAndType {
+        span {
+          background-color: $darkTwo;
+          padding: 2px 5px;
+          margin: auto 10px;
+          border-radius: 5px;
+        }
+      }
+
+      .catSubCat {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .dot {
+    height: 5px;
+    width: 5px;
+    background-color: $white;
+    border-radius: 50%;
+
+    margin: auto 10px;
+  }
+
+  .footer {
+    width: 100%;
+  }
+
+  .durationFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .imgIcon {
+      width: 20px;
+    }
+  }
+
+  .progressBarFooter {
+    width: 100%;
+
+    section {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+
+      p {
+        display: flex;
+      }
+    }
+
+    .progress {
+      height: 5px;
+      background-color: $darkTwo;
+      margin-top: 10px;
+
+      span {
+        height: 100%;
+        background-color: $primary;
+      }
+    }
+  }
+}

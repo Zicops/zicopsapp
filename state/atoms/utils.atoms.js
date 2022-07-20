@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 
 export const STATUS = {
-  display: ['DRAFT', 'FAILED'],
+  display: ['DRAFT', 'FAILED', 'UPDATING'],
   flow: [
     'SAVED',
     'APPROVAL_PENDING',

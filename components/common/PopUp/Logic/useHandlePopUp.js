@@ -40,6 +40,7 @@ export default function useHandlePopUp(popUpState = []) {
   function closePopUp() {
     if (!isPopUpDataPresent) {
       setIsOpen(false);
+      setPopUpParentState((prev) => (typeof prev === 'boolean' ? false : null));
       return;
     }
 

@@ -71,7 +71,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
         {questionPaperTabData?.mappedQb?.map((metaData, index) => {
           // return if qb map does belong current section
           if (metaData?.sectionId !== section.id) {
-            --sequence;
+            // --sequence;
             return null;
           }
 

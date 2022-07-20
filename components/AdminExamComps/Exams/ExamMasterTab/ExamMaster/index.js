@@ -173,9 +173,7 @@ export default function ExamMaster() {
         </label>
 
         <div
-          className={`${styles.passingCriteriaInnerContainer} ${
-            examTabData?.passing_criteria?.length ? '' : styles.hasValue
-          }`}
+          className={`${styles.passingCriteriaInnerContainer} ${styles.hasValue}`}
           onFocus={(e) => e.currentTarget.classList.add(styles.focus)}
           onBlur={(e) => e.currentTarget.classList.remove(styles.focus)}>
           <input

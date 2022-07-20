@@ -1,0 +1,89 @@
+@import '../../../styles/base.scss';
+
+.cardContainer {
+  max-width: 450px;
+  min-width: 250px;
+
+  background-color: $black;
+  color: $white;
+  padding: 20px;
+  border-radius: 5px;
+
+  .imgContainer {
+    border-radius: 10px;
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+
+    .dataOverImg {
+      position: absolute;
+      bottom: 10px;
+      padding: 0px 15px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      width: 100%;
+
+      .type {
+        background-color: $black;
+        padding: 2px 5px;
+        border-radius: 5px;
+      }
+
+      .imgIcon {
+        margin-right: 10px;
+        width: 20px;
+      }
+    }
+  }
+
+  .cardBody {
+    margin-bottom: 20px;
+
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .catSubCat {
+      word-spacing: 10px;
+    }
+  }
+
+  .calenderFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .imgIcon {
+      width: 20px;
+    }
+  }
+
+  .progressBarFooter {
+    div {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+
+      .percent {
+        color: $primary;
+      }
+    }
+
+    .progress {
+      height: 5px;
+      background-color: $darkTwo;
+      margin-top: 10px;
+
+      span {
+        height: 100%;
+        background-color: $primary;
+      }
+    }
+  }
+}
