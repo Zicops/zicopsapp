@@ -1,9 +1,10 @@
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { GET_LATEST_QUESTION_BANK, queryClient } from '../../../API/Queries';
+import { GET_LATEST_QUESTION_BANK, GET_QUESTIONS_NAMES, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import {
   getQuestionBankObject,
@@ -34,15 +35,25 @@ export default function QuestionBankTable({ isEdit = false }) {
   const [questionBank, setQuestionBank] = useState([]);
 
   // load table data
-  useEffect(() => {
+  useEffect(async () => {
     const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
 
-    loadQuestionBank({ variables: queryVariables }).then(({ data }) => {
-      if (errorQuestionBankData)
-        return setToastMsg({ type: 'danger', message: 'question bank load error' });
+    const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
+    if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
 
-      setQuestionBank(data?.getLatestQuestionBank?.questionBanks || []);
-    });
+    const questionBankData = structuredClone(qbRes?.getLatestQuestionBank?.questionBanks) || [];
+    if (!questionBankData.length) return;
+
+    for (let i = 0; i < questionBankData.length; i++) {
+      const qb = questionBankData[i];
+      const questionsRes = await loadQueryDataAsync(GET_QUESTIONS_NAMES, {
+        question_bank_id: qb.id
+      });
+      const questionsArr = questionsRes?.getQuestionBankQuestions || [];
+      questionBankData[i].noOfQuestions = questionsArr.length;
+    }
+
+    setQuestionBank(questionBankData);
   }, []);
 
   // set refetch query in recoil
