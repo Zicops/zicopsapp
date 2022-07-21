@@ -1,4 +1,8 @@
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { QuestionPaperTabDataAtom } from '@/state/atoms/exams.atoms';
+import { GET_FIXED_QUESTION } from 'API/Queries';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { DIFFICULTY, getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.helper';
 import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
@@ -14,12 +18,34 @@ export default function QuestionTable({
   selectedQuestionIds,
   setSelectedQuestionIds
 }) {
+  const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
+
   const [searchQuery, setSearchQuery] = useState(null);
   const [allQb, setAllQb] = useState(qbQuestions);
   const [filteredQb, setFilteredQb] = useState(qbQuestions);
 
-  useEffect(() => {
+  useEffect(async () => {
+    const alreadySelectedQuestionIds = [];
+    for (let i = 0; i < questionPaperTabData.mappedQb?.length; i++) {
+      const mapping = questionPaperTabData.mappedQb[i];
+      if (
+        mapping?.qbId === metaData?.qbId &&
+        metaData?.difficulty_level === mapping?.difficulty_level
+      ) {
+        if (mapping?.retrieve_type === 'random') continue;
+
+        const data = await loadQueryDataAsync(GET_FIXED_QUESTION, { mapping_id: mapping?.id });
+
+        alreadySelectedQuestionIds.push(
+          ...data.getSectionFixedQuestions[0]?.QuestionId?.split(',')
+        );
+      }
+    }
+
     const filteredBasedOnDifficulty = allQb.filter((q) => {
+      if (alreadySelectedQuestionIds.includes(q?.id) && !selectedQuestionIds?.includes(q?.id))
+        return false;
+
       return DIFFICULTY[metaData?.difficulty_level]?.includes(q?.Difficulty);
     });
 

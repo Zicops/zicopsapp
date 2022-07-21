@@ -1,12 +1,15 @@
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { GET_TOPIC_EXAMS } from 'API/Queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../helper/data.helper';
 import { secondsToMinutes } from '../../../helper/utils.helper';
-import { TopicContentAtom } from '../../../state/atoms/module.atoms';
-import { VideoAtom } from '../../../state/atoms/video.atom';
+import { TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
+import { getVideoObject, VideoAtom } from '../../../state/atoms/video.atom';
 import { addCallbackToEvent } from './customVideoPlayer.helper';
 
-export default function useVideoPlayer(videoElement, videoContainer) {
+export default function useVideoPlayer(videoElement, videoContainer, set) {
   // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
   const [playPauseActivated, setPlayPauseActivated] = useState(null);
   const [playerState, setPlayerState] = useState({
@@ -18,6 +21,8 @@ export default function useVideoPlayer(videoElement, videoContainer) {
   });
 
   const [videoData, updateVideoData] = useRecoilState(VideoAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const topicContent = useRecoilValue(TopicContentAtom);
   const [seek, setSeek] = useState(0);
   const [hideControls, setHideControls] = useState(0);
@@ -71,6 +76,7 @@ export default function useVideoPlayer(videoElement, videoContainer) {
   // reset tooltip and seek after timeoutSeconds
   const timeoutSeconds = 2000;
   useEffect(() => {
+    if (!videoData.videoSrc && !videoData.type) return;
     setTimeout(() => {
       setSeek(0);
     }, timeoutSeconds);
@@ -211,8 +217,39 @@ export default function useVideoPlayer(videoElement, videoContainer) {
     setPlayPauseActivated(!playerState.isPlaying ? 'play' : 'pause');
   }
 
-  function playNextVideo() {
+  async function setExamView(isNext = true) {
+    set(false);
+
+    const { allModuleTopic, currentTopicIndex, currentModuleId, allModuleOptions } = videoData;
+    const topic = allModuleTopic[currentTopicIndex + (isNext ? 1 : -1)];
+    const topicExam = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic.id }).then(
+      (res) => res.getTopicExams[0]
+    );
+
+    if (!topicExam)
+      return setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
+
+    // reset recoil and set new data
+    updateVideoData(getVideoObject());
+    setTopicExamData({
+      id: topicExam.id,
+      topicId: topicExam.topicId,
+      courseId: topicExam.courseId,
+      examId: topicExam.examId,
+      language: topicExam.language,
+      currentModule: allModuleOptions?.find((mod) => mod.value === currentModuleId) || {},
+      currentTopic: topic
+    });
+  }
+
+  async function playNextVideo() {
     if (!videoData.allModuleTopic) return;
+    const { allModuleTopic, currentTopicIndex } = videoData;
+
+    if (allModuleTopic[currentTopicIndex + 1]?.type === 'Assessment') {
+      return await setExamView();
+    }
+
     // switch to next module
     if (videoData.allModuleTopic.length === videoData.currentTopicIndex + 1) {
       const { setNewModule, allModuleOptions, currentModuleIndex } = videoData;
@@ -237,11 +274,18 @@ export default function useVideoPlayer(videoElement, videoContainer) {
 
     setVideoTime(0);
     setPlayPauseActivated('next');
-    togglePlay();
+    // togglePlay();
   }
 
-  function playPreviousVideo() {
+  async function playPreviousVideo() {
     if (!videoData.allModuleTopic) return;
+
+    const { allModuleTopic, currentTopicIndex } = videoData;
+
+    if (allModuleTopic[currentTopicIndex - 1]?.type === 'Assessment') {
+      return await setExamView(false);
+    }
+
     // switch to previous module
     if (videoData.currentTopicIndex === 0) {
       const { setNewModule, allModuleOptions, currentModuleIndex } = videoData;

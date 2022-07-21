@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useContext, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
 import { filterModule } from '../../../helper/data.helper';
 import { ModuleAtom } from '../../../state/atoms/module.atoms';
@@ -25,7 +25,7 @@ export default function UiComponents({
   subtitleState
 }) {
   const { videoElement, videoContainer } = refs;
-  const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const videoData = useRecoilValue(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
   const { fullCourse } = useContext(courseContext);
 

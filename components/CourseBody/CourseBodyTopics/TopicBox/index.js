@@ -1,3 +1,5 @@
+import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -12,13 +14,10 @@ import {
   TopicExamAtom
 } from '../../../../state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '../../../../state/atoms/video.atom';
-import { updateVideoData } from '../../Logic/courseBody.helper';
 import styles from '../../courseBody.module.scss';
-import useLoadExamData from '../../Logic/useLoadExamData';
-import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
-import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
-import { displayMinToHMS } from '@/helper/utils.helper';
+import { updateVideoData } from '../../Logic/courseBody.helper';
 import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
+import useLoadExamData from '../../Logic/useLoadExamData';
 
 let topicInstance = 0;
 
@@ -98,7 +97,8 @@ export default function TopicBox({
   }, []);
 
   // auto play video when next or previous button clciked (module switch)
-  useEffect(() => {
+  // set exam data if 1st one is exam
+  useEffect(async () => {
     if (
       currrentModule.value !== videoData.currentModuleId &&
       videoData.startPlayer &&
@@ -115,6 +115,30 @@ export default function TopicBox({
       if (lastModuleIndex < currentModuleIndex) isNextClicked = true;
       if (isNextClicked && topicCount !== 1) return;
       if (!isNextClicked && topicCount !== filteredTopicData.length) return;
+
+      // set next or prev module exam
+      const goToTopicIndex = isNextClicked ? 0 : filteredTopicData.length - 1;
+      if (filteredTopicData[goToTopicIndex]?.type === 'Assessment') {
+        const topicExam = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic.id }).then(
+          (res) => res.getTopicExams[0]
+        );
+
+        if (!topicExam)
+          return setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
+
+        // reset recoil and set new data
+        setVideoData(getVideoObject());
+        setTopicExamData({
+          id: topicExam.id,
+          topicId: topicExam.topicId,
+          courseId: topicExam.courseId,
+          examId: topicExam.examId,
+          language: topicExam.language,
+          currentModule: currrentModule,
+          currentTopic: topic
+        });
+        return;
+      }
 
       updateVideoData(
         videoData,

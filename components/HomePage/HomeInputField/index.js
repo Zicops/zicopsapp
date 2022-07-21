@@ -8,7 +8,7 @@ import { orgData } from '../Logic/homePage.helper';
 const HomeInputField = () => {
   const orgDataOptions = [...orgData].map((d) => ({ label: d.org, value: d.org, ...d }));
   const [options, setOptions] = useState(orgDataOptions || []);
-  const [isMenuVisible, setIsMenuVisible] = useState(true);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   const defaultStyles = customSelectStyles();
   const customStyles = {
