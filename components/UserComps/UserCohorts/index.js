@@ -132,7 +132,7 @@ const UserCohorts = () => {
               //   setEditPopUp(true);
               // }}
             >
-              <img src="/images/edit-icon.png" width={20}></img>
+              <img src="/images/svg/download-white.svg" width={20}></img>
             </button>
           </>
         );
