@@ -1,3 +1,84 @@
-@import '../../../styles/base.scss';
+@import '../../styles/base.scss';
 
+.tabContainer {
+  padding: 0 !important;
+}
 
+//Chorot mAster tab
+.inputField {
+  margin-bottom: 30px;
+}
+
+.uploadImage {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  label {
+    width: 25%;
+  }
+
+  .buttonContainer {
+    width: 75%;
+  }
+
+  button {
+    padding: 10px;
+    border: none;
+    background-color: $primary;
+    color: $black;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+
+  .uploadImagePreview {
+    color: $primary;
+    // position: absolute;
+    text-decoration: underline;
+    text-align: center;
+    margin-top: 20px;
+    margin-right: 10px;
+    a {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+
+  .uploadImageRemove {
+    color: $white;
+    // position: absolute;
+    text-decoration: underline;
+    text-align: center;
+    margin-top: 20px;
+    margin-right: 10px;
+    a {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+}
+
+//Users tab
+
+.usersContainer {
+  // margin: auto -30px;
+}
+
+.usersTopContainer {
+  display: flex;
+  justify-content: space-between;
+  span {
+    font-size: 20px;
+  }
+  button {
+    padding: 10px;
+    border: none;
+    background-color: $primary;
+    color: $black;
+    font-weight: bold;
+    border-radius: 3px;
+  }
+}
