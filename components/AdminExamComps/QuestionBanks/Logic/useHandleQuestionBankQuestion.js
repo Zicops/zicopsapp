@@ -188,14 +188,18 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   }
 
   // add question data to array to show in accordion
-  function saveQuestion() {
+  async function saveQuestion() {
     if (!validateInput()) return;
     if (isOptionsDuplicate()) return;
 
-    let isDuplicate = questionsArr.some(
+    let isQuestionAdded = questionsArr.some(
       (q) => q?.question?.description?.toLowerCase() === questionData?.description?.toLowerCase()
     );
-    if (isDuplicate)
+    if (isQuestionAdded)
+      return setToastMsg({ type: 'danger', message: 'Question with same name cannot be added!' });
+
+    // duplicate name check
+    if (await isDuplicate(true))
       return setToastMsg({ type: 'danger', message: 'Question with same name cannot be added!' });
 
     setQuestionsArr([...questionsArr, { question: questionData, options: optionData }]);
@@ -217,14 +221,14 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setIsEditQuestion(true);
   }
 
-  async function isDuplicate(isEdit = false) {
+  async function isDuplicate(checkNewQuestion = false, question = null) {
     const res = await getQuestionNames({ variables: { question_bank_id: questionBankId } });
     const questions = res?.data?.getQuestionBankQuestions;
 
     let isDuplicate = questions.some((q) => {
       const ques = q?.Description?.toLowerCase();
       if (q?.id === questionData?.id) return false;
-      if (isEdit) return ques === questionData?.description?.toLowerCase();
+      if (checkNewQuestion) return ques === questionData?.description?.toLowerCase();
 
       return !!questionsArr.find((obj) => ques === obj?.question?.description?.toLowerCase());
     });
