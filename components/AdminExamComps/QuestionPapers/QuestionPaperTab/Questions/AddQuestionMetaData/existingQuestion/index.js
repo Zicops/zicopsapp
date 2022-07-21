@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { GET_CATS_N_SUB_CATS } from '../../../../../../../API/Queries';
-import { loadQueryData } from '../../../../../../../helper/api.helper';
 import { changeHandler } from '../../../../../../../helper/common.helper';
 import { loadCatSubCat } from '../../../../../../../helper/data.helper';
 import { ToastMsgAtom } from '../../../../../../../state/atoms/toast.atom';
@@ -75,6 +73,8 @@ export default function ExistingQuestion({
       <LabeledDropdown
         styleClass={styles.inputField}
         filterOption={(option, searchQuery) => {
+          if (!option?.data?.noOfQuestions) return false;
+
           if (searchQuery) return option.label?.toLowerCase()?.includes(searchQuery?.toLowerCase());
           if (!metaData?.category && !metaData?.sub_category) return true;
 
@@ -142,9 +142,7 @@ export default function ExistingQuestion({
           }}
           changeHandler={(e) => {
             // validation for entering total question should not be greater than available questions
-            const questionAvailable =
-              questionBankOptions?.filter((option) => option.value === metaData.qbId)[0]
-                ?.noOfQuestions || totalQuestions;
+            const questionAvailable = totalQuestions;
 
             let questionsCount = +e.target.value;
             let errorMsg = null;
@@ -155,7 +153,6 @@ export default function ExistingQuestion({
             }
 
             // no difficulty level selected
-            console.log(!metaData?.difficulty_level);
             if (!metaData?.difficulty_level) {
               questionsCount = 0;
               if (!errorMsg) errorMsg = 'Select Difficulty First';

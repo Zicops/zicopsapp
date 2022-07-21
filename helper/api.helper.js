@@ -48,7 +48,7 @@ export async function loadQueryDataAsync(QUERY, variableObj = {}, options = {}) 
       console.log(`Load Data error:`, err);
     });
 
-  if (response.error) return response;
+  if (response?.error) return response;
 
   return response?.data || {};
 }

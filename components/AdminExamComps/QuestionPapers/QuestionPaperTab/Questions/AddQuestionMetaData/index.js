@@ -59,6 +59,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
 
   const [qbQuestions, setQbQuestions] = useState(null);
   const [qbFilteredQuestions, setQbFilteredQuestions] = useState(null);
+  const [usedQuestionsCount, setUsedQuestionsCount] = useState(0);
   const [isUploadSelected, setIsUploadSelected] = useState(false);
   const [originalQbId, setOriginalQbId] = useState(null);
 
@@ -109,14 +110,27 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
-      if (data?.getQuestionBankQuestions) {
-        setQbQuestions(data.getQuestionBankQuestions);
-      }
+      if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
     });
   }, [metaData.qbId]);
 
+  // set available question length
   useEffect(() => {
     if (!qbQuestions) return;
+
+    // questionPaperTabData.mappedQb.some(qb);
+    const totalQuestions = questionPaperTabData.mappedQb.reduce((total, mapping, index) => {
+      if (
+        mapping?.qbId === metaData?.qbId &&
+        metaData?.difficulty_level === mapping?.difficulty_level
+      ) {
+        total += mapping?.total_questions || 0;
+      }
+
+      return total;
+    }, 0);
+
+    setUsedQuestionsCount(totalQuestions);
 
     setQbFilteredQuestions(
       qbQuestions.filter((q) => {
@@ -125,7 +139,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
         return DIFFICULTY[metaData?.difficulty_level]?.includes(q.Difficulty);
       })
     );
-  }, [qbQuestions, metaData?.difficulty_level]);
+  }, [qbQuestions, metaData?.difficulty_level, metaData?.qbId]);
 
   // reset meta data
   useEffect(() => {
@@ -162,7 +176,11 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
             <ExistingQuestion
               questionBankOptions={questionBankOptions}
               metaData={metaData}
-              totalQuestions={qbFilteredQuestions?.length}
+              totalQuestions={
+                qbFilteredQuestions?.length > usedQuestionsCount
+                  ? qbFilteredQuestions?.length - usedQuestionsCount
+                  : 0
+              }
               setMetaData={setMetaData}
               isEdit={!!editData?.id}
             />

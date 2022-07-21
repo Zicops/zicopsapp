@@ -1,3 +1,4 @@
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -9,7 +10,11 @@ import {
   UPDATE_MAP_SECTION_TO_BANK,
   UPDATE_SECTION_FIXED_QUESTIONS
 } from '../../../../../API/Mutations';
-import { GET_LATEST_QUESTION_BANK, queryClient } from '../../../../../API/Queries';
+import {
+  GET_LATEST_QUESTION_BANK,
+  GET_QUESTIONS_NAMES,
+  queryClient
+} from '../../../../../API/Queries';
 import {
   getQuestionMetaDataObject,
   QuestionPaperTabDataAtom
@@ -60,18 +65,29 @@ export default function useHandleQuestions(sectionId) {
   const [questionBankOptions, setQuestionBankOptions] = useState([]);
 
   // load question bank data
-  useEffect(() => {
+  useEffect(async () => {
     const LARGE_PAGE_SIZE = 999999999999;
     const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
 
-    loadQuestionBank({ variables: queryVariables }).then(({ data }) => {
-      if (loadQBError) return setToastMsg({ type: 'danger', message: 'question bank load error' });
+    const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
+    if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
 
-      const qbOptions = data?.getLatestQuestionBank?.questionBanks.map((qb) => {
-        return { value: qb.id, label: qb.name, ...qb };
+    const questionBankData = structuredClone(qbRes?.getLatestQuestionBank?.questionBanks) || [];
+    if (!questionBankData.length) return;
+
+    for (let i = 0; i < questionBankData.length; i++) {
+      const qb = questionBankData[i];
+      const questionsRes = await loadQueryDataAsync(GET_QUESTIONS_NAMES, {
+        question_bank_id: qb.id
       });
-      setQuestionBankOptions(qbOptions);
+      const questionsArr = questionsRes?.getQuestionBankQuestions || [];
+      questionBankData[i].noOfQuestions = questionsArr.length;
+    }
+
+    const qbOptions = questionBankData.map((qb) => {
+      return { value: qb.id, label: qb.name, ...qb };
     });
+    setQuestionBankOptions(qbOptions);
   }, []);
 
   useEffect(() => {
@@ -305,7 +321,6 @@ export default function useHandleQuestions(sectionId) {
 
     if (!isError) setToastMsg({ type: 'success', message: 'Question Meta Data Updated' });
 
-    console.log(mapToSectionRes);
     const resData = mapToSectionRes?.data?.updateSectionToBank || {};
 
     const updatedMetaData = {
