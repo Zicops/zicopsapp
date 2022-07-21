@@ -147,7 +147,7 @@ const Users = () => {
               //   setEditPopUp(true);
               // }}
             >
-              <img src="/images/edit-icon.png" width={20}></img>
+              <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
           </>
         );

@@ -1,4 +1,5 @@
 import ZicopsTable from '@/components/common/ZicopsTable';
+import { useRouter } from 'next/router';
 import CohortMasterTab from './ChortMasterTab';
 
 const data = [
@@ -64,6 +65,7 @@ const data = [
   }
 ];
 const UserCohorts = () => {
+  const router = useRouter();
   const columns = [
     {
       field: 'name',
@@ -113,11 +115,9 @@ const UserCohorts = () => {
                 outline: '0',
                 border: '0'
               }}
-              // onClick={() => {
-              //   setSelectedQB(getQuestionBankObject(params.row));
-              //   setEditPopUp(true);
-              // }}
-            >
+              onClick={() => {
+                router.push(router.asPath + `/${params.row.id}`);
+              }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
             <button
