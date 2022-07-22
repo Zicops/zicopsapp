@@ -23,7 +23,7 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    z-index: 5;
+    z-index: 11;
     width: 100%;
     padding: 40px 30px;
     transition: all 0.3s ease-in-out;
@@ -271,12 +271,16 @@
       transform: translateX(-50%);
     }
 
-    .notesContainer {
-      .notesCardsContainer {
-        // height: 100px;
-        flex-basis: 100%;
-        overflow-y: scroll;
-      }
+    .notesCardsContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      // position: relative;
+      width: 500px;
+      height: 350px;
+      overflow: hidden auto;
+      z-index: 2;
+      flex-basis: 100%;
     }
 
     .quizDropdown {
@@ -347,6 +351,45 @@
           background-color: $black;
         }
       }
+    }
+  }
+
+  .noteCard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    max-width: 150px;
+    max-height: 150px;
+
+    background-color: $primary;
+    font-family: 'Grape Nuts';
+
+    img {
+      fill: $black;
+    }
+
+    .notesHeader {
+      display: flex;
+      justify-content: space-between;
+      color: $black;
+
+      img {
+        cursor: pointer;
+        margin: auto 2px;
+
+        &.pinned {
+          transform: rotate(-45deg);
+        }
+      }
+    }
+
+    textarea {
+      background-color: transparent;
+      height: 100%;
+      width: 100%;
+      z-index: 5;
     }
   }
 }
@@ -556,14 +599,15 @@
   height: 150px;
   width: 150px;
   padding: 5px;
-  background-color: $primary;
-  font-family: 'Grape Nuts';
   position: absolute;
   top: 100px;
   left: 100px;
   z-index: 15;
   cursor: move;
+  border: 1px solid transparent;
+
   &:hover {
-    background-color: $primary;
+    border-color: $black;
+    z-index: 999;
   }
 }
