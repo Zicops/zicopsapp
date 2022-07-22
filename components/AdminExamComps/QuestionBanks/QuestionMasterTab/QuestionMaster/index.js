@@ -5,9 +5,10 @@ import styles from '../questionMasterTab.module.scss';
 import CreateQuestionForm from './CreateQuestionForm';
 
 export default function QuestionMaster({ isEdit, data }) {
-  const [visibleForm, setVisibleForm] = useState(null);
+  const [visibleForm, setVisibleForm] = useState(data?.questionData?.type ? 'create' : null);
 
   useEffect(() => {
+    if (visibleForm === 'create') return;
     setVisibleForm(isEdit ? 'create' : null);
   }, [isEdit]);
 

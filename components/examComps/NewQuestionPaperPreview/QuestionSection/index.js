@@ -24,7 +24,7 @@ export default function QuestionSection({ setIsQuestion, setOption, data, setDat
                   </p>
                 </div>
 
-                {section?.questions?.map((id) => {
+                {section?.questions?.map((id, i) => {
                   const each = data?.filter((q) => q?.question?.id === id)[0];
 
                   if (!each) return null;
@@ -50,7 +50,7 @@ export default function QuestionSection({ setIsQuestion, setOption, data, setDat
                             setIsQuestion(false);
                           }}>
                           <QuestionOptionView
-                            questionCount={each.id}
+                            questionCount={i+1}
                             questionData={each.question}
                             optionData={each.options}
                             showType="none"
