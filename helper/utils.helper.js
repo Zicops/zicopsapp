@@ -14,7 +14,7 @@ export const months = [
 ];
 
 export function getYearsFromNow(numberOfYearsFromNow) {
-  const currentYear = new Date().getFullYear();
+  let currentYear = new Date().getFullYear();
   const years = [currentYear];
   for (let i = 0; i < numberOfYearsFromNow; i++) {
     years.push(++currentYear);
