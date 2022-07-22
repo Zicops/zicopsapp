@@ -8,11 +8,14 @@ import styles from '../zicopsLogin.module.scss';
 import { useState } from 'react';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
+import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 
 const ChangePasswordScreen = ({ setPage }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-
-  const [currentPassword, setCurrentPassword] = useState('');
+  const router = useRouter();
+  const code = router.query?.oobCode || 'sgWcZL0ohfUnds2dXmiqiIIZqaNbNmyxkx1kv7bkEvwAAAGCJqr1pA';
   const [newPassword, setNewPassword] = useState('');
   const [confNewPassword, setConfNewPassword] = useState('');
 
@@ -36,7 +39,18 @@ const ChangePasswordScreen = ({ setPage }) => {
         type: 'danger',
         message: 'New Password should be same as Confirm Password field'
       });
+    console.log(code, newPassword);
+
+    verifyPasswordResetCode(auth, 'sgWcZL0ohfUnds2dXmiqiIIZqaNbNmyxkx1kv7bkEvwAAAGCJqr1pA')
+      .then((data) => {
+        confirmPasswordReset(auth, code, newPassword)
+          .then((data) => console.log(data))
+          .catch((error) => console.log(error.message));
+      })
+      .catch((error) => console.log(error.message));
   }
+
+  //('https://zicops-one.firebaseapp.com/__/auth/action?mode=resetPassword&oobCode=sgWcZL0ohfUnds2dXmiqiIIZqaNbNmyxkx1kv7bkEvwAAAGCJqr1pA&apiKey=AIzaSyD05Uj8S-YumeJUiM4xuO8YFP7rjLJbrP8&lang=en');
 
   return (
     <>
@@ -56,8 +70,14 @@ const ChangePasswordScreen = ({ setPage }) => {
         />
         <div className="login_body">
           {/* <LoginEmail placeholder={'Enter current password'} chngeHandle={handleCurrentPassword} /> */}
-          <LoginEmail placeholder={'Enter new password'} />
-          <LoginEmail placeholder={'Re-enter new password'} />
+          <LoginEmail
+            placeholder={'Enter new password'}
+            chngeHandle={(e) => handleNewPassword(e)}
+          />
+          <LoginEmail
+            placeholder={'Re-enter new password'}
+            chngeHandle={(e) => handleConfNewPassword(e)}
+          />
           <div className="change_buttons">
             <LoginButton title={'Cancel'} />
             <LoginButton title={'Change'} handleClick={handleSubmit} />
