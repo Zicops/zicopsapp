@@ -24,6 +24,7 @@
 
   button {
     padding: 10px;
+    cursor: pointer;
     border: none;
     background-color: $primary;
     color: $black;
@@ -63,10 +64,6 @@
 
 //Users tab
 
-.usersContainer {
-  // margin: auto -30px;
-}
-
 .usersTopContainer {
   display: flex;
   justify-content: space-between;
@@ -80,5 +77,51 @@
     color: $black;
     font-weight: bold;
     border-radius: 3px;
+  }
+}
+
+// AddUsers page styling
+
+.topContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.imageContainer {
+  display: flex;
+  width: 35%;
+
+  img {
+    height: 60px;
+    object-fit: contain;
+  }
+  .titleContainer {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+    height: 55px;
+    margin: 0 10px;
+    color: $darkThree;
+    .cohortTitle {
+      font-size: 20px;
+      color: $white;
+    }
+  }
+}
+
+.searchBarContainer {
+  position: relative;
+  width: 400px;
+
+  img {
+    position: absolute;
+    top: 30%;
+    left: 10px;
+    transform: translateY(-50%);
+  }
+
+  input {
+    padding-left: 40px;
   }
 }

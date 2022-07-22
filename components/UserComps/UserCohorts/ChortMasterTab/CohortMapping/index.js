@@ -1,7 +1,12 @@
 import styles from '../../../userComps.module.scss';
+import AddUsers from '../Users/AddUsers';
 
 const CohortMapping = () => {
-  return <>hello</>;
+  return (
+    <>
+      <AddUsers />
+    </>
+  );
 };
 
 export default CohortMapping;
