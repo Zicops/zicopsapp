@@ -153,14 +153,13 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   function isOptionsDuplicate() {
     var optionArr = optionData.map(function (op) {
-      return op.description;
+      return op.description?.trim();
     });
     var isDuplicate = optionArr.some((op, i) => {
       if (!op) return;
 
       return optionArr.indexOf(op) != i;
     });
-    console.log(isDuplicate);
 
     if (isDuplicate) setToastMsg({ type: 'danger', message: 'Options cannot be same.' });
     return isDuplicate;
@@ -193,7 +192,9 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     if (isOptionsDuplicate()) return;
 
     let isQuestionAdded = questionsArr.some(
-      (q) => q?.question?.description?.toLowerCase() === questionData?.description?.toLowerCase()
+      (q) =>
+        q?.question?.description?.toLowerCase()?.trim() ===
+        questionData?.description?.toLowerCase()?.trim()
     );
     if (isQuestionAdded)
       return setToastMsg({ type: 'danger', message: 'Question with same name cannot be added!' });
@@ -226,11 +227,13 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     const questions = res?.data?.getQuestionBankQuestions;
 
     let isDuplicate = questions.some((q) => {
-      const ques = q?.Description?.toLowerCase();
+      const ques = q?.Description?.toLowerCase()?.trim();
       if (q?.id === questionData?.id) return false;
-      if (checkNewQuestion) return ques === questionData?.description?.toLowerCase();
+      if (checkNewQuestion) return ques === questionData?.description?.toLowerCase()?.trim();
 
-      return !!questionsArr.find((obj) => ques === obj?.question?.description?.toLowerCase());
+      return !!questionsArr.find(
+        (obj) => ques === obj?.question?.description?.toLowerCase()?.trim()
+      );
     });
     return isDuplicate;
   }
