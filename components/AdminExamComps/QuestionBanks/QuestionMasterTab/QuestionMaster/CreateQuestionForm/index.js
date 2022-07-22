@@ -1,4 +1,5 @@
 import QuestionOptionView from '@/components/common/QuestionOptionView';
+import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import { changeHandler } from '../../../../../../helper/common.helper';
 import Button from '../../../../../common/Button';
@@ -160,7 +161,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
                   .map((value, index) => (
                     <InputWithCheckbox
                       key={index}
-                      labelCount={index + 1}
+                      labelCount={OPTION_LABEL[index]}
                       acceptedTypes={acceptedFileTypes.join(', ')}
                       isCorrectHandler={(e) => optionInputHandler(e, index)}
                       optionData={{

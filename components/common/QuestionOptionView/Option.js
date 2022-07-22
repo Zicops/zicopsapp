@@ -1,9 +1,9 @@
 import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Logic/questionBank.helper';
+import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import styles from './questionOptionView.module.scss';
 
 export default function Option({ option, count, compareCorrect, selectedAnswerId }) {
-  const optionCount = ['a', 'b', 'c', 'd'];
   const isCorrect = option?.isCorrect == null ? selectedAnswerId === option.id : option.isCorrect;
   const [isCorrectSelected, setIsCorrectSelected] = useState(null);
 
@@ -29,7 +29,7 @@ export default function Option({ option, count, compareCorrect, selectedAnswerId
   return (
     <>
       <div className={`${styles.option}`}>
-        <span className={`${styles.highlight}`}>{optionCount[count]}.</span>
+        <span className={`${styles.highlight}`}>{OPTION_LABEL[count]}.</span>
 
         <div className={`${styles.optionWithImg}`}>
           <p>{option?.description}</p>

@@ -137,7 +137,7 @@ export async function isNameDuplicate(QUERY, name, objPath, id = null, checkAgai
     if (id && obj.id === id) return false;
 
     const _name = obj[checkAgainstKey] || obj.Name || obj.name;
-    return _name?.toLowerCase() === name?.toLowerCase();
+    return _name?.toLowerCase()?.trim() === name?.toLowerCase()?.trim();
   });
 
   return isNameExist;
