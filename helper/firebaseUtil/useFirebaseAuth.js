@@ -46,10 +46,8 @@ export default function useFirebaseAuth() {
         auth.currentUser.getIdToken().then((token) => {
           console.log(token);
         });
-        console.log(authUser);
       })
       .catch((error) => {
-        console.log(error.code.slice(5).split('-').join(' '));
         setErrorMsg(error.code.slice(5).split('-').join(' '));
       });
   };

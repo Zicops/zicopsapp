@@ -20,12 +20,22 @@ const CustomColumnMenu = (props) => {
     </GridColumnMenuContainer>
   );
 };
-const ZicopsTable = ({ columns, data, pageSize, rowsPerPageOptions, tableHeight }) => {
+const ZicopsTable = ({
+  columns,
+  data,
+  pageSize,
+  rowsPerPageOptions,
+  tableHeight,
+  customStyles = {},
+  hideFooterPagination = false
+}) => {
   return (
     <div style={{ height: tableHeight }}>
       <StyledDataGrid
         rows={data || []}
         columns={columns}
+        style={customStyles}
+        hideFooterPagination={hideFooterPagination}
         sx={{
           border: 0,
           pt: 2,

@@ -8,11 +8,12 @@ const httpLink = createHttpLink({
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = localStorage.getItem('keyToken');
+  console.log(token);
   // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : ''
+      Authorization: token ? `Bearer ${token}` : ''
     }
   };
 });
@@ -27,31 +28,88 @@ export const USER_LOGIN = gql`
     login {
       user {
         id
-        firstName
-        lastName
-        Status
-        Role
-        IsVerified 
-        IsActive 
-        Gender 
-        CreatedBy 
-        UpdatedBy 
-        CreatedAt 
-        UpdatedAt 
-        Email 
-        Phone 
-        PhotoUrl 
+        first_name
+        last_name
+        status
+        role
+        is_verified
+        is_active
+        gender
+        created_by
+        updated_by
+        created_at
+        updated_at
+        email
+        phone
+        photo_url
       }
       access_token
     }
   }
 `;
 
-// account created for super User(at backend manual) -> login with that account /login ->
-// 1). firebase call for email and password then return uid and tokenId. from this token we will call our UserMutation.
-// IT WILL return tokenZ(custom Token from backend) and user detail. save in browser storage
-// validate tokenZ with backend on app initialization. ( after sometime tokenZ will be expired from backend)
+export const MAKE_ADMIN_USER = gql`
+  mutation registerUsers(
+    $firstName: String!
+    $lastName: String!
+    $Status: String!
+    $Role: String!
+    $IsVerified: Boolean!
+    $IsActive: Boolean!
+    $Gender: String!
+    $CreatedBy: String!
+    $UpdatedBy: String!
+    $Email: String!
+    $Phone: String!
+  ) {
+    registerUsers(
+      input: [
+        {
+          first_name: $firstName
+          last_name: $lastName
+          status: $Status
+          role: $Role
+          is_verified: $IsVerified
+          is_active: $IsActive
+          gender: $Gender
+          created_by: $CreatedBy
+          updated_by: $UpdatedBy
+          email: $Email
+          phone: $Phone
+        }
+      ]
+    ) {
+      id
+      first_name
+      last_name
+      status
+      role
+      is_verified
+      is_active
+      gender
+      created_by
+      updated_by
+      created_at
+      updated_at
+      email
+      phone
+      photo_url
+    }
+  }
+`;
 
-//2). for first time user login. after receiving tokenZ check IsVerified
+export const INVITE_USERS = gql`
+  mutation InviteUsers($emails: String!) {
+    inviteUsers(emails: [$emails])
+  }
+`;
 
-//3). 
+// https://zicops-one.firebaseapp.com/__/auth/action?
+//mode = resetPassword &
+//oobCode = ZCOjb6 - ANGga8SgCe2SXKelCXG2gw1TioDrgjwcy6ykAAAGCJmd7zw &
+//apiKey = AIzaSyD05Uj8S - YumeJUiM4xuO8YFP7rjLJbrP8 &
+//continueUrl = https % 3A % 2F % 2Fdemo.zicops.com &
+//lang = en
+//
+
+//1). reset password link to https://demo.zicops.com/reset-password?

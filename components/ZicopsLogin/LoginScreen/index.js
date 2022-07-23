@@ -48,21 +48,18 @@ const LoginScreen = ({ setPage }) => {
 
     // if (errorMsg) return;
 
-    localStorage.setItem('keyToken', JSON.stringify(authUser?.token));
+    localStorage.setItem('keyToken', authUser?.token);
 
-    // let isError = false;
-    // const res = await userLogin().catch((err) => {
-    //   console.log(err);
-    //   isError = !!err;
-    //   return setToastMsg({ type: 'danger', message: 'Login Error' });
-    // });
+    let isError = false;
+    const res = await userLogin().catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Login Error' });
+    });
 
     // if (isError) return;
     console.log(authUser);
     return;
-
-    // setUserData({ authUser });
-    // router.push('/');
   };
 
   useEffect(() => {

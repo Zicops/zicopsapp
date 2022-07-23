@@ -5,7 +5,14 @@ import { StatusAtom } from '../../../state/atoms/utils.atoms';
 import Button from '../Button';
 import styles from './tabContainer.module.scss';
 // Add proptype for extra added props
-export default function TabContainer({ tabData, tab, setTab, footerObj = {}, children }) {
+export default function TabContainer({
+  tabData,
+  tab,
+  setTab,
+  footerObj = {},
+  children,
+  customClass = null
+}) {
   const {
     status,
     submitDisplay = 'Submit',
@@ -47,7 +54,7 @@ export default function TabContainer({ tabData, tab, setTab, footerObj = {}, chi
         </ul>
       </nav>
 
-      <section className={`${styles.tabSection}`}>{showActiveTab(tab)}</section>
+      <section className={`${styles.tabSection} ${customClass}`}>{showActiveTab(tab)}</section>
 
       {/* footer */}
       {showFooter && (

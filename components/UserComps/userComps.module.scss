@@ -1,3 +1,127 @@
-@import '../../../styles/base.scss';
+@import '../../styles/base.scss';
 
+.tabContainer {
+  padding: 0 !important;
+}
 
+//Chorot mAster tab
+.inputField {
+  margin-bottom: 30px;
+}
+
+.uploadImage {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  label {
+    width: 25%;
+  }
+
+  .buttonContainer {
+    width: 75%;
+  }
+
+  button {
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: $primary;
+    color: $black;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+
+  .uploadImagePreview {
+    color: $primary;
+    // position: absolute;
+    text-decoration: underline;
+    text-align: center;
+    margin-top: 20px;
+    margin-right: 10px;
+    a {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+
+  .uploadImageRemove {
+    color: $white;
+    // position: absolute;
+    text-decoration: underline;
+    text-align: center;
+    margin-top: 20px;
+    margin-right: 10px;
+    a {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+}
+
+//Users tab
+
+.usersTopContainer {
+  display: flex;
+  justify-content: space-between;
+  span {
+    font-size: 20px;
+  }
+  button {
+    padding: 10px;
+    border: none;
+    background-color: $primary;
+    color: $black;
+    font-weight: bold;
+    border-radius: 3px;
+  }
+}
+
+// AddUsers page styling
+
+.topContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.imageContainer {
+  display: flex;
+  width: 35%;
+
+  img {
+    height: 60px;
+    object-fit: contain;
+  }
+  .titleContainer {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+    height: 55px;
+    margin: 0 10px;
+    color: $darkThree;
+    .cohortTitle {
+      font-size: 20px;
+      color: $white;
+    }
+  }
+}
+
+.searchBarContainer {
+  position: relative;
+  width: 400px;
+
+  img {
+    position: absolute;
+    top: 30%;
+    left: 10px;
+    transform: translateY(-50%);
+  }
+
+  input {
+    padding-left: 40px;
+  }
+}
