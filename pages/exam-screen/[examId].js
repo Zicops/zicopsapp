@@ -201,7 +201,7 @@ const ExamScreen = () => {
 
     // load section data and qb mappings
     const sectionData = [];
-    const quesData = [];
+    let quesData = [];
     let mappedQb = [];
     let totalQuestions = 0;
     let totalMarks = 0;
@@ -468,6 +468,9 @@ const ExamScreen = () => {
       }
     }
 
+    // if (confObj.shuffle) quesData = a.sort(() => Math.random() - 0.5);
+    if (confObj.shuffle) shuffleQuestion(quesData);
+
     setQuestionData(quesData);
     if (quesData[0]) setCurrent(quesData[0]);
 
@@ -509,6 +512,25 @@ const ExamScreen = () => {
       );
     });
   }, []);
+
+  function shuffleQuestion(array = []) {
+    let currentIndex = array.length,
+      randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      --currentIndex;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      array[currentIndex].id = currentIndex + 1;
+    }
+    console.log(array);
+
+    return array;
+  }
 
   // loader screen till loading
   if (loading) {

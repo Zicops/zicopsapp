@@ -62,7 +62,7 @@ export default function UiComponents({
 
   useEffect(() => {
     // TODO: remove later
-    // return;
+    return;
 
     if (isTopBarHidden) setShowBox(null);
   }, [isTopBarHidden]);

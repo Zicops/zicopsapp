@@ -1,17 +1,21 @@
+import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../state/atoms/video.atom';
 import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
 import DraggableDiv from './DraggableDiv';
+import useHandleNotes from './Logic/useHandleNotes';
 import useVideoPlayer from './Logic/useHandleVideo';
 import SkipButtons from './SkipButtons';
 import UiComponents from './UiComponents';
+import NoteCard from './UiComponents/Notes/NoteCard';
 import VideoPlayer from './VideoPlayer';
 
 export default function CustomVideo({ set }) {
   const videoData = useRecoilValue(VideoAtom);
+  const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
 
   const { isPreview, topicContent, currentTopicContentIndex } = videoData;
   const [showBingeButtons, setShowBingeButtons] = useState(false);
@@ -45,6 +49,7 @@ export default function CustomVideo({ set }) {
     setVideoTime,
     moveVideoProgressBySeconds
   } = useVideoPlayer(videoElement, videoContainer, set);
+  const { userNotes, handleDragEnd, handleClose, handlePin } = useHandleNotes();
 
   useEffect(() => {
     set(true);
@@ -120,12 +125,36 @@ export default function CustomVideo({ set }) {
 
   return (
     <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
+      {/* floating notes */}
+      {floatingNotes?.map((noteObj, i) => {
+        if (!noteObj.isPinned && hideTopBar) {
+          handleClose(noteObj, i, true);
+          return null;
+        }
+
+        return (
+          <DraggableDiv
+            key={noteObj.id}
+            initalPosition={{
+              x: noteObj.x + 10,
+              y: noteObj.y + 10
+            }}>
+            <NoteCard
+              isDraggable={false}
+              noteObj={noteObj}
+              handleClose={() => handleClose(noteObj, i, true)}
+            />
+          </DraggableDiv>
+        );
+      })}
+
       {/* custom Ui components */}
       {/* <div className={`${styles.customUiContainer} ${hideTopBar ? styles.fadeHideTop : ''}`}> */}
       <UiComponents
         styleClass={hideTopBar ? styles.fadeHideTop : ''}
         updateIsPlayingTo={updateIsPlayingTo}
         set={set}
+        key={'ui'}
         refs={{ videoElement, videoContainer }}
         playerState={playerState}
         isTopBarHidden={hideTopBar}
@@ -134,9 +163,6 @@ export default function CustomVideo({ set }) {
       />
       {/* </div> */}
       {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}
-
-      {/* <DraggableDiv> "Hi" </DraggableDiv>
-      <DraggableDiv> "Hello" </DraggableDiv> */}
 
       <div className="video_wrapper">
         {/* video player */}
