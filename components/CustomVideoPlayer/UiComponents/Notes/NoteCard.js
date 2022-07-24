@@ -58,7 +58,7 @@ export default function NoteCard({
       </div>
 
       <textarea
-        disabled
+        // disabled
         cols="30"
         rows="10"
         onMouseDown={(e) => e.stopPropagation()}
