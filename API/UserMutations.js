@@ -1,19 +1,37 @@
 import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 
 const httpLink = createHttpLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
 });
 
+function checkExpirationOfTokenZ(token) {
+  const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+  console.log(JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()));
+  //JSON.parse(atob(token.split('.')[1]));
+  //check if the token is expired or not-> return false if it is not expired
+  let checkToken = !auth?.currentUser?.stsTokenManager?.isExpired;
+  if (checkToken) return token;
+  let newToken;
+  auth?.currentUser?.getIdToken(true).then((data) => {
+    newToken = data;
+    console.log(data);
+  });
+
+  return newToken;
+}
+
 const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  const token = localStorage.getItem('keyToken');
-  console.log(token);
+  // get the authentication tokenF and tokenZ from local storage if it exists
+  const tokenF = sessionStorage.getItem('tokenF');
+
+  // const token = checkExpirationOfTokenZ(tokenF);
   // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : ''
+      Authorization: tokenF ? `Bearer ${tokenF}` : ''
     }
   };
 });
@@ -113,3 +131,8 @@ export const INVITE_USERS = gql`
 //
 
 //1). reset password link to https://demo.zicops.com/reset-password?
+
+//  //check which of them exists... if both doesnt exist redirect to login page acquire tokenF by letting user login with their credentials
+//now use tokenF and send rquest to login mutation as tokenF as header
+//the moment we get access_token from mutation store it in tokenZ and now change the header with tokenZ
+//we have to getUpdatedtoken if tokenZ is expired
