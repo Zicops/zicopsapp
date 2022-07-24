@@ -81,7 +81,7 @@ const CohortMaster = () => {
       <div className={`${styles.uploadImage}`}>
         <label>Cohort Image:</label>
         <div className={`${styles.buttonContainer}`}>
-          <button>Upload Photo</button>
+          <button className={`${styles.cohortButton2}`}>Upload Photo</button>
           <span className={`${styles.uploadImagePreview}`}>
             <a>Preview</a>
           </span>
