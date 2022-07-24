@@ -183,27 +183,29 @@
 
     .folderBar {
       display: flex;
-      padding: 5px;
+      padding: 10px;
       height: max-content;
       position: relative;
-
-      @include transparentBackground($bgContent);
+      border-radius: 3px;
+      margin-bottom: 10px;
+      background-color: rgba($bgContent, .6);
+      // @include transparentBackground($bgContent);
 
       section {
         display: inline-flex;
         align-items: center;
         justify-content: center;
 
-        margin: auto 10px;
-        height: 30px;
+        margin: auto 20px;
+        height: 15px;
 
         cursor: pointer;
 
         div {
           margin: auto;
           background-color: $primary;
-          height: 5px;
-          width: 25px;
+          height: 2px;
+          width: 15px;
         }
 
         img {
@@ -269,6 +271,7 @@
       left: 50%;
 
       transform: translateX(-50%);
+
     }
 
     .notesCardsContainer {
@@ -281,6 +284,7 @@
       overflow: hidden auto;
       z-index: 2;
       flex-basis: 100%;
+      padding: 10px;
     }
 
     .quizDropdown {
@@ -359,30 +363,60 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-
+    position: relative;
     max-width: 150px;
     max-height: 150px;
 
     background-color: $primary;
-    font-family: 'Grape Nuts';
-
+    padding: 8px;
+    padding-bottom: 15px;
+    box-shadow: 0 0 10px 2px #00000080;
+    border-bottom-right-radius: 50px 10px;
+    overflow: hidden;
     img {
-      fill: $black;
+      width: 15px;
+      // fill: $black;
+      // background-color: #000000;
     }
-
+    &:after{
+      content: "";
+      position: absolute;
+      bottom: -80px;
+      right: 18px;
+      width: 50px;
+      height: 100px;
+      transform: rotate(70deg);
+      // background-color: $white;
+      box-shadow:  0px 0px 20px 10px #00000080;
+    }
+    
     .notesHeader {
       display: flex;
       justify-content: space-between;
       color: $black;
-
+      font-weight: 800;
+      font-size: 14px;
+      cursor: grab;
       img {
         cursor: pointer;
-        margin: auto 2px;
+        // margin: auto 2px;
 
         &.pinned {
           transform: rotate(-45deg);
         }
       }
+      .delete {
+        width: 18px;
+        height: 20px;
+      }
+      .clear, .delete, .pin{cursor: pointer;}
+      .clear path, .pin path, .delete path{
+        fill: $darkOne;
+        &.pinned {
+            transform: rotate(-45deg);
+          }
+      }
+      
     }
 
     textarea {
@@ -390,6 +424,15 @@
       height: 100%;
       width: 100%;
       z-index: 5;
+      font-family: 'Grape Nuts';
+      font-size: 20px;
+      font-weight: 600;
+      cursor: text;
+      outline: none;
+      border: none;
+      &:focus{
+        outline: none;
+      }
     }
   }
 }

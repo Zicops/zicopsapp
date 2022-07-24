@@ -4,7 +4,13 @@ import { useRecoilState } from 'recoil';
 import { NOTE_CARD_SIZE } from './customVideoPlayer.helper';
 
 const dummyNotes = [
-  { id: 1, index: 1, note: 'This is note 1', isPinned: false, isOpen: true },
+  {
+    id: 1,
+    index: 1,
+    note: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
+    isPinned: false,
+    isOpen: true
+  },
   { id: 2, index: 2, note: 'This is note 2', isPinned: false, isOpen: true },
   { id: 3, index: 3, note: 'This is note 3', isPinned: false, isOpen: true },
   { id: 4, index: 4, note: 'This is note 4', isPinned: false, isOpen: true },
