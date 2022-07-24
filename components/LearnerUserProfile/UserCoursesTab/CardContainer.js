@@ -4,17 +4,17 @@ import AssignedCourses from '@/components/UserProfile/AssignedCourses';
 import { useEffect, useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 
-export default function CardContainer({ type, footerType, courseData }) {
+export default function CardContainer({ isAdmin=false, type, footerType, courseData }) {
   const [isBoxView, setIsBoxView] = useState(true);
   const [isShowAll, setIsShowAll] = useState(false);
   const [cardSizeData, setCardSizeData] = useState({
     cardWidth: 300,
     cardCount: 4
   });
-
+  
   useEffect(() => {
     const sidePadding = 50;
-    const gap = 10;
+    const gap = 20;
     const screenWidth = window.screen.width;
     let cardCount = cardSizeData.cardCount;
     if (screenWidth > 1600) cardCount = 6;
@@ -59,6 +59,7 @@ export default function CardContainer({ type, footerType, courseData }) {
             ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
             ?.map((course) => (
               <CourseBoxCard
+                isAdmin={isAdmin}
                 courseData={course}
                 footerType={footerType}
                 cardWidth={cardSizeData.cardWidth}>
@@ -68,6 +69,12 @@ export default function CardContainer({ type, footerType, courseData }) {
                     <p>Added on {courseData?.addedOn || '22-06-2022'}</p>
                   </div>
                 )}
+                {footerType === 'adminFooter' && 
+                  <div className={`${styles.adminCardFooter}`}>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sint quia ea voluptates, a assumenda impedit illum eligendi.</p>
+                  <button>Unassign</button>
+                  </div>
+                }
               </CourseBoxCard>
             ))}
         </div>
