@@ -4,6 +4,7 @@ import styles from '../../../userComps.module.scss';
 import { useState } from 'react';
 
 const CohortMaster = () => {
+  const [image, setImage] = useState();
   const allSelectedCohortManager = [];
   const difficultyOptions = [
     { value: 'Open', label: 'Open' },
@@ -81,7 +82,24 @@ const CohortMaster = () => {
       <div className={`${styles.uploadImage}`}>
         <label>Cohort Image:</label>
         <div className={`${styles.buttonContainer}`}>
-          <button className={`${styles.cohortButton2}`}>Upload Photo</button>
+          <input
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) setImage(file);
+              else setImage(null);
+            }}
+            id={'materialUpload'}
+            type="file"
+          />
+          <button
+            className={`${styles.cohortButton2}`}
+            id={'materialUpload'}
+            onClick={() => {
+              document.getElementById('materialUpload').click();
+            }}>
+            Upload Photo
+          </button>
           <span className={`${styles.uploadImagePreview}`}>
             <a>Preview</a>
           </span>

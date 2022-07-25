@@ -19,7 +19,18 @@
   }
 
   .buttonContainer {
+    position: relative;
     width: 75%;
+    input {
+      position: absolute;
+      cursor: pointer;
+      width: 105px;
+      right: 0;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      display: none;
+    }
   }
 
   .cohortButton2 {
@@ -174,4 +185,29 @@
   border: $primary 2px solid;
   display: inline-block;
   border-radius: 3px;
+}
+
+//learner statistic container
+
+.leanerStatsContainer {
+  .titleContainer {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.learnerBottomContainer {
+  display: flex;
+  justify-content: flex-end;
+  div {
+    display: flex;
+    gap: 15px;
+  }
+  button {
+    display: flex;
+    align-items: center;
+    svg {
+      margin-right: 5px;
+    }
+  }
 }
