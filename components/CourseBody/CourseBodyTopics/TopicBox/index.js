@@ -268,7 +268,7 @@ export default function TopicBox({
                         width={100}
                       />
                     ) : duration ? (
-                      `Duration : ${duration}`
+                      `Duration : ${duration} sec`
                     ) : (
                       'N/A'
                     )}
@@ -303,13 +303,15 @@ export default function TopicBox({
               </div>
               <div className={`${styles.assesmentInfo}`}>
                 <span>
-                  Marks: {!!data?.examData?.totalMarks ? `${data?.examData?.totalMarks}M` : ''}
+                  Marks: {!!data?.examData?.totalMarks ? `${data?.examData?.totalMarks}` : ''}
                 </span>
                 <span>
                   Passing Criteria: {passingCriteriaSymbol(data?.examData?.passingCriteria)}
                 </span>
                 <span>{data?.examData?.difficultyLevel}</span>
-                <span>Attempt: {data?.examData?.noAttempts}</span>
+                {data?.examData?.noAttempts !== 0 && (
+                  <span>Attempt: {data?.examData?.noAttempts}</span>
+                )}
                 {!!data?.examData?.duration && (
                   <span>Duration: {`${data?.examData?.duration} mins`}</span>
                 )}
