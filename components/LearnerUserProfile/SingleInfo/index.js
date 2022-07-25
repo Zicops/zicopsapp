@@ -18,8 +18,8 @@ const SingleInfo = ({ userData, isEditable = true }) => {
             inputOptions={{
               placeholder: `Enter ${userData.text}`,
               value: tempData,
-              maxLength: 60
-              // isDisabled: isPreview
+              maxLength: 60,
+              isDisabled: userData.text === 'Email'
             }}
             changeHandler={(e) => setTempData(e.target.value)}
           />
