@@ -4,16 +4,17 @@ import { userState } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
 import styles from '../LoginEmail/loginEmail.module.scss';
+import styless from '../zicopsLogin.module.scss';
 import LoginHeadOne from '../LoginHeadOne';
 import { useMutation } from '@apollo/client';
-import Link from 'next/link';
+
 import HomeHeader from '@/components/HomePage/HomeHeader';
 
 const LoginScreen = ({ setPage }) => {
@@ -24,8 +25,13 @@ const LoginScreen = ({ setPage }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [vidIsOpen, setVidIsOpen] = useState(false);
+  const vidRef = useRef();
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const setUserData = useSetRecoilState(userState);
+
+  const [screenSize, setScreentSize] = useState({ width: 0, height: 0 });
 
   // const [error, setError] = useState(null);
 
@@ -47,10 +53,12 @@ const LoginScreen = ({ setPage }) => {
 
     await signIn(email, password);
 
-    // if (errorMsg) return;
-    console.log(authUser?.token);
+    if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
 
     sessionStorage.setItem('tokenF', authUser?.token);
+
+    setVidIsOpen(true);
+    vidRef.current.play();
 
     let isError = false;
     const res = await userLogin().catch((err) => {
@@ -59,19 +67,27 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
-    console.log(res);
+    console.log(res?.data?.login?.is_verified);
+
     return;
     // if (!res?.isVerified) return { router.push('/account-setup') };
-
-    //return router.push('/');
+    //setVidIsOpen(true);
+    //vidRef.current.play();
+    //return ;
     // setUserState({ ...res, tokenF: authUser?.token });
     // if (isError) return;
-    console.log(auth?.currentUser);
-    return;
   };
 
   useEffect(() => {
-    if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
+    const sheight = window.screen.height;
+    const swidth = window.screen.width;
+    setScreentSize((prevValue) => ({ ...prevValue, height: sheight, width: swidth }));
+    console.log(screenSize.width, screenSize.height);
+  }, [screenSize.width]);
+
+  useEffect(() => {
+    if (errorMsg) return;
+    console.log(authUser);
   }, [errorMsg, authUser]);
 
   //to check if our user is logged in or not
@@ -80,7 +96,7 @@ const LoginScreen = ({ setPage }) => {
   }, [authUser, loading]);
 
   return (
-    <>
+    <div className={`${styless.loginMainContainer}`}>
       <HomeHeader showLogin={false} />
 
       <ZicopsLogin>
@@ -106,6 +122,19 @@ const LoginScreen = ({ setPage }) => {
           <LoginButton title={'Login'} handleClick={handleSubmit} />
         </div>
       </ZicopsLogin>
+      {!!vidIsOpen && (
+        <div className={`${styless.introVideoContainer}`}>
+          <video
+            width={`${screenSize.width}`}
+            height={`${screenSize.height}`}
+            ref={vidRef}
+            onEnded={() => {
+              router.push('/');
+            }}>
+            <source src="/videos/loginIntro.mp4" type="video/mp4" />
+          </video>
+        </div>
+      )}
       <style jsx>{`
         .login_body {
           width: 400px;
@@ -122,7 +151,7 @@ const LoginScreen = ({ setPage }) => {
           cursor: pointer;
         }
       `}</style>
-    </>
+    </div>
   );
 };
 

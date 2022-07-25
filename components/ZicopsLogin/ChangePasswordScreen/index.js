@@ -19,12 +19,6 @@ const ChangePasswordScreen = ({ setPage }) => {
   const [newPassword, setNewPassword] = useState('');
   const [confNewPassword, setConfNewPassword] = useState('');
 
-  function handleCurrentPassword(e) {
-    setCurrentPassword(e.target.value);
-    if (currentPassword === 'Password')
-      return setToastMsg({ type: 'danger', message: 'Enter correct password' });
-  }
-
   function handleNewPassword(e) {
     setNewPassword(e.target.value);
   }
@@ -34,6 +28,11 @@ const ChangePasswordScreen = ({ setPage }) => {
   }
 
   function handleSubmit() {
+    if (newPassword.length === 0 && confNewPassword.length === 0)
+      return setToastMsg({
+        type: 'danger',
+        message: 'Cannot leave the both password field empty!'
+      });
     if (newPassword !== confNewPassword)
       return setToastMsg({
         type: 'danger',
@@ -41,10 +40,13 @@ const ChangePasswordScreen = ({ setPage }) => {
       });
     console.log(code, newPassword);
 
-    verifyPasswordResetCode(auth, 'sgWcZL0ohfUnds2dXmiqiIIZqaNbNmyxkx1kv7bkEvwAAAGCJqr1pA')
+    verifyPasswordResetCode(auth, code)
       .then((data) => {
         confirmPasswordReset(auth, code, newPassword)
-          .then((data) => console.log(data))
+          .then((data) => {
+            router.push('/login');
+            console.log(data);
+          })
           .catch((error) => console.log(error.message));
       })
       .catch((error) => console.log(error.message));

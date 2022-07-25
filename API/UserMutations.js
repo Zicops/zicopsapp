@@ -26,14 +26,14 @@ function getLatestToken(token) {
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication tokenF and tokenZ from local storage if it exists
-  const tokenF = sessionStorage.getItem('tokenF');
-
+  const firebaseToken = sessionStorage.getItem('tokenF');
+  if (!!!firebaseToken) return (window.location.pathname = '/login');
   // const token = getLatestToken(tokenF);
   // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
-      Authorization: tokenF ? `Bearer ${tokenF}` : ''
+      Authorization: firebaseToken ? `Bearer ${firebaseToken}` : ''
     }
   };
 });

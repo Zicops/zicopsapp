@@ -1,7 +1,12 @@
 @import '../../styles/base.scss';
 
-.zicops_login{
+.loginMainContainer {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
 
+.zicops_login {
   font-family: 'Open Sans';
   background-image: url('../../public/images/starrySky2.png');
   background-position: center;
@@ -16,43 +21,45 @@
   scroll-snap-type: y mandatory;
   justify-content: center;
   align-items: center;
-
-  
 }
-.heading{
-    font-size: 25px;
-    color:$white;
-    font-weight: bold;
-    padding-top: 30px;
+.heading {
+  font-size: 25px;
+  color: $white;
+  font-weight: bold;
+  padding-top: 30px;
 }
-.sub_heading{
+.sub_heading {
   display: flex;
   align-items: center;
   padding: 10px 0 30px;
 
-  p{
+  p {
     font-size: 20px;
-    color:$secondaryBlack;
+    color: $secondaryBlack;
     font-weight: 700;
   }
-
 }
-.text{
-    font-size: 14px;
-    color:$white;
-    font-weight: 500;
-    // padding: 30px 0px 10px 0px;
-
+.text {
+  font-size: 14px;
+  color: $white;
+  font-weight: 500;
+  // padding: 30px 0px 10px 0px;
 }
-.login_body{
-    width: 400px;
+.login_body {
+  width: 400px;
 }
 
-.password_info_container{
+.password_info_container {
   width: 430px;
   display: flex;
   align-items: center;
 }
-.password_info{
+.password_info {
   margin-left: 10px;
+}
+
+.introVideoContainer {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
 }
