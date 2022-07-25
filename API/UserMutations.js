@@ -9,6 +9,8 @@ const httpLink = createHttpLink({
 function getLatestToken(token) {
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   console.log(JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()));
+  let expDate = new Date(0);
+  expDate.setUTCSeconds(data.exp);
   //JSON.parse(atob(token.split('.')[1]));
   //check if the token is expired or not-> return false if it is not expired
   let checkToken = !auth?.currentUser?.stsTokenManager?.isExpired;

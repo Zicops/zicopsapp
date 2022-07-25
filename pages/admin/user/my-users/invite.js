@@ -77,6 +77,8 @@ export default function MyUserPage() {
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
               handleSubmit: function () {
                 if (emails.length === 0) return console.log('Atleast add one mail id');
+                let emailId = emails.map((item) => item?.props?.children[0]);
+                console.log(emailId);
               },
               handleCancel: () => {
                 if (tabData[0]?.name.includes('Invite')) return router.push('/admin/user/my-users');
