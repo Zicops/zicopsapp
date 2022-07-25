@@ -9,8 +9,7 @@ import {
 import { useRouter } from 'next/router';
 
 const formatAuthUser = (user) => ({
-  uid: user.uid,
-  email: user.email,
+  user: user,
   token: user.accessToken
 });
 

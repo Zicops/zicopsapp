@@ -22,7 +22,7 @@
     width: 75%;
   }
 
-  button {
+  .cohortButton2 {
     padding: 10px;
     cursor: pointer;
     border: none;
@@ -71,25 +71,23 @@
     font-size: 20px;
   }
   button {
-    padding: 10px;
-    border: none;
-    background-color: $primary;
-    color: $black;
-    font-weight: bold;
-    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    svg {
+      margin-right: 5px;
+    }
   }
 }
 
 // AddUsers page styling
 
-.topContainer {
+.addUserTopContainer {
   display: flex;
   justify-content: space-between;
 }
 
 .imageContainer {
   display: flex;
-  width: 35%;
 
   img {
     height: 60px;
@@ -112,7 +110,7 @@
 
 .searchBarContainer {
   position: relative;
-  width: 400px;
+  width: 300px;
 
   img {
     position: absolute;
@@ -124,4 +122,56 @@
   input {
     padding-left: 40px;
   }
+}
+
+.addUserBottomContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .leftSide {
+    width: 200px;
+    span {
+      color: $primary;
+    }
+  }
+
+  .buttonContainer {
+    width: 135px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+//button styling need to be change later
+
+.cohortButton1 {
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  background-color: $primary;
+  color: $black;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.cohortButton2 {
+  padding: 10px;
+  cursor: pointer;
+  border: $primary;
+  background-color: $primary;
+  color: $black;
+  font-weight: bold;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+
+.cohortButton3 {
+  padding: 8px;
+  background-color: transparent;
+  color: $primary;
+  font-weight: bold;
+  cursor: pointer;
+  border: $primary 2px solid;
+  display: inline-block;
+  border-radius: 3px;
 }
