@@ -17,7 +17,7 @@ export const tabs = [
     name: 'Courses',
     comp: <UserCoursesTab />
   },
-  { name: 'Learning Dashboard', comp: <UserLearningDashBoardTab /> },
+  { name: 'Dashboard', comp: <UserLearningDashBoardTab /> },
   { name: 'Calender', comp: <UserCalenderTab /> }
 ];
 
