@@ -6,7 +6,7 @@ const httpLink = createHttpLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
 });
 
-function checkExpirationOfTokenZ(token) {
+function getLatestToken(token) {
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   console.log(JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()));
   //JSON.parse(atob(token.split('.')[1]));
@@ -26,7 +26,7 @@ const authLink = setContext((_, { headers }) => {
   // get the authentication tokenF and tokenZ from local storage if it exists
   const tokenF = sessionStorage.getItem('tokenF');
 
-  // const token = checkExpirationOfTokenZ(tokenF);
+  // const token = getLatestToken(tokenF);
   // return the headers to the context so httpLink can read them
   return {
     headers: {
@@ -44,24 +44,21 @@ export const userClient = new ApolloClient({
 export const USER_LOGIN = gql`
   mutation {
     login {
-      user {
-        id
-        first_name
-        last_name
-        status
-        role
-        is_verified
-        is_active
-        gender
-        created_by
-        updated_by
-        created_at
-        updated_at
-        email
-        phone
-        photo_url
-      }
-      access_token
+      id
+      first_name
+      last_name
+      status
+      role
+      is_verified
+      is_active
+      gender
+      created_by
+      updated_by
+      created_at
+      updated_at
+      email
+      phone
+      photo_url
     }
   }
 `;
