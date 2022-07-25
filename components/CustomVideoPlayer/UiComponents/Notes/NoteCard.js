@@ -5,7 +5,9 @@ export default function NoteCard({
   isDraggable = true,
   handleDragEnd = () => {},
   handleClose = () => {},
-  handlePin = () => {}
+  handlePin = () => {},
+  handleDelete = () => {},
+  handleNote = () => {}
 }) {
   return (
     <div
@@ -37,12 +39,13 @@ export default function NoteCard({
           </svg>
           <svg
             className={`${styles.delete}`}
+            onClick={handleDelete}
             width="48"
             height="48"
             viewBox="0 0 48 48"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.58332 40.25V11.5H7.66666V7.66667H17.25V5.75H28.75V7.66667H38.3333V11.5H36.4167V40.25H9.58332ZM17.25 32.5833H21.0833V15.3333H17.25V32.5833ZM24.9167 32.5833H28.75V15.3333H24.9167V32.5833Z" />
+            <path d="M9.58332 40.25V11.5H7.66666V7.66667H17.25V5.75H28.75V7.66667H38.3333V11.5H36.4167V40.25H9.58332ZM17.25 32.5833H21.0833V15.3333H17.25V32.5833ZM24.9167 32.5833H28.75V15.3333H24.9167V32.5833Z" />
           </svg>
           <svg
             className={`${styles.clear}`}
@@ -60,9 +63,11 @@ export default function NoteCard({
       <textarea
         // disabled
         cols="30"
+        placeholder="Type here"
         rows="10"
         onMouseDown={(e) => e.stopPropagation()}
-        defaultValue={noteObj?.note}></textarea>
+        value={noteObj?.note}
+        onChange={(e) => handleNote(e, noteObj)}></textarea>
     </div>
   );
 }

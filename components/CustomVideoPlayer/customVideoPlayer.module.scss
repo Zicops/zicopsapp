@@ -189,7 +189,7 @@
       position: relative;
       border-radius: 3px;
       margin-bottom: 10px;
-      background-color: rgba($bgContent, .6);
+      background-color: rgba($bgContent, 0.6);
       // @include transparentBackground($bgContent);
 
       section {
@@ -272,7 +272,6 @@
       left: 50%;
 
       transform: translateX(-50%);
-
     }
 
     .notesCardsContainer {
@@ -379,12 +378,12 @@
 
     // corner pressed
     clip-path: polygon(100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 0);
-    
+
     img {
       width: 15px;
     }
-    &:after{
-      content: "";
+    &:after {
+      content: '';
       position: absolute;
 
       // corner curled
@@ -401,7 +400,7 @@
       width: 40px;
       height: 40px;
       margin: -20px;
-      box-shadow:  0px 0px 5px 2px #00000050;
+      box-shadow: 0px 0px 5px 2px #00000050;
     }
 
     .notesHeader {
@@ -414,23 +413,27 @@
       img {
         cursor: pointer;
         // margin: auto 2px;
-
-        &.pinned {
-          transform: rotate(-45deg);
-        }
+      }
+      .pinned {
+        transform: rotate(-45deg);
       }
       .delete {
         width: 18px;
         height: 20px;
       }
-      .clear, .delete, .pin{cursor: pointer;}
-      .clear path, .pin path, .delete path{
+      .clear,
+      .delete,
+      .pin {
+        cursor: pointer;
+      }
+      .clear path,
+      .pin path,
+      .delete path {
         fill: $darkOne;
         &.pinned {
-            transform: rotate(-45deg);
-          }
+          transform: rotate(-45deg);
+        }
       }
-      
     }
 
     textarea {
@@ -444,7 +447,7 @@
       cursor: text;
       outline: none;
       border: none;
-      &:focus{
+      &:focus {
         outline: none;
       }
       /* Scrollbar */
@@ -687,7 +690,7 @@
   cursor: move;
   border: 1px solid transparent;
 
-  &:hover .noteCard{
+  &:hover .noteCard {
     // border-color: $black;
     transform: scale(1.05);
     transition: all 0.3s;

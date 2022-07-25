@@ -445,7 +445,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // fix fullscreen issue
   function toggleFullScreen(e) {
-    if (e.type === 'dblclick' && !e.target.className.includes('videoElement')) return;
+    if (e?.type === 'dblclick' && !e?.target?.className?.includes('videoElement')) return;
 
     if (!document.fullscreenElement) {
       // videoContainer.current?.requestFullscreen();

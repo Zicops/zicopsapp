@@ -1,6 +1,7 @@
+import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import Image from 'next/image';
 import { useContext, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
 import { filterModule } from '../../../helper/data.helper';
 import { ModuleAtom } from '../../../state/atoms/module.atoms';
@@ -27,6 +28,7 @@ export default function UiComponents({
   const { videoElement, videoContainer } = refs;
   const videoData = useRecoilValue(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
+  const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const { fullCourse } = useContext(courseContext);
 
   const {
@@ -157,7 +159,27 @@ export default function UiComponents({
                     alt=""
                     height="25px"
                     width="25px"
-                    onClick={() => switchBox(4)}
+                    onClick={() => {
+                      const isBoxClosed = showBox === BOX[4];
+                      if (isBoxClosed) {
+                        // hide the note card which are not pinned
+                        setFloatingNotes(
+                          floatingNotes.map((note) => {
+                            if (note.isPinned) return note;
+
+                            return {
+                              ...note,
+                              isPinned: false,
+                              isFloating: false,
+                              x: null,
+                              y: null
+                            };
+                          })
+                        );
+                      }
+                      updateIsPlayingTo(isBoxClosed);
+                      switchBox(4);
+                    }}
                   />
                 </Button>
 

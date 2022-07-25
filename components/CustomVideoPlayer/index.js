@@ -49,10 +49,11 @@ export default function CustomVideo({ set }) {
     setVideoTime,
     moveVideoProgressBySeconds
   } = useVideoPlayer(videoElement, videoContainer, set);
-  const { userNotes, handleDragEnd, handleClose, handlePin } = useHandleNotes();
+  const { userNotes, handleDragEnd, handleClose, handlePin, deleteNote } = useHandleNotes();
 
   useEffect(() => {
     set(true);
+    setFloatingNotes([]);
 
     // reset video progress when unmounted
     // return () => handleMouseMove({ target: { value: 0 } });
@@ -127,8 +128,9 @@ export default function CustomVideo({ set }) {
     <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
       {/* floating notes */}
       {floatingNotes?.map((noteObj, i) => {
-        if (!noteObj.isPinned && hideTopBar) {
-          handleClose(noteObj, i, true);
+        if (!noteObj.isFloating) return null;
+        if (!noteObj.isPinned && !!hideTopBar) {
+          handleClose(noteObj);
           return null;
         }
 
@@ -136,13 +138,15 @@ export default function CustomVideo({ set }) {
           <DraggableDiv
             key={noteObj.id}
             initalPosition={{
-              x: noteObj.x + 10,
-              y: noteObj.y + 10
+              x: noteObj.x,
+              y: noteObj.y
             }}>
             <NoteCard
               isDraggable={false}
               noteObj={noteObj}
-              handleClose={() => handleClose(noteObj, i, true)}
+              handleClose={() => handleClose(noteObj)}
+              handlePin={(e) => handlePin(e, noteObj)}
+              handleDelete={() => deleteNote(noteObj, true)}
             />
           </DraggableDiv>
         );
