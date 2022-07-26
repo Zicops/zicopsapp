@@ -7,12 +7,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import { languages } from '../ProfilePreferences/Logic/profilePreferencesHelper';
 import ImageCropper from '../../common/ImageCropper';
+import { useRecoilState } from 'recoil';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
 const AccountSetupUser = ({ setCurrentComponent }) => {
   const [selectedLanguage, setSelectedLanguage] = useState();
   const [image, setImage] = useState();
   const [preview, setPreview] = useState('');
   const [pop, setPop] = useState(false);
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const [userData, setUserData] = useRecoilState(UserStateAtom);
   const handleClick = () => {
     setPop(true);
   };
@@ -53,10 +60,12 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             inputName: 'first-name',
             label: 'Firstname:',
             placeholder: 'Enter Firstname (Max up to 60 characters)',
-            // value: ,
+            value: userData?.first_name,
             maxLength: 60
           }}
-          // changeHandler={() => {}}
+          changeHandler={(e) => {
+            setUserData({ ...userData, first_name: e.target.value });
+          }}
         />
         <Box mt={3} />
         <LabeledInput
@@ -64,10 +73,12 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             inputName: 'last-name',
             label: 'Lastname:',
             placeholder: 'Enter Lastname (Max up to 60 characters)',
-            // value: ,
+            value: userData?.last_name,
             maxLength: 60
           }}
-          // changeHandler={() => {}}
+          changeHandler={(e) => {
+            setUserData({ ...userData, last_name: e.target.value });
+          }}
         />
         <Box mt={3} />
         <LabeledDropdown
@@ -85,7 +96,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             inputName: 'email',
             label: 'Email:',
             placeholder: 'Enter Email (ab@zicops.com)',
-            // value: ,
+            value: userData?.email,
             maxLength: 60,
             isDisabled: true
           }}
@@ -97,10 +108,12 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             inputName: 'number',
             label: 'Contact Number:',
             placeholder: 'Enter Phone',
-            // value: ,
+            value: userData?.phone,
             maxLength: 60
           }}
-          // changeHandler={() => {}}
+          changeHandler={(e) => {
+            setUserData({ ...userData, phone: e.target.value });
+          }}
         />
         <Box mt={3} />
         <div className={`${styles.labeledInputWrapper}`}>
@@ -204,6 +217,10 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
             onClick={() => {
+              for (const prop in userData) {
+                if (!userData[prop])
+                  return setToastMsg({ type: 'danger', message: 'Fill all fields!' });
+              }
               setCurrentComponent(1);
             }}>
             Next
