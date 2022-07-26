@@ -1,10 +1,11 @@
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import styles from '../../../userComps.module.scss';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const CohortMaster = () => {
   const [image, setImage] = useState();
+  const uploadRef = useRef();
   const allSelectedCohortManager = [];
   const difficultyOptions = [
     { value: 'Open', label: 'Open' },
@@ -89,15 +90,10 @@ const CohortMaster = () => {
               if (file) setImage(file);
               else setImage(null);
             }}
-            id={'materialUpload'}
+            ref={uploadRef}
             type="file"
           />
-          <button
-            className={`${styles.cohortButton2}`}
-            id={'materialUpload'}
-            onClick={() => {
-              document.getElementById('materialUpload').click();
-            }}>
+          <button className={`${styles.cohortButton2}`} onClick={() => uploadRef?.current?.click()}>
             Upload Photo
           </button>
           <span className={`${styles.uploadImagePreview}`}>

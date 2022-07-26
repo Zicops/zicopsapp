@@ -309,9 +309,11 @@ export default function TopicBox({
                   Passing Criteria: {passingCriteriaSymbol(data?.examData?.passingCriteria)}
                 </span>
                 <span>{data?.examData?.difficultyLevel}</span>
-                {data?.examData?.noAttempts !== 0 && (
-                  <span>Attempt: {data?.examData?.noAttempts}</span>
-                )}
+
+                <span>
+                  Attempt: {!data?.examData?.noAttempts ? '0' : data?.examData?.noAttempts}
+                </span>
+
                 {!!data?.examData?.duration && (
                   <span>Duration: {`${data?.examData?.duration} mins`}</span>
                 )}

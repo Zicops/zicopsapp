@@ -126,13 +126,7 @@ const LoginScreen = ({ setPage }) => {
       </ZicopsLogin>
       {!!vidIsOpen && (
         <div className={`${styless.introVideoContainer}`}>
-          <video
-            width={`${screenSize.width}`}
-            height={`${screenSize.height}`}
-            ref={vidRef}
-            onEnded={() => {
-              router.push('/');
-            }}>
+          <video ref={vidRef} onEnded={() => router.push('/')}>
             <source src="/videos/loginIntro.mp4" type="video/mp4" />
           </video>
         </div>
