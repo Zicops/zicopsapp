@@ -1,5 +1,9 @@
+import { usersEmailId } from '@/state/atoms/users.atom';
+import { useMutation } from '@apollo/client';
+import { INVITE_USERS, userClient } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -10,6 +14,12 @@ import BulkUpload from '../../../../components/UserComps/BulkUpload';
 import InviteUser from '../../../../components/UserComps/InviteUser';
 
 export default function MyUserPage() {
+  const [inviteUsers, { error: inviteError }] = useMutation(INVITE_USERS, {
+    client: userClient
+  });
+
+  const emails = useRecoilValue(usersEmailId);
+
   const [userType, setUserType] = useState('Internal');
   const [tabData, setTabData] = useState([
     { name: 'Invite User', component: <InviteUser userType={userType} /> }
@@ -65,7 +75,11 @@ export default function MyUserPage() {
             setTab={setTab}
             footerObj={{
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
-              handleSubmit: function () {},
+              handleSubmit: function () {
+                if (emails.length === 0) return console.log('Atleast add one mail id');
+                let emailId = emails.map((item) => item?.props?.children[0]);
+                console.log(emailId);
+              },
               handleCancel: () => {
                 if (tabData[0]?.name.includes('Invite')) return router.push('/admin/user/my-users');
 

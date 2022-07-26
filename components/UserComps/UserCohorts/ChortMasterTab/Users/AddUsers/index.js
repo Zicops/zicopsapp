@@ -68,6 +68,7 @@ const data = [
 
 const AddUsers = () => {
   const CohortName = 'Developement Cohort';
+  const selectedUsers = '50/200';
 
   const columns = [
     {
@@ -125,7 +126,7 @@ const AddUsers = () => {
   ];
   return (
     <div className={`${styles.addUsersContainer}`}>
-      <div className={`${styles.topContainer}`}>
+      <div className={`${styles.addUserTopContainer}`}>
         <div className={`${styles.imageContainer}`}>
           <img src="/images/UserCohort.png" height={60} alt="" />
           <div className={`${styles.titleContainer}`}>
@@ -152,6 +153,15 @@ const AddUsers = () => {
         customStyles={{ padding: '10px 0' }}
         hideFooterPagination={true}
       />
+      <div className={`${styles.addUserBottomContainer}`}>
+        <div className={`${styles.leftSide}`}>
+          Users selected: <span>{selectedUsers}</span>
+        </div>
+        <div className={`${styles.buttonContainer}`}>
+          <button className={`${styles.cohortButton3}`}>Cancel</button>
+          <button className={`${styles.cohortButton1}`}>Add</button>
+        </div>
+      </div>
     </div>
   );
 };

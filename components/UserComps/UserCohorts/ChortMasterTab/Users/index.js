@@ -1,6 +1,9 @@
+import PopUp from '@/components/common/PopUp';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
+import { useState } from 'react';
 import styles from '../../../userComps.module.scss';
+import AddUsers from './AddUsers';
 
 const data = [
   {
@@ -102,6 +105,8 @@ const data = [
 ];
 
 const Users = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const columns = [
     {
       field: 'firstName',
@@ -160,7 +165,21 @@ const Users = () => {
     <div className={`${styles.usersContainer}`}>
       <div className={`${styles.usersTopContainer}`}>
         <span>Total Users:{data.length}</span>
-        <button>+ Add Users to Cohort</button>
+        <button
+          className={`${styles.cohortButton1}`}
+          onClick={() => {
+            setIsOpen((prevValue) => !prevValue);
+          }}>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 22V10H26V22H38V26H26V38H22V26H10V22H22Z" fill="black" />
+          </svg>
+          Add Users to Cohort
+        </button>
       </div>
       <ZicopsTable
         columns={columns}
@@ -171,6 +190,10 @@ const Users = () => {
         customStyles={{ padding: '10px 0' }}
         hideFooterPagination={true}
       />
+
+      <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
+        <AddUsers />
+      </PopUp>
     </div>
   );
 };

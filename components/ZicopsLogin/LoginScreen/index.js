@@ -6,6 +6,7 @@ import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
@@ -47,8 +48,9 @@ const LoginScreen = ({ setPage }) => {
     await signIn(email, password);
 
     // if (errorMsg) return;
+    console.log(authUser?.token);
 
-    localStorage.setItem('keyToken', authUser?.token);
+    sessionStorage.setItem('tokenF', authUser?.token);
 
     let isError = false;
     const res = await userLogin().catch((err) => {
@@ -57,14 +59,18 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
+    console.log(res);
+    return;
+    // if (!res?.isVerified) return { router.push('/account-setup') };
+
+    //return router.push('/');
+    // setUserState({ ...res, tokenF: authUser?.token });
     // if (isError) return;
-    console.log(authUser);
+    console.log(auth?.currentUser);
     return;
   };
 
   useEffect(() => {
-    console.log(errorMsg);
-    console.log(authUser);
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
   }, [errorMsg, authUser]);
 
