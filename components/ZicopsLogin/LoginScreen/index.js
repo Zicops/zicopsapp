@@ -57,6 +57,7 @@ const LoginScreen = ({ setPage }) => {
 
     sessionStorage.setItem('tokenF', authUser?.token);
 
+    router.prefetch('/');
     setVidIsOpen(true);
     vidRef.current.play();
 
@@ -73,6 +74,7 @@ const LoginScreen = ({ setPage }) => {
     // if (!res?.isVerified) return { router.push('/account-setup') };
     //setVidIsOpen(true);
     //vidRef.current.play();
+    //router.prefetch('/');
     //return ;
     // setUserState({ ...res, tokenF: authUser?.token });
     // if (isError) return;
