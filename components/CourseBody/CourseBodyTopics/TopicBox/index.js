@@ -18,6 +18,7 @@ import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
 import useLoadExamData from '../../Logic/useLoadExamData';
+import moment from 'moment';
 
 let topicInstance = 0;
 
@@ -268,7 +269,7 @@ export default function TopicBox({
                         width={100}
                       />
                     ) : duration ? (
-                      `Duration : ${duration} sec`
+                      `Duration : ${moment.utc(duration * 1000).format('mm:ss')} mins`
                     ) : (
                       'N/A'
                     )}
