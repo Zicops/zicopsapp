@@ -67,13 +67,15 @@ const LoginScreen = ({ setPage }) => {
     });
 
     console.log(res?.data?.login?.is_verified);
-    // setUserData(res?.data?.login);
+    setUserData(res?.data?.login);
+    if (!userData?.is_verified) return router.push('/account-setup');
+
+    router.prefetch('/');
+    setVidIsOpen(true);
+    vidRef.current.play();
 
     return;
-    // if (!res?.isVerified) return { router.push('/account-setup') };
-    // router.prefetch('/');
-    // setVidIsOpen(true);
-    // vidRef.current.play();
+    //
     //return ;
     // setUserState({ ...res, tokenF: authUser?.token });
     // if (isError) return;
