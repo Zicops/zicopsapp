@@ -28,24 +28,17 @@ const ChangePasswordScreen = ({ setPage }) => {
   }
 
   function handleSubmit() {
-    if (newPassword.length === 0 && confNewPassword.length === 0)
-      return setToastMsg({
-        type: 'danger',
-        message: 'Cannot leave the both password field empty!'
-      });
     if (newPassword !== confNewPassword)
       return setToastMsg({
         type: 'danger',
         message: 'New Password should be same as Confirm Password field'
       });
-    console.log(code, newPassword);
 
     verifyPasswordResetCode(auth, code)
       .then((data) => {
         confirmPasswordReset(auth, code, newPassword)
           .then((data) => {
             router.push('/login');
-            console.log(data);
           })
           .catch((error) => console.log(error.message));
       })
