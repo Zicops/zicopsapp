@@ -33,6 +33,9 @@ $footerHeight: 100px;
 }
 
 // mixins
+@mixin cut-corners ($left-top, $right-top: 0px, $right-bottom: 0px, $left-bottom: 0px) {
+  clip-path: polygon($left-top 0%, calc(100% - #{$right-top}) 0%, 100% $right-top, 100% calc(100% - #{$right-bottom}), calc(100% - #{$right-bottom}) 100%, $left-bottom 100%, 0% calc(100% - #{$left-bottom}), 0% $left-top);
+}
 
 // to make background semi transparent
 @mixin transparentBackground($bgColor: $bgContent, $opacity: 0.5) {

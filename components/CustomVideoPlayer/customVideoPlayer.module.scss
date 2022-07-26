@@ -122,7 +122,8 @@
 
       overflow: hidden;
       // box-shadow: 0 0 50px 0 $white;
-      @include transparentBackground($bgContent);
+      // @include transparentBackground($bgContent);
+      background-color: rgba($bgContent, .6);
 
       .scrollArrow {
         flex: 1;
@@ -369,7 +370,7 @@
     max-height: 150px;
 
     background-color: $primary;
-    padding: 8px;
+    padding: 3px;
     padding-bottom: 20px;
     box-shadow: 0 0 10px 2px #00000080;
     overflow: hidden;
@@ -410,11 +411,11 @@
       color: $black;
       font-weight: 800;
       font-size: 14px;
+      padding: 2px;
+      padding-left: 7px;
       cursor: grab;
       img {
         cursor: pointer;
-        // margin: auto 2px;
-
         &.pinned {
           transform: rotate(-45deg);
         }
@@ -444,6 +445,7 @@
       cursor: text;
       outline: none;
       border: none;
+      padding: 7px;
       &:focus{
         outline: none;
       }
@@ -451,25 +453,25 @@
       /* width */
       &::-webkit-scrollbar {
         width: 2px;
-        background: #555;
+        background-color: #555;
         cursor: pointer;
       }
 
       /* Track */
       &::-webkit-scrollbar-track {
-        background: $darkThree;
+        background-color: $darkThree;
         border-radius: 7px;
       }
 
       /* Handle */
       &::-webkit-scrollbar-thumb {
-        background: $darkTwo;
+        background-color: $darkTwo;
         border-radius: 7px;
       }
 
       /* Handle on hover */
       &::-webkit-scrollbar-thumb:hover {
-        background: $darkOne;
+        background-color: $darkOne;
       }
     }
   }
