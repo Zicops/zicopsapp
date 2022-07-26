@@ -37,7 +37,7 @@ export default function CourseBodyResources() {
       <Dropdown options={options} handleChange={handleModuleChange} value={selectedModule} />
       <Header
         title={currentModule?.name}
-        description={currentModule?.description || 'this is a description.'}
+        description={currentModule?.description || ''}
         expertise={currentModule?.level?.split(',').join(' | ')}
       />
 
