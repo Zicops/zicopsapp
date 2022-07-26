@@ -10,8 +10,8 @@ import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
-import styles from '../LoginEmail/loginEmail.module.scss';
-import styless from '../zicopsLogin.module.scss';
+
+import styles from '../zicopsLogin.module.scss';
 import LoginHeadOne from '../LoginHeadOne';
 import { useMutation } from '@apollo/client';
 
@@ -30,8 +30,6 @@ const LoginScreen = ({ setPage }) => {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const setUserData = useSetRecoilState(userState);
-
-  const [screenSize, setScreentSize] = useState({ width: 0, height: 0 });
 
   // const [error, setError] = useState(null);
 
@@ -53,7 +51,7 @@ const LoginScreen = ({ setPage }) => {
 
     await signIn(email, password);
 
-    if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
+    if (errorMsg) return;
 
     sessionStorage.setItem('tokenF', authUser?.token);
 
@@ -69,26 +67,20 @@ const LoginScreen = ({ setPage }) => {
     });
 
     console.log(res?.data?.login?.is_verified);
+    // setUserData(res?.data?.login);
 
     return;
     // if (!res?.isVerified) return { router.push('/account-setup') };
-    //setVidIsOpen(true);
-    //vidRef.current.play();
-    //router.prefetch('/');
+    // router.prefetch('/');
+    // setVidIsOpen(true);
+    // vidRef.current.play();
     //return ;
     // setUserState({ ...res, tokenF: authUser?.token });
     // if (isError) return;
   };
 
   useEffect(() => {
-    const sheight = window.screen.height;
-    const swidth = window.screen.width;
-    setScreentSize((prevValue) => ({ ...prevValue, height: sheight, width: swidth }));
-    console.log(screenSize.width, screenSize.height);
-  }, [screenSize.width]);
-
-  useEffect(() => {
-    if (errorMsg) return;
+    if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
     console.log(authUser);
   }, [errorMsg, authUser]);
 
@@ -98,7 +90,7 @@ const LoginScreen = ({ setPage }) => {
   }, [authUser, loading]);
 
   return (
-    <div className={`${styless.loginMainContainer}`}>
+    <div className={`${styles.loginMainContainer}`}>
       <HomeHeader showLogin={false} />
 
       <ZicopsLogin>
@@ -125,7 +117,7 @@ const LoginScreen = ({ setPage }) => {
         </div>
       </ZicopsLogin>
       {!!vidIsOpen && (
-        <div className={`${styless.introVideoContainer}`}>
+        <div className={`${styles.introVideoContainer}`}>
           <video ref={vidRef} onEnded={() => router.push('/')}>
             <source src="/videos/loginIntro.mp4" type="video/mp4" />
           </video>
