@@ -2,11 +2,7 @@ import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client
 import { setContext } from '@apollo/client/link/context';
 
 const authLink = setContext((_, { headers }) => {
-  // get the authentication tokenF and tokenZ from local storage if it exists
   const firebaseToken = sessionStorage.getItem('tokenF');
-
-  // const token = getLatestToken(tokenF);
-  // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
