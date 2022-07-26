@@ -1,4 +1,4 @@
-import { usersEmailId } from '@/state/atoms/users.atom';
+import { UsersEmailIdAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { INVITE_USERS, userClient } from 'API/UserMutations';
 import { useRouter } from 'next/router';
@@ -18,7 +18,7 @@ export default function MyUserPage() {
     client: userClient
   });
 
-  const emails = useRecoilValue(usersEmailId);
+  const emails = useRecoilValue(UsersEmailIdAtom);
 
   const [userType, setUserType] = useState('Internal');
   const [tabData, setTabData] = useState([
