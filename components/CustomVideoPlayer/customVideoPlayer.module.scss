@@ -190,7 +190,7 @@
       position: relative;
       border-radius: 3px;
       margin-bottom: 10px;
-      background-color: rgba($bgContent, .6);
+      background-color: rgba($bgContent, 0.6);
       // @include transparentBackground($bgContent);
 
       section {
@@ -273,7 +273,6 @@
       left: 50%;
 
       transform: translateX(-50%);
-
     }
 
     .notesCardsContainer {
@@ -363,120 +362,121 @@
       }
     }
   }
+}
 
-  .noteCard {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    position: relative;
-    max-width: 150px;
-    max-height: 150px;
+.noteCard {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 150px;
+  height: 150px;
 
-    background-color: $primary;
-    padding: 3px;
-    padding-bottom: 20px;
-    box-shadow: 0 0 10px 2px #00000080;
-    overflow: hidden;
+  background-color: $primary;
+  padding: 8px;
+  padding-bottom: 20px;
+  box-shadow: 0 0 10px 2px #00000080;
+  overflow: hidden;
+
+  // corner curled
+  // border-bottom-right-radius: 30px 15px;
+
+  // corner pressed
+  clip-path: polygon(100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 0);
+
+  img {
+    width: 15px;
+  }
+  &:after {
+    content: '';
+    position: absolute;
 
     // corner curled
-    // border-bottom-right-radius: 30px 15px;
+    // bottom: -80px;
+    // right: 18px;
+    // width: 50px;
+    // height: 100px;
+    // transform: rotate(65deg);
+    // box-shadow: 0px 0px 15px 5px #00000080;
 
     // corner pressed
-    clip-path: polygon(100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 0);
-    
+    bottom: 0px;
+    right: 0px;
+    width: 40px;
+    height: 40px;
+    margin: -20px;
+    box-shadow: 0px 0px 5px 2px #00000050;
+  }
+
+  .notesHeader {
+    display: flex;
+    justify-content: space-between;
+    color: $black;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: grab;
     img {
-      width: 15px;
+      cursor: pointer;
+      // margin: auto 2px;
     }
-    &:after{
-      content: "";
-      position: absolute;
-
-      // corner curled
-      // bottom: -80px;
-      // right: 18px;
-      // width: 50px;
-      // height: 100px;
-      // transform: rotate(65deg);
-      // box-shadow: 0px 0px 15px 5px #00000080;
-
-      // corner pressed
-      bottom: 0px;
-      right: 0px;
-      width: 40px;
-      height: 40px;
-      margin: -20px;
-      box-shadow:  0px 0px 5px 2px #00000050;
+    .pinned {
+      transform: rotate(-45deg);
     }
-
-    .notesHeader {
-      display: flex;
-      justify-content: space-between;
-      color: $black;
-      font-weight: 800;
-      font-size: 14px;
-      padding: 2px;
-      padding-left: 7px;
-      cursor: grab;
-      img {
-        cursor: pointer;
-        &.pinned {
-          transform: rotate(-45deg);
-        }
-      }
-      .delete {
-        width: 18px;
-        height: 20px;
-      }
-      .clear, .delete, .pin{cursor: pointer;}
-      .clear path, .pin path, .delete path{
-        fill: $darkOne;
-        &.pinned {
-            transform: rotate(-45deg);
-          }
-      }
-      
+    .delete {
+      width: 18px;
+      height: 20px;
     }
+    .clear,
+    .delete,
+    .pin {
+      cursor: pointer;
+    }
+    .clear path,
+    .pin path,
+    .delete path {
+      fill: $darkOne;
+      &.pinned {
+        transform: rotate(-45deg);
+      }
+    }
+  }
 
-    textarea {
-      background-color: transparent;
-      height: 100%;
-      width: 100%;
-      z-index: 5;
-      font-family: 'Grape Nuts';
-      font-size: 20px;
-      font-weight: 600;
-      cursor: text;
+  textarea {
+    background-color: transparent;
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+    font-family: 'Grape Nuts';
+    font-size: 20px;
+    font-weight: 600;
+    cursor: text;
+    outline: none;
+    border: none;
+    &:focus {
       outline: none;
-      border: none;
-      padding: 7px;
-      &:focus{
-        outline: none;
-      }
-      /* Scrollbar */
-      /* width */
-      &::-webkit-scrollbar {
-        width: 2px;
-        background-color: #555;
-        cursor: pointer;
-      }
+    }
+    /* Scrollbar */
+    /* width */
+    &::-webkit-scrollbar {
+      width: 2px;
+      background: #555;
+      cursor: pointer;
+    }
 
-      /* Track */
-      &::-webkit-scrollbar-track {
-        background-color: $darkThree;
-        border-radius: 7px;
-      }
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: $darkThree;
+      border-radius: 7px;
+    }
 
-      /* Handle */
-      &::-webkit-scrollbar-thumb {
-        background-color: $darkTwo;
-        border-radius: 7px;
-      }
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: $darkTwo;
+      border-radius: 7px;
+    }
 
-      /* Handle on hover */
-      &::-webkit-scrollbar-thumb:hover {
-        background-color: $darkOne;
-      }
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: $darkOne;
     }
   }
 }
@@ -693,7 +693,7 @@
   cursor: move;
   border: 1px solid transparent;
 
-  &:hover .noteCard{
+  &:hover .noteCard {
     // border-color: $black;
     transform: scale(1.05);
     transition: all 0.3s;

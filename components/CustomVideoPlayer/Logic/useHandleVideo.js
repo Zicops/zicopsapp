@@ -39,9 +39,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     updateIsPlayingTo(true);
 
     function switchControls(value) {
-      // TODO: update the 0
-      setHideControls(0);
-      setHideTopBar(0);
+      setHideControls(value);
+      setHideTopBar(value);
     }
 
     addCallbackToEvent(videoContainer.current, [
@@ -444,7 +443,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }
 
   // fix fullscreen issue
-  function toggleFullScreen() {
+  function toggleFullScreen(e) {
+    if (e?.type === 'dblclick' && !e?.target?.className?.includes('videoElement')) return;
+
     if (!document.fullscreenElement) {
       // videoContainer.current?.requestFullscreen();
       openFullscreen(videoContainer.current);

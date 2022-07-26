@@ -7,28 +7,41 @@ import NoteCard from './NoteCard';
 
 export default function Notes() {
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
-  const { userNotes, handleDragEnd, handleClose, handlePin, showAll } = useHandleNotes();
+  const {
+    handleNote,
+    handleDragEnd,
+    handleClose,
+    handlePin,
+    showAll,
+    hideAll,
+    addNewNote,
+    deleteNote
+  } = useHandleNotes();
 
   return (
     <>
       <div className={`${styles.folderBarContainer}`}>
-        <FolderBar onFolderClick={showAll} />
+        <FolderBar onFolderClick={showAll} onMinusClick={hideAll} onPlusClick={addNewNote} />
 
         <div className={`${styles.notesCardsContainer} ${document.fullscreenElement ? styles.notesCardsContainerFS : ''}`}>
-          {userNotes.map((noteObj, i) => {
-            if (!noteObj.isOpen) return null;
-            console.log('noteObj');
+          {floatingNotes
+            .map((noteObj, i) => {
+              if (noteObj.isFloating) return null;
+              if (!noteObj.isOpen) return null;
 
-            return (
-              <NoteCard
-                key={noteObj.id}
-                handleDragEnd={(e) => handleDragEnd(e, noteObj, i)}
-                handleClose={() => handleClose(noteObj, i)}
-                handlePin={(e) => handlePin(e, noteObj, i)}
-                noteObj={noteObj}
-              />
-            );
-          })}
+              return (
+                <NoteCard
+                  key={noteObj.id}
+                  handleDragEnd={(e) => handleDragEnd(e, noteObj)}
+                  handleClose={() => handleClose(noteObj)}
+                  handlePin={(e) => handlePin(e, noteObj)}
+                  handleDelete={() => deleteNote(noteObj)}
+                  handleNote={handleNote}
+                  noteObj={noteObj}
+                />
+              );
+            })
+            .reverse()}
         </div>
       </div>
     </>
