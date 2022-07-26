@@ -14,7 +14,7 @@ export default function Notes() {
       <div className={`${styles.folderBarContainer}`}>
         <FolderBar onFolderClick={showAll} />
 
-        <div className={`${styles.notesCardsContainer}`}>
+        <div className={`${styles.notesCardsContainer} ${document.fullscreenElement ? styles.notesCardsContainerFS : ''}`}>
           {userNotes.map((noteObj, i) => {
             if (!noteObj.isOpen) return null;
             console.log('noteObj');
