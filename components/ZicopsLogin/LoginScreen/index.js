@@ -1,6 +1,6 @@
 import { isEmail } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { userState } from '@/state/atoms/users.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
@@ -29,7 +29,7 @@ const LoginScreen = ({ setPage }) => {
   const vidRef = useRef();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const setUserData = useSetRecoilState(userState);
+  const setUserData = useSetRecoilState(UserStateAtom);
 
   // const [error, setError] = useState(null);
 
