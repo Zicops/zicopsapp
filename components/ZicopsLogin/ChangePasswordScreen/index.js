@@ -15,7 +15,7 @@ import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 const ChangePasswordScreen = ({ setPage }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
-  const code = router.query?.oobCode || 'sgWcZL0ohfUnds2dXmiqiIIZqaNbNmyxkx1kv7bkEvwAAAGCJqr1pA';
+  const code = router.query?.oobCode;
   const [newPassword, setNewPassword] = useState('');
   const [confNewPassword, setConfNewPassword] = useState('');
 
