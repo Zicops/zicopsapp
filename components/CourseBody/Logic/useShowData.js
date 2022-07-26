@@ -23,12 +23,12 @@ import { tabs } from './courseBody.helper';
 
 export default function useShowData(courseContextData) {
   const { fullCourse } = courseContextData;
-  const [videoData, setVideoData] = useRecoilState(VideoAtom);
 
   let myRef = useRef(null);
   const [activeCourseTab, setActiveCourseTab] = useState(tabs[0].name);
   const [selectedModule, setSelectedModule] = useState({});
   const [isResourceShown, setIsResourceShown] = useState(null);
+  const [isNotesVisible, setIsNotesVisible] = useState(null);
 
   useEffect(() => {
     if (activeCourseTab != 'Topics') {
@@ -223,6 +223,16 @@ export default function useShowData(courseContextData) {
     // });
   }
 
+  function toggleNotesVisibility(topic) {
+    // update later to filter topic notes from all notes
+    if (isNotesVisible?.includes(topic.id)) {
+      setIsNotesVisible(null);
+      return;
+    }
+
+    setIsNotesVisible(topic.id + '|:|' + topic.name);
+  }
+
   return {
     myRef,
     showActiveTab,
@@ -234,6 +244,8 @@ export default function useShowData(courseContextData) {
     setSelectedModule,
     showResources,
     filteredResources,
-    isResourceShown
+    isResourceShown,
+    isNotesVisible,
+    toggleNotesVisibility
   };
 }
