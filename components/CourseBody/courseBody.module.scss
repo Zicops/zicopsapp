@@ -221,14 +221,21 @@
     height: 150px;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
     color: $white;
-    border: 2px solid $darkThree;
+    border: 2px dashed $darkThree;
     padding: 8px;
     padding-bottom: 20px;
     box-shadow: 0 0 10px 2px #00000080;
     overflow: hidden;
+
+    cursor: pointer;
+
+    span {
+      font-size: 2em;
+    }
   }
 }
