@@ -101,214 +101,213 @@
       z-index: 20;
       background: rgba(139, 139, 139, 0.471);
     }
+  }
+  .languageList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
 
-    .languageList {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
+    position: absolute;
+    top: 50px;
+    left: 0%;
 
-      position: absolute;
-      top: 50px;
-      left: 0%;
+    // transform: translateX(-50%);
+    background-color: transparent;
+    border: 1px solid $white;
 
-      // transform: translateX(-50%);
-      background-color: transparent;
-      border: 1px solid $white;
+    color: $white;
+    width: 250px;
+    height: 160px;
+    padding: 3px 0px;
 
-      color: $white;
-      width: 250px;
-      height: 160px;
-      padding: 3px 0px;
+    overflow: hidden;
+    // box-shadow: 0 0 50px 0 $white;
+    // @include transparentBackground($bgContent);
+    background-color: rgba($bgContent, 0.6);
 
-      overflow: hidden;
-      // box-shadow: 0 0 50px 0 $white;
-      // @include transparentBackground($bgContent);
-      background-color: rgba($bgContent, .6);
+    .scrollArrow {
+      flex: 1;
+      flex-basis: 100%;
+      text-align: center;
 
-      .scrollArrow {
-        flex: 1;
-        flex-basis: 100%;
-        text-align: center;
+      img {
+        height: 15px;
+        transform: rotate(-90deg);
+      }
+    }
 
-        img {
-          height: 15px;
-          transform: rotate(-90deg);
-        }
+    div {
+      flex: 1;
+      opacity: 1;
+      padding: 0px 5px;
+
+      &:first-child {
+        padding-right: 5px;
+        border-right: 1px solid $primary;
       }
 
-      div {
-        flex: 1;
-        opacity: 1;
-        padding: 0px 5px;
+      h4 {
+        text-align: center;
+      }
 
-        &:first-child {
-          padding-right: 5px;
-          border-right: 1px solid $primary;
+      section {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 80%;
+        width: 100%;
+
+        &::-webkit-scrollbar {
+          width: 0px;
         }
 
-        h4 {
-          text-align: center;
-        }
-
-        section {
-          overflow-y: auto;
-          overflow-x: hidden;
-          height: 80%;
+        button {
+          background-color: transparent;
+          margin: 3px auto;
+          padding: 5px 10px;
           width: 100%;
+          border: 1px solid $primary;
+          color: $primary;
+          cursor: pointer;
 
-          &::-webkit-scrollbar {
-            width: 0px;
-          }
-
-          button {
-            background-color: transparent;
-            margin: 3px auto;
-            padding: 5px 10px;
-            width: 100%;
-            border: 1px solid $primary;
-            color: $primary;
-            cursor: pointer;
-
-            &:hover {
-              background-color: $primary;
-              color: $bgContent;
-            }
-          }
-
-          .languageBtnActive {
-            background-color: $white;
+          &:hover {
+            background-color: $primary;
             color: $bgContent;
           }
         }
-      }
-    }
 
-    .folderBar {
-      display: flex;
-      padding: 10px;
-      height: max-content;
-      position: relative;
-      border-radius: 3px;
-      margin-bottom: 10px;
-      background-color: rgba($bgContent, 0.6);
-      // @include transparentBackground($bgContent);
-
-      section {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-
-        margin: auto 20px;
-        height: 15px;
-
-        cursor: pointer;
-
-        div {
-          margin: auto;
-          background-color: $primary;
-          height: 2px;
-          width: 15px;
-        }
-
-        img {
-          height: 100%;
+        .languageBtnActive {
+          background-color: $white;
+          color: $bgContent;
         }
       }
     }
+  }
 
-    .bookmarkContainer {
-      position: relative;
+  .folderBar {
+    display: flex;
+    padding: 10px;
+    height: max-content;
+    position: relative;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    background-color: rgba($bgContent, 0.6);
+    // @include transparentBackground($bgContent);
 
-      .bookmarksInput {
-        position: absolute;
-        top: 110%;
-        right: 50%;
-
-        padding: 8px;
-        background-color: $darkOne;
-        // opacity: 0.75;
-        width: 200px;
-        box-shadow: 0 0 10px 0 $darkTwo;
-
-        .bookmarksField {
-          width: 100%;
-          padding: 10px;
-          border-radius: 0;
-          border-color: $bgHeader;
-          opacity: 1;
-
-          &:focus {
-            border-radius: 0;
-            outline: 0;
-            opacity: 1;
-          }
-        }
-
-        .bookmarksBtn {
-          background-color: $bgHeader;
-          color: $darkThree;
-          padding: 10px 5px;
-          border: 0;
-          border-radius: 0;
-          width: 100%;
-          cursor: pointer;
-          opacity: 1;
-
-          &:hover {
-            background-color: $bgHeader;
-            color: $white;
-          }
-        }
-      }
-    }
-
-    .folderBarContainer {
-      display: flex;
+    section {
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      align-items: flex-start;
-      flex-wrap: wrap;
 
-      position: absolute;
-      top: 50px;
-      left: 50%;
+      margin: auto 20px;
+      height: 15px;
 
-      transform: translateX(-50%);
-    }
+      cursor: pointer;
 
-    .notesCardsContainer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      // position: relative;
-      width: 500px;
-      height: 350px;
-      overflow: hidden auto;
-      z-index: 2;
-      flex-basis: 100%;
-      padding: 10px;
+      div {
+        margin: auto;
+        background-color: $primary;
+        height: 2px;
+        width: 15px;
+      }
 
-      &.notesCardsContainerFS{
-        height: 550px;
+      img {
+        height: 100%;
       }
     }
+  }
 
-    .quizDropdown {
+  .bookmarkContainer {
+    position: relative;
+
+    .bookmarksInput {
       position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 110%;
+      right: 50%;
 
-      margin-top: 10px;
-      background-color: $bgContent;
+      padding: 8px;
+      background-color: $darkOne;
+      // opacity: 0.75;
+      width: 200px;
+      box-shadow: 0 0 10px 0 $darkTwo;
 
-      button {
-        background-color: transparent;
-        margin: 3px;
-        padding: 5px 10px;
-        width: 100px;
-        border: 1px solid $primary;
-        color: $primary;
+      .bookmarksField {
+        width: 100%;
+        padding: 10px;
+        border-radius: 0;
+        border-color: $bgHeader;
+        opacity: 1;
+
+        &:focus {
+          border-radius: 0;
+          outline: 0;
+          opacity: 1;
+        }
+      }
+
+      .bookmarksBtn {
+        background-color: $bgHeader;
+        color: $darkThree;
+        padding: 10px 5px;
+        border: 0;
+        border-radius: 0;
+        width: 100%;
         cursor: pointer;
+        opacity: 1;
+
+        &:hover {
+          background-color: $bgHeader;
+          color: $white;
+        }
       }
+    }
+  }
+
+  .folderBarContainer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    position: absolute;
+    top: 50px;
+    left: 50%;
+
+    transform: translateX(-50%);
+  }
+
+  .notesCardsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    // position: relative;
+    width: 500px;
+    height: 350px;
+    overflow: hidden auto;
+    z-index: 2;
+    flex-basis: 100%;
+    padding: 10px;
+
+    &.notesCardsContainerFS {
+      height: 550px;
+    }
+  }
+
+  .quizDropdown {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    margin-top: 10px;
+    background-color: $bgContent;
+
+    button {
+      background-color: transparent;
+      margin: 3px;
+      padding: 5px 10px;
+      width: 100px;
+      border: 1px solid $primary;
+      color: $primary;
+      cursor: pointer;
     }
   }
 
@@ -683,8 +682,8 @@
 // draggable div
 
 .draggableDiv {
-  height: 150px;
-  width: 150px;
+  // height: 150px;
+  // width: 150px;
   padding: 5px;
   position: absolute;
   top: 100px;
@@ -699,5 +698,15 @@
     transition: all 0.3s;
     box-shadow: 2px 2px 10px 3px #00000080;
     z-index: 999;
+  }
+}
+
+.toolbar {
+  display: flex;
+  background-color: $darkTwo;
+  color: $white;
+
+  .toolbarBox {
+    display: flex;
   }
 }

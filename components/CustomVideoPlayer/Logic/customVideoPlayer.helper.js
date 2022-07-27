@@ -5,6 +5,7 @@ export function addCallbackToEvent(element, eventCallbackArrObj) {
 }
 
 export const NOTE_CARD_SIZE = 150;
+export const BOX = ['subtitles', 'resources', 'discussion', 'bookmark', 'notes', 'quiz'];
 
 export function getNoteCardObj(data) {
   return {
