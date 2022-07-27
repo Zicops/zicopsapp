@@ -1,6 +1,7 @@
 import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
+import moment from 'moment';
 
 const httpLink = createHttpLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
@@ -9,16 +10,16 @@ const httpLink = createHttpLink({
 function getLatestToken(token) {
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   console.log(JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()));
-  let expDate = new Date(0);
-  expDate.setUTCSeconds(data.exp);
-  //JSON.parse(atob(token.split('.')[1]));
+
+  const expTime = data?.exp;
+  const currentTime = new Date().getTime() / 1000;
+  if (expTime >= currentTime) return token;
+  // JSON.parse(atob(token.split('.')[1]));
   //check if the token is expired or not-> return false if it is not expired
-  let checkToken = !auth?.currentUser?.stsTokenManager?.isExpired;
-  if (checkToken) return token;
+
   let newToken;
   auth?.currentUser?.getIdToken(true).then((data) => {
     newToken = data;
-    console.log(data);
   });
 
   return newToken;
@@ -26,7 +27,8 @@ function getLatestToken(token) {
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication tokenF and tokenZ from local storage if it exists
-  const firebaseToken = sessionStorage.getItem('tokenF');
+  const initialToken = sessionStorage.getItem('tokenF');
+  const firebaseToken = getLatestToken(initialToken);
   if (!firebaseToken) return (window.location.pathname = '/login');
   // const token = getLatestToken(tokenF);
   // return the headers to the context so httpLink can read them
