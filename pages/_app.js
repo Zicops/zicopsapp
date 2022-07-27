@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useRecoilState, useRecoilValue } from 'recoil';
 import ErrorBoundary from '../components/common/ErrorBoundary';
 import Toaster from '../components/common/Toaster';
 import Layout from '../components/Layout';
@@ -8,8 +8,16 @@ import UserContextProvider from '../state/contexts/UserContext';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
 import '../styles/global.scss';
 import '../styles/globals.css';
+import { useEffect } from 'react';
+import { checkUser } from '@/helper/loggeduser.helper';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 
 function MyApp({ Component, pageProps }) {
+  const userData = useRecoilValue(UserStateAtom);
+
+  useEffect(() => {
+    checkUser(userData);
+  }, [userData]);
   return (
     <>
       <Head>
