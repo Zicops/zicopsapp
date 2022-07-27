@@ -68,6 +68,8 @@ const LoginScreen = ({ setPage }) => {
     console.log(res?.data?.login?.is_verified);
     setUserData(getUserObject(res?.data?.login));
 
+    sessionStorage.setItem('loggedUser', res?.data?.login);
+
     if (!res?.data?.login?.is_verified) {
       setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
       router.prefetch('/');
