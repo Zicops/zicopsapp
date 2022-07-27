@@ -1,11 +1,11 @@
 import { isEmail } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
@@ -14,6 +14,7 @@ import LoginEmail from '../LoginEmail';
 import styles from '../zicopsLogin.module.scss';
 import LoginHeadOne from '../LoginHeadOne';
 import { useMutation } from '@apollo/client';
+import moment from 'moment';
 
 import HomeHeader from '@/components/HomePage/HomeHeader';
 
@@ -29,7 +30,7 @@ const LoginScreen = ({ setPage }) => {
   const vidRef = useRef();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const setUserData = useSetRecoilState(UserStateAtom);
+  const [userData, setUserData] = useRecoilState(UserStateAtom);
 
   // const [error, setError] = useState(null);
 
@@ -55,10 +56,6 @@ const LoginScreen = ({ setPage }) => {
 
     sessionStorage.setItem('tokenF', authUser?.token);
 
-    router.prefetch('/');
-    setVidIsOpen(true);
-    vidRef.current.play();
-
     let isError = false;
     const res = await userLogin().catch((err) => {
       console.log(err);
@@ -66,15 +63,21 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
+    if (isError) return;
+
     console.log(res?.data?.login?.is_verified);
-    setUserData(res?.data?.login);
-    if (!userData?.is_verified) return router.push('/account-setup');
+    setUserData(getUserObject(res?.data?.login));
 
-    router.prefetch('/');
-    setVidIsOpen(true);
-    vidRef.current.play();
-
-    return;
+    if (!res?.data?.login?.is_verified) {
+      setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
+      router.prefetch('/');
+      setTimeout(() => {
+        setVidIsOpen(true);
+        vidRef.current.play();
+      }, 1000);
+      return;
+    }
+    // return router.push('/account-setup');
     //
     //return ;
     // setUserState({ ...res, tokenF: authUser?.token });

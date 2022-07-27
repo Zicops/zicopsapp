@@ -192,3 +192,20 @@
   font-size: 16px;
   margin-bottom: 5px;
 }
+
+.small_text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  p {
+    font-size: 14px;
+    color: $secondaryBlack;
+    font-weight: bold;
+    padding: 6px 0px 3px;
+    cursor: pointer;
+  }
+
+  p:hover {
+    color: $primary;
+  }
+}
