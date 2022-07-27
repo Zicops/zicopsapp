@@ -23,7 +23,7 @@ export default function Notes() {
       <div className={`${styles.folderBarContainer}`}>
         <FolderBar onFolderClick={showAll} onMinusClick={hideAll} onPlusClick={addNewNote} />
 
-        <div className={`${styles.notesCardsContainer}`}>
+        <div className={`${styles.notesCardsContainer} ${document.fullscreenElement ? styles.notesCardsContainerFS : ''}`}>
           {floatingNotes
             .map((noteObj, i) => {
               if (noteObj.isFloating) return null;
