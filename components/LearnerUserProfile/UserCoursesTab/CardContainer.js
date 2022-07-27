@@ -10,7 +10,7 @@ export default function CardContainer({ isAdmin = false, type, footerType, cours
   const [isShowAll, setIsShowAll] = useState(false);
   const [cardSizeData, setCardSizeData] = useState({
     cardWidth: 300,
-    cardCount: 4
+    cardCount: 3
   });
 
   useEffect(() => {
