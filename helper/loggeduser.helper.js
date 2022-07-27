@@ -1,7 +1,8 @@
-export function checkUser(user) {
+export function checkUser() {
+  if (window.location.pathname === '/login') return;
   const userData = sessionStorage.getItem('loggedUser');
   if (!userData) {
     window.location.pathname = '/login';
-    return setToastMsg({ type: 'danger', message: 'Please Login!!' });
+    return;
   }
 }
