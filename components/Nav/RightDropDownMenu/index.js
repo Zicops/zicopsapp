@@ -46,7 +46,7 @@ export default function RightDropDownMenu() {
         />
       ),
       onClick: () => {
-        router.push('/my-profile');
+        router.push('/my-profile?tabName=About', '/my-profile');
       }
     },
     { id: 3, class: 'dropdown-submenu-justifycontent-right', name: 'My Certificates' },

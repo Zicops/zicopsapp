@@ -58,7 +58,7 @@ export const userProfile = [
     link: '/my-profile'
   },
   {
-    title: 'Learning Dashboard',
+    title: 'Dashboard',
     link: '/my-profile'
   },
   {

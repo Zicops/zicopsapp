@@ -1,7 +1,65 @@
 @import '../../styles/base.scss';
 
-.zicops_login{
+.loginMainContainer {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  .introVideoContainer {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
 
+    left: 0;
+
+    background-color: $black;
+    z-index: 1000;
+    video {
+      object-fit: contain;
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+//LoginButton Component
+.login_Button {
+  flex: 1;
+  margin: 10px 0px;
+
+  button {
+    background-color: transparent;
+    width: 100%;
+    flex: 1;
+    color: $primary;
+    padding: 7px 10px;
+    border-radius: 3px;
+    font-size: 16px;
+    border: 2px solid $primary;
+  }
+  button:hover {
+    background-color: $primary;
+    color: $black;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+  .small_text {
+    font-size: 14px;
+    color: $secondaryBlack;
+    font-weight: bold;
+    // padding: 15px 0px;
+    text-align: center;
+    span a {
+      color: $primary;
+      text-decoration: underline;
+    }
+    span a:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.zicops_login {
   font-family: 'Open Sans';
   background-image: url('../../public/images/starrySky2.png');
   background-position: center;
@@ -16,43 +74,138 @@
   scroll-snap-type: y mandatory;
   justify-content: center;
   align-items: center;
-
-  
 }
-.heading{
-    font-size: 25px;
-    color:$white;
-    font-weight: bold;
-    padding-top: 30px;
+.heading {
+  font-size: 25px;
+  color: $white;
+  font-weight: bold;
+  padding-top: 30px;
 }
-.sub_heading{
+.sub_heading {
   display: flex;
   align-items: center;
   padding: 10px 0 30px;
 
-  p{
+  p {
     font-size: 20px;
-    color:$secondaryBlack;
+    color: $secondaryBlack;
     font-weight: 700;
   }
-
 }
-.text{
-    font-size: 14px;
-    color:$white;
-    font-weight: 500;
-    // padding: 30px 0px 10px 0px;
-
+.text {
+  font-size: 14px;
+  color: $white;
+  font-weight: 500;
+  // padding: 30px 0px 10px 0px;
 }
-.login_body{
-    width: 400px;
+.login_body {
+  width: 400px;
 }
 
-.password_info_container{
+.password_info_container {
   width: 430px;
   display: flex;
   align-items: center;
 }
-.password_info{
+.password_info {
   margin-left: 10px;
+}
+
+//LoginFooter component
+.login_Footer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 120px;
+  gap: 100px;
+
+  .foot_text a {
+    font-size: 14px;
+    color: $white;
+  }
+}
+
+//Login Email
+
+.login_email {
+  // flex: 1;
+  width: 100%;
+  margin: 8px 0px;
+  display: flex;
+  border: 2px solid #6bcfcf;
+  border-radius: 3px;
+  button {
+    background: $darkOne;
+    outline: 0;
+    border: 0;
+  }
+  input {
+    color: $white;
+    background-color: $darkOne;
+    width: 100%;
+    outline: 0;
+    border: none;
+    // flex: 1;
+    //color: $secondaryBlack;
+    padding: 7px 10px;
+    border-radius: 3px;
+    font-size: 16px;
+
+    // background-image:url('/images/svg/visibility.svg');
+    // background-repeat: no-repeat;
+    // background-position: center;
+    // border: 2px solid $primary;
+
+    .mail {
+      border: 2px solid $primary !important;
+    }
+  }
+  .small_text {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p {
+      font-size: 14px;
+      color: $secondaryBlack;
+      font-weight: bold;
+      padding: 6px 0px 3px;
+      cursor: pointer;
+    }
+
+    p:hover {
+      color: $primary;
+    }
+  }
+}
+
+.login_email_input {
+  color: $white;
+  background-color: $darkOne;
+  width: 100%;
+  outline: 0;
+  //border: 0;
+  border: 2px solid #6bcfcf;
+  // flex: 1;
+  //color: $secondaryBlack;
+  padding: 7px 10px;
+  border-radius: 3px;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.small_text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  p {
+    font-size: 14px;
+    color: $secondaryBlack;
+    font-weight: bold;
+    padding: 6px 0px 3px;
+    cursor: pointer;
+  }
+
+  p:hover {
+    color: $primary;
+  }
 }

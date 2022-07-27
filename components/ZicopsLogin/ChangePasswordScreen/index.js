@@ -15,15 +15,9 @@ import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 const ChangePasswordScreen = ({ setPage }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
-  const code = router.query?.oobCode || 'sgWcZL0ohfUnds2dXmiqiIIZqaNbNmyxkx1kv7bkEvwAAAGCJqr1pA';
+  const code = router.query?.oobCode;
   const [newPassword, setNewPassword] = useState('');
   const [confNewPassword, setConfNewPassword] = useState('');
-
-  function handleCurrentPassword(e) {
-    setCurrentPassword(e.target.value);
-    if (currentPassword === 'Password')
-      return setToastMsg({ type: 'danger', message: 'Enter correct password' });
-  }
 
   function handleNewPassword(e) {
     setNewPassword(e.target.value);
@@ -39,12 +33,13 @@ const ChangePasswordScreen = ({ setPage }) => {
         type: 'danger',
         message: 'New Password should be same as Confirm Password field'
       });
-    console.log(code, newPassword);
 
-    verifyPasswordResetCode(auth, 'sgWcZL0ohfUnds2dXmiqiIIZqaNbNmyxkx1kv7bkEvwAAAGCJqr1pA')
+    verifyPasswordResetCode(auth, code)
       .then((data) => {
         confirmPasswordReset(auth, code, newPassword)
-          .then((data) => console.log(data))
+          .then((data) => {
+            router.push('/login');
+          })
           .catch((error) => console.log(error.message));
       })
       .catch((error) => console.log(error.message));
