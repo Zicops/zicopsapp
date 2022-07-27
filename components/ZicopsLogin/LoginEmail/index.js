@@ -1,4 +1,4 @@
-import styles from './loginEmail.module.scss';
+import styles from '../zicopsLogin.module.scss';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useEffect, useState } from 'react';

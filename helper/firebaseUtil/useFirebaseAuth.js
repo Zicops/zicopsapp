@@ -47,7 +47,8 @@ export default function useFirebaseAuth() {
         });
       })
       .catch((error) => {
-        setErrorMsg(error.code.slice(5).split('-').join(' '));
+        const err = error.code.slice(5).split('-').join(' ');
+        setErrorMsg(err);
       });
   };
 

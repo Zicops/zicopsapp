@@ -1,8 +1,23 @@
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+
+const authLink = setContext((_, { headers }) => {
+  const firebaseToken = sessionStorage.getItem('tokenF');
+  return {
+    headers: {
+      ...headers,
+      Authorization: firebaseToken ? `Bearer ${firebaseToken}` : ''
+    }
+  };
+});
+
+const httpLink = createHttpLink({
+  uri: 'https://demo.zicops.com/cq/api/v1/query'
+});
 
 // Set query Client
 export const queryClient = new ApolloClient({
-  uri: 'https://demo.zicops.com/cq/api/v1/query',
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache()
 });
 

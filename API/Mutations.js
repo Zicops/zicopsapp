@@ -1,6 +1,17 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import customFetch from './customFetch';
+import { setContext } from '@apollo/client/link/context';
+
+const authLink = setContext((_, { headers }) => {
+  const firebaseToken = sessionStorage.getItem('tokenF');
+  return {
+    headers: {
+      ...headers,
+      Authorization: firebaseToken ? `Bearer ${firebaseToken}` : ''
+    }
+  };
+});
 
 const link = createUploadLink({
   uri: 'https://demo.zicops.com/cc/api/v1/query',
@@ -8,7 +19,7 @@ const link = createUploadLink({
 });
 // Set Mutation Client
 export const mutationClient = new ApolloClient({
-  link,
+  link: authLink.concat(link),
   cache: new InMemoryCache()
 });
 
@@ -1564,20 +1575,8 @@ export const ADD_TOPIC_EXAM = gql`
 `;
 
 export const UPDATE_TOPIC_EXAM = gql`
-  mutation updateTopicExam(
-    $id: ID
-    $topicId: String
-    $examId: String
-    $language: String
-  ) {
-    updateTopicExam(
-      exam: {
-        id: $id
-        topicId: $topicId
-        examId: $examId
-        language: $language
-      }
-    ) {
+  mutation updateTopicExam($id: ID, $topicId: String, $examId: String, $language: String) {
+    updateTopicExam(exam: { id: $id, topicId: $topicId, examId: $examId, language: $language }) {
       id
       topicId
       examId

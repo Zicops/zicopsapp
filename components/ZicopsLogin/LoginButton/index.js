@@ -1,4 +1,4 @@
-import styles from './loginButton.module.scss';
+import styles from '../zicopsLogin.module.scss';
 
 const LoginButton = ({ title, handleClick, resend_code, text }) => {
   return (

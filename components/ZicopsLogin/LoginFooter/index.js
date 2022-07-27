@@ -1,4 +1,4 @@
-import styles from './loginFooter.module.scss';
+import styles from '../zicopsLogin.module.scss';
 const LoginFooter = () => {
   return (
     <div className={`${styles.login_Footer}`}>

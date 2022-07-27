@@ -29,7 +29,7 @@ const UserCohorts = () => {
         setTab={setTab}
         footerObj={{
           submitDisplay: 'Save',
-          showFooter: tab !== tabData[1].name
+          showFooter: tab === tabData[0].name
         }}
       />
     </>

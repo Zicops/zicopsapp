@@ -1,19 +1,21 @@
 import { isEmail } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { userState } from '@/state/atoms/users.atom';
+import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
-import styles from '../LoginEmail/loginEmail.module.scss';
+
+import styles from '../zicopsLogin.module.scss';
 import LoginHeadOne from '../LoginHeadOne';
 import { useMutation } from '@apollo/client';
-import Link from 'next/link';
+import moment from 'moment';
+
 import HomeHeader from '@/components/HomePage/HomeHeader';
 
 const LoginScreen = ({ setPage }) => {
@@ -24,8 +26,11 @@ const LoginScreen = ({ setPage }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [vidIsOpen, setVidIsOpen] = useState(false);
+  const vidRef = useRef();
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const setUserData = useSetRecoilState(userState);
+  const [userData, setUserData] = useRecoilState(UserStateAtom);
 
   // const [error, setError] = useState(null);
 
@@ -47,8 +52,7 @@ const LoginScreen = ({ setPage }) => {
 
     await signIn(email, password);
 
-    // if (errorMsg) return;
-    console.log(authUser?.token);
+    if (errorMsg) return;
 
     sessionStorage.setItem('tokenF', authUser?.token);
 
@@ -59,19 +63,32 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
-    console.log(res);
-    return;
-    // if (!res?.isVerified) return { router.push('/account-setup') };
+    if (isError) return;
 
-    //return router.push('/');
+    console.log(res?.data?.login?.is_verified);
+    setUserData(getUserObject(res?.data?.login));
+
+    sessionStorage.setItem('loggedUser', res?.data?.login);
+
+    if (!res?.data?.login?.is_verified) {
+      setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
+      router.prefetch('/');
+      setTimeout(() => {
+        setVidIsOpen(true);
+        vidRef.current.play();
+      }, 1000);
+      return;
+    }
+    // return router.push('/account-setup');
+    //
+    //return ;
     // setUserState({ ...res, tokenF: authUser?.token });
     // if (isError) return;
-    console.log(auth?.currentUser);
-    return;
   };
 
   useEffect(() => {
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
+    console.log(authUser);
   }, [errorMsg, authUser]);
 
   //to check if our user is logged in or not
@@ -80,7 +97,7 @@ const LoginScreen = ({ setPage }) => {
   }, [authUser, loading]);
 
   return (
-    <>
+    <div className={`${styles.loginMainContainer}`}>
       <HomeHeader showLogin={false} />
 
       <ZicopsLogin>
@@ -106,6 +123,13 @@ const LoginScreen = ({ setPage }) => {
           <LoginButton title={'Login'} handleClick={handleSubmit} />
         </div>
       </ZicopsLogin>
+      {!!vidIsOpen && (
+        <div className={`${styles.introVideoContainer}`}>
+          <video ref={vidRef} onEnded={() => router.push('/')}>
+            <source src="/videos/loginIntro.mp4" type="video/mp4" />
+          </video>
+        </div>
+      )}
       <style jsx>{`
         .login_body {
           width: 400px;
@@ -122,7 +146,7 @@ const LoginScreen = ({ setPage }) => {
           cursor: pointer;
         }
       `}</style>
-    </>
+    </div>
   );
 };
 

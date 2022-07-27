@@ -3,6 +3,7 @@ import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { useState } from 'react';
 import styles from '../../../userComps.module.scss';
+import LearnerStatistics from '../../LearnerStatistics';
 import AddUsers from './AddUsers';
 
 const data = [
@@ -193,6 +194,7 @@ const Users = () => {
 
       <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
         <AddUsers />
+        {/* <LearnerStatistics /> */}
       </PopUp>
     </div>
   );

@@ -17,6 +17,12 @@
   justify-content: center;
   flex-direction: column;
 }
+
+.userImageContainer {
+  display: flex;
+  position: relative;
+}
+
 .editIcon img {
   position: absolute;
   right: 2%;
@@ -24,14 +30,19 @@
   width: 20px;
 }
 .userImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
   width: 150px;
   height: 150px;
-  position: relative;
-}
-.userImage > img {
-  width: 100%;
-  height: 100%;
   border-radius: 50%;
+  background-color: $darkThree;
+  overflow: hidden;
+  img {
+    object-fit: contain;
+    height: 100%;
+  }
 }
 
 .editFillIcon img {
@@ -142,59 +153,59 @@
   color: $white;
 }
 
-  .cardContainer {
-    margin: 25px auto 50px;
+.cardContainer {
+  margin: 25px auto 50px;
 
-    .courseTabHeader {
+  .courseTabHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .imageContainer {
       display: flex;
-      justify-content: space-between;
       align-items: center;
 
-      .imageContainer {
-        display: flex;
-        align-items: center;
+      .seeAllBtn {
+        border: none;
+        outline: none;
+        background-color: transparent;
+        color: $white;
 
-        .seeAllBtn {
-          border: none;
-          outline: none;
-          background-color: transparent;
-          color: $white;
-
-          img {
-            height: 10px;
-            margin: auto 5px;
-          }
+        img {
+          height: 10px;
+          margin: auto 5px;
         }
       }
     }
-
-    hr {
-      margin: 5px auto 20px;
-    }
-
-    .boxCardContainer {
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-      gap: 20px;
-
-      flex-wrap: wrap;
-    }
-
-    .listCardContainer {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
   }
 
-.adminCardFooter{
-  p{
+  hr {
+    margin: 5px auto 20px;
+  }
+
+  .boxCardContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+
+    flex-wrap: wrap;
+  }
+
+  .listCardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+.adminCardFooter {
+  p {
     font-size: 14px;
     font-weight: 400;
     line-height: 18px;
   }
-  button{
+  button {
     width: 100%;
     margin-top: 20px;
     padding: 8px;

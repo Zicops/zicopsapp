@@ -8,8 +8,13 @@ import UserContextProvider from '../state/contexts/UserContext';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
 import '../styles/global.scss';
 import '../styles/globals.css';
+import { useEffect } from 'react';
+import { checkUser } from '@/helper/loggeduser.helper';
 
 function MyApp({ Component, pageProps }) {
+  // useEffect(() => {
+  //   checkUser();
+  // }, []);
   return (
     <>
       <Head>
