@@ -11,7 +11,7 @@ const SingleInfo = ({ userData, isEditable = true }) => {
   switch (tempData) {
     case 'Name':
       setTempData(
-        userDataMain ? `${userDataMain.first_name} ${userDataMain?.last_name}` : tempData
+        userDataMain ? `${userDataMain?.first_name} ${userDataMain?.last_name}` : tempData
       );
       break;
     case 'Email':
