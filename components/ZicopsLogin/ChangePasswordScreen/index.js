@@ -42,10 +42,10 @@ const ChangePasswordScreen = ({ setPage }) => {
           })
           .catch((error) => console.log(error.message));
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) =>
+        setToastMsg({ type: 'danger', message: 'Reset password link is expired.' })
+      );
   }
-
-  //('https://zicops-one.firebaseapp.com/__/auth/action?mode=resetPassword&oobCode=sgWcZL0ohfUnds2dXmiqiIIZqaNbNmyxkx1kv7bkEvwAAAGCJqr1pA&apiKey=AIzaSyD05Uj8S-YumeJUiM4xuO8YFP7rjLJbrP8&lang=en');
 
   return (
     <>

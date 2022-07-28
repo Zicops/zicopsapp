@@ -1,7 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
-import moment from 'moment';
 
 const httpLink = createHttpLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
@@ -9,7 +8,6 @@ const httpLink = createHttpLink({
 
 function getLatestToken(token) {
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-  console.log(JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()));
 
   const expTime = data?.exp;
   const currentTime = new Date().getTime() / 1000;
@@ -27,7 +25,11 @@ function getLatestToken(token) {
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication tokenF and tokenZ from local storage if it exists
-  const initialToken = sessionStorage.getItem('tokenF');
+  let tempToken;
+  auth?.currentUser?.getIdToken(true).then((data) => {
+    tempToken = data;
+  });
+  const initialToken = sessionStorage.getItem('tokenF') || tempToken;
   const firebaseToken = getLatestToken(initialToken);
   if (!firebaseToken) return (window.location.pathname = '/login');
   // const token = getLatestToken(tokenF);

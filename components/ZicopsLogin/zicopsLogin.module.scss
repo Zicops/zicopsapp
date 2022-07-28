@@ -15,7 +15,7 @@
     background-color: $black;
     z-index: 1000;
     video {
-      object-fit: contain;
+      object-fit: cover;
       height: 100%;
       width: 100%;
     }
