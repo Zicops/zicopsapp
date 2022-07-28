@@ -27,7 +27,11 @@ function getLatestToken(token) {
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication tokenF and tokenZ from local storage if it exists
-  const initialToken = sessionStorage.getItem('tokenF');
+  let tempToken;
+  auth?.currentUser?.getIdToken(true).then((data) => {
+    tempToken = data;
+  });
+  const initialToken = sessionStorage.getItem('tokenF') || tempToken;
   const firebaseToken = getLatestToken(initialToken);
   if (!firebaseToken) return (window.location.pathname = '/login');
   // const token = getLatestToken(tokenF);
