@@ -2,9 +2,14 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import customFetch from './customFetch';
 import { setContext } from '@apollo/client/link/context';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 
 const authLink = setContext((_, { headers }) => {
-  const firebaseToken = sessionStorage.getItem('tokenF');
+  let tempToken;
+  auth?.currentUser?.getIdToken(true).then((data) => {
+    tempToken = data;
+  });
+  const firebaseToken = sessionStorage.getItem('tokenF') || tempToken;
   return {
     headers: {
       ...headers,
