@@ -8,7 +8,7 @@ const SingleInfo = ({ userData, isEditable = true }) => {
   const [tempData, setTempData] = useState(userData.info);
   const [userDataMain, setUserDataMain] = useRecoilState(UserStateAtom);
 
-  switch (tempData) {
+  switch (userData.text) {
     case 'Name':
       setTempData(
         userDataMain ? `${userDataMain?.first_name} ${userDataMain?.last_name}` : tempData
