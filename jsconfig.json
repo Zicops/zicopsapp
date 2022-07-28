@@ -6,7 +6,8 @@
       "@/common/*": ["components/common/*"],
       "@/helper/*": ["helper/*"],
       "@/state/*": ["state/*"],
-      "@/styles/*": ["styles/*"]
+      "@/styles/*": ["styles/*"],
+      "@/api/*": ["API/*"],
     }
   }
 }
