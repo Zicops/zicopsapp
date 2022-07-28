@@ -74,6 +74,7 @@ export default function RightDropDownMenu() {
         console.log(auth?.currentUser);
         sessionStorage.clear();
         logOut();
+
         router.push('/login');
       }
     }

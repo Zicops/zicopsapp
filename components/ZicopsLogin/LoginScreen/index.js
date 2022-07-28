@@ -6,6 +6,7 @@ import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
@@ -52,12 +53,21 @@ const LoginScreen = ({ setPage }) => {
 
     if (errorMsg) return;
 
-    sessionStorage.setItem('tokenF', authUser?.token);
+    sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
 
     let isError = false;
-    const res = await userLogin().catch((err) => {
+    const res = await userLogin({
+      context: {
+        headers: {
+          Authorization: auth?.currentUser?.accessToken
+            ? `Bearer ${auth?.currentUser?.accessToken}`
+            : ''
+        }
+      }
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
+      console.log(sessionStorage.getItem('tokenF'));
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
@@ -75,6 +85,7 @@ const LoginScreen = ({ setPage }) => {
         setVidIsOpen(true);
         vidRef.current.play();
       }, 1000);
+
       return;
     }
     // return router.push('/account-setup');
