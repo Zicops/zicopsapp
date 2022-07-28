@@ -6,15 +6,13 @@ import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
 
-import styles from '../zicopsLogin.module.scss';
-import LoginHeadOne from '../LoginHeadOne';
 import { useMutation } from '@apollo/client';
-import moment from 'moment';
+import LoginHeadOne from '../LoginHeadOne';
+import styles from '../zicopsLogin.module.scss';
 
 import HomeHeader from '@/components/HomePage/HomeHeader';
 
