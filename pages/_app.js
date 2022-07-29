@@ -12,9 +12,9 @@ import { useEffect } from 'react';
 import { checkUser } from '@/helper/loggeduser.helper';
 
 function MyApp({ Component, pageProps }) {
-  // useEffect(() => {
-  //   checkUser();
-  // }, []);
+  useEffect(() => {
+    checkUser();
+  }, []);
   return (
     <>
       <Head>
