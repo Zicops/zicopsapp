@@ -39,7 +39,7 @@ const SingleInfo = ({ userData, isEditable = true }) => {
             changeHandler={(e) => setTempData(e.target.value)}
           />
         ) : (
-          <div className={`${styles.largeText}`}>{tempData} </div>
+          <div className={`${styles.largeText}`}>{data} </div>
         )}
       </div>
     </div>
