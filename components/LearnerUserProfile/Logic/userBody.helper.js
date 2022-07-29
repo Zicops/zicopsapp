@@ -1,22 +1,13 @@
 import UserAboutTab from '../UserAboutTab';
 import UserCalenderTab from '../UserCalenderTab';
+import UserCohortTab from '../UserCohortTab';
 import UserCoursesTab from '../UserCoursesTab';
 import UserLearningDashBoardTab from '../UserLearningDashBoardTab';
-import UserCohortTab from '../UserCohortTab';
 
 export const tabs = [
-  {
-    name: 'About',
-    comp: <UserAboutTab />
-  },
-  {
-    name: 'Cohort',
-    comp: <UserCohortTab />
-  },
-  {
-    name: 'Courses',
-    comp: <UserCoursesTab />
-  },
+  { name: 'About', comp: <UserAboutTab /> },
+  { name: 'Cohort', comp: <UserCohortTab /> },
+  { name: 'Courses', comp: <UserCoursesTab /> },
   { name: 'Dashboard', comp: <UserLearningDashBoardTab /> },
   { name: 'Calender', comp: <UserCalenderTab /> }
 ];
@@ -42,4 +33,43 @@ export const courseData = [
   { id: 18, title: 'Andriod Course' },
   { id: 19, title: 'IoT Course' },
   { id: 20, title: 'IoT Course' }
+];
+
+export const cohortData = [
+  {
+    id: 1,
+    title: 'Design Cohort',
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+    joinedOn: '20:04:2022',
+    isManager: true,
+    isResigned: false
+  },
+  {
+    id: 2,
+    title: 'Development Cohort',
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isResigned: false
+  },
+  {
+    id: 3,
+    title: 'Business & Finance Cohort',
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isResigned: false
+  },
+  {
+    id: 4,
+    title: 'Product Management Cohort',
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isResigned: true
+  }
 ];

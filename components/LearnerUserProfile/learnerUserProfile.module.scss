@@ -191,12 +191,12 @@
 
     flex-wrap: wrap;
   }
+}
 
-  .listCardContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
+.listCardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .adminCardFooter {
@@ -213,5 +213,21 @@
     border: 2px solid $primary;
     color: $primary;
     border-radius: 3px;
+  }
+}
+
+.btnContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  P {
+    display: flex;
+    align-items: center;
+    img {
+      margin-right: 10px;
+      max-width: 15px;
+    }
   }
 }
