@@ -18,4 +18,8 @@
   img {
     max-height: 15px;
   }
+
+  &:disabled {
+    cursor: no-drop;
+  }
 }

@@ -1,9 +1,13 @@
 import CohortListCard from '@/components/common/CohortListCard';
 import IconBtn from '@/components/common/IconBtn';
+import { useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 import { cohortData } from '../Logic/userBody.helper';
+import CohortPopUp from './CohortPopUp';
 
 const UserCohortTab = () => {
+  const [selectedCohort, setSelectedCohort] = useState(null);
+
   return (
     <div className={`${styles.userTabContainer}`}>
       <p>Your Cohort</p>
@@ -15,8 +19,8 @@ const UserCohortTab = () => {
           const btnData = {
             imgSrc: '/images/svg/calendar-month.svg',
             display: 'Member',
-            handleClick: () => {},
-            color: null
+            color: null,
+            isDisabled: false
           };
 
           if (cohort.isManager) {
@@ -27,6 +31,7 @@ const UserCohortTab = () => {
           if (cohort.isResigned) {
             btnData.display = 'Resigned';
             btnData.color = 'red';
+            btnData.isDisabled = true;
           }
 
           return (
@@ -37,7 +42,10 @@ const UserCohortTab = () => {
                   Joined On: {cohort?.joinedOn}
                 </p>
 
-                <IconBtn color={btnData.color}>
+                <IconBtn
+                  color={btnData.color}
+                  handleClick={() => setSelectedCohort(cohort)}
+                  isDisabled={btnData.isDisabled}>
                   <img src={btnData.imgSrc} alt="" />
                   {btnData.display}
                 </IconBtn>
@@ -46,6 +54,8 @@ const UserCohortTab = () => {
           );
         })}
       </div>
+
+      <CohortPopUp cohortData={selectedCohort} closePopUp={() => setSelectedCohort(null)} />
     </div>
   );
 };

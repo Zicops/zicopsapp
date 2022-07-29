@@ -1,3 +1,4 @@
+import CourseMaster from '@/components/Tabs/CourseMaster';
 import UserAboutTab from '../UserAboutTab';
 import UserCalenderTab from '../UserCalenderTab';
 import UserCohortTab from '../UserCohortTab';
@@ -71,5 +72,28 @@ export const cohortData = [
     joinedOn: '20:04:2022',
     isManager: false,
     isResigned: true
+  }
+];
+
+export const cohortTabData = [
+  {
+    name: 'Course Master',
+    component: <CourseMaster />
+  },
+  {
+    name: 'Details',
+    component: <CourseMaster />
+  },
+  {
+    name: 'About',
+    component: <CourseMaster />
+  },
+  {
+    name: 'Topics',
+    component: <CourseMaster />
+  },
+  {
+    name: 'Configuration',
+    component: <CourseMaster />
   }
 ];
