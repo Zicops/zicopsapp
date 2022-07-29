@@ -5,15 +5,13 @@ import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 
 const authLink = setContext((_, { headers }) => {
-  let tempToken;
-  auth?.currentUser?.getIdToken(true).then((data) => {
-    tempToken = data;
-  });
-  const firebaseToken = sessionStorage.getItem('tokenF') || tempToken;
+  const initialToken = sessionStorage.getItem('tokenF')
+    ? sessionStorage.getItem('tokenF')
+    : auth?.currentUser?.accessToken;
   return {
     headers: {
       ...headers,
-      Authorization: firebaseToken ? `Bearer ${firebaseToken}` : ''
+      Authorization: initialToken ? `Bearer ${initialToken}` : ''
     }
   };
 });

@@ -7,18 +7,16 @@ import styles from '../learnerUserProfile.module.scss';
 const SingleInfo = ({ userData, isEditable = true }) => {
   const [tempData, setTempData] = useState(userData.info);
   const [userDataMain, setUserDataMain] = useRecoilState(UserStateAtom);
-
-  switch (tempData) {
+  let data;
+  switch (userData.text) {
     case 'Name':
-      setTempData(
-        userDataMain ? `${userDataMain?.first_name} ${userDataMain?.last_name}` : tempData
-      );
+      data = userDataMain ? `${userDataMain?.first_name} ${userDataMain?.last_name}` : tempData;
       break;
     case 'Email':
-      setTempData(userDataMain ? userDataMain?.email : tempData);
+      data = userDataMain ? `${userDataMain?.email}` : tempData;
       break;
     case 'Contact':
-      setTempData(userDataMain ? userDataMain?.phone : tempData);
+      data = userDataMain ? `${userDataMain?.phone}` : tempData;
       break;
   }
 
@@ -34,14 +32,14 @@ const SingleInfo = ({ userData, isEditable = true }) => {
             styleClass={`${styles.inputField}`}
             inputOptions={{
               placeholder: `Enter ${userData.text}`,
-              value: tempData,
+              value: data,
               maxLength: 60,
               isDisabled: userData.text === 'Email'
             }}
             changeHandler={(e) => setTempData(e.target.value)}
           />
         ) : (
-          <div className={`${styles.largeText}`}>{tempData} </div>
+          <div className={`${styles.largeText}`}>{data} </div>
         )}
       </div>
     </div>

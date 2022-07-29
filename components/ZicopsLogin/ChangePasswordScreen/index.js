@@ -40,7 +40,10 @@ const ChangePasswordScreen = ({ setPage }) => {
           .then((data) => {
             router.push('/login');
           })
-          .catch((error) => console.log(error.message));
+          .catch((error) => {
+            const err = error.code.slice(5).split('-').join(' ');
+            setToastMsg({ type: 'danger', message: err });
+          });
       })
       .catch((error) =>
         setToastMsg({ type: 'danger', message: 'Reset password link is expired.' })

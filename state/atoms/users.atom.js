@@ -8,12 +8,12 @@ export const UserStateAtom = atom({
 export function getUserObject(data) {
   return {
     id: data?.id || null,
-    first_name: data?.first_name || null,
-    last_name: data?.last_name || null,
+    first_name: data?.first_name || '',
+    last_name: data?.last_name || '',
     status: data?.status || null,
-    role: data?.role || null,
-    email: data?.email || null,
-    phone: data?.phone || null,
+    role: data?.role || '',
+    email: data?.email || '',
+    phone: data?.phone || '',
     photo_url: data?.photo_url || null,
     gender: data?.gender || null,
 

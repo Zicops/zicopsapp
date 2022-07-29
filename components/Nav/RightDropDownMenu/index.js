@@ -9,7 +9,6 @@ import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { preferences, userProfile } from '../Logic/subMenu.helper.js';
 import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
-import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import styles from '../nav.module.scss';
 
 export default function RightDropDownMenu() {
@@ -71,7 +70,6 @@ export default function RightDropDownMenu() {
       class: 'dropdown-submenu-justifycontent-right',
       name: 'Logout',
       onClick: () => {
-        console.log(auth?.currentUser);
         sessionStorage.clear();
         logOut();
         router.push('/login');
