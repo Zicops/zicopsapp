@@ -48,7 +48,11 @@
   }
 
   .cardBody {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
+    padding: 2px;
 
     .title {
       font-size: 20px;
@@ -56,8 +60,19 @@
     }
 
     .catSubCat {
+      display: flex;
+      align-items: center;
       word-spacing: 10px;
     }
+  }
+
+  .dot {
+    height: 5px;
+    width: 5px;
+    background-color: $white;
+    border-radius: 50%;
+
+    margin: auto 10px;
   }
 
   .calenderFooter {

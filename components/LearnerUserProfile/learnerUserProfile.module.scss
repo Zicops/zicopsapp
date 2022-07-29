@@ -191,12 +191,12 @@
 
     flex-wrap: wrap;
   }
+}
 
-  .listCardContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
+.listCardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .adminCardFooter {
@@ -214,4 +214,27 @@
     color: $primary;
     border-radius: 3px;
   }
+}
+
+.btnContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  P {
+    display: flex;
+    align-items: center;
+    img {
+      margin-right: 10px;
+      max-width: 15px;
+    }
+  }
+}
+
+.cohortTabContainer {
+  height: 50vh;
+  width: 50vw;
+  background-color: $black;
+  color: $white;
 }
