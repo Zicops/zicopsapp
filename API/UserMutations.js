@@ -6,30 +6,13 @@ const httpLink = createHttpLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
 });
 
-function getLatestToken(token) {
-  const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-
-  const expTime = data?.exp;
-  const currentTime = new Date().getTime() / 1000;
-  if (expTime >= currentTime) return token;
-  // JSON.parse(atob(token.split('.')[1]));
-  //check if the token is expired or not-> return false if it is not expired
-
-  let newToken;
-  auth?.currentUser?.getIdToken(true).then((data) => {
-    newToken = data;
-  });
-
-  return newToken;
-}
-
 const authLink = setContext((_, { headers }) => {
   // get the authentication tokenF and tokenZ from local storage if it exists
 
-  const initialToken = sessionStorage.getItem('tokenF')
+  const firebaseToken = sessionStorage.getItem('tokenF')
     ? sessionStorage.getItem('tokenF')
     : auth?.currentUser?.accessToken;
-  const firebaseToken = getLatestToken(initialToken);
+
   if (!firebaseToken) return (window.location.pathname = '/login');
   // const token = getLatestToken(tokenF);
   // return the headers to the context so httpLink can read them
