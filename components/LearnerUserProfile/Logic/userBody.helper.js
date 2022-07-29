@@ -1,7 +1,7 @@
-import CourseMaster from '@/components/Tabs/CourseMaster';
 import UserAboutTab from '../UserAboutTab';
 import UserCalenderTab from '../UserCalenderTab';
 import UserCohortTab from '../UserCohortTab';
+import DetailsTab from '../UserCohortTab/CohortPopUp/DetailsTab';
 import UserCoursesTab from '../UserCoursesTab';
 import UserLearningDashBoardTab from '../UserLearningDashBoardTab';
 
@@ -78,22 +78,22 @@ export const cohortData = [
 export const cohortTabData = [
   {
     name: 'Course Master',
-    component: <CourseMaster />
+    component: <DetailsTab />
   },
   {
     name: 'Details',
-    component: <CourseMaster />
+    component: <DetailsTab />
   },
   {
     name: 'About',
-    component: <CourseMaster />
+    component: <DetailsTab />
   },
   {
     name: 'Topics',
-    component: <CourseMaster />
+    component: <DetailsTab />
   },
   {
     name: 'Configuration',
-    component: <CourseMaster />
+    component: <DetailsTab />
   }
 ];

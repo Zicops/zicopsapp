@@ -233,8 +233,55 @@
 }
 
 .cohortTabContainer {
-  height: 50vh;
-  width: 50vw;
-  background-color: $black;
+  position: relative;
+
+  height: 75vh;
+  width: 70vw;
+  background-color: $darkTwo;
   color: $white;
+
+  border-radius: 10px;
+
+  .close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    top: -10px;
+    right: -10px;
+
+    background-color: $secondary;
+    border-radius: 50%;
+
+    img {
+      height: 30px;
+    }
+  }
+
+  .tabHeader {
+    list-style: none;
+    display: flex;
+    justify-content: space-evenly;
+    border-radius: 10px;
+    overflow: hidden;
+
+    li {
+      flex: 1;
+      text-align: center;
+      background-color: $darkOne;
+      color: $darkThree;
+
+      padding: 5px 0px;
+    }
+
+    .active {
+      background-color: $darkTwo;
+      color: $white;
+    }
+  }
+
+  .tabSection {
+    padding: 10px;
+  }
 }
