@@ -28,7 +28,7 @@ export const orgData = [
   },
   {
     image: '/images/svg/badge.svg',
-    text: 'Role In Organization:il',
+    text: 'Role In Organization',
     info: 'Other '
   },
   {

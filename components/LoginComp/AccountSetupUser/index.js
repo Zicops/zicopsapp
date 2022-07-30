@@ -20,6 +20,13 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [userData, setUserData] = useRecoilState(UserStateAtom);
+
+  useEffect(() => {
+    if (!userData) return;
+    const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
+    return setUserData(refreshUserData);
+  }, []);
+
   const handleClick = () => {
     setPop(true);
   };
@@ -100,7 +107,9 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             maxLength: 60,
             isDisabled: true
           }}
-          // changeHandler={() => {}}
+          changeHandler={(e) => {
+            setUserData({ ...userData, email: e.target.value });
+          }}
         />
         <Box mt={3} />
         <LabeledInput
