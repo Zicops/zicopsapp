@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { userContext } from '../../../state/contexts/UserContext';
+import { BOX } from './customVideoPlayer.helper';
 
 export default function useSaveData(videoElement) {
   const { addBookmarkData, addNotes } = useContext(userContext);
@@ -8,7 +9,6 @@ export default function useSaveData(videoElement) {
   const [showQuiz, setShowQuiz] = useState(false);
 
   const [showBox, setShowBox] = useState(null);
-  const BOX = ['subtitles', 'resources', 'discussion', 'bookmark', 'notes', 'quiz'];
 
   function toggleStates(setState, state) {
     setState(!state);

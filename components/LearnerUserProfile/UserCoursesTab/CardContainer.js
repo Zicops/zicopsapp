@@ -1,32 +1,36 @@
 import CourseBoxCard from '@/components/common/CourseBoxCard';
 import CourseLIstCard from '@/components/common/CourseLIstCard';
-import AssignedCourses from '@/components/UserProfile/AssignedCourses';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 
-export default function CardContainer({ isAdmin=false, type, footerType, courseData }) {
+export default function CardContainer({ isAdmin = false, type, footerType, courseData }) {
+  const cardContainerRef = useRef(null);
+
   const [isBoxView, setIsBoxView] = useState(true);
   const [isShowAll, setIsShowAll] = useState(false);
   const [cardSizeData, setCardSizeData] = useState({
     cardWidth: 300,
-    cardCount: 4
+    cardCount: 3
   });
-  
+
   useEffect(() => {
+    if (!cardContainerRef.current) return;
+
     const sidePadding = 50;
     const gap = 20;
-    const screenWidth = window.screen.width;
+    // const screenWidth = window.screen.width;
+    const screenWidth = cardContainerRef.current?.offsetWidth;
+    window.c = cardContainerRef.current;
+    console.log(screenWidth);
     let cardCount = cardSizeData.cardCount;
+
     if (screenWidth > 1600) cardCount = 6;
     if (screenWidth > 1500) cardCount = 5;
     if (screenWidth > 1400) cardCount = 4;
 
-    const cardWidth = (screenWidth - sidePadding * 2 - gap * cardCount) / cardCount;
+    const cardWidth = (screenWidth - (cardCount - 1) - gap * (cardCount - 1)) / cardCount;
 
-    setCardSizeData({
-      cardCount,
-      cardWidth
-    });
+    setCardSizeData({ cardCount, cardWidth });
   }, []);
 
   return (
@@ -54,7 +58,7 @@ export default function CardContainer({ isAdmin=false, type, footerType, courseD
       <hr />
 
       {isBoxView ? (
-        <div className={`${styles.boxCardContainer}`}>
+        <div className={`${styles.boxCardContainer}`} ref={cardContainerRef}>
           {courseData
             ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
             ?.map((course) => (
@@ -69,12 +73,15 @@ export default function CardContainer({ isAdmin=false, type, footerType, courseD
                     <p>Added on {courseData?.addedOn || '22-06-2022'}</p>
                   </div>
                 )}
-                {footerType === 'adminFooter' && 
+                {footerType === 'adminFooter' && (
                   <div className={`${styles.adminCardFooter}`}>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sint quia ea voluptates, a assumenda impedit illum eligendi.</p>
-                  <button>Unassign</button>
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sint
+                      quia ea voluptates, a assumenda impedit illum eligendi.
+                    </p>
+                    <button>Unassign</button>
                   </div>
-                }
+                )}
               </CourseBoxCard>
             ))}
         </div>
@@ -83,7 +90,7 @@ export default function CardContainer({ isAdmin=false, type, footerType, courseD
           {courseData
             ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
             ?.map((course) => (
-              <CourseLIstCard courseData={course} footerType={footerType} />
+              <CourseLIstCard courseData={course} footerType={footerType}></CourseLIstCard>
             ))}
         </div>
       )}

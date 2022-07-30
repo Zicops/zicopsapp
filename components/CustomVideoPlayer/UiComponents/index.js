@@ -1,16 +1,18 @@
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import Image from 'next/image';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
 import { filterModule } from '../../../helper/data.helper';
 import { ModuleAtom } from '../../../state/atoms/module.atoms';
 import { VideoAtom } from '../../../state/atoms/video.atom';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import Button from '../Button';
 import styles from '../customVideoPlayer.module.scss';
+import DraggableDiv from '../DraggableDiv';
+import { BOX } from '../Logic/customVideoPlayer.helper';
 import useSaveData from '../Logic/useSaveData';
 import Bookmark from './Bookmark';
+import ButtonWithBox from './ButtonWithBox';
 import Notes from './Notes';
 import Quiz from './Quiz';
 import SubtitleBox from './SubtitleBox';
@@ -30,11 +32,11 @@ export default function UiComponents({
   const moduleData = useRecoilValue(ModuleAtom);
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const { fullCourse } = useContext(courseContext);
+  const [isToolbarOpen, setIsToolbarOpen] = useState(null);
 
   const {
     showBox,
     setShowBox,
-    BOX,
     switchBox,
     states,
     toggleStates,
@@ -69,53 +71,156 @@ export default function UiComponents({
     if (isTopBarHidden) setShowBox(null);
   }, [isTopBarHidden]);
 
+  const toolbarItems = [
+    {
+      id: 0,
+      btnImg: '/images/4019936_2.png',
+      boxComponent: <SubtitleBox subtitleState={subtitleState} />,
+      handleClick: () => switchBox(0)
+    },
+    {
+      id: 1,
+      btnImg: '/images/pot-plant-icon.png',
+      handleClick: () => switchBox(1)
+    },
+    {
+      id: 2,
+      btnImg: '/images/conversation-icon-png-clipart2.png',
+      handleClick: () => switchBox(2)
+    },
+    {
+      id: 3,
+      btnComp: (
+        <div
+          className={`${styles.videoBookmark}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            switchBox(3);
+            if (playerState?.isPlaying) updateIsPlayingTo(false);
+          }}></div>
+      ),
+      boxComponent: (
+        <Bookmark
+          handleChange={handleBookmarkChange}
+          value={bookmarkData?.title}
+          handleSave={() => handleSaveBookmark(playerState.progress)}
+          updateIsPlayingTo={updateIsPlayingTo}
+          playerState={playerState}
+        />
+      ),
+      handleClick: () => {
+        switchBox(3);
+        if (playerState?.isPlaying) updateIsPlayingTo(false);
+      }
+    },
+    {
+      id: 4,
+      btnImg: '/images/Notes Icon2.png',
+      boxComponent: <Notes />,
+      handleClick: () => {
+        const isBoxClosed = showBox === BOX[4];
+        if (isBoxClosed) {
+          // hide the note card which are not pinned
+          setFloatingNotes(
+            floatingNotes.map((note) => {
+              if (note.isPinned) return note;
+
+              return {
+                ...note,
+                isPinned: false,
+                isFloating: false,
+                x: null,
+                y: null
+              };
+            })
+          );
+        }
+        updateIsPlayingTo(isBoxClosed);
+        switchBox(4);
+      }
+    },
+    {
+      id: 5,
+      btnComp: (
+        <div
+          className={`${styles.videoQuiz}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            switchBox(5);
+          }}></div>
+      ),
+      boxComponent: (
+        <div className={`${styles.quizDropdown}`}>
+          <button
+            onClick={() => {
+              updateIsPlayingTo(false);
+              toggleStates(setShowQuiz, showQuiz);
+              toggleStates(setShowQuizDropdown, setShowQuizDropdown);
+            }}>
+            Quiz 1
+          </button>
+          <button
+            onClick={() => {
+              updateIsPlayingTo(false);
+              toggleStates(setShowQuiz, showQuiz);
+              toggleStates(setShowQuizDropdown, setShowQuizDropdown);
+            }}>
+            Quiz 2
+          </button>
+        </div>
+      ),
+      handleClick: () => () => {
+        updateIsPlayingTo(false);
+        toggleStates(setShowQuiz, showQuiz);
+        toggleStates(setShowQuizDropdown, setShowQuizDropdown);
+      }
+    }
+  ];
   return (
     <>
+      <DraggableDiv initalPosition={{ x: '0px', y: '0px' }}>
+        <div className={`${styles.toolbar}`} onClick={() => setIsToolbarOpen(!isToolbarOpen)}>
+          <span>Toolbar</span>
+
+          <div className={`${styles.toolbarBox}`}>
+            {isToolbarOpen &&
+              toolbarItems.map((item) => {
+                return (
+                  <ButtonWithBox
+                    key={item.id}
+                    btnImg={item.btnImg}
+                    btnComp={item.btnComp}
+                    handleClick={item.handleClick}
+                    isBoxActive={showBox === BOX[item.id]}
+                    boxComponent={item.boxComponent}
+                  />
+                );
+              })}
+          </div>
+        </div>
+      </DraggableDiv>
+
       <div className={`${styles.customUiContainer} ${styleClass}`}>
         <div className={`${styles.topIconsContainer}`}>
           {/* back button on left which close the player and return to hero */}
           <div className={`${styles.firstIcon}`} onClick={playerClose}>
             <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
           </div>
-          {/* subtitles and language button */}
+
           {!videoData.isPreview && (
             <div className={`${styles.leftIcons}`}>
-              <div className="position-relative">
-                <Button>
-                  <Image
-                    src="/images/4019936_2.png"
-                    alt=""
-                    height="30px"
-                    width="28px"
-                    onClick={() => switchBox(0)}
+              {toolbarItems.slice(0, 3).map((item) => {
+                return (
+                  <ButtonWithBox
+                    key={item.id}
+                    btnImg={item.btnImg}
+                    btnComp={item.btnComp}
+                    handleClick={item.handleClick}
+                    isBoxActive={showBox === BOX[item.id]}
+                    boxComponent={item.boxComponent}
                   />
-                </Button>
-
-                {/* subtitle and language element */}
-                {showBox === BOX[0] && <SubtitleBox subtitleState={subtitleState} />}
-              </div>
-
-              {/* something I dont know, update comment later */}
-              <Button>
-                <Image
-                  src="/images/pot-plant-icon.png"
-                  alt=""
-                  height="30px"
-                  width="30px"
-                  onClick={() => switchBox(1)}
-                />
-              </Button>
-
-              {/* something to do with discussion, update later */}
-              <Button>
-                <Image
-                  src="/images/conversation-icon-png-clipart2.png"
-                  alt=""
-                  height="30px"
-                  width="30px"
-                  onClick={() => switchBox(2)}
-                />
-              </Button>
+                );
+              })}
             </div>
           )}
 
@@ -129,92 +234,21 @@ export default function UiComponents({
 
           {!videoData.isPreview && (
             <div className={`${styles.rightIcons}`}>
-              {/* bookmark btn */}
-              <div className={`position-relative`}>
-                <Button>
-                  <div
-                    className={`${styles.videoBookmark}`}
-                    onClick={() => {
-                      switchBox(3);
-                      if (playerState?.isPlaying) updateIsPlayingTo(false);
-                    }}></div>
-                </Button>
-
-                {showBox === BOX[3] && (
-                  <Bookmark
-                    handleChange={handleBookmarkChange}
-                    value={bookmarkData?.title}
-                    handleSave={() => handleSaveBookmark(playerState.progress)}
-                    updateIsPlayingTo={updateIsPlayingTo}
-                    playerState={playerState}
+              {toolbarItems.slice(3, toolbarItems.length).map((item) => {
+                return (
+                  <ButtonWithBox
+                    key={item.id}
+                    btnImg={item.btnImg}
+                    btnComp={item.btnComp}
+                    handleClick={item.handleClick}
+                    isBoxActive={showBox === BOX[item.id]}
+                    boxComponent={item.boxComponent}
                   />
-                )}
-              </div>
-
-              {/* notes btn */}
-              <div className={`position-relative`}>
-                <Button>
-                  <Image
-                    src="/images/Notes Icon2.png"
-                    alt=""
-                    height="25px"
-                    width="25px"
-                    onClick={() => {
-                      const isBoxClosed = showBox === BOX[4];
-                      if (isBoxClosed) {
-                        // hide the note card which are not pinned
-                        setFloatingNotes(
-                          floatingNotes.map((note) => {
-                            if (note.isPinned) return note;
-
-                            return {
-                              ...note,
-                              isPinned: false,
-                              isFloating: false,
-                              x: null,
-                              y: null
-                            };
-                          })
-                        );
-                      }
-                      updateIsPlayingTo(isBoxClosed);
-                      switchBox(4);
-                    }}
-                  />
-                </Button>
-
-                {showBox === BOX[4] && <Notes />}
-              </div>
-
-              {/* quiz btn */}
-              <div className={`position-relative`}>
-                <Button>
-                  <div className={`${styles.videoQuiz}`} onClick={() => switchBox(5)}></div>
-                </Button>
-
-                {showBox === BOX[5] && (
-                  <div className={`${styles.quizDropdown}`}>
-                    <button
-                      onClick={() => {
-                        updateIsPlayingTo(false);
-                        toggleStates(setShowQuiz, showQuiz);
-                        toggleStates(setShowQuizDropdown, setShowQuizDropdown);
-                      }}>
-                      Quiz 1
-                    </button>
-                    <button
-                      onClick={() => {
-                        updateIsPlayingTo(false);
-                        toggleStates(setShowQuiz, showQuiz);
-                        toggleStates(setShowQuizDropdown, setShowQuizDropdown);
-                      }}>
-                      Quiz 2
-                    </button>
-                  </div>
-                )}
-              </div>
+                );
+              })}
             </div>
           )}
+
           <div className={`${styles.lastIcon}`}></div>
         </div>
       </div>
