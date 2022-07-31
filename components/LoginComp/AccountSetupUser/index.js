@@ -10,42 +10,19 @@ import ImageCropper from '../../common/ImageCropper';
 import { useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
 
 const AccountSetupUser = ({ setCurrentComponent }) => {
   const [selectedLanguage, setSelectedLanguage] = useState();
-  const [image, setImage] = useState();
-  const [preview, setPreview] = useState('');
-  const [pop, setPop] = useState(false);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [userData, setUserData] = useRecoilState(UserStateAtom);
-
   useEffect(() => {
     if (!userData) return;
     const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
     return setUserData(refreshUserData);
   }, []);
-
-  const handleClick = () => {
-    setPop(true);
-  };
-  const handleClose = () => {
-    setPop(false);
-  };
-
-  const myRef = useRef(null);
-
-  useEffect(() => {
-    setPreview('');
-    if (image) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result);
-      };
-      reader.readAsDataURL(image);
-    } else setPreview('');
-  }, [image]);
 
   const dataURLtoFile = (dataUrl, filename) => {
     let arr = dataUrl.split(','),
@@ -125,95 +102,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           }}
         />
         <Box mt={3} />
-        <div className={`${styles.labeledInputWrapper}`}>
-          <label className="w-100">Profile Picture:</label>
-          <div className={`${styles.upload}`}>
-            <input
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) setImage(file);
-                else setImage(null);
-              }}
-              id={'materialUpload'}
-              style={{ display: 'none' }}
-              type="file"
-            />
-            <Button
-              variant={'contained'}
-              className={`${styles.transform_text}`}
-              onClick={() => {
-                document.getElementById('materialUpload').click();
-              }}>
-              Upload Photo
-            </Button>
-            <div>320 x 320 pixels (Recommended)</div>
-            <Button
-              onClick={handleClick}
-              disabled={preview === ''}
-              className={`${styles.input_margin_transform_white}`}>
-              Preview
-            </Button>
-            <Dialog open={pop} onClose={handleClose}>
-              <Box
-                py={3}
-                px={3}
-                zIndex={1}
-                width={'450px'}
-                display={'flex'}
-                justifyContent={'center'}
-                alignItems={'center'}>
-                <Box
-                  width={'100%'}
-                  display={'flex'}
-                  justifyContent={'center'}
-                  alignItems={'center'}
-                  flexDirection={'column'}>
-                  <Box
-                    width={'100%'}
-                    display={'flex'}
-                    justifyContent={'space-between'}
-                    alignItems={'center'}
-                    px={2}>
-                    <Box fontSize={'27px'} fontWeight={600} color={'#FFF'}>
-                      Preview
-                    </Box>
-                    <Box>
-                      <ImageCropper
-                        initialImage={image}
-                        setCroppedImage={setPreview}
-                        aspectRatio={1}
-                      />
-                      <IconButton onClick={handleClose}>
-                        <CloseIcon sx={{ color: '#FFF' }} />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                  <Box mb={5} />
-                  <Box
-                    display={'flex'}
-                    alignItems={'center'}
-                    justifyContent={'center'}
-                    width={'320px'}
-                    height={'320px'}
-                    border={'4px dashed #6bcfcf'}
-                    borderRadius={'50%'}
-                    overflow={'hidden'}
-                    m={'auto'}>
-                    <img
-                      src={preview}
-                      alt={'logo'}
-                      width={'320px'}
-                      height={'320px'}
-                      style={{ objectFit: 'cover' }}
-                    />
-                  </Box>
-                  <Box mb={4} />
-                </Box>
-              </Box>
-            </Dialog>
-          </div>
-        </div>
+        <UploadAndPreview inputName={'profile-image'} label={'Profile Picture'} isRemove={true} />
         <Box mt={2} />
       </div>
       <div className={`${styles.navigator}`}>
