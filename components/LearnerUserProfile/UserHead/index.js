@@ -1,4 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
 const UserHead = () => {
@@ -6,6 +7,10 @@ const UserHead = () => {
     return str.length > 16 ? str.substring(0, 13) + '...' : str;
   }
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const [fullName, setFullName] = useState('');
+  useEffect(() => {
+    setFullName(`${userProfileData?.first_name} ${userProfileData?.last_name}`);
+  }, []);
   return (
     <div className={`${styles.userHead}`}>
       <div className={`${styles.editIcon}`}>
@@ -25,9 +30,7 @@ const UserHead = () => {
       </div>
 
       <div className={`${styles.userName}`}>
-        {userProfileData?.first_name
-          ? `${userProfileData?.first_name} ${userProfileData?.last_name}`
-          : 'Aakash Chakraborty'}
+        {userProfileData?.first_name ? `${fullName}` : 'Aakash Chakraborty'}
       </div>
       <div className={`${styles.userRole}`}>Learning manager at accenture</div>
     </div>
