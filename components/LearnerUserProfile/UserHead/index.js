@@ -1,5 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
 const UserHead = () => {
