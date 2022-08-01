@@ -2,22 +2,22 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import CustomButtonGroup from './CustomButtonGroup';
 
-export default function ItemSlider({ carouselProps = {}, children }) {
+export default function ItemSlider({ carouselProps = {}, children, responsiveViews = [3, 3, 1] }) {
   const { containerClass } = carouselProps;
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 3,
+      items: responsiveViews[0],
       slidesToSlide: 1 // optional, default to 1.
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 3,
+      items: responsiveViews[1],
       slidesToSlide: 1 // optional, default to 1.
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1,
+      items: responsiveViews[1],
       slidesToSlide: 1 // optional, default to 1.
     }
   };

@@ -1,0 +1,24 @@
+@import '@/styles/base.scss';
+
+    .headButton {
+    border-radius: 3px;
+    display: flex;
+    p {
+        background-color: $secondary;
+        margin-left: 5px;
+        border-radius: 5px;
+        padding: 5px 10px;
+        color: #acacac;
+        font-weight: 700;
+        width: 5vw;
+        text-align: center;
+    }
+    :hover {
+        cursor: pointer;
+    }
+    :active {
+        background-color: $primary;
+        cursor: pointer;
+        color: $black;
+    }
+    }
