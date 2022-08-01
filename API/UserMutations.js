@@ -1,8 +1,9 @@
-import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
 });
 
@@ -104,6 +105,56 @@ export const MAKE_ADMIN_USER = gql`
 export const INVITE_USERS = gql`
   mutation InviteUsers($emails: String!) {
     inviteUsers(emails: [$emails])
+  }
+`;
+
+export const UPDATE_USER = gql`
+  mutation UpdateUser(
+    $firstName: String!
+    $lastName: String!
+    $Status: String!
+    $Role: String!
+    $IsVerified: Boolean!
+    $IsActive: Boolean!
+    $Gender: String!
+    $CreatedBy: String!
+    $UpdatedBy: String!
+    $Email: String!
+    $Phone: String!
+    $Photo: Upload
+  ) {
+    updateUser(
+      input: {
+        first_name: $firstName
+        last_name: $lastName
+        status: $Status
+        role: $Role
+        is_verified: $IsVerified
+        is_active: $IsActive
+        gender: $Gender
+        created_by: $CreatedBy
+        updated_by: $UpdatedBy
+        email: $Email
+        phone: $Phone
+        Photo: $Photo
+      }
+    ) {
+      id
+      first_name
+      last_name
+      status
+      role
+      is_verified
+      is_active
+      gender
+      created_by
+      updated_by
+      created_at
+      updated_at
+      email
+      phone
+      photo_url
+    }
   }
 `;
 
