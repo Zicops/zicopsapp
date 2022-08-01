@@ -413,6 +413,7 @@
 
 .uploadAndPreviewContainer {
   display: flex;
+  align-items: center;
 
   label {
     color: $white;
@@ -435,9 +436,9 @@
       color: $black;
       border-radius: 3px;
       font-size: 0.875rem;
-      :hover {
-        background-color: rgb(74, 144, 144);
-      }
+      // :hover {
+      //   background-color: rgb(74, 144, 144);
+      // }
     }
     .description {
       color: $bgBody;
@@ -448,8 +449,8 @@
       border: none;
       background-color: transparent;
       color: $white;
-      font-size: 0.875rem;
-      text-decoration: underline;
+      font-size: 0.85rem;
+      // text-decoration: underline;
     }
     button[disabled] {
       color: $darkThree;

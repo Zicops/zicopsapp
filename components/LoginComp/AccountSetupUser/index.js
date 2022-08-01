@@ -1,16 +1,13 @@
-import { Box, Button, Dialog, IconButton } from '@mui/material';
-import LabeledInput from '../../common/FormComponents/LabeledInput';
-import styles from './setupUser.module.scss';
-import { useEffect, useRef, useState } from 'react';
-import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
-import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
-import { languages } from '../ProfilePreferences/Logic/profilePreferencesHelper';
-import ImageCropper from '../../common/ImageCropper';
-import { useRecoilState } from 'recoil';
-import { UserStateAtom } from '@/state/atoms/users.atom';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import { Box, Button } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
+import LabeledInput from '../../common/FormComponents/LabeledInput';
+import { languages } from '../ProfilePreferences/Logic/profilePreferencesHelper';
+import styles from './setupUser.module.scss';
 
 const AccountSetupUser = ({ setCurrentComponent }) => {
   const [selectedLanguage, setSelectedLanguage] = useState();
@@ -18,30 +15,25 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [userData, setUserData] = useRecoilState(UserStateAtom);
+  function handleInput(e) {
+    const { name, value } = e.target;
+    console.log(userData);
+    setUserData((prevValue) => ({ ...prevValue, [name]: value }));
+    console.log(userData);
+  }
+
   useEffect(() => {
     if (!userData) return;
     const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
     return setUserData(refreshUserData);
   }, []);
 
-  const dataURLtoFile = (dataUrl, filename) => {
-    let arr = dataUrl.split(','),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
-  };
-
   return (
     <>
       <div className={`${styles.container}`}>
         <LabeledInput
           inputOptions={{
-            inputName: 'first-name',
+            inputName: 'first_name',
             label: 'Firstname:',
             placeholder: 'Enter Firstname (Max up to 60 characters)',
             value: userData?.first_name,
@@ -54,7 +46,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
         <Box mt={3} />
         <LabeledInput
           inputOptions={{
-            inputName: 'last-name',
+            inputName: 'last_name',
             label: 'Lastname:',
             placeholder: 'Enter Lastname (Max up to 60 characters)',
             value: userData?.last_name,
@@ -91,7 +83,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
         <Box mt={3} />
         <LabeledInput
           inputOptions={{
-            inputName: 'number',
+            inputName: 'phone',
             label: 'Contact Number:',
             placeholder: 'Enter Phone',
             value: userData?.phone,
