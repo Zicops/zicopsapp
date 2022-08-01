@@ -3,13 +3,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import ImageCropper from '../../ImageCropper';
 import styles from '../formComponents.module.scss';
 import { useEffect, useRef, useState } from 'react';
+import { async } from '@firebase/util';
 const UploadAndPreview = ({
   inputName,
   label,
   description = '320 x 320 pixels (Recommended)',
   isPreview,
   isRemove = false,
-  handleChange,
+  handleChange = function () {},
   styleClass = {}
 }) => {
   const [image, setImage] = useState();
@@ -21,6 +22,19 @@ const UploadAndPreview = ({
     setImage(null);
     return;
   };
+
+  function handleImage(e) {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      e.target.value = null;
+      const imageFile = dataURLtoFile(preview, `${file.name}`);
+      const { name, size, type } = imageFile;
+      if (name === file.name && size === file.size && type === file.size)
+        return handleChange((prevValue) => ({ ...prevValue, photo: imageFile }));
+      // else return preview image as it would be the updated image
+    } else setImage(null);
+  }
 
   const handleClick = () => {
     setPop(true);
@@ -43,6 +57,18 @@ const UploadAndPreview = ({
     } else setPreview('');
   }, [image]);
 
+  const dataURLtoFile = (dataUrl, filename) => {
+    let arr = dataUrl?.split(','),
+      mime = arr[0]?.match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr?.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
+
   return (
     <div className={`${styles.uploadAndPreviewContainer} ${styleClass}`}>
       {label && (
@@ -54,11 +80,7 @@ const UploadAndPreview = ({
         <input
           name={inputName}
           accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            if (file) setImage(file);
-            else setImage(null);
-          }}
+          onChange={(e) => handleImage(e)}
           ref={imgRef}
           style={{ display: 'none' }}
           type="file"
@@ -71,7 +93,7 @@ const UploadAndPreview = ({
           Preview
         </button>
         {isRemove && (
-          <button className={`${styles.btn2}`} onClick={handleRemove}>
+          <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
             Remove
           </button>
         )}
