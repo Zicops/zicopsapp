@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client';
 import { INVITE_USERS, userClient } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -18,13 +18,24 @@ export default function MyUserPage() {
     client: userClient
   });
 
-  const emails = useRecoilValue(UsersEmailIdAtom);
+  const [emails, setEmails] = useRecoilState(UsersEmailIdAtom);
 
   const [userType, setUserType] = useState('Internal');
   const [tabData, setTabData] = useState([
     { name: 'Invite User', component: <InviteUser userType={userType} /> }
   ]);
   const [tab, setTab] = useState(tabData[0].name);
+
+  //handle emails
+  function handleMail() {
+    if (emails.length === 0) return console.log('Atleast add one mail id');
+    let emailId = emails.map((item) => item?.props?.children[0]);
+    console.log(emailId);
+    //for removing same email ids
+    emailId = emailId.filter((value, index) => emailId.indexOf(value) === index);
+
+    console.log(emailId);
+  }
 
   // set default tab on comp change
   useEffect(() => {
@@ -75,11 +86,7 @@ export default function MyUserPage() {
             setTab={setTab}
             footerObj={{
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
-              handleSubmit: function () {
-                if (emails.length === 0) return console.log('Atleast add one mail id');
-                let emailId = emails.map((item) => item?.props?.children[0]);
-                console.log(emailId);
-              },
+              handleSubmit: handleMail,
               handleCancel: () => {
                 if (tabData[0]?.name.includes('Invite')) return router.push('/admin/user/my-users');
 

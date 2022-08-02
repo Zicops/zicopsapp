@@ -2,10 +2,9 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import styles from '../../../userComps.module.scss';
 import { useRef, useState } from 'react';
+import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
 
 const CohortMaster = () => {
-  const [image, setImage] = useState();
-  const uploadRef = useRef();
   const allSelectedCohortManager = [];
   const difficultyOptions = [
     { value: 'Open', label: 'Open' },
@@ -80,30 +79,12 @@ const CohortMaster = () => {
 
       <LabeledDropdown styleClass={styles.inputField} dropdownOptions={chorotDropdownOptions} />
 
-      <div className={`${styles.uploadImage}`}>
-        <label>Cohort Image:</label>
-        <div className={`${styles.buttonContainer}`}>
-          <input
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) setImage(file);
-              else setImage(null);
-            }}
-            ref={uploadRef}
-            type="file"
-          />
-          <button className={`${styles.cohortButton2}`} onClick={() => uploadRef?.current?.click()}>
-            Upload Photo
-          </button>
-          <span className={`${styles.uploadImagePreview}`}>
-            <a>Preview</a>
-          </span>
-          <span className={`${styles.uploadImageRemove}`}>
-            <a>Remove</a>
-          </span>
-        </div>
-      </div>
+      <UploadAndPreview
+        inputName={'cohort-image'}
+        label={'Cohort Image'}
+        isRemove={true}
+        description={false}
+      />
     </>
   );
 };

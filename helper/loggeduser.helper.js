@@ -6,3 +6,10 @@ export function checkUser() {
     return;
   }
 }
+
+export function getUserData(state, setState) {
+  if (!state) return;
+  const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
+  setState(userData);
+  return;
+}
