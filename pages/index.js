@@ -22,7 +22,7 @@ export default function Home() {
   React.useEffect(() => {
     console.log(screen.width);
     router.push(isAdmin ? '/admin' : '/');
-  }, []);
+  }, [isAdmin]);
 
   const realSquare = {
     desktop: {
