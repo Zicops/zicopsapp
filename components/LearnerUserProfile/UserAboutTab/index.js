@@ -3,8 +3,11 @@ import SingleUserDetail from '../SingleUserDetail';
 import { userData, orgData, profilePref, subCategory } from '../Logic/userData.helper.js';
 import CategoryPreferences from '../CategoryPreferences';
 import { useState } from 'react';
+import useHandleUserUpdate from '../Logic/useHandleUserUpdate';
+
 const UserAboutTab = () => {
   const [isEditable, setIsEditable] = useState(null);
+  const { updateAboutUser } = useHandleUserUpdate();
 
   return (
     <div className={`${styles.userAboutTab}`}>
