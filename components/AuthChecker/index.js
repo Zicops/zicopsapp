@@ -27,15 +27,16 @@ const AuthChecker = ({ children }) => {
   function authCheck(url) {
     // redirect to login page if accessing a private page and not logged in
     const path = url.split('?')[0];
+    console.log(path);
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
     if (!userData && !PUBLIC_PATHS.includes(path)) {
       //this is temporary will delete later
       setAuthorized(false);
-      if (path === '/') return router.push('/home');
-      router.push({
-        pathname: '/login'
-        // query: { returnUrl: router.asPath }
-      });
+      if (path === '/') router.push('/home');
+      // router.push({
+      //   pathname: '/login'
+      //   // query: { returnUrl: router.asPath }
+      // });
     } else {
       setAuthorized(true);
     }
