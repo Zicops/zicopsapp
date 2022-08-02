@@ -1,16 +1,19 @@
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UserStateAtom, IsUpdatedAtom } from '@/state/atoms/users.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
 const UserHead = () => {
-  function truncateTo16(str) {
-    return str.length > 16 ? str.substring(0, 13) + '...' : str;
-  }
+  const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   const [fullName, setFullName] = useState('');
+
+  //used to not immedialty update the Full name state
   useEffect(() => {
+    if (!isUpdate) return;
     setFullName(`${userProfileData?.first_name} ${userProfileData?.last_name}`);
-  }, []);
+    setIsUpdate(false);
+  }, [isUpdate]);
+
   return (
     <div className={`${styles.userHead}`}>
       <div className={`${styles.editIcon}`}>
@@ -29,9 +32,7 @@ const UserHead = () => {
         </div>
       </div>
 
-      <div className={`${styles.userName}`}>
-        {userProfileData?.first_name ? `${fullName}` : 'Aakash Chakraborty'}
-      </div>
+      <div className={`${styles.userName}`}>{fullName ? `${fullName}` : 'Abhishek Gosh'}</div>
       <div className={`${styles.userRole}`}>Learning manager at accenture</div>
     </div>
   );
