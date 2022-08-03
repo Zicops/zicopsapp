@@ -3,21 +3,22 @@ import { createUploadLink } from 'apollo-upload-client';
 import customFetch from './customFetch';
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
+import { getIdToken } from 'firebase/auth';
 
-function getLatestToken(token) {
+async function getLatestToken(token) {
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   // getting renewed token before time expire
   const expTime = data?.exp - 60;
   const currentTime = new Date().getTime() / 1000;
   if (expTime >= currentTime) return token;
 
- 
-  const newToken = await auth?.currentUser?.getIdToken(true);
+  const newToken = await getIdToken(true);
+
   sessionStorage.setItem('tokenF', newToken);
   return newToken;
 }
 
-const authLink = setContext(async(_, { headers }) => {
+const authLink = setContext(async (_, { headers }) => {
   const initialToken = sessionStorage.getItem('tokenF')
     ? sessionStorage.getItem('tokenF')
     : auth?.currentUser?.accessToken;

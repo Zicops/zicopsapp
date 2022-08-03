@@ -1,6 +1,7 @@
 import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
+import { getIdToken } from 'firebase/auth';
 
 async function getLatestToken(token) {
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
@@ -9,7 +10,8 @@ async function getLatestToken(token) {
   const currentTime = new Date().getTime() / 1000;
   if (expTime >= currentTime) return token;
 
-  const newToken = await auth?.currentUser?.getIdToken(true);
+  const newToken = await getIdToken(true);
+  console.log(newToken);
   sessionStorage.setItem('tokenF', newToken);
   return newToken;
 }
