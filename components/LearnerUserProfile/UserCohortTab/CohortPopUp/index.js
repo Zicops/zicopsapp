@@ -4,7 +4,7 @@ import useHandleCohortTab from '../../Logic/useHandleCohortTab';
 import { cohortTabData } from '../../Logic/userBody.helper';
 
 export default function CohortPopUp({ cohortData, closePopUp = () => {} }) {
-  const { cohortTab, showActiveTab } = useHandleCohortTab();
+  const { cohortTab, setCohortTab, showActiveTab } = useHandleCohortTab();
 
   return (
     <Popup
@@ -22,7 +22,7 @@ export default function CohortPopUp({ cohortData, closePopUp = () => {} }) {
             <li
               key={t.name}
               className={cohortTab === t.name ? `${styles.active}` : ''}
-              onClick={() => setTab(t.name)}>
+              onClick={() => setCohortTab(t.name)}>
               {t.name}
             </li>
           ))}

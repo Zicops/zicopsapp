@@ -2,7 +2,7 @@ import styles from './courseListCard.module.scss';
 import DurationFooter from './DurationFooter';
 import ProgressBarFooter from './ProgressBarFooter';
 
-export default function CourseLIstCard({ courseData, footerType, children }) {
+export default function CourseLIstCard({ courseData, statusData, footerType, children }) {
   return (
     <div className={`${styles.cardContainer}`}>
       {/* course img */}
@@ -27,7 +27,9 @@ export default function CourseLIstCard({ courseData, footerType, children }) {
           {/* level and type */}
           <div className={`${styles.levelAndType}`}>
             <span>{courseData?.level || 'Competent'}</span>
-            <span>{courseData?.type || 'Self Paced'}</span>
+            <span style={statusData ? { color: statusData?.color } : {}}>
+              {statusData ? statusData?.status : courseData?.type || 'Self Paced'}
+            </span>
           </div>
         </div>
 

@@ -13,5 +13,5 @@ export default function useHandleCohortTab() {
     return cohortTabData[0].component;
   }
 
-  return { cohortTab, showActiveTab };
+  return { cohortTab, setCohortTab, showActiveTab };
 }
