@@ -17,11 +17,11 @@ function getLatestToken(token) {
   return newToken;
 }
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext(async(_, { headers }) => {
   const initialToken = sessionStorage.getItem('tokenF')
     ? sessionStorage.getItem('tokenF')
     : auth?.currentUser?.accessToken;
-  const fireBaseToken = getLatestToken(initialToken);
+  const fireBaseToken = await getLatestToken(initialToken);
   return {
     headers: {
       ...headers,
