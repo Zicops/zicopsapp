@@ -12,7 +12,7 @@ async function getLatestToken(token) {
   const currentTime = new Date().getTime() / 1000;
   if (expTime >= currentTime) return token;
 
-  const newToken = await getIdToken(true);
+  const newToken = await getIdToken(auth?.currentUser, true);
 
   sessionStorage.setItem('tokenF', newToken);
   return newToken;
