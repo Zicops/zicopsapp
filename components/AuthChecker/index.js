@@ -32,7 +32,7 @@ const AuthChecker = ({ children }) => {
     if (!userData && !PUBLIC_PATHS.includes(path)) {
       //this is temporary will delete later
       setAuthorized(false);
-      if (path === '/') router.push('/home');
+      if (path === '/') return router.push('/home');
       router.push({
         pathname: '/login'
         // query: { returnUrl: router.asPath }
