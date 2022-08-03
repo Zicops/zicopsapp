@@ -2,17 +2,14 @@ import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 
-function getLatestToken(token) {
+async function getLatestToken(token) {
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   // getting renewed token before time expire
   const expTime = data?.exp - 60;
   const currentTime = new Date().getTime() / 1000;
   if (expTime >= currentTime) return token;
 
-  let newToken;
-  auth?.currentUser?.getIdToken(true).then((data) => {
-    newToken = data;
-  });
+  const newToken = await auth?.currentUser?.getIdToken(true);
   sessionStorage.setItem('tokenF', newToken);
   return newToken;
 }
@@ -25,7 +22,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : ''
+      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : 'Token not found'
     }
   };
 });

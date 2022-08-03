@@ -11,10 +11,8 @@ function getLatestToken(token) {
   const currentTime = new Date().getTime() / 1000;
   if (expTime >= currentTime) return token;
 
-  let newToken;
-  auth?.currentUser?.getIdToken(true).then((data) => {
-    newToken = data;
-  });
+ 
+  const newToken = await auth?.currentUser?.getIdToken(true);
   sessionStorage.setItem('tokenF', newToken);
   return newToken;
 }
@@ -27,7 +25,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : ''
+      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : 'Token Not found'
     }
   };
 });
