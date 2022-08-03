@@ -101,9 +101,9 @@ const LoginScreen = ({ setPage }) => {
   }, [errorMsg, authUser]);
 
   //to check if our user is logged in or not
-  useEffect(() => {
-    if (!loading && !authUser) router.push('/login');
-  }, [authUser, loading]);
+  // useEffect(() => {
+  //   if (!loading && !authUser && ) router.push('/login');
+  // }, [authUser, loading]);
 
   return (
     <div className={`${styles.loginMainContainer}`}>
