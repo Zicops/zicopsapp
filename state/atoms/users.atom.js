@@ -30,3 +30,9 @@ export const UsersEmailIdAtom = atom({
   key: 'usersEmailID',
   default: []
 });
+
+// will delete later if not used
+export const IsUpdatedAtom = atom({
+  key: 'IsUpdated',
+  default: false
+});

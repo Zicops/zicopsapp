@@ -1,35 +1,19 @@
-import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
 });
-
-function getLatestToken(token) {
-  const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-
-  const expTime = data?.exp;
-  const currentTime = new Date().getTime() / 1000;
-  if (expTime >= currentTime) return token;
-  // JSON.parse(atob(token.split('.')[1]));
-  //check if the token is expired or not-> return false if it is not expired
-
-  let newToken;
-  auth?.currentUser?.getIdToken(true).then((data) => {
-    newToken = data;
-  });
-
-  return newToken;
-}
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication tokenF and tokenZ from local storage if it exists
 
-  const initialToken = sessionStorage.getItem('tokenF')
+  const firebaseToken = sessionStorage.getItem('tokenF')
     ? sessionStorage.getItem('tokenF')
     : auth?.currentUser?.accessToken;
-  const firebaseToken = getLatestToken(initialToken);
+
   if (!firebaseToken) return (window.location.pathname = '/login');
   // const token = getLatestToken(tokenF);
   // return the headers to the context so httpLink can read them
@@ -121,6 +105,56 @@ export const MAKE_ADMIN_USER = gql`
 export const INVITE_USERS = gql`
   mutation InviteUsers($emails: String!) {
     inviteUsers(emails: [$emails])
+  }
+`;
+
+export const UPDATE_USER = gql`
+  mutation UpdateUser(
+    $firstName: String!
+    $lastName: String!
+    $Status: String!
+    $Role: String!
+    $IsVerified: Boolean!
+    $IsActive: Boolean!
+    $Gender: String!
+    $CreatedBy: String!
+    $UpdatedBy: String!
+    $Email: String!
+    $Phone: String!
+    $Photo: Upload
+  ) {
+    updateUser(
+      input: {
+        first_name: $firstName
+        last_name: $lastName
+        status: $Status
+        role: $Role
+        is_verified: $IsVerified
+        is_active: $IsActive
+        gender: $Gender
+        created_by: $CreatedBy
+        updated_by: $UpdatedBy
+        email: $Email
+        phone: $Phone
+        Photo: $Photo
+      }
+    ) {
+      id
+      first_name
+      last_name
+      status
+      role
+      is_verified
+      is_active
+      gender
+      created_by
+      updated_by
+      created_at
+      updated_at
+      email
+      phone
+      photo_url
+    }
   }
 `;
 

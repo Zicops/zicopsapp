@@ -76,7 +76,7 @@ const LoginScreen = ({ setPage }) => {
     console.log(res?.data?.login?.is_verified);
     setUserData(getUserObject(res?.data?.login));
 
-    sessionStorage.setItem('loggedUser', res?.data?.login);
+    sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
 
     if (!res?.data?.login?.is_verified) {
       setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
@@ -84,7 +84,7 @@ const LoginScreen = ({ setPage }) => {
       setTimeout(() => {
         setVidIsOpen(true);
         vidRef.current.play();
-      }, 1000);
+      }, 1500);
 
       return;
     }
@@ -134,7 +134,7 @@ const LoginScreen = ({ setPage }) => {
       </ZicopsLogin>
       {!!vidIsOpen && (
         <div className={`${styles.introVideoContainer}`}>
-          <video ref={vidRef} onEnded={() => router.push('/')}>
+          <video ref={vidRef} onEnded={() => router.push('/')} disablePictureInPicture>
             <source src="/videos/loginIntro.mp4" type="video/mp4" />
           </video>
         </div>

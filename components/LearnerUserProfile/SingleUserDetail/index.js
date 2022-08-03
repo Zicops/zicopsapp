@@ -1,7 +1,13 @@
 import styles from '../learnerUserProfile.module.scss';
 import UserInfoWraper from '../UserInfoWraper';
 
-const SingleUserDetail = ({ headingText, userData, toggleEditable, isEditable }) => {
+const SingleUserDetail = ({
+  headingText,
+  userData,
+  toggleEditable,
+  isEditable,
+  updateHandle = function () {}
+}) => {
   return (
     <>
       <div className={`${styles.textEditIcon}`}>
@@ -11,7 +17,12 @@ const SingleUserDetail = ({ headingText, userData, toggleEditable, isEditable })
         </div>
       </div>
       <hr />
-      <UserInfoWraper userData={userData} toggleEditable={toggleEditable} isEditable={isEditable} />
+      <UserInfoWraper
+        userData={userData}
+        toggleEditable={toggleEditable}
+        isEditable={isEditable}
+        handleUpdate={updateHandle}
+      />
     </>
   );
 };

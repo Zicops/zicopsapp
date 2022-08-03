@@ -47,12 +47,13 @@
 
 .editFillIcon img {
   position: absolute;
-  right: 0;
+  right: 20px;
   bottom: 0;
   background-color: $primary;
   padding: 3px;
   border-radius: 50%;
   width: 30px;
+  cursor: pointer;
 }
 
 .userName {
@@ -285,3 +286,9 @@
     padding: 10px;
   }
 }
+.cardSliderBody{
+  width: 100%;
+  height: auto;
+  background-color: black;
+}
+

@@ -11,6 +11,7 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
+import { isPassword } from '@/helper/common.helper';
 
 const ChangePasswordScreen = ({ setPage }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -31,8 +32,12 @@ const ChangePasswordScreen = ({ setPage }) => {
     if (newPassword !== confNewPassword)
       return setToastMsg({
         type: 'danger',
-        message: 'New Password should be same as Confirm Password field'
+        message: 'New password should be same as confirm password field'
       });
+
+    const checkPassword = isPassword(newPassword);
+    if (!!checkPassword.length)
+      return setToastMsg({ type: 'danger', message: `${checkPassword[0]}` });
 
     verifyPasswordResetCode(auth, code)
       .then((data) => {

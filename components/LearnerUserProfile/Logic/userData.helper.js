@@ -1,67 +1,79 @@
 export const userData = [
   {
     image: '/images/svg/account_circle.svg',
-    text: 'Name',
-    info: 'Aakash Chakraborty '
+    inputName: 'first_name',
+    info: 'Aakash',
+    label: 'First Name'
+  },
+  {
+    image: '/images/svg/account_circle.svg',
+    inputName: 'last_name',
+    info: 'Chakraborty',
+    label: 'Last Name'
   },
   {
     image: '/images/svg/mail.svg',
-    text: 'Email',
-    info: 'aakashchakraborty@zicops.com '
-  },
-  {
-    image: '/images/svg/where_to_vote.svg',
-    text: 'Home',
-    info: 'Kolkata, West Bengal, India'
+    inputName: 'email',
+    info: 'aakashchakraborty@zicops.com',
+    label: 'Email'
   },
   {
     image: '/images/svg/call.svg',
-    text: 'Contact',
-    info: '+91 9876543219'
+    inputName: 'phone',
+    info: '+91 9876543219',
+    label: 'Contact'
   }
 ];
 export const orgData = [
   {
     image: '/images/svg/business_center.svg',
-    text: 'Organization',
-    info: 'Accenture '
+    inputName: 'Organization',
+    info: 'Accenture ',
+    label: 'Organization'
   },
   {
     image: '/images/svg/badge.svg',
-    text: 'Role In Organization:il',
-    info: 'Other '
+    inputName: 'Role In Organization',
+    info: 'Other ',
+    label: 'Role In Organization'
   },
   {
     image: '/images/svg/where_to_vote.svg',
-    text: 'Home',
-    info: 'Hinjewadi, Pune, Maharashtra, India'
+    inputName: 'Home',
+    info: 'Hinjewadi, Pune, Maharashtra, India',
+    label: 'Home'
   },
   {
     image: '/images/svg/assignment_ind.svg',
-    text: 'Other Role  Name',
-    info: 'Learning Maneger'
+    inputName: 'Other Role  Name',
+    info: 'Learning Maneger',
+    label: 'Other Role  Name'
   },
   {
     image: '/images/svg/group.svg',
-    text: 'Base Cohort',
-    info: 'IT Develpoment'
+    inputName: 'Base Cohort',
+    info: 'IT Develpoment',
+    label: 'Base Cohort'
   },
   {
     image: '/images/svg/school.svg',
-    text: 'Learning Space Role',
-    info: 'Learner'
+    inputName: 'Learning Space Role',
+    info: 'Learner',
+    label: 'Learning Space Role'
   }
 ];
 export const profilePref = [
   {
     image: '/images/svg/translate.svg',
-    text: 'Base Language',
-    info: 'English'
+    inputName: 'Base Language',
+    info: 'English',
+    label: 'Base Language'
   },
   {
     image: '/images/svg/category.svg',
-    text: 'Base Sub-category',
-    info: 'Java '
+    inputName: 'Base Sub-category',
+    info: 'Java ',
+    label: 'Base Sub-category'
   }
 ];
 export const subCategory = [

@@ -4,14 +4,30 @@ import customFetch from './customFetch';
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 
+function getLatestToken(token) {
+  const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+  // getting renewed token before time expire
+  const expTime = data?.exp - 60;
+  const currentTime = new Date().getTime() / 1000;
+  if (expTime >= currentTime) return token;
+
+  let newToken;
+  auth?.currentUser?.getIdToken(true).then((data) => {
+    newToken = data;
+  });
+  sessionStorage.setItem('tokenF', newToken);
+  return newToken;
+}
+
 const authLink = setContext((_, { headers }) => {
   const initialToken = sessionStorage.getItem('tokenF')
     ? sessionStorage.getItem('tokenF')
     : auth?.currentUser?.accessToken;
+  const fireBaseToken = getLatestToken(initialToken);
   return {
     headers: {
       ...headers,
-      Authorization: initialToken ? `Bearer ${initialToken}` : ''
+      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : ''
     }
   };
 });

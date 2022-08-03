@@ -409,6 +409,54 @@
   }
 }
 
+//Upload and preview
+.uploadAndPreviewContainer {
+  display: flex;
+  align-items: center;
+
+  label {
+    color: $white;
+  }
+
+  .inputContainer {
+    display: inherit;
+    align-items: center;
+    gap: 5px;
+
+    button:nth-last-child(2) {
+      color: $primary;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      cursor: pointer;
+      border: none;
+      background-color: $primary;
+      color: $black;
+      border-radius: 3px;
+      font-size: 0.875rem;
+      // :hover {
+      //   background-color: rgb(74, 144, 144);
+      // }
+    }
+    .description {
+      color: $bgBody;
+      font-size: 12px;
+    }
+    .btn2 {
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      color: $white;
+      font-size: 0.85rem;
+      // text-decoration: underline;
+    }
+    button[disabled] {
+      color: $darkThree;
+    }
+  }
+}
+
 .searchInputContainer {
   position: relative;
   width: 100%;

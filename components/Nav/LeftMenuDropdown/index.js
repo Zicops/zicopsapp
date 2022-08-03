@@ -50,7 +50,7 @@ export default function LeftMenuDropdown() {
         fontSize: '16px',
         alignItems: 'flex-start',
         backgroundColor: 'var(--header-bg)',
-        padding: '8px'
+        padding: '7px 8px'
       },
       comp: (
         <div onClick={!isAdmin ? gotoAdmin : gotoUser}>
