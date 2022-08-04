@@ -21,7 +21,7 @@ const UserHead = () => {
   useEffect(() => {
     if (!userProfileData?.first_name && !userProfileData?.last_name) {
       const userData = getUserData();
-      setUserProfiledata((prevValue) => ({ ...prevValue, ...userData }));
+      setUserProfiledata((prevValue) => ({ ...userData }));
       setFullName(`${userData?.first_name} ${userData?.last_name}`);
       return;
     }
