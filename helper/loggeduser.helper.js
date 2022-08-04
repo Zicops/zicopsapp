@@ -1,15 +1,14 @@
-export function checkUser() {
-  if (window.location.pathname === '/login') return;
-  const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
-  if (!userData) {
-    window.location.pathname = '/login';
-    return;
-  }
-}
+// export function checkUser() {
+//   if (window.location.pathname === '/login') return;
+//   const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
+//   if (!userData) {
+//     window.location.pathname = '/login';
+//     return;
+//   }
+// }
 
-export function getUserData(state, setState) {
-  if (!state) return;
+export function getUserData() {
   const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
-  setState(userData);
-  return;
+  if (!userData) return 'User Data Not Found';
+  return userData;
 }
