@@ -22,6 +22,12 @@ const CoursePageTabs = forwardRef(({ tabData, setActiveTab, activeCourseTab }, r
       <style jsx>
         {`
           .middle_tab {
+            position: sticky;
+            top: 70px;
+            z-index: 1;
+
+            background: var(--dark_one);
+
             display: flex;
             justify-content: center;
             width: 100%;

@@ -19,8 +19,8 @@ const UserInfoWraper = ({
   }
   return (
     <div className={`${styles.userInfoWraper}`}>
-      {userData.map((v) => (
-        <SingleInfo userData={v} isEditable={isEditable} />
+      {userData.map((v, i) => (
+        <SingleInfo key={i} userData={v} isEditable={isEditable} />
       ))}
 
       {isEditable && (

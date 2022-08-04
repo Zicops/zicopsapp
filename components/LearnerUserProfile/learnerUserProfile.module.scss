@@ -2,7 +2,8 @@
 .learnerUserProfile {
   height: auto;
   width: 100%;
-  overflow: auto;
+  // overflow: auto;
+  contain: paint;
   background-color: #1e1e1e;
 }
 .userHead {
@@ -150,12 +151,13 @@
 
 .userTabContainer {
   // height: 75vh;
-  padding: 10px 50px;
+  padding: 50px;
   color: $white;
 }
 
 .cardContainer {
-  margin: 25px auto 50px;
+  margin: auto;
+  margin-bottom: 50px;
 
   .courseTabHeader {
     display: flex;
@@ -286,9 +288,8 @@
     padding: 10px;
   }
 }
-.cardSliderBody{
+.cardSliderBody {
   width: 100%;
   height: auto;
   background-color: black;
 }
-

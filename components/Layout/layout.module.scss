@@ -2,5 +2,7 @@
 
 .main{
     min-height: calc(100vh - ($headerHeight + $footerHeight));
-    overflow: hidden;
+    // overflow: hidden;
+    contain: paint;
+    // https://stackoverflow.com/a/70722270
 }
