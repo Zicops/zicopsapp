@@ -3,7 +3,13 @@ import CourseLIstCard from '@/components/common/CourseLIstCard';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 
-export default function CardContainer({ isAdmin = false, type, footerType, courseData }) {
+export default function CardContainer({
+  isAdmin = false,
+  type,
+  footerType,
+  courseData,
+  statusData
+}) {
   const cardContainerRef = useRef(null);
 
   const [isBoxView, setIsBoxView] = useState(true);
@@ -90,7 +96,10 @@ export default function CardContainer({ isAdmin = false, type, footerType, cours
           {courseData
             ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
             ?.map((course) => (
-              <CourseLIstCard courseData={course} footerType={footerType}></CourseLIstCard>
+              <CourseLIstCard
+                courseData={course}
+                statusData={statusData}
+                footerType={footerType}></CourseLIstCard>
             ))}
         </div>
       )}

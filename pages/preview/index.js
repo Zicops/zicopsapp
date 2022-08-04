@@ -39,7 +39,6 @@ export default function PreviewCourse() {
           <div
             style={{
               backgroundColor: 'var(--tile-bg)',
-              overflow: 'hidden',
               margin: 0,
               padding: 0
             }}>

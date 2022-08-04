@@ -410,7 +410,6 @@
 }
 
 //Upload and preview
-
 .uploadAndPreviewContainer {
   display: flex;
   align-items: center;
@@ -455,5 +454,21 @@
     button[disabled] {
       color: $darkThree;
     }
+  }
+}
+
+.searchInputContainer {
+  position: relative;
+  width: 100%;
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+  }
+
+  input {
+    padding-left: 30px;
   }
 }

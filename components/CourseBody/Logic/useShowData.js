@@ -32,6 +32,8 @@ export default function useShowData(courseContextData) {
 
   useEffect(() => {
     if (activeCourseTab != 'Topics') {
+      if (myRef?.current?.getBoundingClientRect()?.top === 70) return;
+
       window.scrollTo({ behavior: 'smooth', top: myRef.current?.offsetTop - 200 });
     }
   }, [activeCourseTab]);

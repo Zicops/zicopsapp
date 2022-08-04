@@ -1,7 +1,11 @@
-import CourseMaster from '@/components/Tabs/CourseMaster';
 import UserAboutTab from '../UserAboutTab';
 import UserCalenderTab from '../UserCalenderTab';
 import UserCohortTab from '../UserCohortTab';
+import CoursesTab from '../UserCohortTab/CohortPopUp/CoursesTab';
+import DetailsTab from '../UserCohortTab/CohortPopUp/DetailsTab';
+import InviteTab from '../UserCohortTab/CohortPopUp/InviteTab';
+import LeaderboardTab from '../UserCohortTab/CohortPopUp/LeaderboardTab';
+import MembersTab from '../UserCohortTab/CohortPopUp/MembersTab';
 import UserCoursesTab from '../UserCoursesTab';
 import UserLearningDashBoardTab from '../UserLearningDashBoardTab';
 
@@ -76,24 +80,9 @@ export const cohortData = [
 ];
 
 export const cohortTabData = [
-  {
-    name: 'Course Master',
-    component: <CourseMaster />
-  },
-  {
-    name: 'Details',
-    component: <CourseMaster />
-  },
-  {
-    name: 'About',
-    component: <CourseMaster />
-  },
-  {
-    name: 'Topics',
-    component: <CourseMaster />
-  },
-  {
-    name: 'Configuration',
-    component: <CourseMaster />
-  }
+  { name: 'Course Master', component: <DetailsTab /> },
+  { name: 'Members', component: <MembersTab /> },
+  { name: 'Leaderboard', component: <LeaderboardTab /> },
+  { name: 'Courses', component: <CoursesTab /> },
+  { name: 'Invites', component: <InviteTab /> }
 ];

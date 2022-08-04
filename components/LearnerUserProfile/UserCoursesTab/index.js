@@ -16,7 +16,12 @@ const UserCoursesTab = () => {
     { displayType: 'Ongoing Courses', footerType: 'onGoing', data: courseData },
     { displayType: 'Courses Added by Me', footerType: 'added', data: courseData },
     { displayType: 'Assigned Course', footerType: 'assigned', data: courseData },
-    { displayType: 'Completed Course', footerType: 'completed', data: courseData }
+    {
+      displayType: 'Completed Course',
+      footerType: 'completed',
+      data: courseData,
+      statusData: { status: 'Completed', color: 'green' }
+    }
   ];
 
   return (
@@ -28,6 +33,7 @@ const UserCoursesTab = () => {
               type={section.displayType}
               footerType={section.footerType}
               courseData={section.data}
+              statusData={section.statusData}
             />
           );
         })}
