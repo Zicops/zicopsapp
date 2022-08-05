@@ -9,7 +9,10 @@ export default function CourseHeader({
   category,
   subCategory,
   duration,
-  isLoading
+  isLoading,
+  isCourseAssigned,
+  handleAssign,
+  isPreview
 }) {
   return (
     <div className={`${style.heading} row`}>
@@ -66,7 +69,24 @@ export default function CourseHeader({
           </li>
         </ul>
       </div>
-      <div className="icons col_25"></div>
+
+      <div className="icons col_25">
+        {!isPreview && (
+          <>
+            {isCourseAssigned ? (
+              <img height={20} alt="" src="/images/svg/folder-primary.svg" />
+            ) : (
+              <img
+                style={{ cursor: 'pointer' }}
+                src="/images/plus.png"
+                height={20}
+                alt=""
+                onClick={handleAssign}
+              />
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

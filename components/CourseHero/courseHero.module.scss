@@ -1,6 +1,7 @@
 @import '../../styles/base.scss';
 
 .course_header {
+  position: relative;
   // background-image: url(/images/bg-new.png);
   background-position: right center;
   background-repeat: no-repeat;
@@ -112,4 +113,42 @@
   font-size: 0.7vw;
   color: #858f8f;
   margin-bottom: 20px;
+}
+
+.actionIcons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  gap: 10px;
+
+  position: absolute;
+  right: 5%;
+  bottom: 5%;
+
+  color: $primary;
+  cursor: pointer;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    height: 20px;
+    margin: auto 10px;
+  }
+}
+
+.assignCoursePopUp {
+  text-align: center;
+
+  section {
+    margin: 30px;
+
+    label {
+      margin-right: 30px;
+    }
+  }
 }

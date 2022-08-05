@@ -1,19 +1,28 @@
 import { Skeleton } from '@mui/material';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_COURSE } from '../../API/Queries';
 import { getQueryData } from '../../helper/api.helper';
-import { courseContext } from '../../state/contexts/CourseContext';
-import CourseHeader from './CourseHeader';
-import Info from './Info';
-import style from './courseHero.module.scss';
 import { truncateToN } from '../../helper/common.helper';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '../../state/atoms/video.atom';
-import Link from 'next/link';
+import { courseContext } from '../../state/contexts/CourseContext';
+import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
+import InputDatePicker from '../common/InputDatePicker';
+import PopUp from '../common/PopUp';
+import CourseHeader from './CourseHeader';
+import style from './courseHero.module.scss';
+import Info from './Info';
 
 export default function CourseHero({ isPreview = false }) {
+  const [courseAssignData, setCourseAssignData] = useState({
+    endDate: null,
+    isMandatory: false,
+    isCourseAssigned: false
+  });
+  const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const { fullCourse } = useContext(courseContext);
 
@@ -23,6 +32,8 @@ export default function CourseHero({ isPreview = false }) {
   }, []);
 
   const ShowPlayer = () => {
+    if (courseAssignData) return alert('Start the course');
+
     setVideoData({
       ...videoData,
       videoSrc: fullCourse?.previewVideo,
@@ -86,6 +97,9 @@ export default function CourseHero({ isPreview = false }) {
             subCategory={subCategory}
             duration={duration?.toString()}
             isLoading={isLoading}
+            isPreview={isPreview}
+            isCourseAssigned={courseAssignData?.isCourseAssigned}
+            handleAssign={() => setIsAssignPopUpOpen(true)}
           />
 
           <div className={`${style.summary}`}>
@@ -103,7 +117,9 @@ export default function CourseHero({ isPreview = false }) {
           </div>
 
           <div className={`${style.course_big_button}`}>
-            <button onClick={ShowPlayer}>Preview the course</button>
+            <button onClick={ShowPlayer}>
+              {courseAssignData?.isCourseAssigned ? 'Start' : 'Preview'} the course
+            </button>
           </div>
           <div className={`${style.suggested_completion}`}>
             <p>
@@ -121,7 +137,54 @@ export default function CourseHero({ isPreview = false }) {
             <Info name="Must for" data={mustFor?.join(', ')} />
           </div>
         </div>
+
+        <div className={`${style.actionIcons}`}>
+          {/* <div>
+            <img src="/images/plus.png" />
+            Share
+          </div> */}
+          {/* <div>
+            <img src="/images/plus.png" />
+            Feedback
+          </div> */}
+          {/* <div>
+            <img src="/images/plus.png" />
+            Enquire
+          </div> */}
+          {courseAssignData?.isCourseAssigned && <div>Preview</div>}
+        </div>
       </div>
+
+      <PopUp
+        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
+        size="small"
+        positionLeft="50%"
+        submitBtn={{
+          handleClick: () => {
+            setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+            setIsAssignPopUpOpen(false);
+          }
+        }}>
+        <div className={`${style.assignCoursePopUp}`}>
+          <section>
+            <label htmlFor="endDate">Exam End Date:</label>
+            <InputDatePicker
+              selectedDate={courseAssignData?.endDate}
+              changeHandler={(date) => setCourseAssignData({ ...courseAssignData, endDate: date })}
+            />
+          </section>
+
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label="Is Mandatory"
+            name="isMandatory"
+            isChecked={courseAssignData?.isMandatory}
+            changeHandler={(e) =>
+              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
+            }
+          />
+        </div>
+      </PopUp>
     </div>
   );
 }
