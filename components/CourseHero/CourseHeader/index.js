@@ -70,7 +70,7 @@ export default function CourseHeader({
         </ul>
       </div>
 
-      <div className="icons col_25">
+      <div className={`icons col_25 ${style.assignCourseBtn}`}>
         {!isPreview && (
           <div
             tooltip={

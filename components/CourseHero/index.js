@@ -21,7 +21,8 @@ export default function CourseHero({ isPreview = false }) {
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     activateVideoPlayer,
-    assignCourseToUser
+    assignCourseToUser,
+    showPreviewVideo
   } = useHandleCourseHero();
 
   const isLoading = useRecoilValue(isLoadingAtom);
@@ -84,9 +85,13 @@ export default function CourseHero({ isPreview = false }) {
           </div>
 
           <div className={`${style.course_big_button}`}>
-            <button onClick={activateVideoPlayer}>
-              {courseAssignData?.isCourseAssigned ? 'Start' : 'Preview'} the course
-            </button>
+            {courseAssignData?.isCourseAssigned ? (
+              <button onClick={activateVideoPlayer}>
+                {courseAssignData?.isCourseAssigned ? 'Start' : 'Continue'} the course
+              </button>
+            ) : (
+              <button onClick={showPreviewVideo}>Preview the course</button>
+            )}
           </div>
           <div className={`${style.suggested_completion}`}>
             <p>
@@ -118,7 +123,7 @@ export default function CourseHero({ isPreview = false }) {
             <img src="/images/plus.png" />
             Enquire
           </div> */}
-          {courseAssignData?.isCourseAssigned && <div>Preview</div>}
+          {courseAssignData?.isCourseAssigned && <div onClick={showPreviewVideo}>Preview</div>}
         </div>
       </div>
 

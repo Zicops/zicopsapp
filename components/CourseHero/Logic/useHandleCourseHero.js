@@ -50,9 +50,7 @@ export default function useHandleCourseHero() {
     }
   }, [courseData]);
 
-  function activateVideoPlayer() {
-    if (courseAssignData) return alert('Start the course');
-
+  function showPreviewVideo() {
     setVideoData({
       ...videoData,
       videoSrc: fullCourse?.previewVideo,
@@ -62,12 +60,24 @@ export default function useHandleCourseHero() {
     });
   }
 
+  function activateVideoPlayer() {
+    if (courseAssignData?.isCourseAssigned) return alert('Start the course');
+
+    // setVideoData({
+    //   ...videoData,
+    //   videoSrc: fullCourse?.previewVideo,
+    //   type: 'mp4',
+    //   startPlayer: true,
+    //   isPreview: true
+    // });
+  }
+
   async function assignCourseToUser() {
     const sendData = {
       userId: userData?.id,
       userLspId: 'Zicops',
       courseId: fullCourse?.id,
-      addedBy: 'self',
+      addedBy: JSON.stringify({ userId: userData.id, role: 'self' }),
       courseType: fullCourse?.type,
       isMandatory: courseAssignData?.isMandatory,
       courseStatus: 'open',
@@ -89,6 +99,7 @@ export default function useHandleCourseHero() {
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     activateVideoPlayer,
-    assignCourseToUser
+    assignCourseToUser,
+    showPreviewVideo
   };
 }
