@@ -72,19 +72,19 @@ export default function CourseHeader({
 
       <div className="icons col_25">
         {!isPreview && (
-          <>
-            {isCourseAssigned ? (
-              <img height={20} alt="" src="/images/svg/folder-primary.svg" />
-            ) : (
-              <img
-                style={{ cursor: 'pointer' }}
-                src="/images/plus.png"
-                height={20}
-                alt=""
-                onClick={handleAssign}
-              />
-            )}
-          </>
+          <div
+            tooltip={
+              isCourseAssigned ? 'Course is assigned to you' : 'Assign this course to yourself'
+            }
+            flow="down">
+            <img
+              style={{ cursor: 'pointer' }}
+              src={isCourseAssigned ? '/images/svg/folder-primary.svg' : '/images/plus.png'}
+              height={20}
+              alt=""
+              onClick={() => (isCourseAssigned ? {} : handleAssign())}
+            />
+          </div>
         )}
       </div>
     </div>

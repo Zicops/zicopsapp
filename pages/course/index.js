@@ -42,7 +42,8 @@ export default function Course() {
             style={{
               backgroundColor: 'var(--tile-bg)',
               margin: 0,
-              padding: 0
+              padding: 0,
+              contain: 'paint'
             }}>
             {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
 
