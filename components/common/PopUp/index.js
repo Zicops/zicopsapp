@@ -45,34 +45,32 @@ export default function PopUp({
 
             {isFooterVisible && (
               <div className={`${styles.footer}`}>
-                <div className={`form_row`}>
+                {/* <div className={`form_row`}>
                   <div className={`col_25`}></div>
                   <div className={`col_75`}>
-                    <div className={`${styles.button_container}`}>
-                      <button
-                        type="button"
-                        value="cancel"
-                        className={`${
-                          closeBtn.disabled ? styles.btn_cancel_add_disabled : styles.btn_cancel_add
-                        }`}
-                        disabled={closeBtn.disabled}
-                        onClick={closePopUp}>
-                        {closeBtn.name || 'Close'}
-                      </button>
-                      <button
-                        type="button"
-                        value="add"
-                        className={`${
-                          submitBtn.disabled
-                            ? styles.btn_cancel_add_disabled
-                            : styles.btn_cancel_add
-                        }`}
-                        disabled={submitBtn.disabled}
-                        onClick={submitBtn.handleClick}>
-                        {submitBtn.name || 'Submit'}
-                      </button>
-                    </div>
                   </div>
+                </div> */}
+                <div className={`${styles.button_container}`}>
+                  <button
+                    type="button"
+                    value="cancel"
+                    className={`${
+                      closeBtn.disabled ? styles.btn_cancel_add_disabled : styles.btn_cancel_add
+                    }`}
+                    disabled={closeBtn.disabled}
+                    onClick={closePopUp}>
+                    {closeBtn.name || 'Close'}
+                  </button>
+                  <button
+                    type="button"
+                    value="add"
+                    className={`${
+                      submitBtn.disabled ? styles.btn_cancel_add_disabled : styles.btn_cancel_add
+                    }`}
+                    disabled={submitBtn.disabled}
+                    onClick={submitBtn.handleClick}>
+                    {submitBtn.name || 'Submit'}
+                  </button>
                 </div>
               </div>
             )}
