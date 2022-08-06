@@ -158,17 +158,86 @@ export const UPDATE_USER = gql`
   }
 `;
 
-// https://zicops-one.firebaseapp.com/__/auth/action?
-//mode = resetPassword &
-//oobCode = ZCOjb6 - ANGga8SgCe2SXKelCXG2gw1TioDrgjwcy6ykAAAGCJmd7zw &
-//apiKey = AIzaSyD05Uj8S - YumeJUiM4xuO8YFP7rjLJbrP8 &
-//continueUrl = https % 3A % 2F % 2Fdemo.zicops.com &
-//lang = en
-//
+export const ADD_USER_COURSE = gql`
+  mutation addUserCourse(
+    $userId: String!
+    $userLspId: String!
+    $courseId: String!
+    $addedBy: String!
+    $courseType: String!
+    $isMandatory: Boolean!
+    $courseStatus: String!
+    $endDate: String
+  ) {
+    addUserCourse(
+      input: [
+        {
+          user_id: $userId
+          user_lsp_id: $userLspId
+          course_id: $courseId
+          course_type: $courseType
+          added_by: $addedBy
+          is_mandatory: $isMandatory
+          course_status: $courseStatus
+          end_date: $endDate
+        }
+      ]
+    ) {
+      user_course_id
+      user_id
+      user_lsp_id
+      course_id
+      course_type
+      added_by
+      is_mandatory
+      end_date
+      course_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
 
-//1). reset password link to https://demo.zicops.com/reset-password?
-
-//  //check which of them exists... if both doesnt exist redirect to login page acquire tokenF by letting user login with their credentials
-//now use tokenF and send rquest to login mutation as tokenF as header
-//the moment we get access_token from mutation store it in tokenZ and now change the header with tokenZ
-//we have to getUpdatedtoken if tokenZ is expired
+export const UPDATE_USER_COURSE = gql`
+  mutation updateUserCourse(
+    $userId: String!
+    $userLspId: String!
+    $courseId: String!
+    $addedBy: String!
+    $courseType: String!
+    $isMandatory: Boolean!
+    $courseStatus: String!
+    $endDate: String
+  ) {
+    updateUserCourse(
+      input: [
+        {
+          user_id: $userId
+          user_lsp_id: $userLspId
+          course_id: $courseId
+          course_type: $courseType
+          added_by: $addedBy
+          is_mandatory: $isMandatory
+          course_status: $courseStatus
+          end_date: $endDate
+        }
+      ]
+    ) {
+      user_course_id
+      user_id
+      user_lsp_id
+      course_id
+      course_type
+      added_by
+      is_mandatory
+      end_date
+      course_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;

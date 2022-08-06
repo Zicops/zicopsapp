@@ -11,6 +11,7 @@ export default function TabContainer({
   setTab,
   footerObj = {},
   children,
+  customStyles,
   customClass = null
 }) {
   const {
@@ -54,7 +55,7 @@ export default function TabContainer({
         </ul>
       </nav>
 
-      <section className={`${styles.tabSection} ${customClass}`}>{showActiveTab(tab)}</section>
+      <section className={`${styles.tabSection} ${customClass}`} style={customStyles}>{showActiveTab(tab)}</section>
 
       {/* footer */}
       {showFooter && (

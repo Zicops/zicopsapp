@@ -9,7 +9,10 @@ export default function CourseHeader({
   category,
   subCategory,
   duration,
-  isLoading
+  isLoading,
+  isCourseAssigned,
+  handleAssign,
+  isPreview
 }) {
   return (
     <div className={`${style.heading} row`}>
@@ -66,7 +69,24 @@ export default function CourseHeader({
           </li>
         </ul>
       </div>
-      <div className="icons col_25"></div>
+
+      <div className="icons col_25">
+        {!isPreview && (
+          <div
+            tooltip={
+              isCourseAssigned ? 'Course is assigned to you' : 'Assign this course to yourself'
+            }
+            flow="down">
+            <img
+              style={{ cursor: 'pointer' }}
+              src={isCourseAssigned ? '/images/svg/folder-primary.svg' : '/images/plus.png'}
+              height={20}
+              alt=""
+              onClick={() => (isCourseAssigned ? {} : handleAssign())}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

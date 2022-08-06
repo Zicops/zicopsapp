@@ -31,7 +31,13 @@ const UserProfile = () => {
   const [tab, setTab] = useState(tabData[0].name);
   return (
     <>
-      <TabContainer tabData={tabData} tab={tab} setTab={setTab} footerObj={{ showFooter: false }} />
+      <TabContainer
+        customStyles={{ height: 'auto' }}
+        tabData={tabData}
+        tab={tab}
+        setTab={setTab}
+        footerObj={{ showFooter: false }}
+      />
 
       {/* <ProfilePersonelDetail /> */}
       {/* <ProfileOrganizationDetail /> */}
