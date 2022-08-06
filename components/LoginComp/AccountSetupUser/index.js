@@ -1,11 +1,13 @@
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
+import { changeHandler } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../common/FormComponents/LabeledInput';
+import useHandleAddUserDetails from '../Logic/useHandleAddUser';
 import { languages } from '../ProfilePreferences/Logic/profilePreferencesHelper';
 import styles from './setupUser.module.scss';
 
@@ -15,18 +17,17 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [userData, setUserData] = useRecoilState(UserStateAtom);
-  function handleInput(e) {
-    const { name, value } = e.target;
-    console.log(userData);
-    setUserData((prevValue) => ({ ...prevValue, [name]: value }));
-    console.log(userData);
-  }
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+
+  const { isAccountSetupReady } = useHandleAddUserDetails();
 
   useEffect(() => {
     if (!userData) return;
     const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
-    return setUserData(refreshUserData);
-  }, []);
+    setUserData(refreshUserData);
+    setUserOrgData({ ...userOrgData, language: selectedLanguage, is_base_language: true });
+    return;
+  }, [selectedLanguage]);
 
   return (
     <>
@@ -40,7 +41,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             maxLength: 60
           }}
           changeHandler={(e) => {
-            setUserData({ ...userData, first_name: e.target.value });
+            changeHandler(e, userData, setUserData);
           }}
         />
         <Box mt={3} />
@@ -53,7 +54,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             maxLength: 60
           }}
           changeHandler={(e) => {
-            setUserData({ ...userData, last_name: e.target.value });
+            changeHandler(e, userData, setUserData);
           }}
         />
         <Box mt={3} />
@@ -77,7 +78,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             isDisabled: true
           }}
           changeHandler={(e) => {
-            setUserData({ ...userData, email: e.target.value });
+            changeHandler(e, userData, setUserData);
           }}
         />
         <Box mt={3} />
@@ -90,7 +91,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             maxLength: 60
           }}
           changeHandler={(e) => {
-            setUserData({ ...userData, phone: e.target.value });
+            changeHandler(e, userData, setUserData);
           }}
         />
         <Box mt={3} />
@@ -104,13 +105,10 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             Back
           </Button>
           <Button
+            disabled={!isAccountSetupReady}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
             onClick={() => {
-              for (const prop in userData) {
-                if (!userData[prop])
-                  return setToastMsg({ type: 'danger', message: 'Fill all fields!' });
-              }
               setCurrentComponent(1);
             }}>
             Next
