@@ -2,13 +2,14 @@ import { Skeleton } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../helper/common.helper';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
 import { courseContext } from '../../state/contexts/CourseContext';
 import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '../common/InputDatePicker';
 import PopUp from '../common/PopUp';
+import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
 import CourseHeader from './CourseHeader';
 import style from './courseHero.module.scss';
 import Info from './Info';
@@ -26,6 +27,7 @@ export default function CourseHero({ isPreview = false }) {
   } = useHandleCourseHero();
 
   const isLoading = useRecoilValue(isLoadingAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   const router = useRouter();
   const { fullCourse } = useContext(courseContext);
@@ -130,7 +132,7 @@ export default function CourseHero({ isPreview = false }) {
       <PopUp
         popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
         size="small"
-        title='Assign Course To Yourself'
+        title="Assign Course To Yourself"
         positionLeft="50%"
         submitBtn={{ handleClick: assignCourseToUser }}>
         <div className={`${style.assignCoursePopUp}`}>
@@ -138,7 +140,10 @@ export default function CourseHero({ isPreview = false }) {
             <label htmlFor="endDate">Exam End Date:</label>
             <InputDatePicker
               selectedDate={courseAssignData?.endDate}
-              changeHandler={(date) => setCourseAssignData({ ...courseAssignData, endDate: date })}
+              changeHandler={(date) => {
+                setIsPopUpDataPresent(true);
+                setCourseAssignData({ ...courseAssignData, endDate: date });
+              }}
             />
           </section>
 
