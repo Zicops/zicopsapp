@@ -130,6 +130,7 @@ export default function CourseHero({ isPreview = false }) {
       <PopUp
         popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
         size="small"
+        title='Assign Course To Yourself'
         positionLeft="50%"
         submitBtn={{ handleClick: assignCourseToUser }}>
         <div className={`${style.assignCoursePopUp}`}>
