@@ -18,7 +18,7 @@ export function getUserObject(data) {
     email: data?.email || '',
     phone: data?.phone || '',
     photo_url: data?.photo_url || null,
-    photo: data?.photoFile || null,
+    Photo: data?.Photo || null,
     gender: data?.gender || null,
 
     //only do isVerified true when users do its basic account setup
