@@ -100,7 +100,6 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
-
       return router.push('/account-setup');
     }
 
@@ -130,6 +129,11 @@ export default function useHandleAddUserDetails() {
       return setToastMsg({ type: 'danger', message: 'Update User Org Error' });
     });
 
+    if (isError) {
+      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return router.push('/account-setup');
+    }
+
     const dataOrg = resOrg?.data?.addUserOrganizationMap[0];
 
     //updating atom after first mutation call
@@ -155,6 +159,10 @@ export default function useHandleAddUserDetails() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User language Error' });
     });
+    if (isError) {
+      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return router.push('/account-setup');
+    }
 
     const dataLang = resLang?.data?.addUserLanguageMap[0];
     setUserDataOrgLsp((prevValue) => ({
@@ -179,6 +187,11 @@ export default function useHandleAddUserDetails() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User Preferance Error' });
     });
+
+    if (isError) {
+      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return router.push('/account-setup');
+    }
 
     const dataPref = resPref?.data?.addUserPreference[0];
 
@@ -206,6 +219,11 @@ export default function useHandleAddUserDetails() {
       return setToastMsg({ type: 'danger', message: 'Update User role Error' });
     });
 
+    if (isError) {
+      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return router.push('/account-setup');
+    }
+
     const dataRole = resRole?.data?.addUserRoles[0];
 
     setUserDataOrgLsp((prevValue) => ({
@@ -226,7 +244,7 @@ export default function useHandleAddUserDetails() {
       email: userAboutData?.email,
       phone: userAboutData?.phone,
       photo_url: userAboutData?.photo_url || null,
-      Photo: userAboutData?.photo || null,
+      Photo: userAboutData?.Photo || null,
       gender: userAboutData?.gender,
 
       is_verified: true,
