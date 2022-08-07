@@ -27,12 +27,9 @@ const UploadAndPreview = ({
     const file = e.target.files[0];
     if (file) {
       setImage(file);
-      e.target.value = null;
-      const imageFile = dataURLtoFile(preview, `${file.name}`);
-      const { name, size, type } = imageFile;
-      if (name === file.name && size === file.size && type === file.size)
-        return handleChange((prevValue) => ({ ...prevValue, photo: imageFile }));
-      // else return preview image as it would be the updated image
+      setTimeout(() => {
+        e.target.value = null;
+      }, 250);
     } else setImage(null);
   }
 
@@ -56,6 +53,17 @@ const UploadAndPreview = ({
       reader.readAsDataURL(image);
     } else setPreview('');
   }, [image]);
+
+  useEffect(() => {
+    const file = image;
+    if (preview.length > 0) {
+      const imageFile = dataURLtoFile(preview, `${file?.name}`);
+      const { name, size, type } = imageFile;
+      if (name === file.name && size === file.size && type === file.size)
+        return handleChange(imageFile);
+      else return handleChange(imageFile);
+    } else return;
+  }, [preview]);
 
   const dataURLtoFile = (dataUrl, filename) => {
     let arr = dataUrl?.split(','),
