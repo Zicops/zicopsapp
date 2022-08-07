@@ -1,4 +1,4 @@
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Button, Chip, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
@@ -12,12 +12,13 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
   const { updateAboutUser, addUserLearningSpaceDetails } = useHandleAddUserDetails();
 
   const [userAccountData, setUserAccountData] = useRecoilState(UsersOrganizationAtom);
+  const [userBasicData, setUserBasicData] = useRecoilState(UserStateAtom);
 
   useEffect(() => {
-    console.log(userAccountData, userAccountData?.user_role_id);
+    sessionStorage.setItem('loggedUser', JSON.stringify(userBasicData));
     if (!!userAccountData?.user_role_id)
       return sessionStorage.setItem('userAccountSetupData', JSON.stringify(userAccountData));
-  }, [userAccountData]);
+  }, [userAccountData, userBasicData]);
 
   const deleteObject = (subCategory) => {
     const temp = selected;
@@ -86,9 +87,10 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
             onClick={() => {
-              console.log(userAccountData);
               setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
-              //   uncomment it for it to work addUserLearningSpaceDetails(primary);
+
+              // addUserLearningSpaceDetails(primary);
+              // updateAboutUser();
             }}>
             Complete Setup
           </Button>
