@@ -88,7 +88,7 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
             onClick={() => {
               console.log(userAccountData);
               setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
-              addUserLearningSpaceDetails(primary);
+              //   uncomment it for it to work addUserLearningSpaceDetails(primary);
             }}>
             Complete Setup
           </Button>
