@@ -37,6 +37,7 @@ export default function useHandleUserUpdate() {
   const userDataAbout = useRecoilValue(UserStateAtom);
   const [userDataOrgLsp, setUserDataOrgLsp] = useRecoilState(UsersOrganizationAtom);
 
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   // local state
   const [userAboutData, setUserAboutData] = useState(getUserObject());
   const [userOrgData, setUserOrgData] = useState(getUserOrgObject());
