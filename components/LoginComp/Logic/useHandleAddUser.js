@@ -3,6 +3,7 @@ import {
   ADD_USER_LEARNINGSPACE_MAP,
   ADD_USER_ORGANIZATION_MAP,
   ADD_USER_PREFERENCE,
+  ADD_USER_ROLE,
   UPDATE_USER,
   userClient
 } from '@/api/UserMutations';
@@ -14,10 +15,12 @@ import {
   UserStateAtom
 } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleAddUserDetails() {
+  const router = useRouter();
   //have to delete updateAbout later
   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
     client: userClient
@@ -36,6 +39,10 @@ export default function useHandleAddUserDetails() {
   });
 
   const [addPreference, { error: createPreferenceError }] = useMutation(ADD_USER_PREFERENCE, {
+    client: userClient
+  });
+
+  const [addRole, { error: createRoleError }] = useMutation(ADD_USER_ROLE, {
     client: userClient
   });
 
@@ -74,7 +81,8 @@ export default function useHandleAddUserDetails() {
     );
   }, [userOrgData]);
 
-  async function addUserLearningSpaceDetails() {
+  async function addUserLearningSpaceDetails(sub_category) {
+    console.log(userDataOrgLsp, 'data at start of addUserLearningDetails', sub_category);
     const sendLspData = {
       user_id: userDataAbout?.id,
       lsp_id: userOrgData?.lsp_id || 'Zicops Learning Space',
@@ -84,20 +92,57 @@ export default function useHandleAddUserDetails() {
     console.log(sendLspData, 'addUserLearningSpaceDetails');
 
     let isError = false;
-    const res = await addLsp({ variables: sendLspData }).catch((err) => {
+    const resLsp = await addLsp({ variables: sendLspData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
     });
 
-    //updating atom after first mutation call
-    const data = res?.data?.addUserLspMap[0];
-    console.log(data);
-    setUserDataOrgLsp((prevValue) => ({ ...prevValue, user_lsp_id: data?.user_lsp_id }));
+    if (isError) {
+      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
 
+      return router.push('/account-setup');
+    }
+
+    //updating atom after first mutation call
+    const dataLsp = resLsp?.data?.addUserLspMap[0];
+
+    setUserDataOrgLsp((prevValue) => ({ ...prevValue, user_lsp_id: dataLsp?.user_lsp_id }));
+
+    // ORGANIZATION DATA MUTATION
+
+    console.log(userDataOrgLsp, 'data at start of addUserOrganizationDetails');
+    const sendOrgData = {
+      user_id: userDataAbout?.id,
+      employee_id: userOrgData?.employee_id,
+
+      user_lsp_id: dataLsp?.user_lsp_id,
+      organization_id: userOrgData?.organization_id || 'Zicops',
+      organization_role: userOrgData?.organization_role,
+
+      is_active: userOrgData?.org_is_active || true
+    };
+
+    isError = false;
+    const resOrg = await addOrg({ variables: sendOrgData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Update User Org Error' });
+    });
+
+    const dataOrg = resOrg?.data?.addUserOrganizationMap[0];
+
+    //updating atom after first mutation call
+    setUserDataOrgLsp((prevValue) => ({
+      ...prevValue,
+      user_organization_id: dataOrg?.user_organization_id
+    }));
+
+    // LANGUAGE DATA MUTATION
+    console.log(userDataOrgLsp, 'data at start of addUserLanguageDetails');
     const sendLangData = {
       user_id: userDataAbout?.id,
-      user_lsp_id: data?.user_lsp_id,
+      user_lsp_id: dataLsp?.user_lsp_id,
       language: userOrgData?.language,
       is_base_language: userOrgData?.is_base_language || true,
       is_active: userOrgData?.lang_is_active || true
@@ -105,50 +150,69 @@ export default function useHandleAddUserDetails() {
 
     console.log(sendLangData, 'addUserLanguageDetails');
     isError = false;
-    const res2 = await addLanguage({ variables: sendLangData }).catch((err) => {
+    const resLang = await addLanguage({ variables: sendLangData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User language Error' });
     });
-    const data2 = res2?.data?.addUserLanguageMap[0];
-    console.log(data2);
+
+    const dataLang = resLang?.data?.addUserLanguageMap[0];
     setUserDataOrgLsp((prevValue) => ({
       ...prevValue,
-      ...data2
+      user_language_id: dataLang?.user_language_id
     }));
-    console.log(userDataOrgLsp);
-  }
 
-  async function addUserOrganizationDetails() {
-    const sendOrgData = {
+    //ORGANIZATION PREFERANCE MUTATION CALL
+
+    console.log(userDataOrgLsp, 'data at start of addUserPreferenceDetails');
+    const sendPreferenceData = {
       user_id: userDataAbout?.id,
-      employee_id: userOrgData?.employee_id,
-
-      user_lsp_id: userOrgData?.user_lsp_id,
-      organization_id: userOrgData?.organization_id || 'Zicops',
-      organization_role: userOrgData?.organization_role,
-
-      is_active: userOrgData?.org_is_active || true
+      user_lsp_id: dataLsp?.user_lsp_id,
+      sub_category: sub_category,
+      is_base: userOrgData?.is_base,
+      is_active: userOrgData?.preferences_is_active
     };
 
-    console.log(sendOrgData, 'addUserOrganizationDetails');
-
-    let isError = false;
-    const res = await addOrg({ variables: sendOrgData }).catch((err) => {
+    isError = false;
+    const resPref = await addPreference({ variables: sendPreferenceData }).catch((err) => {
       console.log(err);
       isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update User Org Error' });
+      return setToastMsg({ type: 'danger', message: 'Update User Preferance Error' });
     });
 
-    //updating atom after first mutation call
-    setUserDataOrgLsp(
-      getUserOrgObject({
-        ...res?.data?.addUserOrganizationMap,
-        org_is_active: res?.data?.addUserOrganizationMap?.is_active
-      })
-    );
+    const dataPref = resPref?.data?.addUserPreference[0];
 
-    console.log(res, userDataOrgLsp);
+    setUserDataOrgLsp((prevValue) => ({
+      ...prevValue,
+      user_preference_id: dataPref?.user_preference_id,
+      sub_category: dataPref?.sub_category,
+      preferences_is_active: dataPref?.is_active
+    }));
+
+    // ORGANIZATION USER ROLE MUTATION
+    console.log(userDataOrgLsp, 'data at start of addUserRoleDetails');
+    const sendRoleData = {
+      user_id: userDataAbout?.id,
+      user_lsp_id: dataLsp?.user_lsp_id,
+      role: userOrgData?.user_role || 'Learner',
+      is_active: true
+    };
+    console.log(sendRoleData);
+
+    isError = false;
+    const resRole = await addRole({ variables: sendRoleData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Update User role Error' });
+    });
+
+    const dataRole = resRole?.data?.addUserRoles[0];
+
+    setUserDataOrgLsp((prevValue) => ({
+      ...prevValue,
+      user_role: dataRole?.role,
+      user_role_id: dataRole?.user_role_id
+    }));
   }
 
   async function updateAboutUser() {
@@ -184,64 +248,102 @@ export default function useHandleAddUserDetails() {
     console.log(res);
   }
 
-  //   async function addUserLanguageDetails() {
-  //     const sendLangData = {
-  //       user_id: userDataAbout?.id,
-  //       user_lsp_id: userOrgData?.user_lsp_id,
-  //       language: userOrgData?.language,
-  //       is_base_language: userOrgData?.is_base_language || true,
-  //       is_active: userOrgData?.lang_is_active || true
-  //     };
+  // async function addUserOrganizationDetails() {
+  //   console.log(userDataOrgLsp, 'data at start of addUserOrganizationDetails');
+  //   const sendOrgData = {
+  //     user_id: userDataAbout?.id,
+  //     employee_id: userOrgData?.employee_id,
 
-  //     console.log(sendLangData, 'addUserLanguageDetails');
-  //     let isError = false;
-  //     const res = await addLanguage({ variables: sendLangData }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Update User language Error' });
-  //     });
+  //     user_lsp_id: userOrgData?.user_lsp_id,
+  //     organization_id: userOrgData?.organization_id || 'Zicops',
+  //     organization_role: userOrgData?.organization_role,
 
-  //     const data2 = res?.data;
-  //     console.log(data2);
-  //     setUserDataOrgLsp({
-  //       ...data2
-  //     });
-  //     console.log(res, userDataOrgLsp);
-  //   }
+  //     is_active: userOrgData?.org_is_active || true
+  //   };
 
-  async function addUserPreferenceDetails() {
-    const sendPreferenceData = {
-      user_id: userDataAbout?.id,
-      user_lsp_id: userOrgData?.user_lsp_id,
-      sub_category: userOrgData?.sub_category,
-      is_base: userOrgData?.is_base,
-      is_active: userOrgData?.preferences_is_active
-    };
+  //   let isError = false;
+  //   const res = await addOrg({ variables: sendOrgData }).catch((err) => {
+  //     console.log(err);
+  //     isError = !!err;
+  //     return setToastMsg({ type: 'danger', message: 'Update User Org Error' });
+  //   });
 
-    console.log(sendLangData, 'addUserLanguageDetails');
-    let isError = false;
-    const res = await addPreference({ variables: sendPreferenceData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update User Preferance Error' });
-    });
+  //   const data = res?.data?.addUserOrganizationMap[0];
+  //   //updating atom after first mutation call
+  //   setUserDataOrgLsp((prevValue) => ({
+  //     ...prevValue,
+  //     user_organization_id: data?.user_organization_id
+  //   }));
 
-    setUserDataOrgLsp(
-      getUserOrgObject({
-        ...res?.data?.addUserPreference,
-        preferences_is_active: res?.data?.addUserPreference?.is_active
-      })
-    );
-    console.log(res, userDataOrgLsp);
-  }
+  //   console.log(res, userDataOrgLsp);
+  // }
+
+  // async function addUserLanguageDetails() {
+  //   console.log(userDataOrgLsp, 'data at start of addUserLanguageDetails');
+  //   const sendLangData = {
+  //     user_id: userDataAbout?.id,
+  //     user_lsp_id: userOrgData?.user_lsp_id,
+  //     language: userOrgData?.language,
+  //     is_base_language: userOrgData?.is_base_language || true,
+  //     is_active: userOrgData?.lang_is_active || true
+  //   };
+
+  //   console.log(sendLangData, 'addUserLanguageDetails');
+  //   let isError = false;
+  //   const res = await addLanguage({ variables: sendLangData }).catch((err) => {
+  //     console.log(err);
+  //     isError = !!err;
+  //     return setToastMsg({ type: 'danger', message: 'Update User language Error' });
+  //   });
+
+  //   const data = res?.data?.addUserLanguageMap[0];
+  //   setUserDataOrgLsp((prevValue) => ({
+  //     ...prevValue,
+  //     user_language_id: data?.user_language_id
+  //   }));
+
+  //   console.log(userDataOrgLsp);
+  // }
+
+  // async function addUserPreferenceDetails() {
+  //   console.log(userDataOrgLsp, 'data at start of addUserPreferenceDetails');
+  //   const sendPreferenceData = {
+  //     user_id: userDataAbout?.id,
+  //     user_lsp_id: userOrgData?.user_lsp_id,
+  //     sub_category: userOrgData?.sub_category,
+  //     is_base: userOrgData?.is_base,
+  //     is_active: userOrgData?.preferences_is_active
+  //   };
+
+  //   console.log(sendLangData, 'addUserLanguageDetails');
+  //   let isError = false;
+  //   const res = await addPreference({ variables: sendPreferenceData }).catch((err) => {
+  //     console.log(err);
+  //     isError = !!err;
+  //     return setToastMsg({ type: 'danger', message: 'Update User Preferance Error' });
+  //   });
+
+  //   const data = res?.data?.addUserPreference[0];
+
+  //   setUserDataOrgLsp((prevValue) => ({
+  //     ...prevValue,
+  //     user_preference_id: data?.user_preference_id,
+  //     sub_category: data?.sub_category,
+  //     preferences_is_active: data.is_active
+  //   }));
+  //   console.log(userDataOrgLsp);
+  // }
+
+  // async function addUserRoleDetails() {}
 
   return {
     updateAboutUser,
-    addUserOrganizationDetails,
-    isOrganizationSetupReady,
     addUserLearningSpaceDetails,
-
-    isAccountSetupReady,
-    addUserPreferenceDetails
+    isOrganizationSetupReady,
+    isAccountSetupReady
+    // addUserOrganizationDetails,
+    // addUserLanguageDetails,
+    // addUserPreferenceDetails,
+    // addUserRoleDetails
   };
 }

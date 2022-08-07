@@ -27,14 +27,8 @@ export default function useHandleUserDetails() {
   useEffect(() => {
     setUserAboutData(getUserObject(userDataAbout));
     
-  }, [userData, userDataOrgLsp]);
+  }, [userData]);
 
-  useEffect(() => {
-    // setIsAccountSetupReady(
-    //   userAboutData?.first_name && userAboutData?.last_name && userAboutData?.phone
-    // );
-    
-  });
 
   async function updateAboutUser() {
     const sendUserData = {
@@ -69,7 +63,7 @@ export default function useHandleUserDetails() {
     console.log(res);
   }
 
-  return { updateAboutUser, updateUserOrganizationDetails, updateUserLearningSpaceDetails };
+  return { updateAboutUser };
 }
 
 export default function useAddUserDetails() {
