@@ -78,21 +78,16 @@ const LoginScreen = ({ setPage }) => {
 
     sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
 
-    if (!res?.data?.login?.is_verified) {
-      setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
+    if (!!res?.data?.login?.is_verified) {
+      // setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
       router.prefetch('/');
-      setTimeout(() => {
-        setVidIsOpen(true);
-        vidRef.current.play();
-      }, 1500);
-
+      setVidIsOpen(true);
+      vidRef.current.play();
+      // setTimeout(() => {
+      // }, 1500);
       return;
     }
-    // return router.push('/account-setup');
-    //
-    //return ;
-    // setUserState({ ...res, tokenF: authUser?.token });
-    // if (isError) return;
+    return router.push('/account-setup');
   };
 
   useEffect(() => {
