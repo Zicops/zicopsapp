@@ -9,6 +9,7 @@ const UserInfoWraper = ({
   userData,
   isEditable,
   toggleEditable,
+  isOrg = false,
   handleUpdate = function () {}
 }) => {
   const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
@@ -20,7 +21,7 @@ const UserInfoWraper = ({
   return (
     <div className={`${styles.userInfoWraper}`}>
       {userData.map((v, i) => (
-        <SingleInfo key={i} userData={v} isEditable={isEditable} />
+        <SingleInfo key={i} userData={v} isEditable={isEditable} isOrg={isOrg} />
       ))}
 
       {isEditable && (
