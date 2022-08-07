@@ -1,18 +1,41 @@
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Button, Chip, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import useHandleAddUserDetails from '../Logic/useHandleAddUser';
 import styles from './preview.module.scss';
 
 const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) => {
   const [primary, setPrimary] = useState('');
+  const [vidIsOpen, setVidIsOpen] = useState(false);
 
   const { updateAboutUser, addUserLearningSpaceDetails } = useHandleAddUserDetails();
 
+  const router = useRouter();
+
   const [userAccountData, setUserAccountData] = useRecoilState(UsersOrganizationAtom);
   const [userBasicData, setUserBasicData] = useRecoilState(UserStateAtom);
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const vidRef = useRef(null);
+
+  function handleCompleteSetup() {
+    setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
+    console.log(userBasicData, userAccountData);
+    setToastMsg({ type: 'success', message: 'Thank you for your precious time!' });
+    // addUserLearningSpaceDetails(primary);
+    // updateAboutUser();
+    setTimeout(() => {
+      console.log(vidRef.current);
+      router.prefetch('/');
+      setVidIsOpen(true);
+      vidRef.current.play();
+    }, 1500);
+  }
 
   useEffect(() => {
     sessionStorage.setItem('loggedUser', JSON.stringify(userBasicData));
@@ -86,15 +109,17 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
             disabled={primary === ''}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
-            onClick={() => {
-              setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
-
-              // addUserLearningSpaceDetails(primary);
-              // updateAboutUser();
-            }}>
+            onClick={handleCompleteSetup}>
             Complete Setup
           </Button>
         </div>
+        {!!vidIsOpen && (
+          <div className={`${styles.introVideoContainer}`}>
+            <video ref={vidRef} onEnded={() => router.push('/')} disablePictureInPicture>
+              <source src="/videos/loginIntro.mp4" type="video/mp4" />
+            </video>
+          </div>
+        )}
       </div>
     </>
   );
