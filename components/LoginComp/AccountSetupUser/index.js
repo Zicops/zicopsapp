@@ -14,6 +14,8 @@ import styles from './setupUser.module.scss';
 const AccountSetupUser = ({ setCurrentComponent }) => {
   const [selectedLanguage, setSelectedLanguage] = useState();
 
+  const [image, setImage] = useState(null);
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [userData, setUserData] = useRecoilState(UserStateAtom);
@@ -22,12 +24,17 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const { isAccountSetupReady } = useHandleAddUserDetails();
 
   useEffect(() => {
-    if (!userData) return;
-    const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
-    setUserData(refreshUserData);
+    setUserData({ ...userData, Photo: image });
     setUserOrgData({ ...userOrgData, language: selectedLanguage, is_base_language: true });
     return;
-  }, [selectedLanguage]);
+  }, [selectedLanguage, image]);
+
+  useEffect(() => {
+    if (!userData) return;
+    const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
+    setUserData({ ...refreshUserData });
+    return;
+  }, []);
 
   return (
     <>
@@ -95,7 +102,12 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           }}
         />
         <Box mt={3} />
-        <UploadAndPreview inputName={'profile-image'} label={'Profile Picture'} isRemove={true} />
+        <UploadAndPreview
+          inputName={'profile-image'}
+          label={'Profile Picture'}
+          isRemove={true}
+          handleChange={setImage}
+        />
         <Box mt={2} />
       </div>
       <div className={`${styles.navigator}`}>
