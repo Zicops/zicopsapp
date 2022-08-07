@@ -27,7 +27,7 @@ export const userData = [
 export const orgData = [
   {
     image: '/images/svg/business_center.svg',
-    inputName: 'Organization',
+    inputName: 'organization_name',
     info: 'Accenture ',
     label: 'Organization'
   },
@@ -52,7 +52,7 @@ export const orgData = [
 
   {
     image: '/images/svg/school.svg',
-    inputName: 'role',
+    inputName: 'user_role',
     info: 'Learner',
     label: 'Learning Space Role'
   }
@@ -60,13 +60,13 @@ export const orgData = [
 export const profilePref = [
   {
     image: '/images/svg/translate.svg',
-    inputName: 'Base Language',
+    inputName: 'language',
     info: 'English',
     label: 'Base Language'
   },
   {
     image: '/images/svg/category.svg',
-    inputName: 'Base Sub-category',
+    inputName: 'sub_category',
     info: 'Java ',
     label: 'Base Sub-category'
   }
