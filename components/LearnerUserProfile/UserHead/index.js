@@ -1,11 +1,12 @@
 import { getUserData } from '@/helper/loggeduser.helper';
-import { UserStateAtom, IsUpdatedAtom } from '@/state/atoms/users.atom';
+import { UserStateAtom, IsUpdatedAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
 const UserHead = () => {
   const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
   const [userProfileData, setUserProfiledata] = useRecoilState(UserStateAtom);
+  const [userAccountData, setUserAccountdata] = useRecoilState(UsersOrganizationAtom);
   const [fullName, setFullName] = useState(
     `${userProfileData?.first_name} ${userProfileData?.last_name}`
   );
@@ -15,13 +16,16 @@ const UserHead = () => {
     if (!isUpdate) return;
     setFullName(`${userProfileData?.first_name} ${userProfileData?.last_name}`);
     sessionStorage.setItem('loggedUser', JSON.stringify({ ...userProfileData }));
+    sessionStorage.setItem('userAccountSetupData', JSON.stringify({ ...userAccountData }));
     setIsUpdate(false);
   }, [isUpdate]);
 
   useEffect(() => {
     if (!userProfileData?.first_name && !userProfileData?.last_name) {
       const userData = getUserData();
-      setUserProfiledata((prevValue) => ({ ...userData }));
+      const data = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
+      setUserAccountdata({ ...data });
+      setUserProfiledata({ ...userData });
       setFullName(`${userData?.first_name} ${userData?.last_name}`);
       return;
     }
