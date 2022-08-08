@@ -47,7 +47,7 @@ export default function useEditModule(refetchDataAndUpdateRecoil) {
     if (error) return setToastMsg({ type: 'danger', message: 'Module Update Error' });
 
     refetchDataAndUpdateRecoil('module');
-
+    setIsPopUpDataPresent(false);
     // reset local data and close module
     setEditModule(null);
     if (!isError) setToastMsg({ type: 'success', message: 'Module Updated' });
