@@ -23,18 +23,16 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
 
   const vidRef = useRef(null);
 
-  function handleCompleteSetup() {
+  async function handleCompleteSetup() {
     setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
     console.log(userBasicData, userAccountData);
-    setToastMsg({ type: 'success', message: 'Thank you for your precious time!' });
-    addUserLearningSpaceDetails(primary);
-    updateAboutUser();
-    setTimeout(() => {
-      console.log(vidRef.current);
-      router.prefetch('/');
-      setVidIsOpen(true);
-      vidRef.current.play();
-    }, 1500);
+    setToastMsg({ type: 'success', message: 'Account Setup Has been completed!' });
+    await addUserLearningSpaceDetails(primary);
+    await updateAboutUser();
+
+    router.prefetch('/');
+    setVidIsOpen(true);
+    vidRef.current.play();
   }
 
   useEffect(() => {
