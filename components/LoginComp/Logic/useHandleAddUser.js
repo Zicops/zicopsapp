@@ -245,6 +245,7 @@ export default function useHandleAddUserDetails() {
       phone: userAboutData?.phone,
 
       gender: userAboutData?.gender,
+      photo_url: userAboutData?.photo_url || 'not uploaded',
 
       is_verified: true,
       is_active: true,
@@ -254,7 +255,7 @@ export default function useHandleAddUserDetails() {
     };
 
     if (userAboutData?.Photo) sendUserData.Photo = userAboutData?.Photo;
-    if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
+    // if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
 
     console.log(sendUserData, 'updateAboutUser');
 
