@@ -4,6 +4,9 @@ import styles from '../learnerUserProfile.module.scss';
 import UserProgressSlider from './UserProgressSlider';
 import CohortDashboardCardSlider from './CohortDashboardCardSlider';
 import UserMostEngagedSubcategories from './UserMostEngagedSubcategories';
+import UserDashboardCardSlider from './UserDashboardCardSlider';
+import BarGraphView from './BarGraphView';
+import LineChartView from './LineChartView';
 
 const UserLearningDashboardTab = () => {
   return (
@@ -15,11 +18,14 @@ const UserLearningDashboardTab = () => {
       {/* cohort dashboard card slider */}
       {/* user most engaged subcategories */}
       {/* user progress slider */}
-      {/* <Charts /> */}
       {/* <CardSliderBody /> */}
-      <UserProgressSlider />
+      {/* <Charts /> */}
+      <BarGraphView />
+      <UserDashboardCardSlider />
+      <LineChartView/>
       <CohortDashboardCardSlider />
       <UserMostEngagedSubcategories />
+      <UserProgressSlider />
     </div>
   );
 };
