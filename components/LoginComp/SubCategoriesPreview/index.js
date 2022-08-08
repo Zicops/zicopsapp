@@ -26,7 +26,7 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
   async function handleCompleteSetup() {
     setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
     console.log(userBasicData, userAccountData);
-    setToastMsg({ type: 'success', message: 'Account Setup Has been completed!' });
+    setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
     await addUserLearningSpaceDetails(primary);
     await updateAboutUser();
 
