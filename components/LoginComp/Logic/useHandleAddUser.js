@@ -47,7 +47,7 @@ export default function useHandleAddUserDetails() {
   });
 
   //recoil states
-  const userDataAbout = useRecoilValue(UserStateAtom);
+  const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
   const [userDataOrgLsp, setUserDataOrgLsp] = useRecoilState(UsersOrganizationAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -243,8 +243,7 @@ export default function useHandleAddUserDetails() {
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
       phone: userAboutData?.phone,
-      photo_url: userAboutData?.photo_url || null,
-      Photo: userAboutData?.Photo || null,
+
       gender: userAboutData?.gender,
 
       is_verified: true,
@@ -253,6 +252,9 @@ export default function useHandleAddUserDetails() {
       created_by: userAboutData?.created_by || 'Zicops',
       updated_by: userAboutData?.updated_by || 'Zicops'
     };
+
+    if (userAboutData?.Photo) sendUserData.Photo = userAboutData?.Photo;
+    if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
 
     console.log(sendUserData, 'updateAboutUser');
 
@@ -263,7 +265,13 @@ export default function useHandleAddUserDetails() {
       return setToastMsg({ type: 'danger', message: 'Update User about Error' });
     });
 
-    console.log(res);
+    if (isError) {
+      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return router.push('/account-setup');
+    }
+
+    const data = res?.data?.updateUser;
+    setUserDataAbout({ ...data });
   }
 
   // async function addUserOrganizationDetails() {
