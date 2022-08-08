@@ -27,8 +27,8 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
     setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
     console.log(userBasicData, userAccountData);
     setToastMsg({ type: 'success', message: 'Thank you for your precious time!' });
-    // addUserLearningSpaceDetails(primary);
-    // updateAboutUser();
+    addUserLearningSpaceDetails(primary);
+    updateAboutUser();
     setTimeout(() => {
       console.log(vidRef.current);
       router.prefetch('/');
