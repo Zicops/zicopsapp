@@ -6,6 +6,7 @@ const SingleUserDetail = ({
   userData,
   toggleEditable,
   isEditable,
+  isOrg = false,
   updateHandle = function () {}
 }) => {
   return (
@@ -21,6 +22,7 @@ const SingleUserDetail = ({
         userData={userData}
         toggleEditable={toggleEditable}
         isEditable={isEditable}
+        isOrg={isOrg}
         handleUpdate={updateHandle}
       />
     </>

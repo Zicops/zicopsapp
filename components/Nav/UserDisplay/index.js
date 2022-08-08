@@ -25,7 +25,7 @@ const UserDisplay = () => {
   useEffect(() => {
     if (!userProfileData?.first_name && !userProfileData?.last_name) {
       const userData = getUserData();
-      setUserProfileData((prevValue) => ({ ...userData }));
+      setUserProfileData({ ...userData });
       setFullName(`${userData?.first_name} ${userData?.last_name}`);
       return;
     }
@@ -36,16 +36,19 @@ const UserDisplay = () => {
   return (
     <>
       <div className={styles.profile}>
-        <div className={styles.profilepic}>
-          <img
-            src={`${
-              userProfileData?.photo_url ? userProfileData?.photo_url : '/images/swagDP.jpg'
-            }`}
-          />
-        </div>
-        <div className={styles.profilename}>
-          <div className={styles.name}>{fullName ? truncateTo16(`${fullName}`) : ''}</div>
-          <div className={styles.desg}>Zicops</div>
+        <div className={styles.profileInnerContainer}>
+          <div className={styles.profilepic}>
+            <img
+              src={`${
+                userProfileData?.photo_url ? userProfileData?.photo_url : '/images/swagDP.jpg'
+              }`}
+            />
+          </div>
+
+          <div className={styles.profilename}>
+            <div className={styles.name}>{fullName ? truncateTo16(`${fullName}`) : ''}</div>
+            <div className={styles.desg}>Zicops</div>
+          </div>
         </div>
         <RightDropDownMenu />
       </div>

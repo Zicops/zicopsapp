@@ -113,6 +113,12 @@
   /* margin-right: 50px; */
   min-width: 220px;
 }
+
+.profileInnerContainer {
+  display: flex;
+  align-items: center; /* justify-content: space-between; */
+  width: 100%;
+}
 .profilepic {
   display: flex;
   justify-content: center;

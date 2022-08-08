@@ -1,4 +1,5 @@
 @import '../../styles/base.scss';
+
 .learnerUserProfile {
   height: auto;
   width: 100%;
@@ -10,13 +11,26 @@
   width: 100%;
   margin-top: 70px;
   height: 300px;
-  background-image: url('/images/userBackgroundImg.png');
-  background-repeat: no-repeat;
-  background-size: cover;
+  position: relative;
+
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.userHead::before {
+  content: '';
+  background-image: url('/images/banner-image-2.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.2;
+  z-index: -1;
 }
 
 .userImageContainer {
@@ -85,6 +99,14 @@
   display: grid;
   grid-template-columns: 50% 50%;
 }
+
+.userInfoButtonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45%;
+  margin-top: 10px;
+}
 .textEditIcon {
   display: flex;
   justify-content: space-between;
@@ -96,7 +118,7 @@
 .updateBtn {
   border-radius: 5px;
   background-color: $primary;
-  margin-left: 58px;
+  margin-right: 10px;
   color: $black;
 }
 .Icon img {

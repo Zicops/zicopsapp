@@ -27,37 +27,32 @@ export const userData = [
 export const orgData = [
   {
     image: '/images/svg/business_center.svg',
-    inputName: 'Organization',
+    inputName: 'organization_name',
     info: 'Accenture ',
     label: 'Organization'
   },
   {
     image: '/images/svg/badge.svg',
-    inputName: 'Role In Organization',
+    inputName: 'organization_role',
     info: 'Other ',
     label: 'Role In Organization'
   },
   {
     image: '/images/svg/where_to_vote.svg',
-    inputName: 'Home',
+    inputName: 'organization_unit',
     info: 'Hinjewadi, Pune, Maharashtra, India',
-    label: 'Home'
+    label: 'Organization Unit'
   },
   {
     image: '/images/svg/assignment_ind.svg',
-    inputName: 'Other Role  Name',
+    inputName: 'employee_id',
     info: 'Learning Maneger',
-    label: 'Other Role  Name'
+    label: 'Employee id'
   },
-  {
-    image: '/images/svg/group.svg',
-    inputName: 'Base Cohort',
-    info: 'IT Develpoment',
-    label: 'Base Cohort'
-  },
+
   {
     image: '/images/svg/school.svg',
-    inputName: 'Learning Space Role',
+    inputName: 'user_role',
     info: 'Learner',
     label: 'Learning Space Role'
   }
@@ -65,13 +60,13 @@ export const orgData = [
 export const profilePref = [
   {
     image: '/images/svg/translate.svg',
-    inputName: 'Base Language',
+    inputName: 'language',
     info: 'English',
     label: 'Base Language'
   },
   {
     image: '/images/svg/category.svg',
-    inputName: 'Base Sub-category',
+    inputName: 'sub_category',
     info: 'Java ',
     label: 'Base Sub-category'
   }

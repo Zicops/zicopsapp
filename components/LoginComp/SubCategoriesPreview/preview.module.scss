@@ -3,18 +3,21 @@
 .container {
   width: 100%;
   color: $white;
+  margin: 0;
+  padding: 0;
+  position: relative;
 
-  .title{
+  .title {
     margin-bottom: 4px;
     font-weight: 700;
     font-size: 16px;
   }
-  .subtitle{
+  .subtitle {
     margin-bottom: 16px;
     font-size: 12px;
   }
 
-  .checkbox_container{
+  .checkbox_container {
     padding: 8px 0;
     font-size: 14px;
     border-radius: 5px;
@@ -28,7 +31,7 @@
     position: relative;
   }
 
-  .checkbox_container_selected{
+  .checkbox_container_selected {
     //padding: 8px 0;
     //font-size: 14px;
     //border-radius: 5px;
@@ -44,29 +47,29 @@
   }
 }
 
-.input_margin_transform{
+.input_margin_transform {
   margin-left: 16px;
   text-transform: none;
 }
-.transform_text{
+.transform_text {
   text-transform: none;
 }
 
-.navigatorBtns{
+.navigatorBtns {
   width: 230px;
   display: flex;
   justify-content: space-between;
 
-  .input_margin_transform{
+  .input_margin_transform {
     margin-left: 16px;
     text-transform: none;
   }
-  .transform_text{
+  .transform_text {
     text-transform: none;
   }
 }
 
-.navigator{
+.navigator {
   width: 100%;
   background-image: url('/images/starrySky2.png');
   background-position: fixed;
@@ -78,4 +81,19 @@
 .container::-webkit-scrollbar {
   width: 0px;
   background: transparent;
+}
+
+.introVideoContainer {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: $black;
+  z-index: 1000;
+  video {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
 }
