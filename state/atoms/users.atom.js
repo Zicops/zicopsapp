@@ -49,7 +49,7 @@ export function getUserOrgObject(data) {
 
     //organization data
     organization_name: data?.user_organization_name || 'Zicops',
-    organization_unit: data?.organization_unit || 'Wakad, Pune, Maharastra ,India',
+    organization_unit: data?.organization_unit || 'Zicops ,India',
 
     user_organization_id: data?.user_organization_id || 'Zicops, Pune',
     organization_id: data?.organization_id || 'Zicops',
