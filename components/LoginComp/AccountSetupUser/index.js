@@ -12,7 +12,7 @@ import { languages } from '../ProfilePreferences/Logic/profilePreferencesHelper'
 import styles from './setupUser.module.scss';
 
 const AccountSetupUser = ({ setCurrentComponent }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState();
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
 
   const [image, setImage] = useState(null);
 
@@ -27,7 +27,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
     setUserData({ ...userData, Photo: image });
     setUserOrgData({ ...userOrgData, language: selectedLanguage, is_base_language: true });
     return;
-  }, [selectedLanguage, image]);
+  }, [image]);
 
   useEffect(() => {
     if (!userData) return;
@@ -70,7 +70,8 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             label: 'Base Language:',
             placeholder: 'Select Language',
             options: languages,
-            value: { value: selectedLanguage, label: selectedLanguage }
+            value: { value: selectedLanguage, label: selectedLanguage },
+            isDisabled: true
           }}
           changeHandler={(e) => setSelectedLanguage(e.value)}
         />
