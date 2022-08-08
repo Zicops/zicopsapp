@@ -1,5 +1,6 @@
 import { GET_COURSE } from '@/api/Queries';
 import { ADD_USER_COURSE, userClient } from '@/api/UserMutations';
+import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { getQueryData } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -22,12 +23,13 @@ export default function useHandleCourseHero() {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const userData = useRecoilValue(UserStateAtom);
 
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
     isMandatory: false,
-    isCourseAssigned: false
+    isCourseAssigned: true
   });
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
 
@@ -73,6 +75,7 @@ export default function useHandleCourseHero() {
   }
 
   async function assignCourseToUser() {
+    setIsPopUpDataPresent(false);
     const sendData = {
       userId: userData?.id,
       userLspId: 'Zicops',

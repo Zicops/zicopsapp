@@ -121,6 +121,10 @@
   justify-content: center;
   text-align: center;
 
+  background-color: rgba($black, 0.4);
+  padding: 10px;
+  border-radius: 5px;
+
   gap: 10px;
 
   position: absolute;
@@ -133,6 +137,16 @@
   div {
     display: flex;
     align-items: center;
+    gap: 5px;
+
+    &:hover {
+      text-decoration: underline;
+      svg {
+        path {
+          fill: $primary;
+        }
+      }
+    }
   }
 
   img {
