@@ -1,8 +1,24 @@
-import { useContext, useEffect, useState } from 'react';
+import { ADD_USER_BOOKMARK, userClient } from '@/api/UserMutations';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import { VideoAtom } from '@/state/atoms/video.atom';
+import { courseContext } from '@/state/contexts/CourseContext';
+import { useMutation } from '@apollo/client';
+import { useContext, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
 import { BOX } from './customVideoPlayer.helper';
 
 export default function useSaveData(videoElement) {
+  const [addUserBookMark] = useMutation(ADD_USER_BOOKMARK, {
+    client: userClient
+  });
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const userData = useRecoilValue(UserStateAtom);
+
+  const { fullCourse } = useContext(courseContext);
   const { addBookmarkData, addNotes } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
@@ -60,7 +76,7 @@ export default function useSaveData(videoElement) {
     return canvas?.toDataURL('image/png');
   }
 
-  function handleSaveBookmark(timestamp) {
+  async function handleSaveBookmark(timestamp) {
     const image = captureImageOfVideo();
     setBookmarkData({
       ...bookmarkData,
@@ -75,7 +91,26 @@ export default function useSaveData(videoElement) {
       captureImg: image,
       timestamp
     });
-    alert('Bookmark added');
+
+    const sendBookMarkData = {
+      user_id: userData?.id,
+      user_lsp_id: 'Zicops',
+      user_course_id: 'RandomCourseId',
+      course_id: fullCourse?.id,
+      topic_id: videoData?.topicContent[0]?.topicId,
+      module_id: videoData?.currentModuleId,
+      name: bookmarkData?.title,
+      time_stamp: `${timestamp}`,
+      is_active: true
+    };
+    const res = await addUserBookMark({ variables: sendBookMarkData }).catch((err) => {
+      console.log(err);
+      return setToastMsg({ type: 'danger', message: 'Error while adding bookmark!' });
+    });
+
+    console.log(res?.data?.addUserBookmark[0]);
+    return setToastMsg({ type: 'success', message: 'BookMark added' });
+    console.log(bookmarkData, sendBookMarkData);
   }
 
   function handleNotesChange(e) {
