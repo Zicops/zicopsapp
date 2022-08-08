@@ -50,7 +50,11 @@ const UserHead = () => {
       </div>
 
       <div className={`${styles.userName}`}>{fullName ? `${fullName}` : ''}</div>
-      <div className={`${styles.userRole}`}>Learning manager at accenture</div>
+      <div className={`${styles.userRole}`}>
+        {userAccountData?.organization_role
+          ? `${userAccountData?.organization_role} at ${userAccountData?.organization_name}`
+          : ''}
+      </div>
     </div>
   );
 };
