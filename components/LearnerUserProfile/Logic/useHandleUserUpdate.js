@@ -103,13 +103,13 @@ export default function useHandleUserUpdate() {
       first_name: userAboutData?.first_name,
       last_name: userAboutData?.last_name,
 
-      status: userAboutData?.status,
+      status: userAboutData?.status || 'Active',
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
       phone: userAboutData?.phone,
-      photo_url: userAboutData?.photo_url || null,
-      Photo: userAboutData?.photo || null,
+
       gender: userAboutData?.gender,
+      photo_url: userAboutData?.photo_url,
 
       is_verified: true,
       is_active: true,

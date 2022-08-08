@@ -239,13 +239,13 @@ export default function useHandleAddUserDetails() {
       first_name: userAboutData?.first_name,
       last_name: userAboutData?.last_name,
 
-      status: userAboutData?.status,
+      status: userAboutData?.status || 'Active',
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
       phone: userAboutData?.phone,
 
       gender: userAboutData?.gender,
-      photo_url: userAboutData?.photo_url || 'not uploaded',
+      photo_url: userAboutData?.photo_url,
 
       is_verified: true,
       is_active: true,
