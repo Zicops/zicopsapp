@@ -92,6 +92,11 @@ export default function useSaveData(videoElement) {
       timestamp
     });
 
+    if (!bookmarkData?.title)
+      return setToastMsg({ type: 'danger', message: 'BookMark title cannot be empty!' });
+
+    console.log(bookmarkData);
+
     const sendBookMarkData = {
       user_id: userData?.id,
       user_lsp_id: 'Zicops',

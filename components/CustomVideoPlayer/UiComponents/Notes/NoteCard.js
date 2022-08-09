@@ -33,6 +33,7 @@ export default function NoteCard({
   const { fullCourse } = useContext(courseContext);
 
   async function saveNotes() {
+    // if (noteObj?.note.length === 0) return;
     console.log(noteObj);
 
     const sendNotesData = {
@@ -47,6 +48,8 @@ export default function NoteCard({
       is_active: true,
       status: 'Saved'
     };
+
+    if (sendNotesData?.details.length === 0) return;
 
     if (noteObj?.id) {
       sendNotesData.user_notes_id = noteObj?.id;
