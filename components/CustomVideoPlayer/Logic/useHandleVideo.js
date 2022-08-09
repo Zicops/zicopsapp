@@ -41,9 +41,11 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         type: videoData?.type,
         isPreview: videoData?.isPreview,
         shouldShowPlayer: videoData?.startPlayer
-      }
+      },
+      activeModule: { index: videoData?.currentModuleIndex, id: videoData?.currentModuleId },
+      activeTopic: { index: videoData?.currentTopicIndex, id: videoData?.topicContent[0]?.topicId }
     });
-  }, [playerState]);
+  }, [videoData, playerState]);
 
   // hide control bar if no mouse movement for 2.5 sec
   const duration = 2500;
