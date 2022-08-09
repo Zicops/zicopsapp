@@ -112,8 +112,8 @@ export const MAKE_ADMIN_USER = gql`
 `;
 
 export const INVITE_USERS = gql`
-  mutation InviteUsers($emails: String!) {
-    inviteUsers(emails: [$emails])
+  mutation InviteUsers($emails: [String!]!) {
+    inviteUsers(emails: $emails)
   }
 `;
 

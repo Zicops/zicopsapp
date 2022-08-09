@@ -1,3 +1,4 @@
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersEmailIdAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { INVITE_USERS, userClient } from 'API/UserMutations';
@@ -18,7 +19,8 @@ export default function MyUserPage() {
     client: userClient
   });
 
-  const [emails, setEmails] = useRecoilState(UsersEmailIdAtom);
+  const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [userType, setUserType] = useState('Internal');
   const [tabData, setTabData] = useState([
@@ -27,14 +29,20 @@ export default function MyUserPage() {
   const [tab, setTab] = useState(tabData[0].name);
 
   //handle emails
-  function handleMail() {
-    if (emails.length === 0) return console.log('Atleast add one mail id');
-    let emailId = emails.map((item) => item?.props?.children[0]);
-    console.log(emailId);
-    //for removing same email ids
-    emailId = emailId.filter((value, index) => emailId.indexOf(value) === index);
+  async function handleMail() {
+    if (emailId.length === 0)
+      return setToastMsg({ type: 'danger', message: 'Add atleast one email!' });
+    let emails = emailId.map((item) => item?.props?.children[0]);
+    console.log(emails, emailId);
+    //for removing duplicate email ids
+    emails = emails.filter((value, index) => emails.indexOf(value) === index);
+    console.log(emails);
 
-    console.log(emailId);
+    const resEmail = await inviteUsers({ variables: { emails: emails } }).catch((err) => {
+      console.log(err);
+    });
+
+    console.log(resEmail);
   }
 
   // set default tab on comp change
