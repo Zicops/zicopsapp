@@ -53,10 +53,10 @@ export default function NoteCard({
       sendNotesData.user_notes_id = noteObj?.id;
       delete sendNotesData?.user_course_id;
       sendNotesData.is_active = sendNotesData?.details.length === 0 ? false : true;
+      console.log(sendNotesData);
     }
 
-    if (sendNotesData?.details.length === 0) return;
-    console.log(sendNotesData);
+    if (sendNotesData?.details.length === 0 && !sendNotesData?.user_id) return;
 
     const resNotes = noteObj?.id
       ? await updateUserNotes({ variables: sendNotesData }).catch((err) => {
