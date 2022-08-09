@@ -34,7 +34,7 @@ export default function NoteCard({
 
   async function saveNotes() {
     // if (noteObj?.note.length === 0) return;
-    console.log(noteObj);
+    // console.log(noteObj);
 
     const sendNotesData = {
       user_id: userData?.id,
@@ -49,14 +49,14 @@ export default function NoteCard({
       status: 'Saved'
     };
 
-    if (sendNotesData?.details.length === 0) return;
-
     if (noteObj?.id) {
       sendNotesData.user_notes_id = noteObj?.id;
       delete sendNotesData?.user_course_id;
+      sendNotesData.is_active = sendNotesData?.details.length === 0 ? false : true;
     }
 
-    console.log(noteObj);
+    if (sendNotesData?.details.length === 0) return;
+    console.log(sendNotesData);
 
     const resNotes = noteObj?.id
       ? await updateUserNotes({ variables: sendNotesData }).catch((err) => {
