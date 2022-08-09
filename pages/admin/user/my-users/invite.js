@@ -40,6 +40,7 @@ export default function MyUserPage() {
 
     const resEmail = await inviteUsers({ variables: { emails: emails } }).catch((err) => {
       console.log(err);
+      return setToastMsg({ type: 'danger', message: `${err}` });
     });
 
     console.log(resEmail);
