@@ -47,6 +47,8 @@
   cursor: pointer;
 }
 .footer {
+  display: flex;
+  justify-content: center;
   padding: 30px;
 }
 .btn_cancel_add {

@@ -23,7 +23,7 @@
 .back_btn {
   position: absolute;
   left: 50px;
-  top: calc(6vh + 70px);
+  top: 6vh;
   cursor: pointer;
 }
 .course_header_text {
@@ -101,13 +101,22 @@
   border: 2px solid $primary;
   cursor: pointer;
   transition: 0.5s;
+
+  &:disabled {
+    border-color: $darkThree;
+    color: $darkThree;
+    opacity: 0.5;
+    cursor: no-drop;
+  }
 }
 
 .course_big_button button:hover {
-  color: #000000;
-  border: 2px solid #000000;
-  background-color: $primary;
-  background-image: url(/images/preview-button.png);
+  &:not(:disabled) {
+    color: #000000;
+    border: 2px solid #000000;
+    background-color: $primary;
+    background-image: url(/images/preview-button.png);
+  }
 }
 .suggested_completion p {
   font-size: 0.7vw;
@@ -121,6 +130,10 @@
   justify-content: center;
   text-align: center;
 
+  background-color: rgba($black, 0.4);
+  padding: 10px;
+  border-radius: 5px;
+
   gap: 10px;
 
   position: absolute;
@@ -133,6 +146,16 @@
   div {
     display: flex;
     align-items: center;
+    gap: 5px;
+
+    &:hover {
+      text-decoration: underline;
+      svg {
+        path {
+          fill: $primary;
+        }
+      }
+    }
   }
 
   img {

@@ -70,7 +70,7 @@ const CourseContextProvider = (props) => {
       outcomes: data.outcomes || [],
       created_at: data.created_at || '',
       updated_at: data.updated_at || '',
-      type: data.type || '',
+      type: data.type || 'self-paced',
       prequisites: data.prequisites || [],
       goodFor: data.goodFor || [],
       mustFor: data.mustFor || [],

@@ -1,3 +1,4 @@
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery } from '@apollo/client/react';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -9,7 +10,13 @@ import {
   GET_TOPIC_RESOURCES_BY_COURSE_ID,
   queryClient
 } from '../../../API/Queries';
-import { filterResources, sortArrByKeyInOrder } from '../../../helper/data.helper';
+import {
+  filterAndSortChapter,
+  filterAndSortTopicsBasedOnModuleId,
+  filterResources,
+  filterTopicContent,
+  sortArrByKeyInOrder
+} from '../../../helper/data.helper';
 import {
   ChapterAtom,
   isLoadingAtom,
@@ -18,7 +25,7 @@ import {
   TopicAtom,
   TopicContentAtom
 } from '../../../state/atoms/module.atoms';
-import { VideoAtom } from '../../../state/atoms/video.atom';
+import { UserCourseDataAtom } from '../../../state/atoms/video.atom';
 import { tabs } from './courseBody.helper';
 
 export default function useShowData(courseContextData) {
@@ -39,6 +46,9 @@ export default function useShowData(courseContextData) {
   }, [activeCourseTab]);
 
   // recoil states
+  const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
   const [moduleData, updateModuleData] = useRecoilState(ModuleAtom);
   const [chapter, updateChapterData] = useRecoilState(ChapterAtom);
   const [topicData, updateTopicData] = useRecoilState(TopicAtom);
@@ -68,39 +78,121 @@ export default function useShowData(courseContextData) {
       client: queryClient
     });
 
-  // load module, chapter, topic data and set in recoil
   useEffect(() => {
+    if (!userCourseData?.activeModule?.id) return;
+
+    if (userCourseData?.activeModule?.id !== selectedModule?.value) {
+      setSelectedModule({
+        label: `MODULE ${userCourseData?.activeModule?.index + 1}`,
+        value: userCourseData?.activeModule?.id
+      });
+    }
+  }, [userCourseData?.activeModule]);
+
+  // load module, chapter, topic data and set in recoil
+  useEffect(async () => {
     if (!fullCourse.id) return;
     setIsLoading(
       loadingModuleData && loadingChapterData && loadingTopicData && loadingResourceData
     );
+    const moduleRes = await loadModuleData({
+      variables: { course_id: fullCourse.id },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
+      if (err) alert('Module Load Error');
+    });
+    const chapterRes = await loadChapterData({
+      variables: { course_id: fullCourse.id },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
+      if (err) alert('Chapter Load Error');
+    });
+    const topicRes = await loadTopicData({
+      variables: { course_id: fullCourse.id },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
+      if (err) alert('Module Load Error');
+    });
+    const topicContentRes = await loadTopicContentData({
+      variables: { course_id: fullCourse.id },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
+      if (err) alert('Module Load Error');
+    });
+    const moduleDataLoaded = moduleRes?.data?.getCourseModules;
+    const chapterDataLoaded = chapterRes?.data?.getCourseChapters;
+    const topicDataLoaded = topicRes?.data?.getTopics;
+    const topicContentDataLoaded = topicContentRes?.data?.getTopicContentByCourseId;
 
-    loadModuleData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
-      ({ data }) => {
-        if (errorModuleData) alert('Module Load Error');
+    // new logic
+    topicDataLoaded
+      ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
+      ?.forEach((topic) => {
+        const filteredTopicContent = filterTopicContent(topicContentDataLoaded, topic?.id);
+        // console.log(filteredTopicContent);
+        topic.topicContentData = filteredTopicContent;
+        topic.userProgress = {};
+      });
+    chapterDataLoaded?.sort((m1, m2) => m1?.sequence - m2?.sequence);
+    moduleDataLoaded
+      ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
+      ?.forEach((mod) => {
+        const filteredChapterData = filterAndSortChapter(chapterDataLoaded, mod?.id);
+        const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicDataLoaded, mod?.id);
 
-        const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence', 1);
-        updateModuleData(sortedData || []);
+        mod.chapterData = filteredChapterData;
+        mod.topicData = filteredTopicData;
+      });
 
-        setSelectedModule(getModuleOptions(sortedData)[0] || {});
-      }
-    );
+    setUserCourseData({
+      ...userCourseData,
+      allModules: moduleDataLoaded,
+      activeModule: { index: 0, id: moduleDataLoaded[0]?.id }
+    });
 
-    loadChapterData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
-      ({ data }) => {
-        if (errorChapterData) alert('Chapter Load Error');
+    // previous logic
+    const sortedData = sortArrByKeyInOrder([...moduleDataLoaded], 'sequence', 1);
+    updateModuleData(sortedData || []);
+    setSelectedModule(getModuleOptions(sortedData)[0] || {});
 
-        updateChapterData(data.getCourseChapters || []);
-      }
-    );
+    updateChapterData(chapterDataLoaded || []);
+    updateTopicData(topicDataLoaded || []);
+    updateTopicContent(topicContentDataLoaded || []);
 
-    loadTopicData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
-      ({ data }) => {
-        if (errorTopicData) alert('Topic Load Error');
+    // loadModuleData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+    //   ({ data }) => {
+    //     if (errorModuleData) alert('Module Load Error');
 
-        updateTopicData(data.getTopics || []);
-      }
-    );
+    //     const sortedData = sortArrByKeyInOrder([...data.getCourseModules], 'sequence', 1);
+    //     updateModuleData(sortedData || []);
+
+    //     setSelectedModule(getModuleOptions(sortedData)[0] || {});
+    //   }
+    // );
+
+    // loadChapterData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+    //   ({ data }) => {
+    //     if (errorChapterData) alert('Chapter Load Error');
+
+    //     updateChapterData(data.getCourseChapters || []);
+    //   }
+    // );
+
+    // loadTopicData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+    //   ({ data }) => {
+    //     if (errorTopicData) alert('Topic Load Error');
+
+    //     updateTopicData(data.getTopics || []);
+    //   }
+    // );
+
+    // loadTopicContentData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
+    //   ({ data }) => {
+    //     if (errorTopicContentData) alert('Topic Content Load Error');
+
+    //     updateTopicContent(data.getTopicContentByCourseId || []);
+    //   }
+    // );
 
     loadResourcesData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
@@ -109,15 +201,22 @@ export default function useShowData(courseContextData) {
         updateResources(data.getResourcesByCourseId || []);
       }
     );
-
-    loadTopicContentData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
-      ({ data }) => {
-        if (errorTopicContentData) alert('Topic Content Load Error');
-
-        updateTopicContent(data.getTopicContentByCourseId || []);
-      }
-    );
   }, [fullCourse]);
+
+  useEffect(() => {
+    if (errorModuleData) return setToastMsg({ type: 'danger', message: 'Module Load Error' });
+    if (errorChapterData) return setToastMsg({ type: 'danger', message: 'Chapter Load Error' });
+    if (errorTopicData) return setToastMsg({ type: 'danger', message: 'Topic Load Error' });
+    if (errorTopicContentData)
+      return setToastMsg({ type: 'danger', message: 'Topic Content Load Error' });
+    if (errorResourcesData) return setToastMsg({ type: 'danger', message: 'Resourses Load Error' });
+  }, [
+    errorModuleData,
+    errorChapterData,
+    errorTopicData,
+    errorTopicContentData,
+    errorResourcesData
+  ]);
 
   // function saveContentInState(data) {
   //   let localData = [...topicContent, ...data];
@@ -204,6 +303,10 @@ export default function useShowData(courseContextData) {
   function handleModuleChange(e) {
     setSelectedModule(e);
 
+    setUserCourseData({
+      ...userCourseData,
+      activeModule: { id: e?.value, index: e?.label?.split(' ')[1] - 1 }
+    });
     setIsResourceShown(null);
   }
 

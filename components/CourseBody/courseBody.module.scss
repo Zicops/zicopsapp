@@ -144,27 +144,46 @@
   width: 100%;
   height: 10px;
   margin: auto;
-  background: #343535;
+  background: $darkOne;
   border: 1px solid #ffffff;
   position: relative;
+
+  .progressBarFill {
+    position: relative;
+    height: 100%;
+    width: 0%;
+    background-color: $primary;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0%;
+      left: 100%;
+      transform: translateY(-35%);
+      clip-path: polygon(100% 50%, 0 0, 0 100%);
+      background-color: $primary;
+      height: 30px;
+      width: 30px;
+    }
+  }
 }
-.progress_bar:after {
-  content: '';
-  width: 50%;
-  height: 8px;
-  background: #858f8f;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.progress_bar img {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -33%);
-  width: 30px;
-  z-index: 2;
-}
+// .progress_bar:after {
+//   content: '';
+//   width: 50%;
+//   height: 8px;
+//   background: #858f8f;
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+// }
+// .progress_bar img {
+//   position: absolute;
+//   top: 0;
+//   left: 50%;
+//   transform: translate(-50%, -33%);
+//   width: 30px;
+//   z-index: 2;
+// }
 
 .topic_assesment {
   width: 40%;

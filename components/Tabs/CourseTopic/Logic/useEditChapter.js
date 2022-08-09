@@ -49,7 +49,7 @@ export default function useEditChapter(refetchDataAndUpdateRecoil) {
     if (error) return setToastMsg({ type: 'success', message: 'Chapter Update Error' });
 
     refetchDataAndUpdateRecoil('chapter');
-
+    setIsPopUpDataPresent(false);
     // reset local data and close module
     setEditChapter(null);
     if (!isError) setToastMsg({ type: 'success', message: 'Chapter Updated' });
