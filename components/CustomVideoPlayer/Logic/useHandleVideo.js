@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../helper/data.helper';
 import { secondsToMinutes } from '../../../helper/utils.helper';
 import { TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
-import { getVideoObject, VideoAtom } from '../../../state/atoms/video.atom';
+import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
 import { addCallbackToEvent } from './customVideoPlayer.helper';
 
 export default function useVideoPlayer(videoElement, videoContainer, set) {
@@ -20,6 +20,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     volume: 0.7
   });
 
+  const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+
   const [videoData, updateVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
@@ -29,8 +31,21 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
 
-  // hide control bar if no mouse movement for 2.5 sec
+  // udpate recoil state
+  useEffect(() => {
+    setUserCourseData({
+      ...userCourseData,
+      videoData: {
+        ...playerState,
+        videoSrc: videoData?.videoSrc,
+        type: videoData?.type,
+        isPreview: videoData?.isPreview,
+        shouldShowPlayer: videoData?.startPlayer
+      }
+    });
+  }, [playerState]);
 
+  // hide control bar if no mouse movement for 2.5 sec
   const duration = 2500;
   let timeout;
   useEffect(() => {
@@ -229,7 +244,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       return setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
 
     // reset recoil and set new data
-    updateVideoData(getVideoObject());
+    updateVideoData(getVideoObject({ setNewModule: videoData?.setNewModule }));
     setTopicExamData({
       id: topicExam.id,
       topicId: topicExam.topicId,

@@ -1,3 +1,9 @@
+import {
+  getUserCourseDataObj,
+  getVideoObject,
+  UserCourseDataAtom,
+  VideoAtom
+} from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -12,7 +18,7 @@ import {
   queryClient
 } from '../../../API/Queries';
 import { LearnerExamAtom } from '../../../state/atoms/exams.atoms';
-import { getTopicExamObj, TopicAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
+import { getTopicExamObj, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
 import styles from './examLanding.module.scss';
@@ -35,12 +41,20 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
     client: queryClient
   });
 
+  const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
   var btnStyle;
 
   const router = useRouter();
+
+  useEffect(() => {
+    setUserCourseData(getUserCourseDataObj({ allModules: userCourseData?.allModules }));
+    setVideoData(getVideoObject());
+  }, []);
 
   useEffect(async () => {
     const examId = topicExamData?.examId || null;
