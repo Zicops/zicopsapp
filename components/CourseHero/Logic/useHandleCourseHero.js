@@ -4,7 +4,7 @@ import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper'
 import { getQueryData } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { getVideoObject, VideoAtom } from '@/state/atoms/video.atom';
+import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -21,6 +21,8 @@ export default function useHandleCourseHero() {
   const { updateCourseMaster, isDataLoaded, setIsDataLoaded, fullCourse } =
     useContext(courseContext);
 
+  const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
@@ -29,7 +31,7 @@ export default function useHandleCourseHero() {
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
     isMandatory: false,
-    isCourseAssigned: true
+    isCourseAssigned: false
   });
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
 
@@ -62,15 +64,39 @@ export default function useHandleCourseHero() {
     });
   }
 
-  function activateVideoPlayer() {
-    if (courseAssignData?.isCourseAssigned) return alert('Start the course');
+  async function activateVideoPlayer() {
+    // if (courseAssignData?.isCourseAssigned) alert('Start the course');
+    const data = {
+      activeModule: { id: null, index: null },
+      activeTopic: { id: null, index: null },
+      activeTopicContent: { id: null, index: null }
+    };
+    let isTopicFound = false;
 
+    userCourseData?.allModules?.some((mod, modIndex) => {
+      mod?.topicData?.some((topic, topicIndex) => {
+        if (topic?.type !== 'Content' || isTopicFound) return isTopicFound;
+
+        data.activeModule = { index: modIndex, id: mod?.id };
+        data.activeTopic = { index: topicIndex, id: topic?.id };
+        data.activeTopicContent = { index: 0, id: topic?.topicContentData[0]?.id };
+        isTopicFound = true;
+        console.log(123, data);
+      });
+
+      return isTopicFound;
+    });
+    console.log(data);
+
+    setUserCourseData({
+      ...userCourseData,
+      ...data
+    });
     // setVideoData({
     //   ...videoData,
-    //   videoSrc: fullCourse?.previewVideo,
-    //   type: 'mp4',
-    //   startPlayer: true,
-    //   isPreview: true
+    //   videoSrc: validTopicContent?.contentUrl,
+    //   type: validTopicContent?.type,
+    //   startPlayer: true
     // });
   }
 

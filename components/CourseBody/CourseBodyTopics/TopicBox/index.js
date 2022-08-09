@@ -2,23 +2,31 @@ import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/L
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
-import { filterAndSortTopicsBasedOnModuleId } from '../../../../helper/data.helper';
+import {
+  filterAndSortTopicsBasedOnModuleId,
+  filterTopicContent
+} from '../../../../helper/data.helper';
 import {
   getTopicExamObj,
   isLoadingAtom,
   TopicAtom,
+  TopicContentAtom,
   TopicExamAtom
 } from '../../../../state/atoms/module.atoms';
-import { getVideoObject, VideoAtom } from '../../../../state/atoms/video.atom';
+import {
+  getVideoObject,
+  UserCourseDataAtom,
+  VideoAtom
+} from '../../../../state/atoms/video.atom';
 import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
 import useLoadExamData from '../../Logic/useLoadExamData';
-import moment from 'moment';
 
 let topicInstance = 0;
 
@@ -42,11 +50,14 @@ export default function TopicBox({
   const { name, description, type } = topic;
   const duration = topicContent[0]?.duration.toString();
   const topicData = useRecoilValue(TopicAtom);
+  const topicContentData = useRecoilValue(TopicContentAtom);
 
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
+
+  const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
 
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -66,6 +77,35 @@ export default function TopicBox({
   data.examData = useLoadExamData(examData?.examId);
   if (data?.examData?.scheduleType === SCHEDULE_TYPE[0] && !data?.examData?.examEnd)
     finalEndDate = new Date(getEndTime(data));
+
+  useEffect(() => {
+    if (!userCourseData?.activeTopicContent?.id) return;
+    if (
+      userCourseData?.activeTopicContent?.id !==
+      videoData?.topicContent[videoData?.currentTopicContentIndex]?.id
+    ) {
+      const filteredTopicContent = filterTopicContent(
+        topicContentData,
+        userCourseData?.activeTopic?.id
+      );
+
+      updateVideoData(
+        videoData,
+        setVideoData,
+        { moduleId: userCourseData?.activeModule?.id, topicId: userCourseData?.activeTopic?.id },
+        topicData,
+        filteredTopicContent,
+        allModuleOptions,
+        {
+          value: userCourseData?.activeModule?.id,
+          label: `MODULE ${userCourseData?.activeModule?.index + 1}`
+        },
+        setSelectedModule,
+        userCourseData,
+        setUserCourseData
+      );
+    }
+  }, [userCourseData]);
 
   useEffect(async () => {
     if (topic?.type !== 'Assessment') return;
@@ -149,7 +189,9 @@ export default function TopicBox({
         topicContent,
         allModuleOptions,
         currrentModule,
-        setSelectedModule
+        setSelectedModule,
+        userCourseData,
+        setUserCourseData
       );
       setSelectedModule({
         ...currrentModule,
@@ -201,7 +243,9 @@ export default function TopicBox({
             topicContent,
             allModuleOptions,
             currrentModule,
-            setSelectedModule
+            setSelectedModule,
+            userCourseData,
+            setUserCourseData
           );
           // }
         }}>
@@ -255,7 +299,15 @@ export default function TopicBox({
           {type === 'Content' && (
             <div className={`${styles.topic_player}`}>
               <div className={`${styles.progress_bar}`}>
-                <img src="images/progressTriangle.png" alt="" />
+                <div
+                  className={`${styles.progressBarFill}`}
+                  style={
+                    topic?.id === userCourseData?.activeTopic?.id
+                      ? { width: `${userCourseData?.videoData?.progress}%` }
+                      : {}
+                  }>
+                  {/* <img src="images/progressTriangle.png" alt="" /> */}
+                </div>
               </div>
               <div className={`${styles.details}`}>
                 <div>Video + Quiz</div>

@@ -35,7 +35,9 @@ export function updateVideoData(
   topicContent,
   allModuleOptions,
   currrentModule,
-  setSelectedModule
+  setSelectedModule,
+  userCourseData,
+  setUserCourseData
 ) {
   const { moduleId, topicId } = idObject;
   const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topic, moduleId);
@@ -44,6 +46,13 @@ export function updateVideoData(
   const currentModuleIndex = allModuleOptions.findIndex((m) => m.value === currrentModule.value);
 
   if (!topicContent.length) return;
+
+  setUserCourseData({
+    ...userCourseData,
+
+    activeModule: { id: moduleId, index: currentModuleIndex },
+    activeTopic: { id: topicId, index: currentTopicIndex }
+  });
 
   setVideoData({
     ...videoData,

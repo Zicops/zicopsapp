@@ -101,13 +101,22 @@
   border: 2px solid $primary;
   cursor: pointer;
   transition: 0.5s;
+
+  &:disabled {
+    border-color: $darkThree;
+    color: $darkThree;
+    opacity: 0.5;
+    cursor: no-drop;
+  }
 }
 
 .course_big_button button:hover {
-  color: #000000;
-  border: 2px solid #000000;
-  background-color: $primary;
-  background-image: url(/images/preview-button.png);
+  &:not(:disabled) {
+    color: #000000;
+    border: 2px solid #000000;
+    background-color: $primary;
+    background-image: url(/images/preview-button.png);
+  }
 }
 .suggested_completion p {
   font-size: 0.7vw;

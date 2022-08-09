@@ -1,3 +1,4 @@
+import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { Skeleton } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -26,6 +27,7 @@ export default function CourseHero({ isPreview = false }) {
     showPreviewVideo
   } = useHandleCourseHero();
 
+  const userCourseData = useRecoilValue(UserCourseDataAtom);
   const isLoading = useRecoilValue(isLoadingAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
@@ -88,7 +90,9 @@ export default function CourseHero({ isPreview = false }) {
 
           <div className={`${style.course_big_button}`}>
             {courseAssignData?.isCourseAssigned ? (
-              <button onClick={activateVideoPlayer}>
+              <button
+                onClick={activateVideoPlayer}
+                disabled={userCourseData?.allModules?.length === 0}>
                 {courseAssignData?.isCourseAssigned ? 'Start' : 'Continue'} the course
               </button>
             ) : (
