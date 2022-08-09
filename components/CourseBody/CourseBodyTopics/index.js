@@ -68,7 +68,7 @@ export default function CourseBodyTopics() {
               name={chapter.name}
               description={chapter.description}
               chapterIndex={index + 1}
-              key={chapter.name}
+              key={chapter.id}
               chapterId={chapter.id}
               moduleId={selectedModule.value}
               getModuleOptions={getModuleOptions}
@@ -81,7 +81,7 @@ export default function CourseBodyTopics() {
 
             return (
               <TopicBox
-                key={topic.name}
+                key={topic.id}
                 topicCount={index + 1}
                 topic={topic}
                 topicIndex={++topicIndex}
