@@ -81,8 +81,8 @@ export default function useHandleAddUserDetails() {
     );
   }, [userOrgData]);
 
-  async function addUserLearningSpaceDetails(sub_category) {
-    console.log(userDataOrgLsp, 'data at start of addUserLearningDetails', sub_category);
+  async function addUserLearningSpaceDetails(sub_categories = [], base_sub_category) {
+    console.log(userDataOrgLsp, 'data at start of addUserLearningDetails');
     const sendLspData = {
       user_id: userDataAbout?.id,
       lsp_id: userOrgData?.lsp_id || 'Zicops Learning Space',
@@ -173,20 +173,35 @@ export default function useHandleAddUserDetails() {
     //ORGANIZATION PREFERANCE MUTATION CALL
 
     console.log(userDataOrgLsp, 'data at start of addUserPreferenceDetails');
-    const sendPreferenceData = {
-      user_id: userDataAbout?.id,
-      user_lsp_id: dataLsp?.user_lsp_id,
-      sub_category: sub_category,
-      is_base: userOrgData?.is_base,
-      is_active: userOrgData?.preferences_is_active
-    };
+    // const sendPreferenceData = {
+    //   user_id: userDataAbout?.id,
+    //   user_lsp_id: dataLsp?.user_lsp_id,
+    //   sub_category: sub_category,
+    //   is_base: userOrgData?.is_base,
+    //   is_active: userOrgData?.preferences_is_active
+    // };
+
+    const sendPreferenceData = sub_categories.map((item) => {
+      let is_base = item === base_sub_category ? true : false;
+      return {
+        user_id: userDataAbout?.id,
+        user_lsp_id: dataLsp?.user_lsp_id,
+        sub_category: item,
+        is_base: is_base,
+        is_active: userOrgData?.preferences_is_active
+      };
+    });
+
+    console.log(sendPreferenceData);
 
     isError = false;
-    const resPref = await addPreference({ variables: sendPreferenceData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update User Preferance Error' });
-    });
+    const resPref = await addPreference({ variables: { input: sendPreferenceData } }).catch(
+      (err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update User Preferance Error' });
+      }
+    );
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
@@ -194,6 +209,7 @@ export default function useHandleAddUserDetails() {
     }
 
     const dataPref = resPref?.data?.addUserPreference[0];
+    console.log(dataPref);
 
     setUserDataOrgLsp((prevValue) => ({
       ...prevValue,
