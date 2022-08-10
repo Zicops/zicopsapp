@@ -23,7 +23,10 @@ export default function Notes() {
       <div className={`${styles.folderBarContainer}`}>
         <FolderBar onFolderClick={showAll} onMinusClick={hideAll} onPlusClick={addNewNote} />
 
-        <div className={`${styles.notesCardsContainer} ${document.fullscreenElement ? styles.notesCardsContainerFS : ''}`}>
+        <div
+          className={`${styles.notesCardsContainer} ${
+            document.fullscreenElement ? styles.notesCardsContainerFS : ''
+          }`}>
           {floatingNotes
             .map((noteObj, i) => {
               if (noteObj.isFloating) return null;
@@ -31,7 +34,7 @@ export default function Notes() {
 
               return (
                 <NoteCard
-                  key={noteObj.id}
+                  key={noteObj?.index}
                   handleDragEnd={(e) => handleDragEnd(e, noteObj)}
                   handleClose={() => handleClose(noteObj)}
                   handlePin={(e) => handlePin(e, noteObj)}

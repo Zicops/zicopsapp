@@ -57,7 +57,10 @@ export default function DropDownSubMenu({
                   margin: `${index === 0 ? '1px 2px 0 2px' : '0 2px'}`
                   // background: 'var(--dark_one)'
                 }}
-                onClick={() => {
+                onClick={(e) => {
+                  // e.stopPropagation();
+                  e.syntheticEvent.stopPropagation();
+
                   router.push(`${link}?tabName=${title}`, link);
                 }}>
                 {title}
