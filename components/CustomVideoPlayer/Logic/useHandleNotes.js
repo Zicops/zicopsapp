@@ -36,13 +36,17 @@ export default function useHandleNotes() {
     // const filterFloatingNotes = [...userNote].filter(
     //   (note) => floatingNotes.findIndex((obj) => obj.id === note.id) < 0
     // );
-    setFloatingNotes(dummyNotes.map((note) => ({ ...note, x: null, y: null })));
+    // setFloatingNotes(dummyNotes.map((note) => ({ ...note, x: null, y: null })));
     // setUserNote(filterFloatingNotes);
   }, []);
 
   function handleNote(e, noteObj) {
     const allNotes = structuredClone([...floatingNotes]);
-    const index = allNotes?.findIndex((note) => note.id === noteObj?.id);
+
+    const index = allNotes?.findIndex((note) => {
+      if (!note.id) return note.index === noteObj?.index;
+      return note.id === noteObj?.id;
+    });
 
     allNotes[index].note = e.target.value;
     setFloatingNotes(allNotes);
@@ -50,7 +54,10 @@ export default function useHandleNotes() {
 
   function handleDragEnd(e, noteObj) {
     const allNotes = structuredClone([...floatingNotes]);
-    const index = allNotes?.findIndex((note) => note.id === noteObj?.id);
+    const index = allNotes?.findIndex((note) => {
+      if (!note.id) return note.index === noteObj?.index;
+      return note.id === noteObj?.id;
+    });
 
     allNotes[index].isFloating = true;
     allNotes[index].x = e.pageX;
@@ -61,7 +68,10 @@ export default function useHandleNotes() {
 
   function handleClose(noteObj) {
     let allNotes = structuredClone(floatingNotes);
-    const index = allNotes?.findIndex((note) => note.id === noteObj?.id);
+    const index = allNotes?.findIndex((note) => {
+      if (!note.id) return note.index === noteObj?.index;
+      return note.id === noteObj?.id;
+    });
 
     allNotes[index].isOpen = false;
     allNotes[index].isPinned = false;
@@ -74,7 +84,10 @@ export default function useHandleNotes() {
 
   function handlePin(e, noteObj) {
     const allNotes = structuredClone([...floatingNotes]);
-    const index = allNotes?.findIndex((note) => note.id === noteObj?.id);
+    const index = allNotes?.findIndex((note) => {
+      if (!note.id) return note.index === noteObj?.index;
+      return note.id === noteObj?.id;
+    });
 
     const isPinned = !allNotes[index].isPinned;
     allNotes[index].isFloating = true;
@@ -90,7 +103,7 @@ export default function useHandleNotes() {
     const allNotes = structuredClone(floatingNotes);
     const lastNote = allNotes[allNotes.length - 1];
 
-    allNotes.push(getNoteCardObj({ id: lastNote.id + 1, index: lastNote.index + 1 }));
+    allNotes.push(getNoteCardObj({ index: lastNote?.index + 1 || 1 }));
     setFloatingNotes(allNotes);
   }
 

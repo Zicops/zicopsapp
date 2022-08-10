@@ -47,7 +47,8 @@ export default function RightDropDownMenu() {
           submenurowdirection={true}
         />
       ),
-      onClick: () => {
+      onClick: (e) => {
+        e.stopPropagation();
         router.push('/my-profile?tabName=About', '/my-profile');
       }
     },

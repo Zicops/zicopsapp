@@ -60,7 +60,10 @@ export default function DropDownSubMenu({
                 key={title}
                 className={`${styles.subMenuItem} ${styles[`dropdown_item_${index + 1}`]}`}
                 style={customStyles}
-                onClick={() => {
+                onClick={(e) => {
+                  // e.stopPropagation();
+                  e?.syntheticEvent?.stopPropagation();
+
                   router.push(`${link}?tabName=${title}`, link);
                 }}>
                 {title}

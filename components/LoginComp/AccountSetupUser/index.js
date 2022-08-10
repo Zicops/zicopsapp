@@ -8,7 +8,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../common/FormComponents/LabeledInput';
 import useHandleAddUserDetails from '../Logic/useHandleAddUser';
-import { languages } from '../ProfilePreferences/Logic/profilePreferencesHelper';
+import { languages, genders } from '../ProfilePreferences/Logic/profilePreferencesHelper';
 import styles from './setupUser.module.scss';
 
 const AccountSetupUser = ({ setCurrentComponent }) => {
@@ -30,9 +30,10 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   }, [image]);
 
   useEffect(() => {
-    if (!userData) return;
-    const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
-    setUserData({ ...refreshUserData });
+    if (!userData?.first_name) {
+      const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
+      return setUserData({ ...refreshUserData });
+    }
     return;
   }, []);
 
@@ -90,6 +91,17 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           }}
         />
         <Box mt={3} />
+        <LabeledDropdown
+          dropdownOptions={{
+            inputName: 'gender',
+            label: 'Gender:',
+            placeholder: 'Select your gender',
+            options: genders,
+            value: { value: userData?.gender, label: userData?.gender }
+          }}
+          changeHandler={(e) => changeHandler(e, userData, setUserData, 'gender')}
+        />
+        <Box mt={3} />
         <LabeledInput
           inputOptions={{
             inputName: 'phone',
@@ -114,7 +126,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
       <div className={`${styles.navigator}`}>
         <span />
         <div className={`${styles.navigatorBtns}`}>
-          <Button variant={'outlined'} className={`${styles.transform_text}`}>
+          <Button disabled={true} variant={'outlined'} className={`${styles.transform_text}`}>
             Back
           </Button>
           <Button
