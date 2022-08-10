@@ -18,6 +18,7 @@ export const UserMenu = [
   { title: 'Classroom', link: '/classroom' },
   { title: 'Events', link: '/events' },
   { title: 'Labs', link: '/labs' },
-  { title: 'Exams', link: '/exams' },
-  { title: 'Community', link: '/courses' }
+  { title: 'Exams', link: '/exams' }
+  // ,
+  // { title: 'Community', link: '/courses' }
 ];

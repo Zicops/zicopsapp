@@ -1,6 +1,6 @@
 import styles from './iconBtn.module.scss';
 
-export default function IconBtn({ handleClick, children, color = null, isDisabled = false }) {
+export default function IconBtn({ handleClick=()=>{}, children, color = null, isDisabled = false }) {
   return (
     <button
       disabled={isDisabled}
