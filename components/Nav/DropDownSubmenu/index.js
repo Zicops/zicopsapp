@@ -47,16 +47,19 @@ export default function DropDownSubMenu({
           viewScroll={'initial'}>
           {subData.map((elements, index) => {
             const { title, link } = elements;
-
+            let customStyles = {
+              border: '1px solid var(--primary)',
+              margin: `${index === 0 ? '1px 2px 0 2px' : '0 2px'}`
+              // background: 'var(--dark_one)'
+            };
+            if (elements.customStyle) {
+              customStyles = { ...customStyles ,...elements.customStyle};
+            }
             return (
               <MenuItem
                 key={title}
                 className={`${styles.subMenuItem} ${styles[`dropdown_item_${index + 1}`]}`}
-                style={{
-                  border: '1px solid var(--primary)',
-                  margin: `${index === 0 ? '1px 2px 0 2px' : '0 2px'}`
-                  // background: 'var(--dark_one)'
-                }}
+                style={customStyles}
                 onClick={() => {
                   router.push(`${link}?tabName=${title}`, link);
                 }}>
