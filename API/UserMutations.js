@@ -396,24 +396,8 @@ export const ADD_USER_LANGUAGE_MAP = gql`
 `;
 
 export const ADD_USER_PREFERENCE = gql`
-  mutation addUserPreference(
-    $user_id: String!
-    $user_lsp_id: String!
-    $sub_category: String!
-    $is_base: Boolean!
-    $is_active: Boolean!
-  ) {
-    addUserPreference(
-      input: [
-        {
-          user_id: $user_id
-          user_lsp_id: $user_lsp_id
-          sub_category: $sub_category
-          is_base: $is_base
-          is_active: $is_active
-        }
-      ]
-    ) {
+  mutation addUserPreference($input: [UserPreferenceInput!]!) {
+    addUserPreference(input: $input) {
       user_preference_id
       user_id
       user_lsp_id
@@ -655,6 +639,98 @@ export const UPDATE_USER_NOTES = gql`
       status
       details
       is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_USER_EXAM_ATTEMPTS = gql`
+  mutation AddUserExamAttempts(
+    $user_id: String!
+    $user_lsp_id: String!
+    $user_cp_id: String!
+    $user_course_id: String!
+    $exam_id: String!
+    $attempt_no: Int!
+    $attempt_status: String!
+    $attempt_start_time: String!
+    $attempt_duration: String!
+  ) {
+    addUserExamAttempts(
+      input: [
+        {
+          user_id: $user_id
+          user_lsp_id: $user_lsp_id
+          user_cp_id: $user_cp_id
+          user_course_id: $user_course_id
+          exam_id: $exam_id
+          attempt_no: $attempt_no
+          attempt_status: $attempt_status
+          attempt_start_time: $attempt_start_time
+          attempt_duration: $attempt_duration
+        }
+      ]
+    ) {
+      user_ea_id
+      user_id
+      user_lsp_id
+      user_cp_id
+      user_course_id
+      exam_id
+      attempt_no
+      attempt_status
+      attempt_start_time
+      attempt_duration
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_EXAM_ATTEMPTS = gql`
+  mutation AddUserExamAttempts(
+    $user_ea_id: ID
+    $user_id: String!
+    $user_lsp_id: String!
+    $user_cp_id: String!
+    $user_course_id: String!
+    $exam_id: String!
+    $attempt_no: Int!
+    $attempt_status: String!
+    $attempt_start_time: String!
+    $attempt_duration: String!
+  ) {
+    addUserExamAttempts(
+      input: [
+        {
+          user_ea_id: $user_ea_id
+          user_id: $user_id
+          user_lsp_id: $user_lsp_id
+          user_cp_id: $user_cp_id
+          user_course_id: $user_course_id
+          exam_id: $exam_id
+          attempt_no: $attempt_no
+          attempt_status: $attempt_status
+          attempt_start_time: $attempt_start_time
+          attempt_duration: $attempt_duration
+        }
+      ]
+    ) {
+      user_ea_id
+      user_id
+      user_lsp_id
+      user_cp_id
+      user_course_id
+      exam_id
+      attempt_no
+      attempt_status
+      attempt_start_time
+      attempt_duration
       created_by
       updated_by
       created_at
