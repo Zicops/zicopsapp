@@ -38,12 +38,17 @@ export default function MyUserPage() {
     emails = emails.filter((value, index) => emails.indexOf(value) === index);
     console.log(emails);
 
+    let isError = false;
     const resEmail = await inviteUsers({ variables: { emails: emails } }).catch((err) => {
-      console.log(err);
-      return setToastMsg({ type: 'danger', message: `${err}` });
+      let errorMsg = err.graphQLErrors[0]?.message;
+      isError = !!err;
+      return;
     });
 
+    if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+
     console.log(resEmail);
+    return setToastMsg({ type: 'success', message: `Invite send successfully!` });
   }
 
   // set default tab on comp change
