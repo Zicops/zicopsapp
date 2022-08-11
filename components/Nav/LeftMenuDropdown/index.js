@@ -109,6 +109,7 @@ export default function LeftMenuDropdown() {
                   sx={{
                     '&.MuiMenuItem-root': {
                       border: '1px solid var(--primary)',
+                      color: 'var(--primary)',
                       // margin: '2px',
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-start',
