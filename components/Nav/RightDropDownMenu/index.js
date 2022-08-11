@@ -89,7 +89,7 @@ export default function RightDropDownMenu() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         onMouseEnter={handleClick}
-        // onMouseLeave={handleClose}
+        onMouseLeave={handleClose}
         style={{
           height: '70px'
         }}>
