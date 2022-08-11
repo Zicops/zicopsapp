@@ -118,13 +118,11 @@ export default function RightDropDownMenu() {
                   sx={{
                     '&.MuiMenuItem-root': {
                       border: '1px solid var(--primary)',
+                      color: 'var(--primary)',
                       // margin: '2px',
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
-                      padding: '0px',
-                      '& .MuiMenuItem-root:hover': {
-                        color: 'red'
-                      }
+                      padding: '0px'
                     }
                   }}
                   onClick={item?.onClick ? item.onClick : () => {}}
