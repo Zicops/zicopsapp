@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
-import { preferences, userProfile } from '../Logic/subMenu.helper.js';
+import { support, userProfile } from '../Logic/subMenu.helper.js';
 import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
 import styles from '../nav.module.scss';
 
@@ -27,7 +27,8 @@ export default function RightDropDownMenu() {
         fontSize: '10px',
         alignItems: 'flex-end',
         backgroundColor: 'var(--header-bg)',
-        padding: '15px 10px'
+        padding: '15px 10px',
+        color: 'var(--primary)'
       },
       comp: (
         <>
@@ -47,17 +48,18 @@ export default function RightDropDownMenu() {
           submenurowdirection={true}
         />
       ),
-      onClick: () => {
+      onClick: (e) => {
+        e.stopPropagation();
         router.push('/my-profile?tabName=About', '/my-profile');
       }
     },
-    { id: 3, class: 'dropdown-submenu-justifycontent-right', name: 'My Certificates' },
-    { id: 4, class: 'dropdown-submenu-justifycontent-right', name: 'My Dashboard' },
+    // { id: 3, class: 'dropdown-submenu-justifycontent-right', name: 'My Certificates' },
+    // { id: 4, class: 'dropdown-submenu-justifycontent-right', name: 'My Dashboard' },
     {
-      id: 5,
+      id: 3,
       comp: (
         <DropDownSubMenu
-          subData={preferences}
+          subData={support}
           menuIcon={LeftArrow}
           submenutext="Support"
           arrowpositon="left"
@@ -66,7 +68,7 @@ export default function RightDropDownMenu() {
       )
     },
     {
-      id: 6,
+      id: 4,
       class: 'dropdown-submenu-justifycontent-right',
       name: 'Logout',
       onClick: () => {
@@ -117,6 +119,7 @@ export default function RightDropDownMenu() {
                   sx={{
                     '&.MuiMenuItem-root': {
                       border: '1px solid var(--primary)',
+                      color: 'var(--primary)',
                       // margin: '2px',
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',

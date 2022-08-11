@@ -24,11 +24,14 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
   const vidRef = useRef(null);
 
   async function handleCompleteSetup() {
+    // console.log(selected);
+    const sub_categories = selected.map((item) => item.name);
+    console.log(sub_categories);
     setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
     console.log(userBasicData, userAccountData);
-    setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
-    await addUserLearningSpaceDetails(primary);
+    await addUserLearningSpaceDetails(sub_categories, primary);
     await updateAboutUser();
+    setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
 
     router.prefetch('/');
     setVidIsOpen(true);

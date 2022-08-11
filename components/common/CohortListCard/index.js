@@ -1,8 +1,8 @@
 import styles from './cohortListCard.module.scss';
 
-export default function CohortListCard({ cohortData, children }) {
+export default function CohortListCard({ cohortData, children,handleClick=()=>{} }) {
   return (
-    <div className={`${styles.listCard}`}>
+    <div className={`${styles.listCard}`} onClick={handleClick}>
       {/* course img */}
       <div className={`${styles.imgContainer}`}>
         <img src={cohortData?.tileImg || '/images/profile-card.png'} alt="" />

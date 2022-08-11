@@ -1,30 +1,49 @@
 export const languages = [
   {
-    title: 'Hindi',
+    title: 'English',
+    link: '/',
+    customStyle: {
+      backgroundColor: 'var(--primary)',
+      color: 'var(--black)'
+    }
+  }
+  // ,
+  // {
+  //   title: 'Marathi',
+  //   link: '/'
+  // },
+  // {
+  //   title: 'Punjabi',
+  //   link: '/'
+  // },
+  // {
+  //   title: 'Haryanavi',
+  //   link: '/'
+  // },
+  // {
+  //   title: 'Maithali',
+  //   link: '/'
+  // },
+  // {
+  //   title: 'Russian',
+  //   link: '/'
+  // }
+];
+
+export const support = [
+  {
+    title: 'Raise A Query',
     link: '/'
   },
   {
-    title: 'Marathi',
+    title: ' Talk To Us',
     link: '/'
   },
   {
-    title: 'Punjabi',
-    link: '/'
-  },
-  {
-    title: 'Haryanavi',
-    link: '/'
-  },
-  {
-    title: 'Maithali',
-    link: '/'
-  },
-  {
-    title: 'Russian',
+    title: 'Learning Manual',
     link: '/'
   }
 ];
-
 export const preferences = [
   {
     title: 'Preference 1',

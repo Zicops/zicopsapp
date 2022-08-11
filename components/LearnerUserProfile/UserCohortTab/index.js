@@ -35,17 +35,19 @@ const UserCohortTab = () => {
           }
 
           return (
-            <CohortListCard cohortData={cohort} key={cohort.id}>
+            <CohortListCard
+              cohortData={cohort}
+              key={cohort.id}
+              handleClick={() => {
+                setSelectedCohort(cohort);
+              }}>
               <div className={`${styles.btnContainer}`}>
                 <p>
                   <img src="/images/svg/calendar-month.svg" alt="" />
                   Joined On: {cohort?.joinedOn}
                 </p>
 
-                <IconBtn
-                  color={btnData.color}
-                  handleClick={() => setSelectedCohort(cohort)}
-                  isDisabled={btnData.isDisabled}>
+                <IconBtn color={btnData.color} isDisabled={btnData.isDisabled}>
                   <img src={btnData.imgSrc} alt="" />
                   {btnData.display}
                 </IconBtn>

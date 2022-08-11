@@ -49,7 +49,8 @@ export default function CustomVideo({ set }) {
     setVideoTime,
     moveVideoProgressBySeconds
   } = useVideoPlayer(videoElement, videoContainer, set);
-  const { userNotes, handleDragEnd, handleClose, handlePin, deleteNote, handleNote } = useHandleNotes();
+  const { userNotes, handleDragEnd, handleClose, handlePin, deleteNote, handleNote } =
+    useHandleNotes();
 
   useEffect(() => {
     set(true);
@@ -136,7 +137,7 @@ export default function CustomVideo({ set }) {
 
         return (
           <DraggableDiv
-            key={noteObj.id}
+            key={noteObj?.index}
             initalPosition={{
               x: noteObj.x,
               y: noteObj.y

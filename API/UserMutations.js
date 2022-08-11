@@ -2,25 +2,34 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from '@apollo/client/link/context';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
+import { getIdToken } from 'firebase/auth';
 
 const httpLink = createUploadLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
 });
 
-const authLink = setContext((_, { headers }) => {
-  // get the authentication tokenF and tokenZ from local storage if it exists
+async function getLatestToken(token) {
+  const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+  // getting renewed token before time expire
+  const expTime = data?.exp - 60;
+  const currentTime = new Date().getTime() / 1000;
+  if (expTime >= currentTime) return token;
 
-  const firebaseToken = sessionStorage.getItem('tokenF')
+  const newToken = await getIdToken(auth?.currentUser, true);
+  console.log(newToken);
+  sessionStorage.setItem('tokenF', newToken);
+  return newToken;
+}
+
+const authLink = setContext(async (_, { headers }) => {
+  const initialToken = sessionStorage.getItem('tokenF')
     ? sessionStorage.getItem('tokenF')
     : auth?.currentUser?.accessToken;
-
-  if (!firebaseToken) return (window.location.pathname = '/login');
-  // const token = getLatestToken(tokenF);
-  // return the headers to the context so httpLink can read them
+  const fireBaseToken = await getLatestToken(initialToken);
   return {
     headers: {
       ...headers,
-      Authorization: firebaseToken ? `Bearer ${firebaseToken}` : ''
+      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : 'Token Not found'
     }
   };
 });
@@ -103,8 +112,8 @@ export const MAKE_ADMIN_USER = gql`
 `;
 
 export const INVITE_USERS = gql`
-  mutation InviteUsers($emails: String!) {
-    inviteUsers(emails: [$emails])
+  mutation InviteUsers($emails: [String!]!) {
+    inviteUsers(emails: $emails)
   }
 `;
 
@@ -465,24 +474,8 @@ export const ADD_USER_LANGUAGE_MAP = gql`
 `;
 
 export const ADD_USER_PREFERENCE = gql`
-  mutation addUserPreference(
-    $user_id: String!
-    $user_lsp_id: String!
-    $sub_category: String!
-    $is_base: Boolean!
-    $is_active: Boolean!
-  ) {
-    addUserPreference(
-      input: [
-        {
-          user_id: $user_id
-          user_lsp_id: $user_lsp_id
-          sub_category: $sub_category
-          is_base: $is_base
-          is_active: $is_active
-        }
-      ]
-    ) {
+  mutation addUserPreference($input: [UserPreferenceInput!]!) {
+    addUserPreference(input: $input) {
       user_preference_id
       user_id
       user_lsp_id
@@ -542,6 +535,280 @@ export const UPDATE_USER_ROLE = gql`
       user_lsp_id
       role
       is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_USER_BOOKMARK = gql`
+  mutation addUserBookmark(
+    $user_id: String!
+    $user_lsp_id: String!
+    $user_course_id: String!
+    $course_id: String!
+    $module_id: String!
+    $topic_id: String!
+    $name: String!
+    $time_stamp: String!
+    $is_active: Boolean!
+  ) {
+    addUserBookmark(
+      input: [
+        {
+          user_id: $user_id
+          user_lsp_id: $user_lsp_id
+          user_course_id: $user_course_id
+          course_id: $course_id
+          module_id: $module_id
+          topic_id: $topic_id
+          name: $name
+          time_stamp: $time_stamp
+          is_active: $is_active
+        }
+      ]
+    ) {
+      user_bm_id
+      user_id
+      user_lsp_id
+      user_course_id
+      course_id
+      module_id
+      topic_id
+      name
+      time_stamp
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_BOOKMARK = gql`
+  mutation UpdateUserBookmark(
+    $user_bm_id: String!
+    $user_id: String!
+    $user_lsp_id: String!
+    $user_course_id: String!
+    $course_id: String!
+    $module_id: String!
+    $topic_id: String!
+    $name: String!
+    $time_stamp: String!
+    $is_active: Boolean!
+  ) {
+    addUserBookmark(
+      input: [
+        {
+          user_bm_id: $user_bm_id
+          user_id: $user_id
+          user_lsp_id: $user_lsp_id
+          user_course_id: $user_course_id
+          course_id: $course_id
+          module_id: $module_id
+          topic_id: $topic_id
+          name: $name
+          time_stamp: $time_stamp
+          is_active: $is_active
+        }
+      ]
+    ) {
+      user_bm_id
+      user_id
+      user_lsp_id
+      user_course_id
+      course_id
+      module_id
+      topic_id
+      name
+      time_stamp
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_USER_NOTES = gql`
+  mutation AddUserNotes(
+    $user_id: String!
+    $user_lsp_id: String!
+    $course_id: String!
+    $module_id: String!
+    $topic_id: String!
+    $sequence: Int!
+    $details: String!
+    $status: String!
+    $is_active: Boolean!
+  ) {
+    addUserNotes(
+      input: [
+        {
+          user_id: $user_id
+          user_lsp_id: $user_lsp_id
+          course_id: $course_id
+          module_id: $module_id
+          topic_id: $topic_id
+          sequence: $sequence
+          status: $status
+          details: $details
+          is_active: $is_active
+        }
+      ]
+    ) {
+      user_notes_id
+      user_id
+      user_lsp_id
+      course_id
+      module_id
+      topic_id
+      sequence
+      status
+      details
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_NOTES = gql`
+  mutation updateUserNotes(
+    $user_notes_id: ID
+    $user_id: String!
+    $user_lsp_id: String!
+    $course_id: String!
+    $module_id: String!
+    $topic_id: String!
+    $sequence: Int!
+    $status: String!
+    $details: String!
+    $is_active: Boolean!
+  ) {
+    updateUserNotes(
+      input: {
+        user_notes_id: $user_notes_id
+        user_id: $user_id
+        user_lsp_id: $user_lsp_id
+        course_id: $course_id
+        module_id: $module_id
+        topic_id: $topic_id
+        sequence: $sequence
+        status: $status
+        details: $details
+        is_active: $is_active
+      }
+    ) {
+      user_notes_id
+      user_id
+      user_lsp_id
+      course_id
+      module_id
+      topic_id
+      sequence
+      status
+      details
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_USER_EXAM_ATTEMPTS = gql`
+  mutation AddUserExamAttempts(
+    $user_id: String!
+    $user_lsp_id: String!
+    $user_cp_id: String!
+    $user_course_id: String!
+    $exam_id: String!
+    $attempt_no: Int!
+    $attempt_status: String!
+    $attempt_start_time: String!
+    $attempt_duration: String!
+  ) {
+    addUserExamAttempts(
+      input: [
+        {
+          user_id: $user_id
+          user_lsp_id: $user_lsp_id
+          user_cp_id: $user_cp_id
+          user_course_id: $user_course_id
+          exam_id: $exam_id
+          attempt_no: $attempt_no
+          attempt_status: $attempt_status
+          attempt_start_time: $attempt_start_time
+          attempt_duration: $attempt_duration
+        }
+      ]
+    ) {
+      user_ea_id
+      user_id
+      user_lsp_id
+      user_cp_id
+      user_course_id
+      exam_id
+      attempt_no
+      attempt_status
+      attempt_start_time
+      attempt_duration
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_EXAM_ATTEMPTS = gql`
+  mutation AddUserExamAttempts(
+    $user_ea_id: ID
+    $user_id: String!
+    $user_lsp_id: String!
+    $user_cp_id: String!
+    $user_course_id: String!
+    $exam_id: String!
+    $attempt_no: Int!
+    $attempt_status: String!
+    $attempt_start_time: String!
+    $attempt_duration: String!
+  ) {
+    addUserExamAttempts(
+      input: [
+        {
+          user_ea_id: $user_ea_id
+          user_id: $user_id
+          user_lsp_id: $user_lsp_id
+          user_cp_id: $user_cp_id
+          user_course_id: $user_course_id
+          exam_id: $exam_id
+          attempt_no: $attempt_no
+          attempt_status: $attempt_status
+          attempt_start_time: $attempt_start_time
+          attempt_duration: $attempt_duration
+        }
+      ]
+    ) {
+      user_ea_id
+      user_id
+      user_lsp_id
+      user_cp_id
+      user_course_id
+      exam_id
+      attempt_no
+      attempt_status
+      attempt_start_time
+      attempt_duration
       created_by
       updated_by
       created_at

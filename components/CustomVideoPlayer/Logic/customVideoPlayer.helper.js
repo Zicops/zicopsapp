@@ -9,7 +9,7 @@ export const BOX = ['subtitles', 'resources', 'discussion', 'bookmark', 'notes',
 
 export function getNoteCardObj(data) {
   return {
-    id: data?.id || 0,
+    id: data?.id || null,
     index: data?.index || 0,
     note: data?.note || '',
     isPinned: data?.isPinned || false,
