@@ -27,7 +27,8 @@ export default function RightDropDownMenu() {
         fontSize: '10px',
         alignItems: 'flex-end',
         backgroundColor: 'var(--header-bg)',
-        padding: '15px 10px'
+        padding: '15px 10px',
+        color: 'var(--primary)'
       },
       comp: (
         <>
@@ -88,7 +89,7 @@ export default function RightDropDownMenu() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         onMouseEnter={handleClick}
-        onMouseLeave={handleClose}
+        // onMouseLeave={handleClose}
         style={{
           height: '70px'
         }}>
