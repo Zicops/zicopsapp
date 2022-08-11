@@ -114,7 +114,7 @@ export default function CustomVideo({ set }) {
     if (showBingeButtons) {
       bingeTimeout = setTimeout(() => {
         setShowBingeButtons(false);
-        playNextVideo();
+        playNextVideo('binge');
       }, 5000);
     }
 

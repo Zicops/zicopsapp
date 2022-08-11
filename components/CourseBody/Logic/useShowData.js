@@ -1,3 +1,4 @@
+import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, userClient } from '@/api/UserMutations';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery } from '@apollo/client/react';
 import { useEffect, useRef, useState } from 'react';
@@ -78,6 +79,9 @@ export default function useShowData(courseContextData) {
       client: queryClient
     });
 
+  const [loadUserCourseMaps] = useLazyQuery(GET_USER_COURSE_MAPS, { client: userClient });
+  const [loadUserCourseProgress] = useLazyQuery(GET_USER_COURSE_PROGRESS, { client: userClient });
+
   useEffect(() => {
     if (!userCourseData?.activeModule?.id) return;
 
@@ -144,10 +148,31 @@ export default function useShowData(courseContextData) {
         mod.topicData = filteredTopicData;
       });
 
+    const queryVariables = { publish_time: Date.now(), pageSize: 99999999, pageCursor: '' };
+    const mapRes = await loadUserCourseMaps({ variables: queryVariables, fetchPolicy: 'no-cache' });
+    if (mapRes?.error)
+      return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+
+    const currentCourseMap = mapRes?.data?.getUserCourseMaps?.user_courses?.filter(
+      (obj) => obj?.course_id === fullCourse?.id
+    )[0];
+
+    const data = {};
+    if (currentCourseMap?.user_course_id) {
+      const progressRes = await loadUserCourseProgress({
+        variables: { userCourseId: currentCourseMap?.user_course_id },
+        fetchPolicy: 'no-cache'
+      });
+      const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+      if (courseProgress?.length) data.userCourseProgress = courseProgress;
+    }
+
     setUserCourseData({
       ...userCourseData,
       allModules: moduleDataLoaded,
-      activeModule: { index: 0, id: moduleDataLoaded[0]?.id }
+      activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
+      userCourseMapping: currentCourseMap,
+      userCourseProgress: data?.userCourseProgress || []
     });
 
     // previous logic
@@ -302,7 +327,7 @@ export default function useShowData(courseContextData) {
 
   function handleModuleChange(e) {
     setSelectedModule(e);
-
+    console.log(5);
     setUserCourseData({
       ...userCourseData,
       activeModule: { id: e?.value, index: e?.label?.split(' ')[1] - 1 }
