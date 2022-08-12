@@ -93,7 +93,10 @@ export default function CourseHero({ isPreview = false }) {
               <button
                 onClick={activateVideoPlayer}
                 disabled={userCourseData?.allModules?.length === 0}>
-                {courseAssignData?.isCourseAssigned ? 'Start' : 'Continue'} the course
+                {userCourseData?.userCourseMapping?.course_status === 'started'
+                  ? 'Continue'
+                  : 'Start'}{' '}
+                the course
               </button>
             ) : (
               <button onClick={showPreviewVideo}>Preview the course</button>
@@ -156,7 +159,7 @@ export default function CourseHero({ isPreview = false }) {
         submitBtn={{ handleClick: assignCourseToUser }}>
         <div className={`${style.assignCoursePopUp}`}>
           <section>
-            <label htmlFor="endDate">Exam End Date:</label>
+            <label htmlFor="endDate">Course End Date:</label>
             <InputDatePicker
               selectedDate={courseAssignData?.endDate}
               changeHandler={(date) => {

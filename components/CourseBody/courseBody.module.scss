@@ -161,7 +161,7 @@
       left: 100%;
       transform: translateY(-35%);
       clip-path: polygon(100% 50%, 0 0, 0 100%);
-      background-color: $primary;
+      background-color: inherit;
       height: 30px;
       width: 30px;
     }

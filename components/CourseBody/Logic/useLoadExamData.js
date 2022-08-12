@@ -179,6 +179,8 @@ export default function useLoadExamData(examId) {
       ...schObj,
       totalMarks: totalMarks || '0'
     });
+
+    return () => {};
   }, [examId]);
 
   return data;

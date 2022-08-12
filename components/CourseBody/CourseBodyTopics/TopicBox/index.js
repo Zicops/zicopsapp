@@ -18,11 +18,7 @@ import {
   TopicContentAtom,
   TopicExamAtom
 } from '../../../../state/atoms/module.atoms';
-import {
-  getVideoObject,
-  UserCourseDataAtom,
-  VideoAtom
-} from '../../../../state/atoms/video.atom';
+import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../../state/atoms/video.atom';
 import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
@@ -79,6 +75,7 @@ export default function TopicBox({
     finalEndDate = new Date(getEndTime(data));
 
   useEffect(() => {
+    if (userCourseData?.triggerPlayerToStartAt === null) return;
     if (!userCourseData?.activeTopicContent?.id) return;
     if (
       userCourseData?.activeTopicContent?.id !==
@@ -134,7 +131,7 @@ export default function TopicBox({
     if (topicIndex) return setTopicCountDisplay(topicIndex);
 
     setTopicCountDisplay(getTopicsIndex().next()?.value);
-    return () => getTopicsIndex(true).next();
+    // return () => getTopicsIndex(true).next();
   }, []);
 
   // auto play video when next or previous button clciked (module switch)
@@ -224,6 +221,23 @@ export default function TopicBox({
   let isTopicActive = topicExamData?.topicId === topic.id;
   if (allModuleTopic && allModuleTopic[currentTopicIndex]?.id === topic.id) isTopicActive = true;
 
+  const currentProgressIndex =
+    topic?.type === 'Content'
+      ? userCourseData?.userCourseProgress?.findIndex((obj) => obj?.topic_id === topic?.id)
+      : -1;
+
+  const progressBarStyles = {
+    backgroundColor:
+      userCourseData?.userCourseProgress?.[currentProgressIndex]?.status === 'completed'
+        ? 'green'
+        : '',
+    width: `${userCourseData?.userCourseProgress?.[currentProgressIndex]?.video_progress || 0}%`
+  };
+
+  if (topic?.id === userCourseData?.activeTopic?.id) {
+    progressBarStyles.width = `${userCourseData?.videoData?.progress || 0}%`;
+  }
+
   return (
     <>
       <div
@@ -296,16 +310,11 @@ export default function TopicBox({
               </p>
             </div>
           </div>
+
           {type === 'Content' && (
             <div className={`${styles.topic_player}`}>
               <div className={`${styles.progress_bar}`}>
-                <div
-                  className={`${styles.progressBarFill}`}
-                  style={
-                    topic?.id === userCourseData?.activeTopic?.id
-                      ? { width: `${userCourseData?.videoData?.progress}%` }
-                      : {}
-                  }>
+                <div className={`${styles.progressBarFill}`} style={progressBarStyles}>
                   {/* <img src="images/progressTriangle.png" alt="" /> */}
                 </div>
               </div>
