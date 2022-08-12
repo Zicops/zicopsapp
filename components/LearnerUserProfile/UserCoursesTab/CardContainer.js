@@ -42,7 +42,7 @@ export default function CardContainer({
   return (
     <div className={`${styles.cardContainer}`}>
       <div className={`${styles.courseTabHeader}`}>
-        <p>{type}</p>
+        <p className={`${styles.text}`}>{type}</p>
 
         <div className={`${styles.imageContainer}`}>
           <img

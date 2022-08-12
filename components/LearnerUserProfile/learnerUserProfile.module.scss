@@ -111,6 +111,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
+}
+.text {
+  color: var(--white);
+  font-weight: 600;
+  font-size: 22px;
 }
 .inputField {
   width: 400px;
