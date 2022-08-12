@@ -94,10 +94,12 @@ export default function useHandleUserUpdate() {
     const data = res?.data?.updateUserOrganizationMap[0];
     setUserDataOrgLsp((prevValue) => ({ ...prevValue, ...data }));
 
+    setTimeout(sessionStorage.setItem('userAccountSetupData', JSON.stringify(userOrgData)), 200);
+
     console.log(res, userDataOrgLsp);
   }
 
-  async function updateAboutUser() {
+  async function updateAboutUser(newImage = null) {
     const sendData = {
       id: userAboutData?.id,
       first_name: userAboutData?.first_name,
@@ -118,7 +120,7 @@ export default function useHandleUserUpdate() {
       updated_by: userAboutData?.updated_by || 'Zicops'
     };
 
-    console.log(sendData, 'yo');
+    if (newImage) sendData.Photo = newImage;
 
     let isError = false;
     const res = await updateAbout({ variables: sendData }).catch((err) => {
