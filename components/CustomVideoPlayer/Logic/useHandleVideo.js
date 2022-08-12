@@ -110,10 +110,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           (obj) => obj?.topic_id === topic?.id
         );
         if (topicProgress?.length !== 0) {
-          console.log(topicProgress);
-
           if (topicProgress[0]?.topic_id === videoData?.topicContent[0]?.topicId) {
-            console.log(videoElement?.current?.duration, topicProgress);
             const vidDur = videoElement?.current?.duration;
             const startProgress = +topicProgress[0]?.video_progress;
 
@@ -138,7 +135,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           sendData.videoProgress = playerState?.progress?.toString();
         }
 
-        console.log(sendData);
+        // console.log(sendData);
         const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
           console.log(err);
           return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
@@ -151,22 +148,6 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     setUserCourseData({ ...userCourseData, ...userCourseMapData });
   }, [videoElement?.current?.duration]);
-
-  useEffect(() => {
-    // if (userCourseData?.triggerPlayerToStartAt === null) return;
-    if (!videoElement?.current?.duration) return;
-
-    const startProgress = +userCourseData?.triggerPlayerToStartAt;
-    const time = videoElement?.current?.duration;
-
-    console.log(startProgress, time, videoElement?.current?.duration);
-    // if (videoElement.current) videoElement.current.currentTime = (time * startProgress) / 100;
-    // setPlayerState({ ...playerState, progress: startProgress });
-  }, [videoElement?.current?.duration]);
-
-  // useEffect(() => {
-  //   console.log(videoElement?.current?.duration);
-  // }, [videoElement?.current?.duration]);
 
   // create and update user course progress
   useEffect(() => {
@@ -200,7 +181,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       isCompleted = playerState?.progress === 100;
 
       if (+currentTopicProgress?.video_progress > +playerState?.progress)
-        return console.log('progress saved is greater');
+        // return console.log('progress saved is greater');
+        return;
     }
 
     const { currentTime, duration } = videoElement.current;

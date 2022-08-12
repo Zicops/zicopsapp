@@ -327,7 +327,6 @@ export default function useShowData(courseContextData) {
 
   function handleModuleChange(e) {
     setSelectedModule(e);
-    console.log(5);
     setUserCourseData({
       ...userCourseData,
       activeModule: { id: e?.value, index: e?.label?.split(' ')[1] - 1 }
