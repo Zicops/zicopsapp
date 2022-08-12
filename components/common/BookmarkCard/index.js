@@ -15,7 +15,7 @@ export default function BookmarkCard({ data, styleClass }) {
               <img src={data.img || "/images/dnd1.jpg"} alt="" />
             </div>
             <div className={`${styles.bookmarkText}`}>
-              <div className={`${styles.bookmarkTime}`}> 04:57 </div>
+              <div className={`${styles.bookmarkTime}`}> 04:57 <span>Course Name </span></div>
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
             </div>
           </div>

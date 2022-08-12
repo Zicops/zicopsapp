@@ -4,6 +4,7 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
@@ -18,11 +19,7 @@ import {
   TopicContentAtom,
   TopicExamAtom
 } from '../../../../state/atoms/module.atoms';
-import {
-  getVideoObject,
-  UserCourseDataAtom,
-  VideoAtom
-} from '../../../../state/atoms/video.atom';
+import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../../state/atoms/video.atom';
 import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
@@ -254,10 +251,10 @@ export default function TopicBox({
             <img src="images/resourcesicon.png" />
             <p>Resources</p>
           </div>
-          <div>
+          {/* <div>
             <img src="images/discussicon.png" />
             <p>Discuss</p>
-          </div>
+          </div> */}
         </div>
 
         <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
@@ -411,14 +408,15 @@ export default function TopicBox({
                     align-items: center;
                     justify-content: space-between;
                     padding: 10px;
-                    border: 1px solid #ffffff;
                     transition: all 0.3s;
                     cursor: pointer;
+                    background-color: var(--black);
+                    border-radius: 5px;
                 }
                 .topic-loop:hover, .activeTopic{
                     box-shadow: 0 0 10px 0 #6bcfcf;
                     transform: scale(1.02);
-                    background-color: #000000;
+                    background-color: var(--dark_two);
                 
                 `}
       </style>
