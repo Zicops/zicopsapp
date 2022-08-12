@@ -173,7 +173,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     if (videoData?.isPreview) return;
 
     if ([0, 100].includes(+playerState?.progress)) return syncVideoProgress();
-    if (syncProgressInSeconds > 0) return setSyncProgressInSeconds(--syncProgressInSeconds);
+    if (syncProgressInSeconds > 0) return setSyncProgressInSeconds(syncProgressInSeconds - 1);
 
     syncVideoProgress();
     setSyncProgressInSeconds(SYNC_DATA_IN_SECONDS * 3);
