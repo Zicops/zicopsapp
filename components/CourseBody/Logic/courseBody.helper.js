@@ -49,7 +49,6 @@ export function updateVideoData(
 
   setUserCourseData({
     ...userCourseData,
-
     activeModule: { id: moduleId, index: currentModuleIndex },
     activeTopic: { id: topicId, index: currentTopicIndex }
   });

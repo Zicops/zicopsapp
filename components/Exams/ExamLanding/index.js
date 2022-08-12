@@ -1,9 +1,4 @@
-import {
-  getUserCourseDataObj,
-  getVideoObject,
-  UserCourseDataAtom,
-  VideoAtom
-} from '@/state/atoms/video.atom';
+import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -52,7 +47,13 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
   const router = useRouter();
 
   useEffect(() => {
-    setUserCourseData(getUserCourseDataObj({ allModules: userCourseData?.allModules }));
+    setUserCourseData({
+      ...userCourseData,
+      activeModule: { index: null, id: null },
+      activeTopic: { index: null, id: null },
+      activeTopicContent: { index: null, id: null },
+      activeTopicSubtitle: { index: null, id: null }
+    });
     setVideoData(getVideoObject());
   }, []);
 

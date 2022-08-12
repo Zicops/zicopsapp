@@ -1,5 +1,14 @@
+import {
+  ADD_USER_COURSE_PROGRESS,
+  UPDATE_USER_COURSE,
+  UPDATE_USER_COURSE_PROGRESS,
+  userClient
+} from '@/api/UserMutations';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import { useMutation } from '@apollo/client';
 import { GET_TOPIC_EXAMS } from 'API/Queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -10,17 +19,20 @@ import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../state/at
 import { addCallbackToEvent } from './customVideoPlayer.helper';
 
 export default function useVideoPlayer(videoElement, videoContainer, set) {
-  // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
-  const [playPauseActivated, setPlayPauseActivated] = useState(null);
-  const [playerState, setPlayerState] = useState({
-    isPlaying: false,
-    progress: 0, // o - 100
-    speed: 1,
-    isMuted: false,
-    volume: 0.7
+  const [updateUserCourse, { error: updateUserCourseErr }] = useMutation(UPDATE_USER_COURSE, {
+    client: userClient
   });
+  const [addUserCourseProgress, { error: addUserCourseProgressErr }] = useMutation(
+    ADD_USER_COURSE_PROGRESS,
+    { client: userClient }
+  );
+  const [updateUserCourseProgress, { error: updateUserCourseProgressErr }] = useMutation(
+    UPDATE_USER_COURSE_PROGRESS,
+    { client: userClient }
+  );
 
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+  const userData = useRecoilValue(UserStateAtom);
 
   const [videoData, updateVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -30,6 +42,17 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
+  const [syncProgressInSeconds, setSyncProgressInSeconds] = useState(SYNC_DATA_IN_SECONDS * 3);
+
+  // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
+  const [playPauseActivated, setPlayPauseActivated] = useState(null);
+  const [playerState, setPlayerState] = useState({
+    isPlaying: false,
+    progress: 0, // o - 100
+    speed: 1,
+    isMuted: false,
+    volume: 0.7
+  });
 
   // udpate recoil state
   useEffect(() => {
@@ -41,15 +64,187 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         type: videoData?.type,
         isPreview: videoData?.isPreview,
         shouldShowPlayer: videoData?.startPlayer
-      }
+      },
+      triggerPlayerToStartAt: null,
+      activeModule: { index: videoData?.currentModuleIndex, id: videoData?.currentModuleId },
+      activeTopic: { index: videoData?.currentTopicIndex, id: videoData?.topicContent[0]?.topicId }
     });
-  }, [playerState]);
+  }, [videoData, playerState]);
+
+  // update user course data
+  useEffect(async () => {
+    if (videoData?.isPreview) return;
+    if (!videoElement?.current?.duration) return;
+
+    const userCourseMapData = structuredClone(userCourseData);
+
+    if (userCourseData?.userCourseMapping?.course_status === 'open') {
+      const sendUserCourseData = {
+        courseStatus: 'started',
+        userCourseId: userCourseMapData?.userCourseMapping?.user_course_id,
+        userId: userCourseMapData?.userCourseMapping?.user_id,
+        userLspId: userCourseMapData?.userCourseMapping?.user_lsp_id,
+        courseId: userCourseMapData?.userCourseMapping?.course_id,
+        addedBy: userCourseMapData?.userCourseMapping?.added_by,
+        courseType: userCourseMapData?.userCourseMapping?.course_type,
+        isMandatory: userCourseMapData?.userCourseMapping?.is_mandatory,
+        endDate: userCourseMapData?.userCourseMapping?.end_date
+      };
+
+      // console.log(sendUserCourseData);
+      const res = await updateUserCourse({ variables: sendUserCourseData }).catch((err) => {
+        console.log(err);
+        return setToastMsg({ type: 'danger', message: 'Course Assign Update Error' });
+      });
+      console.log(res);
+    }
+
+    for (let i = 0; i < userCourseMapData?.allModules?.length; i++) {
+      const mod = userCourseMapData?.allModules[i];
+
+      for (let j = 0; j < mod?.topicData.length; j++) {
+        const topic = mod?.topicData[j];
+        if (topic?.type !== 'Content') continue;
+
+        const topicProgress = userCourseMapData?.userCourseProgress?.filter(
+          (obj) => obj?.topic_id === topic?.id
+        );
+        if (topicProgress?.length !== 0) {
+          console.log(topicProgress);
+
+          if (topicProgress[0]?.topic_id === videoData?.topicContent[0]?.topicId) {
+            console.log(videoElement?.current?.duration, topicProgress);
+            const vidDur = videoElement?.current?.duration;
+            const startProgress = +topicProgress[0]?.video_progress;
+
+            videoElement.current.currentTime = (vidDur * startProgress) / 100;
+            setPlayerState({ ...playerState, progress: startProgress });
+          }
+          continue;
+        }
+
+        const { currentTime, duration } = videoElement.current;
+        const sendData = {
+          userId: userData.id,
+          userCourseId: userCourseMapData?.userCourseMapping?.user_course_id,
+          topicId: topic?.id,
+          topicType: topic?.type,
+          status: 'not-started',
+          videoProgress: '',
+          timestamp: `${currentTime}-${duration}`
+        };
+        if (topic?.id === videoData?.topicContent[0]?.topicId) {
+          sendData.status = 'in-progress';
+          sendData.videoProgress = playerState?.progress?.toString();
+        }
+
+        console.log(sendData);
+        const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
+          console.log(err);
+          return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+        });
+        const userCourseProgressData = progressRes?.data?.addUserCourseProgress[0];
+        if (userCourseProgressData)
+          userCourseMapData.userCourseProgress.push(userCourseProgressData);
+      }
+    }
+
+    setUserCourseData({ ...userCourseData, ...userCourseMapData });
+  }, [videoElement?.current?.duration]);
+
+  useEffect(() => {
+    // if (userCourseData?.triggerPlayerToStartAt === null) return;
+    if (!videoElement?.current?.duration) return;
+
+    const startProgress = +userCourseData?.triggerPlayerToStartAt;
+    const time = videoElement?.current?.duration;
+
+    console.log(startProgress, time, videoElement?.current?.duration);
+    // if (videoElement.current) videoElement.current.currentTime = (time * startProgress) / 100;
+    // setPlayerState({ ...playerState, progress: startProgress });
+  }, [videoElement?.current?.duration]);
+
+  // useEffect(() => {
+  //   console.log(videoElement?.current?.duration);
+  // }, [videoElement?.current?.duration]);
+
+  // create and update user course progress
+  useEffect(() => {
+    if (videoData?.isPreview) return;
+
+    if ([0, 100].includes(+playerState?.progress)) return syncVideoProgress();
+    if (syncProgressInSeconds > 0) return setSyncProgressInSeconds(syncProgressInSeconds - 1);
+
+    syncVideoProgress();
+    setSyncProgressInSeconds(SYNC_DATA_IN_SECONDS * 3);
+  }, [playerState?.progress]);
+
+  // sync data when video is paused
+  useEffect(() => {
+    if (!playerState?.isPlaying) syncVideoProgress();
+  }, [playerState?.isPlaying]);
+
+  async function syncVideoProgress(type) {
+    const userCourseMapData = structuredClone(userCourseData);
+    const currentProgressIndex = userCourseMapData?.userCourseProgress?.findIndex(
+      (obj) => obj?.topic_id === videoData?.topicContent[0]?.topicId
+    );
+    // TODO: what to do if no progress found?
+    if (currentProgressIndex < 0) return;
+
+    const currentTopicProgress = userCourseMapData?.userCourseProgress[currentProgressIndex];
+
+    let isCompleted = currentTopicProgress?.status === 'completed';
+    if (type === 'binge') isCompleted = true;
+    if (!isCompleted) {
+      isCompleted = playerState?.progress === 100;
+
+      if (+currentTopicProgress?.video_progress > +playerState?.progress)
+        return console.log('progress saved is greater');
+    }
+
+    const { currentTime, duration } = videoElement.current;
+    const sendData = {
+      userCpId: currentTopicProgress?.user_cp_id,
+      userId: userData.id,
+      userCourseId: userCourseMapData?.userCourseMapping?.user_course_id,
+      topicId: currentTopicProgress?.topic_id,
+      topicType: 'Content',
+      status: isCompleted ? 'completed' : 'in-progress',
+      videoProgress: playerState?.progress?.toString(),
+      timestamp: `${currentTime}-${duration}`
+    };
+
+    // console.log('course progress', sendData);
+    const progressRes = await updateUserCourseProgress({ variables: sendData }).catch((err) => {
+      console.log(err);
+      return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+    });
+    const userCourseProgressData = progressRes?.data?.updateUserCourseProgress;
+
+    userCourseMapData.userCourseProgress[currentProgressIndex] = userCourseProgressData;
+    if (isCompleted) {
+      userCourseMapData.activeModule = { index: null, id: null };
+      userCourseMapData.activeTopic = { index: null, id: null };
+      userCourseMapData.activeTopicContent = { index: null, id: null };
+      userCourseMapData.activeTopicSubtitle = { index: null, id: null };
+    }
+    setUserCourseData({ ...userCourseData, ...userCourseMapData });
+  }
+
+  useEffect(() => {
+    if (updateUserCourseErr) setToastMsg({ type: 'danger', message: 'Course Assign Update Error' });
+    if (addUserCourseProgressErr)
+      setToastMsg({ type: 'danger', message: 'Course Progress Add Error' });
+    if (updateUserCourseProgressErr)
+      setToastMsg({ type: 'danger', message: 'Course Progress Update Error' });
+  }, [updateUserCourseErr, addUserCourseProgressErr, updateUserCourseProgressErr]);
 
   // hide control bar if no mouse movement for 2.5 sec
   const duration = 2500;
   let timeout;
   useEffect(() => {
-    setVideoTime(0);
+    if (userCourseData?.triggerPlayerToStartAt === null) setVideoTime(0);
     videoElement.current?.focus();
     updateIsPlayingTo(true);
 
@@ -98,7 +293,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // reset progress when video changes
   useEffect(() => {
-    if (playerState.progress > 0) setVideoTime(0);
+    if (playerState.progress > 0 && userCourseData?.triggerPlayerToStartAt === null)
+      setVideoTime(0);
     if (!playerState.isPlaying) togglePlay();
   }, [videoData.videoSrc]);
 
@@ -256,7 +452,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     });
   }
 
-  async function playNextVideo() {
+  async function playNextVideo(type = null) {
+    await syncVideoProgress(type);
     if (!videoData.allModuleTopic) return;
     const { allModuleTopic, currentTopicIndex } = videoData;
 
@@ -292,6 +489,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }
 
   async function playPreviousVideo() {
+    await syncVideoProgress();
     if (!videoData.allModuleTopic) return;
 
     const { allModuleTopic, currentTopicIndex } = videoData;

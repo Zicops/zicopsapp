@@ -35,6 +35,8 @@ export function getUserCourseDataObj(data) {
   return {
     videoData: data?.videoData || getVideoDataObj(),
     userCourseMapping: data?.userCourseMapping || {},
+    userCourseProgress: data?.userCourseProgress || [],
+    triggerPlayerToStartAt: data?.triggerPlayerToStartAt || null,
     allModules:
       data?.allModules ||
       [

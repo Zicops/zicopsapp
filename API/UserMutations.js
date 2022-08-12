@@ -213,6 +213,7 @@ export const ADD_USER_COURSE = gql`
 
 export const UPDATE_USER_COURSE = gql`
   mutation updateUserCourse(
+    $userCourseId: ID!
     $userId: String!
     $userLspId: String!
     $courseId: String!
@@ -223,18 +224,17 @@ export const UPDATE_USER_COURSE = gql`
     $endDate: String
   ) {
     updateUserCourse(
-      input: [
-        {
-          user_id: $userId
-          user_lsp_id: $userLspId
-          course_id: $courseId
-          course_type: $courseType
-          added_by: $addedBy
-          is_mandatory: $isMandatory
-          course_status: $courseStatus
-          end_date: $endDate
-        }
-      ]
+      input: {
+        user_course_id: $userCourseId
+        user_id: $userId
+        user_lsp_id: $userLspId
+        course_id: $courseId
+        course_type: $courseType
+        added_by: $addedBy
+        is_mandatory: $isMandatory
+        course_status: $courseStatus
+        end_date: $endDate
+      }
     ) {
       user_course_id
       user_id
@@ -245,6 +245,84 @@ export const UPDATE_USER_COURSE = gql`
       is_mandatory
       end_date
       course_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_USER_COURSE_PROGRESS = gql`
+  mutation addUserCourseProgress(
+    $userId: String!
+    $userCourseId: String!
+    $topicId: String!
+    $topicType: String!
+    $status: String!
+    $videoProgress: String!
+    $timestamp: String!
+  ) {
+    addUserCourseProgress(
+      input: [
+        {
+          user_id: $userId
+          user_course_id: $userCourseId
+          topic_id: $topicId
+          topic_type: $topicType
+          status: $status
+          video_progress: $videoProgress
+          time_stamp: $timestamp
+        }
+      ]
+    ) {
+      user_cp_id
+      user_id
+      user_course_id
+      topic_id
+      topic_type
+      status
+      video_progress
+      time_stamp
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_COURSE_PROGRESS = gql`
+  mutation updateUserCourseProgress(
+    $userCpId: ID!
+    $userId: String!
+    $userCourseId: String!
+    $topicId: String!
+    $topicType: String!
+    $status: String!
+    $videoProgress: String!
+    $timestamp: String!
+  ) {
+    updateUserCourseProgress(
+      input: {
+        user_cp_id: $userCpId
+        user_id: $userId
+        user_course_id: $userCourseId
+        topic_id: $topicId
+        topic_type: $topicType
+        status: $status
+        video_progress: $videoProgress
+        time_stamp: $timestamp
+      }
+    ) {
+      user_cp_id
+      user_id
+      user_course_id
+      topic_id
+      topic_type
+      status
+      video_progress
+      time_stamp
       created_by
       updated_by
       created_at
@@ -731,6 +809,57 @@ export const UPDATE_USER_EXAM_ATTEMPTS = gql`
       attempt_status
       attempt_start_time
       attempt_duration
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+// ------------------------------------- QUERIES
+
+export const GET_USER_COURSE_MAPS = gql`
+  query getUserCourseMaps($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getUserCourseMaps(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      user_courses {
+        user_course_id
+        user_id
+        user_lsp_id
+        course_id
+        course_type
+        added_by
+        is_mandatory
+        end_date
+        course_status
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_USER_COURSE_PROGRESS = gql`
+  query getUserCourseProgressByMapId($userCourseId: ID!) {
+    getUserCourseProgressByMapId(user_course_id: $userCourseId) {
+      user_cp_id
+      user_id
+      user_course_id
+      topic_id
+      topic_type
+      status
+      video_progress
+      time_stamp
       created_by
       updated_by
       created_at
