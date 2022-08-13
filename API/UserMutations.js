@@ -490,6 +490,39 @@ export const ADD_USER_PREFERENCE = gql`
   }
 `;
 
+export const UPDATE_USER_PREFERENCE = gql`
+  mutation UpdateUserPreference(
+    $user_preference_id: ID
+    $user_id: String!
+    $user_lsp_id: String!
+    $is_active: Boolean!
+    $sub_category: String!
+    $is_base: Boolean!
+  ) {
+    updateUserPreference(
+      input: {
+        user_preference_id: $user_preference_id
+        user_id: $user_id
+        user_lsp_id: $user_lsp_id
+        sub_category: $sub_category
+        is_base: $is_base
+        is_active: $is_active
+      }
+    ) {
+      user_preference_id
+      user_id
+      user_lsp_id
+      sub_category
+      is_base
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
 export const ADD_USER_ROLE = gql`
   mutation addUserRoles(
     $user_id: String!
