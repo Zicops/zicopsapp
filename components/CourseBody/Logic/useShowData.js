@@ -1,5 +1,8 @@
-import { userClient } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS_BY_COURSE_ID, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
+import {
+  GET_USER_COURSE_MAPS_BY_COURSE_ID,
+  GET_USER_COURSE_PROGRESS,
+  userQueryClient
+} from '@/api/UserQueries';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery } from '@apollo/client/react';
 import { useEffect, useRef, useState } from 'react';
@@ -30,7 +33,7 @@ import {
 import { UserCourseDataAtom } from '../../../state/atoms/video.atom';
 import { tabs } from './courseBody.helper';
 
-export default function useShowData(courseContextData) {
+export default function useShowData(courseContextData, isPreview) {
   const { fullCourse } = courseContextData;
 
   let myRef = useRef(null);
@@ -81,9 +84,11 @@ export default function useShowData(courseContextData) {
     });
 
   const [loadUserCourseMaps] = useLazyQuery(GET_USER_COURSE_MAPS_BY_COURSE_ID, {
-    client: userClient
+    client: userQueryClient
   });
-  const [loadUserCourseProgress] = useLazyQuery(GET_USER_COURSE_PROGRESS, { client: userClient });
+  const [loadUserCourseProgress] = useLazyQuery(GET_USER_COURSE_PROGRESS, {
+    client: userQueryClient
+  });
 
   useEffect(() => {
     if (!userCourseData?.activeModule?.id) return;
@@ -151,30 +156,33 @@ export default function useShowData(courseContextData) {
         mod.topicData = filteredTopicData;
       });
 
-    const mapRes = await loadUserCourseMaps({
-      variables: { courseId: fullCourse?.id },
-      fetchPolicy: 'no-cache'
-    });
-    if (mapRes?.error)
-      return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+    const data = { userCourseMapping: {}, userCourseProgress: [] };
 
-    const currentCourseMap = mapRes?.data?.getUserCourseMapByCourseID[0];
-
-    const data = {};
-    if (currentCourseMap?.user_course_id) {
-      const progressRes = await loadUserCourseProgress({
-        variables: { userCourseId: currentCourseMap?.user_course_id },
+    if (!isPreview) {
+      const mapRes = await loadUserCourseMaps({
+        variables: { courseId: fullCourse?.id },
         fetchPolicy: 'no-cache'
       });
-      const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
-      if (courseProgress?.length) data.userCourseProgress = courseProgress;
+      if (mapRes?.error)
+        return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+
+      data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
+
+      if (data?.userCourseMapping?.user_course_id) {
+        const progressRes = await loadUserCourseProgress({
+          variables: { userCourseId: data?.userCourseMapping?.user_course_id },
+          fetchPolicy: 'no-cache'
+        });
+        const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+        if (courseProgress?.length) data.userCourseProgress = courseProgress;
+      }
     }
 
     setUserCourseData({
       ...userCourseData,
       allModules: moduleDataLoaded,
       activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
-      userCourseMapping: currentCourseMap,
+      userCourseMapping: data?.userCourseMapping || {},
       userCourseProgress: data?.userCourseProgress || []
     });
 

@@ -75,6 +75,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   useEffect(async () => {
     if (videoData?.isPreview) return;
     if (!videoElement?.current?.duration) return;
+    if (!userCourseData?.userCourseMapping?.user_course_id) return;
 
     const userCourseMapData = structuredClone(userCourseData);
 
@@ -97,6 +98,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         return setToastMsg({ type: 'danger', message: 'Course Assign Update Error' });
       });
       console.log(res);
+      if (res?.data?.updateUserCourse)
+        userCourseMapData.userCourseMapping = res?.data?.updateUserCourse || {};
     }
 
     for (let i = 0; i < userCourseMapData?.allModules?.length; i++) {
@@ -153,6 +156,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // create and update user course progress
   useEffect(() => {
     if (videoData?.isPreview) return;
+    if (!userCourseData?.userCourseMapping?.user_course_id) return;
 
     if ([0, 100].includes(+playerState?.progress)) return syncVideoProgress();
     if (syncProgressInSeconds > 0) return setSyncProgressInSeconds(syncProgressInSeconds - 1);
@@ -167,6 +171,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }, [playerState?.isPlaying]);
 
   async function syncVideoProgress(type) {
+    if (!userCourseData?.userCourseMapping?.user_course_id) return;
+
     const userCourseMapData = structuredClone(userCourseData);
     const currentProgressIndex = userCourseMapData?.userCourseProgress?.findIndex(
       (obj) => obj?.topic_id === videoData?.topicContent[0]?.topicId
