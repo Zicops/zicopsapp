@@ -84,13 +84,13 @@
   text-transform: capitalize;
   padding: 5px 0px;
 }
-.text,
-.category {
-  color: $white;
-  font-size: 1.2vw;
-  text-transform: capitalize;
-  font-weight: 500;
-}
+// .text,
+// .category {
+//   color: $white;
+//   // font-size: 1.2vw;
+//   text-transform: capitalize;
+//   font-weight: 600;
+// }
 .userInfoWraper {
   background-color: #262626;
   border-radius: 16px;
@@ -112,7 +112,7 @@
   justify-content: space-between;
   align-items: center;
 }
-.text {
+.text , .category{
   color: var(--white);
   font-weight: 600;
   font-size: 22px;
@@ -220,9 +220,9 @@
     }
   }
 
-  hr {
-    margin: 5px auto 20px;
-  }
+  // hr {
+  //   margin: 5px auto 20px;
+  // }
 
   .boxCardContainer {
     display: flex;

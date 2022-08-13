@@ -9,14 +9,16 @@ const CohortDashboardCardSlider = () => {
   console.log(CohortsData);
   return (
     <div style={{ position: 'relative' }}>
-      <div className={`${styles.headingText}`} style={{ borderBottom: '1px solid white' }}>
-        Your Cohorts
+      <div className={`${styles.headingText}`}>Your Cohorts</div>
+      <hr />
+      <div style={{ position: 'relative' }}>
+        <ItemSlider
+          responsiveViews={[4, 4, 1]}>
+          {CohortsData.map(function (v, i) {
+            return <SmallCard CohortsData={v} />;
+          })}
+        </ItemSlider>
       </div>
-      <ItemSlider responsiveViews={[4, 4, 1]}>
-        {CohortsData.map(function (v, i) {
-          return <SmallCard CohortsData={v} />;
-        })}
-      </ItemSlider>
     </div>
   );
 };
