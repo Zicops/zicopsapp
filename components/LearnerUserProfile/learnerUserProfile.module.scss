@@ -238,6 +238,12 @@
     border: 2px solid $primary;
     color: $primary;
     border-radius: 3px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  button:hover {
+    color: $black;
+    background-color: $primary;
   }
 }
 
@@ -314,4 +320,58 @@
   width: 100%;
   height: auto;
   background-color: black;
+}
+
+.container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.prefContainer {
+  background-image: none !important;
+  color: $white !important;
+  svg path {
+    fill: $white !important;
+  }
+  input {
+    color: $white !important;
+  }
+  span {
+    color: $primary !important;
+  }
+}
+
+.prefNav {
+  background-image: none !important;
+  div {
+    justify-content: right !important;
+  }
+  button {
+    color: $black !important;
+    background-color: $primary !important;
+  }
+  button:disabled {
+    background-color: $darkOne !important;
+  }
+}
+
+.prefCat {
+  button {
+    color: $primary !important;
+  }
+  span {
+    svg {
+      fill: $primary !important;
+    }
+  }
+}
+
+.prefGrid {
+  div {
+    color: $white !important;
+  }
+
+  svg {
+    fill: $darkOne !important;
+  }
 }
