@@ -23,9 +23,10 @@ const BarGraphView = () => {
   });
   return (
     <>
-      <div className={`${styles.headingText}`} style={{ borderBottom: '1px solid white' }}>
+      <div className={`${styles.headingText}`}>
         Skill matrix dashboard
       </div>
+      <hr/>
       <BarChart chartData={userData} />
     </>
   );

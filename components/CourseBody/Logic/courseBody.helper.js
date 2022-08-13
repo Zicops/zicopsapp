@@ -15,7 +15,7 @@ export const tabs = [
   },
   { name: 'Notes', comp: <CourseBodyNotes /> },
   { name: 'Discussion', comp: ' ABCD ' },
-  { name: 'Mentor', comp: ' XYZ ' },
+  // { name: 'Mentor', comp: ' XYZ ' },
   { name: 'About', comp: <CourseBodyAbout /> }
 ];
 

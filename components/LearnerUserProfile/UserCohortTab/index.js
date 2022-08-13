@@ -10,7 +10,7 @@ const UserCohortTab = () => {
 
   return (
     <div className={`${styles.userTabContainer}`}>
-      <p>Your Cohort</p>
+      <p className={`${styles.text}`}>Your Cohort</p>
 
       <hr />
 
