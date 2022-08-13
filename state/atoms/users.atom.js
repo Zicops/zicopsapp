@@ -69,7 +69,7 @@ export function getUserOrgObject(data) {
 
     // user language data
     user_language_id: data?.user_language_id || null,
-    language: data?.language || '',
+    language: data?.language || 'English',
     is_base_language: data?.is_base_language || false,
     lang_is_active: data?.lang_is_active || true,
 
