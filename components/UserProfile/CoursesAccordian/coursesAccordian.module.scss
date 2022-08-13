@@ -14,8 +14,10 @@
     width: 20px;
     margin-right: 10px;
     color: $primary;
+    border: 1px solid $primary;
     &:hover{
         cursor: pointer;
+  
     }
 }
 .course_loop{

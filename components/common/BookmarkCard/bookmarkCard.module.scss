@@ -43,9 +43,15 @@
                 }
             }
             .bookmarkText{
-                width: 75%;
-                color: $white;
+            width: 75%;
+            color: $white;
+                .bookmarkTime span{
+                    font-size:2vh;
+                    color:$primary;
+                    padding-left: 0.7vh;
+                    font-weight: 600;
+                }
+                }
             }
-        }
     }
 }

@@ -39,17 +39,17 @@ export default function Header({ title, description, expertise }) {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 15px 0 40px 0;
+            padding: 15px 0;
           }
           .heading {
-            margin-top: 20px;
+            margin-top: 5px;
           }
           .subheading {
             display: flex;
             gap: 5px;
             font-size: 14px;
             color: var(--dark_three);
-            margin: 10px 0;
+            margin: 5px 0;
             max-width: 800px;
             text-align: center;
           }

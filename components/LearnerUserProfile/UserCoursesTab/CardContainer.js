@@ -42,7 +42,7 @@ export default function CardContainer({
   return (
     <div className={`${styles.cardContainer}`}>
       <div className={`${styles.courseTabHeader}`}>
-        <p>{type}</p>
+        <p className={`${styles.text}`}>{type}</p>
 
         <div className={`${styles.imageContainer}`}>
           <img
@@ -54,7 +54,9 @@ export default function CardContainer({
             onClick={() => setIsBoxView(true)}
           />
 
-          <button className={`${styles.seeAllBtn}`} onClick={() => setIsShowAll(!isShowAll)}>
+          <button
+            className={isShowAll ? `${styles.seeAllBtn}` : `${styles.seeLessBtn} `}
+            onClick={() => setIsShowAll(!isShowAll)}>
             See {isShowAll ? 'Less' : 'All'}
             <img src={`/images/arrow2.png`} />
           </button>
