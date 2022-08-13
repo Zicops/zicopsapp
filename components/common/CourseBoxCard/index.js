@@ -15,7 +15,7 @@ export default function CourseBoxCard({
       style={{ width: `${cardWidth}px` }}>
       <div className={`${styles.imgContainer}`}>
         {/* course img */}
-        <img src={courseData?.tileImg || '/images/profile-card.png'} alt="" />
+        <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
 
         {/* level and type */}
         <div className={`${styles.dataOverImg}`}>
@@ -32,16 +32,14 @@ export default function CourseBoxCard({
       {/* title and cat sub cat */}
       <div className={`${styles.cardBody}`}>
         <div>
-          <p className={`${styles.title}`}>
-            {courseData?.title || 'Start with Project Management'}
-          </p>
+          <p className={`${styles.title}`}>{courseData?.name || 'Start with Project Management'}</p>
           <p className={`${styles.catSubCat}`}>
             {courseData?.category || 'Development'}
-            <div className={`${styles.dot}`}></div> {courseData?.subCategory || 'Java'}
+            <div className={`${styles.dot}`}></div> {courseData?.sub_category || 'Java'}
           </p>
         </div>
 
-        {isAdmin && (
+        {/* {isAdmin && (
           <svg
             width="25"
             height="27"
@@ -53,7 +51,7 @@ export default function CourseBoxCard({
               fill="#6BCFCF"
             />
           </svg>
-        )}
+        )} */}
       </div>
 
       {/* footer */}
