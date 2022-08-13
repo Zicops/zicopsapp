@@ -1,3 +1,4 @@
+import useHandleUserUpdate from '@/components/LearnerUserProfile/Logic/useHandleUserUpdate';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Button, Chip, Grid } from '@mui/material';
@@ -8,11 +9,20 @@ import { useRecoilState } from 'recoil';
 import useHandleAddUserDetails from '../Logic/useHandleAddUser';
 import styles from './preview.module.scss';
 
-const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) => {
+const SubCategoriesPreview = ({
+  setCurrentComponent,
+  selected,
+  setSelected,
+  customStyle = [],
+  isUpdate = false,
+  handleUpdate = () => {},
+  popUpClose = () => {}
+}) => {
   const [primary, setPrimary] = useState('');
   const [vidIsOpen, setVidIsOpen] = useState(false);
 
   const { updateAboutUser, addUserLearningSpaceDetails } = useHandleAddUserDetails();
+  const { updatePreferences } = useHandleUserUpdate();
 
   const router = useRouter();
 
@@ -26,9 +36,9 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
   async function handleCompleteSetup() {
     // console.log(selected);
     const sub_categories = selected.map((item) => item.name);
-    console.log(sub_categories);
+
     setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
-    console.log(userBasicData, userAccountData);
+
     await addUserLearningSpaceDetails(sub_categories, primary);
     await updateAboutUser();
     setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
@@ -36,6 +46,12 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
     router.prefetch('/');
     setVidIsOpen(true);
     vidRef.current.play();
+    console.log('from add');
+  }
+
+  function handleUpdate() {
+    updatePreferences(selected, primary);
+    popUpClose(false);
   }
 
   useEffect(() => {
@@ -71,9 +87,11 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
     <>
       <div className={`${styles.container}`}>
         <div className={`${styles.title}`}>Selected Sub-Categories</div>
-        <div className={`${styles.subtitle}`}>Kindly select your primary Sub-Category</div>
+        <div className={`${styles.subtitle} ${customStyle[0]}`}>
+          Kindly select your primary Sub-Category
+        </div>
         {
-          <Grid container spacing={2}>
+          <Grid container spacing={2} className={`${customStyle[1]}`}>
             {selected.map((subCategory) => (
               <Grid item xs={4}>
                 <CustomChip
@@ -95,7 +113,7 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
         }
         <Box mt={3} />
       </div>
-      <div className={`${styles.navigator}`}>
+      <div className={`${styles.navigator} ${customStyle[2]}`}>
         <span />
         <div className={`${styles.navigatorBtns}`}>
           <Button
@@ -110,7 +128,7 @@ const SubCategoriesPreview = ({ setCurrentComponent, selected, setSelected }) =>
             disabled={primary === ''}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
-            onClick={handleCompleteSetup}>
+            onClick={isUpdate ? handleUpdate : handleCompleteSetup}>
             Complete Setup
           </Button>
         </div>
