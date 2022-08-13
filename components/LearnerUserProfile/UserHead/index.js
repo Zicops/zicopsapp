@@ -1,11 +1,16 @@
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
 import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { IsUpdatedAtom, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
 const UserHead = () => {
+  const [loadUserData] = useLazyQuery(GET_USER_DETAIL, {
+    client: userQueryClient
+  });
   const [isOpen, setIsopen] = useState(false);
   const [image, setImage] = useState(null);
   const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
@@ -26,13 +31,22 @@ const UserHead = () => {
     setIsUpdate(false);
   }, [isUpdate]);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!userProfileData?.first_name && !userProfileData?.last_name) {
-      const userData = getUserData();
-      const data = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
-      setUserAccountdata({ ...data });
-      setUserProfiledata({ ...userData });
-      setFullName(`${userData?.first_name} ${userData?.last_name}`);
+      const data = getUserData();
+      const userData = await loadUserData({ variables: { user_id: data?.id } }).catch((err) => {
+        console.log(err);
+      });
+      const basicInfo = userData?.data?.getUserDetails;
+
+      const orgData = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
+      setUserAccountdata((prevValue) => ({ ...prevValue, ...orgData }));
+      setUserProfiledata((prevValue) => ({
+        ...prevValue,
+        ...data,
+        photoUrl: basicInfo?.photoUrl
+      }));
+      setFullName(`${data?.first_name} ${data?.last_name}`);
       return;
     }
   }, []);
@@ -66,7 +80,6 @@ const UserHead = () => {
           // handleChange={setImage}
           initialImage={image}
           handleUpdateImage={async (updatedFile) => {
-            console.log(updatedFile);
             await updateAboutUser(updatedFile);
             setIsopen(false);
           }}
