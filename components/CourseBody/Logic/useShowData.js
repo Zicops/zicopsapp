@@ -1,4 +1,5 @@
-import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, userClient } from '@/api/UserMutations';
+import { userClient } from '@/api/UserMutations';
+import { GET_USER_COURSE_MAPS_BY_COURSE_ID, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery } from '@apollo/client/react';
 import { useEffect, useRef, useState } from 'react';
@@ -79,7 +80,9 @@ export default function useShowData(courseContextData) {
       client: queryClient
     });
 
-  const [loadUserCourseMaps] = useLazyQuery(GET_USER_COURSE_MAPS, { client: userClient });
+  const [loadUserCourseMaps] = useLazyQuery(GET_USER_COURSE_MAPS_BY_COURSE_ID, {
+    client: userClient
+  });
   const [loadUserCourseProgress] = useLazyQuery(GET_USER_COURSE_PROGRESS, { client: userClient });
 
   useEffect(() => {
@@ -148,14 +151,14 @@ export default function useShowData(courseContextData) {
         mod.topicData = filteredTopicData;
       });
 
-    const queryVariables = { publish_time: Date.now(), pageSize: 99999999, pageCursor: '' };
-    const mapRes = await loadUserCourseMaps({ variables: queryVariables, fetchPolicy: 'no-cache' });
+    const mapRes = await loadUserCourseMaps({
+      variables: { courseId: fullCourse?.id },
+      fetchPolicy: 'no-cache'
+    });
     if (mapRes?.error)
       return setToastMsg({ type: 'danger', message: 'user course maps load error' });
 
-    const currentCourseMap = mapRes?.data?.getUserCourseMaps?.user_courses?.filter(
-      (obj) => obj?.course_id === fullCourse?.id
-    )[0];
+    const currentCourseMap = mapRes?.data?.getUserCourseMapByCourseID[0];
 
     const data = {};
     if (currentCourseMap?.user_course_id) {
@@ -226,7 +229,7 @@ export default function useShowData(courseContextData) {
         updateResources(data.getResourcesByCourseId || []);
       }
     );
-  }, [fullCourse]);
+  }, [fullCourse?.id]);
 
   useEffect(() => {
     if (errorModuleData) return setToastMsg({ type: 'danger', message: 'Module Load Error' });

@@ -104,11 +104,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
       for (let j = 0; j < mod?.topicData.length; j++) {
         const topic = mod?.topicData[j];
-        if (topic?.type !== 'Content') continue;
+        // if (topic?.type !== 'Content') continue;
 
         const topicProgress = userCourseMapData?.userCourseProgress?.filter(
           (obj) => obj?.topic_id === topic?.id
         );
+        // console.log(topicProgress);
         if (topicProgress?.length !== 0) {
           if (topicProgress[0]?.topic_id === videoData?.topicContent[0]?.topicId) {
             const vidDur = videoElement?.current?.duration;
@@ -128,14 +129,14 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           topicType: topic?.type,
           status: 'not-started',
           videoProgress: '',
-          timestamp: `${currentTime}-${duration}`
+          timestamp: topic?.type !== 'Content' ? `${currentTime}-${duration}` : ''
         };
         if (topic?.id === videoData?.topicContent[0]?.topicId) {
           sendData.status = 'in-progress';
           sendData.videoProgress = playerState?.progress?.toString();
         }
 
-        // console.log(sendData);
+        console.log(sendData);
         const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
           console.log(err);
           return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
