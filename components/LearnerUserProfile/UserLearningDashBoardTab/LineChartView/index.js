@@ -32,12 +32,13 @@ const LineChartView = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          margin: '0px 15px',
-          borderBottom: '1px solid white'
+          // margin: '0px 15px',
+          // borderBottom: '1px solid white'
         }}>
         <div className={`${styles.headingText}`}>Engagement in Zicops</div>
         <DayWeekMonth />
       </div>
+      <hr/>
       <LineChart chartData={userEngageData} />
     </>
   );

@@ -7,14 +7,19 @@ const UserDashboardCardSlider = () => {
 
   return (
     <div style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '0px 15px',borderBottom:'1px solid white',paddingBottom:'10px'}}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <DayWeekMonth />
       </div>
-      <ItemSlider responsiveViews={[4, 4, 1]}>
-        {UserDashboardCardSliderData.map(function (v, i) {
-          return <DataCard UserDashboardCardSliderData={v} />;
-        })}
-      </ItemSlider>
+      <hr />
+      <div style={{ position: 'relative' }}>
+        <ItemSlider
+          responsiveViews={[4, 4, 1]}
+          carouselProps={{ containerClass: 'itsItemContainer' }}>
+          {UserDashboardCardSliderData.map(function (v, i) {
+            return <DataCard UserDashboardCardSliderData={v} />;
+          })}
+        </ItemSlider>
+      </div>
     </div>
   );
 };

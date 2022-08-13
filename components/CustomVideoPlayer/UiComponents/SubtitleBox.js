@@ -1,5 +1,6 @@
 import SwitchButton from '@/components/common/FormComponents/SwitchButton';
 import { VideoAtom } from '@/state/atoms/video.atom';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../customVideoPlayer.module.scss';
 
@@ -8,6 +9,9 @@ export default function SubtitleBox({ subtitleState }) {
   const [showSubtitles, setShowSubtitles] = subtitleState;
 
   const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
+  useEffect(() => {
+    setShowSubtitles(!!topicContent?.[currentTopicContentIndex]?.subtitleUrl?.length);
+  }, []);
 
   return (
     <>
@@ -45,6 +49,7 @@ export default function SubtitleBox({ subtitleState }) {
               styles={{
                 marginLeft: '5px'
               }}
+              isDisabled={!topicContent?.[currentTopicContentIndex]?.subtitleUrl?.length}
               type={null}
               isChecked={showSubtitles}
               handleChange={() => setShowSubtitles(!showSubtitles)}
