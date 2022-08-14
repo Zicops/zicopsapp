@@ -77,6 +77,7 @@ const UserAboutTab = () => {
     const resOrg = await loadUserOrg({ variables: { user_id: id } }).catch((err) =>
       console.log(err)
     );
+    //added comments
     const orgData = resOrg?.data?.getUserOrganizations[0];
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
