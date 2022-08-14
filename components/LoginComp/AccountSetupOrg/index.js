@@ -14,12 +14,7 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
 
   const userBasicData = useRecoilValue(UserStateAtom);
   const [userOrgLsp, setUserOrgLsp] = useRecoilState(UsersOrganizationAtom);
-  const {
-    isOrganizationSetupReady,
-    updateAboutUser,
-    addUserLearningSpaceDetails,
-    addUserOrganizationDetails
-  } = useHandleAddUserDetails();
+  const { isOrganizationSetupReady } = useHandleAddUserDetails();
 
   //initialize user_id after login
   useEffect(() => {

@@ -1,5 +1,6 @@
 import CourseBoxCard from '@/components/common/CourseBoxCard';
 import CourseLIstCard from '@/components/common/CourseLIstCard';
+import { truncateToN } from '@/helper/common.helper';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 
@@ -8,7 +9,9 @@ export default function CardContainer({
   type,
   footerType,
   courseData,
-  statusData
+  statusData,
+  buttonText = '',
+  handleSubmit = () => {}
 }) {
   const cardContainerRef = useRef(null);
 
@@ -44,15 +47,15 @@ export default function CardContainer({
       <div className={`${styles.courseTabHeader}`}>
         <p className={`${styles.text}`}>{type}</p>
 
-        <div className={`${styles.imageContainer}`}>
-          <img
-            src={`/images/svg/view_agenda${isBoxView ? '_gray' : ''}.svg`}
-            onClick={() => setIsBoxView(false)}
-          />
-          <img
-            src={`/images/svg/grid_view${isBoxView ? '_primary' : ''}.svg`}
-            onClick={() => setIsBoxView(true)}
-          />
+          <div className={`${styles.imageContainer}`}>
+            <img
+              src={`/images/svg/view_agenda${isBoxView ? '_gray' : ''}.svg`}
+              onClick={() => setIsBoxView(false)}
+            />
+            <img
+              src={`/images/svg/grid_view${isBoxView ? '_primary' : ''}.svg`}
+              onClick={() => setIsBoxView(true)}
+            />
 
           <button
             className={isShowAll ? `${styles.seeAllBtn}` : `${styles.seeLessBtn} `}
@@ -63,48 +66,50 @@ export default function CardContainer({
         </div>
       </div>
 
-      <hr />
+        <hr />
 
-      {isBoxView ? (
-        <div className={`${styles.boxCardContainer}`} ref={cardContainerRef}>
-          {courseData
-            ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
-            ?.map((course) => (
-              <CourseBoxCard
-                isAdmin={isAdmin}
-                courseData={course}
-                footerType={footerType}
-                cardWidth={cardSizeData.cardWidth}>
-                {footerType === 'added' && (
-                  <div className={`${styles.leftAlign}`}>
-                    <p>Duration: {courseData?.duration || 240} mins</p>
-                    <p>Added on {courseData?.addedOn || '22-06-2022'}</p>
-                  </div>
-                )}
-                {footerType === 'adminFooter' && (
-                  <div className={`${styles.adminCardFooter}`}>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sint
-                      quia ea voluptates, a assumenda impedit illum eligendi.
-                    </p>
-                    <button>Unassign</button>
-                  </div>
-                )}
-              </CourseBoxCard>
-            ))}
-        </div>
-      ) : (
-        <div className={`${styles.listCardContainer}`}>
-          {courseData
-            ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
-            ?.map((course) => (
-              <CourseLIstCard
-                courseData={course}
-                statusData={statusData}
-                footerType={footerType}></CourseLIstCard>
-            ))}
-        </div>
-      )}
+        {isBoxView ? (
+          <div className={`${styles.boxCardContainer}`} ref={cardContainerRef}>
+            {courseData
+              ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
+              ?.map((course) => (
+                <CourseBoxCard
+                  isAdmin={isAdmin}
+                  courseData={course}
+                  footerType={footerType}
+                  cardWidth={cardSizeData.cardWidth}>
+                  {footerType === 'added' && (
+                    <div className={`${styles.leftAlign}`}>
+                      <p>Duration: {courseData?.duration || 240} mins</p>
+                      <p>Added on {courseData?.addedOn || '22-06-2022'}</p>
+                    </div>
+                  )}
+                  {footerType === 'adminFooter' && (
+                    <div className={`${styles.adminCardFooter}`}>
+                      {/* <p>
+                        {course?.description
+                          ? truncateToN(course?.description, 150)
+                          : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sintquia ea voluptates, a assumenda impedit illum eligendi.'}
+                      </p> */}
+                      <button onClick={() => handleSubmit(course)}>{buttonText}</button>
+                    </div>
+                  )}
+                </CourseBoxCard>
+              ))}
+          </div>
+        ) : (
+          <div className={`${styles.listCardContainer}`}>
+            {courseData
+              ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
+              ?.map((course) => (
+                <CourseLIstCard
+                  courseData={course}
+                  statusData={statusData}
+                  footerType={footerType}></CourseLIstCard>
+              ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

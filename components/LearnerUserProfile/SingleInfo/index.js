@@ -2,7 +2,7 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { changeHandler } from '@/helper/common.helper';
 import { checkOrg } from '../Logic/singleInfo.helper';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
 import { isDisabledArr } from '../Logic/singleInfo.helper';
@@ -22,6 +22,15 @@ const SingleInfo = ({ userData, isEditable = true, isOrg = false }) => {
       ? changeHandler(e, userDataMain, setUserDataMain)
       : userDataMain[`${userData.inputName}`];
   }
+
+  useEffect(() => {
+    if (!userMetaData?.organization_id) {
+      const data = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
+      console.log(data);
+      setUserMetaData((prevValue) => ({ ...prevValue, ...data }));
+      return;
+    }
+  }, []);
 
   return (
     <div className={`${styles.singleWraper}`}>

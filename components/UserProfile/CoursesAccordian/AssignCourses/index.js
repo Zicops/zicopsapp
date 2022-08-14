@@ -3,7 +3,16 @@ import CardContainer from '@/components/LearnerUserProfile/UserCoursesTab/CardCo
 import CoursesAccHead from '../../CoursesAccHead';
 import styles from '../coursesAccordian.module.scss';
 
-const AssignCourses = ({ section, isHead = true, isFolder = false, handleClick = () => {} }) => {
+
+const AssignCourses = ({
+  section,
+  isHead = true,
+  isFolder = false,
+  handleSubmit = () => {},
+  handleClick = () => {},
+  buttonText = ''
+}) => {
+
   return (
     <>
       {isHead && <CoursesAccHead isFolder={isFolder} handleClick={handleClick} />}
@@ -13,6 +22,9 @@ const AssignCourses = ({ section, isHead = true, isFolder = false, handleClick =
         type={section.displayType}
         footerType={section.footerType}
         courseData={section.data}
+        handleSubmit={handleSubmit}
+        buttonText={buttonText}
+
       />
     </>
   );

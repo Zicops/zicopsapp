@@ -5,85 +5,53 @@ import EllipsisMenu from '../../common/EllipsisMenu';
 import LabeledRadioCheckbox from '../../common/FormComponents/LabeledRadioCheckbox';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
-
-const data = [
-  {
-    id: 'uniwfcno3wo1oe31u9qdj',
-    emailId: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 2,
-    emailId: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 3,
-    emailId: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 4,
-    emailId: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 5,
-    emailId: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 6,
-    emailId: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 7,
-    emailId: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 8,
-    emailId: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  }
-];
+import { useLazyQuery } from '@apollo/client';
+import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRecoilState } from 'recoil';
 
 export default function UserTable({ selectedUser }) {
   const [userId, setUserId] = useState([]);
+  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    selectedUser(userId);
-  }, [userId]);
+  const [loadUsersData, { error: errorUserData, refetch }] = useLazyQuery(GET_USERS_FOR_ADMIN, {
+    client: userQueryClient
+  });
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
+
+  useEffect(async () => {
+    selectedUser(userId);
+    const currentTime = new Date().getTime();
+
+    const sendData = {
+      publish_time: Math.floor(currentTime / 1000),
+      pageCursor: '',
+      pageSize: 100
+    };
+    const res = await loadUsersData({ variables: sendData }).catch((err) => {
+      console.log(err);
+      return setToastMsg({ type: 'danger', message: `${err}` });
+    });
+    const usersData = res?.data?.getUsersForAdmin?.users;
+    if (usersData)
+      var uData = usersData.map((item) => ({
+        id: item?.id,
+        email: item?.email,
+        first_name: item?.first_name,
+        last_name: item?.last_name,
+        status: item?.status,
+        role: item?.role
+      }));
+    console.log(uData);
+    return setData([...uData]);
+    return;
+  }, [userId]);
 
   const columns = [
     {
-      field: 'emailId',
+      field: 'emails',
       headerClassName: 'course-list-header',
       flex: 1,
       renderHeader: (params) => (
@@ -117,19 +85,19 @@ export default function UserTable({ selectedUser }) {
                 setUserId(userList);
               }}
             />
-            {params.row?.emailId}
+            {params.row?.email}
           </div>
         );
       }
     },
     {
-      field: 'firstName',
+      field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'First Name',
       flex: 0.5
     },
     {
-      field: 'lastName',
+      field: 'last_name',
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
       flex: 0.5
