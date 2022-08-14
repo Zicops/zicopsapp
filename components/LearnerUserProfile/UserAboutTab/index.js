@@ -15,6 +15,7 @@ import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUs
 import { useRecoilState } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { profilePreferencesData } from '@/components/UserProfile/Logic/userProfile.helper';
+import { getUserData } from '@/helper/loggeduser.helper';
 
 const UserAboutTab = () => {
   const [isEditable, setIsEditable] = useState(null);
@@ -34,7 +35,10 @@ const UserAboutTab = () => {
   const [userAccountDetails, setUserAccountDetails] = useRecoilState(UsersOrganizationAtom);
 
   useEffect(async () => {
-    const res = await loadUserPreferences().catch((err) => {
+    const { id } = getUserData();
+    const res = await loadUserPreferences({
+      variables: { user_id: id }
+    }).catch((err) => {
       console.log(err);
       return;
     });
@@ -70,12 +74,14 @@ const UserAboutTab = () => {
 
     setSelected([...preferenceArr]);
 
-    const resOrg = await loadUserOrg().catch((err) => console.log(err));
-    const orgData = resOrg?.data?.getUserOrganizations;
+    const resOrg = await loadUserOrg({ variables: { user_id: id } }).catch((err) =>
+      console.log(err)
+    );
+    const orgData = resOrg?.data?.getUserOrganizations[0];
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
       sub_category: data?.sub_category,
-      ...orgData[0]
+      ...orgData
     }));
   }, []);
   return (
