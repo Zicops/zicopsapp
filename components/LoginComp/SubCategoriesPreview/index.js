@@ -52,6 +52,9 @@ const SubCategoriesPreview = ({
   function handleUpdate() {
     updatePreferences(selected, primary);
     popUpClose(false);
+    setTimeout(() => {
+      setCurrentComponent(2);
+    }, 500);
   }
 
   useEffect(() => {
