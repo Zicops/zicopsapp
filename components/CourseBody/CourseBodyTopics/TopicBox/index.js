@@ -275,40 +275,45 @@ export default function TopicBox({
           </div> */}
         </div>
 
-        <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
+        <div className={`${styles.topic_loop} ${isTopicActive ? 'activeTopic' : ''}`}>
           <div className={`${styles.topic_img}`}>
             <img src={`${topicImageLink}`} alt="" />
           </div>
 
           <div className={`${styles.topic_text}`}>
-            <div className={`${styles.topic_heading}`}>
-              <h4>
-                <span>
-                  {isLoading ? (
-                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
-                  ) : (
-                    topicCountDisplay + '. '
-                  )}
-                </span>
+            <div className={`${styles.topic_number}`}>
+              <span>
                 {isLoading ? (
-                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={150} />
-                ) : name ? (
-                  name
+                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
                 ) : (
-                  'N/A'
+                  topicCountDisplay + '. '
                 )}
-              </h4>
+              </span>
             </div>
-            <div className={`${styles.topic_description}`}>
-              <p>
-                {isLoading ? (
-                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
-                ) : description ? (
-                  description
-                ) : (
-                  'N/A'
-                )}
-              </p>
+            <div className={`${styles.topic_meta}`}>
+              <div className={`${styles.topic_heading}`}>
+                <h4>
+                  {isLoading ? (
+                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={150} />
+                  ) : name ? (
+                    name
+                  ) : (
+                    'N/A'
+                  )}
+                </h4>
+              </div>
+              <div className={`${styles.topic_description}`}>
+                <p>
+                  {isLoading ? (
+                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
+                  ) : description.length > 250 ? (
+                    description
+                  ) : (
+                    // 'N/A'
+                    'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint eos quisquam beatae doloremque rem, deleniti dolor odio accusamus doloribus harum cumque fugiat, suscipit illo, molestias adipisci fugit porro ratione tenetur.'
+                  )}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -320,7 +325,7 @@ export default function TopicBox({
                 </div>
               </div>
               <div className={`${styles.details}`}>
-                <div>Video + Quiz</div>
+                <div>e-Content</div>
                 <div>
                   <span>
                     {isLoading ? (
@@ -411,28 +416,6 @@ export default function TopicBox({
           )}
         </div>
       </div>
-
-      {/* move to .scss */}
-      <style>
-        {`
-                
-                .topic-loop{
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px;
-                    transition: all 0.3s;
-                    cursor: pointer;
-                    background-color: var(--black);
-                    border-radius: 5px;
-                }
-                .topic-loop:hover, .activeTopic{
-                    box-shadow: 0 0 10px 0 #6bcfcf;
-                    transform: scale(1.02);
-                    background-color: var(--dark_two);
-                
-                `}
-      </style>
     </>
   );
 }
