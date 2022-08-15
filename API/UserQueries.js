@@ -93,8 +93,14 @@ export const GET_USERS_FOR_ADMIN = gql`
 `;
 
 export const GET_USER_COURSE_MAPS = gql`
-  query GetUserCourseMaps($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query GetUserCourseMaps(
+    $user_id: String!
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+  ) {
     getUserCourseMaps(
+      user_id: $user_id
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
@@ -123,8 +129,8 @@ export const GET_USER_COURSE_MAPS = gql`
 `;
 
 export const GET_USER_ORGANIZATIONS = gql`
-  query GetUserOrganization {
-    getUserOrganizations {
+  query GetUserOrganization($user_id: String!) {
+    getUserOrganizations(user_id: $user_id) {
       user_organization_id
       user_id
       user_lsp_id
@@ -159,8 +165,8 @@ export const GET_USER_ORGANIZATION_DETAIL = gql`
 `;
 
 export const GET_USER_LEARNINGSPACES = gql`
-  query GetUserLsps {
-    getUserLsps {
+  query GetUserLsps($user_id: String!) {
+    getUserLsps(user_id: $user_id) {
       user_lsp_id
       user_id
       lsp_id
@@ -189,8 +195,8 @@ export const GET_USER_LEARNINGSPACES_DETAILS = gql`
 `;
 
 export const GET_USER_PREFERENCES = gql`
-  {
-    getUserPreferences {
+  query GetUserPreferences($user_id: String!) {
+    getUserPreferences(user_id: $user_id) {
       user_preference_id
       user_id
       user_lsp_id
