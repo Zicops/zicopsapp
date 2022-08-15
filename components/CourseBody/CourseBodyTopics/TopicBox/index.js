@@ -306,11 +306,11 @@ export default function TopicBox({
                 <p>
                   {isLoading ? (
                     <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
-                  ) : description.length > 250 ? (
+                  ) : description ? (
                     description
                   ) : (
-                    // 'N/A'
-                    'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint eos quisquam beatae doloremque rem, deleniti dolor odio accusamus doloribus harum cumque fugiat, suscipit illo, molestias adipisci fugit porro ratione tenetur.'
+                    'N/A'
+                    // 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint eos quisquam beatae doloremque rem, deleniti dolor odio accusamus doloribus harum cumque fugiat, suscipit illo, molestias adipisci fugit porro ratione tenetur.'
                   )}
                 </p>
               </div>
