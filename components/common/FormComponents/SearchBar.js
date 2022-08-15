@@ -1,4 +1,5 @@
 // components\common\FormComponents\SearchBar.js
+//trial comment
 
 import styles from './formComponents.module.scss';
 import LabeledInput from './LabeledInput';
