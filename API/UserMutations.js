@@ -855,6 +855,7 @@ export const UPDATE_USER_EXAM_ATTEMPTS = gql`
 export const GET_USER_COURSE_MAPS = gql`
   query getUserCourseMaps($publish_time: Int, $pageCursor: String, $pageSize: Int) {
     getUserCourseMaps(
+      user_id: ""
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
@@ -884,7 +885,7 @@ export const GET_USER_COURSE_MAPS = gql`
 
 export const GET_USER_COURSE_PROGRESS = gql`
   query getUserCourseProgressByMapId($userCourseId: ID!) {
-    getUserCourseProgressByMapId(user_course_id: $userCourseId) {
+    getUserCourseProgressByMapId(user_id: "", user_course_id: $userCourseId) {
       user_cp_id
       user_id
       user_course_id
