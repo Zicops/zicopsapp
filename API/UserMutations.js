@@ -726,32 +726,8 @@ export const UPDATE_USER_NOTES = gql`
 `;
 
 export const ADD_USER_EXAM_ATTEMPTS = gql`
-  mutation AddUserExamAttempts(
-    $user_id: String!
-    $user_lsp_id: String!
-    $user_cp_id: String!
-    $user_course_id: String!
-    $exam_id: String!
-    $attempt_no: Int!
-    $attempt_status: String!
-    $attempt_start_time: String!
-    $attempt_duration: String!
-  ) {
-    addUserExamAttempts(
-      input: [
-        {
-          user_id: $user_id
-          user_lsp_id: $user_lsp_id
-          user_cp_id: $user_cp_id
-          user_course_id: $user_course_id
-          exam_id: $exam_id
-          attempt_no: $attempt_no
-          attempt_status: $attempt_status
-          attempt_start_time: $attempt_start_time
-          attempt_duration: $attempt_duration
-        }
-      ]
-    ) {
+  mutation AddUserExamAttempts($userExamAttempts: [UserExamAttemptsInput]!) {
+    addUserExamAttempts(input: $userExamAttempts) {
       user_ea_id
       user_id
       user_lsp_id
@@ -784,20 +760,18 @@ export const UPDATE_USER_EXAM_ATTEMPTS = gql`
     $attempt_duration: String!
   ) {
     addUserExamAttempts(
-      input: [
-        {
-          user_ea_id: $user_ea_id
-          user_id: $user_id
-          user_lsp_id: $user_lsp_id
-          user_cp_id: $user_cp_id
-          user_course_id: $user_course_id
-          exam_id: $exam_id
-          attempt_no: $attempt_no
-          attempt_status: $attempt_status
-          attempt_start_time: $attempt_start_time
-          attempt_duration: $attempt_duration
-        }
-      ]
+      input: {
+        user_ea_id: $user_ea_id
+        user_id: $user_id
+        user_lsp_id: $user_lsp_id
+        user_cp_id: $user_cp_id
+        user_course_id: $user_course_id
+        exam_id: $exam_id
+        attempt_no: $attempt_no
+        attempt_status: $attempt_status
+        attempt_start_time: $attempt_start_time
+        attempt_duration: $attempt_duration
+      }
     ) {
       user_ea_id
       user_id
@@ -809,6 +783,134 @@ export const UPDATE_USER_EXAM_ATTEMPTS = gql`
       attempt_status
       attempt_start_time
       attempt_duration
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_USER_EXAM_PROGRESS = gql`
+  mutation addUserExamProgress($userExamProgress: [UserExamProgressInput]!) {
+    addUserExamProgress(input: $userExamProgress) {
+      user_ep_id
+      user_id
+      user_ea_id
+      user_lsp_id
+      user_cp_id
+      sr_no
+      question_id
+      question_type
+      answer
+      q_attempt_status
+      total_time_spent
+      correct_answer
+      section_id
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_EXAM_PROGRESS = gql`
+  mutation updateUserExamProgress(
+    $user_id: String!
+    $user_ea_id: String!
+    $user_lsp_id: String!
+    $user_cp_id: String!
+    $sr_no: Int!
+    $question_id: String!
+    $question_type: String!
+    $answer: String!
+    $q_attempt_status: String!
+    $total_time_spent: String!
+    $correct_answer: String!
+    $section_id: String!
+  ) {
+    updateUserExamProgress(
+      input: {
+        user_id: $user_id
+        user_ea_id: $user_ea_id
+        user_lsp_id: $user_lsp_id
+        user_cp_id: $user_cp_id
+        sr_no: $sr_no
+        question_id: $question_id
+        question_type: $question_type
+        answer: $answer
+        q_attempt_status: $q_attempt_status
+        total_time_spent: $total_time_spent
+        correct_answer: $correct_answer
+        section_id: $section_id
+      }
+    ) {
+      user_ep_id
+      user_id
+      user_ea_id
+      user_lsp_id
+      user_cp_id
+      sr_no
+      question_id
+      question_type
+      answer
+      q_attempt_status
+      total_time_spent
+      correct_answer
+      section_id
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_USER_EXAM_RESULTS = gql`
+  mutation addUserExamResult($userExamReslts: [UserExamResultInput]!) {
+    addUserExamResult(input: $userExamReslts) {
+      user_er_id
+      user_id
+      user_ea_id
+      user_score
+      correct_answers
+      wrong_answers
+      result_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_EXAM_RESULTS = gql`
+  mutation updateUserExamResult(
+    $user_id: String!
+    $user_ea_id: String!
+    $user_score: Int!
+    $correct_answers: Int!
+    $wrong_answers: Int!
+    $result_status: String!
+  ) {
+    updateUserExamResult(
+      input: {
+        user_id: $user_id
+        user_ea_id: $user_ea_id
+        user_score: $user_score
+        correct_answers: $correct_answers
+        wrong_answers: $wrong_answers
+        result_status: $result_status
+      }
+    ) {
+      user_er_id
+      user_id
+      user_ea_id
+      user_score
+      correct_answers
+      wrong_answers
+      result_status
       created_by
       updated_by
       created_at

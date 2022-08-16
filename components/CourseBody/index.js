@@ -21,7 +21,7 @@ export default function CourseBody({ isPreview = false }) {
     setActiveCourseTab,
     getModuleOptions,
     moduleData
-  } = useShowData(courseContextData);
+  } = useShowData(courseContextData, isPreview);
 
   const props = {
     activeCourseTab: activeCourseTab,

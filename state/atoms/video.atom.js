@@ -73,3 +73,16 @@ export function getVideoDataObj() {
     volume: 0.7
   };
 }
+
+export const UserExamDataAtom = atom({
+  key: 'UserExamData',
+  default: getUserExamDataObj()
+});
+
+export function getUserExamDataObj(data) {
+  return {
+    userExamAttempts: data?.userExamAttempts || [],
+    userExamProgress: data?.userExamProgress || [],
+    userExamResults: data?.userExamResults || []
+  };
+}
