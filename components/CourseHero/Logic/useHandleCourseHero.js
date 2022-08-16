@@ -2,6 +2,7 @@ import { GET_COURSE } from '@/api/Queries';
 import { ADD_USER_COURSE, userClient } from '@/api/UserMutations';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { getQueryData } from '@/helper/api.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
@@ -136,7 +137,7 @@ export default function useHandleCourseHero() {
       courseType: fullCourse?.type,
       isMandatory: courseAssignData?.isMandatory,
       courseStatus: 'open',
-      endDate: courseAssignData?.endDate
+      endDate: getUnixFromDate(courseAssignData?.endDate)
     };
 
     const res = await addUserCourse({ variables: sendData }).catch((err) => {

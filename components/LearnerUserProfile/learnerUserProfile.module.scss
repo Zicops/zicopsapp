@@ -112,7 +112,8 @@
   justify-content: space-between;
   align-items: center;
 }
-.text , .category{
+.text,
+.category {
   color: var(--white);
   font-weight: 600;
   font-size: 22px;
@@ -180,11 +181,13 @@
   // height: 75vh;
   padding: 50px;
   color: $white;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 }
 
 .cardContainer {
   margin: auto;
-  margin-bottom: 50px;
 
   .courseTabHeader {
     display: flex;
@@ -202,7 +205,7 @@
         color: $primary;
 
         img {
-          transform: rotate(90deg);
+          transform: rotate(180deg);
           height: 10px;
           margin: auto 5px;
         }
@@ -390,4 +393,14 @@
   svg {
     fill: $darkOne !important;
   }
+}
+
+.fallbackMsg {
+  margin: 50px auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: $white;
 }

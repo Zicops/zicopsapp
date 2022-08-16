@@ -1,7 +1,5 @@
-import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
 import CardContainer from '@/components/LearnerUserProfile/UserCoursesTab/CardContainer';
 import CoursesAccHead from '../../CoursesAccHead';
-import styles from '../coursesAccordian.module.scss';
 
 const AssignCourses = ({
   section,
@@ -9,17 +7,38 @@ const AssignCourses = ({
   isFolder = false,
   handleSubmit = () => {},
   handleClick = () => {},
-  buttonText = ''
+  buttonText = '',
+  type = null,
+  assignedCourses = []
 }) => {
+  let courseData = section.data;
+  if (type === 'currentCourses')
+    courseData = courseData.filter((courses) => courses.completedPercentage);
+
+  if (type === 'assignedCourses')
+    courseData = courseData.filter((courses) => !courses.completedPercentage);
+
+  if (type === 'assignCourses' && assignedCourses?.length) {
+    courseData = courseData.filter(
+      (courses) => assignedCourses?.findIndex((obj) => obj.id === courses.id) < 0
+    );
+  }
+
   return (
     <>
-      {isHead && <CoursesAccHead isFolder={isFolder} handleClick={handleClick} />}
+      {isHead && (
+        <CoursesAccHead
+          isFolder={isFolder}
+          courseCount={assignedCourses?.length}
+          handleClick={handleClick}
+        />
+      )}
 
       <CardContainer
         isAdmin={true}
         type={section.displayType}
         footerType={section.footerType}
-        courseData={section.data}
+        courseData={courseData}
         handleSubmit={handleSubmit}
         buttonText={buttonText}
       />

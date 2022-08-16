@@ -1,12 +1,14 @@
 import { GET_COURSE, GET_LATEST_COURSES, queryClient } from '@/api/Queries';
 import { ADD_USER_COURSE, userClient } from '@/api/UserMutations';
+import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '@/components/common/InputDatePicker';
 import PopUp from '@/components/common/PopUp';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
-import useHandleCourseHero from '@/components/CourseHero/Logic/useHandleCourseHero';
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -17,16 +19,15 @@ import Accordian from '../../../components/UserProfile/Accordian';
 // import AssignedCourses from '../../AssignedCourses';
 import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
+import CurrentCourses from './CurrentCourses';
 const CoursesAccordian = () => {
-  // const [loadUserCourseData, { error: errorUC }] = useLazyQuery(GET_USER_COURSE_MAPS, {
-  //   client: userQueryClient
-  // });
-  const { courseAssignData, setCourseAssignData } = useHandleCourseHero();
+  const { courseAssignData, setCourseAssignData } = useState({
+    endDate: new Date(),
+    isMandatory: false,
+    isCourseAssigned: false
+  });
 
   const [loadLastestCourseData, { error: error }] = useLazyQuery(GET_LATEST_COURSES, {
-    client: queryClient
-  });
-  const [loadCourseData, { error: errorC, refetch }] = useLazyQuery(GET_COURSE, {
     client: queryClient
   });
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
@@ -35,6 +36,8 @@ const CoursesAccordian = () => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const router = useRouter();
+  const currentUserId = router?.query?.userId;
+  const [assignedCourses, setAssignedCourses] = useState([]);
   const [userCourseData, setUserCourseData] = useState(null);
   const [dataCourse, setDataCourse] = useState([]);
   const [selected, setSelected] = useState(3);
@@ -59,7 +62,7 @@ const CoursesAccordian = () => {
       courseType: userCourseData.type,
       isMandatory: courseAssignData?.isMandatory,
       courseStatus: 'open',
-      endDate: courseAssignData?.endDate
+      endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
     console.log(sendData);
 
@@ -74,15 +77,17 @@ const CoursesAccordian = () => {
     setDataCourse([...courseArray]);
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
     setIsAssignPopUpOpen(false);
+
+    loadAssignedCourseData();
   }
 
   const courseSections = [
-    { displayType: 'Current Courses', footerType: 'onGoing', data: courseData },
+    { displayType: 'Current Courses', footerType: 'onGoing', data: assignedCourses },
     { displayType: 'Current Courses', footerType: 'added', data: courseData },
     {
       displayType: 'Assigned Courses',
       footerType: 'adminFooter',
-      data: courseData,
+      data: assignedCourses,
       buttonText: 'Remove'
     },
     {
@@ -202,7 +207,7 @@ const CoursesAccordian = () => {
     const courseData = res?.data?.latestCourses?.courses;
 
     setDataCourse([...courseData]);
-    console.log(dataCourse);
+    // console.log(dataCourse);
 
     // courseData.forEach(async (item) => {
     //   console.log(item);
@@ -214,12 +219,85 @@ const CoursesAccordian = () => {
     //   data.push(resCourseData?.data);
     // });
   }, []);
-  let course = ['', '', ''];
-  const [isBoxView, setIsBoxView] = useState(true);
+
+  // load assigned courses
+  useEffect(() => {
+    loadAssignedCourseData();
+  }, [currentUserId]);
+
+  async function loadAssignedCourseData() {
+    if (!currentUserId) return;
+    const assignedCoursesRes = await loadQueryDataAsync(
+      GET_USER_COURSE_MAPS,
+      {
+        user_id: currentUserId,
+        publish_time: Math.floor(Date.now() / 1000),
+        pageCursor: '',
+        pageSize: 999999999
+      },
+      {},
+      userClient
+    );
+
+    if (assignedCoursesRes?.error)
+      return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
+    const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+
+    const allAssignedCourses = [];
+    for (let i = 0; i < assignedCoursesToUser.length; i++) {
+      const courseMap = assignedCoursesToUser[i];
+      const mapId = courseMap?.user_course_id;
+      const course_id = courseMap?.course_id;
+
+      const courseProgressRes = await loadQueryDataAsync(
+        GET_USER_COURSE_PROGRESS,
+        { userId: currentUserId, userCourseId: mapId },
+        {},
+        userClient
+      );
+
+      if (courseProgressRes?.error) {
+        setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+        continue;
+      }
+      const userProgressArr = courseProgressRes?.getUserCourseProgressByMapId;
+
+      let topicsStarted = 0;
+      userProgressArr?.map((topic) => {
+        if (topic?.status !== 'not-started') ++topicsStarted;
+      });
+      console.log(topicsStarted);
+      const courseProgress = userProgressArr?.length
+        ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+        : 0;
+
+      const courseRes = await loadQueryDataAsync(GET_COURSE, { course_id: course_id });
+      if (courseRes?.error) {
+        setToastMsg({ type: 'danger', message: 'Course Load Error' });
+        continue;
+      }
+
+      allAssignedCourses.push({
+        ...courseRes?.getCourse,
+        completedPercentage: userProgressArr?.length ? courseProgress : 0
+      });
+    }
+
+    if (allAssignedCourses?.length) setAssignedCourses(allAssignedCourses);
+  }
 
   return (
     <>
       <Accordian height={'auto'} acc_title={'Courses'}>
+        {/* <CurrentCourses
+          assignedCourses={assignedCourses.filter((courses) => courses.completedPercentage)}
+          onAssignClick={() => {
+            setIsAssignedPage(!isAssignedPage);
+            setSelectedPage('Assign Courses');
+            setSelected(3);
+          }}
+        /> */}
+
         <div className={`${styles.courses_acc_head}`}>
           {isAssignedPage && (
             <div className={`${styles.current_courses}`}>
@@ -235,7 +313,8 @@ const CoursesAccordian = () => {
           )}
           {!isAssignedPage && (
             <div className={`${styles.assign}`}>
-              <div>Current courses:6</div>
+              <div>Current courses: {assignedCourses?.length}</div>
+
               <div
                 onClick={() => {
                   setIsAssignedPage(!isAssignedPage);
@@ -250,11 +329,15 @@ const CoursesAccordian = () => {
           )}
         </div>
         {/* {isAssignedPage && <AssignCourses section={courseSections[3]} />} */}
-        {!isAssignedPage && <AssignCourses isHead={false} section={courseSections[0]} />}
-        {/* {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />} */}
+        {!isAssignedPage && (
+          <AssignCourses type="currentCourses" isHead={false} section={courseSections[0]} />
+        )}
+        {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />}
         {selectedPage === 'Assign Courses' && (
           <AssignCourses
             isFolder={true}
+            type="assignCourses"
+            assignedCourses={assignedCourses}
             section={courseSections[3]}
             handleClick={handleClickFolder}
             handleSubmit={handleAssign}
@@ -262,7 +345,11 @@ const CoursesAccordian = () => {
           />
         )}
         {selectedPage === 'Assigned Courses' && (
-          <AssignCourses section={courseSections[2]} buttonText={courseSections[2].buttonText} />
+          <AssignCourses
+            type="assignedCourses"
+            section={courseSections[2]}
+            buttonText={courseSections[2].buttonText}
+          />
         )}
         <PopUp
           popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}

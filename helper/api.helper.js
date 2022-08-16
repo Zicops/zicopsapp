@@ -41,8 +41,13 @@ export function loadQueryData(QUERY, variablesObj = {}, options = {}) {
   return response?.data || {};
 }
 
-export async function loadQueryDataAsync(QUERY, variableObj = {}, options = {}) {
-  const response = await queryClient
+export async function loadQueryDataAsync(
+  QUERY,
+  variableObj = {},
+  options = {},
+  client = queryClient
+) {
+  const response = await client
     .query({ query: QUERY, variables: variableObj, ...options })
     .catch((err) => {
       console.log(`Load Data error:`, err);
