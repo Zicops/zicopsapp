@@ -1,21 +1,19 @@
-import styles from '../learnerUserProfile.module.scss';
-import SingleUserDetail from '../SingleUserDetail';
-import { userData, orgData, profilePref, subCategory } from '../Logic/userData.helper.js';
-import CategoryPreferences from '../CategoryPreferences';
-import { useState } from 'react';
-import useHandleUserUpdate from '../Logic/useHandleUserUpdate';
 import { GET_USER_ORGANIZATIONS, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
-import { useLazyQuery } from '@apollo/client';
-import { useEffect } from 'react';
 import PopUp from '@/components/common/PopUp';
+import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
 import ProfilePreferences from '@/components/LoginComp/ProfilePreferences';
 import SubCategoriesPreview from '@/components/LoginComp/SubCategoriesPreview';
-import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/profilePreferencesHelper';
-import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
-import { useRecoilState } from 'recoil';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { profilePreferencesData } from '@/components/UserProfile/Logic/userProfile.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import CategoryPreferences from '../CategoryPreferences';
+import styles from '../learnerUserProfile.module.scss';
+import useCommonHelper from '../Logic/common.helper';
+import useHandleUserUpdate from '../Logic/useHandleUserUpdate';
+import { orgData, profilePref, userData } from '../Logic/userData.helper.js';
+import SingleUserDetail from '../SingleUserDetail';
 
 const UserAboutTab = () => {
   const [isEditable, setIsEditable] = useState(null);
@@ -28,6 +26,8 @@ const UserAboutTab = () => {
     client: userQueryClient
   });
 
+  const { getUserPreferences } = useCommonHelper();
+
   const [subCategory, setSubCategory] = useState([]);
   const [isOpen, setIsopen] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(2);
@@ -36,43 +36,44 @@ const UserAboutTab = () => {
 
   useEffect(async () => {
     const { id } = getUserData();
-    const res = await loadUserPreferences({
-      variables: { user_id: id }
-    }).catch((err) => {
-      console.log(err);
-      return;
-    });
+    const lspData = JSON.parse(sessionStorage.getItem('lspData'));
 
-    const data = res?.data?.getUserPreferences[0];
-    // const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
-    // const prefData = data.filter((item) => {
-    //   return item?.user_lsp_id === user_lsp_id;
-    // });
-    // const prefArr = [];
-    // for (let i = 0; i < prefData.length; i++) {
-    //   for (let j = 0; j < subCategories.length; j++) {
-    //     if (prefData[i].sub_category === subCategories[j].name) {
-    //       prefArr.push({
-    //         ...subCategories[j],
-    //         user_preference_id: prefData[i]?.user_preference_id
-    //       });
-    //     }
-    //   }
-    // }
+    let data;
 
-    const newArr = subCategories.filter((item) => item.name === data?.sub_category);
+    //for first time only...will delete later
+    if (!lspData?.user_lsp_id) {
+      const res = await loadUserPreferences({
+        variables: { user_id: id }
+      }).catch((err) => {
+        console.log(err);
+        return;
+      });
+      data = res?.data?.getUserPreferences[0];
+      console.log(data);
+    }
 
-    const preferenceArr = newArr.map((item) => ({
-      user_preference_id: data?.user_preference_id,
-      sub_category: item?.name,
-      user_id: data?.user_id,
-      user_lsp_id: data?.user_lsp_id,
-      ...item
-    }));
+    console.log(lspData, 'lspdata');
 
-    if (data) setSubCategory([data]);
+    let userLspId = !!lspData?.user_lsp_id ? lspData?.user_lsp_id : data?.user_lsp_id;
 
-    setSelected([...preferenceArr]);
+    if (!lspData) {
+      sessionStorage.setItem(
+        'lspData',
+        JSON.stringify({ user_id: id, user_lsp_id: data?.user_lsp_id })
+      );
+    }
+
+    const userPreferences = await getUserPreferences(userLspId);
+    // const preferenceData = userPreferences.slice(0, 5);
+    const preferenceData = userPreferences.filter((item) => item?.is_active);
+    console.log(preferenceData);
+
+    if (preferenceData) setSubCategory([...preferenceData]);
+
+    setSelected([...preferenceData]);
+
+    const baseSubcategory = preferenceData.filter((item) => item?.is_base);
+    console.log(baseSubcategory);
 
     const resOrg = await loadUserOrg({ variables: { user_id: id } }).catch((err) =>
       console.log(err)
@@ -81,10 +82,11 @@ const UserAboutTab = () => {
     const orgData = resOrg?.data?.getUserOrganizations[0];
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
-      sub_category: data?.sub_category,
+      sub_category: baseSubcategory[0]?.sub_category,
       ...orgData
     }));
   }, []);
+
   return (
     <div className={`${styles.userAboutTab}`}>
       <SingleUserDetail

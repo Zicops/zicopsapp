@@ -6,11 +6,17 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
 import { isDisabledArr } from '../Logic/singleInfo.helper';
+import { useLazyQuery } from '@apollo/client';
+import { GET_USER_ORGANIZATIONS, userQueryClient } from '@/api/UserQueries';
+import { getUserData } from '@/helper/loggeduser.helper';
 
 const SingleInfo = ({ userData, isEditable = true, isOrg = false }) => {
   const [tempData, setTempData] = useState(userData.info);
   const [userDataMain, setUserDataMain] = useRecoilState(UserStateAtom);
   const [userMetaData, setUserMetaData] = useRecoilState(UsersOrganizationAtom);
+  const [loadUserOrg] = useLazyQuery(GET_USER_ORGANIZATIONS, {
+    client: userQueryClient
+  });
 
   function checkOrg(e, isOrg, userData) {
     if (isOrg) {
@@ -23,11 +29,22 @@ const SingleInfo = ({ userData, isEditable = true, isOrg = false }) => {
       : userDataMain[`${userData.inputName}`];
   }
 
-  useEffect(() => {
+  useEffect(async () => {
+    const { id } = getUserData();
     if (!userMetaData?.organization_id) {
-      const data = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
-      console.log(data);
-      setUserMetaData((prevValue) => ({ ...prevValue, ...data }));
+      const resOrg = await loadUserOrg({ variables: { user_id: id } }).catch((err) =>
+        console.log(err)
+      );
+
+      const orgData = resOrg?.data?.getUserOrganizations[0];
+
+      // const data = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
+      // console.log(data);
+      setUserMetaData((prevValue) => ({
+        ...prevValue,
+        sub_category: baseSubcategory[0]?.sub_category,
+        ...orgData
+      }));
       return;
     }
   }, []);
