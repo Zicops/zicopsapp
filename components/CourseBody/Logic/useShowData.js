@@ -4,9 +4,10 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client/react';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   GET_COURSE_CHAPTERS,
   GET_COURSE_MODULES,
@@ -51,6 +52,7 @@ export default function useShowData(courseContextData, isPreview) {
   }, [activeCourseTab]);
 
   // recoil states
+  const userData = useRecoilValue(UserStateAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -104,6 +106,8 @@ export default function useShowData(courseContextData, isPreview) {
   // load module, chapter, topic data and set in recoil
   useEffect(async () => {
     if (!fullCourse.id) return;
+    if (!userData.id) return;
+
     setIsLoading(
       loadingModuleData && loadingChapterData && loadingTopicData && loadingResourceData
     );
@@ -160,7 +164,7 @@ export default function useShowData(courseContextData, isPreview) {
 
     if (!isPreview) {
       const mapRes = await loadUserCourseMaps({
-        variables: { courseId: fullCourse?.id },
+        variables: { userId: userData?.id, courseId: fullCourse?.id },
         fetchPolicy: 'no-cache'
       });
       if (mapRes?.error)
@@ -170,7 +174,10 @@ export default function useShowData(courseContextData, isPreview) {
 
       if (data?.userCourseMapping?.user_course_id) {
         const progressRes = await loadUserCourseProgress({
-          variables: { userCourseId: data?.userCourseMapping?.user_course_id },
+          variables: {
+            userId: userData?.id,
+            userCourseId: data?.userCourseMapping?.user_course_id
+          },
           fetchPolicy: 'no-cache'
         });
         const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
@@ -237,7 +244,7 @@ export default function useShowData(courseContextData, isPreview) {
         updateResources(data.getResourcesByCourseId || []);
       }
     );
-  }, [fullCourse?.id]);
+  }, [fullCourse?.id, userData.id]);
 
   useEffect(() => {
     if (errorModuleData) return setToastMsg({ type: 'danger', message: 'Module Load Error' });
