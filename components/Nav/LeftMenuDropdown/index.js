@@ -56,7 +56,8 @@ export default function LeftMenuDropdown() {
         <div onClick={!isAdmin ? gotoAdmin : gotoUser}>
           {!isAdmin ? 'Switch to Admin' : 'Switch to Learner'}
         </div>
-      )
+      ),
+      isAdmin: true
     }
   ];
 
@@ -103,6 +104,8 @@ export default function LeftMenuDropdown() {
             onMouseEnter={handleClick}
             onKeyDown={handleClick}>
             {menuItemList.map((item) => {
+              if (item.isAdmin && !isAdmin) return null;
+
               return (
                 <MenuItem
                   key={item.id}
