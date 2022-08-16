@@ -1,44 +1,96 @@
 @import '../../../styles/base.scss';
-.courses_acc_head, .assign {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    font-weight: bold;
-   
+// .courses_acc_head {
+//   display: flex;
+// }
+.assign {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
-.assign{
-    color: $primary;
-}
-.assign img{
-    width: 20px;
-    margin-right: 10px;
-    color: $primary;
-    &:hover{
-        cursor: pointer;
-    }
-}
-.course_loop{
-   
-        box-sizing: border-box;
-        display: flex;
-        flex-wrap: wrap;
-        // justify-content: flex-start;
-        gap: 20px;
+.assignInner {
+  display: flex;
+  justify-content: center;
 
+  cursor: pointer;
+  color: $primary;
 }
-.course_card{
-    width :calc(100%/3 - 20px + 20px/3);
- 
+.assignInner img {
+  width: 20px;
+  margin-right: 5px;
+  color: $primary;
+  border: 1px solid $primary;
+  &:hover {
+    cursor: pointer;
+  }
 }
-.imageContainer{
-    display: flex;
-    justify-content: flex-end;
-    & img{
-        width: 25px;
-     margin:0px 0px 10px 10px;
-     &:hover{
-        cursor: pointer;
-     }
+.course_loop {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  // justify-content: flex-start;
+  gap: 20px;
+}
+.course_card {
+  width: calc(100% / 3 - 20px + 20px / 3);
+}
+.imageContainer {
+  display: flex;
+  justify-content: flex-end;
+  & img {
+    width: 25px;
+    margin: 0px 0px 10px 10px;
+    &:hover {
+      cursor: pointer;
     }
+  }
+}
+
+.current_courses {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  svg {
+    height: 15px;
+    width: 15px;
+  }
+}
+
+.adminCardFooter {
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+  }
+  button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 8px;
+    background-color: transparent;
+    border: 2px solid $primary;
+    color: $primary;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  button:hover {
+    color: $black;
+    background-color: $primary;
+  }
+}
+
+.assignCoursePopUp {
+  text-align: center;
+
+  section {
+    margin: 30px;
+
+    label {
+      margin-right: 30px;
+    }
+  }
 }

@@ -1,9 +1,11 @@
 import { Box, Dialog, IconButton } from '@mui/material';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageCropper from '../../ImageCropper';
 import styles from '../formComponents.module.scss';
 import { useEffect, useRef, useState } from 'react';
-import { async } from '@firebase/util';
+
 const UploadAndPreview = ({
   inputName,
   label,
@@ -11,11 +13,27 @@ const UploadAndPreview = ({
   isPreview,
   isRemove = false,
   handleChange = function () {},
-  styleClass = {}
+  styleClass = {},
+  handleUpdateImage = () => {},
+  initialImage = null,
+  closePopUp = () => {}
 }) => {
   const [image, setImage] = useState();
   const [preview, setPreview] = useState('');
   const [pop, setPop] = useState(false);
+
+  useEffect(async () => {
+    if (!initialImage) return;
+
+    const response = await fetch(initialImage);
+    // here image is url/location of image
+    const blob = await response.blob();
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+
+    console.log(file);
+    setImage(file);
+    setPop(true);
+  }, []);
 
   const handleRemove = () => {
     if (!image) return;
@@ -33,12 +51,18 @@ const UploadAndPreview = ({
     } else setImage(null);
   }
 
+  const CustomButton = styled(Button)(({ theme }) => ({
+    borderRadius: '15px',
+    padding: '10px 15px'
+  }));
+
   const handleClick = () => {
     setPop(true);
   };
 
   const handleClose = () => {
     setPop(false);
+    closePopUp();
   };
 
   const imgRef = useRef(null);
@@ -93,19 +117,30 @@ const UploadAndPreview = ({
           style={{ display: 'none' }}
           type="file"
         />
-        <button className={`${styles.btn}`} onClick={() => imgRef?.current?.click()}>
-          Upload Photo
-        </button>
-        {description && <span className={`${styles.description}`}>{description}</span>}
-        <button className={`${styles.btn2}`} onClick={handleClick} disabled={!image}>
-          Preview
-        </button>
-        {isRemove && (
-          <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
-            Remove
-          </button>
+        {!initialImage && (
+          <>
+            <button className={`${styles.btn}`} onClick={() => imgRef?.current?.click()}>
+              Upload Photo
+            </button>
+            {description && <span className={`${styles.description}`}>{description}</span>}
+            <button className={`${styles.btn2}`} onClick={handleClick} disabled={!image}>
+              Preview
+            </button>
+            {isRemove && (
+              <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
+                Remove
+              </button>
+            )}
+          </>
         )}
-        <Dialog open={pop} onClose={handleClose}>
+        <Dialog
+          open={pop}
+          onClose={handleClose}
+          sx={{
+            '& .MuiPaper-root': {
+              backgroundColor: 'var(--black)'
+            }
+          }}>
           <Box
             py={3}
             px={3}
@@ -129,7 +164,24 @@ const UploadAndPreview = ({
                 <Box fontSize={'27px'} fontWeight={600} color={'#FFF'}>
                   Preview
                 </Box>
-                <Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'flex-end'
+                  }}>
+                  {initialImage && (
+                    <span
+                      style={{
+                        width: '20px',
+                        marginRight: '10px',
+                        height: '30px'
+                      }}
+                      className={`${styles.btn}`}
+                      onClick={() => imgRef?.current?.click()}>
+                      <img height={'20px'} width={'20px'} src="/images/plus.png" />
+                    </span>
+                  )}
                   <ImageCropper initialImage={image} setCroppedImage={setPreview} aspectRatio={1} />
                   <IconButton onClick={handleClose}>
                     <CloseIcon sx={{ color: '#FFF' }} />
@@ -155,7 +207,20 @@ const UploadAndPreview = ({
                   style={{ objectFit: 'cover' }}
                 />
               </Box>
+
               <Box mb={4} />
+              {initialImage && (
+                <CustomButton
+                  onClick={() => {
+                    const file = image;
+                    const imageFile = dataURLtoFile(preview, `${file?.name}`);
+                    handleUpdateImage(imageFile);
+                  }}
+                  variant={'contained'}
+                  fullWidth>
+                  Update Profile Image
+                </CustomButton>
+              )}
             </Box>
           </Box>
         </Dialog>

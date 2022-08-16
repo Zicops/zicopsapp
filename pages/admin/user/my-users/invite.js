@@ -48,7 +48,8 @@ export default function MyUserPage() {
     if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
 
     console.log(resEmail);
-    return setToastMsg({ type: 'success', message: `Invite send successfully!` });
+
+    return router.push('/admin/user/my-users');
   }
 
   // set default tab on comp change

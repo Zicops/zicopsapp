@@ -69,15 +69,16 @@ export function getUserOrgObject(data) {
 
     // user language data
     user_language_id: data?.user_language_id || null,
-    language: data?.language || '',
+    language: data?.language || 'English',
     is_base_language: data?.is_base_language || false,
     lang_is_active: data?.lang_is_active || true,
 
     //user preferences data
     user_preference_id: data?.user_preference_id || null,
     sub_category: data?.sub_category || null,
-    is_base: data?.is_base || true,
+    is_base: data?.is_base || false,
     preferences_is_active: data?.preferences_is_active || true,
+    sub_categories: data?.sub_categories || [],
 
     created_by: data?.created_by || 'Zicops',
     updated_by: data?.updated_by || 'Zicops'

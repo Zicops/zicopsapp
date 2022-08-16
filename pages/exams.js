@@ -248,7 +248,7 @@ export default function LearnerExams() {
         style={{
           display: 'flex',
           marginTop: '70px',
-          padding: '60px 0 70px',
+          padding: '5vh 4vw',
           backgroundColor: 'var(--black)',
           height: '75vh',
           overflow: 'hidden'

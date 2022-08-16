@@ -249,7 +249,7 @@ export default function useHandleAddUserDetails() {
     }));
   }
 
-  async function updateAboutUser() {
+  async function updateAboutUser(newImage = null) {
     const sendUserData = {
       id: userAboutData?.id,
       first_name: userAboutData?.first_name,
@@ -271,6 +271,7 @@ export default function useHandleAddUserDetails() {
     };
 
     if (userAboutData?.Photo) sendUserData.Photo = userAboutData?.Photo;
+    if (newImage) sendUserData.Photo = newImage;
     // if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
 
     console.log(sendUserData, 'updateAboutUser');
@@ -288,7 +289,11 @@ export default function useHandleAddUserDetails() {
     }
 
     const data = res?.data?.updateUser;
-    setUserDataAbout({ ...data });
+    console.log(data);
+    if (!data.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
+    setUserDataAbout((prevValue) => ({ ...prevValue, ...data }));
+
+    setTimeout(sessionStorage.setItem('loggedUser', JSON.stringify(userAboutData)), 500);
   }
 
   // async function addUserOrganizationDetails() {

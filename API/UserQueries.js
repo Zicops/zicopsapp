@@ -39,6 +39,27 @@ export const userQueryClient = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+export const GET_USER_DETAIL = gql`
+  query GetUserDetails($user_id: String!) {
+    getUserDetails(user_id: $user_id) {
+      id
+      first_name
+      last_name
+      status
+      role
+      is_verified
+      is_active
+      gender
+      created_by
+      updated_by
+      created_at
+      updated_at
+      email
+      phone
+      photo_url
+    }
+  }
+`;
 export const GET_USERS_FOR_ADMIN = gql`
   query GetUsersForAdmin($publish_time: Int, $pageCursor: String, $pageSize: Int) {
     getUsersForAdmin(
@@ -72,8 +93,14 @@ export const GET_USERS_FOR_ADMIN = gql`
 `;
 
 export const GET_USER_COURSE_MAPS = gql`
-  query getUserCourseMaps($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query GetUserCourseMaps(
+    $user_id: String!
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+  ) {
     getUserCourseMaps(
+      user_id: $user_id
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
@@ -101,18 +128,16 @@ export const GET_USER_COURSE_MAPS = gql`
   }
 `;
 
-export const GET_USER_COURSE_MAPS_BY_COURSE_ID = gql`
-  query getUserCourseMapByCourseID($courseId: String!) {
-    getUserCourseMapByCourseID(course_id: $courseId) {
-      user_course_id
+export const GET_USER_ORGANIZATIONS = gql`
+  query GetUserOrganization($user_id: String!) {
+    getUserOrganizations(user_id: $user_id) {
+      user_organization_id
       user_id
       user_lsp_id
-      course_id
-      course_type
-      added_by
-      is_mandatory
-      end_date
-      course_status
+      organization_id
+      organization_role
+      is_active
+      employee_id
       created_by
       updated_by
       created_at
@@ -121,17 +146,80 @@ export const GET_USER_COURSE_MAPS_BY_COURSE_ID = gql`
   }
 `;
 
-export const GET_USER_COURSE_PROGRESS = gql`
-  query getUserCourseProgressByMapId($userCourseId: ID!) {
-    getUserCourseProgressByMapId(user_course_id: $userCourseId) {
-      user_cp_id
+export const GET_USER_ORGANIZATION_DETAIL = gql`
+  query GetUserOrgDetails($user_id: String!, $user_lsp_id: String!) {
+    getUserOrgDetails(user_id: $user_id, user_lsp_id: $user_lsp_id) {
+      user_organization_id
       user_id
-      user_course_id
-      topic_id
-      topic_type
+      user_lsp_id
+      organization_id
+      organization_role
+      is_active
+      employee_id
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_LEARNINGSPACES = gql`
+  query GetUserLsps($user_id: String!) {
+    getUserLsps(user_id: $user_id) {
+      user_lsp_id
+      user_id
+      lsp_id
       status
-      video_progress
-      time_stamp
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_LEARNINGSPACES_DETAILS = gql`
+  query GetUserLspByLspId($user_id: String!, $user_lsp_id: String!) {
+    getUserLspByLspId(user_id: $user_id, lsp_id: $user_lsp_id) {
+      user_lsp_id
+      user_id
+      lsp_id
+      status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_PREFERENCES = gql`
+  query GetUserPreferences($user_id: String!) {
+    getUserPreferences(user_id: $user_id) {
+      user_preference_id
+      user_id
+      user_lsp_id
+      sub_category
+      is_base
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_PREFERENCES_DETAILS = gql`
+  query GetUserPreferenceForLsp($user_id: String!, $user_lsp_id: String!) {
+    getUserPreferenceForLsp(user_id: $user_id, user_lsp_id: $user_lsp_id) {
+      user_preference_id
+      user_id
+      user_lsp_id
+      sub_category
+      is_base
+      is_active
       created_by
       updated_by
       created_at

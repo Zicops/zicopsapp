@@ -1,5 +1,6 @@
 import CourseBoxCard from '@/components/common/CourseBoxCard';
 import CourseLIstCard from '@/components/common/CourseLIstCard';
+import { truncateToN } from '@/helper/common.helper';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 
@@ -8,7 +9,9 @@ export default function CardContainer({
   type,
   footerType,
   courseData,
-  statusData
+  statusData,
+  buttonText = '',
+  handleSubmit = () => {}
 }) {
   const cardContainerRef = useRef(null);
 
@@ -24,7 +27,7 @@ export default function CardContainer({
 
     const sidePadding = 50;
     const gap = 20;
-    // const screenWidth = window.screen.width;
+    // const screenWidth = window.screen.width; //////
     const screenWidth = cardContainerRef.current?.offsetWidth;
     window.c = cardContainerRef.current;
     console.log(screenWidth);
@@ -42,7 +45,7 @@ export default function CardContainer({
   return (
     <div className={`${styles.cardContainer}`}>
       <div className={`${styles.courseTabHeader}`}>
-        <p>{type}</p>
+        <p className={`${styles.text}`}>{type}</p>
 
         <div className={`${styles.imageContainer}`}>
           <img
@@ -54,7 +57,9 @@ export default function CardContainer({
             onClick={() => setIsBoxView(true)}
           />
 
-          <button className={`${styles.seeAllBtn}`} onClick={() => setIsShowAll(!isShowAll)}>
+          <button
+            className={isShowAll ? `${styles.seeAllBtn}` : `${styles.seeLessBtn} `}
+            onClick={() => setIsShowAll(!isShowAll)}>
             See {isShowAll ? 'Less' : 'All'}
             <img src={`/images/arrow2.png`} />
           </button>
@@ -81,11 +86,12 @@ export default function CardContainer({
                 )}
                 {footerType === 'adminFooter' && (
                   <div className={`${styles.adminCardFooter}`}>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sint
-                      quia ea voluptates, a assumenda impedit illum eligendi.
-                    </p>
-                    <button>Unassign</button>
+                    {/* <p>
+                        {course?.description
+                          ? truncateToN(course?.description, 150)
+                          : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sintquia ea voluptates, a assumenda impedit illum eligendi.'}
+                      </p> */}
+                    <button onClick={() => handleSubmit(course)}>{buttonText}</button>
                   </div>
                 )}
               </CourseBoxCard>

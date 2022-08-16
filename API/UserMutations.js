@@ -490,6 +490,39 @@ export const ADD_USER_PREFERENCE = gql`
   }
 `;
 
+export const UPDATE_USER_PREFERENCE = gql`
+  mutation UpdateUserPreference(
+    $user_preference_id: ID
+    $user_id: String!
+    $user_lsp_id: String!
+    $is_active: Boolean!
+    $sub_category: String!
+    $is_base: Boolean!
+  ) {
+    updateUserPreference(
+      input: {
+        user_preference_id: $user_preference_id
+        user_id: $user_id
+        user_lsp_id: $user_lsp_id
+        sub_category: $sub_category
+        is_base: $is_base
+        is_active: $is_active
+      }
+    ) {
+      user_preference_id
+      user_id
+      user_lsp_id
+      sub_category
+      is_base
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
 export const ADD_USER_ROLE = gql`
   mutation addUserRoles(
     $user_id: String!
@@ -815,96 +848,41 @@ export const ADD_USER_EXAM_PROGRESS = gql`
   }
 `;
 
-export const UPDATE_USER_EXAM_PROGRESS = gql`
-  mutation updateUserExamProgress(
-    $user_id: String!
-    $user_ea_id: String!
-    $user_lsp_id: String!
-    $user_cp_id: String!
-    $sr_no: Int!
-    $question_id: String!
-    $question_type: String!
-    $answer: String!
-    $q_attempt_status: String!
-    $total_time_spent: String!
-    $correct_answer: String!
-    $section_id: String!
-  ) {
-    updateUserExamProgress(
-      input: {
-        user_id: $user_id
-        user_ea_id: $user_ea_id
-        user_lsp_id: $user_lsp_id
-        user_cp_id: $user_cp_id
-        sr_no: $sr_no
-        question_id: $question_id
-        question_type: $question_type
-        answer: $answer
-        q_attempt_status: $q_attempt_status
-        total_time_spent: $total_time_spent
-        correct_answer: $correct_answer
-        section_id: $section_id
-      }
+export const GET_USER_COURSE_MAPS = gql`
+  query getUserCourseMaps($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getUserCourseMaps(
+      user_id: ""
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
     ) {
-      user_ep_id
-      user_id
-      user_ea_id
-      user_lsp_id
+      user_courses {
+        user_course_id
+        user_id
+        user_lsp_id
+        course_id
+        course_type
+        added_by
+        is_mandatory
+        end_date
+        course_status
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_USER_COURSE_PROGRESS = gql`
+  query getUserCourseProgressByMapId($userCourseId: ID!) {
+    getUserCourseProgressByMapId(user_id: "", user_course_id: $userCourseId) {
       user_cp_id
-      sr_no
-      question_id
-      question_type
-      answer
-      q_attempt_status
-      total_time_spent
-      correct_answer
-      section_id
-      created_by
-      updated_by
-      created_at
-      updated_at
-    }
-  }
-`;
-
-export const ADD_USER_EXAM_RESULTS = gql`
-  mutation addUserExamResult($userExamReslts: [UserExamResultInput]!) {
-    addUserExamResult(input: $userExamReslts) {
-      user_er_id
-      user_id
-      user_ea_id
-      user_score
-      correct_answers
-      wrong_answers
-      result_status
-      created_by
-      updated_by
-      created_at
-      updated_at
-    }
-  }
-`;
-
-export const UPDATE_USER_EXAM_RESULTS = gql`
-  mutation updateUserExamResult(
-    $user_id: String!
-    $user_ea_id: String!
-    $user_score: Int!
-    $correct_answers: Int!
-    $wrong_answers: Int!
-    $result_status: String!
-  ) {
-    updateUserExamResult(
-      input: {
-        user_id: $user_id
-        user_ea_id: $user_ea_id
-        user_score: $user_score
-        correct_answers: $correct_answers
-        wrong_answers: $wrong_answers
-        result_status: $result_status
-      }
-    ) {
-      user_er_id
       user_id
       user_ea_id
       user_score

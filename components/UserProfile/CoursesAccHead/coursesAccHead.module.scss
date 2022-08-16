@@ -1,22 +1,27 @@
 @import '../../../styles/base.scss';
-.coursesAcc_Head{
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 20px 0px;
+.coursesAcc_Head {
+  display: flex;
+  gap: 10px;
+  padding: 20px 0px;
+  .folderSvg {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+  }
 }
 .searchInputContainer {
-    position: relative;
-    width: 400px;
+  position: relative;
+  width: 400px;
 
-    img {
-        position: absolute;
-        top: 50%;
-        left: 5px;
-        transform: translateY(-50%);
-    }
+  img {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+  }
 
-    input {
-        padding-left: 30px;
-    }
+  input {
+    // padding-left: 35px;
+    padding: 9px 0px 9px 35px;
+  }
 }

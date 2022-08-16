@@ -5,10 +5,10 @@ export function imageTypeTopicBox(type) {
       topicImage = '/images/PDF-icon.png';
       break;
     case 'Assessment':
-      topicImage = '/images/media-container.png';
+      topicImage = '/images/Rectangle 55 (1).png';
       break;
     case 'Content':
-      topicImage = '/images/lightBrain-icon.png';
+      topicImage = '/images/Rectangle 55.png';
       break;
   }
 

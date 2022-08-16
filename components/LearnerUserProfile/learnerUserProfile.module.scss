@@ -84,13 +84,13 @@
   text-transform: capitalize;
   padding: 5px 0px;
 }
-.text,
-.category {
-  color: $white;
-  font-size: 1.2vw;
-  text-transform: capitalize;
-  font-weight: 500;
-}
+// .text,
+// .category {
+//   color: $white;
+//   // font-size: 1.2vw;
+//   text-transform: capitalize;
+//   font-weight: 600;
+// }
 .userInfoWraper {
   background-color: #262626;
   border-radius: 16px;
@@ -111,6 +111,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.text , .category{
+  color: var(--white);
+  font-weight: 600;
+  font-size: 22px;
 }
 .inputField {
   width: 400px;
@@ -194,8 +199,19 @@
         border: none;
         outline: none;
         background-color: transparent;
-        color: $white;
+        color: $primary;
 
+        img {
+          transform: rotate(90deg);
+          height: 10px;
+          margin: auto 5px;
+        }
+      }
+      .seeLessBtn {
+        color: $white;
+        border: none;
+        outline: none;
+        background-color: transparent;
         img {
           height: 10px;
           margin: auto 5px;
@@ -204,9 +220,9 @@
     }
   }
 
-  hr {
-    margin: 5px auto 20px;
-  }
+  // hr {
+  //   margin: 5px auto 20px;
+  // }
 
   .boxCardContainer {
     display: flex;
@@ -238,6 +254,12 @@
     border: 2px solid $primary;
     color: $primary;
     border-radius: 3px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  button:hover {
+    color: $black;
+    background-color: $primary;
   }
 }
 
@@ -314,4 +336,58 @@
   width: 100%;
   height: auto;
   background-color: black;
+}
+
+.container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.prefContainer {
+  background-image: none !important;
+  color: $white !important;
+  svg path {
+    fill: $white !important;
+  }
+  input {
+    color: $white !important;
+  }
+  span {
+    color: $primary !important;
+  }
+}
+
+.prefNav {
+  background-image: none !important;
+  div {
+    justify-content: right !important;
+  }
+  button {
+    color: $black !important;
+    background-color: $primary !important;
+  }
+  button:disabled {
+    background-color: $darkOne !important;
+  }
+}
+
+.prefCat {
+  button {
+    color: $primary !important;
+  }
+  span {
+    svg {
+      fill: $primary !important;
+    }
+  }
+}
+
+.prefGrid {
+  div {
+    color: $white !important;
+  }
+
+  svg {
+    fill: $darkOne !important;
+  }
 }

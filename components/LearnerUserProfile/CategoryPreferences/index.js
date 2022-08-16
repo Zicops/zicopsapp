@@ -1,14 +1,12 @@
 import styles from '../learnerUserProfile.module.scss';
-import { subCategory } from '../Logic/userData.helper';
 
-const CategoryPreferences = () => {
-  //   console.log(subCategory);
+const CategoryPreferences = ({ subCategoryData }) => {
   return (
     <div className={`${styles.categoryPreferences}`}>
       <div className={`${styles.text}`}>Sub-category preferences:</div>
       <div className={`${styles.category}`}>
-        {subCategory.map((v, i) => (
-          <div className={`${styles.textSubCategory}`}>{subCategory[i]}</div>
+        {subCategoryData.map((v, i) => (
+          <div className={`${styles.textSubCategory}`}>{v?.sub_category}</div>
         ))}
       </div>
     </div>

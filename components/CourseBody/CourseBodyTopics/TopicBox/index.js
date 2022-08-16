@@ -4,6 +4,7 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
@@ -268,46 +269,51 @@ export default function TopicBox({
             <img src="images/resourcesicon.png" />
             <p>Resources</p>
           </div>
-          <div>
+          {/* <div>
             <img src="images/discussicon.png" />
             <p>Discuss</p>
-          </div>
+          </div> */}
         </div>
 
-        <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
+        <div className={`${styles.topic_loop} ${isTopicActive ? 'activeTopic' : ''}`}>
           <div className={`${styles.topic_img}`}>
             <img src={`${topicImageLink}`} alt="" />
           </div>
 
           <div className={`${styles.topic_text}`}>
-            <div className={`${styles.topic_heading}`}>
-              <h4>
-                <span>
-                  {isLoading ? (
-                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
-                  ) : (
-                    topicCountDisplay + '. '
-                  )}
-                </span>
+            <div className={`${styles.topic_number}`}>
+              <span>
                 {isLoading ? (
-                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={150} />
-                ) : name ? (
-                  name
+                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
                 ) : (
-                  'N/A'
+                  topicCountDisplay + '. '
                 )}
-              </h4>
+              </span>
             </div>
-            <div className={`${styles.topic_description}`}>
-              <p>
-                {isLoading ? (
-                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
-                ) : description ? (
-                  description
-                ) : (
-                  'N/A'
-                )}
-              </p>
+            <div className={`${styles.topic_meta}`}>
+              <div className={`${styles.topic_heading}`}>
+                <h4>
+                  {isLoading ? (
+                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={150} />
+                  ) : name ? (
+                    name
+                  ) : (
+                    'N/A'
+                  )}
+                </h4>
+              </div>
+              <div className={`${styles.topic_description}`}>
+                <p>
+                  {isLoading ? (
+                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
+                  ) : description ? (
+                    description
+                  ) : (
+                    'N/A'
+                    // 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint eos quisquam beatae doloremque rem, deleniti dolor odio accusamus doloribus harum cumque fugiat, suscipit illo, molestias adipisci fugit porro ratione tenetur.'
+                  )}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -319,7 +325,7 @@ export default function TopicBox({
                 </div>
               </div>
               <div className={`${styles.details}`}>
-                <div>Video + Quiz</div>
+                <div>e-Content</div>
                 <div>
                   <span>
                     {isLoading ? (
@@ -410,27 +416,6 @@ export default function TopicBox({
           )}
         </div>
       </div>
-
-      {/* move to .scss */}
-      <style>
-        {`
-                
-                .topic-loop{
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px;
-                    border: 1px solid #ffffff;
-                    transition: all 0.3s;
-                    cursor: pointer;
-                }
-                .topic-loop:hover, .activeTopic{
-                    box-shadow: 0 0 10px 0 #6bcfcf;
-                    transform: scale(1.02);
-                    background-color: #000000;
-                
-                `}
-      </style>
     </>
   );
 }

@@ -1,7 +1,9 @@
 import {
+  ADD_USER_PREFERENCE,
   UPDATE_USER,
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
+  UPDATE_USER_PREFERENCE,
   UPDATE_USER_ROLE,
   userClient
 } from '@/api/UserMutations';
@@ -15,8 +17,11 @@ import { useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import useCommonHelper from './common.helper';
+import { getUserData } from '@/helper/loggeduser.helper';
 
 export default function useHandleUserUpdate() {
+  const { getUserPreferences } = useCommonHelper();
   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
     client: userClient
   });
@@ -30,6 +35,14 @@ export default function useHandleUserUpdate() {
   });
 
   const [updateRole, { error: createRoleError }] = useMutation(UPDATE_USER_ROLE, {
+    client: userClient
+  });
+
+  const [updatePreference, { error: updatePreferenceError }] = useMutation(UPDATE_USER_PREFERENCE, {
+    client: userClient
+  });
+
+  const [addPreference, { error: createPreferenceError }] = useMutation(ADD_USER_PREFERENCE, {
     client: userClient
   });
 
@@ -68,6 +81,8 @@ export default function useHandleUserUpdate() {
     const data = res?.data?.addUserLspMap[0];
 
     setUserDataOrgLsp((prevValue) => ({ ...prevValue, ...data }));
+
+    setTimeout(sessionStorage.setItem('userAccountSetupData', JSON.stringify(userOrgData)), 200);
   }
 
   async function updateUserOrganizationDetails() {
@@ -94,41 +109,89 @@ export default function useHandleUserUpdate() {
     const data = res?.data?.updateUserOrganizationMap[0];
     setUserDataOrgLsp((prevValue) => ({ ...prevValue, ...data }));
 
+    setTimeout(sessionStorage.setItem('userAccountSetupData', JSON.stringify(userOrgData)), 200);
+
     console.log(res, userDataOrgLsp);
   }
 
-  async function updateAboutUser() {
-    const sendData = {
-      id: userAboutData?.id,
-      first_name: userAboutData?.first_name,
-      last_name: userAboutData?.last_name,
+  async function updatePreferences(sub_categories = [], base_sub_category) {
+    const { id } = getUserData();
+    const userPreferences = await getUserPreferences();
 
-      status: userAboutData?.status || 'Active',
-      role: userAboutData?.role || 'Learner',
-      email: userAboutData?.email,
-      phone: userAboutData?.phone,
+    const selectedSubcartegory = sub_categories;
 
-      gender: userAboutData?.gender,
-      photo_url: userAboutData?.photo_url,
+    console.log(selectedSubcartegory);
+    for (let i = 0; i < userPreferences.length; i++) {
+      const a = selectedSubcartegory.filter((ele) => ele?.name === userPreferences[i].name);
 
-      is_verified: true,
-      is_active: true,
+      if (!a[0]?.user_preference_id && a.length) {
+        a[0].user_preference_id = userPreferences[i]?.user_preference_id;
+        a[0].user_id = userPreferences[i]?.user_id;
+        a[0].user_lsp_id = userPreferences[i]?.user_lsp_id;
+      }
+    }
 
-      created_by: userAboutData?.created_by || 'Zicops',
-      updated_by: userAboutData?.updated_by || 'Zicops'
-    };
+    console.log(selectedSubcartegory);
+    //delete preferences that are deselected
+    let sub_categoriesArr;
+    if (userPreferences.length) {
+      const newArr = sub_categories.map((item) => item?.name);
+      console.log(newArr);
+      sub_categoriesArr = userPreferences.filter((item) => {
+        return !newArr.includes(item?.name);
+      });
+      // console.log(userPreferences, sub_categoriesArr);
+    }
+    if (sub_categoriesArr.length) {
+      for (let i = 0; i < sub_categoriesArr.length; i++) {
+        let sendData = {
+          user_preference_id: sub_categoriesArr[i]?.user_preference_id,
+          user_id: sub_categoriesArr[i]?.user_id,
+          user_lsp_id: sub_categoriesArr[i]?.user_lsp_id,
+          sub_category: sub_categoriesArr[i]?.sub_category,
+          is_base: false,
+          is_active: false
+        };
+        console.log(sendData);
+        const res = await updatePreference({ variables: sendData }).catch((err) =>
+          console.log(err)
+        );
+      }
+    }
 
-    console.log(sendData, 'yo');
+    // console.log(sub_categories);
+    //temp way need to be delete later
+    const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
 
-    let isError = false;
-    const res = await updateAbout({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update User Error' });
-    });
-
-    console.log(res);
+    for (let i = 0; i < selectedSubcartegory.length; i++) {
+      let is_base = selectedSubcartegory[i]?.name === base_sub_category ? true : false;
+      if (selectedSubcartegory[i]?.user_preference_id) {
+        let sendData = {
+          user_preference_id: selectedSubcartegory[i]?.user_preference_id,
+          user_id: id,
+          user_lsp_id: selectedSubcartegory[i]?.user_lsp_id,
+          sub_category: selectedSubcartegory[i]?.name,
+          is_base: is_base,
+          is_active: true
+        };
+        console.log(sendData);
+        const res = await updatePreference({ variables: sendData }).catch((err) =>
+          console.log(err)
+        );
+      } else {
+        let sendData = {
+          user_id: id,
+          user_lsp_id: user_lsp_id,
+          sub_category: selectedSubcartegory[i]?.name,
+          is_base: is_base,
+          is_active: true
+        };
+        console.log(sendData);
+        const res = await addPreference({ variables: { input: sendData } }).catch((err) =>
+          console.log(err)
+        );
+      }
+    }
   }
-
-  return { updateAboutUser, updateUserLearningSpaceDetails, updateUserOrganizationDetails };
+  return { updateUserLearningSpaceDetails, updateUserOrganizationDetails, updatePreferences };
 }
