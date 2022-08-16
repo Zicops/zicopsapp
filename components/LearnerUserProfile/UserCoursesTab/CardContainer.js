@@ -27,7 +27,7 @@ export default function CardContainer({
 
     const sidePadding = 50;
     const gap = 20;
-    // const screenWidth = window.screen.width;
+    // const screenWidth = window.screen.width; //////
     const screenWidth = cardContainerRef.current?.offsetWidth;
     window.c = cardContainerRef.current;
     console.log(screenWidth);

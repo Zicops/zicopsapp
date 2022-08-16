@@ -18,9 +18,10 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import useCommonHelper from './common.helper';
+import { getUserData } from '@/helper/loggeduser.helper';
 
 export default function useHandleUserUpdate() {
-  const { sendUserPreferences, userPrefences } = useCommonHelper();
+  const { getUserPreferences } = useCommonHelper();
   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
     client: userClient
   });
@@ -114,48 +115,62 @@ export default function useHandleUserUpdate() {
   }
 
   async function updatePreferences(sub_categories = [], base_sub_category) {
-    // await sendUserPreferences();
+    const { id } = getUserData();
+    const userPreferences = await getUserPreferences();
 
-    // const dataLsp = JSON.parse(sessionStorage.getItem('lspData'));
+    const selectedSubcartegory = sub_categories;
 
-    // if (userPrefences.length) {
-    //   const newArr = sub_categories.map((item) => item.name);
-    //   console.log(newArr);
-    //   const sub_categoriesArr = userPrefences.filter((item) => {
-    //     if (!newArr.includes(item?.sub_category)) return item;
-    //   });
-    //   console.log(sub_categoriesArr);
-    //   if (sub_categoriesArr.length) {
-    //     sub_categoriesArr.forEach(async (item) => {
-    //       let sendData = {
-    //         user_preference_id: item.user_preference_id,
-    //         user_id: dataLsp?.user_id,
-    //         user_lsp_id: dataLsp?.user_lsp_id,
-    //         sub_category: item?.sub_category,
-    //         is_base: false,
-    //         is_active: false
-    //       };
-    //       console.log(sendData);
+    console.log(selectedSubcartegory);
+    for (let i = 0; i < userPreferences.length; i++) {
+      const a = selectedSubcartegory.filter((ele) => ele?.name === userPreferences[i].name);
 
-    //       const res = await updatePreference({ variables: sendData }).catch((err) =>
-    //         console.log(err)
-    //       );
-    //       console.log(res?.data);
-    //     });
-    //   }
-    // }
+      if (!a[0]?.user_preference_id && a.length) {
+        a[0].user_preference_id = userPreferences[i]?.user_preference_id;
+        a[0].user_id = userPreferences[i]?.user_id;
+        a[0].user_lsp_id = userPreferences[i]?.user_lsp_id;
+      }
+    }
 
-    // console.log(userPrefences);
-    //temp way need to be delete later
-    const { user_preference_id, user_id, user_lsp_id } = sub_categories[0];
-    for (let i = 0; i < sub_categories.length; i++) {
-      let is_base = sub_categories[i]?.name === base_sub_category ? true : false;
-      if (sub_categories[i]?.user_preference_id) {
+    console.log(selectedSubcartegory);
+    //delete preferences that are deselected
+    let sub_categoriesArr;
+    if (userPreferences.length) {
+      const newArr = sub_categories.map((item) => item?.name);
+      console.log(newArr);
+      sub_categoriesArr = userPreferences.filter((item) => {
+        return !newArr.includes(item?.name);
+      });
+      // console.log(userPreferences, sub_categoriesArr);
+    }
+    if (sub_categoriesArr.length) {
+      for (let i = 0; i < sub_categoriesArr.length; i++) {
         let sendData = {
-          user_preference_id: sub_categories[i]?.user_preference_id,
-          user_id: sub_categories[i]?.user_id,
-          user_lsp_id: sub_categories[i]?.user_lsp_id,
-          sub_category: sub_categories[i]?.name,
+          user_preference_id: sub_categoriesArr[i]?.user_preference_id,
+          user_id: sub_categoriesArr[i]?.user_id,
+          user_lsp_id: sub_categoriesArr[i]?.user_lsp_id,
+          sub_category: sub_categoriesArr[i]?.sub_category,
+          is_base: false,
+          is_active: false
+        };
+        console.log(sendData);
+        const res = await updatePreference({ variables: sendData }).catch((err) =>
+          console.log(err)
+        );
+      }
+    }
+
+    // console.log(sub_categories);
+    //temp way need to be delete later
+    const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
+
+    for (let i = 0; i < selectedSubcartegory.length; i++) {
+      let is_base = selectedSubcartegory[i]?.name === base_sub_category ? true : false;
+      if (selectedSubcartegory[i]?.user_preference_id) {
+        let sendData = {
+          user_preference_id: selectedSubcartegory[i]?.user_preference_id,
+          user_id: id,
+          user_lsp_id: selectedSubcartegory[i]?.user_lsp_id,
+          sub_category: selectedSubcartegory[i]?.name,
           is_base: is_base,
           is_active: true
         };
@@ -165,9 +180,9 @@ export default function useHandleUserUpdate() {
         );
       } else {
         let sendData = {
-          user_id: userAboutData?.id,
+          user_id: id,
           user_lsp_id: user_lsp_id,
-          sub_category: sub_categories[i]?.name,
+          sub_category: selectedSubcartegory[i]?.name,
           is_base: is_base,
           is_active: true
         };
