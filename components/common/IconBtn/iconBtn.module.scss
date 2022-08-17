@@ -5,20 +5,15 @@
   align-items: center;
   justify-content: center;
   gap: 5%;
-
   background-color: $black;
   border: 2px solid $white;
   color: $white;
   cursor: pointer;
-
   font-size: 16px;
-
   padding: 10px;
-
   img {
-    max-height: 15px;
+    // max-height: 15px;
   }
-
   &:disabled {
     cursor: no-drop;
   }

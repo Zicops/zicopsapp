@@ -86,3 +86,68 @@ export const cohortTabData = [
   { name: 'Courses', component: <CoursesTab /> },
   { name: 'Invites', component: <InviteTab /> }
 ];
+export const memberTabData = [
+  {
+    id: 1,
+    name: 'Devansh Kumar',
+    description: 'Tata Consultancy Services',
+    designation: 'Product Manager',
+    joinedOn: '20:04:2022',
+    isManager: true,
+    isMember: false
+  },
+  {
+    id: 2,
+    name: 'Kumar Vasu',
+    description: 'Tata Consultancy Services',
+    designation: 'Product Manager',
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isMember: true
+  },
+  {
+    id: 3,
+    name: 'Lisa Menon',
+    description: 'Tata Consultancy Services',
+    designation: 'Product Manager',
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isMember: true
+  },
+  {
+    id: 4,
+    name: 'Deepika Rajput',
+    description: 'Tata Consultancy Services',
+    designation: 'Product Manager',
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isMember: true
+  },
+  {
+    id: 5,
+    name: 'Kumar Vasu',
+    description: 'Tata Consultancy Services',
+    designation: 'Product Manager',
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isMember: true
+  },
+  {
+    id: 6,
+    name: 'Lisa Menon',
+    description: 'Tata Consultancy Services',
+    designation: 'Product Manager',
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isMember: true
+  },
+  {
+    id: 7,
+    name: 'Deepika Rajput',
+    description: 'Tata Consultancy Services',
+    designation: 'Product Manager',
+    joinedOn: '20:04:2022',
+    isManager: false,
+    isMember: true
+  }
+];

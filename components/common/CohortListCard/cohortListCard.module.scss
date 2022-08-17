@@ -21,14 +21,34 @@
       height: 100%;
     }
   }
+  .imgRoundContainer{
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    img{
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center center;
+      
+    }
+  }
 
   .cardBody {
     flex: 1;
+        display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100%;
 
     .title {
       color: $white;
       font-size: 20px;
       font-weight: bold;
+    }
+    .desc{
+      padding-top: 20px;
     }
   }
 }
