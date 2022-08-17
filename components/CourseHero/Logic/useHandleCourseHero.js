@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-export default function useHandleCourseHero() {
+export default function useHandleCourseHero(isPreview) {
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
 
   const router = useRouter();
@@ -54,6 +54,8 @@ export default function useHandleCourseHero() {
   }, [courseData]);
 
   useEffect(() => {
+    if (isPreview) return;
+
     setCourseAssignData({
       ...courseAssignData,
       isCourseAssigned: !!userCourseData?.userCourseMapping?.user_course_id
