@@ -178,12 +178,10 @@
 }
 
 .userTabContainer {
-  // height: 75vh;
+  // height:75vh;
   padding: 50px;
   color: $white;
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
+  overflow-y: scroll;
 }
 
 .cardContainer {

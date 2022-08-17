@@ -36,7 +36,7 @@ const UserCohortTab = () => {
 
           return (
             <CohortListCard
-              cohortData={cohort}
+              data={cohort}
               key={cohort.id}
               handleClick={() => {
                 setSelectedCohort(cohort);
