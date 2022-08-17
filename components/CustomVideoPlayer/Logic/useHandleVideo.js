@@ -13,7 +13,7 @@ import { GET_TOPIC_EXAMS } from 'API/Queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../helper/data.helper';
-import { secondsToMinutes } from '../../../helper/utils.helper';
+import { secondsToHMS, secondsToMinutes } from '../../../helper/utils.helper';
 import { TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
 import { addCallbackToEvent } from './customVideoPlayer.helper';
@@ -39,6 +39,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const topicContent = useRecoilValue(TopicContentAtom);
   const [seek, setSeek] = useState(0);
+  const [freezeScreen, setFreezeScreen] = useState(false);
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
@@ -51,7 +52,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     progress: 0, // o - 100
     speed: 1,
     isMuted: false,
-    volume: 0.7
+    volume: 0.7,
+    timestamp: '00:00',
+    duration: 0
   });
 
   // udpate recoil state
@@ -229,20 +232,28 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       setToastMsg({ type: 'danger', message: 'Course Progress Update Error' });
   }, [updateUserCourseErr, addUserCourseProgressErr, updateUserCourseProgressErr]);
 
-  // hide control bar if no mouse movement for 2.5 sec
-  const duration = 2500;
-  let timeout;
   useEffect(() => {
     if (userCourseData?.triggerPlayerToStartAt === null) setVideoTime(0);
     videoElement.current?.focus();
     updateIsPlayingTo(true);
+  }, [videoElement.current]);
+
+  // hide control bar if no mouse movement for 2.5 sec
+  const duration = 2500;
+  let timeout;
+  useEffect(() => {
+    console.log(freezeScreen);
+    clearTimeout(timeout);
 
     function switchControls(value) {
+      console.log('freezeScreen: ', freezeScreen);
+      if (freezeScreen) return;
+
       setHideControls(value);
       setHideTopBar(value);
     }
 
-    addCallbackToEvent(videoContainer.current, [
+    const callBackFuncArr = [
       {
         event: 'mousemove',
         callback: () => {
@@ -268,8 +279,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           clearTimeout(timeout);
         }
       }
-    ]);
-  }, []);
+    ];
+
+    if (freezeScreen) return addCallbackToEvent(videoContainer.current, callBackFuncArr, true);
+
+    addCallbackToEvent(videoContainer.current, callBackFuncArr);
+  }, [freezeScreen]);
 
   // reset tooltip and seek after timeoutSeconds
   const timeoutSeconds = 2000;
@@ -304,6 +319,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // play video on state update
   useEffect(() => {
     playerState.isPlaying ? videoElement.current?.play() : videoElement.current?.pause();
+
+    if (playerState.isPlaying) setFreezeScreen(false);
   }, [playerState.isPlaying, videoElement]);
 
   // volume = 0 is mute, volume > 0 is unmute
@@ -515,19 +532,21 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // pass true or false
   function updateIsPlayingTo(play) {
-    setPlayerState({
-      ...playerState,
-      isPlaying: !!play
-    });
+    if (playerState?.isPlaying === play) return;
 
+    setPlayerState({ ...playerState, isPlaying: !!play });
     setPlayPauseActivated(!!play ? 'play' : 'pause');
   }
 
   const handleOnTimeUpdate = () => {
-    const progress = (videoElement.current?.currentTime / videoElement.current?.duration) * 100;
+    const currentTime = videoElement.current?.currentTime;
+    const progress = (currentTime / videoElement.current?.duration) * 100;
+
     setPlayerState({
       ...playerState,
-      progress: progress || 0
+      progress: progress || 0,
+      timestamp: secondsToHMS(currentTime || 0),
+      duration: videoElement.current?.duration
     });
   };
 
@@ -694,6 +713,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     playNextVideo,
     playPreviousVideo,
     setVideoTime,
-    moveVideoProgressBySeconds
+    moveVideoProgressBySeconds,
+    freezeScreen,
+    setFreezeScreen
   };
 }

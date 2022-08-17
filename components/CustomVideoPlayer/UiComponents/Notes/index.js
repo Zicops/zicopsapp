@@ -12,8 +12,7 @@ export default function Notes() {
     handleDragEnd,
     handleClose,
     handlePin,
-    showAll,
-    hideAll,
+    toggleAllNotes,
     addNewNote,
     deleteNote
   } = useHandleNotes();
@@ -21,7 +20,7 @@ export default function Notes() {
   return (
     <>
       <div className={`${styles.folderBarContainer}`}>
-        <FolderBar onFolderClick={showAll} onMinusClick={hideAll} onPlusClick={addNewNote} />
+        <FolderBar onFolderClick={toggleAllNotes} onPlusClick={addNewNote} />
 
         <div
           className={`${styles.notesCardsContainer} ${

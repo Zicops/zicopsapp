@@ -28,6 +28,7 @@ const dummyNotes = [
 export default function useHandleNotes() {
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
 
+  const [isNotesOpen, setIsNotesOpen] = useState(true);
   const [userNotes, setUserNotes] = useState([...dummyNotes]);
 
   useEffect(() => {
@@ -115,22 +116,15 @@ export default function useHandleNotes() {
     setFloatingNotes(allNotes);
   }
 
-  function showAll() {
+  function toggleAllNotes() {
+    const isOpen = !isNotesOpen;
     let allNotes = structuredClone(floatingNotes).map((note) => {
-      note.isOpen = true;
+      note.isOpen = isOpen;
       return note;
     });
 
     setFloatingNotes(allNotes);
-  }
-
-  function hideAll() {
-    let allNotes = structuredClone(floatingNotes).map((note) => {
-      note.isOpen = false;
-      return note;
-    });
-
-    setFloatingNotes(allNotes);
+    setIsNotesOpen(isOpen);
   }
 
   return {
@@ -138,8 +132,7 @@ export default function useHandleNotes() {
     handleDragEnd,
     handleClose,
     handlePin,
-    showAll,
-    hideAll,
+    toggleAllNotes,
     addNewNote,
     deleteNote
   };
