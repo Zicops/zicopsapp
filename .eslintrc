@@ -1,0 +1,6 @@
+{
+  "plugins": ["spellcheck"],
+  "rules": {
+    "spellcheck/spell-checker": ["warn"]
+  }
+}
