@@ -26,11 +26,11 @@ export default function useCommonHelper() {
     const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
     // let uLspId = user_lsp_id ? user_lsp_id : userLspId;
     // console.log(user_lsp_id, uLspId);
-    console.log(data);
+    // console.log(data);
     const prefData = data?.filter((item) => {
       return item?.user_lsp_id === user_lsp_id;
     });
-    console.log(prefData);
+    // console.log(prefData);
     const prefArr = [];
     for (let i = 0; i < prefData?.length; i++) {
       for (let j = 0; j < subCategories?.length; j++) {

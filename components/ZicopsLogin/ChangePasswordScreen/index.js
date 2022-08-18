@@ -76,10 +76,12 @@ const ChangePasswordScreen = ({ setPage }) => {
           <LoginEmail
             placeholder={'Enter new password'}
             chngeHandle={(e) => handleNewPassword(e)}
+            tabIndex={1}
           />
           <LoginEmail
             placeholder={'Re-enter new password'}
             chngeHandle={(e) => handleConfNewPassword(e)}
+            tabIndex={2}
           />
           <div className="change_buttons">
             <LoginButton title={'Cancel'} />

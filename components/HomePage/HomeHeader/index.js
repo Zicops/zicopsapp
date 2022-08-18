@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from '../home.module.scss';
-const HomeHeader = ({ showLogin = true }) => {
+const HomeHeader = ({ showLogin = true, showBackBtn = false }) => {
   return (
     <>
       <header className={`${styles.HomeHeader}`}>
@@ -15,6 +16,15 @@ const HomeHeader = ({ showLogin = true }) => {
             <div className={`${styles.Login}`}>
               <img src="/images/Union1.png" alt="not found" />
               <a>Login</a>
+            </div>
+          </Link>
+        )}
+
+        {showBackBtn && (
+          <Link href="/login">
+            <div className={`${styles.backBtn}`}>
+              <Image src="/images/bigarrowleft.png" alt="" height={20} width={20} />
+              <span>Back</span>
             </div>
           </Link>
         )}

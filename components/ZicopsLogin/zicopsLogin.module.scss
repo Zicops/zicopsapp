@@ -21,15 +21,15 @@
   }
 }
 
-.zicops_logo{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 150px;
-    width: 150px;
-    padding: 5px;
-  img{
+.zicops_logo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 150px;
+  padding: 5px;
+  img {
     width: 66%;
     height: 70%;
     margin-bottom: 30px;
@@ -134,15 +134,15 @@
   // justify-content: center;
   // width: 100%;
   // padding-top: 120px;
-  
-    position: fixed;
-    width: 100%;
-    height: 27px;
-    bottom: 40px;
-    display: flex;
-    justify-content: center;
-    gap: 100px;
-    
+
+  position: fixed;
+  width: 100%;
+  height: 27px;
+  bottom: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+
   .foot_text a {
     font-size: 14px;
     color: $white;
@@ -188,6 +188,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     p {
       font-size: 14px;
       color: $secondaryBlack;
@@ -219,12 +220,15 @@
 
 .small_text {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: baseline;
+  justify-content: flex-end;
+  color: $white;
+  gap: 5px;
+  font-weight: bold;
+  // font-size: 14px;
   p {
-    font-size: 14px;
     color: $secondaryBlack;
-    font-weight: bold;
+    // font-weight: bold;
     padding: 6px 0px 3px;
     cursor: pointer;
   }

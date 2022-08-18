@@ -164,6 +164,17 @@ $DELAY: $DURATION / 2;
   height: 80px;
   padding: 0 4%;
 
+  .backBtn {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    align-items: center;
+    color: $primary;
+    cursor: pointer;
+    font-size: medium;
+    font-weight: bold;
+  }
+
   .Login {
     display: flex;
     justify-content: flex-end;

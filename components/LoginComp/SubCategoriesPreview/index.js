@@ -15,7 +15,6 @@ const SubCategoriesPreview = ({
   setSelected,
   customStyle = [],
   isUpdate = false,
-  handleUpdate = () => {},
   popUpClose = () => {}
 }) => {
   const [primary, setPrimary] = useState('');
@@ -54,12 +53,11 @@ const SubCategoriesPreview = ({
     console.log('from add');
   }
 
-  function handleUpdate() {
-    updatePreferences(selected, primary);
+  async function handleUpdate() {
+    await updatePreferences(selected, primary);
     popUpClose(false);
-    setTimeout(() => {
-      setCurrentComponent(2);
-    }, 500);
+    setCurrentComponent(2);
+    router.reload();
   }
 
   useEffect(() => {
@@ -136,7 +134,9 @@ const SubCategoriesPreview = ({
             disabled={primary === ''}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
-            onClick={isUpdate ? handleUpdate : handleCompleteSetup}>
+            onClick={() => {
+              isUpdate ? handleUpdate() : handleCompleteSetup();
+            }}>
             Complete Setup
           </Button>
         </div>
