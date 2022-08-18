@@ -121,7 +121,12 @@ const LoginScreen = ({ setPage }) => {
           <LoginEmail type={'password'} placeholder={'Password'} chngeHandle={handlePassword} />
           <div className={`${styles.small_text}`}>
             <span />
-            <p>Forgot Password?</p>
+            <p
+              onClick={() => {
+                router.push('/forgot-password');
+              }}>
+              Forgot Password?
+            </p>
           </div>
 
           <LoginButton title={'Login'} handleClick={handleSubmit} />

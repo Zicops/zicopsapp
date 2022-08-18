@@ -14,7 +14,8 @@ export default function Layout({ children }) {
     '/exam-screen/[examId]',
     '/login',
     '/reset-password',
-    '/account-setup'
+    '/account-setup',
+    '/forgot-password'
   ];
 
   useEffect(() => {
