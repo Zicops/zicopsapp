@@ -1,6 +1,6 @@
 import styles from './bookmarkCard.module.scss';
 
-export default function BookmarkCard({ data, styleClass }) {
+export default function BookmarkCard({ data = {}, styleClass }) {
   const gotoPage = () => {
     alert('go go go!');
   };
@@ -12,11 +12,13 @@ export default function BookmarkCard({ data, styleClass }) {
           <div className={`${styles.banner}`}>Bookmarks</div>
           <div className={`${styles.imageTimeText}`}>
             <div className={`${styles.bookmarkImage}`}>
-              <img src={data.img || "/images/dnd1.jpg"} alt="" />
+              <img src={data?.img || '/images/dnd1.jpg'} alt="" />
             </div>
             <div className={`${styles.bookmarkText}`}>
-              <div className={`${styles.bookmarkTime}`}> 04:57 <span>Course Name </span></div>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+              <div className={`${styles.bookmarkTime}`}>
+                {data?.timestamp || '04:57'} <span>{data?.courseName || 'Course Name'} </span>
+              </div>
+              <p>{data?.title || 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'}</p>
             </div>
           </div>
         </div>

@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@apollo/client": "^3.5.8",
@@ -19,11 +20,13 @@
     "@reach/menu-button": "^0.16.2",
     "@stitches/react": "^1.2.7",
     "@szhsin/react-menu": "^3.0.0",
+    "@types/react": "^17.0.48",
     "apollo-upload-client": "^17.0.0",
     "chart.js": "^3.8.2",
     "firebase": "^9.8.4",
     "graphql": "^16.3.0",
     "graphql-upload": "^15.0.1",
+    "libphonenumber-js": "^1.10.12",
     "moment": "^2.29.4",
     "mui-datatables": "^3.8.5",
     "next": "^12.1.6",
@@ -35,6 +38,7 @@
     "react-documents": "^1.1.2",
     "react-dom": "^17.0.2",
     "react-multi-carousel": "^2.6.5",
+    "react-phone-input-2": "^2.15.1",
     "react-select": "^5.2.2",
     "react-slick": "^0.28.1",
     "react-transition-group": "^4.4.2",
@@ -45,6 +49,7 @@
     "@babel/core": "^7.18.9",
     "babel-loader": "^8.2.5",
     "eslint": "^8.12.0",
+    "eslint-config-next": "12.2.5",
     "eslint-plugin-react": "^7.29.4",
     "prop-types": "^15.8.1",
     "sass": "^1.49.10",

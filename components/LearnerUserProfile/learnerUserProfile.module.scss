@@ -194,7 +194,6 @@
 
 .cardContainer {
   margin: auto;
-  margin-bottom: 50px;
 
   .courseTabHeader {
     display: flex;
@@ -212,7 +211,7 @@
         color: $primary;
 
         img {
-          transform: rotate(90deg);
+          transform: rotate(180deg);
           height: 10px;
           margin: auto 5px;
         }
@@ -400,4 +399,14 @@
   svg {
     fill: $darkOne !important;
   }
+}
+
+.fallbackMsg {
+  margin: 50px auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: $white;
 }

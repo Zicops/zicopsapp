@@ -2,6 +2,7 @@ import { GET_COURSE } from '@/api/Queries';
 import { ADD_USER_COURSE, userClient } from '@/api/UserMutations';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { getQueryData } from '@/helper/api.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
@@ -11,7 +12,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-export default function useHandleCourseHero() {
+export default function useHandleCourseHero(isPreview) {
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
 
   const router = useRouter();
@@ -53,6 +54,8 @@ export default function useHandleCourseHero() {
   }, [courseData]);
 
   useEffect(() => {
+    if (isPreview) return;
+
     setCourseAssignData({
       ...courseAssignData,
       isCourseAssigned: !!userCourseData?.userCourseMapping?.user_course_id
@@ -136,7 +139,7 @@ export default function useHandleCourseHero() {
       courseType: fullCourse?.type,
       isMandatory: courseAssignData?.isMandatory,
       courseStatus: 'open',
-      endDate: courseAssignData?.endDate
+      endDate: getUnixFromDate(courseAssignData?.endDate)
     };
 
     const res = await addUserCourse({ variables: sendData }).catch((err) => {

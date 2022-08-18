@@ -1,17 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 
 export function useHandleNav(isAdmin, setAdmin) {
+  const userData = useRecoilValue(UserStateAtom);
   const [searchQuery, setSearchQuery] = useState(null);
   const router = useRouter();
   const searchInputRef = useRef(null);
 
   useEffect(() => {
-    const route = router.asPath;
-    window.localStorage.setItem('isAdmin', route.includes('admin') ? 1 : 0);
+    // const route = router.asPath;
+    // window.localStorage.setItem('isAdmin', route.includes('admin') ? 1 : 0);
 
-    setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
-  }, []);
+    // setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
+    setAdmin(userData?.role?.toLowerCase() === 'admin');
+  }, [userData?.role]);
 
   // whenever input is render it should be on focus
   // useEffect(() => {
@@ -19,12 +23,12 @@ export function useHandleNav(isAdmin, setAdmin) {
   // }, [searchInputRef.current]);
 
   function gotoAdmin() {
-    setAdmin(1);
+    // setAdmin(1);
     router.push('/admin');
   }
 
   function gotoUser() {
-    setAdmin(0);
+    // setAdmin(0);
     router.push('/');
   }
 

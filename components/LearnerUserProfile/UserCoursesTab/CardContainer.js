@@ -1,6 +1,5 @@
 import CourseBoxCard from '@/components/common/CourseBoxCard';
 import CourseLIstCard from '@/components/common/CourseLIstCard';
-import { truncateToN } from '@/helper/common.helper';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 
@@ -67,6 +66,8 @@ export default function CardContainer({
       </div>
 
       <hr />
+
+      {!courseData?.length && <strong className={`${styles.fallbackMsg}`}>No Courses Found</strong>}
 
       {isBoxView ? (
         <div className={`${styles.boxCardContainer}`} ref={cardContainerRef}>

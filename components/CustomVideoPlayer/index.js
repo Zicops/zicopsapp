@@ -47,10 +47,12 @@ export default function CustomVideo({ set }) {
     playNextVideo,
     playPreviousVideo,
     setVideoTime,
-    moveVideoProgressBySeconds
+    moveVideoProgressBySeconds,
+    freezeScreen,
+    setFreezeScreen
   } = useVideoPlayer(videoElement, videoContainer, set);
-  const { userNotes, handleDragEnd, handleClose, handlePin, deleteNote, handleNote } =
-    useHandleNotes();
+
+  const { handleClose, handlePin, deleteNote, handleNote } = useHandleNotes();
 
   useEffect(() => {
     set(true);
@@ -125,6 +127,13 @@ export default function CustomVideo({ set }) {
   // currently  not used, can remove later
   const vidRef = useRef();
 
+  useEffect(() => {
+    if (hideTopBar) return;
+
+    const isNoteActive = floatingNotes?.some((note) => note?.isActive);
+    setFreezeScreen(isNoteActive);
+  }, [floatingNotes]);
+
   return (
     <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
       {/* floating notes */}
@@ -157,13 +166,14 @@ export default function CustomVideo({ set }) {
       {/* custom Ui components */}
       {/* <div className={`${styles.customUiContainer} ${hideTopBar ? styles.fadeHideTop : ''}`}> */}
       <UiComponents
-        styleClass={hideTopBar ? styles.fadeHideTop : ''}
+        styleClass={!freezeScreen && hideTopBar ? styles.fadeHideTop : ''}
         updateIsPlayingTo={updateIsPlayingTo}
         set={set}
         key={'ui'}
+        freezeState={[freezeScreen, setFreezeScreen]}
         refs={{ videoElement, videoContainer }}
         playerState={playerState}
-        isTopBarHidden={hideTopBar}
+        isTopBarHidden={!freezeScreen && hideTopBar}
         subtitleState={[showSubtitles, setShowSubtitles]}
         moveVideoProgressBySeconds={moveVideoProgressBySeconds}
       />
@@ -178,7 +188,7 @@ export default function CustomVideo({ set }) {
           playerState={playerState}
           handleClick={togglePlay}
           handleKeyDown={handleKeyDownEvents}
-          isControlBarVisible={hideControls}
+          isControlBarVisible={!freezeScreen && hideControls}
           isSubtitleShown={showSubtitles}
         />
 
@@ -238,7 +248,7 @@ export default function CustomVideo({ set }) {
 
         {/* control bar */}
         <div
-          className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`}
+          className={`${styles.controls} ${!freezeScreen && hideControls ? styles.fadeHide : ''}`}
           ref={vidRef}
           onClick={() => videoElement.current?.focus()}>
           <ControlBar

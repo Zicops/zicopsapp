@@ -4,7 +4,7 @@ import ProfileOrganizationDetail from './ProfileOrganizationDetail';
 import ProfilePersonelDetail from './ProfilePersonelDetail';
 import ProfilePreferences from './ProfilePreferences';
 
-const UserProfile = () => {
+const UserProfile = ({ currentUserData = {} }) => {
   // {
   //   status,
   //     (submitDisplay = 'Submit'),
@@ -17,15 +17,15 @@ const UserProfile = () => {
   const tabData = [
     {
       name: 'Personel Details',
-      component: <ProfilePersonelDetail />
+      component: <ProfilePersonelDetail currentUserData={currentUserData} />
     },
     {
       name: 'Organization Details',
-      component: <ProfileOrganizationDetail />
+      component: <ProfileOrganizationDetail currentUserData={currentUserData} />
     },
     {
       name: 'Profile Preferences',
-      component: <ProfilePreferences />
+      component: <ProfilePreferences currentUserData={currentUserData} />
     }
   ];
   const [tab, setTab] = useState(tabData[0].name);

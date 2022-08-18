@@ -59,6 +59,7 @@ $footerHeight: 100px;
   @if $state == 'hasValue' {
     color: $white;
     border: 2px solid $primary;
+    background-color: $darkTwo;
   }
 
   @if $state == 'disabled' {

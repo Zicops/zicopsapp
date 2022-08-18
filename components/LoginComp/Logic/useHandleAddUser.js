@@ -15,9 +15,14 @@ import {
   UserStateAtom
 } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
+import {
+  isPossiblePhoneNumber,
+  isValidPhoneNumber,
+  validatePhoneNumberLength
+} from 'libphonenumber-js';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 export default function useHandleAddUserDetails() {
   const router = useRouter();
@@ -57,6 +62,7 @@ export default function useHandleAddUserDetails() {
   const [userOrgData, setUserOrgData] = useState(getUserOrgObject());
   const [isOrganizationSetupReady, setIsOrgnizationSetupReady] = useState(false);
   const [isAccountSetupReady, setIsAccountSetupReady] = useState(false);
+  const [phCountryCode, setPhCountryCode] = useState('IN');
 
   // setting up local states
   useEffect(() => {
@@ -65,10 +71,19 @@ export default function useHandleAddUserDetails() {
   }, [userDataAbout, userDataOrgLsp]);
 
   useEffect(() => {
+    let isPhValid = false;
+
+    if (userAboutData?.phone?.length > 10) {
+      isPhValid =
+        isPossiblePhoneNumber(`${userAboutData?.phone || 123456}`, phCountryCode) &&
+        isValidPhoneNumber(`${userAboutData?.phone || 123456}`, phCountryCode) &&
+        !validatePhoneNumberLength(`${userAboutData?.phone || 123456}`, phCountryCode);
+    }
+
     setIsAccountSetupReady(
       userAboutData?.first_name.length > 0 &&
         userAboutData?.last_name.length > 0 &&
-        userAboutData?.phone.length > 0 &&
+        isPhValid &&
         userOrgData?.language.length > 0
     );
     setIsOrgnizationSetupReady(
@@ -247,6 +262,8 @@ export default function useHandleAddUserDetails() {
       user_role: dataRole?.role,
       user_role_id: dataRole?.user_role_id
     }));
+
+    return isError;
   }
 
   async function updateAboutUser(newImage = null) {
@@ -258,7 +275,7 @@ export default function useHandleAddUserDetails() {
       status: userAboutData?.status || 'Active',
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
-      phone: userAboutData?.phone,
+      phone: `+${userAboutData?.phone}`,
 
       gender: userAboutData?.gender,
       photo_url: userAboutData?.photo_url,
@@ -294,6 +311,8 @@ export default function useHandleAddUserDetails() {
     setUserDataAbout((prevValue) => ({ ...prevValue, ...data }));
 
     setTimeout(sessionStorage.setItem('loggedUser', JSON.stringify(userAboutData)), 500);
+
+    return isError;
   }
 
   // async function addUserOrganizationDetails() {
@@ -388,7 +407,8 @@ export default function useHandleAddUserDetails() {
     updateAboutUser,
     addUserLearningSpaceDetails,
     isOrganizationSetupReady,
-    isAccountSetupReady
+    isAccountSetupReady,
+    setPhCountryCode
     // addUserOrganizationDetails,
     // addUserLanguageDetails,
     // addUserPreferenceDetails,

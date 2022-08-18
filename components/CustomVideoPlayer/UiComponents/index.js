@@ -25,7 +25,8 @@ export default function UiComponents({
   isTopBarHidden,
   styleClass,
   moveVideoProgressBySeconds,
-  subtitleState
+  subtitleState,
+  freezeState
 }) {
   const { videoElement, videoContainer } = refs;
   const videoData = useRecoilValue(VideoAtom);
@@ -33,6 +34,8 @@ export default function UiComponents({
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const { fullCourse } = useContext(courseContext);
   const [isToolbarOpen, setIsToolbarOpen] = useState(null);
+
+  const [freezeScreen, setFreezeScreen] = freezeState;
 
   const {
     showBox,
@@ -42,11 +45,12 @@ export default function UiComponents({
     toggleStates,
     handleBookmarkChange,
     bookmarkData,
+    setBookmarkData,
     handleSaveBookmark,
     notes,
     handleNotesChange,
     handleSaveNotes
-  } = useSaveData(videoElement);
+  } = useSaveData(videoElement, freezeState);
 
   const { setShowQuizDropdown, showQuiz, setShowQuiz } = states;
   const playerClose = () => set(false);
@@ -65,11 +69,9 @@ export default function UiComponents({
   // }, [videoData.videoSrc]);
 
   useEffect(() => {
-    // TODO: remove later
-    // return;
-
+    if (playerState?.isPlaying) setShowBox(null);
     if (isTopBarHidden) setShowBox(null);
-  }, [isTopBarHidden]);
+  }, [isTopBarHidden, playerState?.isPlaying]);
 
   const toolbarItems = [
     {
@@ -96,14 +98,16 @@ export default function UiComponents({
           onClick={(e) => {
             e.stopPropagation();
             switchBox(3);
-            if (playerState?.isPlaying) updateIsPlayingTo(false);
+            updateIsPlayingTo(false);
           }}></div>
       ),
       boxComponent: (
         <Bookmark
           handleChange={handleBookmarkChange}
-          value={bookmarkData?.title}
-          handleSave={() => handleSaveBookmark(playerState.progress)}
+          value={bookmarkData?.timestamp}
+          freezeState={freezeState}
+          bookmarkState={[bookmarkData, setBookmarkData]}
+          handleSave={() => handleSaveBookmark()}
           updateIsPlayingTo={updateIsPlayingTo}
           playerState={playerState}
         />

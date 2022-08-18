@@ -79,6 +79,19 @@ export default function NoteCard({
     allNotes[noteIndex].id = data?.user_notes_id;
     setFloatingNotes(allNotes);
   }
+
+  function activateNote(e, noteObj, isActive) {
+    const allNotes = structuredClone([...floatingNotes]);
+
+    const index = allNotes?.findIndex((note) => {
+      if (!note.id) return note.index === noteObj?.index;
+      return note.id === noteObj?.id;
+    });
+
+    allNotes[index].isActive = isActive;
+    setFloatingNotes(allNotes);
+  }
+
   return (
     <div
       className={`${styles.noteCard}`}
@@ -87,7 +100,7 @@ export default function NoteCard({
       // onDragStart={(e) => console.log(e)}
     >
       <div className={`${styles.notesHeader}`}>
-        <p>Note {noteObj?.index}</p>
+        <p className={`${noteObj?.isActive ? styles.activeNote : ''}`}>Note {noteObj?.index}</p>
         <section>
           {/* <img
             src={'/images/svg/pin-dark.svg'}
@@ -142,7 +155,11 @@ export default function NoteCard({
         onMouseDown={(e) => e.stopPropagation()}
         value={noteObj?.note}
         onChange={(e) => handleNote(e, noteObj)}
-        onBlur={saveNotes}></textarea>
+        onFocus={(e) => activateNote(e, noteObj, true)}
+        onBlur={(e) => {
+          saveNotes();
+          activateNote(e, noteObj, false);
+        }}></textarea>
     </div>
   );
 }

@@ -39,13 +39,18 @@ const SubCategoriesPreview = ({
 
     setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
 
-    await addUserLearningSpaceDetails(sub_categories, primary);
-    await updateAboutUser();
+    let isError = false;
+    isError = await addUserLearningSpaceDetails(sub_categories, primary);
+    if (isError) return;
+    isError = await updateAboutUser();
+
+    if (isError) return;
+
     setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
 
     router.prefetch('/');
     setVidIsOpen(true);
-    vidRef.current.play();
+    vidRef?.current?.play();
     console.log('from add');
   }
 
