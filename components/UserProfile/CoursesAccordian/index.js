@@ -300,7 +300,10 @@ const CoursesAccordian = () => {
 
         <div className={`${styles.courses_acc_head}`}>
           {isAssignedPage && (
-            <div className={`${styles.current_courses}`}>
+            <div
+              className={`${styles.current_courses} ${
+                lists?.length > 3? styles.marginBottom : ''
+              }`}>
               {lists.map((item) => (
                 <div
                   key={item.id}
@@ -313,7 +316,10 @@ const CoursesAccordian = () => {
           )}
           {!isAssignedPage && (
             <div className={`${styles.assign}`}>
-              <div>Current courses: {assignedCourses?.length}</div>
+              <div>
+                Current courses:{' '}
+                {assignedCourses?.filter((courses) => courses.completedPercentage)?.length}
+              </div>
 
               <div
                 onClick={() => {
@@ -329,13 +335,12 @@ const CoursesAccordian = () => {
           )}
         </div>
         {/* {isAssignedPage && <AssignCourses section={courseSections[3]} />} */}
-        {!isAssignedPage && (
-          <AssignCourses type="currentCourses" isHead={false} section={courseSections[0]} />
-        )}
-        {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />}
+        {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} />}
+        {/* {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />} */}
         {selectedPage === 'Assign Courses' && (
           <AssignCourses
             isFolder={true}
+            isHead={true}
             type="assignCourses"
             assignedCourses={assignedCourses}
             section={courseSections[3]}

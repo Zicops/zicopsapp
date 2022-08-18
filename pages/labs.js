@@ -7,10 +7,20 @@ export default function labs() {
         backgroundColor: 'var(--tile-bg)',
         overflow: 'hidden',
         margin: 0,
-        marginTop: '50px',
+        // marginTop: '50px',
         padding: 0
       }}>
-      <Pacman />
+      <div
+        style={{
+          // display: 'flex',
+          marginTop: '70px',
+          // padding: '5vh 4vw',
+          backgroundColor: 'var(--black)',
+          height: '75vh',
+          overflow: 'hidden'
+        }}>
+        <Pacman />
+      </div>
     </div>
   );
 }

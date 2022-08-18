@@ -3,7 +3,7 @@ import CoursesAccHead from '../../CoursesAccHead';
 
 const AssignCourses = ({
   section,
-  isHead = true,
+  isHead = false,
   isFolder = false,
   handleSubmit = () => {},
   handleClick = () => {},
@@ -29,13 +29,14 @@ const AssignCourses = ({
       {isHead && (
         <CoursesAccHead
           isFolder={isFolder}
-          courseCount={assignedCourses?.length}
+          courseCount={assignedCourses?.filter((courses) => !courses.completedPercentage)?.length}
           handleClick={handleClick}
         />
       )}
 
       <CardContainer
         isAdmin={true}
+        hideTopBar={true}
         type={section.displayType}
         footerType={section.footerType}
         courseData={courseData}

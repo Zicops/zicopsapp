@@ -20,7 +20,11 @@ export default function Notes() {
   return (
     <>
       <div className={`${styles.folderBarContainer}`}>
-        <FolderBar onFolderClick={toggleAllNotes} onPlusClick={addNewNote} />
+        <FolderBar
+          onFolderClick={toggleAllNotes}
+          onPlusClick={addNewNote}
+          count={floatingNotes?.length || 0}
+        />
 
         <div
           className={`${styles.notesCardsContainer} ${

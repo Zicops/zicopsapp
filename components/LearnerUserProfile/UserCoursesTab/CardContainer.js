@@ -6,6 +6,7 @@ import styles from '../learnerUserProfile.module.scss';
 export default function CardContainer({
   isAdmin = false,
   type,
+  hideTopBar = false,
   footerType,
   courseData,
   statusData,
@@ -15,7 +16,7 @@ export default function CardContainer({
   const cardContainerRef = useRef(null);
 
   const [isBoxView, setIsBoxView] = useState(true);
-  const [isShowAll, setIsShowAll] = useState(false);
+  const [isShowAll, setIsShowAll] = useState(hideTopBar);
   const [cardSizeData, setCardSizeData] = useState({
     cardWidth: 300,
     cardCount: 4
@@ -43,29 +44,32 @@ export default function CardContainer({
 
   return (
     <div className={`${styles.cardContainer}`}>
-      <div className={`${styles.courseTabHeader}`}>
-        <p className={`${styles.text}`}>{type}</p>
+      {!hideTopBar && (
+        <>
+          <div className={`${styles.courseTabHeader}`}>
+            <p className={`${styles.text}`}>{type}</p>
 
-        <div className={`${styles.imageContainer}`}>
-          <img
-            src={`/images/svg/view_agenda${isBoxView ? '_gray' : ''}.svg`}
-            onClick={() => setIsBoxView(false)}
-          />
-          <img
-            src={`/images/svg/grid_view${isBoxView ? '_primary' : ''}.svg`}
-            onClick={() => setIsBoxView(true)}
-          />
+            <div className={`${styles.imageContainer}`}>
+              <img
+                src={`/images/svg/view_agenda${isBoxView ? '_gray' : ''}.svg`}
+                onClick={() => setIsBoxView(false)}
+              />
+              <img
+                src={`/images/svg/grid_view${isBoxView ? '_primary' : ''}.svg`}
+                onClick={() => setIsBoxView(true)}
+              />
 
-          <button
-            className={isShowAll ? `${styles.seeAllBtn}` : `${styles.seeLessBtn} `}
-            onClick={() => setIsShowAll(!isShowAll)}>
-            See {isShowAll ? 'Less' : 'All'}
-            <img src={`/images/arrow2.png`} />
-          </button>
-        </div>
-      </div>
-
-      <hr />
+              <button
+                className={isShowAll ? `${styles.seeAllBtn}` : `${styles.seeLessBtn} `}
+                onClick={() => setIsShowAll(!isShowAll)}>
+                See {isShowAll ? 'Less' : 'All'}
+                <img src={`/images/arrow2.png`} />
+              </button>
+            </div>
+          </div>
+          <hr />
+        </>
+      )}
 
       {!courseData?.length && <strong className={`${styles.fallbackMsg}`}>No Courses Found</strong>}
 
