@@ -50,7 +50,7 @@ export default function Nav() {
     <div className={styles.navbar} id="navbar">
       <div className={styles.left}>
         <LeftMenuDropdown
-          isAdmin={isAdmin}
+          isOnLearnerSide={isOnLearnerSide}
           handleClick={{ gotoAdmin, gotoUser }}
           navmenuicon={HamburgerMenuIcon}
         />
