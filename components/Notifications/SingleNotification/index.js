@@ -6,7 +6,7 @@ const SingleNotification = ({description,img,link,duration,status,style,route}) 
     const {notification_info_status_unread} = styles
     const router = useRouter()
   return (
-    <div className={`${styles.notification_block} ${status === 'unread' ? notification_info_status_unread : ''}`} style={style} onClick={()=>router.reload(route)}>
+    <div className={`${styles.notification_block} ${status === 'unread' ? notification_info_status_unread : ''}`} style={style} onClick={()=>router.push(route)}>
         <div className={`${styles.notification_img}`}>
             <img src={img} alt="error" />
         </div>

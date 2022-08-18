@@ -15,7 +15,7 @@ const Notifications = () => {
         <AllNotifications data={notificationData}/>
       
       <div className={`${styles.notification_footer}`}>
-        <button onClick={()=>router.reload('/notification-center')}>Open Notification Center</button>
+        <button onClick={()=>router.push('/notification-center')}>Open Notification Center</button>
       </div>
     </div>
   )
