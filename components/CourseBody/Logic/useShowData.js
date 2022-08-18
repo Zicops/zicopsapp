@@ -19,9 +19,12 @@ export default function useShowData(courseContextData) {
   const [isNotesVisible, setIsNotesVisible] = useState(null);
 
   useEffect(() => {
-    if (activeCourseTab != 'Topics') {
-      if (myRef?.current?.getBoundingClientRect()?.top === 80) return;
+    if (myRef?.current?.getBoundingClientRect()?.top <= 80) {
+      window.scrollTo({ behavior: 'smooth', top: 600 });
+      return;
+    }
 
+    if (activeCourseTab != 'Topics') {
       window.scrollTo({ behavior: 'smooth', top: myRef.current?.offsetTop - 200 });
     }
   }, [activeCourseTab]);

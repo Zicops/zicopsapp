@@ -245,6 +245,7 @@ export default function TopicBox({
       <div
         className={`${styles.topic}`}
         onClick={() => {
+          if (!userCourseData?.userCourseMapping?.user_course_id) return;
           if (type === 'Assessment') return loadTopicExam();
 
           // if (type === 'Content') {
