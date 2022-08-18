@@ -53,7 +53,8 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     maxHeight: '250px !important'
   },
   '& .MuiDataGrid-row:hover .MuiDataGrid-cell': {
-    color: 'var(--primary)'
+    color: 'var(--primary)',
+    backgroundColor: '#6bcfcf26'
   },
   '& .MuiPaginationItem-root': {
     borderRadius: 0

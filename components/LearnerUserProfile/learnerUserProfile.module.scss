@@ -33,6 +33,9 @@
   z-index: -1;
 }
 
+.userBody{
+  background-color: $bgTile;
+}
 .userImageContainer {
   display: flex;
   position: relative;
@@ -157,6 +160,7 @@
 }
 .userAboutTab {
   padding: 50px;
+  background-color: $bgTile;
 }
 .categoryPreferences {
   background-color: #262626;
@@ -182,6 +186,10 @@
   padding: 50px;
   color: $white;
   overflow-y: scroll;
+
+  hr{
+    margin-bottom: 20px;
+  }
 }
 
 .cardContainer {
@@ -238,7 +246,7 @@
 .listCardContainer {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .adminCardFooter {

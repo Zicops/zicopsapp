@@ -2,7 +2,7 @@ import styles from '../zicopsLogin.module.scss';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useEffect, useState } from 'react';
-const LoginEmail = ({ chngeHandle, type, placeholder }) => {
+const LoginEmail = ({ chngeHandle, type, placeholder, tabIndex = -1 }) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -24,6 +24,7 @@ const LoginEmail = ({ chngeHandle, type, placeholder }) => {
         placeholder={placeholder}
         onChange={chngeHandle}
         autoComplete={'off'}
+        tabIndex={tabIndex}
         // style={{ margin: '5px 0px' }}
       />
       <button onClick={handleShowPassword}>
