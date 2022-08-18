@@ -21,7 +21,7 @@ export default function CourseBoxCard({
         <div className={`${styles.dataOverImg}`}>
           {!isAdmin && (
             <span>
-              <img src="/images/media.png" alt="" className={`${styles.imgIcon}`} />
+              <img src="/images/Media.png" alt="" className={`${styles.imgIcon}`} />
               {courseData?.level || 'Competent'}
             </span>
           )}

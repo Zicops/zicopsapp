@@ -39,21 +39,27 @@
     .dataOverImg {
       position: absolute;
       bottom: 10px;
-      padding: 0px 15px;
+      padding: 0px 5px;
 
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
       width: 100%;
       height: 100%;
+      span{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
       .type {
+        font-size: 14px;
         background-color: $black;
-        padding: 2px 5px;
+        padding: 0px 5px;
         border-radius: 5px;
       }
 
       .imgIcon {
-        margin-right: 10px;
+        margin-right: 5px;
         width: 20px;
       }
     }
