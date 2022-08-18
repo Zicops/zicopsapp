@@ -1,14 +1,15 @@
+import PhoneInputBox from '@/components/common/FormComponents/PhoneInputBox';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
 import { changeHandler } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../common/FormComponents/LabeledInput';
 import useHandleAddUserDetails from '../Logic/useHandleAddUser';
-import { languages, genders } from '../ProfilePreferences/Logic/profilePreferencesHelper';
+import { genders, languages } from '../ProfilePreferences/Logic/profilePreferencesHelper';
 import styles from './setupUser.module.scss';
 
 const AccountSetupUser = ({ setCurrentComponent }) => {
@@ -21,7 +22,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
-  const { isAccountSetupReady } = useHandleAddUserDetails();
+  const { isAccountSetupReady, setPhCountryCode } = useHandleAddUserDetails();
 
   useEffect(() => {
     setUserData({ ...userData, Photo: image });
@@ -102,7 +103,18 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           changeHandler={(e) => changeHandler(e, userData, setUserData, 'gender')}
         />
         <Box mt={3} />
-        <LabeledInput
+
+        <div className={`${styles.contactInputContainer}`}>
+          <label>Contact Number:</label>
+          <PhoneInputBox
+            value={userData?.phone}
+            changeHandler={(phNo, data) => {
+              setUserData({ ...userData, phone: phNo });
+              setPhCountryCode(data.countryCode?.toUpperCase());
+            }}
+          />
+        </div>
+        {/* <LabeledInput
           inputOptions={{
             inputName: 'phone',
             label: 'Contact Number:',
@@ -113,7 +125,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           changeHandler={(e) => {
             changeHandler(e, userData, setUserData);
           }}
-        />
+        /> */}
         <Box mt={3} />
         <UploadAndPreview
           inputName={'profile-image'}

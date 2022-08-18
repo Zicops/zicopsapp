@@ -34,7 +34,12 @@ export default function CourseBodyResources() {
 
   return (
     <>
-      <Dropdown options={options} handleChange={handleModuleChange} value={selectedModule} />
+      <Dropdown
+        options={options}
+        handleChange={handleModuleChange}
+        value={selectedModule}
+        customStyles={{ margin: '20px auto 0px' }}
+      />
       <Header
         title={currentModule?.name}
         description={currentModule?.description || ''}

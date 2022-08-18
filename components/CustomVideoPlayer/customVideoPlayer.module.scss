@@ -194,6 +194,10 @@
     background-color: rgba($bgContent, 0.6);
     // @include transparentBackground($bgContent);
 
+    .showCount {
+      @include showRedCountAtCorner(15px, 10px);
+    }
+
     section {
       display: inline-flex;
       align-items: center;
@@ -219,45 +223,94 @@
 
   .bookmarkContainer {
     position: relative;
+    max-width: 420px;
+    padding: 10px;
 
     .bookmarksInput {
-      position: absolute;
-      top: 110%;
-      right: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 10px;
 
-      padding: 8px;
-      background-color: $darkOne;
+      position: relative;
+      // position: absolute;
+      // top: 0%;
+      // right: 50%;
+
+      // margin: auto 10px;
+      padding: 10px;
+      background-color: $black;
+      border-radius: 10px;
+
       // opacity: 0.75;
-      width: 200px;
+      width: 400px;
+      height: max-content;
       box-shadow: 0 0 10px 0 $darkTwo;
+
+      section {
+        width: 100%;
+        display: flex;
+
+        span {
+          color: $white;
+          margin: auto 5px;
+
+          height: 100%;
+        }
+      }
+
+      .crossBtn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translate(50%, -40%);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        height: 20px;
+        width: 20px;
+
+        background-color: $darkThree;
+        border-radius: 50%;
+        color: $white;
+        cursor: pointer;
+      }
 
       .bookmarksField {
         width: 100%;
-        padding: 10px;
-        border-radius: 0;
+        padding: 8px;
+        border-radius: 5px;
+        background-color: #dfdfdf;
         border-color: $bgHeader;
         opacity: 1;
 
         &:focus {
-          border-radius: 0;
+          // border-radius: 0;
           outline: 0;
           opacity: 1;
         }
       }
 
       .bookmarksBtn {
-        background-color: $bgHeader;
-        color: $darkThree;
-        padding: 10px 5px;
-        border: 0;
         border-radius: 0;
-        width: 100%;
+        background-color: $primary;
+        color: $darkTwo;
+
+        padding: 8px 25px;
+        border: 0;
+        border-radius: 2px;
+        // width: 60%;
+        // font-weight: 550;
         cursor: pointer;
         opacity: 1;
 
         &:hover {
-          background-color: $bgHeader;
-          color: $white;
+          box-shadow: 0 0 10px 0 $primary;
+          // background-color: $bgHeader;
+          // color: $white;
         }
       }
     }
@@ -418,6 +471,10 @@
       cursor: pointer;
       // margin: auto 2px;
     }
+    .activeNote {
+      text-decoration: underline;
+    }
+
     .pinned {
       transform: rotate(-45deg);
     }

@@ -34,7 +34,11 @@ const ForgotPassword = ({ setPage }) => {
         />
         <div className="login_body">
           {/* <LoginEmail placeholder={'Enter current password'} chngeHandle={handleCurrentPassword} /> */}
-          <LoginEmail placeholder={'Email address'} chngeHandle={(e) => handleEmail(e)} />
+          <LoginEmail
+            placeholder={'Email address'}
+            chngeHandle={(e) => handleEmail(e)}
+            tabIndex={1}
+          />
           <div className="change_buttons">
             <LoginButton title={'Send Email'} handleClick={handleSubmit} />
           </div>

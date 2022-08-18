@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useContext } from 'react';
 import { courseContext } from '../../state/contexts/CourseContext';
 import BottomTabsMenu from '../small/BottomTabsMenu';
@@ -8,8 +9,8 @@ import {
 } from './courseBody.module.scss';
 import CoursePageTabs from './CoursePageTabs';
 import { tabs } from './Logic/courseBody.helper';
+import useLoadUserData from './Logic/useLoadUserData';
 import useShowData from './Logic/useShowData';
-import Link from 'next/link';
 
 export default function CourseBody({ isPreview = false }) {
   const courseContextData = useContext(courseContext);
@@ -20,8 +21,11 @@ export default function CourseBody({ isPreview = false }) {
     activeCourseTab,
     setActiveCourseTab,
     getModuleOptions,
-    moduleData
+    moduleData,
+    setSelectedModule
   } = useShowData(courseContextData);
+
+  useLoadUserData(isPreview, setSelectedModule, getModuleOptions);
 
   const props = {
     activeCourseTab: activeCourseTab,

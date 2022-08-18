@@ -29,7 +29,8 @@ export default function CourseBodyTopics() {
     getModuleOptions,
     handleModuleChange,
     selectedModule,
-    setSelectedModule
+    setSelectedModule,
+    showResources
   } = useShowData(courseContextData);
 
   const { fullCourse } = courseContextData;
@@ -79,6 +80,7 @@ export default function CourseBodyTopics() {
               getModuleOptions={getModuleOptions}
               currrentModule={selectedModule}
               setSelectedModule={setSelectedModule}
+              showResources={showResources}
             />
           ))
         : filteredAndSortedData.map((topic, index) => {
@@ -95,6 +97,7 @@ export default function CourseBodyTopics() {
                 getModuleOptions={getModuleOptions}
                 currrentModule={selectedModule}
                 setSelectedModule={setSelectedModule}
+                showResources={showResources}
               />
             );
           })}

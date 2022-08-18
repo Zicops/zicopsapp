@@ -4,12 +4,12 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
 import { BOX } from './customVideoPlayer.helper';
 
-export default function useSaveData(videoElement) {
+export default function useSaveData(videoElement, freezeState) {
   const [addUserBookMark] = useMutation(ADD_USER_BOOKMARK, {
     client: userClient
   });
@@ -19,22 +19,13 @@ export default function useSaveData(videoElement) {
   const userData = useRecoilValue(UserStateAtom);
 
   const { fullCourse } = useContext(courseContext);
-  const { addBookmarkData, addNotes } = useContext(userContext);
+  const { addBookmarkData, addNotes, setBookmarkData: saveBMData } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
 
+  const [freezeScreen, setFreezeScreen] = freezeState;
   const [showBox, setShowBox] = useState(null);
-
-  function toggleStates(setState, state) {
-    setState(!state);
-  }
-
-  function switchBox(boxNumber) {
-    if (showBox === BOX[boxNumber]) return setShowBox(null);
-
-    setShowBox(BOX[boxNumber] || null);
-  }
 
   const [bookmarkData, setBookmarkData] = useState({
     timestamp: '',
@@ -46,6 +37,27 @@ export default function useSaveData(videoElement) {
     title: '',
     notes: ''
   });
+
+  useEffect(() => {
+    const bookmarks = [
+      { id: 1, timestamp: '00:10', title: 'New Bookmark', captureImg: null },
+      { id: 2, timestamp: '00:11', title: 'New Bookmark 1', captureImg: null },
+      { id: 3, timestamp: '10:11', title: 'New Bookmark 2', captureImg: null }
+    ];
+
+    saveBMData(bookmarks);
+    // bookmarks.map((b) => addBookmarkData(b));
+  }, []);
+
+  function toggleStates(setState, state) {
+    setState(!state);
+  }
+
+  function switchBox(boxNumber) {
+    if (showBox === BOX[boxNumber]) return setShowBox(null);
+
+    setShowBox(BOX[boxNumber] || null);
+  }
 
   function handleBookmarkChange(e) {
     console.log(e);
@@ -76,20 +88,16 @@ export default function useSaveData(videoElement) {
     return canvas?.toDataURL('image/png');
   }
 
-  async function handleSaveBookmark(timestamp) {
-    const image = captureImageOfVideo();
-    setBookmarkData({
-      ...bookmarkData,
-      captureImg: image,
-      timestamp: timestamp
-    });
+  async function handleSaveBookmark() {
+    // const image = captureImageOfVideo();
+    setBookmarkData({ ...bookmarkData });
 
     //   save to context
     addBookmarkData({
       ...bookmarkData,
       id: new Date().getMilliseconds(),
-      captureImg: image,
-      timestamp
+      // captureImg: image,
+      timestamp: bookmarkData?.timestamp
     });
 
     if (!bookmarkData?.title)
@@ -113,9 +121,10 @@ export default function useSaveData(videoElement) {
       return setToastMsg({ type: 'danger', message: 'Error while adding bookmark!' });
     });
 
-    console.log(res?.data?.addUserBookmark[0]);
-    return setToastMsg({ type: 'success', message: 'BookMark added' });
+    // console.log(res?.data?.addUserBookmark[0]);
+    setToastMsg({ type: 'success', message: 'BookMark added' });
     console.log(bookmarkData, sendBookMarkData);
+    return true;
   }
 
   function handleNotesChange(e) {
@@ -155,6 +164,7 @@ export default function useSaveData(videoElement) {
     toggleStates,
     handleBookmarkChange,
     bookmarkData,
+    setBookmarkData,
     handleSaveBookmark,
     notes,
     handleNotesChange,
