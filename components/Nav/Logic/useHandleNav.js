@@ -6,6 +6,7 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 export function useHandleNav(isAdmin, setAdmin) {
   const userData = useRecoilValue(UserStateAtom);
   const [searchQuery, setSearchQuery] = useState(null);
+  const [isOnLearnerSide, setIsOnLearnerSide] = useState(true);
   const router = useRouter();
   const searchInputRef = useRef(null);
 
@@ -16,6 +17,10 @@ export function useHandleNav(isAdmin, setAdmin) {
     // setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
     setAdmin(userData?.role?.toLowerCase() === 'admin');
   }, [userData?.role]);
+
+  useEffect(() => {
+    setIsOnLearnerSide(!router?.pathname?.includes('/admin'));
+  }, [isAdmin]);
 
   // whenever input is render it should be on focus
   // useEffect(() => {
@@ -52,6 +57,7 @@ export function useHandleNav(isAdmin, setAdmin) {
   }
 
   return {
+    isOnLearnerSide,
     searchQuery,
     searchInputRef,
     activateSearch,

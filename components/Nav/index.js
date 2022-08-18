@@ -20,7 +20,8 @@ export default function Nav() {
     searchInputRef,
     handleSearch,
     gotoAdmin,
-    gotoUser
+    gotoUser,
+    isOnLearnerSide
   } = useHandleNav(isAdmin, makeAdmin);
 
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function Nav() {
 
         <div className={styles.menu}>
           <ul>
-            {(isAdmin ? AdminMenu : UserMenu).map((val, key) => {
+            {(!isOnLearnerSide ? AdminMenu : UserMenu).map((val, key) => {
               return (
                 <Link href={val.link} key={key}>
                   <li
@@ -62,7 +63,7 @@ export default function Nav() {
 
       <div className={styles.right} onBlur={deactivateSearch}>
         {/* {searchQuery !== null && ( */}
-        {!isAdmin && (
+        {isOnLearnerSide && (
           <div className={`${styles.search_menu}`} id="search_menu">
             {/* <select className={styles.nav_search_dropdown} placeholder="Search...">
               {['All', 'Self Paced', 'Classroom', 'Labs', 'Exam', 'Blogs'].map((opt) => (

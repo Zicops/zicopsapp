@@ -16,7 +16,7 @@ export default function CardContainer({
   const cardContainerRef = useRef(null);
 
   const [isBoxView, setIsBoxView] = useState(true);
-  const [isShowAll, setIsShowAll] = useState(false);
+  const [isShowAll, setIsShowAll] = useState(hideTopBar);
   const [cardSizeData, setCardSizeData] = useState({
     cardWidth: 300,
     cardCount: 4

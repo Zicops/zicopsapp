@@ -10,6 +10,10 @@
   user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
+:root {
+  --scrollbarOpacity: 0;
+}
+
 body {
   background-color: $darkOne;
 }
@@ -87,6 +91,30 @@ body {
 ::-webkit-scrollbar-thumb {
   background: $primary;
   border-radius: 5px;
+}
+
+body::-webkit-scrollbar-track {
+  background: rgba(#2a2e31, var(--scrollbarOpacity));
+  transition: 0.5s ease-in-out;
+
+  &:hover {
+    &::-webkit-scrollbar-track {
+      background: rgba($primary, 1);
+    }
+
+    background: rgba(#2a2e31, 1);
+  }
+}
+
+// Handle
+body::-webkit-scrollbar-thumb {
+  background: rgba($primary, var(--scrollbarOpacity));
+  transition: 0.5s ease-in-out;
+  border-radius: 5px;
+
+  &:hover {
+    background: rgba($primary, 1);
+  }
 }
 
 // tooltip
