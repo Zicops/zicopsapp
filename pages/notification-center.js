@@ -73,18 +73,19 @@ const NotificationCenter = () => {
           fontSize: '28px',
           fontWeight: '700',
           color: 'white',
-          margin: '2vh 11vw 3vh 0'
+          // margin: '2vh 11vw 3vh 0'
+          margin: 'auto'
         }}>
         <p>Notification Center</p>
       </div>
-      <div style={{ width: '100%', borderBottom: '1px solid var(--primary)' }}>
+      {/* <div style={{ width: '100%', borderBottom: '1px solid var(--primary)' }}> */}
         <CoursePageTabs
-          customStyles={{ width: '905px', justifyContent: 'flex-start', margin: 'auto' }}
+          // customStyles={{ width: '905px', justifyContent: 'flex-start', margin: 'auto' }}
           tabData={tabsHeader}
           activeCourseTab={activeCourseTab}
           setActiveTab={setActiveCourseTab}
         />
-      </div>
+      {/* </div> */}
       {showActiveTab(activeCourseTab)}
     </div>
   );
