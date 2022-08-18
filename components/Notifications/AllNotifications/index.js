@@ -1,11 +1,11 @@
 import React from 'react';
 import SingleNotification from '../SingleNotification';
 
-const AllNotifications = ({ style, customStyle, data }) => {
+const AllNotifications = ({ style, data }) => {
   return (
     <div>
       {data.map((element) => {
-        const { description, img, link, duration, status } = element;
+        const { description, img, link, duration, status,route } = element;
         return (
           <SingleNotification
             description={description}
@@ -14,7 +14,7 @@ const AllNotifications = ({ style, customStyle, data }) => {
             duration={duration}
             status={status}
             style={style}
-            customStyle={customStyle}
+            route={route}
           />
         );
       })}
