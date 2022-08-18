@@ -4,18 +4,23 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterResources } from '../../../helper/data.helper';
 import { ModuleAtom, ResourcesAtom } from '../../../state/atoms/module.atoms';
 import { UserCourseDataAtom } from '../../../state/atoms/video.atom';
-import { tabs } from './courseBody.helper';
+import {
+  ActiveCourseTabAtom,
+  ActiveResourcesAtom,
+  SelectedModuleDataAtom,
+  tabs
+} from './courseBody.helper';
 
 export default function useShowData(courseContextData) {
   let myRef = useRef(null);
-  const [activeCourseTab, setActiveCourseTab] = useState(tabs[0].name);
-  const [selectedModule, setSelectedModule] = useState({});
-  const [isResourceShown, setIsResourceShown] = useState(null);
+  const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabAtom);
+  const [isResourceShown, setIsResourceShown] = useRecoilState(ActiveResourcesAtom);
+  const [selectedModule, setSelectedModule] = useRecoilState(SelectedModuleDataAtom);
   const [isNotesVisible, setIsNotesVisible] = useState(null);
 
   useEffect(() => {
     if (activeCourseTab != 'Topics') {
-      if (myRef?.current?.getBoundingClientRect()?.top === 70) return;
+      if (myRef?.current?.getBoundingClientRect()?.top === 80) return;
 
       window.scrollTo({ behavior: 'smooth', top: myRef.current?.offsetTop - 200 });
     }
@@ -137,6 +142,8 @@ export default function useShowData(courseContextData) {
   }
 
   function showResources(topic) {
+    console.log(topic);
+    setActiveCourseTab(tabs[1].name);
     if (isResourceShown?.includes(topic.id)) {
       setFilteredResources([]);
       setIsResourceShown(null);

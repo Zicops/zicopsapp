@@ -42,7 +42,8 @@ export default function TopicBox({
   moduleId,
   getModuleOptions,
   currrentModule,
-  setSelectedModule
+  setSelectedModule,
+  showResources
 }) {
   const { name, description, type } = topic;
   const duration = topicContent[0]?.duration.toString();
@@ -265,7 +266,12 @@ export default function TopicBox({
           // }
         }}>
         <div className={`${styles.preclassName}`}>
-          <div>
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              showResources(topic);
+            }}>
             <img src="images/resourcesicon.png" />
             <p>Resources</p>
           </div>
