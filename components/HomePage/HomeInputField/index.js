@@ -69,11 +69,11 @@ const HomeInputField = () => {
       </div>
       <footer className={`${styles.HomeFooter}`}>
         <div className={`${styles.HomeFooterInner}`}>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
+          <a href="/home">About Zicops</a>
+          <a href="/home">Take a tour</a>
+          <a href="/home">Collaborate with us</a>
+          <a href="/home">Contact us</a>
+          <a href="/home">Careers</a>
         </div>
       </footer>
     </>
