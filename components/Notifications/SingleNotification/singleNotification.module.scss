@@ -13,7 +13,6 @@
     &:hover{
         background-color: $tertiaryBlack;
         border: 1px solid $white;
-        padding: 15px;
     }
     
     .notification_img {
@@ -61,5 +60,10 @@
 
 .notification_info_status_unread{
     background-color:$black ;
+}
+
+.notification_info_status_unread:hover{
+    outline: 1px solid $white;
+    background: $darkTwo;
 }
 
