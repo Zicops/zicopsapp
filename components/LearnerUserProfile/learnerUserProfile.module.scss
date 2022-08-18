@@ -112,7 +112,8 @@
   justify-content: space-between;
   align-items: center;
 }
-.text , .category{
+.text,
+.category {
   color: var(--white);
   font-weight: 600;
   font-size: 22px;
@@ -177,9 +178,10 @@
 }
 
 .userTabContainer {
-  // height: 75vh;
+  // height:75vh;
   padding: 50px;
   color: $white;
+  overflow-y: scroll;
 }
 
 .cardContainer {

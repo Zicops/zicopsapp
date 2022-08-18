@@ -26,7 +26,7 @@ const CoursePageTabs = forwardRef(({ tabData, setActiveTab, activeCourseTab }, r
             top: 70px;
             z-index: 1;
 
-            background: var(--dark_one);
+            background: var(--tile-bg);
 
             display: flex;
             justify-content: center;

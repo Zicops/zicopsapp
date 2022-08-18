@@ -19,7 +19,7 @@ export default function CardContainer({
   const [isShowAll, setIsShowAll] = useState(false);
   const [cardSizeData, setCardSizeData] = useState({
     cardWidth: 300,
-    cardCount: 3
+    cardCount: 4
   });
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function CardContainer({
 
     const sidePadding = 50;
     const gap = 20;
-    // const screenWidth = window.screen.width;
+    // const screenWidth = window.screen.width; //////
     const screenWidth = cardContainerRef.current?.offsetWidth;
     window.c = cardContainerRef.current;
     console.log(screenWidth);
@@ -35,7 +35,7 @@ export default function CardContainer({
 
     if (screenWidth > 1600) cardCount = 6;
     if (screenWidth > 1500) cardCount = 5;
-    if (screenWidth > 1400) cardCount = 4;
+    if (screenWidth > 1400) cardCount = 5;
 
     const cardWidth = (screenWidth - (cardCount - 1) - gap * (cardCount - 1)) / cardCount;
 
