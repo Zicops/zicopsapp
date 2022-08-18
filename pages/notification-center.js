@@ -2,6 +2,7 @@ import notificationData from '@/components/Notifications/data';
 import React, { useEffect, useState } from 'react';
 import CoursePageTabs from '@/components/CourseBody/CoursePageTabs';
 import AllNotifications from '@/components/Notifications/AllNotifications';
+import { autocompleteClasses } from '@mui/material';
 
 const NotificationCenter = () => {
   const style = {
@@ -76,11 +77,14 @@ const NotificationCenter = () => {
         }}>
         <p>Notification Center</p>
       </div>
-      <CoursePageTabs
-        tabData={tabsHeader}
-        activeCourseTab={activeCourseTab}
-        setActiveTab={setActiveCourseTab}
-      />
+      <div style={{ width: '100%', borderBottom: '1px solid var(--primary)' }}>
+        <CoursePageTabs
+          customStyles={{ width: '905px', justifyContent: 'flex-start', margin: 'auto' }}
+          tabData={tabsHeader}
+          activeCourseTab={activeCourseTab}
+          setActiveTab={setActiveCourseTab}
+        />
+      </div>
       {showActiveTab(activeCourseTab)}
     </div>
   );
