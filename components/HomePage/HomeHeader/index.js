@@ -6,7 +6,7 @@ const HomeHeader = ({ showLogin = true }) => {
       <header className={`${styles.HomeHeader}`}>
         <Link href="/home">
           <a className={`${styles.ZicopsLogo}`}>
-            <img src="/images/zicops-header-logo.png" alt="not found" />
+            <img src="/images/ZICOPS LOGO.svg" alt="zicops logo" />
           </a>
         </Link>
 
@@ -14,7 +14,7 @@ const HomeHeader = ({ showLogin = true }) => {
           <Link href="/login">
             <div className={`${styles.Login}`}>
               <img src="/images/Union1.png" alt="not found" />
-              <a>Log In</a>
+              <a>Login</a>
             </div>
           </Link>
         )}
