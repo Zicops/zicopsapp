@@ -44,6 +44,7 @@ export default function Bookmark({
 
           if (playerState?.isPlaying) updateIsPlayingTo(false);
         }}
+        count={allBookmarks?.length || 0}
         onFolderClick={() => {
           setShowAddBookmark(false);
           setViewAllBookmarks(!viewAllBookmarks);

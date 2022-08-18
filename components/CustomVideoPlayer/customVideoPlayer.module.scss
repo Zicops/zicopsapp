@@ -194,6 +194,10 @@
     background-color: rgba($bgContent, 0.6);
     // @include transparentBackground($bgContent);
 
+    .showCount {
+      @include showRedCountAtCorner(13px, 10px);
+    }
+
     section {
       display: inline-flex;
       align-items: center;
