@@ -1,0 +1,48 @@
+@import '../../styles/base.scss';
+
+.notification_box {
+    width: 450px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    position: absolute;
+    top: $headerHeight;
+    right: 18vw;
+    background-color: $bgTile;
+    color: $white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 20px 5px rgba($black, 0.5);
+}
+
+.notification_header {
+    border-bottom: 0.666667px solid $secondaryBlack;
+    // height: 57px;
+    font-weight: 600;
+    font-size: 18px;
+    // line-height: 25px;
+    padding: 16px;
+}
+
+.notification_footer {
+    height: 67px;
+    padding: 16px;
+    button {
+        cursor: pointer;
+        border: 1px solid $secondaryBlack;
+        border-radius: 4px;
+        width: 100%;
+        height: 35px;
+        padding: 8px 0;
+        font-weight: 500;
+        font-size: 14px;
+        letter-spacing: 0.015em;
+        background-color: inherit;
+        color:  $secondaryBlack;
+    }
+    button:hover{
+        background: $tertiaryBlack;
+        color: $white;
+        outline: 1px solid $white;
+    }
+}
