@@ -2,6 +2,7 @@ import notificationData from '@/components/Notifications/data';
 import React, { useEffect, useState } from 'react';
 import CoursePageTabs from '@/components/CourseBody/CoursePageTabs';
 import AllNotifications from '@/components/Notifications/AllNotifications';
+import styles from './notification.module.scss';
 
 const NotificationCenter = () => {
   const style = {
@@ -58,30 +59,19 @@ const NotificationCenter = () => {
   }
 
   return (
-    <div
-      style={{
-        marginTop: '10vh',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        background: '#1a1d21'
-      }}>
-      <div
-        style={{
-          fontSize: '28px',
-          fontWeight: '700',
-          color: 'white',
-          margin: '2vh 11vw 3vh 0'
-        }}>
-        <p>Notification Center</p>
-      </div>
-      <CoursePageTabs
-        tabData={tabsHeader}
-        activeCourseTab={activeCourseTab}
-        setActiveTab={setActiveCourseTab}
-      />
-      {showActiveTab(activeCourseTab)}
+    <div className={`${styles.notificationPage}`}>
+        <div className={`${styles.notificationHeader}`}>
+            <p>Notification Center</p>
+        </div>
+            <CoursePageTabs
+                // customStyles={{ width: '905px', justifyContent: 'flex-start', margin: 'auto' }}
+                tabData={tabsHeader}
+                activeCourseTab={activeCourseTab}
+                setActiveTab={setActiveCourseTab}
+            />
+        <div className={`${styles.notificationTabBody}`}>
+            {showActiveTab(activeCourseTab)}  
+        </div>
     </div>
   );
 };

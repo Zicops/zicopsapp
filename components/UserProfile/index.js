@@ -16,7 +16,7 @@ const UserProfile = ({ currentUserData = {} }) => {
   // } = footerObj
   const tabData = [
     {
-      name: 'Personel Details',
+      name: 'Personal Details',
       component: <ProfilePersonelDetail currentUserData={currentUserData} />
     },
     {
@@ -32,7 +32,7 @@ const UserProfile = ({ currentUserData = {} }) => {
   return (
     <>
       <TabContainer
-        customStyles={{ height: 'auto' }}
+        customStyles={{ height: '40vh' }}
         tabData={tabData}
         tab={tab}
         setTab={setTab}

@@ -19,14 +19,13 @@ const ProfilePersonelDetail = ({ currentUserData }) => {
         </div>
         <div className={`${styles.profileDetails}`}>
           {Object.keys(userProfileDetailsData).map((item, i) => (
-            <span>
+            <div className={`${styles.profileDetailsField}`}>
               <div key={i} className={`${styles.label}`}>
-                {item.charAt(0).toUpperCase() + item.slice(1)}:
+                {item.charAt(0).toUpperCase() + item.slice(1)}
               </div>
-              <div className={`${styles.value}`}>
-                <span>{userProfileDetailsData[item]}</span>
-              </div>
-            </span>
+              <div className={`${styles.colon}`}> : </div>
+              <div className={`${styles.value}`}>{userProfileDetailsData[item]}</div>
+            </div>
           ))}
         </div>
       </div>

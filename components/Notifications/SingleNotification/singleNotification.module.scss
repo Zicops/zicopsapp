@@ -60,10 +60,22 @@
 
 .notification_info_status_unread{
     background-color:$black ;
+    position: relative;
+    &::before{
+        content: '';
+        height: 15px;
+        width: 15px;
+        background-color: $primary;
+        border-radius: 50%;
+
+        position: absolute;
+        top: 10px;
+        left: -25px;
+    }
 }
 
 .notification_info_status_unread:hover{
     outline: 1px solid $white;
-    background: $darkTwo;
+    background-color: $darkTwo;
 }
 

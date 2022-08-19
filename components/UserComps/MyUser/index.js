@@ -51,7 +51,7 @@ export default function MyUser({ getUser }) {
     {
       field: 'emails',
       headerClassName: 'course-list-header',
-      flex: 1,
+      flex: 2,
       renderHeader: (params) => (
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
@@ -92,13 +92,13 @@ export default function MyUser({ getUser }) {
       field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'First Name',
-      flex: 0.5
+      flex: 1
     },
     {
       field: 'last_name',
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
-      flex: 0.5
+      flex: 1
     },
     {
       field: 'role',
@@ -116,7 +116,7 @@ export default function MyUser({ getUser }) {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
-      flex: 0.5,
+      flex: 0.4,
       renderCell: (params) => (
         <>
           <EllipsisMenu
