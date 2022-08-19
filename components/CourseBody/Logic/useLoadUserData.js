@@ -1,29 +1,29 @@
 import {
-    GET_COURSE_CHAPTERS,
-    GET_COURSE_MODULES,
-    GET_COURSE_TOPICS,
-    GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID,
-    GET_TOPIC_RESOURCES_BY_COURSE_ID,
-    queryClient
+  GET_COURSE_CHAPTERS,
+  GET_COURSE_MODULES,
+  GET_COURSE_TOPICS,
+  GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID,
+  GET_TOPIC_RESOURCES_BY_COURSE_ID,
+  queryClient
 } from '@/api/Queries';
 import {
-    GET_USER_COURSE_MAPS_BY_COURSE_ID,
-    GET_USER_COURSE_PROGRESS,
-    userQueryClient
+  GET_USER_COURSE_MAPS_BY_COURSE_ID,
+  GET_USER_COURSE_PROGRESS,
+  userQueryClient
 } from '@/api/UserQueries';
 import {
-    filterAndSortChapter,
-    filterAndSortTopicsBasedOnModuleId,
-    filterTopicContent,
-    sortArrByKeyInOrder
+  filterAndSortChapter,
+  filterAndSortTopicsBasedOnModuleId,
+  filterTopicContent,
+  sortArrByKeyInOrder
 } from '@/helper/data.helper';
 import {
-    ChapterAtom,
-    isLoadingAtom,
-    ModuleAtom,
-    ResourcesAtom,
-    TopicAtom,
-    TopicContentAtom
+  ChapterAtom,
+  isLoadingAtom,
+  ModuleAtom,
+  ResourcesAtom,
+  TopicAtom,
+  TopicContentAtom
 } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -148,7 +148,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         variables: { userId: userData?.id, courseId: fullCourse?.id },
         fetchPolicy: 'no-cache'
       });
-      if (mapRes?.error)
+      if (!mapRes?.data && mapRes?.error)
         return setToastMsg({ type: 'danger', message: 'user course maps load error' });
 
       data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
