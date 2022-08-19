@@ -78,3 +78,9 @@ compoennts/  pageComponent/subcompoent1/subcomp2
 ## Global classes
 
 class name should be in kebab case (class-name)
+
+## Check HTML box model
+*{
+    border: 1px solid lightblue;
+    background-color: rgba(red, 0.1)!important;
+}

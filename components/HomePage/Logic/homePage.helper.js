@@ -2,7 +2,7 @@ export const data = [
   {
     id: 1,
     icon: '/images/Zicops-logo-icon.png',
-    text: 'Readily Available or Create your own Self Paced Cources | Live Training Cources | Labs & Simulations | Exams.'
+    text: 'Readily Available or Create your own Self Paced Courses | Live Training Courses | Labs & Simulations | Exams.'
   },
   {
     id: 2,

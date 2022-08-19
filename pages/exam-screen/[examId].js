@@ -1,8 +1,8 @@
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   GET_EXAM_CONFIG,
   GET_EXAM_INSTRUCTION,
@@ -17,7 +17,21 @@ import {
   queryClient
 } from '../../API/Queries';
 // import LearnerExamComponent from '../../components/LearnerExamComp';
+import {
+  ADD_USER_EXAM_ATTEMPTS,
+  UPDATE_USER_COURSE,
+  UPDATE_USER_EXAM_ATTEMPTS,
+  userClient
+} from '@/api/UserMutations';
+import {
+  GET_USER_COURSE_MAPS_BY_COURSE_ID,
+  GET_USER_COURSE_PROGRESS,
+  userQueryClient
+} from '@/api/UserQueries';
 import LearnerExamComponent from '@/components/LearnerExamComp';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
 import { CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ExamInstruction from '../../components/LearnerExamComp/ExamInstructions';
@@ -61,9 +75,24 @@ const ExamScreen = () => {
     GET_QUESTION_OPTIONS_WITHOUT_ANSWER,
     { client: queryClient }
   );
+  const [updateUserCourse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
+  const [addUserExamAttempts] = useMutation(ADD_USER_EXAM_ATTEMPTS, { client: userClient });
+  const [updateUserExamAttempts] = useMutation(UPDATE_USER_EXAM_ATTEMPTS, { client: userClient });
+  const [loadUserCourseMaps] = useLazyQuery(GET_USER_COURSE_MAPS_BY_COURSE_ID, {
+    client: userQueryClient
+  });
+  const [loadUserCourseProgress] = useLazyQuery(GET_USER_COURSE_PROGRESS, {
+    client: userQueryClient
+  });
 
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+
+  const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+  const [userExamData, setUserExamData] = useRecoilState(UserExamDataAtom);
+  const userData = useRecoilValue(UserStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [questionData, setQuestionData] = useRecoilState(QuestionOptionDataAtom);
   const [current, setCurrent] = useState({
@@ -474,6 +503,31 @@ const ExamScreen = () => {
     setQuestionData(quesData);
     if (quesData[0]) setCurrent(quesData[0]);
 
+    // load user course mapping and progress
+    const data = {
+      userCourseMapping: userCourseData?.userCourseMapping,
+      userCourseProgress: userCourseData?.userCourseProgress
+    };
+    if (data?.userCourseMapping?.user_cp_id) {
+      const mapRes = await loadUserCourseMaps({
+        variables: { courseId: fullCourse?.id },
+        fetchPolicy: 'no-cache'
+      });
+      if (mapRes?.error)
+        return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+      data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
+    }
+
+    if (!data?.userCourseProgress?.length && data?.userCourseMapping?.user_course_id) {
+      const progressRes = await loadUserCourseProgress({
+        variables: { userCourseId: currentCourseMap?.user_course_id },
+        fetchPolicy: 'no-cache'
+      });
+      const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+      if (courseProgress?.length) data.userCourseProgress = courseProgress || [];
+    }
+
+    setUserCourseData({ ...userCourseData, ...data });
     setLearnerExamData({
       ...learnerExamData,
       examData: {
@@ -497,6 +551,7 @@ const ExamScreen = () => {
       },
       sectionData: sectionData
     });
+
     setLoading(false);
   }, [router.query]);
 
@@ -530,6 +585,82 @@ const ExamScreen = () => {
     console.log(array);
 
     return array;
+  }
+
+  useEffect(() => {
+    if (isLearner) setUserAttemptData();
+  }, [isLearner]);
+
+  async function setUserAttemptData() {
+    const userCourseMapData = structuredClone(userCourseData);
+    const learnerData = learnerExamData;
+
+    if (userCourseData?.userCourseMapping?.course_status === 'open') {
+      const sendUserCourseData = {
+        courseStatus: 'started',
+        userCourseId: userCourseMapData?.userCourseMapping?.user_course_id,
+        userId: userCourseMapData?.userCourseMapping?.user_id,
+        userLspId: userCourseMapData?.userCourseMapping?.user_lsp_id,
+        courseId: userCourseMapData?.userCourseMapping?.course_id,
+        addedBy: userCourseMapData?.userCourseMapping?.added_by,
+        courseType: userCourseMapData?.userCourseMapping?.course_type,
+        isMandatory: userCourseMapData?.userCourseMapping?.is_mandatory,
+        endDate: userCourseMapData?.userCourseMapping?.end_date
+      };
+
+      // console.log(sendUserCourseData);
+      const res = await updateUserCourse({ variables: sendUserCourseData }).catch((err) => {
+        console.log(err);
+        return setToastMsg({ type: 'danger', message: 'Course Assign Update Error' });
+      });
+      console.log(res);
+      if (res?.data?.updateUserCourse)
+        userCourseMapData.userCourseMapping = res?.data?.updateUserCourse || {};
+    }
+    const attemptCount = userExamData?.userExamAttempts?.length + 1 || 1;
+
+    if (attemptCount > learnerData?.examData?.noAttempts)
+      return setToastMsg({ type: 'danger', message: 'All Attempts Used' });
+
+    const sendAttemptData = {
+      user_id: userData?.id,
+      user_lsp_id: userOrgData?.user_lsp_id,
+      user_cp_id: userCourseMapData?.userCourseMapping?.user_cp_id,
+      user_course_id: userCourseMapData?.userCourseMapping?.user_course_id,
+      exam_id: learnerData?.examData?.id,
+      attempt_no: `${attemptCount}`,
+      attempt_status: 'started',
+      attempt_start_time: Date.now() / 1000,
+      attempt_duration: '0'
+    };
+
+    console.log(sendAttemptData);
+    // const examAttemptRes = await addUserExamAttempts({ variables: [sendAttemptData] }).catch(
+    //   (err) => {
+    //     console.log(err);
+    //     return setToastMsg({ type: 'danger', message: 'Add Exam Attempt Error' });
+    //   }
+    // );
+    // const examAttemptData = examAttemptRes?.data?.addUserExamAttempts[0];
+    const examAttemptData = {};
+    console.log(examAttemptData, learnerData);
+
+    const sendExamProgressData = {
+      user_id: userData?.id,
+      user_lsp_id: userOrgData?.user_lsp_id,
+      user_cp_id: userCourseMapData?.userCourseMapping?.user_cp_id,
+      user_course_id: userCourseMapData?.userCourseMapping?.user_course_id,
+      user_ea_id: examAttemptData?.user_ea_id,
+
+      sr_no: '',
+      question_id: '',
+      question_type: '',
+      answer: '',
+      q_attempt_status: '',
+      total_time_spent: '',
+      section_id: ''
+    };
+    console.log(sendExamProgressData);
   }
 
   // loader screen till loading

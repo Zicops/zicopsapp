@@ -7,7 +7,8 @@
     width: 25%;
     color: $white;
   }
-  input {
+  input,
+  input.inputStyles {
     padding: 10px;
     border: 2px solid $darkThree;
     background-color: $darkTwo;
@@ -26,6 +27,36 @@
 
     &:disabled {
       @include inputStylesFor('disabled');
+    }
+  }
+
+  div.countryCodeBtn {
+    background-color: $darkTwo;
+    color: $white;
+
+    :global(.country-list) {
+      background-color: inherit;
+      color: inherit;
+
+      li {
+        &:hover {
+          background-color: $darkThree;
+        }
+      }
+    }
+    :global(.country.highlight) {
+      background-color: $black;
+    }
+
+    :global(.selected-flag) {
+      background-color: inherit !important;
+
+      &:hover {
+        background-color: inherit !important;
+      }
+    }
+    &:hover {
+      background-color: inherit;
     }
   }
 }

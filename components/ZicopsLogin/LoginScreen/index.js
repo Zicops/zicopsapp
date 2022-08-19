@@ -115,13 +115,24 @@ const LoginScreen = ({ setPage }) => {
             type={'email'}
             placeholder={'Email address'}
             onChange={handleEmail}
+            tabIndex={1}
             // onFocus={chngeHandle}
             // style={{ margin: '5px 0px' }}
           />
-          <LoginEmail type={'password'} placeholder={'Password'} chngeHandle={handlePassword} />
+          <LoginEmail
+            type={'password'}
+            placeholder={'Password'}
+            chngeHandle={handlePassword}
+            tabIndex={2}
+          />
           <div className={`${styles.small_text}`}>
             <span />
-            <p>Forgot Password?</p>
+            <p
+              onClick={() => {
+                router.push('/forgot-password');
+              }}>
+              Forgot Password?
+            </p>
           </div>
 
           <LoginButton title={'Login'} handleClick={handleSubmit} />

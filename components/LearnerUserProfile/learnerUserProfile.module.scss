@@ -33,6 +33,9 @@
   z-index: -1;
 }
 
+.userBody{
+  background-color: $bgTile;
+}
 .userImageContainer {
   display: flex;
   position: relative;
@@ -157,6 +160,7 @@
 }
 .userAboutTab {
   padding: 50px;
+  background-color: $bgTile;
 }
 .categoryPreferences {
   background-color: #262626;
@@ -182,14 +186,16 @@
   padding: 50px;
   color: $white;
   overflow-y: scroll;
-  // display: flex;
-  // flex-direction: column;
-  // gap: 15px;
+
+
+  hr{
+    margin-bottom: 20px;
+  }
+
 }
 
 .cardContainer {
   margin: auto;
-  margin-bottom: 50px;
 
   .courseTabHeader {
     display: flex;
@@ -207,7 +213,7 @@
         color: $primary;
 
         img {
-          transform: rotate(90deg);
+          transform: rotate(180deg);
           height: 10px;
           margin: auto 5px;
         }
@@ -242,7 +248,7 @@
 .listCardContainer {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .adminCardFooter {
@@ -396,6 +402,7 @@
     fill: $darkOne !important;
   }
 }
+
 .inviteComponents {
   display: flex;
   flex-direction: column;
@@ -574,4 +581,15 @@
   border: $primary 2px solid;
   display: inline-block;
   border-radius: 3px;
+}
+
+.fallbackMsg {
+  margin: 50px auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: $white;
+
 }

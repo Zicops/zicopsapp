@@ -15,7 +15,6 @@ const SubCategoriesPreview = ({
   setSelected,
   customStyle = [],
   isUpdate = false,
-  handleUpdate = () => {},
   popUpClose = () => {}
 }) => {
   const [primary, setPrimary] = useState('');
@@ -39,22 +38,26 @@ const SubCategoriesPreview = ({
 
     setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
 
-    await addUserLearningSpaceDetails(sub_categories, primary);
-    await updateAboutUser();
+    let isError = false;
+    isError = await addUserLearningSpaceDetails(sub_categories, primary);
+    if (isError) return;
+    isError = await updateAboutUser();
+
+    if (isError) return;
+
     setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
 
     router.prefetch('/');
     setVidIsOpen(true);
-    vidRef.current.play();
+    vidRef?.current?.play();
     console.log('from add');
   }
 
-  function handleUpdate() {
-    updatePreferences(selected, primary);
+  async function handleUpdate() {
+    await updatePreferences(selected, primary);
     popUpClose(false);
-    setTimeout(() => {
-      setCurrentComponent(2);
-    }, 500);
+    setCurrentComponent(2);
+    router.reload();
   }
 
   useEffect(() => {
@@ -131,7 +134,9 @@ const SubCategoriesPreview = ({
             disabled={primary === ''}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
-            onClick={isUpdate ? handleUpdate : handleCompleteSetup}>
+            onClick={() => {
+              isUpdate ? handleUpdate() : handleCompleteSetup();
+            }}>
             Complete Setup
           </Button>
         </div>

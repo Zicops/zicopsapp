@@ -25,7 +25,7 @@ export default function CourseHero({ isPreview = false }) {
     activateVideoPlayer,
     assignCourseToUser,
     showPreviewVideo
-  } = useHandleCourseHero();
+  } = useHandleCourseHero(isPreview);
 
   const userCourseData = useRecoilValue(UserCourseDataAtom);
   const isLoading = useRecoilValue(isLoadingAtom);

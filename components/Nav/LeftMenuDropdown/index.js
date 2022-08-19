@@ -12,7 +12,7 @@ import { userContext } from '../../../state/contexts/UserContext';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { languages, preferences } from '../Logic/subMenu.helper.js';
 import styles from '../nav.module.scss';
-export default function LeftMenuDropdown() {
+export default function LeftMenuDropdown({ isOnLearnerSide }) {
   const { isAdmin } = useContext(userContext);
   const { anchorEl, handleClick, handleClose, open, gotoAdmin, gotoUser } = useDropDownHandle();
 
@@ -53,10 +53,11 @@ export default function LeftMenuDropdown() {
         padding: '7px 8px'
       },
       comp: (
-        <div onClick={!isAdmin ? gotoAdmin : gotoUser}>
-          {!isAdmin ? 'Switch to Admin' : 'Switch to Learner'}
+        <div onClick={isOnLearnerSide ? gotoAdmin : gotoUser}>
+          {isOnLearnerSide ? 'Switch to Admin' : 'Switch to Learner'}
         </div>
-      )
+      ),
+      isAdmin: true
     }
   ];
 
@@ -103,6 +104,10 @@ export default function LeftMenuDropdown() {
             onMouseEnter={handleClick}
             onKeyDown={handleClick}>
             {menuItemList.map((item) => {
+              console.log(isAdmin);
+              // alert(isAdmin)
+              if (item.isAdmin && !isAdmin) return null;
+
               return (
                 <MenuItem
                   key={item.id}

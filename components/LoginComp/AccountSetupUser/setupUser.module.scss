@@ -113,3 +113,13 @@
 
 
 
+.contactInputContainer{
+  display: flex;
+  justify-content: stretch;
+  color: $white;
+  margin-bottom: 20px;
+
+  label{
+    width: 25%;
+  }
+}

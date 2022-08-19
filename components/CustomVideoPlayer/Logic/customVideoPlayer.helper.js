@@ -1,5 +1,8 @@
-export function addCallbackToEvent(element, eventCallbackArrObj) {
+export function addCallbackToEvent(element, eventCallbackArrObj, isRemoveCallback) {
   eventCallbackArrObj.forEach((callbackObj) => {
+    if (isRemoveCallback)
+      return element?.removeEventListener(callbackObj.event, callbackObj.callback);
+
     element?.addEventListener(callbackObj.event, callbackObj.callback);
   });
 }
@@ -13,6 +16,7 @@ export function getNoteCardObj(data) {
     index: data?.index || 0,
     note: data?.note || '',
     isPinned: data?.isPinned || false,
-    isOpen: data?.isOpen || true
+    isOpen: data?.isOpen || true,
+    isActive: data?.isActive || false
   };
 }

@@ -7,6 +7,8 @@ import {
   UPDATE_USER_ROLE,
   userClient
 } from '@/api/UserMutations';
+import { getUserData } from '@/helper/loggeduser.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   getUserObject,
   getUserOrgObject,
@@ -16,9 +18,7 @@ import {
 import { useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import useCommonHelper from './common.helper';
-import { getUserData } from '@/helper/loggeduser.helper';
 
 export default function useHandleUserUpdate() {
   const { getUserPreferences } = useCommonHelper();
@@ -120,7 +120,7 @@ export default function useHandleUserUpdate() {
 
     const selectedSubcartegory = sub_categories;
 
-    console.log(selectedSubcartegory);
+    // console.log(selectedSubcartegory);
     for (let i = 0; i < userPreferences.length; i++) {
       const a = selectedSubcartegory.filter((ele) => ele?.name === userPreferences[i].name);
 
@@ -131,7 +131,7 @@ export default function useHandleUserUpdate() {
       }
     }
 
-    console.log(selectedSubcartegory);
+    // console.log(selectedSubcartegory);
     //delete preferences that are deselected
     let sub_categoriesArr;
     if (userPreferences.length) {
