@@ -148,7 +148,8 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         variables: { userId: userData?.id, courseId: fullCourse?.id },
         fetchPolicy: 'no-cache'
       });
-      if (!mapRes?.data && mapRes?.error)
+      console.log(mapRes);
+      if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
         return setToastMsg({ type: 'danger', message: 'user course maps load error' });
 
       data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
