@@ -14,9 +14,7 @@ export default function CourseLIstCard({ courseData, statusData, footerType, chi
         <div className={`${styles.head}`}>
           {/* title and cat subcat */}
           <section>
-            <p className={`${styles.title}`}>
-              {courseData?.title || 'Start with Project Management'}
-            </p>
+            <p className={`${styles.title}`}>{courseData?.title}</p>
 
             <p className={`${styles.catSubCat}`}>
               {courseData?.category || 'Development'} <div className={`${styles.dot}`}></div>
@@ -27,6 +25,9 @@ export default function CourseLIstCard({ courseData, statusData, footerType, chi
           {/* level and type */}
           <div className={`${styles.levelAndType}`}>
             <span>{courseData?.level || 'Competent'}</span>
+            {/* <span style={statusData ? { color: statusData?.color } : {}}>
+              {statusData ? statusData?.status : courseData?.type || 'Self Paced'}
+            </span> */}
             <span style={statusData ? { color: statusData?.color } : {}}>
               {statusData ? statusData?.status : courseData?.type || 'Self Paced'}
             </span>
