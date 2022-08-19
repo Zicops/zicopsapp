@@ -116,7 +116,7 @@ export default function Nav() {
                 <img src="/images/search.png" />
               </li>
             )} */}
-            <li onClick={handleClickInside}>
+            <li onClick={handleClickInside} className={styles.notificationIcon}>
               {showNotification ? (
                 <svg
                   width="25"
