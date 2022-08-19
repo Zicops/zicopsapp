@@ -55,7 +55,7 @@ export default function Nav() {
           navmenuicon={HamburgerMenuIcon}
         />
 
-        <Link href={isAdmin ? '/admin' : '/'}>
+        <Link href={!isOnLearnerSide ? '/admin' : '/'}>
           <a className={styles.logo}>
             <img src="/images/zicops-header-logo.png" />
           </a>
