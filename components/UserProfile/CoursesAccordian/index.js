@@ -21,7 +21,7 @@ import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
 import CurrentCourses from './CurrentCourses';
 const CoursesAccordian = () => {
-  const { courseAssignData, setCourseAssignData } = useState({
+  const [courseAssignData, setCourseAssignData]  = useState({
     endDate: new Date(),
     isMandatory: false,
     isCourseAssigned: false
