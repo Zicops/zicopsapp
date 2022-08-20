@@ -12,6 +12,7 @@ export default function Layout({ children }) {
     '/exam-live',
     '/exam-screen',
     '/exam-screen/[examId]',
+    '/course/[courseId]/exam/[examId]',
     '/login',
     '/reset-password',
     '/account-setup',

@@ -316,3 +316,66 @@ export const GET_USER_BOOKMARKS = gql`
     }
   }
 `;
+
+export const GET_USER_EXAM_ATTEMPTS = gql`
+  query getUserExamAttempts($user_id: String!, $user_lsp_id: String!) {
+    getUserExamAttempts(user_id: $user_id, user_lsp_id: $user_lsp_id) {
+      user_ea_id
+      user_id
+      user_lsp_id
+      user_cp_id
+      user_course_id
+      exam_id
+      attempt_no
+      attempt_status
+      attempt_start_time
+      attempt_duration
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_EXAM_RESULTS = gql`
+  query getUserExamResults($user_id: String!, $user_ea_id: String!) {
+    getUserExamResults(user_id: $user_id, user_ea_id: $user_ea_id) {
+      user_er_id
+      user_id
+      user_ea_id
+      user_score
+      correct_answers
+      wrong_answers
+      result_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_EXAM_PROGRESS = gql`
+  query getUserExamProgress($user_id: String!, $user_ea_id: String!) {
+    getUserExamProgress(user_id: $user_id, user_ea_id: $user_ea_id) {
+      user_ep_id
+      user_id
+      user_ea_id
+      user_lsp_id
+      user_cp_id
+      sr_no
+      question_id
+      question_type
+      answer
+      q_attempt_status
+      total_time_spent
+      correct_answer
+      section_id
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;

@@ -19,7 +19,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
     e.currentTarget.parentNode.style.margin = '';
   }
   const gotoCourse = () => {
-    window.location.href = courseData?.id ? `/course?courseId=${courseData.id}` : '/courses';
+    window.location.href = courseData?.id ? `/course/${courseData.id}` : '/courses';
   };
 
   let courseNameClass = "coursename";

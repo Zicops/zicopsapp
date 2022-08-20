@@ -732,7 +732,7 @@ export const UPDATE_USER_NOTES = gql`
 
 export const ADD_USER_EXAM_ATTEMPTS = gql`
   mutation AddUserExamAttempts($userExamAttempts: [UserExamAttemptsInput]!) {
-    addUserExamAttempts(input: $userExamAttempts) {
+    addUserExamAttempts(input: [$userExamAttempts]) {
       user_ea_id
       user_id
       user_lsp_id

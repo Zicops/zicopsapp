@@ -15,7 +15,7 @@ import {
   GET_QUESTION_PAPER_META,
   GET_QUESTION_PAPER_SECTION,
   queryClient
-} from '../../API/Queries';
+} from '../../../../API/Queries';
 // import LearnerExamComponent from '../../components/LearnerExamComp';
 import {
   ADD_USER_EXAM_ATTEMPTS,
@@ -30,17 +30,17 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import LearnerExamComponent from '@/components/LearnerExamComp';
+import ExamInstruction from '@/components/LearnerExamComp/ExamInstructions';
+import styles from '@/components/LearnerExamComp/learnerExam.module.scss';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { DIFFICULTY, getUnixFromDate, toggleFullScreen } from '@/helper/utils.helper';
+import { LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
+import { courseContext } from '@/state/contexts/CourseContext';
 import { CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import ExamInstruction from '../../components/LearnerExamComp/ExamInstructions';
-import styles from '../../components/LearnerExamComp/learnerExam.module.scss';
-import { DIFFICULTY, getUnixFromDate, toggleFullScreen } from '../../helper/utils.helper';
-import { LearnerExamAtom, QuestionOptionDataAtom } from '../../state/atoms/exams.atoms';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { courseContext } from '@/state/contexts/CourseContext';
 
 const ExamScreen = () => {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
@@ -91,8 +91,6 @@ const ExamScreen = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
-  const { fullCourse } = useContext(courseContext);
-
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [userExamData, setUserExamData] = useRecoilState(UserExamDataAtom);
   const userData = useRecoilValue(UserStateAtom);
@@ -110,10 +108,18 @@ const ExamScreen = () => {
   const refFullscreen = useRef(null);
 
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
 
   useEffect(async () => {
     setLoading(true);
+    console.log(userData);
+    if (!userData?.id) return;
+
     const examId = router.query?.examId || null;
+    const courseId = router.query?.courseId || null;
+    if (!courseId) return;
     if (!examId) return;
 
     // load master data
@@ -514,9 +520,8 @@ const ExamScreen = () => {
       userCourseProgress: userCourseData?.userCourseProgress
     };
     if (!data?.userCourseMapping?.user_cp_id) {
-      console.log(fullCourse);
       const mapRes = await loadUserCourseMaps({
-        variables: { courseId: fullCourse?.id },
+        variables: { userId: userData?.id, courseId: courseId },
         fetchPolicy: 'no-cache'
       });
       if (mapRes?.error)
@@ -526,7 +531,7 @@ const ExamScreen = () => {
 
     if (!data?.userCourseProgress?.length && data?.userCourseMapping?.user_course_id) {
       const progressRes = await loadUserCourseProgress({
-        variables: { userCourseId: currentCourseMap?.user_course_id },
+        variables: { userId: userData?.id, userCourseId: currentCourseMap?.user_course_id },
         fetchPolicy: 'no-cache'
       });
       const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
@@ -568,7 +573,7 @@ const ExamScreen = () => {
     });
 
     setLoading(false);
-  }, [router.query]);
+  }, [router.query, userData?.id]);
 
   // update full screen state
   useEffect(() => {
