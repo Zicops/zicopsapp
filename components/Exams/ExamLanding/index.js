@@ -207,7 +207,7 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
 
             router.back();
           }}>
-          <img src="./images/Back.png" />
+          <img src="/images/Back.png" />
         </button>
 
         <div className={`${styles.exam_landing_head_container}`}>
