@@ -40,16 +40,17 @@ export default function useShowData(courseContextData) {
   // const [topicContent, updateTopicContent] = useRecoilState(TopicContentAtom);
   const [resources, updateResources] = useRecoilState(ResourcesAtom);
   const [filteredResources, setFilteredResources] = useState([]);
-  // const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
 
   useEffect(() => {
     if (!userCourseData?.activeModule?.id) return;
+    if (!userCourseData?.switchModule) return;
 
     if (userCourseData?.activeModule?.id !== selectedModule?.value) {
       setSelectedModule({
         label: `MODULE ${userCourseData?.activeModule?.index + 1}`,
         value: userCourseData?.activeModule?.id
       });
+      setUserCourseData({ ...userCourseData, switchModule: false });
     }
   }, [userCourseData?.activeModule]);
 

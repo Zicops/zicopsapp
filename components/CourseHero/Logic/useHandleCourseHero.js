@@ -120,7 +120,7 @@ export default function useHandleCourseHero(isPreview) {
 
     if (!isTopicFound) data = { ...firstIncompletedTopicData };
 
-    setUserCourseData({ ...userCourseData, ...data });
+    setUserCourseData({ ...userCourseData, ...data, switchModule: true });
     // setVideoData({
     //   ...videoData,
     //   videoSrc: validTopicContent?.contentUrl,

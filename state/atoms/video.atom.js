@@ -37,6 +37,7 @@ export function getUserCourseDataObj(data) {
     userCourseMapping: data?.userCourseMapping || {},
     userCourseProgress: data?.userCourseProgress || [],
     triggerPlayerToStartAt: data?.triggerPlayerToStartAt || null,
+    switchModule: data?.switchModule || null,
     allModules:
       data?.allModules ||
       [

@@ -79,7 +79,7 @@ export default function CustomVideo({ set }) {
     if (isPreview && playerState.progress === 100) set(false);
 
     // autoplay next video
-    if (playerState.progress === 100) playNextVideo();
+    if (playerState.progress === 100) playNextVideo('binge');
 
     // add logic for preventing binge button for last video
     if (topicContent && showBingeButtons !== null) {

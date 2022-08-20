@@ -459,6 +459,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   async function playNextVideo(type = null) {
     await syncVideoProgress(type);
     if (!videoData.allModuleTopic) return;
+    const isBinge = type === 'binge';
+    if (isBinge) return;
+
     const { allModuleTopic, currentTopicIndex } = videoData;
 
     if (allModuleTopic[currentTopicIndex + 1]?.type === 'Assessment') {
@@ -469,7 +472,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     if (videoData.allModuleTopic.length === videoData.currentTopicIndex + 1) {
       const { setNewModule, allModuleOptions, currentModuleIndex } = videoData;
       if (currentModuleIndex + 1 === allModuleOptions.length) return;
-      setNewModule({ ...allModuleOptions[currentModuleIndex + 1], isVideoControlClicked: true });
+      setNewModule({
+        ...allModuleOptions[currentModuleIndex + 1],
+        isVideoControlClicked: !isBinge
+      });
       return;
     }
 
