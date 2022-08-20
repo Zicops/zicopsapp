@@ -15,12 +15,13 @@ import BulkUpload from '../../../../components/UserComps/BulkUpload';
 import InviteUser from '../../../../components/UserComps/InviteUser';
 
 export default function MyUserPage() {
-  const [inviteUsers, { error: inviteError }] = useMutation(INVITE_USERS, {
+  const [inviteUsers, { data, loading, error: inviteError }] = useMutation(INVITE_USERS, {
     client: userClient
   });
 
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [disableButton, setDisableButton] = useState(false);
 
   const [userType, setUserType] = useState('Internal');
   const [tabData, setTabData] = useState([
@@ -44,6 +45,8 @@ export default function MyUserPage() {
       isError = !!err;
       return;
     });
+
+    if (loading) return setDisableButton(true);
 
     if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
 
@@ -100,6 +103,7 @@ export default function MyUserPage() {
             tab={tab}
             setTab={setTab}
             footerObj={{
+              disableSubmit: disableButton,
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
               handleSubmit: handleMail,
               handleCancel: () => {

@@ -20,7 +20,7 @@ export function useHandleNav(isAdmin, setAdmin) {
 
   useEffect(() => {
     setIsOnLearnerSide(!router?.pathname?.includes('/admin'));
-  }, [isAdmin]);
+  }, [isAdmin, router?.pathname]);
 
   // whenever input is render it should be on focus
   // useEffect(() => {

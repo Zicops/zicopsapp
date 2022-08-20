@@ -21,7 +21,7 @@ export default function Home() {
 
   React.useEffect(() => {
     console.log(screen.width);
-    if (isAdmin) router.push('/admin');
+    // if (isAdmin) router.push('/admin');
   }, []);
 
   const realSquare = {

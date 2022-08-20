@@ -28,7 +28,7 @@ const UserDisplay = () => {
     if (!isUpdate) return;
     setFullName(`${userProfileData?.first_name} ${userProfileData?.last_name}`);
     setIsUpdate(false);
-    console.log(userProfileData);
+    // console.log(userProfileData);
   }, [isUpdate]);
 
   //refill the  recoil values
