@@ -1,14 +1,14 @@
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { useRecoilValue } from 'recoil';
 import { ResourcesAtom } from '../../../../state/atoms/module.atoms';
-import { getResourceCount } from '../../Logic/courseBody.helper';
+import { getNotesCount, getResourceCount } from '../../Logic/courseBody.helper';
 
 export default function TopicFiles({ data, handleClick, isResourceShown, isNotes }) {
   const isResourceActive = isResourceShown?.includes(data.id);
 
   const resources = useRecoilValue(ResourcesAtom);
   const notes = useRecoilValue(FloatingNotesAtom);
-  let fileCount = isNotes ? notes.length : getResourceCount(resources, data?.id);
+  let fileCount = isNotes ? getNotesCount(notes, data?.id) : getResourceCount(resources, data?.id);
 
   const styles = {
     fontSize: '1.25vw',

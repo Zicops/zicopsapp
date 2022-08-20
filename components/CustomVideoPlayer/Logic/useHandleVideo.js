@@ -242,11 +242,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const duration = 2500;
   let timeout;
   useEffect(() => {
-    console.log(freezeScreen);
     clearTimeout(timeout);
 
     function switchControls(value) {
-      console.log('freezeScreen: ', freezeScreen);
       if (freezeScreen) return;
 
       setHideControls(value);

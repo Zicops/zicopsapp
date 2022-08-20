@@ -56,7 +56,6 @@ export default function CustomVideo({ set }) {
 
   useEffect(() => {
     set(true);
-    setFloatingNotes([]);
 
     // reset video progress when unmounted
     // return () => handleMouseMove({ target: { value: 0 } });
@@ -138,6 +137,7 @@ export default function CustomVideo({ set }) {
     <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
       {/* floating notes */}
       {floatingNotes?.map((noteObj, i) => {
+        if (noteObj?.topic_id !== videoData?.topicContent[0]?.topicId) return null;
         if (!noteObj.isFloating) return null;
         if (!noteObj.isPinned && !!hideTopBar) {
           handleClose(noteObj);
@@ -146,7 +146,7 @@ export default function CustomVideo({ set }) {
 
         return (
           <DraggableDiv
-            key={noteObj?.index}
+            key={`${noteObj?.sequence}-${noteObj?.user_notes_id}`}
             initalPosition={{
               x: noteObj.x,
               y: noteObj.y

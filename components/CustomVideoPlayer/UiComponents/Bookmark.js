@@ -1,6 +1,9 @@
 import BookmarkCard from '@/components/common/BookmarkCard';
+import { VideoAtom } from '@/state/atoms/video.atom';
+import { courseContext } from '@/state/contexts/CourseContext';
 import { userContext } from '@/state/contexts/UserContext';
 import { useContext, useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import styles from '../customVideoPlayer.module.scss';
 import FolderBar from './FolderBar';
 
@@ -13,11 +16,15 @@ export default function Bookmark({
   bookmarkState,
   freezeState = []
 }) {
+  const videoData = useRecoilValue(VideoAtom);
+
   const [showAddBookmark, setShowAddBookmark] = useState(true);
   const [viewAllBookmarks, setViewAllBookmarks] = useState(false);
   const [freezeScreen, setFreezeScreen] = freezeState;
   const [bookmarkData, setBookmarkData] = bookmarkState;
+
   const { bookmarkData: allBookmarks } = useContext(userContext);
+  const { fullCourse } = useContext(courseContext);
 
   useEffect(() => {
     setFreezeScreen(showAddBookmark);
@@ -44,7 +51,11 @@ export default function Bookmark({
 
           if (playerState?.isPlaying) updateIsPlayingTo(false);
         }}
-        count={allBookmarks?.length || 0}
+        count={
+          allBookmarks?.filter(
+            (bookmark) => bookmark?.topic_id === videoData?.topicContent[0]?.topicId
+          )?.length || 0
+        }
         onFolderClick={() => {
           setShowAddBookmark(false);
           setViewAllBookmarks(!viewAllBookmarks);
@@ -69,8 +80,8 @@ export default function Bookmark({
                 className={`${styles.bookmarksField}`}
                 type="text"
                 placeholder="add bookmark title"
-                onChange={(e) => setBookmarkData({ ...bookmarkData, title: e.target.value })}
-                value={bookmarkData?.title}
+                onChange={(e) => setBookmarkData({ ...bookmarkData, name: e.target.value })}
+                value={bookmarkData?.name}
                 ref={(elem) => elem?.focus()}
                 // onBlur={() => setShowAddBookmark(false)}
               />
@@ -90,9 +101,21 @@ export default function Bookmark({
           <>
             {viewAllBookmarks && (
               <>
-                {allBookmarks.map((bookmark, i) => (
-                  <BookmarkCard data={bookmark} key={`${bookmark?.id}-${i}`} />
-                ))}
+                {allBookmarks.map((bookmark, i) => {
+                  if (bookmark?.topic_id !== videoData?.topicContent[0]?.topicId) return null;
+
+                  return (
+                    <BookmarkCard
+                      data={{
+                        img: fullCourse?.tileImg,
+                        courseName: fullCourse?.name,
+                        title: bookmark?.name,
+                        timestamp: bookmark?.timestamp
+                      }}
+                      key={`${bookmark?.user_bm_id}-${i}`}
+                    />
+                  );
+                })}
               </>
             )}
           </>
