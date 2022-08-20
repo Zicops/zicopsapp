@@ -41,6 +41,7 @@ export default function PreviewCourse() {
               backgroundColor: 'var(--tile-bg)',
               margin: 0,
               padding: 0,
+              overflow: 'clip'
               // contain: 'paint'
             }}>
             {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}

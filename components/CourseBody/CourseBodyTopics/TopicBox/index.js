@@ -245,11 +245,11 @@ export default function TopicBox({
       <div
         className={`${styles.topic}`}
         onClick={() => {
-          if (!userCourseData?.userCourseMapping?.user_course_id) return;
+          // if (!userCourseData?.userCourseMapping?.user_course_id) return;
           if (type === 'Assessment') return loadTopicExam();
 
           // if (type === 'Content') {
-          if (!topicContent.length) return;
+          if (!topicContent.length) return console.log('no topic content found');
 
           setTopicExamData(getTopicExamObj());
           updateVideoData(
