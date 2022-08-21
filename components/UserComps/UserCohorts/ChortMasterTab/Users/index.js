@@ -1,9 +1,9 @@
+import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import PopUp from '@/components/common/PopUp';
 import ZicopsTable from '@/components/common/ZicopsTable';
-import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
-import { useState } from 'react';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { useEffect, useState } from 'react';
 import styles from '../../../userComps.module.scss';
-import LearnerStatistics from '../../LearnerStatistics';
 import AddUsers from './AddUsers';
 
 const data = [
@@ -107,6 +107,25 @@ const data = [
 
 const Users = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [userData, setUserData] = useState([]);
+
+  useEffect(async () => {
+    const currentTime = new Date().getTime();
+    const sendData = {
+      publish_time: Math.floor(currentTime / 1000),
+      pageCursor: '',
+      pageSize: 100
+    };
+    const resUserData = await loadQueryDataAsync(
+      GET_USERS_FOR_ADMIN,
+      { ...sendData },
+      {},
+      userQueryClient
+    );
+    const users = resUserData?.getUsersForAdmin?.users;
+    console.log(users);
+    if (users?.length) return setUserData([...users]);
+  }, []);
 
   const columns = [
     {
@@ -193,7 +212,7 @@ const Users = () => {
       />
 
       <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
-        <AddUsers />
+        <AddUsers usersData={userData} />
         {/* <LearnerStatistics /> */}
       </PopUp>
     </div>
