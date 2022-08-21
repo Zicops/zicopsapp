@@ -1,5 +1,9 @@
 import { userClient } from '@/api/UserMutations';
-import { GET_USER_DETAIL } from '@/api/UserQueries';
+import {
+  GET_USER_DETAIL,
+  GET_USER_ORGANIZATION_DETAIL,
+  GET_USER_PREFERENCES
+} from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRouter } from 'next/router';
@@ -38,6 +42,40 @@ export default function userProfilePage() {
     // console.log(currentUserId, userDetails);
 
     setCurrentUserData({ ...userDetails });
+
+    const detailPref = await loadQueryDataAsync(
+      GET_USER_PREFERENCES,
+      { user_id: currentUserId },
+      {},
+      userClient
+    );
+    if (detailPref?.error) return setToastMsg({ type: 'danger', message: 'User Pref Load Error' });
+    const userPref = detailPref?.getUserPreferences;
+    if (userPref.length) setCurrentUserData((prev) => ({ ...prev, ...userPref[0] }));
+    const prefArr = userPref?.filter(
+      (item) => item?.user_lsp_id === userPref[0]?.user_lsp_id && item?.is_active
+    );
+
+    const base = prefArr?.filter((item) => item?.is_base);
+    console.log(base);
+    setCurrentUserData((prev) => ({
+      ...prev,
+      sub_categories: [...prefArr],
+      sub_category: base[0]?.sub_category
+    }));
+
+    // console.log(currentUserData);
+
+    const detailOrg = await loadQueryDataAsync(
+      GET_USER_ORGANIZATION_DETAIL,
+      { user_id: currentUserId, user_lsp_id: userPref[0]?.user_lsp_id },
+      {},
+      userClient
+    );
+    if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
+    const userOrg = detailOrg?.getUserOrgDetails;
+    // console.log(userOrg);
+    if (userPref.length) setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
   }, [currentUserId]);
 
   return (
