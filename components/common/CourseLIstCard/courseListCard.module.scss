@@ -15,8 +15,15 @@
   .imgContainer {
     border-radius: 10px;
     max-width: 20%;
+    
+    // min-width: 15%;
+    // max-width: 15%;
 
     img {
+    //   height: 100%;
+    // width: 100%;
+    // object-fit: cover;
+    // border-radius: inherit;
       height: 100%;
     }
   }

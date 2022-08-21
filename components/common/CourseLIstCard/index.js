@@ -7,7 +7,7 @@ export default function CourseLIstCard({ courseData, statusData, footerType, chi
     <div className={`${styles.cardContainer}`}>
       {/* course img */}
       <div className={`${styles.imgContainer}`}>
-        <img src={courseData?.tileImg || '/images/profile-card.png'} alt="" />
+        <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
       </div>
 
       <div className={`${styles.cardBody}`}>
@@ -15,18 +15,18 @@ export default function CourseLIstCard({ courseData, statusData, footerType, chi
           {/* title and cat subcat */}
           <section>
             <p className={`${styles.title}`}>
-              {courseData?.title || 'Start with Project Management'}
+              {courseData?.name || 'Start with Project Management'}
             </p>
 
             <p className={`${styles.catSubCat}`}>
               {courseData?.category || 'Development'} <div className={`${styles.dot}`}></div>
-              {courseData?.subCategory || 'Java'}
+              {courseData?.sub_category || 'Java'}
             </p>
           </section>
 
           {/* level and type */}
           <div className={`${styles.levelAndType}`}>
-            <span>{courseData?.level || 'Competent'}</span>
+            <span>{courseData?.expertise_level || 'Competent'}</span>
             <span style={statusData ? { color: statusData?.color } : {}}>
               {statusData ? statusData?.status : courseData?.type || 'Self Paced'}
             </span>
