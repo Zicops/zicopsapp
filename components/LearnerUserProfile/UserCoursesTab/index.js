@@ -116,7 +116,7 @@ const UserCoursesTab = () => {
       // if (assignedToSelf?.length) setAddedCourses([...assignedToSelf], setLoading(false));
       // const assignedByAdmin = userCourses.filter((item) => item?.added_by !== 'self');
       // if (assignedByAdmin?.length) setAssignedCourses([...assignedByAdmin], setLoading(false));
-    }
+    } else setLoading(false);
   }
 
   function setCourseState(arr, filterParam, filterData, setState, notEqual = 'equal') {
