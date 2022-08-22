@@ -22,9 +22,9 @@ const AddUsers = ({ usersData = [] }) => {
     return setData([...usersData]);
   }, [usersData]);
 
-  useEffect(() => {
-    console.log(userId, router?.query?.cohortId);
-  }, [userId]);
+  // useEffect(() => {
+  //   console.log(userId, router?.query?.cohortId);
+  // }, [userId]);
 
   async function handleAddUser() {
     if (!userId?.length)

@@ -123,7 +123,7 @@ const Users = () => {
       userQueryClient
     );
     const users = resUserData?.getUsersForAdmin?.users;
-    console.log(users);
+    // console.log(users);
     if (users?.length) return setUserData([...users]);
   }, []);
 

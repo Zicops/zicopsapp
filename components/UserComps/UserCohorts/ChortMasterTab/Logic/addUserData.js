@@ -9,7 +9,6 @@ export default function addUserData() {
   });
 
   const { id, role } = getUserData();
-  useEffect(() => {}, []);
 
   async function addUserToCohort(data = {}) {
     const sendCohortData = {
@@ -23,7 +22,7 @@ export default function addUserData() {
     // const resCohort = await addToCohort({ variables: { userCohort: sendCohortData } }).catch((err) =>
     //   console.log(err)
     // );
-    console.log(resCohort);
+    // console.log(resCohort);
   }
 
   return { addUserToCohort };
