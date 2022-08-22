@@ -1,0 +1,13 @@
+@import '../../../../styles/base.scss';
+.inviteUserLearner {
+  display: flex;
+//   gap: 20px;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  background-color: $black;
+  color: $darkThree;
+  padding: 20px;
+  border-radius: 5px;
+ 
+}

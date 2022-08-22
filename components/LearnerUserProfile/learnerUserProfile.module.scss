@@ -187,9 +187,11 @@
   color: $white;
   overflow-y: scroll;
 
+
   hr{
     margin-bottom: 20px;
   }
+
 }
 
 .cardContainer {
@@ -401,6 +403,186 @@
   }
 }
 
+.inviteComponents {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 70%;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+  padding-top: 15px;
+}
+.head {
+  border-bottom: 1px solid var(--white);
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 20px 10px;
+  font-weight: 600;
+  p {
+    margin-right: 25px;
+  }
+}
+.courseTabContainer {
+  height: 500px;
+  overflow-y: scroll;
+  padding-right: 15px;
+  padding: 20px;
+  overflow: hidden;
+}
+.listCardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.cardList {
+  // margin-bottom: 15px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.listCardTabContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+  overflow: scroll;
+}
+// //////Cohort-Details Tab //////////////////
+.detailsTopsection,
+.detailsBottomsection {
+  display: grid;
+  grid-template-columns: 25% auto;
+  gap: 15px;
+  height: 50%;
+}
+.detailsTopsection {
+  margin-bottom: 15px;
+}
+.topLeft,
+.topRight,
+.bottomLeft,
+.bottomRight {
+  background-color: $black;
+  border-radius: 5px;
+  padding: 15px;
+}
+.topLeft {
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+  }
+}
+.list {
+  margin-top: 15px;
+}
+.topRight {
+  display: grid;
+  grid-template-columns: 65% auto;
+  .bigText {
+    font-size: 1.7vw;
+    font-weight: 600;
+    text-transform: capitalize;
+    p span {
+      margin-right: 5px;
+    }
+  }
+  .rank {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 5px;
+    .rankInside {
+      border-radius: 5px;
+      border: 2px solid $primary;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 5px;
+      p {
+        font-size: 14px;
+      }
+      .rankNumber {
+        font-size: 50px;
+        font-weight: 600;
+        color: $primary;
+      }
+    }
+  }
+}
+.cohortManager {
+  border: 2px solid $primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 15px;
+  border-radius: 5px;
+  margin: 0px 0px 5px 5px;
+  img {
+    margin-right: 10px;
+  }
+  span {
+    margin-left: 10px;
+  }
+}
+
+// Invite Tab
+.addUserBottomContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .leftSide {
+    width: 200px;
+
+    span {
+      color: $primary;
+    }
+  }
+
+  .buttonContainer {
+    width: 135px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+//button styling need to be change later
+
+.cohortButton1 {
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  background-color: $primary;
+  color: $black;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.cohortButton2 {
+  padding: 10px;
+  cursor: pointer;
+  border: $primary;
+  background-color: $primary;
+  color: $black;
+  font-weight: bold;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+
+.cohortButton3 {
+  padding: 8px;
+  background-color: transparent;
+  color: $primary;
+  font-weight: bold;
+  cursor: pointer;
+  border: $primary 2px solid;
+  display: inline-block;
+  border-radius: 3px;
+}
+
 .fallbackMsg {
   margin: 50px auto;
 
@@ -409,4 +591,5 @@
   justify-content: center;
 
   color: $white;
+
 }

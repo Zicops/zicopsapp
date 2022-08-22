@@ -18,26 +18,69 @@ export const tabs = [
 ];
 
 export const courseData = [
-  { id: 1, name: 'React Course' },
-  { id: 2, name: 'Java Course' },
-  { id: 3, name: 'HTML Course' },
-  { id: 4, name: 'CSS Course' },
-  { id: 5, name: 'SCSS Course' },
-  { id: 6, name: 'Kotlin Course' },
-  { id: 7, name: 'Go Course' },
-  { id: 8, name: 'Andriod Course' },
-  { id: 9, name: 'IoT Course' },
-  { id: 10, name: 'HTML Course' },
-  { id: 11, name: 'React Course' },
-  { id: 12, name: 'Java Course' },
-  { id: 13, name: 'HTML Course' },
-  { id: 14, name: 'CSS Course' },
-  { id: 15, name: 'SCSS Course' },
-  { id: 16, name: 'Kotlin Course' },
-  { id: 17, name: 'Go Course' },
-  { id: 18, name: 'Andriod Course' },
-  { id: 19, name: 'IoT Course' },
-  { id: 20, name: 'IoT Course' }
+  {
+    id: 1,
+    name: 'React Course',
+    title: 'React Course',
+    category: 'Development',
+    subCategory: 'JAVA',
+    level: 'Competent',
+    footerType: 'completed'
+  },
+  {
+    id: 2,
+    name: 'Java Course',
+    title: 'Java Course',
+    category: 'Development',
+    subCategory: 'JAVA',
+    level: 'Competent',
+    footerType: 'completed'
+  },
+  {
+    id: 3,
+    name: 'HTML Course',
+    title: 'HTML Course',
+    category: 'Development',
+    subCategory: 'JAVA',
+    level: 'Competent',
+    footerType: 'onGoing'
+  },
+  {
+    id: 4,
+    name: 'CSS Course',
+    title: 'CSS Course',
+    category: 'Development',
+    subCategory: 'JAVA',
+    level: 'Competent',
+    footerType: 'onGoing'
+  },
+  {
+    id: 5,
+    name: 'SCSS Course',
+    title: 'SCSS Course',
+    category: 'Development',
+    subCategory: 'JAVA',
+    level: 'Competent',
+    footerType: 'completed'
+  },
+  {
+    id: 6,
+    name: 'Kotlin Course',
+    title: 'Kotlin Course',
+    category: 'Development',
+    subCategory: 'JAVA',
+    level: 'Competent',
+    footerType: 'completed'
+  },
+  {
+    id: 7,
+    name: 'Go Course',
+    title: 'Go Course',
+    category: 'Development',
+    subCategory: 'JAVA',
+    level: 'Competent',
+    footerType: 'completed'
+  }
 ];
 
 export const cohortData = [
@@ -80,7 +123,7 @@ export const cohortData = [
 ];
 
 export const cohortTabData = [
-  { name: 'Course Master', component: <DetailsTab /> },
+  { name: 'Details', component: <DetailsTab /> },
   { name: 'Members', component: <MembersTab /> },
   { name: 'Leaderboard', component: <LeaderboardTab /> },
   { name: 'Courses', component: <CoursesTab /> },
@@ -151,3 +194,49 @@ export const memberTabData = [
     isMember: true
   }
 ];
+export const inviteTabData = [
+  {
+    id: 1,
+    firstName: 'Joy',
+    lastName: 'Joy',
+    emailId:'abc@gmail.com'
+  },
+  {
+    id: 2,
+    firstName: 'Abhishek',
+    lastName: 'Ghosh',
+    emailId:'xyz@gmail.com'
+  },
+  {
+    id: 3,
+    firstName: 'Ankit',
+    lastName: 'Joy',
+    emailId:'pqr@gmail.com'
+},
+  {
+    id: 4,
+    firstName: 'Sonali',
+    lastName: 'Sonali',
+    emailId:'stu@gmail.com'
+},
+  {
+    id: 5,
+    firstName: 'Lorem',
+    lastName: 'Ipsum',
+    emailId:'efg@gmail.com'
+  },
+
+  {
+    id: 6,
+    firstName: 'Demo',
+    lastName: 'Zicops',
+    emailId:'hij@gmail.com'
+  },
+  {
+    id: 7,
+    firstName: 'Vajresh',
+    lastName: 'Joy',
+    emailId:'lmn@gmail.com'
+  }
+
+]
