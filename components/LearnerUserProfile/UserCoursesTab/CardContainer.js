@@ -11,7 +11,8 @@ export default function CardContainer({
   courseData,
   statusData,
   buttonText = '',
-  handleSubmit = () => {}
+  handleSubmit = () => {},
+  isLoading = false
 }) {
   const cardContainerRef = useRef(null);
 
@@ -71,36 +72,42 @@ export default function CardContainer({
         </>
       )}
 
-      {!courseData?.length && <strong className={`${styles.fallbackMsg}`}>No Courses Found</strong>}
+      {isLoading ? (
+        <strong className={`${styles.fallbackMsg}`}>Loading...</strong>
+      ) : (
+        !courseData?.length && <strong className={`${styles.fallbackMsg}`}>No Courses Found</strong>
+      )}
 
       {isBoxView ? (
         <div className={`${styles.boxCardContainer}`} ref={cardContainerRef}>
           {courseData
             ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
-            ?.map((course) => (
-              <CourseBoxCard
-                isAdmin={isAdmin}
-                courseData={course}
-                footerType={footerType}
-                cardWidth={cardSizeData.cardWidth}>
-                {footerType === 'added' && (
-                  <div className={`${styles.leftAlign}`}>
-                    <p>Duration: {courseData?.duration || 240} mins</p>
-                    <p>Added on {courseData?.addedOn || '22-06-2022'}</p>
-                  </div>
-                )}
-                {footerType === 'adminFooter' && (
-                  <div className={`${styles.adminCardFooter}`}>
-                    {/* <p>
+            ?.map((course) => {
+              return (
+                <CourseBoxCard
+                  isAdmin={isAdmin}
+                  courseData={course}
+                  footerType={footerType}
+                  cardWidth={cardSizeData.cardWidth}>
+                  {footerType === 'added' && (
+                    <div className={`${styles.leftAlign}`}>
+                      <p>Duration: {course?.duration || 240} mins</p>
+                      <p>Added on {course?.created_at || '22-06-2022'}</p>
+                    </div>
+                  )}
+                  {footerType === 'adminFooter' && (
+                    <div className={`${styles.adminCardFooter}`}>
+                      {/* <p>
                         {course?.description
                           ? truncateToN(course?.description, 150)
                           : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sintquia ea voluptates, a assumenda impedit illum eligendi.'}
                       </p> */}
-                    <button onClick={() => handleSubmit(course)}>{buttonText}</button>
-                  </div>
-                )}
-              </CourseBoxCard>
-            ))}
+                      <button onClick={() => handleSubmit(course)}>{buttonText}</button>
+                    </div>
+                  )}
+                </CourseBoxCard>
+              );
+            })}
         </div>
       ) : (
         <div className={`${styles.listCardContainer}`}>

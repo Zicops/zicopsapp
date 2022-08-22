@@ -819,3 +819,20 @@ export const ADD_USER_EXAM_PROGRESS = gql`
     }
   }
 `;
+
+export const ADD_USER_COHORT = gql`
+  mutation addUserCohort($userCohort: [UserCohortInput!]!) {
+    addUserCohort(input: $userCohort) {
+      user_cohort_id
+      user_id
+      user_lsp_id
+      cohort_id
+      added_by
+      membership_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;

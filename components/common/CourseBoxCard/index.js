@@ -22,10 +22,12 @@ export default function CourseBoxCard({
           {!isAdmin && (
             <span>
               <img src="/images/Media.png" alt="" className={`${styles.imgIcon}`} />
-              {courseData?.level || 'Competent'}
+              {courseData?.expertise_level || 'Competent'}
             </span>
           )}
-          <span className={`${styles.type}`}>{courseData?.type || 'Self Paced'}</span>
+          <span className={`${styles.type}`}>
+            {courseData?.type?.split('-').join(' ') || 'Self Paced'}
+          </span>
         </div>
       </div>
 

@@ -307,7 +307,7 @@ export default function useHandleAddUserDetails() {
 
     const data = res?.data?.updateUser;
     console.log(data);
-    if (!data.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
+    if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
     setUserDataAbout((prevValue) => ({ ...prevValue, ...data }));
 
     setTimeout(sessionStorage.setItem('loggedUser', JSON.stringify(userAboutData)), 500);

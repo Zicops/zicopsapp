@@ -1,7 +1,14 @@
 import styles from '../userProfile.module.scss';
-import { profileOrganizationData } from '../Logic/userProfile.helper';
 
 const ProfileOrganizationDetail = ({ currentUserData }) => {
+  // console.log(currentUserData);
+  const userOrganizationData = {
+    organization: 'Zicops',
+    organization_unit: 'Zicops,India',
+    learning_space_role: currentUserData?.role || 'Learner',
+    role_in_organization: currentUserData?.organization_role,
+    employee_id: currentUserData?.employee_id
+  };
   return (
     <>
       <div className={`${styles.profileDetailsContainer}`}>
@@ -13,31 +20,19 @@ const ProfileOrganizationDetail = ({ currentUserData }) => {
           />
         </div>
         <div className={`${styles.profileDetails}`}>
-          <div className={`${styles.profileDetailsField}`}>
-            <div className={`${styles.label}`}>Organization</div>
-            <div className={`${styles.colon}`}> : </div>
-            <div className={`${styles.value}`}>{profileOrganizationData.organization}</div>
-          </div>
-          <div className={`${styles.profileDetailsField}`}>
-            <div className={`${styles.label}`}>Organization Unit</div>
-            <div className={`${styles.colon}`}> : </div>
-            <div className={`${styles.value}`}>{profileOrganizationData.organization_Unit}</div>
-          </div>
-          <div className={`${styles.profileDetailsField}`}>
-            <div className={`${styles.label}`}>Learning Space Role</div>
-            <div className={`${styles.colon}`}> : </div>
-            <div className={`${styles.value}`}>{profileOrganizationData.learning_Space_Role}</div>
-          </div>
-          <div className={`${styles.profileDetailsField}`}>
-            <div className={`${styles.label}`}>Role in the Organization</div>
-            <div className={`${styles.colon}`}> : </div>
-            <div className={`${styles.value}`}>{profileOrganizationData.role_In_Organization}</div>
-          </div>
-          <div className={`${styles.profileDetailsField}`}>
-            <div className={`${styles.label}`}>Other Role Name</div>
-            <div className={`${styles.colon}`}> : </div>
-            <div className={`${styles.value}`}>{profileOrganizationData.other_Role_Name}</div>
-          </div>
+          {Object.keys(userOrganizationData).map((item, i) => {
+            const label = item.charAt(0).toUpperCase() + item.slice(1);
+            const labelText = label.split('_').join(' ');
+            return (
+              <div className={`${styles.profileDetailsField}`}>
+                <div key={i} className={`${styles.label}`}>
+                  {labelText}
+                </div>
+                <div className={`${styles.colon}`}> : </div>
+                <div className={`${styles.value}`}>{userOrganizationData[item]}</div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </>

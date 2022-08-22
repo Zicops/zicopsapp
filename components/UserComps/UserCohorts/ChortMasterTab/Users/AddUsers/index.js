@@ -1,88 +1,59 @@
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/components/common/ZicopsTable';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import styles from '../../../../userComps.module.scss';
+import addUserData from '../../Logic/addUserData';
 
-const data = [
-  {
-    id: 'uniwfcno3wo1oe31u9qdj',
-    email: 'abc@zicops.com',
-    firstName: 'Harshad',
-    lastName: 'Gholap'
-  },
-  {
-    id: 2,
-    email: 'abc@zicops.com',
-    firstName: 'Wasim',
-    lastName: 'Khan'
-  },
-  {
-    id: 3,
-    email: 'abc@zicops.com',
-    firstName: 'Ravant',
-    lastName: 'Kumar'
-  },
-  {
-    id: 4,
-    email: 'abc@zicops.com',
-    firstName: 'Abhishek',
-    lastName: 'Ghosh'
-  },
-  {
-    id: 5,
-    email: 'abc@zicops.com',
-    firstName: 'Ravant',
-    lastName: 'Kumar'
-  },
-  {
-    id: 6,
-    email: 'abc@zicops.com',
-    firstName: 'Joy',
-    lastName: 'Boy'
-  },
-  {
-    id: 7,
-    email: 'abc@zicops.com',
-    firstName: 'Skyline',
-    lastName: 'Meridian'
-  },
-  {
-    id: 8,
-    email: 'abc@zicops.com',
-    firstName: 'Vajresh',
-    lastName: 'Patkar'
-  },
-  {
-    id: 9,
-    email: 'abc@zicops.com',
-    firstName: 'Puneet',
-    lastName: 'Saraswat'
-  },
-  {
-    id: 64,
-    email: 'abc@zicops.com',
-    firstName: 'Ron',
-    lastName: 'Doe'
-  }
-];
-
-const AddUsers = () => {
+const AddUsers = ({ usersData = [] }) => {
+  const { addUserToCohort } = addUserData();
   const CohortName = 'Developement Cohort';
-  const selectedUsers = '50/200';
+  const selectedUsers = `5/${usersData.length}`;
+  const [userId, setUserId] = useState([]);
+  const [data, setData] = useState([]);
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const router = useRouter();
+  useEffect(() => {
+    if (!usersData.length) return;
+    return setData([...usersData]);
+  }, [usersData]);
+
+  // useEffect(() => {
+  //   console.log(userId, router?.query?.cohortId);
+  // }, [userId]);
+
+  async function handleAddUser() {
+    if (!userId?.length)
+      return setToastMsg({ type: 'warning', message: 'Please be sure to add atleast one user' });
+
+    for (let i = 0; i < userId?.length; i++) {
+      const sendData = {
+        id: userId[i],
+        user_lsp_id: 'ZicopsLsp',
+        cohort_id: router?.query?.cohortId
+        // membership_status: 'Learner'
+      };
+      await addUserToCohort(sendData);
+    }
+  }
 
   const columns = [
     {
-      field: 'firstName',
+      field: 'first_name',
       headerClassName: 'course-list-header',
       flex: 1,
       renderHeader: (params) => (
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
             type="checkbox"
-            // isChecked={userId.length === data.length}
-            // changeHandler={(e) => {
-            //   setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
-            // }}
+            isChecked={userId.length === data.length}
+            changeHandler={(e) => {
+              setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
+            }}
           />
           First Name
         </div>
@@ -92,27 +63,27 @@ const AddUsers = () => {
           <div className="center-elements-with-flex">
             <LabeledRadioCheckbox
               type="checkbox"
-              //   isChecked={userId?.includes(params.id)}
-              //   changeHandler={(e) => {
-              //     const userList = [...userId];
+              isChecked={userId?.includes(params.id)}
+              changeHandler={(e) => {
+                const userList = [...userId];
 
-              //     if (e.target.checked) {
-              //       userList.push(params.id);
-              //     } else {
-              //       const index = userList.findIndex((id) => id === params.id);
-              //       userList.splice(index, 1);
-              //     }
+                if (e.target.checked) {
+                  userList.push(params.id);
+                } else {
+                  const index = userList.findIndex((id) => id === params.id);
+                  userList.splice(index, 1);
+                }
 
-              //     setUserId(userList);
-              //   }}
+                setUserId(userList);
+              }}
             />
-            {params.row?.firstName}
+            {params.row?.first_name}
           </div>
         );
       }
     },
     {
-      field: 'lastName',
+      field: 'last_name',
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
       flex: 1
@@ -159,7 +130,13 @@ const AddUsers = () => {
         </div>
         <div className={`${styles.buttonContainer}`}>
           <button className={`${styles.cohortButton3}`}>Cancel</button>
-          <button className={`${styles.cohortButton1}`}>Add</button>
+          <button
+            className={`${styles.cohortButton1}`}
+            onClick={() => {
+              handleAddUser();
+            }}>
+            Add
+          </button>
         </div>
       </div>
     </div>
