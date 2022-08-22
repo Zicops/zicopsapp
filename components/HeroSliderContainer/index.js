@@ -51,8 +51,8 @@ const HeroSliderContainer = ({ children }) => {
           dotListClass="custom-dot-list-style"
           // customDot={<CustomDot />}
           // partialVisbile={true}
-          customLeftArrow={<CustomLeftArrow />}
-          customRightArrow={<CustomRightArrow />}
+          customLeftArrow={<CustomLeftArrow customClass={styles.customLeftArrow} />}
+          customRightArrow={<CustomRightArrow customClass={styles.customRightArrow} />}
           itemClass={`${styles.itemContainer}`}>
           {children}
         </Carousel>
