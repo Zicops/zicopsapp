@@ -4,7 +4,7 @@ const DetailsTabBottom = () => {
     return (
       <div className={`${styles.detailsBottomsection}`}>
         <div className={`${styles.bottomLeft}`}>
-          <p className={`${styles.text}`}>Cohort Manegers</p>
+          <p className={`${styles.text}`}>Cohort Managers</p>
           <div className={`${styles.list}`}>
             <div
               style={{

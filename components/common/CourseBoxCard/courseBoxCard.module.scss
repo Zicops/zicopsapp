@@ -26,7 +26,7 @@
     border-radius: 10px;
     position: relative;
     width: 100%;
-    height: 50%;
+    // height: calc( / $cardTileRatio);
     margin-bottom: 5px;
 
     img {
@@ -74,7 +74,7 @@
     padding: 2px;
 
     .title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
     }
 
@@ -82,15 +82,17 @@
       display: flex;
       align-items: center;
       word-spacing: 10px;
+      font-size: 14px;
+      color: $darkThree;
+      font-weight: bold;
     }
   }
 
   .dot {
     height: 5px;
     width: 5px;
-    background-color: $white;
+    background-color: $darkThree;
     border-radius: 50%;
-
     margin: auto 10px;
   }
 
@@ -110,7 +112,6 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-
       .percent {
         color: $primary;
       }

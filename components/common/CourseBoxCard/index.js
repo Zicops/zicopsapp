@@ -13,7 +13,7 @@ export default function CourseBoxCard({
     <div
       className={`${styles.cardContainer} ${isAdmin ? styles.isAdmin : ''}`}
       style={{ width: `${cardWidth}px` }}>
-      <div className={`${styles.imgContainer}`}>
+      <div className={`${styles.imgContainer}`} style={{ height: `${cardWidth/1.8125}px` }}>
         {/* course img */}
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
 

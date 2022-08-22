@@ -1,6 +1,6 @@
-import styles from './courseListCard.module.scss';
 import DurationFooter from './DurationFooter';
 import ProgressBarFooter from './ProgressBarFooter';
+import styles from './courseListCard.module.scss';
 
 export default function CourseLIstCard({ courseData, statusData, footerType, children }) {
   return (
