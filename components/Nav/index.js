@@ -23,7 +23,7 @@ export default function Nav() {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      console.log(e.target, notificationBarRef.current);
+      // console.log(e.target, notificationBarRef.current);
       if (!notificationBarRef.current.contains(e.target) && notificationBarRef.current) {
         setShowNotification(false);
       }
