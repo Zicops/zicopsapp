@@ -15,13 +15,14 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import Accordian from '../../../components/UserProfile/Accordian';
+import UserButton from '@/common/UserButton';
 
 // import AssignedCourses from '../../AssignedCourses';
 import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
 import CurrentCourses from './CurrentCourses';
 const CoursesAccordian = () => {
-  const [courseAssignData, setCourseAssignData]  = useState({
+  const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
     isMandatory: false,
     isCourseAssigned: false
@@ -302,7 +303,7 @@ const CoursesAccordian = () => {
           {isAssignedPage && (
             <div
               className={`${styles.current_courses} ${
-                lists?.length > 3? styles.marginBottom : ''
+                lists?.length > 3 ? styles.marginBottom : ''
               }`}>
               {lists.map((item) => (
                 <div
@@ -357,32 +358,51 @@ const CoursesAccordian = () => {
           />
         )}
         <PopUp
+          // title="Course Mapping Configuration"
+          // submitBtn={{ handleClick: handleSubmit }}
           popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-          size="small"
-          title="Assign Course To User"
-          positionLeft="50%"
-          submitBtn={{ handleClick: handleSubmit }}>
+          size="smaller"
+          isFooterVisible={false}
+          positionLeft="50%">
           <div className={`${styles.assignCoursePopUp}`}>
-            <section>
-              <label htmlFor="endDate">Course End Date:</label>
-              <InputDatePicker
-                selectedDate={courseAssignData?.endDate}
-                changeHandler={(date) => {
-                  setIsPopUpDataPresent(true);
-                  setCourseAssignData({ ...courseAssignData, endDate: date });
-                }}
-              />
-            </section>
-
+            <p className={`${styles.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
             <LabeledRadioCheckbox
               type="checkbox"
-              label="Is Mandatory"
+              label="Course Mandatory"
               name="isMandatory"
               isChecked={courseAssignData?.isMandatory}
               changeHandler={(e) =>
                 setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
               }
             />
+            <section>
+              <p htmlFor="endDate">Expected Completion date:</p>
+              <InputDatePicker
+                selectedDate={courseAssignData?.endDate}
+                changeHandler={(date) => {
+                  setIsPopUpDataPresent(true);
+                  setCourseAssignData({ ...courseAssignData, endDate: date });
+                }}
+                customStyle={styles.dataPickerStyle}
+              />
+            </section>
+            <div className={`${styles.assignCourseButtonContainer}`}>
+              <UserButton
+                text={'Cancel'}
+                isPrimary={false}
+                type={'button'}
+                clickHandler={() => {
+                  setIsAssignPopUpOpen(false);
+                }}
+              />
+              <UserButton
+                text={'Save'}
+                type={'button'}
+                clickHandler={() => {
+                  handleSubmit();
+                }}
+              />
+            </div>
           </div>
         </PopUp>
         {/* <div className={`${styles.imageContainer}`}>

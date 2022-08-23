@@ -88,13 +88,36 @@
 }
 
 .assignCoursePopUp {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 40px;
+  margin-left: 15px;
+
+  .assignCoursePopUpTitle {
+    font-size: larger;
+  }
+
+  .dataPickerStyle {
+    display: flex;
+    padding-right: 15px;
+  }
+  label {
+    font-size: medium;
+    font-weight: 400;
+  }
 
   section {
-    margin: 30px;
-
-    label {
-      margin-right: 30px;
+    padding-right: 10px;
+    p {
+      margin-bottom: 10px;
     }
+  }
+
+  .assignCourseButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 15px;
+    gap: 10px;
   }
 }
