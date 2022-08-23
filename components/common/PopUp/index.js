@@ -29,6 +29,10 @@ export default function PopUp({
     customStyles.width = '700px';
   }
 
+  if (size === 'smaller') {
+    customStyles.width = '400px';
+  }
+
   return (
     <>
       <Popup open={isOpen} closeOnDocumentClick={false} closeOnEscape={false}>
@@ -105,5 +109,5 @@ PopUp.propTypes = {
   submitBtn: btnObj,
   isFooterVisible: bool,
   positionLeft: string,
-  size: oneOf(['large', 'medium', 'small'])
+  size: oneOf(['large', 'medium', 'small', 'smaller'])
 };
