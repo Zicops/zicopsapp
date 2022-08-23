@@ -6,10 +6,11 @@ export default function InputDatePicker({
   selectedDate = new Date(),
   minDate = null,
   changeHandler = function () {},
-  isDisabled = false
+  isDisabled = false,
+  customStyle = {}
 }) {
   return (
-    <div className={`${styles.inputDatePickerContainer}`}>
+    <div className={`${styles.inputDatePickerContainer} ${customStyle}`}>
       <DatePicker
         dateFormat="dd/MM/yyyy"
         renderCustomHeader={CustomHeader}
