@@ -258,7 +258,7 @@ select.nav_search_dropdow:selected {
     transform-origin: top center;
     animation: scaleZ 500ms $var * 60ms ease-in-out forwards;
     &:hover {
-      background-color: $darkOne !important;
+      background-color: $darkOne;
     }
   }
 }
