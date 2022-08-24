@@ -33,7 +33,7 @@
   z-index: -1;
 }
 
-.userBody{
+.userBody {
   background-color: $bgTile;
 }
 .userImageContainer {
@@ -169,11 +169,12 @@
   margin: 20px 0px;
   // display: flex;
   // gap: 10px;
-}
-.category {
-  display: flex;
-  gap: 10px;
-  padding-top: 20px;
+  .category {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 20px;
+  }
 }
 .textSubCategory {
   background-color: $black;
@@ -187,11 +188,9 @@
   color: $white;
   overflow-y: scroll;
 
-
-  hr{
+  hr {
     margin-bottom: 20px;
   }
-
 }
 
 .cardContainer {
@@ -591,5 +590,4 @@
   justify-content: center;
 
   color: $white;
-
 }
