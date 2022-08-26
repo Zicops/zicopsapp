@@ -2,14 +2,26 @@
 
 import IconBtn from '@/components/common/IconBtn';
 import { useState } from 'react';
+import SearchBar from '@/components/common/FormComponents/SearchBar';
+
 import CohortListCard from '@/components/common/CohortListCard';
 import styles from '../../learnerUserProfile.module.scss';
 import { memberTabData } from '../../Logic/userBody.helper';
 
 export default function MembersTab() {
   return (
-    <div className={`${styles.userTabContainer}`} style={{ height: '500px' }}>
-      <div className={`${styles.listCardContainer}`}>
+    <div className={`${styles.courseTabContainer}`}>
+      <div style={{ padding: '0px 5px 15px' }}>
+        <SearchBar
+          inputDataObj={{
+            inputOptions: {
+              inputName: 'filter',
+              placeholder: 'Search Courses'
+            }
+          }}
+        />
+      </div>
+      <div className={`${styles.listCardTabContainer}`}>
         {memberTabData?.map((member) => {
           const btnData = {
             imgSrc: null,
@@ -33,7 +45,7 @@ export default function MembersTab() {
           return (
             <CohortListCard
               data={member}
-              isRoundImage = {true}
+              isRoundImage={true}
               key={member.id}
               // handleClick={() => {
               //   setSelectedCohort(cohort);
@@ -46,7 +58,7 @@ export default function MembersTab() {
                 </p>
 
                 <IconBtn color={btnData.color} isDisabled={btnData.isDisabled}>
-                  <img src={btnData.imgSrc} alt=""/>
+                  <img src={btnData.imgSrc} alt="" />
                   {btnData.display}
                 </IconBtn>
               </div>

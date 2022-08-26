@@ -27,6 +27,7 @@ $bgHeader: #0b0c0d;
 $headerHeight: 70px;
 $footerHeight: 100px;
 
+$cardTileRatio: 1.75;
 // function for generating transparent color from base colors
 @function getLowOpacityColor($colorInHex, $opacityInHex) {
   @return rgba($colorInHex, $opacityInHex);

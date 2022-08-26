@@ -13,7 +13,7 @@ export default function CourseBoxCard({
     <div
       className={`${styles.cardContainer} ${isAdmin ? styles.isAdmin : ''}`}
       style={{ width: `${cardWidth}px` }}>
-      <div className={`${styles.imgContainer}`}>
+      <div className={`${styles.imgContainer}`} style={{ height: `${cardWidth/1.8125}px` }}>
         {/* course img */}
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
 
@@ -22,10 +22,12 @@ export default function CourseBoxCard({
           {!isAdmin && (
             <span>
               <img src="/images/Media.png" alt="" className={`${styles.imgIcon}`} />
-              {courseData?.level || 'Competent'}
+              {courseData?.expertise_level || 'Competent'}
             </span>
           )}
-          <span className={`${styles.type}`}>{courseData?.type || 'Self Paced'}</span>
+          <span className={`${styles.type}`}>
+            {courseData?.type?.split('-').join(' ') || 'Self Paced'}
+          </span>
         </div>
       </div>
 
