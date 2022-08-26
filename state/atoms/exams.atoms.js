@@ -203,13 +203,13 @@ export const LearnerExamAtom = atom({
   default: getLearnerExamObj()
 });
 
-export function getLearnerExamObj() {
+export function getLearnerExamObj(data = {}) {
   return {
-    examData: getExamData(),
-    landingPageData: getLandingPageData(),
-    insPageData: getInsPageObj(),
+    examData: getExamData(data),
+    landingPageData: getLandingPageData(data),
+    insPageData: getInsPageObj(data),
     sectionData: [],
-    resultData: getResultsObj()
+    resultData: getResultsObj(data)
   };
 }
 

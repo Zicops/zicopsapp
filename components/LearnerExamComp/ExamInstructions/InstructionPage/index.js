@@ -9,7 +9,7 @@ import styles from '../../learnerExam.module.scss';
 import { getIsExamAccessible } from '../../Logic/exam.helper';
 import { data } from '../Logic/examInstruction.helper';
 
-const InstructionPage = ({ handleStart, isFullScreen }) => {
+const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
   let learnerExamData = useRecoilValue(LearnerExamAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
 
@@ -32,6 +32,8 @@ const InstructionPage = ({ handleStart, isFullScreen }) => {
   }, []);
 
   useEffect(() => {
+    if (isTestExam) return setIsExamAccessible(terms && getIsExamAccessible(learnerExamData));
+
     const attemptsLeft = learnerExamData?.examData?.noAttempts;
     let isAttemptLeft = true;
     if (attemptsLeft > 0) isAttemptLeft = learnerExamData?.insPageData?.attempts < attemptsLeft;
