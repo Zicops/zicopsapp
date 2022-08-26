@@ -74,6 +74,7 @@ export const GET_LATEST_COURSES = gql`
         updated_by
         status
         is_display
+        is_active
         category
         sub_category
         sub_categories {

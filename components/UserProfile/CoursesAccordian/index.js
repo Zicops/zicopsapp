@@ -21,7 +21,7 @@ import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
 import CurrentCourses from './CurrentCourses';
 const CoursesAccordian = () => {
-  const [courseAssignData, setCourseAssignData]  = useState({
+  const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
     isMandatory: false,
     isCourseAssigned: false
@@ -204,7 +204,9 @@ const CoursesAccordian = () => {
       console.log(err);
       return setToastMsg({ type: 'danger', message: `${err}` });
     });
-    const courseData = res?.data?.latestCourses?.courses;
+    const courseData = res?.data?.latestCourses?.courses?.filter(
+      (c) => c?.is_active && c?.is_display
+    );
 
     setDataCourse([...courseData]);
     // console.log(dataCourse);
@@ -302,7 +304,7 @@ const CoursesAccordian = () => {
           {isAssignedPage && (
             <div
               className={`${styles.current_courses} ${
-                lists?.length > 3? styles.marginBottom : ''
+                lists?.length > 3 ? styles.marginBottom : ''
               }`}>
               {lists.map((item) => (
                 <div
