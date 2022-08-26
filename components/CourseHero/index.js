@@ -11,6 +11,7 @@ import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox'
 import InputDatePicker from '../common/InputDatePicker';
 import PopUp from '../common/PopUp';
 import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
+import UserButton from '../common/UserButton';
 import CourseHeader from './CourseHeader';
 import style from './courseHero.module.scss';
 import Info from './Info';
@@ -151,7 +152,7 @@ export default function CourseHero({ isPreview = false }) {
         )}
       </div>
 
-      <PopUp
+      {/* <PopUp
         popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
         size="small"
         title="Assign Course To Yourself"
@@ -178,6 +179,54 @@ export default function CourseHero({ isPreview = false }) {
               setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
             }
           />
+        </div>
+      </PopUp> */}
+      <PopUp
+        // title="Course Mapping Configuration"
+        // submitBtn={{ handleClick: handleSubmit }}
+        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
+        size="smaller"
+        isFooterVisible={false}
+        positionLeft="50%">
+        <div className={`${style.assignCoursePopUp}`}>
+          <p className={`${style.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label="Course Mandatory"
+            name="isMandatory"
+            isChecked={courseAssignData?.isMandatory}
+            changeHandler={(e) =>
+              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
+            }
+          />
+          <section>
+            <p htmlFor="endDate">Expected Completion date:</p>
+            <InputDatePicker
+              selectedDate={courseAssignData?.endDate}
+              changeHandler={(date) => {
+                setIsPopUpDataPresent(true);
+                setCourseAssignData({ ...courseAssignData, endDate: date });
+              }}
+              customStyle={style.dataPickerStyle}
+            />
+          </section>
+          <div className={`${style.assignCourseButtonContainer}`}>
+            <UserButton
+              text={'Cancel'}
+              isPrimary={false}
+              type={'button'}
+              clickHandler={() => {
+                setIsAssignPopUpOpen(false);
+              }}
+            />
+            <UserButton
+              text={'Save'}
+              type={'button'}
+              clickHandler={() => {
+                assignCourseToUser();
+              }}
+            />
+          </div>
         </div>
       </PopUp>
     </div>
