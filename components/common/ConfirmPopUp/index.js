@@ -11,7 +11,7 @@ export default function ConfirmPopUp({ title, message, btnObj = {} }) {
   } = btnObj;
 
   return (
-    <>
+    <div className={`${styles.confirmPopContainer}`}>
       <div className={`${styles.confirmPopUp}`}>
         <div className={`${styles.cross}`}>
           <img src={'/images/svg/clear.svg'} width={35} onClick={handleClickRight} />
@@ -29,6 +29,6 @@ export default function ConfirmPopUp({ title, message, btnObj = {} }) {
           <CongratulationsScreenButton title={textRight} handleClick={handleClickRight} />
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -15,7 +15,7 @@ export default function ZicopsCourseTable() {
     },
     client: queryClient
   });
-  let data1 = data?.latestCourses.courses;
+  let data1 = data?.latestCourses.courses?.filter((c) => c?.is_active);
 
   return (
     <>
