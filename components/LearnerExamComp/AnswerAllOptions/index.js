@@ -80,7 +80,6 @@ const AnswerAllOptions = ({
       setData(handleMarked());
       // setData(changeMarked());
       setMarkTrigger(false);
-      return
     }
     if (current.id !== 0 && data.length !== current.id) {
       setOption(current?.selectedOption);

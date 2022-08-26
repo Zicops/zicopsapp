@@ -14,7 +14,7 @@ import { getDateTimeFromUnix } from '../Tabs/Logic/tabs.helper';
 import styles from './attemptHistory.module.scss';
 
 const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose }) => {
-  const [tableData, setTableData] = useState(null);
+  const [tableData, setTableData] = useState();
 
   const userData = useRecoilValue(UserStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -39,7 +39,7 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
         )
         ?.sort((a1, a2) => a1?.attempt_no - a2?.attempt_no) || [];
 
-    if (!attemptData?.length) return;
+    if (!attemptData?.length) return setTableData(null);
 
     for (let i = 0; i < attemptData.length; i++) {
       const attempt = attemptData[i];
@@ -102,9 +102,13 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
         <Button text="Close" styleClass={styles.closeBtn} onClick={handleChange} />
       </table> */}
 
-        {!tableData?.length ? (
+        {tableData === undefined && <div className={styles.fallback}>Loading...</div>}
+
+        {tableData !== undefined && !tableData?.length && (
           <div className={styles.fallback}>No Attempts Data Found</div>
-        ) : (
+        )}
+
+        {tableData?.length && (
           <div className={styles.tableWrap}>
             <table>
               <thead>
@@ -123,7 +127,11 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
                   return (
                     <tr key={d?.Attempt}>
                       <td
-                        style={{ color: '#6bcfcf', textDecoration: 'underline', cursor: 'pointer' }}
+                        style={{
+                          color: '#6bcfcf',
+                          textDecoration: 'underline',
+                          cursor: 'pointer'
+                        }}
                         onClick={() =>
                           router.push(`/answer-key/cp/${userCourseProgressId}/exam/${examId}`)
                         }>

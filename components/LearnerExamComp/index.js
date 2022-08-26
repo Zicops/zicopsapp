@@ -1,18 +1,16 @@
-import { ADD_USER_EXAM_RESULTS, userClient } from '@/api/UserMutations';
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserExamDataAtom } from '@/state/atoms/video.atom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
+import { useLazyQuery } from '@apollo/client';
 import { GET_QUESTION_OPTIONS_WITH_ANSWER, queryClient } from 'API/Queries';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import NewQuestionPaperPreview from '../examComps/NewQuestionPaperPreview';
 import AnswerAllOptions from './AnswerAllOptions';
 import ExamAllQuestions from './ExamAllQuestions';
 import InfoSection from './InfoSection';
 import styles from './learnerExam.module.scss';
-import { getPassingMarks } from './Logic/exam.helper';
 import ProctoredSection from './ProctoredSection';
 import QuestionCountButtonSection from './QuestionCountButton';
 
@@ -30,8 +28,10 @@ const LearnerExamComponent = ({
   );
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
   const [userExamData, setUserExamData] = useRecoilState(UserExamDataAtom);
+  const userCourseData = useRecoilValue(UserCourseDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
+  const topicId = router?.query?.topicId;
 
   const [filter, setFilter] = useState('all');
   const [option, setOption] = useState(current?.selectedOption);
@@ -40,7 +40,11 @@ const LearnerExamComponent = ({
   useEffect(() => {
     if (learnerExamData?.resultData?.examScore == null) return;
 
-    router.push(`/exam-result`);
+    router.push(
+      `/exam-result/cp/${
+        userCourseData?.userCourseProgress?.find((cp) => cp?.topic_id === topicId)?.user_cp_id
+      }/exam/${learnerExamData?.examData?.id}`
+    );
   }, [learnerExamData?.resultData?.examScore]);
 
   return (

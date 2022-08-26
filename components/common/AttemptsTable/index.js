@@ -1,9 +1,9 @@
 import styles from './attemptsTable.module.scss';
 
-export default function AttemptsTable({ attemptData = [], totalAttempts = 1, style = {} }) {
+export default function AttemptsTable({ attemptData = [], totalAttempts = 1, customStyle = {} }) {
   return (
     <>
-      <div className={`${styles.congratulations_Body}`}>
+      <div className={`${styles.congratulations_Body}`} style={customStyle}>
         <table className={`${styles.table_style}`}>
           <thead>
             <tr>

@@ -13,6 +13,8 @@ const Congratulations = ({ resultIndex }) => {
   const userExamData = useRecoilValue(UserExamDataAtom);
 
   const router = useRouter();
+  const cpId = router?.query?.cpId;
+  const examId = router?.query?.examId;
 
   const style = getResultStyles(data[resultIndex].result);
 
@@ -35,17 +37,13 @@ const Congratulations = ({ resultIndex }) => {
               result: data[resultIndex].result
             }
           ]}
-          style={style}
+          customStyle={{ maxWidth: 'none' }}
         />
       </CongratulationsScreen>
       <CongratulationsFooter>
         <CongratulationsScreenButton title={'Download Result'} />
         <CongratulationsScreenButton
-          handleClick={() =>
-            router.push(
-              `/answer-key/topic/${userExamData?.userExamAttempts?.[0]?.topicId}/exam/${learnerExamData?.examData?.id}`
-            )
-          }
+          handleClick={() => router.push(`/answer-key/cp/${cpId}/exam/${examId}`)}
           title={'View Attempt History'}
         />
 

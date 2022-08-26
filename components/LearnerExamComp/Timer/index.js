@@ -1,8 +1,10 @@
+import { customSelectStyles } from '@/components/common/FormComponents/Logic/formComponents.helper';
 import { secondsToHMS } from '@/helper/utils.helper';
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 import { UserExamDataAtom } from '@/state/atoms/video.atom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import Select from 'react-select';
 import { useRecoilState } from 'recoil';
 import styles from '../InfoSection/infoSection.module.scss';
 import { getEndTime } from '../Logic/exam.helper';
@@ -34,7 +36,7 @@ export default function Timer({ submitPaper }) {
         return setIsExamEnded(true);
       }
 
-      return setTimer(secondsToHMS(durationInSeconds));
+      return setTimer(secondsToHMS(durationInSeconds, false));
     }, 1000);
 
     return () => {
@@ -83,13 +85,67 @@ export default function Timer({ submitPaper }) {
     yield --totalDuration;
   }
 
+  const defaultStyles = customSelectStyles(false);
+  const selectStyles = {
+    ...defaultStyles,
+    container: () => ({
+      ...defaultStyles.container(),
+      width: '150px',
+      margin: 'auto',
+      height: '25px',
+      position: 'relative'
+    }),
+    control: () => ({
+      ...defaultStyles.control(),
+      display: 'flex',
+      border: '1px solid transparent',
+      background: 'transparent',
+      borderBottom: '1px solid var(--white)',
+      margin: 'auto',
+      height: '25px',
+      width: '100%',
+      height: '100%',
+      textAlign: 'left'
+    }),
+    // menuList: () => ({
+    //   ...defaultStyles.menuList(),
+    //   height: '100%',
+    //   width: '100%'
+    // })
+    option: () => ({
+      ...defaultStyles.option(),
+      height: '100%',
+      width: '100%',
+      padding: '2px 0px'
+    })
+  };
+  console.log(selectStyles);
+
   return (
     <>
       <div className={`${styles.dropdownContainer}`}>
-        <select value={isShowTimeLeft} onChange={(e) => setIsShowTimeLeft(+e.target.value)}>
+        <Select
+          options={[
+            { value: 0, label: 'Current Time' },
+            { value: 1, label: 'Time Left' }
+          ]}
+          value={{ value: isShowTimeLeft, label: isShowTimeLeft ? 'Time Left' : 'Current Time' }}
+          // filterOption={filterOption}
+          // name={inputName}
+          onChange={(e) => setIsShowTimeLeft(e.value)}
+          // menuPlacement={menuPlacement}
+          styles={selectStyles}
+          isSearchable={false}
+          // menuIsOpen={true}
+          // isDisabled={!!isDisabled}
+          // isOptionDisabled={(option) => option.disabled}
+          isMulti={false}
+          isClearable={false}
+        />
+        {/* <select value={isShowTimeLeft} onChange={(e) => setIsShowTimeLeft(+e.target.value)}>
           <option value={0}>Current Time</option>
           <option value={1}>Time Left</option>
-        </select>
+        </select> */}
       </div>
 
       <span className={`${styles.info_section_watch_time}`}>
