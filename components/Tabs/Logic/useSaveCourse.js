@@ -66,9 +66,7 @@ export default function useSaveCourse(courseContextData) {
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
     console.log('var', fullCourse);
-    const courseUpdateResponse = await updateCourse({
-      variables: fullCourse
-    });
+    const courseUpdateResponse = await updateCourse({ variables: fullCourse });
 
     updateCourseMaster(courseUpdateResponse.data.updateCourse);
 
