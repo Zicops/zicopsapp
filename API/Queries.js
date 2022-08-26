@@ -74,6 +74,7 @@ export const GET_LATEST_COURSES = gql`
         updated_by
         status
         is_display
+        is_active
         category
         sub_category
         sub_categories {
@@ -358,6 +359,27 @@ export const GET_QUESTION_BANK_QUESTIONS = gql`
       }
     ) {
       id
+      Description
+      Type
+      Difficulty
+      Attachment
+      AttachmentType
+      Hint
+      QbmId
+      Status
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+    }
+  }
+`;
+
+export const GET_QUESTION_BY_ID = gql`
+  query getQuestionsById($question_ids: [String]) {
+    getQuestionsById(question_ids: $question_ids) {
+      id
+      Name
       Description
       Type
       Difficulty

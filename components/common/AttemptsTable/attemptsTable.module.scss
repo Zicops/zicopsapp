@@ -1,14 +1,49 @@
 @import '../../../styles/base.scss';
 
 .congratulations_Body {
-  width: 100%;
-  padding: 50px 0px;
+  max-width: 700px;
+  // padding: 50px 0px;
   text-align: center;
   color: $white;
+
+  // max-height: 20vh;
+  // overflow: auto;
+  padding: 20px;
+
+  // position: relative;
+
+  tbody {
+    display: block;
+    max-height: 20vh;
+    overflow: auto;
+    padding-right: 5px;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    // position: sticky;
+    // background-color: $bgContent;
+    // top: 1px;
+    // outline: 1px solid $darkThree;
+  }
+
+  thead,
+  tbody tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  thead {
+    width: calc(100% - 7px);
+  }
 }
 .table_style {
   width: 100%;
+  border-collapse: collapse;
 }
 .table_style tr td {
   padding: 10px 20px;
+  border: 1px solid $darkThree;
 }

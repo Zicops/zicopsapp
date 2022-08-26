@@ -6,8 +6,8 @@
   justify-content: flex-start;
   align-items: center;
 
-  width: 100vw;
-  height: 100vh;
+  // width: 100vw;
+  // height: 100vh;
   margin-top: 70px;
   background-color: $bgContent;
   color: $white;
@@ -34,10 +34,14 @@
   .tableContainer {
     text-align: center;
     margin: 20px auto;
-    min-width: 600px;
+    min-width: 700px;
+
+    p {
+      margin: 10px;
+    }
 
     div {
-      padding: 10px 0;
+      padding: 0px 10px;
     }
   }
 
@@ -48,6 +52,10 @@
     height: 50vh;
     overflow: auto;
 
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+
     .questionCard {
       padding: 10px;
 
@@ -56,4 +64,14 @@
       }
     }
   }
+}
+
+.loadingExamScreen {
+  height: 100vh;
+  width: 100%;
+  overflow: auto;
+  background-color: $darkOne;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

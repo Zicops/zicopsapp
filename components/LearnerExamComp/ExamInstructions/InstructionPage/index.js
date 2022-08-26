@@ -1,3 +1,5 @@
+import AttempHistory from '@/components/AttemptHistory';
+import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -7,8 +9,9 @@ import styles from '../../learnerExam.module.scss';
 import { getIsExamAccessible } from '../../Logic/exam.helper';
 import { data } from '../Logic/examInstruction.helper';
 
-const InstructionPage = ({ setIsLearner, isFullScreen }) => {
+const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
   let learnerExamData = useRecoilValue(LearnerExamAtom);
+  const userCourseData = useRecoilValue(UserCourseDataAtom);
 
   if (!learnerExamData?.examData?.id) learnerExamData = data;
 
@@ -18,7 +21,9 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
   });
   const [terms, setTerms] = useState(false);
   const [isExamAccessible, setIsExamAccessible] = useState(null);
+  const [isAttemptHistoryOpen, setIsAttempyHistoryOpen] = useState(null);
   const router = useRouter();
+  const topicId = router?.query?.topicId;
 
   useEffect(() => {
     if (learnerExamData?.examData?.scheduleType === 'Take Anytime') {
@@ -27,7 +32,13 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
   }, []);
 
   useEffect(() => {
-    setIsExamAccessible(terms && getIsExamAccessible(learnerExamData));
+    if (isTestExam) return setIsExamAccessible(terms && getIsExamAccessible(learnerExamData));
+
+    const attemptsLeft = learnerExamData?.examData?.noAttempts;
+    let isAttemptLeft = true;
+    if (attemptsLeft > 0) isAttemptLeft = learnerExamData?.insPageData?.attempts < attemptsLeft;
+
+    setIsExamAccessible(terms && getIsExamAccessible(learnerExamData) && isAttemptLeft);
   }, [terms]);
 
   return (
@@ -132,20 +143,28 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
           </span>
           <span>
             <img src="/images/ExamInstructions/checklist_rtl.png" alt="cannot found" /> Max attempts
-            <span>:</span> <span>{learnerExamData?.examData?.noAttempts} Attempts</span>
+            <span>:</span>{' '}
+            <span>
+              {learnerExamData?.examData?.noAttempts > 0
+                ? learnerExamData?.examData?.noAttempts
+                : 'Unlimited'}{' '}
+              Attempts
+            </span>
           </span>
           <span>
             <img src="/images/ExamInstructions/checklist.png" alt="cannot found" /> Attempts
             <span>:</span>{' '}
             <span>
-              {learnerExamData?.insPageData?.attempts || 0}/
-              {learnerExamData?.examData?.noAttempts || 0}
+              {learnerExamData?.insPageData?.attempts || 0}
+              {learnerExamData?.examData?.noAttempts > 0
+                ? `/ ${learnerExamData?.examData?.noAttempts}`
+                : ''}
             </span>
           </span>
         </div>
       </div>
       <div className={`${styles.viewHistory}`}>
-        <a>View Attempt History</a>
+        <a onClick={() => setIsAttempyHistoryOpen(true)}>View Attempt History</a>
       </div>
       <div
         className={
@@ -226,16 +245,22 @@ const InstructionPage = ({ setIsLearner, isFullScreen }) => {
         </div>
 
         <div className={`${styles.btn}`}>
-          <button
-            onClick={() => {
-              setIsLearner(1);
-            }}
-            disabled={!isExamAccessible}>
+          <button onClick={handleStart} disabled={!isExamAccessible}>
             Start
           </button>
           <button onClick={() => router.back()}>Back</button>
         </div>
       </div>
+
+      {isAttemptHistoryOpen && (
+        <AttempHistory
+          examId={learnerExamData?.examData?.id}
+          userCourseProgressId={
+            userCourseData?.userCourseProgress?.find((cp) => cp?.topic_id === topicId)?.user_cp_id
+          }
+          handleClose={() => setIsAttempyHistoryOpen(false)}
+        />
+      )}
     </div>
   );
 };

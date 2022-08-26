@@ -207,7 +207,7 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
 
             router.back();
           }}>
-          <img src="./images/Back.png" />
+          <img src="/images/Back.png" />
         </button>
 
         <div className={`${styles.exam_landing_head_container}`}>
@@ -240,7 +240,11 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
             Take Sample Test
           </button>
           <button
-            onClick={() => router.push(`/exam-screen/${topicExamData?.examId}`)}
+            onClick={() =>
+              router.push(
+                `${router.asPath}/topic/${topicExamData?.topicId}/exam/${topicExamData?.examId}`
+              )
+            }
             className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>
             Take Exam Now
           </button>

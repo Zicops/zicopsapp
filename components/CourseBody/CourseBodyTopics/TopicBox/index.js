@@ -273,7 +273,7 @@ export default function TopicBox({
               e.stopPropagation();
               showResources(topic);
             }}>
-            <img src="images/resourcesicon.png" />
+            <img src="/images/resourcesicon.png" />
             <p>Resources</p>
           </div>
           {/* <div>

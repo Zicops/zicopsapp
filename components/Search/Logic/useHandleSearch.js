@@ -34,7 +34,7 @@ export default function useHandleSearch() {
     loadCourses({ variables: queryVariables }).then(({ data }) => {
       if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
 
-      const courseData = data?.latestCourses;
+      const courseData = data?.latestCourses?.filter((c) => c?.is_active && c?.is_display);
       setPageCursor(courseData?.pageCursor || null);
       setCourses(courseData?.courses || []);
     });
