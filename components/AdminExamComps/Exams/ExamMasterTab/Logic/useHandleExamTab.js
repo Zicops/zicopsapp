@@ -73,12 +73,21 @@ export default function useHandleExamTab() {
 
   // disable submit if data not complete
   function validateInput() {
-    const { name, description, qpId, duration, schedule_type, passing_criteria, instructions } =
-      examTabData;
+    const {
+      name,
+      description,
+      qpId,
+      duration,
+      schedule_type,
+      passing_criteria_type,
+      passing_criteria,
+      instructions
+    } = examTabData;
 
     let errMsg = null;
     if (!instructions) errMsg = 'Please add instruction';
-    if (!passing_criteria) errMsg = 'Please add passing criteria';
+    if (passing_criteria_type !== 'None' && !passing_criteria)
+      errMsg = 'Please add passing criteria';
     if (!duration) errMsg = 'duration should have some value';
     if (!schedule_type) errMsg = 'Please select schedule type';
     if (!description) errMsg = 'Please add exam description';
@@ -224,9 +233,12 @@ export default function useHandleExamTab() {
   }
 
   async function saveInstructions(examId) {
+    const type =
+      examTabData.passing_criteria_type === 'None' ? 'Marks' : examTabData.passing_criteria_type;
+
     const sendData = {
       examId: examId,
-      passing_criteria: `${examTabData.passing_criteria}-${examTabData.passing_criteria_type}`,
+      passing_criteria: `${examTabData.passing_criteria}-${type}`,
       no_attempts: examTabData.no_attempts || -1,
       instructions: examTabData.instructions || '',
       access_type: examTabData.access_type || '',

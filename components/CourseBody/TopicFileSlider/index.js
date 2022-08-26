@@ -14,7 +14,12 @@ export default function TopicFileSlider({
         itemsArr={itemsArr}
         carouselProps={{ containerClass: 'itsItemContainer' }}
         CardComp={TopicFiles}
-        cardProps={{ handleClick: showResources, isResourceShown: isResourceShown, isNotes }}
+        cardProps={{
+          handleClick: showResources,
+          isResourceShown: isResourceShown,
+          isNotes,
+          customStyles: { padding: '5px' }
+        }}
       />
 
       {/* move to .scss */}

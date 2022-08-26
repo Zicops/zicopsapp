@@ -32,10 +32,13 @@ export default function InputTimePicker({
       },
 
       '&.Mui-focused': {
-        border: '0',
+        border: '2px solid #6bcfcf',
         boxShadow: '0px 0px 10px 0px #6bcfcf'
         // outline: 0,
       }
+    },
+    fieldset: {
+      borderColor: 'transparent !important'
     }
   }));
 

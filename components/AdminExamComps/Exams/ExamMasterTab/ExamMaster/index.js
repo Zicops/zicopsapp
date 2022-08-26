@@ -189,6 +189,7 @@ export default function ExamMaster() {
             disabled={isPreview}
             onChange={(e) => {
               let value = +e.target.value;
+              let type = examTabData?.passing_criteria_type;
               const isMarks = examTabData?.passing_criteria_type === 'Marks';
 
               if (isMarks && value > examTabData?.total_marks) {
@@ -200,9 +201,16 @@ export default function ExamMaster() {
                 if (value < 0) value = 0;
               }
 
+              if (value === 0) {
+                type = 'None';
+              } else {
+                type = 'Marks';
+              }
+
               setExamTabData({
                 ...examTabData,
-                passing_criteria: value
+                passing_criteria: value,
+                passing_criteria_type: type
               });
             }}
           />
@@ -237,6 +245,9 @@ export default function ExamMaster() {
                 if (marks > 100) marks = 100;
                 if (marks < 0) marks = 0;
               }
+              if (e.target.value === 'None') {
+                marks = 0;
+              }
 
               setExamTabData({
                 ...examTabData,
@@ -244,7 +255,10 @@ export default function ExamMaster() {
                 passing_criteria: marks
               });
             }}
-            value={examTabData?.passing_criteria_type}>
+            value={
+              +examTabData?.passing_criteria === 0 ? 'None' : examTabData?.passing_criteria_type
+            }>
+            <option value="None">None</option>
             <option value="Marks">Marks</option>
             <option value="Percentage">Percentage</option>
           </select>

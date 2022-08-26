@@ -3,7 +3,13 @@ import { useRecoilValue } from 'recoil';
 import { ResourcesAtom } from '../../../../state/atoms/module.atoms';
 import { getNotesCount, getResourceCount } from '../../Logic/courseBody.helper';
 
-export default function TopicFiles({ data, handleClick, isResourceShown, isNotes }) {
+export default function TopicFiles({
+  data,
+  handleClick,
+  isResourceShown,
+  isNotes,
+  customStyles = {}
+}) {
   const isResourceActive = isResourceShown?.includes(data.id);
 
   const resources = useRecoilValue(ResourcesAtom);
@@ -24,8 +30,10 @@ export default function TopicFiles({ data, handleClick, isResourceShown, isNotes
     styles.padding = '0px';
   }
 
+  if (!isNotes && !fileCount) return null;
+
   return (
-    <>
+    <div style={customStyles}>
       <div
         className={`topic ${isResourceActive ? 'highlight' : ''}`}
         onClick={() => handleClick(data)}>
@@ -87,6 +95,6 @@ export default function TopicFiles({ data, handleClick, isResourceShown, isNotes
           }
         `}
       </style>
-    </>
+    </div>
   );
 }

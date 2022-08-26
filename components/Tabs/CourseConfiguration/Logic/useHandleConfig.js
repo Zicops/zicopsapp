@@ -1,3 +1,4 @@
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { useEffect, useState } from 'react';
 
 export default function useHandleConfig(courseContextData) {
@@ -13,7 +14,7 @@ export default function useHandleConfig(courseContextData) {
   useEffect(() => {
     updateCourseMaster({
       ...fullCourse,
-      expiry_date: Math.floor(expireDate / 1000).toString()
+      expiry_date: getUnixFromDate(expireDate).toString()
     });
   }, [expireDate]);
 
@@ -21,8 +22,9 @@ export default function useHandleConfig(courseContextData) {
   useEffect(() => {
     updateCourseMaster({
       ...fullCourse,
-      publish_date: Math.floor(publishDate / 1000).toString()
+      publish_date: getUnixFromDate(publishDate).toString()
     });
+    if (expireDate < publishDate) setExpireDate(publishDate);
   }, [publishDate]);
 
   return {

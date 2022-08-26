@@ -1,4 +1,6 @@
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import AlertBox from '@/components/common/AlertBox';
+import ExamAlertPopupTwo from '@/components/ExamAlertPopup/ExamAlertPopupTwo';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
@@ -61,6 +63,7 @@ export default function TopicBox({
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [topicCountDisplay, setTopicCountDisplay] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
 
   const [examData, setExamData] = useState({
     id: null,
@@ -245,6 +248,8 @@ export default function TopicBox({
       <div
         className={`${styles.topic}`}
         onClick={() => {
+          if (!userCourseData?.userCourseMapping?.user_course_id) return setShowAlert(true);
+
           // if (!userCourseData?.userCourseMapping?.user_course_id) return;
           if (type === 'Assessment') return loadTopicExam();
 
@@ -423,6 +428,14 @@ export default function TopicBox({
           )}
         </div>
       </div>
+
+      {showAlert && (
+        <AlertBox
+          title="Course Not Assigned"
+          description="Please assign course to access the course contents"
+          handleClose={() => setShowAlert(false)}
+        />
+      )}
     </>
   );
 }
