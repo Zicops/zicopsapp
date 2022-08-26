@@ -165,14 +165,19 @@ export default function useHandleCourseHero(isPreview) {
       courseType: fullCourse?.type,
       isMandatory: courseAssignData?.isMandatory,
       courseStatus: 'open',
-      endDate: getUnixFromDate(courseAssignData?.endDate)
+      endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
 
+    let isError = false;
     const res = await addUserCourse({ variables: sendData }).catch((err) => {
       console.log(err);
+      isError = true;
       return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
     });
-    console.log(res);
+    // console.log(res);
+    if (isError) return;
+    if (res?.errors) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
+
     setUserCourseData({
       ...userCourseData,
       userCourseMapping: res?.data?.addUserCourse[0] || {}
