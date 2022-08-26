@@ -1,16 +1,19 @@
 import { secondsToHMS } from '@/helper/utils.helper';
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
+import { UserExamDataAtom } from '@/state/atoms/video.atom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../InfoSection/infoSection.module.scss';
 import { getEndTime } from '../Logic/exam.helper';
 
-export default function Timer({ isShowTimeLeft, setIsShowTimeLeft, submitPaper }) {
+export default function Timer({ submitPaper }) {
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
+  const [userExamData, setUserExamData] = useRecoilState(UserExamDataAtom);
 
   const [timer, setTimer] = useState(latestTime());
   const [isExamEnded, setIsExamEnded] = useState(false);
+  const [isShowTimeLeft, setIsShowTimeLeft] = useState(0);
   let totalDuration = getDurationLeft();
 
   let timeInterval;
@@ -18,22 +21,27 @@ export default function Timer({ isShowTimeLeft, setIsShowTimeLeft, submitPaper }
     clearInterval(timeInterval);
 
     timeInterval = setInterval(() => {
-      if (+isShowTimeLeft === 1) {
-        const durationInSeconds = timerGenerator().next()?.value;
+      const durationInSeconds = timerGenerator().next()?.value;
+      const { duration = 0, bufferTime = 0 } = learnerExamData?.examData;
 
-        if (durationInSeconds <= 0) return setIsExamEnded(true);
+      setUserExamData((prev) => ({
+        ...prev,
+        duration: { total: (+duration + +bufferTime) * 60, timeLeft: durationInSeconds }
+      }));
 
-        return setTimer(secondsToHMS(durationInSeconds));
+      if (durationInSeconds <= 0) {
+        console.log('exam time up');
+        return setIsExamEnded(true);
       }
 
-      setTimer(latestTime());
+      return setTimer(secondsToHMS(durationInSeconds));
     }, 1000);
 
     return () => {
       clearInterval(timeInterval);
-      secondsToHMS(timerGenerator().next(true));
+      // secondsToHMS(timerGenerator().next(true));
     };
-  }, [isShowTimeLeft]);
+  }, []);
 
   useEffect(async () => {
     if (isExamEnded) await submitPaper();
@@ -53,12 +61,23 @@ export default function Timer({ isShowTimeLeft, setIsShowTimeLeft, submitPaper }
     const examEndDate = moment(getEndTime(learnerExamData));
     const timeDiff = examEndDate.diff(moment(), 'seconds');
 
+    let attemptData = null;
+    if (userExamData?.userExamAttempts) {
+      attemptData = userExamData?.userExamAttempts?.find(
+        (attempt) => userExamData?.currentAttemptId === attempt?.user_ea_id
+      );
+    }
+    const durationSpent = +attemptData?.attempt_duration || 0;
+
     const durationLeft = (+duration + +bufferTime) * 60;
-    return durationLeft > timeDiff ? timeDiff : durationLeft;
+
+    const _timeLeft = (durationLeft > timeDiff ? timeDiff : durationLeft) - durationSpent;
+    // console.log(_timeLeft, durationSpent, attemptData);
+
+    return _timeLeft;
   }
 
-  function* timerGenerator(isReset = null) {
-    if (isReset) totalDuration = getDurationLeft();
+  function* timerGenerator() {
     if (totalDuration < 0) yield 0;
 
     yield --totalDuration;
@@ -73,7 +92,9 @@ export default function Timer({ isShowTimeLeft, setIsShowTimeLeft, submitPaper }
         </select>
       </div>
 
-      <span className={`${styles.info_section_watch_time}`}>{timer}</span>
+      <span className={`${styles.info_section_watch_time}`}>
+        {isShowTimeLeft ? timer : latestTime()}
+      </span>
     </>
   );
 }

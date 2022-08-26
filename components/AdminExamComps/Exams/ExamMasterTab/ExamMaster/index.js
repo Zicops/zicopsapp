@@ -261,7 +261,14 @@ export default function ExamMaster() {
             name="is_attempts_visible"
             isChecked={examTabData?.is_attempts_visible}
             isDisabled={isPreview}
-            changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+            changeHandler={(e) => {
+              const isChecked = e.target.checked;
+              setExamTabData({
+                ...examTabData,
+                is_attempts_visible: isChecked,
+                no_attempts: isChecked ? 1 : -1
+              });
+            }}
           />
         </div>
 

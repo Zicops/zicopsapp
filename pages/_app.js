@@ -12,6 +12,7 @@ import '../styles/global.scss';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
+  // toggle scrollbar opacity when scroll
   useEffect(() => {
     let timeout = null;
     function updateOpacity() {

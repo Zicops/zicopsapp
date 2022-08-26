@@ -42,6 +42,7 @@ export function secondsToHMS(secs) {
   const divisor_for_seconds = divisor_for_minutes % 60;
   const seconds = ('0' + Math.ceil(divisor_for_seconds)).substr(-2) || '00';
 
+  if (hours == '00') return `${minutes}:${seconds}`;
   return `${hours}:${minutes}:${seconds}`;
 }
 
@@ -130,7 +131,7 @@ export function toggleFullScreen(elem) {
   return false;
 }
 
-export function getUnixFromDate(dateObj) {
+export function getUnixFromDate(dateObj = new Date()) {
   const newDate = new Date(dateObj);
 
   return Math.floor(newDate.getTime() / 1000) || 0;

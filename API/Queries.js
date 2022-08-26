@@ -374,6 +374,27 @@ export const GET_QUESTION_BANK_QUESTIONS = gql`
   }
 `;
 
+export const GET_QUESTION_BY_ID = gql`
+  query getQuestionsById($question_ids: [String]) {
+    getQuestionsById(question_ids: $question_ids) {
+      id
+      Name
+      Description
+      Type
+      Difficulty
+      Attachment
+      AttachmentType
+      Hint
+      QbmId
+      Status
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+    }
+  }
+`;
+
 export const GET_QUESTIONS_NAMES = gql`
   query questionBankQuestions(
     $question_bank_id: String

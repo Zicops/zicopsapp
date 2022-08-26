@@ -113,7 +113,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
 
   // load table data
   useEffect(() => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
+    const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
 
     loadQuestionPaper({ variables: queryVariables }).then(({ data }) => {
       if (errorQuestionPaperData)

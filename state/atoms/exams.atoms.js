@@ -163,7 +163,7 @@ export function getExamTabDataObject(data = {}) {
     passing_criteria: data.passing_criteria || '',
     passing_criteria_type: data.passing_criteria_type || 'Marks',
     is_attempts_visible: data.is_attempts_visible || false,
-    no_attempts: data.no_attempts || 0,
+    no_attempts: data.no_attempts || -1,
     instructions: data.instructions || '',
     access_type: data.access_type || '',
     is_ins_active: data.is_ins_active || '',

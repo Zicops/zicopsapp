@@ -1,4 +1,5 @@
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
+import { UserExamDataAtom } from '@/state/atoms/video.atom';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import AttemptsTable from '../common/AttemptsTable';
@@ -9,6 +10,7 @@ import CongratulationsScreen from './CongratulationsScreen';
 import { data, getResultStyles } from './Logic/congratulationsHead.helper';
 const Congratulations = ({ resultIndex }) => {
   const learnerExamData = useRecoilValue(LearnerExamAtom);
+  const userExamData = useRecoilValue(UserExamDataAtom);
 
   const router = useRouter();
 
@@ -39,7 +41,11 @@ const Congratulations = ({ resultIndex }) => {
       <CongratulationsFooter>
         <CongratulationsScreenButton title={'Download Result'} />
         <CongratulationsScreenButton
-          handleClick={() => router.push('/answer-key')}
+          handleClick={() =>
+            router.push(
+              `/answer-key/topic/${userExamData?.userExamAttempts?.[0]?.topicId}/exam/${learnerExamData?.examData?.id}`
+            )
+          }
           title={'View Attempt History'}
         />
 

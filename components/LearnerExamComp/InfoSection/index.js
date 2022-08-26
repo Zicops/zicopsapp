@@ -7,15 +7,13 @@ import { useRecoilState } from 'recoil';
 import Timer from '../Timer';
 import styles from './infoSection.module.scss';
 
-const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
+const InfoSection = ({ handleEndButton, data, handleQuestionPaperClick, setFilter }) => {
   const [loadOptions, { error: errorOptionsData }] = useLazyQuery(
     GET_QUESTION_OPTIONS_WITH_ANSWER,
     { client: queryClient }
   );
   const router = useRouter();
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
-
-  const [isShowTimeLeft, setIsShowTimeLeft] = useState(0);
 
   const attemptedQuestions = () => {
     let attempted = 0;
@@ -84,7 +82,7 @@ const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
       </div>
       <div className={`${styles.info_section_exam_info_button_container}`}>
         <button
-          onClick={() => setIsQuestion(true)}
+          onClick={handleQuestionPaperClick}
           className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_question}`}>
           Question Paper
         </button>
@@ -95,11 +93,7 @@ const InfoSection = ({ handleEndButton, data, setIsQuestion, setFilter }) => {
         </button>
       </div>
       <div className={`${styles.info_section_watch}`}>
-        <Timer
-          isShowTimeLeft={isShowTimeLeft}
-          setIsShowTimeLeft={setIsShowTimeLeft}
-          submitPaper={handleEndButton}
-        />
+        <Timer submitPaper={handleEndButton} />
       </div>
     </div>
   );

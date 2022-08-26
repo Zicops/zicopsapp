@@ -227,7 +227,7 @@ export default function useHandleExamTab() {
     const sendData = {
       examId: examId,
       passing_criteria: `${examTabData.passing_criteria}-${examTabData.passing_criteria_type}`,
-      no_attempts: examTabData.no_attempts || 1,
+      no_attempts: examTabData.no_attempts || -1,
       instructions: examTabData.instructions || '',
       access_type: examTabData.access_type || '',
       createdBy: examTabData.createdBy || 'Zicops',

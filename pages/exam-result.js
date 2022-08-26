@@ -1,4 +1,5 @@
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import Congratulations from '../components/Congratulations';
 
@@ -18,7 +19,8 @@ export default function ExamResult() {
           justifyContent: 'center',
           width: '100vw',
           height: '100vh',
-          backgroundColor: 'var(--dark_one)'
+          backgroundColor: 'var(--dark_one)',
+          overflow: 'clip'
         }}>
         <Congratulations resultIndex={resultIndex} />
       </div>
