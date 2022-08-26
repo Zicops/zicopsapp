@@ -81,18 +81,38 @@ export default function useHandleCourseHero(isPreview) {
       triggerPlayerToStartAt: null
     };
     let isTopicFound = false;
+    let fallBack = null;
     let firstIncompletedTopicData = null;
+    let firstNotStartedTopicData = null;
 
     userCourseData?.allModules?.some((mod, modIndex) => {
       mod?.topicData?.some((topic, topicIndex) => {
         if (topic?.type !== 'Content') return false;
         if (isTopicFound) return true;
 
+        if (!fallBack) {
+          fallBack = {
+            activeModule: { index: modIndex, id: mod?.id },
+            activeTopic: { index: topicIndex, id: topic?.id },
+            activeTopicContent: { index: 0, id: topic?.topicContentData[0]?.id },
+            triggerPlayerToStartAt: +topicProgress?.video_progress || 0
+          };
+        }
+
         const topicProgress = userCourseData?.userCourseProgress?.find(
           (obj) => obj?.topic_id === topic?.id
         );
         // console.log(topic);
         // console.log(topicProgress);
+
+        if (topicProgress?.status === 'not-started' && !firstNotStartedTopicData) {
+          firstNotStartedTopicData = {
+            activeModule: { index: modIndex, id: mod?.id },
+            activeTopic: { index: topicIndex, id: topic?.id },
+            activeTopicContent: { index: 0, id: topic?.topicContentData[0]?.id },
+            triggerPlayerToStartAt: +topicProgress?.video_progress || 0
+          };
+        }
 
         if (
           (!topicProgress || +topicProgress?.video_progress < 100) &&
@@ -118,8 +138,14 @@ export default function useHandleCourseHero(isPreview) {
       return isTopicFound;
     });
 
-    if (!isTopicFound) data = { ...firstIncompletedTopicData };
+    if (!isTopicFound)
+      data = firstNotStartedTopicData
+        ? { ...firstNotStartedTopicData }
+        : { ...firstIncompletedTopicData };
 
+    if (!data?.activeTopic?.id) data = { ...fallBack };
+
+    // return;
     setUserCourseData({ ...userCourseData, ...data, switchModule: true });
     // setVideoData({
     //   ...videoData,

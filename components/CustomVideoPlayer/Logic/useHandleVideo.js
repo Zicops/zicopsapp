@@ -459,8 +459,6 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   async function playNextVideo(type = null) {
     await syncVideoProgress(type);
     if (!videoData.allModuleTopic) return;
-    const isBinge = type === 'binge';
-    if (isBinge) return;
 
     const { allModuleTopic, currentTopicIndex } = videoData;
 
@@ -470,6 +468,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     // switch to next module
     if (videoData.allModuleTopic.length === videoData.currentTopicIndex + 1) {
+      const isBinge = type === 'binge';
+      if (isBinge) return;
+
       const { setNewModule, allModuleOptions, currentModuleIndex } = videoData;
       if (currentModuleIndex + 1 === allModuleOptions.length) return;
       setNewModule({
