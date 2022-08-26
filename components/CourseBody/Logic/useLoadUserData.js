@@ -180,6 +180,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       {},
       userClient
     );
+    // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
     setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks);
 
     const data = { userCourseMapping: {}, userCourseProgress: [] };
@@ -189,7 +190,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         variables: { userId: userData?.id, courseId: fullCourse?.id },
         fetchPolicy: 'no-cache'
       });
-      console.log(mapRes);
+      // console.log(mapRes);
       if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
         return setToastMsg({ type: 'danger', message: 'user course maps load error' });
 

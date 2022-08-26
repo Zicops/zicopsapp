@@ -84,13 +84,21 @@ export default function useHandleNotes() {
     setFloatingNotes(allNotes);
   }
 
-  function addNewNote() {
-    const allNotes = structuredClone(floatingNotes);
+  function addNewNote(topic_id) {
+    const allNotes = structuredClone(
+      floatingNotes?.filter((notes) => notes?.topic_id === topic_id)
+    );
     const lastNote = allNotes[allNotes.length - 1];
 
-    allNotes.push(
-      getNoteCardObj({ user_notes_id: Math.random(), sequence: lastNote?.sequence + 1 || 1 })
-    );
+    allNotes.push({
+      ...getNoteCardObj({
+        user_notes_id: Math.random(),
+        sequence: lastNote?.sequence + 1 || 1,
+        topic_id: topic_id
+      }),
+      isNew: true
+    });
+    console.log(allNotes);
     setFloatingNotes(allNotes);
   }
 

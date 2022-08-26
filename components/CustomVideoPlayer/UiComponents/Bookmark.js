@@ -35,11 +35,7 @@ export default function Bookmark({
   }, [playerState?.timestamp]);
 
   function updateTimestamp() {
-    const timestampArr = playerState?.timestamp?.split(':');
-    let _timestamp = `${timestampArr?.[1]}:${timestampArr?.[2]}`;
-    if (timestampArr?.[0] !== '00') _timestamp += `${timestampArr?.[0]}:${_timestamp}`;
-
-    setBookmarkData({ ...bookmarkData, timestamp: _timestamp });
+    setBookmarkData({ ...bookmarkData, time_stamp: playerState?.timestamp });
   }
 
   return (
@@ -47,6 +43,7 @@ export default function Bookmark({
       <FolderBar
         onPlusClick={() => {
           setShowAddBookmark(true);
+          setViewAllBookmarks(false);
           updateTimestamp();
 
           if (playerState?.isPlaying) updateIsPlayingTo(false);
@@ -73,7 +70,7 @@ export default function Bookmark({
             </div>
 
             <section>
-              <span>{bookmarkData?.timestamp}</span>
+              <span>{bookmarkData?.time_stamp}</span>
               <span>-</span>
 
               <input
@@ -110,7 +107,7 @@ export default function Bookmark({
                         img: fullCourse?.tileImg,
                         courseName: fullCourse?.name,
                         title: bookmark?.name,
-                        timestamp: bookmark?.timestamp
+                        timestamp: bookmark?.time_stamp
                       }}
                       key={`${bookmark?.user_bm_id}-${i}`}
                     />

@@ -20,7 +20,12 @@ export default function useSaveData(videoElement, freezeState) {
   const userCourseData = useRecoilValue(UserCourseDataAtom);
 
   const { fullCourse } = useContext(courseContext);
-  const { addBookmarkData, addNotes, setBookmarkData: saveBMData } = useContext(userContext);
+  const {
+    addBookmarkData,
+    addNotes,
+    setBookmarkData: saveBMData,
+    bookmarkData: bmD
+  } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -29,27 +34,11 @@ export default function useSaveData(videoElement, freezeState) {
   const [showBox, setShowBox] = useState(null);
 
   const [bookmarkData, setBookmarkData] = useState({
-    timestamp: '',
+    time_stamp: '',
     name: '',
-    captureImg: ''
+    topic_id: ''
+    // captureImg: ''
   });
-  const [notes, setNotes] = useState({
-    timestamp: '',
-    title: '',
-    notes: ''
-  });
-
-  useEffect(() => {
-    const bookmarks = [
-      { id: 1, timestamp: '00:10', title: 'New Bookmark', captureImg: null },
-      { id: 2, timestamp: '00:11', title: 'New Bookmark 1', captureImg: null },
-      { id: 3, timestamp: '10:11', title: 'New Bookmark 2', captureImg: null }
-    ];
-
-    // saveBMData(bookmarks);
-    // bookmarks.map((b) => addBookmarkData(b));
-    
-  }, []);
 
   function toggleStates(setState, state) {
     setState(!state);
@@ -107,7 +96,7 @@ export default function useSaveData(videoElement, freezeState) {
       topic_id: videoData?.topicContent[0]?.topicId,
       module_id: videoData?.currentModuleId,
       name: bookmarkData?.name,
-      time_stamp: `${bookmarkData?.timestamp}`,
+      time_stamp: `${bookmarkData?.time_stamp}`,
       is_active: true
     };
 
@@ -119,34 +108,15 @@ export default function useSaveData(videoElement, freezeState) {
     });
     console.log(res);
     //   save to context
-    addBookmarkData({ ...bookmarkData, ...res?.data?.addUserBookmark });
+    if (!res?.data?.addUserBookmark?.[0])
+      return setToastMsg({ type: 'danger', message: 'Bookmark add error' });
+    addBookmarkData(res?.data?.addUserBookmark?.[0]);
 
+    setBookmarkData({ time_stamp: '', name: '', topic_id: '' });
     // console.log(res?.data?.addUserBookmark[0]);
-    setToastMsg({ type: 'success', message: 'BookMark added' });
+    setToastMsg({ type: 'success', message: 'Bookmark added' });
     // console.log(bookmarkData, sendBookMarkData);
     return true;
-  }
-
-  function handleNotesChange(e) {
-    setNotes({
-      ...notes,
-      [e.target.name]: e.target.value
-    });
-  }
-
-  function handleSaveNotes(timestamp) {
-    setBookmarkData({
-      ...bookmarkData,
-      timestamp: timestamp
-    });
-
-    //   save to context
-    addNotes({
-      ...notes,
-      id: new Date().getMilliseconds(),
-      timestamp
-    });
-    alert('Notes added');
   }
 
   const states = {

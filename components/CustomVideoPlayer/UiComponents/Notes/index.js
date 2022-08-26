@@ -25,7 +25,7 @@ export default function Notes() {
       <div className={`${styles.folderBarContainer}`}>
         <FolderBar
           onFolderClick={toggleAllNotes}
-          onPlusClick={addNewNote}
+          onPlusClick={() => addNewNote(videoData?.topicContent[0]?.topicId)}
           count={
             floatingNotes?.filter(
               (notes) => notes?.topic_id === videoData?.topicContent[0]?.topicId
