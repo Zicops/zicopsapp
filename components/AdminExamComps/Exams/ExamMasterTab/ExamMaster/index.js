@@ -1,3 +1,4 @@
+import RTE from '@/components/common/FormComponents/RTE';
 import NextButton from '@/components/common/NextButton';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -338,7 +339,8 @@ export default function ExamMaster() {
       <div>
         <label>
           Enter Instructions/Guidelines:
-          <LabeledTextarea
+          {/* <MUIRichTextEditor label="Start typing..." /> */}
+          {/* <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
               inputName: 'instructions',
@@ -349,14 +351,12 @@ export default function ExamMaster() {
               maxLength: 300
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-          />
-          {/* <RTE
-            changeHandler={(e) => {
-              setExamTabData({ ...examTabData, instructions: e.target.innerHTML });
-            }}
+          /> */}
+          <RTE
+            changeHandler={(e) => setExamTabData({ ...examTabData, instructions: e })}
             placeholder="Enter instructions in less than 300 characters."
             value={examTabData?.instructions}
-          /> */}
+          />
         </label>
       </div>
 

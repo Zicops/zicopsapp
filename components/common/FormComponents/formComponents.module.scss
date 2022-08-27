@@ -503,3 +503,36 @@
     padding-left: 30px;
   }
 }
+
+.rteContainer {
+  margin: 20px auto;
+  // min-height: 150px;
+  // max-height: 250px;
+  color: $white !important;
+
+  .reactQuill {
+    // min-height: 100px;
+    // max-height: 300px;
+
+    :global(.ql-active .ql-stroke) {
+      stroke: $white !important;
+    }
+    :global(.ql-stroke) {
+      stroke: $darkThree !important;
+    }
+
+    :global(.ql-active .ql-fill) {
+      stroke: $white !important;
+    }
+    :global(.ql-fill) {
+      fill: $darkThree !important;
+    }
+    :global(.ql-editor.ql-blank::before) {
+      color: $darkThree !important;
+    }
+
+    :global(.ql-snow) {
+      color: $white !important;
+    }
+  }
+}
