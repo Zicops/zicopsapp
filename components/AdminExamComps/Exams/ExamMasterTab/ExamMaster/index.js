@@ -15,6 +15,7 @@ import { customSelectStyles } from '../../../../common/FormComponents/Logic/form
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
 import useHandleExamTab from '../Logic/useHandleExamTab';
+import MUIRichTextEditor from 'mui-rte';
 
 export default function ExamMaster() {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -338,7 +339,8 @@ export default function ExamMaster() {
       <div>
         <label>
           Enter Instructions/Guidelines:
-          <LabeledTextarea
+          <MUIRichTextEditor label="Start typing..." />
+          {/* <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
               inputName: 'instructions',
@@ -349,7 +351,7 @@ export default function ExamMaster() {
               maxLength: 300
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-          />
+          /> */}
           {/* <RTE
             changeHandler={(e) => {
               setExamTabData({ ...examTabData, instructions: e.target.innerHTML });
