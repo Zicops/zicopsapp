@@ -26,7 +26,7 @@ export default function useHandleNotes() {
   // }, []);
 
   function handleNote(e, noteObj) {
-    const allNotes = structuredClone([...floatingNotes]);
+    const allNotes = structuredClone([...floatingNotes]) || [];
 
     const index = allNotes?.findIndex((note) => {
       if (!note?.user_notes_id) return note?.sequence === noteObj?.sequence;
@@ -38,7 +38,7 @@ export default function useHandleNotes() {
   }
 
   function handleDragEnd(e, noteObj) {
-    const allNotes = structuredClone([...floatingNotes]);
+    const allNotes = structuredClone([...floatingNotes]) || [];
     const index = allNotes?.findIndex((note) => {
       if (!note?.user_notes_id) return note?.sequence === noteObj?.sequence;
       return note?.user_notes_id === noteObj?.user_notes_id;
@@ -52,7 +52,7 @@ export default function useHandleNotes() {
   }
 
   function handleClose(noteObj) {
-    let allNotes = structuredClone(floatingNotes);
+    let allNotes = structuredClone(floatingNotes) || [];
     const index = allNotes?.findIndex((note) => {
       if (!note?.user_notes_id) return note?.sequence === noteObj?.sequence;
       return note?.user_notes_id === noteObj?.user_notes_id;
@@ -68,7 +68,7 @@ export default function useHandleNotes() {
   }
 
   function handlePin(e, noteObj) {
-    const allNotes = structuredClone([...floatingNotes]);
+    const allNotes = structuredClone([...floatingNotes]) || [];
     const index = allNotes?.findIndex((note) => {
       if (!note?.user_notes_id) return note?.sequence === noteObj?.sequence;
       return note?.user_notes_id === noteObj?.user_notes_id;
@@ -85,9 +85,8 @@ export default function useHandleNotes() {
   }
 
   function addNewNote(topic_id) {
-    const allNotes = structuredClone(
-      floatingNotes?.filter((notes) => notes?.topic_id === topic_id)
-    );
+    const allNotes =
+      structuredClone(floatingNotes?.filter((notes) => notes?.topic_id === topic_id)) || [];
     const lastNote = allNotes?.[allNotes.length - 1];
 
     allNotes.push({
@@ -103,7 +102,7 @@ export default function useHandleNotes() {
   }
 
   function deleteNote(noteObj) {
-    const allNotes = structuredClone(floatingNotes);
+    const allNotes = structuredClone(floatingNotes) || [];
     const index = allNotes?.findIndex((note) => note?.user_notes_id === noteObj?.user_notes_id);
 
     allNotes?.splice(index, 1);
