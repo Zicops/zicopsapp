@@ -1,3 +1,4 @@
+import RTE from '@/components/common/FormComponents/RTE';
 import NextButton from '@/components/common/NextButton';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -15,7 +16,6 @@ import { customSelectStyles } from '../../../../common/FormComponents/Logic/form
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
 import useHandleExamTab from '../Logic/useHandleExamTab';
-import MUIRichTextEditor from 'mui-rte';
 
 export default function ExamMaster() {
   const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
@@ -339,7 +339,7 @@ export default function ExamMaster() {
       <div>
         <label>
           Enter Instructions/Guidelines:
-          <MUIRichTextEditor label="Start typing..." />
+          {/* <MUIRichTextEditor label="Start typing..." /> */}
           {/* <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
@@ -352,13 +352,11 @@ export default function ExamMaster() {
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           /> */}
-          {/* <RTE
-            changeHandler={(e) => {
-              setExamTabData({ ...examTabData, instructions: e.target.innerHTML });
-            }}
+          <RTE
+            changeHandler={(e) => setExamTabData({ ...examTabData, instructions: e })}
             placeholder="Enter instructions in less than 300 characters."
             value={examTabData?.instructions}
-          /> */}
+          />
         </label>
       </div>
 
