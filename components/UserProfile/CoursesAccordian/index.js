@@ -378,6 +378,7 @@ const CoursesAccordian = () => {
             <section>
               <p htmlFor="endDate">Expected Completion date:</p>
               <InputDatePicker
+                minDate={new Date()}
                 selectedDate={courseAssignData?.endDate}
                 changeHandler={(date) => {
                   setIsPopUpDataPresent(true);
