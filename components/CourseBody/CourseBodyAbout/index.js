@@ -41,12 +41,7 @@ export default function CourseBodyAbout() {
 
       <div className="compo_row">
         <div className="col_50 small_compo">
-          <Inclusions
-            languages={fullCourse.language}
-            quizCount={2}
-            labsCount={4}
-            assesmentCount={3}
-          />
+          <Inclusions languages={fullCourse.language} />
         </div>
 
         <div className="col_50 small_compo">

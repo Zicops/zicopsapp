@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
 
-export default function Inclusions({ languages, labsCount, assesmentCount, quizCount }) {
+export default function Inclusions({ languages, quizCount = 2 }) {
   const moduleData = useRecoilValue(ModuleAtom);
   const chapter = useRecoilValue(ChapterAtom);
   const topic = useRecoilValue(TopicAtom);
@@ -41,13 +41,13 @@ export default function Inclusions({ languages, labsCount, assesmentCount, quizC
           <div className="col_50 label">
             Practice Exercises & Labs <span>:</span>
           </div>
-          <div className="col_50">{labsCount}</div>
+          <div className="col_50">{topic?.filter((t) => t.type === 'Labs')?.length}</div>
         </div>
         <div className="row">
           <div className="col_50 label">
             Assessments <span>:</span>
           </div>
-          <div className="col_50">{assesmentCount}</div>
+          <div className="col_50">{topic?.filter((t) => t.type === 'Assessment')?.length}</div>
         </div>
       </div>
       <style jsx>

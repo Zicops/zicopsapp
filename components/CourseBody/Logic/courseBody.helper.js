@@ -28,6 +28,14 @@ export function getResourceCount(resources, topicId) {
   return filteredResources.length;
 }
 
+export function getNotesCount(notes, topicId) {
+  const filteredNotes = notes.filter((n, i) => {
+    return n.topic_id === topicId;
+  });
+
+  return filteredNotes.length;
+}
+
 export function updateVideoData(
   videoData,
   setVideoData,

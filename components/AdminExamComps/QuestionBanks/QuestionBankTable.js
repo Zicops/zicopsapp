@@ -36,7 +36,7 @@ export default function QuestionBankTable({ isEdit = false }) {
 
   // load table data
   useEffect(async () => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 50, pageCursor: '' };
+    const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
 
     const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
     if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });

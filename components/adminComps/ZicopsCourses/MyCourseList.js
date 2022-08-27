@@ -68,13 +68,13 @@ function MyLatestCourseList({ time }) {
   const { data } = useQuery(GET_LATEST_COURSES, {
     variables: {
       publish_time: time,
-      pageSize: 50,
+      pageSize: 999999,
       pageCursor: ''
     },
     client: queryClient
   });
 
-  let latestCourses = data?.latestCourses.courses;
+  let latestCourses = data?.latestCourses.courses?.filter((c) => c?.is_active);
 
   return (
     <ZicopsTable

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styles from './accordion.module.scss';
 
-const Accordion = ({ title, children }) => {
+const Accordion = ({ title, children, customClass }) => {
   const [isActive, setIsActive] = useState(false);
   return (
     <>
-      <div className={`${styles.accordion}`}>
+      <div className={`${styles.accordion} ${customClass}`}>
         <div className={`${styles.accordion_item}`}>
-          <div
+          <section
             className={isActive ? `${styles.accordion_title_active}` : `${styles.accordion_title}`}
             onClick={() => setIsActive(!isActive)}>
             <div className={`${styles.accordion_title_text}`}>{title}</div>
@@ -18,7 +18,7 @@ const Accordion = ({ title, children }) => {
                 <img src="/images/accordionOff.png" />
               )}
             </div>
-          </div>
+          </section>
           {isActive && <div className={`${styles.accordion_content}`}>{children}</div>}
         </div>
       </div>

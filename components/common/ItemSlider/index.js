@@ -1,8 +1,14 @@
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import CustomButtonGroup from './CustomButtonGroup';
+import styles from './itemSlider.module.scss';
 
-export default function ItemSlider({ carouselProps = {}, children, responsiveViews = [3, 3, 1] }) {
+export default function ItemSlider({
+  carouselProps = {},
+  children,
+  responsiveViews = [3, 3, 1],
+  noDataFound = false
+}) {
   const { containerClass } = carouselProps;
   const responsive = {
     desktop: {
@@ -21,6 +27,8 @@ export default function ItemSlider({ carouselProps = {}, children, responsiveVie
       slidesToSlide: 1 // optional, default to 1.
     }
   };
+
+  if (noDataFound) return <div className={`${styles.fallBackMsg}`}>No Resources Found</div>;
 
   return (
     <>

@@ -48,7 +48,7 @@ export async function loadQueryDataAsync(
   client = queryClient
 ) {
   const response = await client
-    .query({ query: QUERY, variables: variableObj, ...options })
+    .query({ query: QUERY, variables: variableObj, fetchPolicy: 'no-cache', ...options })
     .catch((err) => {
       console.log(`Load Data error:`, err);
     });

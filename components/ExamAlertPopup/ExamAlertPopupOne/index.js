@@ -1,12 +1,17 @@
 import styles from './examAlertPopupOne.module.scss';
-// import '/public/images';
 import CongratulationsScreenButton from '../../common/CongratulationsScreenButton';
-const ExamAlertPopupOne = ({ handleClick }) => {
+
+const ExamAlertPopupOne = ({
+  handleClose = () => {},
+  handleContinue = () => {},
+  handleNewAttempt = () => {},
+  isLastAttempt = null
+}) => {
   return (
     <>
       <div className={`${styles.examAlertPopup_One}`}>
         <div className={`${styles.cross}`}>
-          <img src={'/images/svg/clear.svg'} width={35} onClick={handleClick} />
+          <img src={'/images/svg/clear.svg'} width={35} onClick={handleClose} />
         </div>
 
         <div className={`${styles.alert_text}`}>
@@ -15,11 +20,19 @@ const ExamAlertPopupOne = ({ handleClick }) => {
         </div>
 
         <div className={`${styles.button}`}>
-          <CongratulationsScreenButton title={'Continue with last attempt'} />
+          <CongratulationsScreenButton
+            title={'Continue with last attempt'}
+            handleClick={handleContinue}
+          />
         </div>
-        <div className={`${styles.button}`}>
-          <CongratulationsScreenButton title={' Finish previous and start new attempt'} />
-        </div>
+        {!isLastAttempt && (
+          <div className={`${styles.button}`}>
+            <CongratulationsScreenButton
+              title={' Finish previous and start new attempt'}
+              handleClick={handleNewAttempt}
+            />
+          </div>
+        )}
       </div>
     </>
   );
