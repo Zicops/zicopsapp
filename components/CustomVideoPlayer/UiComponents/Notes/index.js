@@ -38,7 +38,7 @@ export default function Notes() {
             document.fullscreenElement ? styles.notesCardsContainerFS : ''
           }`}>
           {floatingNotes
-            .map((noteObj, i) => {
+            ?.map((noteObj, i) => {
               if (noteObj?.topic_id !== videoData?.topicContent[0]?.topicId) return null;
               if (noteObj.isFloating) return null;
               if (!noteObj.isOpen) return null;

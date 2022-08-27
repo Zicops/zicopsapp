@@ -12,7 +12,7 @@ export default function useHandleNotes() {
   const [isNotesOpen, setIsNotesOpen] = useState(true);
 
   useEffect(() => {
-    let allNotes = structuredClone(floatingNotes).map((note) => {
+    let allNotes = structuredClone(floatingNotes)?.map((note) => {
       note.isOpen = true;
       return note;
     });
@@ -26,22 +26,22 @@ export default function useHandleNotes() {
   // }, []);
 
   function handleNote(e, noteObj) {
-    const allNotes = structuredClone([...floatingNotes]);
+    const allNotes = structuredClone([...floatingNotes]) || [];
 
     const index = allNotes?.findIndex((note) => {
-      if (!note.user_notes_id) return note.sequence === noteObj?.sequence;
-      return note.user_notes_id === noteObj?.user_notes_id;
+      if (!note?.user_notes_id) return note?.sequence === noteObj?.sequence;
+      return note?.user_notes_id === noteObj?.user_notes_id;
     });
 
-    allNotes[index].details = e.target.value;
+    allNotes[index].details = e?.target?.value;
     setFloatingNotes(allNotes);
   }
 
   function handleDragEnd(e, noteObj) {
-    const allNotes = structuredClone([...floatingNotes]);
+    const allNotes = structuredClone([...floatingNotes]) || [];
     const index = allNotes?.findIndex((note) => {
-      if (!note.user_notes_id) return note.sequence === noteObj?.sequence;
-      return note.user_notes_id === noteObj?.user_notes_id;
+      if (!note?.user_notes_id) return note?.sequence === noteObj?.sequence;
+      return note?.user_notes_id === noteObj?.user_notes_id;
     });
 
     allNotes[index].isFloating = true;
@@ -52,10 +52,10 @@ export default function useHandleNotes() {
   }
 
   function handleClose(noteObj) {
-    let allNotes = structuredClone(floatingNotes);
+    let allNotes = structuredClone(floatingNotes) || [];
     const index = allNotes?.findIndex((note) => {
-      if (!note.user_notes_id) return note.sequence === noteObj?.sequence;
-      return note.user_notes_id === noteObj?.user_notes_id;
+      if (!note?.user_notes_id) return note?.sequence === noteObj?.sequence;
+      return note?.user_notes_id === noteObj?.user_notes_id;
     });
 
     allNotes[index].isOpen = false;
@@ -68,13 +68,13 @@ export default function useHandleNotes() {
   }
 
   function handlePin(e, noteObj) {
-    const allNotes = structuredClone([...floatingNotes]);
+    const allNotes = structuredClone([...floatingNotes]) || [];
     const index = allNotes?.findIndex((note) => {
-      if (!note.user_notes_id) return note.sequence === noteObj?.sequence;
-      return note.user_notes_id === noteObj?.user_notes_id;
+      if (!note?.user_notes_id) return note?.sequence === noteObj?.sequence;
+      return note?.user_notes_id === noteObj?.user_notes_id;
     });
 
-    const isPinned = !allNotes[index].isPinned;
+    const isPinned = !allNotes?.[index]?.isPinned;
     allNotes[index].isFloating = true;
     allNotes[index].isPinned = isPinned;
 
@@ -85,10 +85,9 @@ export default function useHandleNotes() {
   }
 
   function addNewNote(topic_id) {
-    const allNotes = structuredClone(
-      floatingNotes?.filter((notes) => notes?.topic_id === topic_id)
-    );
-    const lastNote = allNotes[allNotes.length - 1];
+    const allNotes =
+      structuredClone(floatingNotes?.filter((notes) => notes?.topic_id === topic_id)) || [];
+    const lastNote = allNotes?.[allNotes.length - 1];
 
     allNotes.push({
       ...getNoteCardObj({
@@ -103,7 +102,7 @@ export default function useHandleNotes() {
   }
 
   function deleteNote(noteObj) {
-    const allNotes = structuredClone(floatingNotes);
+    const allNotes = structuredClone(floatingNotes) || [];
     const index = allNotes?.findIndex((note) => note?.user_notes_id === noteObj?.user_notes_id);
 
     allNotes?.splice(index, 1);
@@ -112,7 +111,7 @@ export default function useHandleNotes() {
 
   function toggleAllNotes() {
     const isOpen = !isNotesOpen;
-    let allNotes = structuredClone(floatingNotes).map((note) => {
+    let allNotes = structuredClone(floatingNotes)?.map((note) => {
       note.isOpen = isOpen;
       return note;
     });
