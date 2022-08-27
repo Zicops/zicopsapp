@@ -12,11 +12,22 @@ export const BOX = ['subtitles', 'resources', 'discussion', 'bookmark', 'notes',
 
 export function getNoteCardObj(data) {
   return {
-    id: data?.id || null,
-    index: data?.index || 0,
-    note: data?.note || '',
+    user_notes_id: data?.user_notes_id || null,
+    user_lsp_id: data?.user_lsp_id || null,
+    user_id: data?.user_id || null,
+
+    course_id: data?.course_id || null,
+    module_id: data?.module_id || null,
+    topic_id: data?.topic_id || null,
+
+    sequence: data?.sequence || 0,
+    details: data?.details || '',
+
     isPinned: data?.isPinned || false,
     isOpen: data?.isOpen || true,
-    isActive: data?.isActive || false
+    isSelected: data?.isSelected || false,
+
+    status: data?.status || null,
+    is_active: data?.is_active || false
   };
 }

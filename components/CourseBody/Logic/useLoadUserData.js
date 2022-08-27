@@ -6,11 +6,16 @@ import {
   GET_TOPIC_RESOURCES_BY_COURSE_ID,
   queryClient
 } from '@/api/Queries';
+import { userClient } from '@/api/UserMutations';
 import {
+  GET_USER_BOOKMARKS,
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
   GET_USER_COURSE_PROGRESS,
+  GET_USER_NOTES,
   userQueryClient
 } from '@/api/UserQueries';
+import { getNoteCardObj } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import {
   filterAndSortChapter,
   filterAndSortTopicsBasedOnModuleId,
@@ -25,16 +30,19 @@ import {
   TopicAtom,
   TopicContentAtom
 } from '@/state/atoms/module.atoms';
+import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
+import { userContext } from '@/state/contexts/UserContext';
 import { useLazyQuery } from '@apollo/client';
 import { useContext, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useLoadUserData(isPreview, setSelectedModule, getModuleOptions) {
   const { fullCourse } = useContext(courseContext);
+  const { setBookmarkData } = useContext(userContext);
 
   // recoil states
   const userData = useRecoilValue(UserStateAtom);
@@ -47,6 +55,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   const [topicContent, updateTopicContent] = useRecoilState(TopicContentAtom);
   const [resources, updateResources] = useRecoilState(ResourcesAtom);
   const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
+  const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
 
   // module, chapter, topic data query obj
   const [loadModuleData, { error: errorModuleData, loading: loadingModuleData }] = useLazyQuery(
@@ -141,6 +150,39 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         mod.topicData = filteredTopicData;
       });
 
+    const notesDataRes = await loadQueryDataAsync(
+      GET_USER_NOTES,
+      {
+        user_id: userData?.id,
+        user_lsp_id: 'Zicops',
+        publish_time: Date.now(),
+        pageCursor: '',
+        pageSize: 9999999999999
+      },
+      {},
+      userClient
+    );
+    setFloatingNotes(
+      notesDataRes?.getUserNotes?.notes
+        ?.filter((notes) => notes?.is_active)
+        ?.map((noteObj) => getNoteCardObj(noteObj))
+    );
+
+    const bookmarkDataRes = await loadQueryDataAsync(
+      GET_USER_BOOKMARKS,
+      {
+        user_id: userData?.id,
+        user_lsp_id: 'Zicops',
+        publish_time: Date.now(),
+        pageCursor: '',
+        pageSize: 9999999999999
+      },
+      {},
+      userClient
+    );
+    // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
+    setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks);
+
     const data = { userCourseMapping: {}, userCourseProgress: [] };
 
     if (!isPreview) {
@@ -148,7 +190,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         variables: { userId: userData?.id, courseId: fullCourse?.id },
         fetchPolicy: 'no-cache'
       });
-      console.log(mapRes);
+      // console.log(mapRes);
       if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
         return setToastMsg({ type: 'danger', message: 'user course maps load error' });
 

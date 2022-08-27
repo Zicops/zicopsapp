@@ -1,4 +1,5 @@
-import { useContext } from 'react';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { useContext, useState } from 'react';
 import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
 import { getQueryData } from '../../../helper/api.helper';
 import { changeHandler } from '../../../helper/common.helper';
@@ -14,6 +15,7 @@ export default function CourseMaster() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
   const { data } = getQueryData(GET_CATS_N_SUB_CATS);
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   const allCatOptions = [];
   data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
@@ -141,8 +143,13 @@ export default function CourseMaster() {
         <SwitchButton
           label="Active"
           inputName="is_active"
-          isChecked={fullCourse?.is_active || false}
-          handleChange={handleChange}
+          isChecked={fullCourse?.is_active}
+          handleChange={(e) => {
+            if (!fullCourse?.is_active)
+              return updateCourseMaster({ ...fullCourse, is_active: true });
+
+            setShowConfirmBox(true);
+          }}
         />
         <SwitchButton
           label="Display"
@@ -153,6 +160,21 @@ export default function CourseMaster() {
       </div>
 
       <NextButton tabIndex={1} />
+
+      {showConfirmBox && (
+        <ConfirmPopUp
+          title={
+            'Are you sure about deleting this course? This will delete the course permanently!'
+          }
+          btnObj={{
+            handleClickLeft: () => {
+              updateCourseMaster({ ...fullCourse, is_active: false });
+              setShowConfirmBox(false);
+            },
+            handleClickRight: () => setShowConfirmBox(false)
+          }}
+        />
+      )}
     </>
   );
 }

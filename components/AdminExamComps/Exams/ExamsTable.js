@@ -29,7 +29,7 @@ export default function ExamsTable({ isEdit = false }) {
 
   // load table data
   useEffect(async () => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 10, pageCursor: '' };
+    const queryVariables = { publish_time: Date.now(), pageSize: 9999999, pageCursor: '' };
 
     const res = await loadExams({ variables: queryVariables });
     if (loadExamErr) return setToastMsg({ type: 'danger', message: 'exams load error' });

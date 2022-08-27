@@ -205,7 +205,9 @@ const CoursesAccordian = () => {
       console.log(err);
       return setToastMsg({ type: 'danger', message: `${err}` });
     });
-    const courseData = res?.data?.latestCourses?.courses;
+    const courseData = res?.data?.latestCourses?.courses?.filter(
+      (c) => c?.is_active && c?.is_display
+    );
 
     setDataCourse([...courseData]);
     // console.log(dataCourse);

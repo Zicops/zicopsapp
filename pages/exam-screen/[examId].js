@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   GET_EXAM_CONFIG,
@@ -26,6 +26,7 @@ import {
 import {
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
   GET_USER_COURSE_PROGRESS,
+  GET_USER_EXAM_ATTEMPTS,
   userQueryClient
 } from '@/api/UserQueries';
 import LearnerExamComponent from '@/components/LearnerExamComp';
@@ -36,8 +37,10 @@ import { CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ExamInstruction from '../../components/LearnerExamComp/ExamInstructions';
 import styles from '../../components/LearnerExamComp/learnerExam.module.scss';
-import { DIFFICULTY, toggleFullScreen } from '../../helper/utils.helper';
+import { DIFFICULTY, getUnixFromDate, toggleFullScreen } from '../../helper/utils.helper';
 import { LearnerExamAtom, QuestionOptionDataAtom } from '../../state/atoms/exams.atoms';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { courseContext } from '@/state/contexts/CourseContext';
 
 const ExamScreen = () => {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
@@ -87,6 +90,8 @@ const ExamScreen = () => {
 
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+
+  const { fullCourse } = useContext(courseContext);
 
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [userExamData, setUserExamData] = useRecoilState(UserExamDataAtom);
@@ -508,7 +513,8 @@ const ExamScreen = () => {
       userCourseMapping: userCourseData?.userCourseMapping,
       userCourseProgress: userCourseData?.userCourseProgress
     };
-    if (data?.userCourseMapping?.user_cp_id) {
+    if (!data?.userCourseMapping?.user_cp_id) {
+      console.log(fullCourse);
       const mapRes = await loadUserCourseMaps({
         variables: { courseId: fullCourse?.id },
         fetchPolicy: 'no-cache'
@@ -526,6 +532,15 @@ const ExamScreen = () => {
       const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
       if (courseProgress?.length) data.userCourseProgress = courseProgress || [];
     }
+    console.log(data);
+
+    const attemptRes = await loadQueryDataAsync(
+      GET_USER_EXAM_ATTEMPTS,
+      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      {},
+      userQueryClient
+    );
+    console.log(attemptRes);
 
     setUserCourseData({ ...userCourseData, ...data });
     setLearnerExamData({
@@ -605,7 +620,7 @@ const ExamScreen = () => {
         addedBy: userCourseMapData?.userCourseMapping?.added_by,
         courseType: userCourseMapData?.userCourseMapping?.course_type,
         isMandatory: userCourseMapData?.userCourseMapping?.is_mandatory,
-        endDate: userCourseMapData?.userCourseMapping?.end_date
+        endDate: getUnixFromDate(userCourseMapData?.userCourseMapping?.end_date)
       };
 
       // console.log(sendUserCourseData);
@@ -624,7 +639,7 @@ const ExamScreen = () => {
 
     const sendAttemptData = {
       user_id: userData?.id,
-      user_lsp_id: userOrgData?.user_lsp_id,
+      user_lsp_id: userOrgData?.user_lsp_id || 'Zicops',
       user_cp_id: userCourseMapData?.userCourseMapping?.user_cp_id,
       user_course_id: userCourseMapData?.userCourseMapping?.user_course_id,
       exam_id: learnerData?.examData?.id,
@@ -634,15 +649,15 @@ const ExamScreen = () => {
       attempt_duration: '0'
     };
 
-    console.log(sendAttemptData);
-    // const examAttemptRes = await addUserExamAttempts({ variables: [sendAttemptData] }).catch(
-    //   (err) => {
-    //     console.log(err);
-    //     return setToastMsg({ type: 'danger', message: 'Add Exam Attempt Error' });
-    //   }
-    // );
-    // const examAttemptData = examAttemptRes?.data?.addUserExamAttempts[0];
-    const examAttemptData = {};
+    console.log(sendAttemptData, userCourseMapData);
+    const examAttemptRes = await addUserExamAttempts({ variables: sendAttemptData }).catch(
+      (err) => {
+        console.log(err);
+        return setToastMsg({ type: 'danger', message: 'Add Exam Attempt Error' });
+      }
+    );
+    const examAttemptData = examAttemptRes?.data?.addUserExamAttempts[0];
+    // const examAttemptData = {};
     console.log(examAttemptData, learnerData);
 
     const sendExamProgressData = {

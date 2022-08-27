@@ -12,21 +12,22 @@ export default function PopUp({
   isFooterVisible = true,
   positionLeft = '',
   size = 'medium',
+  customStyles = {},
   children
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState);
 
   // modify popup styles based on props
-  const customStyles = { width: '800px' };
-  if (positionLeft) customStyles.left = positionLeft;
+  const propStyles = { width: '800px', ...customStyles };
+  if (positionLeft) propStyles.left = positionLeft;
 
   if (size === 'large') {
-    customStyles.width = '70vw';
-    customStyles.height = '75vh';
+    propStyles.width = '70vw';
+    propStyles.height = '75vh';
   }
 
   if (size === 'small') {
-    customStyles.width = '700px';
+    propStyles.width = '700px';
   }
 
   if (size === 'smaller') {
@@ -36,7 +37,7 @@ export default function PopUp({
   return (
     <>
       <Popup open={isOpen} closeOnDocumentClick={false} closeOnEscape={false}>
-        <div className={`${styles.popUpContainer}`} style={customStyles}>
+        <div className={`${styles.popUpContainer}`} style={propStyles}>
           <div className={`${styles.popUp}`}>
             <div className={`${styles.header}`}>
               <div className={`${styles.title}`}>{title} </div>
@@ -102,7 +103,6 @@ const btnObj = shape({
 });
 
 PopUp.propTypes = {
-  isPopUpOpen: bool,
   popUpState: array,
   title: string,
   closeBtn: btnObj,

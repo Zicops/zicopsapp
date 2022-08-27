@@ -37,6 +37,7 @@ export function getUserCourseDataObj(data) {
     userCourseMapping: data?.userCourseMapping || {},
     userCourseProgress: data?.userCourseProgress || [],
     triggerPlayerToStartAt: data?.triggerPlayerToStartAt || null,
+    switchModule: data?.switchModule || null,
     allModules:
       data?.allModules ||
       [
@@ -83,6 +84,15 @@ export function getUserExamDataObj(data) {
   return {
     userExamAttempts: data?.userExamAttempts || [],
     userExamProgress: data?.userExamProgress || [],
-    userExamResults: data?.userExamResults || []
+    userExamResults: data?.userExamResults || [],
+    currentAttemptId: null,
+    activeQuestion: {
+      questionId: null,
+      startTime: null
+    },
+    duration: {
+      total: null,
+      timeLeft: null
+    }
   };
 }
