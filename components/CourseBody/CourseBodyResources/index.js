@@ -51,6 +51,7 @@ export default function CourseBodyResources() {
         itemsArr={filteredAndSortedData}
         showResources={showResources}
         isResourceShown={isResourceShown}
+        hideResourcesOnEmpty={true}
       />
 
       <CourseResourcesOpen resources={filteredResources} isResourceShown={isResourceShown} />

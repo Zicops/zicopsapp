@@ -116,8 +116,10 @@ export default function Home() {
         pageCursor: ''
       }
     }).then(({ data }) => {
-      console.log(data);
-      setLatestCourseData(data?.latestCourses?.courses || []);
+      // console.log(data);
+      setLatestCourseData(
+        data?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) || []
+      );
 
       if (error) alert('Course Load Error');
     });

@@ -1,10 +1,10 @@
 import styles from './attemptsTable.module.scss';
 
-export default function AttemptsTable({ attemptData = [], totalAttempts = 1, style = {} }) {
+export default function AttemptsTable({ attemptData = [], totalAttempts = 1, customStyle = {} }) {
   return (
     <>
-      <div className={`${styles.congratulations_Body}`}>
-        <table className={`${styles.table_style}`} border="1">
+      <div className={`${styles.congratulations_Body}`} style={customStyle}>
+        <table className={`${styles.table_style}`}>
           <thead>
             <tr>
               <td>Attempt:</td>
@@ -21,7 +21,9 @@ export default function AttemptsTable({ attemptData = [], totalAttempts = 1, sty
                   <td>
                     {data?.examScore || 0} / {data?.totalMarks || 0}
                   </td>
-                  <td style={{ color: style.color }}>{data.result}</td>
+                  <td style={{ color: data.result?.includes('failed') ? '#F53D41' : '#26BA4D' }}>
+                    {data.result}
+                  </td>
                 </tr>
               );
             })}

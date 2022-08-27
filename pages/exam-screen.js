@@ -503,10 +503,12 @@ const ExamScreen = () => {
           setCurrent={setCurrent}
           isFullScreen={isFullScreen}
           setIsFullScreen={setIsFullScreen}
+          isTestExam={true}
         />
       ) : (
         // <ExamLandingPage setIsLearner={setIsLearner} />
         <ExamInstruction
+          isTestExam={true}
           setIsLearner={setIsLearner}
           isFullScreen={isFullScreen}
           setIsFullScreen={setIsFullScreen}

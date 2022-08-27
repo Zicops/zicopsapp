@@ -19,10 +19,17 @@ const UserContextProvider = (props) => {
     setBookmarkData([
       ...bookmarkData,
       {
-        id: data.id,
-        timestamp: data.timestamp,
-        title: data.title,
-        captureImg: data.captureImg
+        user_bm_id: data?.user_bm_id,
+        user_id: data?.user_id,
+        user_lsp_id: data?.user_lsp_id,
+        course_id: data?.course_id,
+        user_course_id: data?.user_course_id,
+        module_id: data?.module_id,
+        topic_id: data?.topic_id,
+        time_stamp: data?.time_stamp,
+        name: data?.name,
+        is_active: data?.is_active
+        // captureImg: data?.captureImg
       }
     ]);
   };
@@ -43,9 +50,13 @@ const UserContextProvider = (props) => {
   return (
     <userContext.Provider
       value={{
-        isAdmin, makeAdmin, bookmarkData, addBookmarkData,
+        isAdmin,
+        makeAdmin,
+        bookmarkData,
+        addBookmarkData,
         setBookmarkData, // TODO: remove later
-        notes, addNotes
+        notes,
+        addNotes
       }}>
       {props.children}
     </userContext.Provider>

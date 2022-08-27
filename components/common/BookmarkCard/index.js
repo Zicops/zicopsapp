@@ -16,7 +16,7 @@ export default function BookmarkCard({ data = {}, styleClass }) {
             </div>
             <div className={`${styles.bookmarkText}`}>
               <div className={`${styles.bookmarkTime}`}>
-                {data?.timestamp || '04:57'} <span>{data?.courseName || 'Course Name'} </span>
+                {data?.timestamp || '00:00'} <span>{data?.courseName || 'Course Name'} </span>
               </div>
               <p>{data?.title || 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'}</p>
             </div>

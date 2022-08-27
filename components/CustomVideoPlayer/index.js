@@ -56,7 +56,6 @@ export default function CustomVideo({ set }) {
 
   useEffect(() => {
     set(true);
-    setFloatingNotes([]);
 
     // reset video progress when unmounted
     // return () => handleMouseMove({ target: { value: 0 } });
@@ -80,7 +79,7 @@ export default function CustomVideo({ set }) {
     if (isPreview && playerState.progress === 100) set(false);
 
     // autoplay next video
-    if (playerState.progress === 100) playNextVideo();
+    if (playerState.progress === 100) playNextVideo('binge');
 
     // add logic for preventing binge button for last video
     if (topicContent && showBingeButtons !== null) {
@@ -138,15 +137,16 @@ export default function CustomVideo({ set }) {
     <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
       {/* floating notes */}
       {floatingNotes?.map((noteObj, i) => {
-        if (!noteObj.isFloating) return null;
-        if (!noteObj.isPinned && !!hideTopBar) {
+        if (noteObj?.topic_id !== videoData?.topicContent[0]?.topicId) return null;
+        if (!noteObj?.isFloating) return null;
+        if (!noteObj?.isPinned && !!hideTopBar) {
           handleClose(noteObj);
           return null;
         }
 
         return (
           <DraggableDiv
-            key={noteObj?.index}
+            key={`${noteObj?.sequence}-${noteObj?.user_notes_id}`}
             initalPosition={{
               x: noteObj.x,
               y: noteObj.y

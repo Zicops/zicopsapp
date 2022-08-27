@@ -71,7 +71,7 @@ function LatestCourseList({ time }) {
     client: queryClient
   });
 
-  let latestCourses = data?.latestCourses.courses;
+  let latestCourses = data?.latestCourses.courses?.filter((c) => c?.is_active);
 
   return (
     <ZicopsTable
