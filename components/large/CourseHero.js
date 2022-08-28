@@ -131,7 +131,7 @@ const CourseHero = ({ set }) => {
           .course-header {
             // background-image: url('');
             background-image: url(${data?.bgImage || '../images/bg-new.png'});
-            background-position: bottom left;
+            background-position: center;
             background-repeat: no-repeat;
             background-size: 100%;
             background-size: cover;
@@ -143,9 +143,9 @@ const CourseHero = ({ set }) => {
             background: rgba(0, 0, 0, 0);
             background: linear-gradient(
               90deg,
-              rgba(0, 0, 0, 0.5) 0%,
-              rgba(0, 0, 0, 1) 40%,
-              rgba(0, 0, 0, 0) 70%,
+              rgba(0, 0, 0, 1) 0%,
+              rgba(0, 0, 0, 0.9) 35%,
+              rgba(0, 0, 0, 0.8) 50%,
               rgba(0, 0, 0, 0) 100%
             );
           }
