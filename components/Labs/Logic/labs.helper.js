@@ -23,14 +23,14 @@ export const board = [
 ];
 
 export const roomData = [
-  { id: 0, img: '/images/dnd1.jpg', route: '/c', x: 3, y: 2 },
-  { id: 1, img: '/images/dnd2.jpg', route: '/css', x: 3, y: 10 },
-  { id: 2, img: '/images/dnd1.jpg', route: '/blizJs', x: 3, y: 20 },
-  { id: 3, img: '/images/dnd3.jpg', route: '/redwoodJs', x: 3, y: 28 },
-  { id: 4, img: '/images/dnd1.jpg', route: '/golang', x: 4, y: 7 },
-  { id: 5, img: '/images/dnd2.jpg', route: '/c++', x: 4, y: 24 },
-  { id: 6, img: '/images/dnd1.jpg', route: '/rust', x: 9, y: 2 },
-  { id: 7, img: '/images/dnd3.jpg', route: '/angularJs', x: 9, y: 10 },
-  { id: 8, img: '/images/dnd1.jpg', route: '/reactJs', x: 9, y: 20 },
-  { id: 9, img: '/images/dnd3.jpg', route: '/php', x: 9, y: 28 }
+  { id: 0, img: '/images/reactJs_logo.png', route: '/reactJs', x: 3, y: 2 },
+  { id: 1, img: '/images/cpp_logo.png', route: '/c++', x: 3, y: 10 },
+  { id: 2, img: '/images/angular_logo.png', route: '/angular', x: 3, y: 20 },
+  { id: 3, img: '/images/tailwindCss_logo.png', route: '/tailwindCSS', x: 3, y: 28 },
+  { id: 4, img: '/images/graphql_logo.png', route: '/graphql', x: 4, y: 7 },
+  { id: 5, img: '/images/nodeJs_logo.png', route: '/nodeJs', x: 4, y: 24 },
+  { id: 6, img: '/images/tensorFlow_logo.jpg', route: '/tensorFlow', x: 9, y: 2 },
+  { id: 7, img: '/images/html_logo.jpg', route: '/html', x: 9, y: 10 },
+  { id: 8, img: '/images/python_logo.png', route: '/python', x: 9, y: 20 },
+  { id: 9, img: '/images/php_logo.png', route: '/php', x: 9, y: 28 }
 ];
