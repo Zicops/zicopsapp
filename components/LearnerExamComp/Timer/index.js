@@ -5,12 +5,15 @@ import { UserExamDataAtom } from '@/state/atoms/video.atom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../InfoSection/infoSection.module.scss';
-import { getEndTime } from '../Logic/exam.helper';
+import { data, getEndTime } from '../Logic/exam.helper';
 
 export default function Timer({ submitPaper }) {
-  const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
+  let learnerExamData = useRecoilValue(LearnerExamAtom);
+
+  if (!learnerExamData?.examData?.id) learnerExamData = data;
+
   const [userExamData, setUserExamData] = useRecoilState(UserExamDataAtom);
 
   const [timer, setTimer] = useState(latestTime());
@@ -41,11 +44,13 @@ export default function Timer({ submitPaper }) {
 
     return () => {
       clearInterval(timeInterval);
+      timerGenerator().next(true);
       // secondsToHMS(timerGenerator().next(true));
     };
   }, []);
 
   useEffect(async () => {
+    console.log(isExamEnded);
     if (isExamEnded) await submitPaper();
   }, [isExamEnded]);
 
@@ -74,12 +79,12 @@ export default function Timer({ submitPaper }) {
     const durationLeft = (+duration + +bufferTime) * 60;
 
     const _timeLeft = (durationLeft > timeDiff ? timeDiff : durationLeft) - durationSpent;
-    // console.log(_timeLeft, durationSpent, attemptData);
 
     return _timeLeft;
   }
 
-  function* timerGenerator() {
+  function* timerGenerator(isReset = false) {
+    if (isReset) totalDuration = getDurationLeft();
     if (totalDuration < 0) yield 0;
 
     yield --totalDuration;

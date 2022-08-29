@@ -23,7 +23,7 @@ const ProctoredSection = () => {
         </div>
         <div className={`${styles.proctor_section_info}`}>
           <p>{`${userData?.first_name || ''} ${userData?.last_name || ''}`}</p>
-          <p>0909</p>
+          <p>{`${userData?.id?.substr(0, 4)}`}</p>
         </div>
       </div>
     </div>

@@ -29,3 +29,12 @@
   width: 60%;
   margin-left: 10px;
 }
+
+.hintBtn {
+  color: $darkThree;
+
+  span {
+    font-weight: 600;
+    cursor: pointer;
+  }
+}

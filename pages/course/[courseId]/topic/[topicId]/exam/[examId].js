@@ -1177,7 +1177,7 @@ const ExamScreen = () => {
 
     setUserCourseData(_courseData);
     setUserExamData(_examData);
-    if (isNewAttempt === 'new') return setStartExam('startNewAttempt');
+    if (isNewAttempt === 'new') return setStartExam('startNewAttemptNow');
 
     setLearnerExamData({
       ...learnerExamData,
@@ -1198,7 +1198,7 @@ const ExamScreen = () => {
         setQuestionData={setQuestionData}
         current={current}
         setCurrent={setCurrent}
-        calculateResult={calculateResult}
+        calculateResult={async () => await calculateResult()}
         syncDataWithBackend={() => syncDataWithBackend()}
         handleExamStart={async () => await setUserAttemptData()}
         startExam={startExam}
@@ -1210,7 +1210,9 @@ const ExamScreen = () => {
           console.log(userExamData?.userExamAttempts[attemptIndex], userExamData);
           setStartExam('start');
         }}
-        handleNewAttempt={() => setStartExam('newAttempt')}
+        handleNewAttempt={() => {
+          setStartExam('newAttempt');
+        }}
       />
     </>
   );

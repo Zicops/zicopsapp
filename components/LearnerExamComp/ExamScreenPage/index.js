@@ -9,24 +9,24 @@ import ExamInstructions from '../ExamInstructions';
 import styles from '../learnerExam.module.scss';
 
 export default function ExamScreenPage({
+  isSampleTest = false,
+  isLoading = false,
   isLearner,
-  isLoading,
   questionData,
   setQuestionData,
   current,
   setCurrent,
-  calculateResult,
-  syncDataWithBackend,
-  handleExamStart,
-  startExam,
-  handlePopUpClose,
-  handleContinue,
-  handleNewAttempt
+  calculateResult = () => {},
+  syncDataWithBackend = () => {},
+  handleExamStart = () => {},
+  startExam = '',
+  handlePopUpClose = () => {},
+  handleContinue = () => {},
+  handleNewAttempt = () => {}
 }) {
   const router = useRouter();
   const examId = router.query?.examId || null;
   const courseId = router.query?.courseId || null;
-  const topicId = router.query?.topicId || null;
 
   const refFullscreen = useRef(null);
 
@@ -46,6 +46,8 @@ export default function ExamScreenPage({
   }, []);
 
   function backToCourse() {
+    if (isSampleTest) return router.push(`${localStorage?.getItem('sampleTestStartLink') || '/'}`);
+
     router.push(`/course/${courseId}?activateExam=${examId}`, `/course/${courseId}`);
   }
 

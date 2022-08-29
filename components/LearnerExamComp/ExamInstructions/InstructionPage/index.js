@@ -1,4 +1,5 @@
 import AttempHistory from '@/components/AttemptHistory';
+import RTE from '@/components/common/FormComponents/RTE';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -6,8 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
 import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
 import styles from '../../learnerExam.module.scss';
-import { getIsExamAccessible } from '../../Logic/exam.helper';
-import { data } from '../Logic/examInstruction.helper';
+import { data, getIsExamAccessible } from '../../Logic/exam.helper';
 
 const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn = () => {} }) => {
   let learnerExamData = useRecoilValue(LearnerExamAtom);
@@ -52,7 +52,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
       <div className={`${styles.aboutExam}`}>
         <div className={`${styles.leftAbout}`}>
           <span>
-            <img src="/images/ExamInstructions/assignment.png" alt="cannot found" /> Exam Type
+            <img src="/images/ExamInstructions/assignment.png" alt="" /> Exam Type
             <span>:</span>{' '}
             <span style={{ textTransform: 'capitalize' }}>
               {learnerExamData?.examData?.scheduleType}
@@ -172,9 +172,9 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
             ? `${styles.instructions} ${styles.instructionsFs}`
             : `${styles.instructions}`
         }>
-        <div dangerouslySetInnerHTML={{ __html: learnerExamData?.examData?.instructions }}></div>
+        {/* <div dangerouslySetInnerHTML={{ __html: learnerExamData?.examData?.instructions }}></div> */}
         {/* {learnerExamData?.examData?.instructions} */}
-        {!learnerExamData?.examData?.id && (
+        {!learnerExamData?.examData?.id ? (
           <>
             <div className={`${styles.genInfo}`}>
               <span>
@@ -221,6 +221,12 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
               </ol>
             </div>
           </>
+        ) : (
+          <RTE
+            isReadOnly={true}
+            // customStyles={{ background: 'var(--black)' }}
+            value={learnerExamData?.examData?.instructions}
+          />
         )}
       </div>
       <div className={`${styles.instructionFooter}`}>
