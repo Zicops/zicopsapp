@@ -1,7 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   GET_EXAM_CONFIG,
@@ -37,20 +36,15 @@ import {
   GET_USER_EXAM_RESULTS,
   userQueryClient
 } from '@/api/UserQueries';
-import ExamAlertPopupOne from '@/components/ExamAlertPopup/ExamAlertPopupOne';
-import LearnerExamComponent from '@/components/LearnerExamComp';
-import ExamInstruction from '@/components/LearnerExamComp/ExamInstructions';
-import styles from '@/components/LearnerExamComp/learnerExam.module.scss';
+import ExamScreenPage from '@/components/LearnerExamComp/ExamScreenPage';
 import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
-import { DIFFICULTY, getUnixFromDate, toggleFullScreen } from '@/helper/utils.helper';
+import { DIFFICULTY, getUnixFromDate } from '@/helper/utils.helper';
 import { LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
-import { CircularProgress } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import moment from 'moment';
 
 const ExamScreen = () => {
@@ -103,25 +97,10 @@ const ExamScreen = () => {
 
   const [questionData, setQuestionData] = useRecoilState(QuestionOptionDataAtom);
   const [current, setCurrent] = useState({ id: 0, question: {}, options: [] });
-  const [isFullScreen, setIsFullScreen] = useState(0);
   const [isLearner, setIsLearner] = useState(false);
   const [startExam, setStartExam] = useState('startNewAttempt');
-  const refFullscreen = useRef(null);
 
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
-
-  // update full screen state
-  useEffect(() => {
-    window.addEventListener('resize', () => {
-      setIsFullScreen(
-        !!(
-          document.fullscreenElement ||
-          document.webkitFullscreenElement ||
-          document.mozFullScreenElement
-        )
-      );
-    });
-  }, []);
 
   useEffect(async () => {
     if (!startExam?.includes('startNewAttempt')) return;
@@ -1210,90 +1189,30 @@ const ExamScreen = () => {
     });
   }
 
-  function backToCourse() {
-    router.push(`/course/${courseId}?activateExam=${examId}`, `/course/${courseId}`);
-  }
-
-  // loader screen till loading
-  if (loading) {
-    return (
-      <div className={styles.loadingExamScreen}>
-        <ThemeProvider
-          theme={createTheme({
-            palette: {
-              primary: {
-                main: '#6bcfcf'
-              }
-            }
-          })}>
-          <CircularProgress />
-        </ThemeProvider>
-      </div>
-    );
-  }
-
   return (
-    <div ref={refFullscreen}>
-      {isLearner ? (
-        <LearnerExamComponent
-          data={questionData}
-          setData={setQuestionData}
-          current={current}
-          setCurrent={setCurrent}
-          isFullScreen={isFullScreen}
-          setIsFullScreen={setIsFullScreen}
-          calculateResult={calculateResult}
-          syncDataWithBackend={() => syncDataWithBackend()}
-        />
-      ) : (
-        // <ExamLandingPage setIsLearner={setIsLearner} />
-        <ExamInstruction
-          handleStart={async () => await setUserAttemptData()}
-          isFullScreen={isFullScreen}
-          setIsFullScreen={setIsFullScreen}
-          handleBackBtn={backToCourse}
-        />
-      )}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '10px',
-          display: 'flex',
-          gap: '10px',
-          marginLeft: '40px'
-        }}>
-        <div
-          onClick={() => setIsFullScreen(toggleFullScreen(refFullscreen.current))}
-          style={{ cursor: 'pointer' }}>
-          {isFullScreen ? (
-            <Image src="/images/svg/fullscreen_exit.svg" height={30} width={30} />
-          ) : (
-            <Image src="/images/svg/fullscreen.svg" height={30} width={30} />
-          )}
-        </div>
-        <div onClick={backToCourse} style={{ cursor: 'pointer' }}>
-          <Image src="/images/svg/clear.svg" height={30} width={30} />
-        </div>
-      </div>
-
-      {startExam?.includes('alertOne') && (
-        <ExamAlertPopupOne
-          handleClose={() => setStartExam(null)}
-          handleContinue={() => {
-            const attemptIndex = userExamData?.userExamAttempts?.findIndex(
-              (attempt) => attempt?.user_ea_id === userExamData?.currentAttemptId
-            );
-            console.log(userExamData?.userExamAttempts[attemptIndex], userExamData);
-            setStartExam('start');
-          }}
-          handleNewAttempt={() => {
-            setStartExam('newAttempt');
-          }}
-          isLastAttempt={startExam?.includes('alertOneLast')}
-        />
-      )}
-      {/* <ExamAlertPopupTwo /> */}
-    </div>
+    <>
+      <ExamScreenPage
+        isLearner={isLearner}
+        isLoading={loading}
+        questionData={questionData}
+        setQuestionData={setQuestionData}
+        current={current}
+        setCurrent={setCurrent}
+        calculateResult={calculateResult}
+        syncDataWithBackend={() => syncDataWithBackend()}
+        handleExamStart={async () => await setUserAttemptData()}
+        startExam={startExam}
+        handlePopUpClose={() => setStartExam(null)}
+        handleContinue={() => {
+          const attemptIndex = userExamData?.userExamAttempts?.findIndex(
+            (attempt) => attempt?.user_ea_id === userExamData?.currentAttemptId
+          );
+          console.log(userExamData?.userExamAttempts[attemptIndex], userExamData);
+          setStartExam('start');
+        }}
+        handleNewAttempt={() => setStartExam('newAttempt')}
+      />
+    </>
   );
 };
 

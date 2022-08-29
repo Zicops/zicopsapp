@@ -119,7 +119,6 @@ export default function Timer({ submitPaper }) {
       padding: '2px 0px'
     })
   };
-  console.log(selectStyles);
 
   return (
     <>
