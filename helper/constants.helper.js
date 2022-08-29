@@ -6,7 +6,6 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
   '/exam-live',
   '/exam-screen',
-  '/exam-screen/[examId]',
   '/course/[courseId]/topic/[topicId]/exam/[examId]',
   '/login',
   '/reset-password',
