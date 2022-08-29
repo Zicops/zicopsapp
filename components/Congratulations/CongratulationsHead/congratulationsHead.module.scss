@@ -4,8 +4,10 @@
   // height: 400px;
   // margin-right: 100px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 20px;
+
   text-align: center;
   color: $white;
 }
