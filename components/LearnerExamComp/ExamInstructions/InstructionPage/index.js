@@ -9,7 +9,7 @@ import styles from '../../learnerExam.module.scss';
 import { getIsExamAccessible } from '../../Logic/exam.helper';
 import { data } from '../Logic/examInstruction.helper';
 
-const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
+const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn = () => {} }) => {
   let learnerExamData = useRecoilValue(LearnerExamAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
 
@@ -248,7 +248,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
           <button onClick={handleStart} disabled={!isExamAccessible}>
             Start
           </button>
-          <button onClick={() => router.back()}>Back</button>
+          <button onClick={handleBackBtn}>Back</button>
         </div>
       </div>
 

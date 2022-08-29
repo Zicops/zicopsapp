@@ -53,6 +53,8 @@ export default function TopicBox({
   const topicContentData = useRecoilValue(TopicContentAtom);
 
   const router = useRouter();
+  const activateExam = router?.query?.activateExam || null;
+
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
@@ -129,6 +131,14 @@ export default function TopicBox({
     });
   }, []);
 
+  // open exam landing page if params exists
+  useEffect(() => {
+    if (!activateExam) return;
+    if (!examData?.examId) return;
+
+    loadTopicExam({ examId: activateExam, filter: true });
+  }, [activateExam, examData?.examId]);
+
   let topicImageLink = imageTypeTopicBox(type);
 
   // calculate topic Index with generator function
@@ -203,8 +213,9 @@ export default function TopicBox({
     }
   }, [currrentModule]);
 
-  async function loadTopicExam() {
+  async function loadTopicExam(obj) {
     if (topic?.type !== 'Assessment') return;
+    if (obj?.filter && obj?.examId !== examData?.examId) return;
 
     const topicExam = examData;
     if (!topicExam) return;
@@ -396,7 +407,8 @@ export default function TopicBox({
                 <span>{data?.examData?.difficultyLevel}</span>
 
                 <span>
-                  Attempt: {!data?.examData?.noAttempts ? '0' : data?.examData?.noAttempts}
+                  Attempt:{' '}
+                  {+data?.examData?.noAttempts < 0 ? 'Unlimited' : data?.examData?.noAttempts}
                 </span>
 
                 {!!data?.examData?.duration && (

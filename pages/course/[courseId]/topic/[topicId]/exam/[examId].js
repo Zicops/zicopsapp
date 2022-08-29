@@ -1210,6 +1210,10 @@ const ExamScreen = () => {
     });
   }
 
+  function backToCourse() {
+    router.push(`/course/${courseId}?activateExam=${examId}`, `/course/${courseId}`);
+  }
+
   // loader screen till loading
   if (loading) {
     return (
@@ -1247,6 +1251,7 @@ const ExamScreen = () => {
           handleStart={async () => await setUserAttemptData()}
           isFullScreen={isFullScreen}
           setIsFullScreen={setIsFullScreen}
+          handleBackBtn={backToCourse}
         />
       )}
       <div
@@ -1257,14 +1262,16 @@ const ExamScreen = () => {
           gap: '10px',
           marginLeft: '40px'
         }}>
-        <div onClick={() => setIsFullScreen(toggleFullScreen(refFullscreen.current))}>
+        <div
+          onClick={() => setIsFullScreen(toggleFullScreen(refFullscreen.current))}
+          style={{ cursor: 'pointer' }}>
           {isFullScreen ? (
             <Image src="/images/svg/fullscreen_exit.svg" height={30} width={30} />
           ) : (
             <Image src="/images/svg/fullscreen.svg" height={30} width={30} />
           )}
         </div>
-        <div onClick={() => router.push('/exam')}>
+        <div onClick={backToCourse} style={{ cursor: 'pointer' }}>
           <Image src="/images/svg/clear.svg" height={30} width={30} />
         </div>
       </div>
