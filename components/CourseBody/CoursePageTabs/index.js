@@ -25,7 +25,7 @@ const CoursePageTabs = forwardRef(
             .middle_tab {
               position: sticky;
               top: 70px;
-              z-index: 1;
+              z-index: 1000;
 
               background: var(--tile-bg);
 

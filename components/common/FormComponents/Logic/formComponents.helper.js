@@ -72,7 +72,8 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
       fontSize: '14px',
       cursor: 'pointer',
       '&:hover': {
-        backgroundColor: 'var(--black)'
+        backgroundColor: 'var(--black)',
+        color: 'var(--white)'
       }
     }),
     singleValue: (provided, state) => ({ ...provided, color: 'var(--white)' }),
