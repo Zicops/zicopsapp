@@ -7,7 +7,8 @@ export const classroomData = [
     designation: 'Ex-SDE, Amazon',
     price: '1299',
     date: '18th August, Thursday',
-    time: '08:00 PM - 11:00 PM'
+    time: '08:00 PM - 11:00 PM',
+    link: '/courses'
   },
   {
     bgImage: '/images/icons8-team-dhZtNlvNE8M-unsplash.jpg',
@@ -17,7 +18,8 @@ export const classroomData = [
     designation: 'Ex-SDE, Amazon',
     price: '1299',
     date: '18th August, Thursday',
-    time: '08:00 PM - 11:00 PM'
+    time: '08:00 PM - 11:00 PM',
+    link: '/courses'
   },
   {
     bgImage: '/images/carl-heyerdahl-KE0nC8-58MQ-unsplash.jpg',
@@ -27,6 +29,7 @@ export const classroomData = [
     designation: 'Mentor, Zicops',
     price: '1299',
     date: '18th August, Thursday',
-    time: '08:00 PM - 11:00 PM'
+    time: '08:00 PM - 11:00 PM',
+    link: '/courses'
   }
 ];
