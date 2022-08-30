@@ -14,3 +14,4 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
 ];
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
+export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];

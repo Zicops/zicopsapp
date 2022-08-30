@@ -1,6 +1,7 @@
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { ApolloProvider, useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { mutationClient } from '../../../API/Mutations';
 import { GET_COURSE, queryClient } from '../../../API/Queries';
@@ -16,7 +17,7 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 export default function EditCoursePage() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  const { updateCourseMaster } = useContext(courseContext);
+  const { updateCourseMaster, fullCourse } = useContext(courseContext);
   const router = useRouter();
   const editCourseId = router.query?.courseId || null;
   const [loadCourseData, { error: errorCourseData }] = useLazyQuery(GET_COURSE, {
@@ -34,12 +35,19 @@ export default function EditCoursePage() {
     );
   }, [editCourseId]);
 
+  function getPageTitle() {
+    if (fullCourse?.type === COURSE_TYPES[0]) return 'Edit Course';
+    if (fullCourse?.type === COURSE_TYPES[3]) return 'Edit Test Series';
+
+    return 'Edit';
+  }
+
   return (
     <>
       <Sidebar sidebarItemsArr={courseSidebarData} />
 
       <MainBody>
-        <AdminHeader title="Edit Course" />
+        <AdminHeader title={getPageTitle()} />
 
         <ApolloProvider client={mutationClient}>
           <MainBodyBox>
