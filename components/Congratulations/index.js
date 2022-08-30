@@ -10,9 +10,11 @@ const Congratulations = (props) => {
   const { resultIndex, attemptData, isSampleTest, handleReturnToMainScreen } = props;
 
   const router = useRouter();
+  const cpId = router?.query?.cpId || '';
+  const examId = router?.query?.examId || '';
 
   const style = getResultStyles(data[resultIndex].result);
-  console.log(style);
+  // console.log(style);
   return (
     <div style={{ width: '70%' }}>
       <CongratulationsScreen>

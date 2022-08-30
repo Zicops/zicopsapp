@@ -895,6 +895,7 @@ const ExamScreen = () => {
         : _examData?.userExamAttempts[attemptIndex];
     // console.log(examAttemptData, learnerData, questionData);
     _examData?.userExamAttempts?.push(examAttemptData);
+    _examData.currentAttemptId = examAttemptData?.user_ea_id;
 
     if (_examData?.userExamProgress?.length) return true;
 
@@ -1058,6 +1059,7 @@ const ExamScreen = () => {
     const currentExamAttemptData = structuredClone(
       userExamData?.userExamAttempts?.find((a) => a?.user_ea_id === userExamData?.currentAttemptId)
     );
+    console.log(currentExamAttemptData);
     const examResultData = {
       user_id: currentExamAttemptData?.user_id,
       user_ea_id: currentExamAttemptData?.user_ea_id,
@@ -1093,8 +1095,8 @@ const ExamScreen = () => {
     if (passingMarks === 0) examResultData.result_status = 'completed';
 
     const sendExamData = {
-      user_id: examResultData?.user_id,
-      user_ea_id: examResultData?.user_ea_id,
+      user_id: userData?.id,
+      user_ea_id: userExamData?.currentAttemptId,
       user_score: examResultData?.user_score,
       correct_answers: examResultData?.correct_answers,
       wrong_answers: examResultData?.wrong_answers,
@@ -1106,6 +1108,7 @@ const ExamScreen = () => {
       })
     };
     console.log(sendExamData);
+    // return;
     const resp = await addExamResult({ variables: sendExamData }).catch((err) => {
       console.log(err);
       isError = true;
