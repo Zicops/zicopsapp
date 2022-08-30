@@ -397,6 +397,7 @@ const CoursesAccordian = () => {
                 type={'button'}
                 clickHandler={() => {
                   setIsAssignPopUpOpen(false);
+                  setCourseAssignData({ ...courseAssignData, endDate: new Date() });
                 }}
               />
               <UserButton

@@ -219,6 +219,7 @@ export default function CourseHero({ isPreview = false }) {
               type={'button'}
               clickHandler={() => {
                 setIsAssignPopUpOpen(false);
+                setCourseAssignData({ ...courseAssignData, endDate: new Date() });
               }}
             />
             <UserButton
