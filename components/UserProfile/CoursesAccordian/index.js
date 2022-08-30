@@ -363,7 +363,8 @@ const CoursesAccordian = () => {
           // title="Course Mapping Configuration"
           // submitBtn={{ handleClick: handleSubmit }}
           popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-          size="smaller"
+          // size="smaller"
+          customStyles={{ width: '400px' }}
           isFooterVisible={false}
           positionLeft="50%">
           <div className={`${styles.assignCoursePopUp}`}>
@@ -386,7 +387,7 @@ const CoursesAccordian = () => {
                   setIsPopUpDataPresent(true);
                   setCourseAssignData({ ...courseAssignData, endDate: date });
                 }}
-                customStyle={styles.dataPickerStyle}
+                styleClass={styles.dataPickerStyle}
               />
             </section>
             <div className={`${styles.assignCourseButtonContainer}`}>

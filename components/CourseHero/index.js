@@ -185,7 +185,8 @@ export default function CourseHero({ isPreview = false }) {
         // title="Course Mapping Configuration"
         // submitBtn={{ handleClick: handleSubmit }}
         popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-        size="smaller"
+        // size="smaller"
+        customStyles={{ width: '400px' }}
         isFooterVisible={false}
         positionLeft="50%">
         <div className={`${style.assignCoursePopUp}`}>
@@ -208,7 +209,7 @@ export default function CourseHero({ isPreview = false }) {
                 setIsPopUpDataPresent(true);
                 setCourseAssignData({ ...courseAssignData, endDate: date });
               }}
-              customStyle={style.dataPickerStyle}
+              styleClass={style.dataPickerStyle}
             />
           </section>
           <div className={`${style.assignCourseButtonContainer}`}>
