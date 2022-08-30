@@ -6,7 +6,8 @@ export default function TopicFileSlider({
   itemsArr,
   showResources,
   isResourceShown,
-  isNotes = null
+  isNotes = null,
+  hideResourcesOnEmpty = false
 }) {
   return (
     <div style={{ position: 'relative' }}>
@@ -18,7 +19,7 @@ export default function TopicFileSlider({
           handleClick: showResources,
           isResourceShown: isResourceShown,
           isNotes,
-          customStyles: { padding: '5px' }
+          hideResourcesOnEmpty
         }}
       />
 

@@ -5,7 +5,6 @@ export default function BookmarkCard({ data = {}, styleClass }) {
     alert('go go go!');
   };
 
-  console.log(data);
   return (
     <>
       <div className={`${styles.bookmarksCard} ${styleClass}`} onClick={gotoPage}>

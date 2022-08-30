@@ -182,7 +182,8 @@ export default function UiComponents({
   ];
   return (
     <>
-      <DraggableDiv initalPosition={{ x: '0px', y: '0px' }}>
+      {/* Static content toolbar */}
+      {/* <DraggableDiv initalPosition={{ x: '0px', y: '0px' }}>
         <div className={`${styles.toolbar}`} onClick={() => setIsToolbarOpen(!isToolbarOpen)}>
           <span>Toolbar</span>
 
@@ -202,7 +203,7 @@ export default function UiComponents({
               })}
           </div>
         </div>
-      </DraggableDiv>
+      </DraggableDiv> */}
 
       <div className={`${styles.customUiContainer} ${styleClass}`}>
         <div className={`${styles.topIconsContainer}`}>

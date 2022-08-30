@@ -138,8 +138,8 @@ export default function CustomVideo({ set }) {
       {/* floating notes */}
       {floatingNotes?.map((noteObj, i) => {
         if (noteObj?.topic_id !== videoData?.topicContent[0]?.topicId) return null;
-        if (!noteObj.isFloating) return null;
-        if (!noteObj.isPinned && !!hideTopBar) {
+        if (!noteObj?.isFloating) return null;
+        if (!noteObj?.isPinned && !!hideTopBar) {
           handleClose(noteObj);
           return null;
         }
