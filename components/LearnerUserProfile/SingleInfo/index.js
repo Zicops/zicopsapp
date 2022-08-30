@@ -9,6 +9,8 @@ import { isDisabledArr } from '../Logic/singleInfo.helper';
 import { useLazyQuery } from '@apollo/client';
 import { GET_USER_ORGANIZATIONS, userQueryClient } from '@/api/UserQueries';
 import { getUserData } from '@/helper/loggeduser.helper';
+import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
+import PhoneInputBox from '@/components/common/FormComponents/PhoneInputBox';
 
 const SingleInfo = ({ userData, isEditable = true, isOrg = false }) => {
   const [tempData, setTempData] = useState(userData.info);
@@ -17,6 +19,8 @@ const SingleInfo = ({ userData, isEditable = true, isOrg = false }) => {
   const [loadUserOrg] = useLazyQuery(GET_USER_ORGANIZATIONS, {
     client: userQueryClient
   });
+
+  const { setPhCountryCode } = useHandleAddUserDetails();
 
   function checkOrg(e, isOrg, userData) {
     if (isOrg) {
@@ -57,17 +61,31 @@ const SingleInfo = ({ userData, isEditable = true, isOrg = false }) => {
       <div className={`${styles.textWraper}`}>
         <div className={`${styles.smallText}`}>{userData.label}:</div>
         {isEditable ? (
-          <LabeledInput
-            styleClass={`${styles.inputField}`}
-            inputOptions={{
-              inputName: `${userData.inputName}`,
-              placeholder: `Enter ${userData.label}`,
-              value: checkOrg(null, isOrg, userData),
-              maxLength: 60,
-              isDisabled: isDisabledArr.includes(userData.label)
-            }}
-            changeHandler={(e) => checkOrg(e, isOrg, userData)}
-          />
+          userData?.label === 'Contact' ? (
+            <div className={`${styles.contactInputContainer}`}>
+              {/* <label>Contact Number:</label> */}
+              <PhoneInputBox
+                value={userDataMain?.phone}
+                changeHandler={(phNo, data) => {
+                  setUserDataMain((prevValue) => ({ ...prevValue, phone: phNo }));
+                  setPhCountryCode(data.countryCode?.toUpperCase());
+                }}
+                isLabel={false}
+              />
+            </div>
+          ) : (
+            <LabeledInput
+              styleClass={`${styles.inputField}`}
+              inputOptions={{
+                inputName: `${userData.inputName}`,
+                placeholder: `Enter ${userData.label}`,
+                value: checkOrg(null, isOrg, userData),
+                maxLength: 60,
+                isDisabled: isDisabledArr.includes(userData.label)
+              }}
+              changeHandler={(e) => checkOrg(e, isOrg, userData)}
+            />
+          )
         ) : (
           <div className={`${styles.largeText}`}>{checkOrg(null, isOrg, userData)} </div>
         )}

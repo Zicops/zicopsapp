@@ -103,6 +103,21 @@
   grid-template-columns: 50% 50%;
 }
 
+.contactInputContainer {
+  display: flex;
+  justify-content: stretch;
+  color: $white;
+  width: 400px;
+  height: 40px;
+  div {
+    // border-color: $primary !important;
+    border-width: 2px !important;
+  }
+  input {
+    height: 100% !important;
+  }
+}
+
 .userInfoButtonContainer {
   display: flex;
   align-items: center;
