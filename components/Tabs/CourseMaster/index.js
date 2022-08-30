@@ -1,4 +1,5 @@
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { LANGUAGES } from '@/helper/constants.helper';
 import { loadCatSubCat } from '@/helper/data.helper';
 import { useContext, useState } from 'react';
 import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
@@ -67,20 +68,7 @@ export default function CourseMaster() {
     isSearchEnable: true
   };
 
-  const allLanguages = [
-    { value: 'English', label: 'English' },
-    { value: 'Hindi', label: 'Hindi' },
-    { value: 'Marathi', label: 'Marathi' },
-    { value: 'Bengali', label: 'Bengali' },
-    { value: 'Telegu', label: 'Telegu' },
-    { value: 'Tamil', label: 'Tamil' },
-    { value: 'Kannada', label: 'Kannada' },
-    { value: 'Punjabi', label: 'Punjabi' },
-    { value: 'Assamese', label: 'Assamese' },
-    { value: 'Orria', label: 'Orria' },
-    { value: 'Bhojpuri', label: 'Bhojpuri' },
-    { value: 'Maithili', label: 'Maithili' }
-  ];
+  const allLanguages = LANGUAGES?.map((lang) => ({ label: lang, value: lang }));
   const allSelectedLanguages = [];
 
   fullCourse?.language?.map((val) => allSelectedLanguages.push({ value: val, label: val }));
@@ -91,6 +79,7 @@ export default function CourseMaster() {
     options: allLanguages,
     value: allSelectedLanguages,
     isSearchEnable: true,
+    menuPlacement: 'top',
     isMulti: true
   };
 
