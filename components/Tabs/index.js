@@ -1,3 +1,4 @@
+import { STATUS } from '@/state/atoms/utils.atoms';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -44,7 +45,7 @@ export default function CourseTabs() {
             isCourseUploading
           ) : (
             <>
-              {fullCourse.status}{' '}
+              {fullCourse.status || STATUS.display[0]}{' '}
               <span style={{ fontSize: '12px', fontWeight: '400' }}>
                 {isCourseUploading ? '' : displayTime}
               </span>
