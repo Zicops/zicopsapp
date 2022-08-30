@@ -13,7 +13,13 @@ export default function CourseHead({ title }) {
   const router = useRouter();
   const options = Array(COURSE_TYPES?.length)
     .fill(null)
-    .map((v, i) => ({ value: COURSE_TYPES[i], label: snakeCaseToTitleCase(COURSE_TYPES[i]) }));
+    .map((v, i) => {
+      return {
+        value: COURSE_TYPES[i],
+        label: snakeCaseToTitleCase(COURSE_TYPES[i]),
+        isDisabled: [1, 2].includes(i)
+      };
+    });
   // const options = [
   //   { value:  'self-paced', label: 'Self Paced' },
   //   { value: 'classroom', label: 'Classroom' },
