@@ -1,14 +1,10 @@
 @import '../../../styles/base.scss';
 
-.btnPrimary {
-  width: 70px;
-  cursor: pointer;
-  font-family: sans-serif;
-  background-color: $primary;
-  color: $black;
+.btnPrimary,
+.btnDark {
+  min-width: 70px;
   font-size: 13px;
   padding: 8px 5px;
-  border: none;
   border-radius: 3px;
   opacity: 0.8;
   cursor: pointer;
@@ -17,18 +13,14 @@
   }
 }
 
+.btnPrimary {
+  background-color: $primary;
+  color: $black;
+  border: none;
+}
+
 .btnDark {
-  width: 70px;
   background-color: $black;
   color: $primary;
-  font-family: sans-serif;
-  font-size: 13px;
-  padding: 8px 5px;
   border: $primary 2px solid;
-  opacity: 0.9;
-  border-radius: 3px;
-  cursor: pointer;
-  &:hover {
-    opacity: 1;
-  }
 }
