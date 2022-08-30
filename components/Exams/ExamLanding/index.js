@@ -1,9 +1,16 @@
+import { GET_USER_EXAM_ATTEMPTS, userQueryClient } from '@/api/UserQueries';
+import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import AttempHistory from '@/components/AttemptHistory';
+import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useContext, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   GET_EXAM_CONFIG,
   GET_EXAM_INSTRUCTION,
@@ -18,7 +25,7 @@ import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
 import styles from './examLanding.module.scss';
 
-export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = false }) {
+export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = false }) {
   const { fullCourse } = useContext(courseContext);
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
     client: queryClient
@@ -38,11 +45,19 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
 
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const userData = useRecoilValue(UserStateAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
   var btnStyle;
+
+  const [userExamData, setUserExamData] = useState({
+    userAttempts: [],
+    cpId: '',
+    isBtnActive: false
+  });
+  const [isAttemptHistoryOpen, setIsAttempyHistoryOpen] = useState(null);
 
   const router = useRouter();
 
@@ -125,7 +140,7 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
     const insObj = {
       instructionId: insData?.id || null,
       passingCriteria: insData?.PassingCriteria,
-      noAttempts: insData?.NoAttempts,
+      noAttempts: +insData?.NoAttempts,
       instructions: insData?.Instructions || '',
       accessType: insData?.AccessType || '',
       is_ins_active: insData?.IsActive || ''
@@ -168,7 +183,25 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
       is_config_active: confData?.IsActive || false
     };
 
-    setLearnerExamData({
+    const userCourseProgressId = userCourseData?.userCourseProgress?.find(
+      (cp) => cp?.topic_id === topicExamData?.topicId
+    )?.user_cp_id;
+
+    const attemptRes = await loadQueryDataAsync(
+      GET_USER_EXAM_ATTEMPTS,
+      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      {},
+      userQueryClient
+    );
+    const examAttemptData =
+      attemptRes?.getUserExamAttempts?.filter(
+        (ea) =>
+          ea?.exam_id === examId &&
+          ea?.attempt_status === 'completed' &&
+          ea?.user_cp_id === userCourseProgressId
+      ) || [];
+
+    const _examData = {
       ...learnerExamData,
       examData: {
         ...masterObj,
@@ -186,7 +219,43 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
         isNegativeMarking: false,
         expertiseLevel: paperMaster?.difficultyLevel
       }
+    };
+
+    function getIsExamAccessible(learnerExamData) {
+      if (!learnerExamData) return false;
+      if (learnerExamData?.examData?.scheduleType === SCHEDULE_TYPE[1]) return true;
+
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - 15);
+      const isExamStarted = learnerExamData?.examData.examStart < now;
+      const examEndDate = getEndTime(learnerExamData);
+      const isExamEnded = examEndDate < Date.now();
+
+      return isExamStarted && !isExamEnded;
+    }
+
+    let timer = null;
+    let isExamAccessible = getIsExamAccessible(_examData);
+
+    setUserExamData({
+      userAttempts: examAttemptData,
+      cpId: userCourseProgressId,
+      isBtnActive: isExamAccessible
     });
+    setLearnerExamData(_examData);
+
+    if (!isExamAccessible) {
+      setInterval(() => {
+        isExamAccessible = getIsExamAccessible(_examData);
+        console.log('isExamAccessible', isExamAccessible);
+        if (!isExamAccessible) return;
+
+        setUserExamData((prev) => ({ ...prev, isBtnActive: true }));
+        clearInterval(timer);
+      }, SYNC_DATA_IN_SECONDS * 1000);
+    }
+
+    return () => clearInterval(timer);
   }, [topicExamData?.examId, topicExamData?.topicId]);
 
   const { exam_landing_btn_container, exam_landing_btn_container1 } = styles;
@@ -229,49 +298,77 @@ export default function ExamLanding({ testType = 'Quiz', isDisplayedInCourse = f
         isProctoring={learnerExamData?.landingPageData?.isProctoring}
         totalQuestions={learnerExamData?.landingPageData?.totalQuestions}
         isNegativeMarking={learnerExamData?.landingPageData?.isNegativeMarking}
-        noAttempt={learnerExamData?.examData?.noAttempts}
+        noAttempts={
+          +learnerExamData?.examData?.noAttempts > 0
+            ? learnerExamData?.examData?.noAttempts
+            : 'Unlimited'
+        }
       />
 
-      <div className={`${btnStyle}`}>
-        <section>
-          <button
-            className={`${styles.exam_landing_btn}`}
-            onClick={() => router.push('/exam-screen')}>
-            Take Sample Test
-          </button>
+      <div className={`${styles.btnContainer} ${btnStyle}`}>
+        <section className={`${styles.centerBtns}`}>
+          {!userExamData?.userAttempts?.length ? (
+            <button
+              className={`${styles.exam_landing_btn}`}
+              onClick={() => {
+                localStorage?.setItem('sampleTestStartLink', router.asPath);
+                router.push('/exam-screen');
+              }}>
+              Take Sample Test
+            </button>
+          ) : (
+            <button
+              className={`${styles.exam_landing_btn}`}
+              onClick={() => setIsAttempyHistoryOpen(true)}>
+              View Attempt History
+            </button>
+          )}
           <button
             onClick={() => {
-              localStorage?.setItem('sampleTestStartLink', router.asPath);
+              if (!userExamData?.isBtnActive) return;
+
               router.push(
                 `${router.asPath}/topic/${topicExamData?.topicId}/exam/${topicExamData?.examId}`
               );
             }}
-            className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>
-            Take Exam Now
+            disabled={userExamData?.isBtnActive}
+            className={`${styles.exam_landing_btn} ${
+              !userExamData?.isBtnActive ? styles.exam_landing_btn_takeExam : ''
+            }`}>
+            Take Exam Now {learnerExamData?.examData?.type}
           </button>
-          {testType === 'Exam' && (
-            <div>
-              <p
-                style={{
-                  color: 'var(--white)',
-                  fontSize: '10px',
-                  textAlign: 'right',
-                  marginTop: '10px'
-                }}>
-                This link will be active 15 minutes before the exam
-              </p>
-            </div>
-          )}
+          {testType === 'Exam' &&
+            SCHEDULE_TYPE[0]?.includes(learnerExamData?.examData?.scheduleType) && (
+              <div>
+                <p
+                  style={{
+                    color: 'var(--white)',
+                    fontSize: '10px',
+                    textAlign: 'right',
+                    marginTop: '5px',
+                    marginRight: '-15px'
+                  }}>
+                  This link will be active 15 minutes before the exam
+                </p>
+              </div>
+            )}
         </section>
-        {testType === 'Exam' && (
+
+        {testType === 'Exam' && userExamData?.userAttempts?.length && (
           <section>
-            <button className={`${styles.exam_landing_btn}`}>View Full Course</button>
-            <button className={`${styles.exam_landing_btn}`} style={{ color: 'var(--dark_three' }}>
-              Skip Exam
-            </button>
+            {/* <button className={`${styles.exam_landing_btn}`}>View Full Course</button> */}
+            <button className={`${styles.exam_landing_btn}`}>Next</button>
           </section>
         )}
       </div>
+
+      {isAttemptHistoryOpen && (
+        <AttempHistory
+          examId={topicExamData?.examId}
+          userCourseProgressId={userExamData?.cpId}
+          handleClose={() => setIsAttempyHistoryOpen(false)}
+        />
+      )}
     </div>
   );
 }

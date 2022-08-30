@@ -41,9 +41,8 @@ const Congratulations = (props) => {
         />
       </CongratulationsScreen>
       <CongratulationsFooter>
-        <CongratulationsScreenButton title={'Download Result'} disable={!!isSampleTest} />
+        <CongratulationsScreenButton title={'Download Result'} />
         <CongratulationsScreenButton
-          disable={!!isSampleTest}
           handleClick={() => router.push(`/answer-key/cp/${cpId}/exam/${examId}`)}
           title={'View Attempt History'}
         />
