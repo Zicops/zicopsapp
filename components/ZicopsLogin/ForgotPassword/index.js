@@ -1,3 +1,4 @@
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import HomeHeader from '@/components/HomePage/HomeHeader';
 import { isEmail } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -15,13 +16,13 @@ const ForgotPassword = ({ setPage }) => {
   const router = useRouter();
   const [sendEmail, setSendEmail] = useState('');
 
-  function handleEmail(e) {
-    setSendEmail(e.target.value);
+  function handleEmail(e, setState) {
+    setState(e.target.value);
   }
 
   function handleSubmit() {
-    isEmail(sendEmail);
-    console.log(sendEmail);
+    const checkEmail = isEmail(sendEmail);
+    if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
   }
 
   return (
@@ -33,12 +34,21 @@ const ForgotPassword = ({ setPage }) => {
           sub_heading={'Start your first step to learning here!'}
         />
         <div className="login_body">
-          <input
+          {/* <input
             className={`${styles.login_email_input}`}
             type={'email'}
             placeholder={'Email address'}
             chngeHandle={(e) => handleEmail(e)}
             tabIndex={1}
+          /> */}
+          <LabeledInput
+            styleClass={styles.login_email_input}
+            inputOptions={{
+              inputName: 'email',
+              placeholder: 'Email address',
+              value: sendEmail
+            }}
+            changeHandler={(e) => handleEmail(e, setSendEmail)}
           />
 
           <div className="change_buttons">
