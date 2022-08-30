@@ -12,7 +12,6 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/reset-password',
   '/account-setup',
   '/forgot-password',
-  '/forgot-password',
   '/info/about-us',
   '/info/collaborate',
   '/info/contact-us',
