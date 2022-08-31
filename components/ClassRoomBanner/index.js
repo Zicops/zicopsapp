@@ -1,6 +1,9 @@
+import { useRouter } from 'next/router';
 import styles from './classRoomBanner.module.scss';
 
 const ClassRoomBanner = ({ data }) => {
+  const passData = JSON.stringify(data) ;
+  const router = useRouter()
     return (
       <div className={`${styles.classroomBanner}`}>
         <div className={`${styles.imgContainer}`}>
@@ -23,7 +26,7 @@ const ClassRoomBanner = ({ data }) => {
           </div>
           <div className={`${styles.classroomBannerButtons}`}>
             <button className={`${styles.bookNowButton}`}>Book Now</button>
-            <button>See More</button>
+            <button onClick={()=>router.push(`${data?.link}?data=${passData}`,`${data?.link}`)}>See More</button>
           </div>
           <div className={`${styles.classroomSchedule}`}>
             <div className={`${styles.classroomScheduleDate}`}>
