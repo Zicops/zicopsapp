@@ -258,7 +258,7 @@ select.nav_search_dropdow:selected {
     transform-origin: top center;
     animation: scaleZ 500ms $var * 60ms ease-in-out forwards;
     &:hover {
-      background-color: $darkOne;
+      background-color: $darkOne !important;
     }
   }
 }
@@ -300,6 +300,16 @@ select.nav_search_dropdow:selected {
 
 .subMenuItem {
   max-width: 180px;
+}
+
+.selectedSubMenuItem {
+  opacity: 0;
+  width: 250px;
+  transform-origin: top center;
+  animation: scaleZ 500ms 60ms ease-in-out forwards;
+  &:hover {
+    background-color: $primary !important;
+  }
 }
 
 .notificationIcon {
