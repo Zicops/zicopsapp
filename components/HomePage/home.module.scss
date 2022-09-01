@@ -393,3 +393,51 @@ $DELAY: $DURATION / 2;
 .animated {
   margin-top: 120px;
 }
+
+
+.homeFooterElement {
+  transition: 1s linear;
+}
+
+.move_up {
+  position: relative;
+  transform: translateY(calc(-91vh + $headerHeight));
+}
+
+.footerOverlay {
+  background-color: $black;
+  height: 100vh;
+  width: 98vw;
+  opacity: 0;
+}
+
+.footerOverlayZoom {
+  position: fixed;
+  inset: 0;
+  animation: showOverlay 1500ms ;
+}
+
+.footerOverlayNone {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+@keyframes showOverlay {
+  0% {
+    opacity: 0.2;
+  }
+
+  20% {
+    opacity: 0.5;
+  }
+
+  60% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 1;
+    z-index: 10;
+  }
+}

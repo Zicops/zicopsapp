@@ -1,0 +1,54 @@
+@import '../../styles/base.scss';
+
+.HomeHeader {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 80px;
+    padding: 0 4%;
+
+    .ZicopsLogo {
+        width: 180px;
+
+        img {
+            object-fit: contain;
+            width: 100%;
+        }
+    }
+
+    .PageRoutes {
+        display: flex;
+        align-items: center;
+        gap: 8vw;
+        height: 40px;
+        color: $white;
+        font-size: 13px;
+    }
+
+    .Login {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        align-items: center;
+        width: 100px;
+        height: 40px;
+        cursor: pointer;
+
+        font-size: 18px;
+        font-weight: 600;
+        color: $primary;
+
+        &:hover {
+            color: $white;
+        }
+
+        img {
+            object-fit: contain;
+            width: 20px;
+        }
+    }
+
+
+}
