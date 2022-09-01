@@ -5,6 +5,7 @@ import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery } from '@apollo/client';
@@ -44,6 +45,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
   });
 
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+  const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
 
@@ -55,9 +57,11 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
   const [userExamData, setUserExamData] = useState({
     userAttempts: [],
     cpId: '',
-    isBtnActive: false
+    isBtnActive: false,
+    nextTopic: null
   });
   const [isAttemptHistoryOpen, setIsAttempyHistoryOpen] = useState(null);
+  const [counter, setCounter] = useState(null);
 
   const router = useRouter();
 
@@ -221,42 +225,100 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       }
     };
 
-    function getIsExamAccessible(learnerExamData) {
-      if (!learnerExamData) return false;
-      if (learnerExamData?.examData?.scheduleType === SCHEDULE_TYPE[1]) return true;
-
-      const now = new Date();
-      now.setMinutes(now.getMinutes() - 15);
-      const isExamStarted = learnerExamData?.examData.examStart < now;
-      const examEndDate = getEndTime(learnerExamData);
-      const isExamEnded = examEndDate < Date.now();
-
-      return isExamStarted && !isExamEnded;
-    }
-
-    let timer = null;
-    let isExamAccessible = getIsExamAccessible(_examData);
-
     setUserExamData({
       userAttempts: examAttemptData,
       cpId: userCourseProgressId,
-      isBtnActive: isExamAccessible
+      isBtnActive: getIsExamAccessible(_examData),
+      nextTopic: getNextTopicId()
     });
     setLearnerExamData(_examData);
+    // console.log(switchToTopic);
+  }, [topicExamData?.examId, topicExamData?.topicId]);
 
-    if (!isExamAccessible) {
-      setInterval(() => {
-        isExamAccessible = getIsExamAccessible(_examData);
-        console.log('isExamAccessible', isExamAccessible);
-        if (!isExamAccessible) return;
+  useEffect(() => {
+    let timer = null;
+    if (userExamData?.isBtnActive) return clearInterval(timer);
 
-        setUserExamData((prev) => ({ ...prev, isBtnActive: true }));
-        clearInterval(timer);
-      }, SYNC_DATA_IN_SECONDS * 1000);
-    }
+    timer = setInterval(() => setCounter((prev) => !prev), SYNC_DATA_IN_SECONDS * 1000);
 
     return () => clearInterval(timer);
-  }, [topicExamData?.examId, topicExamData?.topicId]);
+  }, [counter]);
+
+  useEffect(() => {
+    if (!learnerExamData?.examData?.id) return;
+    if (userExamData?.isBtnActive) return;
+    if (!counter) return;
+
+    const isExamAccessible = getIsExamAccessible();
+
+    if (isExamAccessible) setUserExamData({ ...userExamData, isBtnActive: true });
+    setCounter(null);
+  }, [learnerExamData, counter]);
+
+  function getIsExamAccessible(_data = null) {
+    const _examData = !!_data ? _data : learnerExamData;
+    if (!_examData) return false;
+    if (_examData?.examData?.scheduleType === SCHEDULE_TYPE[1]) return true;
+
+    const startTime = new Date(_examData?.examData.examStart);
+    startTime.setMinutes(startTime.getMinutes() - 15);
+    const isExamStarted = startTime < Date.now();
+    // console.log(isExamStarted);
+    const examEndDate = getEndTime(_examData);
+    const isExamEnded = examEndDate < Date.now();
+
+    return isExamStarted && !isExamEnded;
+  }
+
+  function getNextTopicId() {
+    let nextTopic = null;
+    let modId = null;
+    let currentTopic = null;
+    userCourseData?.allModules?.some((mod, modIndex) => {
+      if (nextTopic === 0) {
+        nextTopic = mod?.topicData?.find((topic) => topic?.sequence === 1);
+      } else {
+        currentTopic = mod?.topicData?.find((topic) => topic?.id === topicExamData?.topicId);
+
+        nextTopic = mod?.topicData?.find((topic) => topic?.sequence === currentTopic?.sequence + 1);
+        // console.log(currentTopic, nextTopic);
+
+        if (!nextTopic && currentTopic) {
+          // console.log(nextTopic, currentTopic);
+          if (userCourseData?.allModules?.length !== modIndex + 1) {
+            nextTopic = 0;
+          }
+        }
+      }
+
+      // mod?.topicData?.some((topic, topicIndex) => {
+      //   console.log(topic);
+      //   if (currentTopic) {
+      //     const topicProgress = userCourseData?.userCourseProgress?.find(
+      //       (obj) => obj?.topic_id === topic?.id
+      //     );
+
+      //     nextTopicData = {
+      //       activeModule: { index: modIndex, id: mod?.id },
+      //       activeTopic: { index: topicIndex, id: topic?.id },
+      //       activeTopicContent: { index: 0, id: topic?.topicContentData[0]?.id },
+      //       triggerPlayerToStartAt: +topicProgress?.video_progress || 0
+      //     };
+      //     console.log(nextTopicData);
+      //     return true;
+      //   }
+      //   if (topic?.id !== topicExamData?.topicId) return false;
+      //   if (topic?.id === topicExamData?.topicId) return (currentTopic = true);
+      // });
+
+      return !!nextTopic;
+    });
+
+    // if (!nextTopicData) data = { ...nextTopicData };
+
+    // console.log(nextTopic, currentTopic);
+    return nextTopic;
+  }
 
   const { exam_landing_btn_container, exam_landing_btn_container1 } = styles;
 
@@ -357,7 +419,14 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
         {testType === 'Exam' && userExamData?.userAttempts?.length && (
           <section>
             {/* <button className={`${styles.exam_landing_btn}`}>View Full Course</button> */}
-            <button className={`${styles.exam_landing_btn}`}>Next</button>
+            <button
+              disabled={!userExamData?.nextTopic}
+              className={`${styles.exam_landing_btn} ${
+                !userExamData?.nextTopic ? styles.exam_landing_btn_takeExam : ''
+              }`}
+              onClick={() => setSwitchToTopic(userExamData?.nextTopic)}>
+              Next
+            </button>
           </section>
         )}
       </div>
