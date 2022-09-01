@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../labs.module.scss';
 
@@ -5,6 +6,8 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
   const pacmanRef = useRef(null);
   const [activeRoom, setActiveRoom] = useState(null);
   const [activeBtn, setActiveBtn] = useState(null);
+
+  const router = useRouter();
 
   // pac man positions,  should be multiples of PACMAN_HEIGHT_WIDTH constant
   const firstRowValueIndex = board.findIndex((row, i) => row[0] === 1);
@@ -45,7 +48,7 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
   useEffect(() => {
     if (!pacmanRef.current) return;
 
-    document.addEventListener('keydown', (e) => {
+    function movePacman(e) {
       if (e.key.includes('Arrow')) e.preventDefault();
 
       if (e.key === 'ArrowUp') updateState(-1, 0, -PACMAN_HEIGHT_WIDTH, 0, 0);
@@ -53,10 +56,13 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
       if (e.key === 'ArrowLeft') updateState(0, -1, 0, -PACMAN_HEIGHT_WIDTH, 1);
       if (e.key === 'ArrowRight') updateState(0, 1, 0, PACMAN_HEIGHT_WIDTH, 3);
 
-      if (e.key === 'Enter' && pacmanRef.current?.activeRoom)
-        alert(pacmanRef.current?.activeRoom?.route);
-    });
-  }, []);
+      if (e.key === 'Enter' && pacmanRef.current?.activeRoom) onRoomClick();
+    }
+
+    document.addEventListener('keydown', movePacman);
+
+    return () => document?.removeEventListener('keydown', movePacman);
+  }, [pacmanRef.current]);
 
   // reset active btn state to null after few seconds
   useEffect(() => {
@@ -70,6 +76,13 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
 
     return () => clearTimeout(timer);
   }, [activeBtn]);
+
+  function onRoomClick(route = null) {
+    if (!route) route = pacmanRef?.current?.activeRoom?.route;
+    if (route?.includes('html')) return router.push(route);
+
+    alert(route);
+  }
 
   function removePreviousDirections() {
     pacmanRef.current?.classList.remove(styles.up);
@@ -160,5 +173,16 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
     if (index === 3) updateState(0, 1, 0, PACMAN_HEIGHT_WIDTH, index);
   }
 
-  return { board, rows, cols, pacmanRef, pacmanData, roomData, activeRoom, handleClick, activeBtn };
+  return {
+    board,
+    rows,
+    cols,
+    pacmanRef,
+    pacmanData,
+    roomData,
+    activeRoom,
+    handleClick,
+    activeBtn,
+    onRoomClick
+  };
 }

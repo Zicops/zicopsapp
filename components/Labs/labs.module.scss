@@ -471,3 +471,19 @@ $side: calc($cellHeightWidth - $diff);
     height: calc(($cellHeightWidth) - ($diff));
   }
 }
+
+.zicopsEditor {
+  display: grid;
+  grid-template-columns: repeat(2, 49%);
+  grid-gap: 2%;
+  background-color: $darkTwo;
+
+  .editor {
+    // background-color: $darkTwo;
+    // max-width: 50vw;
+  }
+
+  .codePreview {
+    background-color: $darkThree;
+  }
+}
