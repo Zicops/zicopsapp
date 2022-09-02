@@ -117,7 +117,7 @@ const UserCohorts = () => {
               }}
               onClick={() => {
                 router.push(
-                  router.asPath + `/${params.row.id}?${params.row.name}`,
+                  router.asPath + `/cohort_id?${params.row.id}`,
                   router.asPath + `/${params.row.id}`
                 );
               }}>
@@ -146,13 +146,7 @@ const UserCohorts = () => {
   return (
     <>
       {/* <CohortMasterTab /> */}
-      <ZicopsTable
-        columns={columns}
-        data={data}
-        tableHeight="70vh"
-        customStyles={{ padding: '10px 20px' }}
-        hideFooterPagination={true}
-      />
+      <ZicopsTable columns={columns} data={data} tableHeight="70vh" hideFooterPagination={true} />
     </>
   );
 };
