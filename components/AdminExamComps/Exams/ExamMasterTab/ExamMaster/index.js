@@ -11,7 +11,6 @@ import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
-import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
 import { customSelectStyles } from '../../../../common/FormComponents/Logic/formComponents.helper';
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
@@ -28,6 +27,7 @@ export default function ExamMaster() {
   const [questionPaperOptions, setQuestionPaperOptions] = useState([]);
 
   const router = useRouter();
+  const examId = router?.query?.examId;
   const isPreview = router.query?.isPreview || false;
 
   const { getTotalMarks, saveExamData } = useHandleExamTab();
@@ -354,7 +354,7 @@ export default function ExamMaster() {
           /> */}
           <RTE
             changeHandler={(e) => {
-              if (!examTabData?.id) return;
+              if (examTabData?.id !== examId) return;
               setExamTabData({ ...examTabData, instructions: e });
             }}
             placeholder="Enter instructions in less than 300 characters."
