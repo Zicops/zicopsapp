@@ -1,6 +1,6 @@
-import Pacman from '../components/Labs/Pacman';
+import Pacman from '../../components/Labs/Pacman';
 
-export default function labs() {
+export default function LabsPage() {
   return (
     <div
       style={{

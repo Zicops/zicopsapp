@@ -1,10 +1,10 @@
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import AlertBox from '@/components/common/AlertBox';
-import ExamAlertPopupTwo from '@/components/ExamAlertPopup/ExamAlertPopupTwo';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { Skeleton } from '@mui/material';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -52,6 +52,7 @@ export default function TopicBox({
   const topicData = useRecoilValue(TopicAtom);
   const topicContentData = useRecoilValue(TopicContentAtom);
 
+  const router = useRouter();
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
@@ -248,7 +249,11 @@ export default function TopicBox({
       <div
         className={`${styles.topic}`}
         onClick={() => {
-          if (!userCourseData?.userCourseMapping?.user_course_id) return setShowAlert(true);
+          if (
+            !router?.asPath?.includes('preview') &&
+            !userCourseData?.userCourseMapping?.user_course_id
+          )
+            return setShowAlert(true);
 
           // if (!userCourseData?.userCourseMapping?.user_course_id) return;
           if (type === 'Assessment') return loadTopicExam();
