@@ -8,7 +8,8 @@ export default function Board(props) {
     activeRoom,
     pacmanRef,
     roomData,
-    pacmanData: { top, left }
+    pacmanData: { top, left },
+    onRoomClick
   } = props;
 
   let roomIndex = -1;
@@ -61,9 +62,7 @@ export default function Board(props) {
                       
                       ${activeRoom?.id === index ? styles.activeRoom : ''}
                       ${i === 5 ? styles.longImg : ''}`}
-                      onClick={() => {
-                        alert(roomData[index].route);
-                      }}>
+                      onClick={() => onRoomClick(roomData[index].route)}>
                       {roomData[roomIndex]?.img && <img src={roomData[roomIndex].img} alt="" />}
 
                       {/* on hover  */}
