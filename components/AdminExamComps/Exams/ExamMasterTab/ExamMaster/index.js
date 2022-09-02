@@ -337,10 +337,9 @@ export default function ExamMaster() {
 
       {/* exam Instructions/Guidelines */}
       <div>
-        <label>
-          Enter Instructions/Guidelines:
-          {/* <MUIRichTextEditor label="Start typing..." /> */}
-          {/* <LabeledTextarea
+        <label>Enter Instructions/Guidelines:</label>
+        {/* <MUIRichTextEditor label="Start typing..." /> */}
+        {/* <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
               inputName: 'instructions',
@@ -352,15 +351,14 @@ export default function ExamMaster() {
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           /> */}
-          <RTE
-            changeHandler={(e) => {
-              if (examTabData?.id !== examId) return;
-              setExamTabData({ ...examTabData, instructions: e });
-            }}
-            placeholder="Enter instructions in less than 300 characters."
-            value={examTabData?.instructions}
-          />
-        </label>
+        <RTE
+          changeHandler={(e) => {
+            if (examTabData?.id !== examId) return;
+            setExamTabData({ ...examTabData, instructions: e });
+          }}
+          placeholder="Enter instructions in less than 300 characters."
+          value={examTabData?.instructions}
+        />
       </div>
 
       <div className={`w-100 ${styles.examMasterLastRow}`}>
