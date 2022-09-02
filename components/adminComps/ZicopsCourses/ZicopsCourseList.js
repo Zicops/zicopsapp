@@ -35,7 +35,7 @@ const columns = [
   {
     field: 'action',
     headerClassName: 'course-list-header',
-    headerName: 'Display',
+    headerName: 'Action',
     sortable: false,
     renderCell: (params) => {
       return (

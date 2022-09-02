@@ -105,7 +105,7 @@ export default function QuestionBankTable({ isEdit = false }) {
     {
       field: 'action',
       headerClassName: 'course-list-header',
-      headerName: 'Display',
+      headerName: 'Action',
       sortable: false,
       renderCell: (params) => {
         return (
