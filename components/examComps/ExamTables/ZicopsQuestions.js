@@ -5,7 +5,7 @@ const columns = [
     field: 'question',
     headerName: 'Questions',
     headerClassName: 'course-list-header',
-    flex: 5,
+    flex: 5
   },
   {
     field: 'type',
@@ -16,32 +16,32 @@ const columns = [
   {
     field: 'action',
     headerClassName: 'course-list-header',
-    headerName: 'Display',
+    headerName: 'Action',
     sortable: false,
     renderCell: (params) => {
-        return (
-          <>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              onClick={() => {}}>
-              <img src="/images/svg/edit-box-line.svg" width={20}></img>
-            </button>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}>
-              <img src="/images/svg/eye-line.svg" width={20}></img>
-            </button>
-          </>
-        );
+      return (
+        <>
+          <button
+            style={{
+              cursor: 'pointer',
+              backgroundColor: 'transparent',
+              outline: '0',
+              border: '0'
+            }}
+            onClick={() => {}}>
+            <img src="/images/svg/edit-box-line.svg" width={20}></img>
+          </button>
+          <button
+            style={{
+              cursor: 'pointer',
+              backgroundColor: 'transparent',
+              outline: '0',
+              border: '0'
+            }}>
+            <img src="/images/svg/eye-line.svg" width={20}></img>
+          </button>
+        </>
+      );
     },
     flex: 0.5
   }
@@ -59,7 +59,8 @@ const data = [
   },
   {
     id: 3,
-    question: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam eveniet odit laudantium?',
+    question:
+      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam eveniet odit laudantium?',
     type: 'MCQ'
   },
   {
@@ -74,7 +75,8 @@ const data = [
   },
   {
     id: 6,
-    question: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam eveniet odit laudantium?',
+    question:
+      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam eveniet odit laudantium?',
     type: 'MCQ'
   },
   {
