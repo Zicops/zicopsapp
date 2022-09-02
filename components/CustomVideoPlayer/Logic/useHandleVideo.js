@@ -195,7 +195,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         return;
     }
 
-    const { currentTime, duration } = videoElement.current;
+    // const { currentTime, duration } = videoElement.current;
+    const currentTime = videoElement?.current?.currentTime;
+    const duration = videoElement?.current?.duration;
     const sendData = {
       userCpId: currentTopicProgress?.user_cp_id,
       userId: userData.id,
