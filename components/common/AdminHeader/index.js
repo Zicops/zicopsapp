@@ -5,6 +5,7 @@ import styles from './adminHeader.module.scss';
 import PopUp from '../PopUp';
 import Sitemap from './Sitemap';
 import AdminSubHeader from './AdminSubHeader';
+import ToolTip from '../ToolTip';
 
 export default function AdminHeader({
   title,
@@ -49,20 +50,26 @@ export default function AdminHeader({
         <div className={styles.icons}>
           {/* TODO: remove first condition */}
           {!route.includes('admin/courses') && isAddShown && (
+            <ToolTip title="Create New Question Bank" placement="left">
+              <img
+                src="/images/plus_big.png"
+                className="rightside_icon"
+                alt=""
+                onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+              />
+            </ToolTip>
+          )}
+          <ToolTip title="Settings" placement="bottom">
+            <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
+          </ToolTip>
+          <ToolTip title="Sitemap" placement="right">
             <img
-              src="/images/plus_big.png"
+              src="/images/sitemap_icon.png"
               className="rightside_icon"
               alt=""
-              onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+              onClick={() => setShowSitemap(true)}
             />
-          )}
-          <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
-          <img
-            src="/images/sitemap_icon.png"
-            className="rightside_icon"
-            alt=""
-            onClick={() => setShowSitemap(true)}
-          />
+          </ToolTip>
         </div>
 
         {/* sitemap pop up */}

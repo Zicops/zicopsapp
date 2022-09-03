@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRef, useState } from 'react';
+import ToolTip from '../Tooltip';
 import styles from './sidebar.module.scss';
 
 // move the styles in sidebar.module.scss in this folder
@@ -50,7 +51,9 @@ export default function Sidebar({ sidebarItemsArr }) {
                     onClick={() => {
                       router.pathname = val.link;
                     }}>
-                    {val.title}
+                    <ToolTip title={val.description} placement="right-end">
+                      <div>{val.title}</div>
+                    </ToolTip>
                   </a>
                 </Link>
               );
@@ -58,18 +61,19 @@ export default function Sidebar({ sidebarItemsArr }) {
           </ul>
         </div>
 
-        <div
-          className={styles.sidebar_footer_menu}
-          style={isSidebarBottomReached ? { position: 'absolute' } : {}}>
-          <ul>
-            <Link href="/admin" className="row">
-              <a>
-                <span>Back to Home</span>
-              </a>
-            </Link>
-          </ul>
-        </div>
-
+        <ToolTip title="Go Back to Admin Home" placement="top">
+          <div
+            className={styles.sidebar_footer_menu}
+            style={isSidebarBottomReached ? { position: 'absolute' } : {}}>
+            <ul>
+              <Link href="/admin" className="row">
+                <a>
+                  <span>Back to Home</span>
+                </a>
+              </Link>
+            </ul>
+          </div>
+        </ToolTip>
         <div ref={lastItem} className={styles.lastItem}></div>
       </div>
     </>
