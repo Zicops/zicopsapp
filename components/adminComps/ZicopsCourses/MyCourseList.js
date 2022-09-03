@@ -65,7 +65,7 @@ function MyLatestCourseList({ time }) {
     });
   }, []);
 
-  const { data } = useQuery(GET_LATEST_COURSES, {
+  const { data, loading } = useQuery(GET_LATEST_COURSES, {
     variables: {
       publish_time: time,
       pageSize: 999999,
@@ -83,6 +83,7 @@ function MyLatestCourseList({ time }) {
       pageSize={pageSize}
       rowsPerPageOptions={[3]}
       tableHeight="70vh"
+      loading={loading}
     />
   );
 }
