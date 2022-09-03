@@ -116,10 +116,7 @@ const UserCohorts = () => {
                 border: '0'
               }}
               onClick={() => {
-                router.push(
-                  router.asPath + `/cohort_id?${params.row.id}`,
-                  router.asPath + `/${params.row.id}`
-                );
+                router.push(router.asPath + `/${params.row.id}`);
               }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
