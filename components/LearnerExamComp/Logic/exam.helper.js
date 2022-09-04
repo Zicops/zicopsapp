@@ -1,4 +1,5 @@
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import moment from 'moment';
 
 export function getPassingMarks(passingCriteria, totalMarks) {
   const [criteria, type] = passingCriteria?.split('-');
@@ -29,12 +30,22 @@ export function getIsExamAccessible(learnerExamData) {
   return isExamStarted && !isExamEnded;
 }
 
+// Data for Sample Test
+const duration = 30;
+const bufferTime = 15;
+
+const startDate = moment().subtract('15', 'minutes').seconds(0);
+const endDate = moment()
+  .add(duration + bufferTime, 'minutes')
+  .seconds(0);
+
+// console.log(startDate.format(), endDate);
+
 export const questionData = [
   {
     id: 1,
     question: {
-      description:
-        'When the switch statement matches the expression with the given labels, how is the comparison done?'
+      description: 'When the switch statement matches the expression with the given labels, how is the comparison done?'
     },
     options: [
       {

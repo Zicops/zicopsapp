@@ -52,24 +52,29 @@ export default function NoteCard({
       status: 'Saved'
     };
 
-    if (noteData?.user_notes_id) {
+    if (isNaN(+noteData?.user_notes_id)) {
       sendNotesData.user_notes_id = noteData?.user_notes_id;
       sendNotesData.is_active = !!sendNotesData?.details?.length;
-      // console.log(sendNotesData);
+      // console.log('update note');
     }
     if (isDelete) sendNotesData.is_active = false;
 
-    console.log(sendNotesData, !isNaN(+sendNotesData?.user_notes_id), sendNotesData?.user_notes_id);
+    // console.log(sendNotesData, isNaN(+noteData?.user_notes_id), sendNotesData?.user_notes_id);
 
     let resNotes = null;
-    if (noteData?.isNew) {
+    let _note = null;
+    if (!sendNotesData.user_notes_id) {
       resNotes = await addUserNotes({ variables: sendNotesData }).catch((err) => {
         console.log(err);
       });
+      _note = resNotes?.data?.addUserNotes[0];
+      // console.log('note added');
     } else if (sendNotesData?.user_notes_id) {
       resNotes = await updateUserNotes({ variables: sendNotesData }).catch((err) => {
         console.log(err);
       });
+      // console.log('note updated');
+      _note = resNotes?.data?.updateUserNotes;
     }
 
     if (!resNotes) return console.log('note not saved');
@@ -81,13 +86,14 @@ export default function NoteCard({
       return note.user_notes_id === noteData?.user_notes_id;
     });
 
-    const data = noteData?.user_notes_id
-      ? resNotes?.data?.updateUserNotes?.[0]
-      : resNotes?.data?.addUserNotes?.[0];
+    // const data = noteData?.user_notes_id
+    //   ? resNotes?.data?.updateUserNotes?.[0]
+    //   : resNotes?.data?.addUserNotes?.[0];
     // console.log(data);
 
-    allNotes[noteIndex].user_notes_id = data?.user_notes_id;
+    allNotes[noteIndex].user_notes_id = _note?.user_notes_id;
 
+    // console.log(allNotes);
     if (isDelete) allNotes?.splice(noteIndex, 1);
     setFloatingNotes(allNotes);
   }

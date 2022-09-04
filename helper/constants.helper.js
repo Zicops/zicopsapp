@@ -6,7 +6,6 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
   '/exam-live',
   '/exam-screen',
-  '/exam-screen/[examId]',
   '/course/[courseId]/topic/[topicId]/exam/[examId]',
   '/login',
   '/reset-password',
@@ -26,3 +25,20 @@ export const LEARNING_SPACE_ID = 'Zicops learning Spaces';
 export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS'
 };
+
+export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
+
+export const LANGUAGES = [
+  'English',
+  'Hindi',
+  'Marathi',
+  'Bengali',
+  'Telegu',
+  'Tamil',
+  'Kannada',
+  'Punjabi',
+  'Assamese',
+  'Orria',
+  'Bhojpuri',
+  'Maithili'
+];
