@@ -13,7 +13,7 @@ import ZicopsTable from '../../common/ZicopsTable';
 import { acceptedFileTypes } from './Logic/questionBank.helper';
 
 export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
-  const [loadQBQuestions, { error: errorQBQuestionsData, refetch }] = useLazyQuery(
+  const [loadQBQuestions, { loading, error: errorQBQuestionsData, refetch }] = useLazyQuery(
     GET_QUESTION_BANK_QUESTIONS,
     { client: queryClient }
   );
@@ -132,6 +132,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
+        loading={loading}
       />
 
       {/* view question pop up */}

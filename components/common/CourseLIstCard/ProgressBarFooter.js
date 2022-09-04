@@ -11,9 +11,11 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
         ) : (
           <>
             <p>
-              Expected Completion by {courseData?.expectedCompletion || '22-06-2022'}
+              Expected Completion by {courseData?.expected_completion || '22-06-2022'}
               <div className={`${styles.dot}`}></div>
-              <span className={`${styles.mandatory}`}>{courseData?.isMandatory || 'Mandatory'}</span>
+              <span className={`${styles.mandatory}`}>
+                {courseData?.isMandatory || 'Mandatory'}
+              </span>
             </p>
             <p className={styles.percent}>{courseData?.timeLeft || '3'} hours of content left</p>
           </>
