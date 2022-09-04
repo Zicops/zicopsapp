@@ -5,6 +5,7 @@ const AssignCourses = ({
   section,
   isHead = false,
   isFolder = false,
+  isRemove = false,
   handleSubmit = () => {},
   handleClick = () => {},
   buttonText = '',
@@ -42,6 +43,7 @@ const AssignCourses = ({
         courseData={courseData}
         handleSubmit={handleSubmit}
         buttonText={buttonText}
+        isRemove={isRemove}
       />
     </>
   );
