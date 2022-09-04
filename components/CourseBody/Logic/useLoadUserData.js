@@ -165,7 +165,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     setFloatingNotes(
       notesDataRes?.getUserNotes?.notes
         ?.filter((notes) => notes?.is_active)
-        ?.map((noteObj) => getNoteCardObj(noteObj))
+        ?.map((noteObj) => getNoteCardObj(noteObj)) || []
     );
 
     const bookmarkDataRes = await loadQueryDataAsync(
@@ -181,7 +181,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       userClient
     );
     // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
-    setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks);
+    setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks || []);
 
     const data = { userCourseMapping: {}, userCourseProgress: [] };
 

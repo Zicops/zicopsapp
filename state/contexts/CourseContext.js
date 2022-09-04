@@ -1,3 +1,4 @@
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { createContext, useState, useReducer, useEffect } from 'react';
 import { tabData } from '../../components/Tabs/Logic/tabs.helper';
 
@@ -28,7 +29,7 @@ const CourseContextProvider = (props) => {
     outcomes: [],
     created_at: '',
     updated_at: '',
-    type: '',
+    type: COURSE_TYPES[0],
     prequisites: [],
     goodFor: [],
     mustFor: [],
@@ -70,7 +71,7 @@ const CourseContextProvider = (props) => {
       outcomes: data.outcomes || [],
       created_at: data.created_at || '',
       updated_at: data.updated_at || '',
-      type: data.type || 'self-paced',
+      type: data.type || COURSE_TYPES[0],
       prequisites: data.prequisites || [],
       goodFor: data.goodFor || [],
       mustFor: data.mustFor || [],

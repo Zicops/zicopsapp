@@ -17,3 +17,8 @@ export const StatusAtom = atom({
   key: 'Status',
   default: STATUS.display[0]
 });
+
+export const SwitchToTopicAtom = atom({
+  key: 'SwitchToTopic',
+  default: null
+});
