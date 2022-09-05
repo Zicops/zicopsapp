@@ -302,6 +302,16 @@ select.nav_search_dropdow:selected {
   max-width: 180px;
 }
 
+.selectedSubMenuItem {
+  opacity: 0;
+  width: 250px;
+  transform-origin: top center;
+  animation: scaleZ 500ms 60ms ease-in-out forwards;
+  &:hover {
+    background-color: $primary !important;
+  }
+}
+
 .notificationIcon {
   cursor: pointer;
   display: flex;

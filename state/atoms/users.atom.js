@@ -90,3 +90,23 @@ export const IsUpdatedAtom = atom({
   key: 'IsUpdated',
   default: false
 });
+
+//cohort master atom
+
+export const CohortMasterData = atom({
+  key: 'cohortMasterState',
+  default: getCohortMasterObject()
+});
+
+export function getCohortMasterObject(data = {}) {
+  return {
+    id: data?.id || null,
+    cohort_name: data?.cohort_name || '',
+    cohort_code: data?.cohort_code || '',
+    status: data?.status || 'is_active',
+    lsp_id: data?.lsp_id || '',
+    cohort_type: data?.cohort_type || '',
+    description: data?.description || '',
+    cohort_image: data?.image || null
+  };
+}

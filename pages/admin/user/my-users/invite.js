@@ -13,9 +13,10 @@ import { userSideBarData } from '../../../../components/common/Sidebar/Logic/sid
 import TabContainer from '../../../../components/common/TabContainer';
 import BulkUpload from '../../../../components/UserComps/BulkUpload';
 import InviteUser from '../../../../components/UserComps/InviteUser';
+import { CUSTOM_ERROR_MESSAGE } from '../../../../helper/constants.helper';
 
 export default function MyUserPage() {
-  const [inviteUsers, { data, loading, error: inviteError }] = useMutation(INVITE_USERS, {
+  const [inviteUsers, { data, loading }] = useMutation(INVITE_USERS, {
     client: userClient
   });
 
@@ -32,25 +33,32 @@ export default function MyUserPage() {
   //handle emails
   async function handleMail() {
     if (emailId.length === 0)
-      return setToastMsg({ type: 'danger', message: 'Add atleast one email!' });
+      return setToastMsg({ type: 'warning', message: 'Add atleast one email!' });
     let emails = emailId.map((item) => item?.props?.children[0]);
-    console.log(emails, emailId);
+    // console.log(emails, emailId);
     //for removing duplicate email ids
     emails = emails.filter((value, index) => emails.indexOf(value) === index);
-    console.log(emails);
+    // console.log(emails);
 
     let isError = false;
+    let errorMsg;
     const resEmail = await inviteUsers({ variables: { emails: emails } }).catch((err) => {
-      let errorMsg = err.graphQLErrors[0]?.message;
+      errorMsg = err.message;
       isError = !!err;
-      return;
     });
 
     if (loading) return setDisableButton(true);
 
-    if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+    if (isError) {
+      const message = JSON.parse(errorMsg.split('body:')[1]);
+      if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.emailError)
+        return setToastMsg({ type: 'danger', message: `Email already exists!` });
+      return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+    }
 
-    console.log(resEmail);
+    // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+
+    setToastMsg({ type: 'success', message: `Emails send successfully!` });
 
     return router.push('/admin/user/my-users');
   }

@@ -35,7 +35,7 @@ const columns = [
   {
     field: 'action',
     headerClassName: 'course-list-header',
-    headerName: 'Display',
+    headerName: 'Action',
     sortable: false,
     renderCell: (params) => {
       return (
@@ -62,7 +62,7 @@ function LatestCourseList({ time }) {
     });
   }, []);
 
-  const { data } = useQuery(GET_LATEST_COURSES, {
+  const { data, loading } = useQuery(GET_LATEST_COURSES, {
     variables: {
       publish_time: time,
       pageSize: 50,
@@ -80,6 +80,7 @@ function LatestCourseList({ time }) {
       pageSize={pageSize}
       rowsPerPageOptions={[3]}
       tableHeight="70vh"
+      loading={loading}
     />
   );
 }

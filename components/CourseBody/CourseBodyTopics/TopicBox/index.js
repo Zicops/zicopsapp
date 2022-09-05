@@ -2,6 +2,7 @@ import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/L
 import AlertBox from '@/components/common/AlertBox';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { Skeleton } from '@mui/material';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -53,11 +54,13 @@ export default function TopicBox({
   const topicContentData = useRecoilValue(TopicContentAtom);
 
   const router = useRouter();
+  const activateExam = router?.query?.activateExam || null;
+
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
-
+  const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
 
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
@@ -128,6 +131,14 @@ export default function TopicBox({
       language: topicExam.language
     });
   }, []);
+
+  // open exam landing page if params exists
+  useEffect(() => {
+    if (!activateExam) return;
+    if (!examData?.examId) return;
+
+    loadTopicExam({ examId: activateExam, filter: true });
+  }, [activateExam, examData?.examId]);
 
   let topicImageLink = imageTypeTopicBox(type);
 
@@ -203,11 +214,37 @@ export default function TopicBox({
     }
   }, [currrentModule]);
 
-  async function loadTopicExam() {
+  useEffect(() => {
+    if (!switchToTopic && !switchToTopic?.id) return;
+    if (topic?.id !== switchToTopic?.id) return;
+    // console.log('switchToTopic', switchToTopic);
+
+    if (type === 'Assessment') return loadTopicExam();
+
+    if (!topicContent.length) return console.log('no topic content found');
+
+    setSwitchToTopic(null);
+    setTopicExamData(getTopicExamObj());
+    updateVideoData(
+      videoData,
+      setVideoData,
+      { moduleId: moduleId, topicId: topic.id },
+      topicData,
+      topicContent,
+      allModuleOptions,
+      currrentModule,
+      setSelectedModule,
+      userCourseData,
+      setUserCourseData
+    );
+  }, [switchToTopic, examData]);
+
+  async function loadTopicExam(obj) {
     if (topic?.type !== 'Assessment') return;
+    if (obj?.filter && obj?.examId !== examData?.examId) return;
 
     const topicExam = examData;
-    if (!topicExam) return;
+    if (!topicExam?.id) return;
     // setToastMsg({ type: 'danger', message: 'No Exam Added!' });
 
     // reset recoil and set new data
@@ -396,7 +433,8 @@ export default function TopicBox({
                 <span>{data?.examData?.difficultyLevel}</span>
 
                 <span>
-                  Attempt: {!data?.examData?.noAttempts ? '0' : data?.examData?.noAttempts}
+                  Attempt:{' '}
+                  {+data?.examData?.noAttempts < 0 ? 'Unlimited' : data?.examData?.noAttempts}
                 </span>
 
                 {!!data?.examData?.duration && (

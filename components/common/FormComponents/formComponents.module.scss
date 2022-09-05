@@ -529,10 +529,35 @@
     }
     :global(.ql-editor.ql-blank::before) {
       color: $darkThree !important;
-    }
 
+      // :global(.ql-container.ql-snow),
+      // :global(.ql-toolbar.ql-snow) {
+      //   @include inputStylesFor('hasValue');
+      // }
+
+      // :global(.ql-toolbar.ql-snow) {
+      //   border-bottom: 2px solid $darkThree;
+      // }
+      // :global(.ql-container.ql-snow) {
+      //   border-top: 0px;
+      // }
+    }
     :global(.ql-snow) {
       color: $white !important;
     }
   }
+
+  // &.hasValue {
+  //   :global(.ql-container.ql-snow),
+  //   :global(.ql-toolbar.ql-snow) {
+  //     @include inputStylesFor('hasValue');
+  //   }
+
+  //   :global(.ql-toolbar.ql-snow) {
+  //     border-bottom: 2px solid $darkThree;
+  //   }
+  //   :global(.ql-container.ql-snow) {
+  //     border-top: 0px;
+  //   }
+  // }
 }
