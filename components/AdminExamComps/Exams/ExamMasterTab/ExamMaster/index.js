@@ -353,7 +353,7 @@ export default function ExamMaster() {
           /> */}
         <RTE
           changeHandler={(e) => {
-            if (examTabData?.id !== examId) return;
+            if (examId && examTabData?.id !== examId) return;
             setExamTabData({ ...examTabData, instructions: e });
           }}
           placeholder="Enter instructions in less than 300 characters."
