@@ -11,7 +11,7 @@ import ZicopsTable from '../../common/ZicopsTable';
 import Preview from './Preview';
 
 export default function QuestionPaperTable({ isEdit = false }) {
-  const [loadQuestionPaper, { error: errorQuestionPaperData }] = useLazyQuery(
+  const [loadQuestionPaper, { loading, error: errorQuestionPaperData }] = useLazyQuery(
     GET_LATEST_QUESTION_PAPERS,
     { client: queryClient }
   );
@@ -132,6 +132,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
+        loading={loading}
       />
 
       {/* preview popup */}

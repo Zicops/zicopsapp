@@ -18,10 +18,10 @@ import ZicopsTable from '../../common/ZicopsTable';
 import AddQuestionBank from './AddQuestionBank';
 
 export default function QuestionBankTable({ isEdit = false }) {
-  const [loadQuestionBank, { error: errorQuestionBankData, refetch }] = useLazyQuery(
-    GET_LATEST_QUESTION_BANK,
-    { client: queryClient }
-  );
+  const [loadQuestionBank, { loading: loadRefetch, error: errorQuestionBankData, refetch }] =
+    useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
+
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const [addPopUp, setAddPopUp] = useRecoilState(PopUpStatesAtomFamily('addQuestionBank'));
@@ -53,7 +53,8 @@ export default function QuestionBankTable({ isEdit = false }) {
       questionBankData[i].noOfQuestions = questionsArr.length;
     }
 
-    setQuestionBank(questionBankData);
+    if (!questionBankData?.length) return setLoading(false);
+    setQuestionBank([...questionBankData], setLoading(false));
   }, []);
 
   // set refetch query in recoil
@@ -72,6 +73,13 @@ export default function QuestionBankTable({ isEdit = false }) {
       questionBank: refetchBankData
     });
   }, []);
+
+  // //useEffect to setLoading false if there is not any data
+  // useEffect(() => {
+  //   if (loadRefetch) return setLoading(true);
+  //   if (!loadRefetch || !questionBank?.length) return setLoading(false);
+  //   // if (!questionBank?.length) return setLoading(false);
+  // }, [loadRefetch]);
 
   useEffect(() => {
     if (addPopUp && !isPopUpDataPresent) setSelectedQB(getQuestionBankObject());
@@ -154,6 +162,7 @@ export default function QuestionBankTable({ isEdit = false }) {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
+        loading={loading}
       />
 
       {/* add question bank pop up */}

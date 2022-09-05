@@ -116,10 +116,7 @@ const UserCohorts = () => {
                 border: '0'
               }}
               onClick={() => {
-                router.push(
-                  router.asPath + `/${params.row.id}?${params.row.name}`,
-                  router.asPath + `/${params.row.id}`
-                );
+                router.push(router.asPath + `/${params.row.id}`);
               }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
@@ -146,13 +143,7 @@ const UserCohorts = () => {
   return (
     <>
       {/* <CohortMasterTab /> */}
-      <ZicopsTable
-        columns={columns}
-        data={data}
-        tableHeight="70vh"
-        customStyles={{ padding: '10px 20px' }}
-        hideFooterPagination={true}
-      />
+      <ZicopsTable columns={columns} data={data} tableHeight="70vh" hideFooterPagination={true} />
     </>
   );
 };

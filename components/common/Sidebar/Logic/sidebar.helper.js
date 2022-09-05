@@ -64,11 +64,11 @@ export const userSideBarData = {
       title: 'My Users',
       link: '/admin/user/my-users'
     },
-    {
-      title: 'User Roles',
-      // link: '/admin/user/users-roles'
-      link: ''
-    },
+    // {
+    //   title: 'User Roles',
+    //   // link: '/admin/user/users-roles'
+    //   link: ''
+    // },
     {
       title: 'User Cohort',
       link: '/admin/user/user-cohort'

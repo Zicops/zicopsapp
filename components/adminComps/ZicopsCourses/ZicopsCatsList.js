@@ -32,14 +32,14 @@ function ZicopsCategoryList() {
       }
     });
   }, []);
-  
-  const { data } = useQuery(GET_CATS);
+
+  const { data, loading } = useQuery(GET_CATS);
 
   let categories = [];
 
   if (data)
     data.allCategories.map((val, index) => categories.push({ id: index + 1, catName: val }));
-  
+
   return (
     <ZicopsTable
       columns={columns}
@@ -47,6 +47,7 @@ function ZicopsCategoryList() {
       pageSize={pageSize}
       rowsPerPageOptions={[3]}
       tableHeight="70vh"
+      loading={loading}
     />
   );
 }
