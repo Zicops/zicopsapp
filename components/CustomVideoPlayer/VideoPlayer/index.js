@@ -131,20 +131,20 @@ export default function VideoPlayer({
                   srcLang="en"
                   default
                   hidden
-                  src={
-                    isTrackSrcAvailable
-                      ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
-                          ?.url
-                      : ''
-                  }
                   // src={
                   //   isTrackSrcAvailable
-                  //     ? `/api/loadFile?filePath=${encodeURIComponent(
-                  //         topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
-                  //           ?.url
-                  //       )}`
+                  //     ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
+                  //         ?.url
                   //     : ''
                   // }
+                  src={
+                    isTrackSrcAvailable
+                      ? `/api/getSubtitleFile?filePath=${encodeURIComponent(
+                          topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
+                            ?.url
+                        )}`
+                      : ''
+                  }
                   // src={'/pineapple.vtt'}
                 />
               )}
