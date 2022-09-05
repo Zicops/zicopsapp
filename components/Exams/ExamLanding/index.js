@@ -416,7 +416,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
             )}
         </section>
 
-        {testType === 'Exam' && userExamData?.userAttempts?.length && (
+        {testType === 'Exam' && (
           <section>
             {/* <button className={`${styles.exam_landing_btn}`}>View Full Course</button> */}
             <button
@@ -425,7 +425,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
                 !userExamData?.nextTopic ? styles.exam_landing_btn_takeExam : ''
               }`}
               onClick={() => setSwitchToTopic(userExamData?.nextTopic)}>
-              Next
+              {userExamData?.userAttempts?.length ? 'Next' : 'Skip'}
             </button>
           </section>
         )}
