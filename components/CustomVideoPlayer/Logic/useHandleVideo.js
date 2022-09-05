@@ -210,7 +210,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       topicId: currentTopicProgress?.topic_id,
       topicType: 'Content',
       status: isCompleted ? 'completed' : 'in-progress',
-      videoProgress: isCompleted ? '100' : playerState?.progress?.toString(),
+      videoProgress: type === 'binge' ? '100' : playerState?.progress?.toString(),
       timestamp: `${currentTime}-${duration}`
     };
 

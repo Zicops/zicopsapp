@@ -230,7 +230,7 @@ export default function CustomVideo({ set }) {
                 text: 'Next Topic',
                 classes: styles.nextPlayBtn,
                 clickHandler: () => {
-                  playNextVideo();
+                  playNextVideo('binge');
                   setShowBingeButtons(false);
                 }
               }}
