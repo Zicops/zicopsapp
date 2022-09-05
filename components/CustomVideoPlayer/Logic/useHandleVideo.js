@@ -122,8 +122,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
             const vidDur = videoElement?.current?.duration;
             const startProgress = +topicProgress[0]?.video_progress;
 
-            videoElement.current.currentTime = (vidDur * startProgress) / 100;
-            setPlayerState({ ...playerState, progress: startProgress });
+            if (startProgress < 98) {
+              videoElement.current.currentTime = (vidDur * startProgress) / 100;
+              setPlayerState({ ...playerState, progress: startProgress });
+            }
           }
           continue;
         }
@@ -208,7 +210,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       topicId: currentTopicProgress?.topic_id,
       topicType: 'Content',
       status: isCompleted ? 'completed' : 'in-progress',
-      videoProgress: playerState?.progress?.toString(),
+      videoProgress: isCompleted ? '100' : playerState?.progress?.toString(),
       timestamp: `${currentTime}-${duration}`
     };
 
