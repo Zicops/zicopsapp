@@ -101,6 +101,7 @@ export default function VideoPlayer({
       {!videoData.videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
 
       <button
+        style={{ opacity: 0, zIndex: -10000000, position: 'absolute', top: '0px' }}
         onClick={() => {
           let c = videoType + 1;
           if (c > 3) c = 1;
