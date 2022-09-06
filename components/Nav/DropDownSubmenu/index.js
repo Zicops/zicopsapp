@@ -53,12 +53,14 @@ export default function DropDownSubMenu({
               // background: 'var(--dark_one)'
             };
             if (elements.customStyle) {
-              customStyles = { ...customStyles ,...elements.customStyle};
+              customStyles = { ...customStyles, ...elements.customStyle };
             }
             return (
               <MenuItem
                 key={title}
-                className={`${styles.subMenuItem} ${styles[`dropdown_item_${index + 1}`]}`}
+                className={`${styles.subMenuItem} ${
+                  elements.customStyle ? elements.customClass : styles[`dropdown_item_${index + 1}`]
+                }`}
                 style={customStyles}
                 onClick={(e) => {
                   // e.stopPropagation();

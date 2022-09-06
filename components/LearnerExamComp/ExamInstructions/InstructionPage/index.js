@@ -1,4 +1,5 @@
 import AttempHistory from '@/components/AttemptHistory';
+import RTE from '@/components/common/FormComponents/RTE';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -6,10 +7,9 @@ import { useRecoilValue } from 'recoil';
 import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
 import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
 import styles from '../../learnerExam.module.scss';
-import { getIsExamAccessible } from '../../Logic/exam.helper';
-import { data } from '../Logic/examInstruction.helper';
+import { data, getIsExamAccessible } from '../../Logic/exam.helper';
 
-const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
+const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn = () => {} }) => {
   let learnerExamData = useRecoilValue(LearnerExamAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
 
@@ -52,7 +52,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
       <div className={`${styles.aboutExam}`}>
         <div className={`${styles.leftAbout}`}>
           <span>
-            <img src="/images/ExamInstructions/assignment.png" alt="cannot found" /> Exam Type
+            <img src="/images/ExamInstructions/assignment.png" alt="" /> Exam Type
             <span>:</span>{' '}
             <span style={{ textTransform: 'capitalize' }}>
               {learnerExamData?.examData?.scheduleType}
@@ -172,9 +172,9 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
             ? `${styles.instructions} ${styles.instructionsFs}`
             : `${styles.instructions}`
         }>
-        <div dangerouslySetInnerHTML={{ __html: learnerExamData?.examData?.instructions }}></div>
+        {/* <div dangerouslySetInnerHTML={{ __html: learnerExamData?.examData?.instructions }}></div> */}
         {/* {learnerExamData?.examData?.instructions} */}
-        {!learnerExamData?.examData?.id && (
+        {!learnerExamData?.examData?.id ? (
           <>
             <div className={`${styles.genInfo}`}>
               <span>
@@ -221,6 +221,12 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
               </ol>
             </div>
           </>
+        ) : (
+          <RTE
+            isReadOnly={true}
+            // customStyles={{ background: 'var(--black)' }}
+            value={learnerExamData?.examData?.instructions}
+          />
         )}
       </div>
       <div className={`${styles.instructionFooter}`}>
@@ -248,7 +254,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam }) => {
           <button onClick={handleStart} disabled={!isExamAccessible}>
             Start
           </button>
-          <button onClick={() => router.back()}>Back</button>
+          <button onClick={handleBackBtn}>Back</button>
         </div>
       </div>
 

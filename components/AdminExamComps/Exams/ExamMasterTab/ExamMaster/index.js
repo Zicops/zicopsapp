@@ -13,7 +13,6 @@ import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
-import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
 import { customSelectStyles } from '../../../../common/FormComponents/Logic/formComponents.helper';
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
@@ -30,6 +29,7 @@ export default function ExamMaster() {
   const [questionPaperOptions, setQuestionPaperOptions] = useState([]);
 
   const router = useRouter();
+  const examId = router?.query?.examId;
   const isPreview = router.query?.isPreview || false;
 
   const { getTotalMarks, saveExamData } = useHandleExamTab();
@@ -389,10 +389,9 @@ export default function ExamMaster() {
 
       {/* exam Instructions/Guidelines */}
       <div>
-        <label>
-          Enter Instructions/Guidelines:
-          {/* <MUIRichTextEditor label="Start typing..." /> */}
-          {/* <LabeledTextarea
+        <label>Enter Instructions/Guidelines:</label>
+        {/* <MUIRichTextEditor label="Start typing..." /> */}
+        {/* <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
               inputName: 'instructions',
@@ -404,12 +403,14 @@ export default function ExamMaster() {
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           /> */}
-          <RTE
-            changeHandler={(e) => setExamTabData({ ...examTabData, instructions: e })}
-            placeholder="Enter instructions in less than 300 characters."
-            value={examTabData?.instructions}
-          />
-        </label>
+        <RTE
+          changeHandler={(e) => {
+            if (examId && examTabData?.id !== examId) return;
+            setExamTabData({ ...examTabData, instructions: e });
+          }}
+          placeholder="Enter instructions in less than 300 characters."
+          value={examTabData?.instructions}
+        />
       </div>
 
       <div className={`w-100 ${styles.examMasterLastRow}`}>

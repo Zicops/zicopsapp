@@ -39,6 +39,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const topicContent = useRecoilValue(TopicContentAtom);
   const [seek, setSeek] = useState(0);
+  const [dataSyncing, setDataSyncing] = useState(false);
   const [freezeScreen, setFreezeScreen] = useState(false);
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
@@ -121,8 +122,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
             const vidDur = videoElement?.current?.duration;
             const startProgress = +topicProgress[0]?.video_progress;
 
-            videoElement.current.currentTime = (vidDur * startProgress) / 100;
-            setPlayerState({ ...playerState, progress: startProgress });
+            if (startProgress < 98) {
+              videoElement.current.currentTime = (vidDur * startProgress) / 100;
+              setPlayerState({ ...playerState, progress: startProgress });
+            }
           }
           continue;
         }
@@ -174,14 +177,16 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }, [playerState?.isPlaying]);
 
   async function syncVideoProgress(type) {
-    if (!userCourseData?.userCourseMapping?.user_course_id) return;
+    if (dataSyncing) return;
+    setDataSyncing(true);
+    if (!userCourseData?.userCourseMapping?.user_course_id) return setDataSyncing(false);
 
     const userCourseMapData = structuredClone(userCourseData);
     const currentProgressIndex = userCourseMapData?.userCourseProgress?.findIndex(
       (obj) => obj?.topic_id === videoData?.topicContent[0]?.topicId
     );
     // TODO: what to do if no progress found?
-    if (currentProgressIndex < 0) return;
+    if (currentProgressIndex < 0) return setDataSyncing(false);
 
     const currentTopicProgress = userCourseMapData?.userCourseProgress[currentProgressIndex];
 
@@ -192,7 +197,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
       if (+currentTopicProgress?.video_progress > +playerState?.progress)
         // return console.log('progress saved is greater');
-        return;
+        return setDataSyncing(false);
     }
 
     // const { currentTime, duration } = videoElement.current;
@@ -205,7 +210,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       topicId: currentTopicProgress?.topic_id,
       topicType: 'Content',
       status: isCompleted ? 'completed' : 'in-progress',
-      videoProgress: playerState?.progress?.toString(),
+      videoProgress: type === 'binge' ? '100' : playerState?.progress?.toString(),
       timestamp: `${currentTime}-${duration}`
     };
 
@@ -223,6 +228,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       userCourseMapData.activeTopicContent = { index: null, id: null };
       userCourseMapData.activeTopicSubtitle = { index: null, id: null };
     }
+    if (type !== 'binge') setDataSyncing(false);
     setUserCourseData({ ...userCourseData, ...userCourseMapData });
   }
 

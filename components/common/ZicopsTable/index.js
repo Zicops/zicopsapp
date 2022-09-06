@@ -27,6 +27,7 @@ const ZicopsTable = ({
   rowsPerPageOptions,
   tableHeight,
   customStyles = {},
+  loading = false,
   hideFooterPagination = false
 }) => {
   return (
@@ -55,6 +56,7 @@ const ZicopsTable = ({
         pageSize={pageSize}
         rowsPerPageOptions={rowsPerPageOptions}
         pagination
+        loading={loading}
       />
     </div>
   );

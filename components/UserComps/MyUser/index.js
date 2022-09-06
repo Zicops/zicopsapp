@@ -13,9 +13,13 @@ export default function MyUser({ getUser }) {
   const [userId, setUserId] = useState([]);
   const [data, setData] = useState([]);
 
-  const [loadUsersData, { error: errorUserData, refetch }] = useLazyQuery(GET_USERS_FOR_ADMIN, {
-    client: userQueryClient
-  });
+  // const [loading, setLoading] = useState(true);
+  const [loadUsersData, { loading, error: errorUserData, refetch }] = useLazyQuery(
+    GET_USERS_FOR_ADMIN,
+    {
+      client: userQueryClient
+    }
+  );
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
@@ -44,7 +48,7 @@ export default function MyUser({ getUser }) {
         role: item?.role
       }));
     // console.log(uData);
-    return setData([...uData]);
+    setData([...uData]);
   }, [userId]);
 
   const columns = [
@@ -139,6 +143,7 @@ export default function MyUser({ getUser }) {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="75vh"
+        loading={loading}
       />
     </>
   );

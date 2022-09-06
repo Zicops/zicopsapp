@@ -1,4 +1,5 @@
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import moment from 'moment';
 
 export function getPassingMarks(passingCriteria, totalMarks) {
   const [criteria, type] = passingCriteria?.split('-');
@@ -28,6 +29,17 @@ export function getIsExamAccessible(learnerExamData) {
 
   return isExamStarted && !isExamEnded;
 }
+
+// Data for Sample Test
+const duration = 30;
+const bufferTime = 15;
+
+const startDate = moment().subtract('15', 'minutes').seconds(0);
+const endDate = moment()
+  .add(duration + bufferTime, 'minutes')
+  .seconds(0);
+
+// console.log(startDate.format(), endDate);
 
 export const questionData = [
   {
@@ -381,8 +393,8 @@ export const questionData = [
     id: 14,
     question: {
       description: 'Answer the following question',
-      attachment:'https://www.youtube.com/shorts/SEf79EwT8Sk',
-      attachmentType:'video'
+      attachment: 'https://www.youtube.com/shorts/SEf79EwT8Sk',
+      attachmentType: 'video'
     },
     options: [
       {
@@ -396,7 +408,7 @@ export const questionData = [
       },
       {
         id: '2',
-        description: 'not defined',
+        description: 'not defined'
       },
       {
         id: '3',
@@ -430,3 +442,31 @@ export const questionData = [
     ]
   }
 ];
+
+export const data = {
+  examData: {
+    name: 'Core Java Fundamentals',
+    scheduleType: 'Scheduled',
+    duration: duration,
+    examStart: new Date(startDate),
+    examEnd: new Date(endDate),
+    noAttempts: -1,
+    totalMarks: questionData?.reduce(
+      (total, ques) => total + (ques?.question?.question_marks || 1),
+      0
+    ),
+    passingCriteria: '50-Percentage',
+    bufferTime: bufferTime,
+
+    display_hints: true
+  },
+  landingPageData: {
+    isProctoring: 'No',
+    totalQuestions: questionData?.length || 1,
+    isNegativeMarking: ''
+  },
+  insPageData: {
+    examTimeStandard: 'IST',
+    attempts: '-'
+  }
+};

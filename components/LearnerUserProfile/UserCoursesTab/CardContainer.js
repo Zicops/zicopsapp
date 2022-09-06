@@ -5,6 +5,7 @@ import styles from '../learnerUserProfile.module.scss';
 
 export default function CardContainer({
   isAdmin = false,
+  isRemove = false,
   type,
   hideTopBar = false,
   footerType,
@@ -102,7 +103,7 @@ export default function CardContainer({
                           ? truncateToN(course?.description, 150)
                           : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nam iure sintquia ea voluptates, a assumenda impedit illum eligendi.'}
                       </p> */}
-                      <button onClick={() => handleSubmit(course)}>{buttonText}</button>
+                      <button onClick={() => handleSubmit(course, isRemove)}>{buttonText}</button>
                     </div>
                   )}
                 </CourseBoxCard>

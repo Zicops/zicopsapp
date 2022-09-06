@@ -28,6 +28,6 @@ export function getNoteCardObj(data) {
     isSelected: data?.isSelected || false,
 
     status: data?.status || null,
-    is_active: data?.is_active || false
+    is_active: data?.is_active == null ? true : !!data?.is_active
   };
 }

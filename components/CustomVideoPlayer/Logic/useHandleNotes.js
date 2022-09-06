@@ -25,6 +25,26 @@ export default function useHandleNotes() {
   //   );
   // }, []);
 
+  function addNewNote(topic_id) {
+    const allNotes =
+      structuredClone(
+        floatingNotes?.filter((notes) => notes?.topic_id === topic_id && notes?.is_active)
+      ) || [];
+    // const lastNote = allNotes?.[allNotes.length - 1];
+    console.log(allNotes, floatingNotes);
+
+    allNotes.push({
+      ...getNoteCardObj({
+        user_notes_id: Math.random(),
+        sequence: allNotes?.length + 1 || 1,
+        topic_id: topic_id
+      }),
+      isNew: true
+    });
+    console.log(allNotes);
+    setFloatingNotes(allNotes);
+  }
+
   function handleNote(e, noteObj) {
     const allNotes = structuredClone([...floatingNotes]) || [];
 
@@ -81,23 +101,6 @@ export default function useHandleNotes() {
     allNotes[index].x = isPinned ? e.screenX - NOTE_CARD_SIZE : null;
     allNotes[index].y = isPinned ? e.screenY - NOTE_CARD_SIZE : null;
 
-    setFloatingNotes(allNotes);
-  }
-
-  function addNewNote(topic_id) {
-    const allNotes =
-      structuredClone(floatingNotes?.filter((notes) => notes?.topic_id === topic_id)) || [];
-    const lastNote = allNotes?.[allNotes.length - 1];
-
-    allNotes.push({
-      ...getNoteCardObj({
-        user_notes_id: Math.random(),
-        sequence: lastNote?.sequence + 1 || 1,
-        topic_id: topic_id
-      }),
-      isNew: true
-    });
-    console.log(allNotes);
     setFloatingNotes(allNotes);
   }
 
