@@ -5,6 +5,7 @@ import { VideoAtom } from '../../../state/atoms/video.atom';
 import Button from '../Button';
 import {
   controlBar,
+  thumbnailPoints,
   controlButtons,
   dimProgressBar,
   fullScreenBtn,
@@ -58,6 +59,7 @@ export default function ControlBar({
 
   return (
     <div className={`${controlBar}`}>
+      <div className={`${thumbnailPoints}`} id="thumbnailPoints"></div>
       <input
         type="range"
         id="vidInput"
