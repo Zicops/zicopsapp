@@ -1,5 +1,6 @@
 import {
   GET_EXAM_CONFIG,
+  GET_EXAM_INSTRUCTION,
   GET_EXAM_META,
   GET_QB_SECTION_MAPPING_BY_SECTION,
   GET_QUESTION_BY_ID,
@@ -106,24 +107,25 @@ export default function AnswerKeyPage() {
     // masterObj.paperName = paperMaster.name;
 
     // load instructions
-    // const insRes = await loadInstructions({
-    //   variables: { exam_id: examId },
-    //   fetchPolicy: 'no-cache'
-    // }).catch((err) => {
-    //   console.log(err);
-    //   isError = !!err;
-    //   return setToastMsg({ type: 'danger', message: 'Instructions load error' });
-    // });
-    // if (isError) return;
-    // const insData = insRes?.data?.getExamInstruction[0];
-    // const insObj = {
-    //   instructionId: insData?.id || null,
-    //   passingCriteria: insData?.PassingCriteria,
-    //   noAttempts: insData?.NoAttempts,
-    //   instructions: insData?.Instructions || '',
-    //   accessType: insData?.AccessType || '',
-    //   is_ins_active: insData?.IsActive || ''
-    // };
+    const insRes = await loadQueryDataAsync(
+      GET_EXAM_INSTRUCTION,
+      { exam_id: examId },
+      { fetchPolicy: 'no-cache' }
+    ).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Instructions load error' });
+    });
+    if (isError) return;
+    const insData = insRes?.getExamInstruction[0];
+    const insObj = {
+      instructionId: insData?.id || null,
+      passingCriteria: insData?.PassingCriteria,
+      noAttempts: insData?.NoAttempts,
+      instructions: insData?.Instructions || '',
+      accessType: insData?.AccessType || '',
+      is_ins_active: insData?.IsActive || ''
+    };
 
     // load schedule
     // let schObj = {};
@@ -397,11 +399,11 @@ export default function AnswerKeyPage() {
       }
     }
 
-    console.log({
+    console.log(insObj, {
       ...learnerExamData,
       examData: {
         ...masterObj,
-        // ...insObj,
+        ...insObj,
         // ...schObj,
         ...confObj,
         totalMarks: totalMarks || '0'
@@ -425,7 +427,7 @@ export default function AnswerKeyPage() {
       ...learnerExamData,
       examData: {
         ...masterObj,
-        // ...insObj,
+        ...insObj,
         // ...schObj,
         ...confObj,
         // show_answer: true,
@@ -498,14 +500,13 @@ export default function AnswerKeyPage() {
           }
         }}
         styleClass={styles.dropdownInput}
-        isFiftyFifty={true}
         changeHandler={(e) => setAttemptData({ ...attemptData, currentAttemptId: e.value })}
       />
 
       <div className={`${styles.tableContainer}`}>
         <p>Results</p>
         <AttemptsTable
-          totalAttempts={3}
+          totalAttempts={attemptedQuestions?.examData?.noAttempts}
           attemptData={
             attemptData?.userExamAttempts?.map((ea) => {
               const resultData = ea?.result?.result_status
@@ -549,6 +550,7 @@ export default function AnswerKeyPage() {
                         questionData={each.question}
                         optionData={attemptedQuestions?.examData?.show_answer ? null : each.options}
                         compareCorrect={attemptedQuestions?.examData?.show_answer}
+                        showAnswer={attemptedQuestions?.examData?.show_answer}
                         selectedAnswerId={each?.selectedOption}
                         showType={
                           attemptedQuestions?.examData?.show_answer ? 'marksObtained' : 'marks'
