@@ -1,4 +1,5 @@
 import QuestionOptionView from '@/components/common/QuestionOptionView';
+import ToolTip from '@/components/common/ToolTip';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -100,7 +101,9 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                   border: '0'
                 }}
                 onClick={() => openEditQuestionMasterTab(data)}>
-                <img src="/images/svg/edit-box-line.svg" width={20}></img>
+                <ToolTip title="Edit Question" placement="bottom">
+                  <img src="/images/svg/edit-box-line.svg" width={20}></img>
+                </ToolTip>
               </button>
             )}
 
@@ -115,7 +118,9 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                 setViewQuestion(data);
                 udpatePopUpState(true);
               }}>
-              <img src="/images/svg/eye-line.svg" width={20}></img>
+              <ToolTip title="View Question Details" placement="bottom">
+                <img src="/images/svg/eye-line.svg" width={20}></img>
+              </ToolTip>
             </button>
           </>
         );

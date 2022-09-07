@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import styles from '../../addQuestionMetaData.module.scss';
 
 const UploadButton = () => {
@@ -23,8 +24,12 @@ const UploadButton = () => {
             />
           </div>
           <div className={`${styles.preview_remove_links}`}>
+            <ToolTip title="Click here to Preview Uploaded File" placement="bottom">
             <a className={`${styles.preview}`}>Preview</a>
+            </ToolTip>
+            <ToolTip title="Upload File to Preview" placement="bottom">
             <a className={`${styles.remove}`}>Remove</a>
+            </ToolTip>
           </div>
         </div>
         {/* left here because needed a popup if the user upload file other than excel template

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRef, useState } from 'react';
-import ToolTip from '../Tooltip';
+import ToolTip from '../ToolTip';
 import styles from './sidebar.module.scss';
 
 // move the styles in sidebar.module.scss in this folder
