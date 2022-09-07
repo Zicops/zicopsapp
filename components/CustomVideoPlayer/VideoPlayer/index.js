@@ -16,42 +16,42 @@ export default function VideoPlayer({
 
   const [subtitles, setSubtitles] = useState('');
 
-  useEffect(() => {
-    if (!isSubtitleShown) return;
+  // useEffect(() => {
+  //   if (!isSubtitleShown) return;
 
-    function handleSubtitleLoad() {
-      if (
-        window.navigator.userAgent.indexOf('MSIE ') < 0 &&
-        window.navigator.userAgent.indexOf('Trident/') < 0
-      ) {
-        // Not IE, do nothing.
-        return;
-      }
+  //   function handleSubtitleLoad() {
+  //     if (
+  //       window.navigator.userAgent.indexOf('MSIE ') < 0 &&
+  //       window.navigator.userAgent.indexOf('Trident/') < 0
+  //     ) {
+  //       // Not IE, do nothing.
+  //       return;
+  //     }
 
-      var tracks = document.querySelectorAll('track');
+  //     var tracks = document.querySelectorAll('track');
 
-      for (var i = 0; i < tracks.length; i++) {
-        loadTrackWithAjax(tracks[i]);
-      }
-    }
+  //     for (var i = 0; i < tracks.length; i++) {
+  //       loadTrackWithAjax(tracks[i]);
+  //     }
+  //   }
 
-    function loadTrackWithAjax(track) {
-      var xhttp = new XMLHttpRequest();
+  //   function loadTrackWithAjax(track) {
+  //     var xhttp = new XMLHttpRequest();
 
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200 && this.responseText) {
-          // If VTT fetch succeeded, replace the src with a BLOB URL.
-          var blob = new Blob([this.responseText], { type: 'text/vtt' });
-          track.setAttribute('src', URL.createObjectURL(blob));
-        }
-      };
-      xhttp.open('GET', track.src, true);
-      xhttp.send();
-    }
+  //     xhttp.onreadystatechange = function () {
+  //       if (this.readyState == 4 && this.status == 200 && this.responseText) {
+  //         // If VTT fetch succeeded, replace the src with a BLOB URL.
+  //         var blob = new Blob([this.responseText], { type: 'text/vtt' });
+  //         track.setAttribute('src', URL.createObjectURL(blob));
+  //       }
+  //     };
+  //     xhttp.open('GET', track.src, true);
+  //     xhttp.send();
+  //   }
 
-    window.addEventListener('load', handleSubtitleLoad);
-    return () => window.removeEventListener('keyup', handleSubtitleLoad);
-  }, []);
+  //   window.addEventListener('load', handleSubtitleLoad);
+  //   return () => window.removeEventListener('keyup', handleSubtitleLoad);
+  // }, []);
 
   useEffect(() => {
     if (!videoElement?.current) return;
@@ -101,6 +101,7 @@ export default function VideoPlayer({
       {!videoData.videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
 
       <button
+        style={{ opacity: 0, zIndex: -10000000, position: 'absolute', top: '0px' }}
         onClick={() => {
           let c = videoType + 1;
           if (c > 3) c = 1;
@@ -130,10 +131,18 @@ export default function VideoPlayer({
                   srcLang="en"
                   default
                   hidden
+                  // src={
+                  //   isTrackSrcAvailable
+                  //     ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
+                  //         ?.url
+                  //     : ''
+                  // }
                   src={
                     isTrackSrcAvailable
-                      ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
-                          ?.url
+                      ? `/api/getSubtitleFile?filePath=${encodeURIComponent(
+                          topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
+                            ?.url
+                        )}`
                       : ''
                   }
                   // src={'/pineapple.vtt'}
