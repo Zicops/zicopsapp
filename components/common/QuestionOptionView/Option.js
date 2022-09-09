@@ -26,7 +26,7 @@ export default function Option({ option, count, compareCorrect, selectedAnswerId
   if (isCorrectSelected === true) imgSrc = '/images/svg/green-tick.svg';
   if (isCorrectSelected === false) imgSrc = '/images/svg/red-cross.svg';
 
-  console.log(isCorrectSelected, isCorrect, option?.description, selectedAnswerId);
+  // console.log(isCorrectSelected, isCorrect, option?.description, selectedAnswerId);
   return (
     <>
       <div className={`${styles.option}`}>

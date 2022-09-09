@@ -16,14 +16,13 @@ import {
 import Accordion from '@/components/common/Accordion';
 import AttemptsTable from '@/components/common/AttemptsTable';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import Loader from '@/components/common/Loader';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserExamDataAtom } from '@/state/atoms/video.atom';
-import { CircularProgress, createTheme } from '@mui/material';
-import { ThemeProvider } from '@mui/system';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -453,22 +452,7 @@ export default function AnswerKeyPage() {
   }, [examId, cpId, userData?.id, attemptData?.currentAttemptId]);
 
   // loader screen till loading
-  if (loading) {
-    return (
-      <div className={styles.loadingExamScreen}>
-        <ThemeProvider
-          theme={createTheme({
-            palette: {
-              primary: {
-                main: '#6bcfcf'
-              }
-            }
-          })}>
-          <CircularProgress />
-        </ThemeProvider>
-      </div>
-    );
-  }
+  if (loading) return <Loader />;
 
   return (
     <div className={`${styles.answerKey}`}>
@@ -508,11 +492,12 @@ export default function AnswerKeyPage() {
         <AttemptsTable
           totalAttempts={attemptedQuestions?.examData?.noAttempts}
           attemptData={
-            attemptData?.userExamAttempts?.map((ea) => {
+            attemptData?.userExamAttempts?.map((ea, i) => {
               const resultData = ea?.result?.result_status
                 ? JSON.parse(ea?.result?.result_status)
                 : {};
 
+              if (i === 0) console.log(ea);
               return {
                 attempt: ea?.attempt_no,
                 examScore: ea?.result?.user_score,
