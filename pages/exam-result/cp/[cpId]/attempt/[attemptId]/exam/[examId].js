@@ -17,7 +17,7 @@ export default function ExamResult() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100vw',
+          // width: '100vw',
           height: '100vh',
           backgroundColor: 'var(--dark_one)',
           overflow: 'clip'
