@@ -149,15 +149,23 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
           <QuestionOptionView questionData={viewQuestion} showType="difficulty" />
 
           <div style={{ float: 'right' }}>
-            <Button text={'Cancel'} clickHandler={() => udpatePopUpState(false)} />
-            <Button
-              text={'Edit'}
-              isDisabled={!isEdit}
-              clickHandler={() => {
-                udpatePopUpState(false);
-                openEditQuestionMasterTab(viewQuestion);
-              }}
-            />
+            <ToolTip title="Cancel and go back to Question list" placement="left">
+              <span>
+                <Button text={'Cancel'} clickHandler={() => udpatePopUpState(false)} />
+              </span>
+            </ToolTip>
+            <ToolTip title="Edit Question" placement="right">
+              <span>
+                <Button
+                  text={'Edit'}
+                  isDisabled={!isEdit}
+                  clickHandler={() => {
+                    udpatePopUpState(false);
+                    openEditQuestionMasterTab(viewQuestion);
+                  }}
+                />
+              </span>
+            </ToolTip>
           </div>
         </>
       </PopUp>
