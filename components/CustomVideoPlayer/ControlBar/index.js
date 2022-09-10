@@ -12,7 +12,10 @@ import {
   playPauseBtn,
   progressBar,
   tooltipContainer,
-  volumeContainer
+  volumeContainer,
+  thumbnailInfo,
+  thumbnailImage,
+  thumbnailTime
 } from './controlbar.module.scss';
 import Volume from './Volume';
 import styles from './controlbar.module.scss';
@@ -74,7 +77,12 @@ export default function ControlBar({
       />
 
       <div className={`${tooltipContainer} ${!seek ? 'hide' : ''}`} ref={tooltip}>
-        {seek}
+        {/* {seek} */}
+        <div className={`${thumbnailInfo}`}>Some info will be here!</div>
+        <div className={`${thumbnailImage}`}>
+          <img src="/images/courses/1.png" alt="" />
+        </div>
+        <div className={`${thumbnailTime}`}>{seek}</div>
       </div>
 
       <div className={`${controlButtons}`}>

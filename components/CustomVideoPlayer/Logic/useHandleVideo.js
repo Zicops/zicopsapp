@@ -382,7 +382,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   function setTooltipPosition(tooltipPosition) {
     // 10 is added for scrollbar gap and margin left
-    const elemWidth = 100;
+    const elemWidth = 200;
     const margin = 20;
 
     const diff = screen.width - tooltipPosition - margin;
