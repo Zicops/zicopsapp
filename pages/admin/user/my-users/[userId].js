@@ -29,17 +29,19 @@ export default function userProfilePage() {
 
   useEffect(async () => {
     if (!currentUserId) return;
+    const userIds = [];
+    userIds.push(currentUserId);
 
     const detailsRes = await loadQueryDataAsync(
       GET_USER_DETAIL,
-      { user_id: currentUserId },
+      { user_id: userIds },
       {},
       userClient
     );
     if (detailsRes?.error)
       return setToastMsg({ type: 'danger', message: 'User Details Load Error' });
-    const userDetails = detailsRes?.getUserDetails;
-    // console.log(currentUserId, userDetails);
+    const userDetails = detailsRes?.getUserDetails[0];
+    // console.log(userIds, userDetails, detailsRes);
 
     setCurrentUserData({ ...userDetails });
 
