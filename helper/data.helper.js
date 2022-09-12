@@ -156,15 +156,16 @@ export function loadCatSubCat(state, setState, category = null) {
     const data = { allCategories: [], allSubCategories: [], allSubCatsByCat: [] };
 
     if (!state?.cat?.length) {
-      const {
-        data: { allCategories, allSubCategories }
-      } = await loadCatAndSubCat().catch((err) => {
+      const res = await loadCatAndSubCat().catch((err) => {
         console.log(err);
         if (err) return setToastMsg({ type: 'danger', message: 'category load error' });
       });
 
-      data.allCategories = allCategories?.map((val) => ({ value: val, label: val }));
-      data.allSubCategories = allSubCategories?.map((val) => ({ value: val, label: val }));
+      data.allCategories = res?.data?.allCategories?.map((val) => ({ value: val, label: val }));
+      data.allSubCategories = res?.data?.allSubCategories?.map((val) => ({
+        value: val,
+        label: val
+      }));
     }
 
     if (category) {
