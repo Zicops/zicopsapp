@@ -45,7 +45,7 @@ export default function useSaveData(videoElement, freezeState) {
     const thumbnailsGap = THUMBNAIL_GAP;
     if (!videoElement?.current?.duration) return;
 
-    await generateVideoThumbnails(thumbnailsGap, videoElement?.current?.duration);
+    // await generateVideoThumbnails(thumbnailsGap, videoElement?.current?.duration);
 
     async function generateVideoThumbnails(thumbnailsGap, duration) {
       let thumbnail = [];
@@ -59,11 +59,11 @@ export default function useSaveData(videoElement, freezeState) {
       //   thumbnail.push(oneThums);
       // }
       fractions.map(async (time) => {
-        showThumbnailPointsInProgressbar(time);
+        // showThumbnailPointsInProgressbar(time);
         let oneThums = await getVideoThumbnail(time);
         thumbnail.push(oneThums);
       });
-      console.log('thumbnail', thumbnail);
+      // console.log('thumbnail', thumbnail);
     }
 
 

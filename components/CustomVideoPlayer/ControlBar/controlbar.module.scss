@@ -29,6 +29,71 @@
   justify-content: space-evenly;
   align-items: center;
 }
+
+// Timeline <div> approach
+.timelineContainer{
+  height: 7px;
+  margin-inline: 5px;
+
+  .timeline{
+    background-color: rgba($darkOne, 0.5);
+    width: 100%;
+    height: 4px;
+    transition: height 150ms ease-in-out;
+    position: relative;
+    cursor: pointer;
+    &::before{
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: calc(100% - var(--previewPosition) * 100%);
+      background-color: #2940b3;
+      display: none;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: calc(100% - var(--progressPosition) * 100%);
+      background-color: $primary;
+      box-shadow: 0 0 10px 2px rgba($darkThree, 1);
+    }
+    .thumbIndicator{
+      --scale : 1;
+      position: absolute;
+      transform: translateX(-50%) scale(var(--scale));
+      height: 200%;
+      top: -50%;
+      left: calc(var(--progressPosition, 0.25) * 100%);
+      background-color: $primary;
+      border-radius: 50%;
+      transition: transform 150ms ease-in-out;
+      aspect-ratio: 1 / 1;
+      box-shadow: 0 0 10px 2px rgba($darkThree, 1);
+      z-index: 5;
+    }
+    .previewImg{
+      position: absolute;
+      height: 80px;
+      aspect-ratio: 16 / 9;
+      top: -1rem;
+      transform: translate(-50%, -100%);
+      left: calc(var(--previewPosition) * 100%);
+      border-radius: 0.25rem;
+      border: 2px solid $white;
+      // display: none;
+    }
+  }
+}
+.timelineContainer .timeline:hover {
+  height: 100%;
+  background-color: rgba($darkOne, 0.6);
+}
+
 // Set progressbar
 .progressBar {
   -webkit-appearance: none;

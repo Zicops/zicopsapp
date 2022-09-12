@@ -15,7 +15,11 @@ import {
   volumeContainer,
   thumbnailInfo,
   thumbnailImage,
-  thumbnailTime
+  thumbnailTime,
+  timelineContainer,
+  timeline,
+  previewImg,
+  thumbIndicator
 } from './controlbar.module.scss';
 import Volume from './Volume';
 import styles from './controlbar.module.scss';
@@ -62,8 +66,18 @@ export default function ControlBar({
 
   return (
     <div className={`${controlBar}`}>
-      <div className={`${thumbnailPoints}`} id="thumbnailPoints"></div>
-      <input
+      <div
+        className={`${timelineContainer}`}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseExit}
+        id="timelineContainer">
+        <div className={`${timeline}`}>
+          <img src="" alt="" className={`${previewImg}`} id="thumbnailImages" />
+          <div className={`${thumbIndicator}`} id="thumbIndicator"></div>
+        </div>
+      </div>
+      {/* <div className={`${thumbnailPoints}`} id="thumbnailPoints"></div> */}
+      {/* <input
         type="range"
         id="vidInput"
         onChange={handleProgress}
@@ -74,16 +88,16 @@ export default function ControlBar({
         max={100}
         step={0.1}
         className={`${progressBar} ${hideBar ? dimProgressBar : ''}`}
-      />
+      /> */}
 
-      <div className={`${tooltipContainer} ${!seek ? 'hide' : ''}`} ref={tooltip}>
-        {/* {seek} */}
-        <div className={`${thumbnailInfo}`}>Some info will be here!</div>
+      {/* <div className={`${tooltipContainer} ${!seek ? 'hide' : ''}`} ref={tooltip}> */}
+      {/* {seek} */}
+      {/* <div className={`${thumbnailInfo}`}>Some info will be here!</div>
         <div className={`${thumbnailImage}`}>
           <img src="/images/courses/1.png" alt="" />
         </div>
-        <div className={`${thumbnailTime}`}>{seek}</div>
-      </div>
+        <div className={`${thumbnailTime}`}>{seek}</div> */}
+      {/* </div> */}
 
       <div className={`${controlButtons}`}>
         <Button handleClick={reloadVideo}>

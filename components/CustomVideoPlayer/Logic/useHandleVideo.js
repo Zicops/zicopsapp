@@ -5,7 +5,7 @@ import {
   userClient
 } from '@/api/UserMutations';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
+import { THUMBNAIL_GAP, SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -57,6 +57,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     duration: 0
   });
 
+  const [previewImages, setPreviewImages] = useState([]);
   // udpate recoil state
   useEffect(() => {
     setUserCourseData({
@@ -331,15 +332,79 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // TODO : Change this to Ref OR change entire input range to DIV
   // progress bar color update on video play
+
   useEffect(() => {
-    document.getElementById('vidInput').style.background =
-      'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' +
-      playerState.progress +
-      '%, #22252980 ' +
-      playerState.progress +
-      '%, #22252980 100%)';
+  //   document.getElementById('vidInput').style.background =
+  //     'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' +
+  //     playerState.progress +
+  //     '%, #22252980 ' +
+  //     playerState.progress +
+  //     '%, #22252980 100%)';
+    let percent = videoElement?.current?.currentTime / videoElement?.current?.duration;
+    const timelineContainer = document.getElementById('timelineContainer');
+    timelineContainer.style.setProperty('--progressPosition', percent);
   }, [playerState.progress]);
 
+  useEffect(async () => {
+    if (!videoElement?.current?.duration) return;
+    const ImgPreviews = await generateVideoThumbnails(
+      THUMBNAIL_GAP,
+      videoElement?.current?.duration
+    );
+    setPreviewImages(ImgPreviews);
+  }, [videoElement?.current?.duration]);
+  
+  async function generateVideoThumbnails(thumbnailsGap, duration) {
+    let thumbnail = [];
+    let fractions = [];
+    for (let i = 0; i <= duration; i += thumbnailsGap) {
+      fractions.push(Math.floor(i));
+    }
+    fractions.map(async (time) => {
+      let oneThums = await getVideoThumbnail(time);
+      thumbnail.push(oneThums);
+    });
+
+    return thumbnail;
+  }
+  async function getVideoThumbnail(videoTimeInSeconds) {
+    return new Promise((resolve, reject) => {
+      var video = document.createElement('video');
+      var timeupdate = function () {
+        if (snapImage()) {
+          video.removeEventListener('timeupdate', timeupdate);
+          video.pause();
+        }
+      };
+      video.addEventListener('loadeddata', function () {
+        if (snapImage()) {
+          video.removeEventListener('timeupdate', timeupdate);
+        }
+      });
+      var snapImage = function () {
+        var canvas = document.createElement('canvas');
+        var scaleFactor = 0.5;
+        canvas.width = video.videoWidth * scaleFactor;
+        canvas.height = video.videoHeight * scaleFactor;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        var image = canvas.toDataURL();
+        var success = image.length > 100000;
+        if (success) {
+          URL.revokeObjectURL(videoData.videoSrc);
+          resolve(image);
+        }
+        return success;
+      };
+      video.addEventListener('timeupdate', timeupdate);
+      video.preload = 'metadata';
+      video.src = videoData.videoSrc;
+      // Load video in Safari / IE11
+      video.muted = true;
+      video.playsInline = true;
+      video.currentTime = videoTimeInSeconds;
+      video.play();
+    });
+  }
   // keyboard events
   function handleKeyDownEvents(e) {
     e.preventDefault();
@@ -394,15 +459,27 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   function handleMouseMove(e) {
     if (!videoElement.current) return;
-
-    setTooltipPosition(e.pageX);
+    const rect = e.target.getBoundingClientRect();
+    const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
 
     var videoDuration = videoElement.current?.duration;
-    const timestamp = (e.pageX / screen.width) * videoDuration;
 
-    const timeObj = secondsToMinutes(timestamp);
-    if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
-    setSeek(`${timeObj.minute}: ${timeObj.second}`);
+    // getting count of preview images as it could vary
+    const previewImgNumber = Math.max(1, Math.floor((percent * videoDuration) / THUMBNAIL_GAP));
+      const previewImg = document.getElementById('thumbnailImages');
+      const timelineContainer = document.getElementById('timelineContainer');
+      const thumbIndicator = document.getElementById('thumbIndicator');
+    previewImg.setAttribute('src', previewImages[previewImgNumber - 1]);
+    timelineContainer.style.setProperty("--previewPosition", percent);
+    
+    // setTooltipPosition(e.pageX);
+
+    // const timestamp = (e.pageX / screen.width) * videoDuration;
+
+    // for time display below thumb image
+    // const timeObj = secondsToMinutes(timestamp);
+    // if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
+    // setSeek(`${timeObj.minute} : ${timeObj.second}`);
   }
 
   function handleMouseExit(e) {
