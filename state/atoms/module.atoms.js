@@ -168,19 +168,23 @@ export function getQuizObject(data) {
     courseId: data.courseId,
     topicId: data.topicId,
     name: data.name || '',
+    startTimeMin: data?.startTimeMin || '',
+    startTimeSec: data?.startTimeSec || '',
     isMandatory: data.isMandatory || false,
     formType: data.formType || null,
     type: data.type || 'MCQ',
+    difficulty: data?.difficulty || 1,
+    attachmentType: data?.attachmentType || '',
+    hint: data?.hint || '',
 
     question: data.question || '',
     questionFile: data.questionFile || null,
 
-    options: [
-      Array(4).fill({
-        option: data.option || '',
-        file: data.file || null,
-        isCorrect: data.isCorrect || false
-      })
-    ]
+    options: Array(4).fill({
+      option: data.option || '',
+      file: data.file || null,
+      attachmentType: data?.attachmentType || '',
+      isCorrect: data.isCorrect || false
+    })
   };
 }

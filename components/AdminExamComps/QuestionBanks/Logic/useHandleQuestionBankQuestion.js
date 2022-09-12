@@ -1,3 +1,4 @@
+import { QUESTION_STATUS } from '@/helper/constants.helper';
 import { STATUS, StatusAtom } from '@/state/atoms/utils.atoms';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { GET_QUESTIONS_NAMES, queryClient } from 'API/Queries';
@@ -262,7 +263,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
         // TODO: remove or update later
         createdBy: 'Zicops',
         updatedBy: 'Zicops',
-        status: STATUS.flow[0]
+        status: QUESTION_STATUS[0]
       };
 
       if (question.file) {

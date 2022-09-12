@@ -144,12 +144,13 @@ export async function isNameDuplicate(QUERY, name, objPath, id = null, checkAgai
 }
 
 export function loadCatSubCat(state, setState, category = null) {
-  const [loadCatSubCat, { error: loadCatErr }] = useLazyQuery(GET_CATS_N_SUB_CATS, {
+  const [loadCatAndSubCat, { error: loadCatErr }] = useLazyQuery(GET_CATS_N_SUB_CATS, {
     client: queryClient
   });
   const [loadSubCat, { error: loadSubCatErr }] = useLazyQuery(GET_SUB_CATS_BY_CAT, {
     client: queryClient
   });
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   useEffect(async () => {
     const data = { allCategories: [], allSubCategories: [], allSubCatsByCat: [] };
@@ -157,7 +158,7 @@ export function loadCatSubCat(state, setState, category = null) {
     if (!state?.cat?.length) {
       const {
         data: { allCategories, allSubCategories }
-      } = await loadCatSubCat().catch((err) => {
+      } = await loadCatAndSubCat().catch((err) => {
         console.log(err);
         if (err) return setToastMsg({ type: 'danger', message: 'category load error' });
       });

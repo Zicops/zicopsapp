@@ -1,8 +1,15 @@
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { QUESTION_STATUS } from '@/helper/constants.helper';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
+  ADD_QUESTION_BANK_QUESTION,
+  ADD_QUESTION_OPTIONS,
   ADD_TOPIC_CONTENT,
+  ADD_TOPIC_QUIZ,
+  CREATE_QUESTION_BANK,
+  mutationClient,
   UPDATE_COURSE_TOPIC,
   UPDATE_TOPIC_CONTENT,
   UPLOAD_TOPIC_CONTENT_SUBTITLE,
@@ -11,6 +18,9 @@ import {
 } from '../../../../API/Mutations';
 import {
   GET_COURSE_TOPICS_CONTENT,
+  GET_LATEST_QUESTION_BANK,
+  GET_QUESTIONS_NAMES,
+  GET_TOPIC_QUIZ,
   GET_TOPIC_RESOURCES,
   queryClient
 } from '../../../../API/Queries';
@@ -18,8 +28,10 @@ import { filterTopicContent } from '../../../../helper/data.helper';
 import {
   BingeAtom,
   getBingeObject,
+  getQuizObject,
   getTopicObject,
   isLoadingAtom,
+  QuizAtom,
   ResourcesAtom,
   TopicAtom,
   TopicContentAtom,
@@ -48,6 +60,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   const [topicVideo, updateTopicVideo] = useRecoilState(TopicVideoAtom);
   const [topicSubtitle, updateTopicSubtitle] = useRecoilState(TopicSubtitleAtom);
   const [binge, updateBinge] = useRecoilState(BingeAtom);
+  const [quizData, updateQuizData] = useRecoilState(QuizAtom);
   const [resources, updateResources] = useRecoilState(ResourcesAtom);
   const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
   const [uploadStatus, setUploadStatus] = useRecoilState(uploadStatusAtom);
@@ -65,6 +78,19 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   );
   const [uploadTopicResource, { loading: uploadResourcesLoading }] =
     useMutation(UPLOAD_TOPIC_RESOURCE);
+  const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
+    client: mutationClient
+  });
+  const [addQuestion, { error: addQuestionErr }] = useMutation(ADD_QUESTION_BANK_QUESTION, {
+    client: mutationClient
+  });
+  const [addOption, { error: addOptionErr }] = useMutation(ADD_QUESTION_OPTIONS, {
+    client: mutationClient
+  });
+  const [addQuiz] = useMutation(ADD_TOPIC_QUIZ, {
+    client: mutationClient
+  });
+
   // local state
   const [editTopic, setEditTopic] = useState(getTopicObject({ courseId: fullCourse.id }));
   const [isEditTopicFormVisible, setIsEditTopicFormVisible] = useState(false);
@@ -85,7 +111,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   }, [editTopic]);
 
   // set local state to edit topic data for form
-  function activateEditTopic(topicId, topicDataFromAddTopic) {
+  async function activateEditTopic(topicId, topicDataFromAddTopic) {
     let currentTopic = null;
     if (topicDataFromAddTopic) {
       currentTopic = topicDataFromAddTopic;
@@ -173,6 +199,15 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           if (errorResourcesData) setToastMsg({ type: 'danger', message: 'Resources Load Error' });
         }
       );
+
+      const quizRes = await loadQueryDataAsync(
+        GET_TOPIC_QUIZ,
+        { topic_id: topicId },
+        { fetchPolicy: 'no-cache' }
+      );
+
+      if (quizRes?.getTopicQuizes)
+        updateQuizData(quizRes?.getTopicQuizes?.sort((q1, q2) => q1?.sequence - q2?.sequence));
     }
 
     const filteredTopicContent = filterTopicContent(topicContent, topicId);
@@ -326,10 +361,146 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
       await uploadTopicResource({ variables: sendResources }).catch((err) => console.log(err));
     }
 
+    let isError = false;
+    const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
+    const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
+
+    let subCatQb = qbRes?.getLatestQuestionBank?.questionBanks?.find(
+      (qb) => qb?.name === fullCourse?.sub_category
+    );
+    let allQuestionsArr = [];
+    if (!subCatQb) {
+      const sendData = {
+        name: fullCourse?.sub_category,
+        description: '',
+        category: fullCourse?.category,
+        sub_category: fullCourse.sub_category,
+
+        //TODO: extra data for success, remove or make this dynamic
+        created_by: 'Zicops',
+        updated_by: 'Zicops',
+        is_active: true,
+        is_default: true,
+        owner: 'Zicops'
+      };
+
+      const createdQbRes = await createQuestionBank({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
+      });
+
+      subCatQb = createdQbRes?.createQuestionBank;
+    } else {
+      const questionRes = await loadQueryDataAsync(GET_QUESTIONS_NAMES, {
+        question_bank_id: subCatQb?.id
+      });
+      allQuestionsArr = questionRes?.getQuestionBankQuestions;
+    }
+
+    for (let i = 0; i < quizData.length; i++) {
+      const quiz = quizData[i];
+      if (quiz?.id) continue;
+
+      const isDuplicate = allQuestionsArr.some(
+        (q) => q?.Description?.toLowerCase()?.trim() === quiz?.question?.toLowerCase()?.trim()
+      );
+      if (isDuplicate)
+        return setToastMsg({ type: 'danger', message: 'Quiz with same question cannot be added!' });
+
+      const sendQuestionData = {
+        name: '',
+        description: quiz?.question || '',
+        type: quiz?.type || '',
+        difficulty: quiz.difficulty || 0,
+        hint: quiz?.hint || '',
+        qbmId: subCatQb.id || null,
+        attachmentType: '',
+
+        // TODO: remove or update later
+        createdBy: 'Zicops',
+        updatedBy: 'Zicops',
+        status: QUESTION_STATUS[1]
+      };
+
+      if (quiz?.questionFile) {
+        sendQuestionData.file = quiz?.questionFile;
+        sendQuestionData.attachmentType = quiz?.attachmentType || '';
+      }
+      // console.log(sendQuestionData);
+      // add question
+      const questionRes = await addQuestion({ variables: sendQuestionData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+      });
+
+      if (!questionRes || isError)
+        return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+
+      const options = quiz?.options || [];
+      // add option
+      for (let i = 0; i < options.length; i++) {
+        const option = options[i];
+        // console.log(option);
+        if (!option.option && !option.file) continue;
+
+        const sendOptionData = {
+          description: option.option || '',
+          isCorrect: option.isCorrect || false,
+          qmId: questionRes?.data?.addQuestionBankQuestion?.id,
+          isActive: true,
+          attachmentType: option.attachmentType || '',
+
+          // TODO: remove or update later
+          createdBy: 'Zicops',
+          updatedBy: 'Zicops'
+        };
+
+        if (option.file) {
+          sendOptionData.file = option.file;
+          sendOptionData.attachmentType = option.attachmentType;
+        }
+
+        // console.log(sendOptionData);
+        await addOption({ variables: sendOptionData }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+        });
+      }
+
+      // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
+      if (isError) continue;
+
+      const startTime = parseInt(quiz?.startTimeMin) * 60 + parseInt(quiz?.startTimeSec);
+      const sendQuizData = {
+        name: quiz?.name || '',
+        category: fullCourse?.category || '',
+        type: quiz?.type || '',
+        isMandatory: quiz?.isMandatory || false,
+        topicId: quiz?.topicId || '',
+        courseId: quiz?.courseId || '',
+        questionId: questionRes?.data?.addQuestionBankQuestion?.id,
+        qbId: subCatQb?.id,
+        weightage: 1,
+        sequence: i + 1,
+        startTime: startTime || 0
+      };
+      console.log(sendQuizData);
+      const quizRes = await addQuiz({ variables: sendQuizData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+      });
+      // console.log(quizRes);
+    }
+
     setUploadStatus(null);
     console.log('Topic Content and resources Uploaded');
     setToastMsg({ type: 'success', message: 'Topic Content and Resources Uploaded' });
     setEditTopic(getTopicObject({ courseId: fullCourse.id }));
+    updateQuizData(getQuizObject({ courseId: fullCourse.id }));
   }
 
   return {
