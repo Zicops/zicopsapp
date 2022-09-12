@@ -20,7 +20,7 @@ import CoursesAccordian from '../../../../components/UserProfile/CoursesAccordia
 import LearningDashboardAccordian from '../../../../components/UserProfile/LearningDashboardAccordian';
 import styles from '../user.module.scss';
 
-export default function userProfilePage() {
+export default function UserProfilePage() {
   const [currentUserData, setCurrentUserData] = useState(null);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
