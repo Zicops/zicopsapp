@@ -41,9 +41,14 @@ export function loadQueryData(QUERY, variablesObj = {}, options = {}) {
   return response?.data || {};
 }
 
-export async function loadQueryDataAsync(QUERY, variableObj = {}, options = {}) {
-  const response = await queryClient
-    .query({ query: QUERY, variables: variableObj, ...options })
+export async function loadQueryDataAsync(
+  QUERY,
+  variableObj = {},
+  options = {},
+  client = queryClient
+) {
+  const response = await client
+    .query({ query: QUERY, variables: variableObj, fetchPolicy: 'no-cache', ...options })
     .catch((err) => {
       console.log(`Load Data error:`, err);
     });

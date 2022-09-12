@@ -1,15 +1,15 @@
 import { ADD_USER_BOOKMARK, userClient } from '@/api/UserMutations';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { VideoAtom } from '@/state/atoms/video.atom';
+import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
 import { BOX } from './customVideoPlayer.helper';
 
-export default function useSaveData(videoElement) {
+export default function useSaveData(videoElement, freezeState) {
   const [addUserBookMark] = useMutation(ADD_USER_BOOKMARK, {
     client: userClient
   });
@@ -17,14 +17,28 @@ export default function useSaveData(videoElement) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const userCourseData = useRecoilValue(UserCourseDataAtom);
 
   const { fullCourse } = useContext(courseContext);
-  const { addBookmarkData, addNotes } = useContext(userContext);
+  const {
+    addBookmarkData,
+    addNotes,
+    setBookmarkData: saveBMData,
+    bookmarkData: bmD
+  } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
 
+  const [freezeScreen, setFreezeScreen] = freezeState;
   const [showBox, setShowBox] = useState(null);
+
+  const [bookmarkData, setBookmarkData] = useState({
+    time_stamp: '',
+    name: '',
+    topic_id: ''
+    // captureImg: ''
+  });
 
   function toggleStates(setState, state) {
     setState(!state);
@@ -36,22 +50,11 @@ export default function useSaveData(videoElement) {
     setShowBox(BOX[boxNumber] || null);
   }
 
-  const [bookmarkData, setBookmarkData] = useState({
-    timestamp: '',
-    title: '',
-    captureImg: ''
-  });
-  const [notes, setNotes] = useState({
-    timestamp: '',
-    title: '',
-    notes: ''
-  });
-
   function handleBookmarkChange(e) {
     console.log(e);
     setBookmarkData({
       ...bookmarkData,
-      title: e.target.value
+      name: e.target.value
     });
   }
 
@@ -76,23 +79,11 @@ export default function useSaveData(videoElement) {
     return canvas?.toDataURL('image/png');
   }
 
-  async function handleSaveBookmark(timestamp) {
-    const image = captureImageOfVideo();
-    setBookmarkData({
-      ...bookmarkData,
-      captureImg: image,
-      timestamp: timestamp
-    });
+  async function handleSaveBookmark() {
+    // const image = captureImageOfVideo();
+    // setBookmarkData({ ...bookmarkData });
 
-    //   save to context
-    addBookmarkData({
-      ...bookmarkData,
-      id: new Date().getMilliseconds(),
-      captureImg: image,
-      timestamp
-    });
-
-    if (!bookmarkData?.title)
+    if (!bookmarkData?.name)
       return setToastMsg({ type: 'danger', message: 'BookMark title cannot be empty!' });
 
     console.log(bookmarkData);
@@ -100,44 +91,32 @@ export default function useSaveData(videoElement) {
     const sendBookMarkData = {
       user_id: userData?.id,
       user_lsp_id: 'Zicops',
-      user_course_id: 'RandomCourseId',
+      user_course_id: userCourseData?.userCourseMapping?.user_course_id,
       course_id: fullCourse?.id,
       topic_id: videoData?.topicContent[0]?.topicId,
       module_id: videoData?.currentModuleId,
-      name: bookmarkData?.title,
-      time_stamp: `${timestamp}`,
+      name: bookmarkData?.name,
+      time_stamp: `${bookmarkData?.time_stamp}`,
       is_active: true
     };
+
+    console.log(sendBookMarkData);
+    // return;
     const res = await addUserBookMark({ variables: sendBookMarkData }).catch((err) => {
       console.log(err);
       return setToastMsg({ type: 'danger', message: 'Error while adding bookmark!' });
     });
-
-    console.log(res?.data?.addUserBookmark[0]);
-    return setToastMsg({ type: 'success', message: 'BookMark added' });
-    console.log(bookmarkData, sendBookMarkData);
-  }
-
-  function handleNotesChange(e) {
-    setNotes({
-      ...notes,
-      [e.target.name]: e.target.value
-    });
-  }
-
-  function handleSaveNotes(timestamp) {
-    setBookmarkData({
-      ...bookmarkData,
-      timestamp: timestamp
-    });
-
+    console.log(res);
     //   save to context
-    addNotes({
-      ...notes,
-      id: new Date().getMilliseconds(),
-      timestamp
-    });
-    alert('Notes added');
+    if (!res?.data?.addUserBookmark?.[0])
+      return setToastMsg({ type: 'danger', message: 'Bookmark add error' });
+    addBookmarkData(res?.data?.addUserBookmark?.[0]);
+
+    setBookmarkData({ time_stamp: '', name: '', topic_id: '' });
+    // console.log(res?.data?.addUserBookmark[0]);
+    setToastMsg({ type: 'success', message: 'Bookmark added' });
+    // console.log(bookmarkData, sendBookMarkData);
+    return true;
   }
 
   const states = {
@@ -155,10 +134,11 @@ export default function useSaveData(videoElement) {
     toggleStates,
     handleBookmarkChange,
     bookmarkData,
-    handleSaveBookmark,
-    notes,
-    handleNotesChange,
-    handleSaveNotes
+    setBookmarkData,
+    handleSaveBookmark
+    // notes,
+    // handleNotesChange,
+    // handleSaveNotes
   };
 }
 

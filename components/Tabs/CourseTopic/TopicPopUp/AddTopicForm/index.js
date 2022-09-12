@@ -1,3 +1,6 @@
+import { COURSE_TYPES } from '@/helper/constants.helper';
+import { courseContext } from '@/state/contexts/CourseContext';
+import { useContext, useEffect } from 'react';
 import { changeHandler } from '../../../../../helper/common.helper';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
@@ -5,11 +8,20 @@ import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
 import styles from '../../../courseTabs.module.scss';
 
 export default function AddTopicForm({ topicData, setTopicData, isEdit = false }) {
+  const { fullCourse } = useContext(courseContext);
+
   const typeOptions = [
     { value: 'Content', label: 'Content' },
     { value: 'Lab', label: 'Lab' },
     { value: 'Assessment', label: 'Assessment' }
   ];
+
+  useEffect(() => {
+    if (fullCourse.type !== COURSE_TYPES[3]) return;
+
+    setTopicData({ ...topicData, type: typeOptions[2].value });
+  }, []);
+
   return (
     <div className={`${styles.popUpFormContainer}`}>
       <LabeledInput
@@ -45,7 +57,8 @@ export default function AddTopicForm({ topicData, setTopicData, isEdit = false }
             label: 'Topic Type:',
             placeholder: 'Select topic type',
             options: typeOptions,
-            value: topicData.type ? { value: topicData.type, label: topicData.type } : null
+            value: topicData.type ? { value: topicData.type, label: topicData.type } : null,
+            isDisabled: fullCourse.type === COURSE_TYPES[3]
           }}
           changeHandler={(e) => changeHandler(e, topicData, setTopicData, 'type')}
         />

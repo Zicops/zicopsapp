@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import InputDatePicker from '../../common/InputDatePicker';
-import SlideButton from '../../small/SlideButton';
-import useHandleConfig from './Logic/useHandleConfig';
-import styles from '../courseTabs.module.scss';
 import SwitchButton from '../../common/FormComponents/SwitchButton';
+import InputDatePicker from '../../common/InputDatePicker';
+import styles from '../courseTabs.module.scss';
+import useHandleConfig from './Logic/useHandleConfig';
 
 export default function CourseConfiguration() {
   const courseContextData = useContext(courseContext);
@@ -21,7 +20,11 @@ export default function CourseConfiguration() {
             Publish Date
           </label>
           <div className={`w-25`}>
-            <InputDatePicker selectedDate={publishDate} changeHandler={(d) => setPublishDate(d)} />
+            <InputDatePicker
+              selectedDate={publishDate}
+              minDate={new Date()}
+              changeHandler={(d) => setPublishDate(d)}
+            />
           </div>
         </>
 
@@ -31,7 +34,11 @@ export default function CourseConfiguration() {
             Expire Date
           </label>
           <div className={`w-25`}>
-            <InputDatePicker selectedDate={expireDate} changeHandler={(d) => setExpireDate(d)} />
+            <InputDatePicker
+              selectedDate={expireDate}
+              minDate={publishDate}
+              changeHandler={(d) => setExpireDate(d)}
+            />
           </div>
         </>
       </div>

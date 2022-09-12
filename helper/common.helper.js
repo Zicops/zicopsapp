@@ -39,6 +39,13 @@ export function changeHandler(e, state, setState, inputName = null) {
   });
 }
 
+export function snakeCaseToTitleCase(string = '') {
+  // https://stackoverflow.com/a/64489760
+  return string
+    .replace(/^[-_]*(.)/, (_, c) => c.toUpperCase())
+    .replace(/[-_]+(.)/g, (_, c) => ' ' + c.toUpperCase());
+}
+
 //Email validation
 
 export function isEmail(email) {

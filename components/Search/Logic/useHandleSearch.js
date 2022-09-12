@@ -29,14 +29,14 @@ export default function useHandleSearch() {
 
   // load table data
   useEffect(() => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 10, pageCursor: '' };
+    const queryVariables = { publish_time: Date.now(), pageSize: 30, pageCursor: '' };
 
     loadCourses({ variables: queryVariables }).then(({ data }) => {
       if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
 
       const courseData = data?.latestCourses;
       setPageCursor(courseData?.pageCursor || null);
-      setCourses(courseData?.courses || []);
+      setCourses(courseData?.courses?.filter((c) => c?.is_active && c?.is_display) || []);
     });
   }, []);
 

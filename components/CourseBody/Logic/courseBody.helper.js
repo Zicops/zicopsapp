@@ -3,6 +3,7 @@ import CourseBodyNotes from '../CourseBodyNotes';
 import CourseBodyAbout from '../CourseBodyAbout';
 import CourseBodyResources from '../CourseBodyResources';
 import CourseBodyTopics from '../CourseBodyTopics';
+import { atom } from 'recoil';
 
 export const tabs = [
   {
@@ -25,6 +26,14 @@ export function getResourceCount(resources, topicId) {
   });
 
   return filteredResources.length;
+}
+
+export function getNotesCount(notes, topicId) {
+  const filteredNotes = notes.filter((n, i) => {
+    return n.topic_id === topicId;
+  });
+
+  return filteredNotes.length;
 }
 
 export function updateVideoData(
@@ -73,3 +82,18 @@ export function updateVideoData(
     setNewModule: setSelectedModule
   });
 }
+
+export const ActiveCourseTabAtom = atom({
+  key: 'ActiveCourseTab',
+  default: tabs[0].name
+});
+
+export const ActiveResourcesAtom = atom({
+  key: 'ActiveResources',
+  default: null
+});
+
+export const SelectedModuleDataAtom = atom({
+  key: 'SelectedModuleData',
+  default: {}
+});

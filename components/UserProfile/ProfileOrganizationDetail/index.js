@@ -1,40 +1,39 @@
 import styles from '../userProfile.module.scss';
-import { profileOrganizationData } from '../Logic/userProfile.helper';
 
-const ProfileOrganizationDetail = () => {
+const ProfileOrganizationDetail = ({ currentUserData }) => {
+  // console.log(currentUserData);
+  const userOrganizationData = {
+    organization: 'Zicops',
+    organization_unit: 'Zicops,India',
+    learning_space_role: currentUserData?.role || 'Learner',
+    role_in_organization: currentUserData?.organization_role,
+    employee_id: currentUserData?.employee_id
+  };
   return (
     <>
-      <div className={`${styles.organizationDetailsContainer}`}>
-        <span>
-          <div className={`${styles.label}`}>Organization:</div>
-          <div className={`${styles.value}`}>
-            <span>{profileOrganizationData.organization}</span>
-          </div>
-        </span>
-        <span>
-          <div className={`${styles.label}`}>Organization Unit:</div>
-          <div className={`${styles.value}`}>
-            <span>{profileOrganizationData.organization_Unit}</span>
-          </div>
-        </span>
-        <span>
-          <div className={`${styles.label}`}>Learning Space Role:</div>
-          <div className={`${styles.value}`}>
-            <span>{profileOrganizationData.learning_Space_Role}</span>
-          </div>
-        </span>
-        <span>
-          <div className={`${styles.label}`}>Role in the Organization:</div>
-          <div className={`${styles.value}`}>
-            <span>{profileOrganizationData.role_In_Organization}</span>
-          </div>
-        </span>
-        <span>
-          <div className={`${styles.label}`}>Other Role Name:</div>
-          <div className={`${styles.value}`}>
-            <span>{profileOrganizationData.other_Role_Name}</span>
-          </div>
-        </span>
+      <div className={`${styles.profileDetailsContainer}`}>
+        <div className={`${styles.profilePicContainer}`}>
+          <img
+            src={currentUserData?.photo_url || '/images/profile_picture.png'}
+            alt="not found"
+            width={200}
+          />
+        </div>
+        <div className={`${styles.profileDetails}`}>
+          {Object.keys(userOrganizationData).map((item, i) => {
+            const label = item.charAt(0).toUpperCase() + item.slice(1);
+            const labelText = label.split('_').join(' ');
+            return (
+              <div className={`${styles.profileDetailsField}`}>
+                <div key={i} className={`${styles.label}`}>
+                  {labelText}
+                </div>
+                <div className={`${styles.colon}`}> : </div>
+                <div className={`${styles.value}`}>{userOrganizationData[item]}</div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </>
   );

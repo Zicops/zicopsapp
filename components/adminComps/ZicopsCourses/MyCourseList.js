@@ -65,16 +65,16 @@ function MyLatestCourseList({ time }) {
     });
   }, []);
 
-  const { data } = useQuery(GET_LATEST_COURSES, {
+  const { data, loading } = useQuery(GET_LATEST_COURSES, {
     variables: {
       publish_time: time,
-      pageSize: 50,
+      pageSize: 999999,
       pageCursor: ''
     },
     client: queryClient
   });
 
-  let latestCourses = data?.latestCourses.courses;
+  let latestCourses = data?.latestCourses.courses?.filter((c) => c?.is_active);
 
   return (
     <ZicopsTable
@@ -83,6 +83,7 @@ function MyLatestCourseList({ time }) {
       pageSize={pageSize}
       rowsPerPageOptions={[3]}
       tableHeight="70vh"
+      loading={loading}
     />
   );
 }

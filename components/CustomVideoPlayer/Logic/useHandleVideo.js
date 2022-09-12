@@ -13,7 +13,7 @@ import { GET_TOPIC_EXAMS } from 'API/Queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../helper/data.helper';
-import { secondsToMinutes } from '../../../helper/utils.helper';
+import { secondsToHMS, secondsToMinutes } from '../../../helper/utils.helper';
 import { TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
 import { addCallbackToEvent } from './customVideoPlayer.helper';
@@ -39,6 +39,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const topicContent = useRecoilValue(TopicContentAtom);
   const [seek, setSeek] = useState(0);
+  const [dataSyncing, setDataSyncing] = useState(false);
+  const [freezeScreen, setFreezeScreen] = useState(false);
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
@@ -51,7 +53,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     progress: 0, // o - 100
     speed: 1,
     isMuted: false,
-    volume: 0.7
+    volume: 0.7,
+    timestamp: '00:00',
+    duration: 0
   });
 
   // udpate recoil state
@@ -75,6 +79,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   useEffect(async () => {
     if (videoData?.isPreview) return;
     if (!videoElement?.current?.duration) return;
+    if (!userCourseData?.userCourseMapping?.user_course_id) return;
 
     const userCourseMapData = structuredClone(userCourseData);
 
@@ -97,6 +102,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         return setToastMsg({ type: 'danger', message: 'Course Assign Update Error' });
       });
       console.log(res);
+      if (res?.data?.updateUserCourse)
+        userCourseMapData.userCourseMapping = res?.data?.updateUserCourse || {};
     }
 
     for (let i = 0; i < userCourseMapData?.allModules?.length; i++) {
@@ -104,21 +111,21 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
       for (let j = 0; j < mod?.topicData.length; j++) {
         const topic = mod?.topicData[j];
-        if (topic?.type !== 'Content') continue;
+        // if (topic?.type !== 'Content') continue;
 
         const topicProgress = userCourseMapData?.userCourseProgress?.filter(
           (obj) => obj?.topic_id === topic?.id
         );
+        // console.log(topicProgress);
         if (topicProgress?.length !== 0) {
-          console.log(topicProgress);
-
           if (topicProgress[0]?.topic_id === videoData?.topicContent[0]?.topicId) {
-            console.log(videoElement?.current?.duration, topicProgress);
             const vidDur = videoElement?.current?.duration;
             const startProgress = +topicProgress[0]?.video_progress;
 
-            videoElement.current.currentTime = (vidDur * startProgress) / 100;
-            setPlayerState({ ...playerState, progress: startProgress });
+            if (startProgress < 98) {
+              videoElement.current.currentTime = (vidDur * startProgress) / 100;
+              setPlayerState({ ...playerState, progress: startProgress });
+            }
           }
           continue;
         }
@@ -131,7 +138,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           topicType: topic?.type,
           status: 'not-started',
           videoProgress: '',
-          timestamp: `${currentTime}-${duration}`
+          timestamp: topic?.type !== 'Content' ? `${currentTime}-${duration}` : ''
         };
         if (topic?.id === videoData?.topicContent[0]?.topicId) {
           sendData.status = 'in-progress';
@@ -152,25 +159,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     setUserCourseData({ ...userCourseData, ...userCourseMapData });
   }, [videoElement?.current?.duration]);
 
-  useEffect(() => {
-    // if (userCourseData?.triggerPlayerToStartAt === null) return;
-    if (!videoElement?.current?.duration) return;
-
-    const startProgress = +userCourseData?.triggerPlayerToStartAt;
-    const time = videoElement?.current?.duration;
-
-    console.log(startProgress, time, videoElement?.current?.duration);
-    // if (videoElement.current) videoElement.current.currentTime = (time * startProgress) / 100;
-    // setPlayerState({ ...playerState, progress: startProgress });
-  }, [videoElement?.current?.duration]);
-
-  // useEffect(() => {
-  //   console.log(videoElement?.current?.duration);
-  // }, [videoElement?.current?.duration]);
-
   // create and update user course progress
   useEffect(() => {
     if (videoData?.isPreview) return;
+    if (!userCourseData?.userCourseMapping?.user_course_id) return;
 
     if ([0, 100].includes(+playerState?.progress)) return syncVideoProgress();
     if (syncProgressInSeconds > 0) return setSyncProgressInSeconds(syncProgressInSeconds - 1);
@@ -185,12 +177,16 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }, [playerState?.isPlaying]);
 
   async function syncVideoProgress(type) {
+    if (dataSyncing) return;
+    setDataSyncing(true);
+    if (!userCourseData?.userCourseMapping?.user_course_id) return setDataSyncing(false);
+
     const userCourseMapData = structuredClone(userCourseData);
     const currentProgressIndex = userCourseMapData?.userCourseProgress?.findIndex(
       (obj) => obj?.topic_id === videoData?.topicContent[0]?.topicId
     );
     // TODO: what to do if no progress found?
-    if (currentProgressIndex < 0) return;
+    if (currentProgressIndex < 0) return setDataSyncing(false);
 
     const currentTopicProgress = userCourseMapData?.userCourseProgress[currentProgressIndex];
 
@@ -200,10 +196,13 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       isCompleted = playerState?.progress === 100;
 
       if (+currentTopicProgress?.video_progress > +playerState?.progress)
-        return console.log('progress saved is greater');
+        // return console.log('progress saved is greater');
+        return setDataSyncing(false);
     }
 
-    const { currentTime, duration } = videoElement.current;
+    // const { currentTime, duration } = videoElement.current;
+    const currentTime = videoElement?.current?.currentTime;
+    const duration = videoElement?.current?.duration;
     const sendData = {
       userCpId: currentTopicProgress?.user_cp_id,
       userId: userData.id,
@@ -211,7 +210,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       topicId: currentTopicProgress?.topic_id,
       topicType: 'Content',
       status: isCompleted ? 'completed' : 'in-progress',
-      videoProgress: playerState?.progress?.toString(),
+      videoProgress: type === 'binge' ? '100' : playerState?.progress?.toString(),
       timestamp: `${currentTime}-${duration}`
     };
 
@@ -229,6 +228,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       userCourseMapData.activeTopicContent = { index: null, id: null };
       userCourseMapData.activeTopicSubtitle = { index: null, id: null };
     }
+    if (type !== 'binge') setDataSyncing(false);
     setUserCourseData({ ...userCourseData, ...userCourseMapData });
   }
 
@@ -240,20 +240,26 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       setToastMsg({ type: 'danger', message: 'Course Progress Update Error' });
   }, [updateUserCourseErr, addUserCourseProgressErr, updateUserCourseProgressErr]);
 
-  // hide control bar if no mouse movement for 2.5 sec
-  const duration = 2500;
-  let timeout;
   useEffect(() => {
     if (userCourseData?.triggerPlayerToStartAt === null) setVideoTime(0);
     videoElement.current?.focus();
     updateIsPlayingTo(true);
+  }, [videoElement.current]);
+
+  // hide control bar if no mouse movement for 2.5 sec
+  const duration = 2500;
+  let timeout;
+  useEffect(() => {
+    clearTimeout(timeout);
 
     function switchControls(value) {
+      if (freezeScreen) return;
+
       setHideControls(value);
       setHideTopBar(value);
     }
 
-    addCallbackToEvent(videoContainer.current, [
+    const callBackFuncArr = [
       {
         event: 'mousemove',
         callback: () => {
@@ -279,8 +285,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           clearTimeout(timeout);
         }
       }
-    ]);
-  }, []);
+    ];
+
+    if (freezeScreen) return addCallbackToEvent(videoContainer.current, callBackFuncArr, true);
+
+    addCallbackToEvent(videoContainer.current, callBackFuncArr);
+  }, [freezeScreen]);
 
   // reset tooltip and seek after timeoutSeconds
   const timeoutSeconds = 2000;
@@ -315,6 +325,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // play video on state update
   useEffect(() => {
     playerState.isPlaying ? videoElement.current?.play() : videoElement.current?.pause();
+
+    if (playerState.isPlaying) setFreezeScreen(false);
   }, [playerState.isPlaying, videoElement]);
 
   // volume = 0 is mute, volume > 0 is unmute
@@ -455,6 +467,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   async function playNextVideo(type = null) {
     await syncVideoProgress(type);
     if (!videoData.allModuleTopic) return;
+
     const { allModuleTopic, currentTopicIndex } = videoData;
 
     if (allModuleTopic[currentTopicIndex + 1]?.type === 'Assessment') {
@@ -463,9 +476,15 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     // switch to next module
     if (videoData.allModuleTopic.length === videoData.currentTopicIndex + 1) {
+      const isBinge = type === 'binge';
+      if (isBinge) return;
+
       const { setNewModule, allModuleOptions, currentModuleIndex } = videoData;
       if (currentModuleIndex + 1 === allModuleOptions.length) return;
-      setNewModule({ ...allModuleOptions[currentModuleIndex + 1], isVideoControlClicked: true });
+      setNewModule({
+        ...allModuleOptions[currentModuleIndex + 1],
+        isVideoControlClicked: !isBinge
+      });
       return;
     }
 
@@ -526,19 +545,21 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // pass true or false
   function updateIsPlayingTo(play) {
-    setPlayerState({
-      ...playerState,
-      isPlaying: !!play
-    });
+    if (playerState?.isPlaying === play) return;
 
+    setPlayerState({ ...playerState, isPlaying: !!play });
     setPlayPauseActivated(!!play ? 'play' : 'pause');
   }
 
   const handleOnTimeUpdate = () => {
-    const progress = (videoElement.current?.currentTime / videoElement.current?.duration) * 100;
+    const currentTime = videoElement.current?.currentTime;
+    const progress = (currentTime / videoElement.current?.duration) * 100;
+
     setPlayerState({
       ...playerState,
-      progress: progress || 0
+      progress: progress || 0,
+      timestamp: secondsToHMS(currentTime || 0),
+      duration: videoElement.current?.duration
     });
   };
 
@@ -705,6 +726,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     playNextVideo,
     playPreviousVideo,
     setVideoTime,
-    moveVideoProgressBySeconds
+    moveVideoProgressBySeconds,
+    freezeScreen,
+    setFreezeScreen
   };
 }

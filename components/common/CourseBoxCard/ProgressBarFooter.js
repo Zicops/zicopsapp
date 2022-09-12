@@ -1,6 +1,8 @@
 import styles from './courseBoxCard.module.scss';
 
 export default function ProgressBarFooter({ courseData, isCompleted }) {
+  const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 90;
+
   return (
     <div className={`${styles.progressBarFooter}`}>
       <div>
@@ -11,14 +13,14 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
           </>
         ) : (
           <>
-            <p>Expected Completion by {courseData?.expectedCompletion || '22-06-2022'}</p>
-            <p className={styles.percent}>{courseData?.completedPercentage || '90%'}</p>
+            <p>Expected Completion by {courseData?.expected_completion || '22-07-2022'}</p>
+            <p className={styles.percent}>{progress}%</p>
           </>
         )}
       </div>
 
       <div className={styles.progress}>
-        <span className={`w-${courseData?.completedPercentage || 90}`}></span>
+        <span className={`w-${progress}`}></span>
       </div>
     </div>
   );

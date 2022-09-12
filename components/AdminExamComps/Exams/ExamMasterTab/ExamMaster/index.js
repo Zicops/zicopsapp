@@ -1,3 +1,4 @@
+import RTE from '@/components/common/FormComponents/RTE';
 import NextButton from '@/components/common/NextButton';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -10,7 +11,6 @@ import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
-import LabeledTextarea from '../../../../common/FormComponents/LabeledTextarea';
 import { customSelectStyles } from '../../../../common/FormComponents/Logic/formComponents.helper';
 import styles from '../examMasterTab.module.scss';
 import { SCHEDULE_TYPE } from '../Logic/examMasterTab.helper';
@@ -27,6 +27,7 @@ export default function ExamMaster() {
   const [questionPaperOptions, setQuestionPaperOptions] = useState([]);
 
   const router = useRouter();
+  const examId = router?.query?.examId;
   const isPreview = router.query?.isPreview || false;
 
   const { getTotalMarks, saveExamData } = useHandleExamTab();
@@ -189,6 +190,7 @@ export default function ExamMaster() {
             disabled={isPreview}
             onChange={(e) => {
               let value = +e.target.value;
+              let type = examTabData?.passing_criteria_type;
               const isMarks = examTabData?.passing_criteria_type === 'Marks';
 
               if (isMarks && value > examTabData?.total_marks) {
@@ -200,9 +202,16 @@ export default function ExamMaster() {
                 if (value < 0) value = 0;
               }
 
+              if (value === 0) {
+                type = 'None';
+              } else {
+                type = 'Marks';
+              }
+
               setExamTabData({
                 ...examTabData,
-                passing_criteria: value
+                passing_criteria: value,
+                passing_criteria_type: type
               });
             }}
           />
@@ -237,6 +246,9 @@ export default function ExamMaster() {
                 if (marks > 100) marks = 100;
                 if (marks < 0) marks = 0;
               }
+              if (e.target.value === 'None') {
+                marks = 0;
+              }
 
               setExamTabData({
                 ...examTabData,
@@ -244,7 +256,10 @@ export default function ExamMaster() {
                 passing_criteria: marks
               });
             }}
-            value={examTabData?.passing_criteria_type}>
+            value={
+              +examTabData?.passing_criteria === 0 ? 'None' : examTabData?.passing_criteria_type
+            }>
+            <option value="None">None</option>
             <option value="Marks">Marks</option>
             <option value="Percentage">Percentage</option>
           </select>
@@ -261,7 +276,14 @@ export default function ExamMaster() {
             name="is_attempts_visible"
             isChecked={examTabData?.is_attempts_visible}
             isDisabled={isPreview}
-            changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+            changeHandler={(e) => {
+              const isChecked = e.target.checked;
+              setExamTabData({
+                ...examTabData,
+                is_attempts_visible: isChecked,
+                no_attempts: isChecked ? 1 : -1
+              });
+            }}
           />
         </div>
 
@@ -315,9 +337,9 @@ export default function ExamMaster() {
 
       {/* exam Instructions/Guidelines */}
       <div>
-        <label>
-          Enter Instructions/Guidelines:
-          <LabeledTextarea
+        <label>Enter Instructions/Guidelines:</label>
+        {/* <MUIRichTextEditor label="Start typing..." /> */}
+        {/* <LabeledTextarea
             styleClass={styles.inputLabelGap}
             inputOptions={{
               inputName: 'instructions',
@@ -328,15 +350,15 @@ export default function ExamMaster() {
               maxLength: 300
             }}
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
-          />
-          {/* <RTE
-            changeHandler={(e) => {
-              setExamTabData({ ...examTabData, instructions: e.target.innerHTML });
-            }}
-            placeholder="Enter instructions in less than 300 characters."
-            value={examTabData?.instructions}
           /> */}
-        </label>
+        <RTE
+          changeHandler={(e) => {
+            if (examId && examTabData?.id !== examId) return;
+            setExamTabData({ ...examTabData, instructions: e });
+          }}
+          placeholder="Enter instructions in less than 300 characters."
+          value={examTabData?.instructions}
+        />
       </div>
 
       <div className={`w-100 ${styles.examMasterLastRow}`}>

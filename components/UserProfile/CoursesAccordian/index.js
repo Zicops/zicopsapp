@@ -1,12 +1,15 @@
 import { GET_COURSE, GET_LATEST_COURSES, queryClient } from '@/api/Queries';
-import { ADD_USER_COURSE, userClient } from '@/api/UserMutations';
+import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
+import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
+import UserButton from '@/common/UserButton';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '@/components/common/InputDatePicker';
 import PopUp from '@/components/common/PopUp';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
-import useHandleCourseHero from '@/components/CourseHero/Logic/useHandleCourseHero';
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -15,42 +18,69 @@ import { useRecoilState } from 'recoil';
 import Accordian from '../../../components/UserProfile/Accordian';
 
 // import AssignedCourses from '../../AssignedCourses';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
+import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
 const CoursesAccordian = () => {
-  // const [loadUserCourseData, { error: errorUC }] = useLazyQuery(GET_USER_COURSE_MAPS, {
-  //   client: userQueryClient
-  // });
-  const { courseAssignData, setCourseAssignData } = useHandleCourseHero();
+  const [courseAssignData, setCourseAssignData] = useState({
+    endDate: new Date(),
+    isMandatory: false,
+    isCourseAssigned: false
+  });
 
   const [loadLastestCourseData, { error: error }] = useLazyQuery(GET_LATEST_COURSES, {
     client: queryClient
   });
-  const [loadCourseData, { error: errorC, refetch }] = useLazyQuery(GET_COURSE, {
-    client: queryClient
-  });
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
+  const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
 
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const router = useRouter();
+  const currentUserId = router?.query?.userId;
+  const [assignedCourses, setAssignedCourses] = useState([]);
+  const [currentCourses, setCurrentCourses] = useState([]);
   const [userCourseData, setUserCourseData] = useState(null);
   const [dataCourse, setDataCourse] = useState([]);
   const [selected, setSelected] = useState(3);
   const [selectedPage, setSelectedPage] = useState('');
   const [isAssignedPage, setIsAssignedPage] = useState(false);
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  function handleAssign(item) {
+  const { updateCourse } = useHandleUpdateCourse();
+
+  async function handleAssign(item, isRemove = false) {
     // const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
-    setIsAssignPopUpOpen(true);
     setUserCourseData({ ...item });
+
+    if (!isRemove) return setIsAssignPopUpOpen(true);
+
+    return setShowConfirmBox(true);
+  }
+
+  async function handleRemove() {
+    const checkUpdate = await updateCourse(userCourseData, currentUserId, 'self');
+    console.log(checkUpdate);
+    await loadAssignedCourseData();
+    setShowConfirmBox(false);
   }
 
   async function handleSubmit() {
     setIsPopUpDataPresent(false);
     const { id } = getUserData();
+
+    const checkCourse = await updateCourse(userCourseData, currentUserId, 'admin', id);
+    if (checkCourse) {
+      const courseArray = dataCourse.filter((item) => item.id !== userCourseData?.id);
+      setDataCourse([...courseArray]);
+      setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+      await loadAssignedCourseData();
+      return setIsAssignPopUpOpen(false);
+    }
+
     const sendData = {
       userId: router.query?.userId,
       userLspId: 'Zicops',
@@ -59,30 +89,30 @@ const CoursesAccordian = () => {
       courseType: userCourseData.type,
       isMandatory: courseAssignData?.isMandatory,
       courseStatus: 'open',
-      endDate: courseAssignData?.endDate
+      endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
-    console.log(sendData);
 
     let isError = false;
     const res = await addUserCourse({ variables: sendData }).catch((err) => {
       console.log(err);
       return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
     });
-    console.log(res);
+
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
     const courseArray = dataCourse.filter((item) => item.id !== sendData?.courseId);
     setDataCourse([...courseArray]);
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+    await loadAssignedCourseData();
     setIsAssignPopUpOpen(false);
   }
 
   const courseSections = [
-    { displayType: 'Current Courses', footerType: 'onGoing', data: courseData },
+    { displayType: 'Current Courses', footerType: 'onGoing', data: currentCourses },
     { displayType: 'Current Courses', footerType: 'added', data: courseData },
     {
       displayType: 'Assigned Courses',
       footerType: 'adminFooter',
-      data: courseData,
+      data: assignedCourses,
       buttonText: 'Remove'
     },
     {
@@ -199,10 +229,12 @@ const CoursesAccordian = () => {
       console.log(err);
       return setToastMsg({ type: 'danger', message: `${err}` });
     });
-    const courseData = res?.data?.latestCourses?.courses;
+    const courseData = res?.data?.latestCourses?.courses?.filter(
+      (c) => c?.is_active && c?.is_display
+    );
 
     setDataCourse([...courseData]);
-    console.log(dataCourse);
+    // console.log(dataCourse);
 
     // courseData.forEach(async (item) => {
     //   console.log(item);
@@ -214,15 +246,99 @@ const CoursesAccordian = () => {
     //   data.push(resCourseData?.data);
     // });
   }, []);
-  let course = ['', '', ''];
-  const [isBoxView, setIsBoxView] = useState(true);
+
+  // load assigned courses
+  useEffect(() => {
+    loadAssignedCourseData();
+  }, [currentUserId]);
+
+  async function loadAssignedCourseData() {
+    if (!currentUserId) return;
+    const assignedCoursesRes = await loadQueryDataAsync(
+      GET_USER_COURSE_MAPS,
+      {
+        user_id: currentUserId,
+        publish_time: Math.floor(Date.now() / 1000),
+        pageCursor: '',
+        pageSize: 999999999
+      },
+      {},
+      userClient
+    );
+
+    if (assignedCoursesRes?.error)
+      return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
+    const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+
+    const allAssignedCourses = [];
+    for (let i = 0; i < assignedCoursesToUser?.length; i++) {
+      const courseMap = assignedCoursesToUser[i];
+      const mapId = courseMap?.user_course_id;
+      const course_id = courseMap?.course_id;
+
+      const courseProgressRes = await loadQueryDataAsync(
+        GET_USER_COURSE_PROGRESS,
+        { userId: currentUserId, userCourseId: mapId },
+        {},
+        userClient
+      );
+
+      if (courseProgressRes?.error) {
+        setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+        continue;
+      }
+      const userProgressArr = courseProgressRes?.getUserCourseProgressByMapId;
+
+      let topicsStarted = 0;
+      userProgressArr?.map((topic) => {
+        if (topic?.status !== 'not-started') ++topicsStarted;
+      });
+      console.log(topicsStarted);
+      const courseProgress = userProgressArr?.length
+        ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+        : 0;
+
+      const courseRes = await loadQueryDataAsync(GET_COURSE, { course_id: course_id });
+      if (courseRes?.error) {
+        setToastMsg({ type: 'danger', message: 'Course Load Error' });
+        continue;
+      }
+
+      allAssignedCourses.push({
+        ...courseRes?.getCourse,
+        completedPercentage: userProgressArr?.length ? courseProgress : 0,
+        added_by: JSON.parse(courseMap?.added_by)
+      });
+    }
+
+    if (allAssignedCourses?.length) {
+      const adminAssignedCourses = allAssignedCourses?.filter(
+        (course) => course?.added_by?.role.toLowerCase() === 'admin'
+      );
+
+      setCurrentCourses(allAssignedCourses);
+      setAssignedCourses(adminAssignedCourses);
+    }
+  }
 
   return (
     <>
       <Accordian height={'auto'} acc_title={'Courses'}>
+        {/* <CurrentCourses
+          assignedCourses={assignedCourses.filter((courses) => courses.completedPercentage)}
+          onAssignClick={() => {
+            setIsAssignedPage(!isAssignedPage);
+            setSelectedPage('Assign Courses');
+            setSelected(3);
+          }}
+        /> */}
+
         <div className={`${styles.courses_acc_head}`}>
           {isAssignedPage && (
-            <div className={`${styles.current_courses}`}>
+            <div
+              className={`${styles.current_courses} ${
+                lists?.length > 3 ? styles.marginBottom : ''
+              }`}>
               {lists.map((item) => (
                 <div
                   key={item.id}
@@ -235,7 +351,11 @@ const CoursesAccordian = () => {
           )}
           {!isAssignedPage && (
             <div className={`${styles.assign}`}>
-              <div>Current courses:6</div>
+              <div>
+                Current courses:{' '}
+                {assignedCourses?.filter((courses) => courses.completedPercentage)?.length}
+              </div>
+
               <div
                 onClick={() => {
                   setIsAssignedPage(!isAssignedPage);
@@ -250,11 +370,14 @@ const CoursesAccordian = () => {
           )}
         </div>
         {/* {isAssignedPage && <AssignCourses section={courseSections[3]} />} */}
-        {!isAssignedPage && <AssignCourses isHead={false} section={courseSections[0]} />}
+        {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} />}
         {/* {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />} */}
         {selectedPage === 'Assign Courses' && (
           <AssignCourses
             isFolder={true}
+            isHead={true}
+            type="assignCourses"
+            assignedCourses={assignedCourses}
             section={courseSections[3]}
             handleClick={handleClickFolder}
             handleSubmit={handleAssign}
@@ -262,37 +385,76 @@ const CoursesAccordian = () => {
           />
         )}
         {selectedPage === 'Assigned Courses' && (
-          <AssignCourses section={courseSections[2]} buttonText={courseSections[2].buttonText} />
+          <AssignCourses
+            type="assignedCourses"
+            section={courseSections[2]}
+            buttonText={courseSections[2].buttonText}
+            handleSubmit={handleAssign}
+            isRemove={true}
+          />
         )}
         <PopUp
+          // title="Course Mapping Configuration"
+          // submitBtn={{ handleClick: handleSubmit }}
           popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-          size="small"
-          title="Assign Course To User"
-          positionLeft="50%"
-          submitBtn={{ handleClick: handleSubmit }}>
+          // size="smaller"
+          customStyles={{ width: '400px' }}
+          isFooterVisible={false}
+          positionLeft="50%">
           <div className={`${styles.assignCoursePopUp}`}>
-            <section>
-              <label htmlFor="endDate">Course End Date:</label>
-              <InputDatePicker
-                selectedDate={courseAssignData?.endDate}
-                changeHandler={(date) => {
-                  setIsPopUpDataPresent(true);
-                  setCourseAssignData({ ...courseAssignData, endDate: date });
-                }}
-              />
-            </section>
-
+            <p className={`${styles.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
             <LabeledRadioCheckbox
               type="checkbox"
-              label="Is Mandatory"
+              label="Course Mandatory"
               name="isMandatory"
               isChecked={courseAssignData?.isMandatory}
               changeHandler={(e) =>
                 setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
               }
             />
+            <section>
+              <p htmlFor="endDate">Expected Completion date:</p>
+              <InputDatePicker
+                minDate={new Date()}
+                selectedDate={courseAssignData?.endDate}
+                changeHandler={(date) => {
+                  setIsPopUpDataPresent(true);
+                  setCourseAssignData({ ...courseAssignData, endDate: date });
+                }}
+                styleClass={styles.dataPickerStyle}
+              />
+            </section>
+            <div className={`${styles.assignCourseButtonContainer}`}>
+              <UserButton
+                text={'Cancel'}
+                isPrimary={false}
+                type={'button'}
+                clickHandler={() => {
+                  setIsAssignPopUpOpen(false);
+                  setCourseAssignData({ ...courseAssignData, endDate: new Date() });
+                }}
+              />
+              <UserButton
+                text={'Save'}
+                type={'button'}
+                clickHandler={() => {
+                  handleSubmit();
+                }}
+              />
+            </div>
           </div>
         </PopUp>
+
+        {showConfirmBox && (
+          <ConfirmPopUp
+            title={'Are you sure about removing this course?'}
+            btnObj={{
+              handleClickLeft: () => handleRemove(),
+              handleClickRight: () => setShowConfirmBox(false)
+            }}
+          />
+        )}
+
         {/* <div className={`${styles.imageContainer}`}>
           <img
             src={`/images/svg/view_agenda${isBoxView ? '_gray' : ''}.svg`}

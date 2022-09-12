@@ -1,3 +1,14 @@
+import { userClient } from '@/api/UserMutations';
+import {
+  GET_USER_DETAIL,
+  GET_USER_ORGANIZATION_DETAIL,
+  GET_USER_PREFERENCES
+} from '@/api/UserQueries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -10,6 +21,65 @@ import LearningDashboardAccordian from '../../../../components/UserProfile/Learn
 import styles from '../user.module.scss';
 
 export default function userProfilePage() {
+  const [currentUserData, setCurrentUserData] = useState(null);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const router = useRouter();
+  const currentUserId = router?.query?.userId;
+
+  useEffect(async () => {
+    if (!currentUserId) return;
+    const userIds = [];
+    userIds.push(currentUserId);
+
+    const detailsRes = await loadQueryDataAsync(
+      GET_USER_DETAIL,
+      { user_id: userIds },
+      {},
+      userClient
+    );
+    if (detailsRes?.error)
+      return setToastMsg({ type: 'danger', message: 'User Details Load Error' });
+    const userDetails = detailsRes?.getUserDetails[0];
+    // console.log(userIds, userDetails, detailsRes);
+
+    setCurrentUserData({ ...userDetails });
+
+    const detailPref = await loadQueryDataAsync(
+      GET_USER_PREFERENCES,
+      { user_id: currentUserId },
+      {},
+      userClient
+    );
+    if (detailPref?.error) return setToastMsg({ type: 'danger', message: 'User Pref Load Error' });
+    const userPref = detailPref?.getUserPreferences;
+    if (userPref.length) setCurrentUserData((prev) => ({ ...prev, ...userPref[0] }));
+    const prefArr = userPref?.filter(
+      (item) => item?.user_lsp_id === userPref[0]?.user_lsp_id && item?.is_active
+    );
+
+    const base = prefArr?.filter((item) => item?.is_base);
+    console.log(base);
+    setCurrentUserData((prev) => ({
+      ...prev,
+      sub_categories: [...prefArr],
+      sub_category: base[0]?.sub_category
+    }));
+
+    // console.log(currentUserData);
+
+    const detailOrg = await loadQueryDataAsync(
+      GET_USER_ORGANIZATION_DETAIL,
+      { user_id: currentUserId, user_lsp_id: userPref[0]?.user_lsp_id },
+      {},
+      userClient
+    );
+    if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
+    const userOrg = detailOrg?.getUserOrgDetails;
+    // console.log(userOrg);
+    if (userPref.length) setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
+  }, [currentUserId]);
+
   return (
     <>
       <Sidebar sidebarItemsArr={userSideBarData} />
@@ -19,8 +89,8 @@ export default function userProfilePage() {
             <div>
               <img src="" alt="" />
               <div>
-                <p>Name</p>
-                <p>Description</p>
+                <p>{`${currentUserData?.first_name} ${currentUserData?.last_name}`}</p>
+                {/* <p>Description</p> */}
               </div>
             </div>
           }
@@ -35,7 +105,7 @@ export default function userProfilePage() {
         />
 
         <MainBodyBox customStyle={{ minHeight: 'auto', maxHeight: 'none', height: 'min-content' }}>
-          <UserProfile />
+          <UserProfile currentUserData={currentUserData} />
         </MainBodyBox>
         <div className={`${styles.accordianContainer}`}>
           <CoursesAccordian />

@@ -1,5 +1,6 @@
 import { customSelectStyles } from '@/components/common/FormComponents/Logic/formComponents.helper';
 import ScrollDownAnimation from '@/components/common/ScrollDownAnimation';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import styles from '../home.module.scss';
@@ -31,6 +32,41 @@ const HomeInputField = () => {
       // overflow: 'auto'
     })
   };
+
+  
+  const router = useRouter();
+  const locationKey = router?.asPath;
+  // console.log(locationKey);
+  const timeout = { enter: 500, exit: 500 };
+
+  // console.log(styles['slide-enter']);
+  const [selected, setSelected] = useState('');
+  // const [isActive, setIsActive] = useState(false);
+  const [isOverLay, setIsOverLay] = useState(false);
+
+  const routerConfig = [
+    {
+      path: '/about-us',
+      title: 'About Zicops'
+    },
+    {
+      path: '/tour',
+      title: 'Take a tour'
+    },
+    {
+      path: '/collaborate',
+      title: 'Collaborate with us'
+    },
+    {
+      path: '/contact-us',
+      title: 'Contact Us'
+    },
+    {
+      path: '/careers',
+      title: 'Careers'
+    },
+    
+  ];
 
   return (
     <>
@@ -69,12 +105,33 @@ const HomeInputField = () => {
       </div>
       <footer className={`${styles.HomeFooter}`}>
         <div className={`${styles.HomeFooterInner}`}>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
-          <a href="/home">Zicops About</a>
+          {routerConfig.map((item, index) => {
+            return (
+              <span
+                className={`${styles.homeFooterElement} ${
+                  selected === item?.path ? styles['move_up'] : ''
+                }`}
+                key={index}
+                onClick={() => setSelected(item?.path)}
+                onTransitionEnd={() => {
+                  setIsOverLay(true);
+                }}>
+                {item?.title}
+              </span>
+            );
+          })}
         </div>
+        <div
+          className={`${styles.footerOverlay} ${
+            isOverLay ? styles.footerOverlayZoom : styles.footerOverlayNone
+          }`}
+          onAnimationStart={() => {
+            router.prefetch(`info/${selected}`);
+          }}
+          onAnimationEnd={() => {
+            router.push(`info/${selected}`);
+            setIsOverLay(false);
+          }}></div>
       </footer>
     </>
   );

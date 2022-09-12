@@ -1,5 +1,6 @@
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { ApolloProvider } from '@apollo/client';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { mutationClient } from '../../../API/Mutations';
 import AdminHeader from '../../../components/common/AdminHeader';
 import MainBody from '../../../components/common/MainBody';
@@ -11,18 +12,28 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 
 export default function AddCoursePage() {
   const { updateCourseMaster } = useContext(courseContext);
+  const [courseType, setCourseType] = useState(COURSE_TYPES[0]);
 
   // reset context state
   useEffect(() => {
-    updateCourseMaster({});
+    const type = localStorage.getItem('courseType') || COURSE_TYPES[0];
+    setCourseType(type);
+    updateCourseMaster({ type });
   }, []);
+
+  function getPageTitle() {
+    if (courseType === COURSE_TYPES[0]) return 'Add New Course';
+    if (courseType === COURSE_TYPES[3]) return 'Add New Test Series';
+
+    return 'Add';
+  }
 
   return (
     <>
       <Sidebar sidebarItemsArr={courseSidebarData} />
 
       <MainBody>
-        <AdminHeader title="Add New Course" />
+        <AdminHeader title={getPageTitle()} />
 
         <ApolloProvider client={mutationClient}>
           <MainBodyBox>

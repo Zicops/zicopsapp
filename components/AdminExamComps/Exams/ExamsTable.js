@@ -25,11 +25,13 @@ export default function ExamsTable({ isEdit = false }) {
   const router = useRouter();
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  const [exams, setExams] = useState([]);
+  const [examData, setExamData] = useState([]);
+
+  const [loading, setLoading] = useState(true);
 
   // load table data
   useEffect(async () => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 10, pageCursor: '' };
+    const queryVariables = { publish_time: Date.now(), pageSize: 9999999, pageCursor: '' };
 
     const res = await loadExams({ variables: queryVariables });
     if (loadExamErr) return setToastMsg({ type: 'danger', message: 'exams load error' });
@@ -88,7 +90,8 @@ export default function ExamsTable({ isEdit = false }) {
       exams.push({ ...exam, Status: status });
     }
 
-    setExams(exams);
+    if (!exams?.length) setLoading(false);
+    setExamData([...exams], setLoading(false));
   }, []);
 
   const columns = [
@@ -155,10 +158,11 @@ export default function ExamsTable({ isEdit = false }) {
     <>
       <ZicopsTable
         columns={columns}
-        data={exams}
+        data={examData}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
+        loading={loading}
       />
     </>
   );

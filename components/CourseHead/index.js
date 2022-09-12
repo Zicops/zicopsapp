@@ -1,25 +1,41 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
+import { snakeCaseToTitleCase } from '@/helper/common.helper';
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
-import styles from './courseHead.module.scss';
-import PopUp from '../common/PopUp';
+import { useEffect, useState } from 'react';
+import Select from 'react-select';
 import Sitemap from '../common/AdminHeader/Sitemap';
+import PopUp from '../common/PopUp';
+import styles from './courseHead.module.scss';
 
 export default function CourseHead({ title }) {
   const [showSitemap, setShowSitemap] = useState(false);
 
   const router = useRouter();
-  const options = [
-    { value: 'self-paced', label: 'Self Paced' },
-    { value: 'classroom', label: 'Classroom' },
-    { value: 'labs', label: 'Labs' },
-    { value: 'test', label: 'Test' }
-  ];
+  const options = Array(COURSE_TYPES?.length)
+    .fill(null)
+    .map((v, i) => {
+      return {
+        value: COURSE_TYPES[i],
+        label: snakeCaseToTitleCase(COURSE_TYPES[i]),
+        isDisabled: [1, 2].includes(i)
+      };
+    });
+  // const options = [
+  //   { value:  'self-paced', label: 'Self Paced' },
+  //   { value: 'classroom', label: 'Classroom' },
+  //   { value: 'labs', label: 'Labs' },
+  //   { value: 'test-series', label: 'Test' }
+  // ];
   const route = router.route;
   function gotoAddcourse() {
     router.push('/admin/courses');
   }
-  console.log(showSitemap);
+
+  useEffect(() => {
+    localStorage.setItem('courseType', options[0].value);
+  }, []);
+
+  // console.log(showSitemap);
   return (
     <div className={`${styles.courseHead}`}>
       <div className={`${styles.header}`}>
@@ -28,6 +44,7 @@ export default function CourseHead({ title }) {
           instanceId="coursehead_coursetype"
           options={options}
           defaultValue={{ value: 'self-paced', label: 'Self Paced' }}
+          onChange={(e) => localStorage.setItem('courseType', e.value)}
           className="zicops_select_container"
           classNamePrefix="zicops_select"
           isSearchable={false}

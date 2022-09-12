@@ -1,0 +1,155 @@
+@import '../../styles/base.scss';
+
+.registerNow_certificate {
+    display: flex;
+    gap: 2.5vw;
+    color: $darkThree;
+    font-size: 0.9vw;
+    margin-top: 10px;
+    .registerNow_certificate_fullrow{
+        width: 100%;
+        display: flex;
+        .label{
+            width: 25%;
+            display: flex;
+            justify-content: space-between;
+            color: $primary;
+            font-weight: bold;
+            span{
+                padding-right: 1vw;
+                color: $darkThree;
+            }
+        }
+        .value{
+            width: 75%;
+        }
+    }
+    .registerNow_certificate_row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    span {
+        color: $primary;
+        font-weight: 600;
+    }
+
+    p {
+        float: right;
+        padding-right: 1vw;
+    }
+
+    .registerNow_label{
+        padding-right: 2.5vw;
+    }
+    .registerNow_value{
+        padding-left: 1vw;
+        font-weight: 400;
+        color: $darkThree;
+    }
+}
+
+.registerNow_Price {
+    display: flex;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 6vh;
+    margin-bottom: 10px;
+
+    .registerNow_Icon {
+        width: 22px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .registerNow_partition {
+        border: 0.5px solid $primary;
+        background-color: $primary;
+        height: 25px;
+    }
+}
+
+.registerNow_BannerButtons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 50vw;
+
+    button {
+        font-size: 16px;
+        background-color: $darkTwo;
+        color: $white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        opacity: 0.8;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .bookNowButton {
+        background-color: $primary;
+        color: $black;
+        font-weight: bold;
+        padding: 10px 100px;
+    }
+
+    .registerNow_scheduleLinks {
+        margin-left: 10px;
+        font-size: 13px;
+        color: $primary;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-end;
+        gap: 15px;
+        a{
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 2.5px
+        }
+
+        img {
+            height: 20px;
+            margin-right: 3px;
+        }
+    }
+}
+
+
+.registerNow_instructions{
+    width: 85vw;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+
+    .registerNow_shareIcons {
+        margin-left: 10px;
+        font-size: 13px;
+        color: $primary;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-end;
+        gap: 15px;
+    
+        img {
+            height: 20px;
+            margin-right: 3px;
+        }
+    
+        a{
+            display: flex;
+            align-items: center;
+        }
+    }
+}

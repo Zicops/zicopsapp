@@ -48,7 +48,12 @@ export default function CourseBodyNotes() {
 
   return (
     <>
-      <Dropdown options={options} handleChange={handleModuleChange} value={selectedModule} />
+      <Dropdown
+        options={options}
+        handleChange={handleModuleChange}
+        value={selectedModule}
+        customStyles={{ margin: '20px auto 0px' }}
+      />
       <Header
         title={currentModule?.name}
         description={currentModule?.description || ''}
@@ -74,15 +79,19 @@ export default function CourseBodyNotes() {
               </div>
 
               {floatingNotes
-                .map((noteObj, i) => (
-                  <NoteCard
-                    key={noteObj.id}
-                    handleDelete={() => deleteNote(noteObj)}
-                    handleNote={handleNote}
-                    noteObj={noteObj}
-                    isDraggable={false}
-                  />
-                ))
+                .map((noteObj, i) => {
+                  if (noteObj?.topic_id !== isNotesVisible.split('|:|')[0]) return null;
+
+                  return (
+                    <NoteCard
+                      key={noteObj.id}
+                      handleDelete={() => deleteNote(noteObj)}
+                      handleNote={handleNote}
+                      noteObj={noteObj}
+                      isDraggable={false}
+                    />
+                  );
+                })
                 .reverse()}
             </div>
           </LearnerPageContainer>

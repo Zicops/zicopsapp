@@ -21,7 +21,7 @@ export default function Home() {
 
   React.useEffect(() => {
     console.log(screen.width);
-    if (isAdmin) router.push('/admin');
+    // if (isAdmin) router.push('/admin');
   }, []);
 
   const realSquare = {
@@ -116,8 +116,10 @@ export default function Home() {
         pageCursor: ''
       }
     }).then(({ data }) => {
-      console.log(data);
-      setLatestCourseData(data?.latestCourses?.courses || []);
+      // console.log(data);
+      setLatestCourseData(
+        data?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) || []
+      );
 
       if (error) alert('Course Load Error');
     });

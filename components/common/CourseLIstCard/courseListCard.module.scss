@@ -3,10 +3,8 @@
 .cardContainer {
   display: flex;
   gap: 25px;
-
   width: 100%;
-  height: 140px;
-
+  height: 18vh;
   background-color: $black;
   color: $darkThree;
   padding: 20px;
@@ -14,9 +12,11 @@
 
   .imgContainer {
     border-radius: 10px;
-    max-width: 20%;
-
+    width: 10%;
     img {
+      width: 100%;
+      object-fit: cover;
+      border-radius: inherit;
       height: 100%;
     }
   }
@@ -103,4 +103,8 @@
       }
     }
   }
+}
+
+.mandatory{
+  color: $primary;
 }

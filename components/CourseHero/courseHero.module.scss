@@ -15,8 +15,8 @@
   background: linear-gradient(
     90deg,
     rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) 35%,
-    rgba(0, 0, 0, 0.7) 70%,
+    rgba(0, 0, 0, 0.9) 35%,
+    rgba(0, 0, 0, 0.8) 50%,
     rgba(0, 0, 0, 0) 100%
   );
 }
@@ -164,14 +164,48 @@
   }
 }
 
+// .assignCoursePopUp {
+//   text-align: center;
+
+//   section {
+//     margin: 30px;
+
+//     label {
+//       margin-right: 30px;
+//     }
+//   }
+// }
+
 .assignCoursePopUp {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 40px;
+  margin-left: 15px;
+
+  .assignCoursePopUpTitle {
+    font-size: larger;
+  }
+
+  .dataPickerStyle {
+    display: flex;
+    padding-right: 15px;
+  }
+  label {
+    font-size: medium;
+    font-weight: 400;
+  }
 
   section {
-    margin: 30px;
-
-    label {
-      margin-right: 30px;
+    p {
+      margin-bottom: 10px;
     }
+  }
+
+  .assignCourseButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 15px;
+    gap: 10px;
   }
 }

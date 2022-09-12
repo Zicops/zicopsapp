@@ -1,8 +1,11 @@
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import AlertBox from '@/components/common/AlertBox';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { Skeleton } from '@mui/material';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -42,24 +45,29 @@ export default function TopicBox({
   moduleId,
   getModuleOptions,
   currrentModule,
-  setSelectedModule
+  setSelectedModule,
+  showResources
 }) {
   const { name, description, type } = topic;
   const duration = topicContent[0]?.duration.toString();
   const topicData = useRecoilValue(TopicAtom);
   const topicContentData = useRecoilValue(TopicContentAtom);
 
+  const router = useRouter();
+  const activateExam = router?.query?.activateExam || null;
+
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
-
+  const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
 
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [topicCountDisplay, setTopicCountDisplay] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
 
   const [examData, setExamData] = useState({
     id: null,
@@ -123,6 +131,14 @@ export default function TopicBox({
       language: topicExam.language
     });
   }, []);
+
+  // open exam landing page if params exists
+  useEffect(() => {
+    if (!activateExam) return;
+    if (!examData?.examId) return;
+
+    loadTopicExam({ examId: activateExam, filter: true });
+  }, [activateExam, examData?.examId]);
 
   let topicImageLink = imageTypeTopicBox(type);
 
@@ -198,11 +214,37 @@ export default function TopicBox({
     }
   }, [currrentModule]);
 
-  async function loadTopicExam() {
+  useEffect(() => {
+    if (!switchToTopic && !switchToTopic?.id) return;
+    if (topic?.id !== switchToTopic?.id) return;
+    // console.log('switchToTopic', switchToTopic);
+
+    if (type === 'Assessment') return loadTopicExam();
+
+    if (!topicContent.length) return console.log('no topic content found');
+
+    setSwitchToTopic(null);
+    setTopicExamData(getTopicExamObj());
+    updateVideoData(
+      videoData,
+      setVideoData,
+      { moduleId: moduleId, topicId: topic.id },
+      topicData,
+      topicContent,
+      allModuleOptions,
+      currrentModule,
+      setSelectedModule,
+      userCourseData,
+      setUserCourseData
+    );
+  }, [switchToTopic, examData]);
+
+  async function loadTopicExam(obj) {
     if (topic?.type !== 'Assessment') return;
+    if (obj?.filter && obj?.examId !== examData?.examId) return;
 
     const topicExam = examData;
-    if (!topicExam) return;
+    if (!topicExam?.id) return;
     // setToastMsg({ type: 'danger', message: 'No Exam Added!' });
 
     // reset recoil and set new data
@@ -244,10 +286,17 @@ export default function TopicBox({
       <div
         className={`${styles.topic}`}
         onClick={() => {
+          if (
+            !router?.asPath?.includes('preview') &&
+            !userCourseData?.userCourseMapping?.user_course_id
+          )
+            return setShowAlert(true);
+
+          // if (!userCourseData?.userCourseMapping?.user_course_id) return;
           if (type === 'Assessment') return loadTopicExam();
 
           // if (type === 'Content') {
-          if (!topicContent.length) return;
+          if (!topicContent.length) return console.log('no topic content found');
 
           setTopicExamData(getTopicExamObj());
           updateVideoData(
@@ -265,8 +314,13 @@ export default function TopicBox({
           // }
         }}>
         <div className={`${styles.preclassName}`}>
-          <div>
-            <img src="images/resourcesicon.png" />
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              showResources(topic);
+            }}>
+            <img src="/images/resourcesicon.png" />
             <p>Resources</p>
           </div>
           {/* <div>
@@ -275,40 +329,45 @@ export default function TopicBox({
           </div> */}
         </div>
 
-        <div className={`topic-loop ${isTopicActive ? 'activeTopic' : ''}`}>
+        <div className={`${styles.topic_loop} ${isTopicActive ? 'activeTopic' : ''}`}>
           <div className={`${styles.topic_img}`}>
             <img src={`${topicImageLink}`} alt="" />
           </div>
 
           <div className={`${styles.topic_text}`}>
-            <div className={`${styles.topic_heading}`}>
-              <h4>
-                <span>
-                  {isLoading ? (
-                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
-                  ) : (
-                    topicCountDisplay + '. '
-                  )}
-                </span>
+            <div className={`${styles.topic_number}`}>
+              <span>
                 {isLoading ? (
-                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={150} />
-                ) : name ? (
-                  name
+                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={50} />
                 ) : (
-                  'N/A'
+                  topicCountDisplay + '. '
                 )}
-              </h4>
+              </span>
             </div>
-            <div className={`${styles.topic_description}`}>
-              <p>
-                {isLoading ? (
-                  <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
-                ) : description ? (
-                  description
-                ) : (
-                  'N/A'
-                )}
-              </p>
+            <div className={`${styles.topic_meta}`}>
+              <div className={`${styles.topic_heading}`}>
+                <h4>
+                  {isLoading ? (
+                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={150} />
+                  ) : name ? (
+                    name
+                  ) : (
+                    'N/A'
+                  )}
+                </h4>
+              </div>
+              <div className={`${styles.topic_description}`}>
+                <p>
+                  {isLoading ? (
+                    <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={70} width={500} />
+                  ) : description ? (
+                    description
+                  ) : (
+                    'N/A'
+                    // 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint eos quisquam beatae doloremque rem, deleniti dolor odio accusamus doloribus harum cumque fugiat, suscipit illo, molestias adipisci fugit porro ratione tenetur.'
+                  )}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -320,7 +379,7 @@ export default function TopicBox({
                 </div>
               </div>
               <div className={`${styles.details}`}>
-                <div>Video + Quiz</div>
+                <div>e-Content</div>
                 <div>
                   <span>
                     {isLoading ? (
@@ -374,7 +433,8 @@ export default function TopicBox({
                 <span>{data?.examData?.difficultyLevel}</span>
 
                 <span>
-                  Attempt: {!data?.examData?.noAttempts ? '0' : data?.examData?.noAttempts}
+                  Attempt:{' '}
+                  {+data?.examData?.noAttempts < 0 ? 'Unlimited' : data?.examData?.noAttempts}
                 </span>
 
                 {!!data?.examData?.duration && (
@@ -412,27 +472,13 @@ export default function TopicBox({
         </div>
       </div>
 
-      {/* move to .scss */}
-      <style>
-        {`
-                
-                .topic-loop{
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px;
-                    transition: all 0.3s;
-                    cursor: pointer;
-                    background-color: var(--black);
-                    border-radius: 5px;
-                }
-                .topic-loop:hover, .activeTopic{
-                    box-shadow: 0 0 10px 0 #6bcfcf;
-                    transform: scale(1.02);
-                    background-color: var(--dark_two);
-                
-                `}
-      </style>
+      {showAlert && (
+        <AlertBox
+          title="Course Not Assigned"
+          description="Please assign course to access the course contents"
+          handleClose={() => setShowAlert(false)}
+        />
+      )}
     </>
   );
 }

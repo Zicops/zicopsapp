@@ -2,10 +2,10 @@ import { ADD_USER_NOTES, UPDATE_USER_NOTES, userClient } from '@/api/UserMutatio
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { VideoAtom } from '@/state/atoms/video.atom';
+import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../customVideoPlayer.module.scss';
 
@@ -27,58 +27,81 @@ export default function NoteCard({
 
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
 
+  const [activeNote, setActiveNote] = useState(null);
+
   const { fullCourse } = useContext(courseContext);
 
-  async function saveNotes() {
-    // if (noteObj?.note.length === 0) return;
+  async function saveNotes(noteData, isDelete) {
+    // if (noteObj?.details.length === 0) return;
     // console.log(noteObj);
+    if (!noteData?.user_notes_id && !noteData?.details.length) return console.log('skip');
 
     const sendNotesData = {
       user_id: userData?.id,
       user_lsp_id: 'Zicops',
-      user_course_id: 'RandomCourseId',
       course_id: fullCourse?.id,
       topic_id: videoData?.topicContent[0]?.topicId,
       module_id: videoData?.currentModuleId,
-      details: noteObj?.note,
-      sequence: noteObj?.index,
+      details: noteData?.details,
+      sequence: noteData?.sequence,
       is_active: true,
       status: 'Saved'
     };
 
-    if (noteObj?.id) {
-      sendNotesData.user_notes_id = noteObj?.id;
-      delete sendNotesData?.user_course_id;
-      sendNotesData.is_active = sendNotesData?.details.length === 0 ? false : true;
-      console.log(sendNotesData);
+    if (isNaN(+noteData?.user_notes_id)) {
+      sendNotesData.user_notes_id = noteData?.user_notes_id;
+      sendNotesData.is_active = !!sendNotesData?.details?.length;
+      // console.log('update note');
+    }
+    if (isDelete) sendNotesData.is_active = false;
+
+    // console.log(sendNotesData, isNaN(+noteData?.user_notes_id), sendNotesData?.user_notes_id);
+
+    let resNotes = null;
+    let _note = null;
+    if (!sendNotesData.user_notes_id) {
+      resNotes = await addUserNotes({ variables: sendNotesData }).catch((err) => {
+        console.log(err);
+      });
+      _note = resNotes?.data?.addUserNotes[0];
+      // console.log('note added');
+    } else if (sendNotesData?.user_notes_id) {
+      resNotes = await updateUserNotes({ variables: sendNotesData }).catch((err) => {
+        console.log(err);
+      });
+      // console.log('note updated');
+      _note = resNotes?.data?.updateUserNotes;
     }
 
-    if (sendNotesData?.details.length === 0 && !sendNotesData?.user_id) return;
-
-    const resNotes = noteObj?.id
-      ? await updateUserNotes({ variables: sendNotesData }).catch((err) => {
-          console.log(err);
-        })
-      : await addUserNotes({ variables: sendNotesData }).catch((err) => {
-          console.log(err);
-        });
+    if (!resNotes) return console.log('note not saved');
 
     const allNotes = structuredClone([...floatingNotes]);
 
     const noteIndex = allNotes?.findIndex((note) => {
-      if (!note.id) return note.index === noteObj?.index;
-      return note.id === noteObj?.id;
+      if (!note.user_notes_id) return note.sequence === noteData?.sequence;
+      return note.user_notes_id === noteData?.user_notes_id;
     });
 
-    const data = noteObj?.id ? resNotes?.data?.updateUserNotes[0] : resNotes?.data?.addUserNotes[0];
-    console.log(data);
+    // const data = noteData?.user_notes_id
+    //   ? resNotes?.data?.updateUserNotes?.[0]
+    //   : resNotes?.data?.addUserNotes?.[0];
+    // console.log(data);
 
-    allNotes[noteIndex].id = data?.user_notes_id;
+    allNotes[noteIndex].user_notes_id = _note?.user_notes_id;
+
+    // console.log(allNotes);
+    if (isDelete) allNotes?.splice(noteIndex, 1);
     setFloatingNotes(allNotes);
   }
+
+  function activateNote(e, noteObj, isSelected) {
+    setActiveNote(isSelected ? noteObj?.user_notes_id : null);
+  }
+
   return (
     <div
       className={`${styles.noteCard}`}
@@ -87,7 +110,9 @@ export default function NoteCard({
       // onDragStart={(e) => console.log(e)}
     >
       <div className={`${styles.notesHeader}`}>
-        <p>Note {noteObj?.index}</p>
+        <p className={`${activeNote === noteObj?.user_notes_id ? styles.activeNote : ''}`}>
+          Note {noteObj?.sequence}
+        </p>
         <section>
           {/* <img
             src={'/images/svg/pin-dark.svg'}
@@ -111,7 +136,7 @@ export default function NoteCard({
           )}
           <svg
             className={`${styles.delete}`}
-            onClick={handleDelete}
+            onClick={() => saveNotes(noteObj, true)}
             width="48"
             height="48"
             viewBox="0 0 48 48"
@@ -140,9 +165,13 @@ export default function NoteCard({
         placeholder="Type here"
         rows="10"
         onMouseDown={(e) => e.stopPropagation()}
-        value={noteObj?.note}
+        value={noteObj?.details}
         onChange={(e) => handleNote(e, noteObj)}
-        onBlur={saveNotes}></textarea>
+        onFocus={(e) => activateNote(e, noteObj, true)}
+        onBlur={(e) => {
+          activateNote(e, noteObj, false);
+          saveNotes(noteObj);
+        }}></textarea>
     </div>
   );
 }

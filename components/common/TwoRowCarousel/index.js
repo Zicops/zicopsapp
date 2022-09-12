@@ -1,23 +1,38 @@
-import { Fragment } from 'react';
+import { getResourceCount } from '@/components/CourseBody/Logic/courseBody.helper';
+import { ResourcesAtom } from '@/state/atoms/module.atoms';
+import { Fragment, useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import ItemSlider from '../ItemSlider';
 
 export default function TwoRowCarousel({ carouselProps, itemsArr, CardComp, cardProps = {} }) {
   let prevItem = null;
 
+  const resources = useRecoilValue(ResourcesAtom);
+  const [isResourcesFound, setIsResourcesFound] = useState(true);
+
+  useEffect(() => {
+    // return;
+    if (!cardProps?.hideResourcesOnEmpty) return;
+
+    const isFound = itemsArr?.some((dt) => !!getResourceCount(resources, dt?.id));
+    setIsResourcesFound(isFound);
+  }, []);
+
   return (
     <>
       <div style={{ position: 'relative' }}>
-        <ItemSlider carouselProps={carouselProps}>
+        <ItemSlider carouselProps={carouselProps} noDataFound={!isResourcesFound}>
           {itemsArr.map((dt, i) => {
             if (i + 1 == itemsArr.length) {
               return (
                 <Fragment key={dt.id + i + prevItem?.id}>
                   {prevItem && (
-                    <div style={{ padding: '5px' }}>
+                    <div style={cardProps?.hideResourcesOnEmpty ? {} : { padding: '5px' }}>
                       <CardComp data={prevItem} {...cardProps} />
                     </div>
                   )}
-                  <div style={{ padding: '5px' }}>
+
+                  <div style={cardProps?.hideResourcesOnEmpty ? {} : { padding: '5px' }}>
                     <CardComp data={dt} {...cardProps} />
                   </div>
                 </Fragment>
@@ -30,10 +45,11 @@ export default function TwoRowCarousel({ carouselProps, itemsArr, CardComp, card
 
             return (
               <Fragment key={dt.id + i + prevItem?.id}>
-                <div style={{ padding: '5px' }}>
+                <div style={cardProps?.hideResourcesOnEmpty ? {} : { padding: '5px' }}>
                   <CardComp data={prevItem} {...cardProps} />
                 </div>
-                <div style={{ padding: '5px' }}>
+
+                <div style={cardProps?.hideResourcesOnEmpty ? {} : { padding: '5px' }}>
                   <CardComp data={dt} {...cardProps} />
                 </div>
 

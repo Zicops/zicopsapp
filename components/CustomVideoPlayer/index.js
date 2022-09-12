@@ -47,14 +47,15 @@ export default function CustomVideo({ set }) {
     playNextVideo,
     playPreviousVideo,
     setVideoTime,
-    moveVideoProgressBySeconds
+    moveVideoProgressBySeconds,
+    freezeScreen,
+    setFreezeScreen
   } = useVideoPlayer(videoElement, videoContainer, set);
-  const { userNotes, handleDragEnd, handleClose, handlePin, deleteNote, handleNote } =
-    useHandleNotes();
+
+  const { handleClose, handlePin, deleteNote, handleNote } = useHandleNotes();
 
   useEffect(() => {
     set(true);
-    setFloatingNotes([]);
 
     // reset video progress when unmounted
     // return () => handleMouseMove({ target: { value: 0 } });
@@ -78,7 +79,7 @@ export default function CustomVideo({ set }) {
     if (isPreview && playerState.progress === 100) set(false);
 
     // autoplay next video
-    if (playerState.progress === 100) playNextVideo();
+    if (playerState.progress === 100) playNextVideo('binge');
 
     // add logic for preventing binge button for last video
     if (topicContent && showBingeButtons !== null) {
@@ -125,19 +126,27 @@ export default function CustomVideo({ set }) {
   // currently  not used, can remove later
   const vidRef = useRef();
 
+  useEffect(() => {
+    if (hideTopBar) return;
+
+    const isNoteActive = floatingNotes?.some((note) => note?.isActive);
+    setFreezeScreen(isNoteActive);
+  }, [floatingNotes]);
+
   return (
     <div className={styles.videoContainer} ref={videoContainer} onDoubleClick={toggleFullScreen}>
       {/* floating notes */}
       {floatingNotes?.map((noteObj, i) => {
-        if (!noteObj.isFloating) return null;
-        if (!noteObj.isPinned && !!hideTopBar) {
+        if (noteObj?.topic_id !== videoData?.topicContent[0]?.topicId) return null;
+        if (!noteObj?.isFloating) return null;
+        if (!noteObj?.isPinned && !!hideTopBar) {
           handleClose(noteObj);
           return null;
         }
 
         return (
           <DraggableDiv
-            key={noteObj?.index}
+            key={`${noteObj?.sequence}-${noteObj?.user_notes_id}`}
             initalPosition={{
               x: noteObj.x,
               y: noteObj.y
@@ -157,13 +166,14 @@ export default function CustomVideo({ set }) {
       {/* custom Ui components */}
       {/* <div className={`${styles.customUiContainer} ${hideTopBar ? styles.fadeHideTop : ''}`}> */}
       <UiComponents
-        styleClass={hideTopBar ? styles.fadeHideTop : ''}
+        styleClass={!freezeScreen && hideTopBar ? styles.fadeHideTop : ''}
         updateIsPlayingTo={updateIsPlayingTo}
         set={set}
         key={'ui'}
+        freezeState={[freezeScreen, setFreezeScreen]}
         refs={{ videoElement, videoContainer }}
         playerState={playerState}
-        isTopBarHidden={hideTopBar}
+        isTopBarHidden={!freezeScreen && hideTopBar}
         subtitleState={[showSubtitles, setShowSubtitles]}
         moveVideoProgressBySeconds={moveVideoProgressBySeconds}
       />
@@ -178,7 +188,7 @@ export default function CustomVideo({ set }) {
           playerState={playerState}
           handleClick={togglePlay}
           handleKeyDown={handleKeyDownEvents}
-          isControlBarVisible={hideControls}
+          isControlBarVisible={!freezeScreen && hideControls}
           isSubtitleShown={showSubtitles}
         />
 
@@ -220,7 +230,7 @@ export default function CustomVideo({ set }) {
                 text: 'Next Topic',
                 classes: styles.nextPlayBtn,
                 clickHandler: () => {
-                  playNextVideo();
+                  playNextVideo('binge');
                   setShowBingeButtons(false);
                 }
               }}
@@ -238,7 +248,7 @@ export default function CustomVideo({ set }) {
 
         {/* control bar */}
         <div
-          className={`${styles.controls} ${hideControls ? styles.fadeHide : ''}`}
+          className={`${styles.controls} ${!freezeScreen && hideControls ? styles.fadeHide : ''}`}
           ref={vidRef}
           onClick={() => videoElement.current?.focus()}>
           <ControlBar

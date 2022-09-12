@@ -16,6 +16,7 @@ import LoginHeadOne from '../LoginHeadOne';
 import styles from '../zicopsLogin.module.scss';
 
 import HomeHeader from '@/components/HomePage/HomeHeader';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 
 const LoginScreen = ({ setPage }) => {
   const [userLogin, { error: loginError }] = useMutation(USER_LOGIN, {
@@ -110,18 +111,38 @@ const LoginScreen = ({ setPage }) => {
           sub_heading={'Start your first step to learning here!'}
         />
         <div className="login_body">
-          <input
+          {/* <input
             className={`${styles.login_email_input}`}
             type={'email'}
             placeholder={'Email address'}
             onChange={handleEmail}
+            tabIndex={1}
             // onFocus={chngeHandle}
             // style={{ margin: '5px 0px' }}
+          /> */}
+          <LabeledInput
+            styleClass={styles.login_email_input}
+            inputOptions={{
+              inputName: 'email',
+              placeholder: 'Email address',
+              value: email
+            }}
+            changeHandler={(e) => handleEmail(e, setEmail)}
           />
-          <LoginEmail type={'password'} placeholder={'Password'} chngeHandle={handlePassword} />
+          <LoginEmail
+            type={'password'}
+            placeholder={'Password'}
+            chngeHandle={handlePassword}
+            tabIndex={1}
+          />
           <div className={`${styles.small_text}`}>
             <span />
-            <p>Forgot Password?</p>
+            <p
+              onClick={() => {
+                router.push('/forgot-password');
+              }}>
+              Forgot Password?
+            </p>
           </div>
 
           <LoginButton title={'Login'} handleClick={handleSubmit} />

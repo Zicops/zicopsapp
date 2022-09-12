@@ -1,4 +1,7 @@
-import { useContext } from 'react';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { LANGUAGES } from '@/helper/constants.helper';
+import { loadCatSubCat } from '@/helper/data.helper';
+import { useContext, useState } from 'react';
 import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
 import { getQueryData } from '../../../helper/api.helper';
 import { changeHandler } from '../../../helper/common.helper';
@@ -14,27 +17,33 @@ export default function CourseMaster() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
   const { data } = getQueryData(GET_CATS_N_SUB_CATS);
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const allCatOptions = [];
-  data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
+  // cat and sub cat
+  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // update sub cat based on cat
+  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, fullCourse?.category);
+
+  // const allCatOptions = [];
+  // data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
   const categoryDropdownOptions = {
     inputName: 'category',
     label: 'Course Category',
     placeholder: 'Select the category of the course',
-    options: allCatOptions,
+    options: catAndSubCatOption.cat,
     value: fullCourse?.category
       ? { value: fullCourse?.category, label: fullCourse?.category }
       : null,
     isSearchEnable: true
   };
 
-  const allSubcatOptions = [];
-  data?.allSubCategories?.map((val) => allSubcatOptions.push({ value: val, label: val }));
+  // const allSubcatOptions = [];
+  // data?.allSubCategories?.map((val) => allSubcatOptions.push({ value: val, label: val }));
   const subcategoryDropdownOptions = {
     inputName: 'sub_category',
     label: 'Select Base Sub-category',
     placeholder: 'Select the sub-category of the course',
-    options: allSubcatOptions,
+    options: catAndSubCatOption.subCat,
     value: fullCourse?.sub_category
       ? { value: fullCourse?.sub_category, label: fullCourse?.sub_category }
       : null,
@@ -59,20 +68,7 @@ export default function CourseMaster() {
     isSearchEnable: true
   };
 
-  const allLanguages = [
-    { value: 'English', label: 'English' },
-    { value: 'Hindi', label: 'Hindi' },
-    { value: 'Marathi', label: 'Marathi' },
-    { value: 'Bengali', label: 'Bengali' },
-    { value: 'Telegu', label: 'Telegu' },
-    { value: 'Tamil', label: 'Tamil' },
-    { value: 'Kannada', label: 'Kannada' },
-    { value: 'Punjabi', label: 'Punjabi' },
-    { value: 'Assamese', label: 'Assamese' },
-    { value: 'Orria', label: 'Orria' },
-    { value: 'Bhojpuri', label: 'Bhojpuri' },
-    { value: 'Maithili', label: 'Maithili' }
-  ];
+  const allLanguages = LANGUAGES?.map((lang) => ({ label: lang, value: lang }));
   const allSelectedLanguages = [];
 
   fullCourse?.language?.map((val) => allSelectedLanguages.push({ value: val, label: val }));
@@ -83,6 +79,7 @@ export default function CourseMaster() {
     options: allLanguages,
     value: allSelectedLanguages,
     isSearchEnable: true,
+    menuPlacement: 'top',
     isMulti: true
   };
 
@@ -105,8 +102,9 @@ export default function CourseMaster() {
       <LabeledDropdown
         styleClass={styles.marginBottom}
         dropdownOptions={categoryDropdownOptions}
-        changeHandler={(e) =>
-          changeHandler(e, fullCourse, updateCourseMaster, categoryDropdownOptions.inputName)
+        changeHandler={
+          (e) => updateCourseMaster({ ...fullCourse, category: e.value, sub_category: '' })
+          // changeHandler(e, fullCourse, updateCourseMaster, categoryDropdownOptions.inputName)
         }
       />
 
@@ -141,8 +139,13 @@ export default function CourseMaster() {
         <SwitchButton
           label="Active"
           inputName="is_active"
-          isChecked={fullCourse?.is_active || false}
-          handleChange={handleChange}
+          isChecked={fullCourse?.is_active}
+          handleChange={(e) => {
+            if (!fullCourse?.is_active)
+              return updateCourseMaster({ ...fullCourse, is_active: true });
+
+            setShowConfirmBox(true);
+          }}
         />
         <SwitchButton
           label="Display"
@@ -153,6 +156,21 @@ export default function CourseMaster() {
       </div>
 
       <NextButton tabIndex={1} />
+
+      {showConfirmBox && (
+        <ConfirmPopUp
+          title={
+            'Are you sure about deleting this course? This will delete the course permanently!'
+          }
+          btnObj={{
+            handleClickLeft: () => {
+              updateCourseMaster({ ...fullCourse, is_active: false });
+              setShowConfirmBox(false);
+            },
+            handleClickRight: () => setShowConfirmBox(false)
+          }}
+        />
+      )}
     </>
   );
 }

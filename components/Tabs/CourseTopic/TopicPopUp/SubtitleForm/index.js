@@ -1,8 +1,7 @@
-import { useContext } from 'react';
+import { LANGUAGES } from '@/helper/constants.helper';
 import { useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
 import { TopicSubtitleAtom } from '../../../../../state/atoms/module.atoms';
-import { courseContext } from '../../../../../state/contexts/CourseContext';
 import Bar from '../../../../common/Bar';
 import Button from '../../../../common/Button';
 import BrowseAndUpload from '../../../../common/FormComponents/BrowseAndUpload';
@@ -12,7 +11,6 @@ import styles from '../../../courseTabs.module.scss';
 import useAddSubtitles from '../../Logic/useAddSubtitles';
 
 export default function SubtitleForm({ courseId, topicId }) {
-  const { fullCourse } = useContext(courseContext);
   const {
     newSubtitles,
     handleSubtitleInput,
@@ -24,8 +22,7 @@ export default function SubtitleForm({ courseId, topicId }) {
 
   const subtitles = useRecoilValue(TopicSubtitleAtom);
 
-  const languageOptions = [];
-  fullCourse?.language.forEach((lang) => languageOptions.push({ value: lang, label: lang }));
+  const languageOptions = LANGUAGES?.map((lang) => ({ label: lang, value: lang }));
 
   return (
     <>

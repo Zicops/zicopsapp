@@ -1,33 +1,5 @@
 import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { auth } from '@/helper/firebaseUtil/firebaseConfig';
-import { getIdToken } from 'firebase/auth';
-
-async function getLatestToken(token) {
-  const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-  // getting renewed token before time expire
-  const expTime = data?.exp - 60;
-  const currentTime = new Date().getTime() / 1000;
-  if (expTime >= currentTime) return token;
-
-  const newToken = await getIdToken(auth?.currentUser, true);
-  console.log(newToken);
-  sessionStorage.setItem('tokenF', newToken);
-  return newToken;
-}
-
-const authLink = setContext(async (_, { headers }) => {
-  const initialToken = sessionStorage.getItem('tokenF')
-    ? sessionStorage.getItem('tokenF')
-    : auth?.currentUser?.accessToken;
-  const fireBaseToken = await getLatestToken(initialToken);
-  return {
-    headers: {
-      ...headers,
-      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : 'Token not found'
-    }
-  };
-});
+import { authLink } from './api.helper';
 
 const httpLink = createHttpLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
@@ -40,8 +12,8 @@ export const userQueryClient = new ApolloClient({
 });
 
 export const GET_USER_DETAIL = gql`
-  query GetUserDetails($user_id: String!) {
-    getUserDetails(user_id: $user_id) {
+  query GetUserDetails($user_id: [String!]) {
+    getUserDetails(user_ids: $user_id) {
       id
       first_name
       last_name
@@ -128,6 +100,45 @@ export const GET_USER_COURSE_MAPS = gql`
   }
 `;
 
+export const GET_USER_COURSE_MAPS_BY_COURSE_ID = gql`
+  query GetUserCourseMaps($userId: String!, $courseId: String!) {
+    getUserCourseMapByCourseID(user_id: $userId, course_id: $courseId) {
+      user_course_id
+      user_id
+      user_lsp_id
+      course_id
+      course_type
+      added_by
+      is_mandatory
+      end_date
+      course_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_COURSE_PROGRESS = gql`
+  query getUserCourseProgressByMapId($userId: String!, $userCourseId: ID!) {
+    getUserCourseProgressByMapId(user_id: $userId, user_course_id: $userCourseId) {
+      user_cp_id
+      user_id
+      user_course_id
+      topic_id
+      topic_type
+      status
+      video_progress
+      time_stamp
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
 export const GET_USER_ORGANIZATIONS = gql`
   query GetUserOrganization($user_id: String!) {
     getUserOrganizations(user_id: $user_id) {
@@ -180,8 +191,8 @@ export const GET_USER_LEARNINGSPACES = gql`
 `;
 
 export const GET_USER_LEARNINGSPACES_DETAILS = gql`
-  query GetUserLspByLspId($user_id: String!, $user_lsp_id: String!) {
-    getUserLspByLspId(user_id: $user_id, lsp_id: $user_lsp_id) {
+  query GetUserLspByLspId($user_id: String!, $lsp_id: String!) {
+    getUserLspByLspId(user_id: $user_id, lsp_id: $lsp_id) {
       user_lsp_id
       user_id
       lsp_id
@@ -224,6 +235,230 @@ export const GET_USER_PREFERENCES_DETAILS = gql`
       updated_by
       created_at
       updated_at
+    }
+  }
+`;
+
+export const GET_USER_NOTES = gql`
+  query getUserNotes(
+    $user_id: String!
+    $user_lsp_id: String!
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+  ) {
+    getUserNotes(
+      user_id: $user_id
+      user_lsp_id: $user_lsp_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      notes {
+        user_notes_id
+        user_id
+        user_lsp_id
+        course_id
+        module_id
+        topic_id
+        sequence
+        status
+        details
+        is_active
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_USER_BOOKMARKS = gql`
+  query getUserBookmarks(
+    $user_id: String!
+    $user_lsp_id: String!
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+  ) {
+    getUserBookmarks(
+      user_id: $user_id
+      user_lsp_id: $user_lsp_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      bookmarks {
+        user_bm_id
+        user_id
+        user_lsp_id
+        user_course_id
+        course_id
+        module_id
+        topic_id
+        name
+        time_stamp
+        is_active
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_USER_EXAM_ATTEMPTS = gql`
+  query getUserExamAttempts($user_id: String!, $user_lsp_id: String!) {
+    getUserExamAttempts(user_id: $user_id, user_lsp_id: $user_lsp_id) {
+      user_ea_id
+      user_id
+      user_lsp_id
+      user_cp_id
+      user_course_id
+      exam_id
+      attempt_no
+      attempt_status
+      attempt_start_time
+      attempt_duration
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_EXAM_RESULTS = gql`
+  query getUserExamResults($user_id: String!, $user_ea_id: String!) {
+    getUserExamResults(user_id: $user_id, user_ea_id: $user_ea_id) {
+      user_er_id
+      user_id
+      user_ea_id
+      user_score
+      correct_answers
+      wrong_answers
+      result_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_USER_EXAM_PROGRESS = gql`
+  query getUserExamProgress($user_id: String!, $user_ea_id: String!) {
+    getUserExamProgress(user_id: $user_id, user_ea_id: $user_ea_id) {
+      user_ep_id
+      user_id
+      user_ea_id
+      user_lsp_id
+      user_cp_id
+      sr_no
+      question_id
+      question_type
+      answer
+      q_attempt_status
+      total_time_spent
+      correct_answer
+      section_id
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_COHORT_MAINS = gql`
+  query GetCohortMains($lsp_id: String!, $publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getCohortMains(
+      lsp_id: $lsp_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      cohorts {
+        cohort_id
+        name
+        description
+        lsp_id
+        code
+        status
+        type
+        is_active
+        created_by
+        updated_by
+        created_at
+        updated_at
+        size
+        imageUrl
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_COHORT_DETAILS = gql`
+  query GetCohortDetails($cohort_id: String!) {
+    getCohortDetails(cohort_id: $cohort_id) {
+      cohort_id
+      name
+      description
+      lsp_id
+      code
+      status
+      type
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+      size
+      imageUrl
+    }
+  }
+`;
+
+
+export const GET_COHORT_USERS = gql`
+  query GetCohortUsers($cohort_id: String!, $publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getCohortUsers(
+      cohort_id: $cohort_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      cohorts {
+        user_cohort_id
+        user_id
+        user_lsp_id
+        cohort_id
+        added_by
+        membership_status
+        role
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
     }
   }
 `;

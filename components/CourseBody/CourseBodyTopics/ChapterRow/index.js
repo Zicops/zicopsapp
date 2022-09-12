@@ -14,7 +14,8 @@ export default function ChapterRow({
   moduleId,
   getModuleOptions,
   currrentModule,
-  setSelectedModule
+  setSelectedModule,
+  showResources
 }) {
   const filteredAndSortedData = filterAndSortTopics(topics, moduleId, chapterId);
 
@@ -70,6 +71,7 @@ export default function ChapterRow({
             getModuleOptions={getModuleOptions}
             currrentModule={currrentModule}
             setSelectedModule={setSelectedModule}
+            showResources={showResources}
           />
         );
       })}

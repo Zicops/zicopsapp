@@ -60,10 +60,11 @@ $boardBorderWidth: 5px;
 
 .pacmanContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   height: 75vh;
-  margin: 50px 30px;
+  padding: 50px 0px;
+  // margin: 50px 30px;
 }
 
 // controls
@@ -73,6 +74,8 @@ $boardBorderWidth: 5px;
   justify-content: space-between;
   height: 100%;
   width: 15%;
+  padding: 20px 0px;
+  // border: 1px solid yellow;
 
   .arrowContainer {
     display: grid;
@@ -466,5 +469,21 @@ $side: calc($cellHeightWidth - $diff);
   }
   to {
     height: calc(($cellHeightWidth) - ($diff));
+  }
+}
+
+.zicopsEditor {
+  display: grid;
+  grid-template-columns: repeat(2, 49%);
+  grid-gap: 2%;
+  background-color: $darkTwo;
+
+  .editor {
+    // background-color: $darkTwo;
+    // max-width: 50vw;
+  }
+
+  .codePreview {
+    background-color: $darkThree;
   }
 }

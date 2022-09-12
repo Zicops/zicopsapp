@@ -8,6 +8,9 @@ import HeroSliderContainer from '../../components/HeroSliderContainer';
 import FavouriteDndCourses from '../../components/FavouriteDndCourses';
 import BigCardSlider from '../../components/medium/BigCardSlider';
 import ZicopsCarousel from '../../components/ZicopsCarousel';
+import {classroomData} from '@/components/ClassRoomBanner/classRoomBanner.helper';
+import ClassRoomBanner from '@/components/ClassRoomBanner';
+
 
 const Classroom = () => {
   const router = useRouter();
@@ -121,9 +124,9 @@ const Classroom = () => {
   };
 
   const imageLink = [
-    'images/TopSectioncopy.png',
     'images/pocket-watch-g4b6aee647_1920.jpg',
     'images/universe-gd6be558e6_1920.jpg',
+    'images/TopSectioncopy.png',
     'images/bg-new.png'
   ];
 
@@ -140,9 +143,12 @@ const Classroom = () => {
         padding: '0 0 0 0'
       }}>
       <HeroSliderContainer>
-        {imageLink.map((item) => (
-          <img src={item} alt="" />
+        {classroomData.map((item) => (
+          <ClassRoomBanner data={item}/>
         ))}
+        {/* {imageLink.map((item) => (
+          <img src={item} alt="" />
+        ))} */}
       </HeroSliderContainer>
       <ZicopsCarousel title="Subscribed Classroom Courses" data={sliderImages} />
       <ZicopsCarousel title="Recomended For You" data={sliderImages} />

@@ -6,7 +6,8 @@ export default function TopicFileSlider({
   itemsArr,
   showResources,
   isResourceShown,
-  isNotes = null
+  isNotes = null,
+  hideResourcesOnEmpty = false
 }) {
   return (
     <div style={{ position: 'relative' }}>
@@ -14,7 +15,12 @@ export default function TopicFileSlider({
         itemsArr={itemsArr}
         carouselProps={{ containerClass: 'itsItemContainer' }}
         CardComp={TopicFiles}
-        cardProps={{ handleClick: showResources, isResourceShown: isResourceShown, isNotes }}
+        cardProps={{
+          handleClick: showResources,
+          isResourceShown: isResourceShown,
+          isNotes,
+          hideResourcesOnEmpty
+        }}
       />
 
       {/* move to .scss */}

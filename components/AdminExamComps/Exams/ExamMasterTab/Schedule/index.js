@@ -40,6 +40,7 @@ export default function Schedule() {
         <label htmlFor="examDate">Exam Start Date:</label>
         <InputDatePicker
           selectedDate={examTabData?.exam_start}
+          minDate={new Date()}
           changeHandler={(date) => {
             const startDate = updateDate(date, examTabData?.exam_start);
 

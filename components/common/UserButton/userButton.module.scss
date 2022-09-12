@@ -1,0 +1,26 @@
+@import '../../../styles/base.scss';
+
+.btnPrimary,
+.btnDark {
+  min-width: 70px;
+  font-size: 13px;
+  padding: 8px 5px;
+  border-radius: 3px;
+  opacity: 0.8;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.btnPrimary {
+  background-color: $primary;
+  color: $black;
+  border: none;
+}
+
+.btnDark {
+  background-color: $black;
+  color: $primary;
+  border: $primary 2px solid;
+}

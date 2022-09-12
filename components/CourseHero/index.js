@@ -11,6 +11,7 @@ import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox'
 import InputDatePicker from '../common/InputDatePicker';
 import PopUp from '../common/PopUp';
 import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
+import UserButton from '../common/UserButton';
 import CourseHeader from './CourseHeader';
 import style from './courseHero.module.scss';
 import Info from './Info';
@@ -25,7 +26,7 @@ export default function CourseHero({ isPreview = false }) {
     activateVideoPlayer,
     assignCourseToUser,
     showPreviewVideo
-  } = useHandleCourseHero();
+  } = useHandleCourseHero(isPreview);
 
   const userCourseData = useRecoilValue(UserCourseDataAtom);
   const isLoading = useRecoilValue(isLoadingAtom);
@@ -53,12 +54,12 @@ export default function CourseHero({ isPreview = false }) {
       className={`${style.course_header}`}
       style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover' }}>
       <div className={`${style.gradient}`}>
-        <span onClick={() => (isPreview ? '' : router?.back())}>
-          <Link href={isPreview ? `/admin/courses/${fullCourse.id}` : ''}>
-            <a className={`${style.back_btn}`}>
-              <img src="/images/bigarrowleft.png" alt="" />
-            </a>
-          </Link>
+        <span onClick={() => (isPreview ? '' : router?.back())} className={`${style.back_btn}`}>
+          {/* <Link href={isPreview ? `/admin/courses/${fullCourse.id}` : ''}> */}
+          {/* <a className={`${style.back_btn}`}> */}
+          <img src="/images/bigarrowleft.png" alt="" />
+          {/* </a> */}
+          {/* </Link> */}
         </span>
 
         <div className={`${style.course_header_text}`}>
@@ -151,7 +152,7 @@ export default function CourseHero({ isPreview = false }) {
         )}
       </div>
 
-      <PopUp
+      {/* <PopUp
         popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
         size="small"
         title="Assign Course To Yourself"
@@ -178,6 +179,57 @@ export default function CourseHero({ isPreview = false }) {
               setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
             }
           />
+        </div>
+      </PopUp> */}
+      <PopUp
+        // title="Course Mapping Configuration"
+        // submitBtn={{ handleClick: handleSubmit }}
+        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
+        // size="smaller"
+        customStyles={{ width: '400px' }}
+        isFooterVisible={false}
+        positionLeft="50%">
+        <div className={`${style.assignCoursePopUp}`}>
+          <p className={`${style.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label="Course Mandatory"
+            name="isMandatory"
+            isChecked={courseAssignData?.isMandatory}
+            changeHandler={(e) =>
+              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
+            }
+          />
+          <section>
+            <p htmlFor="endDate">Expected Completion date:</p>
+            <InputDatePicker
+              minDate={new Date()}
+              selectedDate={courseAssignData?.endDate}
+              changeHandler={(date) => {
+                setIsPopUpDataPresent(true);
+                setCourseAssignData({ ...courseAssignData, endDate: date });
+              }}
+              styleClass={style.dataPickerStyle}
+            />
+          </section>
+          <div className={`${style.assignCourseButtonContainer}`}>
+            <UserButton
+              text={'Cancel'}
+              isPrimary={false}
+              type={'button'}
+              clickHandler={() => {
+                setIsAssignPopUpOpen(false);
+                setCourseAssignData({ ...courseAssignData, endDate: new Date() });
+              }}
+            />
+            <UserButton
+              text={'Save'}
+              type={'button'}
+              clickHandler={() => {
+                assignCourseToUser();
+              }}
+            />
+          </div>
         </div>
       </PopUp>
     </div>

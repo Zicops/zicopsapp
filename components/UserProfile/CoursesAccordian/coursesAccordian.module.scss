@@ -20,7 +20,7 @@
   width: 20px;
   margin-right: 5px;
   color: $primary;
-  border: 1px solid $primary;
+  // border: 1px solid $primary;
   &:hover {
     cursor: pointer;
   }
@@ -66,6 +66,10 @@
     height: 15px;
     width: 15px;
   }
+
+  &.marginBottom {
+    margin-bottom: 20px;
+  }
 }
 
 .adminCardFooter {
@@ -92,13 +96,35 @@
 }
 
 .assignCoursePopUp {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 40px;
+  margin-left: 15px;
+
+  .assignCoursePopUpTitle {
+    font-size: larger;
+  }
+
+  .dataPickerStyle {
+    display: flex;
+    padding-right: 15px;
+  }
+  label {
+    font-size: medium;
+    font-weight: 400;
+  }
 
   section {
-    margin: 30px;
-
-    label {
-      margin-right: 30px;
+    p {
+      margin-bottom: 10px;
     }
+  }
+
+  .assignCourseButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 15px;
+    gap: 10px;
   }
 }

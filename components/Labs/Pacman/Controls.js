@@ -1,28 +1,34 @@
+import Dropdown from '@/components/common/Dropdown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import TurnRightIcon from '@mui/icons-material/TurnRight';
 import { useState } from 'react';
-import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import styles from '../labs.module.scss';
 
 export default function Controls(props) {
-  const { pacmanRef, handleClick, activeBtn } = props;
+  const { pacmanRef, handleClick, activeBtn, onRoomClick } = props;
 
-  const [floor, setFloor] = useState();
   const floorOptions = [
-    { value: 1, label: '1' },
-    { value: 2, label: '2' },
-    { value: 3, label: '3' },
-    { value: 4, label: '4' },
-    { value: 5, label: '5' }
+    { value: 'Programming', label: 'Programming' },
+    { value: 'Design', label: 'Design' },
+    { value: 'Infrastructure', label: 'Infrastructure' },
+    { value: 'Leadership', label: 'Leadership' }
+    // { value: 5, label: '5' }
   ];
+  const [floor, setFloor] = useState(floorOptions[0]);
 
   return (
     <div className={styles.controls}>
       <div>
-        <LabeledDropdown
+        <Dropdown
+          options={floorOptions}
+          handleChange={(e) => setFloor(e)}
+          value={floor}
+          customStyles={{ width: '100%' }}
+        />
+        {/* <LabeledDropdown
           dropdownOptions={{
             placeholder: 'Select Floor Level',
             options: floorOptions,
@@ -30,7 +36,7 @@ export default function Controls(props) {
           }}
           // isFiftyFifty={true}
           changeHandler={(e) => setFloor(e.value)}
-        />
+        /> */}
       </div>
 
       <div className={`${styles.arrowContainer}`}>
@@ -48,9 +54,7 @@ export default function Controls(props) {
         )}
       </div>
       <div className={`${styles.enterLabBtn}`}>
-        <button
-          disabled={pacmanRef?.current?.activeRoom == null}
-          onClick={() => alert(pacmanRef?.current?.activeRoom?.route)}>
+        <button disabled={pacmanRef?.current?.activeRoom == null} onClick={() => onRoomClick()}>
           <TurnRightIcon />
         </button>
         <span>Enter Labs</span>

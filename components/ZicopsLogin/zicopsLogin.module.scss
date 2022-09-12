@@ -9,7 +9,6 @@
     width: 100vw;
     position: fixed;
     top: 0;
-
     left: 0;
 
     background-color: $black;
@@ -22,26 +21,43 @@
   }
 }
 
+.zicops_logo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 150px;
+  padding: 5px;
+  img {
+    width: 66%;
+    height: 70%;
+    margin-bottom: 30px;
+    object-fit: contain;
+  }
+}
 //LoginButton Component
 .login_Button {
   flex: 1;
   margin: 10px 0px;
 
   button {
-    background-color: transparent;
+    background-color: $primary;
     width: 100%;
     flex: 1;
-    color: $primary;
+    color: $black;
     padding: 7px 10px;
     border-radius: 3px;
     font-size: 16px;
+    font-weight: bold;
     border: 2px solid $primary;
   }
   button:hover {
     background-color: $primary;
+    box-shadow: 0 0 10px 0 $darkThree;
     color: $black;
     cursor: pointer;
-    transition: 0.5s;
+    // transition: 0.5s;
   }
   .small_text {
     font-size: 14px;
@@ -61,7 +77,7 @@
 
 .zicops_login {
   font-family: 'Open Sans';
-  background-image: url('../../public/images/starrySky2.png');
+  background-image: url('/images/starrySky2.png');
   background-position: center;
   background-size: cover;
   display: flex;
@@ -72,14 +88,15 @@
   width: 100vw;
   flex-flow: column nowrap;
   scroll-snap-type: y mandatory;
-  justify-content: center;
+
+  padding-top: 120px;
   align-items: center;
 }
 .heading {
   font-size: 25px;
   color: $white;
   font-weight: bold;
-  padding-top: 30px;
+  // padding-top: 30px;
 }
 .sub_heading {
   display: flex;
@@ -113,10 +130,17 @@
 
 //LoginFooter component
 .login_Footer {
+  // display: flex;
+  // justify-content: center;
+  // width: 100%;
+  // padding-top: 120px;
+
+  position: fixed;
+  width: 100%;
+  height: 27px;
+  bottom: 40px;
   display: flex;
   justify-content: center;
-  width: 100%;
-  padding-top: 120px;
   gap: 100px;
 
   .foot_text a {
@@ -127,6 +151,13 @@
 
 //Login Email
 
+.focusEmailContainer {
+  border: 2px solid $primary;
+  box-shadow: 0px 0px 10px 0px $primary;
+  outline: 0;
+  color: $white;
+}
+
 .login_email {
   // flex: 1;
   width: 100%;
@@ -134,11 +165,13 @@
   display: flex;
   border: 2px solid #6bcfcf;
   border-radius: 3px;
+  background-color: $darkOne;
   button {
     background: $darkOne;
     outline: 0;
     border: 0;
   }
+
   input {
     color: $white;
     background-color: $darkOne;
@@ -148,7 +181,7 @@
     // flex: 1;
     //color: $secondaryBlack;
     padding: 7px 10px;
-    border-radius: 3px;
+    // border-radius: 3px;
     font-size: 16px;
 
     // background-image:url('/images/svg/visibility.svg');
@@ -164,6 +197,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     p {
       font-size: 14px;
       color: $secondaryBlack;
@@ -179,28 +213,33 @@
 }
 
 .login_email_input {
-  color: $white;
-  background-color: $darkOne;
-  width: 100%;
-  outline: 0;
-  //border: 0;
-  border: 2px solid #6bcfcf;
-  // flex: 1;
-  //color: $secondaryBlack;
-  padding: 7px 10px;
-  border-radius: 3px;
-  font-size: 16px;
-  margin-bottom: 5px;
+  input {
+    color: $white;
+    background-color: $darkOne;
+    width: 100%;
+    outline: 0;
+    //border: 0;
+    border: 2px solid #6bcfcf;
+    // flex: 1;
+    //color: $secondaryBlack;
+    padding: 7px 10px;
+    border-radius: 3px;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
 }
 
 .small_text {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: baseline;
+  justify-content: flex-end;
+  color: $white;
+  gap: 5px;
+  font-weight: bold;
+  // font-size: 14px;
   p {
-    font-size: 14px;
     color: $secondaryBlack;
-    font-weight: bold;
+    // font-weight: bold;
     padding: 6px 0px 3px;
     cursor: pointer;
   }

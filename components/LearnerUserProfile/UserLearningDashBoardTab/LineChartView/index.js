@@ -16,9 +16,9 @@ const LineChartView = () => {
         tension: 0.2,
         backgroundColor: (context) => {
           const ctx = context.chart.ctx;
-          const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-          gradient.addColorStop(0, 'rgba(32,161,161,1)');
-          gradient.addColorStop(1, 'rgba(41,239,180,0.2) ');
+          const gradient = ctx.createLinearGradient(0, 0, 0, 500);
+          gradient.addColorStop(0, 'rgba(32, 162, 162, 0.3)');
+          gradient.addColorStop(1, 'rgba(4, 4, 4, 1) ');
           return gradient;
         },
         borderColor: '#20A1A1'

@@ -13,7 +13,7 @@ FROM node:lts as runner
 WORKDIR /zicops-app
 ENV NODE_ENV production
 # If you are using a custom next.config.js file, uncomment this line.
-# COPY --from=builder /zicops-app/next.config.js ./
+COPY --from=builder /zicops-app/next.config.js ./
 COPY --from=builder /zicops-app/public ./public
 COPY --from=builder /zicops-app/.next ./.next
 COPY --from=builder /zicops-app/node_modules ./node_modules

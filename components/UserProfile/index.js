@@ -4,7 +4,7 @@ import ProfileOrganizationDetail from './ProfileOrganizationDetail';
 import ProfilePersonelDetail from './ProfilePersonelDetail';
 import ProfilePreferences from './ProfilePreferences';
 
-const UserProfile = () => {
+const UserProfile = ({ currentUserData = {} }) => {
   // {
   //   status,
   //     (submitDisplay = 'Submit'),
@@ -16,23 +16,23 @@ const UserProfile = () => {
   // } = footerObj
   const tabData = [
     {
-      name: 'Personel Details',
-      component: <ProfilePersonelDetail />
+      name: 'Personal Details',
+      component: <ProfilePersonelDetail currentUserData={currentUserData} />
     },
     {
       name: 'Organization Details',
-      component: <ProfileOrganizationDetail />
+      component: <ProfileOrganizationDetail currentUserData={currentUserData} />
     },
     {
       name: 'Profile Preferences',
-      component: <ProfilePreferences />
+      component: <ProfilePreferences currentUserData={currentUserData} />
     }
   ];
   const [tab, setTab] = useState(tabData[0].name);
   return (
     <>
       <TabContainer
-        customStyles={{ height: 'auto' }}
+        customStyles={{ height: '40vh' }}
         tabData={tabData}
         tab={tab}
         setTab={setTab}

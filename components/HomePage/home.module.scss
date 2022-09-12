@@ -21,9 +21,9 @@ $DELAY: $DURATION / 2;
 
 .container {
   font-family: 'Open Sans';
+  background: url('/images/starrySky2.png');
   background-position: center;
   background-size: cover;
-  background: url('/images/starrySky2.png');
 
   position: relative;
 
@@ -54,7 +54,8 @@ $DELAY: $DURATION / 2;
 
   div {
     height: 30px;
-    width: 5px;
+    width: 3px;
+    border-radius: 10px;
     background-color: $darkThree;
     margin: 8px 5px;
     cursor: pointer;
@@ -159,43 +160,47 @@ $DELAY: $DURATION / 2;
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  height: 70px;
-  padding-top: 10px;
+  align-items: flex-end;
+  height: 80px;
+  padding: 0 4%;
+
+  .backBtn {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    align-items: center;
+    color: $primary;
+    cursor: pointer;
+    font-size: medium;
+    font-weight: bold;
+  }
 
   .Login {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 10px;
     align-items: center;
 
-    width: 65px;
-    height: 80%;
+    width: 100px;
     cursor: pointer;
-    margin-right: 33px;
 
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
-
     color: $primary;
-
-    // border: 1px solid $primary;
     &:hover {
       color: $white;
     }
-
     img {
       object-fit: contain;
-      height: 40%;
+      width: 20px;
     }
   }
 
   .ZicopsLogo {
-    width: 70px;
-    height: 80%;
-
+    width: 180px;
     img {
       object-fit: contain;
-      height: 100%;
+      width: 100%;
     }
   }
 }
@@ -288,12 +293,12 @@ $DELAY: $DURATION / 2;
 .formContainerWrapper {
   width: 100%;
   position: absolute;
-  bottom: 15%;
+  bottom: 20%;
   display: flex;
   align-items: center;
   flex-direction: column;
   z-index: 5;
-  gap: 40px;
+  gap: 60px;
   .formContainer {
     display: flex;
     flex-direction: row;
@@ -301,16 +306,16 @@ $DELAY: $DURATION / 2;
     position: relative;
 
     background-color: $black;
-    border: 3px solid $primary;
-    border-radius: 5px;
+    border: 2px solid $primary;
+    border-radius: 25px;
     width: 450px;
     height: 40px;
-    padding: 3px;
+    padding: 5px;
 
     .searchBar {
       width: calc(100%);
       left: 0;
-      margin: -3px;
+      margin: -5px 0;
       z-index: 1;
 
       // to hide options after 3
@@ -335,12 +340,13 @@ $DELAY: $DURATION / 2;
     button {
       border: 1px solid $primary;
       background: $primary;
-      //   color: $darkOne;
       width: 15%;
       font-weight: 700;
       font-size: medium;
       font-family: 'Open Sans';
-      margin: -5px;
+      margin: 0px;
+      border-radius: 20px;
+      cursor: pointer;
     }
 
     span {
@@ -352,6 +358,7 @@ $DELAY: $DURATION / 2;
       img {
         object-fit: contain;
         height: 100%;
+        padding: 5px;
       }
     }
 
@@ -368,8 +375,6 @@ $DELAY: $DURATION / 2;
   width: 100%;
   height: 27px;
   bottom: 40px;
-  // left: 0px;
-  //   background-color: $darkTwo;
   font-size: small;
 
   .HomeFooterInner {
@@ -380,7 +385,6 @@ $DELAY: $DURATION / 2;
 
     max-width: 60%;
     margin: auto;
-    // gap: 20px;
     color: $white;
   }
 }
@@ -388,4 +392,52 @@ $DELAY: $DURATION / 2;
 // Animation for homepage scroll
 .animated {
   margin-top: 120px;
+}
+
+
+.homeFooterElement {
+  transition: 1s linear;
+}
+
+.move_up {
+  position: relative;
+  transform: translateY(calc(-91vh + $headerHeight));
+}
+
+.footerOverlay {
+  background-color: $black;
+  height: 100vh;
+  width: 98vw;
+  opacity: 0;
+}
+
+.footerOverlayZoom {
+  position: fixed;
+  inset: 0;
+  animation: showOverlay 1500ms ;
+}
+
+.footerOverlayNone {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+@keyframes showOverlay {
+  0% {
+    opacity: 0.2;
+  }
+
+  20% {
+    opacity: 0.5;
+  }
+
+  60% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 1;
+    z-index: 10;
+  }
 }

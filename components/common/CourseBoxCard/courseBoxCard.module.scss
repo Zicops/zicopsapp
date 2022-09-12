@@ -25,8 +25,8 @@
   .imgContainer {
     border-radius: 10px;
     position: relative;
-    height: 170px;
-    width: 310px;
+    width: 100%;
+    // height: calc( / $cardTileRatio);
     margin-bottom: 5px;
 
     img {
@@ -38,22 +38,29 @@
 
     .dataOverImg {
       position: absolute;
-      bottom: 10px;
-      padding: 0px 15px;
-
+      bottom: 0;
+      padding: 10px 5px;
+      background: rgb(0, 0, 0);
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
       width: 100%;
       height: 100%;
+      span {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
       .type {
+        font-size: 14px;
         background-color: $black;
-        padding: 2px 5px;
+        padding: 0px 5px;
         border-radius: 5px;
       }
 
       .imgIcon {
-        margin-right: 10px;
+        margin-right: 5px;
         width: 20px;
       }
     }
@@ -67,7 +74,7 @@
     padding: 2px;
 
     .title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
     }
 
@@ -75,15 +82,17 @@
       display: flex;
       align-items: center;
       word-spacing: 10px;
+      font-size: 14px;
+      color: $darkThree;
+      font-weight: bold;
     }
   }
 
   .dot {
     height: 5px;
     width: 5px;
-    background-color: $white;
+    background-color: $darkThree;
     border-radius: 50%;
-
     margin: auto 10px;
   }
 
@@ -103,7 +112,6 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-
       .percent {
         color: $primary;
       }

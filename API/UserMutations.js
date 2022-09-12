@@ -1,37 +1,9 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
-import { setContext } from '@apollo/client/link/context';
-import { auth } from '@/helper/firebaseUtil/firebaseConfig';
-import { getIdToken } from 'firebase/auth';
+import { authLink } from './api.helper';
 
 const httpLink = createUploadLink({
   uri: 'https://demo.zicops.com/um/api/v1/query'
-});
-
-async function getLatestToken(token) {
-  const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-  // getting renewed token before time expire
-  const expTime = data?.exp - 60;
-  const currentTime = new Date().getTime() / 1000;
-  if (expTime >= currentTime) return token;
-
-  const newToken = await getIdToken(auth?.currentUser, true);
-  console.log(newToken);
-  sessionStorage.setItem('tokenF', newToken);
-  return newToken;
-}
-
-const authLink = setContext(async (_, { headers }) => {
-  const initialToken = sessionStorage.getItem('tokenF')
-    ? sessionStorage.getItem('tokenF')
-    : auth?.currentUser?.accessToken;
-  const fireBaseToken = await getLatestToken(initialToken);
-  return {
-    headers: {
-      ...headers,
-      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : 'Token Not found'
-    }
-  };
 });
 
 export const userClient = new ApolloClient({
@@ -759,32 +731,8 @@ export const UPDATE_USER_NOTES = gql`
 `;
 
 export const ADD_USER_EXAM_ATTEMPTS = gql`
-  mutation AddUserExamAttempts(
-    $user_id: String!
-    $user_lsp_id: String!
-    $user_cp_id: String!
-    $user_course_id: String!
-    $exam_id: String!
-    $attempt_no: Int!
-    $attempt_status: String!
-    $attempt_start_time: String!
-    $attempt_duration: String!
-  ) {
-    addUserExamAttempts(
-      input: [
-        {
-          user_id: $user_id
-          user_lsp_id: $user_lsp_id
-          user_cp_id: $user_cp_id
-          user_course_id: $user_course_id
-          exam_id: $exam_id
-          attempt_no: $attempt_no
-          attempt_status: $attempt_status
-          attempt_start_time: $attempt_start_time
-          attempt_duration: $attempt_duration
-        }
-      ]
-    ) {
+  mutation AddUserExamAttempts($userExamAttempts: [UserExamAttemptsInput]!) {
+    addUserExamAttempts(input: $userExamAttempts) {
       user_ea_id
       user_id
       user_lsp_id
@@ -804,7 +752,7 @@ export const ADD_USER_EXAM_ATTEMPTS = gql`
 `;
 
 export const UPDATE_USER_EXAM_ATTEMPTS = gql`
-  mutation AddUserExamAttempts(
+  mutation updateUserExamAttempts(
     $user_ea_id: ID
     $user_id: String!
     $user_lsp_id: String!
@@ -816,21 +764,19 @@ export const UPDATE_USER_EXAM_ATTEMPTS = gql`
     $attempt_start_time: String!
     $attempt_duration: String!
   ) {
-    addUserExamAttempts(
-      input: [
-        {
-          user_ea_id: $user_ea_id
-          user_id: $user_id
-          user_lsp_id: $user_lsp_id
-          user_cp_id: $user_cp_id
-          user_course_id: $user_course_id
-          exam_id: $exam_id
-          attempt_no: $attempt_no
-          attempt_status: $attempt_status
-          attempt_start_time: $attempt_start_time
-          attempt_duration: $attempt_duration
-        }
-      ]
+    updateUserExamAttempts(
+      input: {
+        user_ea_id: $user_ea_id
+        user_id: $user_id
+        user_lsp_id: $user_lsp_id
+        user_cp_id: $user_cp_id
+        user_course_id: $user_course_id
+        exam_id: $exam_id
+        attempt_no: $attempt_no
+        attempt_status: $attempt_status
+        attempt_start_time: $attempt_start_time
+        attempt_duration: $attempt_duration
+      }
     ) {
       user_ea_id
       user_id
@@ -850,50 +796,129 @@ export const UPDATE_USER_EXAM_ATTEMPTS = gql`
   }
 `;
 
-// ------------------------------------- QUERIES
-
-export const GET_USER_COURSE_MAPS = gql`
-  query getUserCourseMaps($publish_time: Int, $pageCursor: String, $pageSize: Int) {
-    getUserCourseMaps(
-      user_id: ""
-      publish_time: $publish_time
-      pageCursor: $pageCursor
-      Direction: ""
-      pageSize: $pageSize
-    ) {
-      user_courses {
-        user_course_id
-        user_id
-        user_lsp_id
-        course_id
-        course_type
-        added_by
-        is_mandatory
-        end_date
-        course_status
-        created_by
-        updated_by
-        created_at
-        updated_at
-      }
-      pageCursor
-      direction
-      pageSize
+export const ADD_USER_EXAM_PROGRESS = gql`
+  mutation addUserExamProgress($userExamProgress: [UserExamProgressInput]!) {
+    addUserExamProgress(input: $userExamProgress) {
+      user_ep_id
+      user_id
+      user_ea_id
+      user_lsp_id
+      user_cp_id
+      sr_no
+      question_id
+      question_type
+      answer
+      q_attempt_status
+      total_time_spent
+      correct_answer
+      section_id
+      created_by
+      updated_by
+      created_at
+      updated_at
     }
   }
 `;
 
-export const GET_USER_COURSE_PROGRESS = gql`
-  query getUserCourseProgressByMapId($userCourseId: ID!) {
-    getUserCourseProgressByMapId(user_id: "", user_course_id: $userCourseId) {
-      user_cp_id
+export const ADD_USER_COHORT = gql`
+  mutation addUserCohort($userCohort: [UserCohortInput!]!) {
+    addUserCohort(input: $userCohort) {
+      user_cohort_id
       user_id
-      user_course_id
-      topic_id
-      topic_type
-      status
-      video_progress
-      time_stamp
+      user_lsp_id
+      cohort_id
+      added_by
+      membership_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_EXAM_PROGRESS = gql`
+  mutation updateUserExamProgress(
+    $user_ep_id: ID
+    $user_id: String!
+    $user_ea_id: String!
+    $user_lsp_id: String!
+    $user_cp_id: String!
+    $sr_no: Int!
+    $question_id: String!
+    $question_type: String!
+    $answer: String!
+    $q_attempt_status: String!
+    $total_time_spent: String!
+    $correct_answer: String!
+    $section_id: String!
+  ) {
+    updateUserExamProgress(
+      input: {
+        user_ep_id: $user_ep_id
+        user_id: $user_id
+        user_ea_id: $user_ea_id
+        user_lsp_id: $user_lsp_id
+        user_cp_id: $user_cp_id
+        sr_no: $sr_no
+        question_id: $question_id
+        question_type: $question_type
+        answer: $answer
+        q_attempt_status: $q_attempt_status
+        total_time_spent: $total_time_spent
+        correct_answer: $correct_answer
+        section_id: $section_id
+      }
+    ) {
+      user_ep_id
+      user_id
+      user_ea_id
+      user_lsp_id
+      user_cp_id
+      sr_no
+      question_id
+      question_type
+      answer
+      q_attempt_status
+      total_time_spent
+      correct_answer
+      section_id
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_USER_EXAM_RESULTS = gql`
+  mutation addUserExamResult(
+    $user_id: String!
+    $user_ea_id: String!
+    $user_score: Int!
+    $correct_answers: Int!
+    $wrong_answers: Int!
+    $result_status: String!
+  ) {
+    addUserExamResult(
+      input: [
+        {
+          user_id: $user_id
+          user_ea_id: $user_ea_id
+          user_score: $user_score
+          correct_answers: $correct_answers
+          wrong_answers: $wrong_answers
+          result_status: $result_status
+        }
+      ]
+    ) {
+      user_er_id
+      user_id
+      user_ea_id
+      user_score
+      correct_answers
+      wrong_answers
+      result_status
       created_by
       updated_by
       created_at
