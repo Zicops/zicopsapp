@@ -4,11 +4,10 @@ import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
 import { filterModule } from '../../../helper/data.helper';
-import { ModuleAtom } from '../../../state/atoms/module.atoms';
+import { ModuleAtom, QuizAtom } from '../../../state/atoms/module.atoms';
 import { VideoAtom } from '../../../state/atoms/video.atom';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import styles from '../customVideoPlayer.module.scss';
-import DraggableDiv from '../DraggableDiv';
 import { BOX } from '../Logic/customVideoPlayer.helper';
 import useSaveData from '../Logic/useSaveData';
 import Bookmark from './Bookmark';
@@ -31,6 +30,7 @@ export default function UiComponents({
   const { videoElement, videoContainer } = refs;
   const videoData = useRecoilValue(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
+  const quizData = useRecoilValue(QuizAtom);
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const { fullCourse } = useContext(courseContext);
   const [isToolbarOpen, setIsToolbarOpen] = useState(null);
@@ -155,22 +155,24 @@ export default function UiComponents({
       ),
       boxComponent: (
         <div className={`${styles.quizDropdown}`}>
-          <button
-            onClick={() => {
-              updateIsPlayingTo(false);
-              toggleStates(setShowQuiz, showQuiz);
-              toggleStates(setShowQuizDropdown, setShowQuizDropdown);
-            }}>
-            Quiz 1
-          </button>
-          <button
+          {quizData?.map((quiz) => {
+            <button
+              onClick={() => {
+                updateIsPlayingTo(false);
+                toggleStates(setShowQuiz, showQuiz);
+                toggleStates(setShowQuizDropdown, setShowQuizDropdown);
+              }}>
+              {quiz?.name}
+            </button>;
+          })}
+          {/* <button
             onClick={() => {
               updateIsPlayingTo(false);
               toggleStates(setShowQuiz, showQuiz);
               toggleStates(setShowQuizDropdown, setShowQuizDropdown);
             }}>
             Quiz 2
-          </button>
+          </button> */}
         </div>
       ),
       handleClick: () => () => {
@@ -180,6 +182,7 @@ export default function UiComponents({
       }
     }
   ];
+
   return (
     <>
       {/* Static content toolbar */}
