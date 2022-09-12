@@ -205,7 +205,9 @@ export default function ExamMaster() {
         </label>
 
         <div
-          className={`${styles.passingCriteriaInnerContainer} ${examTabData?.passing_criteria ? styles.hasValue : ''}`}
+          className={`${styles.passingCriteriaInnerContainer} ${
+            examTabData?.passing_criteria ? styles.hasValue : ''
+          } ${isPreview ? styles.disabled : '' }`}
           onFocus={(e) => e.currentTarget.classList.add(styles.focus)}
           onBlur={(e) => e.currentTarget.classList.remove(styles.focus)}>
           <input
@@ -222,15 +224,15 @@ export default function ExamMaster() {
             onChange={(e) => {
               let value = +e.target.value;
               let type = examTabData?.passing_criteria_type;
-              
+
               if (value === 0) {
                 type = 'None';
               } else if (type === 'None') {
                 type = 'Marks';
               }
-              
+
               const isMarks = type === 'Marks';
-              
+
               if (isMarks && value > examTabData?.total_marks) {
                 value = examTabData?.total_marks;
               }
@@ -239,8 +241,6 @@ export default function ExamMaster() {
                 if (value > 100) value = 100;
                 if (value < 0) value = 0;
               }
-
-              
 
               setExamTabData({
                 ...examTabData,
@@ -259,6 +259,7 @@ export default function ExamMaster() {
               }}
               name="passing_criteria_type"
               className="w-100"
+              isDisabled={isPreview}
               styles={customStyles}
               isSearchable={false}
               // onChange={(e) => setExamTabData({ ...examTabData, passing_criteria_type: e.value })}
