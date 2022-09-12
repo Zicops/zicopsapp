@@ -253,9 +253,9 @@ export default function AnswerKeyPDF({ data }) {
       <Page size="A4" style={styles.page}>
         {data?.sectionData?.map((section, i) => {
           return (
-            <View style={styles.sectionTop}>
+            <View style={styles?.sectionTop}>
               <View>
-                <Text style={styles.title}>{section?.name}</Text>
+                <Text style={styles?.title}>{section?.name}</Text>
               </View>
               <View>
                 <Text>{section?.description}</Text>

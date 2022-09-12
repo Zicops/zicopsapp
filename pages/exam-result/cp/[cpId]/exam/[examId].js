@@ -502,7 +502,7 @@ export default function ExamResult() {
           handleReturnToMainScreen={handleReturnToMainScreen}
           downloadBtn={
             <>
-              {/* {typeof window != null && (
+              {typeof window != null && (
                 <PDFDownloadLink
                   document={<AnswerKeyPDF data={attemptedQuestions} />}
                   fileName="answer-key.pdf">
@@ -510,7 +510,7 @@ export default function ExamResult() {
                     loading ? 'Loading document...' : 'Download now!'
                   }
                 </PDFDownloadLink>
-              )} */}
+              )}
             </>
           }
         />
