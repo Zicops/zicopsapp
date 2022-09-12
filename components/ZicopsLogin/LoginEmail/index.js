@@ -1,9 +1,12 @@
 import styles from '../zicopsLogin.module.scss';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 const LoginEmail = ({ chngeHandle, type, placeholder, tabIndex = -1 }) => {
   const [show, setShow] = useState(false);
+  const [focus, setFocus] = useState(false);
+
+  const passwordRef = useRef(null);
 
   useEffect(() => {
     if (show) {
@@ -13,18 +16,32 @@ const LoginEmail = ({ chngeHandle, type, placeholder, tabIndex = -1 }) => {
     }
   }, [show]);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!passwordRef.current.contains(e.target) && passwordRef.current) {
+        setFocus(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [passwordRef]);
+
   const handleShowPassword = () => {
     setShow(!show);
   };
 
   return (
-    <div className={`${styles.login_email}`}>
+    <div
+      className={`${styles.login_email} ${focus ? styles.focusEmailContainer : ''}`}
+      ref={passwordRef}>
       <input
         type={show ? 'text' : 'password'}
         placeholder={placeholder}
         onChange={chngeHandle}
         autoComplete={'off'}
         tabIndex={tabIndex}
+        onFocus={() => setFocus(true)}
         // style={{ margin: '5px 0px' }}
       />
       <button onClick={handleShowPassword}>

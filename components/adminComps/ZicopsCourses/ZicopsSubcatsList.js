@@ -33,7 +33,7 @@ function ZicopsSubCategoryList() {
     });
   }, []);
 
-  const { data } = useQuery(GET_SUB_CATS);
+  const { data, loading } = useQuery(GET_SUB_CATS);
 
   let latest = [];
 
@@ -47,6 +47,7 @@ function ZicopsSubCategoryList() {
       pageSize={pageSize}
       rowsPerPageOptions={[3]}
       tableHeight="70vh"
+      loading={loading}
     />
   );
 }

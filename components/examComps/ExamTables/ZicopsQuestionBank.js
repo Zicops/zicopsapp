@@ -1,4 +1,4 @@
-import ZicopsTable from "../../common/ZicopsTable";
+import ZicopsTable from '../../common/ZicopsTable';
 
 const columns = [
   {
@@ -28,13 +28,13 @@ const columns = [
   {
     field: 'action',
     headerClassName: 'course-list-header',
-    headerName: 'Display',
+    headerName: 'Action',
     sortable: false,
     renderCell: (params) => {
       return (
         <button
           style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
-              onClick={() => { }}>
+          onClick={() => {}}>
           <img src="/images/edit-icon.png" width={20}></img>
         </button>
         // <button
@@ -105,16 +105,16 @@ const data = [
   }
 ];
 const ZicopsQuestionBank = () => {
-// const { pageSize } = useHandlePagesize();
+  // const { pageSize } = useHandlePagesize();
   return (
     <>
-        <ZicopsTable
-            columns={columns}
-            data={data}
-            pageSize={7}
-            rowsPerPageOptions={[3]}
-            tableHeight="70vh"
-        />
+      <ZicopsTable
+        columns={columns}
+        data={data}
+        pageSize={7}
+        rowsPerPageOptions={[3]}
+        tableHeight="70vh"
+      />
     </>
   );
 };

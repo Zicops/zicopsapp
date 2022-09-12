@@ -98,7 +98,7 @@ export default function Bookmark({
           <>
             {viewAllBookmarks && (
               <>
-                {allBookmarks.map((bookmark, i) => {
+                {allBookmarks?.map((bookmark, i) => {
                   if (bookmark?.topic_id !== videoData?.topicContent[0]?.topicId) return null;
 
                   return (

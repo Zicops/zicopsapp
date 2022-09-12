@@ -1,3 +1,4 @@
+import styles from '../nav.module.scss';
 export const languages = [
   {
     title: 'English',
@@ -5,7 +6,8 @@ export const languages = [
     customStyle: {
       backgroundColor: 'var(--primary)',
       color: 'var(--black)'
-    }
+    },
+    customClass: styles['selectedSubMenuItem']
   }
   // ,
   // {

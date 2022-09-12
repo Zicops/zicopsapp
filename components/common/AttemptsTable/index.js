@@ -17,11 +17,14 @@ export default function AttemptsTable({ attemptData = [], totalAttempts = 1, cus
             {attemptData?.map((data, i) => {
               return (
                 <tr key={i}>
-                  <td>{data?.attempt || 1 / totalAttempts || 1}</td>
+                  <td>{`${data?.attempt || 1}${!!+totalAttempts ? `/${totalAttempts}` : ''}`}</td>
                   <td>
                     {data?.examScore || 0} / {data?.totalMarks || 0}
                   </td>
-                  <td style={{ color: data.result?.includes('failed') ? '#F53D41' : '#26BA4D' }}>
+                  <td
+                    style={{
+                      color: data.result?.toLowerCase()?.includes('fail') ? '#F53D41' : '#26BA4D'
+                    }}>
                     {data.result}
                   </td>
                 </tr>

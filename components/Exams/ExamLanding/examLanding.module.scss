@@ -7,7 +7,7 @@
   margin-top: 50px;
   height: 75vh;
   width: 100%;
-  padding: 50px 40px 0 10px;
+  padding: 50px 40px 30px;
   background: $black;
 
   .blank_space {
@@ -126,6 +126,7 @@
     border: none;
     background: $darkThree;
     color: $black;
+    cursor: no-drop;
   }
 
   .exam_landing_footer {
@@ -142,5 +143,16 @@
     border: none;
     cursor: pointer;
     width: 3rem;
+  }
+}
+
+.btnContainer {
+  min-height: 50px;
+  position: relative;
+
+  .centerBtns {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-48%);
   }
 }

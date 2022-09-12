@@ -1,4 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterResources } from '../../../helper/data.helper';
@@ -31,6 +32,7 @@ export default function useShowData(courseContextData) {
 
   // recoil states
   const userData = useRecoilValue(UserStateAtom);
+  const switchToTopic = useRecoilValue(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   // const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -53,6 +55,17 @@ export default function useShowData(courseContextData) {
       setUserCourseData({ ...userCourseData, switchModule: false });
     }
   }, [userCourseData?.activeModule]);
+
+  useEffect(() => {
+    if (!switchToTopic) return;
+    if (!switchToTopic?.moduleId === selectedModule?.value) return;
+
+    setSelectedModule(getModuleOptions(null, switchToTopic?.moduleId)[0]);
+    // setSelectedModule({
+    //   label: `MODULE ${userCourseData?.activeModule?.index + 1}`,
+    //   value: userCourseData?.activeModule?.id
+    // });
+  }, [switchToTopic]);
 
   // function saveContentInState(data) {
   //   let localData = [...topicContent, ...data];
@@ -113,7 +126,7 @@ export default function useShowData(courseContextData) {
     return tabs[index].comp;
   }
 
-  function getModuleOptions(data) {
+  function getModuleOptions(data, modId) {
     const options = [];
     if (data) {
       data.forEach((mod) => {
@@ -122,6 +135,16 @@ export default function useShowData(courseContextData) {
           // label: mod.name
           label: 'MODULE ' + mod.sequence
         });
+      });
+    } else if (modId) {
+      moduleData?.forEach((mod) => {
+        if (mod.id === modId) {
+          options.push({
+            value: mod.id,
+            // label: mod.name
+            label: 'MODULE ' + mod.sequence
+          });
+        }
       });
     } else {
       moduleData?.forEach((mod) => {
@@ -138,15 +161,15 @@ export default function useShowData(courseContextData) {
 
   function handleModuleChange(e) {
     setSelectedModule(e);
-    setUserCourseData({
-      ...userCourseData,
-      activeModule: { id: e?.value, index: e?.label?.split(' ')[1] - 1 }
-    });
+    // setUserCourseData({
+    //   ...userCourseData,
+    //   activeModule: { id: e?.value, index: e?.label?.split(' ')[1] - 1 }
+    // });
     setIsResourceShown(null);
   }
 
   function showResources(topic) {
-    console.log(topic);
+    // console.log(topic);
     setActiveCourseTab(tabs[1].name);
     if (isResourceShown?.includes(topic.id)) {
       setFilteredResources([]);
