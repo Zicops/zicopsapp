@@ -1,10 +1,10 @@
-import styles from '../../customVideoPlayer.module.scss';
 import Image from 'next/image';
-import QuizQuestion from '../../../examComps/QuickQuiz/QuizQuestion';
-import QuizOptions from '../../../examComps/QuickQuiz/QuizOptions';
 import { questions } from '../../../examComps/QuickQuiz/Logic/QuickQuiz.helper';
+import QuizOptions from '../../../examComps/QuickQuiz/QuizOptions';
+import QuizQuestion from '../../../examComps/QuickQuiz/QuizQuestion';
+import styles from '../../customVideoPlayer.module.scss';
 
-export default function Quiz({ playerClose, handleSkip, handleSubmit }) {
+export default function Quiz({ playerClose, quizData = {}, handleSkip, handleSubmit }) {
   return (
     <div className={`${styles.quizContainer}`}>
       <div className={`${styles.firstIcon}`} onClick={playerClose}>

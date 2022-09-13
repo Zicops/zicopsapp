@@ -155,16 +155,20 @@ export default function UiComponents({
       ),
       boxComponent: (
         <div className={`${styles.quizDropdown}`}>
-          {quizData?.map((quiz) => {
-            <button
-              onClick={() => {
-                updateIsPlayingTo(false);
-                toggleStates(setShowQuiz, showQuiz);
-                toggleStates(setShowQuizDropdown, setShowQuizDropdown);
-              }}>
-              {quiz?.name}
-            </button>;
-          })}
+          {quizData
+            ?.filter((quiz) => quiz?.topicId === videoData?.topicContent[0]?.topicId)
+            ?.map((quiz) => {
+              return (
+                <button
+                  onClick={() => {
+                    updateIsPlayingTo(false);
+                    setShowQuiz(quiz);
+                    toggleStates(setShowQuizDropdown, setShowQuizDropdown);
+                  }}>
+                  {quiz?.name}
+                </button>
+              );
+            })}
           {/* <button
             onClick={() => {
               updateIsPlayingTo(false);
@@ -312,18 +316,19 @@ export default function UiComponents({
           </div> */}
       {/* <div id="output"></div> */}
 
-      {showQuiz && (
+      {showQuiz != null && (
         <Quiz
           playerClose={playerClose}
+          quizData={showQuiz}
           handleSkip={() => {
             moveVideoProgressBySeconds(-1);
             updateIsPlayingTo(true);
-            toggleStates(setShowQuiz, showQuiz);
+            setShowQuiz(null);
           }}
           handleSubmit={() => {
             moveVideoProgressBySeconds(-1);
             updateIsPlayingTo(true);
-            toggleStates(setShowQuiz, showQuiz);
+            setShowQuiz(null);
           }}
         />
       )}

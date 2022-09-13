@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
+import { GET_TOPIC_EXAMS, GET_TOPIC_QUIZ } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
 import {
   filterAndSortTopicsBasedOnModuleId,
@@ -18,6 +18,7 @@ import {
 import {
   getTopicExamObj,
   isLoadingAtom,
+  QuizAtom,
   TopicAtom,
   TopicContentAtom,
   TopicExamAtom
@@ -62,7 +63,7 @@ export default function TopicBox({
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
-
+  const [quizData, setQuizData] = useRecoilState(QuizAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -239,6 +240,47 @@ export default function TopicBox({
     );
   }, [switchToTopic, examData]);
 
+  // quiz
+  useEffect(() => {
+    if (topic?.type !== 'Content') return;
+
+    const allQuiz = [];
+
+    async function loadQuiz() {
+      let topicQuiz = allQuiz?.find((quiz) => quiz?.topicId === topic?.id);
+
+      if (!topicQuiz) {
+        const quizRes = await loadQueryDataAsync(
+          GET_TOPIC_QUIZ,
+          { topic_id: topic?.id },
+          { fetchPolicy: 'no-cache' }
+        );
+
+        if (quizRes?.getTopicQuizes) {
+          topicQuiz = [...quizRes?.getTopicQuizes]?.sort((q1, q2) => q1?.sequence - q2?.sequence);
+          // console.log([...quizData, ...topicQuiz]);
+          allQuiz.push(...topicQuiz);
+        }
+      }
+
+      return allQuiz;
+    }
+
+    loadQuiz().then((newQuiz) => {
+      if (newQuiz?.length)
+        setQuizData((prev) => {
+          console.log(prev, newQuiz);
+          const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
+
+          return [...prev, ...filteredQuiz];
+        });
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   console.log('q', quizData);
+  // }, [quizData]);
+
   async function loadTopicExam(obj) {
     if (topic?.type !== 'Assessment') return;
     if (obj?.filter && obj?.examId !== examData?.examId) return;
@@ -380,6 +422,9 @@ export default function TopicBox({
               </div>
               <div className={`${styles.details}`}>
                 <div>e-Content</div>
+                <div>
+                  Quiz: {0} / {quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0}
+                </div>
                 <div>
                   <span>
                     {isLoading ? (

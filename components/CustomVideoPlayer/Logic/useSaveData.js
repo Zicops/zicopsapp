@@ -1,13 +1,11 @@
-import { GET_TOPIC_QUIZ } from '@/api/Queries';
 import { ADD_USER_BOOKMARK, userClient } from '@/api/UserMutations';
-import { loadQueryDataAsync } from '@/helper/api.helper';
 import { QuizAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
 import { BOX } from './customVideoPlayer.helper';
@@ -19,7 +17,6 @@ export default function useSaveData(videoElement, freezeState) {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
-  const [quizData, setQuizData] = useRecoilState(QuizAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
 
@@ -32,7 +29,7 @@ export default function useSaveData(videoElement, freezeState) {
   } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
-  const [showQuiz, setShowQuiz] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(null);
 
   const [freezeScreen, setFreezeScreen] = freezeState;
   const [showBox, setShowBox] = useState(null);
@@ -43,21 +40,6 @@ export default function useSaveData(videoElement, freezeState) {
     topic_id: ''
     // captureImg: ''
   });
-
-  useEffect(() => {
-    async function loadQuiz(params) {
-      const quizRes = await loadQueryDataAsync(
-        GET_TOPIC_QUIZ,
-        { topic_id: videoData?.topicContent?.[0]?.topicId },
-        { fetchPolicy: 'no-cache' }
-      );
-
-      if (quizRes?.getTopicQuizes)
-        setQuizData(quizRes?.getTopicQuizes?.sort((q1, q2) => q1?.sequence - q2?.sequence));
-    }
-
-    loadQuiz();
-  }, []);
 
   function toggleStates(setState, state) {
     setState(!state);
