@@ -414,12 +414,13 @@ export default function TopicBox({
                     </span>
                     <span className={`${styles.scheduleType}`}>
                       {data?.examData?.scheduleType.charAt(0).toUpperCase() +
-                        data?.examData?.scheduleType.slice(1)}
+                        data?.examData?.scheduleType.slice(1)}{' '}
+                      Exam
                     </span>
                   </div>
                 ) : (
                   <div>
-                    <span className={`${styles.scheduleType}`}>Take Anytime</span>
+                    <span className={`${styles.scheduleType}`}>Take Anytime Exam</span>
                   </div>
                 )}
               </div>
