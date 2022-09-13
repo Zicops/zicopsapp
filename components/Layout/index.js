@@ -21,6 +21,7 @@ export default function Layout({ children }) {
     if (userData?.id) return;
 
     const data = getUserData();
+    if (data === 'User Data Not Found') return;
     const userId = [];
     userId.push(data?.id);
     const userData = await loadQueryDataAsync(
