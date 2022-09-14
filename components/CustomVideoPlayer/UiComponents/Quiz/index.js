@@ -1,8 +1,4 @@
-import {
-  GET_QUESTION_BY_ID,
-  GET_QUESTION_OPTIONS,
-  GET_QUESTION_OPTIONS_WITHOUT_ANSWER
-} from '@/api/Queries';
+import { GET_QUESTION_BY_ID, GET_QUESTION_OPTIONS_WITHOUT_ANSWER } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import Image from 'next/image';
@@ -17,6 +13,7 @@ import McqScreen from './McqScreen';
 export default function Quiz({ quizData = {}, handleSkip, handleSubmit }) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
+  const [selectedOption, setSelectedOption] = useState(null);
   const [mcqData, setMcqData] = useState({});
 
   useEffect(() => {
@@ -73,7 +70,17 @@ export default function Quiz({ quizData = {}, handleSkip, handleSubmit }) {
         <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
       </div>
 
-      <McqScreen {...mcqData} />
+      <McqScreen
+        {...mcqData}
+        handleSelect={(op) => setSelectedOption(op)}
+        selectedOptionId={selectedOption?.id}>
+        <button className={`${styles.mcqBtns} ${styles.skipBtn}`} onClick={handleSkip}>
+          Skip
+        </button>
+        <button className={`${styles.mcqBtns}`} onClick={handleSubmit}>
+          Submit
+        </button>
+      </McqScreen>
 
       <div>
         <QuizOptions answerOptions={questions[1].answerOptions} />

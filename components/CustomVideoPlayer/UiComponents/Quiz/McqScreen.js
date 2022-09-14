@@ -1,5 +1,6 @@
 // components\CustomVideoPlayer\UiComponents\Quiz\QuizQuestion.js
 
+import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useState } from 'react';
 import styles from '../../customVideoPlayer.module.scss';
 
@@ -7,11 +8,14 @@ export default function McqScreen({
   count = null,
   question = {},
   options = [],
-  displayHint = true
+  displayHint = true,
+  handleSelect = () => {},
+  selectedOptionId = null,
+  children
 }) {
   const [showHint, setShowHint] = useState(false);
   const hasAttachment = !!question?.attachment;
-  console.log(options);
+  console.log(options, question);
 
   return (
     <div className={`${styles.mcqScreen}`}>
@@ -19,14 +23,10 @@ export default function McqScreen({
         <div className={`${styles.count}`}>{count ? `${count}.` : ''}</div>
 
         <div className={`${styles.question}`}>
-          {question?.descriptions && <p>{question?.description}</p>}
-
-          <div className={`${styles.attachment}`}>
-            <img src="/images/galaxy.jpg" alt="image" />
-          </div>
+          {question?.description && <p>{question?.description}</p>}
 
           {hasAttachment && (
-            <div>
+            <div className={`${styles.attachment}`}>
               {question?.attachmentType.includes('image') && (
                 <img src={question.attachment} alt="image" />
               )}
@@ -49,26 +49,36 @@ export default function McqScreen({
       </div>
 
       <div className={`${styles.optionsContainer}`}>
-        {options?.map((op) => {
-          const isAttachmentPresent = !!op?.attachment;
-          const type = op?.attachmentType;
-          return (
-            <div className={`${styles.option}`}>
-              <p>{op?.description}</p>
+        <div className={`${styles.options}`}>
+          {options?.map((op, i) => {
+            const isAttachmentPresent = !!op?.attachment;
+            const type = op?.attachmentType;
+            return (
+              <section>
+                <p>{OPTION_LABEL?.[i]}. </p>
 
-              <img src="/images/logo.png" alt="image" />
+                <div
+                  className={`${styles.option} ${selectedOptionId === op?.id ? styles.active : ''}`}
+                  onClick={() => handleSelect(op)}>
+                  <p>{op?.description}</p>
 
-              {isAttachmentPresent && (
-                <div>
-                  {type.includes('image') && <img src={op.attachment} alt="image" />}
-                  {type.includes('video') && <video controls src={op.attachment} alt="video" />}
-                  {type.includes('audio') && <audio controls src={op.attachment} alt="audio" />}
+                  {isAttachmentPresent && (
+                    <div className={`${styles.attachment}`}>
+                      {type.includes('image') && <img src={op.attachment} alt="image" />}
+                      {type.includes('video') && <video controls src={op.attachment} alt="video" />}
+                      {type.includes('audio') && <audio controls src={op.attachment} alt="audio" />}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
+
+                <div>{/* add correct, wrong, selected img */}</div>
+              </section>
+            );
+          })}
+        </div>
       </div>
+
+      <div className={`${styles.footerBtn}`}>{children}</div>
     </div>
   );
 }
