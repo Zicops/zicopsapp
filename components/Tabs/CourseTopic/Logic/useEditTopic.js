@@ -414,7 +414,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         type: quiz?.type || '',
         difficulty: quiz.difficulty || 0,
         hint: quiz?.hint || '',
-        qbmId: subCatQb.id || null,
+        qbmId: subCatQb?.id || null,
         attachmentType: '',
 
         // TODO: remove or update later
@@ -493,14 +493,14 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Add Question Error' });
       });
-      // console.log(quizRes);
+      console.log(quizRes);
+      updateQuizData([...quizData, quizRes?.data?.addQuiz]);
     }
 
     setUploadStatus(null);
     console.log('Topic Content and resources Uploaded');
     setToastMsg({ type: 'success', message: 'Topic Content and Resources Uploaded' });
     setEditTopic(getTopicObject({ courseId: fullCourse.id }));
-    updateQuizData(getQuizObject({ courseId: fullCourse.id }));
   }
 
   return {

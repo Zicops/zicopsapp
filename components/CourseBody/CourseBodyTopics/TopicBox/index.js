@@ -118,7 +118,7 @@ export default function TopicBox({
     if (topic?.type !== 'Assessment') return;
 
     const topicExam = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic.id }).then(
-      (res) => res.getTopicExams[0]
+      (res) => res?.getTopicExams?.[0]
     );
 
     if (!topicExam)

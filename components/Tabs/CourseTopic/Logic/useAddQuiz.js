@@ -21,6 +21,10 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   }, [topicId, courseId]);
 
   useEffect(() => {
+    if (!isQuizFormVisible) setNewQuiz({ ...newQuiz, topicId: topicId, courseId: courseId });
+  }, [isQuizFormVisible]);
+
+  useEffect(() => {
     setIsQuizReady(
       newQuiz.name &&
         newQuiz.type &&
