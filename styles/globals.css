@@ -25,7 +25,10 @@
   --header-bg: #0b0c0d;
   --skeleton-dark: dimgray;
 }
-
+* {
+  /* border: 1px solid rgb(56, 231, 91); */
+  /* background-color: rgba(red, 0.1)!important; */
+}
 html,
 body, h1, h2, h3, h4, h5, p, ul, li {
   padding: 0;

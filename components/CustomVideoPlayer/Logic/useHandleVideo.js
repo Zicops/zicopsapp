@@ -13,7 +13,7 @@ import { GET_TOPIC_EXAMS } from 'API/Queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../helper/data.helper';
-import { secondsToHMS, secondsToMinutes } from '../../../helper/utils.helper';
+import { generateVideoThumbnails, secondsToHMS, secondsToMinutes } from '../../../helper/utils.helper';
 import { TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
 import { addCallbackToEvent } from './customVideoPlayer.helper';
@@ -338,7 +338,6 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // TODO : Change this to Ref OR change entire input range to DIV
   // progress bar color update on video play
-
   useEffect(() => {
   //   document.getElementById('vidInput').style.background =
   //     'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' +
@@ -354,63 +353,14 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   useEffect(async () => {
     if (!videoElement?.current?.duration) return;
     const ImgPreviews = await generateVideoThumbnails(
+      videoData,
       THUMBNAIL_GAP,
       videoElement?.current?.duration
     );
     setPreviewImages(ImgPreviews);
   }, [videoElement?.current?.duration]);
   
-  async function generateVideoThumbnails(thumbnailsGap, duration) {
-    let thumbnail = [];
-    let fractions = [];
-    for (let i = 0; i <= duration; i += thumbnailsGap) {
-      fractions.push(Math.floor(i));
-    }
-    fractions.map(async (time) => {
-      let oneThums = await getVideoThumbnail(time);
-      thumbnail.push(oneThums);
-    });
 
-    return thumbnail;
-  }
-  async function getVideoThumbnail(videoTimeInSeconds) {
-    return new Promise((resolve, reject) => {
-      var video = document.createElement('video');
-      var timeupdate = function () {
-        if (snapImage()) {
-          video.removeEventListener('timeupdate', timeupdate);
-          video.pause();
-        }
-      };
-      video.addEventListener('loadeddata', function () {
-        if (snapImage()) {
-          video.removeEventListener('timeupdate', timeupdate);
-        }
-      });
-      var snapImage = function () {
-        var canvas = document.createElement('canvas');
-        var scaleFactor = 0.5;
-        canvas.width = video.videoWidth * scaleFactor;
-        canvas.height = video.videoHeight * scaleFactor;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        var image = canvas.toDataURL();
-        var success = image.length > 100000;
-        if (success) {
-          URL.revokeObjectURL(videoData.videoSrc);
-          resolve(image);
-        }
-        return success;
-      };
-      video.addEventListener('timeupdate', timeupdate);
-      video.preload = 'metadata';
-      video.src = videoData.videoSrc;
-      // Load video in Safari / IE11
-      video.muted = true;
-      video.playsInline = true;
-      video.currentTime = videoTimeInSeconds;
-      video.play();
-    });
-  }
   // keyboard events
   function handleKeyDownEvents(e) {
     e.preventDefault();

@@ -47,69 +47,69 @@ export default function useSaveData(videoElement, freezeState) {
 
     // await generateVideoThumbnails(thumbnailsGap, videoElement?.current?.duration);
 
-    async function generateVideoThumbnails(thumbnailsGap, duration) {
-      let thumbnail = [];
-      let fractions = [];
-      for (let i = 0; i <= duration; i += thumbnailsGap) {
-        fractions.push(Math.floor(i));
-      }
-      // for (let time in fractions){
-      //   showThumbnailPointsInProgressbar(time);
-      //   let oneThums = await getVideoThumbnail(time);
-      //   thumbnail.push(oneThums);
-      // }
-      fractions.map(async (time) => {
-        // showThumbnailPointsInProgressbar(time);
-        let oneThums = await getVideoThumbnail(time);
-        thumbnail.push(oneThums);
-      });
-      // console.log('thumbnail', thumbnail);
-    }
+    // async function generateVideoThumbnails(thumbnailsGap, duration) {
+    //   let thumbnail = [];
+    //   let fractions = [];
+    //   for (let i = 0; i <= duration; i += thumbnailsGap) {
+    //     fractions.push(Math.floor(i));
+    //   }
+    //   // for (let time in fractions){
+    //   //   showThumbnailPointsInProgressbar(time);
+    //   //   let oneThums = await getVideoThumbnail(time);
+    //   //   thumbnail.push(oneThums);
+    //   // }
+    //   fractions.map(async (time) => {
+    //     // showThumbnailPointsInProgressbar(time);
+    //     let oneThums = await getVideoThumbnail(time);
+    //     thumbnail.push(oneThums);
+    //   });
+    //   // console.log('thumbnail', thumbnail);
+    // }
 
 
-    async function getVideoThumbnail(videoTimeInSeconds) {
-      return new Promise((resolve, reject) => {
-        var video = document.createElement('video');
-        var timeupdate = function () {
-          if (snapImage()) {
-            video.removeEventListener('timeupdate', timeupdate);
-            video.pause();
-          }
-        };
-        video.addEventListener('loadeddata', function () {
-          if (snapImage()) {
-            video.removeEventListener('timeupdate', timeupdate);
-          }
-        });
-        var snapImage = function () {
-          var canvas = document.createElement('canvas');
-          var scaleFactor = 0.5;
-          canvas.width = video.videoWidth * scaleFactor;
-          canvas.height =  video.videoHeight * scaleFactor;
-          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-          var image = canvas.toDataURL();
-          var success = image.length > 100000;
-          if (success) {
-            URL.revokeObjectURL(videoData.videoSrc);
-            resolve(image);
-          }
-          return success;
-        };
-        video.addEventListener('timeupdate', timeupdate);
-        video.preload = 'metadata';
-        video.src = videoData.videoSrc;
-        // Load video in Safari / IE11
-        video.muted = true;
-        video.playsInline = true;
-        video.currentTime = videoTimeInSeconds;
-        video.play();
-      });
-    }
-
+    // async function getVideoThumbnail(videoTimeInSeconds) {
+    //   return new Promise((resolve, reject) => {
+    //     var video = document.createElement('video');
+    //     var timeupdate = function () {
+    //       if (snapImage()) {
+    //         video.removeEventListener('timeupdate', timeupdate);
+    //         video.pause();
+    //       }
+    //     };
+    //     video.addEventListener('loadeddata', function () {
+    //       if (snapImage()) {
+    //         video.removeEventListener('timeupdate', timeupdate);
+    //       }
+    //     });
+    //     var snapImage = function () {
+    //       var canvas = document.createElement('canvas');
+    //       var scaleFactor = 0.5;
+    //       canvas.width = video.videoWidth * scaleFactor;
+    //       canvas.height =  video.videoHeight * scaleFactor;
+    //       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    //       var image = canvas.toDataURL();
+    //       var success = image.length > 100000;
+    //       if (success) {
+    //         URL.revokeObjectURL(videoData.videoSrc);
+    //         resolve(image);
+    //       }
+    //       return success;
+    //     };
+    //     video.addEventListener('timeupdate', timeupdate);
+    //     video.preload = 'metadata';
+    //     video.src = videoData.videoSrc;
+    //     // Load video in Safari / IE11
+    //     video.muted = true;
+    //     video.playsInline = true;
+    //     video.currentTime = videoTimeInSeconds;
+    //     video.play();
+    //   });
+    // }
+    showThumbnailPointsInProgressbar(140);
     async function showThumbnailPointsInProgressbar(videoTimeInSeconds) {
       // console.log(videoElement);
       let percent = (videoTimeInSeconds/videoElement?.current?.duration) * 100;
-      let thumbPoints = document.getElementById('thumbnailPoints');
+      let thumbPoints = document.getElementById('bookmarkIndicator');
       let thumbSpan = document.createElement('span');
       thumbSpan.style.left = percent + '%';
       thumbPoints.appendChild(thumbSpan);

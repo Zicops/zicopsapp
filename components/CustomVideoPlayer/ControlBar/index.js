@@ -3,24 +3,25 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../../state/atoms/video.atom';
 import Button from '../Button';
-import {
-  controlBar,
-  thumbnailPoints,
-  controlButtons,
-  dimProgressBar,
-  fullScreenBtn,
-  playPauseBtn,
-  progressBar,
-  tooltipContainer,
-  volumeContainer,
-  thumbnailInfo,
-  thumbnailImage,
-  thumbnailTime,
-  timelineContainer,
-  timeline,
-  previewImg,
-  thumbIndicator
-} from './controlbar.module.scss';
+// import {
+//   controlBar,
+//   thumbnailPoints,
+//   controlButtons,
+//   dimProgressBar,
+//   fullScreenBtn,
+//   playPauseBtn,
+//   progressBar,
+//   tooltipContainer,
+//   volumeContainer,
+//   thumbnailContainer,
+//   thumbnailInfo,
+//   thumbnailImage,
+//   thumbnailTime,
+//   timelineContainer,
+//   timeline,
+//   previewImg,
+//   thumbIndicator
+// } from './controlbar.module.scss';
 import Volume from './Volume';
 import styles from './controlbar.module.scss';
 
@@ -65,17 +66,26 @@ export default function ControlBar({
   }
 
   return (
-    <div className={`${controlBar}`}>
+    <div className={`${styles.controlBar}`}>
       <div
-        className={`${timelineContainer}`}
+        className={`${styles.timelineContainer}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseExit}
         id="timelineContainer">
-        <div className={`${timeline}`}>
-          <img src="" alt="" className={`${previewImg}`} id="thumbnailImages" />
-          <div className={`${thumbIndicator}`} id="thumbIndicator"></div>
+        <div className={`${styles.timeline}`}>
+          <div className={`${styles.thumbnailContainer}`}>
+            <div className={`${styles.thumbnailInfo}`}>Some info will be here!</div>
+            <div className={`${styles.thumbnailImage}`}>
+              <img src="" alt="" className={`${styles.previewImg}`} id="thumbnailImages" />
+            </div>
+            <div className={`${styles.thumbnailTime}`}>{seek}</div>
+          </div>
+          <div className={`${styles.thumbIndicator}`} id="thumbIndicator"></div>
+          <div className={`${styles.bookmarkIndicator}`} id="bookmarkIndicator"></div>
+          <div className={`${styles.quizIndicator}`} id="quizIndicator"></div>
         </div>
       </div>
+
       {/* <div className={`${thumbnailPoints}`} id="thumbnailPoints"></div> */}
       {/* <input
         type="range"
@@ -99,7 +109,7 @@ export default function ControlBar({
         <div className={`${thumbnailTime}`}>{seek}</div> */}
       {/* </div> */}
 
-      <div className={`${controlButtons}`}>
+      <div className={`${styles.controlButtons}`}>
         <Button handleClick={reloadVideo}>
           {/* <Image src="/images/reload_53905.png" alt="" height="25px" width="22px" /> */}
           <div className={`${styles.reloadBtn}`}></div>
@@ -127,7 +137,7 @@ export default function ControlBar({
           <div className={`${styles.backwordBtn}`}></div>
         </Button>
 
-        <Button handleClick={handlePlay} styleClass={playPauseBtn}>
+        <Button handleClick={handlePlay} styleClass={styles.playPauseBtn}>
           {!playerState.isPlaying ? (
             // <Image src="/images/preview-btn.png" alt="" height="50px" width="50px" />
             <div className={`${styles.pauseBtn}`}></div>
@@ -160,7 +170,7 @@ export default function ControlBar({
         </Button>
 
         <div
-          className={`${volumeContainer}`}
+          className={`${styles.volumeContainer}`}
           onMouseEnter={() => setHideBar(true)}
           onMouseLeave={() => setHideBar(false)}>
           <Volume
@@ -171,7 +181,7 @@ export default function ControlBar({
           />
         </div>
       </div>
-      <div className={`${fullScreenBtn}`}>
+      <div className={`${styles.fullScreenBtn}`}>
         <Button handleClick={handleFullScreen}>
           {!document.fullscreenElement ? (
             <div className={`${styles.fsBtn}`}></div>

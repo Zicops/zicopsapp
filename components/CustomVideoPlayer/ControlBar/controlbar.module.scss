@@ -5,17 +5,7 @@
   position: relative;
   z-index: 1;
 }
-.thumbnailPoints span{
-  height: 5px;
-  width: 5px;
-  background-color: yellow;
-  border-radius: 50%;
-  transform: translate(50%, 50%);
-  position: absolute;
-  top: -30px;
-  left: 0;
-  z-index: 2;
-}
+
 .fullScreenBtn {
   float: right;
   margin-top: -50px;
@@ -60,7 +50,7 @@
       bottom: 0;
       right: calc(100% - var(--progressPosition) * 100%);
       background-color: $primary;
-      box-shadow: 0 0 10px 2px rgba($darkThree, 1);
+      // box-shadow: 0 0 10px 2px rgba($darkThree, 1);
     }
     .thumbIndicator{
       --scale : 1;
@@ -76,6 +66,16 @@
       box-shadow: 0 0 10px 2px rgba($darkThree, 1);
       z-index: 5;
     }
+    .bookmarkIndicator span {
+      height: 7px;
+      width: 7px;
+      background-color: yellow;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
     .previewImg{
       position: absolute;
       height: 80px;
@@ -85,7 +85,12 @@
       left: calc(var(--previewPosition) * 100%);
       border-radius: 0.25rem;
       border: 2px solid $white;
-      // display: none;
+      display: none;
+    }
+    &:hover {
+      .previewImg {
+        display: block;
+      }
     }
   }
 }
@@ -220,33 +225,33 @@
   transition: all 0.3s;
 }
 
-.tooltipContainer {
-  position: absolute;
-  bottom: 110px;
-  left: 0; 
-  // height: 120px; 
-  width: 200px; 
+// .tooltipContainer {
+//   position: absolute;
+//   bottom: 110px;
+//   left: 0; 
+//   // height: 120px; 
+//   width: 200px; 
   
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
-  gap: 2px; 
-  .thumbnailInfo { 
-    background-color: $bgHeader; 
-    color: $primary; 
-    padding: 5px; 
-    border-radius: 5px; 
-  } 
-  .thumbnailImage { 
-    width: 200px; 
-    img { 
-      width: 100%; 
-      object-fit: contain; 
-    } 
-  } 
-  .thumbnailTime { width: 100%; color: $white; text-align: center; text-shadow: 1px 1px 2px $black; } 
-}
+//   display: flex; 
+//   flex-direction: column; 
+//   justify-content: center; 
+//   align-items: center; 
+//   gap: 2px; 
+//   .thumbnailInfo { 
+//     background-color: $bgHeader; 
+//     color: $primary; 
+//     padding: 5px; 
+//     border-radius: 5px; 
+//   } 
+//   .thumbnailImage { 
+//     width: 200px; 
+//     img { 
+//       width: 100%; 
+//       object-fit: contain; 
+//     } 
+//   } 
+//   .thumbnailTime { width: 100%; color: $white; text-align: center; text-shadow: 1px 1px 2px $black; } 
+// }
 
 // style by sonali
  .reloadBtn, .prevBtn, .backwordBtn, .pauseBtn, .playBtn, .forwardBtn, .nextBtn, .volumeIconBtn, .muteVolumeIconBtn, .fsBtn, .fseBtn{
