@@ -8,6 +8,8 @@
       "@/state/*": ["state/*"],
       "@/styles/*": ["styles/*"],
       "@/api/*": ["API/*"],
+      "react/jsx-dev-runtime": ["react/jsx-dev-runtime.js"],
+      "react/jsx-runtime": ["react/jsx-runtime.js"]
     }
   }
 }
