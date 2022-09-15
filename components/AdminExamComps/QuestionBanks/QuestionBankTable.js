@@ -1,4 +1,5 @@
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
+import ToolTip from '@/components/common/ToolTip';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -130,7 +131,9 @@ export default function QuestionBankTable({ isEdit = false }) {
                   setSelectedQB(getQuestionBankObject(params.row));
                   setEditPopUp(true);
                 }}>
-                <img src="/images/edit-icon.png" width={20}></img>
+                <ToolTip title="Edit Bank" placement="bottom">
+                  <img src="/images/edit-icon.png" width={20}></img>
+                </ToolTip>
               </button>
             )}
 
@@ -145,7 +148,9 @@ export default function QuestionBankTable({ isEdit = false }) {
                 setSelectedQB(getQuestionBankObject(params.row));
                 router.push(router.asPath + `/${params.row.id}`);
               }}>
-              <img src="/images/svg/eye-line.svg" width={20}></img>
+              <ToolTip title="View Bank" placement="bottom">
+                <img src="/images/svg/eye-line.svg" width={20}></img>
+              </ToolTip>
             </button>
           </>
         );

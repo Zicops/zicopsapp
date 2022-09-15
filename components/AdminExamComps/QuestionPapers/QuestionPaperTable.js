@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -62,7 +63,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
                 border: '0'
               }}
               onClick={() => setMasterData(paperMasterData)}>
-              <img src="/images/svg/eye-line.svg" width={20}></img>
+              <ToolTip title="View Paper" placement="left"><img src="/images/svg/eye-line.svg" width={20}></img></ToolTip>
             </button>
             {isEdit && (
               <>
@@ -80,9 +81,10 @@ export default function QuestionPaperTable({ isEdit = false }) {
                     outline: '0',
                     border: '0'
                   }}>
-                  <img src="/images/svg/edit-box-line.svg" width={20}></img>
+                  <ToolTip title="Edit Paper" placement="bottom"><img src="/images/svg/edit-box-line.svg" width={20}></img></ToolTip>
                 </button>
 
+                <ToolTip title="Create Exam" placement="bottom">
                 <button
                   onClick={() => {
                     router.push(
@@ -93,6 +95,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
                   style={{ background: 'var(--primary)', color: 'var(--black)' }}>
                   + Create Exams
                 </button>
+                </ToolTip>
               </>
             )}
           </>

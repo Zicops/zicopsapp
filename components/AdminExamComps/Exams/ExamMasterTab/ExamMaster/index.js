@@ -1,5 +1,8 @@
 import RTE from '@/components/common/FormComponents/RTE';
 import NextButton from '@/components/common/NextButton';
+import ToolTip from '@/components/common/ToolTip';
+import { TOOLTIP_STYLE } from '@/components/common/ToolTip/tooltip.helper';
+import { TOOLTIP_IMG_SRC } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -82,6 +85,13 @@ export default function ExamMaster() {
       padding: '0px'
     })
   };
+
+  let passingCriteriaText = 'No passing criteria would be applicable for this exam.';
+  if (examTabData?.passing_criteria_type === 'Marks') {
+    passingCriteriaText = 'Enter passing marks for this exam';
+  } else if (examTabData?.passing_criteria_type === 'Percentage') {
+    passingCriteriaText = 'Enter passing percentage for this exam';
+  }
 
   return (
     <>
@@ -171,6 +181,9 @@ export default function ExamMaster() {
       <div className={`${styles.passingCriteriaOuterContainer}`}>
         <label htmlFor="passing_criteria" aria-label="passing_criteria">
           Passing Criteria:
+          <ToolTip title={passingCriteriaText} placement="bottom">
+            <img src={TOOLTIP_IMG_SRC} style={TOOLTIP_STYLE} />
+          </ToolTip>
         </label>
 
         <div
@@ -272,7 +285,17 @@ export default function ExamMaster() {
         <div className={`w-35 ${styles.checkboxContainer}`}>
           <LabeledRadioCheckbox
             type="checkbox"
-            label="Set Max. Attempts Limit"
+            label={
+              <ToolTip
+                title={`${
+                  examTabData?.is_attempts_visible
+                    ? 'Define the number of attempts allowed for this exam'
+                    : 'Exams could be taken multiple times'
+                }`}
+                placement="right">
+                <span>Set Max. Attempts Limit</span>
+              </ToolTip>
+            }
             name="is_attempts_visible"
             isChecked={examTabData?.is_attempts_visible}
             isDisabled={isPreview}
@@ -382,8 +405,11 @@ export default function ExamMaster() {
             changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
           />
         </div>
-
-        <NextButton clickHandler={() => saveExamData(1)} />
+        <ToolTip title="Save master details and go to next tab" placement="left">
+          <span>
+            <NextButton clickHandler={() => saveExamData(1)} />
+          </span>
+        </ToolTip>
       </div>
 
       {/* exam access */}
