@@ -22,11 +22,12 @@ export default function Layout({ children }) {
 
     const data = getUserData();
     if (data === 'User Data Not Found') return;
-    const userId = [];
-    userId.push(data?.id);
+    // const userId = [];
+    // userId.push(data?.id);
+    const userId = data?.id;
     const userData = await loadQueryDataAsync(
       GET_USER_DETAIL,
-      { user_id: userId },
+      { user_id: [userId] },
       {},
       userQueryClient
     );

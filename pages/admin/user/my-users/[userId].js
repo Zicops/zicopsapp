@@ -29,12 +29,12 @@ export default function UserProfilePage() {
 
   useEffect(async () => {
     if (!currentUserId) return;
-    const userIds = [];
-    userIds.push(currentUserId);
+    // const userIds = [];
+    // userIds.push(currentUserId);
 
     const detailsRes = await loadQueryDataAsync(
       GET_USER_DETAIL,
-      { user_id: userIds },
+      { user_id: [currentUserId] },
       {},
       userClient
     );
