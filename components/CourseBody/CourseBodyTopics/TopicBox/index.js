@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
+import { GET_TOPIC_EXAMS, GET_TOPIC_QUIZ } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
 import {
   filterAndSortTopicsBasedOnModuleId,
@@ -18,11 +18,17 @@ import {
 import {
   getTopicExamObj,
   isLoadingAtom,
+  QuizAtom,
   TopicAtom,
   TopicContentAtom,
   TopicExamAtom
 } from '../../../../state/atoms/module.atoms';
-import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../../state/atoms/video.atom';
+import {
+  getVideoObject,
+  QuizProgressDataAtom,
+  UserCourseDataAtom,
+  VideoAtom
+} from '../../../../state/atoms/video.atom';
 import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
@@ -52,6 +58,7 @@ export default function TopicBox({
   const duration = topicContent[0]?.duration.toString();
   const topicData = useRecoilValue(TopicAtom);
   const topicContentData = useRecoilValue(TopicContentAtom);
+  const quizProgressData = useRecoilValue(QuizProgressDataAtom);
 
   const router = useRouter();
   const activateExam = router?.query?.activateExam || null;
@@ -62,7 +69,7 @@ export default function TopicBox({
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
-
+  const [quizData, setQuizData] = useRecoilState(QuizAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -117,7 +124,7 @@ export default function TopicBox({
     if (topic?.type !== 'Assessment') return;
 
     const topicExam = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic.id }).then(
-      (res) => res.getTopicExams[0]
+      (res) => res?.getTopicExams?.[0]
     );
 
     if (!topicExam)
@@ -239,6 +246,47 @@ export default function TopicBox({
     );
   }, [switchToTopic, examData]);
 
+  // quiz
+  useEffect(() => {
+    if (topic?.type !== 'Content') return;
+
+    const allQuiz = [];
+
+    async function loadQuiz() {
+      let topicQuiz = allQuiz?.find((quiz) => quiz?.topicId === topic?.id);
+
+      if (!topicQuiz) {
+        const quizRes = await loadQueryDataAsync(
+          GET_TOPIC_QUIZ,
+          { topic_id: topic?.id },
+          { fetchPolicy: 'no-cache' }
+        );
+
+        if (quizRes?.getTopicQuizes) {
+          topicQuiz = [...quizRes?.getTopicQuizes]?.sort((q1, q2) => q1?.sequence - q2?.sequence);
+          // console.log([...quizData, ...topicQuiz]);
+          allQuiz.push(...topicQuiz);
+        }
+      }
+
+      return allQuiz;
+    }
+
+    loadQuiz().then((newQuiz) => {
+      if (newQuiz?.length)
+        setQuizData((prev) => {
+          console.log(prev, newQuiz);
+          const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
+
+          return [...prev, ...filteredQuiz];
+        });
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   console.log('q', quizData);
+  // }, [quizData]);
+
   async function loadTopicExam(obj) {
     if (topic?.type !== 'Assessment') return;
     if (obj?.filter && obj?.examId !== examData?.examId) return;
@@ -280,6 +328,19 @@ export default function TopicBox({
   if (topic?.id === userCourseData?.activeTopic?.id) {
     progressBarStyles.width = `${userCourseData?.videoData?.progress || 0}%`;
   }
+
+  // https://stackoverflow.com/a/45998597
+  const quizId = [];
+
+  let attemptedQuiz =
+    quizProgressData
+      ?.filter((quiz) => {
+        if (quizId?.includes(quiz?.quiz_id)) return false;
+
+        quizId.push(quiz?.quiz_id);
+        return true;
+      })
+      ?.filter((quiz) => quiz?.topic_id === topic?.id)?.length || 0;
 
   return (
     <>
@@ -381,6 +442,10 @@ export default function TopicBox({
               <div className={`${styles.details}`}>
                 <div>e-Content</div>
                 <div>
+                  Quiz: {attemptedQuiz || 0} /{' '}
+                  {quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0}
+                </div>
+                <div>
                   <span>
                     {isLoading ? (
                       <Skeleton
@@ -414,12 +479,13 @@ export default function TopicBox({
                     </span>
                     <span className={`${styles.scheduleType}`}>
                       {data?.examData?.scheduleType.charAt(0).toUpperCase() +
-                        data?.examData?.scheduleType.slice(1)}
+                        data?.examData?.scheduleType.slice(1)}{' '}
+                      Exam
                     </span>
                   </div>
                 ) : (
                   <div>
-                    <span className={`${styles.scheduleType}`}>Take Anytime</span>
+                    <span className={`${styles.scheduleType}`}>Take Anytime Exam</span>
                   </div>
                 )}
               </div>
