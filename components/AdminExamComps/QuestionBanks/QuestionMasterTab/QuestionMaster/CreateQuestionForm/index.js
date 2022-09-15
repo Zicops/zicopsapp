@@ -1,4 +1,5 @@
 import QuestionOptionView from '@/components/common/QuestionOptionView';
+import ToolTip from '@/components/common/ToolTip';
 import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import { changeHandler } from '../../../../../../helper/common.helper';
@@ -84,6 +85,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
       </div>
 
       {!showQuestionForm ? (
+        <ToolTip title="Add new question" placement="bottom">
         <div className={`center-element-with-flex`}>
           <Button
             text="Add Question"
@@ -93,6 +95,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
             }}
           />
         </div>
+        </ToolTip>
       ) : (
         <>
           <LabeledDropdown
