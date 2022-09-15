@@ -329,6 +329,17 @@ export default function TopicBox({
     progressBarStyles.width = `${userCourseData?.videoData?.progress || 0}%`;
   }
 
+  // https://stackoverflow.com/a/45998597
+  const quizId = [];
+
+  let attemptedQuiz =
+    quizProgressData.filter((quiz) => {
+      if (quizId?.includes(quiz?.quiz_id)) return false;
+
+      quizId.push(quiz?.quiz_id);
+      return true;
+    })?.length || 0;
+
   return (
     <>
       <div
@@ -429,11 +440,8 @@ export default function TopicBox({
               <div className={`${styles.details}`}>
                 <div>e-Content</div>
                 <div>
-                  Quiz:{' '}
-                  {quizProgressData?.filter(
-                    (quiz) => quiz?.topic_id === topic?.id && quiz?.result === 'passed'
-                  )?.length || 0}{' '}
-                  / {quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0}
+                  Quiz: {attemptedQuiz || 0} /{' '}
+                  {quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0}
                 </div>
                 <div>
                   <span>

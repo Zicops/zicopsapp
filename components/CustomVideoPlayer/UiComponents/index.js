@@ -159,19 +159,22 @@ export default function UiComponents({
           {quizData
             ?.filter((quiz) => quiz?.topicId === videoData?.topicContent[0]?.topicId)
             ?.map((quiz) => {
-              const isCompleted = quizProgressData?.find(
-                (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
-              );
+              const quizAttempts = quizProgressData?.filter((qp) => qp?.quiz_id === quiz?.id) || [];
+              const isCompleted = quizAttempts?.find((qp) => qp?.result === 'passed');
+
+              let styleClass = '';
+              if (!!quizAttempts?.length) styleClass = styles.wrongQuiz;
+              if (!!isCompleted) styleClass = styles.correctQuiz;
 
               return (
                 <button
-                  className={`${isCompleted ? styles.activeBtn : ''}`}
+                  className={`${styleClass}`}
                   onClick={() => {
                     updateIsPlayingTo(false);
                     setShowQuiz(quiz);
                     toggleStates(setShowQuizDropdown, setShowQuizDropdown);
                   }}>
-                  {quiz?.name}
+                  <span>{quiz?.name}</span>
                 </button>
               );
             })}

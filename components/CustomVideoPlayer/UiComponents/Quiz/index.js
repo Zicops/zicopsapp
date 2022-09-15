@@ -8,6 +8,7 @@ import {
   UPDATE_USER_COURSE_PROGRESS,
   userClient
 } from '@/api/UserMutations';
+import AlertBox from '@/components/common/AlertBox';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { QuizAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -43,7 +44,9 @@ export default function Quiz({
   const [quizProgressData, setQuizProgressData] = useRecoilState(QuizProgressDataAtom);
 
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [mcqData, setMcqData] = useState({});
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     // console.log(quizData);
@@ -87,11 +90,26 @@ export default function Quiz({
       }));
       // console.log(optionData, _option);
 
-      setMcqData({ question: questionData, options: optionData });
+      const _mcqData = { question: questionData, options: optionData };
+      setMcqData(_mcqData);
+      return _mcqData;
     }
 
+    // const isQuizPassed = quizProgressData?.find(
+    //   (qp) => qp?.quiz_id === quizData?.id && qp?.result === 'passed'
+    // );
+    // console.log(isQuizPassed);
+
+    // setIsSubmitDisabled(!!isQuizPassed);
     loadMcqData();
   }, []);
+
+  useEffect(() => {
+    if (isSubmitDisabled) {
+      setIsSubmitDisabled(false);
+      afterSubmit();
+    }
+  }, [toastMsg]);
 
   function isTopicQuizCompleted(topicId, quizProgress) {
     const isCompleted = !quizData
@@ -100,7 +118,6 @@ export default function Quiz({
         const isPassed = quizProgress?.find(
           (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
         );
-        console.log(isPassed);
         return !isPassed;
       });
 
@@ -108,6 +125,7 @@ export default function Quiz({
   }
 
   async function handleSubmit() {
+    setIsSubmitDisabled(true);
     if (!selectedOption) return setToastMsg({ type: 'danger', message: 'Select option first' });
     if (!currentQuizData?.id) return setToastMsg({ type: 'danger', message: 'No Quiz Id present' });
 
@@ -175,7 +193,12 @@ export default function Quiz({
       setUserCourseData(_userCourseData);
     }
 
-    afterSubmit();
+    setShowAlert(true);
+
+    setTimeout(() => {
+      setShowAlert(false);
+      afterSubmit();
+    }, 3000);
   }
 
   return (
@@ -191,7 +214,10 @@ export default function Quiz({
         <button className={`${styles.mcqBtns} ${styles.skipBtn}`} onClick={handleSkip}>
           Skip
         </button>
-        <button className={`${styles.mcqBtns}`} onClick={handleSubmit}>
+        <button
+          className={`${styles.mcqBtns}`}
+          disabled={!!isSubmitDisabled}
+          onClick={handleSubmit}>
           Submit
         </button>
       </McqScreen>
@@ -204,6 +230,17 @@ export default function Quiz({
         <button onClick={handleSubmit}>Submit</button>
         <button onClick={handleSkip}>Skip</button>
       </div>
+
+      {showAlert && (
+        <AlertBox
+          title="Quiz Attemptted"
+          description="Quiz was completed!!"
+          handleClose={() => {
+            setShowAlert(false);
+            afterSubmit();
+          }}
+        />
+      )}
     </div>
   );
 }

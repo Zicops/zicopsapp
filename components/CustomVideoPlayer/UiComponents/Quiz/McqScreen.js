@@ -15,7 +15,6 @@ export default function McqScreen({
 }) {
   const [showHint, setShowHint] = useState(false);
   const hasAttachment = !!question?.attachment;
-  // console.log(options, question);
 
   return (
     <div className={`${styles.mcqScreen}`}>

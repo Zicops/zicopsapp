@@ -404,7 +404,6 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         const isPassed = quizProgress?.find(
           (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
         );
-        console.log(isPassed);
         return !isPassed;
       });
 

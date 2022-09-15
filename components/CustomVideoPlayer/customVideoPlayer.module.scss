@@ -368,8 +368,29 @@
         color: $black;
       }
 
-      &.activeBtn {
-        text-decoration: underline;
+      &.wrongQuiz,
+      &.correctQuiz {
+        span {
+          position: relative;
+          width: fit-content;
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0px;
+            right: 110%;
+
+            height: 15px;
+            width: 15px;
+            background: url(/images/svg/cross.svg);
+            background-repeat: no-repeat;
+            background-size: contain;
+          }
+        }
+      }
+
+      &.correctQuiz span::before {
+        background-image: url(/images/svg/done.svg);
       }
     }
   }
@@ -914,8 +935,15 @@
 
   cursor: pointer;
 
-  &.skipBtn {
+  // &.skipBtn {
+  // border-color: $darkThree;
+  // color: $darkThree;
+  // }
+
+  &:disabled {
     border-color: $darkThree;
     color: $darkThree;
   }
+  // button {
+  // }
 }
