@@ -379,3 +379,23 @@ export const GET_USER_EXAM_PROGRESS = gql`
     }
   }
 `;
+
+export const GET_USER_QUIZ_ATTEMPTS = gql`
+  query getUserQuizAttempts($user_id: String!, $topic_id: String!) {
+    getUserQuizAttempts(user_id: $user_id, topic_id: $topic_id) {
+      user_qa_id
+      user_id
+      user_cp_id
+      user_course_id
+      quiz_id
+      quiz_attempt
+      topic_id
+      result
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;

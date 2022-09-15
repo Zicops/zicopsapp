@@ -1,5 +1,8 @@
+import { COURSE_TYPES, LANGUAGES } from '@/helper/constants.helper';
+import { loadCatSubCat } from '@/helper/data.helper';
 import { useRouter } from 'next/router';
-import { changeHandler } from '../../../helper/common.helper';
+import { useState } from 'react';
+import { changeHandler, snakeCaseToTitleCase } from '../../../helper/common.helper';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import Button from '../../CustomVideoPlayer/Button';
 import styles from '../search.module.scss';
@@ -8,21 +11,24 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
   const router = useRouter();
   const { searchQuery } = router.query;
 
-  const Type = [
-    { value: 'Self Paced', label: 'Self Paced' },
-    { value: 'Classroom', label: 'Classroom' },
-    { value: 'Exam', label: 'Exam' },
-    { value: 'Labs', label: 'Labs' },
-    { value: 'Blog', label: 'Blog' },
-    { value: 'Bookmarks', label: 'Bookmarks' }
-  ];
-  const Languages = [
-    { value: 'Hindi', label: 'Hindi' },
-    { value: 'English', label: 'English' },
-    { value: 'Marathi', label: 'Marathi' },
-    { value: 'Bengali', label: 'Bengali' }
-  ];
+  const Type = COURSE_TYPES?.map((v, i) => {
+    return { value: v, label: snakeCaseToTitleCase(v), isDisabled: [1, 2].includes(i) };
+  });
+  // const Type = [
+  //   { value: 'Self Paced', label: 'Self Paced' },
+  //   { value: 'Classroom', label: 'Classroom' },
+  //   { value: 'Exam', label: 'Exam' },
+  //   { value: 'Labs', label: 'Labs' },
+  //   { value: 'Blog', label: 'Blog' },
+  //   { value: 'Bookmarks', label: 'Bookmarks' }
+  // ];
 
+  // cat and sub cat
+  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // update sub cat based on cat
+  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, filters?.category);
+
+  const Languages = LANGUAGES?.map((lang) => ({ value: lang, label: lang }));
   const isFilterPresent =
     !!filters.lang && filters.category && !!filters.subCategory && !!filters.type;
 
@@ -72,17 +78,17 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Category',
-            options: Type,
+            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.cat],
             value: { value: filters.category, label: filters.category },
             isSearchEnable: true
           }}
-          changeHandler={(e) => changeHandler(e, filters, setFilters, 'category')}
+          changeHandler={(e) => setFilters({ ...filters, category: e.value, subCategory: null })}
         />
         <LabeledDropdown
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Sub-category',
-            options: Type,
+            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.subCat],
             value: { value: filters.subCategory, label: filters.subCategory },
             isSearchEnable: true
           }}
@@ -92,8 +98,13 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Type',
-            options: Type,
-            value: { value: filters.type, label: filters.type }
+            options: [
+              { value: '', label: '-- Select --' },
+              ...Type,
+              { value: 'Blog', label: 'Blog' },
+              { value: 'Bookmarks', label: 'Bookmarks' }
+            ],
+            value: { value: filters.type, label: snakeCaseToTitleCase(filters.type) }
           }}
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'type')}
         />

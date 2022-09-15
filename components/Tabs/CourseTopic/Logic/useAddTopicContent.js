@@ -65,6 +65,12 @@ export default function useAddTopicContent(topic) {
           });
       }
 
+      if (inputName === 'type') {
+        setNewTopicVideo({ ...newTopicVideo, file: null });
+        setNewTopicContent({ ...newTopicContent, [inputName]: e.value, duration: 0 });
+        return;
+      }
+
       return setNewTopicContent({ ...newTopicContent, [inputName]: e.value });
     }
 
@@ -79,14 +85,8 @@ export default function useAddTopicContent(topic) {
   // video input
   function handleTopicVideoInput(e) {
     if (!e.target.files?.length) {
-      setNewTopicVideo({
-        ...newTopicVideo,
-        file: null
-      });
-      setNewTopicContent({
-        ...newTopicContent,
-        duration: 0
-      });
+      setNewTopicVideo({ ...newTopicVideo, file: null });
+      setNewTopicContent({ ...newTopicContent, duration: 0 });
       return;
     }
 
@@ -102,11 +102,11 @@ export default function useAddTopicContent(topic) {
       const filteredTopicContent = filterTopicContent(topicContent, topic?.id);
       if (filteredTopicContent.length) {
         const prevUploadDuration = filteredTopicContent[0].duration;
-        console.log(
-          prevUploadDuration + variable_buffer_time,
-          prevUploadDuration - variable_buffer_time,
-          duration
-        );
+        // console.log(
+        //   prevUploadDuration + variable_buffer_time,
+        //   prevUploadDuration - variable_buffer_time,
+        //   duration
+        // );
         // 6 < 4 < 2
         if (
           prevUploadDuration + variable_buffer_time <= duration ||
@@ -117,14 +117,8 @@ export default function useAddTopicContent(topic) {
         }
       }
 
-      setNewTopicContent({
-        ...newTopicContent,
-        duration: parseInt(duration)
-      });
-      setNewTopicVideo({
-        ...newTopicVideo,
-        file: e.target.files[0]
-      });
+      setNewTopicContent({ ...newTopicContent, duration: parseInt(duration) });
+      setNewTopicVideo({ ...newTopicVideo, file: e.target.files[0] });
     };
   }
 
