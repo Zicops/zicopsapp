@@ -2,7 +2,7 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { QUESTION_STATUS } from '@/helper/constants.helper';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   ADD_QUESTION_BANK_QUESTION,
   ADD_QUESTION_OPTIONS,
@@ -32,6 +32,7 @@ import {
   getTopicObject,
   isLoadingAtom,
   QuizAtom,
+  QuizMetaDataAtom,
   ResourcesAtom,
   TopicAtom,
   TopicContentAtom,
@@ -55,6 +56,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   });
 
   // recoil state
+  const quizMetaData = useRecoilValue(QuizMetaDataAtom);
   const [topicData, updateTopicData] = useRecoilState(TopicAtom);
   const [topicContent, updateTopicContent] = useRecoilState(TopicContentAtom);
   const [topicVideo, updateTopicVideo] = useRecoilState(TopicVideoAtom);
@@ -362,116 +364,100 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
     }
 
     let isError = false;
-    const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
-    const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
+    let subCatQb = quizMetaData?.questionBank || {};
 
-    let subCatQb = qbRes?.getLatestQuestionBank?.questionBanks?.find(
-      (qb) => qb?.name === fullCourse?.sub_category
-    );
-    let allQuestionsArr = [];
-    if (!subCatQb) {
-      const sendData = {
-        name: fullCourse?.sub_category,
-        description: '',
-        category: fullCourse?.category,
-        sub_category: fullCourse.sub_category,
-
-        //TODO: extra data for success, remove or make this dynamic
-        created_by: 'Zicops',
-        updated_by: 'Zicops',
-        is_active: true,
-        is_default: true,
-        owner: 'Zicops'
-      };
-
-      const createdQbRes = await createQuestionBank({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
-      });
-
-      subCatQb = createdQbRes?.createQuestionBank;
-    } else {
-      const questionRes = await loadQueryDataAsync(GET_QUESTIONS_NAMES, {
-        question_bank_id: subCatQb?.id
-      });
-      allQuestionsArr = questionRes?.getQuestionBankQuestions;
-    }
+    let allQuestionsArr = quizMetaData?.questions || [];
 
     for (let i = 0; i < quizData.length; i++) {
       const quiz = quizData[i];
       if (quiz?.id) continue;
 
-      const isDuplicate = allQuestionsArr.some(
-        (q) => q?.Description?.toLowerCase()?.trim() === quiz?.question?.toLowerCase()?.trim()
-      );
-      if (isDuplicate)
-        return setToastMsg({ type: 'danger', message: 'Quiz with same question cannot be added!' });
+      let questionId = null;
+      if (quiz?.formType === 'create') {
+        const isDuplicate = allQuestionsArr.some(
+          (q) => q?.Description?.toLowerCase()?.trim() === quiz?.question?.toLowerCase()?.trim()
+        );
+        if (isDuplicate)
+          return setToastMsg({
+            type: 'danger',
+            message: 'Question with same name cannot be added!'
+          });
 
-      const sendQuestionData = {
-        name: '',
-        description: quiz?.question || '',
-        type: quiz?.type || '',
-        difficulty: quiz.difficulty || 0,
-        hint: quiz?.hint || '',
-        qbmId: subCatQb?.id || null,
-        attachmentType: '',
-
-        // TODO: remove or update later
-        createdBy: 'Zicops',
-        updatedBy: 'Zicops',
-        status: QUESTION_STATUS[1]
-      };
-
-      if (quiz?.questionFile) {
-        sendQuestionData.file = quiz?.questionFile;
-        sendQuestionData.attachmentType = quiz?.attachmentType || '';
-      }
-      // console.log(sendQuestionData);
-      // add question
-      const questionRes = await addQuestion({ variables: sendQuestionData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add Question Error' });
-      });
-
-      if (!questionRes || isError)
-        return setToastMsg({ type: 'danger', message: 'Add Question Error' });
-
-      const options = quiz?.options || [];
-      // add option
-      for (let i = 0; i < options.length; i++) {
-        const option = options[i];
-        // console.log(option);
-        if (!option.option && !option.file) continue;
-
-        const sendOptionData = {
-          description: option.option || '',
-          isCorrect: option.isCorrect || false,
-          qmId: questionRes?.data?.addQuestionBankQuestion?.id,
-          isActive: true,
-          attachmentType: option.attachmentType || '',
+        const sendQuestionData = {
+          name: '',
+          description: quiz?.question || '',
+          type: quiz?.type || '',
+          difficulty: quiz.difficulty || 0,
+          hint: quiz?.hint || '',
+          qbmId: subCatQb?.id || null,
+          attachmentType: '',
 
           // TODO: remove or update later
           createdBy: 'Zicops',
-          updatedBy: 'Zicops'
+          updatedBy: 'Zicops',
+          status: QUESTION_STATUS[1]
         };
 
-        if (option.file) {
-          sendOptionData.file = option.file;
-          sendOptionData.attachmentType = option.attachmentType;
+        if (quiz?.questionFile) {
+          sendQuestionData.file = quiz?.questionFile;
+          sendQuestionData.attachmentType = quiz?.attachmentType || '';
         }
 
-        // console.log(sendOptionData);
-        await addOption({ variables: sendOptionData }).catch((err) => {
+        // console.log(sendQuestionData);
+        // add question
+        const questionRes = await addQuestion({ variables: sendQuestionData }).catch((err) => {
           console.log(err);
           isError = !!err;
-          return setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+          return setToastMsg({ type: 'danger', message: 'Add Question Error' });
         });
+
+        if (!questionRes || isError)
+          return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+        questionId = questionRes?.data?.addQuestionBankQuestion?.id;
+
+        const options = quiz?.options || [];
+        // add option
+        for (let i = 0; i < options.length; i++) {
+          const option = options[i];
+          // console.log(option);
+          if (!option.option && !option.file) continue;
+
+          const sendOptionData = {
+            description: option.option || '',
+            isCorrect: option.isCorrect || false,
+            qmId: questionRes?.data?.addQuestionBankQuestion?.id,
+            isActive: true,
+            attachmentType: option.attachmentType || '',
+
+            // TODO: remove or update later
+            createdBy: 'Zicops',
+            updatedBy: 'Zicops'
+          };
+
+          if (option.file) {
+            sendOptionData.file = option.file;
+            sendOptionData.attachmentType = option.attachmentType;
+          }
+
+          // console.log(sendOptionData);
+          await addOption({ variables: sendOptionData }).catch((err) => {
+            console.log(err);
+            isError = !!err;
+            return setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+          });
+        }
+        // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
+        if (isError) continue;
       }
 
-      // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
-      if (isError) continue;
+      if (quiz?.formType === 'select') {
+        questionId = quiz?.questionId;
+      }
+
+      if (!questionId) {
+        setToastMsg({ type: 'danger', message: 'Question Id not found!' });
+        continue;
+      }
 
       const startTime = parseInt(quiz?.startTimeMin) * 60 + parseInt(quiz?.startTimeSec);
       const sendQuizData = {
@@ -481,7 +467,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         isMandatory: quiz?.isMandatory || false,
         topicId: quiz?.topicId || '',
         courseId: quiz?.courseId || '',
-        questionId: questionRes?.data?.addQuestionBankQuestion?.id,
+        questionId: questionId,
         qbId: subCatQb?.id,
         weightage: 1,
         sequence: i + 1,

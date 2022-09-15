@@ -436,6 +436,7 @@ export const GET_QUESTIONS_NAMES = gql`
     ) {
       id
       Description
+      Status
     }
   }
 `;

@@ -2,7 +2,7 @@ import InputWithCheckbox from '@/common/InputWithCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import RangeSlider from '@/components/common/FormComponents/RangeSlider';
 import { useRecoilValue } from 'recoil';
-import { QuizAtom } from '../../../../../state/atoms/module.atoms';
+import { QuizAtom, QuizMetaDataAtom } from '../../../../../state/atoms/module.atoms';
 import Bar from '../../../../common/Bar';
 import Button from '../../../../common/Button';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
@@ -25,6 +25,7 @@ export default function QuizForm({ courseId, topicId }) {
   } = useAddQuiz(courseId, topicId);
 
   const quizzes = useRecoilValue(QuizAtom);
+  const quizMetaData = useRecoilValue(QuizMetaDataAtom);
   const acceptedType = ['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'];
   const NUMBER_OF_OPTIONS = 4;
 
@@ -109,9 +110,17 @@ export default function QuizForm({ courseId, topicId }) {
                 isChecked={newQuiz?.formType === 'upload'}
                 changeHandler={handleQuizInput}
               />
+              <LabeledRadioCheckbox
+                type="radio"
+                label="Select Quiz"
+                name="formType"
+                value={'select'}
+                isChecked={newQuiz?.formType === 'select'}
+                changeHandler={handleQuizInput}
+              />
             </div>
 
-            {newQuiz?.formType === 'create' ? (
+            {newQuiz?.formType === 'create' && (
               <>
                 <div className={`${styles.quizInput} ${styles.quizType}`}>
                   <LabeledDropdown
@@ -194,8 +203,49 @@ export default function QuizForm({ courseId, topicId }) {
                     ))}
                 </div>
               </>
-            ) : (
-              <></>
+            )}
+
+            {newQuiz?.formType === 'select' && (
+              <>
+                <LabeledDropdown
+                  styleClass={styles.inputField}
+                  // filterOption={(option, searchQuery) => {
+                  //   if (!option?.data?.noOfQuestions) return false;
+
+                  //   if (searchQuery)
+                  //     return option.label?.toLowerCase()?.includes(searchQuery?.toLowerCase());
+                  //   if (!metaData?.category && !metaData?.sub_category) return true;
+
+                  //   if (!metaData?.category)
+                  //     return option?.data?.sub_category === metaData?.sub_category;
+                  //   if (!metaData?.sub_category)
+                  //     return option?.data?.category === metaData?.category;
+
+                  //   return (
+                  //     option?.data?.category === metaData?.category &&
+                  //     option?.data?.sub_category === metaData?.sub_category
+                  //   );
+                  // }}
+                  dropdownOptions={{
+                    inputName: 'questionId',
+                    label: 'Questions:',
+                    placeholder: 'Select from the existing question',
+                    options: quizMetaData?.questions
+                      ?.map((q) => {
+                        // if (quizzes?.find((quiz) => quiz?.questionId === q?.id)) return null;
+
+                        return { value: q?.id, label: q?.Description };
+                      })
+                      ?.filter((q) => q),
+                    value: { value: newQuiz?.questionId, label: newQuiz?.question },
+                    isSearchEnable: true,
+                    menuPlacement: 'top'
+                  }}
+                  changeHandler={(e) =>
+                    setNewQuiz({ ...newQuiz, question: e?.label, questionId: e?.value })
+                  }
+                />
+              </>
             )}
             {/* footer btn */}
             <div className="center-element-with-flex">

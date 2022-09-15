@@ -50,6 +50,14 @@ export const QuizAtom = atom({
   default: []
 });
 
+export const QuizMetaDataAtom = atom({
+  key: 'QuizMetaData',
+  default: {
+    questionBank: {},
+    questions: []
+  }
+});
+
 export const isLoadingAtom = atom({
   key: 'isLoading',
   default: false
@@ -177,6 +185,7 @@ export function getQuizObject(data) {
     attachmentType: data?.attachmentType || '',
     hint: data?.hint || '',
 
+    questionId: data.questionId || null,
     question: data.question || '',
     questionFile: data.questionFile || null,
 
