@@ -42,3 +42,6 @@ export const LANGUAGES = [
   'Bhojpuri',
   'Maithili'
 ];
+
+
+export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';

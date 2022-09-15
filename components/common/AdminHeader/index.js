@@ -6,6 +6,7 @@ import PopUp from '../PopUp';
 import Sitemap from './Sitemap';
 import AdminSubHeader from './AdminSubHeader';
 import ToolTip from '../ToolTip';
+import CustomTooltip from '../CustomTooltip';
 
 export default function AdminHeader({
   title,
@@ -30,6 +31,16 @@ export default function AdminHeader({
     if (!pageRoute) return;
     router.push(pageRoute);
   }
+
+  let tooltipTitle = "Create New Question Bank"
+  if(pageRoute==="/admin/exams/my-question-papers/add"){
+    tooltipTitle="Create new Question Paper"
+  }else if(router?.query?.questionBankId){
+    tooltipTitle="Add Questions"
+  }else if(pageRoute="/admin/exams/zicops-question-papers"){
+    tooltipTitle="Create new Question Paper"
+  }
+
   return (
     <div>
       <div className={`${styles.courseHead}`}>
@@ -50,19 +61,22 @@ export default function AdminHeader({
         <div className={styles.icons}>
           {/* TODO: remove first condition */}
           {!route.includes('admin/courses') && isAddShown && (
-            <ToolTip title="Create New Question Bank" placement="left">
-              <img
-                src="/images/plus_big.png"
-                className="rightside_icon"
-                alt=""
-                onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
-              />
-            </ToolTip>
+            <span>
+              <ToolTip title={tooltipTitle} placement="left">
+                <img
+                  src="/images/plus_big.png"
+                  className="rightside_icon"
+                  alt=""
+                  onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+                />
+              </ToolTip>
+              <CustomTooltip info="create new question bank" />
+            </span>
           )}
-          <ToolTip title="Settings" placement="bottom">
+          <ToolTip title="View Settings" placement="bottom">
             <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
           </ToolTip>
-          <ToolTip title="Sitemap" placement="right">
+          <ToolTip title="View Sitemap" placement="right">
             <img
               src="/images/sitemap_icon.png"
               className="rightside_icon"

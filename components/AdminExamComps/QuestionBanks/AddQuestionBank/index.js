@@ -128,7 +128,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
               <Button text={'Cancel'} clickHandler={closePopUp} />
             </div>
           </ToolTip>
-          <ToolTip title="Enter Question Bank Details" placement="right">
+          <ToolTip title={`${isEdit?"Save new changes to this question paper":"Add and proceed to Question Creation"}`} placement="right">
             <div>
               <Button
                 text={isEdit ? 'Update' : 'Add'}

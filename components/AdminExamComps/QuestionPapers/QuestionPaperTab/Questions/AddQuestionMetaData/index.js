@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -154,7 +155,11 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
             <label>Question Selection:</label>
             <LabeledRadioCheckbox
               type="radio"
-              label="Existing Question Bank"
+              label={
+                <ToolTip title="Select questions from existing question bank" placement="bottom">
+                  <span>Existing Question Bank</span>
+                </ToolTip>
+              }
               name="selection"
               isDisabled={!!editData?.id}
               isChecked={!isUploadSelected}
@@ -162,7 +167,13 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
             />
             <LabeledRadioCheckbox
               type="radio"
-              label="Upload New"
+              label={
+                <ToolTip
+                  title="Create new question bank and then select questions for this paper"
+                  placement="right">
+                  <span>Upload New</span>
+                </ToolTip>
+              }
               name="selection"
               isDisabled={!!editData?.id}
               isChecked={isUploadSelected}

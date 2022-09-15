@@ -1,0 +1,57 @@
+@import '../../../styles/base.scss';
+
+.infoButton {
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: auto 3px;
+
+    img{
+        width: 15px;
+        margin: 2px;
+    }
+}
+
+.info {
+    position: fixed;
+    bottom: 100px;
+    right: 50px;
+    color: $white;
+    background: $darkTwo;
+    width: 200px;
+    max-width: 350px;
+    height: 70px;
+    font-size: 14px;
+    padding: 10px;
+    word-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    animation: tooltip-in-right .7s;
+}
+
+.reverse{
+    animation: tooltip-in-left .7s;
+}
+
+@keyframes tooltip-in-right {
+	from {
+	  transform: translateX(100%);
+	  
+	}
+	to {
+	  transform: translateX(0);
+	}
+}
+
+@keyframes tooltip-in-left {
+	from {
+		transform: translateX(-100%);
+		
+	}
+	to {
+		transform: translateX(0);
+	}
+}

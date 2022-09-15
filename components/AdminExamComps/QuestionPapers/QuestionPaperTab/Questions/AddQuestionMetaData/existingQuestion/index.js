@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../../../helper/common.helper';
@@ -122,7 +123,13 @@ export default function ExistingQuestion({
           styleClass={styles.inputField}
           inputOptions={{
             inputName: 'question_marks',
-            label: 'Marks Per Question:',
+            label: (
+              <ToolTip
+                title="Enter marks to be associated with each selected question"
+                placement="bottom">
+                <span>Marks Per Question:</span>
+              </ToolTip>
+            ),
             placeholder: 'Enter Marks Per Question',
             value: metaData?.question_marks,
             isNumericOnly: true
@@ -135,7 +142,11 @@ export default function ExistingQuestion({
           styleClass={`${styles.paddingToLabel}`}
           inputOptions={{
             inputName: 'total_questions',
-            label: 'No. of Question:',
+            label: (
+              <ToolTip title=" Enter number of questions to be selected" placement="bottom">
+                <span>No. of Question:</span>
+              </ToolTip>
+            ),
             placeholder: 'Enter No. of Question',
             value: metaData?.total_questions,
             isNumericOnly: true
@@ -193,7 +204,16 @@ export default function ExistingQuestion({
           <LabeledRadioCheckbox
             type="radio"
             key={label}
-            label={label}
+            label={
+              <ToolTip
+                title={`${
+                  label === 'Manual'
+                    ? 'Select questions to be added'
+                    : 'Allow system to select questions'
+                }`}>
+                <span>{label}</span>
+              </ToolTip>
+            }
             name="retrieve_type"
             value={label.toLowerCase()}
             isDisabled={isEdit}
