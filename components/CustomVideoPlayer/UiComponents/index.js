@@ -77,18 +77,18 @@ export default function UiComponents({
   const toolbarItems = [
     {
       id: 0,
-      btnImg: '/images/4019936_2.png',
+      btnImg: '/images/svg/spatial_audio_off.svg',
       boxComponent: <SubtitleBox subtitleState={subtitleState} />,
       handleClick: () => switchBox(0)
     },
     {
       id: 1,
-      btnImg: '/images/pot-plant-icon.png',
+      btnImg: '/images/svg/hub.svg',
       handleClick: () => switchBox(1)
     },
     {
       id: 2,
-      btnImg: '/images/conversation-icon-png-clipart2.png',
+      btnImg: '/images/svg/forum.svg',
       handleClick: () => switchBox(2)
     },
     {
@@ -120,7 +120,7 @@ export default function UiComponents({
     },
     {
       id: 4,
-      btnImg: '/images/Notes Icon2.png',
+      btnImg: '/images/svg/app_registration.svg',
       boxComponent: <Notes />,
       handleClick: () => {
         const isBoxClosed = showBox === BOX[4];
@@ -162,19 +162,51 @@ export default function UiComponents({
               const quizAttempts = quizProgressData?.filter((qp) => qp?.quiz_id === quiz?.id) || [];
               const isCompleted = quizAttempts?.find((qp) => qp?.result === 'passed');
 
-              let styleClass = '';
-              if (!!quizAttempts?.length) styleClass = styles.wrongQuiz;
-              if (!!isCompleted) styleClass = styles.correctQuiz;
+              let svgIndex = 0;
+              if (!!quizAttempts?.length) svgIndex = 1;
+              if (!!isCompleted) svgIndex = 2;
+              // let styleClass = '';
+              // if (!!quizAttempts?.length) styleClass = styles.wrongQuiz;
+              // if (!!isCompleted) styleClass = styles.correctQuiz;
 
               return (
                 <button
-                  className={`${styleClass}`}
+                  // className={`${styleClass}`}
                   onClick={() => {
                     updateIsPlayingTo(false);
                     setShowQuiz(quiz);
                     toggleStates(setShowQuizDropdown, setShowQuizDropdown);
                   }}>
-                  <span>{quiz?.name}</span>
+                  <span>
+                    {svgIndex === 1 && (
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                          fill="red"
+                        />
+                      </svg>
+                    )}
+
+                    {svgIndex === 2 && (
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M8.80001 15.9L4.60001 11.7L3.20001 13.1L8.80001 18.7L20.8 6.70005L19.4 5.30005L8.80001 15.9Z"
+                          fill="green"
+                        />
+                      </svg>
+                    )}
+                    {quiz?.name}
+                  </span>
                 </button>
               );
             })}
@@ -327,6 +359,7 @@ export default function UiComponents({
 
       {showQuiz != null && (
         <Quiz
+          isTopBarHidden={isTopBarHidden}
           playerClose={playerClose}
           currentQuizData={showQuiz}
           handleSkip={() => {

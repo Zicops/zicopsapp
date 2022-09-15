@@ -333,12 +333,14 @@ export default function TopicBox({
   const quizId = [];
 
   let attemptedQuiz =
-    quizProgressData.filter((quiz) => {
-      if (quizId?.includes(quiz?.quiz_id)) return false;
+    quizProgressData
+      ?.filter((quiz) => {
+        if (quizId?.includes(quiz?.quiz_id)) return false;
 
-      quizId.push(quiz?.quiz_id);
-      return true;
-    })?.length || 0;
+        quizId.push(quiz?.quiz_id);
+        return true;
+      })
+      ?.filter((quiz) => quiz?.topic_id === topic?.id)?.length || 0;
 
   return (
     <>

@@ -27,7 +27,8 @@ import McqScreen from './McqScreen';
 export default function Quiz({
   currentQuizData = {},
   handleSkip = () => {},
-  afterSubmit = () => {}
+  afterSubmit = () => {},
+  isTopBarHidden
 }) {
   const [addQuizAttempt] = useMutation(ADD_USER_QUIZ_ATTEMPT, {
     client: userClient
@@ -203,7 +204,9 @@ export default function Quiz({
 
   return (
     <div className={`${styles.quizContainer}`}>
-      <div className={`${styles.firstIcon} ${styles.backBtn}`} onClick={handleSkip}>
+      <div
+        className={`${styles.firstIcon} ${styles.backBtn} ${isTopBarHidden ? styles.hideBtn : ''}`}
+        onClick={handleSkip}>
         <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
       </div>
 
