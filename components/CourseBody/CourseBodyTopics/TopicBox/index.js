@@ -23,7 +23,12 @@ import {
   TopicContentAtom,
   TopicExamAtom
 } from '../../../../state/atoms/module.atoms';
-import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../../state/atoms/video.atom';
+import {
+  getVideoObject,
+  QuizProgressDataAtom,
+  UserCourseDataAtom,
+  VideoAtom
+} from '../../../../state/atoms/video.atom';
 import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
@@ -53,6 +58,7 @@ export default function TopicBox({
   const duration = topicContent[0]?.duration.toString();
   const topicData = useRecoilValue(TopicAtom);
   const topicContentData = useRecoilValue(TopicContentAtom);
+  const quizProgressData = useRecoilValue(QuizProgressDataAtom);
 
   const router = useRouter();
   const activateExam = router?.query?.activateExam || null;
@@ -423,7 +429,11 @@ export default function TopicBox({
               <div className={`${styles.details}`}>
                 <div>e-Content</div>
                 <div>
-                  Quiz: {0} / {quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0}
+                  Quiz:{' '}
+                  {quizProgressData?.filter(
+                    (quiz) => quiz?.topic_id === topic?.id && quiz?.result === 'passed'
+                  )?.length || 0}{' '}
+                  / {quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0}
                 </div>
                 <div>
                   <span>

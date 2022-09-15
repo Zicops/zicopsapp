@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
 import { filterModule } from '../../../helper/data.helper';
 import { ModuleAtom, QuizAtom } from '../../../state/atoms/module.atoms';
-import { VideoAtom } from '../../../state/atoms/video.atom';
+import { QuizProgressDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import styles from '../customVideoPlayer.module.scss';
 import { BOX } from '../Logic/customVideoPlayer.helper';
@@ -31,6 +31,7 @@ export default function UiComponents({
   const videoData = useRecoilValue(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
   const quizData = useRecoilValue(QuizAtom);
+  const quizProgressData = useRecoilValue(QuizProgressDataAtom);
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const { fullCourse } = useContext(courseContext);
   const [isToolbarOpen, setIsToolbarOpen] = useState(null);
@@ -158,8 +159,13 @@ export default function UiComponents({
           {quizData
             ?.filter((quiz) => quiz?.topicId === videoData?.topicContent[0]?.topicId)
             ?.map((quiz) => {
+              const isCompleted = quizProgressData?.find(
+                (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
+              );
+
               return (
                 <button
+                  className={`${isCompleted ? styles.activeBtn : ''}`}
                   onClick={() => {
                     updateIsPlayingTo(false);
                     setShowQuiz(quiz);
@@ -319,13 +325,13 @@ export default function UiComponents({
       {showQuiz != null && (
         <Quiz
           playerClose={playerClose}
-          quizData={showQuiz}
+          currentQuizData={showQuiz}
           handleSkip={() => {
             moveVideoProgressBySeconds(-1);
             updateIsPlayingTo(true);
             setShowQuiz(null);
           }}
-          handleSubmit={() => {
+          afterSubmit={() => {
             moveVideoProgressBySeconds(-1);
             updateIsPlayingTo(true);
             setShowQuiz(null);

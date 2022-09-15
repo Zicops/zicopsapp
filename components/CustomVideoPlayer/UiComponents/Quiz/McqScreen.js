@@ -15,7 +15,7 @@ export default function McqScreen({
 }) {
   const [showHint, setShowHint] = useState(false);
   const hasAttachment = !!question?.attachment;
-  console.log(options, question);
+  // console.log(options, question);
 
   return (
     <div className={`${styles.mcqScreen}`}>
@@ -54,7 +54,7 @@ export default function McqScreen({
             const isAttachmentPresent = !!op?.attachment;
             const type = op?.attachmentType;
             return (
-              <section>
+              <section key={op?.id || i}>
                 <p>{OPTION_LABEL?.[i]}. </p>
 
                 <div
