@@ -37,7 +37,7 @@ export default function AdminHeader({
     tooltipTitle="Create new Question Paper"
   }else if(router?.query?.questionBankId){
     tooltipTitle="Add Questions"
-  }else if(pageRoute="/admin/exams/zicops-question-papers"){
+  }else if(pageRoute==="/admin/exams/zicops-question-papers"){
     tooltipTitle="Create new Question Paper"
   }
 
@@ -70,7 +70,7 @@ export default function AdminHeader({
                   onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
                 />
               </ToolTip>
-              <CustomTooltip info="create new question bank" />
+              {/* <CustomTooltip info="create new question bank" /> */}
             </span>
           )}
           <ToolTip title="View Settings" placement="bottom">

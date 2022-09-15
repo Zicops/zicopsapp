@@ -75,11 +75,7 @@ export default function Nav() {
                         ? styles.active
                         : ''
                     }>
-                    <ToolTip
-                      title={`${val.title === 'Exams' ? 'Manage Exams' : ''}`}
-                      placement="bottom">
                       <span>{val.title}</span>
-                    </ToolTip>
                   </li>
                 </Link>
               );
