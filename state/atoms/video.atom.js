@@ -96,3 +96,8 @@ export function getUserExamDataObj(data) {
     }
   };
 }
+
+export const QuizProgressDataAtom = atom({
+  key: 'QuizProgressData',
+  default: []
+});

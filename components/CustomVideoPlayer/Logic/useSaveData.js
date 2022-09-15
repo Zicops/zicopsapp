@@ -1,10 +1,11 @@
 import { ADD_USER_BOOKMARK, userClient } from '@/api/UserMutations';
+import { QuizAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
 import { BOX } from './customVideoPlayer.helper';
@@ -28,7 +29,7 @@ export default function useSaveData(videoElement, freezeState) {
   } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
-  const [showQuiz, setShowQuiz] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(null);
 
   const [freezeScreen, setFreezeScreen] = freezeState;
   const [showBox, setShowBox] = useState(null);

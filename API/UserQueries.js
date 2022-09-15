@@ -12,8 +12,8 @@ export const userQueryClient = new ApolloClient({
 });
 
 export const GET_USER_DETAIL = gql`
-  query GetUserDetails($user_id: [String!]) {
-    getUserDetails(user_ids: $user_id) {
+  query GetUserDetails($user_id: String!) {
+    getUserDetails(user_id: $user_id) {
       id
       first_name
       last_name
@@ -191,8 +191,8 @@ export const GET_USER_LEARNINGSPACES = gql`
 `;
 
 export const GET_USER_LEARNINGSPACES_DETAILS = gql`
-  query GetUserLspByLspId($user_id: String!, $lsp_id: String!) {
-    getUserLspByLspId(user_id: $user_id, lsp_id: $lsp_id) {
+  query GetUserLspByLspId($user_id: String!, $user_lsp_id: String!) {
+    getUserLspByLspId(user_id: $user_id, lsp_id: $user_lsp_id) {
       user_lsp_id
       user_id
       lsp_id
@@ -380,85 +380,22 @@ export const GET_USER_EXAM_PROGRESS = gql`
   }
 `;
 
-export const GET_COHORT_MAINS = gql`
-  query GetCohortMains($lsp_id: String!, $publish_time: Int, $pageCursor: String, $pageSize: Int) {
-    getCohortMains(
-      lsp_id: $lsp_id
-      publish_time: $publish_time
-      pageCursor: $pageCursor
-      Direction: ""
-      pageSize: $pageSize
-    ) {
-      cohorts {
-        cohort_id
-        name
-        description
-        lsp_id
-        code
-        status
-        type
-        is_active
-        created_by
-        updated_by
-        created_at
-        updated_at
-        size
-        imageUrl
-      }
-      pageCursor
-      direction
-      pageSize
-    }
-  }
-`;
-
-export const GET_COHORT_DETAILS = gql`
-  query GetCohortDetails($cohort_id: String!) {
-    getCohortDetails(cohort_id: $cohort_id) {
-      cohort_id
-      name
-      description
-      lsp_id
-      code
-      status
-      type
+export const GET_USER_QUIZ_ATTEMPTS = gql`
+  query getUserQuizAttempts($user_id: String!, $topic_id: String!) {
+    getUserQuizAttempts(user_id: $user_id, topic_id: $topic_id) {
+      user_qa_id
+      user_id
+      user_cp_id
+      user_course_id
+      quiz_id
+      quiz_attempt
+      topic_id
+      result
       is_active
       created_by
       updated_by
       created_at
       updated_at
-      size
-      imageUrl
-    }
-  }
-`;
-
-
-export const GET_COHORT_USERS = gql`
-  query GetCohortUsers($cohort_id: String!, $publish_time: Int, $pageCursor: String, $pageSize: Int) {
-    getCohortUsers(
-      cohort_id: $cohort_id
-      publish_time: $publish_time
-      pageCursor: $pageCursor
-      Direction: ""
-      pageSize: $pageSize
-    ) {
-      cohorts {
-        user_cohort_id
-        user_id
-        user_lsp_id
-        cohort_id
-        added_by
-        membership_status
-        role
-        created_by
-        updated_by
-        created_at
-        updated_at
-      }
-      pageCursor
-      direction
-      pageSize
     }
   }
 `;
