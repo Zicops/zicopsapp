@@ -51,6 +51,12 @@
     font-size: 16px;
     font-weight: bold;
     border: 2px solid $primary;
+
+    &:disabled {
+      background-color: $darkThree;
+      border-color: $darkThree;
+      cursor: no-drop;
+    }
   }
   button:hover {
     background-color: $primary;
