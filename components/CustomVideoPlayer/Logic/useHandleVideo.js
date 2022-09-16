@@ -19,8 +19,13 @@ import {
   secondsToHMS,
   secondsToMinutes
 } from '../../../helper/utils.helper';
-import { TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
-import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
+import { QuizAtom, TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
+import {
+  getVideoObject,
+  QuizProgressDataAtom,
+  UserCourseDataAtom,
+  VideoAtom
+} from '../../../state/atoms/video.atom';
 import { addCallbackToEvent } from './customVideoPlayer.helper';
 
 export default function useVideoPlayer(videoElement, videoContainer, set) {
@@ -39,6 +44,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const userData = useRecoilValue(UserStateAtom);
 
+  const quizData = useRecoilValue(QuizAtom);
+  const quizProgressData = useRecoilValue(QuizProgressDataAtom);
   const [videoData, updateVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
@@ -207,6 +214,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       if (+currentTopicProgress?.video_progress > +playerState?.progress)
         // return console.log('progress saved is greater');
         return setDataSyncing(false);
+    }
+
+    if (isCompleted) {
+      isCompleted = isTopicQuizCompleted(currentTopicProgress?.topic_id, quizProgressData);
     }
 
     // const { currentTime, duration } = videoElement.current;
@@ -407,6 +418,19 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       moveVideoProgress(e.code === 'ArrowRight');
       return;
     }
+  }
+
+  function isTopicQuizCompleted(topicId, quizProgress) {
+    const isCompleted = !quizData
+      ?.filter((quiz) => quiz?.topicId === topicId)
+      ?.some((quiz) => {
+        const isPassed = quizProgress?.find(
+          (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
+        );
+        return !isPassed;
+      });
+
+    return isCompleted;
   }
 
   function setTooltipPosition(tooltipPosition) {

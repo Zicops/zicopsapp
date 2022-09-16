@@ -21,6 +21,7 @@ export default function ZicopsQuestionBanks() {
           isAddShown={true}
           // pageRoute="/admin/exams/question-bank"
           handleClickForPlus={() => udpatePopUpState(true)}
+          tooltipTitle="Create new Question Bank"
         />
         <MainBodyBox>
           <QuestionBankTable />

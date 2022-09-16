@@ -20,7 +20,8 @@ const SubCategoriesPreview = ({
   const [primary, setPrimary] = useState('');
   const [vidIsOpen, setVidIsOpen] = useState(false);
 
-  const { updateAboutUser, addUserLearningSpaceDetails } = useHandleAddUserDetails();
+  const { updateAboutUser, addUserLearningSpaceDetails, isSubmitDisable } =
+    useHandleAddUserDetails();
   const { updatePreferences } = useHandleUserUpdate();
 
   const router = useRouter();
@@ -131,7 +132,7 @@ const SubCategoriesPreview = ({
             Back
           </Button>
           <Button
-            disabled={primary === ''}
+            disabled={primary === '' || isSubmitDisable}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
             onClick={() => {

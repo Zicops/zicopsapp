@@ -62,6 +62,7 @@ export default function useHandleAddUserDetails() {
   const [userOrgData, setUserOrgData] = useState(getUserOrgObject());
   const [isOrganizationSetupReady, setIsOrgnizationSetupReady] = useState(false);
   const [isAccountSetupReady, setIsAccountSetupReady] = useState(false);
+  const [isSubmitDisable, setSubmitDisable] = useState(false);
   const [phCountryCode, setPhCountryCode] = useState('IN');
 
   // setting up local states
@@ -98,6 +99,7 @@ export default function useHandleAddUserDetails() {
 
   async function addUserLearningSpaceDetails(sub_categories = [], base_sub_category) {
     console.log(userDataOrgLsp, 'data at start of addUserLearningDetails');
+    setSubmitDisable(true);
     const sendLspData = {
       user_id: userDataAbout?.id,
       lsp_id: userOrgData?.lsp_id || 'Zicops Learning Space',
@@ -263,6 +265,8 @@ export default function useHandleAddUserDetails() {
       user_role_id: dataRole?.user_role_id
     }));
 
+    setSubmitDisable(false);
+
     return isError;
   }
 
@@ -408,7 +412,8 @@ export default function useHandleAddUserDetails() {
     addUserLearningSpaceDetails,
     isOrganizationSetupReady,
     isAccountSetupReady,
-    setPhCountryCode
+    setPhCountryCode,
+    isSubmitDisable
     // addUserOrganizationDetails,
     // addUserLanguageDetails,
     // addUserPreferenceDetails,

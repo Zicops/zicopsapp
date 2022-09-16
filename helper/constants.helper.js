@@ -1,4 +1,5 @@
-export const OPTION_LABEL = ['a', 'b', 'c', 'd'];
+export const OPTION_LABEL = ['A', 'B', 'C', 'D'];
+export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 20;
@@ -43,3 +44,6 @@ export const LANGUAGES = [
   'Bhojpuri',
   'Maithili'
 ];
+
+
+export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';

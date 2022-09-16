@@ -14,6 +14,7 @@ export default function MyQuestionPapers() {
           title="My Question Papers"
           isAddShown={true}
           pageRoute="/admin/exams/my-question-papers/add"
+          tooltipTitle="Create new Question Paper"
         />
 
         <MainBodyBox>

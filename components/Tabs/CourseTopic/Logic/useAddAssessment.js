@@ -49,23 +49,25 @@ export default function useAddAssessment(topicId, setEditTopic) {
     });
 
     // topic exam
-    await loadTopicExamsData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
-      ({ data }) => {
-        if (errorTopicExamData)
-          return setToastMsg({ type: 'danger', message: 'Topic Exams Load Error' });
+    if (topicId) {
+      await loadTopicExamsData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
+        ({ data }) => {
+          if (errorTopicExamData)
+            return setToastMsg({ type: 'danger', message: 'Topic Exams Load Error' });
 
-        const topicExam = data?.getTopicExams[0];
-        if (!topicExam) return;
+          const topicExam = data?.getTopicExams[0];
+          if (!topicExam) return;
 
-        const selectedExam = examData?.filter((ex) => ex?.id === topicExam?.examId)[0];
+          const selectedExam = examData?.filter((ex) => ex?.id === topicExam?.examId)[0];
 
-        setAssessmentData({
-          ...topicExam,
-          category: selectedExam?.Category,
-          sub_category: selectedExam?.SubCategory
-        });
-      }
-    );
+          setAssessmentData({
+            ...topicExam,
+            category: selectedExam?.Category,
+            sub_category: selectedExam?.SubCategory
+          });
+        }
+      );
+    }
   }, []);
 
   async function saveAssessment() {

@@ -34,10 +34,15 @@ const UserHead = () => {
   useEffect(async () => {
     if (!userProfileData?.first_name && !userProfileData?.last_name) {
       const data = getUserData();
-      const userData = await loadUserData({ variables: { user_id: data?.id } }).catch((err) => {
+      // const userId = [];
+      // userId.push(data?.id);
+      const userId = data?.id;
+      const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
         console.log(err);
       });
-      const basicInfo = userData?.data?.getUserDetails;
+      if (userData?.error) return console.log('User data load error');
+      const basicInfo = userData?.data?.getUserDetails[0];
+      // console.log(basicInfo);
 
       const orgData = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
       setUserAccountdata((prevValue) => ({ ...prevValue, ...orgData }));

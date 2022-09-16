@@ -32,7 +32,9 @@ const CoursesAccordian = () => {
   const [loadLastestCourseData, { error: error }] = useLazyQuery(GET_LATEST_COURSES, {
     client: queryClient
   });
-  const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
+  const [addUserCourse, { loading }] = useMutation(ADD_USER_COURSE, {
+    client: userClient
+  });
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
 
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
@@ -50,7 +52,7 @@ const CoursesAccordian = () => {
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const { updateCourse } = useHandleUpdateCourse();
+  const { updateCourse, isSubmitDisable } = useHandleUpdateCourse();
 
   async function handleAssign(item, isRemove = false) {
     // const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
@@ -437,6 +439,7 @@ const CoursesAccordian = () => {
               <UserButton
                 text={'Save'}
                 type={'button'}
+                isDisabled={isSubmitDisable || loading}
                 clickHandler={() => {
                   handleSubmit();
                 }}

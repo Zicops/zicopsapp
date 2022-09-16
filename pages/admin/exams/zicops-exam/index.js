@@ -10,7 +10,7 @@ const ZicopsExam = () => {
     <>
       <Sidebar sidebarItemsArr={examSidebarData} />
       <MainBody>
-        <AdminHeader title="Zicops Exams" isAddShown={true} pageRoute="/admin/exams/my-exams/add" />
+        <AdminHeader title="Zicops Exams" isAddShown={true} pageRoute="/admin/exams/my-exams/add" tooltipTitle="Create new Exam"/>
         <MainBodyBox>
           <ExamsTable />
         </MainBodyBox>

@@ -31,27 +31,33 @@ export const examSidebarData = {
   data: [
     {
       title: 'Zicops Question Banks',
-      link: '/admin/exams/zicops-question-bank'
+      link: '/admin/exams/zicops-question-bank',
+      description:'View Zicops Question Banks'
     },
     {
       title: 'My Question Banks',
-      link: '/admin/exams/my-question-bank'
+      link: '/admin/exams/my-question-bank',
+      description:'View and Create your Question Banks'
     },
     {
       title: 'Zicops Question Papers',
-      link: '/admin/exams/zicops-question-papers'
+      link: '/admin/exams/zicops-question-papers',
+      description:'View Zicops Question Papers'
     },
     {
       title: 'My Question Papers',
-      link: '/admin/exams/my-question-papers'
+      link: '/admin/exams/my-question-papers',
+      description:'View and Create your Question Papers'
     },
     {
       title: 'Zicops Exams',
-      link: '/admin/exams/zicops-exam'
+      link: '/admin/exams/zicops-exam',
+      description:'View Zicops Exams'
     },
     {
       title: 'My Exams',
-      link: '/admin/exams/my-exams'
+      link: '/admin/exams/my-exams',
+      description:'View and Create your Exams'
     }
   ]
 };
