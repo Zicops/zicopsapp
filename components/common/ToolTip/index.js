@@ -3,7 +3,7 @@ import { Tooltip } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { makeStyles } from '@material-ui/core';
 
-const ToolTip = ({ children, placement, title = " ", image, buttonName }) => {
+const ToolTip = ({ children, placement, title = "", image, buttonName }) => {
   const useTooltipStyles = makeStyles((theme) => ({
     tooltip: {
       backgroundColor: '#484848',
@@ -22,7 +22,7 @@ const ToolTip = ({ children, placement, title = " ", image, buttonName }) => {
   return (
     <>
       <Tooltip
-        title={title?.trim()?.length > 0?
+        title={title?.length > 0?
           <>
             <div
               style={{
