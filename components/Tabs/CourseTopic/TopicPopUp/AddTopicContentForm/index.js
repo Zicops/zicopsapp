@@ -22,19 +22,11 @@ export default function AddTopicContentForm({
 
   // to set state based on if topic content is present or not
   useEffect(() => {
-    if (topicContent?.length > 0) {
-      setNewTopicContent({
-        ...newTopicContent,
-        type: topicContent[0]?.type,
-        is_default: false
-      });
-    } else {
-      console.log(true);
-      setNewTopicContent({
-        ...newTopicContent,
-        is_default: true
-      });
-    }
+    setNewTopicContent({
+      ...newTopicContent,
+      is_default: true,
+      type: topicContent?.[0]?.type || null
+    });
   }, []);
 
   const languageOptions = [];
@@ -43,6 +35,10 @@ export default function AddTopicContentForm({
   const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
   const typeOptions = [];
   types?.map((type) => typeOptions.push({ value: type, label: type }));
+
+  let acceptedFiles = ['.zip', '.rar', '.tar.gz'].join(', ');
+  // .WEBM, .MPG, .MP2, .MPEG, .MPE, .MPV, .OGG, .MP4, .M4P, .M4V, .AVI, .WMV, .MOV, .QT, .FLV, .SWF, AVCHD,
+  if (newTopicContent?.type === types[3]) acceptedFiles = ['.mp4'].join(', ');
 
   return (
     <div className={`${styles.popUpFormContainer}`}>
@@ -76,13 +72,13 @@ export default function AddTopicContentForm({
           label: 'Type of content:',
           placeholder: 'Type of the content',
           options: typeOptions,
-          isDisabled: topicContent?.length > 0,
+          isDisabled: !!topicContent?.length,
           value: { value: newTopicContent.type, label: newTopicContent.type }
         }}
         changeHandler={(e) => handleTopicContentInput(e, 'type')}
       />
 
-      {newTopicContent.type === 'mp4' ? (
+      {newTopicContent?.type && (
         <>
           {/* Upload Course Video */}
           <div className={`center-element-with-flex ${styles.marginBottom}`}>
@@ -92,7 +88,7 @@ export default function AddTopicContentForm({
                 handleFileUpload={handleTopicVideoInput}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
-                acceptedTypes={['video/*'].join(', ')}
+                acceptedTypes={acceptedFiles}
                 hidePreviewBtns={true}
               />
             </div>
@@ -101,6 +97,7 @@ export default function AddTopicContentForm({
             </div>
           </div>
 
+          {/* duration */}
           <div className={`${styles.flexContainerWithSpace}`}>
             <div className="w-50">
               <LabeledInput
@@ -109,15 +106,16 @@ export default function AddTopicContentForm({
                   inputName: 'duration',
                   label: 'Duration:',
                   maxLength: 16,
-                  isDisabled: true,
-                  value: newTopicContent.duration || 0
+                  isDisabled: newTopicContent?.type === 'mp4',
+                  value: newTopicContent?.duration || 0
                 }}
+                changeHandler={(e) => handleTopicContentInput(e, 'type')}
               />
             </div>
             <div className="w-45">seconds</div>
           </div>
         </>
-      ) : null}
+      )}
 
       <div className="center-element-with-flex">
         <Button

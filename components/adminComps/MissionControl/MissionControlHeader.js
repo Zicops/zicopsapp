@@ -7,6 +7,7 @@ import { SiteMapAtom } from '../../../state/atoms/sitemap.atom';
 import styles from './missionControl.module.scss';
 import Sitemap from '../../common/AdminHeader/Sitemap';
 import PopUp from '../../common/PopUp';
+import ToolTip from '@/components/common/ToolTip';
 
 export default function MissionControlHeader() {
   const [showSitemap, setShowSitemap] = useState(false);
@@ -141,6 +142,7 @@ export default function MissionControlHeader() {
               onClick={() => setShowSearch(true)}
             />
           </div>
+          <ToolTip title='Settings' placement='top-start'>
           <div className="rightside_icon">
             <Image
               src="/images/cog.png"
@@ -150,6 +152,8 @@ export default function MissionControlHeader() {
               width={'40px'}
             />
           </div>
+          </ToolTip>
+          <ToolTip title='Sitemap' placement='right-start'>
           <div className="rightside_icon">
             <Image
               src="/images/hiararchy.png"
@@ -160,6 +164,7 @@ export default function MissionControlHeader() {
               onClick={() => setShowSitemap(true)}
             />
           </div>
+          </ToolTip>
         </div>
       </div>
 
@@ -172,7 +177,6 @@ export default function MissionControlHeader() {
         positionLeft="50%">
         <Sitemap />
       </PopUp>
-
       <style jsx>
         {`
           .mission_control_header {

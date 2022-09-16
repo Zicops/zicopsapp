@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -83,7 +84,11 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
               type={isSectionWise ? 'small' : 'large'}
               title={`Question Bank ${++sequence}: ${bankName?.name || ''}`}
               extraComp={
-                <span className={`${styles.numberOfQuestions}`}>[{metaData?.total_questions}]</span>
+                <ToolTip title="Number of questions selected" placement="right">
+                  <span className={`${styles.numberOfQuestions}`}>
+                    [{metaData?.total_questions}]
+                  </span>
+                </ToolTip>
               }
               editHandler={() => {
                 setEditMetaData(metaData);
@@ -95,7 +100,11 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
         })}
 
         <IconButton
-          text="Add Question"
+          text={
+            <ToolTip title="Create and add new question" placement="bottom">
+              <span>Add Question</span>
+            </ToolTip>
+          }
           styleClass="btnGrey"
           handleClick={() => {
             setSectionData();

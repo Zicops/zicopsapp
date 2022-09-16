@@ -268,6 +268,27 @@ export const GET_TOPIC_RESOURCES_BY_COURSE_ID = gql`
   }
 `;
 
+export const GET_TOPIC_QUIZ = gql`
+  query getTopicQuizes($topic_id: String) {
+    getTopicQuizes(topic_id: $topic_id) {
+      id
+      name
+      category
+      type
+      isMandatory
+      created_at
+      updated_at
+      topicId
+      courseId
+      questionId
+      qbId
+      weightage
+      sequence
+      startTime
+    }
+  }
+`;
+
 export const GET_LATEST_QUESTION_BANK = gql`
   query latestQuestionBank($publish_time: Int, $pageCursor: String, $pageSize: Int) {
     getLatestQuestionBank(
@@ -415,6 +436,7 @@ export const GET_QUESTIONS_NAMES = gql`
     ) {
       id
       Description
+      Status
     }
   }
 `;

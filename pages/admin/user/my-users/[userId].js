@@ -20,7 +20,7 @@ import CoursesAccordian from '../../../../components/UserProfile/CoursesAccordia
 import LearningDashboardAccordian from '../../../../components/UserProfile/LearningDashboardAccordian';
 import styles from '../user.module.scss';
 
-export default function userProfilePage() {
+export default function UserProfilePage() {
   const [currentUserData, setCurrentUserData] = useState(null);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -29,12 +29,12 @@ export default function userProfilePage() {
 
   useEffect(async () => {
     if (!currentUserId) return;
-    const userIds = [];
-    userIds.push(currentUserId);
+    // const userIds = [];
+    // userIds.push(currentUserId);
 
     const detailsRes = await loadQueryDataAsync(
       GET_USER_DETAIL,
-      { user_id: userIds },
+      { user_id: [currentUserId] },
       {},
       userClient
     );

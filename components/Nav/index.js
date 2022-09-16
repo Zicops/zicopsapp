@@ -12,6 +12,7 @@ import Notifications from '../Notifications';
 
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import UserDisplay from './UserDisplay';
+import ToolTip from '../common/ToolTip';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -57,7 +58,9 @@ export default function Nav() {
 
         <Link href={!isOnLearnerSide ? '/admin' : '/'}>
           <a className={styles.logo}>
-            <img src="/images/zicops-header-logo.png" />
+            <ToolTip title="Go Back to Admin Home" placement="bottom">
+              <img src="/images/zicops-header-logo.png" />
+            </ToolTip>
           </a>
         </Link>
 
@@ -72,7 +75,7 @@ export default function Nav() {
                         ? styles.active
                         : ''
                     }>
-                    {val.title}
+                      <span>{val.title}</span>
                   </li>
                 </Link>
               );

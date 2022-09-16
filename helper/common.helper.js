@@ -40,6 +40,8 @@ export function changeHandler(e, state, setState, inputName = null) {
 }
 
 export function snakeCaseToTitleCase(string = '') {
+  if (!string) return '';
+
   // https://stackoverflow.com/a/64489760
   return string
     .replace(/^[-_]*(.)/, (_, c) => c.toUpperCase())

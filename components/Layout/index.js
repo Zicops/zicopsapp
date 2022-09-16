@@ -21,11 +21,13 @@ export default function Layout({ children }) {
     if (userData?.id) return;
 
     const data = getUserData();
-    const userId = [];
-    userId.push(data?.id);
+    if (data === 'User Data Not Found') return;
+    // const userId = [];
+    // userId.push(data?.id);
+    const userId = data?.id;
     const userData = await loadQueryDataAsync(
       GET_USER_DETAIL,
-      { user_id: userId },
+      { user_id: [userId] },
       {},
       userQueryClient
     );
