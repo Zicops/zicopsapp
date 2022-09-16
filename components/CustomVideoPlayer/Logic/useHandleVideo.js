@@ -67,6 +67,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // udpate recoil state
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     setUserCourseData({
       ...userCourseData,
       videoData: {
@@ -168,6 +169,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // create and update user course progress
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (videoData?.isPreview) return;
     if (!userCourseData?.userCourseMapping?.user_course_id) return;
 
@@ -244,6 +246,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }
 
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (updateUserCourseErr) setToastMsg({ type: 'danger', message: 'Course Assign Update Error' });
     if (addUserCourseProgressErr)
       setToastMsg({ type: 'danger', message: 'Course Progress Add Error' });
@@ -252,6 +255,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }, [updateUserCourseErr, addUserCourseProgressErr, updateUserCourseProgressErr]);
 
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (userCourseData?.triggerPlayerToStartAt === null) setVideoTime(0);
     videoElement.current?.focus();
     updateIsPlayingTo(true);
@@ -261,6 +265,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const duration = 2500;
   let timeout;
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     clearTimeout(timeout);
 
     function switchControls(value) {
@@ -306,6 +311,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // reset tooltip and seek after timeoutSeconds
   const timeoutSeconds = 2000;
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (!videoData.videoSrc && !videoData.type) return;
     setTimeout(() => {
       setSeek(0);
@@ -314,6 +320,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // reset progress when video changes
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
+
     if (playerState.progress > 0 && userCourseData?.triggerPlayerToStartAt === null)
       setVideoTime(0);
     if (!playerState.isPlaying) togglePlay();
@@ -327,6 +335,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // reset playpause to null after few seconds
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     clearTimeout(timeout);
     const timeout = setTimeout(() => {
       setPlayPauseActivated(null);
@@ -335,6 +344,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // play video on state update
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     playerState.isPlaying ? videoElement.current?.play() : videoElement.current?.pause();
 
     if (playerState.isPlaying) setFreezeScreen(false);
@@ -342,6 +352,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // volume = 0 is mute, volume > 0 is unmute
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (playerState.volume <= 0 && !playerState.isMuted) return toggleMute();
     if (playerState.volume > 0 && playerState.isMuted) return toggleMute();
   }, [playerState.volume]);
@@ -349,6 +360,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // TODO : Change this to Ref OR change entire input range to DIV
   // progress bar color update on video play
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
+
     document.getElementById('vidInput').style.background =
       'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' +
       playerState.progress +
