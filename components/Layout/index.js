@@ -32,7 +32,7 @@ export default function Layout({ children }) {
       userQueryClient
     );
     if (userData?.error) return console.log('User data load error');
-    const basicInfo = userData?.getUserDetails[0];
+    const basicInfo = userData?.getUserDetails?.[0];
 
     setUserData({ ...userData, ...data, ...basicInfo });
   }, [userData?.id]);
