@@ -66,6 +66,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
               setSectionData();
               udpateCustomSectionPopUp(true);
             }}
+            tooltipTitle="Edit Section"
           />
         )}
 
@@ -83,6 +84,7 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
               key={index}
               type={isSectionWise ? 'small' : 'large'}
               title={`Question Bank ${++sequence}: ${bankName?.name || ''}`}
+              tooltipTitle="Edit Questions"
               extraComp={
                 <ToolTip title="Number of questions selected" placement="right">
                   <span className={`${styles.numberOfQuestions}`}>

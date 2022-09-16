@@ -14,7 +14,8 @@ export default function AdminHeader({
   handleClickForPlus,
   isAddShown = false,
   isShowOption = false,
-  subHeaderData = null
+  subHeaderData = null,
+  tooltipTitle=""
 }) {
   const [showSitemap, setShowSitemap] = useState(false);
   const router = useRouter();
@@ -32,14 +33,14 @@ export default function AdminHeader({
     router.push(pageRoute);
   }
 
-  let tooltipTitle = "Create New Question Bank"
-  if(pageRoute==="/admin/exams/my-question-papers/add"){
-    tooltipTitle="Create new Question Paper"
-  }else if(router?.query?.questionBankId){
-    tooltipTitle="Add Questions"
-  }else if(pageRoute==="/admin/exams/zicops-question-papers"){
-    tooltipTitle="Create new Question Paper"
-  }
+  // let tooltipTitle = ""
+  // if(pageRoute==="/admin/exams/my-question-papers/add"){
+  //   tooltipTitle="Create new Question Paper"
+  // }else if(router?.query?.questionBankId){
+  //   tooltipTitle="Add Questions"
+  // }else if(pageRoute==="/admin/exams/zicops-question-papers"){
+  //   tooltipTitle="Create new Question Paper"
+  // }
 
   return (
     <div>

@@ -83,6 +83,7 @@ export default function MyQuestionBanks() {
           }
           isAddShown={!showQuestionForm}
           handleClickForPlus={() => setShowQuestionForm(true)}
+          tooltipTitle="Add Questions"
         />
         <MainBodyBox>
           {showQuestionForm ? (

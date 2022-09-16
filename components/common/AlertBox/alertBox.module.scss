@@ -1,12 +1,11 @@
 @import '../../../styles/base.scss';
 
 .alertBox {
-  $bg-color: #323232;
   position: relative;
   width: 100%;
   min-width: 600px;
   height: auto;
-  background-color: $bg-color;
+  background-color: $popupBgColor;
 
   border-radius: 16px;
   padding: 20px 40px;
