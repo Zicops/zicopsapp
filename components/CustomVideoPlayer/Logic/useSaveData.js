@@ -105,11 +105,11 @@ export default function useSaveData(videoElement, freezeState) {
     //     video.play();
     //   });
     // }
-    showThumbnailPointsInProgressbar(140);
-    async function showThumbnailPointsInProgressbar(videoTimeInSeconds) {
-      // console.log(videoElement);
+    showThumbnailPointsInProgressbar(100, 'bookmarkIndicator');
+    showThumbnailPointsInProgressbar(300, 'quizIndicator');
+    async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
       let percent = (videoTimeInSeconds/videoElement?.current?.duration) * 100;
-      let thumbPoints = document.getElementById('bookmarkIndicator');
+      let thumbPoints = document.getElementById(indicator);
       let thumbSpan = document.createElement('span');
       thumbSpan.style.left = percent + '%';
       thumbPoints.appendChild(thumbSpan);

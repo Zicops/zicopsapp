@@ -137,6 +137,11 @@ export function getUnixFromDate(dateObj = new Date()) {
   return Math.floor(newDate.getTime() / 1000) || 0;
 }
 
+export function limitValueInRange(value, min = 0, max = 100) {
+  if (typeof value !== 'number') return 0;
+  return Math.max(Math.min(value, max), min);
+}
+
   export async function generateVideoThumbnails(videoData, thumbnailsGap, duration) {
     let thumbnail = [];
     let fractions = [];

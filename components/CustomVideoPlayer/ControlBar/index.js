@@ -3,25 +3,6 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../../state/atoms/video.atom';
 import Button from '../Button';
-// import {
-//   controlBar,
-//   thumbnailPoints,
-//   controlButtons,
-//   dimProgressBar,
-//   fullScreenBtn,
-//   playPauseBtn,
-//   progressBar,
-//   tooltipContainer,
-//   volumeContainer,
-//   thumbnailContainer,
-//   thumbnailInfo,
-//   thumbnailImage,
-//   thumbnailTime,
-//   timelineContainer,
-//   timeline,
-//   previewImg,
-//   thumbIndicator
-// } from './controlbar.module.scss';
 import Volume from './Volume';
 import styles from './controlbar.module.scss';
 
@@ -34,11 +15,13 @@ export default function ControlBar({
   handleVolume,
   handleMute,
   handleProgress,
+  toggleScrubbing,
   playerState,
   handleMouseExit,
   handleMouseMove,
   seek,
   tooltip,
+  progressBar,
   playNextVideo,
   playPreviousVideo
 }) {
@@ -68,18 +51,21 @@ export default function ControlBar({
   return (
     <div className={`${styles.controlBar}`}>
       <div
-        className={`${styles.timelineContainer}`}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseExit}
+        className={`${styles.timelineContainer} ${hideBar ? styles.dimProgressBar : ''}`}
+        onPointerDown={handleMouseMove}
+        // onMouseLeave={handleMouseExit}
+        // onClick={handleProgress}
+        // onMouseDown={toggleScrubbing}
         id="timelineContainer">
-        <div className={`${styles.timeline}`}>
-          <div className={`${styles.thumbnailContainer}`}>
+        <div className={`${styles.timeline}`} ref={progressBar}>
+          <div className={`${styles.thumbnailContainer}`} ref={tooltip}>
             <div className={`${styles.thumbnailInfo}`}>Some info will be here!</div>
-            <div className={`${styles.thumbnailImage}`}>
-              <img src="" alt="" className={`${styles.previewImg}`} id="thumbnailImages" />
-            </div>
+            {/* <div className={`${styles.thumbnailImage}`}> */}
+            <img src="" alt="" className={`${styles.previewImg}`} id="thumbnailImages" />
+            {/* </div> */}
             <div className={`${styles.thumbnailTime}`}>{seek}</div>
           </div>
+
           <div className={`${styles.thumbIndicator}`} id="thumbIndicator"></div>
           <div className={`${styles.bookmarkIndicator}`} id="bookmarkIndicator"></div>
           <div className={`${styles.quizIndicator}`} id="quizIndicator"></div>
@@ -120,35 +106,22 @@ export default function ControlBar({
             <div className={`${styles.prevBtn} ${styles.disabled}`}></div>
           ) : (
             <div className={`${styles.prevBtn}`}></div>
-            // <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
-            // <div className={`${styles.prevBtn}`}></div>
-            // <Image
-            //   src="/images/next-topic.png"
-            //   style={{ transform: 'rotate(180deg)' }}
-            //   alt=""
-            //   height="30px"
-            //   width="30px"
-            // />
           )}
         </Button>
 
         <Button handleClick={backwardVideo}>
-          {/* <Image src="/images/prev-back.png" alt="" height="40px" width="35px" /> */}
           <div className={`${styles.backwordBtn}`}></div>
         </Button>
 
         <Button handleClick={handlePlay} styleClass={styles.playPauseBtn}>
           {!playerState.isPlaying ? (
-            // <Image src="/images/preview-btn.png" alt="" height="50px" width="50px" />
             <div className={`${styles.pauseBtn}`}></div>
           ) : (
-            // <Image src="/images/progressTriangle.png" alt="" height="50px" width="50px" />
             <div className={`${styles.playBtn}`}></div>
           )}
         </Button>
 
         <Button handleClick={forwardVideo}>
-          {/* <Image src="/images/next-forward.png" alt="" height="40px" width="35px" /> */}
           <div className={`${styles.forwardBtn}`}></div>
         </Button>
 
@@ -156,17 +129,8 @@ export default function ControlBar({
           {disableNextButton ? (
             <div className={`${styles.nextBtn} ${styles.disabled}`}></div>
           ) : (
-            // <Image
-            //   src="/images/prev-topic.png"
-            //   style={{ transform: 'rotate(180deg)' }}
-            //   alt=""
-            //   height="30px"
-            //   width="30px"
-            // />
-            // <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
             <div className={`${styles.nextBtn}`}></div>
           )}
-          {/* <Image src="/images/next-topic.png" alt="" height="30px" width="30px" /> */}
         </Button>
 
         <div

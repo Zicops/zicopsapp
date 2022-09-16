@@ -125,9 +125,10 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     }).catch((err) => {
       if (err) alert('Module Load Error');
     });
-    const moduleDataLoaded = moduleRes?.data?.getCourseModules;
-    const chapterDataLoaded = chapterRes?.data?.getCourseChapters;
-    const topicDataLoaded = topicRes?.data?.getTopics;
+    const moduleDataLoaded = structuredClone(moduleRes?.data?.getCourseModules);
+    const chapterDataLoaded = structuredClone(chapterRes?.data?.getCourseChapters);
+    // const topicDataLoaded = topicRes?.data?.getTopics;
+    const topicDataLoaded = structuredClone(topicRes?.data?.getTopics);
     const topicContentDataLoaded = topicContentRes?.data?.getTopicContentByCourseId;
 
     // new logic
