@@ -16,8 +16,8 @@ const AssignCourses = ({
   if (type === 'currentCourses')
     courseData = courseData.filter((courses) => courses.completedPercentage);
 
-  if (type === 'assignedCourses')
-    courseData = courseData.filter((courses) => !courses.completedPercentage);
+  // if (type === 'assignedCourses')
+  //   courseData = courseData.filter((courses) => !courses.completedPercentage );
 
   if (type === 'assignCourses' && assignedCourses?.length) {
     courseData = courseData.filter(

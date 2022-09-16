@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -143,7 +144,7 @@ export default function ExamsTable({ isEdit = false }) {
                     outline: '0',
                     border: '0'
                   }}>
-                  <img src="/images/svg/edit-box-line.svg" width={20}></img>
+                  <ToolTip title="Edit Exam Configurations" placement="bottom"><img src="/images/svg/edit-box-line.svg" width={20}></img></ToolTip>
                 </button>
               </>
             )}
