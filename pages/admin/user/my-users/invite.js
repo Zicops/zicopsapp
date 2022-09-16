@@ -22,7 +22,7 @@ export default function MyUserPage() {
 
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const [disableButton, setDisableButton] = useState(false);
+  // const [disableButton, setDisableButton] = useState(false);
 
   const [userType, setUserType] = useState('Internal');
   const [tabData, setTabData] = useState([
@@ -32,6 +32,7 @@ export default function MyUserPage() {
 
   //handle emails
   async function handleMail() {
+    if (loading) return;
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add atleast one email!' });
     let emails = emailId.map((item) => item?.props?.children[0]);
@@ -46,8 +47,6 @@ export default function MyUserPage() {
       errorMsg = err.message;
       isError = !!err;
     });
-
-    if (loading) return setDisableButton(true);
 
     if (isError) {
       const message = JSON.parse(errorMsg.split('body:')[1]);
@@ -111,7 +110,7 @@ export default function MyUserPage() {
             tab={tab}
             setTab={setTab}
             footerObj={{
-              disableSubmit: disableButton,
+              disableSubmit: loading,
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
               handleSubmit: handleMail,
               handleCancel: () => {
