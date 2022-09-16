@@ -235,7 +235,9 @@ export default function UiComponents({
       {videoData?.type !== 'mp4' && (
         <DraggableDiv initalPosition={{ x: '0px', y: '0px' }}>
           <div className={`${styles.toolbar}`} onClick={() => setIsToolbarOpen(!isToolbarOpen)}>
-            <span>Toolbar</span>
+            <span style={{ padding: '5px' }}>
+              <Image src="/images/svg/catching_pokemon.svg" height={20} width={20} />
+            </span>
 
             <div className={`${styles.toolbarBox}`}>
               {isToolbarOpen &&
