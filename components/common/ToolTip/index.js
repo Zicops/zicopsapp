@@ -3,11 +3,11 @@ import { Tooltip } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { makeStyles } from '@material-ui/core';
 
-const ToolTip = ({ children, placement, title, image, buttonName }) => {
+const ToolTip = ({ children, placement, title = " ", image, buttonName }) => {
   const useTooltipStyles = makeStyles((theme) => ({
     tooltip: {
       backgroundColor: '#484848',
-      outline: '1px solid #b5b5b5'
+      outline: '1px solid #b5b5b5',
     },
     arrow: {
       '&.MuiTooltip-arrow::before': {
@@ -18,10 +18,11 @@ const ToolTip = ({ children, placement, title, image, buttonName }) => {
   }));
 
   const tooltipClass = useTooltipStyles();
+
   return (
     <>
       <Tooltip
-        title={
+        title={title?.trim()?.length > 0?
           <>
             <div
               style={{
@@ -33,13 +34,12 @@ const ToolTip = ({ children, placement, title, image, buttonName }) => {
               }}>
               {image && (
                 <div>
-                  <img src={image} alt="" />
                 </div>
               )}
                <div>{title}</div>
               <div>{buttonName && <button>{buttonName}</button>}</div>
             </div>
-          </>
+          </> : ""
         }
         placement={placement}
         arrow
