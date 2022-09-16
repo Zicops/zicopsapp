@@ -1624,3 +1624,20 @@ export const UPDATE_TOPIC_EXAM = gql`
     }
   }
 `;
+
+export const UPLOAD_STATIC_CONTENT = gql`
+  mutation uploadTopicStaticContent(
+    $type: Type
+    $file: Upload
+    $courseId: String
+    $contentId: String
+    $url: String
+  ) {
+    uploadTopicStaticContent(
+      file: { type: $type, file: $file, courseId: $courseId, contentId: $contentId, url: $url }
+    ) {
+      success
+      url
+    }
+  }
+`;

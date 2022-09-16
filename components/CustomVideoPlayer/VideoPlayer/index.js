@@ -96,11 +96,22 @@ export default function VideoPlayer({
 
   const [videoType, setVideoType] = useState(1);
 
+  // console.log(videoData);
   return (
     <>
+      {videoData.type === 'SCORM' && (
+        <iframe
+          src={
+            videoData.videoSrc ||
+            'https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html'
+          }
+          frameBorder="0"
+          className={`${styles.videoElement}`}
+        />
+      )}
       {!videoData.videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
 
-      <button
+      {/* <button
         style={{ opacity: 0, zIndex: -10000000, position: 'absolute', top: '0px' }}
         onClick={() => {
           let c = videoType + 1;
@@ -108,7 +119,7 @@ export default function VideoPlayer({
           setVideoType(c);
         }}>
         {videoType}
-      </button>
+      </button> */}
 
       {videoData.type === 'mp4' && videoData.videoSrc && (
         <>
@@ -225,14 +236,6 @@ export default function VideoPlayer({
             {subtitles}
           </span>
         </>
-      )}
-
-      {videoData.type === 'SCORM' && videoData.videoSrc && (
-        <iframe
-          src="https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html"
-          frameBorder="0"
-          className={`${styles.videoElement}`}
-        />
       )}
     </>
   );
