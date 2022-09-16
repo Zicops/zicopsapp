@@ -433,9 +433,13 @@ export const GET_COHORT_DETAILS = gql`
   }
 `;
 
-
 export const GET_COHORT_USERS = gql`
-  query GetCohortUsers($cohort_id: String!, $publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query GetCohortUsers(
+    $cohort_id: String!
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+  ) {
     getCohortUsers(
       cohort_id: $cohort_id
       publish_time: $publish_time
