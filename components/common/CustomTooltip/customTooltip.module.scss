@@ -15,10 +15,10 @@
 
 .info {
     position: fixed;
-    bottom: 100px;
-    right: 50px;
+    bottom: 20px;
+    right: 20px;
     color: $white;
-    background: $darkTwo;
+    background: $popupBgColor;
     width: 200px;
     max-width: 350px;
     height: 70px;
@@ -28,6 +28,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid $darkThree;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px 0 $darkOne;
     z-index: 10;
     animation: tooltip-in-right .7s;
 }

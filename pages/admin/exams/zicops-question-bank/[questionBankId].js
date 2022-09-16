@@ -25,6 +25,7 @@ export default function MyQuestionBanks() {
           isAddShown={true}
           // pageRoute="/admin/exams/question-bank"
           handleClickForPlus={() => udpatePopUpState(true)}
+          tooltipTitle="Add Questions"
         />
         <MainBodyBox>
           <QuestionsTable />

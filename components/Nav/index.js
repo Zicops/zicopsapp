@@ -58,7 +58,7 @@ export default function Nav() {
 
         <Link href={!isOnLearnerSide ? '/admin' : '/'}>
           <a className={styles.logo}>
-            <ToolTip title="Go Back to Admin Home" placement="bottom">
+            <ToolTip title={`${!isOnLearnerSide ? 'Go Back to Admin Home':""}`} placement="bottom">
               <img src="/images/zicops-header-logo.png" />
             </ToolTip>
           </a>

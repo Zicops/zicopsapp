@@ -18,6 +18,7 @@ export default function MyQuestionBanks() {
           title="My Question Banks"
           isAddShown={true}
           handleClickForPlus={() => udpatePopUpState(true)}
+          tooltipTitle="Create new Question Bank"
         />
         <MainBodyBox>
           <QuestionBankTable isEdit={true} />

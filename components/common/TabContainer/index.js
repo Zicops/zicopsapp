@@ -43,9 +43,13 @@ export default function TabContainer({
   console.log(tab)
   let saveButtonTitle="Save Master details and proceed with question addition"
   let cancelButtonTitle="Cancel and go back to question paper list"
+  let updateButtonTitle="Save new changes to this question paper"
   if(tab==="Question Master"){
     saveButtonTitle="Save Uploaded Questions";
     cancelButtonTitle="Cancel and go back to Questions list"
+  }else if(tab==="Configuration"){
+    updateButtonTitle="Save updated details"
+    cancelButtonTitle="Cancel and go back to Exam list"
   }
 
   let tooltipStatus = "Question paper details saved"
@@ -92,7 +96,7 @@ export default function TabContainer({
               </span>
             </ToolTip>
             <ToolTip
-              title={saveButtonTitle}
+              title={submitDisplay==="Update"?updateButtonTitle:saveButtonTitle}
               placement="bottom">
               <span>
                 <Button
