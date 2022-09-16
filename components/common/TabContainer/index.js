@@ -40,7 +40,7 @@ export default function TabContainer({
     if (index >= 0) return tabData[index].component;
     return tabData[0].component;
   }
-  console.log(tab)
+  
   let saveButtonTitle="Save Master details and proceed with question addition"
   let cancelButtonTitle="Cancel and go back to question paper list"
   let updateButtonTitle="Save new changes to this question paper"

@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 import { useLazyQuery } from '@apollo/client';
 import { GET_QUESTION_OPTIONS_WITH_ANSWER, queryClient } from 'API/Queries';
@@ -81,16 +82,20 @@ const InfoSection = ({ handleEndButton, data, handleQuestionPaperClick, setFilte
         <p>Questions</p>
       </div>
       <div className={`${styles.info_section_exam_info_button_container}`}>
-        <button
-          onClick={handleQuestionPaperClick}
-          className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_question}`}>
-          Question Paper
-        </button>
-        <button
-          onClick={handleEndButton}
-          className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_exam}`}>
-          End Exam
-        </button>
+        <ToolTip title="View entire Question Paper" placement="bottom">
+          <button
+            onClick={handleQuestionPaperClick}
+            className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_question}`}>
+            Question Paper
+          </button>
+        </ToolTip>
+        <ToolTip title="Finish Attempt and Exit" placement="bottom">
+          <button
+            onClick={handleEndButton}
+            className={`${styles.info_section_exam_info_button} ${styles.info_section_exam_info_button_exam}`}>
+            End Exam
+          </button>
+        </ToolTip>
       </div>
       <div className={`${styles.info_section_watch}`}>
         <Timer submitPaper={handleEndButton} />

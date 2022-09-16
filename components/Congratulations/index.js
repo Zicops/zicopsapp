@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import AttemptsTable from '../common/AttemptsTable';
 import CongratulationsScreenButton from '../common/CongratulationsScreenButton';
+import ToolTip from '../common/ToolTip';
 import CongratulationsFooter from './CongratulationsFooter';
 import CongratulationsHead from './CongratulationsHead';
 import CongratulationsScreen from './CongratulationsScreen';
@@ -41,14 +42,28 @@ const Congratulations = (props) => {
         />
       </CongratulationsScreen>
       <CongratulationsFooter>
-        <CongratulationsScreenButton title={'Download Result'} />
+        <CongratulationsScreenButton
+          title={
+            <ToolTip title="Download your result" placement="bottom">
+              <span>Download Result</span>
+            </ToolTip>
+          }
+        />
         <CongratulationsScreenButton
           handleClick={() => router.push(`/answer-key/cp/${cpId}/exam/${examId}`)}
-          title={'View Attempt History'}
+          title={
+            <ToolTip title="View all attempts" placement="bottom">
+              <span>View Attempt History</span>
+            </ToolTip>
+          }
         />
 
         <CongratulationsScreenButton
-          title={'Exit And Return To Main Screen'}
+          title={
+            <ToolTip title="Exit and go back to list of exams" placement="bottom">
+              <span>Exit And Return To Main Screen</span>
+            </ToolTip>
+          }
           handleClick={handleReturnToMainScreen}
         />
       </CongratulationsFooter>

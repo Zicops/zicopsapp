@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import { useRouter } from 'next/router';
 import styles from './examLanding.module.scss';
 
@@ -62,19 +63,25 @@ const ExamLandingPage = () => {
       </div>
       <div className={`${styles.exam_landing_btn_container}`}>
         <section style={{ marginRight: '5%' }}>
-          <button
-            className={`${styles.exam_landing_btn}`}
-            onClick={() => {
-              localStorage?.setItem('sampleTestStartLink', router.asPath);
-              router.push('/exam-screen');
-            }}>
-            Take Sample Test
-          </button>
-          <button
-            disabled
-            className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>
-            Take Exam Now
-          </button>
+          <ToolTip title="Take a test" placement="bottom">
+            <button
+              className={`${styles.exam_landing_btn}`}
+              onClick={() => {
+                localStorage?.setItem('sampleTestStartLink', router.asPath);
+                router.push('/exam-screen');
+              }}>
+              Take Sample Test
+            </button>
+          </ToolTip>
+          <ToolTip title="Start Exam" placement="bottom">
+            <span>
+              <button
+                disabled
+                className={`${styles.exam_landing_btn} ${styles.exam_landing_btn_takeExam}`}>
+                Take Exam Now
+              </button>
+            </span>
+          </ToolTip>
           <div>
             <p
               style={{
@@ -88,10 +95,14 @@ const ExamLandingPage = () => {
           </div>
         </section>
         <section>
-          <button className={`${styles.exam_landing_btn}`}>View Full Course</button>
-          <button className={`${styles.exam_landing_btn}`} style={{ color: 'var(--dark_three' }}>
-            Skip Exam
-          </button>
+          <ToolTip title="View Course Outline" placement="bottom">
+            <button className={`${styles.exam_landing_btn}`}>View Full Course</button>
+          </ToolTip>
+          <ToolTip title="Skip this exam" placement="bottom">
+            <button className={`${styles.exam_landing_btn}`} style={{ color: 'var(--dark_three' }}>
+              Skip Exam
+            </button>
+          </ToolTip>
         </section>
       </div>
     </div>

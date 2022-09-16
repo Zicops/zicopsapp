@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import ToolTip from '@/components/common/ToolTip';
 const AnswerAllOptions = ({
   data,
   setData,
@@ -128,6 +129,7 @@ const AnswerAllOptions = ({
       <div className={`${styles.livePageFooter}`}>
         <div></div>
         <div className={`${styles.answer_all_options_buttons_container}`}>
+        <ToolTip title="Clear the selected option" placement="top">
           <button
             disabled={!option}
             onClick={() => {
@@ -141,6 +143,8 @@ const AnswerAllOptions = ({
             }`}>
             Clear<span>all options</span>
           </button>
+          </ToolTip>
+          <ToolTip title={mark?"Unmark this question":"Save the answer now and review later"} placement="top">
           <button
             onClick={() => {
               if (filter !== 'all') setFilter('all');
@@ -155,6 +159,8 @@ const AnswerAllOptions = ({
             {mark ? 'Unmark' : 'Mark'}
             <span>from review</span>
           </button>
+          </ToolTip>
+          <ToolTip title="Go back to previous question" placement="top">
           <button
             disabled={current.id === 1}
             onClick={() => {
@@ -167,6 +173,8 @@ const AnswerAllOptions = ({
             }`}>
             Previous<span>Question</span>
           </button>
+          </ToolTip>
+          <ToolTip title={`${current.id === data.length ?"Submit and end exam":"Go to next question"}`} placement="top">
           <button
             onClick={() => {
               current.id === data.length ? submitPaper() : setNextTrigger(true);
@@ -183,6 +191,7 @@ const AnswerAllOptions = ({
               </>
             )}
           </button>
+          </ToolTip>
         </div>
       </div>
     </>
