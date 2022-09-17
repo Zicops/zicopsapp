@@ -84,13 +84,13 @@ export default function UiComponents({
         // console.log(bookmarkTimeInSecs);
         showThumbnailPointsInProgressbar(bookmarkTimeInSecs, 'bookmarkIndicator');
       });
-  }, [allBookmarks, videoElement?.current?.duration]);
+  }, [allBookmarks, videoData?.videoSrc, videoElement?.current?.duration]);
 
   // To play automatically quizes and show quiz Q in timeline
   useEffect(() => {
     const topicId = videoData?.topicContent[0]?.topicId;
     const quizLoop = getTopicQuizes(quizData, topicId);
-    quizLoop.forEach((quiz) => {
+    quizLoop.forEach((quiz) => {``
       // console.log(quiz.startTime);
       showThumbnailPointsInProgressbar(quiz.startTime, 'quizIndicator');
       if (quiz.startTime === Math.floor(videoElement?.current?.currentTime)) {
@@ -99,7 +99,7 @@ export default function UiComponents({
         setShowQuiz(quiz);
       }
     });
-  }, [playerState?.progress]);
+  }, [videoData?.videoSrc, videoElement?.current?.duration]);
 
   async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
     let percent = (videoTimeInSeconds / videoElement?.current?.duration) * 100;

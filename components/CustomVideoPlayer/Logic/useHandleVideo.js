@@ -319,14 +319,14 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }, [freezeScreen]);
 
   // reset tooltip and seek after timeoutSeconds
-  const timeoutSeconds = 2000;
-  useEffect(() => {
-    if (videoData?.type !== 'mp4') return;
-    if (!videoData.videoSrc && !videoData.type) return;
-    setTimeout(() => {
-      setSeek(0);
-    }, timeoutSeconds);
-  }, [seek]);
+  // const timeoutSeconds = 2000;
+  // useEffect(() => {
+  //   if (videoData?.type !== 'mp4') return;
+  //   if (!videoData.videoSrc && !videoData.type) return;
+  //   setTimeout(() => {
+  //     setSeek(0);
+  //   }, timeoutSeconds);
+  // }, [seek]);
 
   // reset progress when video changes
   useEffect(() => {

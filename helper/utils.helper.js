@@ -148,14 +148,6 @@ export function limitValueInRange(value, min = 0, max = 100) {
     for (let i = 0; i <= duration; i += thumbnailsGap) {
       fractions.push(Math.floor(i));
     }
-    // const video = document.createElement('video');
-          
-    // video.preload = 'metadata';
-    // video.src = videoData.videoSrc;
-    // // Load video in Safari / IE11
-    // video.muted = true;
-    // video.playsInline = true;
-    
     fractions.map(async (time) => {
       let oneThums = await getVideoThumbnail(videoData, time);
       thumbnail.push(oneThums);
@@ -184,7 +176,6 @@ export function limitValueInRange(value, min = 0, max = 100) {
         canvas.height = video.videoHeight * scaleFactor;
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
         var image = canvas.toDataURL();
-        // console.log(image);
         var success = image.length > 10000;
         if (success) {
           URL.revokeObjectURL(videoData.videoSrc);
