@@ -99,7 +99,7 @@ export default function VideoPlayer({
   // console.log(videoData);
   return (
     <>
-      {videoData.type === 'SCORM' && (
+      {videoData.type === 'SCORM' && videoData.videoSrc && (
         <iframe
           src={
             videoData.videoSrc ||
@@ -150,7 +150,7 @@ export default function VideoPlayer({
                   // }
                   src={
                     isTrackSrcAvailable
-                      ? `/api/getSubtitleFile?filePath=${encodeURIComponent(
+                      ? `/api/overrideCors?filePath=${encodeURIComponent(
                           topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
                             ?.url
                         )}`

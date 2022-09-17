@@ -156,8 +156,9 @@ export function limitValueInRange(value, min = 0, max = 100) {
   }
   async function getVideoThumbnail(videoData, videoTimeInSeconds) {
     return new Promise((resolve, reject) => {
-    const video = document.createElement('video');
-      
+      const SRC = `/api/overrideCors?filePath=${encodeURIComponent(videoData.videoSrc)}`;
+      const video = document.createElement('video');
+      console.log(video.currentTime, videoTimeInSeconds); 
       var timeupdate = function () {
         if (snapImage()) {
           video.removeEventListener('timeupdate', timeupdate);
@@ -178,14 +179,14 @@ export function limitValueInRange(value, min = 0, max = 100) {
         var image = canvas.toDataURL();
         var success = image.length > 10000;
         if (success) {
-          URL.revokeObjectURL(videoData.videoSrc);
+          URL.revokeObjectURL(SRC);
           resolve(image);
         }
         return success;
       };
       video.addEventListener('timeupdate', timeupdate);
       video.preload = 'metadata';
-      video.src = videoData.videoSrc;
+      video.src = SRC;
       // Load video in Safari / IE11
       video.muted = true;
       video.playsInline = true;

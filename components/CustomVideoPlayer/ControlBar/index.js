@@ -60,7 +60,7 @@ export default function ControlBar({
         id="timelineContainer">
         <div className={`${styles.timeline}`} ref={progressBar}>
           <div className={`${styles.thumbnailContainer}`} ref={tooltip}>
-            <div className={`${styles.thumbnailInfo}`}>Some info will be here!</div>
+            {/* <div className={`${styles.thumbnailInfo}`}>Some info will be here!</div> */}
             <div className={`${styles.thumbnailImage}`}>
             <img src="" alt="" className={`${styles.previewImg}`} id="thumbnailImages" />
             </div>
