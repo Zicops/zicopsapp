@@ -20,7 +20,7 @@ export default function SubtitleBox({ subtitleState }) {
         <div>
           <h4>Audio </h4>
 
-          <section>
+          <section className="h-80">
             {videoData?.topicContent &&
               videoData.topicContent.map((c, i) => (
                 <button

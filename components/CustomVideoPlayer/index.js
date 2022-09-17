@@ -250,30 +250,32 @@ export default function CustomVideo({ set }) {
         )}
 
         {/* control bar */}
-        <div
-          className={`${styles.controls} ${!freezeScreen && hideControls ? styles.fadeHide : ''}`}
-          ref={vidRef}
-          onClick={() => videoElement.current?.focus()}>
-          <ControlBar
-            handleMouseExit={handleMouseExit}
-            handleMouseMove={handleMouseMove}
-            seek={seek}
-            reloadVideo={reloadVideo}
-            handlePlay={togglePlay}
-            handleFullScreen={toggleFullScreen}
-            forwardVideo={() => moveVideoProgress(true)}
-            backwardVideo={() => moveVideoProgress(false)}
-            handleProgress={handleVideoProgress}
-            toggleScrubbing={toggleScrubbing}
-            handleMute={toggleMute}
-            handleVolume={handleVolume}
-            playerState={playerState}
-            tooltip={tooltip}
-            progressBar={progressBar}
-            playNextVideo={playNextVideo}
-            playPreviousVideo={playPreviousVideo}
-          />
-        </div>
+        {videoData?.type === 'mp4' && (
+          <div
+            className={`${styles.controls} ${!freezeScreen && hideControls ? styles.fadeHide : ''}`}
+            ref={vidRef}
+            onClick={() => videoElement.current?.focus()}>
+            <ControlBar
+              handleMouseExit={handleMouseExit}
+              handleMouseMove={handleMouseMove}
+              seek={seek}
+              reloadVideo={reloadVideo}
+              handlePlay={togglePlay}
+              handleFullScreen={toggleFullScreen}
+              forwardVideo={() => moveVideoProgress(true)}
+              backwardVideo={() => moveVideoProgress(false)}
+              handleProgress={handleVideoProgress}
+              toggleScrubbing={toggleScrubbing}
+              handleMute={toggleMute}
+              handleVolume={handleVolume}
+              playerState={playerState}
+              tooltip={tooltip}
+              progressBar={progressBar}
+              playNextVideo={playNextVideo}
+              playPreviousVideo={playPreviousVideo}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

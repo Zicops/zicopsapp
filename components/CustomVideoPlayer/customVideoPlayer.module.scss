@@ -154,18 +154,19 @@
       section {
         overflow-y: auto;
         overflow-x: hidden;
-        height: 80%;
         width: 100%;
 
         &::-webkit-scrollbar {
           width: 0px;
         }
 
-        button {
+        button,
+        a {
           background-color: transparent;
           margin: 3px auto;
           padding: 5px 10px;
           width: 100%;
+          font-size: 13px;
           border: 1px solid $primary;
           color: $primary;
           cursor: pointer;
@@ -174,6 +175,11 @@
             background-color: $primary;
             color: $bgContent;
           }
+        }
+
+        a {
+          display: inline-block;
+          text-align: center;
         }
 
         .languageBtnActive {
@@ -959,4 +965,13 @@
   }
   // button {
   // }
+}
+
+.notFound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+
+  height: 100%;
 }

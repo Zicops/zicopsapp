@@ -12,6 +12,7 @@ import {
   mutationClient,
   UPDATE_COURSE_TOPIC,
   UPDATE_TOPIC_CONTENT,
+  UPLOAD_STATIC_CONTENT,
   UPLOAD_TOPIC_CONTENT_SUBTITLE,
   UPLOAD_TOPIC_CONTENT_VIDEO,
   UPLOAD_TOPIC_RESOURCE
@@ -75,6 +76,8 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   const [uploadCourseContentVideo, { loading: uploadVideoLoading }] = useMutation(
     UPLOAD_TOPIC_CONTENT_VIDEO
   );
+  const [uploadStaticContent, { loading: uploadStaticLoading }] =
+    useMutation(UPLOAD_STATIC_CONTENT);
   const [uploadCourseContentSubtitle, { loading: uploadSubtileLoading }] = useMutation(
     UPLOAD_TOPIC_CONTENT_SUBTITLE
   );
@@ -257,7 +260,11 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   async function handleEditTopicSubmit() {
     console.log('Topic and Resources upload started');
     setIsLoading(
-      addContentLoading && uploadVideoLoading && uploadSubtileLoading && uploadResourcesLoading
+      addContentLoading &&
+        uploadVideoLoading &&
+        uploadStaticLoading &&
+        uploadSubtileLoading &&
+        uploadResourcesLoading
     );
 
     console.log(topicContent);
@@ -308,19 +315,41 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           file: topicVideo[index].file
         };
 
-        await uploadCourseContentVideo({
-          variables: sendVideoData,
-          context: {
-            fetchOptions: {
-              useUpload: true,
-              onProgress: (ev) => {
-                setUploadStatus({
-                  [content.language]: ev.loaded / ev.total
-                });
+        if (sendContentData?.type === 'mp4') {
+          await uploadCourseContentVideo({
+            variables: sendVideoData,
+            context: {
+              fetchOptions: {
+                useUpload: true,
+                onProgress: (ev) => {
+                  setUploadStatus({
+                    [content.language]: ev.loaded / ev.total
+                  });
+                }
               }
             }
-          }
-        }).catch((err) => console.log(err));
+          }).catch((err) => console.log(err));
+        }
+
+        if (sendContentData?.type === 'SCORM') {
+          console.log(topicVideo);
+          sendVideoData.type = sendContentData?.type;
+          if (!!topicVideo[index]?.contentUrl) sendVideoData.url = topicVideo[index]?.contentUrl;
+
+          await uploadStaticContent({
+            variables: sendVideoData,
+            context: {
+              fetchOptions: {
+                useUpload: true,
+                onProgress: (ev) => {
+                  setUploadStatus({
+                    [content.language]: ev.loaded / ev.total
+                  });
+                }
+              }
+            }
+          }).catch((err) => console.log(err));
+        }
 
         console.log(`Topic Video Uploaded with language ${content.language}`);
       }
