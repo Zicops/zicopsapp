@@ -5,7 +5,7 @@ import {
   userClient
 } from '@/api/UserMutations';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
+import { THUMBNAIL_GAP, SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -13,7 +13,12 @@ import { GET_TOPIC_EXAMS } from 'API/Queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../helper/data.helper';
-import { secondsToHMS, secondsToMinutes } from '../../../helper/utils.helper';
+import {
+  generateVideoThumbnails,
+  limitValueInRange,
+  secondsToHMS,
+  secondsToMinutes
+} from '../../../helper/utils.helper';
 import { QuizAtom, TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import {
   getVideoObject,
@@ -51,6 +56,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
+  const progressBar = useRef(null);
   const [syncProgressInSeconds, setSyncProgressInSeconds] = useState(SYNC_DATA_IN_SECONDS * 3);
 
   // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
@@ -65,6 +71,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     duration: 0
   });
 
+  // for showing thumbnail previews
+  const [previewImages, setPreviewImages] = useState([]);
+  const [isScrubbing, setIsScrubbing] = useState(false);
   // udpate recoil state
   useEffect(() => {
     if (videoData?.type !== 'mp4') return;
@@ -223,7 +232,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       topicId: currentTopicProgress?.topic_id,
       topicType: 'Content',
       status: isCompleted ? 'completed' : 'in-progress',
-      videoProgress: type === 'binge' ? '100' : playerState?.progress?.toString(),
+      videoProgress: type === 'binge' ? '100' : limitValueInRange(playerState?.progress, 0, 100).toString(),
       timestamp: `${currentTime}-${duration}`
     };
 
@@ -245,6 +254,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     setUserCourseData({ ...userCourseData, ...userCourseMapData });
   }
 
+  // to show errors
   useEffect(() => {
     if (videoData?.type !== 'mp4') return;
     if (updateUserCourseErr) setToastMsg({ type: 'danger', message: 'Course Assign Update Error' });
@@ -361,14 +371,20 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // progress bar color update on video play
   useEffect(() => {
     if (videoData?.type !== 'mp4') return;
-
-    document.getElementById('vidInput').style.background =
-      'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' +
-      playerState.progress +
-      '%, #22252980 ' +
-      playerState.progress +
-      '%, #22252980 100%)';
+    let percent = videoElement?.current?.currentTime / videoElement?.current?.duration;
+    const timelineContainer = document.getElementById('timelineContainer');
+    timelineContainer.style.setProperty('--progressPosition', percent);
   }, [playerState.progress]);
+
+  useEffect(async () => {
+    if (!videoElement?.current?.duration) return;
+    const ImgPreviews = await generateVideoThumbnails(
+      videoData,
+      THUMBNAIL_GAP,
+      videoElement?.current?.duration
+    );
+    setPreviewImages(ImgPreviews);
+  }, [videoElement?.current?.duration]);
 
   // keyboard events
   function handleKeyDownEvents(e) {
@@ -425,31 +441,75 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   function setTooltipPosition(tooltipPosition) {
     // 10 is added for scrollbar gap and margin left
-    const elemWidth = 100;
+    const elemWidth = 175;
     const margin = 20;
 
     const diff = screen.width - tooltipPosition - margin;
     const positionLeft =
       diff < elemWidth ? tooltipPosition - (elemWidth - diff) : tooltipPosition + margin / 2;
 
-    tooltip.current.style.left = positionLeft + 'px';
+    tooltip.current.style.left = positionLeft + '%';
+    console.log(tooltipPosition, tooltip.current.style.left);
   }
 
   function handleMouseMove(e) {
     if (!videoElement.current) return;
 
-    setTooltipPosition(e.pageX);
+    const elemWidth = 175;
+    const margin = 0;
 
+    const timelineContainer = document.getElementById('timelineContainer');
+    // const rect = e.target.getBoundingClientRect();
+    const rect = timelineContainer.getBoundingClientRect();
+    const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
+
+    // const diff = screen.width - percent;
+    // const positionLeft = diff < elemWidth ? percent - (elemWidth - diff) : percent + margin / 2;
     var videoDuration = videoElement.current?.duration;
+
+    // getting count of preview images as it could vary
+    const previewImgNumber = Math.max(1, Math.floor((percent * videoDuration) / THUMBNAIL_GAP));
+    const previewImg = document.getElementById('thumbnailImages');
+    previewImg.setAttribute(
+      'src',
+      previewImages[previewImgNumber] || '/images/gif/loading.gif'
+    );
+    timelineContainer.style.setProperty('--previewPosition', percent);
+
+    // setTooltipPosition(percent * 100);
+
     const timestamp = (e.pageX / screen.width) * videoDuration;
 
+    // for time display below thumb image
     const timeObj = secondsToMinutes(timestamp);
     if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
-    setSeek(`${timeObj.minute}: ${timeObj.second}`);
+    setSeek(`${timeObj.minute} : ${timeObj.second}`);
+
+    // console.log(positionLeft);
+    if (isScrubbing) {
+      e.preventDefault();
+      timelineContainer.style.setProperty('--progressPosition', percent);
+    }
+
+    return percent;
   }
 
+  function toggleScrubbing(e) {
+    const percent = handleMouseMove(e);
+    const _isScrubbing = (e.buttons & 1) === 1;
+    setIsScrubbing(_isScrubbing);
+    // Web dev simplified - youtube video player
+    if (_isScrubbing) {
+      updateIsPlayingTo(false);
+    } else {
+      const manualChange = Number(Math.floor(percent * 100));
+      setVideoTime(manualChange);
+      updateIsPlayingTo(true);
+    }
+  }
   function handleMouseExit(e) {
     setSeek(0);
+    setIsScrubbing(0);
   }
 
   function updateVolumeValue(isIncrement) {
@@ -600,8 +660,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     });
   };
 
-  function handleVideoProgress(event) {
-    const manualChange = Number(event.target.value);
+  function handleVideoProgress(e) {
+    const rect = e.target.getBoundingClientRect();
+    const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
+    const manualChange = Number(Math.floor(percent * 100));
     setVideoTime(manualChange);
   }
 
@@ -758,6 +820,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     hideTopBar,
     handleMouseExit,
     handleMouseMove,
+    toggleScrubbing,
     seek,
     tooltip,
     playNextVideo,

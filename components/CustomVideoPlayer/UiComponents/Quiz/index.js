@@ -147,7 +147,8 @@ export default function Quiz({
       user_cp_id: userCP?.user_cp_id,
       user_course_id: userCourseData?.userCourseMapping?.user_course_id,
       quiz_id: currentQuizData?.id,
-      quiz_attempt: quizProgressData?.filter((quiz) => quiz?.topic_id === topicId)?.length || 1,
+      quiz_attempt:
+        quizProgressData?.filter((quiz) => quiz?.quiz_id === currentQuizData?.id)?.length || 1,
       topic_id: topicId,
       result: _option?.find((op) => op?.id === selectedOption?.id)?.IsCorrect ? 'passed' : 'failed',
       is_active: true

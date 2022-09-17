@@ -42,8 +42,10 @@ export default function CustomVideo({ set }) {
     hideTopBar,
     handleMouseExit,
     handleMouseMove,
+    toggleScrubbing,
     seek,
     tooltip,
+    progressBar,
     playNextVideo,
     playPreviousVideo,
     setVideoTime,
@@ -107,6 +109,7 @@ export default function CustomVideo({ set }) {
         skipIntroTime < currentTime && skipIntroTime + skipIntroDuration > currentTime
       );
     }
+
   }, [playerState.progress]);
 
   // binge logic
@@ -262,10 +265,12 @@ export default function CustomVideo({ set }) {
               forwardVideo={() => moveVideoProgress(true)}
               backwardVideo={() => moveVideoProgress(false)}
               handleProgress={handleVideoProgress}
+              toggleScrubbing={toggleScrubbing}
               handleMute={toggleMute}
               handleVolume={handleVolume}
               playerState={playerState}
               tooltip={tooltip}
+              progressBar={progressBar}
               playNextVideo={playNextVideo}
               playPreviousVideo={playPreviousVideo}
             />

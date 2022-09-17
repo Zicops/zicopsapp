@@ -545,6 +545,9 @@
     :global(.ql-snow) {
       color: $white !important;
     }
+    :global(.ql-editor) {
+      min-height: 100px !important;
+    }
   }
 
   // &.hasValue {

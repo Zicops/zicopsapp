@@ -1,7 +1,7 @@
 @import '../../styles/base.scss';
 
 $DURATION: 1000ms;
-$DELAY: $DURATION / 2;
+$DELAY: calc($DURATION / 2);
 
 .vrContainer {
   position: fixed;
@@ -71,7 +71,7 @@ $DELAY: $DURATION / 2;
 .wheeldownZoomIn {
   animation: wheeldownZoomIn $DURATION ease-out;
   z-index: 99;
-  animation-delay: ($DELAY/2 - $DELAY * 0.2);
+  animation-delay: calc($DELAY/2 - $DELAY * 0.2);
 }
 
 .wheelupZoomIn {
@@ -81,7 +81,7 @@ $DELAY: $DURATION / 2;
 .wheelupZoomOut {
   animation: wheelupZoomOut $DURATION ease-out;
   z-index: 99;
-  animation-delay: ($DELAY/2 - $DELAY * 0.2);
+  animation-delay: calc($DELAY/2 - $DELAY * 0.2);
 }
 
 @keyframes wheeldownZoomOut {
@@ -136,7 +136,7 @@ $DELAY: $DURATION / 2;
   position: absolute;
   left: 50%;
   transform: translateX(-50%) scale(0);
-  transition-delay: $DELAY/2;
+  transition-delay: calc($DELAY/2);
 }
 .showActiveSlide {
   transform: scale(1);
@@ -313,7 +313,7 @@ $DELAY: $DURATION / 2;
     padding: 5px;
 
     .searchBar {
-      width: calc(100%);
+      width: 100%;
       left: 0;
       margin: -5px 0;
       z-index: 1;

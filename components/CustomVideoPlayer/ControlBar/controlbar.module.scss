@@ -5,6 +5,7 @@
   position: relative;
   z-index: 1;
 }
+
 .fullScreenBtn {
   float: right;
   margin-top: -50px;
@@ -18,6 +19,151 @@
   justify-content: space-evenly;
   align-items: center;
 }
+
+// Timeline <div> approach
+.timelineContainer{
+  height: 7px;
+  margin-inline: 5px;
+
+  .timeline{
+    background-color: rgba($darkOne, 0.5);
+    width: 100%;
+    height: 4px;
+    transition: height 150ms ease-in-out;
+    position: relative;
+    cursor: pointer;
+    &::before{
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: calc(100% - var(--previewPosition) * 100%);
+      background-color: #2940b3;
+      display: none;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: calc(100% - var(--progressPosition) * 100%);
+      background-color: $primary;
+      // box-shadow: 0 0 10px 2px rgba($darkThree, 1);
+    }
+    .thumbnailContainer{
+      display: none;
+      position: absolute;
+      top: -150px;
+      left: calc(var(--previewPosition) * 100%);
+      transform: translate(-50%, 0);
+      .thumbnailInfo{
+        padding: 0 10px;
+        color: $white;
+        background-color: rgba($darkThree, 0.8);
+        text-align: center;
+        text-shadow: 1px 1px 2px $black;
+        width: 178px;
+        margin: auto;
+        font-size: 14px;
+      }
+      .thumbnailImage{
+        height: 100px;
+        background-color: $darkOne;
+        margin-bottom: 3px;
+        .previewImg {
+          position: relative;
+            height: 100%;
+            aspect-ratio: 16 / 9;
+            border: 2px solid $white;
+            object-fit: cover;
+          }
+      }
+      .thumbnailTime{
+          padding: 0 10px;
+          color: $white;
+          background-color: rgba($darkThree, 0.8);
+          text-align: center;
+          text-shadow: 1px 1px 2px $black;
+          border-radius: 20px;
+          width: 50%;
+          margin: auto;
+      }
+    }
+    .thumbIndicator{
+      --scale : 1;
+      position: absolute;
+      transform: translateX(-50%) scale(var(--scale));
+      height: 200%;
+      top: -50%;
+      left: calc(var(--progressPosition, 0.25) * 100%);
+      background-color: $primary;
+      border-radius: 50%;
+      transition: transform 150ms ease-in-out;
+      aspect-ratio: 1 / 1;
+      box-shadow: 0 0 10px 2px rgba($darkThree, 1);
+      z-index: 5;
+    }
+    .quizIndicator span, .bookmarkIndicator span {
+      height: 12px;
+      width: 12px;
+      transition: all 150ms ease-in-out;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateY(-50%);
+      z-index: 2;
+      &:before{
+        position: absolute;
+        font-size: 10px;
+        font-weight: 900;
+        top: 0;
+        right: 0;
+        // bottom: 0;
+        left: 0;
+        text-align: center;
+        transition: all 150ms ease-in-out;
+        margin-inline: auto;
+      }
+    }
+    .quizIndicator span{
+      &:before {
+          content: "Q";
+          color: $white;
+          border: 1px solid red;
+          background-color: red;
+          border-radius: 50%;
+      }
+    }
+    .bookmarkIndicator span {
+      &:before {
+          content: "B";
+          color: black;
+          border: 1px solid black;
+          background-color: yellow;
+        }
+    }
+    &:hover {
+        height: 100%;
+        background-color: rgba($darkOne, 0.6);
+      .thumbnailContainer {
+        display: block;
+      }
+      .quizIndicator span, .bookmarkIndicator span {
+        height: 15px;
+        width: 15px;
+        top: 2px;
+        &:before {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
 // Set progressbar
 .progressBar {
   -webkit-appearance: none;
@@ -27,6 +173,7 @@
   position: absolute;
   width: 100%;
   top: -30px;
+  z-index: 1;
   // box-shadow: 0 3px 5px 0 $tertiaryBlack;
   // accent-color: $primary;
 }
@@ -53,6 +200,7 @@
   width: 25px;
   margin-top: -10px; /* Centers thumb on the track */
 }
+
 /* slider thumb */
 .progressBar::-webkit-slider-thumb {
   -webkit-appearance: none; /* Override default look */
@@ -66,6 +214,8 @@
   border-radius: 50%;
   box-shadow: 0 0 10px 0 $black;
   opacity: 1 !important;
+  isolation: isolate;
+  z-index: 3;
 }
 
 /******** Firefox styles ********/
@@ -140,15 +290,33 @@
   transition: all 0.3s;
 }
 
-.tooltipContainer {
-  position: absolute;
-  top: -80px;
-  left: 0;
-  height: 30px;
-  width: 100px;
-  background-color: #fff;
-  text-align: center;
-}
+// .tooltipContainer {
+//   position: absolute;
+//   bottom: 110px;
+//   left: 0; 
+//   // height: 120px; 
+//   width: 200px; 
+  
+//   display: flex; 
+//   flex-direction: column; 
+//   justify-content: center; 
+//   align-items: center; 
+//   gap: 2px; 
+//   .thumbnailInfo { 
+//     background-color: $bgHeader; 
+//     color: $primary; 
+//     padding: 5px; 
+//     border-radius: 5px; 
+//   } 
+//   .thumbnailImage { 
+//     width: 200px; 
+//     img { 
+//       width: 100%; 
+//       object-fit: contain; 
+//     } 
+//   } 
+//   .thumbnailTime { width: 100%; color: $white; text-align: center; text-shadow: 1px 1px 2px $black; } 
+// }
 
 // style by sonali
  .reloadBtn, .prevBtn, .backwordBtn, .pauseBtn, .playBtn, .forwardBtn, .nextBtn, .volumeIconBtn, .muteVolumeIconBtn, .fsBtn, .fseBtn{
