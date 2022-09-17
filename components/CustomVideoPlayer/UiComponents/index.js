@@ -90,7 +90,7 @@ export default function UiComponents({
   useEffect(() => {
     const topicId = videoData?.topicContent[0]?.topicId;
     const quizLoop = getTopicQuizes(quizData, topicId);
-    quizLoop.forEach((quiz) => {``
+    quizLoop.forEach((quiz) => {
       // console.log(quiz.startTime);
       showThumbnailPointsInProgressbar(quiz.startTime, 'quizIndicator');
       if (quiz.startTime === Math.floor(videoElement?.current?.currentTime)) {
