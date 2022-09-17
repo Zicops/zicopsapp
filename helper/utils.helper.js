@@ -148,16 +148,24 @@ export function limitValueInRange(value, min = 0, max = 100) {
     for (let i = 0; i <= duration; i += thumbnailsGap) {
       fractions.push(Math.floor(i));
     }
+    // const video = document.createElement('video');
+          
+    // video.preload = 'metadata';
+    // video.src = videoData.videoSrc;
+    // // Load video in Safari / IE11
+    // video.muted = true;
+    // video.playsInline = true;
+    
     fractions.map(async (time) => {
       let oneThums = await getVideoThumbnail(videoData, time);
       thumbnail.push(oneThums);
     });
-
     return thumbnail;
   }
   async function getVideoThumbnail(videoData, videoTimeInSeconds) {
     return new Promise((resolve, reject) => {
-      var video = document.createElement('video');
+    const video = document.createElement('video');
+      
       var timeupdate = function () {
         if (snapImage()) {
           video.removeEventListener('timeupdate', timeupdate);
@@ -171,12 +179,13 @@ export function limitValueInRange(value, min = 0, max = 100) {
       });
       var snapImage = function () {
         var canvas = document.createElement('canvas');
-        var scaleFactor = 0.5;
+        var scaleFactor = 0.2;
         canvas.width = video.videoWidth * scaleFactor;
         canvas.height = video.videoHeight * scaleFactor;
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
         var image = canvas.toDataURL();
-        var success = image.length > 100000;
+        // console.log(image);
+        var success = image.length > 10000;
         if (success) {
           URL.revokeObjectURL(videoData.videoSrc);
           resolve(image);

@@ -68,14 +68,18 @@
         margin: auto;
         font-size: 14px;
       }
-      // .thumbnailImage{
+      .thumbnailImage{
+        height: 100px;
+        background-color: $darkOne;
+        margin-bottom: 3px;
         .previewImg {
-            height: 100px;
+          position: relative;
+            height: 100%;
             aspect-ratio: 16 / 9;
-            // border-radius: 0.25rem;
             border: 2px solid $white;
+            object-fit: cover;
           }
-      // }
+      }
       .thumbnailTime{
           padding: 0 10px;
           color: $white;
@@ -122,11 +126,10 @@
         left: 0;
         text-align: center;
         transition: all 150ms ease-in-out;
+        margin-inline: auto;
       }
     }
     .quizIndicator span{
-        height: 12px;
-        width: 14px;
       &:before {
           content: "Q";
           color: $white;

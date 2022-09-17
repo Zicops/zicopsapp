@@ -1,4 +1,5 @@
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
+import { userContext } from '@/state/contexts/UserContext';
 import Image from 'next/image';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -28,6 +29,7 @@ export default function UiComponents({
   freezeState
 }) {
   const { videoElement, videoContainer } = refs;
+  const { bookmarkData: allBookmarks } = useContext(userContext);
   const videoData = useRecoilValue(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
   const quizData = useRecoilValue(QuizAtom);
@@ -68,6 +70,46 @@ export default function UiComponents({
   // useEffect(() => {
   //   setShowLanguageSubtitles(false);
   // }, [videoData.videoSrc]);
+
+  useEffect(() => {
+    if (!allBookmarks) return;
+    if (!videoElement?.current?.duration) return;
+    allBookmarks
+      ?.filter((bookmark) => bookmark?.topic_id === videoData?.topicContent[0]?.topicId)
+      ?.forEach((bm) => {
+        let bookmarkTime = bm?.time_stamp?.split(':');
+        let bookmarkTimeInSecs = +bookmarkTime[0] * 60 + +bookmarkTime[1];
+        // console.log(bookmarkTimeInSecs);
+        showThumbnailPointsInProgressbar(bookmarkTimeInSecs, 'bookmarkIndicator');
+      });
+  }, [allBookmarks, videoElement?.current?.duration]);
+
+  // To play automatically quizes and show quiz Q in timeline
+  useEffect(() => {
+    const topicId = videoData?.topicContent[0]?.topicId;
+    const quizLoop = getTopicQuizes(quizData, topicId);
+    quizLoop.forEach((quiz) => {
+      // console.log(quiz.startTime);
+      showThumbnailPointsInProgressbar(quiz.startTime, 'quizIndicator');
+      if (quiz.startTime === Math.floor(videoElement?.current?.currentTime)) {
+        // console.log(quizProgressData);
+        updateIsPlayingTo(false);
+        setShowQuiz(quiz);
+      }
+    });
+  }, [playerState?.progress]);
+
+  async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
+    let percent = (videoTimeInSeconds / videoElement?.current?.duration) * 100;
+    if (!percent) return;
+    let thumbPoints = document.getElementById(indicator);
+    let thumbSpan = document.createElement('span');
+    thumbSpan.style.left = percent + '%';
+    thumbPoints.appendChild(thumbSpan);
+  }
+  function getTopicQuizes(quizData, topicId) {
+    return quizData?.filter((quiz) => quiz?.topicId === topicId) || [];
+  }
 
   useEffect(() => {
     if (playerState?.isPlaying) setShowBox(null);
@@ -172,6 +214,7 @@ export default function UiComponents({
               return (
                 <button
                   // className={`${styleClass}`}
+                  key={quiz?.quiz_id}
                   onClick={() => {
                     updateIsPlayingTo(false);
                     setShowQuiz(quiz);
@@ -363,12 +406,12 @@ export default function UiComponents({
           playerClose={playerClose}
           currentQuizData={showQuiz}
           handleSkip={() => {
-            moveVideoProgressBySeconds(-1);
+            moveVideoProgressBySeconds(1);
             updateIsPlayingTo(true);
             setShowQuiz(null);
           }}
           afterSubmit={() => {
-            moveVideoProgressBySeconds(-1);
+            moveVideoProgressBySeconds(1);
             updateIsPlayingTo(true);
             setShowQuiz(null);
           }}

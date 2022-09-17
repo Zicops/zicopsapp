@@ -52,17 +52,18 @@ export default function ControlBar({
     <div className={`${styles.controlBar}`}>
       <div
         className={`${styles.timelineContainer} ${hideBar ? styles.dimProgressBar : ''}`}
-        onPointerDown={handleMouseMove}
-        // onMouseLeave={handleMouseExit}
-        // onClick={handleProgress}
-        // onMouseDown={toggleScrubbing}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseExit}
+        onPointerDown={toggleScrubbing}
+        onPointerUp={toggleScrubbing}
+        onPointerLeave={handleMouseExit}
         id="timelineContainer">
         <div className={`${styles.timeline}`} ref={progressBar}>
           <div className={`${styles.thumbnailContainer}`} ref={tooltip}>
             <div className={`${styles.thumbnailInfo}`}>Some info will be here!</div>
-            {/* <div className={`${styles.thumbnailImage}`}> */}
+            <div className={`${styles.thumbnailImage}`}>
             <img src="" alt="" className={`${styles.previewImg}`} id="thumbnailImages" />
-            {/* </div> */}
+            </div>
             <div className={`${styles.thumbnailTime}`}>{seek}</div>
           </div>
 

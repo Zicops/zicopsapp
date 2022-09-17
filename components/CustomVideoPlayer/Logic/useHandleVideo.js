@@ -438,30 +438,39 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     const elemWidth = 175;
     const margin = 20;
 
-    // const diff = screen.width - tooltipPosition - margin;
-    // const positionLeft =
-    //   diff < elemWidth ? tooltipPosition - (elemWidth - diff) : tooltipPosition + margin / 2;
+    const diff = screen.width - tooltipPosition - margin;
+    const positionLeft =
+      diff < elemWidth ? tooltipPosition - (elemWidth - diff) : tooltipPosition + margin / 2;
 
-    // tooltip.current.style.left = positionLeft + 'px';
-    console.log(tooltip.current.style.left);
+    tooltip.current.style.left = positionLeft + '%';
+    console.log(tooltipPosition, tooltip.current.style.left);
   }
 
   function handleMouseMove(e) {
     if (!videoElement.current) return;
+
+    const elemWidth = 175;
+    const margin = 0;
+
     const timelineContainer = document.getElementById('timelineContainer');
     // const rect = e.target.getBoundingClientRect();
     const rect = timelineContainer.getBoundingClientRect();
     const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
 
+    // const diff = screen.width - percent;
+    // const positionLeft = diff < elemWidth ? percent - (elemWidth - diff) : percent + margin / 2;
     var videoDuration = videoElement.current?.duration;
 
     // getting count of preview images as it could vary
     const previewImgNumber = Math.max(1, Math.floor((percent * videoDuration) / THUMBNAIL_GAP));
     const previewImg = document.getElementById('thumbnailImages');
-    previewImg.setAttribute('src', previewImages[previewImgNumber - 1]);
+    previewImg.setAttribute(
+      'src',
+      previewImages[previewImgNumber] || '/images/gif/loading.gif'
+    );
     timelineContainer.style.setProperty('--previewPosition', percent);
 
-    setTooltipPosition(e.pageX);
+    // setTooltipPosition(percent * 100);
 
     const timestamp = (e.pageX / screen.width) * videoDuration;
 
@@ -470,28 +479,31 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
     setSeek(`${timeObj.minute} : ${timeObj.second}`);
 
-    // if (isScrubbing) {
-    //   e.preventDefault();
-    //   timelineContainer.style.setProperty('--progressPosition', percent);
-    // }
+    // console.log(positionLeft);
+    if (isScrubbing) {
+      e.preventDefault();
+      timelineContainer.style.setProperty('--progressPosition', percent);
+    }
+
+    return percent;
   }
 
   function toggleScrubbing(e) {
-    const rect = e.target.getBoundingClientRect();
-    const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
-    setIsScrubbing((e.buttons & 1) === 1);
-
-    console.log('Scrubbing', isScrubbing, e.buttons);
-    // if (isScrubbing) {
-    //   togglePlay('pause');
-    // } else {
-    //   const manualChange = Number(Math.floor(percent * 100));
-    //   setVideoTime(manualChange);
-    // }
-    // handleMouseMove(e);
+    const percent = handleMouseMove(e);
+    const _isScrubbing = (e.buttons & 1) === 1;
+    setIsScrubbing(_isScrubbing);
+    // Web dev simplified - youtube video player
+    if (_isScrubbing) {
+      updateIsPlayingTo(false);
+    } else {
+      const manualChange = Number(Math.floor(percent * 100));
+      setVideoTime(manualChange);
+      updateIsPlayingTo(true);
+    }
   }
   function handleMouseExit(e) {
     setSeek(0);
+    setIsScrubbing(0);
   }
 
   function updateVolumeValue(isIncrement) {
@@ -648,22 +660,6 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     const manualChange = Number(Math.floor(percent * 100));
     setVideoTime(manualChange);
   }
-  // var isDragging = true;
-  // function handleVideoClickedProgress(e) {
-
-  //   if (!isDragging) {
-  //     const rect = e.target.getBoundingClientRect();
-  //     const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
-  //     const manualChange = Number(Math.floor(percent * 100));
-  //     setVideoTime(manualChange);
-  //   } else {
-  //     alert('not dragging')
-  //   }
-  //   // const rect = e.target.getBoundingClientRect();
-  //   // const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
-  //   // const manualChange = Number(Math.floor(percent * 100));
-  //   // setVideoTime(manualChange);
-  // }
 
   function moveVideoProgressBySeconds(seconds) {
     let time = Math.floor(videoElement.current?.currentTime);

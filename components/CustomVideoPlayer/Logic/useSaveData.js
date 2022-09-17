@@ -6,7 +6,7 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
 import { BOX } from './customVideoPlayer.helper';
@@ -106,15 +106,15 @@ export default function useSaveData(videoElement, freezeState) {
     //     video.play();
     //   });
     // }
-    showThumbnailPointsInProgressbar(100, 'bookmarkIndicator');
-    showThumbnailPointsInProgressbar(300, 'quizIndicator');
-    async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
-      let percent = (videoTimeInSeconds/videoElement?.current?.duration) * 100;
-      let thumbPoints = document.getElementById(indicator);
-      let thumbSpan = document.createElement('span');
-      thumbSpan.style.left = percent + '%';
-      thumbPoints.appendChild(thumbSpan);
-    }
+    // showThumbnailPointsInProgressbar(280, 'bookmarkIndicator');
+    // showThumbnailPointsInProgressbar(300, 'quizIndicator');
+    // async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
+    //   let percent = (videoTimeInSeconds/videoElement?.current?.duration) * 100;
+    //   let thumbPoints = document.getElementById(indicator);
+    //   let thumbSpan = document.createElement('span');
+    //   thumbSpan.style.left = percent + '%';
+    //   thumbPoints.appendChild(thumbSpan);
+    // }
     // OLD CODE SEMI-WORKING
     // if (!videoElement?.current?.duration) return;
     // let thumbnail = [];
