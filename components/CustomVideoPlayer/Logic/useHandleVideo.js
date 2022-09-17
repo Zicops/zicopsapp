@@ -330,12 +330,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // show/hide controls based on type (show only for mp4)
   useEffect(() => {
     if (videoData.type === null) return setVideoTime(0);
-    if (videoData.type !== 'mp4') return setHideControls(1);
+    // if (videoData.type !== 'mp4') return setHideControls(1);
   }, [videoData.type]);
 
   // reset playpause to null after few seconds
   useEffect(() => {
-    if (videoData?.type !== 'mp4') return;
+    // if (videoData?.type !== 'mp4') return;
     clearTimeout(timeout);
     const timeout = setTimeout(() => {
       setPlayPauseActivated(null);
