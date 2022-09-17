@@ -84,7 +84,7 @@ export default function UiComponents({
         // console.log(bookmarkTimeInSecs);
         showThumbnailPointsInProgressbar(bookmarkTimeInSecs, 'bookmarkIndicator');
       });
-  }, [allBookmarks, videoElement?.current?.duration]);
+  }, [allBookmarks, videoData?.videoSrc, videoElement?.current?.duration]);
 
   // To play automatically quizes and show quiz Q in timeline
   useEffect(() => {
@@ -99,7 +99,7 @@ export default function UiComponents({
         setShowQuiz(quiz);
       }
     });
-  }, [playerState?.progress]);
+  }, [videoData?.videoSrc, videoElement?.current?.duration]);
 
   async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
     let percent = (videoTimeInSeconds / videoElement?.current?.duration) * 100;
