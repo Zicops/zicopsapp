@@ -439,44 +439,27 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     return isCompleted;
   }
 
-  function setTooltipPosition(tooltipPosition) {
-    // 10 is added for scrollbar gap and margin left
-    const elemWidth = 175;
-    const margin = 20;
-
-    const diff = screen.width - tooltipPosition - margin;
-    const positionLeft =
-      diff < elemWidth ? tooltipPosition - (elemWidth - diff) : tooltipPosition + margin / 2;
-
-    tooltip.current.style.left = positionLeft + '%';
-    console.log(tooltipPosition, tooltip.current.style.left);
-  }
-
   function handleMouseMove(e) {
     if (!videoElement.current) return;
 
+    // this width is set in scss
     const elemWidth = 175;
-    const margin = 0;
 
     const timelineContainer = document.getElementById('timelineContainer');
     // const rect = e.target.getBoundingClientRect();
     const rect = timelineContainer.getBoundingClientRect();
-    const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
 
-    // const diff = screen.width - percent;
-    // const positionLeft = diff < elemWidth ? percent - (elemWidth - diff) : percent + margin / 2;
+    const minPosition = e.pageX < elemWidth / 2 ? elemWidth / 2 : e.pageX - rect.x;
+    const maxPosition = rect.width - e.pageX < elemWidth ? rect.width - elemWidth / 2 : rect.width;
+    let percent = Math.min(Math.max(0, minPosition), maxPosition) / rect.width;
+
     var videoDuration = videoElement.current?.duration;
 
     // getting count of preview images as it could vary
     const previewImgNumber = Math.max(1, Math.floor((percent * videoDuration) / THUMBNAIL_GAP));
     const previewImg = document.getElementById('thumbnailImages');
-    previewImg.setAttribute(
-      'src',
-      previewImages[previewImgNumber] || '/images/gif/loading.gif'
-    );
+    previewImg.setAttribute('src', previewImages[previewImgNumber] || '/images/gif/loading.gif');
     timelineContainer.style.setProperty('--previewPosition', percent);
-
-    // setTooltipPosition(percent * 100);
 
     const timestamp = (e.pageX / screen.width) * videoDuration;
 
@@ -485,9 +468,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
     setSeek(`${timeObj.minute} : ${timeObj.second}`);
 
-    // console.log(positionLeft);
     if (isScrubbing) {
       e.preventDefault();
+      percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
       timelineContainer.style.setProperty('--progressPosition', percent);
     }
 

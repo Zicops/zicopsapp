@@ -73,6 +73,19 @@ export default function UiComponents({
   //   setShowLanguageSubtitles(false);
   // }, [videoData.videoSrc]);
 
+  // To play quizzes automatically
+  useEffect(() => {
+    const topicId = videoData?.topicContent[0]?.topicId;
+    const quizLoop = getTopicQuizes(quizData, topicId);
+    quizLoop.forEach((quiz) => {
+      if (quiz.startTime === Math.floor(videoElement?.current?.currentTime)) {
+        updateIsPlayingTo(false);
+        setShowQuiz(quiz);
+      }
+    });
+  }, [playerState?.progress]);
+
+  // To show bookmark B in timeline
   useEffect(() => {
     if (!allBookmarks) return;
     if (!videoElement?.current?.duration) return;
@@ -81,23 +94,16 @@ export default function UiComponents({
       ?.forEach((bm) => {
         let bookmarkTime = bm?.time_stamp?.split(':');
         let bookmarkTimeInSecs = +bookmarkTime[0] * 60 + +bookmarkTime[1];
-        // console.log(bookmarkTimeInSecs);
         showThumbnailPointsInProgressbar(bookmarkTimeInSecs, 'bookmarkIndicator');
       });
   }, [allBookmarks, videoData?.videoSrc, videoElement?.current?.duration]);
 
-  // To play automatically quizes and show quiz Q in timeline
+  // To show quiz Q in timeline
   useEffect(() => {
     const topicId = videoData?.topicContent[0]?.topicId;
     const quizLoop = getTopicQuizes(quizData, topicId);
     quizLoop.forEach((quiz) => {
-      // console.log(quiz.startTime);
       showThumbnailPointsInProgressbar(quiz.startTime, 'quizIndicator');
-      if (quiz.startTime === Math.floor(videoElement?.current?.currentTime)) {
-        // console.log(quizProgressData);
-        updateIsPlayingTo(false);
-        setShowQuiz(quiz);
-      }
     });
   }, [videoData?.videoSrc, videoElement?.current?.duration]);
 
