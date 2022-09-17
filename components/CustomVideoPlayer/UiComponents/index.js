@@ -7,7 +7,6 @@ import { filterModule } from '../../../helper/data.helper';
 import { ModuleAtom, QuizAtom } from '../../../state/atoms/module.atoms';
 import { QuizProgressDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import styles from '../customVideoPlayer.module.scss';
 import DraggableDiv from '../DraggableDiv';
 import { BOX } from '../Logic/customVideoPlayer.helper';
 import useSaveData from '../Logic/useSaveData';
@@ -15,7 +14,9 @@ import Bookmark from './Bookmark';
 import ButtonWithBox from './ButtonWithBox';
 import Notes from './Notes';
 import Quiz from './Quiz';
+import ResourcesList from './ResourcesList';
 import SubtitleBox from './SubtitleBox';
+import styles from '../customVideoPlayer.module.scss';
 
 export default function UiComponents({
   refs,
@@ -75,6 +76,10 @@ export default function UiComponents({
     if (isTopBarHidden) setShowBox(null);
   }, [isTopBarHidden, playerState?.isPlaying]);
 
+  useEffect(() => {
+    setShowQuiz(null);
+  }, [videoData?.type, videoData?.videoSrc]);
+
   const toolbarItems = [
     {
       id: 0,
@@ -85,7 +90,8 @@ export default function UiComponents({
     {
       id: 1,
       btnImg: '/images/svg/hub.svg',
-      handleClick: () => switchBox(1)
+      handleClick: () => switchBox(1),
+      boxComponent: <ResourcesList updateIsPlayingTo={updateIsPlayingTo} />
     },
     {
       id: 2,
@@ -94,6 +100,7 @@ export default function UiComponents({
     },
     {
       id: 3,
+      isHidden: videoData?.type !== 'mp4',
       btnComp: (
         <div
           className={`${styles.videoBookmark}`}
@@ -234,14 +241,16 @@ export default function UiComponents({
       {/* Static content toolbar */}
       {videoData?.type !== 'mp4' && (
         <DraggableDiv initalPosition={{ x: '0px', y: '0px' }}>
-          <div className={`${styles.toolbar}`} onClick={() => setIsToolbarOpen(!isToolbarOpen)}>
-            <span style={{ padding: '5px' }}>
+          <div className={`${styles.toolbar}`}>
+            <span style={{ padding: '5px' }} onClick={() => setIsToolbarOpen(!isToolbarOpen)}>
               <Image src="/images/svg/catching_pokemon.svg" height={20} width={20} />
             </span>
 
             <div className={`${styles.toolbarBox}`}>
               {isToolbarOpen &&
                 toolbarItems.map((item) => {
+                  if (item?.isHidden) return null;
+
                   return (
                     <ButtonWithBox
                       key={item.id}
@@ -270,6 +279,8 @@ export default function UiComponents({
               {!videoData.isPreview && (
                 <div className={`${styles.leftIcons}`}>
                   {toolbarItems.slice(0, 3).map((item) => {
+                    if (item?.isHidden) return null;
+
                     return (
                       <ButtonWithBox
                         key={item.id}
@@ -298,6 +309,7 @@ export default function UiComponents({
               {!videoData.isPreview && (
                 <div className={`${styles.rightIcons}`}>
                   {toolbarItems.slice(3, toolbarItems.length).map((item) => {
+                    if (item?.isHidden) return null;
                     return (
                       <ButtonWithBox
                         key={item.id}
