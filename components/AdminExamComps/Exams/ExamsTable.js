@@ -132,7 +132,9 @@ export default function ExamsTable({ isEdit = false }) {
                 border: '0'
               }}
               onClick={() => router.push(`${addRoute}?isPreview=true`, addRoute)}>
-              <img src="/images/svg/eye-line.svg" width={20}></img>
+              <ToolTip title="View Exam" placement="bottom">
+                <img src="/images/svg/eye-line.svg" width={20}></img>
+              </ToolTip>
             </button>
             {isEdit && (
               <>
@@ -144,7 +146,9 @@ export default function ExamsTable({ isEdit = false }) {
                     outline: '0',
                     border: '0'
                   }}>
-                  <ToolTip title="Edit Exam Configurations" placement="bottom"><img src="/images/svg/edit-box-line.svg" width={20}></img></ToolTip>
+                  <ToolTip title="Edit Exam Configurations" placement="bottom">
+                    <img src="/images/svg/edit-box-line.svg" width={20}></img>
+                  </ToolTip>
                 </button>
               </>
             )}

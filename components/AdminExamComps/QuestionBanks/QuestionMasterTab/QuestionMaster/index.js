@@ -1,3 +1,4 @@
+import CustomTooltip from '@/components/common/CustomTooltip';
 import ToolTip from '@/components/common/ToolTip';
 import { useEffect, useState } from 'react';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
@@ -18,21 +19,37 @@ export default function QuestionMaster({ isEdit, data }) {
       {visibleForm === null && (
         <div className={`center-element-with-flex ${styles.questionMasterContainer}`}>
           <ToolTip title="Create and Add Questions to Bank" placement="top">
-          <div className={`${styles.radioBox}`} onClick={() => setVisibleForm('create')}>
-            <div className={`${styles.radioBoxIcon}`}>
-              <img src="/images/svg/add-line.svg" />
+            <div className={`${styles.radioBox}`} onClick={() => setVisibleForm('create')}>
+              <div className={`${styles.radioBoxIcon}`}>
+                <img src="/images/svg/add-line.svg" />
+              </div>
+              <div className={`${styles.radioBoxText}`}>Create Question</div>
             </div>
-            <div className={`${styles.radioBoxText}`}>Create Question</div>
-          </div>
           </ToolTip>
           <ToolTip title="Bulk Upload Questions" placement="top">
-          <div className={`${styles.radioBox}`} onClick={() => setVisibleForm('upload')}>
-            <div className={`${styles.radioBoxIcon}`}>
-              <img src="/images/svg/upload-cloud-line.svg" />
+            <div className={`${styles.radioBox}`} onClick={() => setVisibleForm('upload')}>
+              <div className={`${styles.radioBoxIcon}`}>
+                <img src="/images/svg/upload-cloud-line.svg" />
+              </div>
+              <div className={`${styles.radioBoxText}`}>
+                Upload Questions
+                <CustomTooltip
+                  info={
+                    <>
+                      Use Upload feature to:
+                      <ul>
+                        <li>Upload MCQ questions with details in bulk in one go.</li>
+                        <li> Upload questions and options in text format only.</li>
+                      </ul>
+                      <b>Note: </b>No media file upload allowed for questions or options in bulk
+                      upload
+                    </>
+                  }
+                />
+              </div>
             </div>
-            <div className={`${styles.radioBoxText}`}>Upload Questions</div>
-          </div>
           </ToolTip>
+
           {/* <LabeledRadioCheckbox
             type="radio"
             label="Create Question"

@@ -43,7 +43,7 @@ const QuestionButton = ({each, data, setData, current, setCurrent, setOption, fi
     <>
       {/*<Grid item lg={2.4} md={2.4} sm={2.4} xs={2.4} display={'flex'} justifyContent={'center'} alignItems={'center'}>*/}
       {/*</Grid>*/}
-      <ToolTip title="Go to this question" placement="top">
+      <ToolTip title={`Go to question number ${each.id}`} placement="top">
       <button onClick={() => {
         setCurrent(data.filter(e => e.id === (each.id))[0])
         setData(handleChange());

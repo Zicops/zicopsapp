@@ -60,7 +60,7 @@ const Congratulations = (props) => {
 
         <CongratulationsScreenButton
           title={
-            <ToolTip title="Exit and go back to list of exams" placement="bottom">
+            <ToolTip title="Exit and go back to course" placement="bottom">
               <span>Exit And Return To Main Screen</span>
             </ToolTip>
           }

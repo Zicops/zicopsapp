@@ -1,3 +1,4 @@
+import CustomTooltip from '@/components/common/CustomTooltip';
 import RTE from '@/components/common/FormComponents/RTE';
 import NextButton from '@/components/common/NextButton';
 import ToolTip from '@/components/common/ToolTip';
@@ -181,9 +182,10 @@ export default function ExamMaster() {
       <div className={`${styles.passingCriteriaOuterContainer}`}>
         <label htmlFor="passing_criteria" aria-label="passing_criteria">
           Passing Criteria:
-          <ToolTip title={passingCriteriaText} placement="bottom">
+          {/* <ToolTip title={passingCriteriaText} placement="bottom">
             <img src={TOOLTIP_IMG_SRC} style={TOOLTIP_STYLE} />
-          </ToolTip>
+          </ToolTip> */}
+          <CustomTooltip info={passingCriteriaText}/>
         </label>
 
         <div

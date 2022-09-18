@@ -63,7 +63,7 @@ const ExamLandingPage = () => {
       </div>
       <div className={`${styles.exam_landing_btn_container}`}>
         <section style={{ marginRight: '5%' }}>
-          <ToolTip title="Take a test" placement="bottom">
+          <ToolTip title="Take a demo test" placement="bottom">
             <button
               className={`${styles.exam_landing_btn}`}
               onClick={() => {

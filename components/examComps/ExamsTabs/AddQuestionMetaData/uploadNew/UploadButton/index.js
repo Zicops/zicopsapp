@@ -25,10 +25,10 @@ const UploadButton = () => {
           </div>
           <div className={`${styles.preview_remove_links}`}>
             <ToolTip title="Click here to Preview Uploaded File" placement="bottom">
-            <a className={`${styles.preview}`}>Preview</a>
+              <a className={`${styles.preview}`}>Preview</a>
             </ToolTip>
-            <ToolTip title="Upload File to Preview" placement="bottom">
-            <a className={`${styles.remove}`}>Remove</a>
+            <ToolTip title="Click here to Remove Uploaded File" placement="bottom">
+              <a className={`${styles.remove}`}>Remove</a>
             </ToolTip>
           </div>
         </div>
