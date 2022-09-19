@@ -10,6 +10,7 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/exam-screen',
   '/course/[courseId]/topic/[topicId]/exam/[examId]',
   '/login',
+  '/test',
   '/reset-password',
   '/account-setup',
   '/forgot-password',
@@ -44,6 +45,5 @@ export const LANGUAGES = [
   'Bhojpuri',
   'Maithili'
 ];
-
 
 export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';

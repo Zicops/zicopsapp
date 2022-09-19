@@ -232,14 +232,15 @@ export default function QuizForm({ courseId, topicId }) {
                     placeholder: 'Select from the existing question',
                     options: quizMetaData?.questions
                       ?.map((q) => {
-                        // if (quizzes?.find((quiz) => quiz?.questionId === q?.id)) return null;
+                        if (quizzes?.find((quiz) => quiz?.questionId === q?.id)) return null;
 
                         return { value: q?.id, label: q?.Description };
                       })
                       ?.filter((q) => q),
                     value: { value: newQuiz?.questionId, label: newQuiz?.question },
                     isSearchEnable: true,
-                    menuPlacement: 'top'
+                    menuPlacement: 'top',
+                    noOptionsMessage: 'No Quiz Questions Available'
                   }}
                   changeHandler={(e) =>
                     setNewQuiz({ ...newQuiz, question: e?.label, questionId: e?.value })

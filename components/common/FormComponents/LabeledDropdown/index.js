@@ -19,6 +19,7 @@ export default function LabeledDropdown({
     isReadonly,
     isSearchEnable,
     isMulti,
+    noOptionsMessage = 'No Options',
     menuPlacement = 'bottom'
   } = dropdownOptions;
 
@@ -54,6 +55,7 @@ export default function LabeledDropdown({
         isSearchable={!!isSearchEnable}
         isDisabled={!!isDisabled}
         isOptionDisabled={(option) => option.disabled}
+        noOptionsMessage={() => noOptionsMessage}
         isMulti={!!isMulti}
         isClearable={false}
       />

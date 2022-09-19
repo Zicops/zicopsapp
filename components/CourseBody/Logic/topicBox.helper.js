@@ -10,6 +10,12 @@ export function imageTypeTopicBox(type) {
     case 'Content':
       topicImage = '/images/Rectangle 55.png';
       break;
+    case 'Classroom':
+      topicImage = '/images/Rectangle 55 (2).png';
+      break;
+    default:
+      topicImage = '/images/Rectangle 55 (3).png';
+      break;
   }
 
   return topicImage;

@@ -16,6 +16,7 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { QuizProgressDataAtom, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { useMutation } from '@apollo/client';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { questions } from '../../../examComps/QuickQuiz/Logic/QuickQuiz.helper';
@@ -37,6 +38,7 @@ export default function Quiz({
     client: userClient
   });
 
+  const router = useRouter();
   const quizData = useRecoilValue(QuizAtom);
   const userData = useRecoilValue(UserStateAtom);
   const videoData = useRecoilValue(VideoAtom);
@@ -103,6 +105,10 @@ export default function Quiz({
 
     // setIsSubmitDisabled(!!isQuizPassed);
     loadMcqData();
+  }, []);
+
+  useEffect(() => {
+    if (router.asPath?.includes('preview')) return setIsSubmitDisabled(true);
   }, []);
 
   useEffect(() => {
