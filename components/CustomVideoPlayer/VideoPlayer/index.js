@@ -244,7 +244,7 @@ export default function VideoPlayer({
       {videoData?.type === 'classroom' && (
         <iframe
           style={{ height: '80vh', width: '100%' }}
-          src="https://zicops.whereby.com/demo-6b19c433-a0c4-4bc8-b60a-0798c71ed825"
+          src="https://zicops.whereby.com/demo-6b19c433-a0c4-4bc8-b60a-0798c71ed825?background=off&logo=off"
           allow="camera; microphone; fullscreen; speaker; display-capture"></iframe>
       )}
     </>
