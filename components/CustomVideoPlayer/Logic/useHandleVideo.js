@@ -232,7 +232,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       topicId: currentTopicProgress?.topic_id,
       topicType: 'Content',
       status: isCompleted ? 'completed' : 'in-progress',
-      videoProgress: type === 'binge' ? '100' : limitValueInRange(playerState?.progress, 0, 100).toString(),
+      videoProgress:
+        type === 'binge' ? '100' : limitValueInRange(playerState?.progress, 0, 100).toString(),
       timestamp: `${currentTime}-${duration}`
     };
 
@@ -725,7 +726,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     // postion is not accurate
     const tooltipPos = (time / videoElement.current.duration) * screen.width;
-    setTooltipPosition(tooltipPos);
+    // setTooltipPosition(tooltipPos);
 
     const timeObj = secondsToMinutes(time);
     if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
