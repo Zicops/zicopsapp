@@ -19,6 +19,7 @@ import UserButton from '../common/UserButton';
 import Card from './Card/Card';
 import styles from './favouriteDndCourses.module.scss';
 import Folder from './Folder/Folder';
+import ListCard from './ListCard';
 import useHandleCourseAssign from './Logic/useHandleCourseAssign';
 
 export default function FavouriteDndCourses() {
@@ -343,7 +344,7 @@ export default function FavouriteDndCourses() {
 
                   if (!isCoursePresent?.selfAdded)
                     setIsCoursePresent({ ...isCoursePresent, selfAdded: true });
-                  return <CourseLIstCard courseData={course} footerType={'added'} />;
+                  return <ListCard courseData={course} footerType={'added'} />;
                 })}
 
                 {!isCoursePresent?.selfAdded && (
@@ -365,7 +366,7 @@ export default function FavouriteDndCourses() {
 
                   if (!isCoursePresent?.adminAdded)
                     setIsCoursePresent({ ...isCoursePresent, adminAdded: true });
-                  return <CourseLIstCard courseData={course} footerType={'assigned'} />;
+                  return <ListCard courseData={course} footerType={'assigned'} />;
                 })}
 
                 {!isCoursePresent?.adminAdded && (
