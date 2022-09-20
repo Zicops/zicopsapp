@@ -7,6 +7,7 @@ import {
   UPDATE_USER,
   userClient
 } from '@/api/UserMutations';
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   getUserObject,
@@ -102,7 +103,7 @@ export default function useHandleAddUserDetails() {
     setSubmitDisable(true);
     const sendLspData = {
       user_id: userDataAbout?.id,
-      lsp_id: userOrgData?.lsp_id || 'Zicops Learning Space',
+      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
       status: 'Active'
     };
 
@@ -265,8 +266,7 @@ export default function useHandleAddUserDetails() {
       user_role_id: dataRole?.user_role_id
     }));
 
-    setSubmitDisable(false);
-
+    setSubmitDisable(true);
     return isError;
   }
 
@@ -413,7 +413,7 @@ export default function useHandleAddUserDetails() {
     isOrganizationSetupReady,
     isAccountSetupReady,
     setPhCountryCode,
-    isSubmitDisable
+    setSubmitDisable
     // addUserOrganizationDetails,
     // addUserLanguageDetails,
     // addUserPreferenceDetails,

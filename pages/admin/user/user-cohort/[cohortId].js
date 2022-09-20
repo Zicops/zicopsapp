@@ -5,8 +5,11 @@ import { userSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helpe
 import { useState } from 'react';
 import ChortMasterTab from '@/components/UserComps/UserCohorts/ChortMasterTab';
 import Sidebar from '@/components/common/Sidebar';
+import { useRouter } from 'next/router';
 
 const UserCohort = () => {
+  const router = useRouter();
+  //get course details right here
   return (
     <>
       <Sidebar sidebarItemsArr={userSideBarData} />
@@ -14,7 +17,7 @@ const UserCohort = () => {
         <AdminHeader title="Cohort Name" isAddShown={false} />
         <MainBodyBox>
           {/* <MyUser getUser={(list) => setUserIds(list)} /> */}
-          <ChortMasterTab />
+          <ChortMasterTab isEdit={true} />
           {/* <UserCohorts /> */}
         </MainBodyBox>
       </MainBody>

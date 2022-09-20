@@ -11,7 +11,7 @@ import addUserData from '../../Logic/addUserData';
 const AddUsers = ({ usersData = [] }) => {
   const { addUserToCohort } = addUserData();
   const CohortName = 'Developement Cohort';
-  const selectedUsers = `5/${usersData.length}`;
+  const selectedUsers = `5/${usersData?.length}`;
   const [userId, setUserId] = useState([]);
   const [data, setData] = useState([]);
 
