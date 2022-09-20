@@ -1,10 +1,13 @@
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
+import { userContext } from '@/state/contexts/UserContext';
+import { useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import { ResourcesAtom } from '../../../../state/atoms/module.atoms';
 import { getNotesCount, getResourceCount } from '../../Logic/courseBody.helper';
 
 export default function TopicFiles({ data, handleClick, isResourceShown, isNotes }) {
   const isResourceActive = isResourceShown?.includes(data.id);
+  const { bookmarkData } = useContext(userContext);
 
   const resources = useRecoilValue(ResourcesAtom);
   const notes = useRecoilValue(FloatingNotesAtom);
@@ -35,9 +38,14 @@ export default function TopicFiles({ data, handleClick, isResourceShown, isNotes
           {data.name}
         </div>
 
-        <div className="topic_body">
+        <div className="topic_body" style={isNotes ? { padding: '10px' } : {}}>
           <div className="topic_data">
-            <p>{fileCount} Files</p>
+            <p>
+              {fileCount} {isNotes ? 'Notes' : 'Files'}
+            </p>
+            {isNotes && (
+              <p>{bookmarkData?.filter((bm) => bm?.topic_id === data?.id)?.length} Bookmarks</p>
+            )}
           </div>
 
           <div className={`arrow_img ${isResourceActive ? 'rotate' : ''}`}>
