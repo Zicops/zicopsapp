@@ -96,7 +96,7 @@ const UserCoursesTab = () => {
       const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
       allAssignedCourses.push({
         ...courseRes?.getCourse,
-        completedPercentage: userProgressArr?.length ? courseProgress : 0,
+        completedPercentage: userProgressArr?.length ? courseProgress : '0',
         added_by: added_by?.role,
         created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY')
