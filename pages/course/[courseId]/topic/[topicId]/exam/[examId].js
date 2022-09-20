@@ -19,6 +19,7 @@ import {
 } from '../../../../../../API/Queries';
 // import LearnerExamComponent from '../../components/LearnerExamComp';
 import {
+  ADD_USER_COURSE_PROGRESS,
   ADD_USER_EXAM_ATTEMPTS,
   ADD_USER_EXAM_PROGRESS,
   ADD_USER_EXAM_RESULTS,
@@ -66,6 +67,8 @@ const ExamScreen = () => {
   const [loadOptionsWithAnswer] = useLazyQuery(GET_QUESTION_OPTIONS_WITH_ANSWER, {
     client: queryClient
   });
+
+  const [addUserCourseProgress] = useMutation(ADD_USER_COURSE_PROGRESS, { client: userClient });
   const [updateUserCourse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
   const [addUserExamAttempts] = useMutation(ADD_USER_EXAM_ATTEMPTS, { client: userClient });
   const [updateUserExamAttempts] = useMutation(UPDATE_USER_EXAM_ATTEMPTS, { client: userClient });
@@ -228,7 +231,7 @@ const ExamScreen = () => {
     // load user course mapping and progress
     const data = {
       userCourseMapping: userCourseData?.userCourseMapping,
-      userCourseProgress: userCourseData?.userCourseProgress
+      userCourseProgress: userCourseData?.userCourseProgress || []
     };
     if (!data?.userCourseMapping?.user_cp_id) {
       const mapRes = await loadUserCourseMaps({
@@ -252,6 +255,25 @@ const ExamScreen = () => {
     const userCourseProgressId = data?.userCourseProgress?.find(
       (cp) => cp?.topic_id === topicId
     )?.user_cp_id;
+    // console.log(data?.userCourseProgress, userCourseProgressId, userCourseData);
+    if (!userCourseProgressId) {
+      const sendData = {
+        userId: userData.id,
+        userCourseId: data?.userCourseMapping?.user_course_id,
+        topicId: topicId,
+        topicType: 'Assessment',
+        status: 'not-started',
+        videoProgress: '',
+        timestamp: ''
+      };
+      console.log(sendData);
+      const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
+        console.log(err);
+        return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+      });
+      const userCPData = progressRes?.data?.addUserCourseProgress[0];
+      if (userCPData) data.userCourseProgress.push(userCPData);
+    }
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
@@ -267,17 +289,18 @@ const ExamScreen = () => {
       examAttemptData?.find((a) => a?.attempt_status === 'started') || null;
     let progressRes = null,
       resultRes;
+    console.log(attemptRes);
     if (currentExamAttemptData?.user_ea_id) {
       progressRes = await loadQueryDataAsync(
         GET_USER_EXAM_PROGRESS,
         { user_id: userData?.id, user_ea_id: currentExamAttemptData?.user_ea_id },
-        {},
+        { fetchPolicy: 'no-cache' },
         userQueryClient
       );
       resultRes = await loadQueryDataAsync(
         GET_USER_EXAM_RESULTS,
         { user_id: userData?.id, user_ea_id: currentExamAttemptData?.user_ea_id },
-        {},
+        { fetchPolicy: 'no-cache' },
         userQueryClient
       );
     }
@@ -349,19 +372,21 @@ const ExamScreen = () => {
 
       mappedQb = [
         ...mappedQb,
-        ...mappingRes?.data?.getQPBankMappingBySectionId?.map((qbMappings) => {
-          return {
-            id: qbMappings.id,
-            qbId: qbMappings.QbId,
-            difficulty_level: qbMappings.DifficultyLevel,
-            sectionId: qbMappings.SectionId,
-            is_active: qbMappings.IsActive,
-            question_marks: qbMappings.QuestionMarks,
-            question_type: qbMappings.QuestionType,
-            retrieve_type: qbMappings.RetrieveType,
-            total_questions: qbMappings.TotalQuestions
-          };
-        })
+        ...structuredClone(mappingRes?.data?.getQPBankMappingBySectionId)
+          ?.sort((m1, m2) => m2?.CreatedAt - m1?.CreatedAt)
+          ?.map((qbMappings) => {
+            return {
+              id: qbMappings.id,
+              qbId: qbMappings.QbId,
+              difficulty_level: qbMappings.DifficultyLevel,
+              sectionId: qbMappings.SectionId,
+              is_active: qbMappings.IsActive,
+              question_marks: qbMappings.QuestionMarks,
+              question_type: qbMappings.QuestionType,
+              retrieve_type: qbMappings.RetrieveType,
+              total_questions: qbMappings.TotalQuestions
+            };
+          })
       ];
     }
 
@@ -777,7 +802,11 @@ const ExamScreen = () => {
 
   useEffect(() => {
     if (userExamData?.duration?.timeLeft % 15 !== 0) return;
-
+    console.log(
+      userExamData?.duration?.timeLeft,
+      userExamData?.duration?.timeLeft % 15,
+      userExamData?.duration?.timeLeft % 15 !== 0
+    );
     syncDataWithBackend();
   }, [userExamData?.duration?.timeLeft]);
 
@@ -818,7 +847,7 @@ const ExamScreen = () => {
         addedBy: _courseData?.userCourseMapping?.added_by,
         courseType: _courseData?.userCourseMapping?.course_type,
         isMandatory: _courseData?.userCourseMapping?.is_mandatory,
-        endDate: getUnixFromDate(_courseData?.userCourseMapping?.end_date)
+        endDate: getUnixFromDate(_courseData?.userCourseMapping?.end_date)?.toString()
       };
 
       // console.log(sendUserCourseData);

@@ -162,6 +162,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           sendData.videoProgress = playerState?.progress?.toString();
         }
 
+        if (
+          userCourseMapData?.userCourseProgress?.filter((cp) => cp?.topic_id === topic?.id)
+            ?.length > 0
+        )
+          continue;
+
         console.log(sendData);
         const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
           console.log(err);
