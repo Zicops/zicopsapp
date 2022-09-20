@@ -230,7 +230,8 @@ export default function VideoPlayer({
         </>
       )}
 
-      {videoData.type === 'SCORM' && videoData.videoSrc && (
+      {/* {videoData.type === 'SCORM' && videoData.videoSrc && ( */}
+      {videoData.type === 'SCORM' && (
         <iframe
           src={
             videoData.videoSrc ||
