@@ -13,6 +13,7 @@ const ZicopsQuestionPapers = () => {
         <AdminHeader
           title="Zicops Question Papers"
           isAddShown={true}
+          pageRoute="/admin/exams/my-question-papers/add"
           tooltipTitle="Create new Question Paper"
         />
         <MainBodyBox>
