@@ -29,7 +29,7 @@ export default function useHandleSearch() {
 
   // load table data
   useEffect(() => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 30, pageCursor: '' };
+    const queryVariables = { publish_time: Date.now(), pageSize: 9999999, pageCursor: '' };
 
     loadCourses({ variables: queryVariables }).then(({ data }) => {
       if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
@@ -41,26 +41,26 @@ export default function useHandleSearch() {
   }, []);
 
   // for reloading new courses
-  useEffect(() => {
-    var options = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0
-    };
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setRefetchData(true);
-      }
-    }, options);
-    if (lastItemRef?.current) observer.observe(lastItemRef?.current);
-  }, []);
+  // useEffect(() => {
+  //   var options = {
+  //     root: null,
+  //     rootMargin: '0px',
+  //     threshold: 1.0
+  //   };
+  //   const observer = new IntersectionObserver((entries) => {
+  //     if (entries[0].isIntersecting) {
+  //       setRefetchData(true);
+  //     }
+  //   }, options);
+  //   if (lastItemRef?.current) observer.observe(lastItemRef?.current);
+  // }, []);
 
-  useEffect(() => {
-    if (refetchData) {
-      refetchNextCourses();
-      setRefetchData(false);
-    }
-  }, [refetchData]);
+  // useEffect(() => {
+  //   if (refetchData) {
+  //     refetchNextCourses();
+  //     setRefetchData(false);
+  //   }
+  // }, [refetchData]);
 
   function refetchNextCourses() {
     if (!pageCursor) return;

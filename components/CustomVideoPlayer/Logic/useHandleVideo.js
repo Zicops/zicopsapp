@@ -13,9 +13,19 @@ import { GET_TOPIC_EXAMS } from 'API/Queries';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../helper/data.helper';
-import { generateVideoThumbnails, secondsToHMS, secondsToMinutes } from '../../../helper/utils.helper';
-import { TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
-import { getVideoObject, UserCourseDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
+import {
+  generateVideoThumbnails,
+  limitValueInRange,
+  secondsToHMS,
+  secondsToMinutes
+} from '../../../helper/utils.helper';
+import { QuizAtom, TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
+import {
+  getVideoObject,
+  QuizProgressDataAtom,
+  UserCourseDataAtom,
+  VideoAtom
+} from '../../../state/atoms/video.atom';
 import { addCallbackToEvent } from './customVideoPlayer.helper';
 
 export default function useVideoPlayer(videoElement, videoContainer, set) {
@@ -34,6 +44,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const userData = useRecoilValue(UserStateAtom);
 
+  const quizData = useRecoilValue(QuizAtom);
+  const quizProgressData = useRecoilValue(QuizProgressDataAtom);
   const [videoData, updateVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
@@ -44,6 +56,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [hideControls, setHideControls] = useState(0);
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
+  const progressBar = useRef(null);
   const [syncProgressInSeconds, setSyncProgressInSeconds] = useState(SYNC_DATA_IN_SECONDS * 3);
 
   // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
@@ -58,9 +71,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     duration: 0
   });
 
+  // for showing thumbnail previews
   const [previewImages, setPreviewImages] = useState([]);
+  const [isScrubbing, setIsScrubbing] = useState(false);
   // udpate recoil state
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     setUserCourseData({
       ...userCourseData,
       videoData: {
@@ -162,6 +178,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // create and update user course progress
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (videoData?.isPreview) return;
     if (!userCourseData?.userCourseMapping?.user_course_id) return;
 
@@ -201,6 +218,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         return setDataSyncing(false);
     }
 
+    if (isCompleted) {
+      isCompleted = isTopicQuizCompleted(currentTopicProgress?.topic_id, quizProgressData);
+    }
+
     // const { currentTime, duration } = videoElement.current;
     const currentTime = videoElement?.current?.currentTime;
     const duration = videoElement?.current?.duration;
@@ -211,7 +232,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       topicId: currentTopicProgress?.topic_id,
       topicType: 'Content',
       status: isCompleted ? 'completed' : 'in-progress',
-      videoProgress: type === 'binge' ? '100' : playerState?.progress?.toString(),
+      videoProgress:
+        type === 'binge' ? '100' : limitValueInRange(playerState?.progress, 0, 100).toString(),
       timestamp: `${currentTime}-${duration}`
     };
 
@@ -233,7 +255,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     setUserCourseData({ ...userCourseData, ...userCourseMapData });
   }
 
+  // to show errors
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (updateUserCourseErr) setToastMsg({ type: 'danger', message: 'Course Assign Update Error' });
     if (addUserCourseProgressErr)
       setToastMsg({ type: 'danger', message: 'Course Progress Add Error' });
@@ -242,6 +266,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }, [updateUserCourseErr, addUserCourseProgressErr, updateUserCourseProgressErr]);
 
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (userCourseData?.triggerPlayerToStartAt === null) setVideoTime(0);
     videoElement.current?.focus();
     updateIsPlayingTo(true);
@@ -251,6 +276,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const duration = 2500;
   let timeout;
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     clearTimeout(timeout);
 
     function switchControls(value) {
@@ -294,16 +320,19 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }, [freezeScreen]);
 
   // reset tooltip and seek after timeoutSeconds
-  const timeoutSeconds = 2000;
-  useEffect(() => {
-    if (!videoData.videoSrc && !videoData.type) return;
-    setTimeout(() => {
-      setSeek(0);
-    }, timeoutSeconds);
-  }, [seek]);
+  // const timeoutSeconds = 2000;
+  // useEffect(() => {
+  //   if (videoData?.type !== 'mp4') return;
+  //   if (!videoData.videoSrc && !videoData.type) return;
+  //   setTimeout(() => {
+  //     setSeek(0);
+  //   }, timeoutSeconds);
+  // }, [seek]);
 
   // reset progress when video changes
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
+
     if (playerState.progress > 0 && userCourseData?.triggerPlayerToStartAt === null)
       setVideoTime(0);
     if (!playerState.isPlaying) togglePlay();
@@ -312,11 +341,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // show/hide controls based on type (show only for mp4)
   useEffect(() => {
     if (videoData.type === null) return setVideoTime(0);
-    if (videoData.type !== 'mp4') return setHideControls(1);
+    // if (videoData.type !== 'mp4') return setHideControls(1);
   }, [videoData.type]);
 
   // reset playpause to null after few seconds
   useEffect(() => {
+    // if (videoData?.type !== 'mp4') return;
     clearTimeout(timeout);
     const timeout = setTimeout(() => {
       setPlayPauseActivated(null);
@@ -325,6 +355,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // play video on state update
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     playerState.isPlaying ? videoElement.current?.play() : videoElement.current?.pause();
 
     if (playerState.isPlaying) setFreezeScreen(false);
@@ -332,6 +363,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
   // volume = 0 is mute, volume > 0 is unmute
   useEffect(() => {
+    if (videoData?.type !== 'mp4') return;
     if (playerState.volume <= 0 && !playerState.isMuted) return toggleMute();
     if (playerState.volume > 0 && playerState.isMuted) return toggleMute();
   }, [playerState.volume]);
@@ -339,12 +371,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // TODO : Change this to Ref OR change entire input range to DIV
   // progress bar color update on video play
   useEffect(() => {
-  //   document.getElementById('vidInput').style.background =
-  //     'linear-gradient(to right, #6bcfcf 0%, #6bcfcf ' +
-  //     playerState.progress +
-  //     '%, #22252980 ' +
-  //     playerState.progress +
-  //     '%, #22252980 100%)';
+    if (videoData?.type !== 'mp4') return;
     let percent = videoElement?.current?.currentTime / videoElement?.current?.duration;
     const timelineContainer = document.getElementById('timelineContainer');
     timelineContainer.style.setProperty('--progressPosition', percent);
@@ -359,7 +386,6 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     );
     setPreviewImages(ImgPreviews);
   }, [videoElement?.current?.duration]);
-  
 
   // keyboard events
   function handleKeyDownEvents(e) {
@@ -401,45 +427,73 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     }
   }
 
-  function setTooltipPosition(tooltipPosition) {
-    // 10 is added for scrollbar gap and margin left
-    const elemWidth = 200;
-    const margin = 20;
+  function isTopicQuizCompleted(topicId, quizProgress) {
+    const isCompleted = !quizData
+      ?.filter((quiz) => quiz?.topicId === topicId)
+      ?.some((quiz) => {
+        const isPassed = quizProgress?.find(
+          (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
+        );
+        return !isPassed;
+      });
 
-    const diff = screen.width - tooltipPosition - margin;
-    const positionLeft =
-      diff < elemWidth ? tooltipPosition - (elemWidth - diff) : tooltipPosition + margin / 2;
-
-    tooltip.current.style.left = positionLeft + 'px';
+    return isCompleted;
   }
 
   function handleMouseMove(e) {
     if (!videoElement.current) return;
-    const rect = e.target.getBoundingClientRect();
-    const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
+
+    // this width is set in scss
+    const elemWidth = 175;
+
+    const timelineContainer = document.getElementById('timelineContainer');
+    // const rect = e.target.getBoundingClientRect();
+    const rect = timelineContainer.getBoundingClientRect();
+
+    const minPosition = e.pageX < elemWidth / 2 ? elemWidth / 2 : e.pageX - rect.x;
+    const maxPosition = rect.width - e.pageX < elemWidth ? rect.width - elemWidth / 2 : rect.width;
+    let percent = Math.min(Math.max(0, minPosition), maxPosition) / rect.width;
 
     var videoDuration = videoElement.current?.duration;
 
     // getting count of preview images as it could vary
     const previewImgNumber = Math.max(1, Math.floor((percent * videoDuration) / THUMBNAIL_GAP));
-      const previewImg = document.getElementById('thumbnailImages');
-      const timelineContainer = document.getElementById('timelineContainer');
-      const thumbIndicator = document.getElementById('thumbIndicator');
-    previewImg.setAttribute('src', previewImages[previewImgNumber - 1]);
-    timelineContainer.style.setProperty("--previewPosition", percent);
-    
-    // setTooltipPosition(e.pageX);
+    const previewImg = document.getElementById('thumbnailImages');
+    previewImg.setAttribute('src', previewImages[previewImgNumber] || '/images/gif/loading.gif');
+    timelineContainer.style.setProperty('--previewPosition', percent);
 
-    // const timestamp = (e.pageX / screen.width) * videoDuration;
+    const timestamp = (e.pageX / screen.width) * videoDuration;
 
     // for time display below thumb image
-    // const timeObj = secondsToMinutes(timestamp);
-    // if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
-    // setSeek(`${timeObj.minute} : ${timeObj.second}`);
+    const timeObj = secondsToMinutes(timestamp);
+    if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
+    setSeek(`${timeObj.minute} : ${timeObj.second}`);
+
+    if (isScrubbing) {
+      e.preventDefault();
+      percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
+      timelineContainer.style.setProperty('--progressPosition', percent);
+    }
+
+    return percent;
   }
 
+  function toggleScrubbing(e) {
+    const percent = handleMouseMove(e);
+    const _isScrubbing = (e.buttons & 1) === 1;
+    setIsScrubbing(_isScrubbing);
+    // Web dev simplified - youtube video player
+    if (_isScrubbing) {
+      updateIsPlayingTo(false);
+    } else {
+      const manualChange = Number(Math.floor(percent * 100));
+      setVideoTime(manualChange);
+      updateIsPlayingTo(true);
+    }
+  }
   function handleMouseExit(e) {
     setSeek(0);
+    setIsScrubbing(0);
   }
 
   function updateVolumeValue(isIncrement) {
@@ -590,8 +644,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     });
   };
 
-  function handleVideoProgress(event) {
-    const manualChange = Number(event.target.value);
+  function handleVideoProgress(e) {
+    const rect = e.target.getBoundingClientRect();
+    const percent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width;
+    const manualChange = Number(Math.floor(percent * 100));
     setVideoTime(manualChange);
   }
 
@@ -670,7 +726,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     // postion is not accurate
     const tooltipPos = (time / videoElement.current.duration) * screen.width;
-    setTooltipPosition(tooltipPos);
+    // setTooltipPosition(tooltipPos);
 
     const timeObj = secondsToMinutes(time);
     if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
@@ -748,6 +804,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     hideTopBar,
     handleMouseExit,
     handleMouseMove,
+    toggleScrubbing,
     seek,
     tooltip,
     playNextVideo,

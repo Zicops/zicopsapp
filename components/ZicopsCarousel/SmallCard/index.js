@@ -66,7 +66,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
                 {courseData?.type?.split('-').join(' ') || 'Self Paced'}
               </div>
             </div>
-            <img className="addCoursePlus" src="images/svg/add-line.svg" />
+            <img className="addCoursePlus" src="/images/svg/add-line.svg" />
             <div className="desc-area">
               <div className="main-desc">
                 <div className="one">
@@ -95,7 +95,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
               {/* <div className="icon-area">
                 <ul>
                   <li>
-                    <img src="images/svg/add-line.svg" />
+                    <img src="/images/svg/add-line.svg" />
                   </li>
                   <li>
                     <img src="images/cart.png" />

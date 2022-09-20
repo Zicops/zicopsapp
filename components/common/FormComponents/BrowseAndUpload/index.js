@@ -24,7 +24,22 @@ export default function BrowseAndUpload({
           Browse & upload
         </button>
 
-        <input type="file" name={inputName} accept={acceptedTypes} onChange={handleFileUpload} />
+        <input
+          type="file"
+          name={inputName}
+          accept={acceptedTypes}
+          onChange={(e) => {
+            let fileTypes = acceptedTypes?.split(', ');
+
+            if (e.target.value && !fileTypes?.some((t) => e.target.value?.includes(t))) {
+              return setToastMsg({
+                type: 'danger',
+                message: `Accepted file types are ${acceptedTypes}`
+              });
+            }
+            handleFileUpload(e);
+          }}
+        />
 
         {!hidePreviewBtns && (
           <div className={`${styles.btnContainer}`}>

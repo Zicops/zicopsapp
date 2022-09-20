@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import { changeHandler } from '../../../../../helper/common.helper';
 import { useRouter } from 'next/router';
+import ToolTip from '@/components/common/ToolTip';
 
 export default function Configuration() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
@@ -18,9 +19,18 @@ export default function Configuration() {
     { name: 'show_result', label: 'Show result on finish' }
   ];
 
+  const configurationTooltipTitle = {
+    shuffle:'Change display order of questions for learners',
+    display_hints:'Show answer hints during attempt',
+    show_answer:'Show answer key on finish',
+    show_result:'Show learner result on finish'
+  }
+
   return (
     <div className={`${styles.configurationContainer}`}>
       {btns.map(({ name, label }) => (
+        <ToolTip title={configurationTooltipTitle[`${name}`]} placement="right">
+          <span>
         <SwitchButton
           label={label}
           labelPlacement="end"
@@ -29,6 +39,8 @@ export default function Configuration() {
           isDisabled={isPreview}
           handleChange={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
+        </span>
+        </ToolTip>
       ))}
     </div>
   );

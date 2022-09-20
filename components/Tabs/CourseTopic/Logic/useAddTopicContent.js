@@ -33,8 +33,12 @@ export default function useAddTopicContent(topic) {
 
   // disable add button if data is incomplete
   useEffect(() => {
+    const isContentPresent = ['SCORM']?.includes(newTopicContent?.type)
+      ? !!newTopicVideo.file || !!newTopicVideo?.contentUrl
+      : !!newTopicVideo?.file;
+
     setIsAddTopicContentReady(
-      !!newTopicContent.language && !!newTopicContent.type && !!newTopicVideo.file
+      !!newTopicContent.language && !!newTopicContent.type && !!isContentPresent
     );
   }, [newTopicContent, newTopicVideo]);
 
@@ -65,6 +69,12 @@ export default function useAddTopicContent(topic) {
           });
       }
 
+      if (inputName === 'type') {
+        setNewTopicVideo({ ...newTopicVideo, file: null });
+        setNewTopicContent({ ...newTopicContent, [inputName]: e.value, duration: 0 });
+        return;
+      }
+
       return setNewTopicContent({ ...newTopicContent, [inputName]: e.value });
     }
 
@@ -79,14 +89,8 @@ export default function useAddTopicContent(topic) {
   // video input
   function handleTopicVideoInput(e) {
     if (!e.target.files?.length) {
-      setNewTopicVideo({
-        ...newTopicVideo,
-        file: null
-      });
-      setNewTopicContent({
-        ...newTopicContent,
-        duration: 0
-      });
+      setNewTopicVideo({ ...newTopicVideo, file: null });
+      setNewTopicContent({ ...newTopicContent, duration: 0 });
       return;
     }
 
@@ -102,11 +106,11 @@ export default function useAddTopicContent(topic) {
       const filteredTopicContent = filterTopicContent(topicContent, topic?.id);
       if (filteredTopicContent.length) {
         const prevUploadDuration = filteredTopicContent[0].duration;
-        console.log(
-          prevUploadDuration + variable_buffer_time,
-          prevUploadDuration - variable_buffer_time,
-          duration
-        );
+        // console.log(
+        //   prevUploadDuration + variable_buffer_time,
+        //   prevUploadDuration - variable_buffer_time,
+        //   duration
+        // );
         // 6 < 4 < 2
         if (
           prevUploadDuration + variable_buffer_time <= duration ||
@@ -117,19 +121,21 @@ export default function useAddTopicContent(topic) {
         }
       }
 
-      setNewTopicContent({
-        ...newTopicContent,
-        duration: parseInt(duration)
-      });
-      setNewTopicVideo({
-        ...newTopicVideo,
-        file: e.target.files[0]
-      });
+      setNewTopicContent({ ...newTopicContent, duration: parseInt(duration) });
+      setNewTopicVideo({ ...newTopicVideo, file: e.target.files[0] });
     };
   }
 
   // save in recoil state
   function addNewTopicContent() {
+    if (newTopicVideo?.contentUrl) {
+      try {
+        new URL(newTopicVideo?.contentUrl);
+      } catch (err) {
+        return setToastMsg({ type: 'danger', message: 'Url is not valid' });
+      }
+    }
+
     const isDefault = newTopicContent.is_default;
     let topicContentArr = [];
     // set is_default to false of every topic content if current is true
@@ -164,7 +170,9 @@ export default function useAddTopicContent(topic) {
   };
   const localStates = {
     newTopicContent,
-    newTopicVideo
+    newTopicVideo,
+    setNewTopicContent,
+    setNewTopicVideo
   };
 
   return {

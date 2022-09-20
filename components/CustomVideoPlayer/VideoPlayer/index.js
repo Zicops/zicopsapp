@@ -96,11 +96,14 @@ export default function VideoPlayer({
 
   const [videoType, setVideoType] = useState(1);
 
+  // console.log(videoData);
   return (
     <>
-      {!videoData.videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
+      {!videoData.videoSrc && videoData?.type !== 'classroom' && (
+        <div className={styles.fallbackForVideo}>No Video Present</div>
+      )}
 
-      <button
+      {/* <button
         style={{ opacity: 0, zIndex: -10000000, position: 'absolute', top: '0px' }}
         onClick={() => {
           let c = videoType + 1;
@@ -108,7 +111,7 @@ export default function VideoPlayer({
           setVideoType(c);
         }}>
         {videoType}
-      </button>
+      </button> */}
 
       {videoData.type === 'mp4' && videoData.videoSrc && (
         <>
@@ -139,7 +142,7 @@ export default function VideoPlayer({
                   // }
                   src={
                     isTrackSrcAvailable
-                      ? `/api/getSubtitleFile?filePath=${encodeURIComponent(
+                      ? `/api/overrideCors?filePath=${encodeURIComponent(
                           topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
                             ?.url
                         )}`
@@ -229,10 +232,21 @@ export default function VideoPlayer({
 
       {videoData.type === 'SCORM' && videoData.videoSrc && (
         <iframe
-          src="https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html"
+          src={
+            videoData.videoSrc ||
+            'https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html'
+          }
           frameBorder="0"
           className={`${styles.videoElement}`}
         />
+      )}
+
+      {videoData?.type === 'classroom' && (
+        <iframe
+          style={{ height: '85vh', width: '100%', marginTop: '-40px' }}
+          frameBorder="0"
+          src="https://zicops.whereby.com/demo-6b19c433-a0c4-4bc8-b60a-0798c71ed825?background=off&logo=off"
+          allow="camera; microphone; fullscreen; speaker; display-capture"></iframe>
       )}
     </>
   );

@@ -154,18 +154,19 @@
       section {
         overflow-y: auto;
         overflow-x: hidden;
-        height: 80%;
         width: 100%;
 
         &::-webkit-scrollbar {
           width: 0px;
         }
 
-        button {
+        button,
+        a {
           background-color: transparent;
           margin: 3px auto;
           padding: 5px 10px;
           width: 100%;
+          font-size: 13px;
           border: 1px solid $primary;
           color: $primary;
           cursor: pointer;
@@ -174,6 +175,11 @@
             background-color: $primary;
             color: $bgContent;
           }
+        }
+
+        a {
+          display: inline-block;
+          text-align: center;
         }
 
         .languageBtnActive {
@@ -357,11 +363,46 @@
     button {
       background-color: transparent;
       margin: 3px;
-      padding: 5px 10px;
-      width: 100px;
-      border: 1px solid $primary;
+      padding: 10px;
+      width: 170px;
+      border: 2px solid $primary;
       color: $primary;
       cursor: pointer;
+
+      &:hover {
+        background-color: $primary;
+        color: $black;
+      }
+
+      // &.wrongQuiz,
+      // &.correctQuiz {
+      span {
+        position: relative;
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+
+        // &::before {
+        //   content: '';
+        //   position: absolute;
+        //   top: 0px;
+        //   left: -20px;
+
+        //   height: 15px;
+        //   width: 15px;
+        //   background: url(/images/svg/cross.svg);
+        //   background-repeat: no-repeat;
+        //   background-size: contain;
+        // }
+      }
+      // }
+
+      // &.correctQuiz span::before {
+      //   background-image: url(/images/svg/done.svg);
+      // }
     }
   }
 
@@ -386,11 +427,27 @@
     height: 100%;
     background-color: $darkOne;
     z-index: 15;
+    // opacity: .4;
+    // padding: 50px 30px;
 
     // display: flex;
     // flex-direction: column;
     // justify-content: space-between;
     // align-items: center;
+
+    .backBtn {
+      position: absolute;
+      top: 50px;
+      left: 30px;
+      z-index: 2;
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    .hideBtn {
+      opacity: 0;
+      transition: all 0.5s ease-in-out;
+    }
 
     .footerBtns {
       width: 90%;
@@ -767,4 +824,154 @@
   .toolbarBox {
     display: flex;
   }
+}
+
+.mcqScreen {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  color: $white;
+
+  // width: 100%;
+  height: 100%;
+
+  .attachment {
+    height: 100%;
+    max-height: 140px;
+    text-align: center;
+
+    img,
+    video,
+    audio {
+      height: 100%;
+      // width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .questionContainer {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: $black;
+    padding: 0px 30px;
+
+    .count {
+      color: $darkThree;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      min-height: 40px;
+    }
+
+    .question {
+      display: flex;
+      justify-content: space-between;
+
+      flex: 1;
+
+      margin-left: 70px;
+
+      .attachment {
+        // height: 140px;
+        text-align: end;
+      }
+    }
+
+    .hintBtn {
+      color: $darkThree;
+      margin-bottom: 10px;
+
+      span {
+        font-weight: 600;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .optionsContainer {
+    flex: 2;
+
+    background-color: $darkOne;
+    padding: 30px;
+
+    display: flex;
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+
+      flex: 1;
+
+      section {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+
+    .option {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      height: 75%;
+      width: 50%;
+      background-color: $black;
+      border: 2px solid $darkThree;
+      overflow: hidden;
+
+      cursor: pointer;
+
+      &.active {
+        border-color: $primary;
+      }
+    }
+  }
+
+  .footerBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 50px;
+  }
+}
+
+.mcqBtns {
+  border: 3px solid $white;
+  background-color: $darkOne;
+  color: $white;
+  padding: 5px 10px;
+  margin: auto 10px;
+
+  border-radius: 5px;
+  font-weight: bolder;
+  font-size: 1.2rem;
+
+  cursor: pointer;
+
+  // &.skipBtn {
+  // border-color: $darkThree;
+  // color: $darkThree;
+  // }
+
+  &:disabled {
+    border-color: $darkThree;
+    color: $darkThree;
+  }
+  // button {
+  // }
+}
+
+.notFound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+
+  height: 100%;
 }

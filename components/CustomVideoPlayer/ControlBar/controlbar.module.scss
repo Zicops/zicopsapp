@@ -52,6 +52,45 @@
       background-color: $primary;
       // box-shadow: 0 0 10px 2px rgba($darkThree, 1);
     }
+    .thumbnailContainer{
+      display: none;
+      position: absolute;
+      top: -150px;
+      left: calc(var(--previewPosition) * 100%);
+      transform: translate(-50%, 0);
+      .thumbnailInfo{
+        padding: 0 10px;
+        color: $white;
+        background-color: rgba($darkThree, 0.8);
+        text-align: center;
+        text-shadow: 1px 1px 2px $black;
+        width: 178px;
+        margin: auto;
+        font-size: 14px;
+      }
+      .thumbnailImage{
+        height: 100px;
+        background-color: $darkOne;
+        margin-bottom: 3px;
+        .previewImg {
+          position: relative;
+            height: 100%;
+            aspect-ratio: 16 / 9;
+            border: 2px solid $white;
+            object-fit: cover;
+          }
+      }
+      .thumbnailTime{
+          padding: 0 10px;
+          color: $white;
+          background-color: rgba($darkThree, 0.8);
+          text-align: center;
+          text-shadow: 1px 1px 2px $black;
+          border-radius: 20px;
+          width: 50%;
+          margin: auto;
+      }
+    }
     .thumbIndicator{
       --scale : 1;
       position: absolute;
@@ -66,37 +105,63 @@
       box-shadow: 0 0 10px 2px rgba($darkThree, 1);
       z-index: 5;
     }
-    .bookmarkIndicator span {
-      height: 7px;
-      width: 7px;
-      background-color: yellow;
-      border-radius: 50%;
+    .quizIndicator span, .bookmarkIndicator span {
+      height: 12px;
+      width: 12px;
+      transition: all 150ms ease-in-out;
       position: absolute;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateY(-50%);
       z-index: 2;
+      &:before{
+        position: absolute;
+        font-size: 10px;
+        font-weight: 900;
+        top: 0;
+        right: 0;
+        // bottom: 0;
+        left: 0;
+        text-align: center;
+        transition: all 150ms ease-in-out;
+        margin-inline: auto;
+      }
     }
-    .previewImg{
-      position: absolute;
-      height: 80px;
-      aspect-ratio: 16 / 9;
-      top: -1rem;
-      transform: translate(-50%, -100%);
-      left: calc(var(--previewPosition) * 100%);
-      border-radius: 0.25rem;
-      border: 2px solid $white;
-      display: none;
+    .quizIndicator span{
+      &:before {
+          content: "Q";
+          color: $white;
+          border: 1px solid red;
+          background-color: red;
+          border-radius: 50%;
+      }
+    }
+    .bookmarkIndicator span {
+      &:before {
+          content: "B";
+          color: black;
+          border: 1px solid black;
+          background-color: yellow;
+        }
     }
     &:hover {
-      .previewImg {
+        height: 100%;
+        background-color: rgba($darkOne, 0.6);
+      .thumbnailContainer {
         display: block;
+      }
+      .quizIndicator span, .bookmarkIndicator span {
+        height: 15px;
+        width: 15px;
+        top: 2px;
+        &:before {
+          font-size: 12px;
+        }
       }
     }
   }
-}
-.timelineContainer .timeline:hover {
-  height: 100%;
-  background-color: rgba($darkOne, 0.6);
 }
 
 // Set progressbar

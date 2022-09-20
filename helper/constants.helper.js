@@ -1,7 +1,8 @@
-export const OPTION_LABEL = ['a', 'b', 'c', 'd'];
+export const OPTION_LABEL = ['A', 'B', 'C', 'D'];
+export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
-export const THUMBNAIL_GAP = 20;
+export const THUMBNAIL_GAP = 25;
 export const PUBLIC_PATHS = ['/login', '/home', '/reset-password', '/forgot-password'];
 export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
@@ -9,6 +10,7 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/exam-screen',
   '/course/[courseId]/topic/[topicId]/exam/[examId]',
   '/login',
+  '/test',
   '/reset-password',
   '/account-setup',
   '/forgot-password',
@@ -43,3 +45,5 @@ export const LANGUAGES = [
   'Bhojpuri',
   'Maithili'
 ];
+
+export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';

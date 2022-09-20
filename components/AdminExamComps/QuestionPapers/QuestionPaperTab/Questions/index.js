@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { QuestionPaperTabDataAtom } from '../../../../../state/atoms/exams.atoms';
@@ -66,7 +67,11 @@ export default function Questions() {
         {/* show add section button if section wise is true */}
         {questionPaperTabData?.paperMaster?.section_wise && (
           <IconButton
-            text="Add Section"
+            text={
+              <ToolTip title="Create and add new Section" placement="bottom">
+                <span>Add Section</span>
+              </ToolTip>
+            }
             styleClass="btnBlack"
             handleClick={() => {
               if (disableIfIdNotPresent()) return;
@@ -78,7 +83,11 @@ export default function Questions() {
         {/* show add question if not section wise and no section added */}
         {!questionPaperTabData.paperMaster?.section_wise && !customSection?.length && (
           <IconButton
-            text="Add Question"
+            text={
+              <ToolTip title="Create and add new question" placement="bottom">
+                <span>Add Question</span>
+              </ToolTip>
+            }
             styleClass="btnGrey"
             handleClick={() => {
               if (disableIfIdNotPresent()) return;

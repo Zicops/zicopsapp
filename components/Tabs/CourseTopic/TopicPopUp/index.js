@@ -11,16 +11,17 @@ import Button from '../../../common/Button';
 import PopUp from '../../../common/PopUp';
 import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 import Accordion from '../../../small/Accordion';
-import styles from '../../courseTabs.module.scss';
 import useAddAssessment from '../Logic/useAddAssessment';
 import AddTopicContentForm from './AddTopicContentForm';
 import AddTopicForm from './AddTopicForm';
 import AssessmentForm from './AssessmentForm';
 import BingeForm from './BingeForm';
+import ClassroomForm from './ClassroomForm';
 import QuizForm from './QuizForm';
 import ResourcesForm from './ResourcesForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentView from './TopicContentView';
+import styles from '../../courseTabs.module.scss';
 
 export default function TopicPopUp({
   addTopicData = {},
@@ -199,6 +200,26 @@ export default function TopicPopUp({
                     }
                   />
                   {/* <Accordion title="Quiz" content={<Quiz />} /> */}
+
+                  {/* resources */}
+                  <Accordion
+                    title="Resources"
+                    content={
+                      <ResourcesForm
+                        topicId={editTopic?.id || ''}
+                        courseId={editTopic?.courseId || ''}
+                      />
+                    }
+                  />
+                </>
+              )}
+
+              {editTopic?.type === 'Classroom' && (
+                <>
+                  {/* topic content title */}
+                  <div className={`${styles.titleWithLineAtSide}`}>Classroom</div>
+
+                  <ClassroomForm />
 
                   {/* resources */}
                   <Accordion

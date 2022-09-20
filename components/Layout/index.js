@@ -21,14 +21,18 @@ export default function Layout({ children }) {
     if (userData?.id) return;
 
     const data = getUserData();
+    if (data === 'User Data Not Found') return;
+    // const userId = [];
+    // userId.push(data?.id);
+    const userId = data?.id;
     const userData = await loadQueryDataAsync(
       GET_USER_DETAIL,
-      { user_id: data?.id },
+      { user_id: [userId] },
       {},
       userQueryClient
     );
     if (userData?.error) return console.log('User data load error');
-    const basicInfo = userData?.getUserDetails;
+    const basicInfo = userData?.getUserDetails?.[0];
 
     setUserData({ ...userData, ...data, ...basicInfo });
   }, [userData?.id]);

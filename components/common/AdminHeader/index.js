@@ -5,6 +5,8 @@ import styles from './adminHeader.module.scss';
 import PopUp from '../PopUp';
 import Sitemap from './Sitemap';
 import AdminSubHeader from './AdminSubHeader';
+import ToolTip from '../ToolTip';
+import CustomTooltip from '../CustomTooltip';
 
 export default function AdminHeader({
   title,
@@ -12,7 +14,8 @@ export default function AdminHeader({
   handleClickForPlus,
   isAddShown = false,
   isShowOption = false,
-  subHeaderData = null
+  subHeaderData = null,
+  tooltipTitle=""
 }) {
   const [showSitemap, setShowSitemap] = useState(false);
   const router = useRouter();
@@ -29,6 +32,16 @@ export default function AdminHeader({
     if (!pageRoute) return;
     router.push(pageRoute);
   }
+
+  // let tooltipTitle = ""
+  // if(pageRoute==="/admin/exams/my-question-papers/add"){
+  //   tooltipTitle="Create new Question Paper"
+  // }else if(router?.query?.questionBankId){
+  //   tooltipTitle="Add Questions"
+  // }else if(pageRoute==="/admin/exams/zicops-question-papers"){
+  //   tooltipTitle="Create new Question Paper"
+  // }
+
   return (
     <div>
       <div className={`${styles.courseHead}`}>
@@ -49,20 +62,29 @@ export default function AdminHeader({
         <div className={styles.icons}>
           {/* TODO: remove first condition */}
           {!route.includes('admin/courses') && isAddShown && (
+            <span>
+              <ToolTip title={tooltipTitle} placement="left">
+                <img
+                  src="/images/plus_big.png"
+                  className="rightside_icon"
+                  alt=""
+                  onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+                />
+              </ToolTip>
+              {/* <CustomTooltip info="create new question bank" /> */}
+            </span>
+          )}
+          <ToolTip title="View Settings" placement="bottom">
+            <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
+          </ToolTip>
+          <ToolTip title="View Sitemap" placement="right">
             <img
-              src="/images/plus_big.png"
+              src="/images/sitemap_icon.png"
               className="rightside_icon"
               alt=""
-              onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+              onClick={() => setShowSitemap(true)}
             />
-          )}
-          <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
-          <img
-            src="/images/sitemap_icon.png"
-            className="rightside_icon"
-            alt=""
-            onClick={() => setShowSitemap(true)}
-          />
+          </ToolTip>
         </div>
 
         {/* sitemap pop up */}

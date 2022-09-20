@@ -10,7 +10,11 @@ const ZicopsQuestionPapers = () => {
     <>
       <Sidebar sidebarItemsArr={examSidebarData} />
       <MainBody>
-        <AdminHeader title="Zicops Question Papers" isAddShown={true} />
+        <AdminHeader
+          title="Zicops Question Papers"
+          isAddShown={true}
+          tooltipTitle="Create new Question Paper"
+        />
         <MainBodyBox>
           {/* <div style={{ padding: '50px' }}>
             <QuizOptionInput />

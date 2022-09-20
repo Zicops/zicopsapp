@@ -248,17 +248,19 @@
     margin: 0;
     border: 0;
     border-bottom: 1px solid $white;
-    width: 20px;
+    width: 22px;
     margin: 5px 0px;
 
-    background-color: $darkTwo;
-    color: $secondaryBlack;
+    background-color: $darkOne;
+    color: $white;
   }
+
   input:focus {
-    padding: 0;
-    border: 0;
-    border-bottom: 1px solid $white;
+    // padding: 0;
+    // border: 0;
+    // border-bottom: 1px solid $white;
     outline: 0;
+    background-color: $darkTwo;
     box-shadow: none;
   }
   .durationvalue {
@@ -462,9 +464,17 @@
 }
 
 .quizInput {
-  width: 50%;
-  margin: auto;
-  align-items: baseline;
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  // width: 50%;
+  // align-items: baseline;
+  // margin: auto;
+
+  &.quizType {
+    display: flex;
+    width: 50%;
+    margin: 20px auto;
+  }
 }
 
 .twoInputContainer {
@@ -480,4 +490,10 @@
       }
     }
   }
+}
+
+.classroomForm {
+  min-height: 100px;
+  text-align: center;
+  margin: 10px;
 }

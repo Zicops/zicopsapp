@@ -1,13 +1,13 @@
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
+import { userContext } from '@/state/contexts/UserContext';
 import Image from 'next/image';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
 import { filterModule } from '../../../helper/data.helper';
-import { ModuleAtom } from '../../../state/atoms/module.atoms';
-import { VideoAtom } from '../../../state/atoms/video.atom';
+import { ModuleAtom, QuizAtom } from '../../../state/atoms/module.atoms';
+import { QuizProgressDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import styles from '../customVideoPlayer.module.scss';
 import DraggableDiv from '../DraggableDiv';
 import { BOX } from '../Logic/customVideoPlayer.helper';
 import useSaveData from '../Logic/useSaveData';
@@ -15,7 +15,9 @@ import Bookmark from './Bookmark';
 import ButtonWithBox from './ButtonWithBox';
 import Notes from './Notes';
 import Quiz from './Quiz';
+import ResourcesList from './ResourcesList';
 import SubtitleBox from './SubtitleBox';
+import styles from '../customVideoPlayer.module.scss';
 
 export default function UiComponents({
   refs,
@@ -29,8 +31,11 @@ export default function UiComponents({
   freezeState
 }) {
   const { videoElement, videoContainer } = refs;
+  const { bookmarkData: allBookmarks } = useContext(userContext);
   const videoData = useRecoilValue(VideoAtom);
   const moduleData = useRecoilValue(ModuleAtom);
+  const quizData = useRecoilValue(QuizAtom);
+  const quizProgressData = useRecoilValue(QuizProgressDataAtom);
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const { fullCourse } = useContext(courseContext);
   const [isToolbarOpen, setIsToolbarOpen] = useState(null);
@@ -68,30 +73,84 @@ export default function UiComponents({
   //   setShowLanguageSubtitles(false);
   // }, [videoData.videoSrc]);
 
+  // To play quizzes automatically
+  useEffect(() => {
+    const topicId = videoData?.topicContent[0]?.topicId;
+    const quizLoop = getTopicQuizes(quizData, topicId);
+    quizLoop.forEach((quiz) => {
+      if (quiz.startTime === Math.floor(videoElement?.current?.currentTime)) {
+        updateIsPlayingTo(false);
+        setShowQuiz(quiz);
+      }
+    });
+  }, [playerState?.progress]);
+
+  // To show bookmark B in timeline
+  useEffect(() => {
+    if (!allBookmarks) return;
+    if (!videoElement?.current?.duration) return;
+    allBookmarks
+      ?.filter((bookmark) => bookmark?.topic_id === videoData?.topicContent[0]?.topicId)
+      ?.forEach((bm) => {
+        let bookmarkTime = bm?.time_stamp?.split(':');
+        let bookmarkTimeInSecs = +bookmarkTime[0] * 60 + +bookmarkTime[1];
+        showThumbnailPointsInProgressbar(bookmarkTimeInSecs, 'bookmarkIndicator');
+      });
+  }, [allBookmarks, videoData?.videoSrc, videoElement?.current?.duration]);
+
+  // To show quiz Q in timeline
+  useEffect(() => {
+    const topicId = videoData?.topicContent[0]?.topicId;
+    const quizLoop = getTopicQuizes(quizData, topicId);
+    quizLoop.forEach((quiz) => {
+      showThumbnailPointsInProgressbar(quiz.startTime, 'quizIndicator');
+    });
+  }, [videoData?.videoSrc, videoElement?.current?.duration]);
+
+  async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
+    let percent = (videoTimeInSeconds / videoElement?.current?.duration) * 100;
+    if (!percent) return;
+    let thumbPoints = document.getElementById(indicator);
+    let thumbSpan = document.createElement('span');
+    thumbSpan.style.left = percent + '%';
+    thumbPoints.appendChild(thumbSpan);
+  }
+  function getTopicQuizes(quizData, topicId) {
+    return quizData?.filter((quiz) => quiz?.topicId === topicId) || [];
+  }
+
   useEffect(() => {
     if (playerState?.isPlaying) setShowBox(null);
     if (isTopBarHidden) setShowBox(null);
   }, [isTopBarHidden, playerState?.isPlaying]);
 
+  useEffect(() => {
+    setShowQuiz(null);
+  }, [videoData?.type, videoData?.videoSrc]);
+
   const toolbarItems = [
     {
       id: 0,
-      btnImg: '/images/4019936_2.png',
+      btnImg: '/images/svg/spatial_audio_off.svg',
       boxComponent: <SubtitleBox subtitleState={subtitleState} />,
-      handleClick: () => switchBox(0)
+      handleClick: () => switchBox(0),
+      isHidden: videoData?.type === 'classroom'
     },
     {
       id: 1,
-      btnImg: '/images/pot-plant-icon.png',
-      handleClick: () => switchBox(1)
+      btnImg: '/images/svg/hub.svg',
+      handleClick: () => switchBox(1),
+      boxComponent: <ResourcesList updateIsPlayingTo={updateIsPlayingTo} />
     },
     {
       id: 2,
-      btnImg: '/images/conversation-icon-png-clipart2.png',
-      handleClick: () => switchBox(2)
+      btnImg: '/images/svg/forum.svg',
+      handleClick: () => switchBox(2),
+      isHidden: videoData?.type === 'classroom'
     },
     {
       id: 3,
+      isHidden: videoData?.type !== 'mp4',
       btnComp: (
         <div
           className={`${styles.videoBookmark}`}
@@ -119,7 +178,7 @@ export default function UiComponents({
     },
     {
       id: 4,
-      btnImg: '/images/Notes Icon2.png',
+      btnImg: '/images/svg/app_registration.svg',
       boxComponent: <Notes />,
       handleClick: () => {
         const isBoxClosed = showBox === BOX[4];
@@ -155,103 +214,173 @@ export default function UiComponents({
       ),
       boxComponent: (
         <div className={`${styles.quizDropdown}`}>
-          <button
-            onClick={() => {
-              updateIsPlayingTo(false);
-              toggleStates(setShowQuiz, showQuiz);
-              toggleStates(setShowQuizDropdown, setShowQuizDropdown);
-            }}>
-            Quiz 1
-          </button>
-          <button
+          {quizData
+            ?.filter((quiz) => quiz?.topicId === videoData?.topicContent[0]?.topicId)
+            ?.map((quiz) => {
+              const quizAttempts = quizProgressData?.filter((qp) => qp?.quiz_id === quiz?.id) || [];
+              const isCompleted = quizAttempts?.find((qp) => qp?.result === 'passed');
+
+              let svgIndex = 0;
+              if (!!quizAttempts?.length) svgIndex = 1;
+              if (!!isCompleted) svgIndex = 2;
+              // let styleClass = '';
+              // if (!!quizAttempts?.length) styleClass = styles.wrongQuiz;
+              // if (!!isCompleted) styleClass = styles.correctQuiz;
+
+              return (
+                <button
+                  // className={`${styleClass}`}
+                  key={quiz?.quiz_id}
+                  onClick={() => {
+                    updateIsPlayingTo(false);
+                    setShowQuiz(quiz);
+                    toggleStates(setShowQuizDropdown, setShowQuizDropdown);
+                  }}>
+                  <span>
+                    {svgIndex === 1 && (
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                          fill="red"
+                        />
+                      </svg>
+                    )}
+
+                    {svgIndex === 2 && (
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M8.80001 15.9L4.60001 11.7L3.20001 13.1L8.80001 18.7L20.8 6.70005L19.4 5.30005L8.80001 15.9Z"
+                          fill="green"
+                        />
+                      </svg>
+                    )}
+                    {quiz?.name}
+                  </span>
+                </button>
+              );
+            })}
+          {/* <button
             onClick={() => {
               updateIsPlayingTo(false);
               toggleStates(setShowQuiz, showQuiz);
               toggleStates(setShowQuizDropdown, setShowQuizDropdown);
             }}>
             Quiz 2
-          </button>
+          </button> */}
         </div>
       ),
       handleClick: () => () => {
         updateIsPlayingTo(false);
         toggleStates(setShowQuiz, showQuiz);
         toggleStates(setShowQuizDropdown, setShowQuizDropdown);
-      }
+      },
+      isHidden: videoData?.type === 'classroom'
     }
   ];
+
   return (
     <>
       {/* Static content toolbar */}
-      {/* <DraggableDiv initalPosition={{ x: '0px', y: '0px' }}>
-        <div className={`${styles.toolbar}`} onClick={() => setIsToolbarOpen(!isToolbarOpen)}>
-          <span>Toolbar</span>
+      {videoData?.type !== 'mp4' && (
+        <DraggableDiv initalPosition={{ x: '0px', y: '0px' }}>
+          <div className={`${styles.toolbar}`}>
+            <span style={{ padding: '5px' }} onClick={() => setIsToolbarOpen(!isToolbarOpen)}>
+              <Image src="/images/svg/catching_pokemon.svg" height={20} width={20} />
+            </span>
 
-          <div className={`${styles.toolbarBox}`}>
-            {isToolbarOpen &&
-              toolbarItems.map((item) => {
-                return (
-                  <ButtonWithBox
-                    key={item.id}
-                    btnImg={item.btnImg}
-                    btnComp={item.btnComp}
-                    handleClick={item.handleClick}
-                    isBoxActive={showBox === BOX[item.id]}
-                    boxComponent={item.boxComponent}
-                  />
-                );
-              })}
+            <div className={`${styles.toolbarBox}`}>
+              {isToolbarOpen &&
+                toolbarItems.map((item) => {
+                  if (item?.isHidden) return null;
+
+                  return (
+                    <ButtonWithBox
+                      key={item.id}
+                      btnImg={item.btnImg}
+                      btnComp={item.btnComp}
+                      handleClick={item.handleClick}
+                      isBoxActive={showBox === BOX[item.id]}
+                      boxComponent={item.boxComponent}
+                    />
+                  );
+                })}
+            </div>
           </div>
-        </div>
-      </DraggableDiv> */}
+        </DraggableDiv>
+      )}
 
-      <div className={`${styles.customUiContainer} ${styleClass}`}>
+      <div
+        className={`${styles.customUiContainer} ${styleClass}`}
+        style={videoData?.type === 'classroom' ? { width: 'fit-content' } : {}}>
         <div className={`${styles.topIconsContainer}`}>
           {/* back button on left which close the player and return to hero */}
-          <div className={`${styles.firstIcon}`} onClick={playerClose}>
+          <div
+            className={`${styles.firstIcon}`}
+            onClick={playerClose}
+            style={videoData?.type === 'classroom' ? { minWidth: '50px' } : {}}>
             <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
           </div>
 
-          {!videoData.isPreview && (
-            <div className={`${styles.leftIcons}`}>
-              {toolbarItems.slice(0, 3).map((item) => {
-                return (
-                  <ButtonWithBox
-                    key={item.id}
-                    btnImg={item.btnImg}
-                    btnComp={item.btnComp}
-                    handleClick={item.handleClick}
-                    isBoxActive={showBox === BOX[item.id]}
-                    boxComponent={item.boxComponent}
-                  />
-                );
-              })}
-            </div>
-          )}
+          {videoData?.type === 'mp4' && (
+            <>
+              {!videoData.isPreview && (
+                <div className={`${styles.leftIcons}`}>
+                  {toolbarItems.slice(0, 3).map((item) => {
+                    if (item?.isHidden) return null;
 
-          {/* video title */}
-          <div className={`${styles.centerText}`}>
-            <div className={`${styles.centerTextHeading}`}>{truncateToN(fullCourse?.name, 60)}</div>
-            <div className={`${styles.centerTextSubheading}`}>
-              {truncateToN(courseTopicName, 80)}
-            </div>
-          </div>
+                    return (
+                      <ButtonWithBox
+                        key={item.id}
+                        btnImg={item.btnImg}
+                        btnComp={item.btnComp}
+                        handleClick={item.handleClick}
+                        isBoxActive={showBox === BOX[item.id]}
+                        boxComponent={item.boxComponent}
+                      />
+                    );
+                  })}
+                </div>
+              )}
 
-          {!videoData.isPreview && (
-            <div className={`${styles.rightIcons}`}>
-              {toolbarItems.slice(3, toolbarItems.length).map((item) => {
-                return (
-                  <ButtonWithBox
-                    key={item.id}
-                    btnImg={item.btnImg}
-                    btnComp={item.btnComp}
-                    handleClick={item.handleClick}
-                    isBoxActive={showBox === BOX[item.id]}
-                    boxComponent={item.boxComponent}
-                  />
-                );
-              })}
-            </div>
+              {/* video title */}
+
+              <div className={`${styles.centerText}`}>
+                <div className={`${styles.centerTextHeading}`}>
+                  {truncateToN(fullCourse?.name, 60)}
+                </div>
+                <div className={`${styles.centerTextSubheading}`}>
+                  {truncateToN(courseTopicName, 80)}
+                </div>
+              </div>
+
+              {!videoData.isPreview && (
+                <div className={`${styles.rightIcons}`}>
+                  {toolbarItems.slice(3, toolbarItems.length).map((item) => {
+                    if (item?.isHidden) return null;
+                    return (
+                      <ButtonWithBox
+                        key={item.id}
+                        btnImg={item.btnImg}
+                        btnComp={item.btnComp}
+                        handleClick={item.handleClick}
+                        isBoxActive={showBox === BOX[item.id]}
+                        boxComponent={item.boxComponent}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </>
           )}
 
           <div className={`${styles.lastIcon}`}></div>
@@ -309,18 +438,20 @@ export default function UiComponents({
           </div> */}
       {/* <div id="output"></div> */}
 
-      {showQuiz && (
+      {showQuiz != null && (
         <Quiz
+          isTopBarHidden={isTopBarHidden}
           playerClose={playerClose}
+          currentQuizData={showQuiz}
           handleSkip={() => {
-            moveVideoProgressBySeconds(-1);
+            moveVideoProgressBySeconds(1);
             updateIsPlayingTo(true);
-            toggleStates(setShowQuiz, showQuiz);
+            setShowQuiz(null);
           }}
-          handleSubmit={() => {
-            moveVideoProgressBySeconds(-1);
+          afterSubmit={() => {
+            moveVideoProgressBySeconds(1);
             updateIsPlayingTo(true);
-            toggleStates(setShowQuiz, showQuiz);
+            setShowQuiz(null);
           }}
         />
       )}

@@ -10,7 +10,7 @@ const MyExams = () => {
     <>
       <Sidebar sidebarItemsArr={examSidebarData} />
       <MainBody>
-        <AdminHeader title="My Exams" isAddShown={true} pageRoute="/admin/exams/my-exams/add" />
+        <AdminHeader title="My Exams" isAddShown={true} pageRoute="/admin/exams/my-exams/add" tooltipTitle="Create new Exam"/>
         <MainBodyBox>
           <ExamsTable isEdit={true} />
         </MainBodyBox>

@@ -137,6 +137,11 @@ export function getUnixFromDate(dateObj = new Date()) {
   return Math.floor(newDate.getTime() / 1000) || 0;
 }
 
+export function limitValueInRange(value, min = 0, max = 100) {
+  if (typeof value !== 'number') return 0;
+  return Math.max(Math.min(value, max), min);
+}
+
   export async function generateVideoThumbnails(videoData, thumbnailsGap, duration) {
     let thumbnail = [];
     let fractions = [];
@@ -147,12 +152,13 @@ export function getUnixFromDate(dateObj = new Date()) {
       let oneThums = await getVideoThumbnail(videoData, time);
       thumbnail.push(oneThums);
     });
-
     return thumbnail;
   }
   async function getVideoThumbnail(videoData, videoTimeInSeconds) {
     return new Promise((resolve, reject) => {
-      var video = document.createElement('video');
+      const SRC = `/api/overrideCors?filePath=${encodeURIComponent(videoData.videoSrc)}`;
+      const video = document.createElement('video');
+      console.log(video.currentTime, videoTimeInSeconds); 
       var timeupdate = function () {
         if (snapImage()) {
           video.removeEventListener('timeupdate', timeupdate);
@@ -166,21 +172,21 @@ export function getUnixFromDate(dateObj = new Date()) {
       });
       var snapImage = function () {
         var canvas = document.createElement('canvas');
-        var scaleFactor = 0.5;
+        var scaleFactor = 0.2;
         canvas.width = video.videoWidth * scaleFactor;
         canvas.height = video.videoHeight * scaleFactor;
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
         var image = canvas.toDataURL();
-        var success = image.length > 100000;
+        var success = image.length > 10000;
         if (success) {
-          URL.revokeObjectURL(videoData.videoSrc);
+          URL.revokeObjectURL(SRC);
           resolve(image);
         }
         return success;
       };
       video.addEventListener('timeupdate', timeupdate);
       video.preload = 'metadata';
-      video.src = videoData.videoSrc;
+      video.src = SRC;
       // Load video in Safari / IE11
       video.muted = true;
       video.playsInline = true;

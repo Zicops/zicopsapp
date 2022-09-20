@@ -1,4 +1,5 @@
 import { ADD_USER_BOOKMARK, userClient } from '@/api/UserMutations';
+import { QuizAtom } from '@/state/atoms/module.atoms';
 import { THUMBNAIL_GAP } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -29,7 +30,7 @@ export default function useSaveData(videoElement, freezeState) {
   } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
-  const [showQuiz, setShowQuiz] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(null);
 
   const [freezeScreen, setFreezeScreen] = freezeState;
   const [showBox, setShowBox] = useState(null);
@@ -105,15 +106,15 @@ export default function useSaveData(videoElement, freezeState) {
     //     video.play();
     //   });
     // }
-    showThumbnailPointsInProgressbar(140);
-    async function showThumbnailPointsInProgressbar(videoTimeInSeconds) {
-      // console.log(videoElement);
-      let percent = (videoTimeInSeconds/videoElement?.current?.duration) * 100;
-      let thumbPoints = document.getElementById('bookmarkIndicator');
-      let thumbSpan = document.createElement('span');
-      thumbSpan.style.left = percent + '%';
-      thumbPoints.appendChild(thumbSpan);
-    }
+    // showThumbnailPointsInProgressbar(280, 'bookmarkIndicator');
+    // showThumbnailPointsInProgressbar(300, 'quizIndicator');
+    // async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
+    //   let percent = (videoTimeInSeconds/videoElement?.current?.duration) * 100;
+    //   let thumbPoints = document.getElementById(indicator);
+    //   let thumbSpan = document.createElement('span');
+    //   thumbSpan.style.left = percent + '%';
+    //   thumbPoints.appendChild(thumbSpan);
+    // }
     // OLD CODE SEMI-WORKING
     // if (!videoElement?.current?.duration) return;
     // let thumbnail = [];

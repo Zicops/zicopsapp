@@ -19,7 +19,7 @@ import HomeHeader from '@/components/HomePage/HomeHeader';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 
 const LoginScreen = ({ setPage }) => {
-  const [userLogin, { error: loginError }] = useMutation(USER_LOGIN, {
+  const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
     client: userClient
   });
 
@@ -47,8 +47,10 @@ const LoginScreen = ({ setPage }) => {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const checkEmail = isEmail(email);
     if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
+    if (!password) return setToastMsg({ type: 'danger', message: 'Enter password!!' });
 
     await signIn(email, password);
 
@@ -110,7 +112,7 @@ const LoginScreen = ({ setPage }) => {
           heading={'Sign Into Your Learning Space'}
           sub_heading={'Start your first step to learning here!'}
         />
-        <div className="login_body">
+        <form className="login_body" onSubmit={handleSubmit}>
           {/* <input
             className={`${styles.login_email_input}`}
             type={'email'}
@@ -129,12 +131,7 @@ const LoginScreen = ({ setPage }) => {
             }}
             changeHandler={(e) => handleEmail(e, setEmail)}
           />
-          <LoginEmail
-            type={'password'}
-            placeholder={'Password'}
-            chngeHandle={handlePassword}
-            tabIndex={1}
-          />
+          <LoginEmail type={'password'} placeholder={'Password'} chngeHandle={handlePassword} />
           <div className={`${styles.small_text}`}>
             <span />
             <p
@@ -145,8 +142,8 @@ const LoginScreen = ({ setPage }) => {
             </p>
           </div>
 
-          <LoginButton title={'Login'} handleClick={handleSubmit} />
-        </div>
+          <LoginButton title={'Login'} isDisabled={loginLoading} />
+        </form>
       </ZicopsLogin>
       {!!vidIsOpen && (
         <div className={`${styles.introVideoContainer}`}>

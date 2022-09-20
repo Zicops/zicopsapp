@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRef, useState } from 'react';
+import ToolTip from '../ToolTip';
 import styles from './sidebar.module.scss';
 
 // move the styles in sidebar.module.scss in this folder
@@ -44,32 +45,37 @@ export default function Sidebar({ sidebarItemsArr }) {
               const isActive = currentUrl === pathUrl[pathUrl.length - 1];
 
               return (
-                <Link href={val.link} key={key} className="row">
-                  <a
-                    className={isActive ? styles.active : ''}
-                    onClick={() => {
-                      router.pathname = val.link;
-                    }}>
-                    {val.title}
-                  </a>
-                </Link>
+                <ToolTip title={val.description} placement="right">
+                  <span>
+                    <Link href={val.link} key={key} className="row">
+                      <a
+                        className={isActive ? styles.active : ''}
+                        onClick={() => {
+                          router.pathname = val.link;
+                        }}>
+                        <div>{val.title}</div>
+                      </a>
+                    </Link>
+                  </span>
+                </ToolTip>
               );
             })}
           </ul>
         </div>
 
-        <div
-          className={styles.sidebar_footer_menu}
-          style={isSidebarBottomReached ? { position: 'absolute' } : {}}>
-          <ul>
-            <Link href="/admin" className="row">
-              <a>
-                <span>Back to Home</span>
-              </a>
-            </Link>
-          </ul>
-        </div>
-
+        <ToolTip title="Go Back to Admin Home" placement="top">
+          <div
+            className={styles.sidebar_footer_menu}
+            style={isSidebarBottomReached ? { position: 'absolute' } : {}}>
+            <ul>
+              <Link href="/admin" className="row">
+                <a>
+                  <span>Back to Home</span>
+                </a>
+              </Link>
+            </ul>
+          </div>
+        </ToolTip>
         <div ref={lastItem} className={styles.lastItem}></div>
       </div>
     </>

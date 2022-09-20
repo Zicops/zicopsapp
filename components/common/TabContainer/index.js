@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { StatusAtom } from '../../../state/atoms/utils.atoms';
 import Button from '../Button';
+import ToolTip from '../ToolTip';
 import styles from './tabContainer.module.scss';
 // Add proptype for extra added props
 export default function TabContainer({
@@ -39,6 +40,26 @@ export default function TabContainer({
     if (index >= 0) return tabData[index].component;
     return tabData[0].component;
   }
+  console.log(tab)
+  let saveButtonTitle="Save Master details and proceed with question addition"
+  let cancelButtonTitle="Cancel and go back to question paper list"
+  let updateButtonTitle="Save new changes to this question paper"
+  if(tab==="Question Master"){
+    saveButtonTitle="Save Uploaded Questions";
+    cancelButtonTitle="Cancel and go back to Questions list"
+  }else if(tab==="Configuration"){
+    updateButtonTitle="Save updated details"
+    cancelButtonTitle="Cancel and go back to Exam list"
+  }
+
+  let tooltipStatus = "Question paper details saved"
+  if(status==="DRAFT"){
+   tooltipStatus="Question Paper not saved"
+  } else if(status==="FAILED"){
+    tooltipStatus="Failed to save Question paper"
+  }else if(status==="UPDATING"){
+    tooltipStatus="Updating Question paper"
+  }
 
   return (
     <>
@@ -55,20 +76,36 @@ export default function TabContainer({
         </ul>
       </nav>
 
-      <section className={`${styles.tabSection} ${customClass}`} style={customStyles}>{showActiveTab(tab)}</section>
+      <section className={`${styles.tabSection} ${customClass}`} style={customStyles}>
+        {showActiveTab(tab)}
+      </section>
 
       {/* footer */}
       {showFooter && (
         <div className={`${styles.contentPanel}`}>
           <div className={`${styles.leftText}`}>
-            <h3>Status: {status}</h3>
+            <ToolTip title={tooltipStatus} placement="top"><h3>Status: {status}</h3></ToolTip>
           </div>
 
           {children}
 
           <div className={`${styles.rightText}`}>
-            <Button clickHandler={handleCancel} text={cancelDisplay} />
-            <Button clickHandler={handleSubmit} isDisabled={disableSubmit} text={submitDisplay} />
+            <ToolTip title={cancelButtonTitle} placement="left">
+              <span>
+                <Button clickHandler={handleCancel} text={cancelDisplay} />
+              </span>
+            </ToolTip>
+            <ToolTip
+              title={submitDisplay==="Update"?updateButtonTitle:saveButtonTitle}
+              placement="bottom">
+              <span>
+                <Button
+                  clickHandler={handleSubmit}
+                  isDisabled={disableSubmit}
+                  text={submitDisplay}
+                />
+              </span>
+            </ToolTip>
           </div>
         </div>
       )}
