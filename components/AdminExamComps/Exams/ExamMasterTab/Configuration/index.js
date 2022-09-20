@@ -10,7 +10,7 @@ export default function Configuration() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
   const router = useRouter();
-  const isPreview = router.query?.isPreview || false;
+  const isPreview = router.query?.isPreview || router.asPath?.includes('zicops-exam') || false;
 
   const btns = [
     { name: 'shuffle', label: 'Question Shuffling' },
@@ -20,26 +20,26 @@ export default function Configuration() {
   ];
 
   const configurationTooltipTitle = {
-    shuffle:'Change display order of questions for learners',
-    display_hints:'Show answer hints during attempt',
-    show_answer:'Show answer key on finish',
-    show_result:'Show learner result on finish'
-  }
+    shuffle: 'Change display order of questions for learners',
+    display_hints: 'Show answer hints during attempt',
+    show_answer: 'Show answer key on finish',
+    show_result: 'Show learner result on finish'
+  };
 
   return (
     <div className={`${styles.configurationContainer}`}>
       {btns.map(({ name, label }) => (
         <ToolTip title={configurationTooltipTitle[`${name}`]} placement="right">
           <span>
-        <SwitchButton
-          label={label}
-          labelPlacement="end"
-          inputName={name}
-          isChecked={examTabData[name]}
-          isDisabled={isPreview}
-          handleChange={(e) => changeHandler(e, examTabData, setExamTabData)}
-        />
-        </span>
+            <SwitchButton
+              label={label}
+              labelPlacement="end"
+              inputName={name}
+              isChecked={examTabData[name]}
+              isDisabled={isPreview}
+              handleChange={(e) => changeHandler(e, examTabData, setExamTabData)}
+            />
+          </span>
         </ToolTip>
       ))}
     </div>
