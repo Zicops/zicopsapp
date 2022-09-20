@@ -1,6 +1,7 @@
 import DurationFooter from './DurationFooter';
 import ProgressBarFooter from './ProgressBarFooter';
 import styles from './listCard.module.scss';
+import { truncateToN } from '@/helper/common.helper';
 
 export default function ListCard({ courseData, statusData, footerType, children }) {
   return (
@@ -14,9 +15,7 @@ export default function ListCard({ courseData, statusData, footerType, children 
         <div className={`${styles.head}`}>
           {/* title and cat subcat */}
           <section>
-            <p className={`${styles.title}`}>
-              {courseData?.name || 'Start with Project Management'}
-            </p>
+            <p className={`${styles.title}`}>{truncateToN(courseData?.name, 60) || ''}</p>
 
             <p className={`${styles.catSubCat}`}>
               {courseData?.category || 'Development'} <div className={`${styles.dot}`}></div>

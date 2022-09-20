@@ -46,11 +46,13 @@
       }
 
       .levelAndType {
-        min-width: 170px;
+        min-width: 140px;
+        text-align: end;
+
         span {
           background-color: $darkTwo;
-          padding: 2px 5px;
-          font-size: 14px;
+          padding: 2px;
+          font-size: 12px;
           margin: auto 2px;
           border-radius: 5px;
         }
