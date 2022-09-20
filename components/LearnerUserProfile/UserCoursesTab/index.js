@@ -108,7 +108,7 @@ const UserCoursesTab = () => {
     );
 
     if (allAssignedCourses?.length) {
-      setOnGoingCourses(userCourses);
+      setCourseState(userCourses,'completedPercentage', 100, setOnGoingCourses, 'not');
       setCourseState(userCourses, 'completedPercentage', 100, setCompletedCourses);
       setCourseState(userCourses, 'added_by', 'self', setAddedCourses);
       setCourseState(userCourses, 'added_by', 'self', setAssignedCourses, 'not');
