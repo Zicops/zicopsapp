@@ -21,6 +21,8 @@ export default function MyUser({ getUser }) {
     }
   );
 
+  const [isLoading , setLoading] = useState(true);
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
 
@@ -48,7 +50,7 @@ export default function MyUser({ getUser }) {
         role: item?.role
       }));
     // console.log(uData);
-    setData([...uData]);
+    setData([...uData],setLoading(false));
   }, [userId]);
 
   const columns = [
@@ -60,7 +62,7 @@ export default function MyUser({ getUser }) {
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
             type="checkbox"
-            isChecked={userId.length === data.length}
+            isChecked={data?.length !== 0 && userId.length === data.length }
             changeHandler={(e) => {
               setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
             }}
@@ -143,7 +145,7 @@ export default function MyUser({ getUser }) {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="75vh"
-        loading={loading}
+        loading={isLoading}
       />
     </>
   );

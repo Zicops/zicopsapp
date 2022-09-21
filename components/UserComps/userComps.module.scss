@@ -147,8 +147,9 @@
   }
 
   .buttonContainer {
-    width: 135px;
+    // width: 135px;
     display: flex;
+    gap: 5px;
     justify-content: space-between;
   }
 }
@@ -250,9 +251,11 @@
 .imageContainer {
   display: flex;
   justify-content: flex-end;
+  
   & img {
-    width: 25px;
+    // width: 25px;
     margin: 0px 0px 10px 10px;
+    border-radius: 50%;
     &:hover {
       cursor: pointer;
     }

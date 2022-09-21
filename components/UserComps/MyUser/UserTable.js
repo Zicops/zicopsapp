@@ -58,7 +58,7 @@ export default function UserTable({ selectedUser }) {
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
             type="checkbox"
-            isChecked={userId.length === data.length}
+            isChecked={data?.length !== 0 && userId.length === data.length}
             changeHandler={(e) => {
               setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
             }}
