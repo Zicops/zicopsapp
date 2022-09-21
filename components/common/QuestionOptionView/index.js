@@ -104,6 +104,7 @@ export default function QuestionOptionView({
         <section>
           {options.map((option, i) => (
             <Option
+              key={i}
               option={option}
               count={i}
               selectedAnswerId={selectedAnswerId}

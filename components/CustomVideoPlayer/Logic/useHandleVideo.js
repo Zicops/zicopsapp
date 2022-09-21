@@ -162,6 +162,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           sendData.videoProgress = playerState?.progress?.toString();
         }
 
+        if (
+          userCourseMapData?.userCourseProgress?.filter((cp) => cp?.topic_id === topic?.id)
+            ?.length > 0
+        )
+          continue;
+
         console.log(sendData);
         const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
           console.log(err);
@@ -431,10 +437,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     const isCompleted = !quizData
       ?.filter((quiz) => quiz?.topicId === topicId)
       ?.some((quiz) => {
-        const isPassed = quizProgress?.find(
-          (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
-        );
-        return !isPassed;
+        const isAttempted = quizProgress?.find((qp) => qp?.quiz_id === quiz?.id);
+        return !isAttempted;
       });
 
     return isCompleted;

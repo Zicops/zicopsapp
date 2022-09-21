@@ -20,23 +20,42 @@ export default function Search() {
       <SearchBookmarks />
       <SearchBody
         courses={courses?.filter((course) => {
-          const nameFilter = course?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase());
+          const nameFilter = course?.name
+            ?.trim()
+            ?.toLowerCase()
+            ?.includes(searchQuery?.trim()?.toLowerCase());
           let langFilter = true,
             catFilter = true,
             subCatFilter = true,
             typeFilter = true;
 
-          if (filters?.lang) langFilter = course?.language?.includes(filters?.lang);
-          if (filters?.category) catFilter = course?.category?.includes(filters?.category);
+          if (filters?.lang)
+            langFilter = course?.language
+              ?.trim()
+              ?.toLowerCase()
+              ?.includes(filters?.lang?.trim()?.toLowerCase());
+          if (filters?.category)
+            catFilter = course?.category
+              ?.trim()
+              ?.toLowerCase()
+              ?.includes(filters?.category?.trim()?.toLowerCase());
           if (filters?.subCategory)
             subCatFilter =
               course?.sub_categories?.findIndex((subCat) =>
-                subCat?.name?.includes(filters?.subCategory)
-              ) > 0;
-          if (filters?.type) typeFilter = course?.type?.includes(filters?.type);
-
-          if (nameFilter && langFilter && catFilter && subCatFilter && typeFilter)
-            console.log(course);
+                subCat?.name
+                  ?.trim()
+                  ?.toLowerCase()
+                  ?.includes(filters?.subCategory?.trim()?.toLowerCase())
+              ) > 0 ||
+              course?.sub_category
+                ?.trim()
+                ?.toLowerCase()
+                ?.includes(filters?.subCategory?.trim()?.toLowerCase());
+          if (filters?.type)
+            typeFilter = course?.type
+              ?.trim()
+              ?.toLowerCase()
+              ?.includes(filters?.type?.trim()?.toLowerCase());
 
           return nameFilter && langFilter && catFilter && subCatFilter && typeFilter;
         })}

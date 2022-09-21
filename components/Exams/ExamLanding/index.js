@@ -228,7 +228,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
     setUserExamData({
       userAttempts: examAttemptData,
       cpId: userCourseProgressId,
-      isBtnActive: getIsExamAccessible(_examData),
+      isBtnActive: getIsExamAccessible(examAttemptData, _examData),
       nextTopic: getNextTopicId()
     });
     setLearnerExamData(_examData);
@@ -249,25 +249,31 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
     if (userExamData?.isBtnActive) return;
     if (!counter) return;
 
-    const isExamAccessible = getIsExamAccessible();
+    const isExamAccessible = getIsExamAccessible(userExamData?.userAttempts);
 
     if (isExamAccessible) setUserExamData({ ...userExamData, isBtnActive: true });
     setCounter(null);
   }, [learnerExamData, counter]);
 
-  function getIsExamAccessible(_data = null) {
+  function getIsExamAccessible(userAttempts = [], _data = null) {
+    let isAccessible = true;
     const _examData = !!_data ? _data : learnerExamData;
     if (!_examData) return false;
-    if (_examData?.examData?.scheduleType === SCHEDULE_TYPE[1]) return true;
+    if (_examData?.examData?.scheduleType === SCHEDULE_TYPE[0]) {
+      const startTime = new Date(_examData?.examData.examStart);
+      startTime.setMinutes(startTime.getMinutes() - 15);
+      const isExamStarted = startTime < Date.now();
+      // console.log(isExamStarted);
+      const examEndDate = getEndTime(_examData);
+      const isExamEnded = examEndDate < Date.now();
+      isAccessible = isExamStarted && !isExamEnded;
+      console.log(isAccessible, isExamStarted, !isExamEnded);
+    }
 
-    const startTime = new Date(_examData?.examData.examStart);
-    startTime.setMinutes(startTime.getMinutes() - 15);
-    const isExamStarted = startTime < Date.now();
-    // console.log(isExamStarted);
-    const examEndDate = getEndTime(_examData);
-    const isExamEnded = examEndDate < Date.now();
+    const noAttempts = +_examData?.examData?.noAttempts;
+    if (noAttempts > 0 && noAttempts <= userAttempts?.length) isAccessible = false;
 
-    return isExamStarted && !isExamEnded;
+    return isAccessible;
   }
 
   function getNextTopicId() {

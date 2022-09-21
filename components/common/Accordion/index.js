@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './accordion.module.scss';
 
-const Accordion = ({ title, children, customClass }) => {
-  const [isActive, setIsActive] = useState(false);
+const Accordion = ({ title, children, customClass, isOpen = false }) => {
+  const [isActive, setIsActive] = useState(!!isOpen);
   return (
     <>
       <div className={`${styles.accordion} ${customClass}`}>

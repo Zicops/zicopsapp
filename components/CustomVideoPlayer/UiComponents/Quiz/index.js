@@ -122,10 +122,8 @@ export default function Quiz({
     const isCompleted = !quizData
       ?.filter((quiz) => quiz?.topicId === topicId)
       ?.some((quiz) => {
-        const isPassed = quizProgress?.find(
-          (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
-        );
-        return !isPassed;
+        const isAttempted = quizProgress?.find((qp) => qp?.quiz_id === quiz?.id);
+        return !isAttempted;
       });
 
     return isCompleted;
