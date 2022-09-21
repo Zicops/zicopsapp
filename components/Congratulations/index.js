@@ -7,7 +7,14 @@ import CongratulationsScreen from './CongratulationsScreen';
 import { data, getResultStyles } from './Logic/congratulationsHead.helper';
 
 const Congratulations = (props) => {
-  const { resultIndex, attemptData, isSampleTest, handleReturnToMainScreen } = props;
+  const {
+    resultIndex,
+    attemptData,
+    isSampleTest,
+    handleReturnToMainScreen,
+    handleDownload = () => {},
+    downloadBtn = ''
+  } = props;
 
   const router = useRouter();
   const cpId = router?.query?.cpId || '';
@@ -41,10 +48,11 @@ const Congratulations = (props) => {
         />
       </CongratulationsScreen>
       <CongratulationsFooter>
-        <CongratulationsScreenButton title={'Download Result'} />
+        <CongratulationsScreenButton title={downloadBtn} handleClick={handleDownload} />
         <CongratulationsScreenButton
           handleClick={() => router.push(`/answer-key/cp/${cpId}/exam/${examId}`)}
           title={'View Attempt History'}
+          disable={isSampleTest}
         />
 
         <CongratulationsScreenButton
