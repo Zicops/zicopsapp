@@ -28,9 +28,10 @@ const AddUsers = ({ usersData = [] , popUpSetState = ()=>{} }) => {
   }, [usersData]);
 
   useEffect(() => {
+    if(router?.query?.cohortId) return;
     if(!cohortData?.id) 
-    setData([]);
-    return setToastMsg({ type: 'danger', message: 'Add cohort master first!' });
+   { setData([]);
+    return setToastMsg({ type: 'danger', message: 'Add cohort master first!' });}
   }, [router?.query]);
 
   async function handleAddUser() {
