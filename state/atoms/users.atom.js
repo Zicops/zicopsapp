@@ -108,6 +108,7 @@ export function getCohortMasterObject(data = {}) {
     cohort_type: data?.type || '',
     description: data?.description || '',
     cohort_image: data?.cohort_image || null,
+    image_url:data?.imageUrl || '',
     managers: []
   };
 }
