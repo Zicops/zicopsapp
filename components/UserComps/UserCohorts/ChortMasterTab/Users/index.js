@@ -24,11 +24,15 @@ const Users = ({ isEdit = false }) => {
   const router = useRouter();
 
   useEffect(async () => {
-    if (!router?.query?.cohortId) return;
+    if (!router?.query?.cohortId) {
+     const users = await getUsersForCohort(true);
+    if(users?.error) return setToastMsg({type:'danger',message:users?.error});
+     return setUserData([...users],setLoading(false));
+    }
     const cohortUser = await getCohortUser(router?.query?.cohortId);
     if (!cohortUser?.length)
       return setToastMsg({ type: 'info', message: 'None verified users found!' });
-    console.log(cohortUser);
+    // console.log(cohortUser,'cohort user');
     setCohortUserData([...cohortUser], setLoading(false));
 
     const users = await getUsersForCohort(true);
@@ -136,7 +140,7 @@ const Users = ({ isEdit = false }) => {
       />
 
       <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
-        <AddUsers usersData={userData} />
+        <AddUsers usersData={userData} popUpSetState={setIsOpen}/>
         {/* <LearnerStatistics /> */}
       </PopUp>
     </div>

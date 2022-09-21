@@ -23,7 +23,7 @@ import useCohortUserData from '../Logic/useCohortUserData';
 import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 
 const CohortMaster = ({ isEdit = false }) => {
-  const { getCohortUser } = useCohortUserData();
+  const {  getCohortManager } = useCohortUserData();
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
   const router = useRouter();
 
@@ -69,13 +69,13 @@ const CohortMaster = ({ isEdit = false }) => {
     );
 
     const managerList = await getUsersForCohort();
-    // setCohortManager([...managerList]);
+    setCohortManager([...managerList]);
 
     const cohortDetail = resCohort?.getCohortDetails;
     if (!cohortDetail) return;
     setCohortData(getCohortMasterObject(cohortDetail));
 
-    const data = await getCohortUser(cohortId);
+    const data = await getCohortManager(cohortId);
     const cohortManager = data?.map((item) => ({
       value: item?.name,
       label: item?.name,

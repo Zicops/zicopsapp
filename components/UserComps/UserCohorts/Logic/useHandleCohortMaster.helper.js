@@ -29,7 +29,7 @@ export function useHandleCohortMaster() {
   });
 
   const { addUserToCohort } = addUserData();
-  const { getCohortManager, getCohortUserDetails } = useCohortUserData();
+  const { getCohortManager, getCohortUserDetails , getCohortUser } = useCohortUserData();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [status, setStatus] = useRecoilState(StatusAtom);
@@ -98,11 +98,23 @@ export function useHandleCohortMaster() {
     let isError = false;
     if (cohortMasterData?.id) {
       sendCohortData.cohort_id = cohortMasterData?.id;
-      const oldmanagers = await getCohortManager(cohortMasterData?.id);
+      const allUsers = await getCohortUser(cohortMasterData?.id,true);
+      const oldManagers = allUsers?.filter((item) => item?.role?.toLowerCase() === 'manager');
+      const oldLearner = allUsers?.filter((item)=> item?.role?.toLowerCase() !== 'manager')
+      
+      //promoting learner to manager
+      const promoteManager = oldLearner.filter(
+        ({ user_id: id1 }) => cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
+      );
 
-      //removing older manager that are removed
-      const removeManager = oldmanagers.filter(
-        ({ id: id1 }) => !cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
+      //updating older manager that are removed
+      const removeManager = oldManagers.filter(
+        ({ user_id: id1 }) => !cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
+      );
+
+      //new manager that are not in cohort
+      const newManager = cohortMasterData?.managers?.filter(
+        ({ id: id1 }) => !allUsers?.some(({ user_id: id2 }) => id2 === id1)
       );
 
       if (removeManager?.length) {
@@ -124,9 +136,27 @@ export function useHandleCohortMaster() {
           console.log(res);
         }
       }
-      const newManager = cohortMasterData?.managers?.filter(
-        ({ id: id1 }) => !oldmanagers?.some(({ id: id2 }) => id2 === id1)
-      );
+
+      if (promoteManager?.length) {
+        for (let i = 0; i < promoteManager?.length; i++) {
+          const data = await getCohortUserDetails(cohortMasterData?.id, promoteManager[i]?.id);
+          if (!data.length) break;
+          const sendData = {
+            user_cohort_id: data[0]?.user_cohort_id,
+            user_id: data[0]?.user_id,
+            user_lsp_id: data[0]?.user_lsp_id,
+            cohort_id: data[0]?.cohort_id,
+            added_by: JSON.stringify({ user_id: id, role: 'Admin' }),
+            membership_status: 'Active',
+            role: 'Manager'
+          };
+          const res = await updateUserCohort({ variables: sendData }).catch((err) => {
+            if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing manager' });
+          });
+          console.log(res);
+        }
+      }
+      
 
       //adding new managers
       if (newManager?.length) {
