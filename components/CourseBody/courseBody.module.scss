@@ -285,3 +285,17 @@
   font-size: 20px;
   font-weight: 700;
 }
+
+.fileContainer {
+  color: $white;
+
+  h3 {
+    margin: 10px;
+  }
+
+  .bookmarkContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}

@@ -1,7 +1,9 @@
+import { useRouter } from 'next/router';
 import { truncateToN } from '../../../helper/common.helper';
 
 export default function SmallCard({ image, courseData, styleClass, carouselRefData }) {
   if (!courseData) return null;
+  const router = useRouter();
 
   function handleMouseEnter(e, start = 0, end = 0) {
     if (e.currentTarget.parentNode.dataset.index === start.toString()) {
@@ -19,7 +21,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
     e.currentTarget.parentNode.style.margin = '';
   }
   const gotoCourse = () => {
-    window.location.href = courseData?.id ? `/course/${courseData.id}` : '/courses';
+    router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
   };
 
   let courseNameClass = 'coursename';

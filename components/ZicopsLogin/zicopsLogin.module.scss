@@ -53,8 +53,8 @@
     border: 2px solid $primary;
 
     &:disabled {
-      background-color: $darkThree;
-      border-color: $darkThree;
+      background-color: $darkThree !important;
+      border-color: $darkThree !important;
       cursor: no-drop;
     }
   }

@@ -108,8 +108,8 @@ export default function ExamMasterTab() {
       instructionId: insData?.id || null,
       passing_criteria: insData?.PassingCriteria?.split('-')[0],
       passing_criteria_type: insData?.PassingCriteria?.split('-')[1] || 'Marks',
-      is_attempts_visible: insData?.NoAttempts > 1,
-      no_attempts: insData?.NoAttempts,
+      is_attempts_visible: +insData?.NoAttempts >= 1,
+      no_attempts: +insData?.NoAttempts,
       instructions: insData?.Instructions || '',
       access_type: insData?.AccessType || '',
       is_ins_active: insData?.IsActive || ''

@@ -3,7 +3,18 @@ export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
-export const PUBLIC_PATHS = ['/login', '/home', '/reset-password', '/forgot-password'];
+
+export const PUBLIC_PATHS = [
+  '/login',
+  '/home',
+  '/reset-password',
+  '/forgot-password',
+  '/info/about-us',
+  '/info/collaborate',
+  '/info/contact-us',
+  '/info/tour',
+  '/info/careers'
+];
 export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
   '/exam-live',

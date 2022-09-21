@@ -1,8 +1,10 @@
+import BookmarkCard from '@/components/common/BookmarkCard';
 import LearnerPageContainer from '@/components/common/LearnerPageContainer';
 import LineText from '@/components/common/LineText';
 import useHandleNotes from '@/components/CustomVideoPlayer/Logic/useHandleNotes';
 import NoteCard from '@/components/CustomVideoPlayer/UiComponents/Notes/NoteCard';
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
+import { userContext } from '@/state/contexts/UserContext';
 import { useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterAndSortTopicsBasedOnModuleId, filterModule } from '../../../helper/data.helper';
@@ -16,6 +18,7 @@ import TopicFileSlider from '../TopicFileSlider';
 
 export default function CourseBodyNotes() {
   const courseContextData = useContext(courseContext);
+  const { fullCourse } = courseContextData;
   const {
     getModuleOptions,
     handleModuleChange,
@@ -30,6 +33,7 @@ export default function CourseBodyNotes() {
   const options = getModuleOptions();
   const currentModule = filterModule(moduleData, selectedModule?.value);
 
+  const { bookmarkData: allBookmarks } = useContext(userContext);
   const {
     handleNote,
     handleDragEnd,
@@ -72,27 +76,54 @@ export default function CourseBodyNotes() {
         <>
           <LineText text={isNotesVisible.split('|:|')[1]} />
           <LearnerPageContainer>
-            <div className={`${styles.notesCardsContainer}`}>
-              <div className={`${styles.addNote}`} onClick={addNewNote}>
-                <span>+</span>
-                Add Note
-              </div>
+            <div className={`${styles.fileContainer}`}>
+              <h3>Notes</h3>
+              <div className={`${styles.notesCardsContainer}`}>
+                <div
+                  className={`${styles.addNote}`}
+                  onClick={() => addNewNote(isNotesVisible.split('|:|')[0])}>
+                  <span>+</span>
+                  Add Note
+                </div>
 
-              {floatingNotes
-                .map((noteObj, i) => {
-                  if (noteObj?.topic_id !== isNotesVisible.split('|:|')[0]) return null;
+                {floatingNotes
+                  .map((noteObj, i) => {
+                    if (noteObj?.topic_id !== isNotesVisible.split('|:|')[0]) return null;
+
+                    return (
+                      <NoteCard
+                        key={noteObj.id}
+                        handleDelete={() => deleteNote(noteObj)}
+                        handleNote={handleNote}
+                        noteObj={noteObj}
+                        isDraggable={false}
+                      />
+                    );
+                  })
+                  .reverse()}
+              </div>
+            </div>
+
+            <div className={`${styles.fileContainer}`}>
+              <h3>Bookmarks</h3>
+              <div className={`${styles.bookmarkContainer}`}>
+                {allBookmarks?.map((bookmark, i) => {
+                  if (bookmark?.topic_id !== isNotesVisible.split('|:|')[0]) return null;
 
                   return (
-                    <NoteCard
-                      key={noteObj.id}
-                      handleDelete={() => deleteNote(noteObj)}
-                      handleNote={handleNote}
-                      noteObj={noteObj}
-                      isDraggable={false}
+                    <BookmarkCard
+                      data={{
+                        img: fullCourse?.tileImg,
+                        courseName: fullCourse?.name,
+                        title: bookmark?.name,
+                        timestamp: bookmark?.time_stamp
+                      }}
+                      bookmarkData={bookmark}
+                      key={`${bookmark?.user_bm_id}-${i}`}
                     />
                   );
-                })
-                .reverse()}
+                })}
+              </div>
             </div>
           </LearnerPageContainer>
         </>
