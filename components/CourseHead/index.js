@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import Sitemap from '../common/AdminHeader/Sitemap';
 import PopUp from '../common/PopUp';
+import ToolTip from '../common/ToolTip';
 import styles from './courseHead.module.scss';
 
-export default function CourseHead({ title }) {
+export default function CourseHead({ title, tooltipTitle = '' }) {
   const [showSitemap, setShowSitemap] = useState(false);
 
   const router = useRouter();
@@ -53,20 +54,26 @@ export default function CourseHead({ title }) {
 
       <div className={styles.icons}>
         {!route.includes('admin/courses') && (
+          <ToolTip title={tooltipTitle}>
+            <img
+              src="/images/plus_big.png"
+              className="rightside_icon"
+              alt=""
+              onClick={gotoAddcourse}
+            />
+          </ToolTip>
+        )}
+        <ToolTip title="View Settings" placement="bottom">
+          <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
+        </ToolTip>
+        <ToolTip title="View Sitemap" placement="bottom">
           <img
-            src="/images/plus_big.png"
+            src="/images/sitemap_icon.png"
             className="rightside_icon"
             alt=""
-            onClick={gotoAddcourse}
+            onClick={() => setShowSitemap(true)}
           />
-        )}
-        <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
-        <img
-          src="/images/sitemap_icon.png"
-          className="rightside_icon"
-          alt=""
-          onClick={() => setShowSitemap(true)}
-        />
+        </ToolTip>
       </div>
 
       {/* sitemap pop up */}

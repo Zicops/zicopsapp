@@ -4,6 +4,7 @@ import CourseHead from '../../CourseHead';
 import ZicopsTable from '../../common/ZicopsTable';
 import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { useEffect, useState } from 'react';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 
 const columns = [
   {
@@ -56,7 +57,7 @@ const ZicopsCatsList = () => {
   return (
     <>
       <div className="content">
-        <CourseHead title="Zicops Categories" />
+        <CourseHead title="Zicops Categories" tooltipTitle={ADMIN_COURSES.categories.addBtn} />
 
         <ApolloProvider client={queryClient}>
           {/* <CourseContextProvider> */}

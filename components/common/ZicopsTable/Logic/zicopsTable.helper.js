@@ -35,7 +35,6 @@ export function CustomPagination() {
 export function CustomAscendingIcon() {
   return (
     <div style={{ marginTop: '5px' }}>
-      <ToolTip title="Previous" placement="left">
         <img
           src="/images/downsort.svg"
           alt=""
@@ -43,7 +42,6 @@ export function CustomAscendingIcon() {
           width={15}
           style={{ transform: 'rotate(180deg)' }}
         />
-      </ToolTip>
     </div>
   );
 }
@@ -51,9 +49,7 @@ export function CustomAscendingIcon() {
 export function CustomDescendingIcon() {
   return (
     <div style={{ marginTop: '5px' }}>
-      <ToolTip title="Next" placement="right">
         <img src="/images/downsort.svg" alt="" height={15} width={15} />
-      </ToolTip>
     </div>
   );
 }

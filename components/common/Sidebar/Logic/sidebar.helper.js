@@ -1,26 +1,33 @@
+import { ADMIN_COURSES, ADMIN_EXAMS, ADMIN_USERS } from '../../ToolTip/tooltip.helper';
+
 export const courseSidebarData = {
   image: '/images/CourseManagement.png',
   heading: 'Course Management',
   data: [
     {
       title: 'Zicops Courses',
-      link: '/admin/course/zicops-courses'
+      link: '/admin/course/zicops-courses',
+      description: ADMIN_COURSES.sidebarData.zicopsCourses
     },
     {
       title: 'My Courses',
-      link: '/admin/course/my-courses'
+      link: '/admin/course/my-courses',
+      description: ADMIN_COURSES.sidebarData.myCourses
     },
     {
       title: 'Categories',
-      link: '/admin/course/categories'
+      link: '/admin/course/categories',
+      description: ADMIN_COURSES.sidebarData.categories
     },
     {
       title: 'Sub-categories',
-      link: '/admin/course/subcategories'
+      link: '/admin/course/subcategories',
+      description: ADMIN_COURSES.sidebarData.addSubCategories
     },
     {
       title: 'Dashboard',
-      link: '/admin'
+      link: '/admin',
+      description: ADMIN_COURSES.sidebarData.dashboard
     }
   ]
 };
@@ -32,32 +39,32 @@ export const examSidebarData = {
     {
       title: 'Zicops Question Banks',
       link: '/admin/exams/zicops-question-bank',
-      description:'View Zicops Question Banks'
+      description: ADMIN_EXAMS.sidebarData.zicopsQuestionBanks
     },
     {
       title: 'My Question Banks',
       link: '/admin/exams/my-question-bank',
-      description:'View and Create your Question Banks'
+      description: ADMIN_EXAMS.sidebarData.myQuestionBanks
     },
     {
       title: 'Zicops Question Papers',
       link: '/admin/exams/zicops-question-papers',
-      description:'View Zicops Question Papers'
+      description: ADMIN_EXAMS.sidebarData.zicopsQuestionPapers
     },
     {
       title: 'My Question Papers',
       link: '/admin/exams/my-question-papers',
-      description:'View and Create your Question Papers'
+      description: ADMIN_EXAMS.sidebarData.myQuestionPapers
     },
     {
       title: 'Zicops Exams',
       link: '/admin/exams/zicops-exam',
-      description:'View Zicops Exams'
+      description: ADMIN_EXAMS.sidebarData.zicopsExams
     },
     {
       title: 'My Exams',
       link: '/admin/exams/my-exams',
-      description:'View and Create your Exams'
+      description: ADMIN_EXAMS.sidebarData.myExams
     }
   ]
 };
@@ -68,7 +75,8 @@ export const userSideBarData = {
   data: [
     {
       title: 'My Users',
-      link: '/admin/user/my-users'
+      link: '/admin/user/my-users',
+      description: ADMIN_USERS.sidebarData.myUsers
     },
     // {
     //   title: 'User Roles',
@@ -77,7 +85,8 @@ export const userSideBarData = {
     // },
     {
       title: 'User Cohort',
-      link: '/admin/user/user-cohort'
+      link: '/admin/user/user-cohort',
+      description: ADMIN_USERS.sidebarData.userCohort
     }
   ]
 };

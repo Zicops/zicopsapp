@@ -2,7 +2,7 @@ import CustomTooltip from '@/components/common/CustomTooltip';
 import RTE from '@/components/common/FormComponents/RTE';
 import NextButton from '@/components/common/NextButton';
 import ToolTip from '@/components/common/ToolTip';
-import { TOOLTIP_STYLE } from '@/components/common/ToolTip/tooltip.helper';
+import { ADMIN_EXAMS, TOOLTIP_STYLE } from '@/components/common/ToolTip/tooltip.helper';
 import { TOOLTIP_IMG_SRC } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -86,13 +86,6 @@ export default function ExamMaster() {
       padding: '0px'
     })
   };
-
-  let passingCriteriaText = 'No passing criteria would be applicable for this exam.';
-  if (examTabData?.passing_criteria_type === 'Marks') {
-    passingCriteriaText = 'Enter passing marks for this exam';
-  } else if (examTabData?.passing_criteria_type === 'Percentage') {
-    passingCriteriaText = 'Enter passing percentage for this exam';
-  }
 
   return (
     <>
@@ -185,7 +178,7 @@ export default function ExamMaster() {
           {/* <ToolTip title={passingCriteriaText} placement="bottom">
             <img src={TOOLTIP_IMG_SRC} style={TOOLTIP_STYLE} />
           </ToolTip> */}
-          <CustomTooltip info={passingCriteriaText}/>
+          <CustomTooltip info={ADMIN_EXAMS.myExams.myExamsPassingCriteria} />
         </label>
 
         <div

@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { useRouter } from 'next/router';
 import CohortMasterTab from './ChortMasterTab';
@@ -64,7 +65,8 @@ const data = [
     name: 'Devlopement Cohort'
   }
 ];
-const UserCohorts = () => {
+const UserCohorts = ({ tooltipTitle = '' }) => {
+  const { viewBtn, editBtn, downloadBtn } = tooltipTitle;
   const router = useRouter();
   const columns = [
     {
@@ -94,46 +96,52 @@ const UserCohorts = () => {
       renderCell: (params) => {
         return (
           <>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              // onClick={() => {
-              //   setSelectedQB(getQuestionBankObject(params.row));
-              //   setEditPopUp(true);
-              // }}
-            >
-              <img src="/images/svg/eye-line.svg" width={20}></img>
-            </button>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              onClick={() => {
-                router.push(router.asPath + `/${params.row.id}`);
-              }}>
-              <img src="/images/svg/edit-box-line.svg" width={20}></img>
-            </button>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              // onClick={() => {
-              //   setSelectedQB(getQuestionBankObject(params.row));
-              //   setEditPopUp(true);
-              // }}
-            >
-              <img src="/images/svg/download-white.svg" width={20}></img>
-            </button>
+            <ToolTip title={viewBtn}>
+              <button
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0'
+                }}
+                // onClick={() => {
+                //   setSelectedQB(getQuestionBankObject(params.row));
+                //   setEditPopUp(true);
+                // }}
+              >
+                <img src="/images/svg/eye-line.svg" width={20}></img>
+              </button>
+            </ToolTip>
+            <ToolTip title={editBtn}>
+              <button
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0'
+                }}
+                onClick={() => {
+                  router.push(router.asPath + `/${params.row.id}`);
+                }}>
+                <img src="/images/svg/edit-box-line.svg" width={20}></img>
+              </button>
+            </ToolTip>
+            <ToolTip title={downloadBtn}>
+              <button
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0'
+                }}
+                // onClick={() => {
+                //   setSelectedQB(getQuestionBankObject(params.row));
+                //   setEditPopUp(true);
+                // }}
+              >
+                <img src="/images/svg/download-white.svg" width={20}></img>
+              </button>
+            </ToolTip>
           </>
         );
       },

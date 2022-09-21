@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import useHandleDragDrop from '../../Logic/useHandleDragDrop';
@@ -74,9 +75,11 @@ const DragDrop = ({ data, contextData }) => {
             </div>
           </div>
 
-          <div className="col_10">
-            <img className="handdrag" src="/images/handdrag.png" />
-          </div>
+          <ToolTip title="Drag and Drop courses here">
+            <div className="col_10">
+              <img className="handdrag" src="/images/handdrag.png" />
+            </div>
+          </ToolTip>
 
           <div className="col_25">
             <Droppable droppableId="subcategories">

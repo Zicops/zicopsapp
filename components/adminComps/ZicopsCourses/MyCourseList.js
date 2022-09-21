@@ -4,6 +4,8 @@ import ZicopsTable from '../../common/ZicopsTable';
 import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { useState, useEffect } from 'react';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
+import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 
 const columns = [
   {
@@ -37,11 +39,13 @@ const columns = [
     sortable: false,
     renderCell: (params) => {
       return (
-        <button
-          style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
-          onClick={() => editCourse(params.row.id)}>
-          <img src="/images/edit-icon.png" width={20}></img>
-        </button>
+        <ToolTip title={ADMIN_COURSES.myCourses.editBtn} placement="bottom">
+          <button
+            style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
+            onClick={() => editCourse(params.row.id)}>
+            <img src="/images/edit-icon.png" width={20}></img>
+          </button>
+        </ToolTip>
       );
     },
     flex: 0.5

@@ -4,6 +4,7 @@ import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { queryClient, GET_SUB_CATS } from '../../../API/Queries';
 import { ApolloProvider, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 
 const columns = [
   {
@@ -56,7 +57,10 @@ const ZicopsSubcatsList = () => {
   return (
     <>
       <div className="content">
-        <CourseHead title="Zicops Subcategories" />
+        <CourseHead
+          title="Zicops Subcategories"
+          tooltipTitle={ADMIN_COURSES.addSubCategories.addBtn}
+        />
 
         <ApolloProvider client={queryClient}>
           <div className="content-panel">

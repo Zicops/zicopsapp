@@ -1,3 +1,4 @@
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { useState } from 'react';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
@@ -53,6 +54,7 @@ export default function MyUserPage() {
               handleChange: (e) => setUserType(e.target.value)
             }
           }}
+          tooltipTitle={ADMIN_USERS.myUsers.addBtn}
         />
 
         <MainBodyBox>
