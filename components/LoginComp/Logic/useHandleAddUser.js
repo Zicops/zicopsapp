@@ -266,7 +266,7 @@ export default function useHandleAddUserDetails() {
       user_role_id: dataRole?.user_role_id
     }));
 
-    setSubmitDisable(true);
+    setSubmitDisable(false);
     return isError;
   }
 
@@ -413,7 +413,7 @@ export default function useHandleAddUserDetails() {
     isOrganizationSetupReady,
     isAccountSetupReady,
     setPhCountryCode,
-    setSubmitDisable
+    isSubmitDisable
     // addUserOrganizationDetails,
     // addUserLanguageDetails,
     // addUserPreferenceDetails,
