@@ -1078,8 +1078,8 @@ const ExamScreen = () => {
     if (isError) return;
 
     if (optionsRes?.data?.getOptionsForQuestions) {
-      optionsRes?.data?.getOptionsForQuestions.forEach((obj) => {
-        obj?.options.forEach((option) => {
+      optionsRes?.data?.getOptionsForQuestions?.forEach((obj) => {
+        obj?.options?.forEach((option) => {
           allOptions.push({ id: option.id, qmId: option.QmId, isCorrect: option.IsCorrect });
         });
       });
@@ -1099,7 +1099,7 @@ const ExamScreen = () => {
     };
 
     learnerExamData?.sectionData?.forEach((section) => {
-      section?.questions.forEach((id) => {
+      section?.questions?.forEach((id) => {
         const ques = questionData?.filter((q) => q?.question?.id === id)[0];
         const selectedOption = ques?.selectedOption
           ? allOptions?.find((op) => op?.id === ques?.selectedOption)

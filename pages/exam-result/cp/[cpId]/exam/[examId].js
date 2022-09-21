@@ -16,13 +16,13 @@ import {
 import Accordion from '@/components/common/Accordion';
 import Loader from '@/components/common/Loader';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
-import AnswerKeyPDF from '@/components/LearnerExamComp/AnswerKeyPDF';
+// import AnswerKeyPDF from '@/components/LearnerExamComp/AnswerKeyPDF';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+// import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -502,7 +502,8 @@ export default function ExamResult() {
           handleReturnToMainScreen={handleReturnToMainScreen}
           downloadBtn={
             <>
-              {typeof window != null && (
+              Download
+              {/* {typeof window != null && (
                 <PDFDownloadLink
                   document={<AnswerKeyPDF data={attemptedQuestions} />}
                   fileName="answer-key.pdf">
@@ -510,15 +511,15 @@ export default function ExamResult() {
                     loading ? 'Loading document...' : 'Download now!'
                   }
                 </PDFDownloadLink>
-              )}
+              )} */}
             </>
           }
         />
       </div>
 
-      <div>
+      {/* <div>
         <AnswerKeyPDF data={attemptedQuestions} />
-      </div>
+      </div> */}
 
       <div className={`${styles.questionPaper}`} ref={resultsRef}>
         {attemptedQuestions?.sectionData?.map((section, i) => {
