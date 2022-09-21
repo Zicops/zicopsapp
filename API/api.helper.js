@@ -30,7 +30,6 @@ export const authLink = setContext(async (_, { headers }) => {
   const initialToken = sessionStorage.getItem('tokenF')
     ? sessionStorage.getItem('tokenF')
     : auth?.currentUser?.accessToken;
-
   const fireBaseToken = await getLatestToken(initialToken);
   return {
     headers: {

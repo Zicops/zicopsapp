@@ -1,10 +1,13 @@
 import DurationFooter from './DurationFooter';
 import ProgressBarFooter from './ProgressBarFooter';
 import styles from './courseListCard.module.scss';
+import { useRouter } from 'next/router';
 
 export default function CourseLIstCard({ courseData, statusData, footerType, children }) {
+  const router = useRouter();
+  const route = courseData?.id ? courseData?.id : null;
   return (
-    <div className={`${styles.cardContainer}`}>
+    <div className={`${styles.cardContainer}`} onClick={route? ()=>{router.push(`/course/${route}`)}:()=>{}}>
       {/* course img */}
       <div className={`${styles.imgContainer}`}>
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />

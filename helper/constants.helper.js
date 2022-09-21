@@ -24,12 +24,13 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/test',
   '/reset-password',
   '/account-setup',
-  '/forgot-password'
-  // '/info/about-us',
-  // '/info/collaborate',
-  // '/info/contact-us',
-  // '/info/tour',
-  // '/info/careers'
+  '/forgot-password',
+  '/info/about-us',
+  '/info/collaborate',
+  '/info/contact-us',
+  '/info/tour',
+  '/info/careers',
+  '/account-select'
 ];
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
