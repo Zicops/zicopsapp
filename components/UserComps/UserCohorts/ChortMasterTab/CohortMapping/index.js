@@ -148,6 +148,7 @@ const CohortMapping = () => {
       console.log(cohortData?.id);
       if (!cohortData?.id) return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
       const data = await getCohortCourses(cohortData?.id);
+      if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
       if (data?.allCourses) {
         return setCourseData([...data?.allCourses]);
       }

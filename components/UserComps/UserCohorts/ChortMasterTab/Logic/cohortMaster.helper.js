@@ -57,6 +57,9 @@ export async function getCohortCourses(cohortId = null) {
   if (res?.error) return { error: 'Error while loading courses!' };
   const courseData = res?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display);
 
+  console.log(courseData);
+  if(!courseData) return { error:'Error while loading courses!v'};
+
   const cohortCoursesRes = await loadQueryDataAsync(
     GET_COHORT_COURSES,
     { cohort_id: cohortId },
