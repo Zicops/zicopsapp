@@ -1085,5 +1085,88 @@ mutation AddCourseCohort($CourseId:String,$CohortId:String,$CourseType:String,$L
     ExpectedCompletion
   }
 }
-
 `
+
+export const ADD_USER_QUIZ_ATTEMPT = gql`
+  mutation addUserQuizAttempt(
+    $user_id: String!
+    $user_cp_id: String!
+    $user_course_id: String!
+    $quiz_id: String!
+    $quiz_attempt: Int!
+    $topic_id: String!
+    $result: String!
+    $is_active: Boolean!
+  ) {
+    addUserQuizAttempt(
+      input: [
+        {
+          user_id: $user_id
+          user_cp_id: $user_cp_id
+          user_course_id: $user_course_id
+          quiz_id: $quiz_id
+          quiz_attempt: $quiz_attempt
+          topic_id: $topic_id
+          result: $result
+          is_active: $is_active
+        }
+      ]
+    ) {
+      user_qa_id
+      user_id
+      user_cp_id
+      user_course_id
+      quiz_id
+      quiz_attempt
+      topic_id
+      result
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_QUIZ_ATTEMPT = gql`
+  mutation updateUserQuizAttempt(
+    $user_qa_id: ID
+    $user_id: String!
+    $user_cp_id: String!
+    $user_course_id: String!
+    $quiz_id: String!
+    $quiz_attempt: Int!
+    $topic_id: String!
+    $result: String!
+    $is_active: Boolean!
+  ) {
+    updateUserQuizAttempt(
+      input: {
+        user_id: $user_id
+        user_qa_id: $user_qa_id
+        user_cp_id: $user_cp_id
+        user_course_id: $user_course_id
+        quiz_id: $quiz_id
+        quiz_attempt: $quiz_attempt
+        topic_id: $topic_id
+        result: $result
+        is_active: $is_active
+      }
+    ) {
+      user_qa_id
+      user_id
+      user_cp_id
+      user_course_id
+      quiz_id
+      quiz_attempt
+      topic_id
+      result
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
