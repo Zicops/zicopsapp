@@ -118,6 +118,7 @@ export default function CourseBodyNotes() {
                         title: bookmark?.name,
                         timestamp: bookmark?.time_stamp
                       }}
+                      bookmarkData={bookmark}
                       key={`${bookmark?.user_bm_id}-${i}`}
                     />
                   );
