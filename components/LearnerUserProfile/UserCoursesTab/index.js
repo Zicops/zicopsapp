@@ -96,7 +96,7 @@ const UserCoursesTab = () => {
       const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
       allAssignedCourses.push({
         ...courseRes?.getCourse,
-        completedPercentage: userProgressArr?.length ? courseProgress : 0,
+        completedPercentage: userProgressArr?.length ? courseProgress : '0',
         added_by: added_by?.role,
         created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY')
@@ -108,7 +108,7 @@ const UserCoursesTab = () => {
     );
 
     if (allAssignedCourses?.length) {
-      setOnGoingCourses(userCourses);
+      setCourseState(userCourses,'completedPercentage', 100, setOnGoingCourses, 'not');
       setCourseState(userCourses, 'completedPercentage', 100, setCompletedCourses);
       setCourseState(userCourses, 'added_by', 'self', setAddedCourses);
       setCourseState(userCourses, 'added_by', 'self', setAssignedCourses, 'not');

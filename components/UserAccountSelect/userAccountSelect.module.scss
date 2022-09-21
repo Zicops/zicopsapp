@@ -1,0 +1,53 @@
+@import '../../styles/base.scss';
+
+.container{
+  background-image: url('/images/starrySky2.png');
+  background-position: fixed;
+  background-size: cover;
+
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+.accountBlobContainer{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+    
+    width: 100%;
+    height: 150px; 
+
+    border-radius: 5px;
+    background-color: $darkTwo;
+    color: $white;
+    font-size: 15px;
+    transition: all 0.3s;
+
+    cursor: pointer;
+
+    
+}
+
+.blobContainer {
+
+    border-radius: 5px;
+
+    // color: $primary;
+    padding: 10px;
+    background-color: $darkThree;
+    &:hover{
+  box-shadow: 0 0 10px 0 rgba($primary, 0.5);
+  transform: scale(1.02);
+  background-color: $primary;
+  div{color: $primary;}
+    }
+
+}

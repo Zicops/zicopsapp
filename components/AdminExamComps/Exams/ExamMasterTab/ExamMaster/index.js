@@ -33,7 +33,7 @@ export default function ExamMaster() {
 
   const router = useRouter();
   const examId = router?.query?.examId;
-  const isPreview = router.query?.isPreview || false;
+  const isPreview = router.query?.isPreview || router.asPath?.includes('zicops-exam') || false;
 
   const { getTotalMarks, saveExamData } = useHandleExamTab();
 
@@ -76,10 +76,12 @@ export default function ExamMaster() {
     });
   }, [questionPaperOptions, router.query, examTabData?.qpId]);
 
-  const maxAttemptsOptions = Array(MAX_ATTEMPT_COUNT).fill(null).map((val, i) => ({
-    value: i+1,
-    label: i+1
-  }));
+  const maxAttemptsOptions = Array(MAX_ATTEMPT_COUNT)
+    .fill(null)
+    .map((val, i) => ({
+      value: i + 1,
+      label: i + 1
+    }));
 
   const defaultStyles = customSelectStyles();
   const customStyles = {
@@ -220,7 +222,7 @@ export default function ExamMaster() {
         <div
           className={`${styles.passingCriteriaInnerContainer} ${
             examTabData?.passing_criteria ? styles.hasValue : ''
-          } ${isPreview ? styles.disabled : '' }`}
+          } ${isPreview ? styles.disabled : ''}`}
           onFocus={(e) => e.currentTarget.classList.add(styles.focus)}
           onBlur={(e) => e.currentTarget.classList.remove(styles.focus)}>
           <input

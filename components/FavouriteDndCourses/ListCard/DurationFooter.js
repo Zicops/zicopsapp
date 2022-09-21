@@ -1,6 +1,6 @@
 import { getDateTimeFromUnix } from '@/components/Tabs/Logic/tabs.helper';
 import moment from 'moment';
-import styles from './courseListCard.module.scss';
+import styles from './listCard.module.scss';
 
 export default function DurationFooter({ courseData, isAdded }) {
   //made changes but wasnt merge

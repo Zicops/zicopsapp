@@ -1,13 +1,11 @@
 import DurationFooter from './DurationFooter';
 import ProgressBarFooter from './ProgressBarFooter';
-import styles from './courseListCard.module.scss';
-import { useRouter } from 'next/router';
+import styles from './listCard.module.scss';
+import { truncateToN } from '@/helper/common.helper';
 
-export default function CourseLIstCard({ courseData, statusData, footerType, children }) {
-  const router = useRouter();
-  const route = courseData?.id ? courseData?.id : null;
+export default function ListCard({ courseData, statusData, footerType, children }) {
   return (
-    <div className={`${styles.cardContainer}`} onClick={route? ()=>{router.push(`/course/${route}`)}:()=>{}}>
+    <div className={`${styles.cardContainer}`}>
       {/* course img */}
       <div className={`${styles.imgContainer}`}>
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
@@ -17,9 +15,7 @@ export default function CourseLIstCard({ courseData, statusData, footerType, chi
         <div className={`${styles.head}`}>
           {/* title and cat subcat */}
           <section>
-            <p className={`${styles.title}`}>
-              {courseData?.name || 'Start with Project Management'}
-            </p>
+            <p className={`${styles.title}`}>{truncateToN(courseData?.name, 60) || ''}</p>
 
             <p className={`${styles.catSubCat}`}>
               {courseData?.category || 'Development'} <div className={`${styles.dot}`}></div>
