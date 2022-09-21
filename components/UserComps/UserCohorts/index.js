@@ -30,7 +30,8 @@ const UserCohorts = () => {
     const list = data.map((item) => {
       return { ...item, id: item?.cohort_id };
     });
-    setCohortList([...list], setLoading(false));
+    const cohorts = list?.filter((item)=>item?.is_active)
+    setCohortList([...cohorts], setLoading(false));
   }, []);
 
   const columns = [

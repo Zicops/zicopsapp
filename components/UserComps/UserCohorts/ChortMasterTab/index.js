@@ -19,6 +19,7 @@ const UserCohorts = ({ isEdit = false }) => {
 
   useEffect(() => {
     console.log(router?.query);
+    // console.log(cohortMasterData);
   }, [router?.query]);
   const tabData = [
     {
@@ -42,6 +43,7 @@ const UserCohorts = ({ isEdit = false }) => {
         tabData={tabData}
         tab={tab}
         setTab={setTab}
+        customStyles={tab === tabData[2].name? {padding:'20px'}:{}}
         footerObj={{
           // submitDisplay: 'Save',
           showFooter: tab === tabData[0].name,
