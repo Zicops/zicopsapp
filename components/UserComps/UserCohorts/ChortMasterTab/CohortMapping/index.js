@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { CohortMasterData } from '@/state/atoms/users.atom';
 import { GET_COHORT_COURSES, GET_COURSE, GET_LATEST_COURSES, queryClient } from '@/api/Queries';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import UserButton from '@/components/common/UserButton';
@@ -19,17 +19,22 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getCohortCourses } from '../Logic/cohortMaster.helper';
 import assignCourseToUser from '../Logic/assignCourseToUser';
+import { ADD_COURSE_COHORT_MAP } from '@/api/UserMutations';
+import { userQueryClient } from '@/api/UserQueries';
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
+import { getUserData } from '@/helper/loggeduser.helper';
 
 const CohortMapping = () => {
   const [courseAssignData, setCourseAssignData] = useState({
-    expectedCompletionDays: 0,
+    expectedCompletionDays: null,
     isMandatory: false,
     isCourseAssigned: false
   });
 
-  const [loadLastestCourseData, { error: error }] = useLazyQuery(GET_LATEST_COURSES, {
-    client: queryClient
+  const [addCohortCourse, { loading }] = useMutation(ADD_COURSE_COHORT_MAP, {
+    client: userQueryClient
   });
+
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [courseData, setCourseData] = useState([]);
@@ -52,15 +57,34 @@ const CohortMapping = () => {
   const { assignCourseToOldUser } = assignCourseToUser();
 
   function handleAssign(item, isRemove = false) {
-    setSelectedCourse({ ...item });
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + parseInt(courseAssignData?.expectedCompletionDays));
+    setSelectedCourse({...item, isMandatory:courseAssignData?.isMandatory , endDate:endDate})
+    // setSelectedCourse({ ...item });
     if (!isRemove) return setIsAssignPopUpOpen(true);
 
     return setShowConfirmBox(true);
   }
 
   async function handleSubmit() {
-    const users = await assignCourseToOldUser(router?.query?.cohortId);
-    console.log('hii' , users);
+    const {id,email} = getUserData();
+    const sendData = {
+      CourseId:selectedCourse?.id,
+      CohortId:router?.query?.cohortId || cohortData?.id,
+      CourseType:selectedCourse?.type,
+      LspId:LEARNING_SPACE_ID,
+      CohortCode:cohortData?.cohort_code,
+      isMandatory:courseAssignData?.isMandatory,
+      CourseStatus:selectedCourse?.status,
+      AddedBy:JSON.stringify({user_id:id,role:'admin'}),
+      CreatedBy:email,
+      UpdatedBy:email,
+      IsActive:'active',
+      ExpectedCompletion:courseAssignData?.expectedCompletionDays
+    }
+    console.log(sendData);
+    const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId,selectedCourse);
+    if(!isCourseAssigned) return setToastMsg({type:'danger',message:'error while assigning course to users!'})
   }
 
   const [lists, setLists] = useState([
@@ -121,12 +145,13 @@ const CohortMapping = () => {
 
   useEffect(async () => {
     if (!router?.query?.cohortId) {
-      console.log(cohortData);
-      if (!cohortData?.id) setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
+      console.log(cohortData?.id);
+      if (!cohortData?.id) return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
       const data = await getCohortCourses(cohortData?.id);
       if (data?.allCourses) {
-        setCourseData([...data?.allCourses]);
+        return setCourseData([...data?.allCourses]);
       }
+      return;
     }
     const data = await getCohortCourses(router?.query?.cohortId);
     if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });

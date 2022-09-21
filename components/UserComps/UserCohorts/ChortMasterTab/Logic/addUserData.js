@@ -32,7 +32,7 @@ export default function addUserData() {
       }
     );
     if (isError)
-      setToastMsg({ type: 'danger', message: 'error occured while adding user cohort mapping' });
+     return setToastMsg({ type: 'danger', message: 'error occured while adding user cohort mapping' });
     // console.log(resCohort, 'adduserData');
   }
 
