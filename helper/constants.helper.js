@@ -18,7 +18,8 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/info/collaborate',
   '/info/contact-us',
   '/info/tour',
-  '/info/careers'
+  '/info/careers',
+  '/account-select'
 ];
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
