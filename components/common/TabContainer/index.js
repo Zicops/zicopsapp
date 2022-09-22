@@ -22,7 +22,8 @@ export default function TabContainer({
     handleSubmit = function () {},
     cancelDisplay = 'Cancel',
     handleCancel = function () {},
-    showFooter = true
+    showFooter = true,
+    isActive = false
   } = footerObj;
 
   const [tabStatus, setTabStatus] = useRecoilState(StatusAtom);
@@ -100,6 +101,7 @@ export default function TabContainer({
               placement="bottom">
               <span>
                 <Button
+                  customStyles={isActive ? { boxShadow: '0 0 10px 0 var(--primary)' } : {}}
                   clickHandler={handleSubmit}
                   isDisabled={disableSubmit}
                   text={submitDisplay}
