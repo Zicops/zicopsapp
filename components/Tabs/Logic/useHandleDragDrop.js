@@ -18,6 +18,9 @@ export default function useHandleDragDrop(courseContextData) {
 
     if (data?.allSubCategories) {
       data.allSubCategories.forEach(function (e, i) {
+        if (fullCourse?.sub_category?.toLowerCase()?.trim()?.includes(e?.toLowerCase()?.trim()))
+          return;
+
         newDraglist.push({ dragOrder: i, name: e });
       });
 
@@ -42,7 +45,11 @@ export default function useHandleDragDrop(courseContextData) {
         })
         .sort((item1, item2) => item1.rank - item2.rank);
 
-      updateDraglist(newDraglist);
+      updateDraglist(
+        newDraglist?.sort((item1, item2) =>
+          item1.name?.toLowerCase()?.trim()?.localeCompare(item2.name?.toLowerCase()?.trim())
+        ) || []
+      );
       updateDroplist(newDroplist);
     }
   }, []);
@@ -85,7 +92,11 @@ export default function useHandleDragDrop(courseContextData) {
       prevDroplist.push(dragItem);
 
       updateDroplist(prevDroplist);
-      updateDraglist(prevDraglist);
+      updateDraglist(
+        prevDraglist?.sort((item1, item2) =>
+          item1.name?.toLowerCase()?.trim().localeCompare(item2.name?.toLowerCase()?.trim())
+        ) || []
+      );
 
       return;
     }
@@ -101,7 +112,11 @@ export default function useHandleDragDrop(courseContextData) {
     previousDraglist.splice(dragOrder, 0, { dragOrder, name });
 
     updateDroplist(previousDroplist);
-    updateDraglist(previousDraglist);
+    updateDraglist(
+      previousDraglist?.sort((item1, item2) =>
+        item1.name?.toLowerCase()?.trim().localeCompare(item2.name?.toLowerCase()?.trim())
+      ) || []
+    );
     if (previousDroplist.length === 0) setIsDragOn(0);
   }
 
