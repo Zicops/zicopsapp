@@ -3,7 +3,7 @@ import ProgressBarFooter from './ProgressBarFooter';
 import styles from './courseListCard.module.scss';
 import { useRouter } from 'next/router';
 
-export default function CourseLIstCard({ courseData, statusData, footerType, children }) {
+export default function CourseLIstCard({ courseData, statusData, footerType, children , isAdmin=false }) {
   const router = useRouter();
   const courseId = courseData?.id ? courseData?.id : null;
   return (
