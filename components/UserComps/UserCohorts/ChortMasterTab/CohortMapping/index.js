@@ -60,9 +60,8 @@ const CohortMapping = () => {
   const { assignCourseToOldUser } = assignCourseToUser();
 
   function handleAssign(item, isRemove = false) {
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + parseInt(courseAssignData?.expectedCompletionDays));
-    setSelectedCourse({...item, isMandatory:courseAssignData?.isMandatory , endDate:endDate})
+
+    setSelectedCourse({...item, isMandatory:courseAssignData?.isMandatory})
     // setSelectedCourse({ ...item });
     if (!isRemove) return setIsAssignPopUpOpen(true);
 
@@ -72,6 +71,11 @@ const CohortMapping = () => {
   async function handleSubmit() {
     setLoading(true);
     const {id,email} = getUserData();
+    
+    //adding end date after adding duration
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate()+parseInt(courseAssignData?.expectedCompletionDays));
+    
     const sendData = {
       CourseId:selectedCourse?.id,
       CohortId:router?.query?.cohortId || cohortData?.id,
@@ -86,13 +90,14 @@ const CohortMapping = () => {
       IsActive:true,
       ExpectedCompletion:courseAssignData?.expectedCompletionDays
     }
-    // console.log(sendData);
+    console.log({...selectedCourse,endDate:endDate},'selected course');
     let isError = false ;
     const resCohortCourse = await addCohortCourse({variables:sendData}).catch((err)=>{isError = !!err});
     if(isError) return setToastMsg({type:'danger',message:'error while assigning course to cohort!'})
-    console.log(resCohortCourse);
-    const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId,selectedCourse);
+    // console.log(resCohortCourse);
+    const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId,{...selectedCourse,endDate:endDate});
     if(!isCourseAssigned) return setToastMsg({type:'danger',message:'error while assigning course to users!'})
+    setIsAssignPopUpOpen(false);
     return setLoading(false);
   }
 
@@ -266,6 +271,7 @@ const CohortMapping = () => {
               clickHandler={() => {
                 handleSubmit();
               }}
+              isDisabled={loading}
             />
           </div>
         </div>
