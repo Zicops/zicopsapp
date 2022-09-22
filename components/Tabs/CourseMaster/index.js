@@ -1,7 +1,9 @@
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { loadCatSubCat } from '@/helper/data.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
 import { getQueryData } from '../../../helper/api.helper';
 import { changeHandler } from '../../../helper/common.helper';
@@ -18,6 +20,7 @@ export default function CourseMaster() {
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
   const { data } = getQueryData(GET_CATS_N_SUB_CATS);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // cat and sub cat
   const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
@@ -51,14 +54,9 @@ export default function CourseMaster() {
   };
 
   const allOwners = [
-    { value: 'Abhishek', label: 'Abhishek' },
-    { value: 'Sonali', label: 'Sonali' },
-    { value: 'Joy', label: 'Joy' },
-    { value: 'Puneet', label: 'Puneet' },
-    { value: 'Vaishnavi', label: 'Vaishnavi' },
-    { value: 'Harshad', label: 'Harshad' },
-    { value: 'Rishav', label: 'Rishav' }
+    { value: 'Zicops', label: 'Zicops' },
   ];
+
   const ownerDropdownOptions = {
     inputName: 'owner',
     label: 'Course Owner',
@@ -83,11 +81,13 @@ export default function CourseMaster() {
     isMulti: true
   };
 
+  const isError = toastMsg?.[0]?.type === 'warning';
   return (
     <>
       {/* course name */}
       <LabeledInput
-        styleClass={styles.marginBottom}
+        styleClass={`${styles.marginBottom}`}
+        inputClass={isError ? "error" : ''}
         inputOptions={{
           inputName: 'name',
           label: 'Name',
@@ -101,6 +101,7 @@ export default function CourseMaster() {
       {/* course category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={isError}
         dropdownOptions={categoryDropdownOptions}
         changeHandler={
           (e) => updateCourseMaster({ ...fullCourse, category: e.value, sub_category: '' })
@@ -111,6 +112,7 @@ export default function CourseMaster() {
       {/* course sub category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={isError}
         dropdownOptions={subcategoryDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, subcategoryDropdownOptions.inputName)
@@ -120,6 +122,7 @@ export default function CourseMaster() {
       {/* course owner */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={isError}
         dropdownOptions={ownerDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, ownerDropdownOptions.inputName)
@@ -129,6 +132,7 @@ export default function CourseMaster() {
       {/* language */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={isError}
         dropdownOptions={languageDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)

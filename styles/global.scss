@@ -289,7 +289,9 @@ body::-webkit-scrollbar-thumb {
 .text-center {
   text-align: center;
 }
-
+.error {
+  @include inputStylesFor('error');
+}
 .center-element-with-flex {
   display: flex;
   justify-content: center;

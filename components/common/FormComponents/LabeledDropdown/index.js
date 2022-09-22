@@ -5,6 +5,7 @@ import { customSelectStyles } from '../Logic/formComponents.helper';
 export default function LabeledDropdown({
   dropdownOptions,
   styleClass,
+  isError,
   changeHandler,
   filterOption,
   isFiftyFifty = false
@@ -51,7 +52,7 @@ export default function LabeledDropdown({
         onChange={changeHandler}
         className={`${label ? '' : 'w-100'}`}
         menuPlacement={menuPlacement}
-        styles={customSelectStyles(isFiftyFifty, containerWidth, isReadonly)}
+        styles={customSelectStyles(isFiftyFifty, containerWidth, isError, isReadonly)}
         isSearchable={!!isSearchEnable}
         isDisabled={!!isDisabled}
         isOptionDisabled={(option) => option.disabled}

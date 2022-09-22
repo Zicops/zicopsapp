@@ -4,7 +4,7 @@ $secondary: #292f2f;
 
 $accent: #142c2c;
 $bgContent: #081111;
-
+$error: #cf3e3e;
 $white: #ffffff;
 $secondaryWhite: #484848;
 
@@ -74,6 +74,9 @@ $cardTileRatio: 1.75;
     background-color: $darkTwo;
   }
 
+  @if $state =='error' {
+    border: 2px solid $error !important;
+  }
   @if $state == 'disabled' {
     border: 2px solid $darkThree;
   }
