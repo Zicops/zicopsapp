@@ -23,6 +23,7 @@ import { ADD_COURSE_COHORT_MAP } from '@/api/UserMutations';
 import { userQueryClient } from '@/api/UserQueries';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { mutationClient } from '@/api/Mutations';
 
 const CohortMapping = () => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -31,8 +32,10 @@ const CohortMapping = () => {
     isCourseAssigned: false
   });
 
-  const [addCohortCourse, { loading }] = useMutation(ADD_COURSE_COHORT_MAP, {
-    client: userQueryClient
+
+  const [loading , setLoading] = useState(false);
+  const [addCohortCourse] = useMutation(ADD_COURSE_COHORT_MAP, {
+    client: mutationClient
   });
 
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
@@ -67,6 +70,7 @@ const CohortMapping = () => {
   }
 
   async function handleSubmit() {
+    setLoading(true);
     const {id,email} = getUserData();
     const sendData = {
       CourseId:selectedCourse?.id,
@@ -79,12 +83,17 @@ const CohortMapping = () => {
       AddedBy:JSON.stringify({user_id:id,role:'admin'}),
       CreatedBy:email,
       UpdatedBy:email,
-      IsActive:'active',
+      IsActive:true,
       ExpectedCompletion:courseAssignData?.expectedCompletionDays
     }
-    console.log(sendData);
+    // console.log(sendData);
+    let isError = false ;
+    const resCohortCourse = await addCohortCourse({variables:sendData}).catch((err)=>{isError = !!err});
+    if(isError) return setToastMsg({type:'danger',message:'error while assigning course to cohort!'})
+    console.log(resCohortCourse);
     const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId,selectedCourse);
     if(!isCourseAssigned) return setToastMsg({type:'danger',message:'error while assigning course to users!'})
+    return setLoading(false);
   }
 
   const [lists, setLists] = useState([
