@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 
 export default function CourseLIstCard({ courseData, statusData, footerType, children }) {
   const router = useRouter();
-  const route = courseData?.id ? courseData?.id : null;
+  const courseId = courseData?.id ? courseData?.id : null;
   return (
-    <div className={`${styles.cardContainer}`} onClick={route? ()=>{router.push(`/course/${route}`)}:()=>{}}>
+    <div className={`${styles.cardContainer}`} onClick={()=>{courseId && !isAdmin? router.push(`/course/${courseId}`):''}}>
       {/* course img */}
       <div className={`${styles.imgContainer}`}>
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
