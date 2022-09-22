@@ -292,6 +292,8 @@ body::-webkit-scrollbar-thumb {
 .error {
   @include inputStylesFor('error');
 }
+
+
 .center-element-with-flex {
   display: flex;
   justify-content: center;

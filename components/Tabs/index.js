@@ -81,6 +81,13 @@ export default function CourseTabs() {
         tab={tab}
         setTab={setTab}
         footerObj={{
+          isActive : (
+          fullCourse?.name &&
+          fullCourse?.category &&
+          fullCourse?.sub_category &&
+          fullCourse?.owner &&
+          fullCourse?.language?.length
+        ),
           status: isCourseUploading ? (
             isCourseUploading
           ) : (

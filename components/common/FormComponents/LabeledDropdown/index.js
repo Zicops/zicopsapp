@@ -50,7 +50,7 @@ export default function LabeledDropdown({
         name={inputName}
         placeholder={placeholder}
         onChange={changeHandler}
-        className={`${label ? '' : 'w-100'}`}
+        className={`${label ? '' : 'w-100'} ${isError ? 'headShake' : ''}`}
         menuPlacement={menuPlacement}
         styles={customSelectStyles(isFiftyFifty, containerWidth, isError, isReadonly)}
         isSearchable={!!isSearchEnable}
