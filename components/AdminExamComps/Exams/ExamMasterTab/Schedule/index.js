@@ -17,7 +17,7 @@ export default function Schedule() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
   const router = useRouter();
-  const isPreview = router.query?.isPreview || false;
+  const isPreview = router.query?.isPreview || router.asPath?.includes('zicops-exam') || false;
   const { isEndTimeBehind, updateDate, updateTime, getMinExamEndTime, getTimeWithDuration } =
     useValidateScheduleDates();
 

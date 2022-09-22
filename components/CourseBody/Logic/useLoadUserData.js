@@ -135,6 +135,23 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     );
 
     // new logic
+    // chapterDataLoaded
+    //   ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
+    //   ?.forEach((chapter) => {
+    //     const _topics =
+    //       _topicDataLoaded
+    //         ?.filter((topic) => topic?.chapterId === chapter?.id)
+    //         ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
+    //         ?.map((topic) => {
+    //           const filteredTopicContent = filterTopicContent(topicContentDataLoaded, topic?.id);
+    //           // console.log(filteredTopicContent);
+    //           topic.topicContentData = filteredTopicContent;
+    //           topic.userProgress = {};
+    //           return topic;
+    //         }) || [];
+
+    //     topicDataLoaded.push(..._topics);
+    //   });
     topicDataLoaded
       ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
       ?.forEach((topic) => {

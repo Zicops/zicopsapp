@@ -1,3 +1,5 @@
+import { getDateTimeFromUnix } from '@/components/Tabs/Logic/tabs.helper';
+import moment from 'moment';
 import styles from './courseListCard.module.scss';
 
 export default function DurationFooter({ courseData, isAdded }) {
@@ -5,7 +7,10 @@ export default function DurationFooter({ courseData, isAdded }) {
   return (
     <div className={`${styles.durationFooter}`}>
       {isAdded ? (
-        <p>Added on {courseData?.created_at || '22-06-2022'}</p>
+        <p>
+          Added on{' '}
+          {moment(getDateTimeFromUnix(courseData?.created_at)).format('DD-MM-YYYY') || '22-06-2022'}
+        </p>
       ) : (
         <p>Expected Completion by {courseData?.expected_completion || '22-06-2022'}</p>
       )}

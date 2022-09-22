@@ -99,17 +99,9 @@ export default function VideoPlayer({
   // console.log(videoData);
   return (
     <>
-      {videoData.type === 'SCORM' && videoData.videoSrc && (
-        <iframe
-          src={
-            videoData.videoSrc ||
-            'https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html'
-          }
-          frameBorder="0"
-          className={`${styles.videoElement}`}
-        />
+      {!videoData.videoSrc && videoData?.type !== 'classroom' && (
+        <div className={styles.fallbackForVideo}>No Video Present</div>
       )}
-      {!videoData.videoSrc && <div className={styles.fallbackForVideo}>No Video Present</div>}
 
       {/* <button
         style={{ opacity: 0, zIndex: -10000000, position: 'absolute', top: '0px' }}
@@ -236,6 +228,26 @@ export default function VideoPlayer({
             {subtitles}
           </span>
         </>
+      )}
+
+      {/* {videoData.type === 'SCORM' && videoData.videoSrc && ( */}
+      {videoData.type === 'SCORM' && (
+        <iframe
+          src={
+            videoData.videoSrc ||
+            'https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html'
+          }
+          frameBorder="0"
+          className={`${styles.videoElement}`}
+        />
+      )}
+
+      {videoData?.type === 'classroom' && (
+        <iframe
+          style={{ height: '85vh', width: '100%', marginTop: '-40px' }}
+          frameBorder="0"
+          src="https://zicops.whereby.com/demo-6b19c433-a0c4-4bc8-b60a-0798c71ed825?background=off&logo=off"
+          allow="camera; microphone; fullscreen; speaker; display-capture"></iframe>
       )}
     </>
   );

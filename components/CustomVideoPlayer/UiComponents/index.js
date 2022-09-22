@@ -133,7 +133,8 @@ export default function UiComponents({
       id: 0,
       btnImg: '/images/svg/spatial_audio_off.svg',
       boxComponent: <SubtitleBox subtitleState={subtitleState} />,
-      handleClick: () => switchBox(0)
+      handleClick: () => switchBox(0),
+      isHidden: videoData?.type === 'classroom'
     },
     {
       id: 1,
@@ -144,7 +145,8 @@ export default function UiComponents({
     {
       id: 2,
       btnImg: '/images/svg/forum.svg',
-      handleClick: () => switchBox(2)
+      handleClick: () => switchBox(2),
+      isHidden: videoData?.type === 'classroom'
     },
     {
       id: 3,
@@ -281,7 +283,8 @@ export default function UiComponents({
         updateIsPlayingTo(false);
         toggleStates(setShowQuiz, showQuiz);
         toggleStates(setShowQuizDropdown, setShowQuizDropdown);
-      }
+      },
+      isHidden: videoData?.type === 'classroom'
     }
   ];
 
@@ -316,10 +319,15 @@ export default function UiComponents({
         </DraggableDiv>
       )}
 
-      <div className={`${styles.customUiContainer} ${styleClass}`}>
+      <div
+        className={`${styles.customUiContainer} ${styleClass}`}
+        style={videoData?.type === 'classroom' ? { width: 'fit-content' } : {}}>
         <div className={`${styles.topIconsContainer}`}>
           {/* back button on left which close the player and return to hero */}
-          <div className={`${styles.firstIcon}`} onClick={playerClose}>
+          <div
+            className={`${styles.firstIcon}`}
+            onClick={playerClose}
+            style={videoData?.type === 'classroom' ? { minWidth: '50px' } : {}}>
             <Image src="/images/bigarrowleft.png" width="20px" height="20px" alt="" />
           </div>
 

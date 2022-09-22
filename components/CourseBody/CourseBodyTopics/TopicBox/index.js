@@ -355,6 +355,34 @@ export default function TopicBox({
 
           // if (!userCourseData?.userCourseMapping?.user_course_id) return;
           if (type === 'Assessment') return loadTopicExam();
+          if (type === 'Classroom') {
+            const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicData, moduleId);
+            const currentTopicIndex = filteredTopicData.findIndex((t) => t.id === topic.id);
+
+            const currentModuleIndex = allModuleOptions.findIndex(
+              (m) => m.value === currrentModule.value
+            );
+
+            return setVideoData({
+              ...videoData,
+              videoSrc: null,
+              type: 'classroom',
+              startPlayer: true,
+              isPreview: false,
+              currentTopicIndex: currentTopicIndex,
+
+              topicContent: [],
+              currentTopicContentIndex: 0,
+              currentSubtitleIndex: 0,
+
+              allModuleTopic: filteredTopicData,
+              currentModuleId: moduleId,
+
+              allModuleOptions: allModuleOptions,
+              currentModuleIndex: currentModuleIndex,
+              setNewModule: setSelectedModule
+            });
+          }
 
           // if (type === 'Content') {
           if (!topicContent.length) return console.log('no topic content found');
@@ -537,6 +565,9 @@ export default function TopicBox({
                 </div>
               </div> */}
             </div>
+          )}
+          {type === 'Classroom' && (
+            <div className={`${styles.topic_player}`}>Click here to open classroom</div>
           )}
         </div>
       </div>
