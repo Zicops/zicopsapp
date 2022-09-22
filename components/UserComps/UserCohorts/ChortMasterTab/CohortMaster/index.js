@@ -69,6 +69,7 @@ const CohortMaster = ({ isEdit = false }) => {
     );
 
     const managerList = await getUsersForCohort();
+    if(managerList?.error) return setToastMsg({type:'danger',message:managerList?.error}) 
     setCohortManager([...managerList]);
 
     const cohortDetail = resCohort?.getCohortDetails;

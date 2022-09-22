@@ -117,10 +117,15 @@ export function useHandleCohortMaster() {
         ({ id: id1 }) => !allUsers?.some(({ user_id: id2 }) => id2 === id1)
       );
 
+      console.log(removeManager , newManager , promoteManager , allUsers);
+      // return ;
+
       if (removeManager?.length) {
         for (let i = 0; i < removeManager?.length; i++) {
-          const data = await getCohortUserDetails(cohortMasterData?.id, removeManager[i]?.id);
-          if (!data.length) break;
+          const data = await getCohortUserDetails(cohortMasterData?.id, removeManager[i]?.user_id);
+          // console.log(data,removeManager[i]?.user_id);
+          // return;
+          if (!data?.length) break;
           const sendData = {
             user_cohort_id: data[0]?.user_cohort_id,
             user_id: data[0]?.user_id,
@@ -137,10 +142,11 @@ export function useHandleCohortMaster() {
         }
       }
 
+      // return;
       if (promoteManager?.length) {
         for (let i = 0; i < promoteManager?.length; i++) {
-          const data = await getCohortUserDetails(cohortMasterData?.id, promoteManager[i]?.id);
-          if (!data.length) break;
+          const data = await getCohortUserDetails(cohortMasterData?.id, promoteManager[i]?.user_id);
+          if (!data?.length) break;
           const sendData = {
             user_cohort_id: data[0]?.user_cohort_id,
             user_id: data[0]?.user_id,
