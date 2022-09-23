@@ -58,9 +58,12 @@
     align-items: center;
 
     .seeMore {
-      color: $darkThree;
+      color: $bgBody;
       font-weight: normal;
       cursor: pointer;
+      &:hover{
+        color: $white;
+      }
     }
   }
 

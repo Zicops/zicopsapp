@@ -3,6 +3,7 @@ export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
+export const LEARNING_FOLDER_CAPACITY = 30;
 
 export const PUBLIC_PATHS = [
   '/login',

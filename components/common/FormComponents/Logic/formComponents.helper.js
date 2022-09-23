@@ -1,5 +1,10 @@
 // labeled dropdown react multi select styles
-export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%', isReadonly) {
+export function customSelectStyles(
+  isFiftyFifty = false,
+  containerWidth = '100%',
+  isError,
+  isReadonly
+) {
   return {
     container: (provided, state) => ({
       ...provided,
@@ -11,6 +16,7 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
 
       if (state?.isFocused || state?.hasValue) borderStyle = '2px solid var(--primary)';
       if (state?.isDisabled) borderStyle = '2px solid var(--dark_three)';
+      if (isError) borderStyle = '2px solid var(--error)';
       if (isReadonly) borderStyle = 'none';
 
       return {
