@@ -138,9 +138,9 @@ export default function Home() {
       ) : (
         <HomeSlider />
       )}
+      <ZicopsCarousel title="Continue with your Courses" data={latestCourseData} />
       <ZicopsCarousel title="Latest Courses" data={latestCourseData} />
       {/* <CardSlider title="Latest Courses" data={latestCourseData} /> */}
-      <ZicopsCarousel title="Continue with your Courses" data={sliderImages} />
       <ZicopsCarousel title="Recommended Courses" data={sliderImages} />
 
       <BigCardSlider title="Courses mandatory for you" data={squareImages} slide={realSquare} />
