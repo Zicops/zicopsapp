@@ -68,6 +68,7 @@ export default function QuestionSection({
                                 optionData={each.options}
                                 showType="none"
                                 showHints={learnerExamData?.examData?.display_hints}
+                                selectedAnswerId={each?.selectedOption}
                               />
                               {/* <McqCard
                             each={each}
