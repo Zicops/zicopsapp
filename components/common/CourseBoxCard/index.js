@@ -11,11 +11,11 @@ export default function CourseBoxCard({
   children
 }) {
   const router = useRouter();
-  const route = courseData?.id ? courseData?.id : null;
+  const courseId = courseData?.id ? courseData?.id : null;
   return (
     <div
       className={`${styles.cardContainer} ${isAdmin ? styles.isAdmin : ''}`}
-      style={{ width: `${cardWidth}px` }} onClick={route ? ()=>{ router.push(`/course/${route}`)}:()=>{}}>
+      style={{ width: `${cardWidth}px` }} onClick={ ()=>{ courseId && !isAdmin? router.push(`/course/${courseId}`): ''}}>
       <div className={`${styles.imgContainer}`} style={{ height: `${cardWidth/1.8125}px` }}>
         {/* course img */}
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />

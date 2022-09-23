@@ -1,33 +1,28 @@
-import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
-import EllipsisMenu from '@/common/EllipsisMenu';
-import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
-import ZicopsTable from '@/common/ZicopsTable';
-import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
+import EllipsisMenu from '../../common/EllipsisMenu';
+import LabeledRadioCheckbox from '../../common/FormComponents/LabeledRadioCheckbox';
+import PopUp from '../../common/PopUp';
+import ZicopsTable from '../../common/ZicopsTable';
+import { useLazyQuery } from '@apollo/client';
+import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRecoilState } from 'recoil';
 
-export default function MyUser({ getUser }) {
+export default function UserTable({ selectedUser }) {
   const [userId, setUserId] = useState([]);
   const [data, setData] = useState([]);
 
-  // const [loading, setLoading] = useState(true);
-  const [loadUsersData, { loading, error: errorUserData, refetch }] = useLazyQuery(
-    GET_USERS_FOR_ADMIN,
-    {
-      client: userQueryClient
-    }
-  );
-
-  const [isLoading , setLoading] = useState(true);
+  const [loadUsersData, { error: errorUserData, refetch }] = useLazyQuery(GET_USERS_FOR_ADMIN, {
+    client: userQueryClient
+  });
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
 
   useEffect(async () => {
-    getUser(userId);
+    selectedUser(userId);
     const currentTime = new Date().getTime();
 
     const sendData = {
@@ -49,20 +44,21 @@ export default function MyUser({ getUser }) {
         status: item?.status,
         role: item?.role
       }));
-    // console.log(uData);
-    setData([...uData],setLoading(false));
+    console.log(uData);
+    return setData([...uData]);
+    return;
   }, [userId]);
 
   const columns = [
     {
       field: 'emails',
       headerClassName: 'course-list-header',
-      flex: 2,
+      flex: 1,
       renderHeader: (params) => (
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
             type="checkbox"
-            isChecked={data?.length !== 0 && userId.length === data.length }
+            isChecked={data?.length !== 0 && userId.length === data.length}
             changeHandler={(e) => {
               setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
             }}
@@ -98,13 +94,13 @@ export default function MyUser({ getUser }) {
       field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'First Name',
-      flex: 1
+      flex: 0.5
     },
     {
       field: 'last_name',
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
-      flex: 1
+      flex: 0.5
     },
     {
       field: 'role',
@@ -122,7 +118,7 @@ export default function MyUser({ getUser }) {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
-      flex: 0.4,
+      flex: 0.5,
       renderCell: (params) => (
         <>
           <EllipsisMenu
@@ -145,8 +141,9 @@ export default function MyUser({ getUser }) {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="75vh"
-        loading={isLoading}
       />
+
+      {/* <PopUp  /> */}
     </>
   );
 }

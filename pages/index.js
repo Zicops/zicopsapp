@@ -1,8 +1,13 @@
+
 import { userClient } from '@/api/UserMutations';
 import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
+
+import useUserCourseData from '@/helper/hooks.helper';
+import { getUserData } from '@/helper/loggeduser.helper';
+
 import { useLazyQuery } from '@apollo/client';
 import { Skeleton } from '@mui/material';
 import moment from 'moment';
@@ -24,10 +29,18 @@ import { userContext } from '../state/contexts/UserContext';
 export default function Home() {
   const { isAdmin } = useContext(userContext);
   const router = useRouter();
+  const { getUserCourseProgress } = useUserCourseData();
 
   React.useEffect(() => {
     console.log(screen.width);
   }, []);
+
+  //added user courseProgress in index.js
+  useEffect(async()=>{
+   const {id} = getUserData();
+   const userCourseProgress = await getUserCourseProgress(id);
+   console.log(userCourseProgress,'at pages/index.js') ;
+  },[])
 
   const realSquare = {
     desktop: {

@@ -355,7 +355,7 @@ const CoursesAccordian = () => {
             <div className={`${styles.assign}`}>
               <div>
                 Current courses:{' '}
-                {assignedCourses?.filter((courses) => courses.completedPercentage)?.length}
+                {currentCourses?.filter((courses) => courses.completedPercentage)?.length}
               </div>
 
               <div
