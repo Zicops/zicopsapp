@@ -71,6 +71,8 @@ import { getCurrentEpochTime } from './common.helper';
 //   return { updateAboutUser };
 // }
 
+
+//added common hook for userCourseData
 export default function useUserCourseData(){
 
   async function getUserCourseProgress(currentUserId=null){

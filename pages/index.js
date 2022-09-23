@@ -28,6 +28,7 @@ export default function Home() {
   }, []);
 
   useEffect(async()=>{
+    //added getUserProgress
    const {id} = getUserData();
    const userCourseProgress = await getUserCourseProgress(id);
    console.log(userCourseProgress,'at pages/index.js') ;
