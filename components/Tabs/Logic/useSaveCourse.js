@@ -92,7 +92,6 @@ export default function useSaveCourse(courseContextData) {
   }
 
   async function saveCourseData(isNextButton, tabIndex, showToastMsg = true) {
-    if (!isValidData()) return;
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
 
     if (!fullCourse.id) {
@@ -106,6 +105,8 @@ export default function useSaveCourse(courseContextData) {
       }
       return;
     }
+
+    if (isNextButton && !isValidData()) return setIsLoading(null);
     // alert('course update started');
 
     await uploadFile(courseImage, uploadImage, 'image', 'uploadCourseImage');

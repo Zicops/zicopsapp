@@ -31,6 +31,10 @@ export default function useHandleTabs(courseContextData) {
   // }, []);
 
   useEffect(() => {
+    setCourseError(getCourseErrorData());
+  }, []);
+
+  useEffect(() => {
     setCouseIdForFileContext();
 
     setFileData({
