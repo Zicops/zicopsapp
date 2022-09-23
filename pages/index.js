@@ -27,6 +27,7 @@ export default function Home() {
     // if (isAdmin) router.push('/admin');
   }, []);
 
+  //added user courseProgress in index.js
   useEffect(async()=>{
    const {id} = getUserData();
    const userCourseProgress = await getUserCourseProgress(id);
