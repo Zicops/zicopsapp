@@ -27,7 +27,6 @@ export default function Home() {
 
   React.useEffect(() => {
     console.log(screen.width);
-    // if (isAdmin) router.push('/admin');
   }, []);
 
   const realSquare = {
@@ -258,9 +257,9 @@ export default function Home() {
       ) : (
         <HomeSlider />
       )}
-      <ZicopsCarousel title="Continue with your Courses" data={onGoingCourses} />
-      <ZicopsCarousel title="Courses in your Learning Folder" data={addedCourses} />
-      <ZicopsCarousel title="Latest Courses" data={latestCourseData} />
+      {onGoingCourses.length ? <ZicopsCarousel title="Continue with your Courses" data={onGoingCourses} /> : ''}
+      {addedCourses.length ? <ZicopsCarousel title="Courses in your Learning Folder" data={addedCourses} /> : ''}
+      {latestCourseData.length ? <ZicopsCarousel title="Latest Courses" data={latestCourseData} /> : ''}
       {/* <CardSlider title="Latest Courses" data={latestCourseData} /> */}
       <ZicopsCarousel title="Courses from your learning space" data={latestCourseData} />
       <ZicopsCarousel title={`Courses in ${baseSubcategory}`} data={latestCourseData} />
