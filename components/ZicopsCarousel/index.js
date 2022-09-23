@@ -1,5 +1,5 @@
 import { Skeleton } from '@mui/material';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import CardSliderHeader from '../small/CardSliderHeader';
@@ -68,6 +68,9 @@ const CardSlider = ({ deviceType, title, type = 'small', data }) => {
   //   setCardData(data);
   // }, 2000);
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   return (
     <>
       <div
@@ -131,6 +134,7 @@ const CardSlider = ({ deviceType, title, type = 'small', data }) => {
                   carouselRefData={carouselRef.current}
                   image={d.img}
                   courseData={d}
+                  isShowProgress={title === 'Continue with your Courses'}
                 />
               );
             if (type === 'square') return <SquareCard key={index} image={d.img} />;
