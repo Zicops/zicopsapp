@@ -6,7 +6,7 @@
 
 //Chorot mAster tab
 .inputField {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .uploadImage {
@@ -147,8 +147,9 @@
   }
 
   .buttonContainer {
-    width: 135px;
+    // width: 135px;
     display: flex;
+    gap: 5px;
     justify-content: space-between;
   }
 }
@@ -209,5 +210,105 @@
     svg {
       margin-right: 5px;
     }
+  }
+}
+
+//course mapping
+
+.assign {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.assignInner {
+  display: flex;
+  justify-content: center;
+
+  cursor: pointer;
+  color: $primary;
+}
+.assignInner img {
+  width: 20px;
+  margin-right: 5px;
+  color: $primary;
+  // border: 1px solid $primary;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.course_loop {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  // justify-content: flex-start;
+  gap: 20px;
+}
+.course_card {
+  width: calc(100% / 3 - 20px + 20px / 3);
+}
+.imageContainer {
+  display: flex;
+  justify-content: flex-end;
+  
+  & img {
+    // width: 25px;
+    margin: 0px 0px 10px 10px;
+    border-radius: 50%;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.current_courses {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  svg {
+    height: 15px;
+    width: 15px;
+  }
+
+  &.marginBottom {
+    margin-bottom: 20px;
+  }
+}
+
+.assignCoursePopUp {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 30px;
+  padding: 10px;
+
+  .assignCoursePopUpTitle {
+    font-size: larger;
+  }
+
+  .dataPickerStyle {
+    display: flex;
+    padding-right: 15px;
+  }
+  label {
+    font-size: medium;
+    font-weight: 400;
+  }
+
+  section {
+    p {
+      margin-bottom: 10px;
+    }
+  }
+
+  .assignCourseButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    // padding-right: 15px;
+    gap: 10px;
   }
 }

@@ -100,13 +100,15 @@ export const CohortMasterData = atom({
 
 export function getCohortMasterObject(data = {}) {
   return {
-    id: data?.id || null,
-    cohort_name: data?.cohort_name || '',
-    cohort_code: data?.cohort_code || '',
-    status: data?.status || 'is_active',
-    lsp_id: data?.lsp_id || '',
-    cohort_type: data?.cohort_type || '',
+    id: data?.cohort_id || null,
+    cohort_name: data?.name || '',
+    cohort_code: data?.code || '',
+    status: data?.status || 'active',
+    lsp_id: data?.lsp_id || 'Zicops learning Spaces',
+    cohort_type: data?.type || '',
     description: data?.description || '',
-    cohort_image: data?.image || null
+    cohort_image: data?.cohort_image || null,
+    image_url:data?.imageUrl || '',
+    managers: []
   };
 }

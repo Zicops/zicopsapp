@@ -775,3 +775,25 @@ export const GET_TOPIC_EXAMS = gql`
     }
   }
 `;
+
+export const GET_COHORT_COURSES = gql`
+  query GetCohortCoursesMap($cohort_id: String) {
+    getCohortCourseMaps(cohort_id: $cohort_id) {
+      id
+      CourseId
+      CohortId
+      CourseType
+      LspId
+      CohortCode
+      isMandatory
+      CourseStatus
+      AddedBy
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+

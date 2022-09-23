@@ -4,24 +4,20 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import { userSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 
 import Sidebar from '@/components/common/Sidebar';
-import UserCohorts from '@/components/UserComps/UserCohorts';
+import ChortMasterTab from '@/components/UserComps/UserCohorts/ChortMasterTab';
 
-const UserCohort = () => {
+const AddCohort = () => {
   return (
     <>
       <Sidebar sidebarItemsArr={userSideBarData} />
       <MainBody>
-        <AdminHeader
-          title="User Cohorts"
-          isAddShown={true}
-          pageRoute="/admin/user/user-cohort/add-cohort"
-        />
+        <AdminHeader title="Add New Cohort" />
         <MainBodyBox>
-          <UserCohorts />
+          <ChortMasterTab />
         </MainBodyBox>
       </MainBody>
     </>
   );
 };
 
-export default UserCohort;
+export default AddCohort;

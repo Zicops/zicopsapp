@@ -6,7 +6,7 @@ const AuthChecker = ({ children }) => {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(true);
 
-  useEffect(() => {
+useEffect(() => {
     // on initial load - run auth check
     authCheck(router.asPath);
 

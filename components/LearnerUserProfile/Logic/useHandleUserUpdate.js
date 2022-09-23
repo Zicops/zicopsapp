@@ -64,7 +64,7 @@ export default function useHandleUserUpdate() {
     const sendLspData = {
       user_id: userDataAbout?.id,
       user_lsp_id: userOrgData?.user_lsp_id,
-      lsp_id: userOrgData?.lsp_id || 'Zicops Learning Space',
+      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
       status: 'Active'
     };
 

@@ -8,7 +8,7 @@
 // }
 
 export function getUserData() {
-  const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
+  const userData = JSON.parse(sessionStorage?.getItem('loggedUser'));
   if (!userData) return 'User Data Not Found';
   return userData;
 }

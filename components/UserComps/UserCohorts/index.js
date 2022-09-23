@@ -1,71 +1,39 @@
+import { GET_COHORT_MAINS, userQueryClient } from '@/api/UserQueries';
 import ZicopsTable from '@/components/common/ZicopsTable';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { getCurrentEpochTime } from '@/helper/common.helper';
 import CohortMasterTab from './ChortMasterTab';
 
-const data = [
-  {
-    id: 'Desco-Id-1',
-    size: '32',
-    name: 'Bussiness Cohort'
-  },
-  {
-    id: 'Desco-Id-81',
-    size: '20',
-    name: 'Design Cohort'
-  },
-  {
-    id: 'Desco-Id-51',
-    size: '23',
-    name: 'Devlopement Cohort'
-  },
-  {
-    id: 'Desco-Id-16',
-    size: '17',
-    name: 'Management Cohort'
-  },
-  {
-    id: 'Desco-Id-15',
-    size: '40',
-    name: 'Communication Cohort'
-  },
-  {
-    id: 'Desco-Id-41',
-    size: '15',
-    name: 'ABC'
-  },
-  {
-    id: 'Desco-Id-31',
-    size: '20',
-    name: 'Finance Cohort'
-  },
-  {
-    id: 'Desco-Id-21',
-    size: '80',
-    name: 'Finance Cohort'
-  },
-  {
-    id: 'Desco-Id-19',
-    size: '30',
-    name: 'Finance Cohort'
-  },
-  {
-    id: 'Desco-Id-10',
-    size: '65',
-    name: 'Management Cohort'
-  },
-  {
-    id: 'Desco-Id-11',
-    size: '12',
-    name: 'Communication Cohort'
-  },
-  {
-    id: 'Desco-Id-12',
-    size: '23',
-    name: 'Devlopement Cohort'
-  }
-];
 const UserCohorts = () => {
+  const [cohortList, setCohortList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(async () => {
+    const sendData = {
+      lsp_id: LEARNING_SPACE_ID,
+      publish_time: getCurrentEpochTime(),
+      pageCursor: '',
+      pageSize: 100
+    };
+    const resCohortData = await loadQueryDataAsync(
+      GET_COHORT_MAINS,
+      { ...sendData },
+      {},
+      userQueryClient
+    );
+    const data = resCohortData?.getCohortMains?.cohorts;
+    if (!data) return setLoading(false);
+    const list = data.map((item) => {
+      return { ...item, id: item?.cohort_id };
+    });
+    const cohorts = list?.filter((item)=>item?.is_active)
+    setCohortList([...cohorts], setLoading(false));
+  }, []);
+
   const columns = [
     {
       field: 'name',
@@ -74,14 +42,14 @@ const UserCohorts = () => {
       flex: 1
     },
     {
-      field: 'id',
+      field: 'code',
       headerClassName: 'course-list-header',
-      headerName: 'Cohort ID',
+      headerName: 'Cohort Code',
       flex: 1
     },
     {
       field: 'size',
-      headerName: 'Size',
+      headerName: 'Cohort Size',
       headerClassName: 'course-list-header',
       flex: 1
     },
@@ -116,7 +84,7 @@ const UserCohorts = () => {
                 border: '0'
               }}
               onClick={() => {
-                router.push(router.asPath + `/${params.row.id}`);
+                router.push(router.asPath + `/${params?.row?.id}`);
               }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
@@ -143,7 +111,13 @@ const UserCohorts = () => {
   return (
     <>
       {/* <CohortMasterTab /> */}
-      <ZicopsTable columns={columns} data={data} tableHeight="70vh" hideFooterPagination={true} />
+      <ZicopsTable
+        columns={columns}
+        data={cohortList}
+        tableHeight="70vh"
+        hideFooterPagination={true}
+        loading={loading}
+      />
     </>
   );
 };
