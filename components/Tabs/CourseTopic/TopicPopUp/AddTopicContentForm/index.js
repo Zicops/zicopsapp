@@ -149,7 +149,9 @@ export default function AddTopicContentForm({
       <div className="center-element-with-flex">
         <Button
           text="Add"
-          styleClass={styles.topicContentSmallBtn}
+          styleClass={`${styles.topicContentSmallBtn} ${
+            isAddTopicContentReady ? styles.formFilled : ''
+          }`}
           isDisabled={!isAddTopicContentReady}
           clickHandler={addNewTopicContent}
         />

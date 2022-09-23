@@ -258,7 +258,9 @@ export default function QuizForm({ courseId, topicId }) {
               <Button
                 text="Add"
                 clickHandler={addNewQuiz}
-                styleClass={styles.topicContentSmallBtn}
+                styleClass={`${styles.topicContentSmallBtn} ${
+                  isQuizReady ? styles.formFilled : ''
+                }`}
                 isDisabled={!isQuizReady}
               />
             </div>
