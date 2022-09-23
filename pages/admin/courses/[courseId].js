@@ -35,19 +35,19 @@ export default function EditCoursePage() {
     );
   }, [editCourseId]);
 
-  function getPageTitle() {
-    if (fullCourse?.type === COURSE_TYPES[0]) return 'Edit Course';
-    if (fullCourse?.type === COURSE_TYPES[3]) return 'Edit Test Series';
-
-    return 'Edit';
-  }
-
   return (
     <>
       <Sidebar sidebarItemsArr={courseSidebarData} />
 
       <MainBody>
-        <AdminHeader title={getPageTitle()} />
+        <AdminHeader
+          title={
+            <>
+              <h4>{fullCourse?.name}</h4>
+              <p style={{ color: 'var(--primary)', fontSize: '18px' }}>[ {fullCourse?.type} ]</p>
+            </>
+          }
+        />
 
         <ApolloProvider client={mutationClient}>
           <MainBodyBox>
