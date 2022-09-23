@@ -29,7 +29,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
     console.log(courseData?.name?.length);
     courseNameClass = 'coursenamesmall';
   }
-  const progress = 50;
+  const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
   return (
     <>
       <div
