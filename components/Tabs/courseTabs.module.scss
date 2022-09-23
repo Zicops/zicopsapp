@@ -453,7 +453,8 @@
   color: $white;
   cursor: pointer;
   font-size: large;
-
+  padding: 5px 15px 5px 20px;
+  border: 1px solid transparent;
   span {
     margin-right: 12px;
   }
@@ -462,6 +463,14 @@
     align-items: center;
   }
 }
+
+.activeClass{
+  border: 1px solid $primary;
+  padding: 5px 15px 5px 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 5px 0 $primary;
+}
+
 
 .quizInput {
   display: grid;

@@ -1,7 +1,9 @@
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { loadCatSubCat } from '@/helper/data.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
 import { getQueryData } from '../../../helper/api.helper';
 import { changeHandler } from '../../../helper/common.helper';
@@ -18,6 +20,7 @@ export default function CourseMaster() {
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
   const { data } = getQueryData(GET_CATS_N_SUB_CATS);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // cat and sub cat
   const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
@@ -50,15 +53,8 @@ export default function CourseMaster() {
     isSearchEnable: true
   };
 
-  const allOwners = [
-    { value: 'Abhishek', label: 'Abhishek' },
-    { value: 'Sonali', label: 'Sonali' },
-    { value: 'Joy', label: 'Joy' },
-    { value: 'Puneet', label: 'Puneet' },
-    { value: 'Vaishnavi', label: 'Vaishnavi' },
-    { value: 'Harshad', label: 'Harshad' },
-    { value: 'Rishav', label: 'Rishav' }
-  ];
+  const allOwners = [{ value: 'Zicops', label: 'Zicops' }];
+
   const ownerDropdownOptions = {
     inputName: 'owner',
     label: 'Course Owner',
@@ -83,17 +79,19 @@ export default function CourseMaster() {
     isMulti: true
   };
 
+  const isError = toastMsg?.[0]?.type === 'warning';
   return (
     <>
       {/* course name */}
       <LabeledInput
-        styleClass={styles.marginBottom}
+        styleClass={`${styles.marginBottom}`}
+        inputClass={isError && !fullCourse?.name?.length ? 'error' : ''}
         inputOptions={{
           inputName: 'name',
           label: 'Name',
           placeholder: 'Enter name of the course (Upto 60 characters)',
           maxLength: 60,
-          value: fullCourse.name
+          value: fullCourse?.name
         }}
         changeHandler={handleChange}
       />
@@ -101,6 +99,7 @@ export default function CourseMaster() {
       {/* course category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={isError && !fullCourse?.category?.length}
         dropdownOptions={categoryDropdownOptions}
         changeHandler={
           (e) => updateCourseMaster({ ...fullCourse, category: e.value, sub_category: '' })
@@ -111,6 +110,7 @@ export default function CourseMaster() {
       {/* course sub category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={isError && !fullCourse?.sub_category?.length}
         dropdownOptions={subcategoryDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, subcategoryDropdownOptions.inputName)
@@ -120,6 +120,7 @@ export default function CourseMaster() {
       {/* course owner */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={isError && !fullCourse?.owner?.length}
         dropdownOptions={ownerDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, ownerDropdownOptions.inputName)
@@ -129,6 +130,7 @@ export default function CourseMaster() {
       {/* language */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={isError && !fullCourse?.language?.length}
         dropdownOptions={languageDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
@@ -155,7 +157,16 @@ export default function CourseMaster() {
         />
       </div>
 
-      <NextButton tabIndex={1} />
+      <NextButton
+        tabIndex={1}
+        isActive={
+          fullCourse?.name &&
+          fullCourse?.category &&
+          fullCourse?.sub_category &&
+          fullCourse?.owner &&
+          fullCourse?.language?.length
+        }
+      />
 
       {showConfirmBox && (
         <ConfirmPopUp

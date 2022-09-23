@@ -137,6 +137,14 @@ export function getUnixFromDate(dateObj = new Date()) {
   return Math.floor(newDate.getTime() / 1000) || 0;
 }
 
+export async function delay(ms) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  })
+}
+
 export function limitValueInRange(value, min = 0, max = 100) {
   if (typeof value !== 'number') return 0;
   return Math.max(Math.min(value, max), min);
@@ -158,7 +166,7 @@ export function limitValueInRange(value, min = 0, max = 100) {
     return new Promise((resolve, reject) => {
       const SRC = `/api/overrideCors?filePath=${encodeURIComponent(videoData.videoSrc)}`;
       const video = document.createElement('video');
-      console.log(video.currentTime, videoTimeInSeconds); 
+
       var timeupdate = function () {
         if (snapImage()) {
           video.removeEventListener('timeupdate', timeupdate);
@@ -192,5 +200,6 @@ export function limitValueInRange(value, min = 0, max = 100) {
       video.playsInline = true;
       video.currentTime = videoTimeInSeconds;
       video.play();
+      console.log(video.currentTime, videoTimeInSeconds); 
     });
   }

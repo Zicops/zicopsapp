@@ -20,7 +20,7 @@ export async function createCourseAndUpdateContext(courseContextData, createCour
 
   if (!fullCourse.name || !fullCourse.category || !fullCourse.sub_category || !fullCourse.owner) {
     setTab(tabData[0].name);
-    return { type: 'info', message: 'Please fill all the Course Master Details' };
+    return { type: 'warning', message: 'Please fill all the Course Master Details' };
   }
 
   const { id, created_at, updated_at, ...sendData } = fullCourse;
