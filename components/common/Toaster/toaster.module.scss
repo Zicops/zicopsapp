@@ -11,7 +11,7 @@ $imgHeight: 25px;
 $imgWidth: 25px;
 
 $successImg: '/images/svg/check_circle_outline.svg';
-$infoImg: '/images/heart.png';
+$infoImg: '/images/svg/priority_high.svg';
 $warningImg: '/images/svg/warning_amber.svg';
 $dangerImg: '/images/svg/error_outline.svg';
 
@@ -76,6 +76,7 @@ $dangerImg: '/images/svg/error_outline.svg';
       color: #5bc0de;
       span {
         background-image: url($infoImg);
+        transform: rotate(180deg);
       }
     }
 
