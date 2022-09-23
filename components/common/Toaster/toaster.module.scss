@@ -10,10 +10,10 @@ $messageColor: $bgBody;
 $imgHeight: 25px;
 $imgWidth: 25px;
 
-$successImg: '/images/heart.png';
+$successImg: '/images/svg/check_circle_outline.svg';
 $infoImg: '/images/heart.png';
-$warningImg: '/images/heart.png';
-$dangerImg: '/images/heart.png';
+$warningImg: '/images/svg/warning_amber.svg';
+$dangerImg: '/images/svg/error_outline.svg';
 
 .toasterContainer {
   position: fixed;
