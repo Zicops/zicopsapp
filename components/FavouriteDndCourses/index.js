@@ -1,6 +1,7 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -17,10 +18,10 @@ import PopUp from '../common/PopUp';
 import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
 import UserButton from '../common/UserButton';
 import Card from './Card/Card';
-import styles from './favouriteDndCourses.module.scss';
 import Folder from './Folder/Folder';
 import ListCard from './ListCard';
 import useHandleCourseAssign from './Logic/useHandleCourseAssign';
+import styles from './favouriteDndCourses.module.scss';
 
 export default function FavouriteDndCourses() {
   const {
@@ -37,6 +38,8 @@ export default function FavouriteDndCourses() {
 
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
+  const [droppedByMe, setDroppedByMe] = useState(0);
+  const [droppedByAdmin, setDroppedByAdmin] = useState(0);
   const [isShowAll, setIsShowAll] = useState(false);
   const [isCoursePresent, setIsCoursePresent] = useState({
     selfAdded: false,
@@ -165,6 +168,13 @@ export default function FavouriteDndCourses() {
       transition: `all ${curve} ${0.000001}s`
     };
   }
+
+  useEffect(() => {
+    const MyAssignedCourses = dropped.filter((course) => course.added_by.role == 'self');
+    const AdminAssignedCourses = dropped.filter((course) => course.added_by.role == 'admin');
+    setDroppedByMe(MyAssignedCourses.length);
+    setDroppedByAdmin(AdminAssignedCourses.length);
+  }, [dropped]);
 
   return (
     <>
@@ -331,7 +341,9 @@ export default function FavouriteDndCourses() {
 
             <div className={styles.courseList}>
               <h4>
-                <span>Assigned By Me</span>
+                <span>
+                  Assigned By Me ({droppedByMe} / {LEARNING_FOLDER_CAPACITY})
+                </span>
                 <span className={styles.seeMore} onClick={() => setIsShowAll(!isShowAll)}>
                   See {isShowAll ? 'Less' : 'More'}
                 </span>
@@ -353,7 +365,9 @@ export default function FavouriteDndCourses() {
               </div>
 
               <h4>
-                <span>Assigned By Admin</span>
+                <span>
+                  Assigned By Admin ({droppedByAdmin} / {LEARNING_FOLDER_CAPACITY})
+                </span>
                 <span className={styles.seeMore} onClick={() => setIsShowAllAdmin(!isShowAllAdmin)}>
                   See {isShowAllAdmin ? 'Less' : 'More'}
                 </span>

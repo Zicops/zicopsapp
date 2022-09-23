@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { truncateToN } from '../../../helper/common.helper';
 
-export default function SmallCard({ image, courseData, styleClass, carouselRefData }) {
+export default function SmallCard({ image, courseData, styleClass, carouselRefData, isShowProgress=false }) {
   if (!courseData) return null;
   const router = useRouter();
 
@@ -29,6 +29,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
     console.log(courseData?.name?.length);
     courseNameClass = 'coursenamesmall';
   }
+  const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
   return (
     <>
       <div
@@ -56,6 +57,25 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
             src={courseData.tileImage || image || '/images/courses/workplace design.png'}
             alt=""
           />
+          {/* <LinearProgress
+            sx={{
+              height: '5px',
+              borderRadius: '10px',
+              background: '#000',
+              '&.MuiLinearProgress-bar': {
+                color: '#6BCFCF'
+              }
+            }}
+            variant="determinate"
+            value={55}
+          /> */}
+          {isShowProgress ? (
+            <div className="progress">
+              <span style={{ width: progress + '%' }}></span>
+            </div>
+          ) : (
+            ''
+          )}
         </div>
 
         <div className="overlay">
@@ -119,6 +139,23 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
         {`
           .card_item {
             cursor: pointer;
+          }
+          .progress {
+            width: 90%;
+            height: 3px;
+            background-color: var(--secondary);
+            margin-top: 5px;
+            margin-inline: auto;
+            position: relative;
+          }
+          .card_item:hover .progress {
+            opacity: 0;
+            transition-delay: 0.6s;
+          }
+          .progress span {
+            height: 100%;
+            background-color: var(--primary);
+            position: absolute;
           }
           .smallCard {
             position: relative;
