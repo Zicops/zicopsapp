@@ -107,6 +107,11 @@ export default function useSaveCourse(courseContextData) {
     }
 
     if (isNextButton && !isValidData()) return setIsLoading(null);
+    if (!isNextButton && !fullCourse?.name) {
+      setToastMsg({ type: 'danger', message: 'Course Name should not be empty' });
+      setIsLoading(null);
+      return;
+    }
     // alert('course update started');
 
     await uploadFile(courseImage, uploadImage, 'image', 'uploadCourseImage');
