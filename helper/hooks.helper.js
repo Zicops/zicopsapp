@@ -1,13 +1,14 @@
 import { GET_COURSE } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
+import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
 import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/profilePreferencesHelper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { getUserOrgObject, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
 import { useRecoilState } from 'recoil';
 import { loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
+import { LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 
 // export default function useHandleUserDetails() {
@@ -150,8 +151,19 @@ export default function useUserCourseData(){
 
   async function getUserPreferences() {
     // if(!userLspId) setToastMsg({type:'danger' , message:'Need to provide user lsp id^!'});
-    const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
+    const userData = getUserData();
+    const userLspData = JSON.parse(sessionStorage?.getItem('lspData'));
+    if (userData === 'User Data Not Found') return;
     const { id } = getUserData();
+    if(!userLspData?.user_lsp_id){
+      const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:id,lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
+      if(userLearningSpaceData?.error) return setToastMsg({type:'danger' , message:'Error while loading user preferences^!'});
+      //temporary solution only valid for one lsp...need to change later!
+      sessionStorage?.setItem('lspData',JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
+      // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
+      setUserOrgData(getUserOrgObject({user_lsp_id:userLearningSpaceData?.getUserLspByLspId?.user_lsp_id}));
+    }
+    const { user_lsp_id } = JSON.parse(sessionStorage?.getItem('lspData'));
 
     if(!user_lsp_id) setToastMsg({type:'danger' , message:'Need to provide user lsp id^!'});
     

@@ -37,15 +37,14 @@ export default function Layout({ children }) {
 
     setUserData({ ...userData, ...data, ...basicInfo });
 
-    const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId,lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
-    if(userLearningSpaceData?.error) return console.log('User lsp load error!');
-    // console.log(userLearningSpaceData,'learning space data');
-    //temporary solution only valid for one lsp...need to change later!
-    sessionStorage?.setItem('lspData',JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
-    // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
-    setUserOrgData(getUserOrgObject({user_lsp_id:userLearningSpaceData?.getUserLspByLspId?.user_lsp_id}));
+    // const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId,lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
+    // if(userLearningSpaceData?.error) return console.log('User lsp load error!');
+    // //temporary solution only valid for one lsp...need to change later!
+    // sessionStorage?.setItem('lspData',JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
+    // // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
+    // setUserOrgData(getUserOrgObject({user_lsp_id:userLearningSpaceData?.getUserLspByLspId?.user_lsp_id}));
     return;
-  }, [userData?.id]);
+  }, []);
 
   useEffect(() => {
     setIsFullHeight(HIDE_HEADER_FOOTER_FOR_ROUTE.includes(router.pathname) ? 1 : 0);
