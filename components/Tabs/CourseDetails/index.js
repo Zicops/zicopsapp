@@ -1,3 +1,4 @@
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useContext } from 'react';
 import { truncateToN } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
@@ -95,6 +96,8 @@ export default function CourseDetails() {
             acceptedTypes="video/*"
             inputName="uploadCourseVideo"
             isActive={fileData.uploadCourseVideo}
+            previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCourse}
+            removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCourse}
           />
         </div>
         <div className={`w-50 ${styles.fileName}`}>
@@ -115,6 +118,8 @@ export default function CourseDetails() {
             }}
             inputName="uploadCourseImage"
             isActive={fileData.uploadCourseImage}
+            previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCourseImage}
+            removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCourseImage}
           />
         </div>
         <div className={`w-50 ${styles.fileName}`}>
@@ -135,6 +140,8 @@ export default function CourseDetails() {
             }}
             inputName="myfile"
             isActive={fileData.myfile}
+            previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCoursePicture}
+            removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCoursePicture}
           />
         </div>
         <div className={`w-50 ${styles.fileName}`}>{truncateToN(fileData.myfile, 55)}</div>
@@ -156,7 +163,7 @@ export default function CourseDetails() {
         />
       </div>
 
-      <NextButton tabIndex={2} />
+      <NextButton tabIndex={2} tooltipTitle={ADMIN_COURSES.myCourses.details.nextBtn} />
     </>
   );
 }

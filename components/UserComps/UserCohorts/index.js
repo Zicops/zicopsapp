@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { useRouter } from 'next/router';
 import CohortMasterTab from './ChortMasterTab';
@@ -65,8 +66,8 @@ const data = [
     name: 'Devlopement Cohort'
   }
 ];
-const UserCohorts = ({ tooltipTitle = '' }) => {
-  const { viewBtn, editBtn, downloadBtn } = tooltipTitle;
+const UserCohorts = () => {
+  const { viewBtn, editBtn, downloadBtn } = ADMIN_USERS.userCohort;
   const router = useRouter();
   const columns = [
     {

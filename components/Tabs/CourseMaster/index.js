@@ -1,4 +1,5 @@
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { loadCatSubCat } from '@/helper/data.helper';
 import { useContext, useState } from 'react';
@@ -155,7 +156,7 @@ export default function CourseMaster() {
         />
       </div>
 
-      <NextButton tabIndex={1} />
+      <NextButton tabIndex={1} tooltipTitle={ADMIN_COURSES.myCourses.courseMaster.nextBtn} />
 
       {showConfirmBox && (
         <ConfirmPopUp

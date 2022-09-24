@@ -3,6 +3,7 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import styles from '../../../userComps.module.scss';
 import { useRef, useState } from 'react';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 
 const CohortMaster = () => {
   const allSelectedCohortManager = [];
@@ -84,6 +85,7 @@ const CohortMaster = () => {
         label={'Cohort Image'}
         isRemove={true}
         description={false}
+        tooltipTitle={ADMIN_USERS.userCohort.cohortMaster}
       />
     </>
   );

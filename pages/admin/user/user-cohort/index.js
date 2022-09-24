@@ -19,7 +19,7 @@ const UserCohort = () => {
           tooltipTitle={ADMIN_USERS.userCohort.addBtn}
         />
         <MainBodyBox>
-          <UserCohorts tooltipTitle={ADMIN_USERS.userCohort} />
+          <UserCohorts />
         </MainBodyBox>
       </MainBody>
     </>

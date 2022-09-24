@@ -226,9 +226,9 @@ export const ADMIN_USERS = {
     editBtn: 'Edit Cohort',
     downloadBtn: 'Download Cohort',
     cohortMaster: {
-      uploadPhoto: 'Upload your recent photo',
-      preview: 'Preview image',
-      delete: 'Delete and upload new image',
+      uploadBtn: 'Upload your recent photo',
+      previewBtn: 'Preview image',
+      removeBtn: 'Delete and upload new image',
       cancelBtn: '',
       saveBtn: ''
     },

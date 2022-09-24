@@ -1,5 +1,7 @@
 import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import PopUp from '@/components/common/PopUp';
+import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useEffect, useState } from 'react';
@@ -160,20 +162,22 @@ const Users = () => {
       renderCell: (params) => {
         return (
           <>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              // onClick={() => {
-              //   setSelectedQB(getQuestionBankObject(params.row));
-              //   setEditPopUp(true);
-              // }}
-            >
-              <img src="/images/svg/edit-box-line.svg" width={20}></img>
-            </button>
+            <ToolTip title={ADMIN_USERS.userCohort.users.editBtn}>
+              <button
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0'
+                }}
+                // onClick={() => {
+                //   setSelectedQB(getQuestionBankObject(params.row));
+                //   setEditPopUp(true);
+                // }}
+              >
+                <img src="/images/svg/edit-box-line.svg" width={20}></img>
+              </button>
+            </ToolTip>
           </>
         );
       },
@@ -185,21 +189,23 @@ const Users = () => {
     <div className={`${styles.usersContainer}`}>
       <div className={`${styles.usersTopContainer}`}>
         <span>Total Users:{data.length}</span>
-        <button
-          className={`${styles.cohortButton1}`}
-          onClick={() => {
-            setIsOpen((prevValue) => !prevValue);
-          }}>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 22V10H26V22H38V26H26V38H22V26H10V22H22Z" fill="black" />
-          </svg>
-          Add Users to Cohort
-        </button>
+        <ToolTip title={ADMIN_USERS.userCohort.users.addUserToCohort}>
+          <button
+            className={`${styles.cohortButton1}`}
+            onClick={() => {
+              setIsOpen((prevValue) => !prevValue);
+            }}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 22V10H26V22H38V26H26V38H22V26H10V22H22Z" fill="black" />
+            </svg>
+            Add Users to Cohort
+          </button>
+        </ToolTip>
       </div>
       <ZicopsTable
         columns={columns}

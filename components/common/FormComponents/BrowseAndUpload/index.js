@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+import ToolTip from '../../ToolTip';
 import styles from '../formComponents.module.scss';
 import PreviewImageVideo from './PreviewImageVideo';
 
@@ -11,7 +12,9 @@ export default function BrowseAndUpload({
   handleRemove,
   isActive,
   acceptedTypes = '.jpeg, .png, .gif',
-  hidePreviewBtns = false
+  hidePreviewBtns = false,
+  previewTooltipTitle,
+  removeTooltipTitle
 }) {
   const [showPreview, setShowPreview] = useState(false);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -41,23 +44,27 @@ export default function BrowseAndUpload({
 
         {!hidePreviewBtns && (
           <div className={`${styles.btnContainer}`}>
-            <button
-              className={`${styles.preview}`}
-              onClick={() => {
-                if (previewData?.fileName || previewData?.filePath) {
-                  setShowPreview(true);
-                } else {
-                  setToastMsg([
-                    ...toastMsg,
-                    { type: 'warning', message: 'No File detected, Please Upload a File' }
-                  ]);
-                }
-              }}>
-              Preview
-            </button>
-            <button className={`${styles.remove}`} onClick={handleRemove}>
-              Remove
-            </button>
+            <ToolTip title={previewTooltipTitle}>
+              <button
+                className={`${styles.preview}`}
+                onClick={() => {
+                  if (previewData?.fileName || previewData?.filePath) {
+                    setShowPreview(true);
+                  } else {
+                    setToastMsg([
+                      ...toastMsg,
+                      { type: 'warning', message: 'No File detected, Please Upload a File' }
+                    ]);
+                  }
+                }}>
+                Preview
+              </button>
+            </ToolTip>
+            <ToolTip title={removeTooltipTitle}>
+              <button className={`${styles.remove}`} onClick={handleRemove}>
+                Remove
+              </button>
+            </ToolTip>
           </div>
         )}
       </div>
