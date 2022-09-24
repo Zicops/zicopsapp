@@ -56,6 +56,7 @@ export default function CourseBodyNotes() {
         options={options}
         handleChange={handleModuleChange}
         value={selectedModule}
+        maxMenuHeight="140px"
         customStyles={{ margin: '20px auto 0px' }}
       />
       <Header

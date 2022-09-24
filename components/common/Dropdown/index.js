@@ -1,7 +1,13 @@
 import { arrayOf, objectOf, shape, string } from 'prop-types';
 import Select from 'react-select';
 
-export default function Dropdown({ options, handleChange, value, customStyles }) {
+export default function Dropdown({
+  options,
+  handleChange,
+  value,
+  customStyles,
+  maxMenuHeight = null
+}) {
   return (
     <>
       {/* move styles to .scss */}
@@ -12,6 +18,7 @@ export default function Dropdown({ options, handleChange, value, customStyles })
           onChange={handleChange}
           className="zicops_select_container"
           classNamePrefix="zicops_select"
+          maxMenuHeight={maxMenuHeight}
           isSearchable={false}
         />
       </div>
