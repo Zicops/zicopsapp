@@ -1,7 +1,8 @@
+import { subCategory } from '@/components/LearnerUserProfile/Logic/userData.helper';
 import { COURSE_TYPES, LANGUAGES } from '@/helper/constants.helper';
 import { loadCatSubCat } from '@/helper/data.helper';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { changeHandler, snakeCaseToTitleCase } from '../../../helper/common.helper';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import Button from '../../CustomVideoPlayer/Button';
@@ -10,6 +11,15 @@ import styles from '../search.module.scss';
 export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
   const router = useRouter();
   const { searchQuery } = router.query;
+
+  useEffect(()=>{
+    const {subCat} = router.query;
+    if(!subCat) return ;
+    setFilters(prevValue => ({...prevValue , subCategory:subCat}));
+  },[router.query])
+  // cat and sub cat
+  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+
 
   const Type = COURSE_TYPES?.map((v, i) => {
     return { value: v, label: snakeCaseToTitleCase(v), isDisabled: [1, 2].includes(i) };
@@ -23,8 +33,7 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
   //   { value: 'Bookmarks', label: 'Bookmarks' }
   // ];
 
-  // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  
   // update sub cat based on cat
   loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, filters?.category);
 

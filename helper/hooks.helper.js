@@ -1,18 +1,15 @@
 import { GET_COURSE } from '@/api/Queries';
-import {
-    UPDATE_USER, userClient
-} from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
+import { userClient } from '@/api/UserMutations';
+import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
+import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/profilePreferencesHelper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import {
-    getUserObject, UserStateAtom
-} from '@/state/atoms/users.atom';
-import { useMutation } from '@apollo/client';
+import { getUserOrgObject, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
+import { LEARNING_SPACE_ID } from './constants.helper';
+import { getUserData } from './loggeduser.helper';
 
 // export default function useHandleUserDetails() {
 //   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
@@ -75,7 +72,10 @@ import { getCurrentEpochTime } from './common.helper';
 //added common hook for userCourse progress
 export default function useUserCourseData(){
 
-  async function getUserCourseProgress(currentUserId=null){
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  async function getUserCourseData(currentUserId=null){
     if(!currentUserId) return setToastMsg({type:'danger' , message:'Need to provide user id for course progress!'});
     
     const assignedCoursesRes = await loadQueryDataAsync(
@@ -119,7 +119,7 @@ export default function useUserCourseData(){
       userProgressArr?.map((topic) => {
         if (topic?.status !== 'not-started') ++topicsStarted;
       });
-      console.log(topicsStarted);
+      // console.log(topicsStarted);
       const courseProgress = userProgressArr?.length
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
@@ -148,5 +148,62 @@ export default function useUserCourseData(){
 
     return userCourses ;
   }
-  return {getUserCourseProgress}
+
+  async function getUserPreferences() {
+    // if(!userLspId) setToastMsg({type:'danger' , message:'Need to provide user lsp id^!'});
+    const userData = getUserData();
+    const userLspData = JSON.parse(sessionStorage?.getItem('lspData'));
+    if (userData === 'User Data Not Found') return;
+    const { id } = getUserData();
+    if(!userLspData?.user_lsp_id){
+      const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:id,lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
+      if(userLearningSpaceData?.error) return setToastMsg({type:'danger' , message:'Error while loading user preferences^!'});
+      //temporary solution only valid for one lsp...need to change later!
+      sessionStorage?.setItem('lspData',JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
+      // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
+      setUserOrgData(getUserOrgObject({user_lsp_id:userLearningSpaceData?.getUserLspByLspId?.user_lsp_id}));
+    }
+    const { user_lsp_id } = JSON.parse(sessionStorage?.getItem('lspData'));
+
+    if(!user_lsp_id) setToastMsg({type:'danger' , message:'Need to provide user lsp id^!'});
+    
+    const resPref = await loadQueryDataAsync(GET_USER_PREFERENCES,{user_id:id},{},userQueryClient);
+    // console.log(resPref,'prefdata');
+
+    if(resPref?.error) return setToastMsg({type:'danger' , message:'Error while loading user preferences^!'});
+
+    const data = resPref?.getUserPreferences ;
+
+    // let uLspId = user_lsp_id ? user_lsp_id : userLspId;
+    // console.log(user_lsp_id, uLspId);
+    // console.log(data);
+    const prefData = data?.filter((item) => {
+      return item?.user_lsp_id === user_lsp_id;
+    });
+    // console.log(prefData);
+    const prefArr = [];
+    for (let i = 0; i < prefData?.length; i++) {
+      for (let j = 0; j < subCategories?.length; j++) {
+        if (prefData[i].sub_category === subCategories[j].name) {
+          prefArr.push({
+            ...subCategories[j],
+            user_preference_id: prefData[i]?.user_preference_id,
+            sub_category: subCategories[j].name,
+            user_id: prefData[i]?.user_id,
+            user_lsp_id: prefData[i]?.user_lsp_id,
+            is_base: prefData[i]?.is_base,
+            is_active: prefData[i]?.is_active
+          });
+        }
+      }
+    }
+
+    const basePreference = prefData?.filter((item)=> item?.is_base && item?.is_active);
+    // console.log(basePreference,'base');
+    const preferences = prefData?.filter((item)=> item?.is_active && !item?.is_base);
+    setUserOrgData(prevValue => ({...prevValue ,sub_category:basePreference[0]?.sub_category,sub_categories:preferences}));
+    return prefArr;
+  }
+  
+  return {getUserCourseData,getUserPreferences}
 }

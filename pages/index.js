@@ -2,7 +2,7 @@ import { userClient } from '@/api/UserMutations';
 import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 
 import useUserCourseData from '@/helper/hooks.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
@@ -29,18 +29,13 @@ import { LANGUAGES } from '@/helper/constants.helper';
 export default function Home() {
   const { isAdmin } = useContext(userContext);
   const router = useRouter();
-  const { getUserCourseProgress } = useUserCourseData();
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const { getUserCourseData, getUserPreferences } = useUserCourseData();
 
   React.useEffect(() => {
     console.log(screen.width);
   }, []);
 
-  //added user courseProgress in index.js
-  useEffect(async()=>{
-   const {id} = getUserData();
-   const userCourseProgress = await getUserCourseProgress(id);
-   console.log(userCourseProgress,'at pages/index.js') ;
-  },[])
 
   const realSquare = {
     desktop: {
@@ -129,8 +124,11 @@ export default function Home() {
     client: queryClient
   });
 
-  useEffect(() => {
+  useEffect(async() => {
     setIsLoading(loading);
+
+    // const userPreferencesData = await getUserPreferences();
+
 
     loadCourseData({
       variables: {
@@ -147,101 +145,30 @@ export default function Home() {
       if (error) alert('Course Load Error');
     });
 
-    loadAssignedCourseData();
+    await loadAssignedCourseData();
   }, []);
 
-  useEffect(() => {
-    console.log(
-      'ongoing', onGoingCourses,
-      'added', addedCourses,
-      'assigned', assignedCourses,
-      'user', userData
-    );
-  }, [onGoingCourses, addedCourses, assignedCourses]);
+  // useEffect(() => {
+  //   console.log(
+  //     'ongoing', onGoingCourses,
+  //     'added', addedCourses,
+  //     'assigned', assignedCourses,
+  //     'user', userData
+  //   );
+  // }, [onGoingCourses, addedCourses, assignedCourses]);
 
   // for user courses
   async function loadAssignedCourseData() {
-    const currentUserId = userData?.id;
-    if (!currentUserId) return;
-    const assignedCoursesRes = await loadQueryDataAsync(
-      GET_USER_COURSE_MAPS,
-      {
-        user_id: currentUserId,
-        publish_time: Math.floor(Date.now() / 1000),
-        pageCursor: '',
-        pageSize: 9999999
-      },
-      {},
-      userClient
-    );
+    const {id} = getUserData();
+    const userCourses = await getUserCourseData(id);
 
-    console.log('Function called',currentUserId, assignedCoursesRes);
-    if (assignedCoursesRes?.error)
-      return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
-    const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+    console.log(userOrgData,'userorg data');
 
-    const allAssignedCourses = [];
-    for (let i = 0; i < assignedCoursesToUser.length; i++) {
-      const courseMap = assignedCoursesToUser[i];
-      const mapId = courseMap?.user_course_id;
-      const course_id = courseMap?.course_id;
-
-      const courseProgressRes = await loadQueryDataAsync(
-        GET_USER_COURSE_PROGRESS,
-        { userId: currentUserId, userCourseId: mapId },
-        {},
-        userClient
-      );
-
-      if (courseProgressRes?.error) {
-        setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-        continue;
-      }
-      const userProgressArr = courseProgressRes?.getUserCourseProgressByMapId;
-
-      // if (!userProgressArr?.length) continue;
-
-      let topicsStarted = 0;
-      userProgressArr?.map((topic) => {
-        if (topic?.status !== 'not-started') ++topicsStarted;
-      });
-      console.log(topicsStarted);
-      const courseProgress = userProgressArr?.length
-        ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
-        : 0;
-
-      const courseRes = await loadQueryDataAsync(GET_COURSE, { course_id: course_id });
-      if (courseRes?.error) {
-        setToastMsg({ type: 'danger', message: 'Course Load Error' });
-        continue;
-      }
-
-      const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      allAssignedCourses.push({
-        ...courseRes?.getCourse,
-        completedPercentage: userProgressArr?.length ? courseProgress : '0',
-        added_by: added_by?.role,
-        created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
-        expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY')
-      });
-    }
-
-    const userCourses = allAssignedCourses.filter(
-      (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
-    );
-
-    if (allAssignedCourses?.length) {
+    if (userCourses?.length) {
       setCourseState(userCourses, 'completedPercentage', 100, setOnGoingCourses, 'not');
       // setCourseState(userCourses, 'completedPercentage', 100, setCompletedCourses);
       setCourseState(userCourses, 'added_by', 'self', setAddedCourses);
       setCourseState(userCourses, 'added_by', 'self', setAssignedCourses, 'not');
-      // const completedCourses = userCourses.filter((item) => item?.completedPercentage === 100);
-      // if (completedCourses?.length) setCompletedCourses([...completedCourses], setLoading(false));
-      // const assignedToSelf = userCourses.filter((item) => item?.added_by === 'self');
-      // if (assignedToSelf?.length) setAddedCourses([...assignedToSelf], setLoading(false));
-      // const assignedByAdmin = userCourses.filter((item) => item?.added_by !== 'self');
-      // if (assignedByAdmin?.length) setAssignedCourses([...assignedByAdmin], setLoading(false));
-    // } else setLoading(false);
     } else setIsLoading(false);
   }
 
