@@ -340,7 +340,8 @@ const ExamScreen = () => {
     if (isError) return;
 
     // parse and set section data
-    const sections = sectionRes?.data?.getQuestionPaperSections || [];
+    const sections = sortArrByKeyInOrder(sectionRes?.data?.getQuestionPaperSections, 'CreatedAt');
+
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i];
       fixedQuestionIds.push({
@@ -370,23 +371,25 @@ const ExamScreen = () => {
       });
       if (isError) return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
 
+      const _mappings = sortArrByKeyInOrder(
+        mappingRes?.data?.getQPBankMappingBySectionId,
+        'CreatedAt'
+      );
       mappedQb = [
         ...mappedQb,
-        ...structuredClone(mappingRes?.data?.getQPBankMappingBySectionId)
-          ?.sort((m1, m2) => m2?.CreatedAt - m1?.CreatedAt)
-          ?.map((qbMappings) => {
-            return {
-              id: qbMappings.id,
-              qbId: qbMappings.QbId,
-              difficulty_level: qbMappings.DifficultyLevel,
-              sectionId: qbMappings.SectionId,
-              is_active: qbMappings.IsActive,
-              question_marks: qbMappings.QuestionMarks,
-              question_type: qbMappings.QuestionType,
-              retrieve_type: qbMappings.RetrieveType,
-              total_questions: qbMappings.TotalQuestions
-            };
-          })
+        ..._mappings.map((qbMappings) => {
+          return {
+            id: qbMappings.id,
+            qbId: qbMappings.QbId,
+            difficulty_level: qbMappings.DifficultyLevel,
+            sectionId: qbMappings.SectionId,
+            is_active: qbMappings.IsActive,
+            question_marks: qbMappings.QuestionMarks,
+            question_type: qbMappings.QuestionType,
+            retrieve_type: qbMappings.RetrieveType,
+            total_questions: qbMappings.TotalQuestions
+          };
+        })
       ];
     }
 
