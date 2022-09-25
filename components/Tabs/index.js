@@ -30,6 +30,36 @@ export default function CourseTabs() {
   //   setTab(tabData[0].name);
   // }, [fullCourse?.id]);
 
+  useEffect(() => {
+    const confirmationMessage = 'Changes you made may not be saved. Do you still wish to exit?';
+    function beforeUnloadHandler(e) {
+      (e || window.event).returnValue = confirmationMessage;
+
+      // setShowConfirmBox(1);
+      return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
+    }
+
+    function beforeRouteHandler(url) {
+      // console.log(url);
+      // return false;
+      if (Router.pathname !== url && !confirm(confirmationMessage)) {
+        // setShowConfirmBox(1);
+        Router.events.emit('routeChangeError');
+
+        // if (showConfirmBox !== 2)
+        throw `Route change to "${url}" was aborted (this error can be safely ignored). See https://github.com/zeit/next.js/issues/2476.`;
+      }
+    }
+
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+    Router.events.on('routeChangeStart', beforeRouteHandler);
+
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      Router.events.off('routeChangeStart', beforeRouteHandler);
+    };
+  }, []);
+
   // useEffect(() => {
   //   window.onbeforeunload = function () {
   //     return 'Are you sure you want to leave?';
@@ -37,11 +67,11 @@ export default function CourseTabs() {
   // }, []);
   // useEffect(() => {
   //   const confirmationMessage = 'Changes you made may not be saved.';
-  //   const beforeUnloadHandler = (e) => {
-  //     (e || window.event).returnValue = confirmationMessage;
-  //     // setShowConfirmBox(1);
-  //     return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
-  //   };
+  // const beforeUnloadHandler = (e) => {
+  //   (e || window.event).returnValue = confirmationMessage;
+  //   // setShowConfirmBox(1);
+  //   return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
+  // };
   //   const beforeRouteHandler = (url) => {
   //     if (Router.pathname !== url && !confirm(confirmationMessage)) {
   //       // setShowConfirmBox(1);
@@ -53,7 +83,7 @@ export default function CourseTabs() {
   //         // tslint:disable-next-line: no-string-throw
   //         throw `Route change to "${url}" was aborted (this error can be safely ignored). See https://github.com/zeit/next.js/issues/2476.`;
   //       // }
-        
+
   //     }
   //   };
   //   // if (notSaved) {
@@ -81,13 +111,12 @@ export default function CourseTabs() {
         tab={tab}
         setTab={setTab}
         footerObj={{
-          isActive : (
-          fullCourse?.name &&
-          fullCourse?.category &&
-          fullCourse?.sub_category &&
-          fullCourse?.owner &&
-          fullCourse?.language?.length
-        ),
+          isActive:
+            fullCourse?.name &&
+            fullCourse?.category &&
+            fullCourse?.sub_category &&
+            fullCourse?.owner &&
+            fullCourse?.language?.length,
           status: isCourseUploading ? (
             isCourseUploading
           ) : (
@@ -116,6 +145,7 @@ export default function CourseTabs() {
           </div>
         )}
       </TabContainer>
+
       {/* {showConfirmBox === 1 && (
         <ConfirmPopUp
           title={

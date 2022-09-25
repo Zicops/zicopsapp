@@ -63,6 +63,11 @@ export const isLoadingAtom = atom({
   default: false
 });
 
+export const courseErrorAtom = atom({
+  key: 'courseError',
+  default: getCourseErrorData()
+});
+
 export const uploadStatusAtom = atom({
   key: 'uploadStatus',
   default: null
@@ -195,5 +200,12 @@ export function getQuizObject(data) {
       attachmentType: data?.attachmentType || '',
       isCorrect: data.isCorrect || false
     })
+  };
+}
+export function getCourseErrorData(data = {}) {
+  return {
+    master: data?.master || false,
+    details: data?.details || false,
+    about: data?.about || false
   };
 }

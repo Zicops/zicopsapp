@@ -1,3 +1,4 @@
+import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -33,6 +34,7 @@ export default function useSaveCourse(courseContextData) {
   const [updateCourse, { loading: udpateCourseLoading }] = useMutation(UPDATE_COURSE);
 
   // recoil state
+  const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -44,6 +46,50 @@ export default function useSaveCourse(courseContextData) {
 
     // saveCourseData();
   }, [tab]);
+
+  function isValidData() {
+    let isValid = false;
+    const _courseError = structuredClone(courseError);
+
+    if (tab?.toLowerCase()?.trim()?.includes('master')) {
+      isValid =
+        !!fullCourse?.name &&
+        !!fullCourse?.category?.length &&
+        !!fullCourse?.sub_category?.length &&
+        !!fullCourse?.owner?.length &&
+        !!+fullCourse?.language?.length;
+
+      _courseError.master = !isValid;
+    }
+
+    if (tab?.toLowerCase()?.trim()?.includes('details')) {
+      isValid =
+        !!fullCourse?.sub_categories?.length &&
+        !!fullCourse?.expertise_level?.length &&
+        !!fullCourse?.previewVideo?.length &&
+        !!fullCourse?.tileImage?.length &&
+        !!+fullCourse?.image?.length &&
+        !!+fullCourse?.summary?.length;
+
+      _courseError.details = !isValid;
+    }
+
+    if (tab?.toLowerCase()?.trim()?.includes('about')) {
+      isValid =
+        !!fullCourse?.outcomes?.length &&
+        !!fullCourse?.benefits?.length &&
+        !!fullCourse?.description?.length &&
+        !!fullCourse?.prequisites?.length &&
+        !!+fullCourse?.goodFor?.length &&
+        !!+fullCourse?.mustFor?.length;
+      !!+fullCourse?.related_skills?.length;
+
+      _courseError.about = !isValid;
+    }
+
+    setCourseError(_courseError);
+    return isValid;
+  }
 
   async function saveCourseData(isNextButton, tabIndex, showToastMsg = true) {
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
@@ -57,6 +103,13 @@ export default function useSaveCourse(courseContextData) {
         setTab(tabData[tabIndex || 0].name);
         router.push(router.asPath + `/${resObj?.courseId}`);
       }
+      return;
+    }
+
+    if (isNextButton && !isValidData()) return setIsLoading(null);
+    if (!isNextButton && !fullCourse?.name) {
+      setToastMsg({ type: 'danger', message: 'Course Name should not be empty' });
+      setIsLoading(null);
       return;
     }
     // alert('course update started');

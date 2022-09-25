@@ -105,7 +105,9 @@ export default function ResourcesForm({ courseId, topicId }) {
               <Button
                 text="Add"
                 clickHandler={addNewResource}
-                styleClass={styles.topicContentSmallBtn}
+                styleClass={`${styles.topicContentSmallBtn} ${
+                  isResourceReady ? styles.formFilled : ''
+                }`}
                 isDisabled={!isResourceReady}
               />
             </div>

@@ -69,7 +69,7 @@ export default function PopUp({
                   <button
                     type="button"
                     value="add"
-                    className={`${
+                    className={`${submitBtn.disabled ? '' : styles.add_btn} ${
                       submitBtn.disabled ? styles.btn_cancel_add_disabled : styles.btn_cancel_add
                     }`}
                     disabled={submitBtn.disabled}

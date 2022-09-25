@@ -6,10 +6,13 @@ import NextButton from '../common/NextButton';
 import useHandleTabs from '../Logic/useHandleTabs';
 import styles from '../courseTabs.module.scss';
 import LabeledTextarea from '../../common/FormComponents/LabeledTextarea';
+import { useRecoilState } from 'recoil';
+import { courseErrorAtom } from '@/state/atoms/module.atoms';
 
 export default function CourseAbout() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, handleChange, updateCourseMaster } = useHandleTabs(courseContextData);
+  const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
 
   return (
     <div>
@@ -22,6 +25,7 @@ export default function CourseAbout() {
           <BulletPointInput
             placeholder="Add Learning Objectives/Outcomes and press enter"
             name="outcomes"
+            isError={!fullCourse?.outcomes?.length && courseError?.about}
           />
         </div>
       </div>
@@ -35,6 +39,7 @@ export default function CourseAbout() {
           <BulletPointInput
             placeholder="Add Program Highlights/Benefits and press enter"
             name="benefits"
+            isError={!fullCourse?.benefits?.length && courseError?.about}
           />
         </div>
       </div>
@@ -46,6 +51,7 @@ export default function CourseAbout() {
         </label>
         <LabeledTextarea
           styleClass="w-75"
+          isError={!fullCourse?.description?.length && courseError?.about}
           inputOptions={{
             inputName: 'description',
             placeholder: 'Provide description of the course',
@@ -63,7 +69,11 @@ export default function CourseAbout() {
           Pre-requisites:
         </label>
         <div className="w-75">
-          <BulletPointInput placeholder="Add Pre-requisites and press enter" name="prequisites" />
+          <BulletPointInput
+            placeholder="Add Pre-requisites and press enter"
+            name="prequisites"
+            isError={!fullCourse?.prequisites?.length && courseError?.about}
+          />
         </div>
       </div>
 
@@ -73,14 +83,22 @@ export default function CourseAbout() {
           Good For:
         </label>
         <div className="w-25">
-          <BulletPointInput placeholder="Add Good For and press enter" name="goodFor" />
+          <BulletPointInput
+            placeholder="Add Good For and press enter"
+            name="goodFor"
+            isError={!fullCourse?.goodFor?.length && courseError?.about}
+          />
         </div>
 
         <label htmlFor="mustFor" className="w-25" style={{ textAlign: 'center' }}>
           Must For:
         </label>
         <div className="w-25">
-          <BulletPointInput placeholder="Add Must For and press enter" name="mustFor" />
+          <BulletPointInput
+            placeholder="Add Must For and press enter"
+            name="mustFor"
+            isError={!fullCourse?.mustFor?.length && courseError?.about}
+          />
         </div>
       </div>
 
@@ -94,6 +112,7 @@ export default function CourseAbout() {
             placeholder="Add Related Skills"
             name="related_skills"
             isBullet={false}
+            isError={!fullCourse?.related_skills?.length && courseError?.about}
           />
           {/* <TagInput
             placeholder="Add Related Skills"

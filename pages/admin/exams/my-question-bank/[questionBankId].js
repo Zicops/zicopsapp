@@ -1,4 +1,5 @@
 import AddQuestionBank from '@/components/AdminExamComps/QuestionBanks/AddQuestionBank';
+import QuestionBankData from '@/components/AdminExamComps/QuestionBanks/QuestionBankData';
 import PopUp from '@/components/common/PopUp';
 import ToolTip from '@/components/common/ToolTip';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
@@ -77,7 +78,9 @@ export default function MyQuestionBanks() {
                   border: '0'
                 }}
                 onClick={() => setEditPopUp(true)}>
-                <ToolTip title="Edit Bank Details" placement="right"><img src="/images/svg/edit.svg" width={20} /></ToolTip>
+                <ToolTip title="Edit Bank Details" placement="right">
+                  <img src="/images/svg/edit.svg" width={20} />
+                </ToolTip>
               </button>
             </>
           }
@@ -96,13 +99,20 @@ export default function MyQuestionBanks() {
               }}
             />
           ) : (
-            <QuestionsTable
+            <QuestionBankData
               isEdit={true}
               openEditQuestionMasterTab={(questionData) => {
                 setEditQuestionData(questionData);
                 setShowQuestionForm(true);
               }}
             />
+            // <QuestionsTable
+            //   isEdit={true}
+            //   openEditQuestionMasterTab={(questionData) => {
+            //     setEditQuestionData(questionData);
+            //     setShowQuestionForm(true);
+            //   }}
+            // />
           )}
         </MainBodyBox>
       </MainBody>

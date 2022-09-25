@@ -6,6 +6,7 @@ const LabeledRadioCheckbox = ({
   value,
   isChecked,
   isDisabled,
+  isError,
   changeHandler = function () {}
 }) => {
   return (
@@ -18,7 +19,10 @@ const LabeledRadioCheckbox = ({
         checked={isChecked}
         disabled={isDisabled}
       />
-      <span className={type === 'checkbox' ? checkmark : radiomark}></span>
+      <span
+        className={`${type === 'checkbox' ? checkmark : radiomark} ${
+          isError ? 'error' : ''
+        }`}></span>
       {label}
     </label>
   );

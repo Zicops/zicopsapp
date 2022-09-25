@@ -1,7 +1,7 @@
 import { func, bool, string, number, shape } from 'prop-types';
 import { labeledTextareaWrapper } from '../formComponents.module.scss';
 
-export default function LabeledTextarea({ inputOptions, styleClass, changeHandler }) {
+export default function LabeledTextarea({ inputOptions, styleClass, changeHandler, isError }) {
   const {
     inputName,
     rows = 4,
@@ -29,6 +29,7 @@ export default function LabeledTextarea({ inputOptions, styleClass, changeHandle
         maxLength={maxLength}
         required={!!isRequired}
         disabled={!!isDisabled}
+        className={isError ? 'error' : ''}
         autoComplete={isAutoComplete?.toString()}></textarea>
     </div>
   );
