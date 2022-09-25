@@ -37,11 +37,18 @@ const columns = [
     sortable: false,
     renderCell: (params) => {
       return (
-        <button
-          style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
-          onClick={() => editCourse(params.row.id)}>
-          <img src="/images/edit-icon.png" width={20}></img>
-        </button>
+        <>
+          <button
+            style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
+            onClick={() => Router.push(`/preview?courseId=${params.row.id}`)}>
+            <img src="/images/svg/eye-line.svg" width={20}></img>
+          </button>
+          <button
+            style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
+            onClick={() => editCourse(params.row.id)}>
+            <img src="/images/svg/edit-box-line.svg" width={20}></img>
+          </button>
+        </>
       );
     },
     flex: 0.5

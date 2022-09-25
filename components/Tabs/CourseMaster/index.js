@@ -1,6 +1,7 @@
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { loadCatSubCat } from '@/helper/data.helper';
+import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -21,6 +22,7 @@ export default function CourseMaster() {
   const { data } = getQueryData(GET_CATS_N_SUB_CATS);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
 
   // cat and sub cat
   const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
@@ -79,13 +81,12 @@ export default function CourseMaster() {
     isMulti: true
   };
 
-  const isError = toastMsg?.[0]?.type === 'warning';
   return (
     <>
       {/* course name */}
       <LabeledInput
         styleClass={`${styles.marginBottom}`}
-        inputClass={isError && !fullCourse?.name?.length ? 'error' : ''}
+        inputClass={!fullCourse?.name?.length && courseError?.master ? 'error' : ''}
         inputOptions={{
           inputName: 'name',
           label: 'Name',
@@ -99,7 +100,7 @@ export default function CourseMaster() {
       {/* course category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
-        isError={isError && !fullCourse?.category?.length}
+        isError={!fullCourse?.category?.length && courseError?.master}
         dropdownOptions={categoryDropdownOptions}
         changeHandler={
           (e) => updateCourseMaster({ ...fullCourse, category: e.value, sub_category: '' })
@@ -110,7 +111,7 @@ export default function CourseMaster() {
       {/* course sub category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
-        isError={isError && !fullCourse?.sub_category?.length}
+        isError={!fullCourse?.sub_category?.length && courseError?.master}
         dropdownOptions={subcategoryDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, subcategoryDropdownOptions.inputName)
@@ -120,7 +121,7 @@ export default function CourseMaster() {
       {/* course owner */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
-        isError={isError && !fullCourse?.owner?.length}
+        isError={!fullCourse?.owner?.length && courseError?.master}
         dropdownOptions={ownerDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, ownerDropdownOptions.inputName)
@@ -130,7 +131,7 @@ export default function CourseMaster() {
       {/* language */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
-        isError={isError && !fullCourse?.language?.length}
+        isError={!fullCourse?.language?.length && courseError?.master}
         dropdownOptions={languageDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)

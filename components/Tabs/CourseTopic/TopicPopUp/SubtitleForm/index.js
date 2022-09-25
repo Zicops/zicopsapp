@@ -76,7 +76,9 @@ export default function SubtitleForm({ courseId, topicId }) {
               <Button
                 text="Add"
                 clickHandler={addNewSubtitles}
-                styleClass={styles.topicContentSmallBtn}
+                styleClass={`${styles.topicContentSmallBtn} ${
+                  isSubtitlesReady ? styles.formFilled : ''
+                }`}
                 isDisabled={!isSubtitlesReady}
               />
             </div>
