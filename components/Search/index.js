@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import useHandleSearch from './Logic/useHandleSearch';
 import SearchBody from './SearchBody';
 import SearchBookmarks from './SearchBookmarks';
@@ -8,6 +9,16 @@ export default function Search() {
   const { courses, lastItemRef, filters, setFilters, clearAllFilters } = useHandleSearch();
   const router = useRouter();
   const searchQuery = router.query?.searchQuery || '';
+  const [hideBookMark , setHideBookmark] = useState(false);
+  
+  useEffect(()=>{
+    // console.log(isPref);
+    const { isPref } = router.query ;
+    if(!isPref) return ;
+    setHideBookmark(true);
+    // setFilters(prevValue => ({...prevValue , subCategory:searchQuery}))
+    return ;
+  },[router.query])
 
   return (
     <div
@@ -17,9 +28,10 @@ export default function Search() {
         minHeight: '90vh'
       }}>
       <SearchHeader filters={filters} setFilters={setFilters} clearAllFilters={clearAllFilters} />
-      <SearchBookmarks />
+      {!hideBookMark && <SearchBookmarks />}
       <SearchBody
         courses={courses?.filter((course) => {
+          console.log(course);
           const nameFilter = course?.name
             ?.trim()
             ?.toLowerCase()
@@ -31,8 +43,7 @@ export default function Search() {
 
           if (filters?.lang)
             langFilter = course?.language
-              ?.trim()
-              ?.toLowerCase()
+              ?.map((lang)=> lang?.toLowerCase()?.trim())
               ?.includes(filters?.lang?.trim()?.toLowerCase());
           if (filters?.category)
             catFilter = course?.category

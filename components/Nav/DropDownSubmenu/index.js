@@ -65,8 +65,11 @@ export default function DropDownSubMenu({
                 onClick={(e) => {
                   // e.stopPropagation();
                   e?.syntheticEvent?.stopPropagation();
-
-                  router.push(`${link}?tabName=${title}`, link);
+                  if(!elements?.isPreferenceCentre){
+                  const route = arrowpositon === 'right'? `search-page?subCat=${link}&isPref=true` : `${link}?tabName=${title}`
+                  const maskUrl = elements?.asUrl ? elements?.asUrl : link;
+                  router.push(route,maskUrl);}
+                  else router.push(link);
                 }}>
                 {title}
               </MenuItem>

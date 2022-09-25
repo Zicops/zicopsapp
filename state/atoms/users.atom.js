@@ -43,7 +43,7 @@ export const UsersOrganizationAtom = atom({
   default: getUserOrgObject()
 });
 
-export function getUserOrgObject(data) {
+export function getUserOrgObject(data={}) {
   return {
     user_id: data?.user_id || null,
 
