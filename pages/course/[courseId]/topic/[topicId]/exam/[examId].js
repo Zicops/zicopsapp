@@ -47,6 +47,7 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
 import moment from 'moment';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 const ExamScreen = () => {
   const [loadMaster] = useLazyQuery(GET_EXAM_META, { client: queryClient });
