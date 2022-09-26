@@ -16,7 +16,7 @@ const UserCoursesTab = () => {
   let course = ['', '', ''];
 
 
-  const { getUserCourseProgress } = useUserCourseData()
+  const { getUserCourseData } = useUserCourseData()
   const [isBoxView, setIsBoxView] = useState(true);
   const [onGoingCourses, setOnGoingCourses] = useState([]);
   const [addedCourses, setAddedCourses] = useState([]);
@@ -44,7 +44,7 @@ const UserCoursesTab = () => {
   }, []);
 
   async function loadAssignedCourseData() {
-    const userCourses = await getUserCourseProgress(userData?.id);
+    const userCourses = await getUserCourseData(userData?.id);
      console.log(userCourses);
     if (userCourses?.length) {
       setCourseState(userCourses,'completedPercentage', 100, setOnGoingCourses, 'not');

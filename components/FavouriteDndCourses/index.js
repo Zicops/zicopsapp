@@ -366,7 +366,7 @@ export default function FavouriteDndCourses() {
 
               <h4>
                 <span>
-                  Assigned By Admin ({droppedByAdmin} / {LEARNING_FOLDER_CAPACITY})
+                  Assigned By Admin ({droppedByAdmin})
                 </span>
                 <span className={styles.seeMore} onClick={() => setIsShowAllAdmin(!isShowAllAdmin)}>
                   See {isShowAllAdmin ? 'Less' : 'More'}
