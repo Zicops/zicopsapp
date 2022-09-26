@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { courseContext } from '../../state/contexts/CourseContext';
 import BottomTabsMenu from '../small/BottomTabsMenu';
@@ -25,6 +26,7 @@ export default function CourseBody({ isPreview = false }) {
     setSelectedModule
   } = useShowData(courseContextData);
 
+  const router = useRouter();
   useLoadUserData(isPreview, setSelectedModule, getModuleOptions);
 
   const props = {
@@ -38,12 +40,14 @@ export default function CourseBody({ isPreview = false }) {
       {isPreview && (
         <div className={navbarOverrideElement}>
           This is Preview Page
-          <Link href={`/admin/courses/${courseContextData?.fullCourse.id}`}>
+          <span className={navbarOverrideElementClose} onClick={() => router.back()}>
+            <img src="/images/circular-cross.png" alt="" width={50} />
+          </span>
+          {/* <Link href={`/admin/courses/${courseContextData?.fullCourse.id}`}>
             <a className={navbarOverrideElementClose}>
-              {/* X */}
               <img src="/images/circular-cross.png" alt="" width={50} />
             </a>
-          </Link>
+          </Link> */}
         </div>
       )}
 

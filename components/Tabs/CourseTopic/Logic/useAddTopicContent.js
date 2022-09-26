@@ -38,7 +38,10 @@ export default function useAddTopicContent(topic) {
       : !!newTopicVideo?.file;
 
     setIsAddTopicContentReady(
-      !!newTopicContent.language && !!newTopicContent.type && !!isContentPresent
+      !!newTopicContent.language &&
+        !!newTopicContent.type &&
+        !!isContentPresent &&
+        !!+newTopicContent?.duration
     );
   }, [newTopicContent, newTopicVideo]);
 

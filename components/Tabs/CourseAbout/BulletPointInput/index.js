@@ -2,7 +2,7 @@ import { courseContext } from '@/state/contexts/CourseContext';
 import { useContext, useState } from 'react';
 import styles from '../../courseTabs.module.scss';
 
-export default function BulletPointInput({ placeholder, name, isBullet = true }) {
+export default function BulletPointInput({ placeholder, name, isBullet = true, isError }) {
   const { fullCourse, updateCourseMaster } = useContext(courseContext);
 
   const [input, setInput] = useState('');
@@ -81,6 +81,7 @@ export default function BulletPointInput({ placeholder, name, isBullet = true })
             if (newTag?.length) addTag(newTag);
           }}
           maxLength={isBullet ? null : 60}
+          className={isError ? 'error' : ''}
           onChange={(e) => setInput(e.target.value)}
         />
       </div>
