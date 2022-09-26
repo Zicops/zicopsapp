@@ -81,13 +81,14 @@ const AnswerAllOptions = ({
       // setData(changeMarked());
       setMarkTrigger(false);
     }
-    if (current.id !== 0 && data.length !== current.id) {
-      setOption(current?.selectedOption);
-    }
+    // if (current.id !== 0 && data.length !== current.id) {
+    //   setOption(current?.selectedOption);
+    // }
   }, [nextTrigger, previousTrigger, markTrigger]);
 
   useEffect(() => {
     setMark(current?.isMarked || false);
+    setOption(current?.selectedOption);
   }, [current]);
 
   let index = 0;
