@@ -44,7 +44,7 @@ const LoginEmail = ({ chngeHandle, type, placeholder, tabIndex = -1 }) => {
         onFocus={() => setFocus(true)}
         // style={{ margin: '5px 0px' }}
       />
-      <button onClick={handleShowPassword} tabIndex="-1">
+      <button onClick={handleShowPassword} type="button" tabIndex="-1">
         {show ? <Visibility color={'primary'} /> : <VisibilityOff sx={{ color: '#737373' }} />}
       </button>
     </div>
