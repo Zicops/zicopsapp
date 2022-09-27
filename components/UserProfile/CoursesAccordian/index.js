@@ -77,7 +77,7 @@ const CoursesAccordian = () => {
     const { id } = getUserData();
 
     const checkCourse = await updateCourse(userCourseData, currentUserId, 'admin', id);
-    console.log(checkCourse,'hi')
+    // console.log(checkCourse,'hi')
     if (checkCourse) {
       const courseArray = dataCourse.filter((item) => item.id !== userCourseData?.id);
       setDataCourse([...courseArray]);
@@ -86,7 +86,7 @@ const CoursesAccordian = () => {
       return setIsAssignPopUpOpen(false);
     }
 
-    console.log('hi')
+    // console.log('hi')
     const sendData = {
       userId: router.query?.userId,
       userLspId: 'Zicops',
@@ -101,6 +101,7 @@ const CoursesAccordian = () => {
     let isError = false;
     const res = await addUserCourse({ variables: sendData }).catch((err) => {
       console.log(err);
+      setLoading(false);
       return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
     });
 
@@ -110,7 +111,7 @@ const CoursesAccordian = () => {
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
     await loadAssignedCourseData();
     setIsAssignPopUpOpen(false);
-    setLoading(false);
+    return setLoading(false);
   }
 
   const courseSections = [
