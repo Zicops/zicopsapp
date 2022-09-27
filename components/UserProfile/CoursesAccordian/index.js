@@ -32,7 +32,7 @@ const CoursesAccordian = () => {
   const [loadLastestCourseData, { error: error }] = useLazyQuery(GET_LATEST_COURSES, {
     client: queryClient
   });
-  const [addUserCourse, { loading }] = useMutation(ADD_USER_COURSE, {
+  const [addUserCourse, { loading: addCoueseLoading }] = useMutation(ADD_USER_COURSE, {
     client: userClient
   });
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
@@ -51,8 +51,9 @@ const CoursesAccordian = () => {
   const [isAssignedPage, setIsAssignedPage] = useState(false);
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { updateCourse, isSubmitDisable } = useHandleUpdateCourse();
+  const { updateCourse } = useHandleUpdateCourse();
 
   async function handleAssign(item, isRemove = false) {
     // const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
@@ -71,10 +72,12 @@ const CoursesAccordian = () => {
   }
 
   async function handleSubmit() {
+    setLoading(true);
     setIsPopUpDataPresent(false);
     const { id } = getUserData();
 
     const checkCourse = await updateCourse(userCourseData, currentUserId, 'admin', id);
+    console.log(checkCourse,'hi')
     if (checkCourse) {
       const courseArray = dataCourse.filter((item) => item.id !== userCourseData?.id);
       setDataCourse([...courseArray]);
@@ -83,6 +86,7 @@ const CoursesAccordian = () => {
       return setIsAssignPopUpOpen(false);
     }
 
+    console.log('hi')
     const sendData = {
       userId: router.query?.userId,
       userLspId: 'Zicops',
@@ -106,6 +110,7 @@ const CoursesAccordian = () => {
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
     await loadAssignedCourseData();
     setIsAssignPopUpOpen(false);
+    setLoading(false);
   }
 
   const courseSections = [
@@ -439,7 +444,7 @@ const CoursesAccordian = () => {
               <UserButton
                 text={'Save'}
                 type={'button'}
-                isDisabled={isSubmitDisable || loading}
+                isDisabled={addCoueseLoading||loading}
                 clickHandler={() => {
                   handleSubmit();
                 }}

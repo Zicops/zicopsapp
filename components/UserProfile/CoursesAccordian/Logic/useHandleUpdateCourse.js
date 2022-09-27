@@ -9,10 +9,9 @@ import { useRecoilState } from 'recoil';
 export default function useHandleUpdateCourse() {
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const [isSubmitDisable, setIsSubmitDisable] = useState(false);
+
 
   async function updateCourse(userCourseData, userId = null, role = 'admin', adminId = null) {
-    setIsSubmitDisable(true);
     let id = !!adminId ? adminId : userId;
     const userCourse = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS_BY_COURSE_ID,
@@ -40,9 +39,8 @@ export default function useHandleUpdateCourse() {
     let isError = false;
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
-    setIsSubmitDisable(false);
     return true;
   }
 
-  return { updateCourse, isSubmitDisable };
+  return { updateCourse };
 }
