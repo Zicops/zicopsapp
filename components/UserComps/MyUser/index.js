@@ -128,7 +128,7 @@ export default function MyUser({ getUser }) {
           <EllipsisMenu
             buttonArr={[
               { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
-              { handleClick: () => alert(`Edit ${params.id}`) },
+              // { handleClick: () => alert(`Edit ${params.id}`) },
               { text: 'Disable', handleClick: () => alert(`Disable ${params.id}`) }
             ]}
           />
