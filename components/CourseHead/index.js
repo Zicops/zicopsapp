@@ -7,7 +7,7 @@ import Sitemap from '../common/AdminHeader/Sitemap';
 import PopUp from '../common/PopUp';
 import styles from './courseHead.module.scss';
 
-export default function CourseHead({ title }) {
+export default function CourseHead({ title, hideCourseTypeDropdown = false, hidePlus = false }) {
   const [showSitemap, setShowSitemap] = useState(false);
 
   const router = useRouter();
@@ -40,19 +40,21 @@ export default function CourseHead({ title }) {
     <div className={`${styles.courseHead}`}>
       <div className={`${styles.header}`}>
         <h2>{title}</h2>
-        <Select
-          instanceId="coursehead_coursetype"
-          options={options}
-          defaultValue={{ value: 'self-paced', label: 'Self Paced' }}
-          onChange={(e) => localStorage.setItem('courseType', e.value)}
-          className="zicops_select_container"
-          classNamePrefix="zicops_select"
-          isSearchable={false}
-        />
+        {!hideCourseTypeDropdown && (
+          <Select
+            instanceId="coursehead_coursetype"
+            options={options}
+            defaultValue={{ value: 'self-paced', label: 'Self Paced' }}
+            onChange={(e) => localStorage.setItem('courseType', e.value)}
+            className="zicops_select_container"
+            classNamePrefix="zicops_select"
+            isSearchable={false}
+          />
+        )}
       </div>
 
       <div className={styles.icons}>
-        {!route.includes('admin/courses') && (
+        {!hidePlus && !route.includes('admin/courses') && (
           <img
             src="/images/plus_big.png"
             className="rightside_icon"
