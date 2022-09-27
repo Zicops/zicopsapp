@@ -16,7 +16,7 @@ import addUserData from '../../Logic/addUserData';
 const AddUsers = ({ usersData = [] , popUpSetState = ()=>{} }) => {
   const { addUserToCohort } = addUserData();
   const [cohortData , setCohortData] = useRecoilState(CohortMasterData);
-  const selectedUsers = `5/${usersData?.length}`;
+  const selectedUsers = `${userId?.length}/${usersData?.length}`;
   const [userId, setUserId] = useState([]);
   const [data, setData] = useState([]);
 
@@ -138,7 +138,7 @@ const AddUsers = ({ usersData = [] , popUpSetState = ()=>{} }) => {
       />
       <div className={`${styles.addUserBottomContainer}`}>
         <div className={`${styles.leftSide}`}>
-          Users selected: <span>{selectedUsers}</span>
+          Users selected: <span>{`${userId?.length ? userId?.length : "0"}/${usersData?.length}`}</span>
         </div>
         <div className={`${styles.buttonContainer}`}>
           <UserButton text={'Cancel'} isPrimary={false}/>
