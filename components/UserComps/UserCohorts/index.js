@@ -88,7 +88,7 @@ const UserCohorts = () => {
               }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
-            <button
+            {/* <button
               style={{
                 cursor: 'pointer',
                 backgroundColor: 'transparent',
@@ -101,7 +101,7 @@ const UserCohorts = () => {
               // }}
             >
               <img src="/images/svg/download-white.svg" width={20}></img>
-            </button>
+            </button> */}
           </>
         );
       },
