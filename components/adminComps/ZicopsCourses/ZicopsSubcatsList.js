@@ -56,7 +56,7 @@ const ZicopsSubcatsList = () => {
   return (
     <>
       <div className="content">
-        <CourseHead title="Zicops Subcategories" />
+        <CourseHead title="Zicops Subcategories" hideCourseTypeDropdown={true} hidePlus={true} />
 
         <ApolloProvider client={queryClient}>
           <div className="content-panel">

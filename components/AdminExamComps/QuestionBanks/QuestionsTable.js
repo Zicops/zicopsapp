@@ -37,7 +37,8 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
-      if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
+      if (data?.getQuestionBankQuestions)
+        setQbQuestions(data.getQuestionBankQuestions?.filter((q) => q?.Status === 'Y') || []);
     });
   }, [questionBankId]);
 

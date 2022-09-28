@@ -50,7 +50,8 @@ export default function QuestionBankTable({ isEdit = false }) {
       const questionsRes = await loadQueryDataAsync(GET_QUESTIONS_NAMES, {
         question_bank_id: qb.id
       });
-      const questionsArr = questionsRes?.getQuestionBankQuestions || [];
+      const questionsArr =
+        questionsRes?.getQuestionBankQuestions?.filter((q) => q?.Status === 'Y') || [];
       questionBankData[i].noOfQuestions = questionsArr.length;
     }
 
