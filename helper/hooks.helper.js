@@ -1,6 +1,12 @@
 import { GET_COURSE } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
+import {
+  GET_USER_COURSE_MAPS,
+  GET_USER_COURSE_PROGRESS,
+  GET_USER_LEARNINGSPACES_DETAILS,
+  GET_USER_PREFERENCES,
+  userQueryClient
+} from '@/api/UserQueries';
 import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/profilePreferencesHelper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getUserOrgObject, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -15,22 +21,20 @@ import { getUserData } from './loggeduser.helper';
 //   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
 //     client: userClient
 //   });
-  
+
 //   //recoil states
 //   const userDataAbout = useRecoilValue(UserStateAtom);
- 
-  // const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+// const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
 //   // local state
 //   const [userAboutData, setUserAboutData] = useState(getUserObject());
- 
 
 //   // setting up local states
 //   useEffect(() => {
 //     setUserAboutData(getUserObject(userDataAbout));
-    
-//   }, [userData]);
 
+//   }, [userData]);
 
 //   async function updateAboutUser() {
 //     const sendUserData = {
@@ -68,16 +72,20 @@ import { getUserData } from './loggeduser.helper';
 //   return { updateAboutUser };
 // }
 
-
 //added common hook for userCourse progress
-export default function useUserCourseData(){
-
-  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+export default function useUserCourseData() {
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  async function getUserCourseData(currentUserId=null){
-    if(!currentUserId) return setToastMsg({type:'danger' , message:'Need to provide user id for course progress!'});
-    
+  async function getUserCourseData() {
+    const { id } = getUserData();
+    let currentUserId = id;
+    if (!currentUserId)
+      return setToastMsg({
+        type: 'danger',
+        message: 'Need to provide user id for course progress!'
+      });
+
     const assignedCoursesRes = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS,
       {
@@ -92,6 +100,7 @@ export default function useUserCourseData(){
 
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
+
     const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
 
     const allAssignedCourses = [];
@@ -100,6 +109,7 @@ export default function useUserCourseData(){
       const mapId = courseMap?.user_course_id;
       const course_id = courseMap?.course_id;
 
+      if (course_id === '') continue;
       const courseProgressRes = await loadQueryDataAsync(
         GET_USER_COURSE_PROGRESS,
         { userId: currentUserId, userCourseId: mapId },
@@ -119,7 +129,7 @@ export default function useUserCourseData(){
       userProgressArr?.map((topic) => {
         if (topic?.status !== 'not-started') ++topicsStarted;
       });
-      // console.log(topicsStarted);
+
       const courseProgress = userProgressArr?.length
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
@@ -130,23 +140,30 @@ export default function useUserCourseData(){
         continue;
       }
 
-      const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
+      let added_by = '';
+      try {
+        added_by = JSON.parse(assignedCoursesToUser[i]?.added_by)?.role;
+      } catch (e) {
+        added_by = assignedCoursesToUser[i]?.added_by;
+        // setToastMsg({ type: 'danger', message: 'Added by not a json string' });
+      }
       allAssignedCourses.push({
         ...courseRes?.getCourse,
         completedPercentage: userProgressArr?.length ? courseProgress : '0',
-        added_by: added_by?.role,
+        added_by: added_by,
         created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY')
       });
-    }
+    } // end of for loop
 
+    // to filter duplicate  assigned courses if any
     const userCourses = allAssignedCourses.filter(
       (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
     );
 
-    if(!userCourses?.length) return setToastMsg({ type: 'info', message: 'No courses found!' })
+    if (!userCourses?.length) return setToastMsg({ type: 'info', message: 'No courses found!' });
 
-    return userCourses ;
+    return userCourses;
   }
 
   async function getUserPreferences() {
@@ -155,24 +172,38 @@ export default function useUserCourseData(){
     const userLspData = JSON.parse(sessionStorage?.getItem('lspData'));
     if (userData === 'User Data Not Found') return;
     const { id } = getUserData();
-    if(!userLspData?.user_lsp_id){
-      const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:id,lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
-      if(userLearningSpaceData?.error) return setToastMsg({type:'danger' , message:'Error while loading user preferences^!'});
+    if (!userLspData?.user_lsp_id) {
+      const userLearningSpaceData = await loadQueryDataAsync(
+        GET_USER_LEARNINGSPACES_DETAILS,
+        { user_id: id, lsp_id: LEARNING_SPACE_ID },
+        {},
+        userQueryClient
+      );
+      if (userLearningSpaceData?.error)
+        return setToastMsg({ type: 'danger', message: 'Error while loading user preferences^!' });
       //temporary solution only valid for one lsp...need to change later!
-      sessionStorage?.setItem('lspData',JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
+      sessionStorage?.setItem('lspData', JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
       // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
-      setUserOrgData(getUserOrgObject({user_lsp_id:userLearningSpaceData?.getUserLspByLspId?.user_lsp_id}));
+      setUserOrgData(
+        getUserOrgObject({ user_lsp_id: userLearningSpaceData?.getUserLspByLspId?.user_lsp_id })
+      );
     }
     const { user_lsp_id } = JSON.parse(sessionStorage?.getItem('lspData'));
 
-    if(!user_lsp_id) setToastMsg({type:'danger' , message:'Need to provide user lsp id^!'});
-    
-    const resPref = await loadQueryDataAsync(GET_USER_PREFERENCES,{user_id:id},{},userQueryClient);
+    if (!user_lsp_id) setToastMsg({ type: 'danger', message: 'Need to provide user lsp id^!' });
+
+    const resPref = await loadQueryDataAsync(
+      GET_USER_PREFERENCES,
+      { user_id: id },
+      {},
+      userQueryClient
+    );
     // console.log(resPref,'prefdata');
 
-    if(resPref?.error) return setToastMsg({type:'danger' , message:'Error while loading user preferences^!'});
+    if (resPref?.error)
+      return setToastMsg({ type: 'danger', message: 'Error while loading user preferences^!' });
 
-    const data = resPref?.getUserPreferences ;
+    const data = resPref?.getUserPreferences;
 
     // let uLspId = user_lsp_id ? user_lsp_id : userLspId;
     // console.log(user_lsp_id, uLspId);
@@ -198,12 +229,17 @@ export default function useUserCourseData(){
       }
     }
 
-    const basePreference = prefData?.filter((item)=> item?.is_base && item?.is_active);
+    const basePreference = prefData?.filter((item) => item?.is_base && item?.is_active);
     // console.log(basePreference,'base');
-    const preferences = prefData?.filter((item)=> item?.is_active && !item?.is_base);
-    setUserOrgData(prevValue => ({...prevValue ,sub_category:basePreference[0]?.sub_category,sub_categories:preferences}));
+    const preferences = prefData?.filter((item) => item?.is_active && !item?.is_base);
+    // console.log('preferences', preferences);
+    setUserOrgData((prevValue) => ({
+      ...prevValue,
+      sub_category: basePreference[0]?.sub_category,
+      sub_categories: preferences
+    }));
     return prefArr;
   }
-  
-  return {getUserCourseData,getUserPreferences}
+
+  return { getUserCourseData, getUserPreferences };
 }
