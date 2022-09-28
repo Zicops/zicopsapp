@@ -68,7 +68,7 @@ export default function QuestionOptionView({
 
         <section className={`${styles.questionData}`}>
           {showType === 'difficulty' && (
-            <span>Difficulty Level: {questionData?.difficulty || 0}</span>
+            <span>Difficulty Score: {questionData?.difficulty || 0}</span>
           )}
 
           {showType === 'marks' && <span>Marks: {questionData?.question_marks || 0}</span>}

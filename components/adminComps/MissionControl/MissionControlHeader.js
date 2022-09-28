@@ -18,8 +18,8 @@ export default function MissionControlHeader() {
   const customStyles = {
     container: (provided, state) => ({
       ...provided,
-      width: '50%',
-      boxShadow: state.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
+      width: '50%'
+      // boxShadow: state.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
     }),
     control: (provided, state) => ({
       ...provided,
@@ -114,7 +114,7 @@ export default function MissionControlHeader() {
             {showSearch && (
               <Select
                 options={siteMap.map((val) => {
-                  return { value: val.route, label: val.route };
+                  return { value: val.route, label: val.displayName, ...val };
                 })}
                 filterOption={(option, searchQuery) => {
                   if (!searchQuery?.trim()) return false;
@@ -142,28 +142,28 @@ export default function MissionControlHeader() {
               onClick={() => setShowSearch(true)}
             />
           </div>
-          <ToolTip title='Settings' placement='top-start'>
-          <div className="rightside_icon">
-            <Image
-              src="/images/cog.png"
-              className="rightside_icon"
-              alt=""
-              height={'40px'}
-              width={'40px'}
-            />
-          </div>
+          <ToolTip title="Settings" placement="top-start">
+            <div className="rightside_icon">
+              <Image
+                src="/images/cog.png"
+                className="rightside_icon"
+                alt=""
+                height={'40px'}
+                width={'40px'}
+              />
+            </div>
           </ToolTip>
-          <ToolTip title='Sitemap' placement='right-start'>
-          <div className="rightside_icon">
-            <Image
-              src="/images/hiararchy.png"
-              className="rightside_icon"
-              alt=""
-              height={'40px'}
-              width={'50px'}
-              onClick={() => setShowSitemap(true)}
-            />
-          </div>
+          <ToolTip title="Sitemap" placement="right-start">
+            <div className="rightside_icon">
+              <Image
+                src="/images/hiararchy.png"
+                className="rightside_icon"
+                alt=""
+                height={'40px'}
+                width={'50px'}
+                onClick={() => setShowSitemap(true)}
+              />
+            </div>
           </ToolTip>
         </div>
       </div>
@@ -189,6 +189,7 @@ export default function MissionControlHeader() {
           .rightside_icon {
             margin: 20px;
             display: inline-block;
+            cursor: pointer;
           }
           .first_icon {
             display: flex;
