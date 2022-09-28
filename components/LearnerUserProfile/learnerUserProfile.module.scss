@@ -637,6 +637,11 @@
       flex: 1;
     }
   }
+  .leaderboardScrollable{
+    height: calc(100% - 70px);
+    overflow-y: auto;
+    padding: 10px;
+  }
   .leaderboardBody{
     display: flex;
     justify-content: space-between;
