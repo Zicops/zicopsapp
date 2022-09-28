@@ -1,4 +1,3 @@
-
 import { userClient } from '@/api/UserMutations';
 import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
@@ -25,6 +24,7 @@ import ZicopsCarousel from '../components/ZicopsCarousel';
 import SmallCard from '../components/ZicopsCarousel/SmallCard';
 import { isLoadingAtom } from '../state/atoms/module.atoms';
 import { userContext } from '../state/contexts/UserContext';
+import { LANGUAGES } from '@/helper/constants.helper';
 
 export default function Home() {
   const { isAdmin } = useContext(userContext);
@@ -40,12 +40,12 @@ export default function Home() {
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
-      items: 4,
+      items: 5,
       slidesToSlide: 1
     },
     laptop: {
       breakpoint: { max: 1530, min: 1024 },
-      items: 4,
+      items: 5,
       slidesToSlide: 5
     },
     tablet: {
@@ -184,6 +184,12 @@ export default function Home() {
   }
 
   const baseSubcategory = 'React Development';
+  const parentOfBaseSubcategory = 'Development';
+  const parentOfSubcategory1 = 'Development';
+  const parentOfSubcategory2 = 'Cloud';
+  const parentOfSubcategory3 = 'Project Management';
+  const parentOfSubcategory4 = 'Technology';
+  const parentOfSubcategory5 = 'Development';
   return (
     <div
       style={{
@@ -197,39 +203,65 @@ export default function Home() {
       ) : (
         <HomeSlider />
       )}
-      {onGoingCourses.length ? <ZicopsCarousel title="Continue with your Courses" data={onGoingCourses} /> : ''}
-      {addedCourses.length ? <ZicopsCarousel title="Courses in your Learning Folder" data={addedCourses} /> : ''}
-      {latestCourseData.length ? <ZicopsCarousel title="Latest Courses" data={latestCourseData} /> : ''}
+      {onGoingCourses.length ? (
+        <ZicopsCarousel title="Continue with your Courses" data={onGoingCourses} />
+      ) : (
+        ''
+      )}
+      {addedCourses.length ? (
+        <ZicopsCarousel title="Courses in your Learning Folder" data={addedCourses} />
+      ) : (
+        ''
+      )}
+      {latestCourseData.length ? (
+        <ZicopsCarousel title="Latest Courses" data={latestCourseData} />
+      ) : (
+        ''
+      )}
       {/* <CardSlider title="Latest Courses" data={latestCourseData} /> */}
       <ZicopsCarousel title="Courses from your learning space" data={latestCourseData} />
       <ZicopsCarousel title={`Courses in ${baseSubcategory}`} data={latestCourseData} />
-      {/* <ZicopsCarousel title={`Courses in ${baseSubcategory}`} data={latestCourseData} /> */}
+      <ZicopsCarousel title="Recommended Courses" data={latestCourseData} />
 
-      <BigCardSlider title="Courses mandatory for you" data={squareImages} slide={realSquare} />
+      <BigCardSlider
+        title="Courses in Other Languages"
+        data={LANGUAGES}
+        slide={realSquare}
+        bigBox={true}
+      />
 
-      <ZicopsCarousel title="New Launched Courses" data={sliderImages} />
-      <ZicopsCarousel title="Most Popular Courses in Zicops" data={sliderImages} />
+      <ZicopsCarousel title={`Courses in ${parentOfBaseSubcategory}`} data={latestCourseData} />
+      <ZicopsCarousel title="Self-Help Courses" data={latestCourseData} />
+      <ZicopsCarousel title="Quick Courses" data={latestCourseData} />
+      <ZicopsCarousel title={`Courses in ${parentOfSubcategory1}`} data={latestCourseData} />
+      <ZicopsCarousel title={`Courses in ${parentOfSubcategory2}`} data={latestCourseData} />
+      <ZicopsCarousel title={`Courses in ${parentOfSubcategory3}`} data={latestCourseData} />
+      <ZicopsCarousel title={`Courses in ${parentOfSubcategory4}`} data={latestCourseData} />
+      <ZicopsCarousel title={`Courses in ${parentOfSubcategory5}`} data={latestCourseData} />
+      <ZicopsCarousel title="Slow and Steady Courses" data={latestCourseData} />
+      <ZicopsCarousel title="Explore Other Courses" data={latestCourseData} />
+      {/* <ZicopsCarousel title="Most Popular Courses in Zicops" data={sliderImages} />
       <ZicopsCarousel title="Suggested Learning paths" data={sliderImages} />
       <ZicopsCarousel
         title="See through resources"
         data={squareImages}
         type="square"
         slide={realSquare}
-      />
-      <ZicopsCarousel title="See through courses" data={circleImages} type="circle" />
+      /> */}
+      {/* <ZicopsCarousel title="See through courses" data={circleImages} type="circle" /> */}
 
-      <BigCardSlider title="Categories and Subcategories" data={squareImages} slide={smallSquare} />
-      <div style={{ marginTop: '-60px' }}>
+      {/* <BigCardSlider title="Categories and Subcategories" data={squareImages} slide={smallSquare} /> */}
+      {/* <div style={{ marginTop: '-60px' }}>
         <BigCardSlider title="" data={circleImages} slide={smallSquare} />
-      </div>
-      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
+      </div> */}
+      {/* <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
       <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
       <OneCardSlider title="Featured Events" data={sliderImages} slide={one} />
       <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
       <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
-      <ZicopsCarousel title="Full Stack Development" data={sliderImages} />
+      <ZicopsCarousel title="Full Stack Development" data={sliderImages} /> */}
 
-      <RoundCardSlider title="Upcoming Webinars & Podcasts" data={circleImages} />
+      {/* <RoundCardSlider title="Upcoming Webinars & Podcasts" data={circleImages} />
 
       <ZicopsCarousel title="Available Webinars" data={sliderImages} />
       <ZicopsCarousel title="Cloud Computing" data={sliderImages} />
@@ -240,7 +272,7 @@ export default function Home() {
       <ZicopsCarousel title="Distance Learning" data={sliderImages} />
       <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} />
       <ZicopsCarousel title="Distance Learning" data={sliderImages} />
-      <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} />
+      <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} /> */}
       {/* <Link href="/courses">
       <a>Courses</a>
       </Link> */}

@@ -19,7 +19,7 @@ import { getUserData } from './loggeduser.helper';
 //   //recoil states
 //   const userDataAbout = useRecoilValue(UserStateAtom);
  
-//   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  // const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
 //   // local state
 //   const [userAboutData, setUserAboutData] = useState(getUserObject());
