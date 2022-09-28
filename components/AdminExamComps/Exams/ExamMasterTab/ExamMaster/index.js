@@ -33,7 +33,7 @@ export default function ExamMaster() {
 
   const router = useRouter();
   const examId = router?.query?.examId;
-  const isPreview = router.query?.isPreview || router.asPath?.includes('zicops-exam') || false;
+  const isPreview = router.query?.isPreview || router.asPath?.includes('view') || false;
 
   const { getTotalMarks, saveExamData } = useHandleExamTab();
 
