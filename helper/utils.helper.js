@@ -209,3 +209,15 @@ export function getFileNameFromUrl(fileUrl) {
 
   return decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop());
 }
+
+// https://stackoverflow.com/a/23013574
+export function downloadFileFromURI(uri, downloadFileName) {
+  var link = document.createElement('a');
+
+  link.setAttribute('download', downloadFileName);
+  link.href = uri;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  return true;
+}

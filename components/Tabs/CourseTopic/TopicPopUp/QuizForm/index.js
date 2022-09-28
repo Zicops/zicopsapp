@@ -1,6 +1,7 @@
 import InputWithCheckbox from '@/common/InputWithCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import RangeSlider from '@/components/common/FormComponents/RangeSlider';
+import UploadForm from '@/components/common/FormComponents/UploadForm';
 import { useRecoilValue } from 'recoil';
 import { QuizAtom, QuizMetaDataAtom } from '../../../../../state/atoms/module.atoms';
 import Bar from '../../../../common/Bar';
@@ -212,6 +213,14 @@ export default function QuizForm({ courseId, topicId }) {
                     ))}
                 </div>
               </>
+            )}
+
+            {newQuiz?.formType === 'upload' && (
+              <UploadForm
+                leftGapClass="w-16"
+                filePath={'/templates/question-bank-template.xlsx'}
+                customStyles={{ gap: '25px', margin: '30px 0px' }}
+              />
             )}
 
             {newQuiz?.formType === 'select' && (
