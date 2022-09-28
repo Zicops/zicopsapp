@@ -4,8 +4,8 @@ import styles from '../../learnerUserProfile.module.scss';
 export default function LeaderboardTab() {
   const user = {
     name: 'Sonali Kokalki',
-    bestRank: 2,
-    currentRank: 5,
+    bestRank: '02',
+    currentRank: '05',
     rankGained: false,
     isTopThree: true
   };
