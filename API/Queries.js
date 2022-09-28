@@ -35,13 +35,19 @@ export const GET_SUB_CATS_BY_CAT = gql`
 `;
 
 export const GET_LATEST_COURSES = gql`
-  query LatestCourses($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query LatestCourses(
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $filters: CoursesFilters
+  ) {
     latestCourses(
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
       status: SAVED
+      filters: $filters
     ) {
       courses {
         id
