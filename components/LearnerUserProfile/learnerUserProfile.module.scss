@@ -606,3 +606,77 @@
 
   color: $white;
 }
+
+.LeaderboardTabContainer {
+  height: 500px;
+  overflow-y: scroll;
+  padding-right: 15px;
+  padding: 20px;
+  overflow: hidden;
+    .searchbar {
+      padding: '0px 5px 15px'
+    }
+  .leaderboardHeader{
+    border-bottom: 1px solid $darkThree;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    text-align: center;
+    .name{
+      text-align: start;
+      flex: 2;
+    }
+    .brank{
+      flex: 1;
+    }
+    .crank{
+      display: flex;
+      justify-content: flex-end;
+      flex: 1;
+    }
+  }
+  .leaderboardBody{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    margin: 10px 0;
+    background-color: $black;
+    border-radius: 5px;
+    text-align: center;
+    .profile{
+      display: flex;
+      flex: 2;
+      gap: 10px;
+      align-items: center;
+      img{
+        width: 35px;
+        height: 35px;
+      }
+    }
+    .brankText{
+      flex: 1;
+    }
+    .crankBlock{
+      display: flex;
+      flex: 1;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+      .crankImg {
+        height: 25px;
+        width: 25px;
+        img{
+          height: 100%;
+          width: 100%;
+        }
+      }
+      .crankArrow {
+        height: 25px;
+        width: 25px;
+      }
+    } 
+  }
+}
