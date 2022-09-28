@@ -1,5 +1,5 @@
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersEmailIdAtom } from '@/state/atoms/users.atom';
+import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { INVITE_USERS, userClient } from 'API/UserMutations';
 import { useRouter } from 'next/router';
