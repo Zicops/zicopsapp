@@ -118,7 +118,8 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
-      return router.push('/account-setup');
+      return;
+      // return router.push('/account-setup');
     }
 
     //updating atom after first mutation call
@@ -149,6 +150,7 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
@@ -179,6 +181,7 @@ export default function useHandleAddUserDetails() {
     });
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
@@ -223,6 +226,7 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
@@ -255,6 +259,7 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
@@ -279,7 +284,7 @@ export default function useHandleAddUserDetails() {
       status: userAboutData?.status || 'Active',
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
-      phone: `+${userAboutData?.phone}`,
+      phone: userAboutData?.phone,
 
       gender: userAboutData?.gender,
       photo_url: userAboutData?.photo_url,
@@ -306,15 +311,15 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
     const data = res?.data?.updateUser;
-    console.log(data);
-    if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
-    setUserDataAbout((prevValue) => ({ ...prevValue, ...data }));
-
-    setTimeout(sessionStorage.setItem('loggedUser', JSON.stringify(userAboutData)), 500);
+    const _userData = { ...userAboutData, ...data };
+    // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
+    setUserDataAbout(_userData);
+    sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
 
     return isError;
   }
