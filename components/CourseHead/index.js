@@ -9,7 +9,12 @@ import Sitemap from '../common/AdminHeader/Sitemap';
 import PopUp from '../common/PopUp';
 import styles from './courseHead.module.scss';
 
-export default function CourseHead({ title, hideCourseTypeDropdown = false, hidePlus = false }) {
+export default function CourseHead({
+  title,
+  hideCourseTypeDropdown = false,
+  hidePlus = false,
+  handlePlusClick = null
+}) {
   const [showSitemap, setShowSitemap] = useState(false);
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
 
@@ -66,7 +71,7 @@ export default function CourseHead({ title, hideCourseTypeDropdown = false, hide
             src="/images/plus_big.png"
             className="rightside_icon"
             alt=""
-            onClick={gotoAddcourse}
+            onClick={handlePlusClick ? handlePlusClick : gotoAddcourse}
           />
         )}
         <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
