@@ -177,6 +177,10 @@
   input[type='radio']:checked ~ .radiomark {
     background-color: $primary;
   }
+
+  .disabled {
+    border-color: $darkThree;
+  }
 }
 
 .disabledInput {

@@ -99,6 +99,9 @@ export default function QuizForm({ courseId, topicId }) {
                 label="Create Quiz"
                 name="formType"
                 value={'create'}
+                isDisabled={
+                  !(newQuiz?.name && (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec))
+                }
                 isChecked={newQuiz?.formType === 'create'}
                 changeHandler={handleQuizInput}
               />
@@ -108,6 +111,9 @@ export default function QuizForm({ courseId, topicId }) {
                 name="formType"
                 value={'upload'}
                 isChecked={newQuiz?.formType === 'upload'}
+                isDisabled={
+                  !(newQuiz?.name && (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec))
+                }
                 changeHandler={handleQuizInput}
               />
               <LabeledRadioCheckbox
@@ -116,6 +122,9 @@ export default function QuizForm({ courseId, topicId }) {
                 name="formType"
                 value={'select'}
                 isChecked={newQuiz?.formType === 'select'}
+                isDisabled={
+                  !(newQuiz?.name && (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec))
+                }
                 changeHandler={handleQuizInput}
               />
             </div>
