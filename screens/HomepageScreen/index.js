@@ -68,17 +68,17 @@ export default function HomepageScreen() {
   useEffect(async () => {
     const subcatArr = await getUserPreferences();
     const activeSubcategories = subcatArr?.filter(
-      (item) => item.is_active === true && item.is_base !== true
+      (item) => item?.is_active === true && item?.is_base !== true
     );
-    const baseSubcategoryObj = subcatArr?.filter((item) => item.is_base === true)[0];
+    const baseSubcategoryObj = subcatArr?.filter((item) => item?.is_base === true)[0];
     setBaseSubcategory(baseSubcategoryObj?.name);
     setParentOfBaseSubcategory(baseSubcategoryObj?.category);
     setActiveSubcatArr(activeSubcategories);
 
     const userCourseData = await getUserCourseData();
     let ucidArray = [];
-    userCourseData.map((uc) => {
-      ucidArray.push(uc.id);
+    userCourseData?.map((uc) => {
+      ucidArray?.push(uc.id);
     });
 
     setOngoingCourses(
