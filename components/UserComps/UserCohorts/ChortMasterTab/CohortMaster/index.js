@@ -21,6 +21,7 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { userClient } from '@/api/UserMutations';
 import useCohortUserData from '../Logic/useCohortUserData';
 import { getUsersForCohort } from '../Logic/cohortMaster.helper';
+import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 
 const CohortMaster = ({ isEdit = false }) => {
   const {  getCohortManager } = useCohortUserData();
@@ -54,9 +55,21 @@ const CohortMaster = ({ isEdit = false }) => {
     setCohortData(getCohortMasterObject({}));
   }, []);
 
+  function formatUsers(userArr=null){
+    if(!userArr?.length) return setToastMsg({type:'danger',message:'No user found!'});
+    const data = userArr?.map((item)=>({
+     value: item?.full_name,
+     label: item?.full_name,
+     id: item?.id
+    }))
+    return data;
+  }
+
   useEffect(async () => {
     if (!isEdit) {
-      const managerList = await getUsersForCohort();
+      const userList = await getUsersForAdmin();
+      if(userList?.error) return setToastMsg({type:'danger',message:userList?.error}) 
+      const managerList = formatUsers(userList);
       return setCohortManager([...managerList]);
     }
     const { cohortId } = router?.query;
@@ -68,8 +81,10 @@ const CohortMaster = ({ isEdit = false }) => {
       userClient
     );
 
-    const managerList = await getUsersForCohort();
-    if(managerList?.error) return setToastMsg({type:'danger',message:managerList?.error}) 
+    const userList = await getUsersForAdmin();
+    // console.log(managerList,'fs');
+    if(userList?.error) return setToastMsg({type:'danger',message:userList?.error}) 
+    const managerList = formatUsers(userList);
     setCohortManager([...managerList]);
 
     const cohortDetail = resCohort?.getCohortDetails;

@@ -5,11 +5,16 @@
   min-width: 70px;
   font-size: 13px;
   padding: 8px 5px;
-  border-radius: 3px;
+  border-radius: 3px; 
   opacity: 0.8;
   cursor: pointer;
   &:hover {
     opacity: 1;
+  }
+  &:disabled {
+    background-color: $darkThree !important;
+    border-color: $darkThree !important;
+    cursor: no-drop;
   }
 }
 

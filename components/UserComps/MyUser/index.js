@@ -1,13 +1,17 @@
-import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
+import { GET_USERS_FOR_ADMIN, GET_USER_DETAIL, GET_USER_LSP_MAP_BY_LSPID, userQueryClient } from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { getCurrentEpochTime } from '@/helper/common.helper';
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
 export default function MyUser({ getUser }) {
   const [userId, setUserId] = useState([]);
@@ -28,29 +32,14 @@ export default function MyUser({ getUser }) {
 
   useEffect(async () => {
     getUser(userId);
-    const currentTime = new Date().getTime();
 
-    const sendData = {
-      publish_time: Math.floor(currentTime / 1000),
-      pageCursor: '',
-      pageSize: 100
-    };
-    const res = await loadUsersData({ variables: sendData }).catch((err) => {
-      console.log(err);
-      return setToastMsg({ type: 'danger', message: `${err}` });
-    });
-    const usersData = res?.data?.getUsersForAdmin?.users;
-    if (usersData)
-      var uData = usersData.map((item) => ({
-        id: item?.id,
-        email: item?.email,
-        first_name: item?.first_name,
-        last_name: item?.last_name,
-        status: item?.status,
-        role: item?.role
-      }));
-    // console.log(uData);
-    setData([...uData],setLoading(false));
+    setLoading(true);
+    const usersData = await getUsersForAdmin();
+    console.log(usersData);
+    if(usersData?.error) return setToastMsg({type:'danger',message:`${usersData?.error}`});
+    setData([...usersData],setLoading(false))
+    return;
+    
   }, [userId]);
 
   const columns = [
@@ -128,7 +117,7 @@ export default function MyUser({ getUser }) {
           <EllipsisMenu
             buttonArr={[
               { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
-              { handleClick: () => alert(`Edit ${params.id}`) },
+              // { handleClick: () => alert(`Edit ${params.id}`) },
               { text: 'Disable', handleClick: () => alert(`Disable ${params.id}`) }
             ]}
           />

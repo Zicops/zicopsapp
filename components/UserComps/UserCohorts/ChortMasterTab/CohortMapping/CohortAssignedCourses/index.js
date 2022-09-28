@@ -1,7 +1,7 @@
 import CoursesAccHead from '@/components/UserProfile/CoursesAccHead';
 import CardContainer from '@/components/LearnerUserProfile/UserCoursesTab/CardContainer';
 
-const CohortAssignedCourses = ({ section, handleSubmit = () => {}, isRemove = false }) => {
+const CohortAssignedCourses = ({ section, handleSubmit = () => {}, isRemove = false , isLoading = false }) => {
   return (
     <>
       <CardContainer
@@ -13,6 +13,7 @@ const CohortAssignedCourses = ({ section, handleSubmit = () => {}, isRemove = fa
         buttonText={'Remove'}
         handleSubmit={handleSubmit}
         isRemove={isRemove}
+        isLoading={isLoading}
       />
     </>
   );

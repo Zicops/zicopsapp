@@ -1,7 +1,7 @@
 import CoursesAccHead from '@/components/UserProfile/CoursesAccHead';
 import CardContainer from '@/components/LearnerUserProfile/UserCoursesTab/CardContainer';
 
-const AllCourses = ({ section, handleSubmit = () => {} }) => {
+const AllCourses = ({ section, handleSubmit = () => {} , isLoading = false}) => {
   return (
     <>
       <CoursesAccHead />
@@ -13,6 +13,7 @@ const AllCourses = ({ section, handleSubmit = () => {} }) => {
         courseData={section.data}
         buttonText={'Assign'}
         handleSubmit={handleSubmit}
+        isLoading={isLoading}
       />
     </>
   );

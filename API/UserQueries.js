@@ -64,6 +64,31 @@ export const GET_USERS_FOR_ADMIN = gql`
   }
 `;
 
+export const GET_USER_LSP_MAP_BY_LSPID = gql`
+query GetUserLspMapsByLspId($lsp_id:String!,$pageCursor:String,$Direction:String,$pageSize:Int ){
+  getUserLspMapsByLspId(
+    lsp_id: $lsp_id
+    pageCursor: $pageCursor
+    Direction: $Direction
+    pageSize: $pageSize
+  ) {
+    user_lsp_maps {
+      user_lsp_id
+      user_id
+      lsp_id
+      status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+    pageCursor
+    direction
+    pageSize
+  }
+}
+`
+
 export const GET_USER_COURSE_MAPS = gql`
   query GetUserCourseMaps(
     $user_id: String!

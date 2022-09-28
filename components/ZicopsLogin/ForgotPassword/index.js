@@ -15,15 +15,41 @@ const ForgotPassword = ({ setPage }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
   const [sendEmail, setSendEmail] = useState('');
+  const [loading , setLoading] = useState(false);
 
   function handleEmail(e, setState) {
     setState(e.target.value);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const checkEmail = isEmail(sendEmail);
     if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
+    const sendData = {
+      email:sendEmail
+    }
+    // const res = fetch('https://demo.zicops.com/um/reset-password' , sendData)
+
+    setLoading(true);
+
+    const data = await fetch("https://demo.zicops.com/um/reset-password", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(sendData),
+  })
+
+  console.log(data?.status,'status');
+  if(data?.status === 200){
+    setLoading(false);
+    router?.push('/login');
+    return setToastMsg({type:'success',message:`Send reset password mail to email: ${sendEmail}`});
   }
+
+  setLoading(false);
+  return ;
+
+}
 
   return (
     <>
@@ -52,10 +78,10 @@ const ForgotPassword = ({ setPage }) => {
           />
 
           <div className="change_buttons">
-            <LoginButton title={'Send Email'} handleClick={handleSubmit} />
+            <LoginButton title={'Send Email'} handleClick={handleSubmit} isDisabled={loading}/>
           </div>
           <div className={`${styles.small_text}`}>
-            Did not received mail to reset password?<p>Resend</p>
+            Did not received mail to reset password?<p onClick={handleSubmit}>Resend</p>
           </div>
         </div>
       </ZicopsLogin>

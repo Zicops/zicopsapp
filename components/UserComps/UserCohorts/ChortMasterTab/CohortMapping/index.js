@@ -98,6 +98,11 @@ const CohortMapping = () => {
     const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId,{...selectedCourse,endDate:endDate});
     if(!isCourseAssigned) return setToastMsg({type:'danger',message:'error while assigning course to users!'})
     setIsAssignPopUpOpen(false);
+    setCourseAssignData({
+      expectedCompletionDays: null,
+      isMandatory: false,
+      isCourseAssigned: false
+    });
     return setLoading(false);
   }
 
@@ -168,12 +173,15 @@ const CohortMapping = () => {
       }
       return;
     }
+    setLoading(true);
     const data = await getCohortCourses(router?.query?.cohortId);
-    if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
+    if (data?.error) {setLoading(false);setToastMsg({ type: 'danger', message: data?.error }); return;}
     if (data?.allCourses && data?.assignedCourses) {
       setCourseData([...data?.allCourses]);
+      setLoading(false);
       return setAssignedCourses([...data?.assignedCourses]);
     }
+    setLoading(false);
     return setCourseData([...data?.allCourses]);
   }, [router?.query]);
   return (
@@ -214,10 +222,11 @@ const CohortMapping = () => {
           section={courseSections[0]}
           handleSubmit={handleAssign}
           isRemove={true}
+          isLoading={loading}
         />
       )}
       {page === 'Assign Courses' && (
-        <AllCourses section={courseSections[1]} handleSubmit={handleAssign} />
+        <AllCourses section={courseSections[1]} handleSubmit={handleAssign} isLoading={loading}/>
       )}
       <PopUp
         // title="Course Mapping Configuration"
