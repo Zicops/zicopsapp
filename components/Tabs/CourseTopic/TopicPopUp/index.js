@@ -178,6 +178,7 @@ export default function TopicPopUp({
                   {/* subtitles accordion */}
                   <Accordion
                     title="Subtitles"
+                    isDisabled={!filteredTopicContent?.length}
                     content={
                       <SubtitleForm
                         topicId={editTopic?.id || ''}
@@ -187,11 +188,16 @@ export default function TopicPopUp({
                   />
 
                   {/* binge */}
-                  <Accordion title="Binge it" content={<BingeForm topicVideo={topicVideo} />} />
+                  <Accordion
+                    title="Binge it"
+                    isDisabled={!filteredTopicContent?.length}
+                    content={<BingeForm topicVideo={topicVideo} />}
+                  />
 
                   {/* quiz */}
                   <Accordion
                     title="Quiz"
+                    isDisabled={!filteredTopicContent?.length}
                     content={
                       <QuizForm
                         topicId={editTopic?.id || ''}
@@ -204,6 +210,7 @@ export default function TopicPopUp({
                   {/* resources */}
                   <Accordion
                     title="Resources"
+                    isDisabled={!filteredTopicContent?.length}
                     content={
                       <ResourcesForm
                         topicId={editTopic?.id || ''}

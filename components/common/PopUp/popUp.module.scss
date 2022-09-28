@@ -81,3 +81,9 @@
   color: #ffffff;
   background-color: #1a1a1a;
 }
+
+.add_btn {
+  border-color: $primary;
+  color: $primary;
+  box-shadow: 0px 0px 10px 0px $primary;
+}

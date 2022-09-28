@@ -1,4 +1,4 @@
-import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
+import { data, getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
 import { useRecoilValue } from 'recoil';
@@ -6,7 +6,9 @@ import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
 import styles from '../questionPaperPreview.module.scss';
 
 const QuestionPaperTop = ({ setIsQuestion }) => {
-  const learnerExamData = useRecoilValue(LearnerExamAtom);
+  let learnerExamData = useRecoilValue(LearnerExamAtom);
+  if (!learnerExamData?.examData?.id) learnerExamData = data;
+  // console.log(learnerExamData);
 
   return (
     <>

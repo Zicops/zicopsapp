@@ -10,6 +10,7 @@ export default function BrowseAndUpload({
   previewData,
   handleRemove,
   isActive,
+  isError,
   acceptedTypes = '.jpeg, .png, .gif',
   hidePreviewBtns = false
 }) {
@@ -19,7 +20,10 @@ export default function BrowseAndUpload({
   return (
     <>
       <div className={`${styles.uploadBtnWrapper}`}>
-        <button className={`w-100 ${styles.btn} ${isActive ? styles.isActive : ''}`}>
+        <button
+          className={`w-100 ${styles.btn} ${isActive ? styles.isActive : ''} ${
+            isError ? 'error' : ''
+          }`}>
           <img src="/images/upload.png" alt="" />
           Browse & upload
         </button>

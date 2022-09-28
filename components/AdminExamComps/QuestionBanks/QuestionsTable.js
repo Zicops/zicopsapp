@@ -136,7 +136,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         data={qbQuestions}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
-        tableHeight="70vh"
+        tableHeight="60vh"
         loading={loading}
       />
 

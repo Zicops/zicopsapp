@@ -1,3 +1,4 @@
+import QuestionBankData from '@/components/AdminExamComps/QuestionBanks/QuestionBankData';
 import { useRecoilState } from 'recoil';
 import AddQuestionBank from '../../../../components/AdminExamComps/QuestionBanks/AddQuestionBank';
 import QuestionsTable from '../../../../components/AdminExamComps/QuestionBanks/QuestionsTable';
@@ -22,13 +23,14 @@ export default function MyQuestionBanks() {
       <MainBody>
         <AdminHeader
           title="Design Basics"
-          isAddShown={true}
+          // isAddShown={true}
           // pageRoute="/admin/exams/question-bank"
-          handleClickForPlus={() => udpatePopUpState(true)}
+          // handleClickForPlus={() => udpatePopUpState(true)}
           tooltipTitle="Add Questions"
         />
         <MainBodyBox>
-          <QuestionsTable />
+          {/* <QuestionsTable /> */}
+          <QuestionBankData isEdit={false} />
         </MainBodyBox>
       </MainBody>
 
