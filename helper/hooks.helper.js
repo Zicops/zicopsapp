@@ -1,5 +1,5 @@
 import { GET_COURSE } from '@/api/Queries';
-import { UPDATE_USER, userClient } from '@/api/UserMutations';
+import { UPDATE_USER, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS,
   GET_USER_COURSE_PROGRESS,
@@ -351,6 +351,80 @@ export function useUpdateUserAboutData() {
     newUserAboutData,
     setNewUserAboutData,
     updateAboutUser,
+    isFormCompleted
+  };
+}
+
+export function getUserOrgMapObject(data = {}) {
+  return {
+    user_organization_id: data?.user_organization_id || null,
+    user_id: data?.user_id || null,
+    user_lsp_id: data?.user_lsp_id || null,
+
+    organization_id: data?.organization_id || null,
+    organization_role: data?.organization_role || '',
+    employee_id: data?.employee_id || '',
+
+    is_active: data?.is_active || false,
+    created_by: data?.created_by || '',
+    updated_by: data?.updated_by || '',
+    created_at: data?.created_at || '',
+    updated_at: data?.updated_at || ''
+  };
+}
+
+export function useUpdateUserOrgData() {
+  //have to delete updateAbout later
+  const [updateOrg, { error: updateOrgErr }] = useMutation(UPDATE_USER_ORGANIZATION_MAP, {
+    client: userClient
+  });
+
+  // recoil
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  // local state
+  const [newUserOrgData, setNewUserOrgData] = useState(getUserOrgMapObject({ is_active: true }));
+  const [isFormCompleted, setIsFormCompleted] = useState(false);
+
+  useEffect(() => {
+    setIsFormCompleted(newUserOrgData?.organization_role && newUserOrgData?.employee_id);
+  }, [newUserOrgData]);
+
+  async function updateUserOrg() {
+    const sendUserData = {
+      user_organization_id: newUserOrgData?.user_organization_id || null,
+      user_id: newUserOrgData?.user_id || null,
+      user_lsp_id: newUserOrgData?.user_lsp_id || null,
+
+      organization_id: newUserOrgData?.organization_id || null,
+      organization_role: newUserOrgData?.organization_role || '',
+      employee_id: newUserOrgData?.employee_id || '',
+
+      is_active: newUserOrgData?.is_active || false
+    };
+
+    console.log(sendUserData, 'updateAboutUser');
+
+    let isError = false;
+    const res = await updateOrg({ variables: sendUserData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if (isError || updateOrgErr)
+      return setToastMsg({ type: 'danger', message: 'Update User Org Error' });
+
+    const data = res?.data?.updateUser;
+    const _userData = { ...newUserOrgData, ...data };
+    setUserOrgData(_userData);
+    return _userData;
+  }
+
+  return {
+    newUserOrgData,
+    setNewUserOrgData,
+    updateUserOrg,
     isFormCompleted
   };
 }

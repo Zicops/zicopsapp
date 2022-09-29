@@ -1,14 +1,44 @@
+import Button from '@/components/common/Button';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import { getUserOrgMapObject, useUpdateUserOrgData } from '@/helper/hooks.helper';
+import { useEffect, useState } from 'react';
 import styles from '../userProfile.module.scss';
 
-const ProfileOrganizationDetail = ({ currentUserData }) => {
-  // console.log(currentUserData);
-  const userOrganizationData = {
-    organization: 'Zicops',
-    organization_unit: 'Zicops,India',
-    learning_space_role: currentUserData?.role || 'Learner',
-    role_in_organization: currentUserData?.organization_role,
-    employee_id: currentUserData?.employee_id
-  };
+const ProfileOrganizationDetail = ({ currentUserData, setCurrentUserData }) => {
+  const [isEditData, setIsEditData] = useState(null);
+  const { newUserOrgData, setNewUserOrgData, updateUserOrg } = useUpdateUserOrgData();
+
+  useEffect(() => {
+    if (isEditData) return;
+
+    setNewUserOrgData(getUserOrgMapObject(currentUserData));
+  }, [currentUserData, isEditData]);
+
+  const userOrganizationData = [
+    { id: 1, title: 'Organization', key: 'organization', value: 'Zicops' },
+    { id: 2, title: 'Organization Unit', key: 'organization_unit', value: 'Zicops, India' },
+    {
+      id: 3,
+      title: 'Learning Space Role',
+      key: 'learning_space_role',
+      value: currentUserData?.role || 'Learner'
+    },
+    {
+      id: 4,
+      title: 'Role In Organization',
+      key: 'organization_role',
+      value: currentUserData?.organization_role,
+      isEdit: true
+    },
+    {
+      id: 5,
+      title: 'Employee Id',
+      key: 'employee_id',
+      value: currentUserData?.employee_id,
+      isEdit: true
+    }
+  ];
+
   return (
     <>
       <div className={`${styles.profileDetailsContainer}`}>
@@ -20,16 +50,65 @@ const ProfileOrganizationDetail = ({ currentUserData }) => {
           />
         </div>
         <div className={`${styles.profileDetails}`}>
-          {Object.keys(userOrganizationData).map((item, i) => {
-            const label = item.charAt(0).toUpperCase() + item.slice(1);
-            const labelText = label.split('_').join(' ');
+          {userOrganizationData?.map((item, i) => {
             return (
-              <div className={`${styles.profileDetailsField}`}>
-                <div key={i} className={`${styles.label}`}>
-                  {labelText}
-                </div>
+              <div key={item?.id} className={`${styles.profileDetailsField}`}>
+                <div className={`${styles.label}`}>{item?.title}</div>
                 <div className={`${styles.colon}`}> : </div>
-                <div className={`${styles.value}`}>{userOrganizationData[item]}</div>
+
+                <div className={`${styles.value}`}>
+                  {isEditData === item?.id ? (
+                    <LabeledInput
+                      styleClass={`${styles.inputField}`}
+                      inputOptions={{
+                        inputName: item?.key,
+                        placeholder: `Enter ${item.title}`,
+                        value: newUserOrgData[item?.key],
+                        maxLength: 60
+                      }}
+                      changeHandler={(e) =>
+                        setNewUserOrgData({ ...newUserOrgData, [item?.key]: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <>{item?.value}</>
+                  )}
+                </div>
+
+                {item?.isEdit && (
+                  <div className={`${styles.submitBtnContainer}`}>
+                    {isEditData === item.id ? (
+                      <>
+                        <div className={`${styles.userInfoButtonContainer}`}>
+                          <Button
+                            text={'Update'}
+                            isDisabled={!newUserOrgData[item?.key]}
+                            clickHandler={async () => {
+                              const _userData = await updateUserOrg();
+                              setCurrentUserData({ ...currentUserData, ..._userData });
+
+                              setIsEditData(false);
+                            }}
+                            styleClass={styles.updateBtn}
+                          />
+                          {/* <Button text={'Cancel'} clickHandler={toggleEditable} /> */}
+                        </div>
+
+                        <div
+                          className={`${styles.editFillIcon}`}
+                          onClick={() => setIsEditData(null)}>
+                          <img src="/images/svg/cross.svg" />
+                        </div>
+                      </>
+                    ) : (
+                      <div
+                        className={`${styles.editFillIcon}`}
+                        onClick={() => setIsEditData(item?.id)}>
+                        <img src="/images/svg/edit.svg" />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}
