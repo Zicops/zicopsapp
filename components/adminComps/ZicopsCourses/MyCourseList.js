@@ -4,6 +4,8 @@ import ZicopsTable from '../../common/ZicopsTable';
 import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { useState, useEffect } from 'react';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
+import { useRecoilValue } from 'recoil';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 
 const columns = [
   {
@@ -61,6 +63,7 @@ function editCourse(courseId) {
 
 function MyLatestCourseList({ time }) {
   const [pageSize, setPageSize] = useState(6);
+  const courseType = useRecoilValue(CourseTypeAtom);
 
   useEffect(() => {
     const screenWidth = window.screen.width;
@@ -76,7 +79,10 @@ function MyLatestCourseList({ time }) {
     variables: {
       publish_time: time,
       pageSize: 999999,
-      pageCursor: ''
+      pageCursor: '',
+      filters: {
+        Type: courseType
+      }
     },
     client: queryClient
   });

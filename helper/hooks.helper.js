@@ -16,7 +16,6 @@ import { loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import { LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
-
 // export default function useHandleUserDetails() {
 //   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
 //     client: userClient
@@ -147,12 +146,15 @@ export default function useUserCourseData() {
         added_by = assignedCoursesToUser[i]?.added_by;
         // setToastMsg({ type: 'danger', message: 'Added by not a json string' });
       }
+      // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
+      const courseDuraton = +courseRes?.getCourse?.duration * 60;
       allAssignedCourses.push({
         ...courseRes?.getCourse,
         completedPercentage: userProgressArr?.length ? courseProgress : '0',
         added_by: added_by,
         created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
-        expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY')
+        expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
+        timeLeft: courseDuraton - (courseDuraton * (courseDuraton || 0)) / 100
       });
     } // end of for loop
 
@@ -242,4 +244,195 @@ export default function useUserCourseData() {
   }
 
   return { getUserCourseData, getUserPreferences };
+}
+
+export function getUserAboutObject(data = {}) {
+  return {
+    id: data?.id || null,
+    first_name: data?.first_name || '',
+    last_name: data?.last_name || '',
+    status: data?.status || null,
+    role: data?.role || 'Learner',
+
+    //for now dont update email
+    email: data?.email || '',
+    phone: data?.phone || '',
+    phoneCode: data?.phoneCode || 'IN',
+    photo_url: data?.photo_url || null,
+    Photo: data?.Photo || null,
+    gender: data?.gender || null,
+
+    //only do isVerified true when users do its basic account setup
+    is_verified: data?.is_verified || false,
+    is_active: data?.is_active || false,
+    created_by: data?.created_by || '',
+    updated_by: data?.updated_by || '',
+    created_at: data?.created_at || null,
+    updated_at: data?.updated_at || null
+  };
+}
+
+export function useUpdateUserAboutData() {
+  //have to delete updateAbout later
+  const [updateAbout, { error: updateAboutErr }] = useMutation(UPDATE_USER, {
+    client: userClient
+  });
+
+  // recoil
+  const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  // local state
+  const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
+  const [isFormCompleted, setIsFormCompleted] = useState(false);
+
+  useEffect(() => {
+    let isPhValid = false;
+
+    if (newUserAboutData?.phone?.length > 10) {
+      isPhValid =
+        isPossiblePhoneNumber(
+          `${newUserAboutData?.phone || 123456}`,
+          newUserAboutData?.phoneCode
+        ) &&
+        isValidPhoneNumber(`${newUserAboutData?.phone || 123456}`, newUserAboutData?.phoneCode) &&
+        !validatePhoneNumberLength(
+          `${newUserAboutData?.phone || 123456}`,
+          newUserAboutData?.phoneCode
+        );
+    }
+
+    setIsFormCompleted(
+      newUserAboutData?.first_name &&
+        newUserAboutData?.last_name &&
+        newUserAboutData?.role &&
+        newUserAboutData?.email &&
+        isPhValid &&
+        newUserAboutData?.gender
+    );
+  }, [newUserAboutData]);
+
+  async function updateAboutUser() {
+    const sendUserData = {
+      id: newUserAboutData?.id,
+      first_name: newUserAboutData?.first_name,
+      last_name: newUserAboutData?.last_name,
+
+      status: newUserAboutData?.status || 'Active',
+      role: newUserAboutData?.role || 'Learner',
+      email: newUserAboutData?.email,
+      phone: newUserAboutData?.phone,
+
+      gender: newUserAboutData?.gender,
+      photo_url: newUserAboutData?.photo_url,
+
+      is_verified: true,
+      is_active: newUserAboutData?.is_active,
+
+      created_by: newUserAboutData?.created_by || 'Zicops',
+      updated_by: newUserAboutData?.updated_by || 'Zicops'
+    };
+
+    if (newUserAboutData?.Photo) sendUserData.Photo = newUserAboutData?.Photo;
+    // if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
+
+    console.log(sendUserData, 'updateAboutUser');
+
+    let isError = false;
+    const res = await updateAbout({ variables: sendUserData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if (isError || updateAboutErr)
+      return setToastMsg({ type: 'danger', message: 'Update User about Error' });
+
+    const data = res?.data?.updateUser;
+    const _userData = { ...newUserAboutData, ...data };
+    // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
+    setUserDataAbout(_userData);
+    sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
+  }
+
+  return {
+    newUserAboutData,
+    setNewUserAboutData,
+    updateAboutUser,
+    isFormCompleted
+  };
+}
+
+export function getUserOrgMapObject(data = {}) {
+  return {
+    user_organization_id: data?.user_organization_id || null,
+    user_id: data?.user_id || null,
+    user_lsp_id: data?.user_lsp_id || null,
+
+    organization_id: data?.organization_id || null,
+    organization_role: data?.organization_role || '',
+    employee_id: data?.employee_id || '',
+
+    is_active: data?.is_active || false,
+    created_by: data?.created_by || '',
+    updated_by: data?.updated_by || '',
+    created_at: data?.created_at || '',
+    updated_at: data?.updated_at || ''
+  };
+}
+
+export function useUpdateUserOrgData() {
+  //have to delete updateAbout later
+  const [updateOrg, { error: updateOrgErr }] = useMutation(UPDATE_USER_ORGANIZATION_MAP, {
+    client: userClient
+  });
+
+  // recoil
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  // local state
+  const [newUserOrgData, setNewUserOrgData] = useState(getUserOrgMapObject({ is_active: true }));
+  const [isFormCompleted, setIsFormCompleted] = useState(false);
+
+  useEffect(() => {
+    setIsFormCompleted(newUserOrgData?.organization_role && newUserOrgData?.employee_id);
+  }, [newUserOrgData]);
+
+  async function updateUserOrg() {
+    const sendUserData = {
+      user_organization_id: newUserOrgData?.user_organization_id || null,
+      user_id: newUserOrgData?.user_id || null,
+      user_lsp_id: newUserOrgData?.user_lsp_id || null,
+
+      organization_id: newUserOrgData?.organization_id || null,
+      organization_role: newUserOrgData?.organization_role || '',
+      employee_id: newUserOrgData?.employee_id || '',
+
+      is_active: newUserOrgData?.is_active || false
+    };
+
+    console.log(sendUserData, 'updateAboutUser');
+
+    let isError = false;
+    const res = await updateOrg({ variables: sendUserData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if (isError || updateOrgErr)
+      return setToastMsg({ type: 'danger', message: 'Update User Org Error' });
+
+    const data = res?.data?.updateUser;
+    const _userData = { ...newUserOrgData, ...data };
+    setUserOrgData(_userData);
+    sessionStorage.setItem('userAccountSetupData', JSON.stringify(_userData));
+    return _userData;
+  }
+
+  return {
+    newUserOrgData,
+    setNewUserOrgData,
+    updateUserOrg,
+    isFormCompleted
+  };
 }
