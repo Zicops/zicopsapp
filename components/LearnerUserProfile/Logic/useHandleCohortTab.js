@@ -82,6 +82,7 @@ export default function useHandleCohortTab() {
             userLspId:userLspId,
             courseId:addNewCourses[i]?.CourseId,
             courseType:addNewCourses[i]?.CourseType,
+            courseStatus:'not-started',
             addedBy:JSON.stringify({user_id:id , role:'Cohort'}),
             isMandatory:addNewCourses[i]?.isMandatory,
             endDate:endDate
