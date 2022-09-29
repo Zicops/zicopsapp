@@ -3,6 +3,7 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import UserButton from '@/components/common/UserButton';
 import ZicopsTable from '@/components/common/ZicopsTable';
+import useHandleCohortTab from '@/components/LearnerUserProfile/Logic/useHandleCohortTab';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -14,11 +15,12 @@ import styles from '../../../../userComps.module.scss';
 import addUserData from '../../Logic/addUserData';
 
 const AddUsers = ({ usersData = [] , popUpSetState = ()=>{} }) => {
-  const { addUserToCohort } = addUserData();
+  // const { addUserToCohort } = addUserData();
   const [cohortData , setCohortData] = useRecoilState(CohortMasterData);
   const selectedUsers = `${userId?.length}/${usersData?.length}`;
   const [userId, setUserId] = useState([]);
   const [data, setData] = useState([]);
+  const { addUserToCohort } = useHandleCohortTab();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
@@ -38,19 +40,23 @@ const AddUsers = ({ usersData = [] , popUpSetState = ()=>{} }) => {
     if (!userId?.length)
       return setToastMsg({ type: 'warning', message: 'Please be sure to add atleast one user' });
 
-    for (let i = 0; i < userId?.length; i++) {
-      const lspData = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId[i],lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
-      if(lspData?.error) return  setToastMsg({ type: 'danger', message: 'Error while loading lsp data' });
-      // console.log(lspData?.getUserLspByLspId,'lspData');
-      const sendData = {
-        id: userId[i],
-        user_lsp_id: lspData?.getUserLspByLspId?.user_lsp_id,
-        cohort_id: router?.query?.cohortId
-        // membership_status: 'Learner'
-      };
-      await addUserToCohort(sendData);
-      popUpSetState(false);
-    }
+    // for (let i = 0; i < userId?.length; i++) {
+    //   const lspData = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId[i],lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
+    //   if(lspData?.error) return  setToastMsg({ type: 'danger', message: 'Error while loading lsp data' });
+    //   // console.log(lspData?.getUserLspByLspId,'lspData');
+    //   const sendData = {
+    //     id: userId[i],
+    //     user_lsp_id: lspData?.getUserLspByLspId?.user_lsp_id,
+    //     cohort_id: router?.query?.cohortId
+    //     // membership_status: 'Learner'
+    //   };
+    //   await addUserToCohort(sendData);
+    // }
+    const cohortId = router?.query?.cohortId ? router?.query?.cohortId : cohortData?.id
+    const data = await addUserToCohort(userId,cohortId)
+    // console.log(data);
+    if(!data?.length) return setToastMsg({type:'danger',message:'error while adding user!'});
+    popUpSetState(false);
   }
 
   const columns = [
