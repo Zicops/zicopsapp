@@ -112,3 +112,17 @@ export function getCohortMasterObject(data = {}) {
     managers: []
   };
 }
+
+export const SelectedCohortDataAtom = atom({
+  key:'selectedCohortData',
+  default: getSelectedCohortDataObject()
+});
+
+export function getSelectedCohortDataObject(data={}){
+  return{
+    main: data?.main || null,
+    userCohort: data?.userCohort || null, 
+    cohrotCourses: data?.cohrotCourses || [],
+    cohortUsers:data?.cohortUsers || []
+  }
+}

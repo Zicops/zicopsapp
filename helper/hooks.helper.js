@@ -1,12 +1,8 @@
 import { GET_COURSE } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
-import {
-  GET_USER_COURSE_MAPS,
-  GET_USER_COURSE_PROGRESS,
-  GET_USER_LEARNINGSPACES_DETAILS,
-  GET_USER_PREFERENCES,
-  userQueryClient
-} from '@/api/UserQueries';
+
+import { GET_COHORT_USERS, GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, GET_USER_DETAIL, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_LSP_MAP_BY_LSPID, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
+
 import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/profilePreferencesHelper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getUserOrgObject, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -243,8 +239,86 @@ export default function useUserCourseData() {
     return prefArr;
   }
 
-  return { getUserCourseData, getUserPreferences };
+
+  async function getCohortUserData(cohortId = null, cohortDetails = false){
+    if (!cohortId) return;
+    const sendData = {
+      cohort_id: cohortId,
+      publish_time: getCurrentEpochTime(),
+      pageCursor: '',
+      pageSize: 99999
+    };
+    const resUsers = await loadQueryDataAsync(
+      GET_COHORT_USERS,
+      { ...sendData },
+      {},
+      userQueryClient
+    );
+    if (!resUsers?.getCohortUsers?.cohorts?.length) return;
+    const cohortUsers = resUsers?.getCohortUsers?.cohorts;
+    if (cohortDetails) return cohortUsers;
+    const cohortUserIds = cohortUsers?.map((item) => item?.user_id);
+    const cohortUserData = [];
+
+    const userListData = await loadQueryDataAsync(
+      GET_USER_DETAIL,
+      { user_id: cohortUserIds },
+      {},
+      userQueryClient
+    );
+    // console.log(userListData?.getUserDetails);
+    const userList = userListData?.getUserDetails;
+
+    for (let i = 0; i < userList?.length; i++) {
+      for (let j = 0; j < cohortUsers.length; j++) {
+        if (userList[i]?.id === cohortUsers[j]?.user_id) {
+          cohortUserData.push({
+            user_id: userList[i]?.id,
+            role: cohortUsers[j]?.role,
+            name: `${userList[i]?.first_name} ${userList[i]?.last_name}`,
+            email: userList[i]?.email,
+            first_name: userList[i]?.first_name,
+            last_name: userList[i]?.last_name,
+            membership_status:cohortUsers[j]?.membership_status,
+            photo_url:userList[i]?.photo_url || "",
+            joined_on:moment.unix(cohortUsers[j]?.created_at).format("DD/MM/YYYY")
+          });
+          break;
+        }
+      }
+    }
+    return cohortUserData;
+  }
+
+  async function getUsersForAdmin(){
+    const resLspUser = await loadQueryDataAsync(GET_USER_LSP_MAP_BY_LSPID,{lsp_id:LEARNING_SPACE_ID,pageCursor:'',Direction:'',pageSize:1000},{},userQueryClient);
+    if(resLspUser?.error) return {error:'Error while while loading lsp maps!'}
+
+    //removing duplicate values
+    const userIds = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps?.filter((v,i,a)=> a?.findIndex((v2)=> v2?.user_id === v?.user_id) === i)?.map((user) => user?.user_id);
+
+    const resUserDetails = await loadQueryDataAsync(GET_USER_DETAIL,{user_id:userIds},{},userQueryClient);
+
+    if(resUserDetails?.error) return  {error:'Error while while loading user detail!'} ;
+    
+    const userData = resUserDetails?.getUserDetails?.map((item) => ({
+      id: item?.id,
+      email: item?.email,
+      first_name: item?.first_name,
+      last_name: item?.last_name,
+      status: item?.status,
+      role: item?.role,
+      full_name: `${item?.first_name} ${item?.last_name}`  
+    })) ;
+
+    if(!userData?.length) return {error:'No users found!'};
+    return userData;
 }
+  
+  return {getUserCourseData,getUserPreferences,getCohortUserData,getUsersForAdmin}
+}
+
+
 
 export function getUserAboutObject(data = {}) {
   return {
@@ -436,3 +510,4 @@ export function useUpdateUserOrgData() {
     isFormCompleted
   };
 }
+

@@ -82,6 +82,7 @@ const CoursesAccordian = () => {
       const courseArray = dataCourse.filter((item) => item.id !== userCourseData?.id);
       setDataCourse([...courseArray]);
       setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+      setLoading(false)
       await loadAssignedCourseData();
       return setIsAssignPopUpOpen(false);
     }
@@ -108,7 +109,8 @@ const CoursesAccordian = () => {
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
     const courseArray = dataCourse.filter((item) => item.id !== sendData?.courseId);
     setDataCourse([...courseArray]);
-    setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+    setCourseAssignData({ ...courseAssignData, isCourseAssigned: true ,endDate: new Date(),
+      isMandatory: false  });
     await loadAssignedCourseData();
     setIsAssignPopUpOpen(false);
     return setLoading(false);
@@ -445,7 +447,7 @@ const CoursesAccordian = () => {
               <UserButton
                 text={'Save'}
                 type={'button'}
-                isDisabled={addCoueseLoading||loading}
+                isDisabled={loading}
                 clickHandler={() => {
                   handleSubmit();
                 }}
