@@ -9,7 +9,7 @@ export default function DurationFooter({ courseData, isAdded }) {
       {isAdded ? (
         <p>
           Added on{' '}
-          {moment(getDateTimeFromUnix(courseData?.created_at)).format('DD-MM-YYYY') || '22-06-2022'}
+          {courseData?.created_at|| '22-06-2022'}
         </p>
       ) : (
         <p>Expected Completion by {courseData?.expected_completion || '22-06-2022'}</p>

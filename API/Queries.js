@@ -793,6 +793,7 @@ export const GET_COHORT_COURSES = gql`
       CreatedBy
       UpdatedBy
       IsActive
+      ExpectedCompletion
     }
   }
 `;
