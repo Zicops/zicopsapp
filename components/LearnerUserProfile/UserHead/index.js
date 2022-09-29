@@ -62,9 +62,9 @@ const UserHead = () => {
 
   return (
     <div className={`${styles.userHead}`}>
-      <div className={`${styles.editIcon}`}>
+      {/* <div className={`${styles.editIcon}`}>
         <img src="/images/svg/edit.svg" />
-      </div>
+      </div> */}
       <div className={`${styles.userImageContainer}`}>
         <div className={`${styles.userImage}`}>
           <img
