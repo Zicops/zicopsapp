@@ -1,12 +1,9 @@
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { LANGUAGES } from '@/helper/constants.helper';
-import { loadCatSubCat } from '@/helper/data.helper';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
-import { getQueryData } from '../../../helper/api.helper';
 import { changeHandler } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
@@ -19,15 +16,14 @@ import useHandleTabs from '../Logic/useHandleTabs';
 export default function CourseMaster() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
-  const { data } = getQueryData(GET_CATS_N_SUB_CATS);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
 
   // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
   // update sub cat based on cat
-  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, fullCourse?.category);
+  // loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, fullCourse?.category);
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat(fullCourse?.category);
 
   // const allCatOptions = [];
   // data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
@@ -35,7 +31,7 @@ export default function CourseMaster() {
     inputName: 'category',
     label: 'Course Category',
     placeholder: 'Select the category of the course',
-    options: catAndSubCatOption.cat,
+    options: catSubCat?.cat,
     value: fullCourse?.category
       ? { value: fullCourse?.category, label: fullCourse?.category }
       : null,
@@ -48,7 +44,7 @@ export default function CourseMaster() {
     inputName: 'sub_category',
     label: 'Select Base Sub-category',
     placeholder: 'Select the sub-category of the course',
-    options: catAndSubCatOption.subCat,
+    options: catSubCat.subCat,
     value: fullCourse?.sub_category
       ? { value: fullCourse?.sub_category, label: fullCourse?.sub_category }
       : null,
@@ -103,7 +99,10 @@ export default function CourseMaster() {
         isError={!fullCourse?.category?.length && courseError?.master}
         dropdownOptions={categoryDropdownOptions}
         changeHandler={
-          (e) => updateCourseMaster({ ...fullCourse, category: e.value, sub_category: '' })
+          (e) => {
+            setActiveCatId(e);
+            updateCourseMaster({ ...fullCourse, category: e.value, sub_category: '' });
+          }
           // changeHandler(e, fullCourse, updateCourseMaster, categoryDropdownOptions.inputName)
         }
       />
