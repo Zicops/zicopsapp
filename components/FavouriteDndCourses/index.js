@@ -29,7 +29,8 @@ export default function FavouriteDndCourses() {
     setCourseAssignData,
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
-    assignCourseToUser
+    assignCourseToUser,
+    isSaveDisabled
   } = useHandleCourseAssign();
 
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
@@ -170,10 +171,10 @@ export default function FavouriteDndCourses() {
   }
 
   useEffect(() => {
-    const MyAssignedCourses = dropped.filter((course) => course.added_by.role == 'self');
-    const AdminAssignedCourses = dropped.filter((course) => course.added_by.role == 'admin');
-    setDroppedByMe(MyAssignedCourses.length);
-    setDroppedByAdmin(AdminAssignedCourses.length);
+    const MyAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'self');
+    const AdminAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'admin');
+    setDroppedByMe(MyAssignedCourses?.length || 0);
+    setDroppedByAdmin(AdminAssignedCourses?.length || 0);
   }, [dropped]);
 
   return (
@@ -365,9 +366,7 @@ export default function FavouriteDndCourses() {
               </div>
 
               <h4>
-                <span>
-                  Assigned By Admin ({droppedByAdmin})
-                </span>
+                <span>Assigned By Admin ({droppedByAdmin})</span>
                 <span className={styles.seeMore} onClick={() => setIsShowAllAdmin(!isShowAllAdmin)}>
                   See {isShowAllAdmin ? 'Less' : 'More'}
                 </span>
@@ -436,6 +435,7 @@ export default function FavouriteDndCourses() {
             <UserButton
               text={'Save'}
               type={'button'}
+              isDisabled={isSaveDisabled}
               clickHandler={() => {
                 assignCourseToUser();
               }}
