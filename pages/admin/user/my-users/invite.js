@@ -30,7 +30,7 @@ export default function MyUserPage() {
     { name: 'Invite User', component: <InviteUser userType={userType} /> }
   ]);
   const [tab, setTab] = useState(tabData[0].name);
-
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   //handle emails
   async function handleMail() {
     if (loading) return;
@@ -44,7 +44,9 @@ export default function MyUserPage() {
 
     let isError = false;
     let errorMsg;
-    const resEmail = await inviteUsers({ variables: { emails: emails , lsp_id:userOrgData?.lsp_id } }).catch((err) => {
+    const resEmail = await inviteUsers({
+      variables: { emails: emails, lsp_id: userOrgData?.lsp_id }
+    }).catch((err) => {
       errorMsg = err.message;
       isError = !!err;
     });
