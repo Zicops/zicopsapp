@@ -52,7 +52,8 @@ const AddUsers = ({ usersData = [] , popUpSetState = ()=>{} }) => {
     //   };
     //   await addUserToCohort(sendData);
     // }
-    const cohortId = router?.query?.cohortId ? router?.query?.cohortId : cohortData?.id
+    if(!cohortData?.id) return ;
+    const cohortId = router?.query?.cohortId ? router?.query?.cohortId : cohortData?.id;
     const data = await addUserToCohort(userId,cohortId)
     // console.log(data);
     if(!data?.length) return setToastMsg({type:'danger',message:'error while adding user!'});
