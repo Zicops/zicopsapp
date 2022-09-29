@@ -290,7 +290,7 @@ export default function useHandleAddUserDetails() {
       photo_url: userAboutData?.photo_url,
 
       is_verified: true,
-      is_active: true,
+      is_active: userAboutData?.is_active,
 
       created_by: userAboutData?.created_by || 'Zicops',
       updated_by: userAboutData?.updated_by || 'Zicops'
