@@ -1,3 +1,4 @@
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 
 export const ModuleAtom = atom({
@@ -71,6 +72,11 @@ export const courseErrorAtom = atom({
 export const uploadStatusAtom = atom({
   key: 'uploadStatus',
   default: null
+});
+
+export const CourseTypeAtom = atom({
+  key: 'courseType',
+  default: COURSE_TYPES[0]
 });
 
 // object structures which can be used  for reset or immutable new object

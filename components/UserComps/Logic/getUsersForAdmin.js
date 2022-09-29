@@ -14,6 +14,7 @@ export async function getUsersForAdmin(){
     if(resUserDetails?.error) return  {error:'Error while while loading user detail!'} ;
     
     const userData = resUserDetails?.getUserDetails?.map((item) => ({
+      ...item,
       id: item?.id,
       email: item?.email,
       first_name: item?.first_name,

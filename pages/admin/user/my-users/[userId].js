@@ -105,7 +105,7 @@ export default function UserProfilePage() {
         />
 
         <MainBodyBox customStyle={{ minHeight: 'auto', maxHeight: 'none', height: 'min-content' }}>
-          <UserProfile currentUserData={currentUserData} />
+          <UserProfile currentUserData={currentUserData} setCurrentUserData={setCurrentUserData} />
         </MainBodyBox>
         <div className={`${styles.accordianContainer}`}>
           <CoursesAccordian />

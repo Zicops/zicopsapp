@@ -1,10 +1,18 @@
-import { GET_USERS_FOR_ADMIN, GET_USER_DETAIL, GET_USER_LSP_MAP_BY_LSPID, userQueryClient } from '@/api/UserQueries';
+import {
+  GET_USERS_FOR_ADMIN,
+  GET_USER_DETAIL,
+  GET_USER_LSP_MAP_BY_LSPID,
+  userQueryClient
+} from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
+import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery } from '@apollo/client';
@@ -16,16 +24,12 @@ import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 export default function MyUser({ getUser }) {
   const [userId, setUserId] = useState([]);
   const [data, setData] = useState([]);
+  const [disableAlert, setDisableAlert] = useState(false);
 
-  // const [loading, setLoading] = useState(true);
-  const [loadUsersData, { loading, error: errorUserData, refetch }] = useLazyQuery(
-    GET_USERS_FOR_ADMIN,
-    {
-      client: userQueryClient
-    }
-  );
+  const { newUserAboutData, setNewUserAboutData, updateAboutUser, isFormCompleted } =
+    useUpdateUserAboutData();
 
-  const [isLoading , setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
@@ -36,10 +40,10 @@ export default function MyUser({ getUser }) {
     setLoading(true);
     const usersData = await getUsersForAdmin();
     console.log(usersData);
-    if(usersData?.error) return setToastMsg({type:'danger',message:`${usersData?.error}`});
-    setData([...usersData],setLoading(false))
+
+    if (usersData?.error) return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
+    setData([...usersData], setLoading(false));
     return;
-    
   }, [userId]);
 
   const columns = [
@@ -51,7 +55,7 @@ export default function MyUser({ getUser }) {
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
             type="checkbox"
-            isChecked={data?.length !== 0 && userId.length === data.length }
+            isChecked={data?.length !== 0 && userId.length === data.length}
             changeHandler={(e) => {
               setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
             }}
@@ -118,7 +122,15 @@ export default function MyUser({ getUser }) {
             buttonArr={[
               { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
               // { handleClick: () => alert(`Edit ${params.id}`) },
-              { text: 'Disable', handleClick: () => alert(`Disable ${params.id}`) }
+              {
+                text: 'Disable',
+                handleClick: () => {
+                  setNewUserAboutData(
+                    getUserAboutObject({ ...params.row, is_active: false, status: 'Disabled' })
+                  );
+                  setDisableAlert(true);
+                }
+              }
             ]}
           />
         </>
@@ -136,6 +148,20 @@ export default function MyUser({ getUser }) {
         tableHeight="75vh"
         loading={isLoading}
       />
+
+      {disableAlert && (
+        <ConfirmPopUp
+          title={`Are you sure you want to disable user with email ${newUserAboutData?.email}`}
+          btnObj={{
+            handleClickLeft: async () => {
+              console.log(newUserAboutData);
+              await updateAboutUser();
+              setDisableAlert(false);
+            },
+            handleClickRight: () => setDisableAlert(false)
+          }}
+        />
+      )}
     </>
   );
 }

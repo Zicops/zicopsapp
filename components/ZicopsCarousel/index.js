@@ -9,7 +9,7 @@ import SquareCard from './SquareCard';
 import CircleCard from './CircleCard';
 import styles from './zicopsCarousel.module.scss';
 
-const CardSlider = ({ deviceType, title, type = 'small', data }) => {
+const CardSlider = ({ deviceType, title, type = 'small', data, notext = false }) => {
   const carouselRef = useRef(0);
   // type=sqaure cardShape changes /circle/ . Have to override hover from global scss
   let variableClass = 'card_ietms';
@@ -68,9 +68,9 @@ const CardSlider = ({ deviceType, title, type = 'small', data }) => {
   //   setCardData(data);
   // }, 2000);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
   return (
     <>
       <div
@@ -80,7 +80,7 @@ const CardSlider = ({ deviceType, title, type = 'small', data }) => {
           marginRight: '4%',
           paddingTop: '25px'
         }}>
-        {data.every((d) => !d) ? (
+        {data?.every((d) => !d) ? (
           <Skeleton
             style={{ marginBottom: '10px' }}
             sx={{ bgcolor: 'dimgray' }}
@@ -111,11 +111,11 @@ const CardSlider = ({ deviceType, title, type = 'small', data }) => {
           deviceType={deviceType}
           sliderClass="carousel_track"
           containerClass="carousel_container"
-          itemClass={data.every((d) => !d) ? '' : `${variableClass}`}
+          itemClass={data?.every((d) => !d) ? '' : `${variableClass}`}
           // removeArrowOnDeviceType={["tablet", "mobile"]}
           customLeftArrow={<CustomLeftArrow />}
           customRightArrow={<CustomRightArrow />}>
-          {data.map((d, index) => {
+          {data?.map((d, index) => {
             if (!d)
               return (
                 <Skeleton
@@ -134,13 +134,14 @@ const CardSlider = ({ deviceType, title, type = 'small', data }) => {
                   carouselRefData={carouselRef.current}
                   image={d.img}
                   courseData={d}
+                  notext={notext}
                   isShowProgress={title === 'Continue with your Courses'}
                 />
               );
             if (type === 'square') return <SquareCard key={index} image={d.img} />;
             if (type === 'circle') return <CircleCard key={index} image={d.img} />;
           })}
-          {data.every((d) => d) ? (
+          {data?.every((d) => d) ? (
             <div className={`${styles.last_text} ${itemCount.shape}`}>See All</div>
           ) : (
             <></>

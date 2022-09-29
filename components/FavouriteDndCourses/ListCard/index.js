@@ -2,10 +2,15 @@ import DurationFooter from './DurationFooter';
 import ProgressBarFooter from './ProgressBarFooter';
 import styles from './listCard.module.scss';
 import { truncateToN } from '@/helper/common.helper';
+import { useRouter } from 'next/router';
 
 export default function ListCard({ courseData, statusData, footerType, children }) {
+  const router = useRouter();
+
   return (
-    <div className={`${styles.cardContainer}`}>
+    <div
+      className={`${styles.cardContainer}`}
+      onClick={() => router.push(`/course/${courseData?.id}`)}>
       {/* course img */}
       <div className={`${styles.imgContainer}`}>
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
