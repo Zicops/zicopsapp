@@ -141,7 +141,7 @@ const AddUsers = ({ usersData = [] , popUpSetState = ()=>{} }) => {
           Users selected: <span>{`${userId?.length ? userId?.length : "0"}/${usersData?.length}`}</span>
         </div>
         <div className={`${styles.buttonContainer}`}>
-          <UserButton text={'Cancel'} isPrimary={false}/>
+          <UserButton text={'Cancel'} isPrimary={false} clickHandler={()=>{popUpSetState(false); setUserId([])}}/>
           <UserButton text={'Add'} clickHandler={handleAddUser}/>
         </div>
       </div>

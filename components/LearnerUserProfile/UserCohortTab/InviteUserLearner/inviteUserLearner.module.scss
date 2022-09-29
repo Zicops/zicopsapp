@@ -9,5 +9,13 @@
   color: $darkThree;
   padding: 20px;
   border-radius: 5px;
+
+  .checkBoxContainer{
+    flex: 0.25;
+  }
+
+  .firstName,.lastName,.email{
+    flex: 1;
+  }
  
 }
