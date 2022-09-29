@@ -1,5 +1,5 @@
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersEmailIdAtom } from '@/state/atoms/users.atom';
+import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { INVITE_USERS, userClient } from 'API/UserMutations';
 import { useRouter } from 'next/router';
@@ -22,6 +22,7 @@ export default function MyUserPage() {
 
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   // const [disableButton, setDisableButton] = useState(false);
 
   const [userType, setUserType] = useState('Internal');
@@ -43,7 +44,7 @@ export default function MyUserPage() {
 
     let isError = false;
     let errorMsg;
-    const resEmail = await inviteUsers({ variables: { emails: emails } }).catch((err) => {
+    const resEmail = await inviteUsers({ variables: { emails: emails , lsp_id:userOrgData?.lsp_id } }).catch((err) => {
       errorMsg = err.message;
       isError = !!err;
     });
@@ -56,6 +57,7 @@ export default function MyUserPage() {
     }
 
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+    // console.log(resEmail);
 
     setToastMsg({ type: 'success', message: `Emails send successfully!` });
 
