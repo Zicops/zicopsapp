@@ -1,7 +1,14 @@
 import { useRouter } from 'next/router';
 import { truncateToN } from '../../../helper/common.helper';
 
-export default function SmallCard({ image, courseData, styleClass, carouselRefData, isShowProgress=false }) {
+export default function SmallCard({
+  image,
+  courseData,
+  styleClass,
+  carouselRefData,
+  isShowProgress = false,
+  notext = false,
+}) {
   if (!courseData) return null;
   const router = useRouter();
 
@@ -35,7 +42,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
       <div
         style={{ maxWidth: '350px' }}
         className={`card_item ${styleClass}`}
-        onClick={gotoCourse}
+        onClick={!notext ? gotoCourse : () => {}}
         onMouseEnter={(e) =>
           handleMouseEnter(
             e,
@@ -47,11 +54,14 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
         {/* remove image later */}
         <div className="smallCard">
           <div className="smallCardWrapper">
-            <div className="banner">Self Paced</div>
-            <div className={courseNameClass}>
-              {courseData.name || 'Hands on Scripting with PYTHON'}
-            </div>
-            <div className="courseowner">{courseData.owner || 'Scripting'}</div>
+            <div className="banner">{!notext ? 'Self Paced' : 'Labs'}</div>
+            {!notext ?
+              <div className={courseNameClass}>
+                {courseData.name || 'Hands on Scripting with PYTHON'}
+              </div>
+              :''
+            }
+            {!notext ? <div className="courseowner">{courseData.owner || 'Scripting'}</div> : ''}
           </div>
           <img
             src={courseData.tileImage || image || '/images/courses/workplace design.png'}
