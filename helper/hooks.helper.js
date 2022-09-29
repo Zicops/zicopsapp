@@ -418,6 +418,7 @@ export function useUpdateUserOrgData() {
     const data = res?.data?.updateUser;
     const _userData = { ...newUserOrgData, ...data };
     setUserOrgData(_userData);
+    sessionStorage.setItem('userAccountSetupData', JSON.stringify(_userData));
     return _userData;
   }
 
