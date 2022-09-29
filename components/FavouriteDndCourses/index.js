@@ -39,8 +39,8 @@ export default function FavouriteDndCourses() {
 
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
-  const [droppedByMe, setDroppedByMe] = useState(0);
-  const [droppedByAdmin, setDroppedByAdmin] = useState(0);
+  const [droppedByMe, setDroppedByMe] = useState([]);
+  const [droppedByAdmin, setDroppedByAdmin] = useState([]);
   const [isShowAll, setIsShowAll] = useState(false);
   const [isCoursePresent, setIsCoursePresent] = useState({
     selfAdded: false,
@@ -171,10 +171,10 @@ export default function FavouriteDndCourses() {
   }
 
   useEffect(() => {
-    const MyAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'self');
-    const AdminAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'admin');
-    setDroppedByMe(MyAssignedCourses?.length || 0);
-    setDroppedByAdmin(AdminAssignedCourses?.length || 0);
+    const myAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'self');
+    const adminAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'admin');
+    setDroppedByMe(myAssignedCourses);
+    setDroppedByAdmin(adminAssignedCourses);
   }, [dropped]);
 
   return (
@@ -343,15 +343,15 @@ export default function FavouriteDndCourses() {
             <div className={styles.courseList}>
               <h4>
                 <span>
-                  Assigned By Me ({droppedByMe} / {LEARNING_FOLDER_CAPACITY})
+                  Assigned By Me ({droppedByMe?.length} / {LEARNING_FOLDER_CAPACITY})
                 </span>
                 <span className={styles.seeMore} onClick={() => setIsShowAll(!isShowAll)}>
-                  See {isShowAll ? 'Less' : 'More'}
+                  {droppedByMe?.length > 2 && <>See {isShowAll ? 'Less' : 'More'}</>}
                 </span>
               </h4>
 
               <div className={styles.cardContainer}>
-                {dropped?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
+                {droppedByMe?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
                   if (course?.added_by?.role !== 'self') return;
                   if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
 
@@ -366,14 +366,14 @@ export default function FavouriteDndCourses() {
               </div>
 
               <h4>
-                <span>Assigned By Admin ({droppedByAdmin})</span>
+                <span>Assigned By Admin ({droppedByAdmin?.length})</span>
                 <span className={styles.seeMore} onClick={() => setIsShowAllAdmin(!isShowAllAdmin)}>
-                  See {isShowAllAdmin ? 'Less' : 'More'}
+                  {droppedByAdmin?.length > 2 && <>See {isShowAllAdmin ? 'Less' : 'More'}</>}
                 </span>
               </h4>
 
               <div className={styles.cardContainer}>
-                {dropped?.slice(0, isShowAllAdmin ? dropped?.length : 2)?.map((course) => {
+                {droppedByAdmin?.slice(0, isShowAllAdmin ? dropped?.length : 2)?.map((course) => {
                   if (course?.added_by?.role !== 'admin') return;
                   if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
 
