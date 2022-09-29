@@ -43,9 +43,10 @@ export default function useHandleCohortTab() {
     return cohortTabData[0].component;
   }
 
-  async function assignCourseToUser(userId=null,userLspId = null){
+  async function assignCourseToUser(userId=null,userLspId = null,cohort_id = null){
     const {id} = getUserData();
     // if(!courseId) return false;
+    if(!cohort_id) return false;
     if(!userId) return false;
     if(!userLspId) return false;
 
@@ -58,7 +59,7 @@ export default function useHandleCohortTab() {
 
     //filtering the courses based on user_lsp_id
     const courses = userCoursesMaps?.getUserCourseMaps?.user_courses?.filter((item) => item?.user_lsp_id === userLspId );
-      const cohortCourses = await loadQueryDataAsync(GET_COHORT_COURSES,{cohort_id:selectedCohort?.main?.cohort_id},{},queryClient);
+      const cohortCourses = await loadQueryDataAsync(GET_COHORT_COURSES,{cohort_id:cohort_id},{},queryClient);
       if(cohortCourses?.error) return setToastMsg({type:'danger',message:'Error while loading cohort courses!'});
    
       // const courseIds = cohortCourses?.getCohortCourseMaps?.length? (cohortCourses?.getCohortCourseMaps?.map((item)=> {item?.CourseId})):[];
@@ -183,7 +184,7 @@ export default function useHandleCohortTab() {
 
 
        // check if user have cohort courses
-     const assignCourse = await assignCourseToUser(userIds[i],userLspData?.user_lsp_id,'asf');
+     const assignCourse = await assignCourseToUser(userIds[i],userLspData?.user_lsp_id,cohortId);
 
      if(!assignCourse) return setToastMsg({ type: 'danger', message: 'Error occured while assigning courses to user' });   
       
