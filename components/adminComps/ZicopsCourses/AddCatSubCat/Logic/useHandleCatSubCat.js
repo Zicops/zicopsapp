@@ -103,12 +103,12 @@ export default function useHandleCatSubCat(isSubCat) {
     console.log(sendData);
 
     let isError = false;
-    // const res = await addNewCategory({ variables: sendData }).catch((err) => {
-    //   console.log(err);
-    //   isError = !!err;
-    //   return setToastMsg({ type: 'danger', message: 'Add Category Error' });
-    // });
-    // console.log(res);
+    const res = await addNewCategory({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add Category Error' });
+    });
+    console.log(res);
 
     if (isError) return;
 
@@ -137,12 +137,12 @@ export default function useHandleCatSubCat(isSubCat) {
     console.log(sendData);
 
     let isError = false;
-    // const res = await addNewSubCategory({ variables: sendData }).catch((err) => {
-    //   console.log(err);
-    //   isError = !!err;
-    //   return setToastMsg({ type: 'danger', message: 'Add Sub Category Error' });
-    // });
-    // console.log(res);
+    const res = await addNewSubCategory({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add Sub Category Error' });
+    });
+    console.log(res);
 
     if (isError) return;
 

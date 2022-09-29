@@ -4,7 +4,7 @@ import { authLink } from './api.helper';
 import customFetch from './customFetch';
 
 const link = createUploadLink({
-  uri: 'https://staging.zicops.com/cc/api/v1/query',
+  uri: 'https://demo.zicops.com/cc/api/v1/query',
   fetch: customFetch
 });
 // Set Mutation Client
