@@ -3,7 +3,7 @@ import { createUploadLink } from 'apollo-upload-client';
 import { authLink } from './api.helper';
 
 const httpLink = createUploadLink({
-  uri: 'https://staging.zicops.com/um/api/v1/query'
+  uri: 'https://demo.zicops.com/um/api/v1/query'
 });
 
 export const userClient = new ApolloClient({

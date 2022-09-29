@@ -4,7 +4,7 @@ import { authLink } from './api.helper';
 import customFetch from './customFetch';
 
 const link = createUploadLink({
-  uri: 'https://staging.zicops.com/cc/api/v1/query',
+  uri: 'https://demo.zicops.com/cc/api/v1/query',
   fetch: customFetch
 });
 // Set Mutation Client
@@ -119,6 +119,101 @@ export const ADD_COURSE = gql`
         name
         rank
       }
+    }
+  }
+`;
+
+export const ADD_CAT_MAIN = gql`
+  mutation addCatMain(
+    $Name: String
+    $Description: String
+    $ImageUrl: String
+    $ImageFile: Upload
+    $Code: String
+    $CreatedAt: String
+    $UpdatedAt: String
+    $CreatedBy: String
+    $UpdatedBy: String
+    $IsActive: Boolean
+    $LspId: String
+  ) {
+    addCatMain(
+      input: [
+        {
+          Name: $Name
+          Description: $Description
+          ImageUrl: $ImageUrl
+          ImageFile: $ImageFile
+          Code: $Code
+          CreatedAt: $CreatedAt
+          UpdatedAt: $UpdatedAt
+          CreatedBy: $CreatedBy
+          UpdatedBy: $UpdatedBy
+          IsActive: $IsActive
+          LspId: $LspId
+        }
+      ]
+    ) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      LspId
+    }
+  }
+`;
+
+export const ADD_SUB_CAT_MAIN = gql`
+  mutation addSubCatMain(
+    $Name: String
+    $Description: String
+    $ImageUrl: String
+    $ImageFile: Upload
+    $Code: String
+    $CatId: String
+    $CreatedAt: String
+    $UpdatedAt: String
+    $CreatedBy: String
+    $UpdatedBy: String
+    $IsActive: Boolean
+    $LspId: String
+  ) {
+    addSubCatMain(
+      input: [
+        {
+          Name: $Name
+          Description: $Description
+          ImageUrl: $ImageUrl
+          ImageFile: $ImageFile
+          Code: $Code
+          CatId: $CatId
+          CreatedAt: $CreatedAt
+          UpdatedAt: $UpdatedAt
+          CreatedBy: $CreatedBy
+          UpdatedBy: $UpdatedBy
+          IsActive: $IsActive
+          LspId: $LspId
+        }
+      ]
+    ) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CatId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      LspId
     }
   }
 `;

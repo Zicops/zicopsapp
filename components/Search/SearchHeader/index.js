@@ -13,9 +13,13 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
   const { searchQuery } = router.query;
 
   useEffect(()=>{
-    const {subCat} = router.query;
-    if(!subCat) return ;
-    setFilters(prevValue => ({...prevValue , subCategory:subCat}));
+    const { subCat, lang, cat, type } = router.query;
+    const _filters = structuredClone(filters);
+    if (subCat) _filters.subCategory = subCat;
+    if (lang) _filters.lang = lang;
+    if (cat) _filters.category = cat;
+    if (type) _filters.type = type;
+    setFilters( _filters );
   },[router.query])
   // cat and sub cat
   const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });

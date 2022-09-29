@@ -4,7 +4,7 @@ import ProfileOrganizationDetail from './ProfileOrganizationDetail';
 import ProfilePersonelDetail from './ProfilePersonelDetail';
 import ProfilePreferences from './ProfilePreferences';
 
-const UserProfile = ({ currentUserData = {} }) => {
+const UserProfile = ({ currentUserData = {}, setCurrentUserData }) => {
   // {
   //   status,
   //     (submitDisplay = 'Submit'),
@@ -21,7 +21,12 @@ const UserProfile = ({ currentUserData = {} }) => {
     },
     {
       name: 'Organization Details',
-      component: <ProfileOrganizationDetail currentUserData={currentUserData} />
+      component: (
+        <ProfileOrganizationDetail
+          currentUserData={currentUserData}
+          setCurrentUserData={setCurrentUserData}
+        />
+      )
     },
     {
       name: 'Profile Preferences',
