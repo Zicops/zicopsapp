@@ -97,7 +97,9 @@ const UserHead = () => {
       <div className={`${styles.userName}`}>{fullName ? `${fullName}` : ''}</div>
       <div className={`${styles.userRole}`}>
         {userAccountData?.organization_role
-          ? `${userAccountData?.organization_role} at ${userAccountData?.organization_name}`
+          ? `${userAccountData?.organization_role} at ${
+              userAccountData?.organization_name || 'Zicops'
+            }`
           : ''}
       </div>
     </div>
