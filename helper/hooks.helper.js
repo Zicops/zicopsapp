@@ -31,6 +31,7 @@ export function useHandleCatSubCat(selectedCategory) {
     allSubCat: [],
     isFiltered: false
   });
+  // this will have the whole cat object not just id
   const [activeCatId, setActiveCatId] = useState(null);
 
   useEffect(async () => {
