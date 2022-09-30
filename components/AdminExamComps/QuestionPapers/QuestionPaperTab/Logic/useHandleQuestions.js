@@ -150,6 +150,7 @@ export default function useHandleQuestions(sectionId) {
   }
 
   async function addMetaData() {
+    setIsMetaDataReady(false);
     // create a default section
     let isError = false,
       sectionData = null;
@@ -175,9 +176,13 @@ export default function useHandleQuestions(sectionId) {
           return setToastMsg({ type: 'danger', message: 'Add Default Paper Section Error' });
         }
       );
+      if (isError) return setIsMetaDataReady(true);
       const data = paperSectionRes?.data?.addQuestionPaperSection;
 
-      if (!data) return setToastMsg({ type: 'danger', message: 'Add Section Error' });
+      if (!data) {
+        setIsMetaDataReady(true);
+        return setToastMsg({ type: 'danger', message: 'Add Section Error' });
+      }
       sectionData = [
         {
           id: data?.id,
@@ -218,7 +223,10 @@ export default function useHandleQuestions(sectionId) {
       return setToastMsg({ type: 'danger', message: 'Add Question Meta Data Error' });
     });
 
-    if (isError) return setToastMsg({ type: 'danger', message: 'Add Question Meta Data Error' });
+    if (isError) {
+      setIsMetaDataReady(true);
+      return setToastMsg({ type: 'danger', message: 'Add Question Meta Data Error' });
+    }
     if (!isError) setToastMsg({ type: 'success', message: 'New Question Meta Data Added' });
 
     console.log(addMapToSectionRes);
@@ -239,7 +247,10 @@ export default function useHandleQuestions(sectionId) {
     if (currentMetaData.retrieve_type === 'manual') await saveFixedQuestions(resData.id);
 
     const updatedMappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
-    if (updatedMappedQb == null) return udpateAddMetaDataPopUp(false);
+    if (updatedMappedQb == null) {
+      setIsMetaDataReady(true);
+      return udpateAddMetaDataPopUp(false);
+    }
 
     const allMappedQb = [];
     questionPaperTabData?.mappedQb?.forEach((mapQb) => {
@@ -260,9 +271,11 @@ export default function useHandleQuestions(sectionId) {
 
     setIsPopUpDataPresent(false);
     udpateAddMetaDataPopUp(false);
+    setIsMetaDataReady(true);
   }
 
   async function saveFixedQuestions(mappingId, isUpdate) {
+    setIsFixedDataReady(false);
     const sendData = {
       mappingId: metaData.id || mappingId,
       questionId: selectedQuestionIds.join(','),
@@ -282,7 +295,7 @@ export default function useHandleQuestions(sectionId) {
         return setToastMsg({ type: 'danger', message: 'Update Fixed Question Error' });
       });
 
-      if (isError) return;
+      if (isError) return setIsFixedDataReady(true);
       if (!isError) return setToastMsg({ type: 'success', message: 'Updated Fixed Question' });
     }
 
@@ -292,11 +305,13 @@ export default function useHandleQuestions(sectionId) {
       return setToastMsg({ type: 'danger', message: 'Add Fixed Question Error' });
     });
 
-    if (isError) return;
+    if (isError) return setIsFixedDataReady(true);
     if (!isError) setToastMsg({ type: 'success', message: 'Added Fixed Question' });
+    setIsFixedDataReady(true);
   }
 
   async function updateMetaData() {
+    setIsMetaDataReady(false);
     const sendData = {
       id: metaData.id,
       qbId: metaData.qbId,
@@ -339,7 +354,10 @@ export default function useHandleQuestions(sectionId) {
     if (updatedMetaData.retrieve_type === 'manual') await saveFixedQuestions(resData.id, true);
 
     const updatedMappedQb = await questionPaperTabData?.refetchQBSectionMapping(sendData.sectionId);
-    if (updatedMappedQb == null) return udpateEditMetaDataPopUp(false);
+    if (updatedMappedQb == null) {
+      setIsMetaDataReady(true);
+      return udpateEditMetaDataPopUp(false);
+    }
 
     const allMappedQb = [];
     questionPaperTabData?.mappedQb?.forEach((mapQb) => {
@@ -359,6 +377,7 @@ export default function useHandleQuestions(sectionId) {
 
     setIsPopUpDataPresent(false);
     udpateEditMetaDataPopUp(false);
+    setIsMetaDataReady(true);
   }
 
   return {
