@@ -14,6 +14,7 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
     catoptions,
     setCatSubCatData,
     isAddReady,
+    isSubmitDisabled,
     handleFileInput,
     addCategory,
     addSubCategory
@@ -90,7 +91,7 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
         <div>
           <Button
             text={'Add'}
-            isDisabled={!isAddReady}
+            isDisabled={!isAddReady || isSubmitDisabled}
             styleClass={isAddReady ? 'bg-primary' : ''}
             clickHandler={() => {
               isSubCat ? addSubCategory() : addCategory();
