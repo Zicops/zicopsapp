@@ -27,6 +27,7 @@ const LoginScreen = ({ setPage }) => {
   const [password, setPassword] = useState('');
 
   const [vidIsOpen, setVidIsOpen] = useState(false);
+  const [disableBtn, setDisableBtn] = useState(false);
   const vidRef = useRef();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -48,16 +49,24 @@ const LoginScreen = ({ setPage }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setDisableBtn(true);
     const checkEmail = isEmail(email);
-    if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
-    if (!password) return setToastMsg({ type: 'danger', message: 'Enter password!!' });
+    if (!checkEmail) {
+      setDisableBtn(false);
+      return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
+    }
+    if (!password) {
+      setDisableBtn(false);
+      return setToastMsg({ type: 'danger', message: 'Enter password!!' });
+    }
 
-    await signIn(email, password);
+    const userData = await signIn(email, password);
+    console.log(userData);
+    if (userData) loginUser();
+  };
 
-    if (errorMsg) return;
-
+  async function loginUser() {
     sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
-
     let isError = false;
     const res = await userLogin({
       context: {
@@ -74,11 +83,9 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
-    if (isError) return;
-
+    if (isError) return setDisableBtn(false);
     console.log(res?.data?.login?.is_verified);
     setUserData(getUserObject(res?.data?.login));
-
     sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
 
     if (!!res?.data?.login?.is_verified) {
@@ -88,10 +95,12 @@ const LoginScreen = ({ setPage }) => {
       vidRef.current.play();
       // setTimeout(() => {
       // }, 1500);
-      return;
+      return setDisableBtn(false);
     }
+
+    setDisableBtn(false);
     return router.push('/account-setup');
-  };
+  }
 
   useEffect(() => {
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
@@ -142,7 +151,7 @@ const LoginScreen = ({ setPage }) => {
             </p>
           </div>
 
-          <LoginButton title={'Login'} isDisabled={loginLoading} />
+          <LoginButton title={'Login'} isDisabled={disableBtn} />
         </form>
       </ZicopsLogin>
       {!!vidIsOpen && (
