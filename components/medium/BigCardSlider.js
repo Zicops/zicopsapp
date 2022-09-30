@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Skeleton } from '@mui/material';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -12,9 +12,12 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
   const router = useRouter();
 
   const [cardData, setCardData] = useState(new Array(6).fill(null));
-  setTimeout(() => {
+  // setTimeout(() => {
+  //   setCardData(data);
+  // }, 2000);
+  useEffect(() => {
     setCardData(data);
-  }, 2000);
+  }, [data]);
 
   return (
     <>
@@ -70,10 +73,10 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
                 {data}
               </div>
             ) : (
-              <BigCard key={index} image={data.img} />
+              <BigCard key={data.id} data={data} />
             );
           })}
-          <div className="last-text-big">See All</div>
+          {/* {bigBox ? (<div className="last-text-big">See All</div>) : ''}; */}
         </Carousel>
 
         <style jsx>{`
@@ -100,7 +103,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 300px;
+            height: 600px;
             color: var(--primary);
             background-color: #003548;
             border-radius: 8px;

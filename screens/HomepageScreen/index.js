@@ -1,7 +1,7 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import HomeSlider from '@/components/HomeSlider';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import useUserCourseData from '@/helper/hooks.helper';
+import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useEffect, useState } from 'react';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { LANGUAGES } from '@/helper/constants.helper';
@@ -9,6 +9,7 @@ import BigCardSlider from '@/components/medium/BigCardSlider';
 import { useRecoilValue } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import styles from './homepageScreen.module.scss';
+import { bigImages } from '@/api/DemoSliderData';
 
 export default function HomepageScreen() {
   const { getUserCourseData, getUserPreferences } = useUserCourseData();
@@ -29,11 +30,33 @@ export default function HomepageScreen() {
   const [subCategory2Courses, setSubCategory2Courses] = useState([]);
   const [subCategory3Courses, setSubCategory3Courses] = useState([]);
   const [subCategory4Courses, setSubCategory4Courses] = useState([]);
-
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat();
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
       items: 5,
+      slidesToSlide: 1
+    },
+    laptop: {
+      breakpoint: { max: 1530, min: 1024 },
+      items: 5,
+      slidesToSlide: 5
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 3,
+      slidesToSlide: 3
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+      slidesToSlide: 1
+    }
+  };
+  const bigSquare = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1530 },
+      items: 4,
       slidesToSlide: 1
     },
     laptop: {
@@ -66,6 +89,7 @@ export default function HomepageScreen() {
   const pageSize = 28;
 
   useEffect(async () => {
+    console.log(catSubCat?.cat);
     const subcatArr = await getUserPreferences();
     const activeSubcategories = subcatArr?.filter(
       (item) => item?.is_active === true && item?.is_base !== true
@@ -251,6 +275,7 @@ export default function HomepageScreen() {
       ) : (
         ''
       )}
+      <BigCardSlider title="Categories" data={catSubCat?.cat} slide={bigSquare} />
       {slowCourses?.length ? (
         <ZicopsCarousel title="Slow and Steady Courses" data={slowCourses} />
       ) : (
