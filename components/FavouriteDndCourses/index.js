@@ -96,13 +96,12 @@ export default function FavouriteDndCourses() {
             })
           );
         }) || [];
-      setData(availableCourses);
+      updateCourseData(availableCourses);
 
       setDropped(assignedCourses);
     }
 
     loadCourses();
-    // setData(courses);
   }, [userData?.id]);
 
   useEffect(() => {
@@ -123,6 +122,10 @@ export default function FavouriteDndCourses() {
     if (!isShowAllAdmin) setIsShowAllAdmin(!!searchQuery);
   }, [searchQuery]);
 
+  function updateCourseData(courses) {
+    setData(courses?.sort((c1, c2) => +c1?.created_at - +c2?.created_at));
+  }
+
   const onMouseEnterHandler = () => {
     setHover(true);
   };
@@ -140,9 +143,9 @@ export default function FavouriteDndCourses() {
       const element = data.filter((e) => e.id === result.draggableId);
       // dropped.push(element);
       setCourseAssignData({ ...courseAssignData, fullCourse: element[0] });
-      setIsAssignPopUpOpen(true);
+      setIsAssignPopUpOpen(element[0]);
       // setDropped([...dropped, { ...element[0], added_by: { role: 'self' } }]);
-      setData(data.filter((each) => each.id !== result.draggableId));
+      updateCourseData(data.filter((each) => each.id !== result.draggableId));
       // setTotal(total + 1);
     }
     setIsDrag(false);
@@ -428,17 +431,20 @@ export default function FavouriteDndCourses() {
               isPrimary={false}
               type={'button'}
               clickHandler={() => {
+                updateCourseData([...data, isAssignPopUpOpen]);
                 setIsAssignPopUpOpen(false);
-                setCourseAssignData({ ...courseAssignData, endDate: new Date() });
+                setCourseAssignData({
+                  ...courseAssignData,
+                  endDate: new Date(),
+                  isMandatory: false
+                });
               }}
             />
             <UserButton
               text={'Save'}
               type={'button'}
               isDisabled={isSaveDisabled}
-              clickHandler={() => {
-                assignCourseToUser();
-              }}
+              clickHandler={() => assignCourseToUser()}
             />
           </div>
         </div>
