@@ -1,9 +1,14 @@
+import PopUp from '@/components/common/PopUp';
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
+import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ApolloProvider, useQuery } from '@apollo/client';
-import { GET_CATS, queryClient } from '../../../API/Queries';
-import CourseHead from '../../CourseHead';
-import ZicopsTable from '../../common/ZicopsTable';
-import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { GET_CATS_MAIN, queryClient } from '../../../API/Queries';
+import { TableResponsiveRows } from '../../../helper/utils.helper';
+import ZicopsTable from '../../common/ZicopsTable';
+import CourseHead from '../../CourseHead';
+import AddCatSubCat from './AddCatSubCat';
 
 const columns = [
   {
@@ -22,6 +27,7 @@ const columns = [
 
 function ZicopsCategoryList() {
   const [pageSize, setPageSize] = useState(6);
+  const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
 
   useEffect(() => {
     const screenWidth = window.screen.width;
@@ -33,12 +39,17 @@ function ZicopsCategoryList() {
     });
   }, []);
 
-  const { data, loading } = useQuery(GET_CATS);
+  const { data, loading, refetch } = useQuery(GET_CATS_MAIN, { variables: [LEARNING_SPACE_ID] });
+
+  useEffect(() => {
+    if (popUpState) return;
+    refetch();
+  }, [popUpState]);
 
   let categories = [];
 
   if (data)
-    data.allCategories.map((val, index) => categories.push({ id: index + 1, catName: val }));
+    data?.allCatMain?.map((val, index) => categories.push({ id: index + 1, catName: val?.Name }));
 
   return (
     <ZicopsTable
@@ -53,10 +64,19 @@ function ZicopsCategoryList() {
 }
 
 const ZicopsCatsList = () => {
+  const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
+
+  function closePopUp() {
+    udpatePopUpState(false);
+  }
   return (
     <>
       <div className="content">
-        <CourseHead title="Zicops Categories" />
+        <CourseHead
+          title="Zicops Categories"
+          hideCourseTypeDropdown={true}
+          handlePlusClick={() => udpatePopUpState(true)}
+        />
 
         <ApolloProvider client={queryClient}>
           {/* <CourseContextProvider> */}
@@ -67,6 +87,15 @@ const ZicopsCatsList = () => {
 
           {/* </CourseContextProvider> */}
         </ApolloProvider>
+
+        {/* add cat pop up */}
+        <PopUp
+          title="Add New Category"
+          popUpState={[popUpState, udpatePopUpState]}
+          closeBtn={closePopUp}
+          isFooterVisible={false}>
+          <AddCatSubCat closePopUp={closePopUp} />
+        </PopUp>
       </div>
       <style jsx>
         {`

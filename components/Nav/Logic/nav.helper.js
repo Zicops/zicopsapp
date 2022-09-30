@@ -5,12 +5,12 @@ export function truncateTo16(str) {
 export const AdminMenu = [
   { title: 'Users', link: '/admin/user/my-users' },
   { title: 'Course', link: '/admin/course/my-courses' },
-  { title: 'Training', link: '/' },
+  { title: 'Training', link: '/admin' },
   { title: 'Exams', link: '/admin/exams/my-question-bank' },
-  { title: 'Vendor', link: '/' },
-  { title: 'Lab', link: '/' },
-  { title: 'Analytics', link: '/' },
-  { title: 'Administration', link: '/' }
+  { title: 'Vendor', link: '/admin' },
+  { title: 'Lab', link: '/admin' },
+  { title: 'Analytics', link: '/admin' },
+  { title: 'Administration', link: '/admin' }
 ];
 
 export const UserMenu = [

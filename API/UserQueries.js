@@ -64,6 +64,36 @@ export const GET_USERS_FOR_ADMIN = gql`
   }
 `;
 
+export const GET_USER_LSP_MAP_BY_LSPID = gql`
+  query GetUserLspMapsByLspId(
+    $lsp_id: String!
+    $pageCursor: String
+    $Direction: String
+    $pageSize: Int
+  ) {
+    getUserLspMapsByLspId(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+    ) {
+      user_lsp_maps {
+        user_lsp_id
+        user_id
+        lsp_id
+        status
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
 export const GET_USER_COURSE_MAPS = gql`
   query GetUserCourseMaps(
     $user_id: String!
@@ -467,35 +497,41 @@ export const GET_COHORT_USERS = gql`
   }
 `;
 
-
 export const GET_USER_LATEST_COHORTS = gql`
-query GetLatestCohorts($user_id:String,$user_lsp_id:String,$publish_time:Int,$pageCursor:String,$pageSize:Int){
-  getLatestCohorts(
-    user_id: $user_id
-    user_lsp_id: $user_lsp_id
-    publish_time: $publish_time
-    pageCursor: $pageCursor
-    Direction: ""
-    pageSize: $pageSize
+  query GetLatestCohorts(
+    $user_id: String
+    $user_lsp_id: String
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
   ) {
-    cohorts {
-      user_cohort_id
-      user_id
-      user_lsp_id
-      cohort_id
-      added_by
-      membership_status
-      role
-      created_by
-      updated_by
-      created_at
-      updated_at
+    getLatestCohorts(
+      user_id: $user_id
+      user_lsp_id: $user_lsp_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      cohorts {
+        user_cohort_id
+        user_id
+        user_lsp_id
+        cohort_id
+        added_by
+        membership_status
+        role
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
     }
-    pageCursor
-    direction
-    pageSize
   }
-}`
+`;
 
 export const GET_USER_QUIZ_ATTEMPTS = gql`
   query getUserQuizAttempts($user_id: String!, $topic_id: String!) {

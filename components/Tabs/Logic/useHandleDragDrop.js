@@ -1,10 +1,11 @@
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useEffect, useState } from 'react';
 import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
 import { getQueryData } from '../../../helper/api.helper';
 
 export default function useHandleDragDrop(courseContextData) {
   const { fullCourse, updateCourseMaster } = courseContextData;
-  const { data } = getQueryData(GET_CATS_N_SUB_CATS);
+  const { catSubCat } = useHandleCatSubCat(fullCourse?.category);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [draglist, updateDraglist] = useState([]);
@@ -13,15 +14,21 @@ export default function useHandleDragDrop(courseContextData) {
 
   // load and set data
   useEffect(() => {
+    if (!catSubCat?.subCat) return;
+
     let newDraglist = [];
     let newDroplist = [];
 
+    const data = { allSubCategories: catSubCat?.subCat || [] };
+    console.log(data);
     if (data?.allSubCategories) {
       data.allSubCategories.forEach(function (e, i) {
-        if (fullCourse?.sub_category?.toLowerCase()?.trim()?.includes(e?.toLowerCase()?.trim()))
+        if (
+          fullCourse?.sub_category?.toLowerCase()?.trim()?.includes(e?.Name?.toLowerCase()?.trim())
+        )
           return;
 
-        newDraglist.push({ dragOrder: i, name: e });
+        newDraglist.push({ dragOrder: i, name: e?.Name });
       });
 
       // remove selected categories
@@ -52,7 +59,7 @@ export default function useHandleDragDrop(courseContextData) {
       );
       updateDroplist(newDroplist);
     }
-  }, []);
+  }, [catSubCat?.subCat]);
 
   useEffect(() => {
     updateCourseMaster({

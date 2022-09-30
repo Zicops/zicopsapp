@@ -1,6 +1,7 @@
 import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import PopUp from '@/components/common/PopUp';
 import ZicopsTable from '@/components/common/ZicopsTable';
+import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRouter } from 'next/router';
@@ -35,7 +36,7 @@ const Users = ({ isEdit = false }) => {
     // console.log(cohortUser,'cohort user');
     setCohortUserData([...cohortUser], setLoading(false));
 
-    const users = await getUsersForCohort(true);
+    const users = await getUsersForAdmin(true);
     const notMembers = [];
     if (!users?.length) return setToastMsg({ type: 'info', message: 'None verified users found!' });
     for (let i = 0; i < users?.length; i++) {

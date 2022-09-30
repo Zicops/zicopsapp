@@ -143,6 +143,28 @@ export async function isNameDuplicate(QUERY, name, objPath, id = null, checkAgai
   return isNameExist;
 }
 
+export async function isNameDuplicateAdvanced(
+  QUERY,
+  variables,
+  name,
+  objPath,
+  client = queryClient,
+  id = null,
+  checkAgainstKey
+) {
+  const results = await client.query({ query: QUERY, variables: variables });
+  const arrayOfNames = getNestedValueByString(results?.data, objPath) || [];
+
+  const isNameExist = arrayOfNames.some((obj) => {
+    if (id && obj.id === id) return false;
+
+    const _name = obj[checkAgainstKey] || obj.Name || obj.name;
+    return _name?.toLowerCase()?.trim() === name?.toLowerCase()?.trim();
+  });
+
+  return isNameExist;
+}
+
 export function loadCatSubCat(state, setState, category = null) {
   const [loadCatAndSubCat, { error: loadCatErr }] = useLazyQuery(GET_CATS_N_SUB_CATS, {
     client: queryClient

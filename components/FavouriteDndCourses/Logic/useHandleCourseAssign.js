@@ -30,8 +30,10 @@ export default function useHandleCourseAssign() {
     fullCourse: {}
   });
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
+  const [isSaveDisabled, setisSaveDisabled] = useState(false);
 
   async function assignCourseToUser() {
+    setisSaveDisabled(false);
     setIsPopUpDataPresent(false);
     const sendData = {
       userId: userData?.id,
@@ -60,6 +62,7 @@ export default function useHandleCourseAssign() {
     });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
     setIsAssignPopUpOpen(false);
+    setisSaveDisabled(false);
   }
 
   return {
@@ -67,6 +70,7 @@ export default function useHandleCourseAssign() {
     setCourseAssignData,
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
-    assignCourseToUser
+    assignCourseToUser,
+    isSaveDisabled
   };
 }

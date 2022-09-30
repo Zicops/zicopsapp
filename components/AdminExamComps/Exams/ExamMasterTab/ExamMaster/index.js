@@ -33,7 +33,7 @@ export default function ExamMaster() {
 
   const router = useRouter();
   const examId = router?.query?.examId;
-  const isPreview = router.query?.isPreview || router.asPath?.includes('zicops-exam') || false;
+  const isPreview = router.query?.isPreview || router.asPath?.includes('view') || false;
 
   const { getTotalMarks, saveExamData } = useHandleExamTab();
 
@@ -239,6 +239,7 @@ export default function ExamMaster() {
             onChange={(e) => {
               let value = +e.target.value;
               let type = examTabData?.passing_criteria_type;
+              let totalMarks = examTabData?.total_marks || 0;
 
               if (value === 0) {
                 type = 'None';
@@ -247,10 +248,7 @@ export default function ExamMaster() {
               }
 
               const isMarks = type === 'Marks';
-
-              if (isMarks && value > examTabData?.total_marks) {
-                value = examTabData?.total_marks;
-              }
+              if (isMarks && value > totalMarks) value = totalMarks;
 
               if (!isMarks) {
                 if (value > 100) value = 100;

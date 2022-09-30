@@ -30,14 +30,15 @@ const Index = ({ height, children, acc_title }) => {
           color={'#FFF'}>
           <Box
             width={'100%'}
+            onClick={() => {
+              if (children) setIsActive(!isActive);
+            }}
+            style={{ cursor: 'pointer' }}
             display={'flex'}
             alignItems={'center'}
             justifyContent={'space-between'}>
             <Box fontWeight={700}>{acc_title}</Box>
-            <IconButton
-              onClick={() => {
-                if (children) setIsActive(!isActive);
-              }}>
+            <IconButton>
               {isActive ? <RemoveIcon color={'primary'} /> : <AddIcon sx={{ color: '#FFF' }} />}
             </IconButton>
           </Box>

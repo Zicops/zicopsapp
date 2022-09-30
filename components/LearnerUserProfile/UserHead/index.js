@@ -62,9 +62,9 @@ const UserHead = () => {
 
   return (
     <div className={`${styles.userHead}`}>
-      <div className={`${styles.editIcon}`}>
+      {/* <div className={`${styles.editIcon}`}>
         <img src="/images/svg/edit.svg" />
-      </div>
+      </div> */}
       <div className={`${styles.userImageContainer}`}>
         <div className={`${styles.userImage}`}>
           <img
@@ -97,7 +97,9 @@ const UserHead = () => {
       <div className={`${styles.userName}`}>{fullName ? `${fullName}` : ''}</div>
       <div className={`${styles.userRole}`}>
         {userAccountData?.organization_role
-          ? `${userAccountData?.organization_role} at ${userAccountData?.organization_name}`
+          ? `${userAccountData?.organization_role} at ${
+              userAccountData?.organization_name || 'Zicops'
+            }`
           : ''}
       </div>
     </div>

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import styles from './courseBoxCard.module.scss';
 
 export default function ProgressBarFooter({ courseData, isCompleted }) {
@@ -8,7 +9,7 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
       <div>
         {isCompleted ? (
           <>
-            <p>Completed on {courseData?.completedOn || '22-06-2022'}</p>
+            <p>Completed on {moment.unix(courseData?.updated_at).format("DD/MM/YYYY") || '22-06-2022'}</p>
             <img src="/images/svg/green-tick.svg" alt="" height={15} />
           </>
         ) : (

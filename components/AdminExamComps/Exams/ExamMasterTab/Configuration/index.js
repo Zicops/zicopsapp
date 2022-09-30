@@ -10,7 +10,7 @@ export default function Configuration() {
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
 
   const router = useRouter();
-  const isPreview = router.query?.isPreview || router.asPath?.includes('zicops-exam') || false;
+  const isPreview = router.query?.isPreview || router.asPath?.includes('view') || false;
 
   const btns = [
     { name: 'shuffle', label: 'Question Shuffling' },

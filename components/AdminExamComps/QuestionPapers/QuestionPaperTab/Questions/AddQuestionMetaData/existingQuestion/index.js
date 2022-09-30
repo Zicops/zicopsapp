@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../../../helper/common.helper';
@@ -34,10 +35,11 @@ export default function ExistingQuestion({
     });
   }, [questionBankOptions]);
 
-  // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
-  // update sub cat based on cat
-  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, metaData?.category);
+  // // cat and sub cat
+  // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // // update sub cat based on cat
+  // loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, metaData?.category);
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat(metaData?.category);
 
   return (
     <>
@@ -48,11 +50,19 @@ export default function ExistingQuestion({
             inputName: 'category',
             label: 'Category:',
             placeholder: 'Select category',
-            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.cat],
+            options: [{ value: '', label: '-- Select --' }, ...catSubCat?.cat],
             value: { value: metaData?.category, label: metaData?.category },
             isSearchEnable: true
           }}
-          changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'category')}
+          changeHandler={(e) => {
+            setActiveCatId(e);
+            setMetaData({
+              ...metaData,
+              category: e.value,
+              sub_category: ''
+            });
+            // changeHandler(e, metaData, setMetaData, 'category');
+          }}
           isFiftyFifty={true}
         />
 
@@ -62,7 +72,7 @@ export default function ExistingQuestion({
             inputName: 'sub_category',
             label: 'Sub-Category:',
             placeholder: 'Select sub-category',
-            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.subCat],
+            options: [{ value: '', label: '-- Select --' }, ...catSubCat?.subCat],
             value: { value: metaData?.sub_category, label: metaData?.sub_category },
             isSearchEnable: true
           }}

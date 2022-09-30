@@ -43,7 +43,7 @@ export const UsersOrganizationAtom = atom({
   default: getUserOrgObject()
 });
 
-export function getUserOrgObject(data) {
+export function getUserOrgObject(data={}) {
   return {
     user_id: data?.user_id || null,
 
@@ -111,4 +111,18 @@ export function getCohortMasterObject(data = {}) {
     image_url:data?.imageUrl || '',
     managers: []
   };
+}
+
+export const SelectedCohortDataAtom = atom({
+  key:'selectedCohortData',
+  default: getSelectedCohortDataObject()
+});
+
+export function getSelectedCohortDataObject(data={}){
+  return{
+    main: data?.main || null,
+    userCohort: data?.userCohort || null, 
+    cohrotCourses: data?.cohrotCourses || [],
+    cohortUsers:data?.cohortUsers || []
+  }
 }

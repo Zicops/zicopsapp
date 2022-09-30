@@ -25,7 +25,7 @@ const UploadAndPreview = ({
   useEffect(async () => {
     if (!initialImage) return;
 
-    const response = await fetch(initialImage, { mode: 'no-cors' });
+    const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(initialImage)}`);
     // here image is url/location of image
     const blob = await response.blob();
     const file = new File([blob], 'image.jpg', { type: blob.type });
