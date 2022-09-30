@@ -28,7 +28,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
           marginRight: '4%',
           paddingTop: '10px'
         }}>
-        {cardData.every((d) => !d) ? (
+        {cardData?.every((d) => !d) ? (
           <Skeleton
             style={{ marginBottom: '10px' }}
             sx={{ bgcolor: 'dimgray' }}
@@ -54,7 +54,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
           removeArrowOnDeviceType={['tablet', 'mobile']}
           customLeftArrow={<CustomLeftArrow />}
           customRightArrow={<CustomRightArrow />}>
-          {cardData.map((data, index) => {
+          {cardData?.map((data, index) => {
             if (!data)
               return (
                 <Skeleton
@@ -73,7 +73,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
                 {data}
               </div>
             ) : (
-              <BigCard key={data.id} data={data} />
+              <BigCard key={data?.id} data={data} />
             );
           })}
           {/* {bigBox ? (<div className="last-text-big">See All</div>) : ''}; */}
