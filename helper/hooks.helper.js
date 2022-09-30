@@ -1,12 +1,14 @@
 import { GET_COURSE } from '@/api/Queries';
-import { userClient } from '@/api/UserMutations';
+import { UPDATE_USER, userClient } from '@/api/UserMutations';
 
 import { GET_COHORT_USERS, GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, GET_USER_DETAIL, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_LSP_MAP_BY_LSPID, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
 
 import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/profilePreferencesHelper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { getUserOrgObject, UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { getUserOrgObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { useMutation } from '@apollo/client';
 import moment from 'moment';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
