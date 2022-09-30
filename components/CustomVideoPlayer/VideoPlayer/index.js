@@ -54,6 +54,10 @@ export default function VideoPlayer({
   // }, []);
 
   useEffect(() => {
+    setSubtitles('');
+  }, [videoData?.videoSrc]);
+
+  useEffect(() => {
     if (!videoElement?.current) return;
     if (!isSubtitleShown) return;
 
@@ -94,8 +98,6 @@ export default function VideoPlayer({
     topicContent[currentTopicContentIndex]?.subtitleUrl &&
     topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex];
 
-  const [videoType, setVideoType] = useState(1);
-
   // console.log(videoData);
   return (
     <>
@@ -115,111 +117,43 @@ export default function VideoPlayer({
 
       {videoData.type === 'mp4' && videoData.videoSrc && (
         <>
-          {videoType === 1 && (
-            <video
-              tabIndex="0"
-              onClick={handleClick}
-              onKeyDown={handleKeyDown}
-              ref={videoElement}
-              onTimeUpdate={handleOnTimeUpdate}
-              muted={playerState.isMuted}
-              className={`${styles.videoElement}`}
-              src={videoData.videoSrc}
-              // src={'https://www.youtube.com/watch?v=PNtFSVU-YTI'}
-              autoPlay={true}>
-              {isSubtitleShown && (
-                <track
-                  kind="subtitles"
-                  label="English Subtitles"
-                  srcLang="en"
-                  default
-                  hidden
-                  // src={
-                  //   isTrackSrcAvailable
-                  //     ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
-                  //         ?.url
-                  //     : ''
-                  // }
-                  src={
-                    isTrackSrcAvailable
-                      ? `/api/overrideCors?filePath=${encodeURIComponent(
-                          topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
-                            ?.url
-                        )}`
-                      : ''
-                  }
-                  // src={'/pineapple.vtt'}
-                />
-              )}
-              {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}
-            </video>
-          )}
-
-          {videoType === 2 && (
-            <video
-              tabIndex="0"
-              onClick={handleClick}
-              onKeyDown={handleKeyDown}
-              ref={videoElement}
-              onTimeUpdate={handleOnTimeUpdate}
-              muted={playerState.isMuted}
-              className={`${styles.videoElement}`}
-              src={videoData.videoSrc}
-              // src={'https://www.youtube.com/watch?v=PNtFSVU-YTI'}
-              autoPlay={true}
-              crossOrigin="anonymous">
-              {isSubtitleShown && (
-                <track
-                  kind="subtitles"
-                  label="English Subtitles"
-                  srcLang="en"
-                  default
-                  hidden
-                  src={
-                    isTrackSrcAvailable
-                      ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
+          <video
+            tabIndex="0"
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}
+            ref={videoElement}
+            onTimeUpdate={handleOnTimeUpdate}
+            muted={playerState.isMuted}
+            className={`${styles.videoElement}`}
+            src={videoData.videoSrc}
+            // src={'https://www.youtube.com/watch?v=PNtFSVU-YTI'}
+            autoPlay={true}>
+            {isSubtitleShown && (
+              <track
+                kind="subtitles"
+                label="English Subtitles"
+                srcLang="en"
+                default
+                hidden
+                // src={
+                //   isTrackSrcAvailable
+                //     ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
+                //         ?.url
+                //     : ''
+                // }
+                src={
+                  isTrackSrcAvailable
+                    ? `/api/overrideCors?filePath=${encodeURIComponent(
+                        topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
                           ?.url
-                      : ''
-                  }
-                  // src={'/pineapple.vtt'}
-                />
-              )}
-              {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}
-            </video>
-          )}
-
-          {videoType === 3 && (
-            <video
-              tabIndex="0"
-              onClick={handleClick}
-              onKeyDown={handleKeyDown}
-              ref={videoElement}
-              onTimeUpdate={handleOnTimeUpdate}
-              muted={playerState.isMuted}
-              className={`${styles.videoElement}`}
-              src={videoData.videoSrc}
-              // src={'https://www.youtube.com/watch?v=PNtFSVU-YTI'}
-              autoPlay={true}
-              crossOrigin="use-credentials">
-              {isSubtitleShown && (
-                <track
-                  kind="subtitles"
-                  label="English Subtitles"
-                  srcLang="en"
-                  default
-                  hidden
-                  src={
-                    isTrackSrcAvailable
-                      ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
-                          ?.url
-                      : ''
-                  }
-                  // src={'/pineapple.vtt'}
-                />
-              )}
-              {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}
-            </video>
-          )}
+                      )}`
+                    : ''
+                }
+                // src={'/pineapple.vtt'}
+              />
+            )}
+            {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}
+          </video>
 
           <span
             className={`${styles.subtitles} ${
