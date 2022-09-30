@@ -43,11 +43,10 @@ export function useHandleCatSubCat(selectedCategory) {
     }));
     let _subCat = allSubCat;
 
+    // console.log('selc', selectedCategory);
     if (selectedCategory) {
       const cat = catAndSubCatRes?.allCatMain?.find((cat) => cat?.Name === selectedCategory);
-      _subCat = catAndSubCatRes?.allSubCatMain
-        ?.filter((subCat) => subCat?.CatId === cat?.id)
-        ?.map((subCat) => ({ ...subCat, value: subCat?.Name, label: subCat?.Name }));
+      _subCat = allSubCat?.filter((subCat) => subCat?.CatId === cat?.id);
     }
 
     setCatSubCat({
@@ -59,11 +58,12 @@ export function useHandleCatSubCat(selectedCategory) {
       })),
       subCat: _subCat,
       allSubCat: allSubCat,
-      isFiltered: allSubCat?.length === _subCat?.length
+      isFiltered: allSubCat?.length !== _subCat?.length
     });
   }, []);
 
   useEffect(() => {
+    // console.log(catSubCat, selectedCategory);
     if (catSubCat?.isFiltered) return;
     let allSubCat = catSubCat?.allSubCat;
     let _subCat = catSubCat?.allSubCat;
@@ -71,11 +71,12 @@ export function useHandleCatSubCat(selectedCategory) {
       const cat = catSubCat?.cat?.find((cat) => cat?.Name === selectedCategory);
       _subCat = catSubCat?.subCat?.filter((subCat) => subCat?.CatId === cat?.id);
     }
+    // console.log(allSubCat?.length, _subCat?.length, selectedCategory);
 
     setCatSubCat({
       ...catSubCat,
       subCat: _subCat,
-      isFiltered: allSubCat?.length === _subCat?.length
+      isFiltered: allSubCat?.length !== _subCat?.length
     });
   }, [selectedCategory, catSubCat?.isFiltered]);
 
