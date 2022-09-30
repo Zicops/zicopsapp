@@ -13,13 +13,15 @@ export default function BigCard({data}) {
         <style jsx>
           {`
             .card_item {
-              height: 600px;
+              // height: 600px;
               background-color: var(--dimgray);
               border-radius: 10px;
+              aspect-ratio: 9/14;
             }
             .card_item img {
               height: 100%;
               width: 100%;
+              object-fit: cover;
               opacity: 1;
             }
             .card_item div {
@@ -27,7 +29,7 @@ export default function BigCard({data}) {
               position: absolute;
               width: 100%;
               top: 5%;
-              font-size: 40px;
+              font-size: 2.5vw;
               font-weight: normal;
               text-transform: uppercase;
               word-wrap: break-word;

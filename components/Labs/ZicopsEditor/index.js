@@ -1,4 +1,4 @@
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
 import { useState } from 'react';
 import styles from '../labs.module.scss';
 
@@ -20,7 +20,7 @@ export default function ZicopsEditor({ language = '' }) {
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': '#202124'
+        'editor.background': '#000000'
       }
     });
   }
