@@ -1,8 +1,12 @@
-import { GET_COURSE } from '@/api/Queries';
-import { UPDATE_USER, userClient } from '@/api/UserMutations';
-
-import { GET_COHORT_USERS, GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS, GET_USER_DETAIL, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_LSP_MAP_BY_LSPID, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
-
+import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
+import { UPDATE_USER, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
+import {
+  GET_USER_COURSE_MAPS,
+  GET_USER_COURSE_PROGRESS,
+  GET_USER_LEARNINGSPACES_DETAILS,
+  GET_USER_PREFERENCES,
+  userQueryClient
+} from '@/api/UserQueries';
 import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/profilePreferencesHelper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getUserOrgObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -14,6 +18,76 @@ import { loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import { LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
+
+export function useHandleCatSubCat(selectedCategory) {
+  const [catSubCat, setCatSubCat] = useState({
+    cat: [],
+    subCat: [],
+    allSubCat: [],
+    isFiltered: false
+  });
+  // this will have the whole cat object not just id
+  const [activeCatId, setActiveCatId] = useState(null);
+
+  useEffect(async () => {
+    const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
+    const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => ({
+      ...subCat,
+      value: subCat?.Name,
+      label: subCat?.Name
+    }));
+    let _subCat = allSubCat;
+
+    if (selectedCategory) {
+      const cat = catAndSubCatRes?.allCatMain?.find((cat) => cat?.Name === selectedCategory);
+      _subCat = catAndSubCatRes?.allSubCatMain
+        ?.filter((subCat) => subCat?.CatId === cat?.id)
+        ?.map((subCat) => ({ ...subCat, value: subCat?.Name, label: subCat?.Name }));
+    }
+
+    setCatSubCat({
+      ...catSubCat,
+      cat: catAndSubCatRes?.allCatMain?.map((cat) => ({
+        ...cat,
+        value: cat?.Name,
+        label: cat?.Name
+      })),
+      subCat: _subCat,
+      allSubCat: allSubCat,
+      isFiltered: allSubCat?.length === _subCat?.length
+    });
+  }, []);
+
+  useEffect(() => {
+    if (catSubCat?.isFiltered) return;
+    let allSubCat = catSubCat?.allSubCat;
+    let _subCat = catSubCat?.allSubCat;
+    if (selectedCategory) {
+      const cat = catSubCat?.cat?.find((cat) => cat?.Name === selectedCategory);
+      _subCat = catSubCat?.subCat?.filter((subCat) => subCat?.CatId === cat?.id);
+    }
+
+    setCatSubCat({
+      ...catSubCat,
+      subCat: _subCat,
+      isFiltered: allSubCat?.length === _subCat?.length
+    });
+  }, [selectedCategory, catSubCat?.isFiltered]);
+
+  useEffect(() => {
+    const allSubCat = catSubCat?.allSubCat;
+    let _subCat = allSubCat;
+
+    if (activeCatId?.id) {
+      _subCat = allSubCat?.filter((subCat) => subCat?.CatId === activeCatId?.id);
+    }
+
+    setCatSubCat({ ...catSubCat, subCat: _subCat });
+  }, [activeCatId]);
+
+  return { catSubCat, activeCatId, setActiveCatId };
+}
+
 // export default function useHandleUserDetails() {
 //   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
 //     client: userClient

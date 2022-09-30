@@ -1,10 +1,10 @@
 import ToolTip from '@/components/common/ToolTip';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { GET_QUESTION_BANK_QUESTIONS, queryClient } from '../../../../API/Queries';
 import { changeHandler } from '../../../../helper/common.helper';
-import { loadCatSubCat } from '../../../../helper/data.helper';
 import {
   getQuestionBankObject,
   SelectedQuestionBankAtom
@@ -32,9 +32,10 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
   } = useHandleQuestionBank();
 
   // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
   // update sub cat based on cat
-  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, questionBankData?.category);
+  // loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, questionBankData?.category);
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat(questionBankData?.category);
 
   useEffect(() => {
     if (!selectedQb) return;
@@ -91,12 +92,13 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           inputName: 'category',
           label: 'Category:',
           placeholder: 'Select Category',
-          options: catAndSubCatOption.cat,
+          options: catSubCat.cat,
           value: { value: questionBankData?.category, label: questionBankData?.category },
           isDisabled: isQuestionsPresent || !isPopUp,
           isSearchEnable: true
         }}
         changeHandler={(e) => {
+          setActiveCatId(e);
           setQuestionBankData({
             ...questionBankData,
             category: e.value,
@@ -111,7 +113,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           inputName: 'sub_category',
           label: 'Sub-Category:',
           placeholder: 'Select Sub-Category',
-          options: catAndSubCatOption.subCat,
+          options: catSubCat.subCat,
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },
           isDisabled: isQuestionsPresent || !isPopUp,
           isSearchEnable: true
@@ -128,7 +130,13 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
               <Button text={'Cancel'} clickHandler={closePopUp} />
             </div>
           </ToolTip>
-          <ToolTip title={`${isEdit?"Save new changes to this question paper":"Add and proceed to Question Creation"}`} placement="right">
+          <ToolTip
+            title={`${
+              isEdit
+                ? 'Save new changes to this question paper'
+                : 'Add and proceed to Question Creation'
+            }`}
+            placement="right">
             <div>
               <Button
                 text={isEdit ? 'Update' : 'Add'}

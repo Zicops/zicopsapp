@@ -44,7 +44,7 @@ export default function MyUser({ getUser }) {
     if (usersData?.error) return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
     setData([...usersData], setLoading(false));
     return;
-  }, [userId]);
+  }, []);
 
   const columns = [
     {
