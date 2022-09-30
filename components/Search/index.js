@@ -4,21 +4,29 @@ import useHandleSearch from './Logic/useHandleSearch';
 import SearchBody from './SearchBody';
 import SearchBookmarks from './SearchBookmarks';
 import SearchHeader from './SearchHeader';
+import SearchSubCat from './SearchSubCat';
 
 export default function Search() {
   const { courses, lastItemRef, filters, setFilters, clearAllFilters } = useHandleSearch();
   const router = useRouter();
   const searchQuery = router.query?.searchQuery || '';
-  const [hideBookMark , setHideBookmark] = useState(false);
-  
-  useEffect(()=>{
+  const [hideBookMark, setHideBookmark] = useState(false);
+  const [hideSubCat, setHideSubCat] = useState(false);
+
+  useEffect(() => {
     // console.log(isPref);
-    const { isPref } = router.query ;
-    if(!isPref) return ;
+    const { isPref, cat } = router.query;
+    if (!isPref) return;
     setHideBookmark(true);
+
+    if (cat) {
+      setHideBookmark(true);
+      setHideSubCat(false);
+    }
+
     // setFilters(prevValue => ({...prevValue , subCategory:searchQuery}))
-    return ;
-  },[router.query])
+    return;
+  }, [router.query]);
 
   return (
     <div
@@ -29,6 +37,8 @@ export default function Search() {
       }}>
       <SearchHeader filters={filters} setFilters={setFilters} clearAllFilters={clearAllFilters} />
       {!hideBookMark && <SearchBookmarks />}
+      {!hideSubCat && <SearchSubCat />}
+
       <SearchBody
         courses={courses?.filter((course) => {
           console.log(course);
@@ -43,7 +53,7 @@ export default function Search() {
 
           if (filters?.lang)
             langFilter = course?.language
-              ?.map((lang)=> lang?.toLowerCase()?.trim())
+              ?.map((lang) => lang?.toLowerCase()?.trim())
               ?.includes(filters?.lang?.trim()?.toLowerCase());
           if (filters?.category)
             catFilter = course?.category
