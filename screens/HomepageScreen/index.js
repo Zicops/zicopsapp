@@ -61,8 +61,8 @@ export default function HomepageScreen() {
     },
     laptop: {
       breakpoint: { max: 1530, min: 1024 },
-      items: 5,
-      slidesToSlide: 5
+      items: 4,
+      slidesToSlide: 1
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },

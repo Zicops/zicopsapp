@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../labs.module.scss';
 
-export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
+export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData, openLab) {
   const pacmanRef = useRef(null);
   const [activeRoom, setActiveRoom] = useState(null);
   const [activeBtn, setActiveBtn] = useState(null);
@@ -49,7 +49,7 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
     if (!pacmanRef.current) return;
 
     function movePacman(e) {
-      if (e.key.includes('Arrow')) e.preventDefault();
+      if (e.key?.includes('Arrow')) e.preventDefault();
 
       if (e.key === 'ArrowUp') updateState(-1, 0, -PACMAN_HEIGHT_WIDTH, 0, 0);
       if (e.key === 'ArrowDown') updateState(1, 0, PACMAN_HEIGHT_WIDTH, 0, 2);
@@ -79,9 +79,10 @@ export default function usePacman(PACMAN_HEIGHT_WIDTH, board, roomData) {
 
   function onRoomClick(route = null) {
     if (!route) route = pacmanRef?.current?.activeRoom?.route;
-    if (route?.includes('html')) return router.push(route);
+    // if (route?.includes('html')) return router.push(route);
 
-    alert(route);
+    // alert(route);
+    openLab(route);
   }
 
   function removePreviousDirections() {

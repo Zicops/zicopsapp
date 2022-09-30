@@ -1,8 +1,203 @@
 @import '../../styles/base.scss';
 
-.homebody {
-    background-color: $bgTile;
-    overflow: hidden;
-    margin: 0;
-    padding: 0
+.labsPageScreen {
+  position: absolute;
+  top: 70px;
+  background-color: transparent;
+  width: 100vw;
+  height: 75vh;
+  z-index: 2;
+  overflow: hidden;
+  display: flex;
+  .labsDoorLeft {
+    border: 6px double $primary;
+    width: 50%;
+    height: 100%;
+    transition: all 1s;
+    background-color: rgba($black, 0.85);
+    padding: 50px 100px;
+    .labsDoorLeftContent {
+      color: $white;
+      width: 75%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+
+      .labHeading {
+        p {
+          color: $bgBody;
+          strong {
+            color: $white;
+          }
+        }
+        ul {
+          display: flex;
+          // justify-content: space-between;
+          gap: 50px;
+          margin: 10px 20px;
+        }
+      }
+      .labLeftBody {
+        display: flex;
+        gap: 30px;
+        .image {
+          width: 80px;
+          img {
+            width: 100%;
+          }
+        }
+        .textBlock {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+          .textBlockHeading {
+            font-size: 18px;
+            color: $white;
+            text-transform: uppercase;
+            font-weight: bold;
+          }
+          .textBlockContent {
+            color: $darkThree;
+            margin-top: -5px;
+            span {
+              color: $primary;
+              font-size: 50px;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .centerCircle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    .labsPasswordEntry {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 50vh;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background-color: $black;
+      border: 6px solid $white;
+      box-shadow: 0 0 10px 0 $primary;
+      transition: all 1s;
+
+      .fingerprint {
+        height: 25%;
+        margin-bottom: 20px;
+        img {
+          height: 100%;
+        }
+      }
+        label{
+          color: $primary;
+        }
+      .labsPasswordInput {
+        width: 70%;
+        padding: 10px;
+        font-size: 20px;
+        border: 2px solid $primary;
+        color: $primary;
+        outline: none;
+        background-color: transparent;
+      }
+
+      button {
+        background-color: $primary;
+        width: 50%;
+        padding: 15px;
+        border: none;
+        outline: none;
+        font-weight: bold;
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0px 0px 5px 0 $primary;
+        }
+      }
+    }
+  }
+  .labsDoorRight {
+    border: 6px double $primary;
+    width: 50%;
+    height: 100%;
+    transition: all 1s;
+    background-color: rgba($black, 0.8);
+    padding: 50px 100px;
+    .close{
+      position: absolute;
+      right: 4%;
+      height: 40px;
+      width: 40px;
+      cursor: pointer;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .labsDoorRightContent {
+          color: $white;
+          width: 75%;
+          height: 100%;
+          margin-left: 20%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 30px;
+          .battery{
+            height: 250px;
+            width: 100px;
+            display: grid;
+            grid-gap: 10px;
+            span{
+              background-color: $primary;
+              grid-template-rows: repeat(5, 40px);
+              border: 2px solid $primary;
+              &:first-child {
+                  background-color: transparent;
+                }
+              &:nth-child(2) {
+                  background: linear-gradient(0deg, $primary 0%, $primary 50%, transparent 50%);
+                }
+            }
+          }
+        .batteryText {
+          color: $bgBody;
+          text-align: center;
+          p {
+            color: $primary;
+            font-size: 30px;
+            font-weight: bolder;
+          }
+        }
+      }
+  }
+
+  .leftDoorOpen {
+    margin-right: 60%;
+    margin-left: -60%;
+    opacity: 0;
+  }
+  .rightDoorOpen {
+    margin-left: 60%;
+    margin-right: -60%;
+    opacity: 0;
+  }
+  .labsPasswordSubmit {
+    transform-origin: center center;
+    transform: rotate(350deg) scale(0.5);
+    opacity: 0;
+  }
 }
