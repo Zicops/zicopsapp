@@ -14,21 +14,24 @@ export default function Pacman() {
   const [goto, setGoto] = useState(0);
   const router = useRouter();
 
-  const openLab = (route) => {
+  const setLab = (route) => {
     setShowDoor(1);
     setGoto(route);
   };
-  const closeLab = () => {
+  const openLab = () => {
     setShowDoor(0);
     if (goto?.includes('html')) return router.push(goto);
     alert(goto);
   };
+  const closeLab = () => {
+    setShowDoor(0);
+  };
 
-  const data = usePacman(PACMAN_HEIGHT_WIDTH, board, roomData, openLab);
+  const data = usePacman(PACMAN_HEIGHT_WIDTH, board, roomData, setLab);
 
   return (
     <>
-      {showDoor ? <LabsPageScreen login={closeLab} /> : ''}
+      {showDoor ? <LabsPageScreen openLab={openLab} closeLab={closeLab} /> : ''}
       <div className={styles.pacmanContainer}>
         <Controls {...data} />
         <Board {...data} />

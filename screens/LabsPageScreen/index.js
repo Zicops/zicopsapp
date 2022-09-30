@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import styles from './labsPageScreen.module.scss';
 
-export default function LabsPageScreen({ login }) {
+export default function LabsPageScreen({ openLab, closeLab }) {
   const [labopen, setLabOpen] = useState(0);
-  const openLab = () => {
+  const openLabs = () => {
     setLabOpen(1);
     setTimeout(() => {
-      login();
+      openLab();
     }, 1000);
   };
+
   return (
     <div className={`${styles.labsPageScreen}`}>
       <div className={`${styles.labsDoorLeft} ${labopen ? styles.leftDoorOpen : ''}`}>
@@ -71,10 +72,13 @@ export default function LabsPageScreen({ login }) {
             value="*********"
             autoComplete="false"
           />
-          <button onClick={openLab}>Enter Lab</button>
+          <button onClick={openLabs}>Enter Lab</button>
         </div>
       </div>
       <div className={`${styles.labsDoorRight} ${labopen ? styles.rightDoorOpen : ''}`}>
+        <div className={`${styles.close}`} onClick={closeLab}>
+          <img src="/images/svg/close-icon.svg" alt="" />
+        </div>
         <div className={`${styles.labsDoorRightContent}`}>
           <div className={`${styles.battery}`}>
             <span></span>
@@ -85,7 +89,7 @@ export default function LabsPageScreen({ login }) {
             <span></span>
           </div>
           <div className={`${styles.batteryText}`}>
-            <p>50 mins Left</p> out of 60 Min
+            <p>50 mins left</p> out of 60 Min
           </div>
         </div>
       </div>
