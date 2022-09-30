@@ -13,6 +13,11 @@ import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/p
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getUserOrgObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
+import {
+  isPossiblePhoneNumber,
+  isValidPhoneNumber,
+  validatePhoneNumberLength
+} from 'libphonenumber-js';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -459,6 +464,7 @@ export function useUpdateUserAboutData() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local state
+  const [multiUserArr, setMultiUserArr] = useState([]);
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
 
@@ -488,28 +494,29 @@ export function useUpdateUserAboutData() {
     );
   }, [newUserAboutData]);
 
-  async function updateAboutUser() {
+  async function updateAboutUser(userData = null) {
+    userData = userData ? userData : newUserAboutData;
     const sendUserData = {
-      id: newUserAboutData?.id,
-      first_name: newUserAboutData?.first_name,
-      last_name: newUserAboutData?.last_name,
+      id: userData?.id,
+      first_name: userData?.first_name,
+      last_name: userData?.last_name,
 
-      status: newUserAboutData?.status || 'Active',
-      role: newUserAboutData?.role || 'Learner',
-      email: newUserAboutData?.email,
-      phone: newUserAboutData?.phone,
+      status: userData?.status || 'Active',
+      role: userData?.role || 'Learner',
+      email: userData?.email,
+      phone: userData?.phone,
 
-      gender: newUserAboutData?.gender,
-      photo_url: newUserAboutData?.photo_url,
+      gender: userData?.gender,
+      photo_url: userData?.photo_url,
 
       is_verified: true,
-      is_active: newUserAboutData?.is_active,
+      is_active: userData?.is_active,
 
-      created_by: newUserAboutData?.created_by || 'Zicops',
-      updated_by: newUserAboutData?.updated_by || 'Zicops'
+      created_by: userData?.created_by || 'Zicops',
+      updated_by: userData?.updated_by || 'Zicops'
     };
 
-    if (newUserAboutData?.Photo) sendUserData.Photo = newUserAboutData?.Photo;
+    if (userData?.Photo) sendUserData.Photo = userData?.Photo;
     // if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
 
     console.log(sendUserData, 'updateAboutUser');
@@ -521,20 +528,30 @@ export function useUpdateUserAboutData() {
     });
 
     if (isError || updateAboutErr)
-      return setToastMsg({ type: 'danger', message: 'Update User about Error' });
+      return setToastMsg({ type: 'danger', message: `Failed To Disable ${sendUserData?.email}` });
 
     const data = res?.data?.updateUser;
-    const _userData = { ...newUserAboutData, ...data };
+    const _userData = { ...userData, ...data };
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
     setUserDataAbout(_userData);
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
   }
 
+  async function updateMultiUserAbout() {
+    for (let i = 0; i < multiUserArr.length; i++) {
+      const user = multiUserArr[i];
+      await updateAboutUser(user);
+    }
+  }
+
   return {
     newUserAboutData,
     setNewUserAboutData,
+    multiUserArr,
+    setMultiUserArr,
+    isFormCompleted,
     updateAboutUser,
-    isFormCompleted
+    updateMultiUserAbout
   };
 }
 

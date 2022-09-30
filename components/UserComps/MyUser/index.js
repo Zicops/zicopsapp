@@ -22,7 +22,7 @@ import { useRecoilState } from 'recoil';
 import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
 export default function MyUser({ getUser }) {
-  const [userId, setUserId] = useState([]);
+  const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
 
@@ -35,9 +35,8 @@ export default function MyUser({ getUser }) {
   const router = useRouter();
 
   useEffect(async () => {
-    getUser(userId);
-
     setLoading(true);
+
     const usersData = await getUsersForAdmin();
     console.log(usersData);
 
@@ -45,6 +44,10 @@ export default function MyUser({ getUser }) {
     setData([...usersData], setLoading(false));
     return;
   }, []);
+
+  useEffect(() => {
+    getUser(selectedUser);
+  }, [selectedUser]);
 
   const columns = [
     {
@@ -55,9 +58,9 @@ export default function MyUser({ getUser }) {
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
             type="checkbox"
-            isChecked={data?.length !== 0 && userId.length === data.length}
+            isChecked={data?.length !== 0 && selectedUser.length === data.length}
             changeHandler={(e) => {
-              setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
+              setSelectedUser(e.target.checked ? [...data.map((row) => row)] : []);
             }}
           />
           Email Id
@@ -68,18 +71,18 @@ export default function MyUser({ getUser }) {
           <div className="center-elements-with-flex">
             <LabeledRadioCheckbox
               type="checkbox"
-              isChecked={userId?.includes(params.id)}
+              isChecked={selectedUser?.find((u) => u?.id === params.id)}
               changeHandler={(e) => {
-                const userList = [...userId];
+                const userList = [...selectedUser];
 
                 if (e.target.checked) {
-                  userList.push(params.id);
+                  userList.push(params?.row);
                 } else {
-                  const index = userList.findIndex((id) => id === params.id);
+                  const index = userList.findIndex((u) => u?.id === params.id);
                   userList.splice(index, 1);
                 }
 
-                setUserId(userList);
+                setSelectedUser(userList);
               }}
             />
             {params.row?.email}
@@ -103,13 +106,19 @@ export default function MyUser({ getUser }) {
       field: 'role',
       headerClassName: 'course-list-header',
       headerName: 'Role',
-      flex: 0.5
+      flex: 0.5,
+      renderCell: (params) => {
+        return <>{params?.row?.role || 'Learner'}</>;
+      }
     },
     {
       field: 'status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
-      flex: 0.5
+      flex: 0.5,
+      renderCell: (params) => {
+        return <>{params?.row?.status || 'Invited'}</>;
+      }
     },
     {
       field: 'action',
@@ -154,7 +163,6 @@ export default function MyUser({ getUser }) {
           title={`Are you sure you want to disable user with email ${newUserAboutData?.email}`}
           btnObj={{
             handleClickLeft: async () => {
-              console.log(newUserAboutData);
               await updateAboutUser();
               setDisableAlert(false);
             },
