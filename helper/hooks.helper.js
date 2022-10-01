@@ -174,11 +174,11 @@ export default function useUserCourseData() {
   async function getUserCourseData() {
     const { id } = getUserData();
     let currentUserId = id;
-    if (!currentUserId)
-      return setToastMsg({
-        type: 'danger',
-        message: 'Need to provide user id for course progress!'
-      });
+    if (!currentUserId) return;
+      // return setToastMsg({
+      //   type: 'danger',
+      //   message: 'Need to provide user id for course progress!'
+      // });
 
     const assignedCoursesRes = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS,

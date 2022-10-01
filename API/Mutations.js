@@ -50,6 +50,8 @@ export const ADD_COURSE = gql`
     addCourse(
       course: {
         name: $name
+        lspId: "Zicops learning Spaces"
+        publisher: "Zicops"
         description: $description
         summary: $summary
         instructor: $instructor

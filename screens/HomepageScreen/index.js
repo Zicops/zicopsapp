@@ -89,7 +89,7 @@ export default function HomepageScreen() {
   const pageSize = 28;
 
   useEffect(async () => {
-    console.log(catSubCat?.cat);
+    // console.log(catSubCat?.cat);
     const subcatArr = await getUserPreferences();
     const activeSubcategories = subcatArr?.filter(
       (item) => item?.is_active === true && item?.is_base !== true
