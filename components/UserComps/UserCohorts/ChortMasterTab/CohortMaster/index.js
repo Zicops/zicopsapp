@@ -22,11 +22,13 @@ import { userClient } from '@/api/UserMutations';
 import useCohortUserData from '../Logic/useCohortUserData';
 import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
+import Loader from '@/components/common/Loader';
 
 const CohortMaster = ({ isEdit = false }) => {
-  const {  getCohortManager } = useCohortUserData();
+  const { getCohortManager } = useCohortUserData();
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
   const router = useRouter();
+  const cohortId = router?.query?.cohortId || null;
 
   const [cohortManager, setCohortManager] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -55,20 +57,24 @@ const CohortMaster = ({ isEdit = false }) => {
     setCohortData(getCohortMasterObject({}));
   }, []);
 
-  function formatUsers(userArr=null){
-    if(!userArr?.length) return setToastMsg({type:'danger',message:'No user found!'});
-    const data = userArr?.map((item)=>({
-     value: item?.full_name,
-     label: item?.full_name,
-     id: item?.id
-    }))
+  function formatUsers(userArr = null) {
+    if (!userArr?.length) return setToastMsg({ type: 'danger', message: 'No user found!' });
+    const data = userArr
+      ?.filter((user) => user?.is_verified && user?.is_active)
+      ?.map((item) => {
+        return {
+          value: item?.full_name,
+          label: item?.full_name,
+          id: item?.id
+        };
+      });
     return data;
   }
 
   useEffect(async () => {
     if (!isEdit) {
       const userList = await getUsersForAdmin();
-      if(userList?.error) return setToastMsg({type:'danger',message:userList?.error}) 
+      if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
       const managerList = formatUsers(userList);
       return setCohortManager([...managerList]);
     }
@@ -83,7 +89,7 @@ const CohortMaster = ({ isEdit = false }) => {
 
     const userList = await getUsersForAdmin();
     // console.log(managerList,'fs');
-    if(userList?.error) return setToastMsg({type:'danger',message:userList?.error}) 
+    if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
     const managerList = formatUsers(userList);
     setCohortManager([...managerList]);
 
@@ -92,11 +98,12 @@ const CohortMaster = ({ isEdit = false }) => {
     setCohortData(getCohortMasterObject(cohortDetail));
 
     const data = await getCohortManager(cohortId);
-    const cohortManager = data?.map((item) => ({
-      value: item?.name,
-      label: item?.name,
-      id: item?.id
-    }));
+    const cohortManager =
+      data?.map((item) => ({
+        value: item?.name,
+        label: item?.name,
+        id: item?.id
+      })) || [];
     setCohortData((prevValue) => ({ ...prevValue, managers: [...cohortManager] }));
   }, [router?.query]);
 
@@ -121,6 +128,9 @@ const CohortMaster = ({ isEdit = false }) => {
       [inputName]: e.map((el) => ({ value: el.value, id: el.id }))
     });
   }
+
+  if (cohortId && cohortData?.id !== cohortId)
+    return <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />;
 
   return (
     <>
@@ -197,6 +207,7 @@ const CohortMaster = ({ isEdit = false }) => {
         label={'Cohort Image'}
         isRemove={true}
         description={false}
+        imageUrl={cohortData?.image_url}
         handleChange={setImage}
       />
     </>

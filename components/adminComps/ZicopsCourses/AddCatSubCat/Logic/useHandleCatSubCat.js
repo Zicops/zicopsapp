@@ -28,12 +28,13 @@ export default function useHandleCatSubCat(isSubCat) {
   // local state
   const [catSubCatData, setCatSubCatData] = useState(getCatSubCatData());
   const [isAddReady, setIsAddReady] = useState(false);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [catoptions, setCatOptions] = useState([]);
 
   useEffect(() => {
     async function loadCategories() {
       const catRes = await loadQueryDataAsync(GET_CATS_MAIN);
-      console.log(catRes);
+      // console.log(catRes);
       setCatOptions(catRes?.allCatMain?.map((cat) => ({ label: cat?.Name, value: cat?.id })));
     }
     loadCategories();
@@ -86,21 +87,23 @@ export default function useHandleCatSubCat(isSubCat) {
   }, [addCategoryErr, addSubCategoryErr]);
 
   async function addCategory() {
+    setIsSubmitDisabled(true);
     // duplicate name check
     if (await isNameDuplicateAdvanced(GET_CATS_MAIN, {}, catSubCatData?.Name, 'allCatMain')) {
+      setIsSubmitDisabled(false);
       return setToastMsg({ type: 'danger', message: 'Category with same name already exist' });
     }
 
     const sendData = {
-      Name: catSubCatData?.Name,
-      Description: catSubCatData?.Description,
+      Name: catSubCatData?.Name?.trim(),
+      Description: catSubCatData?.Description?.trim(),
       ImageFile: catSubCatData?.File,
-      Code: catSubCatData?.Code,
+      Code: catSubCatData?.Code?.trim(),
       IsActive: catSubCatData?.IsActive,
       LspId: catSubCatData?.LspId
     };
 
-    console.log(sendData);
+    // console.log(sendData);
 
     let isError = false;
     const res = await addNewCategory({ variables: sendData }).catch((err) => {
@@ -108,33 +111,36 @@ export default function useHandleCatSubCat(isSubCat) {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Add Category Error' });
     });
-    console.log(res);
+    // console.log(res);
 
-    if (isError) return;
+    if (isError) return setIsSubmitDisabled(false);
 
     setIsPopUpDataPresent(false);
     udpatePopUpState(false);
+    setIsSubmitDisabled(false);
   }
 
   async function addSubCategory() {
+    setIsSubmitDisabled(true);
     // duplicate name check
     if (
       await isNameDuplicateAdvanced(GET_SUB_CATS_MAIN, {}, catSubCatData?.Name, 'allSubCatMain')
     ) {
+      setIsSubmitDisabled(false);
       return setToastMsg({ type: 'danger', message: 'Category with same name already exist' });
     }
 
     const sendData = {
       CatId: catSubCatData?.CatId,
-      Name: catSubCatData?.Name,
-      Description: catSubCatData?.Description,
+      Name: catSubCatData?.Name?.trim(),
+      Description: catSubCatData?.Description?.trim(),
       ImageFile: catSubCatData?.File,
-      Code: catSubCatData?.Code,
+      Code: catSubCatData?.Code?.trim(),
       IsActive: catSubCatData?.IsActive,
       LspId: catSubCatData?.LspId
     };
 
-    console.log(sendData);
+    // console.log(sendData);
 
     let isError = false;
     const res = await addNewSubCategory({ variables: sendData }).catch((err) => {
@@ -142,18 +148,20 @@ export default function useHandleCatSubCat(isSubCat) {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Add Sub Category Error' });
     });
-    console.log(res);
+    // console.log(res);
 
-    if (isError) return;
+    if (isError) return setIsSubmitDisabled(false);
 
     setIsPopUpDataPresent(false);
     udpatePopUpState(false);
+    setIsSubmitDisabled(false);
   }
 
   return {
     catSubCatData,
     setCatSubCatData,
     isAddReady,
+    isSubmitDisabled,
     handleFileInput,
     addCategory,
     addSubCategory,

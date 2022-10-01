@@ -46,7 +46,6 @@ export default function LabeledInput({
         disabled={!!isDisabled}
         autoComplete={isAutoComplete?.toString()}
       />
-
     </div>
   );
 }
@@ -59,7 +58,7 @@ export default function LabeledInput({
 
 const LabeledInputObj = shape({
   inputName: string.isRequired,
-  label: string.isRequired,
+  label: string,
   placeholder: string.isRequired,
   value: string || number,
   maxLength: number,

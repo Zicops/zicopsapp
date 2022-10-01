@@ -1,7 +1,8 @@
 import SearchBar from '@/components/common/FormComponents/SearchBar';
+import { useState } from 'react';
 import styles from '../../learnerUserProfile.module.scss';
 
-function LeaderboardCard({user}) {
+function LeaderboardCard({ user }) {
   return (
     <div className={`${styles.leaderboardBody}`}>
       <div className={`${styles.profile}`}>
@@ -30,13 +31,135 @@ function LeaderboardCard({user}) {
   );
 }
 export default function LeaderboardTab() {
-  const user = {
-    name: 'Sonali Kokalki',
-    bestRank: '02',
-    currentRank: '05',
-    rankGained: false,
-    isTopThree: true
-  };
+  const [searchQuery, setSearchQuery] = useState('');
+  const users = [
+    {
+      name: 'Alexander The Great',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Ash Khetchup',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Gol D. Roger',
+      bestRank: '01',
+      currentRank: '10',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Witch Hunter',
+      bestRank: '05',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Batman',
+      bestRank: '05',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    },
+    {
+      name: 'Sonali Kokalki',
+      bestRank: '02',
+      currentRank: '05',
+      rankGained: false,
+      isTopThree: true
+    }
+  ];
   return (
     <div className={`${styles.LeaderboardTabContainer}`}>
       <div className={`${styles.searchbar}`}>
@@ -44,8 +167,10 @@ export default function LeaderboardTab() {
           inputDataObj={{
             inputOptions: {
               inputName: 'filter',
-              placeholder: 'Search Courses'
-            }
+              placeholder: 'Search Courses',
+              value: searchQuery
+            },
+            changeHandler: (e) => setSearchQuery(e.target.value)
           }}
         />
       </div>
@@ -55,16 +180,12 @@ export default function LeaderboardTab() {
         <div className={`${styles.crank}`}>Current Rank</div>
       </div>
       <div className={`${styles.leaderboardScrollable}`}>
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
-        <LeaderboardCard user={user} />
+        {users?.map((user) => {
+          if (!user?.name?.toLowerCase()?.trim()?.includes(searchQuery?.toLowerCase()?.trim()))
+            return null;
+
+          return <LeaderboardCard user={user} />;
+        })}
       </div>
     </div>
   );

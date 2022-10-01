@@ -43,11 +43,11 @@ const UserCohorts = ({ isEdit = false }) => {
         tabData={tabData}
         tab={tab}
         setTab={setTab}
-        customStyles={tab === tabData[2].name? {padding:'20px'}:{}}
+        customStyles={tab === tabData[2].name ? { padding: '20px' } : {}}
         footerObj={{
           // submitDisplay: 'Save',
           showFooter: tab === tabData[0].name,
-          status: status || STATUS.display[0],
+          status: cohortMasterData?.status || status || STATUS.display[0],
           submitDisplay: cohortMasterData?.id ? 'Update' : 'Save',
           handleSubmit: () => saveCohortMaster(),
           handleCancel: () => {

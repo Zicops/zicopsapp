@@ -29,7 +29,7 @@ export function useHandleCohortMaster() {
   });
 
   const { addUserToCohort } = addUserData();
-  const { getCohortManager, getCohortUserDetails , getCohortUser } = useCohortUserData();
+  const { getCohortManager, getCohortUserDetails, getCohortUser } = useCohortUserData();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [status, setStatus] = useRecoilState(StatusAtom);
@@ -62,7 +62,6 @@ export function useHandleCohortMaster() {
     if (!managers?.length > 0) errorMsg = 'Atleast add one manager';
 
     if (!!errorMsg) setToastMsg({ type: 'danger', message: errorMsg });
-
     return !!errorMsg;
   }
 
@@ -78,6 +77,7 @@ export function useHandleCohortMaster() {
   }, [cohortData]);
 
   async function saveCohortMaster() {
+    console.log(cohortMasterData, cohortData);
     if (validatingCohortMaster()) return;
 
     const data = getUserData();
@@ -98,17 +98,18 @@ export function useHandleCohortMaster() {
     let isError = false;
     if (cohortMasterData?.id) {
       sendCohortData.cohort_id = cohortMasterData?.id;
-      const allUsers = await getCohortUser(cohortMasterData?.id,true);
+      const allUsers = await getCohortUser(cohortMasterData?.id, true);
+      if (allUsers?.length) sendCohortData.size = allUsers?.length;
       const oldManagers = allUsers?.filter((item) => item?.role?.toLowerCase() === 'manager');
-      const oldLearner = allUsers?.filter((item)=> item?.role?.toLowerCase() !== 'manager')
-      
+      const oldLearner = allUsers?.filter((item) => item?.role?.toLowerCase() !== 'manager');
+
       //promoting learner to manager
-      const promoteManager = oldLearner.filter(
-        ({ user_id: id1 }) => cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
+      const promoteManager = oldLearner?.filter(({ user_id: id1 }) =>
+        cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
       );
 
       //updating older manager that are removed
-      const removeManager = oldManagers.filter(
+      const removeManager = oldManagers?.filter(
         ({ user_id: id1 }) => !cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
       );
 
@@ -117,7 +118,7 @@ export function useHandleCohortMaster() {
         ({ id: id1 }) => !allUsers?.some(({ user_id: id2 }) => id2 === id1)
       );
 
-      console.log(removeManager , newManager , promoteManager , allUsers);
+      console.log(removeManager, newManager, promoteManager, allUsers);
       // return ;
 
       if (removeManager?.length) {
@@ -162,7 +163,6 @@ export function useHandleCohortMaster() {
           console.log(res);
         }
       }
-      
 
       //adding new managers
       if (newManager?.length) {
@@ -189,6 +189,7 @@ export function useHandleCohortMaster() {
         }
       }
 
+      console.log(sendCohortData);
       const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
         console.log(err);
         isError = !!err;

@@ -28,9 +28,10 @@ const UserCohorts = () => {
     const data = resCohortData?.getCohortMains?.cohorts;
     if (!data) return setLoading(false);
     const list = data.map((item) => {
+      // console.log(item);
       return { ...item, id: item?.cohort_id };
     });
-    const cohorts = list?.filter((item)=>item?.is_active)
+    const cohorts = list?.filter((item) => item?.is_active);
     setCohortList([...cohorts], setLoading(false));
   }, []);
 
@@ -44,12 +45,12 @@ const UserCohorts = () => {
     {
       field: 'code',
       headerClassName: 'course-list-header',
-      headerName: 'Cohort Code',
+      headerName: 'Cohort Id',
       flex: 1
     },
     {
       field: 'size',
-      headerName: 'Cohort Size',
+      headerName: 'Size',
       headerClassName: 'course-list-header',
       flex: 1
     },

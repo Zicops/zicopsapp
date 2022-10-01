@@ -43,7 +43,7 @@ export const UsersOrganizationAtom = atom({
   default: getUserOrgObject()
 });
 
-export function getUserOrgObject(data={}) {
+export function getUserOrgObject(data = {}) {
   return {
     user_id: data?.user_id || null,
 
@@ -103,26 +103,26 @@ export function getCohortMasterObject(data = {}) {
     id: data?.cohort_id || null,
     cohort_name: data?.name || '',
     cohort_code: data?.code || '',
-    status: data?.status || 'active',
+    status: data?.status || '',
     lsp_id: data?.lsp_id || 'Zicops learning Spaces',
     cohort_type: data?.type || '',
     description: data?.description || '',
     cohort_image: data?.cohort_image || null,
-    image_url:data?.imageUrl || '',
+    image_url: data?.imageUrl || '',
     managers: []
   };
 }
 
 export const SelectedCohortDataAtom = atom({
-  key:'selectedCohortData',
+  key: 'selectedCohortData',
   default: getSelectedCohortDataObject()
 });
 
-export function getSelectedCohortDataObject(data={}){
-  return{
+export function getSelectedCohortDataObject(data = {}) {
+  return {
     main: data?.main || null,
-    userCohort: data?.userCohort || null, 
+    userCohort: data?.userCohort || null,
     cohrotCourses: data?.cohrotCourses || [],
-    cohortUsers:data?.cohortUsers || []
-  }
+    cohortUsers: data?.cohortUsers || []
+  };
 }

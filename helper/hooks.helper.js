@@ -13,6 +13,11 @@ import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/p
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getUserOrgObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
+import {
+  isPossiblePhoneNumber,
+  isValidPhoneNumber,
+  validatePhoneNumberLength
+} from 'libphonenumber-js';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -22,45 +27,60 @@ import { LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 
 export function useHandleCatSubCat(selectedCategory) {
+  const [refetch, setRefetch] = useState(true);
   const [catSubCat, setCatSubCat] = useState({
     cat: [],
     subCat: [],
     allSubCat: [],
+    subCatGrp: {},
     isFiltered: false
   });
   // this will have the whole cat object not just id
   const [activeCatId, setActiveCatId] = useState(null);
 
   useEffect(async () => {
+    if (!refetch) return;
+
     const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
-    const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => ({
-      ...subCat,
-      value: subCat?.Name,
-      label: subCat?.Name
-    }));
+    const _subCatGrp = {};
+    const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
+      return {
+        ...subCat,
+        value: subCat?.Name,
+        label: subCat?.Name
+      };
+    });
+    const _cat = catAndSubCatRes?.allCatMain?.map((cat) => {
+      if (!_subCatGrp[cat?.id]) _subCatGrp[cat?.id] = { cat: cat, subCat: [] };
+      _subCatGrp[cat?.id].subCat.push(...allSubCat?.filter((subCat) => subCat?.CatId === cat?.id));
+
+      return {
+        ...cat,
+        value: cat?.Name,
+        label: cat?.Name
+      };
+    });
     let _subCat = allSubCat;
 
+    // console.log('selc', selectedCategory);
     if (selectedCategory) {
       const cat = catAndSubCatRes?.allCatMain?.find((cat) => cat?.Name === selectedCategory);
-      _subCat = catAndSubCatRes?.allSubCatMain
-        ?.filter((subCat) => subCat?.CatId === cat?.id)
-        ?.map((subCat) => ({ ...subCat, value: subCat?.Name, label: subCat?.Name }));
+      _subCat = allSubCat?.filter((subCat) => subCat?.CatId === cat?.id);
     }
 
     setCatSubCat({
       ...catSubCat,
-      cat: catAndSubCatRes?.allCatMain?.map((cat) => ({
-        ...cat,
-        value: cat?.Name,
-        label: cat?.Name
-      })),
+      cat: _cat,
       subCat: _subCat,
       allSubCat: allSubCat,
-      isFiltered: allSubCat?.length === _subCat?.length
+      subCatGrp: _subCatGrp,
+      isFiltered: allSubCat?.length !== _subCat?.length
     });
-  }, []);
+    setRefetch(null);
+  }, [refetch]);
 
   useEffect(() => {
+    // console.log(catSubCat, selectedCategory);
     if (catSubCat?.isFiltered) return;
     let allSubCat = catSubCat?.allSubCat;
     let _subCat = catSubCat?.allSubCat;
@@ -68,11 +88,12 @@ export function useHandleCatSubCat(selectedCategory) {
       const cat = catSubCat?.cat?.find((cat) => cat?.Name === selectedCategory);
       _subCat = catSubCat?.subCat?.filter((subCat) => subCat?.CatId === cat?.id);
     }
+    // console.log(allSubCat?.length, _subCat?.length, selectedCategory);
 
     setCatSubCat({
       ...catSubCat,
       subCat: _subCat,
-      isFiltered: allSubCat?.length === _subCat?.length
+      isFiltered: allSubCat?.length !== _subCat?.length
     });
   }, [selectedCategory, catSubCat?.isFiltered]);
 
@@ -87,7 +108,7 @@ export function useHandleCatSubCat(selectedCategory) {
     setCatSubCat({ ...catSubCat, subCat: _subCat });
   }, [activeCatId]);
 
-  return { catSubCat, activeCatId, setActiveCatId };
+  return { catSubCat, activeCatId, setActiveCatId, setRefetch };
 }
 
 // export default function useHandleUserDetails() {
@@ -317,8 +338,7 @@ export default function useUserCourseData() {
     return prefArr;
   }
 
-
-  async function getCohortUserData(cohortId = null, cohortDetails = false){
+  async function getCohortUserData(cohortId = null, cohortDetails = false) {
     if (!cohortId) return;
     const sendData = {
       cohort_id: cohortId,
@@ -357,9 +377,9 @@ export default function useUserCourseData() {
             email: userList[i]?.email,
             first_name: userList[i]?.first_name,
             last_name: userList[i]?.last_name,
-            membership_status:cohortUsers[j]?.membership_status,
-            photo_url:userList[i]?.photo_url || "",
-            joined_on:moment.unix(cohortUsers[j]?.created_at).format("DD/MM/YYYY")
+            membership_status: cohortUsers[j]?.membership_status,
+            photo_url: userList[i]?.photo_url || '',
+            joined_on: moment.unix(cohortUsers[j]?.created_at).format('DD/MM/YYYY')
           });
           break;
         }
@@ -368,17 +388,29 @@ export default function useUserCourseData() {
     return cohortUserData;
   }
 
-  async function getUsersForAdmin(){
-    const resLspUser = await loadQueryDataAsync(GET_USER_LSP_MAP_BY_LSPID,{lsp_id:LEARNING_SPACE_ID,pageCursor:'',Direction:'',pageSize:1000},{},userQueryClient);
-    if(resLspUser?.error) return {error:'Error while while loading lsp maps!'}
+  async function getUsersForAdmin() {
+    const resLspUser = await loadQueryDataAsync(
+      GET_USER_LSP_MAP_BY_LSPID,
+      { lsp_id: LEARNING_SPACE_ID, pageCursor: '', Direction: '', pageSize: 1000 },
+      {},
+      userQueryClient
+    );
+    if (resLspUser?.error) return { error: 'Error while while loading lsp maps!' };
 
     //removing duplicate values
-    const userIds = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps?.filter((v,i,a)=> a?.findIndex((v2)=> v2?.user_id === v?.user_id) === i)?.map((user) => user?.user_id);
+    const userIds = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps
+      ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
+      ?.map((user) => user?.user_id);
 
-    const resUserDetails = await loadQueryDataAsync(GET_USER_DETAIL,{user_id:userIds},{},userQueryClient);
+    const resUserDetails = await loadQueryDataAsync(
+      GET_USER_DETAIL,
+      { user_id: userIds },
+      {},
+      userQueryClient
+    );
 
-    if(resUserDetails?.error) return  {error:'Error while while loading user detail!'} ;
-    
+    if (resUserDetails?.error) return { error: 'Error while while loading user detail!' };
+
     const userData = resUserDetails?.getUserDetails?.map((item) => ({
       id: item?.id,
       email: item?.email,
@@ -386,17 +418,15 @@ export default function useUserCourseData() {
       last_name: item?.last_name,
       status: item?.status,
       role: item?.role,
-      full_name: `${item?.first_name} ${item?.last_name}`  
-    })) ;
+      full_name: `${item?.first_name} ${item?.last_name}`
+    }));
 
-    if(!userData?.length) return {error:'No users found!'};
+    if (!userData?.length) return { error: 'No users found!' };
     return userData;
-}
-  
-  return {getUserCourseData,getUserPreferences,getCohortUserData,getUsersForAdmin}
-}
+  }
 
-
+  return { getUserCourseData, getUserPreferences, getCohortUserData, getUsersForAdmin };
+}
 
 export function getUserAboutObject(data = {}) {
   return {
@@ -435,6 +465,7 @@ export function useUpdateUserAboutData() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // local state
+  const [multiUserArr, setMultiUserArr] = useState([]);
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
 
@@ -464,28 +495,29 @@ export function useUpdateUserAboutData() {
     );
   }, [newUserAboutData]);
 
-  async function updateAboutUser() {
+  async function updateAboutUser(userData = null) {
+    userData = userData ? userData : newUserAboutData;
     const sendUserData = {
-      id: newUserAboutData?.id,
-      first_name: newUserAboutData?.first_name,
-      last_name: newUserAboutData?.last_name,
+      id: userData?.id,
+      first_name: userData?.first_name,
+      last_name: userData?.last_name,
 
-      status: newUserAboutData?.status || 'Active',
-      role: newUserAboutData?.role || 'Learner',
-      email: newUserAboutData?.email,
-      phone: newUserAboutData?.phone,
+      status: userData?.status || 'Active',
+      role: userData?.role || 'Learner',
+      email: userData?.email,
+      phone: userData?.phone,
 
-      gender: newUserAboutData?.gender,
-      photo_url: newUserAboutData?.photo_url,
+      gender: userData?.gender,
+      photo_url: userData?.photo_url,
 
       is_verified: true,
-      is_active: newUserAboutData?.is_active,
+      is_active: userData?.is_active,
 
-      created_by: newUserAboutData?.created_by || 'Zicops',
-      updated_by: newUserAboutData?.updated_by || 'Zicops'
+      created_by: userData?.created_by || 'Zicops',
+      updated_by: userData?.updated_by || 'Zicops'
     };
 
-    if (newUserAboutData?.Photo) sendUserData.Photo = newUserAboutData?.Photo;
+    if (userData?.Photo) sendUserData.Photo = userData?.Photo;
     // if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
 
     console.log(sendUserData, 'updateAboutUser');
@@ -497,20 +529,30 @@ export function useUpdateUserAboutData() {
     });
 
     if (isError || updateAboutErr)
-      return setToastMsg({ type: 'danger', message: 'Update User about Error' });
+      return setToastMsg({ type: 'danger', message: `Failed To Disable ${sendUserData?.email}` });
 
     const data = res?.data?.updateUser;
-    const _userData = { ...newUserAboutData, ...data };
+    const _userData = { ...userData, ...data };
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
     setUserDataAbout(_userData);
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
   }
 
+  async function updateMultiUserAbout() {
+    for (let i = 0; i < multiUserArr.length; i++) {
+      const user = multiUserArr[i];
+      await updateAboutUser(user);
+    }
+  }
+
   return {
     newUserAboutData,
     setNewUserAboutData,
+    multiUserArr,
+    setMultiUserArr,
+    isFormCompleted,
     updateAboutUser,
-    isFormCompleted
+    updateMultiUserAbout
   };
 }
 
@@ -588,4 +630,3 @@ export function useUpdateUserOrgData() {
     isFormCompleted
   };
 }
-

@@ -41,8 +41,8 @@ export default function useFirebaseAuth() {
   const signIn = async (email, password) => {
     console.log(email, password);
     setErrorMsg(null);
-    await signInWithEmailAndPassword(auth, email, password)
-      .then((authUser) => {})
+    return await signInWithEmailAndPassword(auth, email, password)
+      .then((authUser) => authUser)
       .catch((error) => {
         const err = error.code.slice(5).split('-').join(' ');
         setErrorMsg(err);

@@ -16,6 +16,7 @@ const UploadAndPreview = ({
   styleClass = {},
   handleUpdateImage = () => {},
   initialImage = null,
+  imageUrl = null,
   closePopUp = () => {}
 }) => {
   const [image, setImage] = useState();
@@ -34,6 +35,17 @@ const UploadAndPreview = ({
     setImage(file);
     setPop(true);
   }, []);
+
+  useEffect(async () => {
+    if (!imageUrl) return;
+
+    const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(imageUrl)}`);
+    // here image is url/location of image
+    const blob = await response.blob();
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+
+    setImage(file);
+  }, [imageUrl]);
 
   const handleRemove = () => {
     if (!image) return;

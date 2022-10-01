@@ -66,10 +66,28 @@
   padding-bottom: 20px;
   box-sizing: border-box;
 
+  // display: grid;
+  // grid-template-columns: repeat(5, 1fr);
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 20px;
+
+  .card {
+    $percent: 25%;
+    -webkit-flex: 0 1 calc($percent - 1em);
+    -ms-flex: 0 1 calc($percent - 1em);
+    flex: 0 1 calc($percent - 1em);
+  }
+
+  @media screen and (min-width: 1400px) {
+    .card {
+      $percent: 20%;
+      -webkit-flex: 0 1 calc($percent - 1em);
+      -ms-flex: 0 1 calc($percent - 1em);
+      flex: 0 1 calc($percent - 1em);
+    }
+  }
 
   .notFound {
     text-align: center;
@@ -85,4 +103,35 @@
   color: $white;
   font-size: 20px;
   font-weight: 700;
+}
+
+.subCatCard {
+  height: 150px;
+  width: 150px;
+  background-color: $black;
+  color: $white;
+  border-radius: 50%;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  text-align: center;
+
+  div {
+    z-index: 1;
+  }
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
 }

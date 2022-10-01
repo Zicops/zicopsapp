@@ -1,14 +1,14 @@
-import CourseHead from '../../CourseHead';
-import ZicopsTable from '../../common/ZicopsTable';
-import { TableResponsiveRows } from '../../../helper/utils.helper';
-import { queryClient, GET_SUB_CATS, GET_SUB_CATS_MAIN } from '../../../API/Queries';
-import { ApolloProvider, useQuery } from '@apollo/client';
-import { useEffect, useState } from 'react';
 import PopUp from '@/components/common/PopUp';
-import AddCatSubCat from './AddCatSubCat';
-import { useRecoilState } from 'recoil';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { ApolloProvider } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { queryClient } from '../../../API/Queries';
+import { TableResponsiveRows } from '../../../helper/utils.helper';
+import ZicopsTable from '../../common/ZicopsTable';
+import CourseHead from '../../CourseHead';
+import AddCatSubCat from './AddCatSubCat';
 
 const columns = [
   {
@@ -22,11 +22,18 @@ const columns = [
     headerClassName: 'course-list-header',
     headerName: 'SubCategory',
     flex: 3
+  },
+  {
+    field: 'CatName',
+    headerClassName: 'course-list-header',
+    headerName: 'Category',
+    flex: 3
   }
 ];
 
 function ZicopsSubCategoryList() {
   const [pageSize, setPageSize] = useState(6);
+  const [data, setData] = useState(null);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
 
   useEffect(() => {
@@ -39,26 +46,37 @@ function ZicopsSubCategoryList() {
     });
   }, []);
 
-  const { data, loading, refetch } = useQuery(GET_SUB_CATS_MAIN, { fetchPolicy: 'no-cache' });
+  const { catSubCat, setRefetch } = useHandleCatSubCat();
 
   useEffect(() => {
     if (popUpState) return;
-    refetch();
+    setRefetch(true);
   }, [popUpState]);
 
-  let latest = [];
+  useEffect(() => {
+    if (!catSubCat?.allSubCat?.length) return;
+    const _data = [];
+    catSubCat?.allSubCat.map((val, index) =>
+      _data.push({
+        id: index + 1,
+        SubCatName: val?.Name,
+        CatName: catSubCat?.subCatGrp[val?.CatId]?.cat?.Name
+      })
+    );
 
-  if (data)
-    data.allSubCatMain.map((val, index) => latest.push({ id: index + 1, SubCatName: val?.Name }));
+    setData(_data);
+  }, [catSubCat]);
+
+  let latest = [];
 
   return (
     <ZicopsTable
       columns={columns}
-      data={latest}
+      data={data}
       pageSize={pageSize}
       rowsPerPageOptions={[3]}
       tableHeight="70vh"
-      loading={loading}
+      loading={data === null}
     />
   );
 }
