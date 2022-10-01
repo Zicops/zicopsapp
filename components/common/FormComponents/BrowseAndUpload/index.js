@@ -40,7 +40,9 @@ export default function BrowseAndUpload({
           name={inputName}
           accept={acceptedTypes}
           onChange={(e) => {
-            let fileTypes = acceptedTypes?.split(', ');
+            let fileTypes = acceptedTypes
+              ?.split(', ')
+              ?.map((t) => t?.trim()?.replace(/(\r\n|\n|\r)/gm, ''));
 
             if (e.target.value && !fileTypes?.some((t) => e.target.value?.includes(t))) {
               return setToastMsg({
