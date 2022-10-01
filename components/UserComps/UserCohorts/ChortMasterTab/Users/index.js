@@ -15,8 +15,8 @@ import AddUsers from './AddUsers';
 const Users = ({ isEdit = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState([]);
-  const [cohortUserData, setCohortUserData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [cohortUserData, setCohortUserData] = useState(null);
+  const [refetch, setRefetch] = useState(true);
 
   const { getCohortUser } = useCohortUserData();
 
@@ -25,16 +25,19 @@ const Users = ({ isEdit = false }) => {
   const router = useRouter();
 
   useEffect(async () => {
+    if (!refetch) return;
+
     if (!router?.query?.cohortId) {
-     const users = await getUsersForCohort(true);
-    if(users?.error) return setToastMsg({type:'danger',message:users?.error});
-     return setUserData([...users],setLoading(false));
+      const users = await getUsersForCohort(true);
+      if (users?.error) return setToastMsg({ type: 'danger', message: users?.error });
+      return setUserData([...users]);
     }
     const cohortUser = await getCohortUser(router?.query?.cohortId);
     if (!cohortUser?.length)
       return setToastMsg({ type: 'info', message: 'None verified users found!' });
     // console.log(cohortUser,'cohort user');
-    setCohortUserData([...cohortUser], setLoading(false));
+    setCohortUserData([...cohortUser]);
+    setRefetch(false);
 
     const users = await getUsersForAdmin(true);
     const notMembers = [];
@@ -53,7 +56,7 @@ const Users = ({ isEdit = false }) => {
     }
     setUserData([...notMembers]);
     // console.log(notMembers);
-  }, [router?.query]);
+  }, [router?.query, refetch]);
 
   const columns = [
     {
@@ -95,11 +98,9 @@ const Users = ({ isEdit = false }) => {
                 outline: '0',
                 border: '0'
               }}
-              // onClick={() => {
-              //   setSelectedQB(getQuestionBankObject(params.row));
-              //   setEditPopUp(true);
-              // }}
-            >
+              onClick={() => {
+                router.push(`/admin/user/my-users/${params.id}`);
+              }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
           </>
@@ -112,7 +113,7 @@ const Users = ({ isEdit = false }) => {
   return (
     <div className={`${styles.usersContainer}`}>
       <div className={`${styles.usersTopContainer}`}>
-        <span>Total Users:{cohortUserData?.length}</span>
+        <span>Total Users: {cohortUserData?.length}</span>
         <button
           className={`${styles.cohortButton1}`}
           onClick={() => {
@@ -137,11 +138,15 @@ const Users = ({ isEdit = false }) => {
         tableHeight="49vh"
         customStyles={{ padding: '10px 0' }}
         hideFooterPagination={true}
-        loading={loading}
+        loading={refetch}
       />
 
       <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
-        <AddUsers usersData={userData} popUpSetState={setIsOpen}/>
+        <AddUsers
+          usersData={userData}
+          popUpSetState={setIsOpen}
+          onUserAdd={() => setRefetch(true)}
+        />
         {/* <LearnerStatistics /> */}
       </PopUp>
     </div>
