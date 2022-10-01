@@ -15,40 +15,45 @@ import useUserCourseData from '@/helper/hooks.helper';
 import useHandleCohortTab from '../../Logic/useHandleCohortTab';
 
 export default function MembersTab() {
-  const [selectedCohort , setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
-  const [cohortUsers , setCohortUsers] = useState([]);
-  const [loading , setLoading] = useState(true);
+  const [selectedCohort, setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
+  const [cohortUsers, setCohortUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
   const { getCohortUserData } = useUserCourseData();
   const { getUsersOrgDetails } = useHandleCohortTab();
 
-  useEffect(async()=>{
-  // console.log(selectedCohort,'cohrot_data')
-  if(!selectedCohort?.main?.cohort_id) return ;
-  if(selectedCohort?.cohortUsers?.length) return setCohortUsers([...selectedCohort?.cohortUsers],setLoading(false));;
-  const cohortUsers = await getCohortUserData(selectedCohort?.main?.cohort_id);
-  
-  if(cohortUsers?.error) return setToastMsg({type:'danger',message:'Error while loading cohort users!'});
+  useEffect(async () => {
+    // console.log(selectedCohort,'cohrot_data')
+    if (!selectedCohort?.main?.cohort_id) return;
+    if (selectedCohort?.cohortUsers?.length)
+      return setCohortUsers([...selectedCohort?.cohortUsers], setLoading(false));
+    const cohortUsers = await getCohortUserData(selectedCohort?.main?.cohort_id);
 
-  if(!cohortUsers?.length) return setLoading(false);
+    if (cohortUsers?.error)
+      return setToastMsg({ type: 'danger', message: 'Error while loading cohort users!' });
 
- //removing duplicate data
-  const users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()];
+    if (!cohortUsers?.length) return setLoading(false);
 
-  const modifiedUsers = await getUsersOrgDetails(users)
+    //removing duplicate data
+    const users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()];
 
-  setSelectedCohort((prevValue) => ({...prevValue , cohortUsers:modifiedUsers}))
+    const modifiedUsers = await getUsersOrgDetails(users);
 
-  return setCohortUsers([...modifiedUsers],setLoading(false));
-  },[selectedCohort])
+    setSelectedCohort((prevValue) => ({ ...prevValue, cohortUsers: modifiedUsers }));
+
+    return setCohortUsers([...modifiedUsers], setLoading(false));
+  }, [selectedCohort]);
   return (
-    <div className={`${styles.courseTabContainer}`}>
+    <div className={`${styles.courseTabContainer} ${styles.memberTab}`}>
       <div style={{ padding: '0px 5px 15px' }}>
         <SearchBar
           inputDataObj={{
             inputOptions: {
               inputName: 'filter',
-              placeholder: 'Search Member'
-            }
+              placeholder: 'Search Member',
+              value: searchQuery
+            },
+            changeHandler: (e) => setSearchQuery(e.target.value)
           }}
         />
       </div>
@@ -60,7 +65,7 @@ export default function MembersTab() {
       )}
 
       <div className={`${styles.listCardTabContainer}`}>
-        {cohortUsers?.map((member,index) => {
+        {cohortUsers?.map((member, index) => {
           const btnData = {
             imgSrc: null,
             display: 'Member',
@@ -80,6 +85,9 @@ export default function MembersTab() {
             btnData.color = 'var(--white)';
           }
 
+          if (!member?.name?.toLowerCase()?.trim()?.includes(searchQuery?.toLowerCase()?.trim()))
+            return null;
+
           return (
             <CohortListCard
               data={member}
@@ -88,8 +96,7 @@ export default function MembersTab() {
               // handleClick={() => {
               //   setSelectedCohort(cohort);
               // }}
-              type={'user'}
-            >
+              type={'user'}>
               <div className={`${styles.btnContainer}`}>
                 <p>
                   <img src="/images/svg/calendar-month.svg" alt="" />

@@ -15,9 +15,6 @@ const DetailsTabBottom = () => {
   const [loading, setLoading] = useState(true);
   const { getCohortUserData } = useUserCourseData();
   const { getUsersOrgDetails } = useHandleCohortTab();
-  
-
- 
 
   useEffect(async () => {
     if (!selectedCohortData?.main?.cohort_id) return;
@@ -55,16 +52,18 @@ const DetailsTabBottom = () => {
     }
   }, [selectedCohortData]);
   return (
-    <div className={`${styles.detailsBottomsection}`}>
-      <div className={`${styles.bottomLeft}`}>
+    <>
+      <div className={`${styles.bottomLeft} ${styles.lastContainer}`}>
         <p className={`${styles.text}`}>Cohort Managers</p>
-        <div className={`${styles.list}`}>
+        <div className={`${styles.list} ${styles.listContainer}`}>
           <div className={`${styles.memberList}`}>
-          {loading ? (
-        <strong className={`${styles.fallbackMsg}`}>Loading Users...</strong>
-      ) : (
-        !cohortMembers?.managers?.length && <strong className={`${styles.fallbackMsg}`}>No Users Found</strong>
-      )}
+            {loading ? (
+              <strong className={`${styles.fallbackMsg}`}>Loading Users...</strong>
+            ) : (
+              !cohortMembers?.managers?.length && (
+                <strong className={`${styles.fallbackMsg}`}>No Users Found</strong>
+              )
+            )}
             {cohortMembers?.managers?.map((user, index) => {
               return (
                 <div key={index}>
@@ -75,15 +74,18 @@ const DetailsTabBottom = () => {
           </div>
         </div>
       </div>
-      <div className={`${styles.bottomRight}`}>
+
+      <div className={`${styles.bottomRight} ${styles.lastContainer}`}>
         <p className={`${styles.text}`}>Active Members</p>
-        <div className={`${styles.list}`}>
+        <div className={`${styles.listContainer}`}>
           <div className={`${styles.memberList}`}>
-          {loading ? (
-        <strong className={`${styles.fallbackMsg}`}>Loading Users...</strong>
-      ) : (
-        !cohortMembers?.managers?.length && <strong className={`${styles.fallbackMsg}`}>No Users Found</strong>
-      )}
+            {loading ? (
+              <strong className={`${styles.fallbackMsg}`}>Loading Users...</strong>
+            ) : (
+              !cohortMembers?.managers?.length && (
+                <strong className={`${styles.fallbackMsg}`}>No Users Found</strong>
+              )
+            )}
             {cohortMembers?.members?.map((user, index) => {
               return (
                 <div key={index}>
@@ -94,7 +96,7 @@ const DetailsTabBottom = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
