@@ -23,7 +23,7 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
     setFilters(_filters);
   }, [router.query]);
   // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
 
   const { catSubCat, setActiveCatId } = useHandleCatSubCat(filters.category);
 
@@ -40,7 +40,7 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
   // ];
 
   // update sub cat based on cat
-  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, filters?.category);
+  // loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, filters?.category);
 
   const Languages = LANGUAGES?.map((lang) => ({ value: lang, label: lang }));
   const isFilterPresent =
