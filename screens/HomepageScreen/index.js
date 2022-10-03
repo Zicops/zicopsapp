@@ -152,7 +152,7 @@ export default function HomepageScreen() {
     // Todo : Make it a loop
     // activeSubcatArr.slice(0, 4).map(async(subcat) => {
     let SubCat1Courses = await getLatestCoursesByFilters(
-      { SubCategory: activeSubcatArr[0]?.name },
+      { SubCategory: activeSubcatArr?.[0]?.name },
       pageSize
     );
     setSubCategory1Courses(
@@ -161,7 +161,7 @@ export default function HomepageScreen() {
       ) || []
     );
     let SubCat2Courses = await getLatestCoursesByFilters(
-      { SubCategory: activeSubcatArr[1]?.name },
+      { SubCategory: activeSubcatArr?.[1]?.name },
       pageSize
     );
     setSubCategory2Courses(
@@ -170,7 +170,7 @@ export default function HomepageScreen() {
       ) || []
     );
     let SubCat3Courses = await getLatestCoursesByFilters(
-      { SubCategory: activeSubcatArr[2]?.name },
+      { SubCategory: activeSubcatArr?.[2]?.name },
       pageSize
     );
     setSubCategory3Courses(
@@ -179,7 +179,7 @@ export default function HomepageScreen() {
       ) || []
     );
     let SubCat4Courses = await getLatestCoursesByFilters(
-      { SubCategory: activeSubcatArr[3]?.name },
+      { SubCategory: activeSubcatArr?.[3]?.name },
       pageSize
     );
     setSubCategory4Courses(
@@ -203,7 +203,7 @@ export default function HomepageScreen() {
         (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
       ) || []
     );
-  }, [latestCourses, baseSubcategory]);
+  }, [baseSubcategory]);
   return (
     <div className={`${styles.homebody}`}>
       <HomeSlider />
@@ -275,7 +275,9 @@ export default function HomepageScreen() {
       ) : (
         ''
       )}
-      <BigCardSlider title="Categories" data={catSubCat?.cat} slide={bigSquare} />
+      {catSubCat?.cat?.length && (
+        <BigCardSlider title="Categories" data={catSubCat?.cat} slide={bigSquare} />
+      )}
       {slowCourses?.length ? (
         <ZicopsCarousel title="Slow and Steady Courses" data={slowCourses} />
       ) : (
