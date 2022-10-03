@@ -132,6 +132,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           label={'Profile Picture'}
           isRemove={true}
           handleChange={setImage}
+          uploadedFile={userData?.Photo}
         />
         <Box mt={2} />
       </div>

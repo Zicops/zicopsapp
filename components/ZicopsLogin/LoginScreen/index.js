@@ -61,7 +61,7 @@ const LoginScreen = ({ setPage }) => {
     }
 
     const userData = await signIn(email, password);
-    console.log(userData);
+
     if (userData) loginUser();
   };
 
