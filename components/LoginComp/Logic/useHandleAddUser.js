@@ -7,7 +7,7 @@ import {
   UPDATE_USER,
   userClient
 } from '@/api/UserMutations';
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
+import { LEARNING_SPACE_ID, USER_STATUS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   getUserObject,
@@ -281,7 +281,7 @@ export default function useHandleAddUserDetails() {
       first_name: userAboutData?.first_name,
       last_name: userAboutData?.last_name,
 
-      status: userAboutData?.status || 'Active',
+      status: USER_STATUS.activate,
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
       phone: userAboutData?.phone,

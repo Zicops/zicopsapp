@@ -12,7 +12,7 @@ import {
 } from '../../../API/Mutations';
 import { createCourseAndUpdateContext } from '../../../helper/data.helper';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
-import { CourseTabAtom, isCourseUploadingAtom, tabData } from './tabs.helper';
+import { CourseTabAtom, IsCourseSavedAtom, isCourseUploadingAtom, tabData } from './tabs.helper';
 
 export default function useSaveCourse(courseContextData) {
   const {
@@ -38,6 +38,7 @@ export default function useSaveCourse(courseContextData) {
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
 
   const router = useRouter();
 
@@ -98,6 +99,7 @@ export default function useSaveCourse(courseContextData) {
       const resObj = await createCourseAndUpdateContext(courseContextData, createCourse);
       setToastMsg({ type: resObj.type, message: resObj.message });
       setIsLoading(addCourseLoading ? 'SAVING...' : null);
+      setIsCourseSaved(true);
 
       if (isNextButton && resObj.type === 'success') {
         setTab(tabData[tabIndex || 0].name);
@@ -132,6 +134,7 @@ export default function useSaveCourse(courseContextData) {
     if (showToastMsg) setToastMsg({ type: 'success', message: 'Course Updated' });
     console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
 
+    setIsCourseSaved(true);
     if (isNextButton) setTab(tabData[tabIndex || 0].name);
   }
 

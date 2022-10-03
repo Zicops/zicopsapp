@@ -28,6 +28,11 @@ export const tabData = [
   }
 ];
 
+export const IsCourseSavedAtom = atom({
+  key: 'isCourseSaved',
+  default: false
+});
+
 export const isCourseUploadingAtom = atom({
   key: 'isCourseUploading',
   default: null

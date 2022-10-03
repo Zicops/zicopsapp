@@ -17,9 +17,10 @@ const UploadAndPreview = ({
   handleUpdateImage = () => {},
   initialImage = null,
   imageUrl = null,
+  uploadedFile = null,
   closePopUp = () => {}
 }) => {
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(uploadedFile);
   const [preview, setPreview] = useState('');
   const [pop, setPop] = useState(false);
 
@@ -50,6 +51,7 @@ const UploadAndPreview = ({
   const handleRemove = () => {
     if (!image) return;
     setImage(null);
+    handleChange(null);
     return;
   };
 

@@ -17,6 +17,7 @@ import styles from '../zicopsLogin.module.scss';
 
 import HomeHeader from '@/components/HomePage/HomeHeader';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import { USER_STATUS } from '@/helper/constants.helper';
 
 const LoginScreen = ({ setPage }) => {
   const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
@@ -61,7 +62,7 @@ const LoginScreen = ({ setPage }) => {
     }
 
     const userData = await signIn(email, password);
-    console.log(userData);
+
     if (userData) loginUser();
   };
 
@@ -84,7 +85,11 @@ const LoginScreen = ({ setPage }) => {
     });
 
     if (isError) return setDisableBtn(false);
-    console.log(res?.data?.login?.is_verified);
+    if (res?.data?.login?.status === USER_STATUS.disable) {
+      setDisableBtn(false);
+      return setToastMsg({ type: 'danger', message: 'Login Error' });
+    }
+
     setUserData(getUserObject(res?.data?.login));
     sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
 
