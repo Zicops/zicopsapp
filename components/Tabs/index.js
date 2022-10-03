@@ -10,6 +10,7 @@ import styles from './courseTabs.module.scss';
 import {
   CourseTabAtom,
   getDateTimeFromUnix,
+  IsCourseSavedAtom,
   isCourseUploadingAtom,
   tabData
 } from './Logic/tabs.helper';
@@ -23,6 +24,7 @@ export default function CourseTabs() {
   const [showConfirmBox, setShowConfirmBox] = useState(0);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
+  const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
 
   // TODO: set to first tab when new course is opened
   // useEffect(() => {
@@ -31,6 +33,16 @@ export default function CourseTabs() {
   // }, [fullCourse?.id]);
 
   useEffect(() => {
+    setIsCourseSaved(false);
+  }, [fullCourse]);
+
+  useEffect(() => {
+    if (isCourseSaved) {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      Router.events.off('routeChangeStart', beforeRouteHandler);
+      return;
+    }
+
     const confirmationMessage = 'Changes you made may not be saved. Do you still wish to exit?';
     function beforeUnloadHandler(e) {
       (e || window.event).returnValue = confirmationMessage;
@@ -58,7 +70,7 @@ export default function CourseTabs() {
       window.removeEventListener('beforeunload', beforeUnloadHandler);
       Router.events.off('routeChangeStart', beforeRouteHandler);
     };
-  }, []);
+  }, [isCourseSaved]);
 
   // useEffect(() => {
   //   window.onbeforeunload = function () {
