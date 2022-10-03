@@ -1,21 +1,11 @@
-import {
-  GET_USERS_FOR_ADMIN,
-  GET_USER_DETAIL,
-  GET_USER_LSP_MAP_BY_LSPID,
-  userQueryClient
-} from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { getCurrentEpochTime } from '@/helper/common.helper';
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
+import { USER_STATUS } from '@/helper/constants.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -135,7 +125,11 @@ export default function MyUser({ getUser }) {
                 text: 'Disable',
                 handleClick: () => {
                   setNewUserAboutData(
-                    getUserAboutObject({ ...params.row, is_active: false, status: 'Disabled' })
+                    getUserAboutObject({
+                      ...params.row,
+                      is_active: false,
+                      status: USER_STATUS.disable
+                    })
                   );
                   setDisableAlert(true);
                 }
