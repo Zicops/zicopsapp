@@ -2,6 +2,7 @@ import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { setContext } from '@apollo/client/link/context';
 import { getIdToken, onAuthStateChanged } from 'firebase/auth';
+import { LEARNING_SPACE_ID } from '../helper/constants.helper';
 
 export async function getLatestToken(token) {
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
@@ -34,7 +35,8 @@ export const authLink = setContext(async (_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : 'Token Not found'
+      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : 'Token Not found',
+      tenant: LEARNING_SPACE_ID
     }
   };
 });
