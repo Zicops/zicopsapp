@@ -1,3 +1,4 @@
+import { IMAGE_FILE_TYPES } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
@@ -12,7 +13,7 @@ export default function BrowseAndUpload({
   handleRemove,
   isActive,
   isError,
-  acceptedTypes = '.jpeg, .jpg, .png, .gif',
+  acceptedTypes = IMAGE_FILE_TYPES,
   hidePreviewBtns = false
 }) {
   const [showPreview, setShowPreview] = useState(false);
