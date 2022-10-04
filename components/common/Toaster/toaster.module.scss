@@ -20,7 +20,7 @@ $dangerImg: '/images/svg/error_outline.svg';
   bottom: $toastPositionFromBottom;
   left: $toastPositionFromLeft;
 
-  z-index: 100;
+  z-index: 1000;
 
   .toaster {
     position: relative;

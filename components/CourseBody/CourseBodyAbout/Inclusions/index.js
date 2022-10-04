@@ -18,7 +18,10 @@ export default function Inclusions({ languages }) {
           </div>
           <div className="col_50">
             {languages.map((e, i) => (
-              <span key={i}>{e}, </span>
+              <span key={i}>
+                {e}
+                {i + 1 === languages?.length ? '' : ', '}
+              </span>
             ))}
           </div>
         </div>
