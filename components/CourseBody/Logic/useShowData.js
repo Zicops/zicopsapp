@@ -211,6 +211,7 @@ export default function useShowData(courseContextData) {
     filteredResources,
     isResourceShown,
     isNotesVisible,
+    setIsResourceShown,
     toggleNotesVisibility
   };
 }

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { courseContext } from '../../state/contexts/CourseContext';
 import BottomTabsMenu from '../small/BottomTabsMenu';
 import {
@@ -23,11 +23,17 @@ export default function CourseBody({ isPreview = false }) {
     setActiveCourseTab,
     getModuleOptions,
     moduleData,
-    setSelectedModule
+    setSelectedModule,
+    setIsResourceShown
   } = useShowData(courseContextData);
 
   const router = useRouter();
   useLoadUserData(isPreview, setSelectedModule, getModuleOptions);
+
+  useEffect(() => {
+    setActiveCourseTab(tabs[0].name);
+    setIsResourceShown(null);
+  }, []);
 
   const props = {
     activeCourseTab: activeCourseTab,
