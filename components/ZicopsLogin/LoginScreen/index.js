@@ -68,6 +68,7 @@ const LoginScreen = ({ setPage }) => {
 
   async function loginUser() {
     sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
+    localStorage.setItem('tokenF', auth?.currentUser?.accessToken);
     let isError = false;
     const res = await userLogin({
       context: {
@@ -92,6 +93,7 @@ const LoginScreen = ({ setPage }) => {
 
     setUserData(getUserObject(res?.data?.login));
     sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+    localStorage.setItem('id', res?.data?.login?.id);
 
     if (!!res?.data?.login?.is_verified) {
       // setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
@@ -109,7 +111,7 @@ const LoginScreen = ({ setPage }) => {
 
   useEffect(() => {
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
-    console.log(authUser);
+    // console.log(authUser);
   }, [errorMsg, authUser]);
 
   //to check if our user is logged in or not

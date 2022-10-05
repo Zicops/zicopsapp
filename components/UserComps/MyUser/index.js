@@ -30,8 +30,12 @@ export default function MyUser({ getUser }) {
     const usersData = await getUsersForAdmin();
     console.log(usersData);
 
-    if (usersData?.error) return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
-    setData([...usersData], setLoading(false));
+    if (usersData?.error) {
+      setLoading(false);
+      return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
+    }
+    setLoading(false);
+    setData([...usersData]);
     return;
   }, []);
 

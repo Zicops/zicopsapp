@@ -221,3 +221,13 @@ export function downloadFileFromURI(uri, downloadFileName) {
   link.remove();
   return true;
 }
+
+export function parseJson(stringifiedJson) {
+  if (!stringifiedJson) return '';
+  try {
+    return JSON.parse(stringifiedJson);
+  } catch (err) {
+    console.log(err);
+    return '';
+  }
+}

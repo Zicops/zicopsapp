@@ -109,7 +109,6 @@ export default function CustomVideo({ set }) {
         skipIntroTime < currentTime && skipIntroTime + skipIntroDuration > currentTime
       );
     }
-
   }, [playerState.progress]);
 
   // binge logic
@@ -183,12 +182,13 @@ export default function CustomVideo({ set }) {
       {/* </div> */}
       {playPauseActivated !== null && <CenterFlash state={playPauseActivated} />}
 
-      <div className="video_wrapper">
+      <div className={`${styles.videoWrapper} video_wrapper`}>
         {/* video player */}
         <VideoPlayer
           videoElement={videoElement}
           handleOnTimeUpdate={handleOnTimeUpdate}
           playerState={playerState}
+          handleFullScreen={toggleFullScreen}
           handleClick={togglePlay}
           handleKeyDown={handleKeyDownEvents}
           isControlBarVisible={!freezeScreen && hideControls}

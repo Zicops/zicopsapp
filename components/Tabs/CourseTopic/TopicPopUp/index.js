@@ -176,23 +176,29 @@ export default function TopicPopUp({
                   />
 
                   {/* subtitles accordion */}
-                  <Accordion
-                    title="Subtitles"
-                    isDisabled={!filteredTopicContent?.length}
-                    content={
-                      <SubtitleForm
-                        topicId={editTopic?.id || ''}
-                        courseId={editTopic?.courseId || ''}
-                      />
-                    }
-                  />
+                  {(addTopicContentLocalStates?.newTopicContent?.type === 'mp4' ||
+                    filteredTopicContent[0]?.type === 'mp4') && (
+                    <Accordion
+                      title="Subtitles"
+                      isDisabled={!filteredTopicContent?.length}
+                      content={
+                        <SubtitleForm
+                          topicId={editTopic?.id || ''}
+                          courseId={editTopic?.courseId || ''}
+                        />
+                      }
+                    />
+                  )}
 
                   {/* binge */}
-                  <Accordion
-                    title="Binge it"
-                    isDisabled={!filteredTopicContent?.length}
-                    content={<BingeForm topicVideo={topicVideo} />}
-                  />
+                  {(addTopicContentLocalStates?.newTopicContent?.type === 'mp4' ||
+                    filteredTopicContent[0]?.type === 'mp4') && (
+                    <Accordion
+                      title="Binge it"
+                      isDisabled={!filteredTopicContent?.length}
+                      content={<BingeForm topicVideo={topicVideo} />}
+                    />
+                  )}
 
                   {/* quiz */}
                   <Accordion

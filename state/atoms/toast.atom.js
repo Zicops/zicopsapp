@@ -9,6 +9,8 @@ export const ToastMsgAtom = atom({
         if (!newToastMsgObj.type && !newToastMsgObj.message) return;
 
         const prevArr = prevToastMsgArr.type ? [prevToastMsgArr] : [...prevToastMsgArr];
+        if (prevArr?.find((t) => t?.message === newToastMsgObj.message)) return setSelf(prevArr);
+
         const toastMsgArr = [...prevArr, newToastMsgObj];
 
         console.log(toastMsgArr);

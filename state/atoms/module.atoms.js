@@ -166,8 +166,8 @@ export function getBingeObject() {
     startTimeSec: 0,
     skipIntroDuration: 0,
     showTimeMin: 0,
-    showTimeSec: 0,
-    isFromEnd: false
+    showTimeSec: 5,
+    isFromEnd: true
   };
 }
 

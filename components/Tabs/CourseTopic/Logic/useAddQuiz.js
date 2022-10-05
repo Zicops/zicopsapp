@@ -1,8 +1,14 @@
 import { CREATE_QUESTION_BANK, mutationClient } from '@/api/Mutations';
-import { GET_LATEST_QUESTION_BANK, GET_QUESTIONS_NAMES } from '@/api/Queries';
+import {
+  GET_LATEST_QUESTION_BANK,
+  GET_QUESTIONS_NAMES,
+  GET_QUESTION_BY_ID,
+  GET_QUESTION_OPTIONS
+} from '@/api/Queries';
 import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Logic/questionBank.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { QUESTION_STATUS } from '@/helper/constants.helper';
+import { getMinuteSecondsFromSeconds, secondsToMinutes } from '@/helper/utils.helper';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
@@ -22,7 +28,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
 
   // recoil state
   const { fullCourse } = useContext(courseContext);
-  const [quizzes, addQuizzes] = useRecoilState(QuizAtom);
+  const [quizzes, setQuizzes] = useRecoilState(QuizAtom);
   const [quizMetaData, setQuizMetaData] = useRecoilState(QuizMetaDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const topicContent = useRecoilValue(TopicContentAtom);
@@ -30,6 +36,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   // local state
   const [isQuizFormVisible, setIsQuizFormVisible] = useState(false);
   const [isQuizReady, setIsQuizReady] = useState(false);
+  const [editedQuiz, setEditedQuiz] = useState(null);
   const [newQuiz, setNewQuiz] = useState(getQuizObject({ courseId, topicId }));
 
   // update resouce courseid and topicid
@@ -85,6 +92,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
       );
     }
 
+    console.log(subCatQb);
     setQuizMetaData({
       questionBank: subCatQb,
       questions: allQuestionsArr
@@ -92,16 +100,31 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   }, []);
 
   useEffect(() => {
-    const questionRequired =
-      (newQuiz?.question || newQuiz?.questionFile) &&
-      newQuiz?.options?.every((op) => op?.option || op?.file) &&
-      newQuiz?.options?.some((op) => op?.isCorrect);
+    const question = newQuiz?.question;
+    const options = newQuiz?.options;
+    let isOptionsCompleted = 0,
+      isOneChecked = false;
 
+    options.forEach((option) => {
+      const isComplete = option?.option || option?.file;
+      isOptionsCompleted += isComplete ? 1 : 0;
+
+      if (!isComplete) return;
+
+      if (option?.isCorrect && !isOneChecked) isOneChecked = true;
+    });
+
+    let questionRequired =
+      question && newQuiz?.difficulty && isOptionsCompleted >= 2 && isOneChecked;
+
+    if (newQuiz?.questionId && newQuiz?.formType === 'create') {
+      if (newQuiz?.options?.length > isOptionsCompleted) questionRequired = false;
+    }
     setIsQuizReady(
       newQuiz.name &&
         newQuiz.type &&
         (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec) &&
-        (questionRequired || newQuiz?.questionId)
+        (questionRequired || (newQuiz?.formType === 'select' && newQuiz?.questionId))
     );
   }, [newQuiz]);
 
@@ -134,7 +157,9 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     if (isInValidData) return setNewQuiz({ ...newQuiz, ..._newQuiz });
   }, [newQuiz]);
 
-  function toggleQuizForm() {
+  function toggleQuizForm(val) {
+    if (typeof val === 'boolean') return setIsQuizFormVisible(!!val);
+
     setIsQuizFormVisible(!isQuizFormVisible);
   }
 
@@ -153,11 +178,9 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   }
 
   function isOptionsDuplicate() {
-    var optionArr = newQuiz?.options?.map(function (op) {
-      return op.description?.trim();
-    });
-    var isDuplicate = optionArr.some((op, i) => {
-      if (!op) return;
+    const optionArr = newQuiz?.options?.map((op) => op.option?.trim()?.toLowerCase());
+    const isDuplicate = optionArr.some((op, i) => {
+      if (!op) return false;
 
       return optionArr.indexOf(op) != i;
     });
@@ -211,6 +234,55 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     setNewQuiz({ ...newQuiz, [e.target.name]: e.target.value });
   }
 
+  async function handleEditQuiz(quiz, index) {
+    toggleQuizForm(true);
+    let _quiz = quiz;
+    if (!quiz?.formType && quiz?.questionId) {
+      const quesRes = await loadQueryDataAsync(GET_QUESTION_BY_ID, {
+        question_ids: [quiz?.questionId]
+      });
+      const question = quesRes?.getQuestionsById?.[0];
+
+      const opRes = await loadQueryDataAsync(GET_QUESTION_OPTIONS, {
+        question_id: quiz?.questionId
+      });
+      const options = opRes?.getOptionsForQuestions?.[0]?.options;
+
+      const timeObj = secondsToMinutes(+quiz?.startTime);
+
+      console.log(question);
+      _quiz = {
+        ..._quiz,
+        startTimeMin: +timeObj?.minute || 0,
+        startTimeSec: +timeObj?.second || 0,
+        isMandatory: quiz?.isMandatory || false,
+        formType: 'create',
+        type: question?.Type || 'MCQ',
+        difficulty: question?.Difficulty || 1,
+        attachmentType: question?.AttachmentType || '',
+        hint: question?.Hint || '',
+
+        questionId: quiz?.questionId || null,
+        question: question?.Description || '',
+        questionFile: question?.Attachment || null,
+
+        options: options?.map((op) => ({
+          id: op?.id,
+          option: op?.Description || '',
+          file: op?.Attachment || null,
+          attachmentType: op?.AttachmentType || '',
+          isCorrect: op?.IsCorrect || false
+        }))
+      };
+    }
+
+    setNewQuiz(_quiz);
+    setEditedQuiz({ ..._quiz, isEditQuiz: false });
+    const _quizzes = structuredClone(quizzes);
+    _quizzes?.splice(index, 1);
+    setQuizzes(_quizzes);
+  }
+
   // save in recoil state
   function addNewQuiz() {
     if (isOptionsDuplicate()) return;
@@ -219,7 +291,8 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     )
       return setToastMsg({ type: 'danger', message: 'Quiz name cannot be same in one topic.' });
 
-    addQuizzes([...quizzes, newQuiz]);
+    console.log(newQuiz);
+    setQuizzes([...quizzes, { ...newQuiz, isEditQuiz: true }]);
     setNewQuiz(getQuizObject({ courseId, topicId }));
     setIsQuizFormVisible(false);
   }
@@ -227,10 +300,13 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   return {
     newQuiz,
     setNewQuiz,
+    editedQuiz,
+    setEditedQuiz,
     handleQuizInput,
     addNewQuiz,
     isQuizFormVisible,
     toggleQuizForm,
-    isQuizReady
+    isQuizReady,
+    handleEditQuiz
   };
 }

@@ -154,7 +154,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
   function isOptionsDuplicate() {
     var optionArr = optionData.map(function (op) {
-      return op.description?.trim();
+      return op.description?.trim()?.toLowerCase();
     });
     var isDuplicate = optionArr.some((op, i) => {
       if (!op) return;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../../state/atoms/video.atom';
+import Button from '../Button';
 import styles from '../customVideoPlayer.module.scss';
 
 export default function VideoPlayer({
@@ -10,7 +11,8 @@ export default function VideoPlayer({
   handleClick,
   handleKeyDown,
   isControlBarVisible,
-  isSubtitleShown
+  isSubtitleShown,
+  handleFullScreen
 }) {
   const videoData = useRecoilValue(VideoAtom);
 
@@ -166,14 +168,26 @@ export default function VideoPlayer({
 
       {/* {videoData.type === 'SCORM' && videoData.videoSrc && ( */}
       {videoData.type === 'SCORM' && (
-        <iframe
-          src={
-            videoData.videoSrc ||
-            'https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html'
-          }
-          frameBorder="0"
-          className={`${styles.videoElement}`}
-        />
+        <>
+          <iframe
+            src={
+              videoData.videoSrc ||
+              'https://storage.googleapis.com/content.zicops.com/course1/topic1/story_html5.html'
+            }
+            frameBorder="0"
+            className={`${styles.videoElement}`}
+          />
+
+          <div className={`${styles.scromFullScreenBtn}`}>
+            <Button handleClick={handleFullScreen}>
+              {!document.fullscreenElement ? (
+                <div className={`${styles.fsBtn}`}></div>
+              ) : (
+                <div className={`${styles.fseBtn}`}></div>
+              )}
+            </Button>
+          </div>
+        </>
       )}
 
       {videoData?.type === 'classroom' && (

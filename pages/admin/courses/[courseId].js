@@ -1,3 +1,4 @@
+import { IsCourseSavedAtom } from '@/components/Tabs/Logic/tabs.helper';
 import { COURSE_TYPES } from '@/helper/constants.helper';
 import { ApolloProvider, useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -16,6 +17,9 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 
 export default function EditCoursePage() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+
+  const [isCourseLoaded, setIsCourseLoaded] = useState(false);
 
   const { updateCourseMaster, fullCourse } = useContext(courseContext);
   const router = useRouter();
@@ -31,9 +35,14 @@ export default function EditCoursePage() {
         if (errorCourseData) return setToastMsg({ type: 'danger', message: 'course load error' });
 
         if (data?.getCourse) updateCourseMaster(data.getCourse);
+        setIsCourseLoaded(true);
       }
     );
   }, [editCourseId]);
+
+  useEffect(() => {
+    if (isCourseLoaded) setIsCourseSaved(true);
+  }, [isCourseLoaded]);
 
   return (
     <>

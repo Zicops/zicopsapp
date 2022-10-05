@@ -25,6 +25,7 @@ import { loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import { LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
+import { parseJson } from './utils.helper';
 
 export function useHandleCatSubCat(selectedCategory) {
   const [refetch, setRefetch] = useState(true);
@@ -44,26 +45,17 @@ export function useHandleCatSubCat(selectedCategory) {
     const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
-      return {
-        ...subCat,
-        value: subCat?.Name,
-        label: subCat?.Name
-      };
+      return { ...subCat, value: subCat?.Name, label: subCat?.Name };
     });
     const _cat = catAndSubCatRes?.allCatMain?.map((cat) => {
       if (!_subCatGrp[cat?.id]) _subCatGrp[cat?.id] = { cat: cat, subCat: [] };
       _subCatGrp[cat?.id].subCat.push(...allSubCat?.filter((subCat) => subCat?.CatId === cat?.id));
 
-      return {
-        ...cat,
-        value: cat?.Name,
-        label: cat?.Name
-      };
+      return { ...cat, value: cat?.Name, label: cat?.Name };
     });
     let _subCat = allSubCat;
 
-    // console.log('selc', selectedCategory);
-    if (selectedCategory) {
+    if (!!selectedCategory) {
       const cat = catAndSubCatRes?.allCatMain?.find((cat) => cat?.Name === selectedCategory);
       _subCat = allSubCat?.filter((subCat) => subCat?.CatId === cat?.id);
     }
@@ -175,10 +167,10 @@ export default function useUserCourseData() {
     const { id } = getUserData();
     let currentUserId = id;
     if (!currentUserId) return;
-      // return setToastMsg({
-      //   type: 'danger',
-      //   message: 'Need to provide user id for course progress!'
-      // });
+    // return setToastMsg({
+    //   type: 'danger',
+    //   message: 'Need to provide user id for course progress!'
+    // });
 
     const assignedCoursesRes = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS,
@@ -234,13 +226,9 @@ export default function useUserCourseData() {
         continue;
       }
 
-      let added_by = '';
-      try {
-        added_by = JSON.parse(assignedCoursesToUser[i]?.added_by)?.role;
-      } catch (e) {
-        added_by = assignedCoursesToUser[i]?.added_by;
-        // setToastMsg({ type: 'danger', message: 'Added by not a json string' });
-      }
+      let added_by =
+        parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
+
       // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
       const courseDuraton = +courseRes?.getCourse?.duration * 60;
       allAssignedCourses.push({
@@ -266,8 +254,9 @@ export default function useUserCourseData() {
   async function getUserPreferences() {
     // if(!userLspId) setToastMsg({type:'danger' , message:'Need to provide user lsp id^!'});
     const userData = getUserData();
-    const userLspData = JSON.parse(sessionStorage?.getItem('lspData'));
-    if (userData === 'User Data Not Found') return;
+    let userLspData = parseJson(sessionStorage?.getItem('lspData'));
+
+    if (userData === 'User Data Not Found' && !userLspData) return;
     const { id } = getUserData();
     if (!userLspData?.user_lsp_id) {
       const userLearningSpaceData = await loadQueryDataAsync(
@@ -279,15 +268,19 @@ export default function useUserCourseData() {
       if (userLearningSpaceData?.error)
         return setToastMsg({ type: 'danger', message: 'Error while loading user preferences^!' });
       //temporary solution only valid for one lsp...need to change later!
-      sessionStorage?.setItem('lspData', JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
+      if (userLearningSpaceData?.getUserLspByLspId)
+        sessionStorage?.setItem(
+          'lspData',
+          JSON.stringify(userLearningSpaceData?.getUserLspByLspId)
+        );
       // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
       setUserOrgData(
         getUserOrgObject({ user_lsp_id: userLearningSpaceData?.getUserLspByLspId?.user_lsp_id })
       );
     }
-    const { user_lsp_id } = JSON.parse(sessionStorage?.getItem('lspData'));
+    const { user_lsp_id } = parseJson(sessionStorage?.getItem('lspData'));
 
-    if (!user_lsp_id) setToastMsg({ type: 'danger', message: 'Need to provide user lsp id^!' });
+    if (!user_lsp_id) setToastMsg({ type: 'danger', message: 'Need to provide user lsp id!' });
 
     const resPref = await loadQueryDataAsync(
       GET_USER_PREFERENCES,

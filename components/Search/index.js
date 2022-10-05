@@ -11,7 +11,6 @@ export default function Search() {
   const router = useRouter();
   const searchQuery = router.query?.searchQuery || '';
   const [hideBookMark, setHideBookmark] = useState(false);
-  const [hideSubCat, setHideSubCat] = useState(false);
 
   useEffect(() => {
     // console.log(isPref);
@@ -19,10 +18,7 @@ export default function Search() {
     if (!isPref) return;
     setHideBookmark(true);
 
-    if (cat) {
-      setHideBookmark(true);
-      setHideSubCat(false);
-    }
+    if (cat) setHideBookmark(true);
 
     // setFilters(prevValue => ({...prevValue , subCategory:searchQuery}))
     return;
@@ -36,8 +32,7 @@ export default function Search() {
         minHeight: '90vh'
       }}>
       <SearchHeader filters={filters} setFilters={setFilters} clearAllFilters={clearAllFilters} />
-      {!hideBookMark && <SearchBookmarks />}
-      {!hideSubCat && <SearchSubCat />}
+      {!hideBookMark ? <SearchBookmarks /> : <SearchSubCat />}
 
       <SearchBody
         courses={courses?.filter((course) => {
