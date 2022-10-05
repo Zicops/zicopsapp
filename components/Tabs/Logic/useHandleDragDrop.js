@@ -5,11 +5,12 @@ import { getQueryData } from '../../../helper/api.helper';
 
 export default function useHandleDragDrop(courseContextData) {
   const { fullCourse, updateCourseMaster } = courseContextData;
-  const { catSubCat } = useHandleCatSubCat(fullCourse?.category);
+  const { catSubCat } = useHandleCatSubCat();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [draglist, updateDraglist] = useState([]);
   const [droplist, updateDroplist] = useState(fullCourse.sub_categories || []);
+  const [isDropListUpdated, setIsDropListUpdated] = useState(false);
   const [isDragOn, setIsDragOn] = useState(0);
 
   // load and set data
@@ -20,8 +21,7 @@ export default function useHandleDragDrop(courseContextData) {
     let newDroplist = [];
 
     const data = { allSubCategories: catSubCat?.subCat || [] };
-    console.log(data);
-    if (data?.allSubCategories) {
+    if (data?.allSubCategories?.length) {
       data.allSubCategories.forEach(function (e, i) {
         if (
           fullCourse?.sub_category?.toLowerCase()?.trim()?.includes(e?.Name?.toLowerCase()?.trim())
@@ -34,9 +34,11 @@ export default function useHandleDragDrop(courseContextData) {
       // remove selected categories
       const selectedItems = [];
       newDraglist = newDraglist.filter((item) => {
-        const index = droplist.findIndex((selected) => selected.name === item.name);
+        const index = fullCourse?.sub_categories?.findIndex(
+          (selected) => selected.name === item.name
+        );
         const isSelected = index < 0;
-        if (!isSelected) selectedItems.push(item);
+        if (!isSelected) selectedItems.push({ rank: index, ...item });
 
         return isSelected;
       });
@@ -45,6 +47,7 @@ export default function useHandleDragDrop(courseContextData) {
       newDraglist = newDraglist.filter((c) => c.name);
       newDroplist = selectedItems
         ?.map((item) => {
+          console.log(item);
           const index = droplist.findIndex((selected) => selected.name === item.name);
           const selectedItemOrder = droplist[index]?.rank;
 
@@ -57,18 +60,21 @@ export default function useHandleDragDrop(courseContextData) {
           item1.name?.toLowerCase()?.trim()?.localeCompare(item2.name?.toLowerCase()?.trim())
         ) || []
       );
+      setIsDropListUpdated(true);
       updateDroplist(newDroplist);
     }
   }, [catSubCat?.subCat]);
 
   useEffect(() => {
+    if (!isDropListUpdated) return;
+
     updateCourseMaster({
       ...fullCourse,
       sub_categories: droplist.map((item) => {
         return { name: item.name, rank: item.rank };
       })
     });
-  }, [droplist]);
+  }, [isDropListUpdated, droplist]);
 
   function handleOnDragEnd(result) {
     setIsDragOn(2);
