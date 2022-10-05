@@ -514,3 +514,20 @@
   text-align: center;
   margin: 10px;
 }
+
+.editQuizContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  .editQuiz {
+    height: 20px;
+    cursor: pointer;
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}

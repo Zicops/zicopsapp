@@ -2,8 +2,8 @@ import InputWithCheckbox from '@/common/InputWithCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import RangeSlider from '@/components/common/FormComponents/RangeSlider';
 import UploadForm from '@/components/common/FormComponents/UploadForm';
-import { useRecoilValue } from 'recoil';
-import { QuizAtom, QuizMetaDataAtom } from '../../../../../state/atoms/module.atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { getQuizObject, QuizAtom, QuizMetaDataAtom } from '../../../../../state/atoms/module.atoms';
 import Bar from '../../../../common/Bar';
 import Button from '../../../../common/Button';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
@@ -22,10 +22,11 @@ export default function QuizForm({ courseId, topicId }) {
     addNewQuiz,
     isQuizFormVisible,
     toggleQuizForm,
-    isQuizReady
+    isQuizReady,
+    handleEditQuiz
   } = useAddQuiz(courseId, topicId);
 
-  const quizzes = useRecoilValue(QuizAtom);
+  const [quizzes, setQuizzes] = useRecoilState(QuizAtom);
   const quizMetaData = useRecoilValue(QuizMetaDataAtom);
   const acceptedType = ['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'];
   const NUMBER_OF_OPTIONS = 4;
@@ -38,7 +39,19 @@ export default function QuizForm({ courseId, topicId }) {
     <>
       {quizzes &&
         quizzes?.map((quiz, index) => (
-          <Bar key={quiz.name + index} index={index + 1} text={quiz.name} type={quiz.type} />
+          <Bar
+            key={quiz.name + index}
+            index={index + 1}
+            text={quiz.name}
+            type={
+              <div className={styles.editQuizContainer}>
+                <span>quiz.type</span>
+                <span className={styles.editQuiz} onClick={() => handleEditQuiz(quiz, index)}>
+                  <img src="/images/svg/edit-box-line.svg" alt="" />
+                </span>
+              </div>
+            }
+          />
         ))}
 
       {isQuizFormVisible && (
@@ -207,6 +220,7 @@ export default function QuizForm({ courseId, topicId }) {
                         optionData={{
                           fileName: newQuiz?.options[index]?.file?.name,
                           inputValue: newQuiz?.options[index]?.option,
+                          isCorrect: newQuiz?.options[index]?.isCorrect,
                           inputName: 'option'
                         }}
                       />
@@ -287,7 +301,14 @@ export default function QuizForm({ courseId, topicId }) {
       )}
 
       <div className={`${styles.centerAccordinBtn}`}>
-        <IconButton styleClass="btnBlack" text="Add Quiz" handleClick={toggleQuizForm} />
+        <IconButton
+          styleClass="btnBlack"
+          text="Add Quiz"
+          handleClick={() => {
+            setNewQuiz(getQuizObject({ courseId, topicId }));
+            toggleQuizForm();
+          }}
+        />
       </div>
     </>
   );
