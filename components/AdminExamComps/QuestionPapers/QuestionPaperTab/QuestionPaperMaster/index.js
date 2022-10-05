@@ -68,7 +68,7 @@ export default function QuestionPaperMaster() {
           inputName: 'category',
           label: 'Category:',
           placeholder: 'Select Category',
-          options: catSubCat?.cat,
+          options: [{ value: 'General', label: 'General' }, ...catSubCat?.cat],
           isDisabled: !!questionPaperTabData?.sectionData?.length,
           value: {
             value: questionPaperTabData.paperMaster?.category,
@@ -87,7 +87,7 @@ export default function QuestionPaperMaster() {
           inputName: 'sub_category',
           label: 'Sub-Category:',
           placeholder: 'Select Sub-Category',
-          options: catSubCat?.subCat,
+          options: [{ value: 'General', label: 'General' }, ...catSubCat?.subCat],
           isDisabled: !!questionPaperTabData?.sectionData?.length,
           value: {
             value: questionPaperTabData.paperMaster?.sub_category,

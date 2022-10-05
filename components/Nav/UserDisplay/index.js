@@ -39,7 +39,7 @@ const UserDisplay = () => {
         console.log(err);
       });
       if (userData?.error) return console.log('User data load error');
-      const basicInfo = userData?.data?.getUserDetails[0];
+      const basicInfo = userData?.data?.getUserDetails?.[0];
 
       setUserProfileData((prevValue) => ({ ...prevValue, ...basicInfo }));
       setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);

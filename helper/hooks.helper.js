@@ -45,26 +45,17 @@ export function useHandleCatSubCat(selectedCategory) {
     const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
-      return {
-        ...subCat,
-        value: subCat?.Name,
-        label: subCat?.Name
-      };
+      return { ...subCat, value: subCat?.Name, label: subCat?.Name };
     });
     const _cat = catAndSubCatRes?.allCatMain?.map((cat) => {
       if (!_subCatGrp[cat?.id]) _subCatGrp[cat?.id] = { cat: cat, subCat: [] };
       _subCatGrp[cat?.id].subCat.push(...allSubCat?.filter((subCat) => subCat?.CatId === cat?.id));
 
-      return {
-        ...cat,
-        value: cat?.Name,
-        label: cat?.Name
-      };
+      return { ...cat, value: cat?.Name, label: cat?.Name };
     });
     let _subCat = allSubCat;
 
-    // console.log('selc', selectedCategory);
-    if (selectedCategory) {
+    if (!!selectedCategory) {
       const cat = catAndSubCatRes?.allCatMain?.find((cat) => cat?.Name === selectedCategory);
       _subCat = allSubCat?.filter((subCat) => subCat?.CatId === cat?.id);
     }

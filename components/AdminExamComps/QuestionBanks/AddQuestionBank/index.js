@@ -92,7 +92,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           inputName: 'category',
           label: 'Category:',
           placeholder: 'Select Category',
-          options: catSubCat.cat,
+          options: [{ value: 'General', label: 'General' }, ...catSubCat.cat],
           value: { value: questionBankData?.category, label: questionBankData?.category },
           isDisabled: isQuestionsPresent || !isPopUp,
           isSearchEnable: true
@@ -113,7 +113,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           inputName: 'sub_category',
           label: 'Sub-Category:',
           placeholder: 'Select Sub-Category',
-          options: catSubCat.subCat,
+          options: [{ value: 'General', label: 'General' }, ...catSubCat.subCat],
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },
           isDisabled: isQuestionsPresent || !isPopUp,
           isSearchEnable: true
