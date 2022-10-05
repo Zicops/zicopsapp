@@ -54,7 +54,7 @@ export default function CourseHero({ isPreview = false }) {
       className={`${style.course_header}`}
       style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover' }}>
       <div className={`${style.gradient}`}>
-        <span onClick={() => (isPreview ? '' : router?.back())} className={`${style.back_btn}`}>
+        <span onClick={() => router?.back()} className={`${style.back_btn}`}>
           {/* <Link href={isPreview ? `/admin/courses/${fullCourse.id}` : ''}> */}
           {/* <a className={`${style.back_btn}`}> */}
           <img src="/images/bigarrowleft.png" alt="" />
