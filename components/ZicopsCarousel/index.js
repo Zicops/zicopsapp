@@ -8,6 +8,7 @@ import SmallCard from './SmallCard';
 import SquareCard from './SquareCard';
 import CircleCard from './CircleCard';
 import styles from './zicopsCarousel.module.scss';
+import { MIN_COURSE_LENGTH } from '@/helper/constants.helper';
 
 const CardSlider = ({ deviceType, title, type = 'small', data, notext = false }) => {
   const carouselRef = useRef(0);
@@ -141,7 +142,7 @@ const CardSlider = ({ deviceType, title, type = 'small', data, notext = false })
             if (type === 'square') return <SquareCard key={index} image={d.img} />;
             if (type === 'circle') return <CircleCard key={index} image={d.img} />;
           })}
-          {data?.every((d) => d) ? (
+          {data?.length > MIN_COURSE_LENGTH && data?.every((d) => d) ? (
             <div className={`${styles.last_text} ${itemCount.shape}`}>See All</div>
           ) : (
             <></>
