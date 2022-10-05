@@ -92,7 +92,6 @@ export default function useAddQuiz(courseId = '', topicId = '') {
       );
     }
 
-    console.log(subCatQb);
     setQuizMetaData({
       questionBank: subCatQb,
       questions: allQuestionsArr
@@ -237,7 +236,8 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   async function handleEditQuiz(quiz, index) {
     toggleQuizForm(true);
     let _quiz = quiz;
-    if (!quiz?.formType && quiz?.questionId) {
+    console.log(quiz);
+    if (quiz?.questionId) {
       const quesRes = await loadQueryDataAsync(GET_QUESTION_BY_ID, {
         question_ids: [quiz?.questionId]
       });
