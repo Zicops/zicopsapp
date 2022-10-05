@@ -23,7 +23,9 @@ export default function QuizForm({ courseId, topicId }) {
     isQuizFormVisible,
     toggleQuizForm,
     isQuizReady,
-    handleEditQuiz
+    handleEditQuiz,
+    editedQuiz,
+    setEditedQuiz
   } = useAddQuiz(courseId, topicId);
 
   const [quizzes, setQuizzes] = useRecoilState(QuizAtom);
@@ -45,7 +47,7 @@ export default function QuizForm({ courseId, topicId }) {
             text={quiz.name}
             type={
               <div className={styles.editQuizContainer}>
-                <span>quiz.type</span>
+                <span>{quiz.type}</span>
                 <span className={styles.editQuiz} onClick={() => handleEditQuiz(quiz, index)}>
                   <img src="/images/svg/edit-box-line.svg" alt="" />
                 </span>
@@ -284,7 +286,10 @@ export default function QuizForm({ courseId, topicId }) {
             <div className="center-element-with-flex">
               <Button
                 text="Cancel"
-                clickHandler={toggleQuizForm}
+                clickHandler={() => {
+                  setQuizzes([...quizzes, editedQuiz]);
+                  toggleQuizForm();
+                }}
                 styleClass={styles.topicContentSmallBtn}
               />
               <Button

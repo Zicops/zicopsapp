@@ -36,6 +36,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   // local state
   const [isQuizFormVisible, setIsQuizFormVisible] = useState(false);
   const [isQuizReady, setIsQuizReady] = useState(false);
+  const [editedQuiz, setEditedQuiz] = useState(null);
   const [newQuiz, setNewQuiz] = useState(getQuizObject({ courseId, topicId }));
 
   // update resouce courseid and topicid
@@ -91,6 +92,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
       );
     }
 
+    console.log(subCatQb);
     setQuizMetaData({
       questionBank: subCatQb,
       questions: allQuestionsArr
@@ -156,7 +158,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   }, [newQuiz]);
 
   function toggleQuizForm(val) {
-    if (val) return setIsQuizFormVisible(!!val);
+    if (typeof val === 'boolean') return setIsQuizFormVisible(!!val);
 
     setIsQuizFormVisible(!isQuizFormVisible);
   }
@@ -248,6 +250,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
 
       const timeObj = secondsToMinutes(+quiz?.startTime);
 
+      console.log(question);
       _quiz = {
         ..._quiz,
         startTimeMin: +timeObj?.minute || 0,
@@ -274,6 +277,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     }
 
     setNewQuiz(_quiz);
+    setEditedQuiz({ ..._quiz, isEditQuiz: false });
     const _quizzes = structuredClone(quizzes);
     _quizzes?.splice(index, 1);
     setQuizzes(_quizzes);
@@ -288,7 +292,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
       return setToastMsg({ type: 'danger', message: 'Quiz name cannot be same in one topic.' });
 
     console.log(newQuiz);
-    setQuizzes([...quizzes, newQuiz]);
+    setQuizzes([...quizzes, { ...newQuiz, isEditQuiz: true }]);
     setNewQuiz(getQuizObject({ courseId, topicId }));
     setIsQuizFormVisible(false);
   }
@@ -296,6 +300,8 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   return {
     newQuiz,
     setNewQuiz,
+    editedQuiz,
+    setEditedQuiz,
     handleQuizInput,
     addNewQuiz,
     isQuizFormVisible,

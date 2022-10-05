@@ -410,87 +410,91 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
     for (let i = 0; i < quizData.length; i++) {
       const quiz = quizData[i];
       if (quiz?.id) {
-        const sendQuestionData = {
-          id: quiz?.questionId,
-          name: '',
-          description: quiz?.question || '',
-          type: quiz?.type || '',
-          difficulty: quiz.difficulty || 0,
-          hint: quiz?.hint || '',
-          qbmId: subCatQb?.id || null,
-          attachmentType: '',
-
-          // TODO: remove or update later
-          createdBy: 'Zicops',
-          updatedBy: 'Zicops',
-          status: QUESTION_STATUS[1]
-        };
-        const quesRes = await updateQuestion({ variables: sendQuestionData }).catch((err) => {
-          console.log(err);
-          isError = !!err;
-          return setToastMsg({ type: 'danger', message: 'Update Question Error' });
-        });
-        console.log(quesRes);
-
-        if (!quesRes || isError) continue;
-
-        const options = quiz?.options || [];
-        // add option
-        for (let i = 0; i < options.length; i++) {
-          const option = options[i];
-          // console.log(option);
-          if (!option.option && !option.file) continue;
-
-          const sendOptionData = {
-            id: option.id,
-            description: option.option || '',
-            isCorrect: option.isCorrect || false,
-            qmId: sendQuestionData?.id,
-            isActive: true,
-            attachmentType: option.attachmentType || '',
+        if (quiz?.isEditQuiz) {
+          const sendQuestionData = {
+            id: quiz?.questionId,
+            name: '',
+            description: quiz?.question || '',
+            type: quiz?.type || '',
+            difficulty: quiz.difficulty || 0,
+            hint: quiz?.hint || '',
+            qbmId: quiz?.qbId || null,
+            attachmentType: '',
 
             // TODO: remove or update later
             createdBy: 'Zicops',
-            updatedBy: 'Zicops'
+            updatedBy: 'Zicops',
+            status: QUESTION_STATUS[1]
           };
-
-          if (option.file) {
-            sendOptionData.file = option.file;
-            sendOptionData.attachmentType = option.attachmentType;
-          }
-
-          // console.log(sendOptionData);
-          await updateOption({ variables: sendOptionData }).catch((err) => {
+          console.log(sendQuestionData);
+          const quesRes = await updateQuestion({ variables: sendQuestionData }).catch((err) => {
             console.log(err);
             isError = !!err;
-            return setToastMsg({ type: 'danger', message: `Update Option (${i + 1}) Error` });
+            return setToastMsg({ type: 'danger', message: 'Update Question Error' });
           });
-        }
-        // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
-        if (isError) continue;
+          console.log(quesRes);
 
-        const startTime = parseInt(quiz?.startTimeMin) * 60 + parseInt(quiz?.startTimeSec);
-        const sendQuizData = {
-          id: quiz?.id,
-          name: quiz?.name || '',
-          category: fullCourse?.category || '',
-          type: quiz?.type || '',
-          isMandatory: quiz?.isMandatory || false,
-          topicId: quiz?.topicId || '',
-          courseId: quiz?.courseId || '',
-          questionId: questionId,
-          qbId: subCatQb?.id,
-          weightage: 1,
-          sequence: i + 1,
-          startTime: startTime || 0
-        };
-        console.log(sendQuizData);
-        const quizRes = await updateQuiz({ variables: sendQuizData }).catch((err) => {
-          console.log(err);
-          isError = !!err;
-          setToastMsg({ type: 'danger', message: 'Add Question Error' });
-        });
-        console.log(quizRes);
+          if (!quesRes || isError) continue;
+
+          const options = quiz?.options || [];
+          // add option
+          for (let i = 0; i < options.length; i++) {
+            const option = options[i];
+            // console.log(option);
+            if (!option.option && !option.file) continue;
+
+            const sendOptionData = {
+              id: option.id,
+              description: option.option || '',
+              isCorrect: option.isCorrect || false,
+              qmId: sendQuestionData?.id,
+              isActive: true,
+              attachmentType: option.attachmentType || '',
+
+              // TODO: remove or update later
+              createdBy: 'Zicops',
+              updatedBy: 'Zicops'
+            };
+
+            if (option.file) {
+              sendOptionData.file = option.file;
+              sendOptionData.attachmentType = option.attachmentType;
+            }
+
+            // console.log(sendOptionData);
+            await updateOption({ variables: sendOptionData }).catch((err) => {
+              console.log(err);
+              isError = !!err;
+              return setToastMsg({ type: 'danger', message: `Update Option (${i + 1}) Error` });
+            });
+          }
+          // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
+          if (isError) continue;
+
+          const startTime = parseInt(quiz?.startTimeMin) * 60 + parseInt(quiz?.startTimeSec);
+          const sendQuizData = {
+            id: quiz?.id,
+            name: quiz?.name || '',
+            category: fullCourse?.category || '',
+            type: quiz?.type || '',
+            isMandatory: quiz?.isMandatory || false,
+            topicId: quiz?.topicId || '',
+            courseId: quiz?.courseId || '',
+            questionId: questionId,
+            qbId: subCatQb?.id,
+            weightage: 1,
+            sequence: i + 1,
+            startTime: startTime || 0
+          };
+          console.log(sendQuizData);
+          const quizRes = await updateQuiz({ variables: sendQuizData }).catch((err) => {
+            console.log(err);
+            isError = !!err;
+            setToastMsg({ type: 'danger', message: 'Add Question Error' });
+          });
+          console.log(quizRes);
+          continue;
+        }
         continue;
       }
 
