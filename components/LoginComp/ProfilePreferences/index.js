@@ -1,3 +1,4 @@
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FilterListSharpIcon from '@mui/icons-material/FilterListSharp';
 import SearchIcon from '@mui/icons-material/Search';
@@ -14,7 +15,6 @@ import {
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import CustomAccordion from './CustomAccordion';
-import { categories, subCategories } from './Logic/profilePreferencesHelper';
 import styles from './profilePreferences.module.scss';
 
 const ProfilePreferences = ({
@@ -31,15 +31,37 @@ const ProfilePreferences = ({
   const [searchedData, setSearchedData] = useState([]);
   const [searched, setSearched] = useState(false);
 
+  const { catSubCat } = useHandleCatSubCat();
+
   const handleIcon = () => {
     setIsOpen(!isOpen);
   };
 
-  subCategories.forEach((each) => {
-    each.isSelected = false;
-  });
+  const [categories, setCategories] = useState([]);
+  const [data, setData] = useState([]);
 
-  const [data, setData] = useState(subCategories);
+  useEffect(() => {
+    if (!catSubCat?.cat?.length) return;
+
+    const allCatNames = [];
+    catSubCat?.cat?.forEach((c) => allCatNames.push(c?.Name));
+    setCategories(allCatNames);
+  }, [catSubCat?.cat]);
+
+  useEffect(() => {
+    if (!catSubCat?.subCat?.length) return;
+
+    setData(
+      catSubCat?.subCat?.map((s) => {
+        return {
+          ...s,
+          name: s?.Name,
+          category: catSubCat?.subCatGrp[s?.CatId]?.cat?.Name,
+          isSelected: false
+        };
+      })
+    );
+  }, [catSubCat?.subCat]);
 
   const deleteFilter = (category) => {
     // console.log(category)
