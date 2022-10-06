@@ -41,10 +41,12 @@ const LoginScreen = ({ setPage }) => {
   const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
 
   const handleEmail = (e) => {
+    setDisableBtn(false);
     setEmail(e.target.value);
   };
 
   const handlePassword = (e) => {
+    setDisableBtn(false);
     setPassword(e.target.value);
   };
 
@@ -52,14 +54,9 @@ const LoginScreen = ({ setPage }) => {
     e.preventDefault();
     setDisableBtn(true);
     const checkEmail = isEmail(email);
-    if (!checkEmail) {
-      setDisableBtn(false);
-      return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
-    }
-    if (!password) {
-      setDisableBtn(false);
-      return setToastMsg({ type: 'danger', message: 'Enter password!!' });
-    }
+    if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
+
+    if (!password) return setToastMsg({ type: 'danger', message: 'Enter password!!' });
 
     const userData = await signIn(email, password);
 
@@ -85,11 +82,9 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
-    if (isError) return setDisableBtn(false);
-    if (res?.data?.login?.status === USER_STATUS.disable) {
-      setDisableBtn(false);
+    if (isError) return;
+    if (res?.data?.login?.status === USER_STATUS.disable)
       return setToastMsg({ type: 'danger', message: 'Login Error' });
-    }
 
     setUserData(getUserObject(res?.data?.login));
     sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
@@ -102,10 +97,9 @@ const LoginScreen = ({ setPage }) => {
       vidRef.current.play();
       // setTimeout(() => {
       // }, 1500);
-      return setDisableBtn(false);
+      return;
     }
 
-    setDisableBtn(false);
     return router.push('/account-setup');
   }
 
