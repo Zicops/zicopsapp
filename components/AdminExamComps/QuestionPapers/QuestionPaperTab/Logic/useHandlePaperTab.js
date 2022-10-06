@@ -11,6 +11,7 @@ import {
 import { GET_LATEST_QUESTION_PAPERS_NAMES } from '../../../../../API/Queries';
 import { isNameDuplicate } from '../../../../../helper/data.helper';
 import {
+  getQuestionPaperMasterObject,
   getQuestionPaperTabDataObject,
   QuestionPaperTabDataAtom
 } from '../../../../../state/atoms/exams.atoms';
@@ -43,7 +44,11 @@ export default function useHandlePaperTab() {
     if (questionPaperId || questionPaperTabData?.paperMaster?.id) return;
     if (questionPaperTabData?.paperMaster?.isUpdated) return;
 
-    setQuestionPaperTabData(getQuestionPaperTabDataObject());
+    setQuestionPaperTabData(
+      getQuestionPaperTabDataObject({
+        paperMaster: getQuestionPaperMasterObject({ is_active: true })
+      })
+    );
   }, []);
 
   // useEffect(() => {
