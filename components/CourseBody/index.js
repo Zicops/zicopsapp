@@ -36,6 +36,7 @@ export default function CourseBody({ isPreview = false }) {
   useEffect(() => {
     setActiveCourseTab(tabs[0].name);
     setIsResourceShown(null);
+    setSelectedModule(getModuleOptions()[0]);
     if (isPreview) setUserCourseData(getUserCourseDataObj());
   }, []);
 
