@@ -29,7 +29,7 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
     if(!userPreferences?.length) return setLoading(false);
     const activePreferences = userPreferences?.filter((item)=> item?.is_active);
     const prefArray = [];
-    for(let i = 0  ; i < activePreferences?.length ; i++ ){
+    for(let i = 0  ; i < 5 ; i++ ){
       if(activePreferences[i]?.is_base){
          prefArray.unshift({title:activePreferences[i]?.sub_category ,asUrl:'/search-page' ,link:`${activePreferences[i]?.sub_category}`,customStyle: {
           backgroundColor: 'var(--primary)',
