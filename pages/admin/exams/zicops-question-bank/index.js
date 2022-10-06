@@ -1,3 +1,4 @@
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useRecoilState } from 'recoil';
 import AddQuestionBank from '../../../../components/AdminExamComps/QuestionBanks/AddQuestionBank';
 import QuestionBankTable from '../../../../components/AdminExamComps/QuestionBanks/QuestionBankTable';
@@ -21,7 +22,7 @@ export default function ZicopsQuestionBanks() {
           isAddShown={true}
           // pageRoute="/admin/exams/question-bank"
           handleClickForPlus={() => udpatePopUpState(true)}
-          tooltipTitle="Create new Question Bank"
+          tooltipTitle={ADMIN_EXAMS.zicopsQuestionBanks.addBtn}
         />
         <MainBodyBox>
           <QuestionBankTable />

@@ -1,3 +1,4 @@
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import ExamsTable from '../../../../components/AdminExamComps/Exams/ExamsTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
@@ -10,7 +11,12 @@ const MyExams = () => {
     <>
       <Sidebar sidebarItemsArr={examSidebarData} />
       <MainBody>
-        <AdminHeader title="My Exams" isAddShown={true} pageRoute="/admin/exams/my-exams/add" tooltipTitle="Create new Exam"/>
+        <AdminHeader
+          title="My Exams"
+          isAddShown={true}
+          pageRoute="/admin/exams/my-exams/add"
+          tooltipTitle={ADMIN_EXAMS.myExams.addBtn}
+        />
         <MainBodyBox>
           <ExamsTable isEdit={true} />
         </MainBodyBox>

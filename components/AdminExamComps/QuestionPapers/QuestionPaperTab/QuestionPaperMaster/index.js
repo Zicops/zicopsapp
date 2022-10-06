@@ -1,4 +1,5 @@
 import CustomTooltip from '@/components/common/CustomTooltip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -128,7 +129,16 @@ export default function QuestionPaperMaster() {
       <div className={`${styles.footer}`}>
         <LabeledRadioCheckbox
           type="checkbox"
-          label={<span>Section Wise<CustomTooltip info={`${questionPaperTabData.paperMaster?.section_wise ? "Question paper will have sections":"Question paper will not have sections"}`}/></span>}
+          label={
+            <span>
+              Section Wise
+              <CustomTooltip
+                info={
+                  ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab.sectionWise
+                }
+              />
+            </span>
+          }
           name="section_wise"
           isDisabled={!!questionPaperTabData?.sectionData?.length}
           isChecked={questionPaperTabData.paperMaster?.section_wise}

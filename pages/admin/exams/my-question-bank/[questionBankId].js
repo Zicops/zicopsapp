@@ -1,6 +1,7 @@
 import AddQuestionBank from '@/components/AdminExamComps/QuestionBanks/AddQuestionBank';
 import PopUp from '@/components/common/PopUp';
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -77,13 +78,17 @@ export default function MyQuestionBanks() {
                   border: '0'
                 }}
                 onClick={() => setEditPopUp(true)}>
-                <ToolTip title="Edit Bank Details" placement="right"><img src="/images/svg/edit.svg" width={20} /></ToolTip>
+                <ToolTip
+                  title={ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.penEditIcon}
+                  placement="right">
+                  <img src="/images/svg/edit.svg" width={20} />
+                </ToolTip>
               </button>
             </>
           }
           isAddShown={!showQuestionForm}
           handleClickForPlus={() => setShowQuestionForm(true)}
-          tooltipTitle="Add Questions"
+          tooltipTitle={ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.addBtn}
         />
         <MainBodyBox>
           {showQuestionForm ? (

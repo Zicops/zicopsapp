@@ -22,7 +22,13 @@ export function CustomPagination() {
       count={pageCount}
       renderItem={(props2) => (
         <>
-          <ToolTip title="Go to this Page" placement="bottom">
+          <ToolTip
+            title={`${
+              props2.type.includes('page')
+                ? 'go to this page'
+                : `${props2.type === 'next' ? 'next page' : 'previous page'}`
+            } `}
+            placement="bottom">
             <PaginationItem {...props2} disableRipple />
           </ToolTip>
         </>
@@ -35,13 +41,13 @@ export function CustomPagination() {
 export function CustomAscendingIcon() {
   return (
     <div style={{ marginTop: '5px' }}>
-        <img
-          src="/images/downsort.svg"
-          alt=""
-          height={15}
-          width={15}
-          style={{ transform: 'rotate(180deg)' }}
-        />
+      <img
+        src="/images/downsort.svg"
+        alt=""
+        height={15}
+        width={15}
+        style={{ transform: 'rotate(180deg)' }}
+      />
     </div>
   );
 }
@@ -49,7 +55,7 @@ export function CustomAscendingIcon() {
 export function CustomDescendingIcon() {
   return (
     <div style={{ marginTop: '5px' }}>
-        <img src="/images/downsort.svg" alt="" height={15} width={15} />
+      <img src="/images/downsort.svg" alt="" height={15} width={15} />
     </div>
   );
 }

@@ -126,6 +126,7 @@ export const ADMIN_EXAMS = {
   },
 
   myExams: {
+    addBtn: 'Create new Exam',
     myExamsPassingCriteria: (
       <ul>
         <li>If None, no passing criteria would be applicable for this exam.</li>

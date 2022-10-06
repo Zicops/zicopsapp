@@ -1,3 +1,4 @@
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useRecoilState } from 'recoil';
 import QuestionBankTable from '../../../../components/AdminExamComps/QuestionBanks/QuestionBankTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
@@ -18,7 +19,7 @@ export default function MyQuestionBanks() {
           title="My Question Banks"
           isAddShown={true}
           handleClickForPlus={() => udpatePopUpState(true)}
-          tooltipTitle="Create new Question Bank"
+          tooltipTitle={ADMIN_EXAMS.myQuestionBanks.addBtn}
         />
         <MainBodyBox>
           <QuestionBankTable isEdit={true} />

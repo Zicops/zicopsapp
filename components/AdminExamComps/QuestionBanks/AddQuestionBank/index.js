@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -123,12 +124,18 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
 
       {isPopUp && (
         <div className={`${styles.btnContainer}`}>
-          <ToolTip title="Cancel and Go Back to Question Banks list" placement="left">
+          <ToolTip title={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.cancelBtn} placement="left">
             <div>
               <Button text={'Cancel'} clickHandler={closePopUp} />
             </div>
           </ToolTip>
-          <ToolTip title={`${isEdit?"Save new changes to this question paper":"Add and proceed to Question Creation"}`} placement="right">
+          <ToolTip
+            title={`${
+              isEdit
+                ? `${ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addBtnActive}`
+                : `${ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addBtnDisabled}`
+            }`}
+            placement="right">
             <div>
               <Button
                 text={isEdit ? 'Update' : 'Add'}

@@ -1,5 +1,6 @@
 import CustomTooltip from '@/components/common/CustomTooltip';
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useEffect, useState } from 'react';
 import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
 import UploadQuestions from '../../../../examComps/ExamsTabs/AddQuestionMetaData/uploadNew/UploadQuestions';
@@ -18,7 +19,11 @@ export default function QuestionMaster({ isEdit, data }) {
     <>
       {visibleForm === null && (
         <div className={`center-element-with-flex ${styles.questionMasterContainer}`}>
-          <ToolTip title="Create and Add Questions to Bank" placement="top">
+          <ToolTip
+            title={
+              ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab.createQuestion
+            }
+            placement="top">
             <div className={`${styles.radioBox}`} onClick={() => setVisibleForm('create')}>
               <div className={`${styles.radioBoxIcon}`}>
                 <img src="/images/svg/add-line.svg" />
@@ -26,7 +31,11 @@ export default function QuestionMaster({ isEdit, data }) {
               <div className={`${styles.radioBoxText}`}>Create Question</div>
             </div>
           </ToolTip>
-          <ToolTip title="Bulk Upload Questions" placement="top">
+          <ToolTip
+            title={
+              ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab.uploadQuestion
+            }
+            placement="top">
             <div className={`${styles.radioBox}`} onClick={() => setVisibleForm('upload')}>
               <div className={`${styles.radioBoxIcon}`}>
                 <img src="/images/svg/upload-cloud-line.svg" />
@@ -35,15 +44,8 @@ export default function QuestionMaster({ isEdit, data }) {
                 Upload Questions
                 <CustomTooltip
                   info={
-                    <>
-                      Use Upload feature to:
-                      <ul>
-                        <li>Upload MCQ questions with details in bulk in one go.</li>
-                        <li> Upload questions and options in text format only.</li>
-                      </ul>
-                      <b>Note: </b>No media file upload allowed for questions or options in bulk
-                      upload
-                    </>
+                    ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                      .uploadQuestionInfo
                   }
                 />
               </div>

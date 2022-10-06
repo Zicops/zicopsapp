@@ -1,3 +1,4 @@
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import QuestionPaperTable from '../../../../components/AdminExamComps/QuestionPapers/QuestionPaperTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
@@ -14,7 +15,7 @@ export default function MyQuestionPapers() {
           title="My Question Papers"
           isAddShown={true}
           pageRoute="/admin/exams/my-question-papers/add"
-          tooltipTitle="Create new Question Paper"
+          tooltipTitle={ADMIN_EXAMS.myQuestionPapers.addBtn}
         />
 
         <MainBodyBox>

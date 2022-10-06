@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import styles from '../../addQuestionMetaData.module.scss';
 
 const UploadButton = () => {
@@ -24,10 +25,20 @@ const UploadButton = () => {
             />
           </div>
           <div className={`${styles.preview_remove_links}`}>
-            <ToolTip title="Click here to Preview Uploaded File" placement="bottom">
+            <ToolTip
+              title={
+                ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                  .uploadQuestionScreen.previewBtnUploaded
+              }
+              placement="bottom">
               <a className={`${styles.preview}`}>Preview</a>
             </ToolTip>
-            <ToolTip title="Click here to Remove Uploaded File" placement="bottom">
+            <ToolTip
+              title={
+                ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                  .uploadQuestionScreen.removeBtnUploaded
+              }
+              placement="bottom">
               <a className={`${styles.remove}`}>Remove</a>
             </ToolTip>
           </div>
