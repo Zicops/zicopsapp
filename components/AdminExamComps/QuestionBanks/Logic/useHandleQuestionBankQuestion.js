@@ -340,7 +340,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       // TODO: remove or update later
       createdBy: 'Zicops',
       updatedBy: 'Zicops',
-      status: STATUS.flow[0]
+      status: QUESTION_STATUS[0]
     };
 
     if (question.file) {
