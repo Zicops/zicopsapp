@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCatSubCatData } from './addCatSubCat.helper';
 
-export default function useHandleCatSubCat(isSubCat) {
+export default function useHandleAddCatSubCat(isSubCat) {
   const [addNewCategory, { error: addCategoryErr }] = useMutation(ADD_CAT_MAIN, {
     client: mutationClient
   });

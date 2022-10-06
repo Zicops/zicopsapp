@@ -6,7 +6,7 @@ import { changeHandler } from '@/helper/common.helper';
 import { getFileNameFromUrl } from '@/helper/utils.helper';
 import { useEffect } from 'react';
 import styles from './addCatSubCat.module.scss';
-import useHandleCatSubCat from './Logic/useHandleCatSubCat';
+import useHandleAddCatSubCat from './Logic/useHandleAddCatSubCat';
 
 export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
   const {
@@ -18,7 +18,7 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
     handleFileInput,
     addCategory,
     addSubCategory
-  } = useHandleCatSubCat(isSubCat);
+  } = useHandleAddCatSubCat(isSubCat);
 
   return (
     <div className={`${styles.questionBankContainer}`}>
