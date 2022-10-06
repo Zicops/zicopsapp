@@ -34,7 +34,7 @@ export function useHandleCatSubCat(selectedCategory) {
     subCat: [],
     allSubCat: [],
     subCatGrp: {},
-    isFiltered: false
+    isFiltered: null
   });
   // this will have the whole cat object not just id
   const [activeCatId, setActiveCatId] = useState(null);
@@ -72,15 +72,13 @@ export function useHandleCatSubCat(selectedCategory) {
   }, [refetch]);
 
   useEffect(() => {
-    // console.log(catSubCat, selectedCategory);
-    if (catSubCat?.isFiltered) return;
+    if (catSubCat?.isFiltered || !catSubCat?.allSubCat?.length) return;
     let allSubCat = catSubCat?.allSubCat;
     let _subCat = catSubCat?.allSubCat;
     if (selectedCategory) {
       const cat = catSubCat?.cat?.find((cat) => cat?.Name === selectedCategory);
       _subCat = catSubCat?.subCat?.filter((subCat) => subCat?.CatId === cat?.id);
     }
-    // console.log(allSubCat?.length, _subCat?.length, selectedCategory);
 
     setCatSubCat({
       ...catSubCat,

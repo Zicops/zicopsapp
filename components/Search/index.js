@@ -15,11 +15,10 @@ export default function Search() {
   useEffect(() => {
     // console.log(isPref);
     const { isPref, cat } = router.query;
-    if (!isPref) return;
-    setHideBookmark(true);
-
     if (cat) setHideBookmark(true);
 
+    if (!isPref) return;
+    setHideBookmark(true);
     // setFilters(prevValue => ({...prevValue , subCategory:searchQuery}))
     return;
   }, [router.query]);
@@ -36,7 +35,6 @@ export default function Search() {
 
       <SearchBody
         courses={courses?.filter((course) => {
-          console.log(course);
           const nameFilter = course?.name
             ?.trim()
             ?.toLowerCase()
