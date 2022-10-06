@@ -1,10 +1,13 @@
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useContext, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import styles from '../../courseTabs.module.scss';
 
 export default function BulletPointInput({ placeholder, name, isBullet = true, isError }) {
   const { fullCourse, updateCourseMaster } = useContext(courseContext);
 
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [input, setInput] = useState('');
   const [isKeyReleased, setIsKeyReleased] = useState(false);
 
@@ -24,12 +27,11 @@ export default function BulletPointInput({ placeholder, name, isBullet = true, i
     const trimmedInput = input.trim();
     const tagsAdded = [...fullCourse[name]];
 
-    if (
-      (key === 'Enter' || key === 'Tab') &&
-      trimmedInput.length &&
-      !tagsAdded.includes(trimmedInput)
-    ) {
+    if ((key === 'Enter' || key === 'Tab') && trimmedInput.length) {
       e.preventDefault();
+      if (tagsAdded?.some((t) => t?.toLowerCase() === trimmedInput?.toLowerCase())) {
+        return setToastMsg({ type: 'danger', message: 'Cannot Add Duplicate value' });
+      }
       addTag(trimmedInput);
     }
 
