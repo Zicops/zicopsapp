@@ -1,3 +1,4 @@
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useHandleSearch from './Logic/useHandleSearch';
@@ -8,6 +9,8 @@ import SearchSubCat from './SearchSubCat';
 
 export default function Search() {
   const { courses, lastItemRef, filters, setFilters, clearAllFilters } = useHandleSearch();
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat(filters.category);
+
   const router = useRouter();
   const searchQuery = router.query?.searchQuery || '';
   const [hideBookMark, setHideBookmark] = useState(false);
@@ -23,6 +26,8 @@ export default function Search() {
     return;
   }, [router.query]);
 
+  console.log(catSubCat?.subCat);
+
   return (
     <div
       style={{
@@ -30,8 +35,25 @@ export default function Search() {
         paddingTop: '70px',
         minHeight: '90vh'
       }}>
-      <SearchHeader filters={filters} setFilters={setFilters} clearAllFilters={clearAllFilters} />
-      {!hideBookMark ? <SearchBookmarks /> : <SearchSubCat />}
+      <SearchHeader
+        filters={filters}
+        setFilters={setFilters}
+        clearAllFilters={clearAllFilters}
+        catSubCat={catSubCat}
+        setActiveCatId={setActiveCatId}
+      />
+      {!hideBookMark ? (
+        <SearchBookmarks />
+      ) : (
+        <SearchSubCat
+          data={catSubCat?.subCat?.map((s) => ({
+            ...s,
+            name: s?.Name,
+            img: s?.ImageUrl,
+            handleClick: (subCat) => setFilters({ ...filters, subCategory: subCat })
+          }))}
+        />
+      )}
 
       <SearchBody
         courses={courses?.filter((course) => {

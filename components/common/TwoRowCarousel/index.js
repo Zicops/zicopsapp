@@ -4,7 +4,13 @@ import { Fragment, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import ItemSlider from '../ItemSlider';
 
-export default function TwoRowCarousel({ carouselProps, itemsArr, CardComp, cardProps = {} }) {
+export default function TwoRowCarousel({
+  carouselProps,
+  itemsArr,
+  CardComp,
+  cardProps = {},
+  responsiveViews
+}) {
   let prevItem = null;
 
   const resources = useRecoilValue(ResourcesAtom);
@@ -21,7 +27,10 @@ export default function TwoRowCarousel({ carouselProps, itemsArr, CardComp, card
   return (
     <>
       <div style={{ position: 'relative' }}>
-        <ItemSlider carouselProps={carouselProps} noDataFound={!isResourcesFound}>
+        <ItemSlider
+          carouselProps={carouselProps}
+          noDataFound={!isResourcesFound}
+          responsiveViews={responsiveViews}>
           {itemsArr.map((dt, i) => {
             if (i + 1 == itemsArr.length) {
               return (
