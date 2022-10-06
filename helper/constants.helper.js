@@ -65,3 +65,9 @@ export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';
 export const VIDEO_FILE_TYPES = '.mp4, .mkv';
 export const IMAGE_FILE_TYPES = '.jpg, .jpeg, .png, .svg, .gif';
 export const MIN_COURSE_LENGTH = 25;
+
+export const DEFAULT_VALUES = {
+  image: 'default-image.jpg',
+  tileImage: 'default-image.jpg',
+  previewVideo: ''
+};

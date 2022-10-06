@@ -1,5 +1,5 @@
 import { IsCourseSavedAtom } from '@/components/Tabs/Logic/tabs.helper';
-import { COURSE_TYPES } from '@/helper/constants.helper';
+import { COURSE_TYPES, DEFAULT_VALUES } from '@/helper/constants.helper';
 import { ApolloProvider, useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -34,7 +34,11 @@ export default function EditCoursePage() {
       ({ data }) => {
         if (errorCourseData) return setToastMsg({ type: 'danger', message: 'course load error' });
 
-        if (data?.getCourse) updateCourseMaster(data.getCourse);
+        const _course = data?.getCourse;
+        if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
+        if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
+        if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
+        if (data?.getCourse) updateCourseMaster(_course);
         setIsCourseLoaded(true);
       }
     );
