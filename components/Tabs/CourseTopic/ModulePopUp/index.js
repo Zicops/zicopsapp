@@ -1,3 +1,6 @@
+import { filterAndSortChapter } from '@/helper/data.helper';
+import { ChapterAtom } from '@/state/atoms/module.atoms';
+import { useRecoilValue } from 'recoil';
 import { changeHandler } from '../../../../helper/common.helper';
 import LabeledDropdown from '../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../common/FormComponents/LabeledInput';
@@ -14,6 +17,9 @@ export default function ModulePopUp({
   handleSubmit,
   isEdit = false
 }) {
+  const chapterData = useRecoilValue(ChapterAtom);
+  const filteredAndSortedData = filterAndSortChapter(chapterData, moduleData?.id);
+
   const expertiseOptions = [
     { value: 'Beginner', label: 'Beginner' },
     { value: 'Competent', label: 'Competent' },
@@ -80,7 +86,7 @@ export default function ModulePopUp({
             name="isChapter"
             value="Beginner"
             isChecked={moduleData.isChapter}
-            isDisabled={isEdit}
+            isDisabled={isEdit && filteredAndSortedData?.length}
             changeHandler={(e) => changeHandler(e, moduleData, setModuleData)}
           />
         </div>
