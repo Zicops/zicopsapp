@@ -129,9 +129,10 @@ export default function MyUser({ getUser }) {
                 text: 'Disable',
                 handleClick: () => {
                   setNewUserAboutData(
+                    // TODO: delete user here
                     getUserAboutObject({
                       ...params.row,
-                      is_active: false,
+                      is_active: true,
                       status: USER_STATUS.disable
                     })
                   );

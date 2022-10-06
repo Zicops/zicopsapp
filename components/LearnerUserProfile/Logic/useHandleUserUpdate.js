@@ -150,7 +150,7 @@ export default function useHandleUserUpdate() {
           user_lsp_id: sub_categoriesArr[i]?.user_lsp_id,
           sub_category: sub_categoriesArr[i]?.sub_category,
           is_base: false,
-          is_active: false
+          is_active: true // Ankit why this was set to false, was there any particular reason
         };
         console.log(sendData);
         const res = await updatePreference({ variables: sendData }).catch((err) =>

@@ -99,7 +99,7 @@ export default function useHandleAddCatSubCat(isSubCat) {
       Description: catSubCatData?.Description?.trim(),
       ImageFile: catSubCatData?.File,
       Code: catSubCatData?.Code?.trim(),
-      IsActive: catSubCatData?.IsActive,
+      IsActive: catSubCatData?.IsActive || true,
       LspId: catSubCatData?.LspId
     };
 
@@ -136,7 +136,7 @@ export default function useHandleAddCatSubCat(isSubCat) {
       Description: catSubCatData?.Description?.trim(),
       ImageFile: catSubCatData?.File,
       Code: catSubCatData?.Code?.trim(),
-      IsActive: catSubCatData?.IsActive,
+      IsActive: catSubCatData?.IsActive || true,
       LspId: catSubCatData?.LspId
     };
 

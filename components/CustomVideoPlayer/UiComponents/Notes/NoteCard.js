@@ -54,10 +54,12 @@ export default function NoteCard({
 
     if (isNaN(+noteData?.user_notes_id)) {
       sendNotesData.user_notes_id = noteData?.user_notes_id;
-      sendNotesData.is_active = !!sendNotesData?.details?.length;
+      // TODO: delete note if nothing is saved in it
+      // sendNotesData.is_active = !!sendNotesData?.details?.length;
       // console.log('update note');
     }
-    if (isDelete) sendNotesData.is_active = false;
+    // TODO: delete note
+    // if (isDelete) sendNotesData.is_active = false;
 
     // console.log(sendNotesData, isNaN(+noteData?.user_notes_id), sendNotesData?.user_notes_id);
 

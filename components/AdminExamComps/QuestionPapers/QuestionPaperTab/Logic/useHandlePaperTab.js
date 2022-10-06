@@ -145,7 +145,7 @@ export default function useHandlePaperTab() {
 
       // TODO: update later
       status: STATUS.flow[0],
-      is_active: questionPaperData.is_active || false,
+      is_active: questionPaperData.is_active || true,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
     };
@@ -216,7 +216,7 @@ export default function useHandlePaperTab() {
 
       // TODO: update later
       status: STATUS.flow[0],
-      is_active: questionPaperData.is_active || false,
+      is_active: questionPaperData.is_active || true,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
     };

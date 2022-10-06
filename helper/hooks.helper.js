@@ -437,7 +437,7 @@ export function getUserAboutObject(data = {}) {
 
     //only do isVerified true when users do its basic account setup
     is_verified: data?.is_verified || false,
-    is_active: data?.is_active || false,
+    is_active: data?.is_active || true,
     created_by: data?.created_by || '',
     updated_by: data?.updated_by || '',
     created_at: data?.created_at || null,
@@ -502,7 +502,7 @@ export function useUpdateUserAboutData() {
       photo_url: userData?.photo_url,
 
       is_verified: true,
-      is_active: userData?.is_active,
+      is_active: userData?.is_active || true,
 
       created_by: userData?.created_by || 'Zicops',
       updated_by: userData?.updated_by || 'Zicops'
@@ -557,7 +557,7 @@ export function getUserOrgMapObject(data = {}) {
     organization_role: data?.organization_role || '',
     employee_id: data?.employee_id || '',
 
-    is_active: data?.is_active || false,
+    is_active: data?.is_active || true,
     created_by: data?.created_by || '',
     updated_by: data?.updated_by || '',
     created_at: data?.created_at || '',
@@ -593,7 +593,7 @@ export function useUpdateUserOrgData() {
       organization_role: newUserOrgData?.organization_role || '',
       employee_id: newUserOrgData?.employee_id || '',
 
-      is_active: newUserOrgData?.is_active || false
+      is_active: newUserOrgData?.is_active || true
     };
 
     console.log(sendUserData, 'updateAboutUser');

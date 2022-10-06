@@ -65,7 +65,7 @@ export default function ExamsTable({ isEdit = false }) {
         exam_end: +schData?.End ? new Date(+schData?.End * 1000) : null,
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
-        is_schedule_active: schData?.IsActive || false
+        is_schedule_active: schData?.IsActive || true
       };
 
       if (!schObj.exam_end) {

@@ -106,7 +106,7 @@ export default function Preview({ masterData }) {
             qbId: qbMappings.QbId,
             difficulty_level: qbMappings.DifficultyLevel,
             sectionId: qbMappings.SectionId,
-            is_active: qbMappings.IsActive,
+            is_active: qbMappings.IsActive || true,
             question_marks: qbMappings.QuestionMarks,
             question_type: qbMappings.QuestionType,
             retrieve_type: qbMappings.RetrieveType,

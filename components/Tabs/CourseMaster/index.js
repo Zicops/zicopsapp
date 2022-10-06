@@ -175,7 +175,8 @@ export default function CourseMaster() {
           }
           btnObj={{
             handleClickLeft: () => {
-              updateCourseMaster({ ...fullCourse, is_active: false });
+              // TODO: delete course here
+              updateCourseMaster({ ...fullCourse, is_active: true });
               setShowConfirmBox(false);
             },
             handleClickRight: () => setShowConfirmBox(false)

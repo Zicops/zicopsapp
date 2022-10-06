@@ -141,7 +141,7 @@ const ExamScreen = () => {
       subCategory: masterData.SubCategory,
 
       status: masterData.Status,
-      is_exam_active: masterData.IsActive
+      is_exam_active: masterData.IsActive || true
     };
 
     const metaRes = await loadPaperMeta({
@@ -186,7 +186,7 @@ const ExamScreen = () => {
       noAttempts: +insData?.NoAttempts,
       instructions: insData?.Instructions || '',
       accessType: insData?.AccessType || '',
-      is_ins_active: insData?.IsActive || ''
+      is_ins_active: insData?.IsActive || true
     };
 
     // load schedule
@@ -208,7 +208,7 @@ const ExamScreen = () => {
         examStart: new Date(+schData?.Start * 1000),
         examEnd: +schData?.End ? new Date(+schData?.End * 1000) : null,
         bufferTime: schData?.BufferTime || 0,
-        is_schedule_active: schData?.IsActive || false
+        is_schedule_active: schData?.IsActive || true
       };
     }
 
@@ -226,7 +226,7 @@ const ExamScreen = () => {
       display_hints: confData?.DisplayHints || false,
       show_result: confData?.ShowResult || false,
       show_answer: confData?.ShowAnswer || false,
-      is_config_active: confData?.IsActive || false
+      is_config_active: confData?.IsActive || true
     };
 
     // load user course mapping and progress
@@ -384,7 +384,7 @@ const ExamScreen = () => {
             qbId: qbMappings.QbId,
             difficulty_level: qbMappings.DifficultyLevel,
             sectionId: qbMappings.SectionId,
-            is_active: qbMappings.IsActive,
+            is_active: qbMappings.IsActive || true,
             question_marks: qbMappings.QuestionMarks,
             question_type: qbMappings.QuestionType,
             retrieve_type: qbMappings.RetrieveType,
