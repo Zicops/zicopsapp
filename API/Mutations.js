@@ -1787,3 +1787,10 @@ export const UPLOAD_STATIC_CONTENT = gql`
     }
   }
 `;
+
+// DELETE
+export const DELETE_COURSE = gql`
+  mutation deleteCourse($id: ID) {
+    deleteCourse(id: $id)
+  }
+`;

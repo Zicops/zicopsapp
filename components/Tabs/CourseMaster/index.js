@@ -1,4 +1,6 @@
+import { DELETE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { deleteData } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
@@ -175,8 +177,7 @@ export default function CourseMaster() {
           }
           btnObj={{
             handleClickLeft: () => {
-              // TODO: delete course here
-              updateCourseMaster({ ...fullCourse, is_active: true });
+              deleteData(DELETE_COURSE, { id: fullCourse?.id });
               setShowConfirmBox(false);
             },
             handleClickRight: () => setShowConfirmBox(false)
