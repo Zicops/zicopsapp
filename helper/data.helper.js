@@ -36,7 +36,7 @@ export async function createCourseAndUpdateContext(courseContextData, createCour
 
   console.log('course created', res);
 
-  const _course = res.data.addCourse;
+  const _course = structuredClone(res.data.addCourse);
   if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
   if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
   if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
