@@ -69,5 +69,5 @@ export const MIN_COURSE_LENGTH = 25;
 export const DEFAULT_VALUES = {
   image: 'default-image.jpg',
   tileImage: 'default-image.jpg',
-  previewVideo: 'default-video.jpg'
+  previewVideo: 'default-video.mp4'
 };
