@@ -1,3 +1,4 @@
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 
 export const UserStateAtom = atom({
@@ -59,7 +60,7 @@ export function getUserOrgObject(data = {}) {
 
     //learning space id basically Organization and we can find its unit for now make unit as pune
     user_lsp_id: data?.user_lsp_id || null,
-    lsp_id: data?.lsp_id || 'Zicops learning Spaces',
+    lsp_id: data?.lsp_id || LEARNING_SPACE_ID,
     status: data?.status || 'Active',
 
     // user role data

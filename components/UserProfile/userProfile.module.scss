@@ -128,3 +128,35 @@
   align-items: center;
   height: 100%;
 }
+
+.cohortCardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background-color: transparent;
+    border: 2px solid $primary;
+    color: $primary;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  button:hover {
+    color: $black;
+    background-color: $primary;
+  }
+}
+
+.fallbackMsg {
+  margin: 50px auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: $white;
+}
