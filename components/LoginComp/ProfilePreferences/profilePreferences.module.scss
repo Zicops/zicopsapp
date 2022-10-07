@@ -7,7 +7,7 @@
   overflow-y: auto;
   //position: relative;
 
-  .filter_main_container{
+  .filter_main_container {
     // background-color: $black;
     background-image: url('/images/starrySky2.png');
     background-position: fixed;
@@ -21,25 +21,27 @@
     top: 0;
   }
 
-  .filter_container{
+  .filter_container {
     margin-bottom: 16px;
+    border: 1px solid $darkThree;
+    border-radius: 4px;
   }
-  .filter_drop{
+  .filter_drop {
     padding: 16px;
     //background: $black;
 
-    .apply_btn{
+    .apply_btn {
       padding-top: 16px;
       display: flex;
       justify-content: space-between;
     }
 
-    p{
+    p {
       font-size: 12px;
       margin-bottom: 8px;
     }
   }
-  .category_and_subCategory{
+  .category_and_subCategory {
     //padding-right: 16px;
     //height: 200px;
     //overflow-y: scroll;
@@ -51,23 +53,23 @@
   //.btn_container{
   //  background: $black;
   //}
-  .selected_title{
+  .selected_title {
     margin-bottom: 16px;
     font-weight: 700;
     font-size: 16px;
   }
 
-  .title{
+  .title {
     margin-bottom: 4px;
     font-weight: 700;
     font-size: 16px;
   }
-  .subtitle{
+  .subtitle {
     margin-bottom: 8px;
     font-size: 12px;
   }
 
-  .checkbox_container{
+  .checkbox_container {
     padding: 0 0 0 12px;
     font-size: 14px;
     border-radius: 5px;
@@ -79,27 +81,27 @@
     justify-content: space-between;
   }
 
-  .checkbox_container_filter{
+  .checkbox_container_filter {
     background: $darkOne;
     color: $white;
   }
 }
 
-.navigatorBtns{
+.navigatorBtns {
   width: 150px;
   display: flex;
   justify-content: space-between;
 
-  .input_margin_transform{
+  .input_margin_transform {
     margin-left: 16px;
     text-transform: none;
   }
-  .transform_text{
+  .transform_text {
     text-transform: none;
   }
 }
 
-.navigator{
+.navigator {
   background-image: url('/images/starrySky2.png');
   background-position: fixed;
   background-size: cover;
@@ -113,11 +115,11 @@
   z-index: 100;
   //padding-right: 48px;
 }
-.input_margin_transform{
+.input_margin_transform {
   margin-left: 16px;
   text-transform: none;
 }
-.transform_text{
+.transform_text {
   text-transform: none;
 }
 .container::-webkit-scrollbar {

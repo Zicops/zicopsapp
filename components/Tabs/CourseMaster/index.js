@@ -4,6 +4,8 @@ import { deleteData } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../helper/common.helper';
@@ -20,6 +22,8 @@ export default function CourseMaster() {
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const router = useRouter();
 
   // cat and sub cat
   // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
@@ -176,9 +180,15 @@ export default function CourseMaster() {
             'Are you sure about deleting this course? This will delete the course permanently!'
           }
           btnObj={{
-            handleClickLeft: () => {
-              deleteData(DELETE_COURSE, { id: fullCourse?.id });
+            handleClickLeft: async () => {
+              const isDeleted = await deleteData(DELETE_COURSE, { id: fullCourse?.id });
+              console.log(isDeleted);
               setShowConfirmBox(false);
+
+              if (!isDeleted?.deleteCourse)
+                return setToastMsg({ type: 'danger', message: 'Course Delete Error' });
+
+              router.push('/admin/course/my-courses');
             },
             handleClickRight: () => setShowConfirmBox(false)
           }}
