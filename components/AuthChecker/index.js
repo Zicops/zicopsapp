@@ -9,8 +9,10 @@ const AuthChecker = ({ children }) => {
 
   // https://stackoverflow.com/questions/20325763/browser-sessionstorage-share-between-tabs
   useEffect(() => {
+    // console.log('evess');
     // transfers sessionStorage from one tab to another
     var sessionStorage_transfer = function (event) {
+      // console.log('eve');
       if (!event) event = window.event;
       if (!event.newValue) return;
       if (event.key == 'getSessionStorage') {
@@ -23,8 +25,15 @@ const AuthChecker = ({ children }) => {
         }, 500);
       } else if (event.key == 'sessionStorage' && !sessionStorage.length) {
         // another tab sent data <- get it
-        var data = parseJson(event.newValue);
-        console.log(data);
+        var data = parseJson(event?.newValue);
+
+        // console.log('data', data);
+        if (data) window.location.reload();
+        // // custom event
+        // const e = new Event('login');
+        // // Dispatch the event.
+        // window.dispatchEvent(e);
+
         // authCheck(router.asPath);
         for (var key in data) {
           sessionStorage.setItem(key, data[key]);
@@ -44,6 +53,8 @@ const AuthChecker = ({ children }) => {
       localStorage.setItem('getSessionStorage', 'foobar');
       localStorage.removeItem('getSessionStorage', 'foobar');
     }
+
+    return () => window.removeEventListener('storage', sessionStorage_transfer, false);
   }, []);
 
   useEffect(() => {
