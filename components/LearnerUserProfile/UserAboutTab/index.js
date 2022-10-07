@@ -125,6 +125,7 @@ const UserAboutTab = () => {
               setSelected={setSelected}
               setCurrentComponent={setCurrentComponent}
               customStyle={[styles.prefContainer, styles.prefCat, styles.prefNav]}
+              customClass={styles.preferences}
             />
           )}
           {currentComponent === 3 && (

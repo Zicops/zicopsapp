@@ -374,9 +374,13 @@ $popUpHeight: 75vh;
 
 .container {
   height: 100%;
-  max-height: 70vh;
-  padding: 10px;
+  // max-height: 60vh;
+  // padding: 10px;
   overflow-y: auto;
+
+  .preferences {
+    height: 65vh;
+  }
 }
 
 .prefContainer {

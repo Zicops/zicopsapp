@@ -22,7 +22,8 @@ const ProfilePreferences = ({
   selected,
   setSelected,
   hideBack = false,
-  customStyle = []
+  customStyle = [],
+  customClass
 }) => {
   const [isFiltered, setIsFiltered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -131,7 +132,7 @@ const ProfilePreferences = ({
 
   return (
     <>
-      <div ref={myRef} className={`${styles.container}`}>
+      <div ref={myRef} className={`${styles.container} ${customClass}`}>
         <Grow in={isVisible || isFiltered || searched}>
           <div className={`${styles.filter_main_container} ${customStyle[0]}`}>
             <div className={`${styles.title}`}>Sub-Category Selection</div>
