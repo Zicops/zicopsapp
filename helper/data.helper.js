@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import { GET_CATS_N_SUB_CATS, GET_SUB_CATS_BY_CAT, queryClient } from '../API/Queries';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
+import { DEFAULT_VALUES } from './constants.helper';
 
 export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
@@ -34,7 +35,12 @@ export async function createCourseAndUpdateContext(courseContextData, createCour
     return { type: 'danger', message: 'Course Id not recieved in response' };
 
   console.log('course created', res);
-  updateCourseMaster(res.data.addCourse);
+
+  const _course = res.data.addCourse;
+  if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
+  if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
+  if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
+  updateCourseMaster(_course);
 
   const courseId = res.data.addCourse.id;
   setCourseVideo({ ...courseVideo, courseId: courseId });

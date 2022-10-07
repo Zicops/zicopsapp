@@ -9,7 +9,13 @@ import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import Button from '../../CustomVideoPlayer/Button';
 import styles from '../search.module.scss';
 
-export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
+export default function SearchHeader({
+  filters,
+  setFilters,
+  clearAllFilters,
+  catSubCat,
+  setActiveCatId
+}) {
   const router = useRouter();
   const { searchQuery } = router.query;
 
@@ -24,8 +30,6 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
   }, [router.query]);
   // cat and sub cat
   // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
-
-  const { catSubCat, setActiveCatId } = useHandleCatSubCat(filters.category);
 
   const Type = COURSE_TYPES?.map((v, i) => {
     return { value: v, label: snakeCaseToTitleCase(v), isDisabled: [1, 2].includes(i) };

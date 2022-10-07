@@ -158,7 +158,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
               is_default: content.is_default
             };
             const topicVideoData = {
-              courseId: content.courseId,
+              courseId: fullCourse.id,
               contentId: content.id,
               contentUrl: content.contentUrl,
               file: null
@@ -167,18 +167,17 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             topicContentArray.push(contentData);
             topicVideoArray.push(topicVideoData);
 
-            for (let i = 0; i < content?.subtitleUrl?.length; i++) {
-              const subtitle = content?.subtitleUrl[i];
-              topicSubtitleArray.push({
-                courseId: content.courseId,
-                topicId: content.topicId,
-                subtitleUrl: subtitle.url,
-                language: subtitle.language,
-                file: null
-              });
-            }
-
             if (index === 0) {
+              for (let i = 0; i < content?.subtitleUrl?.length; i++) {
+                const subtitle = content?.subtitleUrl[i];
+                topicSubtitleArray.push({
+                  courseId: fullCourse.id,
+                  topicId: content.topicId,
+                  subtitleUrl: subtitle.url,
+                  language: subtitle.language,
+                  file: null
+                });
+              }
               // binge data
               const startTimeMin = Math.floor(parseInt(content.startTime) / 60);
               const startTimeSec = parseInt(content.startTime) - startTimeMin * 60;
@@ -368,6 +367,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
     // if (topicSubtitle[index].file) {
     for (let i = 0; i < topicSubtitle.length; i++) {
       const subtitle = topicSubtitle[i];
+      if (!subtitle?.isNew) continue;
       const sendResources = {
         topicId: subtitle.topicId,
         courseId: subtitle.courseId,
@@ -386,6 +386,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
 
     for (let index = 0; index < resources.length; index++) {
       const resource = resources[index];
+      if (!resource?.isNew) continue;
 
       const sendResources = {
         name: resource.name,

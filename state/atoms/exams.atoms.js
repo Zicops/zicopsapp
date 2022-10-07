@@ -35,7 +35,7 @@ export function getQuestionBankObject(data = {}) {
     sub_category: data.sub_category || '',
 
     owner: data.owner || '',
-    is_active: data.is_active || '',
+    is_active: data.is_active || true,
     is_default: data.is_default || '',
     created_at: data.created_at || '',
     updated_at: data.updated_at || '',
@@ -71,7 +71,7 @@ export function getQuestionPaperMasterObject(data = {}) {
     suggested_duration: data.suggested_duration || '',
 
     status: data.status || null,
-    is_active: data.is_active || false,
+    is_active: data.is_active || true,
     is_default: data.is_default || false,
     created_at: data.created_at || '',
     updated_at: data.updated_at || '',
@@ -92,7 +92,7 @@ export function getCustomSectionObject(data = {}) {
     difficulty_level: data?.DifficultyLevel || '',
     total_questions: data?.TotalQuestions || '',
 
-    is_active: data?.IsActive || '',
+    is_active: data?.IsActive || true,
     created_at: data?.CreatedAt || '',
     updated_at: data?.UpdatedAt || '',
     created_by: data?.CreatedBy || '',
@@ -113,7 +113,7 @@ export function getQuestionMetaDataObject(data = {}) {
     question_type: data?.question_type || 0,
     retrieve_type: data?.retrieve_type || 'random',
 
-    is_active: data?.is_active || '',
+    is_active: data?.is_active || true,
     created_at: data?.created_at || '',
     updated_at: data?.updated_at || '',
     created_by: data?.Created_by || '',
@@ -127,7 +127,7 @@ export function getFixedQuestionObject(data = {}) {
     mappingId: data?.mappingId || '',
     questionId: data?.questionId || '',
 
-    is_active: data?.is_active || '',
+    is_active: data?.is_active || true,
     created_at: data?.created_at || '',
     updated_at: data?.updated_at || '',
     created_by: data?.Created_by || '',

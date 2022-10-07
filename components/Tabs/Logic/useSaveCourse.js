@@ -1,3 +1,4 @@
+import { DEFAULT_VALUES } from '@/helper/constants.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -47,6 +48,10 @@ export default function useSaveCourse(courseContextData) {
 
     // saveCourseData();
   }, [tab]);
+
+  useEffect(() => {
+    setIsLoading(null);
+  }, []);
 
   function isValidData() {
     let isValid = false;
@@ -123,7 +128,11 @@ export default function useSaveCourse(courseContextData) {
     console.log('var', fullCourse);
     const courseUpdateResponse = await updateCourse({ variables: fullCourse });
 
-    updateCourseMaster(courseUpdateResponse.data.updateCourse);
+    const _course = courseUpdateResponse.data.updateCourse;
+    if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
+    if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
+    if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
+    updateCourseMaster(_course);
 
     setIsLoading(
       udpateCourseLoading && uploadImageLoading && uploadTileLoading && uploadPreviewLoading

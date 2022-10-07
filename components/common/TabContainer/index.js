@@ -41,25 +41,24 @@ export default function TabContainer({
     if (index >= 0) return tabData[index].component;
     return tabData[0].component;
   }
-  console.log(tab)
-  let saveButtonTitle="Save Master details and proceed with question addition"
-  let cancelButtonTitle="Cancel and go back to question paper list"
-  let updateButtonTitle="Save new changes to this question paper"
-  if(tab==="Question Master"){
-    saveButtonTitle="Save Uploaded Questions";
-    cancelButtonTitle="Cancel and go back to Questions list"
-  }else if(tab==="Configuration"){
-    updateButtonTitle="Save updated details"
-    cancelButtonTitle="Cancel and go back to Exam list"
+  let saveButtonTitle = 'Save Master details and proceed with question addition';
+  let cancelButtonTitle = 'Cancel and go back to question paper list';
+  let updateButtonTitle = 'Save new changes to this question paper';
+  if (tab === 'Question Master') {
+    saveButtonTitle = 'Save Uploaded Questions';
+    cancelButtonTitle = 'Cancel and go back to Questions list';
+  } else if (tab === 'Configuration') {
+    updateButtonTitle = 'Save updated details';
+    cancelButtonTitle = 'Cancel and go back to Exam list';
   }
 
-  let tooltipStatus = "Question paper details saved"
-  if(status==="DRAFT"){
-   tooltipStatus="Question Paper not saved"
-  } else if(status==="FAILED"){
-    tooltipStatus="Failed to save Question paper"
-  }else if(status==="UPDATING"){
-    tooltipStatus="Updating Question paper"
+  let tooltipStatus = 'Question paper details saved';
+  if (status === 'DRAFT') {
+    tooltipStatus = 'Question Paper not saved';
+  } else if (status === 'FAILED') {
+    tooltipStatus = 'Failed to save Question paper';
+  } else if (status === 'UPDATING') {
+    tooltipStatus = 'Updating Question paper';
   }
 
   return (
@@ -85,7 +84,9 @@ export default function TabContainer({
       {showFooter && (
         <div className={`${styles.contentPanel}`}>
           <div className={`${styles.leftText}`}>
-            <ToolTip title={tooltipStatus} placement="top"><h3>Status: {status}</h3></ToolTip>
+            <ToolTip title={tooltipStatus} placement="top">
+              <h3>Status: {status}</h3>
+            </ToolTip>
           </div>
 
           {children}
@@ -97,7 +98,7 @@ export default function TabContainer({
               </span>
             </ToolTip>
             <ToolTip
-              title={submitDisplay==="Update"?updateButtonTitle:saveButtonTitle}
+              title={submitDisplay === 'Update' ? updateButtonTitle : saveButtonTitle}
               placement="bottom">
               <span>
                 <Button

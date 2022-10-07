@@ -196,7 +196,7 @@ export default function useHandleQuestions(sectionId) {
           updated_at: data?.UpdatedAt,
           created_by: data?.CreatedBy,
           updated_by: data?.UpdatedBy,
-          is_active: data?.IsActive
+          is_active: data?.IsActive || true
         }
       ];
     }
@@ -211,7 +211,7 @@ export default function useHandleQuestions(sectionId) {
       retrieve_type: metaData.retrieve_type || '',
 
       // TODO: update later
-      is_active: metaData.is_active || false,
+      is_active: metaData.is_active || true,
       created_by: 'Zicops',
       updated_by: 'Zicops'
     };
@@ -280,7 +280,7 @@ export default function useHandleQuestions(sectionId) {
       mappingId: metaData.id || mappingId,
       questionId: selectedQuestionIds.join(','),
 
-      is_active: metaData.is_active || false,
+      is_active: metaData.is_active || true,
       created_by: 'Zicops',
       updated_by: 'Zicops'
     };
@@ -323,7 +323,7 @@ export default function useHandleQuestions(sectionId) {
       retrieve_type: metaData.retrieve_type || 'manual',
 
       // TODO: update later
-      is_active: metaData.is_active || false,
+      is_active: metaData.is_active || true,
       created_by: 'Zicops',
       updated_by: 'Zicops'
     };

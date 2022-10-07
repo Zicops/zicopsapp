@@ -290,7 +290,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
           description: option.description || '',
           isCorrect: option.isCorrect || false,
           qmId: questionRes?.data?.addQuestionBankQuestion?.id,
-          isActive: option.isActive || false,
+          isActive: option.isActive || true,
           attachmentType: option.attachmentType || '',
 
           // TODO: remove or update later
@@ -340,7 +340,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
       // TODO: remove or update later
       createdBy: 'Zicops',
       updatedBy: 'Zicops',
-      status: STATUS.flow[0]
+      status: QUESTION_STATUS[0]
     };
 
     if (question.file) {
@@ -363,7 +363,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
         description: option.description || '',
         isCorrect: option.isCorrect || false,
         qmId: option.qmId,
-        isActive: option.isActive || false,
+        isActive: option.isActive || true,
         attachmentType: option.attachmentType || '',
 
         // TODO: remove or update later
