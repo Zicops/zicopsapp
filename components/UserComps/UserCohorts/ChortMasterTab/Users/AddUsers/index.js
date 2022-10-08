@@ -179,8 +179,10 @@ const AddUsers = ({ usersData = [], popUpSetState = () => {}, onUserAdd = () => 
   return (
     <div className={`${styles.addUsersContainer}`}>
       <div className={`${styles.addUserTopContainer}`}>
-        <div className={`${styles.imageContainer}`}>
-          <img src={cohortData?.image_url || '/images/UserCohort.png'} height={60} alt="" />
+        <div className={`${styles.leftContainer}`}>
+          <div className={`${styles.imageContainer}`}>
+            <img src={cohortData?.image_url || '/images/UserCohort.png'} alt="" />
+          </div>
           <div className={`${styles.titleContainer}`}>
             <span className={`${styles.cohortTitle}`}>{cohortData?.cohort_name || ' '}</span>
             <span>Add Users</span>
@@ -210,8 +212,7 @@ const AddUsers = ({ usersData = [], popUpSetState = () => {}, onUserAdd = () => 
       />
       <div className={`${styles.addUserBottomContainer}`}>
         <div className={`${styles.leftSide}`}>
-          Users selected:{' '}
-          <span>{`${userId?.length ? userId?.length : '0'}/${data?.length}`}</span>
+          Users selected: <span>{`${userId?.length ? userId?.length : '0'}/${data?.length}`}</span>
         </div>
         <div className={`${styles.buttonContainer}`}>
           <UserButton

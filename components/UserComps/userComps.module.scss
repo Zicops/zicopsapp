@@ -254,14 +254,31 @@
 .course_card {
   width: calc(100% / 3 - 20px + 20px / 3);
 }
-.imageContainer {
+.leftContainer{
   display: flex;
   justify-content: flex-end;
+
+  & .titleContainer{
+    margin-top: 10px;
+
+    display: flex;
+    flex-direction: column;
+  }
   
-  & img {
+  & .imageContainer {
     // width: 25px;
-    margin: 0px 0px 10px 10px;
-    border-radius: 50%;
+    // margin: 0px 0px 10px 10px;
+    margin-right: 10px;
+    
+    height: 60px;
+    width: 60px;
+    
+    img{
+      border-radius: 50%;
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
     &:hover {
       cursor: pointer;
     }
