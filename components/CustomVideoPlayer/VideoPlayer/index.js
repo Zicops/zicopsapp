@@ -18,6 +18,7 @@ export default function VideoPlayer({
 
   const [subtitles, setSubtitles] = useState('');
 
+  const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
   // useEffect(() => {
   //   if (!isSubtitleShown) return;
 
@@ -57,7 +58,7 @@ export default function VideoPlayer({
 
   useEffect(() => {
     setSubtitles('');
-  }, [videoData?.videoSrc]);
+  }, [videoData?.videoSrc, currentSubtitleIndex]);
 
   useEffect(() => {
     if (!videoElement?.current) return;
@@ -72,8 +73,8 @@ export default function VideoPlayer({
 
     for (let i = 0; i < cues.length; i++) {
       const cue = cues[i];
-
       cue.onenter = function () {
+        console.log(this);
         setSubtitles(this.text);
       };
 
@@ -94,7 +95,6 @@ export default function VideoPlayer({
     // }
   }, [videoElement.current?.textTracks[0]?.cues?.length]);
 
-  const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
   const isTrackSrcAvailable =
     topicContent[currentTopicContentIndex] &&
     topicContent[currentTopicContentIndex]?.subtitleUrl &&
@@ -157,12 +157,14 @@ export default function VideoPlayer({
             {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}
           </video>
 
-          <span
-            className={`${styles.subtitles} ${
-              isControlBarVisible ? '' : styles.increaseDistanceFromBottom
-            }`}>
-            {subtitles}
-          </span>
+          {isSubtitleShown && subtitles && (
+            <span
+              className={`${styles.subtitles} ${
+                isControlBarVisible ? '' : styles.increaseDistanceFromBottom
+              }`}>
+              {subtitles}
+            </span>
+          )}
         </>
       )}
 
