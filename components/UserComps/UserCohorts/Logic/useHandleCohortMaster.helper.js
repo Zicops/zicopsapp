@@ -164,6 +164,8 @@ export function useHandleCohortMaster() {
         }
       }
 
+      if (newManager?.length) sendCohortData.size = allUsers?.length + newManager?.length;
+
       //adding new managers
       if (newManager?.length) {
         for (let i = 0; i < newManager?.length; i++) {
@@ -202,42 +204,44 @@ export function useHandleCohortMaster() {
       return;
     }
 
-    console.log(sendCohortData);
-    const resCohortData = await addCohortMain({ variables: sendCohortData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-    });
+    console.log(sendCohortData, 'add cohortmaster');
+    if (!cohortMasterData?.id) {
+      const resCohortData = await addCohortMain({ variables: sendCohortData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+      });
 
-    if (isError)
-      return setToastMsg({ type: 'danger', message: 'Error occured while creating cohort!' });
+      if (isError)
+        return setToastMsg({ type: 'danger', message: 'Error occured while creating cohort!' });
 
-    // console.log(resCohortData?.data?.addCohortMain?.cohort_id);
-    const cohort_id = resCohortData?.data?.addCohortMain?.cohort_id;
+      // console.log(resCohortData?.data?.addCohortMain?.cohort_id);
+      const cohort_id = resCohortData?.data?.addCohortMain?.cohort_id;
 
-    setCohortData((prevValue) => ({ ...prevValue, id: cohort_id }));
-    if (!cohort_id)
-      return setToastMsg({ type: 'danger', message: 'Error occured in creating cohortID!' });
-    for (let i = 0; i < cohortMasterData?.managers?.length; i++) {
-      const sendLspData = {
-        user_id: cohortMasterData?.managers[i]?.id,
-        lsp_id: LEARNING_SPACE_ID
-      };
-      let res = await loadQueryDataAsync(
-        GET_USER_LEARNINGSPACES_DETAILS,
-        { ...sendLspData },
-        {},
-        userClient
-      );
-      console.log(res?.getUserLspByLspId);
-      const userLspData = res?.getUserLspByLspId;
-      const sendAddUserCohortData = {
-        id: cohortMasterData?.managers[i]?.id,
-        user_lsp_id: userLspData?.user_lsp_id,
-        cohort_id: cohort_id,
-        membership_status: 'Active',
-        role: 'Manager'
-      };
-      await addUserToCohort(sendAddUserCohortData);
+      setCohortData((prevValue) => ({ ...prevValue, id: cohort_id }));
+      if (!cohort_id)
+        return setToastMsg({ type: 'danger', message: 'Error occured in creating cohortID!' });
+      for (let i = 0; i < cohortMasterData?.managers?.length; i++) {
+        const sendLspData = {
+          user_id: cohortMasterData?.managers[i]?.id,
+          lsp_id: LEARNING_SPACE_ID
+        };
+        let res = await loadQueryDataAsync(
+          GET_USER_LEARNINGSPACES_DETAILS,
+          { ...sendLspData },
+          {},
+          userClient
+        );
+        console.log(res?.getUserLspByLspId);
+        const userLspData = res?.getUserLspByLspId;
+        const sendAddUserCohortData = {
+          id: cohortMasterData?.managers[i]?.id,
+          user_lsp_id: userLspData?.user_lsp_id,
+          cohort_id: cohort_id,
+          membership_status: 'Active',
+          role: 'Manager'
+        };
+        await addUserToCohort(sendAddUserCohortData);
+      }
     }
     // console.log(res);
   }

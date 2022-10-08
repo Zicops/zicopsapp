@@ -24,6 +24,7 @@ export default function InviteTab() {
   const [loading, setLoading] = useState(false);
   const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
   const {addUserToCohort} = useHandleCohortTab();
+  const { getCohortUserData } = useUserCourseData();
 
   const {getUsersForAdmin} = useUserCourseData();
   function handleSelect(id){
@@ -41,21 +42,40 @@ export default function InviteTab() {
     if(selectedCohortData?.userCohort?.role?.toLowerCase() !== 'manager') return;
     if(selectedCohortData?.inviteUser?.length) return setUsersForCohort([...selectedCohortData?.inviteUser],setLoading(false));
     setLoading(true);
+    let cohortUser = [];
+    if(!selectedCohortData?.cohortUsers?.length){
+    const cohortUsers = await getCohortUserData(selectedCohortData?.main?.cohort_id);
+
+    if (cohortUsers?.error)
+      return setToastMsg({ type: 'danger', message: 'Error while loading cohort users!' });
+
+    if (!cohortUsers?.length) return setLoading(false);
+
+    //removing duplicate data
+    const _users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()]; 
+    cohortUser = [..._users];
+
+  }
+    cohortUser = [...selectedCohortData?.cohortUsers]
     const users = await getUsersForAdmin();
     if(!users?.length) return setLoading(false);
+    
     // flitering users who are not in cohort
+    // console.log(users , selectedCohortData?.cohortUsers) ;
     const inviteUserList = users.filter(
-      ({ id: id1 }) => selectedCohortData?.cohortUsers?.some(({ user_id: id2 }) => id2 !== id1)
+      ({ id: id1 }) => !cohortUser?.some(({ user_id: id2 }) => id2 === id1)
     );
+
+    console.log(inviteUserList);
 
     if(!inviteUserList?.length) return ;
     setSelectedCohortData((prevValue) => ({...prevValue , inviteUser:[...inviteUserList]}))
     return setUsersForCohort([...inviteUserList],setLoading(false));
   },[selectedCohortData])
 
-  useEffect(()=>{
-    console.log(userId);
-  },[userId])
+  // useEffect(()=>{
+  //   console.log(userId);
+  // },[userId])
 
   async function addUsersToCohort(){
     if(!userId?.length) return setToastMsg({type:'info' , message:'Please add atleast one user!'});
