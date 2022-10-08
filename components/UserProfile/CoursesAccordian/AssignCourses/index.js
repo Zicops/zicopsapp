@@ -11,7 +11,8 @@ const AssignCourses = ({
   handleClick = () => {},
   buttonText = '',
   type = null,
-  assignedCourses = []
+  assignedCourses = [],
+  loading=null
 }) => {
   const [filters, setFilters] = useState({ searchQuery: '', cat: '', subCat: '', type: '' });
   let courseData = section.data;
@@ -85,6 +86,7 @@ const AssignCourses = ({
         handleSubmit={handleSubmit}
         buttonText={buttonText}
         isRemove={isRemove}
+        isLoading={loading}
       />
     </>
   );

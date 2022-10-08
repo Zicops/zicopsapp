@@ -21,6 +21,7 @@ import Accordian from '../../../components/UserProfile/Accordian';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
+import _styles from '../userProfile.module.scss';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
 const CoursesAccordian = () => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -52,6 +53,7 @@ const CoursesAccordian = () => {
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [courseLoading , setCourseLoading] = useState(false);
 
   const { updateCourse } = useHandleUpdateCourse();
 
@@ -263,7 +265,8 @@ const CoursesAccordian = () => {
   }, [currentUserId]);
 
   async function loadAssignedCourseData() {
-    if (!currentUserId) return;
+    if (!currentUserId) return setCourseLoading(false);
+    setCourseLoading(true);
     const assignedCoursesRes = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS,
       {
@@ -326,7 +329,7 @@ const CoursesAccordian = () => {
         (course) => course?.added_by?.role.toLowerCase() === 'admin'
       );
 
-      setCurrentCourses(allAssignedCourses);
+      setCurrentCourses(allAssignedCourses,setCourseLoading(false));
       setAssignedCourses(adminAssignedCourses);
     }
   }
@@ -342,6 +345,7 @@ const CoursesAccordian = () => {
             setSelected(3);
           }}
         /> */}
+        
 
         <div className={`${styles.courses_acc_head}`}>
           {isAssignedPage && (
@@ -380,7 +384,7 @@ const CoursesAccordian = () => {
           )}
         </div>
         {/* {isAssignedPage && <AssignCourses section={courseSections[3]} />} */}
-        {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} />}
+        {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} loading={courseLoading}/>}
         {/* {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />} */}
         {selectedPage === 'Assign Courses' && (
           <AssignCourses
