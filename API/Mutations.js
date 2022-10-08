@@ -1789,6 +1789,18 @@ export const UPLOAD_STATIC_CONTENT = gql`
 `;
 
 // DELETE
+export const DELETE_CAT_MAIN = gql`
+  mutation deleteCatMain($id: ID) {
+    deleteCatMain(id: $id)
+  }
+`;
+
+export const DELETE_SUB_CAT_MAIN = gql`
+  mutation deleteSubCatMain($id: ID) {
+    deleteSubCatMain(id: $id)
+  }
+`;
+
 export const DELETE_COURSE = gql`
   mutation deleteCourse($id: ID) {
     deleteCourse(id: $id)

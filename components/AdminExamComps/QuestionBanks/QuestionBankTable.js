@@ -36,9 +36,8 @@ export default function QuestionBankTable({ isEdit = false }) {
   const [questionBank, setQuestionBank] = useState([]);
 
   // load table data
+  const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
   useEffect(async () => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
-
     const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
     if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
 
@@ -62,7 +61,7 @@ export default function QuestionBankTable({ isEdit = false }) {
   // set refetch query in recoil
   useEffect(() => {
     function refetchBankData() {
-      refetch().then(({ data: { getLatestQuestionBank } }) => {
+      refetch(queryVariables).then(({ data: { getLatestQuestionBank } }) => {
         setQuestionBank(getLatestQuestionBank?.questionBanks);
       });
 

@@ -182,7 +182,7 @@ export default function CourseMaster() {
           btnObj={{
             handleClickLeft: async () => {
               const isDeleted = await deleteData(DELETE_COURSE, { id: fullCourse?.id });
-              console.log(isDeleted);
+              // console.log(isDeleted);
               setShowConfirmBox(false);
 
               if (!isDeleted?.deleteCourse)

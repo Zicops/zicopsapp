@@ -1,3 +1,5 @@
+import { DELETE_SUB_CAT_MAIN } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
@@ -9,27 +11,6 @@ import { TableResponsiveRows } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
 import CourseHead from '../../CourseHead';
 import AddCatSubCat from './AddCatSubCat';
-
-const columns = [
-  {
-    field: 'id',
-    headerName: 'Index',
-    headerClassName: 'course-list-header',
-    flex: 1
-  },
-  {
-    field: 'SubCatName',
-    headerClassName: 'course-list-header',
-    headerName: 'SubCategory',
-    flex: 3
-  },
-  {
-    field: 'CatName',
-    headerClassName: 'course-list-header',
-    headerName: 'Category',
-    flex: 3
-  }
-];
 
 function ZicopsSubCategoryList() {
   const [pageSize, setPageSize] = useState(6);
@@ -56,18 +37,59 @@ function ZicopsSubCategoryList() {
   useEffect(() => {
     if (!catSubCat?.allSubCat?.length) return;
     const _data = [];
-    catSubCat?.allSubCat.map((val, index) =>
-      _data.push({
-        id: index + 1,
-        SubCatName: val?.Name,
-        CatName: catSubCat?.subCatGrp[val?.CatId]?.cat?.Name
-      })
-    );
+
+    structuredClone(catSubCat?.allSubCat)
+      ?.sort((c1, c2) => c1?.CreatedAt - c2?.CreatedAt)
+      .map((val, index) =>
+        _data.push({
+          index: index + 1,
+          SubCatName: val?.Name,
+          CatName: catSubCat?.subCatGrp[val?.CatId]?.cat?.Name,
+          ...val
+        })
+      );
 
     setData(_data);
   }, [catSubCat]);
 
-  let latest = [];
+  const columns = [
+    {
+      field: 'index',
+      headerName: 'Index',
+      headerClassName: 'course-list-header',
+      flex: 1
+    },
+    {
+      field: 'SubCatName',
+      headerClassName: 'course-list-header',
+      headerName: 'SubCategory',
+      flex: 3
+    },
+    {
+      field: 'CatName',
+      headerClassName: 'course-list-header',
+      headerName: 'Category',
+      flex: 3
+    },
+    {
+      field: '',
+      headerClassName: 'course-list-header',
+      headerName: 'Action',
+      flex: 0.5,
+      renderCell: (params) => {
+        return (
+          <>
+            <DeleteBtn
+              id={params?.id}
+              resKey="deleteSubCatMain"
+              mutation={DELETE_SUB_CAT_MAIN}
+              onDelete={() => setRefetch(true)}
+            />
+          </>
+        );
+      }
+    }
+  ];
 
   return (
     <ZicopsTable

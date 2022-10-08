@@ -13,20 +13,18 @@ export default function Search() {
 
   const router = useRouter();
   const searchQuery = router.query?.searchQuery || '';
-  const [hideBookMark, setHideBookmark] = useState(false);
+  const [showBookMark, setShowBookmark] = useState(false);
+  const [showSubCat, setShowSubCat] = useState(false);
 
   useEffect(() => {
     // console.log(isPref);
     const { isPref, cat } = router.query;
-    if (cat) setHideBookmark(true);
+    if (cat) setShowSubCat(true);
+    if (searchQuery) setShowBookmark(true);
 
-    if (!isPref) return;
-    setHideBookmark(true);
     // setFilters(prevValue => ({...prevValue , subCategory:searchQuery}))
     return;
   }, [router.query]);
-
-  console.log(catSubCat?.subCat);
 
   return (
     <div
@@ -42,9 +40,10 @@ export default function Search() {
         catSubCat={catSubCat}
         setActiveCatId={setActiveCatId}
       />
-      {!hideBookMark ? (
-        <SearchBookmarks />
-      ) : (
+
+      {showBookMark && <SearchBookmarks />}
+
+      {showSubCat && (
         <SearchSubCat
           data={catSubCat?.subCat?.map((s) => ({
             ...s,
@@ -54,7 +53,6 @@ export default function Search() {
           }))}
         />
       )}
-
       <SearchBody
         courses={courses?.filter((course) => {
           const nameFilter = course?.name
