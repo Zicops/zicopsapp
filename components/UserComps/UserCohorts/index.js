@@ -45,7 +45,7 @@ const UserCohorts = () => {
     {
       field: 'code',
       headerClassName: 'course-list-header',
-      headerName: 'Cohort Id',
+      headerName: 'Cohort code',
       flex: 1
     },
     {
