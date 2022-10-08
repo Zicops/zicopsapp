@@ -211,7 +211,7 @@ const AddUsers = ({ usersData = [], popUpSetState = () => {}, onUserAdd = () => 
       <div className={`${styles.addUserBottomContainer}`}>
         <div className={`${styles.leftSide}`}>
           Users selected:{' '}
-          <span>{`${userId?.length ? userId?.length : '0'}/${usersData?.length}`}</span>
+          <span>{`${userId?.length ? userId?.length : '0'}/${data?.length}`}</span>
         </div>
         <div className={`${styles.buttonContainer}`}>
           <UserButton
