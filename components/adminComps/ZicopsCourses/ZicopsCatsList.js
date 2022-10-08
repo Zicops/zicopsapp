@@ -1,3 +1,5 @@
+import { DELETE_CAT_MAIN } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
@@ -9,21 +11,6 @@ import { TableResponsiveRows } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
 import CourseHead from '../../CourseHead';
 import AddCatSubCat from './AddCatSubCat';
-
-const columns = [
-  {
-    field: 'id',
-    headerName: 'Index',
-    headerClassName: 'course-list-header',
-    flex: 1
-  },
-  {
-    field: 'catName',
-    headerClassName: 'course-list-header',
-    headerName: 'Category',
-    flex: 3
-  }
-];
 
 function ZicopsCategoryList() {
   const [pageSize, setPageSize] = useState(6);
@@ -46,10 +33,44 @@ function ZicopsCategoryList() {
     refetch();
   }, [popUpState]);
 
+  const columns = [
+    {
+      field: 'index',
+      headerName: 'Index',
+      headerClassName: 'course-list-header',
+      flex: 1
+    },
+    {
+      field: 'catName',
+      headerClassName: 'course-list-header',
+      headerName: 'Category',
+      flex: 3
+    },
+    {
+      field: '',
+      headerClassName: 'course-list-header',
+      headerName: 'Action',
+      flex: 0.5,
+      renderCell: (params) => {
+        return (
+          <>
+            <DeleteBtn
+              id={params?.id}
+              resKey="deleteCatMain"
+              mutation={DELETE_CAT_MAIN}
+              onDelete={() => refetch()}
+            />
+          </>
+        );
+      }
+    }
+  ];
   let categories = [];
 
   if (data)
-    data?.allCatMain?.map((val, index) => categories.push({ id: index + 1, catName: val?.Name }));
+    structuredClone(data?.allCatMain)
+      ?.sort((c1, c2) => c1?.CreatedAt - c2?.CreatedAt)
+      ?.map((val, index) => categories.push({ index: index + 1, catName: val?.Name, ...val }));
 
   return (
     <ZicopsTable

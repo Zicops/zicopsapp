@@ -1,11 +1,14 @@
-import { GET_USER_DETAIL, GET_USER_LEARNINGSPACES_DETAILS, userQueryClient } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { HIDE_HEADER_FOOTER_FOR_ROUTE, LEARNING_SPACE_ID } from '@/helper/constants.helper';
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
+import { deleteData, loadQueryDataAsync } from '@/helper/api.helper';
+import { HIDE_HEADER_FOOTER_FOR_ROUTE } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { getUserOrgObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { DeleteConfirmDataAtom, getDeleteConfirmDataObj } from '@/state/atoms/popUp.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import ConfirmPopUp from '../common/ConfirmPopUp';
 import Footer from '../Footer';
 import Nav from '../Nav';
 import { main } from './layout.module.scss';
@@ -13,6 +16,8 @@ import { main } from './layout.module.scss';
 export default function Layout({ children }) {
   const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [deleteConfirmData, setDeleteConfirmData] = useRecoilState(DeleteConfirmDataAtom);
 
   const [isFullHeight, setIsFullHeight] = useState(0);
   const router = useRouter();
@@ -55,6 +60,30 @@ export default function Layout({ children }) {
       {!isFullHeight && <Nav />}
       <main className={main}>{children}</main>
       {!isFullHeight && <Footer />}
+
+      {deleteConfirmData?.showConfirm && deleteConfirmData?.mutation && deleteConfirmData?.id && (
+        <ConfirmPopUp
+          title={
+            deleteConfirmData?.confirmMsg ||
+            'Are you sure about deleting? This will delete it permanently!'
+          }
+          btnObj={{
+            handleClickLeft: async () => {
+              const isDeleted = await deleteData(deleteConfirmData?.mutation, {
+                id: deleteConfirmData?.id
+              });
+              console.log(isDeleted, deleteConfirmData);
+              setDeleteConfirmData(getDeleteConfirmDataObj());
+
+              if (!isDeleted?.[deleteConfirmData?.resKey])
+                return setToastMsg({ type: 'danger', message: 'Delete Error' });
+
+              deleteConfirmData?.onDelete();
+            },
+            handleClickRight: () => setDeleteConfirmData(getDeleteConfirmDataObj())
+          }}
+        />
+      )}
     </>
   );
 }
