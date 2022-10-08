@@ -222,6 +222,12 @@
   font-weight: 600;
   margin-bottom: 20px;
 }
+
+.assignedCoursesContainer{
+  display: flex;
+  gap: 5px;
+}
+
 .assignInner {
   display: flex;
   justify-content: center;
