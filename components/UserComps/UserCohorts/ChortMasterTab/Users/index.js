@@ -1,5 +1,7 @@
 import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import PopUp from '@/components/common/PopUp';
+import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { loadQueryDataAsync } from '@/helper/api.helper';
@@ -91,6 +93,7 @@ const Users = ({ isEdit = false }) => {
       renderCell: (params) => {
         return (
           <>
+            <ToolTip title={ADMIN_USERS.userCohort.users.editBtn}>
             <button
               style={{
                 cursor: 'pointer',
@@ -103,6 +106,7 @@ const Users = ({ isEdit = false }) => {
               }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
+            </ToolTip>
           </>
         );
       },
@@ -114,6 +118,7 @@ const Users = ({ isEdit = false }) => {
     <div className={`${styles.usersContainer}`}>
       <div className={`${styles.usersTopContainer}`}>
         <span>Total Users: {cohortUserData?.length}</span>
+        <ToolTip title={ADMIN_USERS.userCohort.users.addUserToCohort}>
         <button
           className={`${styles.cohortButton1}`}
           onClick={() => {
@@ -129,6 +134,7 @@ const Users = ({ isEdit = false }) => {
           </svg>
           Add Users to Cohort
         </button>
+        </ToolTip>
       </div>
       <ZicopsTable
         columns={columns}

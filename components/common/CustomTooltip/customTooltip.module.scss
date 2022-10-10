@@ -1,60 +1,62 @@
 @import '../../../styles/base.scss';
 
 .infoButton {
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin: auto 3px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: auto 3px;
 
-    img{
-        width: 15px;
-        margin: 2px;
-    }
+  img {
+    width: 15px;
+    margin: 2px;
+  }
 }
 
 .info {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    color: $white;
-    background: $popupBgColor;
-    width: 200px;
-    max-width: 350px;
-    height: 70px;
-    font-size: 14px;
-    padding: 10px;
-    word-wrap: wrap;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid $darkThree;
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px 0 $darkOne;
-    z-index: 10;
-    animation: tooltip-in-right .7s;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: $white;
+  background: $popupBgColor;
+  width: 250px;
+  min-height: 70px;
+  overflow: hidden;
+  font-size: 14px;
+  padding: 10px;
+  word-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid $darkThree;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px 0 $darkOne;
+  z-index: 10;
+  animation: tooltip-in-right .7s;
 }
 
-.reverse{
-    animation: tooltip-in-left .7s;
+.reverse {
+  animation: tooltip-in-left .7s;
 }
 
 @keyframes tooltip-in-right {
-	from {
-	  transform: translateX(100%);
-	  
-	}
-	to {
-	  transform: translateX(0);
-	}
+  from {
+    transform: translateX(100%);
+
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes tooltip-in-left {
-	from {
-		transform: translateX(-100%);
-		
-	}
-	to {
-		transform: translateX(0);
-	}
+  from {
+    transform: translateX(-100%);
+
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }

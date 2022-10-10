@@ -1,14 +1,17 @@
 import { func, oneOf, string } from 'prop-types';
+import ToolTip from '../ToolTip';
 import styles from './iconButton.module.scss';
 
-export default function IconButton({ text, styleClass, handleClick }) {
+export default function IconButton({ text, styleClass, handleClick, tooltipText }) {
   return (
-    <button className={`${styles[styleClass]}`} onClick={handleClick}>
-      <span>
-        <img src="/images/plus.png" alt="" />
-      </span>
-      {text}
-    </button>
+    <ToolTip title={tooltipText} placement="bottom">
+      <button className={`${styles[styleClass]}`} onClick={handleClick}>
+        <span>
+          <img src="/images/plus.png" alt="" />
+        </span>
+        {text}
+      </button>
+    </ToolTip>
   );
 }
 

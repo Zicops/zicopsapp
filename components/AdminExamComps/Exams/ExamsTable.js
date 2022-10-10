@@ -132,7 +132,9 @@ export default function ExamsTable({ isEdit = false }) {
                 border: '0'
               }}
               onClick={() => router.push(`${router.asPath}/view/${params.row.id}`)}>
+              <ToolTip title="View Exam" placement="bottom">
               <img src="/images/svg/eye-line.svg" width={20}></img>
+              </ToolTip>
             </button>
             {isEdit && (
               <>

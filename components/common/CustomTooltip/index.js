@@ -13,11 +13,16 @@ const CustomTooltip = ({ info, image }) => {
 
   return (
     <>
-      <button onClick={() => setShow(true)} className={styles.infoButton}>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setShow(true);
+        }}
+        className={styles.infoButton}>
         <img src="/images/svg/error_outline_dark.svg" alt="tooltip icon" />
       </button>
       {show && (
-        <div className={`${show ? styles.info : ""}`}>
+        <div className={`${show ? styles.info : ''}`}>
           {image && (
             <div>
               <img src={image} alt="" />

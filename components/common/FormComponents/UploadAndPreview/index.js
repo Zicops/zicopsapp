@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ImageCropper from '../../ImageCropper';
 import styles from '../formComponents.module.scss';
 import { useEffect, useRef, useState } from 'react';
+import ToolTip from '../../ToolTip';
 
 const UploadAndPreview = ({
   inputName,
@@ -16,6 +17,7 @@ const UploadAndPreview = ({
   styleClass = {},
   handleUpdateImage = () => {},
   initialImage = null,
+  tooltipTitle,
   imageUrl = null,
   uploadedFile = null,
   closePopUp = () => {}
@@ -133,17 +135,23 @@ const UploadAndPreview = ({
         />
         {!initialImage && (
           <>
-            <button className={`${styles.btn}`} onClick={() => imgRef?.current?.click()}>
-              Upload Photo
-            </button>
-            {description && <span className={`${styles.description}`}>{description}</span>}
-            <button className={`${styles.btn2}`} onClick={handleClick} disabled={!image}>
-              Preview
-            </button>
-            {isRemove && (
-              <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
-                Remove
+            <ToolTip title={tooltipTitle.uploadBtn}>
+              <button className={`${styles.btn}`} onClick={() => imgRef?.current?.click()}>
+                Upload Photo
               </button>
+            </ToolTip>
+            {description && <span className={`${styles.description}`}>{description}</span>}
+            <ToolTip title={tooltipTitle.previewBtn}>
+              <button className={`${styles.btn2}`} onClick={handleClick} disabled={!image}>
+                Preview
+              </button>
+            </ToolTip>
+            {isRemove && (
+              <ToolTip title={tooltipTitle.removeBtn}>
+                <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
+                  Remove
+                </button>
+              </ToolTip>
             )}
           </>
         )}

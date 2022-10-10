@@ -1,7 +1,8 @@
+import CustomTooltip from '@/components/common/CustomTooltip';
 import RTE from '@/components/common/FormComponents/RTE';
 import NextButton from '@/components/common/NextButton';
 import ToolTip from '@/components/common/ToolTip';
-import { TOOLTIP_STYLE } from '@/components/common/ToolTip/tooltip.helper';
+import { ADMIN_EXAMS, TOOLTIP_STYLE } from '@/components/common/ToolTip/tooltip.helper';
 import { TOOLTIP_IMG_SRC } from '@/helper/constants.helper';
 import { MAX_ATTEMPT_COUNT } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
@@ -114,6 +115,7 @@ export default function ExamMaster() {
       borderBottom: '1px solid var(--dark_three)'
     })
   };
+
   const passingOptions = [
     { value: 'None', label: 'None' },
     { value: 'Marks', label: 'Marks' },
@@ -214,9 +216,10 @@ export default function ExamMaster() {
       <div className={`${styles.passingCriteriaOuterContainer}`}>
         <label htmlFor="passing_criteria" aria-label="passing_criteria">
           Passing Criteria:
-          <ToolTip title={passingCriteriaText} placement="bottom">
+          {/* <ToolTip title={passingCriteriaText} placement="bottom">
             <img src={TOOLTIP_IMG_SRC} style={TOOLTIP_STYLE} />
-          </ToolTip>
+          </ToolTip> */}
+          <CustomTooltip info={ADMIN_EXAMS.myExams.myExamsPassingCriteria} />
         </label>
 
         <div

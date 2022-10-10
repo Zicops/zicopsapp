@@ -1,5 +1,6 @@
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -150,12 +151,16 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
           <QuestionOptionView questionData={viewQuestion} showType="difficulty" />
 
           <div style={{ float: 'right' }}>
-            <ToolTip title="Cancel and go back to Question list" placement="left">
+            <ToolTip
+              title={ADMIN_EXAMS.zicopsQuestionBanks.questionsScreen.viewQuestions.cancelBtn}
+              placement="left">
               <span>
                 <Button text={'Cancel'} clickHandler={() => udpatePopUpState(false)} />
               </span>
             </ToolTip>
-            <ToolTip title="Edit Question" placement="right">
+            <ToolTip
+              title={ADMIN_EXAMS.zicopsQuestionBanks.questionsScreen.viewQuestions.editBtn}
+              placement="right">
               <span>
                 <Button
                   text={'Edit'}

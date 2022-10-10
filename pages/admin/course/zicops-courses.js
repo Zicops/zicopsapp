@@ -3,6 +3,7 @@ import ZicopsCourseList from '../../../components/adminComps/ZicopsCourses/Zicop
 import ZicopsCourseTable from '../../../components/ZicopsCourseTable';
 import CourseHead from '../../../components/CourseHead';
 import { courseSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 
 const ZicopsCourses = () => {
   return (
@@ -11,7 +12,10 @@ const ZicopsCourses = () => {
       {/* <AdminContent /> */}
 
       <div className={`adminContent`}>
-        <CourseHead title="Zicops Course Offerings" />
+        <CourseHead
+          title="Zicops Course Offerings"
+          tooltipTitle={ADMIN_COURSES.zicopsCourses.addBtn}
+        />
 
         <ZicopsCourseList />
         {/* <ZicopsCourseTable /> */}

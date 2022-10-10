@@ -4,6 +4,8 @@ import ZicopsTable from '../../common/ZicopsTable';
 import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { useState, useEffect } from 'react';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
+import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useRecoilValue } from 'recoil';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 

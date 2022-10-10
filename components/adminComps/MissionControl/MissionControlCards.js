@@ -1,15 +1,19 @@
+import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_HOME } from '@/components/common/ToolTip/tooltip.helper';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const Card = ({ image, text, width }) => {
+const Card = ({ image, text, width, tooltipTitle }) => {
   return (
     <>
-      <div className="card">
-        <div className="card_icon">
-          <Image src={image} alt="" width={width} height={'70px'} />
+      <ToolTip title={tooltipTitle}>
+        <div className="card">
+          <div className="card_icon">
+            <Image src={image} alt="" width={width} height={'70px'} />
+          </div>
+          <div className="card_text">{text}</div>
         </div>
-        <div className="card_text">{text}</div>
-      </div>
+      </ToolTip>
       <style jsx>
         {`
           .card {
@@ -52,28 +56,68 @@ const MissionControlCards = () => {
       <div className="mission_control_body">
         <div className="contain_icons">
           <div className="new_row">
-            <Card image="/images/Analytics.png" text="Analytics" width="70px" />
+            <Card
+              image="/images/Analytics.png"
+              text="Analytics"
+              width="70px"
+              tooltipTitle={ADMIN_HOME.analytics}
+            />
             <Link href="/admin/user/my-users">
               <a>
-                <Card image="/images/UserManagement.png" text="User Management" width="70px" />
+                <Card
+                  image="/images/UserManagement.png"
+                  text="User Management"
+                  width="70px"
+                  tooltipTitle={ADMIN_HOME.userManagement}
+                />
               </a>
             </Link>
             <Link href="/admin/course/my-courses">
               <a>
-                <Card image="/images/CourseManagement.png" text="Course Management" width="70px" />
+                <Card
+                  image="/images/CourseManagement.png"
+                  text="Course Management"
+                  width="70px"
+                  tooltipTitle={ADMIN_HOME.courseManagement}
+                />
               </a>
             </Link>
-            <Card image="/images/TrainingManagement.png" text="Training Management " width="70px" />
+            <Card
+              image="/images/TrainingManagement.png"
+              text="Training Management "
+              width="70px"
+              tooltipTitle={ADMIN_HOME.trainingManagement}
+            />
           </div>
           <div className="new_row">
-            <Card image="/images/Administration.png" text="Administration" width="60px" />
+            <Card
+              image="/images/Administration.png"
+              text="Administration"
+              width="60px"
+              tooltipTitle={ADMIN_HOME.administrationManagement}
+            />
             <Link href="/admin/exams/my-question-bank">
               <a>
-                <Card image="/images/ExamManagement.png" text="Exam Management" width="80px" />
+                <Card
+                  image="/images/ExamManagement.png"
+                  text="Exam Management"
+                  width="80px"
+                  tooltipTitle={ADMIN_HOME.examsManagement}
+                />
               </a>
             </Link>
-            <Card image="/images/VendorManagement.png" text="Vendor Management" width="80px" />
-            <Card image="/images/LabManagement.png" text="Lab Management" width="80px" />
+            <Card
+              image="/images/VendorManagement.png"
+              text="Vendor Management"
+              width="80px"
+              tooltipTitle={ADMIN_HOME.vendorManagement}
+            />
+            <Card
+              image="/images/LabManagement.png"
+              text="Lab Management"
+              width="80px"
+              tooltipTitle={ADMIN_HOME.labManagement}
+            />
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ApolloProvider } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useRecoilState } from 'recoil';
 import { queryClient } from '../../../API/Queries';
 import { TableResponsiveRows } from '../../../helper/utils.helper';
@@ -114,6 +115,7 @@ const ZicopsSubcatsList = () => {
       <div className="content">
         <CourseHead
           title="Zicops Subcategories"
+          tooltipTitle={ADMIN_COURSES.addSubCategories.addBtn}
           hideCourseTypeDropdown={true}
           handlePlusClick={() => udpatePopUpState(true)}
         />

@@ -2,6 +2,7 @@ import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Log
 import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import ToolTip from '../ToolTip';
+import { ADMIN_EXAMS } from '../ToolTip/tooltip.helper';
 import styles from './questionOptionView.module.scss';
 
 export default function Option({ option, count, compareCorrect, selectedAnswerId }) {
@@ -45,7 +46,15 @@ export default function Option({ option, count, compareCorrect, selectedAnswerId
           )}
         </div>
 
-        <div className={`${styles.correctImgContainer}`}>{imgSrc && <ToolTip title="Correct Answer" placement="right"><img src={imgSrc} /></ToolTip>}</div>
+        <div className={`${styles.correctImgContainer}`}>
+          {imgSrc && (
+            <ToolTip
+              title={ADMIN_EXAMS.zicopsQuestionBanks.questionsScreen.viewQuestions.correctAnswer}
+              placement="right">
+              <img src={imgSrc} />
+            </ToolTip>
+          )}
+        </div>
       </div>
     </>
   );

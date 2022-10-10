@@ -102,16 +102,13 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
         })}
 
         <IconButton
-          text={
-            <ToolTip title="Create and add new question" placement="bottom">
-              <span>Add Question</span>
-            </ToolTip>
-          }
+          text="Add Question"
           styleClass="btnGrey"
           handleClick={() => {
             setSectionData();
             udpateAddQuestionMetaDataPopUp(true);
           }}
+          tooltipText="Create and add new question"
         />
       </BlackBox>
     </>

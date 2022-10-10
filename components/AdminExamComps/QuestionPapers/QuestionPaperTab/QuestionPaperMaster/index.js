@@ -1,4 +1,5 @@
 import CustomTooltip from '@/components/common/CustomTooltip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -139,11 +140,9 @@ export default function QuestionPaperMaster() {
             <span>
               Section Wise
               <CustomTooltip
-                info={`${
-                  questionPaperTabData.paperMaster?.section_wise
-                    ? 'Question paper will have sections'
-                    : 'Question paper will not have sections'
-                }`}
+                info={
+                  ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab.sectionWise
+                }
               />
             </span>
           }
