@@ -14,7 +14,7 @@ export default function BrowseAndUpload({
   handleRemove,
   isActive,
   previewTooltipTitle,
-  removeTooltipTitle
+  removeTooltipTitle,
   isError,
   acceptedTypes = IMAGE_FILE_TYPES,
   hidePreviewBtns = false
