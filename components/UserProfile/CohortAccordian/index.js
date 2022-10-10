@@ -82,7 +82,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
             )
           )}
           {cohortData?.map((cohort, index) => {
-            console.log(cohort);
+            // console.log(cohort);
             return (
               <CohortBoxCard
                 key={cohort?.main?.cohort_id}
