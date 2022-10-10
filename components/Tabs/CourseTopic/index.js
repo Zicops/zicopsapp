@@ -87,6 +87,7 @@ export default function CourseTopic() {
           <ModuleBox
             key={mod.id}
             mod={mod}
+            refetchDataAndUpdateRecoil={refetchDataAndUpdateRecoil}
             activateHandlers={{
               activateEditModule,
               constructChapterData,

@@ -76,7 +76,7 @@ export default function Layout({ children }) {
               setDeleteConfirmData(getDeleteConfirmDataObj());
 
               if (!isDeleted?.[deleteConfirmData?.resKey])
-                return setToastMsg({ type: 'danger', message: 'Delete Error' });
+                return setToastMsg({ type: 'danger', message: 'Failed to Delete' });
 
               deleteConfirmData?.onDelete();
             },

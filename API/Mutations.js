@@ -1806,3 +1806,21 @@ export const DELETE_COURSE = gql`
     deleteCourse(id: $id)
   }
 `;
+
+export const DELETE_COURSE_MODULE = gql`
+  mutation deleteCourseModule($id: ID) {
+    deleteCourseModule(id: $id)
+  }
+`;
+
+export const DELETE_COURSE_CHAPTER = gql`
+  mutation deleteCourseChapter($id: ID) {
+    deleteCourseChapter(id: $id)
+  }
+`;
+
+export const DELETE_COURSE_TOPIC = gql`
+  mutation deleteCourseTopic($id: ID) {
+    deleteCourseTopic(id: $id)
+  }
+`;

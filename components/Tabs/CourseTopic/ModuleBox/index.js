@@ -1,3 +1,4 @@
+import { DELETE_COURSE_MODULE } from '@/api/Mutations';
 import { Fragment, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import { filterAndSortChapter, filterAndSortTopics } from '../../../../helper/data.helper';
@@ -9,7 +10,7 @@ import IconButton from '../../../common/IconButton';
 import styles from '../../courseTabs.module.scss';
 import { getSequenceNumber } from '../Logic/courseTopic.helper';
 
-export default function ModuleBox({ mod, activateHandlers }) {
+export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateRecoil }) {
   const { fullCourse } = useContext(courseContext);
 
   const isChapterPresent = mod.isChapter;
@@ -39,6 +40,12 @@ export default function ModuleBox({ mod, activateHandlers }) {
           title={`Module ${mod.sequence} : ${mod.name}`}
           type="large"
           editHandler={() => activateEditModule(mod.id)}
+          deleteProps={{
+            id: mod?.id,
+            resKey: 'deleteCourseModule',
+            mutation: DELETE_COURSE_MODULE,
+            onDelete: () => refetchDataAndUpdateRecoil('module')
+          }}
         />
 
         {isChapterPresent ? (
