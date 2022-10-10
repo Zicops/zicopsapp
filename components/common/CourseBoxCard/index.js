@@ -15,22 +15,31 @@ export default function CourseBoxCard({
   return (
     <div
       className={`${styles.cardContainer} ${isAdmin ? styles.isAdmin : ''}`}
-      style={{ width: `${cardWidth}px` }} onClick={ ()=>{ courseId && !isAdmin? router.push(`/course/${courseId}`): ''}}>
-      <div className={`${styles.imgContainer}`} style={{ height: `${cardWidth/1.8125}px` }}>
+      style={{ width: `${cardWidth}px` }}
+      onClick={() => {
+        courseId && !isAdmin ? router.push(`/course/${courseId}`) : '';
+      }}>
+      <div className={`${styles.imgContainer}`} style={{ height: `${cardWidth / 1.8125}px` }}>
         {/* course img */}
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
 
         {/* level and type */}
         <div className={`${styles.dataOverImg}`}>
+          <span className={`${styles.type}`}>
+            {courseData?.type?.split('-').join(' ') || 'self paced'}
+          </span>
+
           {!isAdmin && (
             <span>
               <img src="/images/Media.png" alt="" className={`${styles.imgIcon}`} />
-              {courseData?.expertise_level || 'Competent'}
+              <span
+                className={`${styles.level} ${
+                  courseData?.expertise_level?.length > 12 ? styles.small : ''
+                }`}>
+                {courseData?.expertise_level}
+              </span>
             </span>
           )}
-          <span className={`${styles.type}`}>
-            {courseData?.type?.split('-').join(' ') || 'Self Paced'}
-          </span>
         </div>
       </div>
 
