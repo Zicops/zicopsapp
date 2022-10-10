@@ -21,7 +21,7 @@ import {
   queryClient
 } from '../../../API/Queries';
 import { LearnerExamAtom } from '../../../state/atoms/exams.atoms';
-import { getTopicExamObj, TopicExamAtom } from '../../../state/atoms/module.atoms';
+import { getTopicExamObj, TopicAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
 import styles from './examLanding.module.scss';
@@ -44,6 +44,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
     client: queryClient
   });
 
+  const topicData = useRecoilValue(TopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
@@ -205,6 +206,15 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
           ea?.user_cp_id === userCourseProgressId
       ) || [];
 
+    const currentTopic = topicData
+      ?.filter((t) => t?.type === 'Assessment')
+      ?.sort((t1, t2) => {
+        t1?.sequence - t2?.sequence;
+      });
+
+    const index = currentTopic?.findIndex((t) => t?.id === topicExamData?.topicId);
+    const topicIndex = index >= 0 ? index + 1 : 0;
+
     const _examData = {
       ...learnerExamData,
       examData: {
@@ -215,8 +225,8 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       },
       landingPageData: {
         testSeries: fullCourse?.name,
-        testSequence: `M${topicExamData?.currentModule?.label.split(' ')[1]}A${
-          topicExamData?.currentTopic?.sequence
+        testSequence: `M${topicExamData?.currentModule?.label.split(' ')[1]}${
+          topicIndex ? `A${topicIndex}` : ''
         }`,
         isProctoring: false,
         totalQuestions: 0,
