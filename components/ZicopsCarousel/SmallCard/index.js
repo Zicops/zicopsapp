@@ -7,7 +7,7 @@ export default function SmallCard({
   styleClass,
   carouselRefData,
   isShowProgress = false,
-  notext = false,
+  notext = false
 }) {
   if (!courseData) return null;
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function SmallCard({
 
   let courseNameClass = 'coursename';
   if (courseData?.name?.length > 43) {
-    console.log(courseData?.name?.length);
+    // console.log(courseData?.name?.length);
     courseNameClass = 'coursenamesmall';
   }
   const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
@@ -55,12 +55,13 @@ export default function SmallCard({
         <div className="smallCard">
           <div className="smallCardWrapper">
             <div className="banner">{!notext ? 'Self Paced' : 'Labs'}</div>
-            {!notext ?
+            {!notext ? (
               <div className={courseNameClass}>
                 {courseData.name || 'Hands on Scripting with PYTHON'}
               </div>
-              :''
-            }
+            ) : (
+              ''
+            )}
             {!notext ? <div className="courseowner">{courseData.owner || 'Scripting'}</div> : ''}
           </div>
           <img
