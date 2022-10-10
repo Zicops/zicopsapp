@@ -88,14 +88,14 @@
       flex: 0 1 calc($percent - 1em);
     }
   }
+}
 
-  .notFound {
-    text-align: center;
-    font-weight: bold;
-    color: $darkThree;
-    width: 100%;
-    margin: 20px;
-  }
+.notFound {
+  text-align: center;
+  font-weight: bold;
+  color: $darkThree;
+  width: 100%;
+  margin: 20px auto;
 }
 
 .searchBodyTitle {

@@ -76,7 +76,7 @@ export default function TopicPopUp({
 
   if (isEdit) {
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
-    closeBtnObj.name = 'Design Later';
+    closeBtnObj.name = 'Cancel';
     closeBtnObj.disabled = !!uploadStatus;
 
     submitBtnObj.name = 'Design';
@@ -208,6 +208,7 @@ export default function TopicPopUp({
                       <QuizForm
                         topicId={editTopic?.id || ''}
                         courseId={editTopic?.courseId || ''}
+                        isScrom={filteredTopicContent[0]?.type === 'SCORM'}
                       />
                     }
                   />

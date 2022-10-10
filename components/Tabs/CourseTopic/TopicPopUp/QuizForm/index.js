@@ -14,7 +14,7 @@ import TextInputWithFile from '../../../../common/InputWithCheckbox/TextInputWit
 import styles from '../../../courseTabs.module.scss';
 import useAddQuiz from '../../Logic/useAddQuiz';
 
-export default function QuizForm({ courseId, topicId }) {
+export default function QuizForm({ courseId, topicId, isScrom = false }) {
   const {
     newQuiz,
     setNewQuiz,
@@ -82,30 +82,34 @@ export default function QuizForm({ courseId, topicId }) {
               />
 
               <div className={`${styles.newline}`}>
-                <span className={`${styles.label}`}>Start Time</span>
-                <input
-                  type="text"
-                  name="startTimeMin"
-                  className={`${styles.valuae}`}
-                  value={newQuiz.startTimeMin}
-                  onChange={(e) => {
-                    if (isNaN(e.target.value)) return;
-                    handleQuizInput(e);
-                  }}
-                />
-                :
-                <input
-                  type="text"
-                  name="startTimeSec"
-                  className={`${styles.valuae}`}
-                  value={newQuiz.startTimeSec}
-                  onChange={(e) => {
-                    if (isNaN(e.target.value)) return;
-                    handleQuizInput(e);
-                  }}
-                />
-                {/* <span className={`${value">20:00</span> */}
-                <span className={`${styles.after}`}>(Mins: Secs)</span>
+                {!isScrom && (
+                  <>
+                    <span className={`${styles.label}`}>Start Time</span>
+                    <input
+                      type="text"
+                      name="startTimeMin"
+                      className={`${styles.valuae}`}
+                      value={newQuiz.startTimeMin}
+                      onChange={(e) => {
+                        if (isNaN(e.target.value)) return;
+                        handleQuizInput(e);
+                      }}
+                    />
+                    :
+                    <input
+                      type="text"
+                      name="startTimeSec"
+                      className={`${styles.valuae}`}
+                      value={newQuiz.startTimeSec}
+                      onChange={(e) => {
+                        if (isNaN(e.target.value)) return;
+                        handleQuizInput(e);
+                      }}
+                    />
+                    {/* <span className={`${value">20:00</span> */}
+                    <span className={`${styles.after}`}>(Mins: Secs)</span>
+                  </>
+                )}
               </div>
             </div>
 

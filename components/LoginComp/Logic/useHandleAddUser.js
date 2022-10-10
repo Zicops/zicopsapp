@@ -284,7 +284,7 @@ export default function useHandleAddUserDetails() {
       status: USER_STATUS.activate,
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
-      phone: userAboutData?.phone,
+      phone: `+${userAboutData?.phone}`,
 
       gender: userAboutData?.gender,
       photo_url: userAboutData?.photo_url,

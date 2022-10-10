@@ -8,7 +8,8 @@ import SearchHeader from './SearchHeader';
 import SearchSubCat from './SearchSubCat';
 
 export default function Search() {
-  const { courses, lastItemRef, filters, setFilters, clearAllFilters } = useHandleSearch();
+  const { courses, isLoading, lastItemRef, filters, setFilters, clearAllFilters } =
+    useHandleSearch();
   const { catSubCat, setActiveCatId } = useHandleCatSubCat(filters.category);
 
   const router = useRouter();
@@ -53,48 +54,7 @@ export default function Search() {
           }))}
         />
       )}
-      <SearchBody
-        courses={courses?.filter((course) => {
-          const nameFilter = course?.name
-            ?.trim()
-            ?.toLowerCase()
-            ?.includes(searchQuery?.trim()?.toLowerCase());
-          let langFilter = true,
-            catFilter = true,
-            subCatFilter = true,
-            typeFilter = true;
-
-          if (filters?.lang)
-            langFilter = course?.language
-              ?.map((lang) => lang?.toLowerCase()?.trim())
-              ?.includes(filters?.lang?.trim()?.toLowerCase());
-          if (filters?.category)
-            catFilter = course?.category
-              ?.trim()
-              ?.toLowerCase()
-              ?.includes(filters?.category?.trim()?.toLowerCase());
-          if (filters?.subCategory)
-            subCatFilter =
-              course?.sub_categories?.findIndex((subCat) =>
-                subCat?.name
-                  ?.trim()
-                  ?.toLowerCase()
-                  ?.includes(filters?.subCategory?.trim()?.toLowerCase())
-              ) > 0 ||
-              course?.sub_category
-                ?.trim()
-                ?.toLowerCase()
-                ?.includes(filters?.subCategory?.trim()?.toLowerCase());
-          if (filters?.type)
-            typeFilter = course?.type
-              ?.trim()
-              ?.toLowerCase()
-              ?.includes(filters?.type?.trim()?.toLowerCase());
-
-          return nameFilter && langFilter && catFilter && subCatFilter && typeFilter;
-        })}
-        lastItemRef={lastItemRef}
-      />
+      <SearchBody courses={courses} isLoading={isLoading} lastItemRef={lastItemRef} />
     </div>
   );
 }

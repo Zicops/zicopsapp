@@ -10,6 +10,7 @@ import { useRecoilValue } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import styles from './homepageScreen.module.scss';
 import { bigImages } from '@/api/DemoSliderData';
+import HomePageLoader from './HomePageLoader';
 
 export default function HomepageScreen() {
   const { getUserCourseData, getUserPreferences } = useUserCourseData();
@@ -30,6 +31,7 @@ export default function HomepageScreen() {
   const [subCategory2Courses, setSubCategory2Courses] = useState([]);
   const [subCategory3Courses, setSubCategory3Courses] = useState([]);
   const [subCategory4Courses, setSubCategory4Courses] = useState([]);
+  const [isLoading, setIsLoading] = useState(null);
   const { catSubCat, setActiveCatId } = useHandleCatSubCat();
   const realSquare = {
     desktop: {
@@ -77,18 +79,23 @@ export default function HomepageScreen() {
   };
   async function getLatestCoursesByFilters(filters, pageSize) {
     // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
-    const courses = await loadQueryDataAsync(GET_LATEST_COURSES, {
-      publish_time: Date.now(),
-      pageSize: pageSize,
-      pageCursor: '',
-      filters: filters
-    });
+    const courses = await loadQueryDataAsync(
+      GET_LATEST_COURSES,
+      {
+        publish_time: Date.now(),
+        pageSize: pageSize,
+        pageCursor: '',
+        filters: filters
+      },
+      { fetchPolicy: 'cache-first' }
+    );
     return courses;
   }
 
   const pageSize = 28;
 
   useEffect(async () => {
+    setIsLoading(true);
     // console.log(catSubCat?.cat);
     const subcatArr = await getUserPreferences();
     const activeSubcategories = subcatArr?.filter(
@@ -125,6 +132,7 @@ export default function HomepageScreen() {
       ) || []
     );
 
+    setIsLoading(false);
     const getLSPCourses = await getLatestCoursesByFilters({ LspId: userOrg?.lsp_id }, pageSize);
     setLearningSpaceCourses(
       getLSPCourses?.latestCourses?.courses?.filter(
@@ -204,11 +212,18 @@ export default function HomepageScreen() {
       ) || []
     );
   }, [baseSubcategory]);
+
+  if (isLoading) return <HomePageLoader />;
+
   return (
     <div className={`${styles.homebody}`}>
       <HomeSlider />
       {ongoingCourses?.length ? (
-        <ZicopsCarousel title="Continue with your Courses" data={ongoingCourses} />
+        <ZicopsCarousel
+          title="Continue with your Courses"
+          data={ongoingCourses}
+          // handleTitleClick={() => alert('s')}
+        />
       ) : (
         ''
       )}

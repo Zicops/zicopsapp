@@ -9,7 +9,9 @@ export function customSelectStyles(
     container: (provided, state) => ({
       ...provided,
       width: isFiftyFifty ? '50%' : containerWidth,
-      boxShadow: state?.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
+      boxShadow: state?.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none',
+
+      zIndex: 5
     }),
     control: (provided, state) => {
       let borderStyle = '2px solid var(--dark_three)';

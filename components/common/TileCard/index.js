@@ -15,7 +15,8 @@ export default function TileCard({
   subCategory,
   showOverlay,
   overlayPositon,
-  customClass
+  customClass,
+  handleClick = () => {}
 }) {
   let courseClass = getDynamicFontClass(
     courseName,
@@ -24,7 +25,7 @@ export default function TileCard({
   );
 
   return (
-    <div className={`${styles.main} ${customClass}`}>
+    <div className={`${styles.main} ${customClass}`} onClick={handleClick}>
       <div className={styles.tileCard}>
         <div className={styles.tileCardWrapper}>
           <div className={styles.banner}>{type}</div>
