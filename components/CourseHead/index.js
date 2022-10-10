@@ -75,6 +75,14 @@ export default function CourseHead({
             alt=""
             onClick={handlePlusClick ? handlePlusClick : gotoAddcourse}
           />
+          )}
+          <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
+          <img
+          src="/images/sitemap_icon.png"
+          className="rightside_icon"
+          alt=""
+          onClick={() => setShowSitemap(true)}
+        />
       </div>
 
       {/* sitemap pop up */}
