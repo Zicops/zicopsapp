@@ -208,6 +208,7 @@ export default function TopicPopUp({
                       <QuizForm
                         topicId={editTopic?.id || ''}
                         courseId={editTopic?.courseId || ''}
+                        isScrom={filteredTopicContent[0]?.type === 'SCORM'}
                       />
                     }
                   />
