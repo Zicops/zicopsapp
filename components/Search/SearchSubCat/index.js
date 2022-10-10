@@ -6,7 +6,7 @@ export default function SearchSubCat({ data }) {
   return (
     <>
       <div className={`${styles.searchBookmarkTitle}`}>Sub Categories</div>
-      {data?.length && (
+      {data?.length ? (
         <TwoRowCarousel
           itemsArr={data}
           carouselProps={{ containerClass: styles.bookmarkContainer }}
@@ -14,6 +14,8 @@ export default function SearchSubCat({ data }) {
           // cardProps={{ name: 'Investment & Finance' }}
           responsiveViews={[7, 6, 6]}
         />
+      ) : (
+        <div className={`${styles.notFound}`}>No Sub Category Found</div>
       )}
     </>
   );
