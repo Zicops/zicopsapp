@@ -10,6 +10,7 @@ import { useRecoilValue } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import styles from './homepageScreen.module.scss';
 import { bigImages } from '@/api/DemoSliderData';
+import HomePageLoader from './HomePageLoader';
 
 export default function HomepageScreen() {
   const { getUserCourseData, getUserPreferences } = useUserCourseData();
@@ -30,6 +31,7 @@ export default function HomepageScreen() {
   const [subCategory2Courses, setSubCategory2Courses] = useState([]);
   const [subCategory3Courses, setSubCategory3Courses] = useState([]);
   const [subCategory4Courses, setSubCategory4Courses] = useState([]);
+  const [isLoading, setIsLoading] = useState(null);
   const { catSubCat, setActiveCatId } = useHandleCatSubCat();
   const realSquare = {
     desktop: {
@@ -89,6 +91,7 @@ export default function HomepageScreen() {
   const pageSize = 28;
 
   useEffect(async () => {
+    setIsLoading(true);
     // console.log(catSubCat?.cat);
     const subcatArr = await getUserPreferences();
     const activeSubcategories = subcatArr?.filter(
@@ -203,7 +206,11 @@ export default function HomepageScreen() {
         (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
       ) || []
     );
+    setIsLoading(false);
   }, [baseSubcategory]);
+
+  if (isLoading) return <HomePageLoader />;
+
   return (
     <div className={`${styles.homebody}`}>
       <HomeSlider />
