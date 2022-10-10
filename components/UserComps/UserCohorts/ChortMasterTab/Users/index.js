@@ -143,6 +143,7 @@ const Users = ({ isEdit = false }) => {
 
       <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
         <AddUsers
+        cohortUsers={cohortUserData}
           usersData={userData}
           popUpSetState={setIsOpen}
           onUserAdd={() => setRefetch(true)}
