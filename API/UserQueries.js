@@ -12,8 +12,8 @@ export const userQueryClient = new ApolloClient({
 });
 
 export const GET_USER_DETAIL = gql`
-  query GetUserDetails($user_id: String!) {
-    getUserDetails(user_id: $user_id) {
+  query GetUserDetails($user_id: [String!]) {
+    getUserDetails(user_ids: $user_id) {
       id
       first_name
       last_name
@@ -56,6 +56,36 @@ export const GET_USERS_FOR_ADMIN = gql`
         email
         phone
         photo_url
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_USER_LSP_MAP_BY_LSPID = gql`
+  query GetUserLspMapsByLspId(
+    $lsp_id: String!
+    $pageCursor: String
+    $Direction: String
+    $pageSize: Int
+  ) {
+    getUserLspMapsByLspId(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+    ) {
+      user_lsp_maps {
+        user_lsp_id
+        user_id
+        lsp_id
+        status
+        created_by
+        updated_by
+        created_at
+        updated_at
       }
       pageCursor
       direction
@@ -191,8 +221,8 @@ export const GET_USER_LEARNINGSPACES = gql`
 `;
 
 export const GET_USER_LEARNINGSPACES_DETAILS = gql`
-  query GetUserLspByLspId($user_id: String!, $user_lsp_id: String!) {
-    getUserLspByLspId(user_id: $user_id, lsp_id: $user_lsp_id) {
+  query GetUserLspByLspId($user_id: String!, $lsp_id: String!) {
+    getUserLspByLspId(user_id: $user_id, lsp_id: $lsp_id) {
       user_lsp_id
       user_id
       lsp_id
@@ -376,6 +406,129 @@ export const GET_USER_EXAM_PROGRESS = gql`
       updated_by
       created_at
       updated_at
+    }
+  }
+`;
+
+export const GET_COHORT_MAINS = gql`
+  query GetCohortMains($lsp_id: String!, $publish_time: Int, $pageCursor: String, $pageSize: Int) {
+    getCohortMains(
+      lsp_id: $lsp_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      cohorts {
+        cohort_id
+        name
+        description
+        lsp_id
+        code
+        status
+        type
+        is_active
+        created_by
+        updated_by
+        created_at
+        updated_at
+        size
+        imageUrl
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_COHORT_DETAILS = gql`
+  query GetCohortDetails($cohort_id: String!) {
+    getCohortDetails(cohort_id: $cohort_id) {
+      cohort_id
+      name
+      description
+      lsp_id
+      code
+      status
+      type
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+      size
+      imageUrl
+    }
+  }
+`;
+
+export const GET_COHORT_USERS = gql`
+  query GetCohortUsers(
+    $cohort_id: String!
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+  ) {
+    getCohortUsers(
+      cohort_id: $cohort_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      cohorts {
+        user_cohort_id
+        user_id
+        user_lsp_id
+        cohort_id
+        added_by
+        membership_status
+        role
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_USER_LATEST_COHORTS = gql`
+  query GetLatestCohorts(
+    $user_id: String
+    $user_lsp_id: String
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+  ) {
+    getLatestCohorts(
+      user_id: $user_id
+      user_lsp_id: $user_lsp_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+    ) {
+      cohorts {
+        user_cohort_id
+        user_id
+        user_lsp_id
+        cohort_id
+        added_by
+        membership_status
+        role
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
     }
   }
 `;

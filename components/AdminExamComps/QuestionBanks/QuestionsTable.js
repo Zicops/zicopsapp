@@ -38,7 +38,8 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
-      if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
+      if (data?.getQuestionBankQuestions)
+        setQbQuestions(data.getQuestionBankQuestions?.filter((q) => q?.Status === 'Y') || []);
     });
   }, [questionBankId]);
 
@@ -137,7 +138,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         data={qbQuestions}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
-        tableHeight="70vh"
+        tableHeight="60vh"
         loading={loading}
       />
 

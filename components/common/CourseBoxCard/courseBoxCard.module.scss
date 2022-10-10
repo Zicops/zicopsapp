@@ -14,6 +14,9 @@
   justify-self: stretch;
   align-self: stretch;
 
+  transition: all 0.3s;
+  cursor: pointer;
+
   &.isAdmin {
     background-color: $secondary;
     .type {
@@ -128,4 +131,10 @@
       }
     }
   }
+}
+
+.cardContainer:hover{
+  box-shadow: 0 0 10px 0 rgba($primary, 0.5);
+  transform: scale(1.02);
+  background-color: $bgTile;
 }

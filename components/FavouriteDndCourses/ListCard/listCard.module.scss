@@ -1,0 +1,122 @@
+@import '../../../styles/base.scss';
+
+.cardContainer {
+  display: flex;
+  gap: 25px;
+  width: 100%;
+  height: 15vh;
+  background-color: $black;
+  color: $darkThree;
+  padding: 10px;
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  p {
+    font-size: 13px;
+  }
+
+  .imgContainer {
+    border-radius: 10px;
+    width: 10%;
+    min-width: 100px;
+
+    img {
+      width: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      height: 100%;
+    }
+  }
+
+  .cardBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex: 1;
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .title {
+        color: $white;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .levelAndType {
+        min-width: 140px;
+        text-align: end;
+
+        span {
+          background-color: $darkTwo;
+          padding: 2px;
+          font-size: 12px;
+          margin: auto 2px;
+          border-radius: 5px;
+        }
+      }
+
+      .catSubCat {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .dot {
+    height: 5px;
+    width: 5px;
+    background-color: $white;
+    border-radius: 50%;
+
+    margin: auto 10px;
+  }
+
+  .footer {
+    width: 100%;
+  }
+
+  .durationFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .imgIcon {
+      width: 20px;
+    }
+  }
+
+  .progressBarFooter {
+    width: 100%;
+
+    section {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+
+      p {
+        display: flex;
+      }
+    }
+
+    .progress {
+      height: 5px;
+      background-color: $darkTwo;
+      margin-top: 10px;
+
+      span {
+        height: 100%;
+        background-color: $primary;
+      }
+    }
+  }
+}
+
+.mandatory {
+  color: $primary;
+}

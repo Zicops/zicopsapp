@@ -118,7 +118,7 @@ export default function CardContainer({
               <CourseLIstCard
                 courseData={course}
                 statusData={statusData}
-                footerType={footerType}></CourseLIstCard>
+                footerType={footerType} isAdmin={isAdmin}></CourseLIstCard>
             ))}
         </div>
       )}

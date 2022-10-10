@@ -15,8 +15,8 @@ const UserCohort = () => {
         <AdminHeader
           title="User Cohorts"
           isAddShown={true}
-          pageRoute="/admin/users/user-cohort"
           tooltipTitle={ADMIN_USERS.userCohort.addBtn}
+          pageRoute="/admin/user/user-cohort/add-cohort"
         />
         <MainBodyBox>
           <UserCohorts />

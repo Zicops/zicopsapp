@@ -1,55 +1,47 @@
-import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { USER_STATUS } from '@/helper/constants.helper';
+import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
 export default function MyUser({ getUser }) {
-  const [userId, setUserId] = useState([]);
+  const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
+  const [disableAlert, setDisableAlert] = useState(false);
 
-  // const [loading, setLoading] = useState(true);
-  const [loadUsersData, { loading, error: errorUserData, refetch }] = useLazyQuery(
-    GET_USERS_FOR_ADMIN,
-    {
-      client: userQueryClient
-    }
-  );
+  const { newUserAboutData, setNewUserAboutData, updateAboutUser, isFormCompleted } =
+    useUpdateUserAboutData();
+
+  const [isLoading, setLoading] = useState(true);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
 
   useEffect(async () => {
-    getUser(userId);
-    const currentTime = new Date().getTime();
+    setLoading(true);
 
-    const sendData = {
-      publish_time: Math.floor(currentTime / 1000),
-      pageCursor: '',
-      pageSize: 100
-    };
-    const res = await loadUsersData({ variables: sendData }).catch((err) => {
-      console.log(err);
-      return setToastMsg({ type: 'danger', message: `${err}` });
-    });
-    const usersData = res?.data?.getUsersForAdmin?.users;
-    if (usersData)
-      var uData = usersData.map((item) => ({
-        id: item?.id,
-        email: item?.email,
-        first_name: item?.first_name,
-        last_name: item?.last_name,
-        status: item?.status,
-        role: item?.role
-      }));
-    // console.log(uData);
-    setData([...uData]);
-  }, [userId]);
+    const usersData = await getUsersForAdmin();
+    console.log(usersData);
+
+    if (usersData?.error) {
+      setLoading(false);
+      return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
+    }
+    setLoading(false);
+    setData([...usersData]);
+    return;
+  }, []);
+
+  useEffect(() => {
+    getUser(selectedUser);
+  }, [selectedUser]);
 
   const columns = [
     {
@@ -60,9 +52,9 @@ export default function MyUser({ getUser }) {
         <div className="center-elements-with-flex">
           <LabeledRadioCheckbox
             type="checkbox"
-            isChecked={userId.length === data.length}
+            isChecked={data?.length !== 0 && selectedUser.length === data.length}
             changeHandler={(e) => {
-              setUserId(e.target.checked ? [...data.map((row) => row.id)] : []);
+              setSelectedUser(e.target.checked ? [...data.map((row) => row)] : []);
             }}
           />
           Email Id
@@ -73,18 +65,18 @@ export default function MyUser({ getUser }) {
           <div className="center-elements-with-flex">
             <LabeledRadioCheckbox
               type="checkbox"
-              isChecked={userId?.includes(params.id)}
+              isChecked={selectedUser?.find((u) => u?.id === params.id)}
               changeHandler={(e) => {
-                const userList = [...userId];
+                const userList = [...selectedUser];
 
                 if (e.target.checked) {
-                  userList.push(params.id);
+                  userList.push(params?.row);
                 } else {
-                  const index = userList.findIndex((id) => id === params.id);
+                  const index = userList.findIndex((u) => u?.id === params.id);
                   userList.splice(index, 1);
                 }
 
-                setUserId(userList);
+                setSelectedUser(userList);
               }}
             />
             {params.row?.email}
@@ -108,13 +100,19 @@ export default function MyUser({ getUser }) {
       field: 'role',
       headerClassName: 'course-list-header',
       headerName: 'Role',
-      flex: 0.5
+      flex: 0.5,
+      renderCell: (params) => {
+        return <>{params?.row?.role || 'Learner'}</>;
+      }
     },
     {
       field: 'status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
-      flex: 0.5
+      flex: 0.5,
+      renderCell: (params) => {
+        return <>{params?.row?.status || 'Invited'}</>;
+      }
     },
     {
       field: 'action',
@@ -126,8 +124,21 @@ export default function MyUser({ getUser }) {
           <EllipsisMenu
             buttonArr={[
               { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
-              { handleClick: () => alert(`Edit ${params.id}`) },
-              { text: 'Disable', handleClick: () => alert(`Disable ${params.id}`) }
+              // { handleClick: () => alert(`Edit ${params.id}`) },
+              {
+                text: 'Disable',
+                handleClick: () => {
+                  setNewUserAboutData(
+                    // TODO: delete user here
+                    getUserAboutObject({
+                      ...params.row,
+                      is_active: true,
+                      status: USER_STATUS.disable
+                    })
+                  );
+                  setDisableAlert(true);
+                }
+              }
             ]}
           />
         </>
@@ -143,8 +154,21 @@ export default function MyUser({ getUser }) {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="75vh"
-        loading={loading}
+        loading={isLoading}
       />
+
+      {disableAlert && (
+        <ConfirmPopUp
+          title={`Are you sure you want to disable user with email ${newUserAboutData?.email}`}
+          btnObj={{
+            handleClickLeft: async () => {
+              await updateAboutUser();
+              setDisableAlert(false);
+            },
+            handleClickRight: () => setDisableAlert(false)
+          }}
+        />
+      )}
     </>
   );
 }

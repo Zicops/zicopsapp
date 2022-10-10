@@ -332,7 +332,7 @@ export default function TopicBox({
   // https://stackoverflow.com/a/45998597
   const quizId = [];
 
-  let attemptedQuiz =
+  const attemptedQuiz =
     quizProgressData
       ?.filter((quiz) => {
         if (quizId?.includes(quiz?.quiz_id)) return false;
@@ -341,7 +341,7 @@ export default function TopicBox({
         return true;
       })
       ?.filter((quiz) => quiz?.topic_id === topic?.id)?.length || 0;
-
+  const totalQuiz = quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0;
   return (
     <>
       <div
@@ -355,6 +355,34 @@ export default function TopicBox({
 
           // if (!userCourseData?.userCourseMapping?.user_course_id) return;
           if (type === 'Assessment') return loadTopicExam();
+          if (type === 'Classroom') {
+            const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicData, moduleId);
+            const currentTopicIndex = filteredTopicData.findIndex((t) => t.id === topic.id);
+
+            const currentModuleIndex = allModuleOptions.findIndex(
+              (m) => m.value === currrentModule.value
+            );
+
+            return setVideoData({
+              ...videoData,
+              videoSrc: null,
+              type: 'classroom',
+              startPlayer: true,
+              isPreview: false,
+              currentTopicIndex: currentTopicIndex,
+
+              topicContent: [],
+              currentTopicContentIndex: 0,
+              currentSubtitleIndex: 0,
+
+              allModuleTopic: filteredTopicData,
+              currentModuleId: moduleId,
+
+              allModuleOptions: allModuleOptions,
+              currentModuleIndex: currentModuleIndex,
+              setNewModule: setSelectedModule
+            });
+          }
 
           // if (type === 'Content') {
           if (!topicContent.length) return console.log('no topic content found');
@@ -442,8 +470,11 @@ export default function TopicBox({
               <div className={`${styles.details}`}>
                 <div>e-Content</div>
                 <div>
-                  Quiz: {attemptedQuiz || 0} /{' '}
-                  {quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0}
+                  {!!totalQuiz && (
+                    <>
+                      Quiz: {attemptedQuiz || 0} / {totalQuiz}
+                    </>
+                  )}
                 </div>
                 <div>
                   <span>
@@ -534,6 +565,9 @@ export default function TopicBox({
                 </div>
               </div> */}
             </div>
+          )}
+          {type === 'Classroom' && (
+            <div className={`${styles.topic_player}`}>Click here to open classroom</div>
           )}
         </div>
       </div>

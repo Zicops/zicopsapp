@@ -28,6 +28,72 @@ export const GET_SUB_CATS = gql`
   }
 `;
 
+export const GET_CATS_MAIN = gql`
+  query allCatMain($lsp_ids: [String]) {
+    allCatMain(lsp_ids: $lsp_ids) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const GET_SUB_CATS_MAIN = gql`
+  query allSubCatMain($lsp_ids: [String]) {
+    allSubCatMain(lsp_ids: $lsp_ids) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CatId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const GET_CATS_AND_SUB_CAT_MAIN = gql`
+  query allCatMain($lsp_ids: [String]) {
+    allCatMain(lsp_ids: $lsp_ids) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+
+    allSubCatMain(lsp_ids: $lsp_ids) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CatId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
 export const GET_SUB_CATS_BY_CAT = gql`
   query allSubCatsByCat($category: String) {
     allSubCatsByCat(category: $category)
@@ -35,13 +101,19 @@ export const GET_SUB_CATS_BY_CAT = gql`
 `;
 
 export const GET_LATEST_COURSES = gql`
-  query LatestCourses($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query LatestCourses(
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $filters: CoursesFilters
+  ) {
     latestCourses(
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
       status: SAVED
+      filters: $filters
     ) {
       courses {
         id
@@ -772,6 +844,28 @@ export const GET_TOPIC_EXAMS = gql`
       created_at
       updated_at
       language
+    }
+  }
+`;
+
+export const GET_COHORT_COURSES = gql`
+  query GetCohortCoursesMap($cohort_id: String) {
+    getCohortCourseMaps(cohort_id: $cohort_id) {
+      id
+      CourseId
+      CohortId
+      CourseType
+      LspId
+      CohortCode
+      isMandatory
+      CourseStatus
+      AddedBy
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      ExpectedCompletion
     }
   }
 `;

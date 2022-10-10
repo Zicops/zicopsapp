@@ -4,6 +4,12 @@ export function truncateToN(str, N = 100) {
   return str.length > N ? str.substring(0, N - 3) + '...' : str;
 }
 
+export function getDynamicFontClass(text, class1, class2) {
+  if (text?.length > 40) {
+    return class2;
+  }
+  return class1;
+}
 export function changeHandler(e, state, setState, inputName = null) {
   // for react multi-select - get a common variable for isMulti and replace if conditions
   if (inputName === 'language') {
@@ -41,7 +47,6 @@ export function changeHandler(e, state, setState, inputName = null) {
 
 export function snakeCaseToTitleCase(string = '') {
   if (!string) return '';
-
   // https://stackoverflow.com/a/64489760
   return string
     .replace(/^[-_]*(.)/, (_, c) => c.toUpperCase())
@@ -70,4 +75,10 @@ export function isPassword(password) {
     return errors;
   }
   return true;
+}
+
+// current epoch time
+export function getCurrentEpochTime() {
+  const currentTime = new Date().getTime();
+  return Math.floor(currentTime / 1000);
 }

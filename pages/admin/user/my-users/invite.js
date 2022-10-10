@@ -1,5 +1,5 @@
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersEmailIdAtom } from '@/state/atoms/users.atom';
+import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { INVITE_USERS, userClient } from 'API/UserMutations';
 import { useRouter } from 'next/router';
@@ -22,16 +22,18 @@ export default function MyUserPage() {
 
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const [disableButton, setDisableButton] = useState(false);
+  // const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  // const [disableButton, setDisableButton] = useState(false);
 
   const [userType, setUserType] = useState('Internal');
   const [tabData, setTabData] = useState([
     { name: 'Invite User', component: <InviteUser userType={userType} /> }
   ]);
   const [tab, setTab] = useState(tabData[0].name);
-
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   //handle emails
   async function handleMail() {
+    if (loading) return;
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add atleast one email!' });
     let emails = emailId.map((item) => item?.props?.children[0]);
@@ -42,12 +44,12 @@ export default function MyUserPage() {
 
     let isError = false;
     let errorMsg;
-    const resEmail = await inviteUsers({ variables: { emails: emails } }).catch((err) => {
+    const resEmail = await inviteUsers({
+      variables: { emails: emails, lsp_id: userOrgData?.lsp_id }
+    }).catch((err) => {
       errorMsg = err.message;
       isError = !!err;
     });
-
-    if (loading) return setDisableButton(true);
 
     if (isError) {
       const message = JSON.parse(errorMsg.split('body:')[1]);
@@ -57,6 +59,7 @@ export default function MyUserPage() {
     }
 
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+    // console.log(resEmail);
 
     setToastMsg({ type: 'success', message: `Emails send successfully!` });
 
@@ -111,7 +114,7 @@ export default function MyUserPage() {
             tab={tab}
             setTab={setTab}
             footerObj={{
-              disableSubmit: disableButton,
+              disableSubmit: loading,
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
               handleSubmit: handleMail,
               handleCancel: () => {

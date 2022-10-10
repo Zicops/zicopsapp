@@ -13,7 +13,8 @@ export default function AddTopicForm({ topicData, setTopicData, isEdit = false }
   const typeOptions = [
     { value: 'Content', label: 'Content' },
     { value: 'Lab', label: 'Lab' },
-    { value: 'Assessment', label: 'Assessment' }
+    { value: 'Assessment', label: 'Assessment' },
+    { value: 'Classroom', label: 'Classroom' }
   ];
 
   useEffect(() => {

@@ -1,12 +1,16 @@
+import { getDateTimeFromUnix } from '@/components/Tabs/Logic/tabs.helper';
+import moment from 'moment';
 import styles from './courseListCard.module.scss';
 
 export default function ProgressBarFooter({ courseData, isCompleted }) {
+
+  
   return (
     <div className={`${styles.progressBarFooter}`}>
       <section>
         {isCompleted ? (
           <>
-            <p>Completed on {courseData?.completedOn || '22-06-2022'}</p>
+            <p>Completed on {moment.unix(courseData?.updated_at).format("DD/MM/YYYY") || '22-06-2022'}</p>
           </>
         ) : (
           <>

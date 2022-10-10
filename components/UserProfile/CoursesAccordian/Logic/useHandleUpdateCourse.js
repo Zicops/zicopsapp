@@ -3,11 +3,13 @@ import { GET_USER_COURSE_MAPS_BY_COURSE_ID } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 export default function useHandleUpdateCourse() {
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
 
   async function updateCourse(userCourseData, userId = null, role = 'admin', adminId = null) {
     let id = !!adminId ? adminId : userId;
@@ -33,7 +35,7 @@ export default function useHandleUpdateCourse() {
       endDate: data?.end_date
     };
 
-    console.log(sendData);
+    // console.log(sendData);
     let isError = false;
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });

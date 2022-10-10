@@ -1,18 +1,8 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../../state/atoms/video.atom';
 import Button from '../Button';
-import {
-  controlBar,
-  controlButtons,
-  dimProgressBar,
-  fullScreenBtn,
-  playPauseBtn,
-  progressBar,
-  tooltipContainer,
-  volumeContainer
-} from './controlbar.module.scss';
 import Volume from './Volume';
 import styles from './controlbar.module.scss';
 
@@ -25,16 +15,25 @@ export default function ControlBar({
   handleVolume,
   handleMute,
   handleProgress,
+  toggleScrubbing,
   playerState,
   handleMouseExit,
   handleMouseMove,
   seek,
   tooltip,
+  progressBar,
   playNextVideo,
   playPreviousVideo
 }) {
   const [hideBar, setHideBar] = useState(false);
   const videoData = useRecoilValue(VideoAtom);
+  const bookmarkRef = useRef();
+  const quizRef = useRef();
+
+  useEffect(() => {
+    bookmarkRef.current.innerHTML = '';
+    quizRef.current.innerHTML = '';
+  }, [videoData?.videoSrc]);
 
   let disablePreviousButton = true;
   let disableNextButton = true;
@@ -57,8 +56,35 @@ export default function ControlBar({
   }
 
   return (
-    <div className={`${controlBar}`}>
-      <input
+    <div className={`${styles.controlBar}`}>
+      <div
+        className={`${styles.timelineContainer} ${hideBar ? styles.dimProgressBar : ''}`}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseExit}
+        onPointerDown={toggleScrubbing}
+        onPointerUp={toggleScrubbing}
+        onPointerLeave={handleMouseExit}
+        id="timelineContainer">
+        <div className={`${styles.timeline}`} ref={progressBar}>
+          <div className={`${styles.thumbnailContainer}`} ref={tooltip}>
+            {/* <div className={`${styles.thumbnailInfo}`}>Some info will be here!</div> */}
+            <div className={`${styles.thumbnailImage}`}>
+              <img src="" alt="" className={`${styles.previewImg}`} id="thumbnailImages" />
+            </div>
+            <div className={`${styles.thumbnailTime}`}>{seek}</div>
+          </div>
+
+          <div className={`${styles.thumbIndicator}`} id="thumbIndicator"></div>
+          <div
+            className={`${styles.bookmarkIndicator}`}
+            ref={bookmarkRef}
+            id="bookmarkIndicator"></div>
+          <div className={`${styles.quizIndicator}`} ref={quizRef} id="quizIndicator"></div>
+        </div>
+      </div>
+
+      {/* <div className={`${thumbnailPoints}`} id="thumbnailPoints"></div> */}
+      {/* <input
         type="range"
         id="vidInput"
         onChange={handleProgress}
@@ -69,13 +95,18 @@ export default function ControlBar({
         max={100}
         step={0.1}
         className={`${progressBar} ${hideBar ? dimProgressBar : ''}`}
-      />
+      /> */}
 
-      <div className={`${tooltipContainer} ${!seek ? 'hide' : ''}`} ref={tooltip}>
-        {seek}
-      </div>
+      {/* <div className={`${tooltipContainer} ${!seek ? 'hide' : ''}`} ref={tooltip}> */}
+      {/* {seek} */}
+      {/* <div className={`${thumbnailInfo}`}>Some info will be here!</div>
+        <div className={`${thumbnailImage}`}>
+          <img src="/images/courses/1.png" alt="" />
+        </div>
+        <div className={`${thumbnailTime}`}>{seek}</div> */}
+      {/* </div> */}
 
-      <div className={`${controlButtons}`}>
+      <div className={`${styles.controlButtons}`}>
         <Button handleClick={reloadVideo}>
           {/* <Image src="/images/reload_53905.png" alt="" height="25px" width="22px" /> */}
           <div className={`${styles.reloadBtn}`}></div>
@@ -86,35 +117,22 @@ export default function ControlBar({
             <div className={`${styles.prevBtn} ${styles.disabled}`}></div>
           ) : (
             <div className={`${styles.prevBtn}`}></div>
-            // <Image src="/images/prev-topic.png" alt="" height="30px" width="30px" />
-            // <div className={`${styles.prevBtn}`}></div>
-            // <Image
-            //   src="/images/next-topic.png"
-            //   style={{ transform: 'rotate(180deg)' }}
-            //   alt=""
-            //   height="30px"
-            //   width="30px"
-            // />
           )}
         </Button>
 
         <Button handleClick={backwardVideo}>
-          {/* <Image src="/images/prev-back.png" alt="" height="40px" width="35px" /> */}
           <div className={`${styles.backwordBtn}`}></div>
         </Button>
 
-        <Button handleClick={handlePlay} styleClass={playPauseBtn}>
+        <Button handleClick={handlePlay} styleClass={styles.playPauseBtn}>
           {!playerState.isPlaying ? (
-            // <Image src="/images/preview-btn.png" alt="" height="50px" width="50px" />
             <div className={`${styles.pauseBtn}`}></div>
           ) : (
-            // <Image src="/images/progressTriangle.png" alt="" height="50px" width="50px" />
             <div className={`${styles.playBtn}`}></div>
           )}
         </Button>
 
         <Button handleClick={forwardVideo}>
-          {/* <Image src="/images/next-forward.png" alt="" height="40px" width="35px" /> */}
           <div className={`${styles.forwardBtn}`}></div>
         </Button>
 
@@ -122,21 +140,12 @@ export default function ControlBar({
           {disableNextButton ? (
             <div className={`${styles.nextBtn} ${styles.disabled}`}></div>
           ) : (
-            // <Image
-            //   src="/images/prev-topic.png"
-            //   style={{ transform: 'rotate(180deg)' }}
-            //   alt=""
-            //   height="30px"
-            //   width="30px"
-            // />
-            // <Image src="/images/next-topic.png" alt="" height="30px" width="30px" />
             <div className={`${styles.nextBtn}`}></div>
           )}
-          {/* <Image src="/images/next-topic.png" alt="" height="30px" width="30px" /> */}
         </Button>
 
         <div
-          className={`${volumeContainer}`}
+          className={`${styles.volumeContainer}`}
           onMouseEnter={() => setHideBar(true)}
           onMouseLeave={() => setHideBar(false)}>
           <Volume
@@ -147,7 +156,7 @@ export default function ControlBar({
           />
         </div>
       </div>
-      <div className={`${fullScreenBtn}`}>
+      <div className={`${styles.fullScreenBtn}`}>
         <Button handleClick={handleFullScreen}>
           {!document.fullscreenElement ? (
             <div className={`${styles.fsBtn}`}></div>

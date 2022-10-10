@@ -1,3 +1,4 @@
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { DIFFICULTY } from '@/helper/utils.helper';
 import { useLazyQuery } from '@apollo/client';
 import { Box, CircularProgress } from '@mui/material';
@@ -66,7 +67,8 @@ export default function Preview({ masterData }) {
     if (isError) return;
 
     // parse and set section data
-    const sections = sectionRes?.data?.getQuestionPaperSections || [];
+    const sections = sortArrByKeyInOrder(sectionRes?.data?.getQuestionPaperSections, 'CreatedAt');
+
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i];
 
@@ -90,16 +92,21 @@ export default function Preview({ masterData }) {
         return setToastMsg({ type: 'danger', message: 'QB Section Mapping load error' });
       });
       if (isError) return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
+      console.log(mappingRes?.data);
 
+      const _mappings = sortArrByKeyInOrder(
+        mappingRes?.data?.getQPBankMappingBySectionId,
+        'CreatedAt'
+      );
       mappedQb = [
         ...mappedQb,
-        ...mappingRes?.data?.getQPBankMappingBySectionId?.map((qbMappings) => {
+        ..._mappings?.map((qbMappings) => {
           return {
             id: qbMappings.id,
             qbId: qbMappings.QbId,
             difficulty_level: qbMappings.DifficultyLevel,
             sectionId: qbMappings.SectionId,
-            is_active: qbMappings.IsActive,
+            is_active: qbMappings.IsActive || true,
             question_marks: qbMappings.QuestionMarks,
             question_type: qbMappings.QuestionType,
             retrieve_type: qbMappings.RetrieveType,

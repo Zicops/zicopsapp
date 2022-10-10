@@ -17,17 +17,19 @@ const UploadAndPreview = ({
   styleClass = {},
   handleUpdateImage = () => {},
   initialImage = null,
-  closePopUp = () => {},
-  tooltipTitle
+  tooltipTitle,
+  imageUrl = null,
+  uploadedFile = null,
+  closePopUp = () => {}
 }) => {
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(uploadedFile);
   const [preview, setPreview] = useState('');
   const [pop, setPop] = useState(false);
 
   useEffect(async () => {
     if (!initialImage) return;
 
-    const response = await fetch(initialImage);
+    const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(initialImage)}`);
     // here image is url/location of image
     const blob = await response.blob();
     const file = new File([blob], 'image.jpg', { type: blob.type });
@@ -37,9 +39,21 @@ const UploadAndPreview = ({
     setPop(true);
   }, []);
 
+  useEffect(async () => {
+    if (!imageUrl) return;
+
+    const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(imageUrl)}`);
+    // here image is url/location of image
+    const blob = await response.blob();
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+
+    setImage(file);
+  }, [imageUrl]);
+
   const handleRemove = () => {
     if (!image) return;
     setImage(null);
+    handleChange(null);
     return;
   };
 

@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import { useRecoilValue } from 'recoil';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 
 const columns = [
   {
@@ -39,13 +41,18 @@ const columns = [
     sortable: false,
     renderCell: (params) => {
       return (
-        <ToolTip title={ADMIN_COURSES.myCourses.editBtn} placement="bottom">
+        <>
+          <button
+            style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
+            onClick={() => Router.push(`/preview?courseId=${params.row.id}`)}>
+            <img src="/images/svg/eye-line.svg" width={20}></img>
+          </button>
           <button
             style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
             onClick={() => editCourse(params.row.id)}>
-            <img src="/images/edit-icon.png" width={20}></img>
+            <img src="/images/svg/edit-box-line.svg" width={20}></img>
           </button>
-        </ToolTip>
+        </>
       );
     },
     flex: 0.5
@@ -58,6 +65,7 @@ function editCourse(courseId) {
 
 function MyLatestCourseList({ time }) {
   const [pageSize, setPageSize] = useState(6);
+  const courseType = useRecoilValue(CourseTypeAtom);
 
   useEffect(() => {
     const screenWidth = window.screen.width;
@@ -73,7 +81,10 @@ function MyLatestCourseList({ time }) {
     variables: {
       publish_time: time,
       pageSize: 999999,
-      pageCursor: ''
+      pageCursor: '',
+      filters: {
+        Type: courseType
+      }
     },
     client: queryClient
   });

@@ -1,11 +1,12 @@
 import { ADD_USER_BOOKMARK, userClient } from '@/api/UserMutations';
 import { QuizAtom } from '@/state/atoms/module.atoms';
+import { THUMBNAIL_GAP } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
 import { BOX } from './customVideoPlayer.helper';
@@ -41,6 +42,172 @@ export default function useSaveData(videoElement, freezeState) {
     // captureImg: ''
   });
 
+  useEffect(async () => {
+    const thumbnailsGap = THUMBNAIL_GAP;
+    if (!videoElement?.current?.duration) return;
+
+    // await generateVideoThumbnails(thumbnailsGap, videoElement?.current?.duration);
+
+    // async function generateVideoThumbnails(thumbnailsGap, duration) {
+    //   let thumbnail = [];
+    //   let fractions = [];
+    //   for (let i = 0; i <= duration; i += thumbnailsGap) {
+    //     fractions.push(Math.floor(i));
+    //   }
+    //   // for (let time in fractions){
+    //   //   showThumbnailPointsInProgressbar(time);
+    //   //   let oneThums = await getVideoThumbnail(time);
+    //   //   thumbnail.push(oneThums);
+    //   // }
+    //   fractions.map(async (time) => {
+    //     // showThumbnailPointsInProgressbar(time);
+    //     let oneThums = await getVideoThumbnail(time);
+    //     thumbnail.push(oneThums);
+    //   });
+    //   // console.log('thumbnail', thumbnail);
+    // }
+
+
+    // async function getVideoThumbnail(videoTimeInSeconds) {
+    //   return new Promise((resolve, reject) => {
+    //     var video = document.createElement('video');
+    //     var timeupdate = function () {
+    //       if (snapImage()) {
+    //         video.removeEventListener('timeupdate', timeupdate);
+    //         video.pause();
+    //       }
+    //     };
+    //     video.addEventListener('loadeddata', function () {
+    //       if (snapImage()) {
+    //         video.removeEventListener('timeupdate', timeupdate);
+    //       }
+    //     });
+    //     var snapImage = function () {
+    //       var canvas = document.createElement('canvas');
+    //       var scaleFactor = 0.5;
+    //       canvas.width = video.videoWidth * scaleFactor;
+    //       canvas.height =  video.videoHeight * scaleFactor;
+    //       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    //       var image = canvas.toDataURL();
+    //       var success = image.length > 100000;
+    //       if (success) {
+    //         URL.revokeObjectURL(videoData.videoSrc);
+    //         resolve(image);
+    //       }
+    //       return success;
+    //     };
+    //     video.addEventListener('timeupdate', timeupdate);
+    //     video.preload = 'metadata';
+    //     video.src = videoData.videoSrc;
+    //     // Load video in Safari / IE11
+    //     video.muted = true;
+    //     video.playsInline = true;
+    //     video.currentTime = videoTimeInSeconds;
+    //     video.play();
+    //   });
+    // }
+    // showThumbnailPointsInProgressbar(280, 'bookmarkIndicator');
+    // showThumbnailPointsInProgressbar(300, 'quizIndicator');
+    // async function showThumbnailPointsInProgressbar(videoTimeInSeconds, indicator) {
+    //   let percent = (videoTimeInSeconds/videoElement?.current?.duration) * 100;
+    //   let thumbPoints = document.getElementById(indicator);
+    //   let thumbSpan = document.createElement('span');
+    //   thumbSpan.style.left = percent + '%';
+    //   thumbPoints.appendChild(thumbSpan);
+    // }
+    // OLD CODE SEMI-WORKING
+    // if (!videoElement?.current?.duration) return;
+    // let thumbnail = [];
+    // let fractions = [];
+    // for (let i = 0; i <= videoElement?.current?.duration; i += thumbnailsGap) {
+    //   fractions.push(Math.floor(i));
+    // }
+    // // the array of promises
+    // let promiseArray = fractions.map( async (time) => {
+    //   return await new Promise((resolve, reject) => {
+    //     var video = document.createElement('video');
+    //     var timeupdate = function () {
+    //       if (snapImage()) {
+    //         video.removeEventListener('timeupdate', timeupdate);
+    //         video.pause();
+    //       }
+    //     };
+    //     video.addEventListener('loadeddata', function () {
+    //       if (snapImage()) {
+    //         video.removeEventListener('timeupdate', timeupdate);
+    //       }
+    //     });
+    //     var snapImage = function () {
+    //       var canvas = document.createElement('canvas');
+    //       const scaleFactor = 0.25;
+    //       canvas.width = video.videoWidth * scaleFactor;
+    //       canvas.height = video.videoHeight * scaleFactor;
+    //       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    //       var image = canvas.toDataURL();
+    //       var success = image.length > 100000;
+    //       if (success) {
+    //         URL.revokeObjectURL(videoData.videoSrc);
+    //         resolve(image);
+    //       }
+    //       return success;
+    //     };
+    //     video.addEventListener('timeupdate', timeupdate);
+    //     video.preload = 'metadata';
+    //     video.src = videoData.videoSrc;
+    //     // Load video in Safari / IE11
+    //     video.muted = true;
+    //     video.playsInline = true;
+    //     video.currentTime = time;
+    //     video.play();
+    //   });
+    // });
+    // console.log(promiseArray);
+
+    // await Promise.all(promiseArray)
+    //   .then((res) => {
+    //     res.forEach((res) => {
+    //       thumbnail.push(res);
+    //     });
+    //     resolve(thumbnail);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   })
+    //   .finally((res) => {
+    //     resolve(thumbnail);
+    //   });
+
+    // console.log(thumbnail);
+    // function VideoToImageAtTime(time) {
+    //   //   remove after testing
+    //   if (!videoElement.current) return alert('Video Ref Not Updated!');
+
+    //   // const video = videoElement.current;
+    //   var video = document.createElement('video');
+    //   video.preload = 'metadata';
+    //   video.src = videoData.videoSrc;
+    //   // Load video in Safari / IE11
+    //   video.muted = true;
+    //   video.playsInline = true;
+    //   video.currentTime = time;
+    //   video.play();
+
+    //   //  quality
+    //   const scaleFactor = 0.25;
+    //   const w = video.videoWidth * scaleFactor;
+    //   const h = video.videoHeight * scaleFactor;
+
+    //   const canvas = document.createElement('canvas');
+    //   canvas.width = w;
+    //   canvas.height = h;
+
+    //   const ctx = canvas.getContext('2d');
+    //   ctx.drawImage(video, 0, 0, w, h);
+    //   video.pause();
+    //   return canvas?.toDataURL('image/png');
+    // }
+  }, [videoElement?.current?.duration]);
+
   function toggleStates(setState, state) {
     setState(!state);
   }
@@ -59,7 +226,7 @@ export default function useSaveData(videoElement, freezeState) {
     });
   }
 
-  function captureImageOfVideo() {
+  function getImageURLOfVideo() {
     //   remove after testing
     if (!videoElement.current) return alert('Video Ref Not Updated!');
 

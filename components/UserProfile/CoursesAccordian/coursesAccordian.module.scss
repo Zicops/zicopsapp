@@ -5,8 +5,8 @@
 .assign {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: 600;
   margin-bottom: 20px;
 }
 .assignInner {
@@ -51,8 +51,8 @@
   display: flex;
   justify-content: flex-start;
   gap: 10px;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
   svg {
     height: 15px;

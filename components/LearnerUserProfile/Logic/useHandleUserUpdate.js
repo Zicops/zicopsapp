@@ -64,7 +64,7 @@ export default function useHandleUserUpdate() {
     const sendLspData = {
       user_id: userDataAbout?.id,
       user_lsp_id: userOrgData?.user_lsp_id,
-      lsp_id: userOrgData?.lsp_id || 'Zicops Learning Space',
+      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
       status: 'Active'
     };
 
@@ -150,7 +150,7 @@ export default function useHandleUserUpdate() {
           user_lsp_id: sub_categoriesArr[i]?.user_lsp_id,
           sub_category: sub_categoriesArr[i]?.sub_category,
           is_base: false,
-          is_active: false
+          is_active: true // Ankit why this was set to false, was there any particular reason
         };
         console.log(sendData);
         const res = await updatePreference({ variables: sendData }).catch((err) =>

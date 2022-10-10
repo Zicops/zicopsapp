@@ -1,4 +1,6 @@
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
 import { courseContext } from '../../../../../state/contexts/CourseContext';
 import Button from '../../../../common/Button';
@@ -17,8 +19,9 @@ export default function AddTopicContentForm({
   topicContent
 }) {
   const { fullCourse } = useContext(courseContext);
-  const { newTopicContent, newTopicVideo } = data;
+  const { newTopicContent, newTopicVideo, setNewTopicVideo } = data;
   const { handleTopicContentInput, handleTopicVideoInput } = inputHandlers;
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   // to set state based on if topic content is present or not
   useEffect(() => {
@@ -82,10 +85,14 @@ export default function AddTopicContentForm({
         <>
           {/* Upload Course Video */}
           <div className={`center-element-with-flex ${styles.marginBottom}`}>
-            <label className={`w-25`}>Upload Content:</label>
+            <label className={`w-25`}>Upload Contents:</label>
             <div className={`w-35`}>
               <BrowseAndUpload
-                handleFileUpload={handleTopicVideoInput}
+                handleFileUpload={(e) => {
+                  if (newTopicContent?.type === types[3]) handleTopicVideoInput(e);
+
+                  setNewTopicVideo({ ...newTopicVideo, file: e.target.files[0] });
+                }}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
                 acceptedTypes={acceptedFiles}
@@ -97,6 +104,26 @@ export default function AddTopicContentForm({
             </div>
           </div>
 
+          {/* url */}
+          {newTopicContent?.type === types[0] && (
+            <div className={`${styles.flexContainerWithSpace}`}>
+              <div className="w-100">
+                <LabeledInput
+                  inputOptions={{
+                    inputName: 'contentUrl',
+                    label: 'URL:',
+                    // maxLength: 16,
+                    value: newTopicVideo?.contentUrl || '',
+                    isDisabled: !!newTopicVideo?.file
+                  }}
+                  changeHandler={(e) =>
+                    setNewTopicVideo({ ...newTopicVideo, contentUrl: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+          )}
+
           {/* duration */}
           <div className={`${styles.flexContainerWithSpace}`}>
             <div className="w-50">
@@ -106,10 +133,15 @@ export default function AddTopicContentForm({
                   inputName: 'duration',
                   label: 'Duration:',
                   maxLength: 16,
-                  isDisabled: newTopicContent?.type === 'mp4',
-                  value: newTopicContent?.duration || 0
+                  isDisabled: !!topicContent?.length || newTopicContent?.type === 'mp4',
+                  value: topicContent?.length
+                    ? topicContent[0]?.duration
+                    : newTopicContent?.duration || 0
                 }}
-                changeHandler={(e) => handleTopicContentInput(e, 'type')}
+                changeHandler={(e) => {
+                  const val = e.target.value?.replace(/^0+/, '');
+                  setNewTopicContent({ ...newTopicContent, duration: val });
+                }}
               />
             </div>
             <div className="w-45">seconds</div>
@@ -120,7 +152,9 @@ export default function AddTopicContentForm({
       <div className="center-element-with-flex">
         <Button
           text="Add"
-          styleClass={styles.topicContentSmallBtn}
+          styleClass={`${styles.topicContentSmallBtn} ${
+            isAddTopicContentReady ? styles.formFilled : ''
+          }`}
           isDisabled={!isAddTopicContentReady}
           clickHandler={addNewTopicContent}
         />

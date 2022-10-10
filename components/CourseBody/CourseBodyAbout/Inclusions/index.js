@@ -1,10 +1,11 @@
 import { useRecoilValue } from 'recoil';
-import { ChapterAtom, ModuleAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
+import { ChapterAtom, ModuleAtom, QuizAtom, TopicAtom } from '../../../../state/atoms/module.atoms';
 
-export default function Inclusions({ languages, quizCount = 2 }) {
+export default function Inclusions({ languages }) {
   const moduleData = useRecoilValue(ModuleAtom);
   const chapter = useRecoilValue(ChapterAtom);
   const topic = useRecoilValue(TopicAtom);
+  const quizData = useRecoilValue(QuizAtom);
 
   return (
     <>
@@ -17,7 +18,10 @@ export default function Inclusions({ languages, quizCount = 2 }) {
           </div>
           <div className="col_50">
             {languages.map((e, i) => (
-              <span key={i}>{e}, </span>
+              <span key={i}>
+                {e}
+                {i + 1 === languages?.length ? '' : ', '}
+              </span>
             ))}
           </div>
         </div>
@@ -35,7 +39,7 @@ export default function Inclusions({ languages, quizCount = 2 }) {
           <div className="col_50 label">
             Interactive Quizzes <span>:</span>
           </div>
-          <div className="col_50">{quizCount}</div>
+          <div className="col_50">{quizData?.length || 0}</div>
         </div>
         <div className="row mb_10">
           <div className="col_50 label">

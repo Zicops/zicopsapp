@@ -33,8 +33,15 @@ export default function useAddTopicContent(topic) {
 
   // disable add button if data is incomplete
   useEffect(() => {
+    const isContentPresent = ['SCORM']?.includes(newTopicContent?.type)
+      ? !!newTopicVideo.file || !!newTopicVideo?.contentUrl
+      : !!newTopicVideo?.file;
+
     setIsAddTopicContentReady(
-      !!newTopicContent.language && !!newTopicContent.type && !!newTopicVideo.file
+      !!newTopicContent.language &&
+        !!newTopicContent.type &&
+        !!isContentPresent &&
+        !!+newTopicContent?.duration
     );
   }, [newTopicContent, newTopicVideo]);
 
@@ -124,6 +131,14 @@ export default function useAddTopicContent(topic) {
 
   // save in recoil state
   function addNewTopicContent() {
+    if (newTopicVideo?.contentUrl) {
+      try {
+        new URL(newTopicVideo?.contentUrl);
+      } catch (err) {
+        return setToastMsg({ type: 'danger', message: 'Url is not valid' });
+      }
+    }
+
     const isDefault = newTopicContent.is_default;
     let topicContentArr = [];
     // set is_default to false of every topic content if current is true
@@ -158,7 +173,9 @@ export default function useAddTopicContent(topic) {
   };
   const localStates = {
     newTopicContent,
-    newTopicVideo
+    newTopicVideo,
+    setNewTopicContent,
+    setNewTopicVideo
   };
 
   return {

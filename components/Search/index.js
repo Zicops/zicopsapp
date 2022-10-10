@@ -1,13 +1,30 @@
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import useHandleSearch from './Logic/useHandleSearch';
 import SearchBody from './SearchBody';
 import SearchBookmarks from './SearchBookmarks';
 import SearchHeader from './SearchHeader';
+import SearchSubCat from './SearchSubCat';
 
 export default function Search() {
   const { courses, lastItemRef, filters, setFilters, clearAllFilters } = useHandleSearch();
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat(filters.category);
+
   const router = useRouter();
   const searchQuery = router.query?.searchQuery || '';
+  const [showBookMark, setShowBookmark] = useState(false);
+  const [showSubCat, setShowSubCat] = useState(false);
+
+  useEffect(() => {
+    // console.log(isPref);
+    const { isPref, cat } = router.query;
+    if (cat) setShowSubCat(true);
+    if (searchQuery) setShowBookmark(true);
+
+    // setFilters(prevValue => ({...prevValue , subCategory:searchQuery}))
+    return;
+  }, [router.query]);
 
   return (
     <div
@@ -16,27 +33,63 @@ export default function Search() {
         paddingTop: '70px',
         minHeight: '90vh'
       }}>
-      <SearchHeader filters={filters} setFilters={setFilters} clearAllFilters={clearAllFilters} />
-      <SearchBookmarks />
+      <SearchHeader
+        filters={filters}
+        setFilters={setFilters}
+        clearAllFilters={clearAllFilters}
+        catSubCat={catSubCat}
+        setActiveCatId={setActiveCatId}
+      />
+
+      {showBookMark && <SearchBookmarks />}
+
+      {showSubCat && (
+        <SearchSubCat
+          data={catSubCat?.subCat?.map((s) => ({
+            ...s,
+            name: s?.Name,
+            img: s?.ImageUrl,
+            handleClick: (subCat) => setFilters({ ...filters, subCategory: subCat })
+          }))}
+        />
+      )}
       <SearchBody
         courses={courses?.filter((course) => {
-          const nameFilter = course?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase());
+          const nameFilter = course?.name
+            ?.trim()
+            ?.toLowerCase()
+            ?.includes(searchQuery?.trim()?.toLowerCase());
           let langFilter = true,
             catFilter = true,
             subCatFilter = true,
             typeFilter = true;
 
-          if (filters?.lang) langFilter = course?.language?.includes(filters?.lang);
-          if (filters?.category) catFilter = course?.category?.includes(filters?.category);
+          if (filters?.lang)
+            langFilter = course?.language
+              ?.map((lang) => lang?.toLowerCase()?.trim())
+              ?.includes(filters?.lang?.trim()?.toLowerCase());
+          if (filters?.category)
+            catFilter = course?.category
+              ?.trim()
+              ?.toLowerCase()
+              ?.includes(filters?.category?.trim()?.toLowerCase());
           if (filters?.subCategory)
             subCatFilter =
               course?.sub_categories?.findIndex((subCat) =>
-                subCat?.name?.includes(filters?.subCategory)
-              ) > 0;
-          if (filters?.type) typeFilter = course?.type?.includes(filters?.type);
-
-          if (nameFilter && langFilter && catFilter && subCatFilter && typeFilter)
-            console.log(course);
+                subCat?.name
+                  ?.trim()
+                  ?.toLowerCase()
+                  ?.includes(filters?.subCategory?.trim()?.toLowerCase())
+              ) > 0 ||
+              course?.sub_category
+                ?.trim()
+                ?.toLowerCase()
+                ?.includes(filters?.subCategory?.trim()?.toLowerCase());
+          if (filters?.type)
+            typeFilter = course?.type
+              ?.trim()
+              ?.toLowerCase()
+              ?.includes(filters?.type?.trim()?.toLowerCase());
 
           return nameFilter && langFilter && catFilter && subCatFilter && typeFilter;
         })}

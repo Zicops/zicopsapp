@@ -40,11 +40,11 @@ const LoginEmail = ({ chngeHandle, type, placeholder, tabIndex = -1 }) => {
         placeholder={placeholder}
         onChange={chngeHandle}
         autoComplete={'off'}
-        tabIndex={tabIndex}
+        // tabIndex={tabIndex}
         onFocus={() => setFocus(true)}
         // style={{ margin: '5px 0px' }}
       />
-      <button onClick={handleShowPassword}>
+      <button onClick={handleShowPassword} type="button" tabIndex="-1">
         {show ? <Visibility color={'primary'} /> : <VisibilityOff sx={{ color: '#737373' }} />}
       </button>
     </div>

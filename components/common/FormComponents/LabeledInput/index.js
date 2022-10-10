@@ -4,6 +4,7 @@ import { labeledInputWrapper, halfInputWrapper } from '../formComponents.module.
 export default function LabeledInput({
   inputOptions,
   styleClass,
+  inputClass,
   changeHandler,
   isFiftyFifty = false
 }) {
@@ -29,7 +30,7 @@ export default function LabeledInput({
 
       <input
         type={type}
-        className={label ? 'w-75' : 'w-100'}
+        className={`${label ? 'w-75' : 'w-100'} ${inputClass}`}
         name={inputName}
         placeholder={placeholder}
         value={value?.toString() || ''}
@@ -57,7 +58,7 @@ export default function LabeledInput({
 
 const LabeledInputObj = shape({
   inputName: string.isRequired,
-  label: string.isRequired,
+  label: string,
   placeholder: string.isRequired,
   value: string || number,
   maxLength: number,

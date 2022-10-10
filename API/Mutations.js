@@ -50,6 +50,8 @@ export const ADD_COURSE = gql`
     addCourse(
       course: {
         name: $name
+        lspId: "Zicops learning Spaces"
+        publisher: "Zicops"
         description: $description
         summary: $summary
         instructor: $instructor
@@ -119,6 +121,101 @@ export const ADD_COURSE = gql`
         name
         rank
       }
+    }
+  }
+`;
+
+export const ADD_CAT_MAIN = gql`
+  mutation addCatMain(
+    $Name: String
+    $Description: String
+    $ImageUrl: String
+    $ImageFile: Upload
+    $Code: String
+    $CreatedAt: String
+    $UpdatedAt: String
+    $CreatedBy: String
+    $UpdatedBy: String
+    $IsActive: Boolean
+    $LspId: String
+  ) {
+    addCatMain(
+      input: [
+        {
+          Name: $Name
+          Description: $Description
+          ImageUrl: $ImageUrl
+          ImageFile: $ImageFile
+          Code: $Code
+          CreatedAt: $CreatedAt
+          UpdatedAt: $UpdatedAt
+          CreatedBy: $CreatedBy
+          UpdatedBy: $UpdatedBy
+          IsActive: $IsActive
+          LspId: $LspId
+        }
+      ]
+    ) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      LspId
+    }
+  }
+`;
+
+export const ADD_SUB_CAT_MAIN = gql`
+  mutation addSubCatMain(
+    $Name: String
+    $Description: String
+    $ImageUrl: String
+    $ImageFile: Upload
+    $Code: String
+    $CatId: String
+    $CreatedAt: String
+    $UpdatedAt: String
+    $CreatedBy: String
+    $UpdatedBy: String
+    $IsActive: Boolean
+    $LspId: String
+  ) {
+    addSubCatMain(
+      input: [
+        {
+          Name: $Name
+          Description: $Description
+          ImageUrl: $ImageUrl
+          ImageFile: $ImageFile
+          Code: $Code
+          CatId: $CatId
+          CreatedAt: $CreatedAt
+          UpdatedAt: $UpdatedAt
+          CreatedBy: $CreatedBy
+          UpdatedBy: $UpdatedBy
+          IsActive: $IsActive
+          LspId: $LspId
+        }
+      ]
+    ) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CatId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      LspId
     }
   }
 `;
@@ -630,6 +727,55 @@ export const ADD_TOPIC_QUIZ = gql`
   ) {
     addQuiz(
       quiz: {
+        name: $name
+        category: $category
+        type: $type
+        isMandatory: $isMandatory
+        topicId: $topicId
+        courseId: $courseId
+        questionId: $questionId
+        qbId: $qbId
+        weightage: $weightage
+        sequence: $sequence
+        startTime: $startTime
+      }
+    ) {
+      id
+      name
+      category
+      type
+      isMandatory
+      created_at
+      updated_at
+      topicId
+      courseId
+      questionId
+      qbId
+      weightage
+      sequence
+      startTime
+    }
+  }
+`;
+
+export const UPDATE_TOPIC_QUIZ = gql`
+  mutation updateQuiz(
+    $id: ID
+    $name: String
+    $category: String
+    $type: String
+    $isMandatory: Boolean
+    $topicId: String
+    $courseId: String
+    $questionId: String
+    $qbId: String
+    $weightage: Int
+    $sequence: Int
+    $startTime: Int
+  ) {
+    updateQuiz(
+      quiz: {
+        id: $id
         name: $name
         category: $category
         type: $type
@@ -1622,5 +1768,41 @@ export const UPDATE_TOPIC_EXAM = gql`
       updated_at
       language
     }
+  }
+`;
+
+export const UPLOAD_STATIC_CONTENT = gql`
+  mutation uploadTopicStaticContent(
+    $type: Type
+    $file: Upload
+    $courseId: String
+    $contentId: String
+    $url: String
+  ) {
+    uploadTopicStaticContent(
+      file: { type: $type, file: $file, courseId: $courseId, contentId: $contentId, url: $url }
+    ) {
+      success
+      url
+    }
+  }
+`;
+
+// DELETE
+export const DELETE_CAT_MAIN = gql`
+  mutation deleteCatMain($id: ID) {
+    deleteCatMain(id: $id)
+  }
+`;
+
+export const DELETE_SUB_CAT_MAIN = gql`
+  mutation deleteSubCatMain($id: ID) {
+    deleteSubCatMain(id: $id)
+  }
+`;
+
+export const DELETE_COURSE = gql`
+  mutation deleteCourse($id: ID) {
+    deleteCourse(id: $id)
   }
 `;

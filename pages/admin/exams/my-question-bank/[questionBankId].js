@@ -1,4 +1,5 @@
 import AddQuestionBank from '@/components/AdminExamComps/QuestionBanks/AddQuestionBank';
+import QuestionBankData from '@/components/AdminExamComps/QuestionBanks/QuestionBankData';
 import PopUp from '@/components/common/PopUp';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
@@ -101,13 +102,20 @@ export default function MyQuestionBanks() {
               }}
             />
           ) : (
-            <QuestionsTable
+            <QuestionBankData
               isEdit={true}
               openEditQuestionMasterTab={(questionData) => {
                 setEditQuestionData(questionData);
                 setShowQuestionForm(true);
               }}
             />
+            // <QuestionsTable
+            //   isEdit={true}
+            //   openEditQuestionMasterTab={(questionData) => {
+            //     setEditQuestionData(questionData);
+            //     setShowQuestionForm(true);
+            //   }}
+            // />
           )}
         </MainBodyBox>
       </MainBody>

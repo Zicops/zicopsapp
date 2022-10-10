@@ -4,9 +4,11 @@ import NextButton from '@/components/common/NextButton';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS, TOOLTIP_STYLE } from '@/components/common/ToolTip/tooltip.helper';
 import { TOOLTIP_IMG_SRC } from '@/helper/constants.helper';
+import { MAX_ATTEMPT_COUNT } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import Select from 'react-select';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../../../API/Queries';
 import { changeHandler } from '../../../../../helper/common.helper';
@@ -32,7 +34,7 @@ export default function ExamMaster() {
 
   const router = useRouter();
   const examId = router?.query?.examId;
-  const isPreview = router.query?.isPreview || false;
+  const isPreview = router.query?.isPreview || router.asPath?.includes('view') || false;
 
   const { getTotalMarks, saveExamData } = useHandleExamTab();
 
@@ -75,17 +77,56 @@ export default function ExamMaster() {
     });
   }, [questionPaperOptions, router.query, examTabData?.qpId]);
 
-  const maxAttemptsOptions = [1, 2, 3, 4, 5].map((val) => ({ value: val, label: val }));
+  const maxAttemptsOptions = Array(MAX_ATTEMPT_COUNT)
+    .fill(null)
+    .map((val, i) => ({
+      value: i + 1,
+      label: i + 1
+    }));
 
   const defaultStyles = customSelectStyles();
   const customStyles = {
     ...defaultStyles,
     container: () => ({
-      ...defaultStyles.container,
-      margin: '0px',
-      padding: '0px'
+      ...defaultStyles.container(),
+      width: '100%',
+      margin: 'auto',
+      height: '25px',
+      position: 'relative'
+    }),
+    control: () => ({
+      ...defaultStyles.control(),
+      display: 'flex',
+      border: '1px solid transparent',
+      background: 'transparent',
+      borderLeft: '2px solid var(--dark_three)',
+      margin: 'auto',
+      height: '25px',
+      width: '100%',
+      height: '100%',
+      textAlign: 'left'
+    }),
+    option: () => ({
+      ...defaultStyles.option(),
+      height: '100%',
+      width: '100%',
+      padding: '5px',
+      paddingLeft: '10px',
+      borderBottom: '1px solid var(--dark_three)'
     })
   };
+
+  const passingOptions = [
+    { value: 'None', label: 'None' },
+    { value: 'Marks', label: 'Marks' },
+    { value: 'Percentage', label: 'Percentage' }
+  ];
+  let passingCriteriaText = 'No passing criteria would be applicable for this exam.';
+  if (examTabData?.passing_criteria_type === 'Marks') {
+    passingCriteriaText = 'Enter passing marks for this exam';
+  } else if (examTabData?.passing_criteria_type === 'Percentage') {
+    passingCriteriaText = 'Enter passing percentage for this exam';
+  }
 
   return (
     <>
@@ -182,7 +223,9 @@ export default function ExamMaster() {
         </label>
 
         <div
-          className={`${styles.passingCriteriaInnerContainer} ${styles.hasValue}`}
+          className={`${styles.passingCriteriaInnerContainer} ${
+            examTabData?.passing_criteria ? styles.hasValue : ''
+          } ${isPreview ? styles.disabled : ''}`}
           onFocus={(e) => e.currentTarget.classList.add(styles.focus)}
           onBlur={(e) => e.currentTarget.classList.remove(styles.focus)}>
           <input
@@ -199,21 +242,20 @@ export default function ExamMaster() {
             onChange={(e) => {
               let value = +e.target.value;
               let type = examTabData?.passing_criteria_type;
-              const isMarks = examTabData?.passing_criteria_type === 'Marks';
+              let totalMarks = examTabData?.total_marks || 0;
 
-              if (isMarks && value > examTabData?.total_marks) {
-                value = examTabData?.total_marks;
+              if (value === 0) {
+                type = 'None';
+              } else if (type === 'None') {
+                type = 'Marks';
               }
+
+              const isMarks = type === 'Marks';
+              if (isMarks && value > totalMarks) value = totalMarks;
 
               if (!isMarks) {
                 if (value > 100) value = 100;
                 if (value < 0) value = 0;
-              }
-
-              if (value === 0) {
-                type = 'None';
-              } else {
-                type = 'Marks';
               }
 
               setExamTabData({
@@ -224,24 +266,43 @@ export default function ExamMaster() {
             }}
           />
 
-          {/* <div>
+          <div style={{ position: 'relative', flex: '1' }}>
             <Select
-              options={[
-                { label: 'Marks', value: 'Marks' },
-                { label: 'Percentage', value: 'Percentage' }
-              ]}
+              options={passingOptions}
               value={{
                 label: examTabData?.passing_criteria_type,
                 value: examTabData?.passing_criteria_type
               }}
               name="passing_criteria_type"
               className="w-100"
+              isDisabled={isPreview}
               styles={customStyles}
               isSearchable={false}
-              onChange={(e) => setExamTabData({ ...examTabData, passing_criteria_type: e.value })}
+              // onChange={(e) => setExamTabData({ ...examTabData, passing_criteria_type: e.value })}
+              onChange={(e) => {
+                let marks = examTabData?.passing_criteria;
+                const isMarks = e?.value === 'Marks';
+
+                if (isMarks && marks > examTabData?.total_marks) {
+                  marks = examTabData?.total_marks;
+                }
+                if (!isMarks) {
+                  if (marks > 100) marks = 100;
+                  if (marks < 0) marks = 0;
+                }
+                if (e?.value === 'None') {
+                  marks = 0;
+                }
+
+                setExamTabData({
+                  ...examTabData,
+                  passing_criteria_type: e?.value,
+                  passing_criteria: marks
+                });
+              }}
             />
-          </div> */}
-          <select
+          </div>
+          {/* <select
             disabled={isPreview}
             onChange={(e) => {
               let marks = examTabData?.passing_criteria;
@@ -270,7 +331,7 @@ export default function ExamMaster() {
             <option value="None">None</option>
             <option value="Marks">Marks</option>
             <option value="Percentage">Percentage</option>
-          </select>
+          </select> */}
         </div>
       </div>
 

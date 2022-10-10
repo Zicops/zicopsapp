@@ -136,3 +136,98 @@ export function getUnixFromDate(dateObj = new Date()) {
 
   return Math.floor(newDate.getTime() / 1000) || 0;
 }
+
+export async function delay(ms) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}
+
+export function limitValueInRange(value, min = 0, max = 100) {
+  if (typeof value !== 'number') return 0;
+  return Math.max(Math.min(value, max), min);
+}
+
+export async function generateVideoThumbnails(videoData, thumbnailsGap, duration) {
+  let thumbnail = [];
+  let fractions = [];
+  for (let i = 0; i <= duration; i += thumbnailsGap) {
+    fractions.push(Math.floor(i));
+  }
+  fractions.map(async (time) => {
+    let oneThums = await getVideoThumbnail(videoData, time);
+    thumbnail.push(oneThums);
+  });
+  return thumbnail;
+}
+async function getVideoThumbnail(videoData, videoTimeInSeconds) {
+  return new Promise((resolve, reject) => {
+    const SRC = `/api/overrideCors?filePath=${encodeURIComponent(videoData.videoSrc)}`;
+    const video = document.createElement('video');
+
+    var timeupdate = function () {
+      if (snapImage()) {
+        video.removeEventListener('timeupdate', timeupdate);
+        video.pause();
+      }
+    };
+    video.addEventListener('loadeddata', function () {
+      if (snapImage()) {
+        video.removeEventListener('timeupdate', timeupdate);
+      }
+    });
+    var snapImage = function () {
+      var canvas = document.createElement('canvas');
+      var scaleFactor = 0.2;
+      canvas.width = video.videoWidth * scaleFactor;
+      canvas.height = video.videoHeight * scaleFactor;
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      var image = canvas.toDataURL();
+      var success = image.length > 10000;
+      if (success) {
+        URL.revokeObjectURL(SRC);
+        resolve(image);
+      }
+      return success;
+    };
+    video.addEventListener('timeupdate', timeupdate);
+    video.preload = 'metadata';
+    video.src = SRC;
+    // Load video in Safari / IE11
+    video.muted = true;
+    video.playsInline = true;
+    video.currentTime = videoTimeInSeconds;
+    video.play();
+    console.log(video.currentTime, videoTimeInSeconds);
+  });
+}
+
+export function getFileNameFromUrl(fileUrl) {
+  if (!fileUrl) return '';
+
+  return decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop());
+}
+
+// https://stackoverflow.com/a/23013574
+export function downloadFileFromURI(uri, downloadFileName) {
+  var link = document.createElement('a');
+
+  link.setAttribute('download', downloadFileName);
+  link.href = uri;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  return true;
+}
+
+export function parseJson(stringifiedJson) {
+  if (!stringifiedJson) return '';
+  try {
+    return JSON.parse(stringifiedJson);
+  } catch (err) {
+    console.log(err);
+    return '';
+  }
+}

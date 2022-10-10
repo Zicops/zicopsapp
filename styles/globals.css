@@ -16,7 +16,7 @@
   --background_body: #acacac;
 
   --footer_background: #001111;
-
+  --error: #cf3e3e;
   --dark_one: #1a1a1a;
   --dark_two: #202222;
   --dark_three: #868f8f;
@@ -24,8 +24,12 @@
   /* --header-bg: #222529; */
   --header-bg: #0b0c0d;
   --skeleton-dark: dimgray;
+  --popup-bg-color: #323232;
 }
-
+* {
+  /* border: 1px solid rgb(56, 231, 91); */
+  /* background-color: rgba(red, 0.1)!important; */
+}
 html,
 body, h1, h2, h3, h4, h5, p, ul, li {
   padding: 0;

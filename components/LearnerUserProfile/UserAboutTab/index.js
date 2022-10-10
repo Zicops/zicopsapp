@@ -4,6 +4,7 @@ import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUs
 import ProfilePreferences from '@/components/LoginComp/ProfilePreferences';
 import SubCategoriesPreview from '@/components/LoginComp/SubCategoriesPreview';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { parseJson } from '@/helper/utils.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
@@ -36,7 +37,7 @@ const UserAboutTab = () => {
 
   useEffect(async () => {
     const { id } = getUserData();
-    const lspData = JSON.parse(sessionStorage.getItem('lspData'));
+    const lspData = parseJson(sessionStorage.getItem('lspData'));
 
     let data;
 
@@ -66,7 +67,7 @@ const UserAboutTab = () => {
     const userPreferences = await getUserPreferences(userLspId);
     // const preferenceData = userPreferences.slice(0, 5);
     const preferenceData = userPreferences.filter((item) => item?.is_active);
-    console.log(preferenceData);
+    console.log(preferenceData, userPreferences);
 
     if (preferenceData) setSubCategory([...preferenceData]);
 
@@ -124,6 +125,7 @@ const UserAboutTab = () => {
               setSelected={setSelected}
               setCurrentComponent={setCurrentComponent}
               customStyle={[styles.prefContainer, styles.prefCat, styles.prefNav]}
+              customClass={styles.preferences}
             />
           )}
           {currentComponent === 3 && (

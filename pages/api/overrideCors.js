@@ -1,11 +1,12 @@
 import { get } from 'https';
 
-export default async function getSubtitleFile(req, res) {
-  res.setHeader('content-type', 'text/plain; charset=utf-8');
+export default async function overrideCors(req, res) {
+  // res.setHeader('content-type', 'text/plain; charset=utf-8');
   get(req?.query?.filePath, (stream) => {
     stream.pipe(res);
   });
   return;
+}
 
   // const filePath = req?.query?.filePath;
   // console.log(req?.query?.filePath);
@@ -54,4 +55,3 @@ export default async function getSubtitleFile(req, res) {
   //   if (error) console.error(error);
   // });
   // res.json({ hello: 'world' });
-}

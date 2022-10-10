@@ -24,7 +24,7 @@ export function getQuestionOptionsObject(data = {}) {
     file: data.file || null,
 
     qmId: data.qmId || null,
-    isActive: data.isActive || false
+    isActive: data.isActive || true
   };
 }
 

@@ -25,11 +25,13 @@
 
 .coursebody {
   background-color: $bgTile;
+  min-height: 100vh;
 }
 .navbarOverrideElementClose {
   position: absolute;
   top: 12px;
   right: 50px;
+  cursor: pointer;
 }
 .navbarOverrideElementClose:hover {
   box-shadow: 0px 0px 55px 0px $darkOne;
@@ -104,8 +106,8 @@
   background-color: $bgTile;
 }
 .topic_img {
-  max-width: 100px;
-  max-height: 100px;
+  width: 100px;
+  height: 100px;
   margin-left: 10px;
   margin-right: 30px;
   overflow: hidden;
@@ -120,7 +122,7 @@
   width: 50%;
   margin-right: 5%;
   display: flex;
-  .topic_number{
+  .topic_number {
     color: $white;
     font-size: 16px;
     font-weight: bold;
@@ -134,8 +136,8 @@
     font-size: 16px;
   }
 }
-.topic_loop:hover .topic_text .topic_number span{
-    color: $primary;
+.topic_loop:hover .topic_text .topic_number span {
+  color: $primary;
 }
 .topic_loop:hover .topic_heading h4 {
   color: $primary;
@@ -283,4 +285,18 @@
   color: $white;
   font-size: 20px;
   font-weight: 700;
+}
+
+.fileContainer {
+  color: $white;
+
+  h3 {
+    margin: 10px;
+  }
+
+  .bookmarkContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
 }

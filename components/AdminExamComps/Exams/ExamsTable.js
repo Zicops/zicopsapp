@@ -65,7 +65,7 @@ export default function ExamsTable({ isEdit = false }) {
         exam_end: +schData?.End ? new Date(+schData?.End * 1000) : null,
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
-        is_schedule_active: schData?.IsActive || false
+        is_schedule_active: schData?.IsActive || true
       };
 
       if (!schObj.exam_end) {
@@ -131,9 +131,9 @@ export default function ExamsTable({ isEdit = false }) {
                 outline: '0',
                 border: '0'
               }}
-              onClick={() => router.push(`${addRoute}?isPreview=true`, addRoute)}>
+              onClick={() => router.push(`${router.asPath}/view/${params.row.id}`)}>
               <ToolTip title="View Exam" placement="bottom">
-                <img src="/images/svg/eye-line.svg" width={20}></img>
+              <img src="/images/svg/eye-line.svg" width={20}></img>
               </ToolTip>
             </button>
             {isEdit && (

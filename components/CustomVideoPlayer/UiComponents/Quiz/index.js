@@ -16,6 +16,7 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { QuizProgressDataAtom, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { useMutation } from '@apollo/client';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { questions } from '../../../examComps/QuickQuiz/Logic/QuickQuiz.helper';
@@ -37,6 +38,7 @@ export default function Quiz({
     client: userClient
   });
 
+  const router = useRouter();
   const quizData = useRecoilValue(QuizAtom);
   const userData = useRecoilValue(UserStateAtom);
   const videoData = useRecoilValue(VideoAtom);
@@ -106,6 +108,10 @@ export default function Quiz({
   }, []);
 
   useEffect(() => {
+    if (router.asPath?.includes('preview')) return setIsSubmitDisabled(true);
+  }, []);
+
+  useEffect(() => {
     if (isSubmitDisabled) {
       setIsSubmitDisabled(false);
       afterSubmit();
@@ -116,10 +122,8 @@ export default function Quiz({
     const isCompleted = !quizData
       ?.filter((quiz) => quiz?.topicId === topicId)
       ?.some((quiz) => {
-        const isPassed = quizProgress?.find(
-          (qp) => qp?.quiz_id === quiz?.id && qp?.result === 'passed'
-        );
-        return !isPassed;
+        const isAttempted = quizProgress?.find((qp) => qp?.quiz_id === quiz?.id);
+        return !isAttempted;
       });
 
     return isCompleted;
@@ -147,7 +151,8 @@ export default function Quiz({
       user_cp_id: userCP?.user_cp_id,
       user_course_id: userCourseData?.userCourseMapping?.user_course_id,
       quiz_id: currentQuizData?.id,
-      quiz_attempt: quizProgressData?.filter((quiz) => quiz?.topic_id === topicId)?.length || 1,
+      quiz_attempt:
+        quizProgressData?.filter((quiz) => quiz?.quiz_id === currentQuizData?.id)?.length || 1,
       topic_id: topicId,
       result: _option?.find((op) => op?.id === selectedOption?.id)?.IsCorrect ? 'passed' : 'failed',
       is_active: true

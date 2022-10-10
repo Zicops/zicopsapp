@@ -84,7 +84,7 @@ const ChangePasswordScreen = ({ setPage }) => {
             tabIndex={2}
           />
           <div className="change_buttons">
-            <LoginButton title={'Cancel'} />
+            {/* <LoginButton title={'Cancel'} /> */}
             <LoginButton title={'Change'} handleClick={handleSubmit} />
           </div>
         </div>

@@ -127,12 +127,31 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     }).catch((err) => {
       if (err) alert('Module Load Error');
     });
-    const moduleDataLoaded = moduleRes?.data?.getCourseModules;
-    const chapterDataLoaded = chapterRes?.data?.getCourseChapters;
-    const topicDataLoaded = topicRes?.data?.getTopics;
-    const topicContentDataLoaded = topicContentRes?.data?.getTopicContentByCourseId;
+    const moduleDataLoaded = structuredClone(moduleRes?.data?.getCourseModules);
+    const chapterDataLoaded = structuredClone(chapterRes?.data?.getCourseChapters);
+    const topicDataLoaded = structuredClone(topicRes?.data?.getTopics);
+    const topicContentDataLoaded = structuredClone(
+      topicContentRes?.data?.getTopicContentByCourseId
+    );
 
     // new logic
+    // chapterDataLoaded
+    //   ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
+    //   ?.forEach((chapter) => {
+    //     const _topics =
+    //       _topicDataLoaded
+    //         ?.filter((topic) => topic?.chapterId === chapter?.id)
+    //         ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
+    //         ?.map((topic) => {
+    //           const filteredTopicContent = filterTopicContent(topicContentDataLoaded, topic?.id);
+    //           // console.log(filteredTopicContent);
+    //           topic.topicContentData = filteredTopicContent;
+    //           topic.userProgress = {};
+    //           return topic;
+    //         }) || [];
+
+    //     topicDataLoaded.push(..._topics);
+    //   });
     topicDataLoaded
       ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
       ?.forEach((topic) => {
@@ -201,13 +220,16 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
           allQuizProgress.push(...quizProgessDataRes?.getUserQuizAttempts);
       }
       // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
-      console.log(allQuizProgress);
+      // console.log(allQuizProgress);
       setQuizProgressData(allQuizProgress);
 
       const data = { userCourseMapping: {}, userCourseProgress: [] };
       const mapRes = await loadUserCourseMaps({
         variables: { userId: userData?.id, courseId: fullCourse?.id },
         fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        if (err?.message?.includes('no user course found')) return;
+        if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
       });
       // console.log(mapRes);
       if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
@@ -222,6 +244,8 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
             userCourseId: data?.userCourseMapping?.user_course_id
           },
           fetchPolicy: 'no-cache'
+        }).catch((err) => {
+          if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
         });
         const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
         if (courseProgress?.length) data.userCourseProgress = courseProgress;

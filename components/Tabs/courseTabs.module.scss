@@ -202,6 +202,15 @@
   padding: 8px 10px;
 }
 
+.formFilled {
+  border-color: $primary !important;
+  box-shadow: 0px 0px 10px 0px $primary;
+
+  &:hover {
+    color: $primary !important;
+  }
+}
+
 .centerAccordinBtn {
   display: flex;
   justify-content: center;
@@ -453,7 +462,8 @@
   color: $white;
   cursor: pointer;
   font-size: large;
-
+  padding: 5px 15px 5px 20px;
+  border: 1px solid transparent;
   span {
     margin-right: 12px;
   }
@@ -461,6 +471,13 @@
   img {
     align-items: center;
   }
+}
+
+.activeClass {
+  border: 1px solid $primary;
+  padding: 5px 15px 5px 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 5px 0 $primary;
 }
 
 .quizInput {
@@ -488,6 +505,29 @@
       label {
         padding-left: 10%;
       }
+    }
+  }
+}
+
+.classroomForm {
+  min-height: 100px;
+  text-align: center;
+  margin: 10px;
+}
+
+.editQuizContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  .editQuiz {
+    height: 20px;
+    cursor: pointer;
+
+    img {
+      height: 100%;
+      object-fit: cover;
     }
   }
 }

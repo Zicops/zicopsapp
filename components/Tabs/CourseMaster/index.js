@@ -1,10 +1,14 @@
+import { DELETE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import { deleteData } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
-import { loadCatSubCat } from '@/helper/data.helper';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { courseErrorAtom } from '@/state/atoms/module.atoms';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
-import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
-import { getQueryData } from '../../../helper/api.helper';
+import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
@@ -17,13 +21,16 @@ import useHandleTabs from '../Logic/useHandleTabs';
 export default function CourseMaster() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
-  const { data } = getQueryData(GET_CATS_N_SUB_CATS);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const router = useRouter();
 
   // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
   // update sub cat based on cat
-  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, fullCourse?.category);
+  // loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, fullCourse?.category);
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat(fullCourse?.category);
 
   // const allCatOptions = [];
   // data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
@@ -31,7 +38,7 @@ export default function CourseMaster() {
     inputName: 'category',
     label: 'Course Category',
     placeholder: 'Select the category of the course',
-    options: catAndSubCatOption.cat,
+    options: catSubCat?.cat,
     value: fullCourse?.category
       ? { value: fullCourse?.category, label: fullCourse?.category }
       : null,
@@ -44,22 +51,15 @@ export default function CourseMaster() {
     inputName: 'sub_category',
     label: 'Select Base Sub-category',
     placeholder: 'Select the sub-category of the course',
-    options: catAndSubCatOption.subCat,
+    options: catSubCat.subCat,
     value: fullCourse?.sub_category
       ? { value: fullCourse?.sub_category, label: fullCourse?.sub_category }
       : null,
     isSearchEnable: true
   };
 
-  const allOwners = [
-    { value: 'Abhishek', label: 'Abhishek' },
-    { value: 'Sonali', label: 'Sonali' },
-    { value: 'Joy', label: 'Joy' },
-    { value: 'Puneet', label: 'Puneet' },
-    { value: 'Vaishnavi', label: 'Vaishnavi' },
-    { value: 'Harshad', label: 'Harshad' },
-    { value: 'Rishav', label: 'Rishav' }
-  ];
+  const allOwners = [{ value: 'Zicops', label: 'Zicops' }];
+
   const ownerDropdownOptions = {
     inputName: 'owner',
     label: 'Course Owner',
@@ -88,13 +88,14 @@ export default function CourseMaster() {
     <>
       {/* course name */}
       <LabeledInput
-        styleClass={styles.marginBottom}
+        styleClass={`${styles.marginBottom}`}
+        inputClass={!fullCourse?.name?.length && courseError?.master ? 'error' : ''}
         inputOptions={{
           inputName: 'name',
           label: 'Name',
           placeholder: 'Enter name of the course (Upto 60 characters)',
           maxLength: 60,
-          value: fullCourse.name
+          value: fullCourse?.name
         }}
         changeHandler={handleChange}
       />
@@ -102,9 +103,13 @@ export default function CourseMaster() {
       {/* course category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={!fullCourse?.category?.length && courseError?.master}
         dropdownOptions={categoryDropdownOptions}
         changeHandler={
-          (e) => updateCourseMaster({ ...fullCourse, category: e.value, sub_category: '' })
+          (e) => {
+            setActiveCatId(e);
+            updateCourseMaster({ ...fullCourse, category: e.value, sub_category: '' });
+          }
           // changeHandler(e, fullCourse, updateCourseMaster, categoryDropdownOptions.inputName)
         }
       />
@@ -112,6 +117,7 @@ export default function CourseMaster() {
       {/* course sub category */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={!fullCourse?.sub_category?.length && courseError?.master}
         dropdownOptions={subcategoryDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, subcategoryDropdownOptions.inputName)
@@ -121,6 +127,7 @@ export default function CourseMaster() {
       {/* course owner */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={!fullCourse?.owner?.length && courseError?.master}
         dropdownOptions={ownerDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, ownerDropdownOptions.inputName)
@@ -130,6 +137,7 @@ export default function CourseMaster() {
       {/* language */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        isError={!fullCourse?.language?.length && courseError?.master}
         dropdownOptions={languageDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
@@ -156,7 +164,17 @@ export default function CourseMaster() {
         />
       </div>
 
-      <NextButton tabIndex={1} tooltipTitle={ADMIN_COURSES.myCourses.courseMaster.nextBtn} />
+      <NextButton
+        tabIndex={1}
+        isActive={
+          fullCourse?.name &&
+          fullCourse?.category &&
+          fullCourse?.sub_category &&
+          fullCourse?.owner &&
+          fullCourse?.language?.length
+        }
+        tooltipTitle={ADMIN_COURSES.myCourses.courseMaster.nextBtn}
+      />
 
       {showConfirmBox && (
         <ConfirmPopUp
@@ -164,9 +182,15 @@ export default function CourseMaster() {
             'Are you sure about deleting this course? This will delete the course permanently!'
           }
           btnObj={{
-            handleClickLeft: () => {
-              updateCourseMaster({ ...fullCourse, is_active: false });
+            handleClickLeft: async () => {
+              const isDeleted = await deleteData(DELETE_COURSE, { id: fullCourse?.id });
+              // console.log(isDeleted);
               setShowConfirmBox(false);
+
+              if (!isDeleted?.deleteCourse)
+                return setToastMsg({ type: 'danger', message: 'Course Delete Error' });
+
+              router.push('/admin/course/my-courses');
             },
             handleClickRight: () => setShowConfirmBox(false)
           }}

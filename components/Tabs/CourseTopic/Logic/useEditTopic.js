@@ -11,15 +11,17 @@ import {
   CREATE_QUESTION_BANK,
   mutationClient,
   UPDATE_COURSE_TOPIC,
+  UPDATE_QUESTION_BANK_QUESTION,
+  UPDATE_QUESTION_OPTIONS,
   UPDATE_TOPIC_CONTENT,
+  UPDATE_TOPIC_QUIZ,
+  UPLOAD_STATIC_CONTENT,
   UPLOAD_TOPIC_CONTENT_SUBTITLE,
   UPLOAD_TOPIC_CONTENT_VIDEO,
   UPLOAD_TOPIC_RESOURCE
 } from '../../../../API/Mutations';
 import {
   GET_COURSE_TOPICS_CONTENT,
-  GET_LATEST_QUESTION_BANK,
-  GET_QUESTIONS_NAMES,
   GET_TOPIC_QUIZ,
   GET_TOPIC_RESOURCES,
   queryClient
@@ -28,7 +30,6 @@ import { filterTopicContent } from '../../../../helper/data.helper';
 import {
   BingeAtom,
   getBingeObject,
-  getQuizObject,
   getTopicObject,
   isLoadingAtom,
   QuizAtom,
@@ -75,6 +76,8 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   const [uploadCourseContentVideo, { loading: uploadVideoLoading }] = useMutation(
     UPLOAD_TOPIC_CONTENT_VIDEO
   );
+  const [uploadStaticContent, { loading: uploadStaticLoading }] =
+    useMutation(UPLOAD_STATIC_CONTENT);
   const [uploadCourseContentSubtitle, { loading: uploadSubtileLoading }] = useMutation(
     UPLOAD_TOPIC_CONTENT_SUBTITLE
   );
@@ -86,10 +89,20 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   const [addQuestion, { error: addQuestionErr }] = useMutation(ADD_QUESTION_BANK_QUESTION, {
     client: mutationClient
   });
+  const [updateQuestion, { error: updateQuestionErr }] = useMutation(
+    UPDATE_QUESTION_BANK_QUESTION,
+    { client: mutationClient }
+  );
   const [addOption, { error: addOptionErr }] = useMutation(ADD_QUESTION_OPTIONS, {
     client: mutationClient
   });
+  const [updateOption, { error: updateOptionErr }] = useMutation(UPDATE_QUESTION_OPTIONS, {
+    client: mutationClient
+  });
   const [addQuiz] = useMutation(ADD_TOPIC_QUIZ, {
+    client: mutationClient
+  });
+  const [updateQuiz] = useMutation(UPDATE_TOPIC_QUIZ, {
     client: mutationClient
   });
 
@@ -145,7 +158,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
               is_default: content.is_default
             };
             const topicVideoData = {
-              courseId: content.courseId,
+              courseId: fullCourse.id,
               contentId: content.id,
               contentUrl: content.contentUrl,
               file: null
@@ -154,18 +167,17 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             topicContentArray.push(contentData);
             topicVideoArray.push(topicVideoData);
 
-            for (let i = 0; i < content?.subtitleUrl?.length; i++) {
-              const subtitle = content?.subtitleUrl[i];
-              topicSubtitleArray.push({
-                courseId: content.courseId,
-                topicId: content.topicId,
-                subtitleUrl: subtitle.url,
-                language: subtitle.language,
-                file: null
-              });
-            }
-
             if (index === 0) {
+              for (let i = 0; i < content?.subtitleUrl?.length; i++) {
+                const subtitle = content?.subtitleUrl[i];
+                topicSubtitleArray.push({
+                  courseId: fullCourse.id,
+                  topicId: content.topicId,
+                  subtitleUrl: subtitle.url,
+                  language: subtitle.language,
+                  file: null
+                });
+              }
               // binge data
               const startTimeMin = Math.floor(parseInt(content.startTime) / 60);
               const startTimeSec = parseInt(content.startTime) - startTimeMin * 60;
@@ -257,7 +269,11 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   async function handleEditTopicSubmit() {
     console.log('Topic and Resources upload started');
     setIsLoading(
-      addContentLoading && uploadVideoLoading && uploadSubtileLoading && uploadResourcesLoading
+      addContentLoading &&
+        uploadVideoLoading &&
+        uploadStaticLoading &&
+        uploadSubtileLoading &&
+        uploadResourcesLoading
     );
 
     console.log(topicContent);
@@ -308,19 +324,41 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           file: topicVideo[index].file
         };
 
-        await uploadCourseContentVideo({
-          variables: sendVideoData,
-          context: {
-            fetchOptions: {
-              useUpload: true,
-              onProgress: (ev) => {
-                setUploadStatus({
-                  [content.language]: ev.loaded / ev.total
-                });
+        if (sendContentData?.type === 'mp4') {
+          await uploadCourseContentVideo({
+            variables: sendVideoData,
+            context: {
+              fetchOptions: {
+                useUpload: true,
+                onProgress: (ev) => {
+                  setUploadStatus({
+                    [content.language]: ev.loaded / ev.total
+                  });
+                }
               }
             }
-          }
-        }).catch((err) => console.log(err));
+          }).catch((err) => console.log(err));
+        }
+
+        if (sendContentData?.type === 'SCORM') {
+          console.log(topicVideo);
+          sendVideoData.type = sendContentData?.type;
+          if (!!topicVideo[index]?.contentUrl) sendVideoData.url = topicVideo[index]?.contentUrl;
+
+          await uploadStaticContent({
+            variables: sendVideoData,
+            context: {
+              fetchOptions: {
+                useUpload: true,
+                onProgress: (ev) => {
+                  setUploadStatus({
+                    [content.language]: ev.loaded / ev.total
+                  });
+                }
+              }
+            }
+          }).catch((err) => console.log(err));
+        }
 
         console.log(`Topic Video Uploaded with language ${content.language}`);
       }
@@ -329,6 +367,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
     // if (topicSubtitle[index].file) {
     for (let i = 0; i < topicSubtitle.length; i++) {
       const subtitle = topicSubtitle[i];
+      if (!subtitle?.isNew) continue;
       const sendResources = {
         topicId: subtitle.topicId,
         courseId: subtitle.courseId,
@@ -347,6 +386,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
 
     for (let index = 0; index < resources.length; index++) {
       const resource = resources[index];
+      if (!resource?.isNew) continue;
 
       const sendResources = {
         name: resource.name,
@@ -370,7 +410,94 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
 
     for (let i = 0; i < quizData.length; i++) {
       const quiz = quizData[i];
-      if (quiz?.id) continue;
+      if (quiz?.id) {
+        if (quiz?.isEditQuiz) {
+          const sendQuestionData = {
+            id: quiz?.questionId,
+            name: '',
+            description: quiz?.question || '',
+            type: quiz?.type || '',
+            difficulty: quiz.difficulty || 0,
+            hint: quiz?.hint || '',
+            qbmId: quiz?.qbId || null,
+            attachmentType: '',
+
+            // TODO: remove or update later
+            createdBy: 'Zicops',
+            updatedBy: 'Zicops',
+            status: QUESTION_STATUS[1]
+          };
+          console.log(sendQuestionData);
+          const quesRes = await updateQuestion({ variables: sendQuestionData }).catch((err) => {
+            console.log(err);
+            isError = !!err;
+            return setToastMsg({ type: 'danger', message: 'Update Question Error' });
+          });
+          console.log(quesRes);
+
+          if (!quesRes || isError) continue;
+
+          const options = quiz?.options || [];
+          // add option
+          for (let i = 0; i < options.length; i++) {
+            const option = options[i];
+            // console.log(option);
+            if (!option.option && !option.file) continue;
+
+            const sendOptionData = {
+              id: option.id,
+              description: option.option || '',
+              isCorrect: option.isCorrect || false,
+              qmId: sendQuestionData?.id,
+              isActive: true,
+              attachmentType: option.attachmentType || '',
+
+              // TODO: remove or update later
+              createdBy: 'Zicops',
+              updatedBy: 'Zicops'
+            };
+
+            if (option.file) {
+              sendOptionData.file = option.file;
+              sendOptionData.attachmentType = option.attachmentType;
+            }
+
+            // console.log(sendOptionData);
+            await updateOption({ variables: sendOptionData }).catch((err) => {
+              console.log(err);
+              isError = !!err;
+              return setToastMsg({ type: 'danger', message: `Update Option (${i + 1}) Error` });
+            });
+          }
+          // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
+          if (isError) continue;
+
+          const startTime = parseInt(quiz?.startTimeMin) * 60 + parseInt(quiz?.startTimeSec);
+          const sendQuizData = {
+            id: quiz?.id,
+            name: quiz?.name || '',
+            category: fullCourse?.category || '',
+            type: quiz?.type || '',
+            isMandatory: quiz?.isMandatory || false,
+            topicId: quiz?.topicId || '',
+            courseId: quiz?.courseId || '',
+            questionId: questionId,
+            qbId: subCatQb?.id,
+            weightage: 1,
+            sequence: i + 1,
+            startTime: startTime || 0
+          };
+          console.log(sendQuizData);
+          const quizRes = await updateQuiz({ variables: sendQuizData }).catch((err) => {
+            console.log(err);
+            isError = !!err;
+            setToastMsg({ type: 'danger', message: 'Add Question Error' });
+          });
+          console.log(quizRes);
+          continue;
+        }
+        continue;
+      }
 
       let questionId = null;
       if (quiz?.formType === 'create') {
@@ -408,11 +535,13 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         const questionRes = await addQuestion({ variables: sendQuestionData }).catch((err) => {
           console.log(err);
           isError = !!err;
-          return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+          setToastMsg({ type: 'danger', message: 'Add Question Error' });
         });
 
-        if (!questionRes || isError)
-          return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+        if (!questionRes || isError) {
+          setToastMsg({ type: 'danger', message: 'Add Question Error' });
+          continue;
+        }
         questionId = questionRes?.data?.addQuestionBankQuestion?.id;
 
         const options = quiz?.options || [];
@@ -443,7 +572,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           await addOption({ variables: sendOptionData }).catch((err) => {
             console.log(err);
             isError = !!err;
-            return setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+            setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
           });
         }
         // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
@@ -477,7 +606,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
       const quizRes = await addQuiz({ variables: sendQuizData }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add Question Error' });
+        setToastMsg({ type: 'danger', message: 'Add Question Error' });
       });
       console.log(quizRes);
       updateQuizData([...quizData, quizRes?.data?.addQuiz]);

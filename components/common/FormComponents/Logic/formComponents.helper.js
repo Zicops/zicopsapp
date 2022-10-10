@@ -1,5 +1,10 @@
 // labeled dropdown react multi select styles
-export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%', isReadonly) {
+export function customSelectStyles(
+  isFiftyFifty = false,
+  containerWidth = '100%',
+  isError,
+  isReadonly
+) {
   return {
     container: (provided, state) => ({
       ...provided,
@@ -11,6 +16,7 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
 
       if (state?.isFocused || state?.hasValue) borderStyle = '2px solid var(--primary)';
       if (state?.isDisabled) borderStyle = '2px solid var(--dark_three)';
+      if (isError) borderStyle = '2px solid var(--error)';
       if (isReadonly) borderStyle = 'none';
 
       return {
@@ -36,7 +42,6 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
         fill: isReadonly ? 'none' : ''
       }
     }),
-
     menuList: (provided, state) => ({
       ...provided,
       padding: 0,
@@ -65,14 +70,15 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state?.isFocused ? 'var(--black)' : 'var(--dark_two)',
+      backgroundColor: state?.isFocused ? 'var(--black)' : 'var(--popup-bg-color)',
       color: state?.isSelected ? 'var(--white)' : 'var(--dark_three)',
       borderRadius: 0,
       boxShadow: 'none',
       fontSize: '14px',
       cursor: 'pointer',
       '&:hover': {
-        backgroundColor: 'var(--black)'
+        backgroundColor: 'var(--black)',
+        color: 'var(--white)'
       }
     }),
     singleValue: (provided, state) => ({ ...provided, color: 'var(--white)' }),
@@ -97,7 +103,7 @@ export function customSelectStyles(isFiftyFifty = false, containerWidth = '100%'
     noOptionsMessage: (provided) => ({
       ...provided,
       borderRadius: '0',
-      backgroundColor: 'var(--dark_two)',
+      backgroundColor: 'var(--popup-bg-color)',
       color: 'var(--dark_three)',
       fontSize: '14px'
     })

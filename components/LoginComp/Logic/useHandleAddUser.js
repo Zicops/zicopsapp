@@ -7,6 +7,7 @@ import {
   UPDATE_USER,
   userClient
 } from '@/api/UserMutations';
+import { LEARNING_SPACE_ID, USER_STATUS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   getUserObject,
@@ -62,6 +63,7 @@ export default function useHandleAddUserDetails() {
   const [userOrgData, setUserOrgData] = useState(getUserOrgObject());
   const [isOrganizationSetupReady, setIsOrgnizationSetupReady] = useState(false);
   const [isAccountSetupReady, setIsAccountSetupReady] = useState(false);
+  const [isSubmitDisable, setSubmitDisable] = useState(false);
   const [phCountryCode, setPhCountryCode] = useState('IN');
 
   // setting up local states
@@ -98,9 +100,10 @@ export default function useHandleAddUserDetails() {
 
   async function addUserLearningSpaceDetails(sub_categories = [], base_sub_category) {
     console.log(userDataOrgLsp, 'data at start of addUserLearningDetails');
+    setSubmitDisable(true);
     const sendLspData = {
       user_id: userDataAbout?.id,
-      lsp_id: userOrgData?.lsp_id || 'Zicops Learning Space',
+      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
       status: 'Active'
     };
 
@@ -115,7 +118,8 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
-      return router.push('/account-setup');
+      return;
+      // return router.push('/account-setup');
     }
 
     //updating atom after first mutation call
@@ -146,6 +150,7 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
@@ -176,6 +181,7 @@ export default function useHandleAddUserDetails() {
     });
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
@@ -220,6 +226,7 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
@@ -252,6 +259,7 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
@@ -263,6 +271,7 @@ export default function useHandleAddUserDetails() {
       user_role_id: dataRole?.user_role_id
     }));
 
+    setSubmitDisable(false);
     return isError;
   }
 
@@ -272,16 +281,16 @@ export default function useHandleAddUserDetails() {
       first_name: userAboutData?.first_name,
       last_name: userAboutData?.last_name,
 
-      status: userAboutData?.status || 'Active',
+      status: USER_STATUS.activate,
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
-      phone: `+${userAboutData?.phone}`,
+      phone: userAboutData?.phone,
 
       gender: userAboutData?.gender,
       photo_url: userAboutData?.photo_url,
 
       is_verified: true,
-      is_active: true,
+      is_active: userAboutData?.is_active,
 
       created_by: userAboutData?.created_by || 'Zicops',
       updated_by: userAboutData?.updated_by || 'Zicops'
@@ -302,15 +311,15 @@ export default function useHandleAddUserDetails() {
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+      return;
       return router.push('/account-setup');
     }
 
     const data = res?.data?.updateUser;
-    console.log(data);
-    if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
-    setUserDataAbout((prevValue) => ({ ...prevValue, ...data }));
-
-    setTimeout(sessionStorage.setItem('loggedUser', JSON.stringify(userAboutData)), 500);
+    const _userData = { ...userAboutData, ...data };
+    // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
+    setUserDataAbout(_userData);
+    sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
 
     return isError;
   }
@@ -408,7 +417,8 @@ export default function useHandleAddUserDetails() {
     addUserLearningSpaceDetails,
     isOrganizationSetupReady,
     isAccountSetupReady,
-    setPhCountryCode
+    setPhCountryCode,
+    isSubmitDisable
     // addUserOrganizationDetails,
     // addUserLanguageDetails,
     // addUserPreferenceDetails,

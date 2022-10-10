@@ -6,15 +6,56 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuList, Paper } from '@mui/material';
 
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import RightArrow from '../../../public/images/bigarrowright.png';
 import { userContext } from '../../../state/contexts/UserContext';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { languages, preferences } from '../Logic/subMenu.helper.js';
 import styles from '../nav.module.scss';
+import useUserCourseData from '@/helper/hooks.helper.js';
+import { useRecoilState } from 'recoil';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 export default function LeftMenuDropdown({ isOnLearnerSide }) {
   const { isAdmin } = useContext(userContext);
   const { anchorEl, handleClick, handleClose, open, gotoAdmin, gotoUser } = useDropDownHandle();
+  const { getUserPreferences } = useUserCourseData();
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [loading , setLoading] = useState(true);
+  const [preferences , setPreferences] = useState([]);
+
+
+  useEffect(async()=>{
+    const userPreferences = await getUserPreferences();
+    if(!userPreferences?.length) return setLoading(false);
+    const activePreferences = userPreferences?.filter((item)=> item?.is_active);
+    const prefArray = [];
+    for(let i = 0  ; i < 5 ; i++ ){
+      if(activePreferences[i]?.is_base){
+         prefArray.unshift({title:activePreferences[i]?.sub_category ,asUrl:'/search-page' ,link:`${activePreferences[i]?.sub_category}`,customStyle: {
+          backgroundColor: 'var(--primary)',
+          color: 'var(--black)'
+        },
+        customClass: styles['selectedSubMenuItem']})
+      }
+      else{ prefArray.push({title:activePreferences[i]?.sub_category , link:`${activePreferences[i]?.sub_category}` , asUrl:'/search-page'} ) }
+    }
+    // console.log(prefArray,'prefArray'); 
+    prefArray.push({title:<><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 14V16H6V14H0ZM0 2V4H10V2H0ZM10 18V16H18V14H10V12H8V18H10ZM4 6V8H0V10H4V12H6V6H4ZM18 10V8H8V10H18ZM12 6H14V4H18V2H14V0H12V6Z" fill="#C4C4C4"/>
+    </svg>Preference Center</> , link:'/' , isPreferenceCentre:true , customStyle: {
+      backgroundColor: 'var(--black)',
+      color: 'var(--white)',
+      borderColor: 'var(--white)',
+      fontSize:'13px',
+    },
+    customClass: `${styles[`dropdown_item_${activePreferences?.length + 1}`]} ${styles.preferenceCentreMenuItem} `})
+    setPreferences([...prefArray],setLoading(false));
+  },[])
+
+  // useEffect(()=>{
+  //  if(!userOrgData?.sub_categories?.length) return setLoading(false);
+
+  // },[userOrgData])
 
   const menuItemList = [
     {
@@ -33,7 +74,7 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
       id: 2,
       comp: (
         <DropDownSubMenu
-          subData={preferences}
+          subData={loading? [{title:'Loading...',link:'/'}]:preferences}
           menuIcon={RightArrow}
           submenutext="Preferences"
           arrowpositon="right"

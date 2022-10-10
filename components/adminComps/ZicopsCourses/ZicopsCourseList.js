@@ -4,6 +4,7 @@ import ZicopsTable from '../../common/ZicopsTable';
 import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { useState, useEffect } from 'react';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
+import Router from 'next/router';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -39,10 +40,29 @@ const columns = [
     sortable: false,
     renderCell: (params) => {
       return (
-        <button
-          style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}>
-          <Switch {...label} defaultChecked color="success" />
-        </button>
+        <>
+          <button
+            style={{
+              cursor: 'pointer',
+              backgroundColor: 'transparent',
+              margin: '0',
+              padding: '0',
+              outline: '0',
+              border: '0'
+            }}
+            onClick={() => Router.push(`/preview?courseId=${params.row.id}`)}>
+            <img src="/images/svg/eye-line.svg" width={20}></img>
+          </button>
+          <button
+            style={{
+              cursor: 'pointer',
+              backgroundColor: 'transparent',
+              outline: '0',
+              border: '0'
+            }}>
+            <Switch {...label} defaultChecked color="success" />
+          </button>
+        </>
       );
     },
     flex: 0.5

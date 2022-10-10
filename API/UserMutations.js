@@ -84,8 +84,8 @@ export const MAKE_ADMIN_USER = gql`
 `;
 
 export const INVITE_USERS = gql`
-  mutation InviteUsers($emails: [String!]!) {
-    inviteUsers(emails: $emails)
+  mutation InviteUsers($emails: [String!]!, $lsp_id: String!) {
+    inviteUsers(emails: $emails, lsp_id: $lsp_id)
   }
 `;
 
@@ -829,10 +829,135 @@ export const ADD_USER_COHORT = gql`
       cohort_id
       added_by
       membership_status
+      role
       created_by
       updated_by
       created_at
       updated_at
+    }
+  }
+`;
+
+export const UPDATE_USER_COHORT = gql`
+  mutation UpdateUserCohort(
+    $user_cohort_id: ID
+    $user_id: String!
+    $user_lsp_id: String!
+    $cohort_id: String!
+    $added_by: String!
+    $membership_status: String!
+    $role: String!
+  ) {
+    updateUserCohort(
+      input: {
+        user_cohort_id: $user_cohort_id
+        user_id: $user_id
+        user_lsp_id: $user_lsp_id
+        cohort_id: $cohort_id
+        added_by: $added_by
+        membership_status: $membership_status
+        role: $role
+      }
+    ) {
+      user_cohort_id
+      user_id
+      user_lsp_id
+      cohort_id
+      added_by
+      membership_status
+      role
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const ADD_COHORT_MAIN = gql`
+  mutation AddCohortMain(
+    $name: String!
+    $description: String!
+    $lsp_id: String!
+    $code: String!
+    $status: String!
+    $type: String!
+    $is_active: Boolean!
+    $size: Int!
+    $image: Upload
+  ) {
+    addCohortMain(
+      input: {
+        name: $name
+        description: $description
+        lsp_id: $lsp_id
+        code: $code
+        status: $status
+        type: $type
+        is_active: $is_active
+        size: $size
+        image: $image
+      }
+    ) {
+      cohort_id
+      name
+      description
+      lsp_id
+      code
+      status
+      type
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+      size
+      imageUrl
+    }
+  }
+`;
+
+export const UPDATE_COHORT_MAIN = gql`
+  mutation updateCohortMain(
+    $cohort_id: ID
+    $name: String!
+    $description: String!
+    $lsp_id: String!
+    $code: String!
+    $status: String!
+    $type: String!
+    $is_active: Boolean!
+    $size: Int!
+    $image: Upload
+  ) {
+    updateCohortMain(
+      input: {
+        cohort_id: $cohort_id
+        name: $name
+        description: $description
+        lsp_id: $lsp_id
+        code: $code
+        status: $status
+        type: $type
+        is_active: $is_active
+        size: $size
+        image: $image
+      }
+    ) {
+      cohort_id
+      name
+      description
+      lsp_id
+      code
+      status
+      type
+      is_active
+      created_by
+      updated_by
+      created_at
+      updated_at
+      size
+      imageUrl
     }
   }
 `;
@@ -926,6 +1051,41 @@ export const ADD_USER_EXAM_RESULTS = gql`
     }
   }
 `;
+
+export const ADD_COURSE_COHORT_MAP = gql`
+mutation AddCourseCohort($CourseId:String,$CohortId:String,$CourseType:String,$LspId:String,$CohortCode:String,$isMandatory:Boolean,$CourseStatus:String,$AddedBy:String,$IsActive:Boolean,$CreatedBy:String,$UpdatedBy:String,$ExpectedCompletion:Int){
+  addCourseCohort(input: {
+    CourseId:$CourseId
+    CohortId:$CohortId
+    CourseType:$CourseType
+    LspId:$LspId
+    CohortCode:$CohortCode
+    isMandatory:$isMandatory
+    CourseStatus:$CourseStatus
+    AddedBy:$AddedBy
+    CreatedBy:$CreatedBy
+    UpdatedBy:$UpdatedBy
+    IsActive:$IsActive
+    ExpectedCompletion:$ExpectedCompletion
+  }) {
+    id
+    CourseId
+    CohortId
+    CourseType
+    LspId
+    CohortCode
+    isMandatory
+    CourseStatus
+    AddedBy
+    CreatedAt
+    UpdatedAt
+    CreatedBy
+    UpdatedBy
+    IsActive
+    ExpectedCompletion
+  }
+}
+`
 
 export const ADD_USER_QUIZ_ATTEMPT = gql`
   mutation addUserQuizAttempt(

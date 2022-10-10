@@ -1,3 +1,4 @@
+import { courseErrorAtom, getCourseErrorData } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
@@ -18,10 +19,20 @@ export default function useHandleTabs(courseContextData) {
   // recoil state
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
+  const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
 
   const [fileData, setFileData] = useState({});
   const [isPreviewPopUpOpen, setIsPreviewPopUpOpen] = useState(false);
   const [previewFileData, setPreviewFileData] = useState(null);
+
+  // useEffect(() => {
+  //   if (courseError?.activeTab === tab) return;
+  //   setCourseError(getCourseErrorData({ activeTab: tab }));
+  // }, []);
+
+  useEffect(() => {
+    setCourseError(getCourseErrorData());
+  }, []);
 
   useEffect(() => {
     setCouseIdForFileContext();
@@ -34,6 +45,27 @@ export default function useHandleTabs(courseContextData) {
         courseVideo.file?.name || getFileNameFromUrl(fullCourse.previewVideo, 'vid')
     });
   }, [fullCourse]);
+
+  // useEffect(() => {
+  //   if (!courseError?.activeTab) return setCourseError(getCourseErrorData({ activeTab: tab }));
+  //   const _courseError = structuredClone(courseError);
+  //   let _tab = _courseError?.activeTab;
+
+  //   if (tab?.toLowerCase()?.trim()?.includes('master')) {
+  //     const isFormFilled =
+  //       !!fullCourse?.name &&
+  //       !!fullCourse?.category?.length &&
+  //       !!fullCourse?.sub_category?.length &&
+  //       !!fullCourse?.owner?.length &&
+  //       !!+fullCourse?.language?.length;
+  //     _courseError.master = isFormFilled;
+  //     if (isFormFilled) _tab = tab;
+  //   }
+
+  //   _courseError.activeTab = _tab;
+  //   setCourseError(_courseError);
+  //   setTab(_tab);
+  // }, [tab]);
 
   function getFileNameFromUrl(fileUrl, type) {
     if (!fileUrl) {

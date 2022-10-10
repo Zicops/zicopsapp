@@ -71,6 +71,7 @@ export default function useHandleQuestionBank() {
   }, [createError, updateError]);
 
   async function createNewQuestionBank() {
+    setIsAddQuestionBankReady(false);
     // duplicate name check
     if (
       await isNameDuplicate(
@@ -79,6 +80,7 @@ export default function useHandleQuestionBank() {
         'getLatestQuestionBank.questionBanks'
       )
     ) {
+      setIsAddQuestionBankReady(true);
       return setToastMsg({ type: 'danger', message: 'Bank with same name already exist' });
     }
 
@@ -109,12 +111,14 @@ export default function useHandleQuestionBank() {
     }
     setIsPopUpDataPresent(false);
     setAddPopUp(false);
+    setIsAddQuestionBankReady(true);
 
     const questionTableRoute = `${router.asPath}/${res.data.createQuestionBank.id}`;
     router.push(`${questionTableRoute}?isTabOpen=true`, questionTableRoute);
   }
 
   async function updateQuestionBank() {
+    setIsAddQuestionBankReady(false);
     // duplicate name check
     if (
       await isNameDuplicate(
@@ -124,6 +128,7 @@ export default function useHandleQuestionBank() {
         questionBankData?.id
       )
     ) {
+      setIsAddQuestionBankReady(true);
       return setToastMsg({ type: 'danger', message: 'Bank with same name already exist' });
     }
 
@@ -155,6 +160,7 @@ export default function useHandleQuestionBank() {
     }
     setIsPopUpDataPresent(false);
     setEditPopUp(false);
+    setIsAddQuestionBankReady(true);
   }
 
   return {

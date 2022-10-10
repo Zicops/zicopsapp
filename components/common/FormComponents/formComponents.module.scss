@@ -177,6 +177,10 @@
   input[type='radio']:checked ~ .radiomark {
     background-color: $primary;
   }
+
+  .disabled {
+    border-color: $darkThree;
+  }
 }
 
 .disabledInput {
@@ -360,6 +364,7 @@
     gap: 40px;
 
     button {
+      cursor: pointer;
       background-color: $primary;
       font-weight: 600;
       padding: 10px 20px;
@@ -544,6 +549,9 @@
     }
     :global(.ql-snow) {
       color: $white !important;
+    }
+    :global(.ql-editor) {
+      min-height: 100px !important;
     }
   }
 

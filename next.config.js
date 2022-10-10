@@ -4,9 +4,6 @@ module.exports = {
     // Important: return the modified config
     config.resolve.extensions = ['.jsx', '.js', '.json', '.wasm'];
 
-    // config.resolve.fallback['react/jsx-runtime'] = require.resolve('react/jsx-runtime');
-    // config.resolve.fallback['react/jsx-dev-runtime'] = require.resolve('react/jsx-dev-runtime');
-
     config.resolve.fallback = {
       ...config.resolve.fallback,
       // your aliases

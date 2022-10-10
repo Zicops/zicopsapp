@@ -144,12 +144,14 @@ export default function QuestionPaperTable({ isEdit = false }) {
       />
 
       {/* preview popup */}
-      <PopUp
-        title={masterData?.name}
-        popUpState={[!!masterData, setMasterData]}
-        isFooterVisible={false}>
-        <Preview masterData={masterData || {}} />
-      </PopUp>
+      {masterData && (
+        <PopUp
+          title={masterData?.name}
+          popUpState={[!!masterData, setMasterData]}
+          isFooterVisible={false}>
+          <Preview masterData={masterData || {}} />
+        </PopUp>
+      )}
     </>
   );
 }

@@ -19,11 +19,7 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
 
   // update resouce courseid and topicid
   useEffect(() => {
-    setNewSubtitles({
-      ...newSubtitles,
-      topicId: topicId,
-      courseId: courseId
-    });
+    setNewSubtitles({ ...newSubtitles, topicId: topicId, courseId: courseId });
   }, [topicId, courseId]);
 
   useEffect(() => {
@@ -72,7 +68,7 @@ export default function useAddSubtitles(courseId = '', topicId = '') {
 
   // save in recoil state
   function addNewSubtitles() {
-    addTopicSubtitle([...topicSubtitle, newSubtitles]);
+    addTopicSubtitle([...topicSubtitle, { ...newSubtitles, isNew: true }]);
     setNewSubtitles(getTopicSubtitleObject({ courseId, topicId }));
     setIsSubtitlesFormVisible(false);
   }

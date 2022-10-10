@@ -11,16 +11,17 @@ import Button from '../../../common/Button';
 import PopUp from '../../../common/PopUp';
 import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 import Accordion from '../../../small/Accordion';
-import styles from '../../courseTabs.module.scss';
 import useAddAssessment from '../Logic/useAddAssessment';
 import AddTopicContentForm from './AddTopicContentForm';
 import AddTopicForm from './AddTopicForm';
 import AssessmentForm from './AssessmentForm';
 import BingeForm from './BingeForm';
+import ClassroomForm from './ClassroomForm';
 import QuizForm from './QuizForm';
 import ResourcesForm from './ResourcesForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentView from './TopicContentView';
+import styles from '../../courseTabs.module.scss';
 
 export default function TopicPopUp({
   addTopicData = {},
@@ -175,22 +176,34 @@ export default function TopicPopUp({
                   />
 
                   {/* subtitles accordion */}
-                  <Accordion
-                    title="Subtitles"
-                    content={
-                      <SubtitleForm
-                        topicId={editTopic?.id || ''}
-                        courseId={editTopic?.courseId || ''}
-                      />
-                    }
-                  />
+                  {(addTopicContentLocalStates?.newTopicContent?.type === 'mp4' ||
+                    filteredTopicContent[0]?.type === 'mp4') && (
+                    <Accordion
+                      title="Subtitles"
+                      isDisabled={!filteredTopicContent?.length}
+                      content={
+                        <SubtitleForm
+                          topicId={editTopic?.id || ''}
+                          courseId={editTopic?.courseId || ''}
+                        />
+                      }
+                    />
+                  )}
 
                   {/* binge */}
-                  <Accordion title="Binge it" content={<BingeForm topicVideo={topicVideo} />} />
+                  {(addTopicContentLocalStates?.newTopicContent?.type === 'mp4' ||
+                    filteredTopicContent[0]?.type === 'mp4') && (
+                    <Accordion
+                      title="Binge it"
+                      isDisabled={!filteredTopicContent?.length}
+                      content={<BingeForm topicVideo={topicVideo} />}
+                    />
+                  )}
 
                   {/* quiz */}
                   <Accordion
                     title="Quiz"
+                    isDisabled={!filteredTopicContent?.length}
                     content={
                       <QuizForm
                         topicId={editTopic?.id || ''}
@@ -199,6 +212,27 @@ export default function TopicPopUp({
                     }
                   />
                   {/* <Accordion title="Quiz" content={<Quiz />} /> */}
+
+                  {/* resources */}
+                  <Accordion
+                    title="Resources"
+                    isDisabled={!filteredTopicContent?.length}
+                    content={
+                      <ResourcesForm
+                        topicId={editTopic?.id || ''}
+                        courseId={editTopic?.courseId || ''}
+                      />
+                    }
+                  />
+                </>
+              )}
+
+              {editTopic?.type === 'Classroom' && (
+                <>
+                  {/* topic content title */}
+                  <div className={`${styles.titleWithLineAtSide}`}>Classroom</div>
+
+                  <ClassroomForm />
 
                   {/* resources */}
                   <Accordion

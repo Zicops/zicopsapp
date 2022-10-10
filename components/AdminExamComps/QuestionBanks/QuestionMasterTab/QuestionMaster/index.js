@@ -1,9 +1,8 @@
 import CustomTooltip from '@/components/common/CustomTooltip';
+import UploadForm from '@/components/common/FormComponents/UploadForm';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useEffect, useState } from 'react';
-import LabeledRadioCheckbox from '../../../../common/FormComponents/LabeledRadioCheckbox';
-import UploadQuestions from '../../../../examComps/ExamsTabs/AddQuestionMetaData/uploadNew/UploadQuestions';
 import styles from '../questionMasterTab.module.scss';
 import CreateQuestionForm from './CreateQuestionForm';
 
@@ -72,7 +71,9 @@ export default function QuestionMaster({ isEdit, data }) {
       <div className={`${styles.formContainer}`}>
         {visibleForm === 'create' && <CreateQuestionForm isEdit={isEdit} data={data} />}
 
-        {visibleForm === 'upload' && <UploadQuestions />}
+        {visibleForm === 'upload' && (
+          <UploadForm leftGapClass={'w-12'} filePath={'/templates/question-bank-template.xlsx'} />
+        )}
       </div>
     </>
   );

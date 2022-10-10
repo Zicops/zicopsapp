@@ -3,141 +3,72 @@ import PopUp from '@/components/common/PopUp';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
+import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import styles from '../../../userComps.module.scss';
+import { getUsersForCohort } from '../Logic/cohortMaster.helper';
+import useCohortUserData from '../Logic/useCohortUserData';
 import AddUsers from './AddUsers';
 
-const data = [
-  {
-    id: 'uniwfcno3wo1oe31u9qdj',
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 2,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 3,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 4,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 5,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 6,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 7,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 8,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 9,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 64,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 27,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  },
-  {
-    id: 85,
-    email: 'abc@zicops.com',
-    firstName: 'ABC',
-    lastName: 'DEF',
-    role: 'Learner',
-    status: 'Invited'
-  }
-];
-
-const Users = () => {
+const Users = ({ isEdit = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState([]);
+  const [cohortUserData, setCohortUserData] = useState(null);
+  const [refetch, setRefetch] = useState(true);
+
+  const { getCohortUser } = useCohortUserData();
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const router = useRouter();
 
   useEffect(async () => {
-    const currentTime = new Date().getTime();
-    const sendData = {
-      publish_time: Math.floor(currentTime / 1000),
-      pageCursor: '',
-      pageSize: 100
-    };
-    const resUserData = await loadQueryDataAsync(
-      GET_USERS_FOR_ADMIN,
-      { ...sendData },
-      {},
-      userQueryClient
-    );
-    const users = resUserData?.getUsersForAdmin?.users;
-    // console.log(users);
-    if (users?.length) return setUserData([...users]);
-  }, []);
+    if (!refetch) return;
+
+    if (!router?.query?.cohortId) {
+      const users = await getUsersForCohort(true);
+      if (users?.error) return setToastMsg({ type: 'danger', message: users?.error });
+      return setUserData([...users]);
+    }
+    const cohortUser = await getCohortUser(router?.query?.cohortId);
+    if (!cohortUser?.length)
+      return setToastMsg({ type: 'info', message: 'None verified users found!' });
+    // console.log(cohortUser,'cohort user');
+    setCohortUserData([...cohortUser]);
+    setRefetch(false);
+
+    const users = await getUsersForAdmin(true);
+    const notMembers = [];
+    if (!users?.length) return setToastMsg({ type: 'info', message: 'None verified users found!' });
+    for (let i = 0; i < users?.length; i++) {
+      let found = false;
+      for (let j = 0; j < cohortUser?.length; j++) {
+        if (cohortUser[j]?.id === users[i]?.id) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        notMembers.push(users[i]);
+      }
+    }
+    setUserData([...notMembers]);
+    // console.log(notMembers);
+  }, [router?.query, refetch]);
 
   const columns = [
     {
-      field: 'firstName',
+      field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'First Name',
       flex: 1
     },
     {
-      field: 'lastName',
+      field: 'last_name',
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
       flex: 1
@@ -163,20 +94,18 @@ const Users = () => {
         return (
           <>
             <ToolTip title={ADMIN_USERS.userCohort.users.editBtn}>
-              <button
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  outline: '0',
-                  border: '0'
-                }}
-                // onClick={() => {
-                //   setSelectedQB(getQuestionBankObject(params.row));
-                //   setEditPopUp(true);
-                // }}
-              >
-                <img src="/images/svg/edit-box-line.svg" width={20}></img>
-              </button>
+            <button
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                outline: '0',
+                border: '0'
+              }}
+              onClick={() => {
+                router.push(`/admin/user/my-users/${params.id}`);
+              }}>
+              <img src="/images/svg/edit-box-line.svg" width={20}></img>
+            </button>
             </ToolTip>
           </>
         );
@@ -188,37 +117,42 @@ const Users = () => {
   return (
     <div className={`${styles.usersContainer}`}>
       <div className={`${styles.usersTopContainer}`}>
-        <span>Total Users:{data.length}</span>
+        <span>Total Users: {cohortUserData?.length}</span>
         <ToolTip title={ADMIN_USERS.userCohort.users.addUserToCohort}>
-          <button
-            className={`${styles.cohortButton1}`}
-            onClick={() => {
-              setIsOpen((prevValue) => !prevValue);
-            }}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 48 48"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path d="M22 22V10H26V22H38V26H26V38H22V26H10V22H22Z" fill="black" />
-            </svg>
-            Add Users to Cohort
-          </button>
+        <button
+          className={`${styles.cohortButton1}`}
+          onClick={() => {
+            setIsOpen((prevValue) => !prevValue);
+          }}>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 22V10H26V22H38V26H26V38H22V26H10V22H22Z" fill="black" />
+          </svg>
+          Add Users to Cohort
+        </button>
         </ToolTip>
       </div>
       <ZicopsTable
         columns={columns}
-        data={data}
+        data={cohortUserData}
         // pageSize={getPageSizeBasedOnScreen()}
         // rowsPerPageOptions={[3]}
         tableHeight="49vh"
         customStyles={{ padding: '10px 0' }}
         hideFooterPagination={true}
+        loading={refetch}
       />
 
       <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
-        <AddUsers usersData={userData} />
+        <AddUsers
+          usersData={userData}
+          popUpSetState={setIsOpen}
+          onUserAdd={() => setRefetch(true)}
+        />
         {/* <LearnerStatistics /> */}
       </PopUp>
     </div>

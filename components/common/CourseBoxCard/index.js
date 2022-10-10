@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import CalenderFooter from './CalenderFooter';
 import styles from './courseBoxCard.module.scss';
 import ProgressBarFooter from './ProgressBarFooter';
@@ -9,10 +10,12 @@ export default function CourseBoxCard({
   cardWidth = 300,
   children
 }) {
+  const router = useRouter();
+  const courseId = courseData?.id ? courseData?.id : null;
   return (
     <div
       className={`${styles.cardContainer} ${isAdmin ? styles.isAdmin : ''}`}
-      style={{ width: `${cardWidth}px` }}>
+      style={{ width: `${cardWidth}px` }} onClick={ ()=>{ courseId && !isAdmin? router.push(`/course/${courseId}`): ''}}>
       <div className={`${styles.imgContainer}`} style={{ height: `${cardWidth/1.8125}px` }}>
         {/* course img */}
         <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />

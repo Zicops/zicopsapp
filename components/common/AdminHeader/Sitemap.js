@@ -25,13 +25,12 @@ export default function Sitemap() {
 
               <>
                 {sitemapForView[key].map((item) => {
-                  isCurrentRoute = router.asPath === item;
-                  console.log(isCurrentRoute, router.asPath);
+                  isCurrentRoute = router.asPath === item?.route;
                   return (
                     <p>
                       <span className={`${isCurrentRoute ? styles.active : ''}`}></span>
-                      <Link href={item}>
-                        <a>{item}</a>
+                      <Link href={item?.route}>
+                        <a>{item?.displayName}</a>
                       </Link>
                     </p>
                   );

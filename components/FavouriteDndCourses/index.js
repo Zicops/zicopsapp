@@ -1,94 +1,130 @@
-import { Box, Grid, Grow } from '@mui/material';
-import Card from './Card/Card';
+import { GET_LATEST_COURSES } from '@/api/Queries';
+import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import { Box, Grid } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import React, { useEffect, useState } from 'react';
+import Popup from 'reactjs-popup';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import CourseLIstCard from '../common/CourseLIstCard';
+import LabeledInput from '../common/FormComponents/LabeledInput';
+import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
+import InputDatePicker from '../common/InputDatePicker';
+import PopUp from '../common/PopUp';
+import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
+import UserButton from '../common/UserButton';
+import Card from './Card/Card';
 import Folder from './Folder/Folder';
+import ListCard from './ListCard';
+import useHandleCourseAssign from './Logic/useHandleCourseAssign';
+import styles from './favouriteDndCourses.module.scss';
 
 export default function FavouriteDndCourses() {
-  const courses = [
-    {
-      id: '1',
-      title: 'Start with',
-      topic: 'HTML',
-      tag: 'Self Placed'
-    },
-    {
-      id: '2',
-      title: 'Start with',
-      topic: 'CSS',
-      tag: 'Self Placed'
-    },
-    {
-      id: '3',
-      title: 'Start with',
-      topic: 'Js',
-      tag: 'Self Placed'
-    },
-    {
-      id: '4',
-      title: 'Start with',
-      topic: 'React',
-      tag: 'Self Placed'
-    },
-    {
-      id: '5',
-      title: 'Start with',
-      topic: 'Angular',
-      tag: 'Self Placed'
-    },
-    {
-      id: '6',
-      title: 'Start with',
-      topic: 'Node Js',
-      tag: 'Self Placed'
-    },
-    {
-      id: '7',
-      title: 'Start with',
-      topic: 'Express',
-      tag: 'Self Placed'
-    },
-    {
-      id: '8',
-      title: 'Start with',
-      topic: 'Git',
-      tag: 'Self Placed'
-    },
-    {
-      id: '9',
-      title: 'Start with',
-      topic: 'Vue Js',
-      tag: 'Self Placed'
-    },
-    {
-      id: '10',
-      title: 'Start with',
-      topic: 'Design',
-      tag: 'Self Placed'
-    },
-    {
-      id: '11',
-      title: 'Start with',
-      topic: 'JQuery',
-      tag: 'Self Placed'
-    },
-    {
-      id: '12',
-      title: 'Start with',
-      topic: 'SASS',
-      tag: 'Self Placed'
-    }
-  ];
+  const {
+    courseAssignData,
+    setCourseAssignData,
+    isAssignPopUpOpen,
+    setIsAssignPopUpOpen,
+    assignCourseToUser,
+    isSaveDisabled
+  } = useHandleCourseAssign();
+
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const userData = useRecoilValue(UserStateAtom);
+
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
+  const [droppedByMe, setDroppedByMe] = useState([]);
+  const [droppedByAdmin, setDroppedByAdmin] = useState([]);
+  const [isShowAll, setIsShowAll] = useState(false);
+  const [isCoursePresent, setIsCoursePresent] = useState({
+    selfAdded: false,
+    adminAdded: false
+  });
+  const [isShowAllAdmin, setIsShowAllAdmin] = useState(false);
   const [isDrag, setIsDrag] = useState(false);
   const [dragId, setDragId] = useState('');
   const [hover, setHover] = useState(false);
-  const [total, setTotal] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setData(courses);
-  }, []);
+    if (!userData?.id) return;
+
+    async function loadCourses() {
+      const queryVariables = { publish_time: getUnixFromDate(), pageSize: 9999999, pageCursor: '' };
+      let isError = false;
+      const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables).catch(
+        (err) => {
+          isError = !!err;
+          console.log(err);
+        }
+      );
+      if (isError) return setToastMsg({ type: 'danger', message: 'course load error' });
+
+      const mapRes = await loadQueryDataAsync(
+        GET_USER_COURSE_MAPS,
+        {
+          ...queryVariables,
+          user_id: userData?.id
+        },
+        {},
+        userQueryClient
+      ).catch((err) => {
+        if (err?.message?.includes('no user course found')) return;
+        if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+      });
+
+      const userCourseMaps = mapRes?.getUserCourseMaps?.user_courses || [];
+      const assignedCourses = [];
+      const availableCourses =
+        courseRes?.latestCourses?.courses?.filter((c) => {
+          return (
+            c?.is_active &&
+            c?.is_display &&
+            !userCourseMaps?.find((map) => {
+              let added_by = {};
+              if (map?.added_by) added_by = JSON.parse(map?.added_by);
+              const isAssigned = map?.course_id === c?.id;
+              if (isAssigned) assignedCourses.push({ ...c, added_by });
+              return isAssigned;
+            })
+          );
+        }) || [];
+      updateCourseData(availableCourses);
+
+      setDropped(assignedCourses);
+    }
+
+    loadCourses();
+  }, [userData?.id]);
+
+  useEffect(() => {
+    if (courseAssignData?.isCourseAssigned) {
+      setDropped([...dropped, courseAssignData?.fullCourse]);
+      setCourseAssignData({
+        ...courseAssignData,
+        fullCourse: {},
+        isCourseAssigned: false,
+        endDate: new Date(),
+        isMandatory: false
+      });
+    }
+  }, [courseAssignData?.isCourseAssigned]);
+
+  useEffect(() => {
+    if (!isShowAll) setIsShowAll(!!searchQuery);
+    if (!isShowAllAdmin) setIsShowAllAdmin(!!searchQuery);
+  }, [searchQuery]);
+
+  function updateCourseData(courses) {
+    setData(courses?.sort((c1, c2) => +c1?.created_at - +c2?.created_at));
+  }
 
   const onMouseEnterHandler = () => {
     setHover(true);
@@ -105,9 +141,12 @@ export default function FavouriteDndCourses() {
   const handleDragEnd = (result) => {
     if (result.destination && result.destination.droppableId === 'character') {
       const element = data.filter((e) => e.id === result.draggableId);
-      dropped.push(element);
-      setData(data.filter((each) => each.id !== result.draggableId));
-      setTotal(total + 1);
+      // dropped.push(element);
+      setCourseAssignData({ ...courseAssignData, fullCourse: element[0] });
+      setIsAssignPopUpOpen(element[0]);
+      // setDropped([...dropped, { ...element[0], added_by: { role: 'self' } }]);
+      updateCourseData(data.filter((each) => each.id !== result.draggableId));
+      // setTotal(total + 1);
     }
     setIsDrag(false);
   };
@@ -133,6 +172,13 @@ export default function FavouriteDndCourses() {
       transition: `all ${curve} ${0.000001}s`
     };
   }
+
+  useEffect(() => {
+    const myAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'self');
+    const adminAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'admin');
+    setDroppedByMe(myAssignedCourses);
+    setDroppedByAdmin(adminAssignedCourses);
+  }, [dropped]);
 
   return (
     <>
@@ -185,7 +231,11 @@ export default function FavouriteDndCourses() {
                       ref={provided.innerRef}
                       onMouseEnter={onMouseEnterHandler}
                       onMouseLeave={onMouseLeaveHandler}>
-                      <Folder total={total} isDrag={isDrag} />
+                      <Folder
+                        total={dropped?.length}
+                        isDrag={isDrag}
+                        handleClick={() => setIsPopupOpen(true)}
+                      />
                     </div>
                   )}
                 </Droppable>
@@ -227,9 +277,10 @@ export default function FavouriteDndCourses() {
                                     style={getStyle(provided.draggableProps.style, snapshot)}
                                     ref={provided.innerRef}>
                                     <Card
-                                      title={each.title}
-                                      tag={each.tag}
-                                      topic={each.topic}
+                                      img={each?.tileImage}
+                                      title={each.category}
+                                      tag={each.type}
+                                      topic={each.name}
                                       hover={hover}
                                       isDrag={isDrag}
                                       dragId={dragId}
@@ -264,6 +315,140 @@ export default function FavouriteDndCourses() {
           </Grid>
         </Box>
       </DragDropContext>
+
+      {/* view courses */}
+      {isPopupOpen && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          closeOnEscape={false}
+          overlayStyle={{ background: 'rgba(0,0,0, 0.5)' }}>
+          <div className={styles.coursePopUp}>
+            {/* cross btn */}
+            <div onClick={() => setIsPopupOpen(false)} className={`${styles.close}`}>
+              <img src="/images/svg/clear.svg" alt="" />
+            </div>
+
+            {/* search box */}
+            <div className={styles.searchBox}>
+              <img src="/images/magnifier.png" height={20} alt="" />
+
+              <LabeledInput
+                inputOptions={{
+                  inputName: 'courseFilter',
+                  placeholder: 'Search Courses',
+                  value: searchQuery
+                }}
+                changeHandler={(e) => setSearchQuery(e.target.value?.toLowerCase())}
+              />
+            </div>
+
+            <div className={styles.courseList}>
+              <h4>
+                <span>
+                  Assigned By Me ({droppedByMe?.length} / {LEARNING_FOLDER_CAPACITY})
+                </span>
+                <span className={styles.seeMore} onClick={() => setIsShowAll(!isShowAll)}>
+                  {droppedByMe?.length > 2 && <>See {isShowAll ? 'Less' : 'More'}</>}
+                </span>
+              </h4>
+
+              <div className={styles.cardContainer}>
+                {droppedByMe?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
+                  if (course?.added_by?.role !== 'self') return;
+                  if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
+
+                  if (!isCoursePresent?.selfAdded)
+                    setIsCoursePresent({ ...isCoursePresent, selfAdded: true });
+                  return <ListCard courseData={course} footerType={'added'} />;
+                })}
+
+                {!isCoursePresent?.selfAdded && (
+                  <div className={styles.notFound}>No Courses Added</div>
+                )}
+              </div>
+
+              <h4>
+                <span>Assigned By Admin ({droppedByAdmin?.length})</span>
+                <span className={styles.seeMore} onClick={() => setIsShowAllAdmin(!isShowAllAdmin)}>
+                  {droppedByAdmin?.length > 2 && <>See {isShowAllAdmin ? 'Less' : 'More'}</>}
+                </span>
+              </h4>
+
+              <div className={styles.cardContainer}>
+                {droppedByAdmin?.slice(0, isShowAllAdmin ? dropped?.length : 2)?.map((course) => {
+                  if (course?.added_by?.role !== 'admin') return;
+                  if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
+
+                  if (!isCoursePresent?.adminAdded)
+                    setIsCoursePresent({ ...isCoursePresent, adminAdded: true });
+                  return <ListCard courseData={course} footerType={'assigned'} />;
+                })}
+
+                {!isCoursePresent?.adminAdded && (
+                  <div className={styles.notFound}>No Courses Added By Admin</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </Popup>
+      )}
+
+      <PopUp
+        // title="Course Mapping Configuration"
+        // submitBtn={{ handleClick: handleSubmit }}
+        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
+        // size="smaller"
+        customStyles={{ width: '400px' }}
+        isFooterVisible={false}
+        positionLeft="50%">
+        <div className={`${styles.assignCoursePopUp}`}>
+          <p className={`${styles.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label="Course Mandatory"
+            name="isMandatory"
+            isChecked={courseAssignData?.isMandatory}
+            changeHandler={(e) =>
+              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
+            }
+          />
+          <section>
+            <p htmlFor="endDate">Expected Completion date:</p>
+            <InputDatePicker
+              minDate={new Date()}
+              selectedDate={courseAssignData?.endDate}
+              changeHandler={(date) => {
+                setIsPopUpDataPresent(true);
+                setCourseAssignData({ ...courseAssignData, endDate: date });
+              }}
+              styleClass={styles.dataPickerStyle}
+            />
+          </section>
+          <div className={`${styles.assignCourseButtonContainer}`}>
+            <UserButton
+              text={'Cancel'}
+              isPrimary={false}
+              type={'button'}
+              clickHandler={() => {
+                updateCourseData([...data, isAssignPopUpOpen]);
+                setIsAssignPopUpOpen(false);
+                setCourseAssignData({
+                  ...courseAssignData,
+                  endDate: new Date(),
+                  isMandatory: false
+                });
+              }}
+            />
+            <UserButton
+              text={'Save'}
+              type={'button'}
+              isDisabled={isSaveDisabled}
+              clickHandler={() => assignCourseToUser()}
+            />
+          </div>
+        </div>
+      </PopUp>
     </>
   );
 }

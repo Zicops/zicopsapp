@@ -5,7 +5,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import useHandleDragDrop from '../../Logic/useHandleDragDrop';
 
 // TODO: update this component later
-const DragDrop = ({ data, contextData }) => {
+const DragDrop = ({ data, contextData, isError = false }) => {
   const {
     draglist,
     droplist,
@@ -82,7 +82,7 @@ const DragDrop = ({ data, contextData }) => {
             </div>
           </ToolTip>
 
-          <div className="col_25">
+          <div className={`col_25 ${isError ? 'error' : ''}`}>
             <Droppable droppableId="subcategories">
               {(provided) => (
                 <div

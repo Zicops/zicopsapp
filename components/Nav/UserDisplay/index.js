@@ -31,14 +31,35 @@ const UserDisplay = () => {
     // console.log(userProfileData);
   }, [isUpdate]);
 
+  useEffect(() => {
+    async function loadAndSetUserData() {
+      const userId = localStorage.getItem('id');
+      if (!userId) return;
+      const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
+        console.log(err);
+      });
+      if (userData?.error) return console.log('User data load error');
+      const basicInfo = userData?.data?.getUserDetails?.[0];
+
+      setUserProfileData((prevValue) => ({ ...prevValue, ...basicInfo }));
+      setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
+    }
+
+    loadAndSetUserData();
+  }, []);
+
   //refill the  recoil values
   useEffect(async () => {
     if (!userProfileData?.first_name && !userProfileData?.last_name) {
       const data = getUserData();
-      const userData = await loadUserData({ variables: { user_id: data?.id } }).catch((err) => {
+      const userId = data?.id;
+      // const userId = [];
+      // userId.push(data?.id);
+      const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
         console.log(err);
       });
-      const basicInfo = userData?.data?.getUserDetails;
+      if (userData?.error) return console.log('User data load error');
+      const basicInfo = userData?.data?.getUserDetails[0];
 
       // const { user_id } = JSON.parse(sessionStorage.getItem('lspData'));
       // const resData = await loadUserData({ variables: { user_id: user_id } }).catch((err) => {

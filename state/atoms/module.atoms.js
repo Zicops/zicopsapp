@@ -1,3 +1,4 @@
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 
 export const ModuleAtom = atom({
@@ -63,9 +64,19 @@ export const isLoadingAtom = atom({
   default: false
 });
 
+export const courseErrorAtom = atom({
+  key: 'courseError',
+  default: getCourseErrorData()
+});
+
 export const uploadStatusAtom = atom({
   key: 'uploadStatus',
   default: null
+});
+
+export const CourseTypeAtom = atom({
+  key: 'courseType',
+  default: COURSE_TYPES[0]
 });
 
 // object structures which can be used  for reset or immutable new object
@@ -155,8 +166,8 @@ export function getBingeObject() {
     startTimeSec: 0,
     skipIntroDuration: 0,
     showTimeMin: 0,
-    showTimeSec: 0,
-    isFromEnd: false
+    showTimeSec: 5,
+    isFromEnd: true
   };
 }
 
@@ -195,5 +206,12 @@ export function getQuizObject(data) {
       attachmentType: data?.attachmentType || '',
       isCorrect: data.isCorrect || false
     })
+  };
+}
+export function getCourseErrorData(data = {}) {
+  return {
+    master: data?.master || false,
+    details: data?.details || false,
+    about: data?.about || false
   };
 }

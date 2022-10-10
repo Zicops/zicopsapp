@@ -76,8 +76,18 @@
   opacity: 0.5;
 }
 
+.disabled {
+  opacity: 0.5;
+}
+
 .btn_cancel_add:hover {
   border-color: #ffffff;
   color: #ffffff;
   background-color: #1a1a1a;
+}
+
+.add_btn {
+  border-color: $primary;
+  color: $primary;
+  box-shadow: 0px 0px 10px 0px $primary;
 }

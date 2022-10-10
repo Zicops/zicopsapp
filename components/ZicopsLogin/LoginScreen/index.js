@@ -17,9 +17,10 @@ import styles from '../zicopsLogin.module.scss';
 
 import HomeHeader from '@/components/HomePage/HomeHeader';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import { USER_STATUS } from '@/helper/constants.helper';
 
 const LoginScreen = ({ setPage }) => {
-  const [userLogin, { error: loginError }] = useMutation(USER_LOGIN, {
+  const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
     client: userClient
   });
 
@@ -27,6 +28,7 @@ const LoginScreen = ({ setPage }) => {
   const [password, setPassword] = useState('');
 
   const [vidIsOpen, setVidIsOpen] = useState(false);
+  const [disableBtn, setDisableBtn] = useState(false);
   const vidRef = useRef();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -39,23 +41,31 @@ const LoginScreen = ({ setPage }) => {
   const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
 
   const handleEmail = (e) => {
+    setDisableBtn(false);
     setEmail(e.target.value);
   };
 
   const handlePassword = (e) => {
+    setDisableBtn(false);
     setPassword(e.target.value);
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setDisableBtn(true);
     const checkEmail = isEmail(email);
     if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
 
-    await signIn(email, password);
+    if (!password) return setToastMsg({ type: 'danger', message: 'Enter password!!' });
 
-    if (errorMsg) return;
+    const userData = await signIn(email, password);
 
+    if (userData) loginUser();
+  };
+
+  async function loginUser() {
     sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
-
+    localStorage.setItem('tokenF', auth?.currentUser?.accessToken);
     let isError = false;
     const res = await userLogin({
       context: {
@@ -73,11 +83,12 @@ const LoginScreen = ({ setPage }) => {
     });
 
     if (isError) return;
+    if (res?.data?.login?.status === USER_STATUS.disable)
+      return setToastMsg({ type: 'danger', message: 'Login Error' });
 
-    console.log(res?.data?.login?.is_verified);
     setUserData(getUserObject(res?.data?.login));
-
     sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+    localStorage.setItem('id', res?.data?.login?.id);
 
     if (!!res?.data?.login?.is_verified) {
       // setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
@@ -88,12 +99,13 @@ const LoginScreen = ({ setPage }) => {
       // }, 1500);
       return;
     }
+
     return router.push('/account-setup');
-  };
+  }
 
   useEffect(() => {
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
-    console.log(authUser);
+    // console.log(authUser);
   }, [errorMsg, authUser]);
 
   //to check if our user is logged in or not
@@ -110,7 +122,7 @@ const LoginScreen = ({ setPage }) => {
           heading={'Sign Into Your Learning Space'}
           sub_heading={'Start your first step to learning here!'}
         />
-        <div className="login_body">
+        <form className="login_body" onSubmit={handleSubmit}>
           {/* <input
             className={`${styles.login_email_input}`}
             type={'email'}
@@ -129,12 +141,7 @@ const LoginScreen = ({ setPage }) => {
             }}
             changeHandler={(e) => handleEmail(e, setEmail)}
           />
-          <LoginEmail
-            type={'password'}
-            placeholder={'Password'}
-            chngeHandle={handlePassword}
-            tabIndex={1}
-          />
+          <LoginEmail type={'password'} placeholder={'Password'} chngeHandle={handlePassword} />
           <div className={`${styles.small_text}`}>
             <span />
             <p
@@ -145,8 +152,8 @@ const LoginScreen = ({ setPage }) => {
             </p>
           </div>
 
-          <LoginButton title={'Login'} handleClick={handleSubmit} />
-        </div>
+          <LoginButton title={'Login'} isDisabled={disableBtn} />
+        </form>
       </ZicopsLogin>
       {!!vidIsOpen && (
         <div className={`${styles.introVideoContainer}`}>

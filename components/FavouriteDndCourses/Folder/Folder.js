@@ -4,10 +4,10 @@ import { IconButton } from '@material-ui/core';
 import ToolTip from '@/components/common/ToolTip';
 import { LEARNER_SELF_LANDING } from '@/components/common/ToolTip/tooltip.helper';
 
-export default function Folder({ isDrag, total }) {
+export default function Folder({ isDrag, total, handleClick = () => {} }) {
   // let isDrag = true;
   return (
-    <>
+    <div onClick={handleClick} style={{ cursor: 'pointer' }}>
       <Box position={'relative'}>
         <img src={'images/backFolder.png'} alt={'folder'} />
         <Box position={'absolute'} top={40} left={15}>
@@ -65,6 +65,6 @@ export default function Folder({ isDrag, total }) {
           {/* </IconButton> */}
         </Box>
       </Box>
-    </>
+    </div>
   );
 }

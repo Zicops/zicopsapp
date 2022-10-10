@@ -41,7 +41,12 @@ export default function PopUp({
           <div className={`${styles.popUp}`}>
             <div className={`${styles.header}`}>
               <div className={`${styles.title}`}>{title} </div>
-              <div className={`${styles.cross_img}`} onClick={closePopUp}>
+              <div
+                className={`${styles.cross_img} ${closeBtn.disabled ? styles.disabled : ''}`}
+                onClick={() => {
+                  if (closeBtn.disabled) return;
+                  closePopUp();
+                }}>
                 <img src="/images/circular-cross.png" alt="" />
               </div>
             </div>
@@ -69,7 +74,7 @@ export default function PopUp({
                   <button
                     type="button"
                     value="add"
-                    className={`${
+                    className={`${submitBtn.disabled ? '' : styles.add_btn} ${
                       submitBtn.disabled ? styles.btn_cancel_add_disabled : styles.btn_cancel_add
                     }`}
                     disabled={submitBtn.disabled}

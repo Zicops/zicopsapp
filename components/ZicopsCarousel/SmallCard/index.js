@@ -1,7 +1,16 @@
+import { useRouter } from 'next/router';
 import { truncateToN } from '../../../helper/common.helper';
 
-export default function SmallCard({ image, courseData, styleClass, carouselRefData }) {
+export default function SmallCard({
+  image,
+  courseData,
+  styleClass,
+  carouselRefData,
+  isShowProgress = false,
+  notext = false,
+}) {
   if (!courseData) return null;
+  const router = useRouter();
 
   function handleMouseEnter(e, start = 0, end = 0) {
     if (e.currentTarget.parentNode.dataset.index === start.toString()) {
@@ -19,7 +28,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
     e.currentTarget.parentNode.style.margin = '';
   }
   const gotoCourse = () => {
-    window.location.href = courseData?.id ? `/course/${courseData.id}` : '/courses';
+    router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
   };
 
   let courseNameClass = 'coursename';
@@ -27,12 +36,13 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
     console.log(courseData?.name?.length);
     courseNameClass = 'coursenamesmall';
   }
+  const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
   return (
     <>
       <div
         style={{ maxWidth: '350px' }}
         className={`card_item ${styleClass}`}
-        onClick={gotoCourse}
+        onClick={!notext ? gotoCourse : () => {}}
         onMouseEnter={(e) =>
           handleMouseEnter(
             e,
@@ -44,16 +54,38 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
         {/* remove image later */}
         <div className="smallCard">
           <div className="smallCardWrapper">
-            <div className="banner">Self Paced</div>
-            <div className={courseNameClass}>
-              {courseData.name || 'Hands on Scripting with PYTHON'}
-            </div>
-            <div className="courseowner">{courseData.owner || 'Scripting'}</div>
+            <div className="banner">{!notext ? 'Self Paced' : 'Labs'}</div>
+            {!notext ?
+              <div className={courseNameClass}>
+                {courseData.name || 'Hands on Scripting with PYTHON'}
+              </div>
+              :''
+            }
+            {!notext ? <div className="courseowner">{courseData.owner || 'Scripting'}</div> : ''}
           </div>
           <img
             src={courseData.tileImage || image || '/images/courses/workplace design.png'}
             alt=""
           />
+          {/* <LinearProgress
+            sx={{
+              height: '5px',
+              borderRadius: '10px',
+              background: '#000',
+              '&.MuiLinearProgress-bar': {
+                color: '#6BCFCF'
+              }
+            }}
+            variant="determinate"
+            value={55}
+          /> */}
+          {isShowProgress ? (
+            <div className="progress">
+              <span style={{ width: progress + '%' }}></span>
+            </div>
+          ) : (
+            ''
+          )}
         </div>
 
         <div className="overlay">
@@ -66,7 +98,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
                 {courseData?.type?.split('-').join(' ') || 'Self Paced'}
               </div>
             </div>
-            <img className="addCoursePlus" src="images/svg/add-line.svg" />
+            <img className="addCoursePlus" src="/images/svg/add-line.svg" />
             <div className="desc-area">
               <div className="main-desc">
                 <div className="one">
@@ -95,7 +127,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
               {/* <div className="icon-area">
                 <ul>
                   <li>
-                    <img src="images/svg/add-line.svg" />
+                    <img src="/images/svg/add-line.svg" />
                   </li>
                   <li>
                     <img src="images/cart.png" />
@@ -117,6 +149,23 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
         {`
           .card_item {
             cursor: pointer;
+          }
+          .progress {
+            width: 90%;
+            height: 3px;
+            background-color: var(--secondary);
+            margin-top: 5px;
+            margin-inline: auto;
+            position: relative;
+          }
+          .card_item:hover .progress {
+            opacity: 0;
+            transition-delay: 0.6s;
+          }
+          .progress span {
+            height: 100%;
+            background-color: var(--primary);
+            position: absolute;
           }
           .smallCard {
             position: relative;

@@ -42,6 +42,7 @@ export default function ExamResult() {
             examScore: resultData?.examScore,
             totalMarks: data?.examData?.totalMarks
           }}
+          downloadBtn="Download"
           handleReturnToMainScreen={() =>
             router.push(`${localStorage?.getItem('sampleTestStartLink') || '/'}`)
           }

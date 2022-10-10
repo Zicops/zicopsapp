@@ -1,5 +1,6 @@
 import {
   GET_EXAM_CONFIG,
+  GET_EXAM_INSTRUCTION,
   GET_EXAM_META,
   GET_QB_SECTION_MAPPING_BY_SECTION,
   GET_QUESTION_BY_ID,
@@ -15,14 +16,13 @@ import {
 import Accordion from '@/components/common/Accordion';
 import AttemptsTable from '@/components/common/AttemptsTable';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import Loader from '@/components/common/Loader';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserExamDataAtom } from '@/state/atoms/video.atom';
-import { CircularProgress, createTheme } from '@mui/material';
-import { ThemeProvider } from '@mui/system';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -77,7 +77,7 @@ export default function AnswerKeyPage() {
       subCategory: masterData.SubCategory,
 
       status: masterData.Status,
-      is_exam_active: masterData.IsActive
+      is_exam_active: masterData.IsActive || true
     };
 
     // const metaRes = await loadPaperMeta({
@@ -106,24 +106,25 @@ export default function AnswerKeyPage() {
     // masterObj.paperName = paperMaster.name;
 
     // load instructions
-    // const insRes = await loadInstructions({
-    //   variables: { exam_id: examId },
-    //   fetchPolicy: 'no-cache'
-    // }).catch((err) => {
-    //   console.log(err);
-    //   isError = !!err;
-    //   return setToastMsg({ type: 'danger', message: 'Instructions load error' });
-    // });
-    // if (isError) return;
-    // const insData = insRes?.data?.getExamInstruction[0];
-    // const insObj = {
-    //   instructionId: insData?.id || null,
-    //   passingCriteria: insData?.PassingCriteria,
-    //   noAttempts: insData?.NoAttempts,
-    //   instructions: insData?.Instructions || '',
-    //   accessType: insData?.AccessType || '',
-    //   is_ins_active: insData?.IsActive || ''
-    // };
+    const insRes = await loadQueryDataAsync(
+      GET_EXAM_INSTRUCTION,
+      { exam_id: examId },
+      { fetchPolicy: 'no-cache' }
+    ).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Instructions load error' });
+    });
+    if (isError) return;
+    const insData = insRes?.getExamInstruction[0];
+    const insObj = {
+      instructionId: insData?.id || null,
+      passingCriteria: insData?.PassingCriteria,
+      noAttempts: insData?.NoAttempts,
+      instructions: insData?.Instructions || '',
+      accessType: insData?.AccessType || '',
+      is_ins_active: insData?.IsActive || true
+    };
 
     // load schedule
     // let schObj = {};
@@ -144,7 +145,7 @@ export default function AnswerKeyPage() {
     //     examStart: new Date(+schData?.Start * 1000),
     //     examEnd: +schData?.End ? new Date(+schData?.End * 1000) : null,
     //     bufferTime: schData?.BufferTime || 0,
-    //     is_schedule_active: schData?.IsActive || false
+    //     is_schedule_active: schData?.IsActive || true
     //   };
     // }
 
@@ -162,7 +163,7 @@ export default function AnswerKeyPage() {
       display_hints: confData?.DisplayHints || false,
       show_result: confData?.ShowResult || false,
       show_answer: confData?.ShowAnswer || false,
-      is_config_active: confData?.IsActive || false
+      is_config_active: confData?.IsActive || true
     };
 
     const attemptRes = await loadQueryDataAsync(
@@ -291,7 +292,7 @@ export default function AnswerKeyPage() {
             qbId: qbMappings.QbId,
             difficulty_level: qbMappings.DifficultyLevel,
             sectionId: qbMappings.SectionId,
-            is_active: qbMappings.IsActive,
+            is_active: qbMappings.IsActive || true,
             question_marks: qbMappings.QuestionMarks,
             question_type: qbMappings.QuestionType,
             retrieve_type: qbMappings.RetrieveType,
@@ -397,11 +398,11 @@ export default function AnswerKeyPage() {
       }
     }
 
-    console.log({
+    console.log(insObj, {
       ...learnerExamData,
       examData: {
         ...masterObj,
-        // ...insObj,
+        ...insObj,
         // ...schObj,
         ...confObj,
         totalMarks: totalMarks || '0'
@@ -425,7 +426,7 @@ export default function AnswerKeyPage() {
       ...learnerExamData,
       examData: {
         ...masterObj,
-        // ...insObj,
+        ...insObj,
         // ...schObj,
         ...confObj,
         // show_answer: true,
@@ -451,22 +452,7 @@ export default function AnswerKeyPage() {
   }, [examId, cpId, userData?.id, attemptData?.currentAttemptId]);
 
   // loader screen till loading
-  if (loading) {
-    return (
-      <div className={styles.loadingExamScreen}>
-        <ThemeProvider
-          theme={createTheme({
-            palette: {
-              primary: {
-                main: '#6bcfcf'
-              }
-            }
-          })}>
-          <CircularProgress />
-        </ThemeProvider>
-      </div>
-    );
-  }
+  if (loading) return <Loader />;
 
   return (
     <div className={`${styles.answerKey}`}>
@@ -498,20 +484,20 @@ export default function AnswerKeyPage() {
           }
         }}
         styleClass={styles.dropdownInput}
-        isFiftyFifty={true}
         changeHandler={(e) => setAttemptData({ ...attemptData, currentAttemptId: e.value })}
       />
 
       <div className={`${styles.tableContainer}`}>
         <p>Results</p>
         <AttemptsTable
-          totalAttempts={3}
+          totalAttempts={attemptedQuestions?.examData?.noAttempts}
           attemptData={
-            attemptData?.userExamAttempts?.map((ea) => {
+            attemptData?.userExamAttempts?.map((ea, i) => {
               const resultData = ea?.result?.result_status
                 ? JSON.parse(ea?.result?.result_status)
                 : {};
 
+              if (i === 0) console.log(ea);
               return {
                 attempt: ea?.attempt_no,
                 examScore: ea?.result?.user_score,
@@ -549,6 +535,7 @@ export default function AnswerKeyPage() {
                         questionData={each.question}
                         optionData={attemptedQuestions?.examData?.show_answer ? null : each.options}
                         compareCorrect={attemptedQuestions?.examData?.show_answer}
+                        showAnswer={attemptedQuestions?.examData?.show_answer}
                         selectedAnswerId={each?.selectedOption}
                         showType={
                           attemptedQuestions?.examData?.show_answer ? 'marksObtained' : 'marks'

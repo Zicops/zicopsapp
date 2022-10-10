@@ -1,5 +1,8 @@
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import { VIDEO_FILE_TYPES } from '@/helper/constants.helper';
+import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useContext } from 'react';
+import { useRecoilState } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import BrowseAndUpload from '../../common/FormComponents/BrowseAndUpload';
@@ -8,6 +11,7 @@ import LabeledRadioCheckbox from '../../common/FormComponents/LabeledRadioCheckb
 import LabeledTextarea from '../../common/FormComponents/LabeledTextarea';
 import NextButton from '../common/NextButton';
 import styles from '../courseTabs.module.scss';
+import { CourseTabAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 import DragDrop from './DragAndDrop';
 
@@ -23,11 +27,14 @@ export default function CourseDetails() {
   } = useHandleTabs(courseContextData);
   const { courseVideo, courseImage, courseTileImage } = courseContextData;
 
+  const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
   const subCatObject = { value: fullCourse.sub_category, label: fullCourse.sub_category };
+
   return (
     <>
       <LabeledDropdown
         styleClass={styles.marginBottom}
+        // isError={!fullCourse?.sub_category?.length && courseError?.details}
         dropdownOptions={{
           inputName: 'course_sub_category',
           label: 'Course Base Sub-category:',
@@ -40,7 +47,10 @@ export default function CourseDetails() {
       />
 
       <div className={`${styles.marginBottom}`}>
-        <DragDrop contextData={courseContextData} />
+        <DragDrop
+          contextData={courseContextData}
+          isError={!fullCourse?.sub_categories?.length && courseError?.details}
+        />
       </div>
 
       {/* Expertise Level */}
@@ -53,6 +63,7 @@ export default function CourseDetails() {
             label="Beginner"
             name="expertise_level"
             value="Beginner"
+            isError={!fullCourse?.expertise_level?.length && courseError?.details}
             isChecked={fullCourse.expertise_level.includes('Beginner')}
             changeHandler={handleChange}
           />
@@ -64,6 +75,7 @@ export default function CourseDetails() {
             label="Competent"
             name="expertise_level"
             value="Competent"
+            isError={!fullCourse?.expertise_level?.length && courseError?.details}
             isChecked={fullCourse.expertise_level.includes('Competent')}
             changeHandler={handleChange}
           />
@@ -75,6 +87,7 @@ export default function CourseDetails() {
             label="Proficient"
             name="expertise_level"
             value="Proficient"
+            isError={!fullCourse?.expertise_level?.length && courseError?.details}
             isChecked={fullCourse.expertise_level.includes('Proficient')}
             changeHandler={handleChange}
           />
@@ -93,7 +106,8 @@ export default function CourseDetails() {
               filePath: courseVideo?.file || fullCourse.previewVideo,
               isVideo: true
             }}
-            acceptedTypes="video/*"
+            isError={!(courseVideo?.file || fullCourse.previewVideo) && courseError?.details}
+            acceptedTypes={VIDEO_FILE_TYPES}
             inputName="uploadCourseVideo"
             isActive={fileData.uploadCourseVideo}
             previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCourse}
@@ -116,6 +130,7 @@ export default function CourseDetails() {
               fileName: fileData.uploadCourseImage,
               filePath: courseTileImage?.file || fullCourse.tileImage
             }}
+            isError={!(courseTileImage?.file || fullCourse.tileImage) && courseError?.details}
             inputName="uploadCourseImage"
             isActive={fileData.uploadCourseImage}
             previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCourseImage}
@@ -138,6 +153,7 @@ export default function CourseDetails() {
               fileName: fileData.myfile,
               filePath: courseImage?.file || fullCourse.image
             }}
+            isError={!(courseImage?.file || fullCourse.image) && courseError?.details}
             inputName="myfile"
             isActive={fileData.myfile}
             previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCoursePicture}
@@ -159,6 +175,7 @@ export default function CourseDetails() {
             value: fullCourse?.summary,
             maxLength: 500
           }}
+          isError={!fullCourse?.summary?.length && courseError?.details}
           changeHandler={handleChange}
         />
       </div>
