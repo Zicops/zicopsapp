@@ -1,8 +1,10 @@
 import Loader from '@/components/common/Loader';
 import TileCard from '@/components/common/TileCard';
+import { useRouter } from 'next/router';
 import styles from '../search.module.scss';
 
 export default function SearchBody({ courses, isLoading, lastItemRef }) {
+  const router = useRouter();
   return (
     <>
       <div className={`${styles.searchBodyTitle}`}>Search Results</div>
@@ -29,6 +31,7 @@ export default function SearchBody({ courses, isLoading, lastItemRef }) {
               category={course?.category}
               subCategory={course?.sub_category}
               customClass={styles.card}
+              handleClick={() => router.push(`/course/${course?.id}`)}
             />
             // <SmallCard
             //   key={course.id}
