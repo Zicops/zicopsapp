@@ -70,7 +70,7 @@ export default function CourseHead({
       <div className={styles.icons}>
         {!hidePlus && !route.includes('admin/courses') && (
           <img
-            src="/images/sitemap_icon.png"
+            src="/images/plus_big.png"
             className="rightside_icon"
             alt=""
             onClick={handlePlusClick ? handlePlusClick : gotoAddcourse}
