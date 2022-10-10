@@ -1,12 +1,20 @@
+import Loader from '@/components/common/Loader';
 import TileCard from '@/components/common/TileCard';
 import styles from '../search.module.scss';
 
-export default function SearchBody({ courses, lastItemRef }) {
+export default function SearchBody({ courses, isLoading, lastItemRef }) {
   return (
     <>
       <div className={`${styles.searchBodyTitle}`}>Search Results</div>
       <div className={`${styles.searchBody}`}>
-        {courses?.length ? (
+        {isLoading && <Loader customStyles={{ height: '100px', background: 'transparent' }} />}
+
+        {!courses?.length && !isLoading && (
+          <div className={`${styles.notFound}`}>No Courses Found</div>
+        )}
+
+        {!!courses?.length &&
+          !isLoading &&
           courses?.map((course) => (
             // <Card data={course} key={course.id} />
             <TileCard
@@ -29,10 +37,7 @@ export default function SearchBody({ courses, lastItemRef }) {
             //   image={course?.tileImg}
             //   courseData={course}
             // />
-          ))
-        ) : (
-          <div className={`${styles.notFound}`}>No Courses Found</div>
-        )}
+          ))}
       </div>
 
       <span ref={lastItemRef}></span>
