@@ -135,23 +135,17 @@ const UploadAndPreview = ({
         />
         {!initialImage && (
           <>
-            <ToolTip title={tooltipTitle.uploadBtn}>
               <button className={`${styles.btn}`} onClick={() => imgRef?.current?.click()}>
                 Upload Photo
               </button>
-            </ToolTip>
             {description && <span className={`${styles.description}`}>{description}</span>}
-            <ToolTip title={tooltipTitle.previewBtn}>
               <button className={`${styles.btn2}`} onClick={handleClick} disabled={!image}>
                 Preview
               </button>
-            </ToolTip>
             {isRemove && (
-              <ToolTip title={tooltipTitle.removeBtn}>
                 <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
                   Remove
                 </button>
-              </ToolTip>
             )}
           </>
         )}
