@@ -102,6 +102,7 @@ const CohortMapping = () => {
     });
     if (!isCourseAssigned)
       return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
+    await loadAssignCourses();
     setIsAssignPopUpOpen(false);
     setCourseAssignData({
       expectedCompletionDays: null,
@@ -168,32 +169,36 @@ const CohortMapping = () => {
   }
 
   useEffect(async () => {
-    if (!router?.query?.cohortId) {
-      console.log(cohortData?.id);
-      if (!cohortData?.id)
-        return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
-      const data = await getCohortCourses(cohortData?.id);
-      if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
-      if (data?.allCourses) {
-        return setCourseData([...data?.allCourses]);
-      }
-      return;
-    }
-    setLoading(true);
-    const data = await getCohortCourses(router?.query?.cohortId);
-    if (data?.error) {
-      setLoading(false);
-      setToastMsg({ type: 'danger', message: data?.error });
-      return;
-    }
-    if (data?.allCourses && data?.assignedCourses) {
-      setCourseData([...data?.allCourses]);
-      setLoading(false);
-      return setAssignedCourses([...data?.assignedCourses]);
-    }
-    setLoading(false);
-    return setCourseData([...data?.allCourses]);
+ loadAssignCourses();
   }, [router?.query]);
+
+async function loadAssignCourses(){
+  if (!router?.query?.cohortId) {
+    console.log(cohortData?.id);
+    if (!cohortData?.id)
+      return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
+    const data = await getCohortCourses(cohortData?.id);
+    if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
+    if (data?.allCourses) {
+      return setCourseData([...data?.allCourses]);
+    }
+    return;
+  }
+  setLoading(true);
+  const data = await getCohortCourses(router?.query?.cohortId);
+  if (data?.error) {
+    setLoading(false);
+    setToastMsg({ type: 'danger', message: data?.error });
+    return;
+  }
+  if (data?.allCourses && data?.assignedCourses) {
+    setCourseData([...data?.allCourses]);
+    setLoading(false);
+    return setAssignedCourses([...data?.assignedCourses]);
+  }
+  setLoading(false);
+  return setCourseData([...data?.allCourses]);
+}
   return (
     <>
       <div className={`${styles.courses_acc_head}`}>
