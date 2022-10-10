@@ -79,12 +79,16 @@ export default function HomepageScreen() {
   };
   async function getLatestCoursesByFilters(filters, pageSize) {
     // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
-    const courses = await loadQueryDataAsync(GET_LATEST_COURSES, {
-      publish_time: Date.now(),
-      pageSize: pageSize,
-      pageCursor: '',
-      filters: filters
-    });
+    const courses = await loadQueryDataAsync(
+      GET_LATEST_COURSES,
+      {
+        publish_time: Date.now(),
+        pageSize: pageSize,
+        pageCursor: '',
+        filters: filters
+      },
+      { fetchPolicy: 'cache-first' }
+    );
     return courses;
   }
 
@@ -128,6 +132,7 @@ export default function HomepageScreen() {
       ) || []
     );
 
+    setIsLoading(false);
     const getLSPCourses = await getLatestCoursesByFilters({ LspId: userOrg?.lsp_id }, pageSize);
     setLearningSpaceCourses(
       getLSPCourses?.latestCourses?.courses?.filter(
@@ -206,7 +211,6 @@ export default function HomepageScreen() {
         (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
       ) || []
     );
-    setIsLoading(false);
   }, [baseSubcategory]);
 
   if (isLoading) return <HomePageLoader />;
@@ -215,7 +219,11 @@ export default function HomepageScreen() {
     <div className={`${styles.homebody}`}>
       <HomeSlider />
       {ongoingCourses?.length ? (
-        <ZicopsCarousel title="Continue with your Courses" data={ongoingCourses} />
+        <ZicopsCarousel
+          title="Continue with your Courses"
+          data={ongoingCourses}
+          // handleTitleClick={() => alert('s')}
+        />
       ) : (
         ''
       )}

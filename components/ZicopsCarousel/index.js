@@ -10,7 +10,14 @@ import CircleCard from './CircleCard';
 import styles from './zicopsCarousel.module.scss';
 import { MIN_COURSE_LENGTH } from '@/helper/constants.helper';
 
-const CardSlider = ({ deviceType, title, type = 'small', data, notext = false }) => {
+const CardSlider = ({
+  deviceType,
+  title,
+  type = 'small',
+  data,
+  notext = false,
+  handleTitleClick = () => {}
+}) => {
   const carouselRef = useRef(0);
   // type=sqaure cardShape changes /circle/ . Have to override hover from global scss
   let variableClass = 'card_ietms';
@@ -90,7 +97,7 @@ const CardSlider = ({ deviceType, title, type = 'small', data, notext = false })
             height={40}
           />
         ) : (
-          <CardSliderHeader title={title} />
+          <CardSliderHeader title={title} handleTitleClick={handleTitleClick} />
         )}
 
         <Carousel
