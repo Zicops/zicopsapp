@@ -74,7 +74,7 @@ const CoursesAccHead = ({
               { value: 'Blog', label: 'Blog' },
               { value: 'Bookmarks', label: 'Bookmarks' }
             ],
-            value: filters?.type
+            value: { value: filters?.type, label: filters?.type }
           }}
           changeHandler={(e) => setFilters({ ...filters, type: e.value })}
         />
