@@ -35,12 +35,12 @@ export const ADMIN_EXAMS = {
   myQuestionBanks: {
     addBtn: 'Create New Question Bank',
     editBtn: 'Edit Bank Master Details',
-    viewBtn: 'View and Add Questions',
+    viewBtn: 'View Bank and Add Questions',
 
     addQuestionBank: {
-      cancelBtn: 'Close and Go Back to Question Banks list',
-      addBtnDisabled: 'Enter Question Bank details first',
-      addBtnActive: 'Save details and proceed to Question Creation',
+      cancelBtn: 'Close and go Back to Question Banks list',
+      addBtnDisabled: 'Enter Question Bank details to Add',
+      addBtnActive: 'Save details and proceed to Question creation',
       crossBtn: 'Close and Go Back to Question Banks list',
       category:
         'Category selection determines the Category under which this bank should appear in question bank listing',
@@ -48,10 +48,10 @@ export const ADMIN_EXAMS = {
         'Sub-Category selection determines the Sub-Category under which this bank should appear in question bank listing'
     },
     viewQuestionsDetails: {
-      penEditIcon: 'Edit Bank Master Details',
+      penEditIcon: 'Edit master details',
       addBtn: 'Add Questions',
       editBtn: 'Edit Question',
-      viewBtn: 'View Question Details',
+      viewBtn: 'View Question details',
 
       viewQuestions: {
         correctAnswer: 'Correct Answer',
@@ -71,8 +71,8 @@ export const ADMIN_EXAMS = {
             <b>Note: </b>No media file upload allowed for questions or options in bulk upload
           </ul>
         ),
-        cancelBtn: 'Cancel and go back to Questions list',
-        saveBtn: 'Add Questions to Save',
+        cancelBtn: 'Close and go back to Questions list',
+        saveBtn: 'Save all the Questions to bank',
         // status
 
         uploadQuestionScreen: {
@@ -91,9 +91,9 @@ export const ADMIN_EXAMS = {
 
   myQuestionPapers: {
     addBtn: 'Create new Question Paper',
-    editBtn: 'Edit Paper',
-    viewBtn: 'View Paper',
-    createExamBtn: 'Create exam',
+    editBtn: 'Edit Question Paper and Add Questions',
+    viewBtn: 'Preview Question Paper',
+    createExamBtn: 'Create Scheduled or Open to take anytime exam using this question paper',
 
     addQuestionPapers: {
       questionPaperMasterTab: {
@@ -103,7 +103,8 @@ export const ADMIN_EXAMS = {
           "If checked then you'll be able to create sections in your question paper.If not checked, you’ll not be able to add any sections to your paper.",
         //status
         category: 'Select this category',
-        addSubCategory: 'Select this sub-category'
+        addSubCategory: 'Select this sub-category',
+        nextBtn:'Save Master details and proceed to question addition'
       },
       questionsTab: {
         addQuestionBtn: 'Create and add new question',
@@ -127,6 +128,8 @@ export const ADMIN_EXAMS = {
 
   myExams: {
     addBtn: 'Create new Exam',
+    viewBtn:'',
+    editBtn:'View and Manage Exam Configurations',
     myExamsPassingCriteria: (
       <ul>
         <li>If None, no passing criteria would be applicable for this exam.</li>
@@ -137,12 +140,12 @@ export const ADMIN_EXAMS = {
   },
 
   sidebarData: {
-    zicopsQuestionBanks: 'View readily available Question Banks',
-    myQuestionBanks: 'View and Create your Question Banks',
-    zicopsQuestionPapers: 'View readily available Question papers',
-    myQuestionPapers: 'View and Create your Question Papers',
-    zicopsExams: 'View readily available exams',
-    myExams: 'View and Create your Exams'
+    zicopsQuestionBanks: 'View readily available Zicops Question Banks',
+    myQuestionBanks: 'Create and Manage your Question Banks',
+    zicopsQuestionPapers: 'View readily available Zicops Question papers',
+    myQuestionPapers: 'Create and Manage your Question Papers',
+    zicopsExams: 'View readily available Zicops Exams',
+    myExams: 'Create and Manage your Exams'
   }
 };
 

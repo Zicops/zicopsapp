@@ -74,7 +74,7 @@ export default function AdminHeader({
               {/* <CustomTooltip info="create new question bank" /> */}
             </span>
           )}
-          <ToolTip title="View Settings" placement="bottom">
+          <ToolTip title="Manage Configurations" placement="bottom">
             <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
           </ToolTip>
           <ToolTip title="View Sitemap" placement="right">

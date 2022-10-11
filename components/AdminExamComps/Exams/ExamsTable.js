@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -146,7 +147,7 @@ export default function ExamsTable({ isEdit = false }) {
                     outline: '0',
                     border: '0'
                   }}>
-                  <ToolTip title="Edit Exam Configurations" placement="bottom">
+                  <ToolTip title={ADMIN_EXAMS.myExams.editBtn} placement="bottom">
                     <img src="/images/svg/edit-box-line.svg" width={20}></img>
                   </ToolTip>
                 </button>

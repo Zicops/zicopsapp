@@ -154,6 +154,7 @@ export default function QuestionPaperMaster() {
 
         <NextButton
           clickHandler={() => (questionPaperId ? updateQuestionPaper(1) : addNewQuestionPaper(1))}
+          tooltipText={ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab.nextBtn}
         />
       </div>
     </div>
