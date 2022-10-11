@@ -61,7 +61,7 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
     ...defaultStyles,
     container: () => ({
       ...defaultStyles.container,
-      margin: '10px auto',
+      margin: '10px auto'
     }),
     multiValue: (styles, { data }) => ({
       ...defaultStyles.multiValue,
@@ -73,7 +73,7 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
       borderRadius: '20px',
 
       padding: '2px 10px',
-      margin: '2px 5px'
+      margin: '5px'
     }),
     multiValueLabel: (styles, { data }) => ({
       ...defaultStyles.multiValueLabel,
