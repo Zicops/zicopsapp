@@ -43,7 +43,14 @@ export default function useAddAssessment(topicId, setEditTopic) {
 
       const options = [];
       if (examData)
-        examData.forEach((exam) => options.push({ value: exam.id, label: exam.Name, ...exam }));
+        examData.forEach((exam) =>
+          options.push({
+            value: exam.id,
+            label: exam.Name,
+            ...exam,
+            duration: +exam?.duration / 60
+          })
+        );
 
       setExamOptions(options);
     });

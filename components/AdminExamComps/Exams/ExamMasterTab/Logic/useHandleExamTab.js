@@ -183,7 +183,7 @@ export default function useHandleExamTab() {
       name: examTabData.name,
       description: examTabData.description,
       qpId: examTabData.qpId,
-      duration: +examTabData.duration || 0,
+      duration: (+examTabData.duration || 0) * 60,
       schedule_type: examTabData.schedule_type,
 
       category: examTabData.category || '',

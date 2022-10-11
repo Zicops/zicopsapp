@@ -96,7 +96,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       qpId: masterData.QpId,
       name: masterData.Name,
       description: masterData.Description,
-      duration: masterData.Duration,
+      duration: +masterData.Duration / 60,
       scheduleType: masterData.ScheduleType,
 
       code: masterData.Code,
@@ -124,7 +124,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       description: paperMasterData?.Description,
       section_wise: paperMasterData?.SectionWise,
       difficultyLevel: paperMasterData?.DifficultyLevel,
-      suggested_duration: paperMasterData?.SuggestedDuration,
+      suggested_duration: +paperMasterData?.SuggestedDuration / 60,
       status: paperMasterData?.Status
     };
 

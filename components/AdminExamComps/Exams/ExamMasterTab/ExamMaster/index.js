@@ -1,9 +1,9 @@
 import RTE from '@/components/common/FormComponents/RTE';
+import Loader from '@/components/common/Loader';
 import NextButton from '@/components/common/NextButton';
 import ToolTip from '@/components/common/ToolTip';
 import { TOOLTIP_STYLE } from '@/components/common/ToolTip/tooltip.helper';
-import { TOOLTIP_IMG_SRC } from '@/helper/constants.helper';
-import { MAX_ATTEMPT_COUNT } from '@/helper/constants.helper';
+import { MAX_ATTEMPT_COUNT, TOOLTIP_IMG_SRC } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ import Select from 'react-select';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../../../API/Queries';
 import { changeHandler } from '../../../../../helper/common.helper';
-import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
+import { ExamTabDataAtom, getExamTabDataObject } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../common/FormComponents/LabeledInput';
@@ -33,6 +33,7 @@ export default function ExamMaster() {
 
   const router = useRouter();
   const examId = router?.query?.examId;
+  const qpId = router.query?.qpId;
   const isPreview = router.query?.isPreview || router.asPath?.includes('view') || false;
 
   const { getTotalMarks, saveExamData } = useHandleExamTab();
@@ -51,7 +52,12 @@ export default function ExamMaster() {
       const options = [];
       if (paperData)
         paperData.forEach((paper) =>
-          options.push({ value: paper.id, label: paper.name, ...paper })
+          options.push({
+            value: paper.id,
+            label: paper.name,
+            ...paper,
+            SuggestedDuration: +paper?.SuggestedDuration / 60
+          })
         );
 
       setQuestionPaperOptions(options);
@@ -59,7 +65,6 @@ export default function ExamMaster() {
   }, []);
 
   useEffect(async () => {
-    const qpId = router.query?.qpId;
     if (!questionPaperOptions?.length) return;
     if (!examTabData?.qpId || qpId !== examTabData?.qpId) return;
 
@@ -67,14 +72,17 @@ export default function ExamMaster() {
       (option) => option?.value === examTabData?.qpId
     )[0];
 
-    setExamTabData({
-      ...examTabData,
+    let _examTabData = {
+      qpId: qpId,
       category: selectedQp?.Category,
       sub_category: selectedQp?.SubCategory,
       duration: selectedQp?.SuggestedDuration || 0,
       total_marks: await getTotalMarks(qpId)
-    });
-  }, [questionPaperOptions, router.query, examTabData?.qpId]);
+    };
+
+    if (examId) _examTabData = { ...examTabData, _examTabData };
+    setExamTabData(getExamTabDataObject(_examTabData));
+  }, [questionPaperOptions, qpId, examId, examTabData?.qpId]);
 
   const maxAttemptsOptions = Array(MAX_ATTEMPT_COUNT)
     .fill(null)
@@ -125,6 +133,9 @@ export default function ExamMaster() {
   } else if (examTabData?.passing_criteria_type === 'Percentage') {
     passingCriteriaText = 'Enter passing percentage for this exam';
   }
+
+  if (examId && examTabData?.id !== examId)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <>
@@ -192,12 +203,13 @@ export default function ExamMaster() {
             label: 'Exam Duration:',
             placeholder: 'Enter duration of the exam',
             value: examTabData.duration?.toString(),
-            isDisabled: true
+            isNumericOnly: true
+            // isDisabled: true
           }}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
 
-        {/* disabled for now */}
+        {/* total marks */}
         <LabeledInput
           isFiftyFifty={true}
           styleClass={`${styles.inputField}`}
@@ -430,6 +442,7 @@ export default function ExamMaster() {
         <RTE
           changeHandler={(e) => {
             if (examId && examTabData?.id !== examId) return;
+            if (!examId && examTabData?.id) return;
             setExamTabData({ ...examTabData, instructions: e });
           }}
           placeholder="Enter instructions in less than 300 characters."

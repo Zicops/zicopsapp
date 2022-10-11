@@ -132,7 +132,7 @@ const ExamScreen = () => {
       qpId: masterData.QpId,
       name: masterData.Name,
       description: masterData.Description,
-      duration: masterData.Duration,
+      duration: +masterData.Duration / 60,
       scheduleType: masterData.ScheduleType,
 
       code: masterData.Code,
@@ -161,7 +161,7 @@ const ExamScreen = () => {
       description: paperMasterData?.Description,
       section_wise: paperMasterData?.SectionWise,
       difficultyLevel: paperMasterData?.DifficultyLevel,
-      suggested_duration: paperMasterData?.SuggestedDuration,
+      suggested_duration: +paperMasterData?.SuggestedDuration / 60,
       status: paperMasterData?.Status
     };
 
@@ -230,10 +230,10 @@ const ExamScreen = () => {
     };
 
     // load user course mapping and progress
-    const data = {
+    const data = structuredClone({
       userCourseMapping: userCourseData?.userCourseMapping,
       userCourseProgress: userCourseData?.userCourseProgress || []
-    };
+    });
     if (!data?.userCourseMapping?.user_cp_id) {
       const mapRes = await loadUserCourseMaps({
         variables: { userId: userData?.id, courseId: courseId },

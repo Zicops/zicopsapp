@@ -50,28 +50,31 @@ export default function QuestionPaperTab() {
 
     // load sections
     let isError = false;
-    const metaRes = await loadPaperMeta({
-      variables: { question_paper_id: [questionPaperId] }
-    }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
-    });
-    if (isError) return;
-    const paperMasterData = metaRes.data.getQPMeta[0];
+    let paperMaster = questionPaperTabData?.paperMaster;
+    if (!questionPaperTabData?.paperMaster?.name) {
+      const metaRes = await loadPaperMeta({
+        variables: { question_paper_id: [questionPaperId] }
+      }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
+      });
+      if (isError) return;
+      const paperMasterData = metaRes.data.getQPMeta[0];
 
-    const paperMaster = getQuestionPaperMasterObject({
-      ...paperMasterData,
-      category: paperMasterData?.Category,
-      sub_category: paperMasterData?.SubCategory,
-      description: paperMasterData?.Description,
-      section_wise: paperMasterData?.SectionWise,
-      difficulty_level: paperMasterData?.DifficultyLevel,
-      suggested_duration: paperMasterData?.SuggestedDuration,
-      status: paperMasterData?.Status
-    });
+      paperMaster = getQuestionPaperMasterObject({
+        ...paperMasterData,
+        category: paperMasterData?.Category,
+        sub_category: paperMasterData?.SubCategory,
+        description: paperMasterData?.Description,
+        section_wise: paperMasterData?.SectionWise,
+        difficulty_level: paperMasterData?.DifficultyLevel,
+        suggested_duration: +paperMasterData?.SuggestedDuration / 60,
+        status: paperMasterData?.Status
+      });
+    }
 
-    setStatus(paperMasterData?.Status);
+    setStatus(paperMaster?.status);
 
     const sectionRes = await loadPaperSection({
       variables: { question_paper_id: questionPaperId },
