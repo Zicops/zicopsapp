@@ -72,10 +72,10 @@ export default function useSaveCourse(courseContextData) {
       isValid =
         !!fullCourse?.sub_categories?.length &&
         !!fullCourse?.expertise_level?.length &&
-        !!fullCourse?.previewVideo?.length &&
-        !!fullCourse?.tileImage?.length &&
-        !!+fullCourse?.image?.length &&
-        !!+fullCourse?.summary?.length;
+        !!(courseVideo?.file || fullCourse.previewVideo) &&
+        !!(courseTileImage?.file || fullCourse.tileImage) &&
+        !!(courseImage?.file || fullCourse.image) &&
+        !!fullCourse?.summary?.length;
 
       _courseError.details = !isValid;
     }
@@ -87,8 +87,8 @@ export default function useSaveCourse(courseContextData) {
         !!fullCourse?.description?.length &&
         !!fullCourse?.prequisites?.length &&
         !!+fullCourse?.goodFor?.length &&
-        !!+fullCourse?.mustFor?.length;
-      !!+fullCourse?.related_skills?.length;
+        !!+fullCourse?.mustFor?.length &&
+        !!+fullCourse?.related_skills?.length;
 
       _courseError.about = !isValid;
     }
@@ -125,8 +125,9 @@ export default function useSaveCourse(courseContextData) {
     await uploadFile(courseTileImage, uploadTileImage, 'tileImage', 'uploadCourseTileImage');
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
-    console.log('var', fullCourse);
-    const courseUpdateResponse = await updateCourse({ variables: fullCourse });
+    const { duration, ...sendData } = fullCourse;
+    console.log('var', sendData);
+    const courseUpdateResponse = await updateCourse({ variables: sendData });
 
     const _course = structuredClone(courseUpdateResponse.data.updateCourse);
     if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
