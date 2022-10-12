@@ -69,7 +69,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   async function handleRemove() {
     const checkUpdate = await updateCourse(userCourseData, currentUserId, 'self');
-    console.log(checkUpdate);
+    // console.log(checkUpdate);
     await loadAssignedCourseData();
     setShowConfirmBox(false);
   }
@@ -88,6 +88,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       setDataCourse([...courseArray]);
       setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
       setLoading(false)
+      setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
       return setIsAssignPopUpOpen(false);
     }
@@ -117,6 +118,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true ,endDate: new Date(),
       isMandatory: false  });
     await loadAssignedCourseData();
+    setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
     setIsAssignPopUpOpen(false);
     return setLoading(false);
   }

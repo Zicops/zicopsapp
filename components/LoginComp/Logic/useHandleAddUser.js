@@ -275,7 +275,9 @@ export default function useHandleAddUserDetails() {
     return isError;
   }
 
-  async function updateAboutUser(newImage = null) {
+  async function updateAboutUser(newImage = null,isVerified = true) {
+
+    
     const sendUserData = {
       id: userAboutData?.id,
       first_name: userAboutData?.first_name,
@@ -284,12 +286,12 @@ export default function useHandleAddUserDetails() {
       status: USER_STATUS.activate,
       role: userAboutData?.role || 'Learner',
       email: userAboutData?.email,
-      phone: `+${userAboutData?.phone}`,
+      phone: userAboutData?.phone?.includes('+')? userAboutData?.phone : `+${userAboutData?.phone}`,
 
       gender: userAboutData?.gender,
       photo_url: userAboutData?.photo_url,
 
-      is_verified: true,
+      is_verified: isVerified,
       is_active: userAboutData?.is_active,
 
       created_by: userAboutData?.created_by || 'Zicops',
@@ -304,7 +306,7 @@ export default function useHandleAddUserDetails() {
 
     let isError = false;
     const res = await updateAbout({ variables: sendUserData }).catch((err) => {
-      console.log(err);
+      // console.log(err,'error at update user');
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User about Error' });
     });
