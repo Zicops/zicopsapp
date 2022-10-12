@@ -1,3 +1,5 @@
+import CustomTooltip from '@/components/common/CustomTooltip';
+import { CUSTOM_TOOLTIP_STYLE } from '@/components/common/CustomTooltip/customTooltip.helper';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
@@ -91,7 +93,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'category',
-          label: 'Category:',
+          label: <>Category:<CustomTooltip info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.category} customStyle={CUSTOM_TOOLTIP_STYLE}/></>,
           placeholder: 'Select Category',
           options: [{ value: 'General', label: 'General' }, ...catSubCat.cat],
           value: { value: questionBankData?.category, label: questionBankData?.category },
@@ -112,7 +114,7 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'sub_category',
-          label: 'Sub-Category:',
+          label: <>Sub-Category:<CustomTooltip info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addSubCategory} customStyle={CUSTOM_TOOLTIP_STYLE}/></>,
           placeholder: 'Select Sub-Category',
           options: [{ value: 'General', label: 'General' }, ...catSubCat.subCat],
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },

@@ -42,10 +42,24 @@ export const ADMIN_EXAMS = {
       addBtnDisabled: 'Enter Question Bank details to Add',
       addBtnActive: 'Save details and proceed to Question creation',
       crossBtn: 'Close and Go Back to Question Banks list',
-      category:
-        'Category selection determines the Category under which this bank should appear in question bank listing',
-      addSubCategory:
-        'Sub-Category selection determines the Sub-Category under which this bank should appear in question bank listing'
+      category: (
+        <>
+          <b>Category:</b>
+          <p>
+            Category selection determines the Category under which this bank should appear in
+            question bank listing
+          </p>
+        </>
+      ),
+      addSubCategory: (
+        <>
+          <b>Sub-Category:</b>
+          <p>
+            Sub-Category selection determines the Sub-Category under which this bank should appear
+            in question bank listing
+          </p>
+        </>
+      )
     },
     viewQuestionsDetails: {
       penEditIcon: 'Edit master details',
@@ -57,7 +71,17 @@ export const ADMIN_EXAMS = {
         correctAnswer: 'Correct Answer',
         cancelBtn: 'Close and go back to Question list',
         editBtn: 'Edit Question',
-        crossBtn: 'Close and go back to Question list'
+        crossBtn: 'Close and go back to Question list',
+        difficultyLevel: (
+          <>
+            <b>Difficulty Score:</b>
+            <p>
+              Difficulty score defines Level of question. A question with difficulty score in range
+              1-3 will be categorised as <b>Beginner level,</b> in range 4-7 as
+              <b>Competent level,</b> and in range 8-10 as <b>Proficient level</b>
+            </p>
+          </>
+        )
       },
 
       questionMasterTab: {
@@ -99,12 +123,54 @@ export const ADMIN_EXAMS = {
       questionPaperMasterTab: {
         cancelBtn: '',
         saveBtn: '',
-        sectionWise:
-          "If checked then you'll be able to create sections in your question paper.If not checked, you’ll not be able to add any sections to your paper.",
+        sectionWise: (
+          <>
+            <b>Question Paper - Section wise:</b>
+            <ul>
+              <li>If checked then question paper will have sections</li>
+              <li>If not checked then question paper will not have sections</li>
+            </ul>
+          </>
+        ),
         //status
-        category: 'Select this category',
-        addSubCategory: 'Select this sub-category',
-        nextBtn:'Save Master details and proceed to question addition'
+        category: (
+          <>
+            <b>Category:</b>
+            <p>
+              Category selection determines the Category under which this paper should appear in
+              question paper listing
+            </p>
+          </>
+        ),
+        addSubCategory: (
+          <>
+            <b>Sub-Category:</b>
+            <p>
+              Sub-Category selection determines the Sub-Category under which this paper should
+              appear in question paper listing
+            </p>
+          </>
+        ),
+        nextBtn: 'Save Master details and proceed to question addition',
+        difficultyLevel: (
+          <>
+            <b>Difficulty Level - Beginner/Competent/Proficient</b>
+            <p>
+              Level selection defines the criteria under which this paper should be displayed in
+              question paper listing
+            </p>
+          </>
+        ),
+        suggestedDuration: (
+          <>
+            <b>Suggested Duration:</b>
+            <p>
+              Defines a tentative duration in which exan should be attempted. This value will be
+              auto-populated on exam creation screen where it can be modified as required for
+              respective exam
+            </p>
+          </>
+        )
       },
       questionsTab: {
         addQuestionBtn: 'Create and add new question',
@@ -128,8 +194,8 @@ export const ADMIN_EXAMS = {
 
   myExams: {
     addBtn: 'Create new Exam',
-    viewBtn:'',
-    editBtn:'View and Manage Exam Configurations',
+    viewBtn: '',
+    editBtn: 'View and Manage Exam Configurations',
     myExamsPassingCriteria: (
       <ul>
         <li>If None, no passing criteria would be applicable for this exam.</li>
