@@ -338,7 +338,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       );
 
       setCurrentCourses(allAssignedCourses,setCourseLoading(false));
-      setAssignedCourses(allAssignedCourses);
+      setAssignedCourses(adminAssignedCourses);
     }
   }
 
