@@ -53,10 +53,14 @@ export default function InviteTab() {
 
     //removing duplicate data
     const _users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()]; 
+    
     cohortUser = [..._users];
 
   }
-    cohortUser = [...selectedCohortData?.cohortUsers]
+
+    console.log(selectedCohortData , 'cohort users',cohortUser)
+    if(!cohortUser?.length) cohortUser = [...selectedCohortData?.cohortUsers]
+    
     const users = await getUsersForAdmin();
     if(!users?.length) return setLoading(false);
     
