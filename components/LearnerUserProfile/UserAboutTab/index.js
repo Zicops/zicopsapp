@@ -5,10 +5,11 @@ import ProfilePreferences from '@/components/LoginComp/ProfilePreferences';
 import SubCategoriesPreview from '@/components/LoginComp/SubCategoriesPreview';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { parseJson } from '@/helper/utils.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import CategoryPreferences from '../CategoryPreferences';
 import styles from '../learnerUserProfile.module.scss';
 import useCommonHelper from '../Logic/common.helper';
@@ -17,6 +18,8 @@ import { orgData, profilePref, userData } from '../Logic/userData.helper.js';
 import SingleUserDetail from '../SingleUserDetail';
 
 const UserAboutTab = () => {
+  const userDataGlobal = useRecoilValue(UserDataAtom);
+
   const [isEditable, setIsEditable] = useState(null);
   const { updateUserOrganizationDetails } = useHandleUserUpdate();
   const { updateAboutUser } = useHandleAddUserDetails();
@@ -64,12 +67,13 @@ const UserAboutTab = () => {
       );
     }
 
-    const userPreferences = await getUserPreferences(userLspId);
+    // const userPreferences = await getUserPreferences(userLspId);
+    const userPreferences = userDataGlobal?.preferences;
     // const preferenceData = userPreferences.slice(0, 5);
     const preferenceData = userPreferences.filter((item) => item?.is_active);
-    console.log(preferenceData, userPreferences);
+    // console.log(preferenceData, userPreferences);
 
-    if (preferenceData) setSubCategory([...preferenceData]);
+    // if (!!preferenceData?.length) setSubCategory([...preferenceData]);
 
     setSelected([...preferenceData]);
 
@@ -115,7 +119,9 @@ const UserAboutTab = () => {
       {/* {userData.map((v) => (
         <CategoryPreferences userData={v} />
       ))} */}
-      <CategoryPreferences subCategoryData={subCategory} />
+      <CategoryPreferences
+        subCategoryData={userDataGlobal?.preferences?.filter((s) => s?.is_active)}
+      />
       <PopUp popUpState={[isOpen, setIsopen]} isFooterVisible={false}>
         <div className={`${styles.container}`}>
           {currentComponent === 2 && (

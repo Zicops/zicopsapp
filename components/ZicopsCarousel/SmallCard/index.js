@@ -54,7 +54,9 @@ export default function SmallCard({
         {/* remove image later */}
         <div className="smallCard">
           <div className="smallCardWrapper">
-            <div className="banner">{!notext ? 'Self Paced' : 'Labs'}</div>
+            <div className="banner">
+              {courseData?.type?.split('-').join(' ') || (!notext ? 'Self Paced' : 'Labs')}
+            </div>
             {!notext ? (
               <div className={courseNameClass}>
                 {courseData.name || 'Hands on Scripting with PYTHON'}
@@ -93,7 +95,9 @@ export default function SmallCard({
           <div className="bottom-box">
             <div className="title-area">
               <div className="firstline">
-                <div className="title">{courseData?.name || 'Hands on Scripting with PYTHON'}</div>
+                <div className={`title ${courseData?.name?.length > 20 ? 'smallFont' : ''}`}>
+                  {courseData?.name || 'Hands on Scripting with PYTHON'}
+                </div>
               </div>
               <div className="secondline">
                 {courseData?.type?.split('-').join(' ') || 'Self Paced'}
@@ -105,15 +109,22 @@ export default function SmallCard({
                 <div className="one">
                   <div className="one-text">
                     <span className="level noselect">Level:</span>
-                    <span className="value noselect">
+                    <span
+                      className={`value noselect ${
+                        courseData?.expertise_level?.split(',').join(' | ')?.length > 15
+                          ? 'smallLevelFont'
+                          : ''
+                      }`}>
                       {courseData?.expertise_level
                         ? courseData?.expertise_level.split(',').join(' | ')
                         : ' Beginner'}
                     </span>
                   </div>
                   <div className="one-text">
-                    <span className="level noselect">Duration:</span>
-                    <span className="value noselect">{courseData?.duration || ' 275'} mins</span>
+                    <span className="level noselect">Duration: </span>
+                    <span className="value noselect">
+                      {Math.floor(courseData?.duration / 60) || '275'} mins
+                    </span>
                   </div>
                 </div>
 
@@ -203,6 +214,7 @@ export default function SmallCard({
             font-size: 10px;
             padding: 3px 7px;
             border-radius: 0 4px 0 0;
+            text-transform: capitalize;
           }
           .coursename {
             margin-top: 50px;
@@ -381,6 +393,12 @@ export default function SmallCard({
             padding: 5px;
             margin: 3px 7px;
             border: 1px solid #6bcfcf;
+          }
+          .smallFont {
+            font-size: 0.9em;
+          }
+          .smallLevelFont {
+            font-size: 0.8em;
           }
         `}
       </style>

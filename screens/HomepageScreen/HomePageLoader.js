@@ -1,11 +1,19 @@
 // screens\HomepageScreen\HomePageLoader.js
 
 import { Skeleton } from '@mui/material';
+import { useEffect } from 'react';
 import styles from './homepageScreen.module.scss';
 
 export default function HomePageLoader() {
   const rowCount = 3;
   const cardCount = 7;
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+
+    return () => (document.body.style.overflow = '');
+  }, []);
 
   return (
     <div className={`${styles.homePageLoader}`}>

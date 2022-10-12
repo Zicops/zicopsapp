@@ -10,7 +10,7 @@ import {
   GET_USER_PREFERENCES,
   userQueryClient
 } from '@/api/UserQueries';
-import { subCategories } from '@/components/LoginComp/ProfilePreferences/Logic/profilePreferencesHelper';
+import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getUserOrgObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -29,6 +29,7 @@ import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
 
 export function useHandleCatSubCat(selectedCategory) {
+  const [catSubCatGlobal, setCatSubCatGlobal] = useRecoilState(CatSubCatAtom);
   const [refetch, setRefetch] = useState(true);
   const [catSubCat, setCatSubCat] = useState({
     cat: [],
@@ -42,6 +43,9 @@ export function useHandleCatSubCat(selectedCategory) {
 
   useEffect(async () => {
     if (!refetch) return;
+    // console.log(catSubCat?.subCatGrp);
+    // if (Object.keys(catSubCat?.subCatGrp || {})?.length) return setCatSubCatState(catSubCat);
+    // console.log('fetch');
 
     const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
     const _subCatGrp = {};
@@ -98,6 +102,11 @@ export function useHandleCatSubCat(selectedCategory) {
 
     setCatSubCat({ ...catSubCat, subCat: _subCat });
   }, [activeCatId]);
+
+  useEffect(() => {
+    // console.log(catSubCatState);
+    setCatSubCatGlobal(catSubCat);
+  }, [catSubCat]);
 
   return { catSubCat, activeCatId, setActiveCatId, setRefetch };
 }
@@ -159,10 +168,11 @@ export function useHandleCatSubCat(selectedCategory) {
 
 //added common hook for userCourse progress
 export default function useUserCourseData() {
+  const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  async function getUserCourseData() {
+  async function getUserCourseData(pageSize = 999999999) {
     const { id } = getUserData();
     let currentUserId = id;
     if (!currentUserId) return;
@@ -177,7 +187,7 @@ export default function useUserCourseData() {
         user_id: currentUserId,
         publish_time: getCurrentEpochTime(),
         pageCursor: '',
-        pageSize: 999999999
+        pageSize: pageSize
       },
       {},
       userClient
@@ -287,6 +297,23 @@ export default function useUserCourseData() {
       {},
       userQueryClient
     );
+    const catAndSubCatRes = await loadQueryDataAsync(
+      GET_CATS_AND_SUB_CAT_MAIN,
+      {},
+      { fetchPolicy: 'cache-first', nextFetchPolicy: 'cache-first' }
+    );
+    const _subCatGrp = {};
+    const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
+      return { ...subCat, value: subCat?.Name, label: subCat?.Name };
+    });
+    catAndSubCatRes?.allCatMain?.forEach((cat) => {
+      if (!_subCatGrp[cat?.id]) _subCatGrp[cat?.id] = { cat: cat, subCat: [] };
+      _subCatGrp[cat?.id].subCat.push(...allSubCat?.filter((subCat) => subCat?.CatId === cat?.id));
+
+      return { ...cat, value: cat?.Name, label: cat?.Name };
+    });
+
+    //    subCatGrp: _subCatGrp,
     // console.log(resPref,'prefdata');
 
     if (resPref?.error)
@@ -302,20 +329,30 @@ export default function useUserCourseData() {
     });
     // console.log(prefData);
     const prefArr = [];
+    // console.log(prefData, allSubCat);
     for (let i = 0; i < prefData?.length; i++) {
-      for (let j = 0; j < subCategories?.length; j++) {
-        if (prefData[i].sub_category === subCategories[j].name) {
-          prefArr.push({
-            ...subCategories[j],
-            user_preference_id: prefData[i]?.user_preference_id,
-            sub_category: subCategories[j].name,
-            user_id: prefData[i]?.user_id,
-            user_lsp_id: prefData[i]?.user_lsp_id,
-            is_base: prefData[i]?.is_base,
-            is_active: prefData[i]?.is_active
-          });
-        }
-      }
+      const pref = prefData[i];
+      const subCatData = allSubCat?.find((s) => s?.Name === pref?.sub_category);
+
+      prefArr.push({
+        ...pref,
+        subCatData,
+        catData: _subCatGrp?.[subCatData?.CatId]?.cat
+      });
+
+      //   for (let j = 0; j < subCategories?.length; j++) {
+      //     if (prefData[i].sub_category === subCategories[j].name) {
+      //       prefArr.push({
+      //         ...subCategories[j],
+      //         user_preference_id: prefData[i]?.user_preference_id,
+      //         sub_category: subCategories[j].name,
+      //         user_id: prefData[i]?.user_id,
+      //         user_lsp_id: prefData[i]?.user_lsp_id,
+      //         is_base: prefData[i]?.is_base,
+      //         is_active: prefData[i]?.is_active
+      //       });
+      //     }
+      //   }
     }
 
     const basePreference = prefData?.filter((item) => item?.is_base && item?.is_active);
@@ -324,9 +361,10 @@ export default function useUserCourseData() {
     // console.log('preferences', preferences);
     setUserOrgData((prevValue) => ({
       ...prevValue,
-      sub_category: basePreference[0]?.sub_category,
+      sub_category: basePreference?.[0]?.sub_category,
       sub_categories: preferences
     }));
+    setUserDataGlobal({ ...userData, preferences: prefArr });
     return prefArr;
   }
 

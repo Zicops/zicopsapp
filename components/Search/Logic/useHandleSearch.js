@@ -1,3 +1,5 @@
+import useUserCourseData from '@/helper/hooks.helper';
+import { parseJson } from '@/helper/utils.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -6,13 +8,15 @@ import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 
 export default function useHandleSearch() {
-  const [loadCourses, { error: loadCoursesError, refetch: refetchCourses }] = useLazyQuery(
-    GET_LATEST_COURSES,
-    { client: queryClient }
-  );
+  const [
+    loadCourses,
+    { loading: courseLoading, error: loadCoursesError, refetch: refetchCourses }
+  ] = useLazyQuery(GET_LATEST_COURSES, { client: queryClient });
 
   const router = useRouter();
   const searchQuery = router.query?.searchQuery || '';
+  const filter = router.query?.filter || null;
+  const userCourse = router.query?.userCourse || null;
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const lastItemRef = useRef(null);
@@ -33,19 +37,60 @@ export default function useHandleSearch() {
   const [isLoading, setIsLoading] = useState(null);
   const [filteredCourses, setFilteredCourses] = useState([]);
 
+  const { getUserCourseData } = useUserCourseData();
+
   // load table data
-  useEffect(() => {
-    setIsLoading(true);
-    const queryVariables = { publish_time: Date.now(), pageSize: 9999999, pageCursor: '' };
+  const time = Date.now();
+  useEffect(async () => {
+    if (courses?.length) return;
+
+    if (userCourse) {
+      setIsLoading(true);
+      const userCourseObj = parseJson(userCourse);
+      const userCourseData = await getUserCourseData();
+
+      const _allUserCourses = userCourseData?.filter((course) => {
+        const isOngoing = course?.completedPercentage > 0 && course?.completedPercentage < 100;
+        const isAssigned =
+          parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100;
+        return userCourseObj?.isOngoing ? isOngoing : isAssigned;
+      });
+
+      setCourses(
+        _allUserCourses?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
+      );
+      return;
+    }
+
+    const queryVariables = { publish_time: time, pageSize: 999, pageCursor: '', filters: {} };
+    if (searchQuery) queryVariables.filters.SearchText = searchQuery;
+    if (filters.category) queryVariables.filters.Category = filters.category;
+    if (filters.subCategory) queryVariables.filters.SubCategory = filters.subCategory;
+    if (filters.type) queryVariables.filters.Type = filters.type;
+    if (filters.lang) queryVariables.filters.Language = filters.lang;
+
+    const filterObj = parseJson(filter);
+    // console.log(filterObj, filter);
+    if (filterObj?.DurationMin) queryVariables.filters.DurationMin = filterObj.DurationMin;
+    if (filterObj?.DurationMax) queryVariables.filters.DurationMax = filterObj.DurationMax;
+    if (filterObj?.LspId) queryVariables.filters.DurationMax = filterObj.LspId;
 
     loadCourses({ variables: queryVariables }).then(({ data }) => {
       if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
 
       const courseData = data?.latestCourses;
       setPageCursor(courseData?.pageCursor || null);
-      setCourses(courseData?.courses?.filter((c) => c?.is_active && c?.is_display) || []);
+      setCourses(
+        courseData?.courses
+          ?.filter((c) => c?.is_active && c?.is_display)
+          ?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
+      );
     });
-  }, []);
+  }, [filters, filter, searchQuery]);
+
+  useEffect(() => {
+    setIsLoading(courseLoading);
+  }, [courseLoading]);
 
   useEffect(() => {
     if (!courses?.length) return;
