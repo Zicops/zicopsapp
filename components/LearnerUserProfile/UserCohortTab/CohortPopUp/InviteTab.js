@@ -70,7 +70,7 @@ export default function InviteTab() {
       ({ id: id1 }) => !cohortUser?.some(({ user_id: id2 }) => id2 === id1)
     );
 
-    console.log(inviteUserList);
+    // console.log(inviteUserList);
 
     if(!inviteUserList?.length) return ;
     setSelectedCohortData((prevValue) => ({...prevValue , inviteUser:[...inviteUserList]}))
@@ -85,6 +85,8 @@ export default function InviteTab() {
     if(!userId?.length) return setToastMsg({type:'info' , message:'Please add atleast one user!'});
     const isAdded = await addUserToCohort(userId,selectedCohortData?.main?.cohort_id,selectedCohortData);
     console.log(isAdded,'added users');
+    const updateUsers =  usersForCohort.filter(({ id: id1 }) => !isAdded.some((id) => id === id1));
+    return setUsersForCohort(updateUsers);
   }
 
   return (
