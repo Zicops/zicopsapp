@@ -23,7 +23,8 @@ import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
 import _styles from '../userProfile.module.scss';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
-const CoursesAccordian = () => {
+
+const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
     isMandatory: false,
@@ -74,6 +75,8 @@ const CoursesAccordian = () => {
   }
 
   async function handleSubmit() {
+    // console.log(currentUserData);
+    if(!currentUserData?.user_lsp_id) return setToastMsg({ type: 'danger', message: 'User lsp load error!' });;
     setLoading(true);
     setIsPopUpDataPresent(false);
     const { id } = getUserData();
@@ -92,7 +95,7 @@ const CoursesAccordian = () => {
     // console.log('hi')
     const sendData = {
       userId: router.query?.userId,
-      userLspId: 'Zicops',
+      userLspId: currentUserData?.user_lsp_id,
       courseId: userCourseData?.id,
       addedBy: JSON.stringify({ userId: id, role: 'admin' }),
       courseType: userCourseData.type,

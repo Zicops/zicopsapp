@@ -125,7 +125,7 @@ export default function UserProfilePage() {
           <UserProfile currentUserData={currentUserData} setCurrentUserData={setCurrentUserData} />
         </MainBodyBox>
         <div className={`${styles.accordianContainer}`}>
-          <CoursesAccordian />
+          <CoursesAccordian currentUserData={currentUserData}/>
           <CohortAccordian currentUserData={currentUserData}/>
           <LearningDashboardAccordian />
         </div>
