@@ -39,10 +39,13 @@ const Users = ({ isEdit = false }) => {
       return setUserData([...users]);
     }
     if(!router?.query?.cohortId && cohortData?.id){
-      
+
+      const users = await getUsersForAdmin(true); 
       const cohortUser = await getCohortUser(cohortData?.id);
       if (!cohortUser?.length)
       return setToastMsg({ type: 'info', message: 'None users found!' });
+      const _nonMembers = users?.filter(({id:id1}) => !cohortUser?.some(({id:id2}) => id1 === id2)) ;
+      setUserData([..._nonMembers]);
       return setCohortUserData([...cohortUser],setRefetch(false));
       // setRefetch(false);
     }
