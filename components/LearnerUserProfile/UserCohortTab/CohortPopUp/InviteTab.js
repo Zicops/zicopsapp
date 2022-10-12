@@ -82,13 +82,14 @@ export default function InviteTab() {
 
   // useEffect(()=>{
   //   console.log(userId);
-  // },[userId])
+  // },[userId]) 
 
   async function addUsersToCohort(){
     if(!userId?.length) return setToastMsg({type:'info' , message:'Please add atleast one user!'});
     const isAdded = await addUserToCohort(userId,selectedCohortData?.main?.cohort_id,selectedCohortData);
     // console.log(isAdded,'added users');
     const updateUsers =  usersForCohort.filter(({ id: id1 }) => !isAdded.some((id) => id === id1));
+    setToastMsg({type:'success' , message:'User added successfully!'});
     return setUsersForCohort(updateUsers);
   }
 
