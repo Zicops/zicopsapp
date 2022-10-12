@@ -11,9 +11,12 @@ export default function CohortListCard({ data,isRoundImage = false, children, ha
 
   useEffect(()=>{
     if(!selectedCohort?.main) return ;
-    if(type === 'cohort') return setImageUrl(selectedCohort?.main?.imageUrl);
+
+    // console.log(data,'data')
     
-    if( type === 'user'){
+    if(type === 'cohort') return setImageUrl(data?.imageUrl);
+    
+    if(type === 'user'){
       const imageLink = data?.photo_url !=='' ? data?.photo_url : '/images/swagDP.jpg' ;
      return setImageUrl(imageLink);
     }
