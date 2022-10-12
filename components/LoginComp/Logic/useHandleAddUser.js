@@ -7,7 +7,7 @@ import {
   UPDATE_USER,
   userClient
 } from '@/api/UserMutations';
-import { LEARNING_SPACE_ID, USER_STATUS } from '@/helper/constants.helper';
+import { CUSTOM_ERROR_MESSAGE, LEARNING_SPACE_ID, USER_STATUS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   getUserObject,
@@ -305,16 +305,19 @@ export default function useHandleAddUserDetails() {
     console.log(sendUserData, 'updateAboutUser');
 
     let isError = false;
+    let errorMsg;
     const res = await updateAbout({ variables: sendUserData }).catch((err) => {
-      // console.log(err,'error at update user');
+      console.log(err,'error at update user');
+      errorMsg = err.message;
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User about Error' });
     });
 
     if (isError) {
-      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
-      return;
-      return router.push('/account-setup');
+      const message = JSON.parse(errorMsg.split('body:')[1]);
+      if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.phoneError)
+        return setToastMsg({ type: 'danger', message: `Phone Number already exists!` });
+      return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     }
 
     const data = res?.data?.updateUser;
