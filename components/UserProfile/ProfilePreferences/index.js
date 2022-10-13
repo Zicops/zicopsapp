@@ -7,7 +7,7 @@ const ProfilePreferences = ({ currentUserData }) => {
   const userProfilePreferenceData = {
     base_language: 'English',
     'base_sub-category': currentUserData?.sub_category,
-    'sub-category_preferences': preferences?.join(',')
+    'sub-category_preferences': preferences?.join(', ')
   };
 
   return (
