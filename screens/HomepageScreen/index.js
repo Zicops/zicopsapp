@@ -2,7 +2,7 @@ import { GET_LATEST_COURSES } from '@/api/Queries';
 import HomeSlider from '@/components/HomeSlider';
 import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
@@ -14,6 +14,7 @@ import HomePageLoader from './HomePageLoader';
 import styles from './homepageScreen.module.scss';
 
 const skeletonCardCount = 5;
+const time = Date.now();
 
 export default function HomepageScreen() {
   const userData = useRecoilValue(UserDataAtom);
@@ -89,19 +90,14 @@ export default function HomepageScreen() {
       slidesToSlide: 1
     }
   };
-  const time = Date.now();
   async function getLatestCoursesByFilters(filters, pageSize = 28) {
     // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
-    const courses = await loadQueryDataAsync(
-      GET_LATEST_COURSES,
-      {
-        publish_time: time,
-        pageSize: pageSize,
-        pageCursor: '',
-        filters: filters
-      },
-      { fetchPolicy: 'cache-first', nextFetchPolicy: 'cache-first' }
-    );
+    const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
+      publish_time: time,
+      pageSize: pageSize,
+      pageCursor: '',
+      filters: filters
+    });
     return courses;
   }
 

@@ -22,7 +22,7 @@ import {
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { loadQueryDataAsync } from './api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import { LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
@@ -47,7 +47,7 @@ export function useHandleCatSubCat(selectedCategory) {
     // if (Object.keys(catSubCat?.subCatGrp || {})?.length) return setCatSubCatState(catSubCat);
     // console.log('fetch');
 
-    const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
+    const catAndSubCatRes = await loadAndCacheDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
       return { ...subCat, value: subCat?.Name, label: subCat?.Name };
@@ -229,7 +229,7 @@ export default function useUserCourseData() {
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-      const courseRes = await loadQueryDataAsync(GET_COURSE, { course_id: course_id });
+      const courseRes = await loadAndCacheDataAsync(GET_COURSE, { course_id: course_id });
       if (courseRes?.error) {
         setToastMsg({ type: 'danger', message: 'Course Load Error' });
         continue;
@@ -297,11 +297,7 @@ export default function useUserCourseData() {
       {},
       userQueryClient
     );
-    const catAndSubCatRes = await loadQueryDataAsync(
-      GET_CATS_AND_SUB_CAT_MAIN,
-      {},
-      { fetchPolicy: 'cache-first', nextFetchPolicy: 'cache-first' }
-    );
+    const catAndSubCatRes = await loadAndCacheDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
       return { ...subCat, value: subCat?.Name, label: subCat?.Name };
