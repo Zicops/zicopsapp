@@ -23,7 +23,8 @@ import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
 import _styles from '../userProfile.module.scss';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
-const CoursesAccordian = () => {
+
+const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
     isMandatory: false,
@@ -67,13 +68,18 @@ const CoursesAccordian = () => {
   }
 
   async function handleRemove() {
+    setLoading(true);
     const checkUpdate = await updateCourse(userCourseData, currentUserId, 'self');
-    console.log(checkUpdate);
+    // console.log(checkUpdate);
     await loadAssignedCourseData();
-    setShowConfirmBox(false);
+    setToastMsg({ type: 'success', message: 'Course Removed Succesfully' });
+    setLoading(false);
+    return setShowConfirmBox(false);
   }
 
   async function handleSubmit() {
+    // console.log(currentUserData);
+    if(!currentUserData?.userLspId) return setToastMsg({ type: 'danger', message: 'User lsp load error!' });;
     setLoading(true);
     setIsPopUpDataPresent(false);
     const { id } = getUserData();
@@ -85,6 +91,7 @@ const CoursesAccordian = () => {
       setDataCourse([...courseArray]);
       setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
       setLoading(false)
+      setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
       return setIsAssignPopUpOpen(false);
     }
@@ -92,7 +99,7 @@ const CoursesAccordian = () => {
     // console.log('hi')
     const sendData = {
       userId: router.query?.userId,
-      userLspId: 'Zicops',
+      userLspId: currentUserData?.userLspId,
       courseId: userCourseData?.id,
       addedBy: JSON.stringify({ userId: id, role: 'admin' }),
       courseType: userCourseData.type,
@@ -114,6 +121,7 @@ const CoursesAccordian = () => {
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true ,endDate: new Date(),
       isMandatory: false  });
     await loadAssignedCourseData();
+    setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
     setIsAssignPopUpOpen(false);
     return setLoading(false);
   }
@@ -464,6 +472,8 @@ const CoursesAccordian = () => {
           <ConfirmPopUp
             title={'Are you sure about removing this course?'}
             btnObj={{
+              leftIsDisable : loading ,
+              rightIsDisable : loading,
               handleClickLeft: () => handleRemove(),
               handleClickRight: () => setShowConfirmBox(false)
             }}

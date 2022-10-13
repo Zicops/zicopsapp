@@ -1,5 +1,5 @@
 import { UPDATE_COHORT_MAIN, UPDATE_USER_COHORT, userClient } from '@/api/UserMutations';
-import { GET_USER_LEARNINGSPACES_DETAILS, userQueryClient } from '@/api/UserQueries';
+import { GET_COHORT_USERS, GET_USER_LEARNINGSPACES_DETAILS, userQueryClient } from '@/api/UserQueries';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import UserButton from '@/components/common/UserButton';
@@ -17,7 +17,7 @@ import styles from '../../../../userComps.module.scss';
 import addUserData from '../../Logic/addUserData';
 import useCohortUserData from '../../Logic/useCohortUserData';
 
-const AddUsers = ({ usersData = [], popUpSetState = () => {}, onUserAdd = () => {} }) => {
+const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onUserAdd = () => {} }) => {
   // const { addUserToCohort } = addUserData();
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
   const selectedUsers = `${userId?.length}/${usersData?.length}`;
@@ -104,9 +104,9 @@ const AddUsers = ({ usersData = [], popUpSetState = () => {}, onUserAdd = () => 
       size: cohortData?.managers?.length || 1
     };
 
-    const allUsers = await getCohortUser(sendCohortData?.id, true);
-    if (allUsers?.length) sendCohortData.size = allUsers?.length;
+    // console.log(cohortUsers,'users')
 
+    if (cohortUsers?.length) sendCohortData.size = cohortUsers?.length;
     let isError = false;
     const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
       console.log(err);
@@ -116,7 +116,8 @@ const AddUsers = ({ usersData = [], popUpSetState = () => {}, onUserAdd = () => 
       setIsBtnDisabled(false);
       return setToastMsg({ type: 'danger', message: 'Cohort Data Update Error' });
     }
-
+    
+    setToastMsg({ type: 'success', message: 'Added users successfully!' });
     popUpSetState(false);
     onUserAdd();
     setIsBtnDisabled(false);
@@ -212,7 +213,7 @@ const AddUsers = ({ usersData = [], popUpSetState = () => {}, onUserAdd = () => 
       />
       <div className={`${styles.addUserBottomContainer}`}>
         <div className={`${styles.leftSide}`}>
-          Users selected: <span>{`${userId?.length ? userId?.length : '0'}/${data?.length}`}</span>
+          Users selected: <span>{`${userId?.length || '0'}/${data?.length || '0'}`}</span>
         </div>
         <div className={`${styles.buttonContainer}`}>
           <UserButton
