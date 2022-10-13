@@ -42,7 +42,7 @@ import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper'
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
 import { DIFFICULTY, getUnixFromDate } from '@/helper/utils.helper';
-import { LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
+import { getResultsObj, LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
@@ -768,7 +768,8 @@ const ExamScreen = () => {
           (ea) => ea.attempt_status === 'completed'
         )?.length
       },
-      sectionData: sectionData
+      sectionData: sectionData,
+      resultData: getResultsObj()
     });
 
     if (startExam === 'startNewAttemptNow') return setStartExam('startAttempt');
