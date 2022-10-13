@@ -32,8 +32,7 @@ const CohortMapping = () => {
     isCourseAssigned: false
   });
 
-
-  const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [addCohortCourse] = useMutation(ADD_COURSE_COHORT_MAP, {
     client: mutationClient
   });
@@ -60,8 +59,7 @@ const CohortMapping = () => {
   const { assignCourseToOldUser } = assignCourseToUser();
 
   function handleAssign(item, isRemove = false) {
-
-    setSelectedCourse({...item, isMandatory:courseAssignData?.isMandatory})
+    setSelectedCourse({ ...item, isMandatory: courseAssignData?.isMandatory });
     // setSelectedCourse({ ...item });
     if (!isRemove) return setIsAssignPopUpOpen(true);
 
@@ -70,33 +68,40 @@ const CohortMapping = () => {
 
   async function handleSubmit() {
     setLoading(true);
-    const {id,email} = getUserData();
-    
+    const { id, email } = getUserData();
+
     //adding end date after adding duration
     const endDate = new Date();
-    endDate.setDate(endDate.getDate()+parseInt(courseAssignData?.expectedCompletionDays));
-    
+    endDate.setDate(endDate.getDate() + parseInt(courseAssignData?.expectedCompletionDays));
+
     const sendData = {
-      CourseId:selectedCourse?.id,
-      CohortId:router?.query?.cohortId || cohortData?.id,
-      CourseType:selectedCourse?.type,
-      LspId:LEARNING_SPACE_ID,
-      CohortCode:cohortData?.cohort_code,
-      isMandatory:courseAssignData?.isMandatory,
-      CourseStatus:selectedCourse?.status,
-      AddedBy:JSON.stringify({user_id:id,role:'admin'}),
-      CreatedBy:email,
-      UpdatedBy:email,
-      IsActive:true,
-      ExpectedCompletion:courseAssignData?.expectedCompletionDays
-    }
-    console.log({...selectedCourse,endDate:endDate},'selected course');
-    let isError = false ;
-    const resCohortCourse = await addCohortCourse({variables:sendData}).catch((err)=>{isError = !!err});
-    if(isError) return setToastMsg({type:'danger',message:'error while assigning course to cohort!'})
+      CourseId: selectedCourse?.id,
+      CohortId: router?.query?.cohortId || cohortData?.id,
+      CourseType: selectedCourse?.type,
+      LspId: LEARNING_SPACE_ID,
+      CohortCode: cohortData?.cohort_code,
+      isMandatory: courseAssignData?.isMandatory,
+      CourseStatus: selectedCourse?.status,
+      AddedBy: JSON.stringify({ user_id: id, role: 'admin' }),
+      CreatedBy: email,
+      UpdatedBy: email,
+      IsActive: true,
+      ExpectedCompletion: courseAssignData?.expectedCompletionDays
+    };
+    console.log({ ...selectedCourse, endDate: endDate }, 'selected course');
+    let isError = false;
+    const resCohortCourse = await addCohortCourse({ variables: sendData }).catch((err) => {
+      isError = !!err;
+    });
+    if (isError)
+      return setToastMsg({ type: 'danger', message: 'error while assigning course to cohort!' });
     // console.log(resCohortCourse);
-    const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId,{...selectedCourse,endDate:endDate});
-    if(!isCourseAssigned) return setToastMsg({type:'danger',message:'error while assigning course to users!'})
+    const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId, {
+      ...selectedCourse,
+      endDate: endDate
+    });
+    if (!isCourseAssigned)
+      return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
     setIsAssignPopUpOpen(false);
     setCourseAssignData({
       expectedCompletionDays: null,
@@ -165,7 +170,8 @@ const CohortMapping = () => {
   useEffect(async () => {
     if (!router?.query?.cohortId) {
       console.log(cohortData?.id);
-      if (!cohortData?.id) return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
+      if (!cohortData?.id)
+        return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
       const data = await getCohortCourses(cohortData?.id);
       if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
       if (data?.allCourses) {
@@ -175,7 +181,11 @@ const CohortMapping = () => {
     }
     setLoading(true);
     const data = await getCohortCourses(router?.query?.cohortId);
-    if (data?.error) {setLoading(false);setToastMsg({ type: 'danger', message: data?.error }); return;}
+    if (data?.error) {
+      setLoading(false);
+      setToastMsg({ type: 'danger', message: data?.error });
+      return;
+    }
     if (data?.allCourses && data?.assignedCourses) {
       setCourseData([...data?.allCourses]);
       setLoading(false);
@@ -202,7 +212,10 @@ const CohortMapping = () => {
         )}
         {!isAssigned && (
           <div className={`${styles.assign}`}>
-            <div>Assigned Courses:{assignedCourses?.length}</div>
+            <div className={`${styles.assignedCoursesContainer}`}>
+            <span>Assigned Courses:</span>
+            <span>{assignedCourses?.length}</span>
+            </div>
 
             <div
               onClick={() => {
@@ -226,7 +239,7 @@ const CohortMapping = () => {
         />
       )}
       {page === 'Assign Courses' && (
-        <AllCourses section={courseSections[1]} handleSubmit={handleAssign} isLoading={loading}/>
+        <AllCourses section={courseSections[1]} handleSubmit={handleAssign} isLoading={loading} />
       )}
       <PopUp
         // title="Course Mapping Configuration"
