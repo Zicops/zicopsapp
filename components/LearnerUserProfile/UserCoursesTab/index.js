@@ -45,7 +45,7 @@ const UserCoursesTab = () => {
 
   async function loadAssignedCourseData() {
     const userCourses = await getUserCourseData(99999);
-     console.log(userCourses);
+    //  console.log(userCourses);
     if (userCourses?.length) {
       setCourseState(userCourses,'completedPercentage', 100, setOnGoingCourses, 'not');
       setCourseState(userCourses, 'completedPercentage', 100, setCompletedCourses);
