@@ -1,6 +1,11 @@
 import styles from './attemptsTable.module.scss';
 
-export default function AttemptsTable({ attemptData = [], totalAttempts = -1, customStyle = {} }) {
+export default function AttemptsTable({
+  attemptData = [],
+  totalAttempts = -1,
+  customStyle = {},
+  activeRow = null
+}) {
   return (
     <>
       <div className={`${styles.congratulations_Body}`} style={customStyle}>
@@ -16,14 +21,15 @@ export default function AttemptsTable({ attemptData = [], totalAttempts = -1, cu
           <tbody>
             {attemptData?.map((data, i) => {
               return (
-                <tr key={i}>
+                <tr key={i} className={activeRow === i ? styles.activeRow : ''}>
                   <td>{`${data?.attempt || 1}${+totalAttempts > 0 ? `/${totalAttempts}` : ''}`}</td>
                   <td>
                     {data?.examScore || 0} / {data?.totalMarks || 0}
                   </td>
                   <td
                     style={{
-                      color: data.result?.toLowerCase()?.includes('fail') ? '#F53D41' : '#26BA4D'
+                      color: data.result?.toLowerCase()?.includes('fail') ? '#F53D41' : '#26BA4D',
+                      textTransform: 'capitalize'
                     }}>
                     {data.result}
                   </td>
