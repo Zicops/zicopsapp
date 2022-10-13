@@ -23,7 +23,7 @@ import { ADD_COURSE_COHORT_MAP } from '@/api/UserMutations';
 import { userQueryClient } from '@/api/UserQueries';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { mutationClient } from '@/api/Mutations';
+import { DELETE_COHORT_COURSE, mutationClient } from '@/api/Mutations';
 
 const CohortMapping = () => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -32,6 +32,7 @@ const CohortMapping = () => {
     isCourseAssigned: false
   });
 
+  const [deleteCohortCourse] = useMutation(DELETE_COHORT_COURSE,{client:mutationClient}) ;
   const [loading, setLoading] = useState(false);
   const [addCohortCourse] = useMutation(ADD_COURSE_COHORT_MAP, {
     client: mutationClient
@@ -104,12 +105,25 @@ const CohortMapping = () => {
       return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
     await loadAssignCourses();
     setIsAssignPopUpOpen(false);
+    setToastMsg({ type: 'sucess', message: 'Course added succesfully!' });
     setCourseAssignData({
       expectedCompletionDays: null,
       isMandatory: false,
       isCourseAssigned: false
     });
     return setLoading(false);
+  }
+
+  async function handleRemove() {
+    // console.log(selectedCourse,'selected course');
+    if(!selectedCourse?.cohortCourseId) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
+    const res = await deleteCohortCourse({variables:{id:selectedCourse?.cohortCourseId}}).catch((err)=>{console.log(err)});
+    // if(res?.deleteCourseCohort) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
+    await loadAssignCourses();
+    setShowConfirmBox(false);
+    setToastMsg({ type: 'sucess', message: 'Course removed from cohort!' });
+    return;
+
   }
 
   const [lists, setLists] = useState([
