@@ -14,6 +14,7 @@ export default function QuestionOptionView({
   showType = 'difficulty',
   questionCount = null,
   showHints = true,
+  showAnswer = null,
   compareCorrect = false,
   selectedAnswerId = '',
   style = {}
@@ -107,6 +108,7 @@ export default function QuestionOptionView({
               key={i}
               option={option}
               count={i}
+              showAnswer={showAnswer}
               selectedAnswerId={selectedAnswerId}
               compareCorrect={compareCorrect}
             />
