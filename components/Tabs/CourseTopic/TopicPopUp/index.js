@@ -130,6 +130,12 @@ export default function TopicPopUp({
                       <Button
                         clickHandler={() => updateTopicAndContext()}
                         isDisabled={!isEditTopicReady}
+                        customStyles={
+                          !!editTopic?.name && !!editTopic?.description
+                            ? { backgroundColor: 'var(--primary)', color: 'var(--black)' }
+                            : {}
+                        }
+                        styleClass={`${styles.updateTopicBtn}`}
                         text="Update"
                         type="button"
                       />

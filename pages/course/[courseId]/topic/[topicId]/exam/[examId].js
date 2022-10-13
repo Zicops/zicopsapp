@@ -48,6 +48,7 @@ import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
 import moment from 'moment';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 
 const ExamScreen = () => {
   const [loadMaster] = useLazyQuery(GET_EXAM_META, { client: queryClient });
@@ -96,6 +97,7 @@ const ExamScreen = () => {
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [userExamData, setUserExamData] = useRecoilState(UserExamDataAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -132,7 +134,7 @@ const ExamScreen = () => {
       qpId: masterData.QpId,
       name: masterData.Name,
       description: masterData.Description,
-      duration: masterData.Duration,
+      duration: +masterData.Duration / 60,
       scheduleType: masterData.ScheduleType,
 
       code: masterData.Code,
@@ -161,7 +163,7 @@ const ExamScreen = () => {
       description: paperMasterData?.Description,
       section_wise: paperMasterData?.SectionWise,
       difficultyLevel: paperMasterData?.DifficultyLevel,
-      suggested_duration: paperMasterData?.SuggestedDuration,
+      suggested_duration: +paperMasterData?.SuggestedDuration / 60,
       status: paperMasterData?.Status
     };
 
@@ -230,10 +232,10 @@ const ExamScreen = () => {
     };
 
     // load user course mapping and progress
-    const data = {
+    const data = structuredClone({
       userCourseMapping: userCourseData?.userCourseMapping,
       userCourseProgress: userCourseData?.userCourseProgress || []
-    };
+    });
     if (!data?.userCourseMapping?.user_cp_id) {
       const mapRes = await loadUserCourseMaps({
         variables: { userId: userData?.id, courseId: courseId },
@@ -278,7 +280,7 @@ const ExamScreen = () => {
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
       {},
       userQueryClient
     );
@@ -879,7 +881,7 @@ const ExamScreen = () => {
 
     const sendAttemptData = {
       user_id: userData?.id,
-      user_lsp_id: userOrgData?.user_lsp_id || 'Zicops',
+      user_lsp_id: userOrgData?.user_lsp_id || userDataGlobal?.userDetails?.user_lsp_id,
       user_cp_id: user_cp_id,
       user_course_id: _courseData?.userCourseMapping?.user_course_id,
       exam_id: learnerData?.examData?.id,
@@ -940,7 +942,7 @@ const ExamScreen = () => {
         const progressData = {
           user_id: userData?.id,
           user_ea_id: examAttemptData?.user_ea_id,
-          user_lsp_id: userOrgData?.user_lsp_id || 'Zicops',
+          user_lsp_id: userOrgData?.user_lsp_id || userDataGlobal?.userDetails?.user_lsp_id,
           user_cp_id: sendAttemptData?.user_cp_id,
           // user_course_id: userCourseMapData?.userCourseMapping?.user_course_id,
 

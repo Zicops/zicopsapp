@@ -57,7 +57,7 @@ export default function ExamMasterTab() {
 
     if (!examId) {
       return setExamTabData(
-        getExamTabDataObject({ qpId: qpId, total_marks: await getTotalMarks(qpId) })
+        getExamTabDataObject(qpId ? { qpId: qpId, total_marks: await getTotalMarks(qpId) } : {})
       );
     }
 
@@ -79,7 +79,7 @@ export default function ExamMasterTab() {
       qpId: masterData.QpId,
       name: masterData.Name,
       description: masterData.Description,
-      duration: masterData.Duration,
+      duration: +masterData.Duration / 60,
       schedule_type: masterData.ScheduleType,
 
       code: masterData.Code,

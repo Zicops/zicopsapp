@@ -162,8 +162,6 @@ export default function UiComponents({
       ),
       boxComponent: (
         <Bookmark
-          handleChange={handleBookmarkChange}
-          value={bookmarkData?.timestamp}
           freezeState={freezeState}
           bookmarkState={[bookmarkData, setBookmarkData]}
           handleSave={() => handleSaveBookmark()}

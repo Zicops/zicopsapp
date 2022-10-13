@@ -84,6 +84,7 @@ export default function SearchHeader({
 
       <div className={`${styles.searchParamDropdowns}`}>
         <LabeledDropdown
+          styleClass={styles.dropdown}
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Language',
@@ -93,6 +94,7 @@ export default function SearchHeader({
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'lang')}
         />
         <LabeledDropdown
+          styleClass={styles.dropdown}
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Category',
@@ -106,6 +108,7 @@ export default function SearchHeader({
           }}
         />
         <LabeledDropdown
+          styleClass={styles.dropdown}
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Sub-category',
@@ -116,6 +119,7 @@ export default function SearchHeader({
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'subCategory')}
         />
         <LabeledDropdown
+          styleClass={styles.dropdown}
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Type',

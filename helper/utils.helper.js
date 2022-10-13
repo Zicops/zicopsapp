@@ -200,7 +200,7 @@ async function getVideoThumbnail(videoData, videoTimeInSeconds) {
     video.playsInline = true;
     video.currentTime = videoTimeInSeconds;
     video.play();
-    console.log(video.currentTime, videoTimeInSeconds);
+    // console.log(video.currentTime, videoTimeInSeconds);
   });
 }
 

@@ -176,10 +176,10 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         GET_USER_NOTES,
         {
           user_id: userData?.id,
-          user_lsp_id: 'Zicops',
           publish_time: Date.now(),
           pageCursor: '',
-          pageSize: 9999999999999
+          pageSize: 9999999999999,
+          course_id: fullCourse?.id
         },
         {},
         userClient
@@ -194,10 +194,10 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         GET_USER_BOOKMARKS,
         {
           user_id: userData?.id,
-          user_lsp_id: 'Zicops',
           publish_time: Date.now(),
           pageCursor: '',
-          pageSize: 9999999999999
+          pageSize: 9999999999999,
+          course_id: fullCourse?.id
         },
         {},
         userClient

@@ -98,6 +98,10 @@
   margin: 20px auto;
 }
 
+.dropdown {
+  z-index: 2;
+}
+
 .searchBodyTitle {
   margin: 30px calc(4% + 10px);
   color: $white;

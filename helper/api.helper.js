@@ -59,6 +59,23 @@ export async function loadQueryDataAsync(
   return response?.data || {};
 }
 
+export async function loadAndCacheDataAsync(
+  QUERY,
+  variableObj = {},
+  options = {},
+  client = queryClient
+) {
+  const response = await client
+    .query({ query: QUERY, variables: variableObj, ...options })
+    .catch((err) => {
+      console.log(`Load Data error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
 export async function deleteData(
   MUTATION,
   variableObj = {},

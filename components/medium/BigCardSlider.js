@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@mui/material';
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import BigCard from '../small/SingleBigCard';
 import CardSliderHeader from '../small/CardSliderHeader';
-import {CustomLeftArrow, CustomRightArrow} from '../small/SliderArrows'
+import { CustomLeftArrow, CustomRightArrow } from '../small/SliderArrows';
 import { useRouter } from 'next/router';
 
-const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false }) => {
+const BigCardSlider = ({
+  deviceType,
+  title,
+  type,
+  data,
+  slide,
+  bigBox = false,
+  handleTitleClick = () => {}
+}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const router = useRouter();
 
@@ -37,7 +45,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
             height={40}
           />
         ) : (
-          <CardSliderHeader title={title} />
+          <CardSliderHeader title={title} handleTitleClick={handleTitleClick} />
         )}
         <Carousel
           swipeable={false}
@@ -116,4 +124,4 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
   );
 };
 
-export default BigCardSlider
+export default BigCardSlider;

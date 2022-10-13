@@ -8,7 +8,7 @@ import SearchHeader from './SearchHeader';
 import SearchSubCat from './SearchSubCat';
 
 export default function Search() {
-  const { courses, isLoading, lastItemRef, filters, setFilters, clearAllFilters } =
+  const { courses, isLoading, lastItemRef, filters, setFilters, clearAllFilters, bookmarkData } =
     useHandleSearch();
   const { catSubCat, setActiveCatId } = useHandleCatSubCat(filters.category);
 
@@ -42,7 +42,7 @@ export default function Search() {
         setActiveCatId={setActiveCatId}
       />
 
-      {showBookMark && <SearchBookmarks />}
+      {showBookMark && <SearchBookmarks data={bookmarkData} />}
 
       {showSubCat && (
         <SearchSubCat

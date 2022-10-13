@@ -125,7 +125,7 @@ const SubCategoriesPreview = ({
         <div className={`${styles.navigatorBtns}`}>
           <Button
             variant={'outlined'}
-            className={`${styles.transform_text}`}
+            className={`${styles.backBtn} ${styles.transform_text}`}
             onClick={() => {
               setCurrentComponent(2);
             }}>

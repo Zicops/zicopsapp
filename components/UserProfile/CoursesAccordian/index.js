@@ -14,7 +14,7 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Accordian from '../../../components/UserProfile/Accordian';
 
 // import AssignedCourses from '../../AssignedCourses';
@@ -23,6 +23,7 @@ import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
 import _styles from '../userProfile.module.scss';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -41,6 +42,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
 
   const router = useRouter();
   const currentUserId = router?.query?.userId;
@@ -90,6 +92,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       const courseArray = dataCourse.filter((item) => item.id !== userCourseData?.id);
       setDataCourse([...courseArray]);
       setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+
       setLoading(false)
       setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
@@ -118,8 +121,12 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
     const courseArray = dataCourse.filter((item) => item.id !== sendData?.courseId);
     setDataCourse([...courseArray]);
-    setCourseAssignData({ ...courseAssignData, isCourseAssigned: true ,endDate: new Date(),
-      isMandatory: false  });
+    setCourseAssignData({
+      ...courseAssignData,
+      isCourseAssigned: true,
+      endDate: new Date(),
+      isMandatory: false
+    });
     await loadAssignedCourseData();
     setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
     setIsAssignPopUpOpen(false);

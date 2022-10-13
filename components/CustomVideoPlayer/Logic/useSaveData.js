@@ -10,12 +10,14 @@ import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
 import { BOX } from './customVideoPlayer.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 
 export default function useSaveData(videoElement, freezeState) {
   const [addUserBookMark] = useMutation(ADD_USER_BOOKMARK, {
     client: userClient
   });
 
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
@@ -66,7 +68,6 @@ export default function useSaveData(videoElement, freezeState) {
     //   });
     //   // console.log('thumbnail', thumbnail);
     // }
-
 
     // async function getVideoThumbnail(videoTimeInSeconds) {
     //   return new Promise((resolve, reject) => {
@@ -258,7 +259,7 @@ export default function useSaveData(videoElement, freezeState) {
 
     const sendBookMarkData = {
       user_id: userData?.id,
-      user_lsp_id: 'Zicops',
+      user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id,
       user_course_id: userCourseData?.userCourseMapping?.user_course_id,
       course_id: fullCourse?.id,
       topic_id: videoData?.topicContent[0]?.topicId,

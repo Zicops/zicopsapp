@@ -8,8 +8,6 @@ import styles from '../customVideoPlayer.module.scss';
 import FolderBar from './FolderBar';
 
 export default function Bookmark({
-  handleChange,
-  value,
   handleSave,
   updateIsPlayingTo,
   playerState,
