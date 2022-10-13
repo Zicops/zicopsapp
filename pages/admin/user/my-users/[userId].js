@@ -53,14 +53,18 @@ export default function UserProfilePage() {
 
     setCurrentUserData({ ...userDetails });
     
-    if(!userDetails?.is_verified) return ;
     
     const userLearningSpaceData = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id: currentUserId , lsp_id:lspId},{},userQueryClient)
     if (userLearningSpaceData?.error) return setToastMsg({ type: 'danger', message: 'User Load Error' });
-
+    
     const { user_lsp_id } = userLearningSpaceData?.getUserLspByLspId;
+    
+    // console.log(user_lsp_id,'userLspid of',userDetails?.email)
     if(!user_lsp_id) return ;
-
+    
+    setCurrentUserData((prev) => ({ ...prev, userLspId:  user_lsp_id })) ;
+    
+    if(!userDetails?.is_verified) return ;
 
     const detailPref = await loadQueryDataAsync(
       GET_USER_PREFERENCES,
@@ -125,7 +129,7 @@ export default function UserProfilePage() {
           <UserProfile currentUserData={currentUserData} setCurrentUserData={setCurrentUserData} />
         </MainBodyBox>
         <div className={`${styles.accordianContainer}`}>
-          <CoursesAccordian />
+          <CoursesAccordian currentUserData={currentUserData}/>
           <CohortAccordian currentUserData={currentUserData}/>
           <LearningDashboardAccordian />
         </div>

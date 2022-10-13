@@ -24,7 +24,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
   const currentUserId = router?.query?.userId;
 
   useEffect(async () => {
-    if(!currentUserData?.user_lsp_id) return ;
+    if(!currentUserData?.userLspId) return ;
     // if (!currentUserData?.user_lsp_id)
     //   return setToastMsg({ type: 'danger', mesaage: 'Error while loading user data!' });
 
@@ -33,7 +33,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
 
     const sendData = {
       user_id: currentUserData?.id,
-      user_lsp_id: currentUserData?.user_lsp_id,
+      user_lsp_id: currentUserData?.userLspId,
       publish_time: getCurrentEpochTime(),
       pageCursor: '',
       pageSize: 100
@@ -68,7 +68,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
     }
     if (!cohortDetails?.length) return setLoading(false);
     return setCohortData([...cohortDetails], setLoading(false));
-  }, [currentUserData?.user_lsp_id]);
+  }, [currentUserData?.userLspId]);
 
   return (
     <>
@@ -82,7 +82,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
             )
           )}
           {cohortData?.map((cohort, index) => {
-            console.log(cohort);
+            // console.log(cohort);
             return (
               <CohortBoxCard
                 key={cohort?.main?.cohort_id}

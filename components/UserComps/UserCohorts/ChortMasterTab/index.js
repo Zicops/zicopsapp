@@ -17,10 +17,10 @@ const UserCohorts = ({ isEdit = false }) => {
 
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(router?.query);
-    // console.log(cohortMasterData);
-  }, [router?.query]);
+  // useEffect(() => {
+  //   console.log(router?.query);
+  //   // console.log(cohortMasterData);
+  // }, [router?.query]);
   const tabData = [
     {
       name: 'Cohort Master',
