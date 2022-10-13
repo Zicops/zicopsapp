@@ -149,7 +149,9 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             className={`${styles.input_margin_transform}`}
             onClick={async() => {
               const _error = await updateAboutUser(null,false);
+              // console.log(_error);
               if(!_error) setCurrentComponent(1);
+
             }}>
             Next
           </Button>
