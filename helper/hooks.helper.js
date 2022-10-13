@@ -364,7 +364,7 @@ export default function useUserCourseData() {
       sub_category: basePreference?.[0]?.sub_category,
       sub_categories: preferences
     }));
-    setUserDataGlobal({ ...userData, preferences: prefArr });
+    setUserDataGlobal({ ...userDataGlobal, preferences: prefArr });
     return prefArr;
   }
 
