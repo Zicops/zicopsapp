@@ -1,4 +1,5 @@
 import { ADD_USER_NOTES, UPDATE_USER_NOTES, userClient } from '@/api/UserMutations';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -18,6 +19,7 @@ export default function NoteCard({
   handleDelete = () => {},
   handleNote = () => {}
 }) {
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const [addUserNotes] = useMutation(ADD_USER_NOTES, {
     client: userClient
   });
@@ -42,7 +44,7 @@ export default function NoteCard({
 
     const sendNotesData = {
       user_id: userData?.id,
-      user_lsp_id: 'Zicops',
+      user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id,
       course_id: fullCourse?.id,
       topic_id: videoData?.topicContent[0]?.topicId,
       module_id: videoData?.currentModuleId,

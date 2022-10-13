@@ -20,6 +20,7 @@ import Loader from '@/components/common/Loader';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserExamDataAtom } from '@/state/atoms/video.atom';
@@ -33,6 +34,7 @@ export default function AnswerKeyPage() {
   const questionOptionData = useRecoilValue(QuestionOptionDataAtom);
   const userExamData = useRecoilValue(UserExamDataAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -168,7 +170,7 @@ export default function AnswerKeyPage() {
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
       {},
       userQueryClient
     );

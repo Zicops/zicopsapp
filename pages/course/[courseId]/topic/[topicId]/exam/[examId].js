@@ -48,6 +48,7 @@ import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
 import moment from 'moment';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 
 const ExamScreen = () => {
   const [loadMaster] = useLazyQuery(GET_EXAM_META, { client: queryClient });
@@ -96,6 +97,7 @@ const ExamScreen = () => {
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [userExamData, setUserExamData] = useRecoilState(UserExamDataAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -278,7 +280,7 @@ const ExamScreen = () => {
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
       {},
       userQueryClient
     );
@@ -879,7 +881,7 @@ const ExamScreen = () => {
 
     const sendAttemptData = {
       user_id: userData?.id,
-      user_lsp_id: userOrgData?.user_lsp_id || 'Zicops',
+      user_lsp_id: userOrgData?.user_lsp_id || userDataGlobal?.userDetails?.user_lsp_id,
       user_cp_id: user_cp_id,
       user_course_id: _courseData?.userCourseMapping?.user_course_id,
       exam_id: learnerData?.examData?.id,
@@ -940,7 +942,7 @@ const ExamScreen = () => {
         const progressData = {
           user_id: userData?.id,
           user_ea_id: examAttemptData?.user_ea_id,
-          user_lsp_id: userOrgData?.user_lsp_id || 'Zicops',
+          user_lsp_id: userOrgData?.user_lsp_id || userDataGlobal?.userDetails?.user_lsp_id,
           user_cp_id: sendAttemptData?.user_cp_id,
           // user_course_id: userCourseMapData?.userCourseMapping?.user_course_id,
 

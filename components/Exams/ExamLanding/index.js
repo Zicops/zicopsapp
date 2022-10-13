@@ -4,6 +4,7 @@ import AttempHistory from '@/components/AttemptHistory';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
@@ -45,6 +46,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
   });
 
   const topicData = useRecoilValue(TopicAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
@@ -195,7 +197,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
       {},
       userQueryClient
     );
