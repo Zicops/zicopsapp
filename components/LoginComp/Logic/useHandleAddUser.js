@@ -317,7 +317,7 @@ export default function useHandleAddUserDetails() {
       const message = JSON.parse(errorMsg.split('body:')[1]);
       if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.phoneError)
         return setToastMsg({ type: 'danger', message: `Phone Number already exists!` });
-      return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+      return setToastMsg({ type: 'danger', message: `Update User about Error!` });
     }
 
     const data = res?.data?.updateUser;
