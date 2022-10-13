@@ -199,7 +199,7 @@ export default function useUserCourseData() {
     const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
 
     const allAssignedCourses = [];
-    for (let i = 0; i < assignedCoursesToUser.length; i++) {
+    for (let i = 0; i < assignedCoursesToUser?.length; i++) {
       const courseMap = assignedCoursesToUser[i];
       const mapId = courseMap?.user_course_id;
       const course_id = courseMap?.course_id;
