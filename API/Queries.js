@@ -704,6 +704,7 @@ export const GET_LATEST_EXAMS = gql`
         Description
         Code
         QpId
+        QuestionIds
         CreatedAt
         UpdatedAt
         CreatedBy
@@ -747,6 +748,7 @@ export const GET_EXAM_META = gql`
       Description
       Code
       QpId
+      QuestionIds
       CreatedAt
       UpdatedAt
       CreatedBy
