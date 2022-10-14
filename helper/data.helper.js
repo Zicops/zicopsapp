@@ -111,9 +111,9 @@ export function sortTopicContentByIsDefault(topicContent) {
 }
 
 export function sortArrByKeyInOrder(array, key = 'sequence', isAsc = true) {
-  if (!array.length) return [];
+  if (!array?.length) return [];
 
-  const localArr = [...array];
+  const localArr = structuredClone(array || []);
   let ascVal = -1,
     desVal = 1;
   if (isAsc) {
