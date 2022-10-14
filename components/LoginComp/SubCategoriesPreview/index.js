@@ -22,7 +22,7 @@ const SubCategoriesPreview = ({
 
   const { updateAboutUser, addUserLearningSpaceDetails, isSubmitDisable } =
     useHandleAddUserDetails();
-  const { updatePreferences } = useHandleUserUpdate();
+  const { updatePreferences , _isSubmitDisable } = useHandleUserUpdate();
 
   const router = useRouter();
 
@@ -51,7 +51,7 @@ const SubCategoriesPreview = ({
     router.prefetch('/');
     setVidIsOpen(true);
     vidRef?.current?.play();
-    console.log('from add');
+    // console.log('from add');
   }
 
   async function handleUpdate() {
@@ -132,7 +132,7 @@ const SubCategoriesPreview = ({
             Back
           </Button>
           <Button
-            disabled={primary === '' || isSubmitDisable}
+            disabled={primary === '' || isSubmitDisable || _isSubmitDisable}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
             onClick={() => {

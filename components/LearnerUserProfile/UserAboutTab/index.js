@@ -40,32 +40,7 @@ const UserAboutTab = () => {
 
   useEffect(async () => {
     const { id } = getUserData();
-    const lspData = parseJson(sessionStorage.getItem('lspData'));
-
-    let data;
-
-    //for first time only...will delete later
-    if (!lspData?.user_lsp_id) {
-      const res = await loadUserPreferences({
-        variables: { user_id: id }
-      }).catch((err) => {
-        console.log(err);
-        return;
-      });
-      data = res?.data?.getUserPreferences[0];
-      console.log(data);
-    }
-
-    console.log(lspData, 'lspdata');
-
-    let userLspId = !!lspData?.user_lsp_id ? lspData?.user_lsp_id : data?.user_lsp_id;
-
-    if (!lspData) {
-      sessionStorage.setItem(
-        'lspData',
-        JSON.stringify({ user_id: id, user_lsp_id: data?.user_lsp_id })
-      );
-    }
+    // const lspData = parseJson(sessionStorage.getItem('lspData'));
 
     // const userPreferences = await getUserPreferences(userLspId);
     const userPreferences = userDataGlobal?.preferences;
@@ -75,10 +50,14 @@ const UserAboutTab = () => {
 
     // if (!!preferenceData?.length) setSubCategory([...preferenceData]);
 
-    setSelected([...preferenceData]);
+    // if(!userDataGlobal?.preferences?.length) return
+
+    setSelected(preferenceData?.map((item) => {
+      return { ...item, name: item?.sub_category, category: item?.catData?.Name, isSelected: false };
+    })|| []);
 
     const baseSubcategory = preferenceData.filter((item) => item?.is_base);
-    console.log(baseSubcategory);
+    // console.log(baseSubcategory);
 
     const resOrg = await loadUserOrg({ variables: { user_id: id } }).catch((err) =>
       console.log(err)
@@ -90,7 +69,7 @@ const UserAboutTab = () => {
       sub_category: baseSubcategory[0]?.sub_category,
       ...orgData
     }));
-  }, []);
+  }, [userDataGlobal?.preferences]);
 
   return (
     <div className={`${styles.userAboutTab}`}>
