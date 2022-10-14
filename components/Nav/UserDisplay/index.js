@@ -49,7 +49,9 @@ const UserDisplay = () => {
       setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
     }
 
-    loadAndSetUserData();
+    if(!userProfileData?.first_name && !userProfileData?.last_name) return loadAndSetUserData();
+
+    return loadAndSetUserData();
   }, []);
 
   // //refill the  recoil values
