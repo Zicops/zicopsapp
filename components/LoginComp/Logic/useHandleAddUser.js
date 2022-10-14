@@ -7,6 +7,8 @@ import {
   UPDATE_USER,
   userClient
 } from '@/api/UserMutations';
+import { GET_USER_LEARNINGSPACES_DETAILS, userQueryClient } from '@/api/UserQueries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { CUSTOM_ERROR_MESSAGE, LEARNING_SPACE_ID, USER_STATUS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
@@ -99,42 +101,55 @@ export default function useHandleAddUserDetails() {
   }, [userOrgData]);
 
   async function addUserLearningSpaceDetails(sub_categories = [], base_sub_category) {
-    console.log(userDataOrgLsp, 'data at start of addUserLearningDetails');
+    // console.log(userDataOrgLsp, 'data at start of addUserLearningDetails');
+
     setSubmitDisable(true);
-    const sendLspData = {
-      user_id: userDataAbout?.id,
-      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
-      status: 'Active'
-    };
-
-    console.log(sendLspData, 'addUserLearningSpaceDetails');
-
-    let isError = false;
-    const resLsp = await addLsp({ variables: sendLspData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
-    });
-
-    if (isError) {
-      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
-      return;
-      // return router.push('/account-setup');
+    const resLearning = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userDataAbout?.id  , lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
+    if(resLearning?.error) return setToastMsg({ type: 'danger', message: 'Error while loading learning space details!' });
+    let userLspId = null ;
+    if(resLearning?.getUserLspByLspId){
+      userLspId = resLearning?.getUserLspByLspId?.user_lsp_id;
     }
 
-    //updating atom after first mutation call
-    const dataLsp = resLsp?.data?.addUserLspMap[0];
+    let isError = false;
+    if(!userLspId){
+      const sendLspData = {
+        user_id: userDataAbout?.id,
+        lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
+        status: 'Active'
+      };
+  
+      // console.log(sendLspData, 'addUserLearningSpaceDetails');
+  
+      const resLsp = await addLsp({ variables: sendLspData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
+      });
+  
+      if (isError) {
+        setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+        return;
+        // return router.push('/account-setup');
+      }
+  
+      //updating atom after first mutation call
+      const dataLsp = resLsp?.data?.addUserLspMap[0];
+  
+      setUserDataOrgLsp((prevValue) => ({ ...prevValue, user_lsp_id: dataLsp?.user_lsp_id }));
 
-    setUserDataOrgLsp((prevValue) => ({ ...prevValue, user_lsp_id: dataLsp?.user_lsp_id }));
+      userLspId = dataLsp?.user_lsp_id ;
 
-    // ORGANIZATION DATA MUTATION
+    }
 
-    console.log(userDataOrgLsp, 'data at start of addUserOrganizationDetails');
+  // ORGANIZATION DATA MUTATION
+
+    // console.log(userDataOrgLsp, 'data at start of addUserOrganizationDetails');
     const sendOrgData = {
       user_id: userDataAbout?.id,
       employee_id: userOrgData?.employee_id,
 
-      user_lsp_id: dataLsp?.user_lsp_id,
+      user_lsp_id: userLspId,
       organization_id: userOrgData?.organization_id || 'Zicops',
       organization_role: userOrgData?.organization_role,
 
@@ -143,7 +158,7 @@ export default function useHandleAddUserDetails() {
 
     isError = false;
     const resOrg = await addOrg({ variables: sendOrgData }).catch((err) => {
-      console.log(err);
+      // console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User Org Error' });
     });
@@ -166,7 +181,7 @@ export default function useHandleAddUserDetails() {
     console.log(userDataOrgLsp, 'data at start of addUserLanguageDetails');
     const sendLangData = {
       user_id: userDataAbout?.id,
-      user_lsp_id: dataLsp?.user_lsp_id,
+      user_lsp_id:userLspId,
       language: userOrgData?.language,
       is_base_language: userOrgData?.is_base_language || true,
       is_active: userOrgData?.lang_is_active || true
@@ -175,7 +190,7 @@ export default function useHandleAddUserDetails() {
     console.log(sendLangData, 'addUserLanguageDetails');
     isError = false;
     const resLang = await addLanguage({ variables: sendLangData }).catch((err) => {
-      console.log(err);
+      // console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User language Error' });
     });
@@ -193,7 +208,7 @@ export default function useHandleAddUserDetails() {
 
     //ORGANIZATION PREFERANCE MUTATION CALL
 
-    console.log(userDataOrgLsp, 'data at start of addUserPreferenceDetails');
+    // console.log(userDataOrgLsp, 'data at start of addUserPreferenceDetails');
     // const sendPreferenceData = {
     //   user_id: userDataAbout?.id,
     //   user_lsp_id: dataLsp?.user_lsp_id,
@@ -206,19 +221,19 @@ export default function useHandleAddUserDetails() {
       let is_base = item === base_sub_category ? true : false;
       return {
         user_id: userDataAbout?.id,
-        user_lsp_id: dataLsp?.user_lsp_id,
+        user_lsp_id: userLspId,
         sub_category: item,
         is_base: is_base,
         is_active: userOrgData?.preferences_is_active
       };
     });
 
-    console.log(sendPreferenceData);
+    // console.log(sendPreferenceData);
 
     isError = false;
     const resPref = await addPreference({ variables: { input: sendPreferenceData } }).catch(
       (err) => {
-        console.log(err);
+        // console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update User Preferance Error' });
       }
@@ -231,7 +246,7 @@ export default function useHandleAddUserDetails() {
     }
 
     const dataPref = resPref?.data?.addUserPreference[0];
-    console.log(dataPref);
+    // console.log(dataPref);
 
     setUserDataOrgLsp((prevValue) => ({
       ...prevValue,
@@ -241,18 +256,18 @@ export default function useHandleAddUserDetails() {
     }));
 
     // ORGANIZATION USER ROLE MUTATION
-    console.log(userDataOrgLsp, 'data at start of addUserRoleDetails');
+    // console.log(userDataOrgLsp, 'data at start of addUserRoleDetails');
     const sendRoleData = {
       user_id: userDataAbout?.id,
-      user_lsp_id: dataLsp?.user_lsp_id,
+      user_lsp_id: userLspId,
       role: userOrgData?.user_role || 'Learner',
       is_active: true
     };
-    console.log(sendRoleData);
+    // console.log(sendRoleData);
 
     isError = false;
     const resRole = await addRole({ variables: sendRoleData }).catch((err) => {
-      console.log(err);
+      // console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User role Error' });
     });
