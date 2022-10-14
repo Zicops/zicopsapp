@@ -42,12 +42,12 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
       {quizzes &&
         quizzes?.map((quiz, index) => (
           <Bar
-            key={quiz.name + index}
+            key={quiz?.name + index}
             index={index + 1}
-            text={quiz.name}
+            text={quiz?.name}
             type={
               <div className={styles.editQuizContainer}>
-                <span>{quiz.type}</span>
+                <span>{quiz?.type}</span>
                 <span className={styles.editQuiz} onClick={() => handleEditQuiz(quiz, index)}>
                   <img src="/images/svg/edit-box-line.svg" alt="" />
                 </span>
@@ -290,10 +290,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
             <div className="center-element-with-flex">
               <Button
                 text="Cancel"
-                clickHandler={() => {
-                  setQuizzes([...quizzes, editedQuiz]);
-                  toggleQuizForm();
-                }}
+                clickHandler={() => toggleQuizForm()}
                 styleClass={styles.topicContentSmallBtn}
               />
               <Button

@@ -2,14 +2,14 @@ import { GET_LATEST_COURSES } from '@/api/Queries';
 import HomeSlider from '@/components/HomeSlider';
 import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
-import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import HomePageLoader from './HomePageLoader';
 import styles from './homepageScreen.module.scss';
 
@@ -102,161 +102,200 @@ export default function HomepageScreen() {
   }
 
   const pageSize = 28;
+  let timer = null;
+  useEffect(() => {
+    if (!(userData?.preferences?.length && userData?.preferences?.[0]?.catData)) {
+      setTimeout(() => {
+        setActiveSubcatArr([]);
+        setOngoingCourses([]);
+        setLearningFolderCourses([]);
+        setLatestCourses([]);
+        setLearningSpaceCourses([]);
+        setBaseSubcategoryCourses([]);
+        setParentOfBaseSubcategoryCourses([]);
+        setQuickCourses([]);
+        setSlowCourses([]);
+        setSubCategory0Courses([]);
+        setSubCategory1Courses([]);
+        setSubCategory2Courses([]);
+        setSubCategory3Courses([]);
+        setSubCategory4Courses([]);
 
-  useEffect(async () => {
-    if (!(userData?.preferences?.length && userData?.preferences?.[0]?.catData)) return;
+        return clearTimeout(timer);
+      }, 3000);
+      return;
+    }
+    clearTimeout(timer);
 
-    setIsLoading(true);
-    const subcatArr = userData?.preferences;
-    // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
-    const activeSubcategories = subcatArr?.filter((item) => item?.is_active);
-    const baseSubcategoryObj = subcatArr?.filter((item) => item?.is_base)[0];
-    setBaseSubcategory(baseSubcategoryObj?.sub_category);
+    async function loadAndSetHomePageRows() {
+      setIsLoading(true);
+      const subcatArr = userData?.preferences;
+      // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
+      const activeSubcategories = subcatArr?.filter(
+        (item) => item?.is_active && item?.sub_category
+      );
+      const baseSubcategoryObj = subcatArr?.filter((item) => item?.is_base)[0];
+      if (baseSubcategoryObj?.sub_category) setBaseSubcategory(baseSubcategoryObj?.sub_category);
 
-    // const catId = catSubCat?.subCat?.find(
-    //   (s) => s?.Name === baseSubcategoryObj?.sub_category
-    // )?.CatId;
-    // console.log(catId, catSubCat);
-    const parentOfBase = baseSubcategoryObj?.catData?.Name;
-    // setParentOfBaseSubcategory(catSubCat?.subCatGrp?.[catId]?.cat?.Name);
-    setParentOfBaseSubcategory(parentOfBase);
-    setActiveSubcatArr(activeSubcategories);
+      // const catId = catSubCat?.subCat?.find(
+      //   (s) => s?.Name === baseSubcategoryObj?.sub_category
+      // )?.CatId;
+      // console.log(catId, catSubCat);
+      const parentOfBase = baseSubcategoryObj?.catData?.Name;
+      // setParentOfBaseSubcategory(catSubCat?.subCatGrp?.[catId]?.cat?.Name);
+      if (parentOfBase) setParentOfBaseSubcategory(parentOfBase);
+      setActiveSubcatArr(activeSubcategories);
 
-    const userCourseData = await getUserCourseData(28);
-    let ucidArray = [];
-    userCourseData?.map((uc) => ucidArray?.push(uc.id));
+      const userCourseData = await getUserCourseData(28);
+      let ucidArray = [];
+      userCourseData?.map((uc) => ucidArray?.push(uc.id));
 
-    setOngoingCourses(
-      userCourseData?.filter(
-        (course) => course?.completedPercentage > 0 && course?.completedPercentage < 100
-      )
-    );
-    setLearningFolderCourses(
-      userCourseData?.filter(
-        (course) =>
-          // course?.added_by.toLowerCase() === 'self' &&
-          parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100
-      )
-    );
+      setOngoingCourses(
+        userCourseData?.filter(
+          (course) => course?.completedPercentage > 0 && course?.completedPercentage < 100
+        )
+      );
+      setLearningFolderCourses(
+        userCourseData?.filter(
+          (course) =>
+            // course?.added_by.toLowerCase() === 'self' &&
+            parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100
+        )
+      );
 
-    const getLatestCourses = await getLatestCoursesByFilters({}, pageSize);
-    setLatestCourses(
-      getLatestCourses?.latestCourses?.courses?.filter(
-        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-      ) || []
-    );
+      const getLatestCourses = await getLatestCoursesByFilters({}, pageSize);
+      setLatestCourses(
+        getLatestCourses?.latestCourses?.courses?.filter(
+          (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+        ) || []
+      );
 
-    setIsLoading(false);
-    const getLSPCourses = await getLatestCoursesByFilters({ LspId: userOrg?.lsp_id }, pageSize);
-    setLearningSpaceCourses(
-      getLSPCourses?.latestCourses?.courses?.filter(
-        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-      ) || []
-    );
+      setIsLoading(false);
+      const getLSPCourses = await getLatestCoursesByFilters({ LspId: userOrg?.lsp_id }, pageSize);
+      setLearningSpaceCourses(
+        getLSPCourses?.latestCourses?.courses?.filter(
+          (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+        ) || []
+      );
 
-    let baseSubCatCourses = await getLatestCoursesByFilters(
-      { SubCategory: baseSubcategory },
-      pageSize
-    );
-    setBaseSubcategoryCourses(
-      baseSubCatCourses?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) || []
-    );
-    let baseSubCatParentCourses = await getLatestCoursesByFilters(
-      { Category: parentOfBase },
-      pageSize
-    );
-    setParentOfBaseSubcategoryCourses(
-      baseSubCatParentCourses?.latestCourses?.courses?.filter(
-        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-      ) || []
-    );
+      if (baseSubcategoryObj?.sub_category) {
+        let baseSubCatCourses = await getLatestCoursesByFilters(
+          { SubCategory: baseSubcategory },
+          pageSize
+        );
+        setBaseSubcategoryCourses(
+          baseSubCatCourses?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) ||
+            []
+        );
+      } else {
+        setBaseSubcategoryCourses([]);
+      }
 
-    // activeSubcatArr.slice(0, 4).map(async(subcat) => {
-    let prefIndex = 0;
-    const courseData = [];
-    for (let i = 0; i < activeSubcategories?.length; ++i) {
-      if (prefIndex === 5) break;
+      if (parentOfBase) {
+        let baseSubCatParentCourses = await getLatestCoursesByFilters(
+          { Category: parentOfBase },
+          pageSize
+        );
+        setParentOfBaseSubcategoryCourses(
+          baseSubCatParentCourses?.latestCourses?.courses?.filter(
+            (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+          ) || []
+        );
+      } else {
+        setParentOfBaseSubcategoryCourses([]);
+      }
 
-      const subCategory = activeSubcategories?.[i]?.sub_category;
-      if (!subCategory) continue;
+      // activeSubcatArr.slice(0, 4).map(async(subcat) => {
+      let prefIndex = 0;
+      const courseData = [];
+      for (let i = 0; i < activeSubcategories?.length; ++i) {
+        if (prefIndex === 5) break;
 
-      let subCatCourses = await getLatestCoursesByFilters({ SubCategory: subCategory }, pageSize);
-      ++prefIndex;
-      courseData.push(
-        subCatCourses?.latestCourses?.courses?.filter(
+        const subCategory = activeSubcategories?.[i]?.sub_category;
+        if (!subCategory) continue;
+
+        let subCatCourses = await getLatestCoursesByFilters({ SubCategory: subCategory }, pageSize);
+        ++prefIndex;
+        courseData.push(
+          subCatCourses?.latestCourses?.courses?.filter(
+            (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+          ) || []
+        );
+      }
+
+      setSubCategory0Courses(courseData?.[0]);
+      setSubCategory1Courses(courseData?.[1]);
+      setSubCategory2Courses(courseData?.[2]);
+      setSubCategory3Courses(courseData?.[3]);
+      setSubCategory4Courses(courseData?.[4]);
+      // if (activeSubcategories?.[0]?.sub_category) {
+      //   let SubCat1Courses = await getLatestCoursesByFilters(
+      //     { SubCategory: activeSubcategories?.[0]?.sub_category },
+      //     pageSize
+      //   );
+      //   setSubCategory1Courses(
+      //     SubCat1Courses?.latestCourses?.courses?.filter(
+      //       (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+      //     ) || []
+      //   );
+      // }
+
+      // if (activeSubcategories?.[1]?.sub_category) {
+      //   let SubCat2Courses = await getLatestCoursesByFilters(
+      //     { SubCategory: activeSubcategories?.[1]?.sub_category },
+      //     pageSize
+      //   );
+      //   setSubCategory2Courses(
+      //     SubCat2Courses?.latestCourses?.courses?.filter(
+      //       (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+      //     ) || []
+      //   );
+      // }
+
+      // if (activeSubcategories?.[2]?.sub_category) {
+      //   let SubCat3Courses = await getLatestCoursesByFilters(
+      //     { SubCategory: activeSubcategories?.[2]?.sub_category },
+      //     pageSize
+      //   );
+      //   setSubCategory3Courses(
+      //     SubCat3Courses?.latestCourses?.courses?.filter(
+      //       (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+      //     ) || []
+      //   );
+      // }
+
+      // if (activeSubcategories?.[3]?.sub_category) {
+      //   let SubCat4Courses = await getLatestCoursesByFilters(
+      //     { SubCategory: activeSubcategories?.[3]?.sub_category },
+      //     pageSize
+      //   );
+      //   setSubCategory4Courses(
+      //     SubCat4Courses?.latestCourses?.courses?.filter(
+      //       (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+      //     ) || []
+      //   );
+      // }
+      // })
+
+      // quickCourses duration less than 1 hour;
+      let getQuickCourses = await getLatestCoursesByFilters({ DurationMax: 60 * 60 }, pageSize);
+      setQuickCourses(
+        getQuickCourses?.latestCourses?.courses?.filter(
+          (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+        ) || []
+      );
+      // slowCourses duration more than 6 hours;
+      let getSlowCourses = await getLatestCoursesByFilters({ DurationMin: 360 * 60 }, pageSize);
+      setSlowCourses(
+        getSlowCourses?.latestCourses?.courses?.filter(
           (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
         ) || []
       );
     }
 
-    setSubCategory0Courses(courseData?.[0]);
-    setSubCategory1Courses(courseData?.[1]);
-    setSubCategory2Courses(courseData?.[2]);
-    setSubCategory3Courses(courseData?.[3]);
-    setSubCategory4Courses(courseData?.[4]);
-    // if (activeSubcategories?.[0]?.sub_category) {
-    //   let SubCat1Courses = await getLatestCoursesByFilters(
-    //     { SubCategory: activeSubcategories?.[0]?.sub_category },
-    //     pageSize
-    //   );
-    //   setSubCategory1Courses(
-    //     SubCat1Courses?.latestCourses?.courses?.filter(
-    //       (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-    //     ) || []
-    //   );
-    // }
+    loadAndSetHomePageRows();
 
-    // if (activeSubcategories?.[1]?.sub_category) {
-    //   let SubCat2Courses = await getLatestCoursesByFilters(
-    //     { SubCategory: activeSubcategories?.[1]?.sub_category },
-    //     pageSize
-    //   );
-    //   setSubCategory2Courses(
-    //     SubCat2Courses?.latestCourses?.courses?.filter(
-    //       (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-    //     ) || []
-    //   );
-    // }
-
-    // if (activeSubcategories?.[2]?.sub_category) {
-    //   let SubCat3Courses = await getLatestCoursesByFilters(
-    //     { SubCategory: activeSubcategories?.[2]?.sub_category },
-    //     pageSize
-    //   );
-    //   setSubCategory3Courses(
-    //     SubCat3Courses?.latestCourses?.courses?.filter(
-    //       (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-    //     ) || []
-    //   );
-    // }
-
-    // if (activeSubcategories?.[3]?.sub_category) {
-    //   let SubCat4Courses = await getLatestCoursesByFilters(
-    //     { SubCategory: activeSubcategories?.[3]?.sub_category },
-    //     pageSize
-    //   );
-    //   setSubCategory4Courses(
-    //     SubCat4Courses?.latestCourses?.courses?.filter(
-    //       (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-    //     ) || []
-    //   );
-    // }
-    // })
-
-    // quickCourses duration less than 1 hour;
-    let getQuickCourses = await getLatestCoursesByFilters({ DurationMax: 60 * 60 }, pageSize);
-    setQuickCourses(
-      getQuickCourses?.latestCourses?.courses?.filter(
-        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-      ) || []
-    );
-    // slowCourses duration more than 6 hours;
-    let getSlowCourses = await getLatestCoursesByFilters({ DurationMin: 360 * 60 }, pageSize);
-    setSlowCourses(
-      getSlowCourses?.latestCourses?.courses?.filter(
-        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-      ) || []
-    );
+    return () => clearTimeout(timer);
   }, [userData?.preferences]);
 
   if (isLoading) return <HomePageLoader />;
@@ -412,12 +451,14 @@ export default function HomepageScreen() {
         />
       )}
 
-      <BigCardSlider
-        title="Categories"
-        data={catSubCat?.cat}
-        slide={bigSquare}
-        handleTitleClick={() => router.push('search-page')}
-      />
+      {!!catSubCat?.cat?.length && (
+        <BigCardSlider
+          title="Categories"
+          data={catSubCat?.cat}
+          slide={bigSquare}
+          handleTitleClick={() => router.push('search-page')}
+        />
+      )}
 
       {!!slowCourses?.length && (
         <ZicopsCarousel

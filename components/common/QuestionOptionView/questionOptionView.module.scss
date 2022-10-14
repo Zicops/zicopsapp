@@ -107,3 +107,22 @@
     }
   }
 }
+
+.selectedAnswer {
+  position: relative;
+  height: 100%;
+  width: 20px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 10px;
+
+    height: 10px;
+    width: 10px;
+    background-color: $primary;
+
+    border-radius: 50%;
+  }
+}

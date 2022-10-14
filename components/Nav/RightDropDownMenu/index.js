@@ -71,11 +71,7 @@ export default function RightDropDownMenu() {
       id: 4,
       class: 'dropdown-submenu-justifycontent-right',
       name: 'Logout',
-      onClick: () => {
-        sessionStorage.clear();
-        logOut();
-        router.push('/login');
-      }
+      onClick: () => logOut()
     }
   ];
 
