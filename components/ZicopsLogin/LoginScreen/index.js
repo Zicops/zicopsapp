@@ -19,7 +19,7 @@ import { GET_USER_ORGANIZATIONS, userQueryClient } from '@/api/UserQueries';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import HomeHeader from '@/components/HomePage/HomeHeader';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { USER_STATUS } from '@/helper/constants.helper';
+import { GIBBERISH_VALUE_FOR_LOGIN_STATE, USER_STATUS } from '@/helper/constants.helper';
 
 const LoginScreen = ({ setPage }) => {
   const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
@@ -41,6 +41,10 @@ const LoginScreen = ({ setPage }) => {
   const router = useRouter();
 
   const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
+
+  useEffect(() => {
+    if (sessionStorage?.length && userData?.id) return router.push('/');
+  }, [userData?.id]);
 
   const handleEmail = (e) => {
     setDisableBtn(false);
@@ -102,7 +106,7 @@ const LoginScreen = ({ setPage }) => {
 
     setUserData(getUserObject(res?.data?.login));
     sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
-    localStorage.setItem('id', res?.data?.login?.id);
+    localStorage.setItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
 
     if (!!res?.data?.login?.is_verified) {
       // setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
