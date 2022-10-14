@@ -188,13 +188,14 @@ const CohortMapping = () => {
 
 async function loadAssignCourses(){
   if (!router?.query?.cohortId) {
-    console.log(cohortData?.id);
+    // console.log(cohortData?.id);
     if (!cohortData?.id)
       return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
     const data = await getCohortCourses(cohortData?.id);
+    setLoading(true);
     if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
     if (data?.allCourses) {
-      return setCourseData([...data?.allCourses]);
+      return setCourseData([...data?.allCourses],setLoading(false));
     }
     return;
   }
