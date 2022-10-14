@@ -2,6 +2,7 @@ import { GET_EXAM_CONFIG } from '@/api/Queries';
 import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { secondsToHMS } from '@/helper/utils.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
@@ -17,13 +18,14 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
   const [tableData, setTableData] = useState();
 
   const userData = useRecoilValue(UserStateAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
 
   useEffect(async () => {
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
       {},
       userQueryClient
     );

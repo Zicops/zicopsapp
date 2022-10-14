@@ -23,7 +23,7 @@ import { ADD_COURSE_COHORT_MAP } from '@/api/UserMutations';
 import { userQueryClient } from '@/api/UserQueries';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { mutationClient } from '@/api/Mutations';
+import { DELETE_COHORT_COURSE, mutationClient } from '@/api/Mutations';
 
 const CohortMapping = () => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -32,6 +32,7 @@ const CohortMapping = () => {
     isCourseAssigned: false
   });
 
+  const [deleteCohortCourse] = useMutation(DELETE_COHORT_COURSE,{client:mutationClient}) ;
   const [loading, setLoading] = useState(false);
   const [addCohortCourse] = useMutation(ADD_COURSE_COHORT_MAP, {
     client: mutationClient
@@ -102,13 +103,27 @@ const CohortMapping = () => {
     });
     if (!isCourseAssigned)
       return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
+    await loadAssignCourses();
     setIsAssignPopUpOpen(false);
+    setToastMsg({ type: 'sucess', message: 'Course added succesfully!' });
     setCourseAssignData({
       expectedCompletionDays: null,
       isMandatory: false,
       isCourseAssigned: false
     });
     return setLoading(false);
+  }
+
+  async function handleRemove() {
+    // console.log(selectedCourse,'selected course');
+    if(!selectedCourse?.cohortCourseId) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
+    const res = await deleteCohortCourse({variables:{id:selectedCourse?.cohortCourseId}}).catch((err)=>{console.log(err)});
+    // if(res?.deleteCourseCohort) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
+    await loadAssignCourses();
+    setShowConfirmBox(false);
+    setToastMsg({ type: 'sucess', message: 'Course removed from cohort!' });
+    return;
+
   }
 
   const [lists, setLists] = useState([
@@ -168,32 +183,37 @@ const CohortMapping = () => {
   }
 
   useEffect(async () => {
-    if (!router?.query?.cohortId) {
-      console.log(cohortData?.id);
-      if (!cohortData?.id)
-        return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
-      const data = await getCohortCourses(cohortData?.id);
-      if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
-      if (data?.allCourses) {
-        return setCourseData([...data?.allCourses]);
-      }
-      return;
-    }
-    setLoading(true);
-    const data = await getCohortCourses(router?.query?.cohortId);
-    if (data?.error) {
-      setLoading(false);
-      setToastMsg({ type: 'danger', message: data?.error });
-      return;
-    }
-    if (data?.allCourses && data?.assignedCourses) {
-      setCourseData([...data?.allCourses]);
-      setLoading(false);
-      return setAssignedCourses([...data?.assignedCourses]);
-    }
-    setLoading(false);
-    return setCourseData([...data?.allCourses]);
+ loadAssignCourses();
   }, [router?.query]);
+
+async function loadAssignCourses(){
+  if (!router?.query?.cohortId) {
+    // console.log(cohortData?.id);
+    if (!cohortData?.id)
+      return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
+    const data = await getCohortCourses(cohortData?.id);
+    setLoading(true);
+    if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
+    if (data?.allCourses) {
+      return setCourseData([...data?.allCourses],setLoading(false));
+    }
+    return;
+  }
+  setLoading(true);
+  const data = await getCohortCourses(router?.query?.cohortId);
+  if (data?.error) {
+    setLoading(false);
+    setToastMsg({ type: 'danger', message: data?.error });
+    return;
+  }
+  if (data?.allCourses && data?.assignedCourses) {
+    setCourseData([...data?.allCourses]);
+    setLoading(false);
+    return setAssignedCourses([...data?.assignedCourses]);
+  }
+  setLoading(false);
+  return setCourseData([...data?.allCourses]);
+}
   return (
     <>
       <div className={`${styles.courses_acc_head}`}>

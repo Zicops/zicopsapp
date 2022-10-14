@@ -15,6 +15,8 @@ export default function VideoPlayer({
   handleFullScreen
 }) {
   const videoData = useRecoilValue(VideoAtom);
+  // const wherebyRoomId = 'demo-6b19c433-a0c4-4bc8-b60a-0798c71ed825';
+  const wherebyRoomId = 'demo-de73a812-30d0-4c00-9066-9b715a1019d2';
 
   const [subtitles, setSubtitles] = useState('');
 
@@ -196,7 +198,7 @@ export default function VideoPlayer({
         <iframe
           style={{ height: '85vh', width: '100%', marginTop: '-40px' }}
           frameBorder="0"
-          src="https://zicops.whereby.com/demo-6b19c433-a0c4-4bc8-b60a-0798c71ed825?background=off&logo=off"
+          src={`https://zicops.whereby.com/${wherebyRoomId}?background=off&logo=off`}
           allow="camera; microphone; fullscreen; speaker; display-capture"></iframe>
       )}
     </>

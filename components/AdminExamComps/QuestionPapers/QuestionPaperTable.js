@@ -51,7 +51,8 @@ export default function QuestionPaperTable({ isEdit = false }) {
           sub_category: params.row.SubCategory,
           difficulty_level: params.row.DifficultyLevel,
           section_wise: params.row.SectionWise,
-          suggested_duration: params.row.SuggestedDuration
+          suggested_duration: +params.row.SuggestedDuration / 60,
+          status: params.row?.Status
         };
 
         return (

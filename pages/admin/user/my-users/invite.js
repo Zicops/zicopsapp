@@ -115,7 +115,10 @@ export default function MyUserPage() {
             setTab={setTab}
             footerObj={{
               disableSubmit: loading,
+              hideStatus: true,
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
+              isActive: !!emailId?.length,
+              customActiveBtnStyles: { backgroundColor: 'var(--primary)', color: 'var(--black)' },
               handleSubmit: handleMail,
               handleCancel: () => {
                 if (tabData[0]?.name.includes('Invite')) return router.push('/admin/user/my-users');

@@ -5,33 +5,35 @@ import ToolTip from '../ToolTip';
 import { ADMIN_EXAMS } from '../ToolTip/tooltip.helper';
 import styles from './questionOptionView.module.scss';
 
-export default function Option({ option, count, compareCorrect, selectedAnswerId }) {
-  const isCorrect = option?.isCorrect == null ? selectedAnswerId === option.id : option.isCorrect;
-  const [isCorrectSelected, setIsCorrectSelected] = useState(null);
+export default function Option({
+  option,
+  count,
+  compareCorrect,
+  showAnswer = false,
+  selectedAnswerId
+}) {
+  const isCorrect = !!option.isCorrect;
+  const isSelected = option?.id === selectedAnswerId;
 
   let fileSrc = null;
 
   if (option?.file) fileSrc = URL.createObjectURL(option?.file);
   if (option?.attachment) fileSrc = option?.attachment;
-
   if (!option?.description && !fileSrc) return null;
 
-  useEffect(() => {
-    if (!compareCorrect) return;
-    if (selectedAnswerId !== option.id) return;
-
-    setIsCorrectSelected(option.isCorrect);
-  }, []);
-
   let imgSrc = null;
-  if (isCorrect && isCorrectSelected == null) imgSrc = '/images/svg/green-tick.svg';
-  if (isCorrectSelected === true) imgSrc = '/images/svg/green-tick.svg';
-  if (isCorrectSelected === false) imgSrc = '/images/svg/red-cross.svg';
+  if (isCorrect === true) imgSrc = '/images/svg/green-tick.svg';
+  if (isSelected && isCorrect === false) imgSrc = '/images/svg/red-cross.svg';
+  if (!showAnswer) imgSrc = null;
 
   // console.log(isCorrectSelected, isCorrect, option?.description, selectedAnswerId);
   return (
     <>
       <div className={`${styles.option}`}>
+        <ToolTip title="Selected Answer" placement="right">
+          <div className={`${selectedAnswerId === option?.id ? styles.selectedAnswer : ''}`}></div>
+        </ToolTip>
+
         <span className={`${styles.highlight}`}>{OPTION_LABEL[count]}.</span>
 
         <div className={`${styles.optionWithImg}`}>

@@ -123,7 +123,18 @@ export default function CourseAbout() {
         </div>
       </div>
 
-      <NextButton tabIndex={3} />
+      <NextButton
+        tabIndex={3}
+        isActive={
+          !!fullCourse?.outcomes?.length &&
+          !!fullCourse?.benefits?.length &&
+          !!fullCourse?.description?.length &&
+          !!fullCourse?.prequisites?.length &&
+          !!+fullCourse?.goodFor?.length &&
+          !!+fullCourse?.mustFor?.length &&
+          !!+fullCourse?.related_skills?.length
+        }
+      />
     </div>
   );
 }

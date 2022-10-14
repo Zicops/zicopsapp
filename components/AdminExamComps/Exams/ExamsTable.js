@@ -77,7 +77,7 @@ export default function ExamsTable({ isEdit = false }) {
           return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
         });
 
-        const paperDuration = qpMetaRes?.data?.getQPMeta[0]?.SuggestedDuration || 0;
+        const paperDuration = (+qpMetaRes?.data?.getQPMeta[0]?.SuggestedDuration || 0) / 60;
         schObj.exam_end = new Date(
           startDate.setMinutes(startDate.getMinutes() + +schObj.buffer_time + +paperDuration)
         );

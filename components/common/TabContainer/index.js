@@ -23,7 +23,9 @@ export default function TabContainer({
     cancelDisplay = 'Cancel',
     handleCancel = function () {},
     showFooter = true,
-    isActive = false
+    hideStatus = false,
+    isActive = false,
+    customActiveBtnStyles = { boxShadow: '0 0 10px 0 var(--primary)' }
   } = footerObj;
 
   const [tabStatus, setTabStatus] = useRecoilState(StatusAtom);
@@ -85,9 +87,11 @@ export default function TabContainer({
       {showFooter && (
         <div className={`${styles.contentPanel}`}>
           <div className={`${styles.leftText}`}>
-            <ToolTip title={tooltipStatus} placement="top">
-              <h3>Status: {status}</h3>
-            </ToolTip>
+            {!hideStatus && (
+              <ToolTip title={tooltipStatus} placement="top">
+                <h3>Status: {status}</h3>
+              </ToolTip>
+            )}
           </div>
 
           {children}
@@ -103,7 +107,7 @@ export default function TabContainer({
               placement="bottom">
               <span>
                 <Button
-                  customStyles={isActive ? { boxShadow: '0 0 10px 0 var(--primary)' } : {}}
+                  customStyles={isActive ? customActiveBtnStyles : {}}
                   clickHandler={handleSubmit}
                   isDisabled={disableSubmit}
                   text={submitDisplay}

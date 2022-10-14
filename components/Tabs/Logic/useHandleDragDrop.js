@@ -47,7 +47,6 @@ export default function useHandleDragDrop(courseContextData) {
       newDraglist = newDraglist.filter((c) => c.name);
       newDroplist = selectedItems
         ?.map((item) => {
-          console.log(item);
           const index = droplist.findIndex((selected) => selected.name === item.name);
           const selectedItemOrder = droplist[index]?.rank;
 

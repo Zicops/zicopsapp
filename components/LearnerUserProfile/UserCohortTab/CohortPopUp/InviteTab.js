@@ -38,6 +38,10 @@ export default function InviteTab() {
    return;
   }
 
+  function handleAll(){
+
+  }
+
   useEffect(async()=>{
     if(selectedCohortData?.userCohort?.role?.toLowerCase() !== 'manager') return;
     if(selectedCohortData?.inviteUser?.length) return setUsersForCohort([...selectedCohortData?.inviteUser],setLoading(false));
@@ -53,20 +57,27 @@ export default function InviteTab() {
 
     //removing duplicate data
     const _users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()]; 
+    
     cohortUser = [..._users];
 
   }
-    cohortUser = [...selectedCohortData?.cohortUsers]
+
+    // console.log(selectedCohortData , 'cohort users',cohortUser)
+    if(!cohortUser?.length) cohortUser = [...selectedCohortData?.cohortUsers]
+    
     const users = await getUsersForAdmin();
     if(!users?.length) return setLoading(false);
+
+    const _users = users?.filter((item) => item?.status?.toLowerCase() === 'active') ;
+    // console.log(_users);
     
     // flitering users who are not in cohort
     // console.log(users , selectedCohortData?.cohortUsers) ;
-    const inviteUserList = users.filter(
+    const inviteUserList = _users.filter(
       ({ id: id1 }) => !cohortUser?.some(({ user_id: id2 }) => id2 === id1)
     );
 
-    console.log(inviteUserList);
+    // console.log(inviteUserList);
 
     if(!inviteUserList?.length) return ;
     setSelectedCohortData((prevValue) => ({...prevValue , inviteUser:[...inviteUserList]}))
@@ -75,12 +86,17 @@ export default function InviteTab() {
 
   // useEffect(()=>{
   //   console.log(userId);
-  // },[userId])
+  // },[userId]) 
 
   async function addUsersToCohort(){
+    setLoading(true);
     if(!userId?.length) return setToastMsg({type:'info' , message:'Please add atleast one user!'});
     const isAdded = await addUserToCohort(userId,selectedCohortData?.main?.cohort_id,selectedCohortData);
-    console.log(isAdded,'added users');
+    // console.log(isAdded,'added users');
+    const updateUsers =  usersForCohort.filter(({ id: id1 }) => !isAdded.some((id) => id === id1));
+    setToastMsg({type:'success' , message:'User added successfully!'});
+    setLoading(false);
+    return setUsersForCohort(updateUsers);
   }
 
   return (
@@ -123,7 +139,7 @@ export default function InviteTab() {
             {/* <button className={`${styles.cohortButton3}`}>Cancel</button>
             <button className={`${styles.cohortButton1}`}>Add</button> */}
             <UserButton text={'Cancel'} isPrimary={false} clickHandler={()=>{setUserId([])}}/>
-            <UserButton text={'Add'} clickHandler={addUsersToCohort}/>
+            <UserButton text={'Add'} clickHandler={addUsersToCohort} isDisabled={laoding}/>
           </div>
         </div>
       </div>

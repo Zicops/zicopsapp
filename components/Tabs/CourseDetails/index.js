@@ -180,7 +180,18 @@ export default function CourseDetails() {
         />
       </div>
 
-      <NextButton tabIndex={2} tooltipTitle={ADMIN_COURSES.myCourses.details.nextBtn} />
+      <NextButton
+        tabIndex={2}
+        isActive={
+          fullCourse?.sub_categories?.length &&
+          fullCourse.expertise_level?.length &&
+          (courseVideo?.file || fullCourse.previewVideo) &&
+          (courseTileImage?.file || fullCourse.tileImage) &&
+          (courseImage?.file || fullCourse.image) &&
+          fullCourse?.summary?.length
+        }
+        tooltipTitle={ADMIN_COURSES.myCourses.details.nextBtn}
+      />
     </>
   );
 }

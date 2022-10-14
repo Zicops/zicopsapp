@@ -1,5 +1,7 @@
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { parseJson } from '@/helper/utils.helper';
+import { getUserDetailsObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { IsUpdatedAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
@@ -16,6 +18,7 @@ const UserDisplay = () => {
   });
 
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
   const [fullName, setFullName] = useState(
     `${userProfileData?.first_name} ${userProfileData?.last_name}`
@@ -78,6 +81,15 @@ const UserDisplay = () => {
       return;
     }
   }, []);
+
+  useEffect(() => {
+    const user_lsp_id = parseJson(sessionStorage?.getItem('lspData'))?.user_lsp_id || null;
+    const loggedUserData = parseJson(sessionStorage?.getItem('loggedUser')) || null;
+    setUserDataGlobal({
+      ...userDataGlobal,
+      userDetails: getUserDetailsObj({ ...userProfileData, ...loggedUserData, user_lsp_id })
+    });
+  }, [userProfileData]);
 
   //update value in sessionStorage
 

@@ -59,7 +59,7 @@ export default function useLoadExamData(examId) {
       name: masterData.Name,
       description: masterData.Description,
 
-      duration: masterData.Duration,
+      duration: +masterData.Duration / 60,
       scheduleType: masterData.ScheduleType
     };
 

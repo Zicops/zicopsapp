@@ -22,7 +22,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
-  const { isAccountSetupReady, setPhCountryCode } = useHandleAddUserDetails();
+  const { isAccountSetupReady, setPhCountryCode ,updateAboutUser } = useHandleAddUserDetails();
 
   useEffect(() => {
     setUserData({ ...userData, Photo: image });
@@ -147,8 +147,11 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             disabled={!isAccountSetupReady}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
-            onClick={() => {
-              setCurrentComponent(1);
+            onClick={async() => {
+              const _error = await updateAboutUser(null,false);
+              // console.log(_error);
+              if(!_error) setCurrentComponent(1);
+
             }}>
             Next
           </Button>

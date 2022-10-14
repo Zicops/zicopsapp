@@ -272,10 +272,11 @@ export const GET_USER_PREFERENCES_DETAILS = gql`
 export const GET_USER_NOTES = gql`
   query getUserNotes(
     $user_id: String!
-    $user_lsp_id: String!
+    $user_lsp_id: String
     $publish_time: Int
     $pageCursor: String
     $pageSize: Int
+    $course_id: String
   ) {
     getUserNotes(
       user_id: $user_id
@@ -284,6 +285,7 @@ export const GET_USER_NOTES = gql`
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      course_id: $course_id
     ) {
       notes {
         user_notes_id
@@ -311,10 +313,11 @@ export const GET_USER_NOTES = gql`
 export const GET_USER_BOOKMARKS = gql`
   query getUserBookmarks(
     $user_id: String!
-    $user_lsp_id: String!
+    $user_lsp_id: String
     $publish_time: Int
     $pageCursor: String
     $pageSize: Int
+    $course_id: String
   ) {
     getUserBookmarks(
       user_id: $user_id
@@ -323,6 +326,7 @@ export const GET_USER_BOOKMARKS = gql`
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      course_id: $course_id
     ) {
       bookmarks {
         user_bm_id

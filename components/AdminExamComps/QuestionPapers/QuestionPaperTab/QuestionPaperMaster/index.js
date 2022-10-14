@@ -23,7 +23,6 @@ export default function QuestionPaperMaster() {
   const router = useRouter();
   const questionPaperId = router.query?.questionPaperId;
   const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
-
   const { handleInput, addNewQuestionPaper, updateQuestionPaper } = useHandlePaperTab();
 
   // cat and sub cat

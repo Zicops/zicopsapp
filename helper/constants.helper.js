@@ -5,6 +5,7 @@ export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
 export const LEARNING_FOLDER_CAPACITY = 30;
+export const GIBBERISH_VALUE_FOR_LOGIN_STATE = '32Xnwiqodh98bjkxqw';
 
 export const PUBLIC_PATHS = [
   '/login',
@@ -41,7 +42,8 @@ export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'
 export const LEARNING_SPACE_ID = 'd8685567-cdae-4ee0-a80e-c187848a760e';
 
 export const CUSTOM_ERROR_MESSAGE = {
-  emailError: 'EMAIL_EXISTS'
+  emailError: 'EMAIL_EXISTS' , 
+  phoneError:'PHONE_NUMBER_EXISTS'
 };
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];

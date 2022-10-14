@@ -5,9 +5,11 @@ export default function ConfirmPopUp({ title, message, btnObj = {} }) {
   const {
     handleClickLeft = function () {},
     textLeft = 'Yes',
+    leftIsDisable = false,
 
     handleClickRight = function () {},
-    textRight = 'No'
+    textRight = 'No',
+    rightIsDisable =  false
   } = btnObj;
 
   return (
@@ -25,8 +27,8 @@ export default function ConfirmPopUp({ title, message, btnObj = {} }) {
         <div className={`${styles.desc}`}>{message}</div>
 
         <div className={`${styles.buttons}`}>
-          <CongratulationsScreenButton title={textLeft} handleClick={handleClickLeft} />
-          <CongratulationsScreenButton title={textRight} handleClick={handleClickRight} />
+          <CongratulationsScreenButton title={textLeft} handleClick={handleClickLeft} disable={leftIsDisable}/>
+          <CongratulationsScreenButton title={textRight} handleClick={handleClickRight} disable={rightIsDisable}/>
         </div>
       </div>
     </div>

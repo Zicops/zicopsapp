@@ -1,11 +1,19 @@
 // screens\HomepageScreen\HomePageLoader.js
 
 import { Skeleton } from '@mui/material';
+import { useEffect } from 'react';
 import styles from './homepageScreen.module.scss';
 
 export default function HomePageLoader() {
   const rowCount = 3;
   const cardCount = 7;
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+
+    return () => (document.body.style.overflow = '');
+  }, []);
 
   return (
     <div className={`${styles.homePageLoader}`}>
@@ -13,7 +21,7 @@ export default function HomePageLoader() {
 
       <div className={`${styles.rowContainer}`}>
         {[...Array(rowCount)].map((v, index) => (
-          <div>
+          <div key={index}>
             <div
               style={{
                 marginLeft: '4%',
@@ -30,9 +38,9 @@ export default function HomePageLoader() {
             </div>
 
             <div className={`${styles.cardContainer}`}>
-              {[...Array(cardCount)].map((v, index) => (
+              {[...Array(cardCount)].map((val, i) => (
                 <Skeleton
-                  key={index}
+                  key={i}
                   sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
                   variant="rectangular"
                   width={230}
