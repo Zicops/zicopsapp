@@ -17,12 +17,16 @@ export function getCatSubCatDataObj(data = {}) {
 
 export const UserDataAtom = atom({
   key: 'userData',
-  default: {
-    userDetails: getUserDetailsObj(),
-    orgDetails: getOrgDetailsObj(),
-    preferences: []
-  }
+  default: getUserGlobalDataObj()
 });
+
+export function getUserGlobalDataObj(data = {}) {
+  return {
+    userDetails: data?.userDetails || getUserDetailsObj(),
+    orgDetails: data?.orgDetails || getOrgDetailsObj(),
+    preferences: data?.preferences || []
+  };
+}
 
 export function getUserDetailsObj(data = {}) {
   return {
