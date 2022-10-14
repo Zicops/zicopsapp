@@ -10,7 +10,8 @@ export function getQuestionBankQuestionObject(data = {}) {
     attachmentType: data.attachmentType || '',
 
     qbmId: data.qbmId || null,
-    status: data.status || null
+    status: data.status || null,
+    isUpdated: data?.isUpdated || false
   };
 }
 
