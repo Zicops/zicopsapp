@@ -131,9 +131,11 @@ export default function HomepageScreen() {
       setIsLoading(true);
       const subcatArr = userData?.preferences;
       // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
-      const activeSubcategories = subcatArr?.filter((item) => item?.is_active);
+      const activeSubcategories = subcatArr?.filter(
+        (item) => item?.is_active && item?.sub_category
+      );
       const baseSubcategoryObj = subcatArr?.filter((item) => item?.is_base)[0];
-      setBaseSubcategory(baseSubcategoryObj?.sub_category);
+      if (baseSubcategoryObj?.sub_category) setBaseSubcategory(baseSubcategoryObj?.sub_category);
 
       // const catId = catSubCat?.subCat?.find(
       //   (s) => s?.Name === baseSubcategoryObj?.sub_category
@@ -141,7 +143,7 @@ export default function HomepageScreen() {
       // console.log(catId, catSubCat);
       const parentOfBase = baseSubcategoryObj?.catData?.Name;
       // setParentOfBaseSubcategory(catSubCat?.subCatGrp?.[catId]?.cat?.Name);
-      setParentOfBaseSubcategory(parentOfBase);
+      if (parentOfBase) setParentOfBaseSubcategory(parentOfBase);
       setActiveSubcatArr(activeSubcategories);
 
       const userCourseData = await getUserCourseData(28);
@@ -176,23 +178,32 @@ export default function HomepageScreen() {
         ) || []
       );
 
-      let baseSubCatCourses = await getLatestCoursesByFilters(
-        { SubCategory: baseSubcategory },
-        pageSize
-      );
-      setBaseSubcategoryCourses(
-        baseSubCatCourses?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) ||
-          []
-      );
-      let baseSubCatParentCourses = await getLatestCoursesByFilters(
-        { Category: parentOfBase },
-        pageSize
-      );
-      setParentOfBaseSubcategoryCourses(
-        baseSubCatParentCourses?.latestCourses?.courses?.filter(
-          (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
-        ) || []
-      );
+      if (baseSubcategoryObj?.sub_category) {
+        let baseSubCatCourses = await getLatestCoursesByFilters(
+          { SubCategory: baseSubcategory },
+          pageSize
+        );
+        setBaseSubcategoryCourses(
+          baseSubCatCourses?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) ||
+            []
+        );
+      } else {
+        setBaseSubcategoryCourses([]);
+      }
+
+      if (parentOfBase) {
+        let baseSubCatParentCourses = await getLatestCoursesByFilters(
+          { Category: parentOfBase },
+          pageSize
+        );
+        setParentOfBaseSubcategoryCourses(
+          baseSubCatParentCourses?.latestCourses?.courses?.filter(
+            (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+          ) || []
+        );
+      } else {
+        setParentOfBaseSubcategoryCourses([]);
+      }
 
       // activeSubcatArr.slice(0, 4).map(async(subcat) => {
       let prefIndex = 0;
