@@ -12,12 +12,15 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData } from '@/state/atoms/users.atom';
 import { STATUS, StatusAtom } from '@/state/atoms/utils.atoms';
 import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import addUserData from '../ChortMasterTab/Logic/addUserData';
 import useCohortUserData from '../ChortMasterTab/Logic/useCohortUserData';
 
 export function useHandleCohortMaster() {
+
+  const router = useRouter();
   const [addCohortMain, { error }] = useMutation(ADD_COHORT_MAIN, {
     client: userClient
   });
@@ -204,7 +207,7 @@ export function useHandleCohortMaster() {
       return setToastMsg({ type: 'success', message: 'Updated cohort successfully!' });;
     }
 
-    console.log(sendCohortData, 'add cohortmaster');
+    // console.log(sendCohortData, 'add cohortmaster');
     if (!cohortMasterData?.id) {
       const resCohortData = await addCohortMain({ variables: sendCohortData }).catch((err) => {
         // console.log(err);
@@ -242,9 +245,10 @@ export function useHandleCohortMaster() {
         };
         await addUserToCohort(sendAddUserCohortData);
       }
+      setToastMsg({ type: 'success', message: 'Added cohort successfully!' });
+      return router.push('/admin/user/user-cohort/'+ cohort_id)
     }
     // console.log(res);
-    return setToastMsg({ type: 'success', message: 'Added cohort successfully!' });
   }
 
   async function assignCourseToUser() {
