@@ -57,7 +57,7 @@ const CohortMapping = () => {
   const [selectedCourse, setSelectedCourse] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  const { assignCourseToOldUser } = assignCourseToUser();
+  const { assignCourseToOldUser , removeUserCohortCourses } = assignCourseToUser();
 
   function handleAssign(item, isRemove = false) {
     setSelectedCourse({ ...item, isMandatory: courseAssignData?.isMandatory });
@@ -103,9 +103,9 @@ const CohortMapping = () => {
     });
     if (!isCourseAssigned)
       return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
-    await loadAssignCourses();
+    setToastMsg({ type: 'success', message: 'Course added succesfully!' });
     setIsAssignPopUpOpen(false);
-    setToastMsg({ type: 'sucess', message: 'Course added succesfully!' });
+    await loadAssignCourses(false);
     setCourseAssignData({
       expectedCompletionDays: null,
       isMandatory: false,
@@ -116,14 +116,16 @@ const CohortMapping = () => {
 
   async function handleRemove() {
     // console.log(selectedCourse,'selected course');
+    setLoading(true);
     if(!selectedCourse?.cohortCourseId) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
     const res = await deleteCohortCourse({variables:{id:selectedCourse?.cohortCourseId}}).catch((err)=>{console.log(err)});
     // if(res?.deleteCourseCohort) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
-    await loadAssignCourses();
+    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId,selectedCourse?.id);
+    if(!isRemoved) return setToastMsg({ type: 'danger', message: 'Error while removing course from user!' });
+    setToastMsg({ type: 'success', message: 'Course removed from cohort!' });
+    await loadAssignCourses(false);
     setShowConfirmBox(false);
-    setToastMsg({ type: 'sucess', message: 'Course removed from cohort!' });
-    return;
-
+    return setLoading(false);
   }
 
   const [lists, setLists] = useState([
@@ -186,20 +188,20 @@ const CohortMapping = () => {
  loadAssignCourses();
   }, [router?.query]);
 
-async function loadAssignCourses(){
+async function loadAssignCourses(isAssign = true){
   if (!router?.query?.cohortId) {
     // console.log(cohortData?.id);
     if (!cohortData?.id)
       return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
     const data = await getCohortCourses(cohortData?.id);
-    setLoading(true);
+    setLoading(isAssign);
     if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
     if (data?.allCourses) {
       return setCourseData([...data?.allCourses],setLoading(false));
     }
     return;
   }
-  setLoading(true);
+  setLoading(isAssign);
   const data = await getCohortCourses(router?.query?.cohortId);
   if (data?.error) {
     setLoading(false);
@@ -207,11 +209,13 @@ async function loadAssignCourses(){
     return;
   }
   if (data?.allCourses && data?.assignedCourses) {
+    // console.log(data?.assignedCourses,'assifnefa')
     setCourseData([...data?.allCourses]);
     setLoading(false);
     return setAssignedCourses([...data?.assignedCourses]);
   }
   setLoading(false);
+  setAssignedCourses([]);
   return setCourseData([...data?.allCourses]);
 }
   return (
@@ -326,6 +330,8 @@ async function loadAssignCourses(){
             "Learners in the cohort won't be able to access the course once unassigned. Do you still wish to continue?"
           }
           btnObj={{
+            leftIsDisable: loading,
+            rightIsDisable:loading,
             handleClickLeft: () => handleRemove(),
             handleClickRight: () => setShowConfirmBox(false)
           }}
