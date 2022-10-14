@@ -151,7 +151,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         title="View Question"
         popUpState={[popUpState, udpatePopUpState]}>
         <>
-          <QuestionOptionView questionData={viewQuestion} showType="difficulty" />
+          <QuestionOptionView showAnswer={true} questionData={viewQuestion} showType="difficulty" />
 
           <div style={{ float: 'right' }}>
             <ToolTip title="Cancel and go back to Question list" placement="left">
