@@ -21,7 +21,7 @@ export default function HomePageLoader() {
 
       <div className={`${styles.rowContainer}`}>
         {[...Array(rowCount)].map((v, index) => (
-          <div>
+          <div key={index}>
             <div
               style={{
                 marginLeft: '4%',
@@ -38,9 +38,9 @@ export default function HomePageLoader() {
             </div>
 
             <div className={`${styles.cardContainer}`}>
-              {[...Array(cardCount)].map((v, index) => (
+              {[...Array(cardCount)].map((val, i) => (
                 <Skeleton
-                  key={index}
+                  key={i}
                   sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
                   variant="rectangular"
                   width={230}

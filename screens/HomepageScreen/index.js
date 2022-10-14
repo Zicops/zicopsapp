@@ -440,12 +440,14 @@ export default function HomepageScreen() {
         />
       )}
 
-      <BigCardSlider
-        title="Categories"
-        data={catSubCat?.cat}
-        slide={bigSquare}
-        handleTitleClick={() => router.push('search-page')}
-      />
+      {!!catSubCat?.cat?.length && (
+        <BigCardSlider
+          title="Categories"
+          data={catSubCat?.cat}
+          slide={bigSquare}
+          handleTitleClick={() => router.push('search-page')}
+        />
+      )}
 
       {!!slowCourses?.length && (
         <ZicopsCarousel
