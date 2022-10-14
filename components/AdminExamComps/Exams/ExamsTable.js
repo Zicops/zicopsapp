@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -92,7 +93,7 @@ export default function ExamsTable({ isEdit = false }) {
     }
 
     if (!exams?.length) setLoading(false);
-    setExamData([...exams], setLoading(false));
+    setExamData(sortArrByKeyInOrder([...exams], 'CreatedAt', false), setLoading(false));
   }, []);
 
   const columns = [
