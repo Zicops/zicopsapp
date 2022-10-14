@@ -305,18 +305,20 @@ export default function useHandleAddUserDetails() {
     console.log(sendUserData, 'updateAboutUser');
 
     let isError = false;
-    let errorMsg;
+    let errorMsg = null;
     const res = await updateAbout({ variables: sendUserData }).catch((err) => {
-      console.log(err,'error at update user');
+      // console.log(err,'error at update user');
       errorMsg = err.message;
-      isError = !!err;
+      isError = true ;
       return setToastMsg({ type: 'danger', message: 'Update User about Error' });
     });
 
     if (isError) {
       const message = JSON.parse(errorMsg.split('body:')[1]);
       if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.phoneError)
-        return setToastMsg({ type: 'danger', message: `Phone Number already exists!` });
+        {setToastMsg({ type: 'danger', message: `Phone Number already exists!` });
+        return !!errorMsg;
+    }
       return setToastMsg({ type: 'danger', message: `Update User about Error!` });
     }
 
@@ -325,8 +327,9 @@ export default function useHandleAddUserDetails() {
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
     setUserDataAbout(_userData);
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
+    // console.log(isError,'iserror')
 
-    return isError;
+    return !!errorMsg;
   }
 
   // async function addUserOrganizationDetails() {

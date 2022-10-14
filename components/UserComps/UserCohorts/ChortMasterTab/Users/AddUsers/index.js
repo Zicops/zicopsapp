@@ -106,7 +106,7 @@ const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onU
 
     // console.log(cohortUsers,'users')
 
-    if (cohortUsers?.length) sendCohortData.size = cohortUsers?.length;
+    if (cohortUsers?.length) sendCohortData.size = cohortUsers?.length + userId?.length;
     let isError = false;
     const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
       console.log(err);
