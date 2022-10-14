@@ -4,6 +4,7 @@ import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { CohortMasterData } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -18,6 +19,9 @@ const Users = ({ isEdit = false }) => {
   const [cohortUserData, setCohortUserData] = useState(null);
   const [refetch, setRefetch] = useState(true);
 
+  const [cohortData , setCohortData] = useRecoilState(CohortMasterData);
+
+
   const { getCohortUser } = useCohortUserData();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -27,10 +31,23 @@ const Users = ({ isEdit = false }) => {
   useEffect(async () => {
     if (!refetch) return;
 
-    if (!router?.query?.cohortId) {
-      const users = await getUsersForCohort(true);
-      if (users?.error) return setToastMsg({ type: 'danger', message: users?.error });
+    
+    if (!router?.query?.cohortId && !cohortData?.id) {
+      // const users = await getUsersForAdmin(true);
+      // if (users?.error) return setToastMsg({ type: 'danger', message: users?.error });
+      return setCohortUserData([],setRefetch(false));
       return setUserData([...users]);
+    }
+    if(!router?.query?.cohortId && cohortData?.id){
+
+      const users = await getUsersForAdmin(true); 
+      const cohortUser = await getCohortUser(cohortData?.id);
+      if (!cohortUser?.length)
+      return setToastMsg({ type: 'info', message: 'None users found!' });
+      const _nonMembers = users?.filter(({id:id1}) => !cohortUser?.some(({id:id2}) => id1 === id2)) ;
+      setUserData([..._nonMembers]);
+      return setCohortUserData([...cohortUser],setRefetch(false));
+      // setRefetch(false);
     }
     const cohortUser = await getCohortUser(router?.query?.cohortId);
     if (!cohortUser?.length)
@@ -143,6 +160,7 @@ const Users = ({ isEdit = false }) => {
 
       <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
         <AddUsers
+        cohortUsers={cohortUserData}
           usersData={userData}
           popUpSetState={setIsOpen}
           onUserAdd={() => setRefetch(true)}

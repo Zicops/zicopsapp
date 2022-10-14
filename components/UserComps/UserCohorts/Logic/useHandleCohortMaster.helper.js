@@ -77,7 +77,7 @@ export function useHandleCohortMaster() {
   }, [cohortData]);
 
   async function saveCohortMaster() {
-    console.log(cohortMasterData, cohortData);
+    // console.log(cohortMasterData, cohortData);
     if (validatingCohortMaster()) return;
 
     const data = getUserData();
@@ -118,7 +118,7 @@ export function useHandleCohortMaster() {
         ({ id: id1 }) => !allUsers?.some(({ user_id: id2 }) => id2 === id1)
       );
 
-      console.log(removeManager, newManager, promoteManager, allUsers);
+      // console.log(removeManager, newManager, promoteManager, allUsers);
       // return ;
 
       if (removeManager?.length) {
@@ -139,7 +139,7 @@ export function useHandleCohortMaster() {
           const res = await updateUserCohort({ variables: sendData }).catch((err) => {
             if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing manager' });
           });
-          console.log(res);
+          // console.log(res);
         }
       }
 
@@ -160,7 +160,7 @@ export function useHandleCohortMaster() {
           const res = await updateUserCohort({ variables: sendData }).catch((err) => {
             if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing manager' });
           });
-          console.log(res);
+          // console.log(res);
         }
       }
 
@@ -191,23 +191,23 @@ export function useHandleCohortMaster() {
         }
       }
 
-      console.log(sendCohortData);
+      // console.log(sendCohortData);
       const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
-        console.log(err);
+        // console.log(err);
         isError = !!err;
       });
 
-      console.log(res);
+      // console.log(res);
       if (isError)
         return setToastMsg({ type: 'danger', message: 'Error occured while updating cohort!' });
 
-      return;
+      return setToastMsg({ type: 'success', message: 'Updated cohort successfully!' });;
     }
 
     console.log(sendCohortData, 'add cohortmaster');
     if (!cohortMasterData?.id) {
       const resCohortData = await addCohortMain({ variables: sendCohortData }).catch((err) => {
-        console.log(err);
+        // console.log(err);
         isError = !!err;
       });
 
@@ -231,7 +231,7 @@ export function useHandleCohortMaster() {
           {},
           userClient
         );
-        console.log(res?.getUserLspByLspId);
+        // console.log(res?.getUserLspByLspId);
         const userLspData = res?.getUserLspByLspId;
         const sendAddUserCohortData = {
           id: cohortMasterData?.managers[i]?.id,
@@ -244,6 +244,7 @@ export function useHandleCohortMaster() {
       }
     }
     // console.log(res);
+    return setToastMsg({ type: 'success', message: 'Added cohort successfully!' });
   }
 
   async function assignCourseToUser() {

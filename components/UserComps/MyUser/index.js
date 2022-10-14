@@ -28,7 +28,7 @@ export default function MyUser({ getUser }) {
     setLoading(true);
 
     const usersData = await getUsersForAdmin();
-    console.log(usersData);
+    // console.log(usersData);
 
     if (usersData?.error) {
       setLoading(false);
