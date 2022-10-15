@@ -82,7 +82,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
         return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
       });
 
-      subCatQb = createdQbRes?.createQuestionBank;
+      subCatQb = createdQbRes?.data?.createQuestionBank;
     } else {
       const questionRes = await loadQueryDataAsync(GET_QUESTIONS_NAMES, {
         question_bank_id: subCatQb?.id
