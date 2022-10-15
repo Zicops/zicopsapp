@@ -32,7 +32,9 @@ export default function ChapterPopUp({
               maxLength: 60,
               value: chapterData.name
             }}
-            changeHandler={(e) => changeHandler(e, chapterData, setChapterData)}
+            changeHandler={(e) =>
+              setChapterData({ ...chapterData, name: e.target.value, isUpdated: true })
+            }
           />
 
           <div className={`center-element-with-flex`}>
@@ -46,7 +48,9 @@ export default function ChapterPopUp({
                 value: chapterData?.description,
                 maxLength: 160
               }}
-              changeHandler={(e) => changeHandler(e, chapterData, setChapterData)}
+              changeHandler={(e) =>
+                setChapterData({ ...chapterData, description: e.target.value, isUpdated: true })
+              }
             />
           </div>
         </div>
