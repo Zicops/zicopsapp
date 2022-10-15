@@ -30,7 +30,7 @@ export default function CoursesTab() {
 
     const { id } = getUserData();
     const user_id = id;
-    const userCourses = await getUserCourseData(user_id);
+    const userCourses = await getUserCourseData(100);
     if (!userCourses?.length) return setLoading(false);
     const cohortCourses = await loadQueryDataAsync(
       GET_COHORT_COURSES,
