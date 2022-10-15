@@ -46,7 +46,7 @@ export default function assignCourseToUser() {
       userId: user_id,
       userLspId: resLsp?.getUserLspByLspId?.user_lsp_id,
       courseId: course_data?.id,
-      addedBy: JSON.stringify({ userId: id, role: 'chorot' }),
+      addedBy: JSON.stringify({ userId: id, role: 'cohort' }),
       courseType: course_data?.type,
       isMandatory: course_data?.isMandatory,
       courseStatus: 'open',
