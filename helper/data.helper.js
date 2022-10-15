@@ -24,9 +24,11 @@ export async function createCourseAndUpdateContext(courseContextData, createCour
     return { type: 'warning', message: 'Please fill all the Course Master Details' };
   }
 
-  const { id, created_at, updated_at, duration, ...sendData } = fullCourse;
+  const { id, created_at, updated_at, duration, name, ...sendData } = fullCourse;
 
-  const res = await createCourse({ variables: { ...sendData, status: 'SAVED' } }).catch((err) => {
+  const res = await createCourse({
+    variables: { ...sendData, name: fullCourse?.name?.trim(), status: 'SAVED' }
+  }).catch((err) => {
     console.log('Course Add Error: ', err);
     return { type: 'danger', message: 'Course Create Error' };
   });
