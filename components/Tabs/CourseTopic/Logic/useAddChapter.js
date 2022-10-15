@@ -50,13 +50,16 @@ export default function useAddChapter(refetchDataAndUpdateRecoil) {
   async function addNewChapter() {
     setIsAddChapterReady(false);
     if (
-      !!chapterData?.find(
-        (chap) => chap?.name?.trim()?.toLowerCase() === newChapterData?.name?.trim()?.toLowerCase()
-      )
+      !!chapterData
+        ?.filter((chap) => chap?.moduleId === newChapterData?.moduleId)
+        ?.find(
+          (chap) =>
+            chap?.name?.trim()?.toLowerCase() === newChapterData?.name?.trim()?.toLowerCase()
+        )
     )
       return setToastMsg({
         type: 'danger',
-        message: 'Chapter with same name already exists in this course'
+        message: 'Chapter with same name already exists in this module'
       });
 
     let isError = false;

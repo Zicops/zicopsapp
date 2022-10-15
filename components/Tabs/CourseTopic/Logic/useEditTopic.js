@@ -1,5 +1,5 @@
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { QUESTION_STATUS } from '@/helper/constants.helper';
+import { CUSTOM_ERROR_MESSAGE, QUESTION_STATUS } from '@/helper/constants.helper';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -237,29 +237,54 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
 
   // save edit topic in function
   async function updateTopicAndContext() {
-    const sendTopicData = {
-      id: editTopic?.id,
-      name: editTopic?.name,
-      description: editTopic?.description,
-      type: editTopic?.type,
-      moduleId: editTopic?.moduleId,
-      chapterId: editTopic?.chapterId,
-      courseId: editTopic?.courseId,
-      sequence: editTopic?.sequence
-    };
+    setIsEditTopicReady(false);
+    if (
+      !!topicData
+        ?.filter((topic) => {
+          if (topic?.id === editTopic?.id) return false;
+          const isChapterPresent = !!editTopic?.chapterId;
+
+          if (isChapterPresent) {
+            return topic?.chapterId === editTopic?.chapterId;
+          } else {
+            return topic?.moduleId === editTopic?.moduleId;
+          }
+        })
+        ?.find(
+          (topic) => topic?.name?.trim()?.toLowerCase() === editTopic?.name?.trim()?.toLowerCase()
+        )
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Topic with same name already exists'
+      });
 
     let isError = false;
-    await updateCourseTopic({
-      variables: sendTopicData
-    }).catch((err) => {
-      console.log(err);
-      isError = true;
-      return setToastMsg({ type: 'danger', message: 'Topic Update Error' });
-    });
+    if (editTopic?.isUpdated) {
+      const sendTopicData = {
+        id: editTopic?.id,
+        name: editTopic?.name?.trim(),
+        description: editTopic?.description?.trim(),
+        type: editTopic?.type,
+        moduleId: editTopic?.moduleId,
+        chapterId: editTopic?.chapterId,
+        courseId: editTopic?.courseId,
+        sequence: editTopic?.sequence
+      };
 
-    if (updateTopicError) return setToastMsg({ type: 'danger', message: 'Topic Update Error' });
+      await updateCourseTopic({
+        variables: sendTopicData
+      }).catch((err) => {
+        if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
 
-    refetchDataAndUpdateRecoil('topic');
+        isError = true;
+        return setToastMsg({ type: 'danger', message: 'Topic Update Error' });
+      });
+
+      if (updateTopicError) return setToastMsg({ type: 'danger', message: 'Topic Update Error' });
+      refetchDataAndUpdateRecoil('topic');
+    }
+
     if (!isError) setToastMsg({ type: 'success', message: 'Topic Updated' });
 
     setIsEditTopicFormVisible(false);

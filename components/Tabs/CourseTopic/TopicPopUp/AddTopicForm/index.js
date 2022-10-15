@@ -33,7 +33,7 @@ export default function AddTopicForm({ topicData, setTopicData, isEdit = false }
           maxLength: 60,
           value: topicData.name
         }}
-        changeHandler={(e) => changeHandler(e, topicData, setTopicData)}
+        changeHandler={(e) => setTopicData({ ...topicData, name: e.target.value, isUpdated: true })}
       />
 
       <div className={`center-element-with-flex`}>
@@ -47,7 +47,9 @@ export default function AddTopicForm({ topicData, setTopicData, isEdit = false }
             value: topicData?.description,
             maxLength: 160
           }}
-          changeHandler={(e) => changeHandler(e, topicData, setTopicData)}
+          changeHandler={(e) =>
+            setTopicData({ ...topicData, description: e.target.value, isUpdated: true })
+          }
         />
       </div>
 
@@ -61,7 +63,7 @@ export default function AddTopicForm({ topicData, setTopicData, isEdit = false }
             value: topicData.type ? { value: topicData.type, label: topicData.type } : null,
             isDisabled: fullCourse.type === COURSE_TYPES[3]
           }}
-          changeHandler={(e) => changeHandler(e, topicData, setTopicData, 'type')}
+          changeHandler={(e) => setTopicData({ ...topicData, type: e.value, isUpdated: true })}
         />
       )}
     </div>

@@ -26,8 +26,12 @@ export default function useAddTopic(refetchDataAndUpdateRecoil, activateEditTopi
 
   // disable save button if data is not correct
   useEffect(() => {
-    setIsAddTopicReady(!!newTopicData.name && !!newTopicData.type && !!newTopicData.description);
-    setIsPopUpDataPresent(!!newTopicData.name || !!newTopicData.type || !!newTopicData.description);
+    setIsAddTopicReady(
+      !!newTopicData.name?.trim() && !!newTopicData.type && !!newTopicData.description?.trim()
+    );
+    setIsPopUpDataPresent(
+      !!newTopicData.name?.trim() || !!newTopicData.type || !!newTopicData.description?.trim()
+    );
   }, [newTopicData]);
 
   // udpate sequence number with recoil state is updated
@@ -43,9 +47,36 @@ export default function useAddTopic(refetchDataAndUpdateRecoil, activateEditTopi
 
   // save in database
   async function addNewTopic() {
+    setIsAddTopicReady(false);
+    if (
+      !!topicData
+        ?.filter((topic) => {
+          const isChapterPresent = !!newTopicData?.chapterId;
+
+          if (isChapterPresent) {
+            return topic?.chapterId === newTopicData?.chapterId;
+          } else {
+            return topic?.moduleId === newTopicData?.moduleId;
+          }
+        })
+        ?.find(
+          (topic) =>
+            topic?.name?.trim()?.toLowerCase() === newTopicData?.name?.trim()?.toLowerCase()
+        )
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Topic with same name already exists'
+      });
+
     let isError = false;
-    const { data } = await createCourseTopic({ variables: { ...newTopicData } }).catch((err) => {
-      console.log(err);
+    const { data } = await createCourseTopic({
+      variables: {
+        ...newTopicData,
+        name: newTopicData?.name?.trim(),
+        description: newTopicData?.description?.trim()
+      }
+    }).catch((err) => {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Topic Create Error' });
     });

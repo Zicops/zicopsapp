@@ -42,6 +42,7 @@ export default function useEditChapter(refetchDataAndUpdateRecoil) {
     setIsEditChapterReady(false);
     if (
       !!chapterData
+        ?.filter((chap) => chap?.moduleId === editChapter?.moduleId)
         ?.filter(
           (chap) => chap?.name?.trim()?.toLowerCase() === editChapter?.name?.trim()?.toLowerCase()
         )
@@ -49,7 +50,7 @@ export default function useEditChapter(refetchDataAndUpdateRecoil) {
     )
       return setToastMsg({
         type: 'danger',
-        message: 'Chapter with same name already exists in this course'
+        message: 'Chapter with same name already exists in this module'
       });
 
     let isError = false;
