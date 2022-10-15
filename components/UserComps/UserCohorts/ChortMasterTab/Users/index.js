@@ -47,15 +47,17 @@ const Users = ({ isEdit = false }) => {
     }
     if(!router?.query?.cohortId && cohortData?.id){
 
+      setLoading(true);
       const users = await getUsersForAdmin(true); 
       const cohortUser = await getCohortUser(cohortData?.id);
       if (!cohortUser?.length)
-      return setToastMsg({ type: 'info', message: 'None users found!' });
+      return setToastMsg({ type: 'info', message: 'No users found!' });
       const _nonMembers = users?.filter(({id:id1}) => !cohortUser?.some(({id:id2}) => id1 === id2)) ;
-      setUserData([..._nonMembers]);
+      setUserData([..._nonMembers],setLoading(false));
       return setCohortUserData([...cohortUser],setRefetch(false));
       // setRefetch(false);
     }
+    setLoading(true)
     const cohortUser = await getCohortUser(router?.query?.cohortId);
     if (!cohortUser?.length)
       return setToastMsg({ type: 'info', message: 'None verified users found!' });
@@ -78,21 +80,22 @@ const Users = ({ isEdit = false }) => {
         notMembers.push(users[i]);
       }
     }
-    setUserData([...notMembers]);
+    setUserData([...notMembers],setLoading(false));
     // console.log(notMembers);
   }, [router?.query, refetch]);
 
 
   async function handleRemoveUser(userData = null, cohortData = null){
+    // console.log(userData)
     if(!userData)setToastMsg({type:'danger',message:'User Data not found!'})
     if(!cohortData)setToastMsg({type:'danger',message:'Cohort Data not found!'})
     setLoading(true) ;
-    const isRemoved = await removeCohortUser(userData = null , cohortData = null);
-    setRefetch(true);
+    const isRemoved = await removeCohortUser(userData,cohortData);
     // console.log(a,'adds');
     if(!isRemoved) setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
     setToastMsg({type:'success',message:"User removed succesfully!"})
-    setLoading(false) ;
+    setRefetch(true);
+    setLoading(false);
     return setShowConfirmBox(false);
   }
   const columns = [
@@ -202,6 +205,7 @@ const Users = ({ isEdit = false }) => {
           usersData={userData}
           popUpSetState={setIsOpen}
           onUserAdd={() => setRefetch(true)}
+          loading={loading}
         />
         {/* <LearnerStatistics /> */}
       </PopUp>
