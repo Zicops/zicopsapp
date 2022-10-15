@@ -1,4 +1,5 @@
 import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import PopUp from '@/components/common/PopUp';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
@@ -9,17 +10,23 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../../../userComps.module.scss';
+import addUserData from '../Logic/addUserData';
 import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 import useCohortUserData from '../Logic/useCohortUserData';
+
 import AddUsers from './AddUsers';
 
-const Users = ({ isEdit = false }) => {
+const Users = ({ isEdit = false , isReadOnly = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState([]);
   const [cohortUserData, setCohortUserData] = useState(null);
   const [refetch, setRefetch] = useState(true);
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const [loading , setLoading] = useState(false);
 
   const [cohortData , setCohortData] = useRecoilState(CohortMasterData);
+  const {removeCohortUser} = addUserData();
+  const [selectedUser , setSelectedUser] = useState(null);
 
 
   const { getCohortUser } = useCohortUserData();
@@ -40,15 +47,17 @@ const Users = ({ isEdit = false }) => {
     }
     if(!router?.query?.cohortId && cohortData?.id){
 
+      setLoading(true);
       const users = await getUsersForAdmin(true); 
       const cohortUser = await getCohortUser(cohortData?.id);
       if (!cohortUser?.length)
-      return setToastMsg({ type: 'info', message: 'None users found!' });
+      return setToastMsg({ type: 'info', message: 'No users found!' });
       const _nonMembers = users?.filter(({id:id1}) => !cohortUser?.some(({id:id2}) => id1 === id2)) ;
-      setUserData([..._nonMembers]);
+      setUserData([..._nonMembers],setLoading(false));
       return setCohortUserData([...cohortUser],setRefetch(false));
       // setRefetch(false);
     }
+    setLoading(true)
     const cohortUser = await getCohortUser(router?.query?.cohortId);
     if (!cohortUser?.length)
       return setToastMsg({ type: 'info', message: 'None verified users found!' });
@@ -71,10 +80,24 @@ const Users = ({ isEdit = false }) => {
         notMembers.push(users[i]);
       }
     }
-    setUserData([...notMembers]);
+    setUserData([...notMembers],setLoading(false));
     // console.log(notMembers);
   }, [router?.query, refetch]);
 
+
+  async function handleRemoveUser(userData = null, cohortData = null){
+    // console.log(userData)
+    if(!userData)setToastMsg({type:'danger',message:'User Data not found!'})
+    if(!cohortData)setToastMsg({type:'danger',message:'Cohort Data not found!'})
+    setLoading(true) ;
+    const isRemoved = await removeCohortUser(userData,cohortData);
+    // console.log(a,'adds');
+    if(!isRemoved) setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
+    setToastMsg({type:'success',message:"User removed succesfully!"})
+    setRefetch(true);
+    setLoading(false);
+    return setShowConfirmBox(false);
+  }
   const columns = [
     {
       field: 'first_name',
@@ -120,6 +143,24 @@ const Users = ({ isEdit = false }) => {
               }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
+            <button
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                outline: '0',
+                border: '0'
+              }}
+              onClick={async() => {
+                // router.push(`/admin/user/my-users/${params.id}`);
+                // console.log(params?.row , cohortData)
+
+                // const isRemoved = await removeCohortUser(params?.row , cohortData);
+                setSelectedUser(params?.row);
+                setShowConfirmBox(true);
+                // handleRemoveUser(params?.row , cohortData);
+              }}>
+              <img src="/images/svg/delete-outline.svg" width={20}></img>
+            </button>
           </>
         );
       },
@@ -131,7 +172,7 @@ const Users = ({ isEdit = false }) => {
     <div className={`${styles.usersContainer}`}>
       <div className={`${styles.usersTopContainer}`}>
         <span>Total Users: {cohortUserData?.length}</span>
-        <button
+        {!isReadOnly&&(<button
           className={`${styles.cohortButton1}`}
           onClick={() => {
             setIsOpen((prevValue) => !prevValue);
@@ -145,7 +186,7 @@ const Users = ({ isEdit = false }) => {
             <path d="M22 22V10H26V22H38V26H26V38H22V26H10V22H22Z" fill="black" />
           </svg>
           Add Users to Cohort
-        </button>
+        </button>)}
       </div>
       <ZicopsTable
         columns={columns}
@@ -164,9 +205,21 @@ const Users = ({ isEdit = false }) => {
           usersData={userData}
           popUpSetState={setIsOpen}
           onUserAdd={() => setRefetch(true)}
+          loading={loading}
         />
         {/* <LearnerStatistics /> */}
       </PopUp>
+      {showConfirmBox && (
+        <ConfirmPopUp
+          title={'Are you sure you want to remove this user from cohort?'}
+          btnObj={{
+            leftIsDisable: loading,
+            rightIsDisable:loading,
+            handleClickLeft: () => handleRemoveUser(selectedUser,cohortData),
+            handleClickRight: () => setShowConfirmBox(false)
+          }}
+        />
+      )}
     </div>
   );
 };
