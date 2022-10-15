@@ -16,7 +16,7 @@ import useCohortUserData from '../Logic/useCohortUserData';
 
 import AddUsers from './AddUsers';
 
-const Users = ({ isEdit = false }) => {
+const Users = ({ isEdit = false , isReadOnly = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState([]);
   const [cohortUserData, setCohortUserData] = useState(null);
@@ -172,7 +172,7 @@ const Users = ({ isEdit = false }) => {
     <div className={`${styles.usersContainer}`}>
       <div className={`${styles.usersTopContainer}`}>
         <span>Total Users: {cohortUserData?.length}</span>
-        <button
+        {!isReadOnly&&(<button
           className={`${styles.cohortButton1}`}
           onClick={() => {
             setIsOpen((prevValue) => !prevValue);
@@ -186,7 +186,7 @@ const Users = ({ isEdit = false }) => {
             <path d="M22 22V10H26V22H38V26H26V38H22V26H10V22H22Z" fill="black" />
           </svg>
           Add Users to Cohort
-        </button>
+        </button>)}
       </div>
       <ZicopsTable
         columns={columns}

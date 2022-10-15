@@ -25,7 +25,7 @@ import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { DELETE_COHORT_COURSE, mutationClient } from '@/api/Mutations';
 
-const CohortMapping = () => {
+const CohortMapping = ({isReadOnly = false}) => {
   const [courseAssignData, setCourseAssignData] = useState({
     expectedCompletionDays: null,
     isMandatory: false,
@@ -241,7 +241,7 @@ async function loadAssignCourses(isAssign = true){
             <span>{assignedCourses?.length}</span>
             </div>
 
-            <div
+            {!isReadOnly&&(<div
               onClick={() => {
                 setIsAssigned(!isAssigned);
                 setPage('Assign Courses');
@@ -250,7 +250,7 @@ async function loadAssignCourses(isAssign = true){
               className={`${styles.assignInner}`}>
               <img src="/images/svg/add-line-blue.svg" />
               Assign Courses
-            </div>
+            </div>)}
           </div>
         )}
       </div>

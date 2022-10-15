@@ -18,7 +18,8 @@ const UploadAndPreview = ({
   initialImage = null,
   imageUrl = null,
   uploadedFile = null,
-  closePopUp = () => {}
+  closePopUp = () => {},
+  isDisabled = false
 }) => {
   const [image, setImage] = useState(uploadedFile);
   const [preview, setPreview] = useState('');
@@ -130,6 +131,7 @@ const UploadAndPreview = ({
           ref={imgRef}
           style={{ display: 'none' }}
           type="file"
+          disabled={isDisabled}
         />
         {!initialImage && (
           <>
@@ -141,7 +143,7 @@ const UploadAndPreview = ({
               Preview
             </button>
             {isRemove && (
-              <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
+              <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image || isDisabled}>
                 Remove
               </button>
             )}
