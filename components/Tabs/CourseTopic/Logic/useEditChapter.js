@@ -1,3 +1,4 @@
+import { CUSTOM_ERROR_MESSAGE } from '@/helper/constants.helper';
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -23,8 +24,8 @@ export default function useEditChapter(refetchDataAndUpdateRecoil) {
 
   // disable submit button if data is incomplete
   useEffect(() => {
-    setIsEditChapterReady(!!editChapter?.name && !!editChapter?.description);
-    setIsPopUpDataPresent(!!editChapter?.name || !!editChapter?.description);
+    setIsEditChapterReady(!!editChapter?.name?.trim() && !!editChapter?.description);
+    setIsPopUpDataPresent(!!editChapter?.name?.trim() || !!editChapter?.description);
   }, [editChapter]);
 
   // set local state to edit chapter data for form
@@ -38,17 +39,40 @@ export default function useEditChapter(refetchDataAndUpdateRecoil) {
 
   // save to db and update context with refetch
   async function handleEditChapterSubmit() {
+    setIsEditChapterReady(false);
+    if (
+      !!chapterData
+        ?.filter((chap) => chap?.moduleId === editChapter?.moduleId)
+        ?.filter(
+          (chap) => chap?.name?.trim()?.toLowerCase() === editChapter?.name?.trim()?.toLowerCase()
+        )
+        ?.filter((chap) => chap?.id !== editChapter?.id)?.length > 0
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Chapter with same name already exists in this module'
+      });
+
     let isError = false;
-    // save in db
-    await updateCourseChapter({ variables: { ...editChapter } }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Chapter Update Error' });
-    });
+    if (editChapter?.isUpdated) {
+      // save in db
+      await updateCourseChapter({
+        variables: {
+          ...editChapter,
+          name: editChapter?.name?.trim(),
+          description: editChapter?.description?.trim()
+        }
+      }).catch((err) => {
+        if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
 
-    if (error) return setToastMsg({ type: 'success', message: 'Chapter Update Error' });
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Chapter Update Error' });
+      });
 
-    refetchDataAndUpdateRecoil('chapter');
+      if (error) return setToastMsg({ type: 'success', message: 'Chapter Update Error' });
+
+      refetchDataAndUpdateRecoil('chapter');
+    }
     setIsPopUpDataPresent(false);
     // reset local data and close module
     setEditChapter(null);

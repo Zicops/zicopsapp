@@ -42,8 +42,9 @@ export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'
 export const LEARNING_SPACE_ID = 'd8685567-cdae-4ee0-a80e-c187848a760e';
 
 export const CUSTOM_ERROR_MESSAGE = {
-  emailError: 'EMAIL_EXISTS' , 
-  phoneError:'PHONE_NUMBER_EXISTS'
+  emailError: 'EMAIL_EXISTS',
+  phoneError: 'PHONE_NUMBER_EXISTS',
+  nothingToUpdate: 'nothing to update'
 };
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];

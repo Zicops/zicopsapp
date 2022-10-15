@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -130,7 +131,9 @@ export default function QuestionPaperTable({ isEdit = false }) {
         return setToastMsg({ type: 'danger', message: 'question paper load error' });
 
       if (data?.getLatestQuestionPapers?.questionPapers)
-        setQuestionPaper(data.getLatestQuestionPapers.questionPapers);
+        setQuestionPaper(
+          sortArrByKeyInOrder(data.getLatestQuestionPapers.questionPapers, 'CreatedAt', false)
+        );
     });
   }, []);
 

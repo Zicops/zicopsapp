@@ -1,3 +1,5 @@
+import { GET_LATEST_COURSES } from '@/api/Queries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { DEFAULT_VALUES } from '@/helper/constants.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useMutation } from '@apollo/client';
@@ -99,6 +101,25 @@ export default function useSaveCourse(courseContextData) {
 
   async function saveCourseData(isNextButton, tabIndex, showToastMsg = true) {
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
+    // check for duplicate course name
+    const queryVariables = {
+      publish_time: Date.now(),
+      pageSize: 999999,
+      pageCursor: '',
+      filters: { SearchText: fullCourse?.name?.trim() }
+    };
+    const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables);
+    const allCourses = courseRes?.latestCourses?.courses || null;
+
+    if (
+      allCourses &&
+      allCourses
+        ?.filter((c) => c?.name?.trim()?.toLowerCase() === fullCourse?.name?.trim()?.toLowerCase())
+        ?.filter((c) => c?.id !== fullCourse?.id)?.length > 0
+    ) {
+      setIsLoading(null);
+      return setToastMsg({ type: 'danger', message: 'Course with smae name already Exist' });
+    }
 
     if (!fullCourse.id) {
       const resObj = await createCourseAndUpdateContext(courseContextData, createCourse);
@@ -125,9 +146,11 @@ export default function useSaveCourse(courseContextData) {
     await uploadFile(courseTileImage, uploadTileImage, 'tileImage', 'uploadCourseTileImage');
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
-    const { duration, ...sendData } = fullCourse;
+    const { duration, name, ...sendData } = fullCourse;
     console.log('var', sendData);
-    const courseUpdateResponse = await updateCourse({ variables: sendData });
+    const courseUpdateResponse = await updateCourse({
+      variables: { ...sendData, name: fullCourse?.name?.trim() }
+    });
 
     const _course = structuredClone(courseUpdateResponse.data.updateCourse);
     if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';

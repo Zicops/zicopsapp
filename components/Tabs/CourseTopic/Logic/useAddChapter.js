@@ -27,8 +27,8 @@ export default function useAddChapter(refetchDataAndUpdateRecoil) {
 
   // disable save button if data is not correct
   useEffect(() => {
-    setIsAddChapterReady(!!newChapterData.name && !!newChapterData.description);
-    setIsPopUpDataPresent(!!newChapterData.name || !!newChapterData.description);
+    setIsAddChapterReady(!!newChapterData.name?.trim() && !!newChapterData.description);
+    setIsPopUpDataPresent(!!newChapterData.name?.trim() || !!newChapterData.description);
   }, [newChapterData]);
 
   // udpate sequence number with recoil state is updated
@@ -48,8 +48,28 @@ export default function useAddChapter(refetchDataAndUpdateRecoil) {
 
   // save course in database
   async function addNewChapter() {
+    setIsAddChapterReady(false);
+    if (
+      !!chapterData
+        ?.filter((chap) => chap?.moduleId === newChapterData?.moduleId)
+        ?.find(
+          (chap) =>
+            chap?.name?.trim()?.toLowerCase() === newChapterData?.name?.trim()?.toLowerCase()
+        )
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Chapter with same name already exists in this module'
+      });
+
     let isError = false;
-    await createCourseChapter({ variables: { ...newChapterData } }).catch((err) => {
+    await createCourseChapter({
+      variables: {
+        ...newChapterData,
+        name: newChapterData?.name?.trim(),
+        description: newChapterData?.description?.trim()
+      }
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Chapter Create Error' });

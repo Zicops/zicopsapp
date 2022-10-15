@@ -1,3 +1,4 @@
+import { CUSTOM_ERROR_MESSAGE } from '@/helper/constants.helper';
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -21,8 +22,12 @@ export default function useEditModule(refetchDataAndUpdateRecoil) {
 
   // disable submit button if data is incomplete
   useEffect(() => {
-    setIsEditModuleReady(!!editModule?.name && !!editModule?.level && !!editModule?.description);
-    setIsPopUpDataPresent(!!editModule?.name || !!editModule?.level || !!editModule?.description);
+    setIsEditModuleReady(
+      !!editModule?.name?.trim() && !!editModule?.level && !!editModule?.description?.trim()
+    );
+    setIsPopUpDataPresent(
+      !!editModule?.name?.trim() || !!editModule?.level || !!editModule?.description?.trim()
+    );
   }, [editModule]);
 
   // set local state to edit module data for form
@@ -36,17 +41,40 @@ export default function useEditModule(refetchDataAndUpdateRecoil) {
 
   // save to db and update context with refetch
   async function handleEditModuleSubmit() {
+    setIsEditModuleReady(false);
+    if (
+      !!moduleData
+        ?.filter(
+          (mod) => mod?.name?.trim()?.toLowerCase() === editModule?.name?.trim()?.toLowerCase()
+        )
+        ?.filter((mod) => mod?.id !== editModule?.id)?.length > 0
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Module with same name already exists in this course'
+      });
+
     let isError = false;
     // save in db
-    await updateCourseModule({ variables: { ...editModule } }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Module Update Error' });
-    });
+    if (editModule?.isUpdated) {
+      await updateCourseModule({
+        variables: {
+          ...editModule,
+          name: editModule?.name?.toLowerCase(),
+          description: editModule?.description?.toLowerCase()
+        }
+      }).catch((err) => {
+        if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
 
-    if (error) return setToastMsg({ type: 'danger', message: 'Module Update Error' });
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Module Update Error' });
+      });
 
-    refetchDataAndUpdateRecoil('module');
+      if (error) return setToastMsg({ type: 'danger', message: 'Module Update Error' });
+
+      refetchDataAndUpdateRecoil('module');
+    }
+
     setIsPopUpDataPresent(false);
     // reset local data and close module
     setEditModule(null);

@@ -1,3 +1,5 @@
+import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
+import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { MenuList, Paper } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -5,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import '@reach/menu-button/styles.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
 import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { support, userProfile } from '../Logic/subMenu.helper.js';
@@ -16,6 +19,8 @@ export default function RightDropDownMenu() {
   let date = new Date().toUTCString().slice(5, 16);
   const router = useRouter();
   const { logOut } = useAuthUserContext();
+  const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
 
   const menuItemList = [
     {
@@ -71,7 +76,11 @@ export default function RightDropDownMenu() {
       id: 4,
       class: 'dropdown-submenu-justifycontent-right',
       name: 'Logout',
-      onClick: () => logOut()
+      onClick: () => {
+        setUserDataGlobal(getUserGlobalDataObj());
+        setUserProfileData(getUserObject());
+        logOut();
+      }
     }
   ];
 
