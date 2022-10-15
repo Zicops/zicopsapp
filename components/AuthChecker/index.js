@@ -115,8 +115,8 @@ const AuthChecker = ({ children }) => {
     // console.log(path);
 
     const userData = parseJson(sessionStorage.getItem('loggedUser'));
-    if (!userData?.is_verified && !PUBLIC_PATHS.includes(path) && !path?.includes('account-setup'))
-      return router.push('/account-setup');
+    // if (!userData?.is_verified && !PUBLIC_PATHS.includes(path) && !path?.includes('account-setup'))
+    //   return router.push('/account-setup');
 
     if (!!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE)) return setAuthorized(true);
 
