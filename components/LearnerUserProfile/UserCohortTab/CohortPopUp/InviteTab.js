@@ -139,7 +139,7 @@ export default function InviteTab() {
             {/* <button className={`${styles.cohortButton3}`}>Cancel</button>
             <button className={`${styles.cohortButton1}`}>Add</button> */}
             <UserButton text={'Cancel'} isPrimary={false} clickHandler={()=>{setUserId([])}}/>
-            <UserButton text={'Add'} clickHandler={addUsersToCohort} isDisabled={laoding}/>
+            <UserButton text={'Add'} clickHandler={addUsersToCohort} isDisabled={loading}/>
           </div>
         </div>
       </div>
