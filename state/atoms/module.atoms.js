@@ -91,7 +91,8 @@ export function getModuleObject(data) {
     owner: data.owner || '',
     duration: data.duration || 0,
     level: data.level || '',
-    setGlobal: data.setGlobal || false
+    setGlobal: data.setGlobal || false,
+    isUpdated: data?.isUpdated || false
   };
 }
 
@@ -102,7 +103,8 @@ export function getChapterObject(data) {
     sequence: data.sequence || 1,
     id: data.id || '',
     name: data.name || '',
-    description: data.description || ''
+    description: data.description || '',
+    isUpdated: data?.isUpdated || false
   };
 }
 
@@ -115,7 +117,8 @@ export function getTopicObject(data) {
     id: data.id || '',
     name: data.name || '',
     description: data.description || '',
-    type: data.type || ''
+    type: data.type || '',
+    isUpdated: data?.isUpdated || false
   };
 }
 

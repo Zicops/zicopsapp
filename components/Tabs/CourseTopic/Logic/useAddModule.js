@@ -51,6 +51,7 @@ export default function useAddModule(refetchDataAndUpdateRecoil) {
 
   // save course in database
   async function addNewModule() {
+    setIsAddModuleReady(false);
     if (
       !!moduleData?.find(
         (mod) => mod?.name?.trim()?.toLowerCase() === newModuleData?.name?.trim()?.toLowerCase()
