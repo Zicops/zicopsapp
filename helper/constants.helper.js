@@ -7,6 +7,11 @@ export const THUMBNAIL_GAP = 25;
 export const LEARNING_FOLDER_CAPACITY = 30;
 export const GIBBERISH_VALUE_FOR_LOGIN_STATE = '32Xnwiqodh98bjkxqw';
 
+
+//need to delete chorot later
+export const ASSIGNED_COURSES = ['cohort','admin','chorot'];
+
+
 export const PUBLIC_PATHS = [
   '/login',
   '/home',
