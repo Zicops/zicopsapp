@@ -12,7 +12,7 @@ const ProductTour = ({ children, customStyle, showInfoModal }) => {
   // function handleClick() {
   //   setShowOverlay(false);
   // }
-  console.log(showInfoModal);
+  // console.log(showInfoModal);
 
   return (
     <>

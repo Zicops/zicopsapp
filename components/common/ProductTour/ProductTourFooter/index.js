@@ -17,22 +17,14 @@ const ProductTourFooter = ({ data, isVisible }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const currentTour = PRODUCT_TOUR_FLOW?.[index?.currentIndex === null ? 0 : index?.currentIndex];
+
+    const currentTour = PRODUCT_TOUR_FLOW?.[index === null ? 0 : index];
+    if(index === null) return;
+    // console.log(currentTour,index);
     setActiveTour(currentTour);
     if (!currentTour?.route?.includes(router?.asPath) && currentTour?.route) {
       router.push(currentTour?.route);
     }
-
-    if (index.currentIndex === null && index.prevIndex === null) {
-      return setIndex((prev) => ({ prevIndex: null, currentIndex: 0 }));
-    }
-
-    if (index.prevIndex !== null && index.currentIndex === null) {
-      if (index.flag) return;
-      return setIndex((prev) => ({ flag: 1, prevIndex: prev.prevIndex, currentIndex: null }));
-    }
-
-    console.log(index);
     // if (currentIndex === null) {
     //   setCurrentIndex((prev)=>{
     //     if(PRODUCT_TOUR_FLOW?.length -1 ===)
@@ -43,11 +35,13 @@ const ProductTourFooter = ({ data, isVisible }) => {
     //   isVisible = false;
     // }
     // console.log(PRODUCT_TOUR_FLOW?.[currentIndex]?.id);
-  }, [index.currentIndex]);
+  }, [index]);
+
 
   const handleCloseProductTour = () => {
     setCloseProductTour(false);
-    return setIndex((prev) => ({ prevIndex: prev.currentIndex, currentIndex: null }));
+    setActiveTour({id:null});
+    return setIndex(null);
   };
 
   // const handlePreviousKey = () => {
@@ -62,7 +56,7 @@ const ProductTourFooter = ({ data, isVisible }) => {
       {isVisible && (
         <div className={styles.footer}>
           <div className={styles.btn_container}>
-            {index.currentIndex === 0 ? (
+            {index === 0 || index === null ? (
               <span>
                 <button disabled>
                   <img src="/images/svg/play_arrow.svg" alt="" className={styles.reverse_img} />
@@ -71,10 +65,7 @@ const ProductTourFooter = ({ data, isVisible }) => {
             ) : (
               <button
                 onClick={() =>
-                  setIndex((prev) => ({
-                    prevIndex: prev.currentIndex,
-                    currentIndex: prev.currentIndex - 1
-                  }))
+                  setIndex(index - 1)
                 }>
                 <img src="/images/svg/play_arrow.svg" alt="" className={styles.reverse_img} />
               </button>
@@ -89,18 +80,15 @@ const ProductTourFooter = ({ data, isVisible }) => {
 
             <button
               onClick={() =>
-                setIndex((prev) => ({
-                  prevIndex: prev.currentIndex,
-                  currentIndex: prev.currentIndex + 1
-                }))
+                {return index === null ? setIndex(0) : setIndex(index + 1)}
               }>
               <img src="/images/svg/play_arrow.svg" alt="" />
             </button>
 
             {/* )} */}
           </div>
-          <button className={styles.close_btn} onClick={handleCloseProductTour}>
-            Close Info Panel{index.currentIndex}
+          <button className={styles.close_btn} onClick={()=>{handleCloseProductTour()}}>
+            Close Info Panel{' '}{index === null ? 0 : index}
           </button>
         </div>
       )}

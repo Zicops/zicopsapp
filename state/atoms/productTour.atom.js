@@ -14,8 +14,5 @@ export const ProductTourVisible = atom({
 
 export const ProductTourIndex = atom({
   key: 'ActiveTourIndex',
-  default: {
-    currentIndex: null,
-    prevIndex: null
-  }
+  default: 0
 });
