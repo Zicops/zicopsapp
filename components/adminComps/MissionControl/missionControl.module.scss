@@ -1,6 +1,18 @@
 .searchBar {
-  > div {
+  >div {
     min-width: 250px;
     margin-right: 10px;
   }
+}
+
+
+.productTour_btn {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+
+  // button {
+  //   width: 50px;
+
+  // }
 }
