@@ -1,3 +1,5 @@
+@import '../../../styles/base.scss';
+
 .searchBar {
   >div {
     min-width: 250px;
@@ -11,8 +13,16 @@
   flex-direction: column;
   position: absolute;
 
-  // button {
-  //   width: 50px;
-
-  // }
+  button {
+    width: 175px;
+    height: 35px;
+    font-size: 15px;
+    font-weight: 600;
+    outline: 2px solid $primary;
+    margin: 4px 0;
+    color: $primary;
+    background: $black;
+    cursor: pointer;
+    z-index: 1;
+  }
 }

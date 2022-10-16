@@ -44,7 +44,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
             alt=""
           />
           <h3>{sidebarItemsArr.heading || 'Admin Management'}</h3>
-          <button onClick={handleProductTour}>
+          <button onClick={handleProductTour} className={styles.course_management_btn}>
             <img src="/images/svg/hub.svg" alt="" />
           </button>
         </div>

@@ -88,7 +88,7 @@ const ProductTourFooter = ({ data, isVisible }) => {
             {/* )} */}
           </div>
           <button className={styles.close_btn} onClick={()=>{handleCloseProductTour()}}>
-            Close Info Panel{' '}{index === null ? 0 : index}
+            Close Info Panel
           </button>
         </div>
       )}
