@@ -7,7 +7,7 @@ import { inviteTabData } from '../../Logic/userBody.helper';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { SelectedCohortDataAtom } from '@/state/atoms/users.atom';
+import { ClosePopUpAtom, SelectedCohortDataAtom } from '@/state/atoms/users.atom';
 import useUserCourseData from '@/helper/hooks.helper';
 import UserButton from '@/components/common/UserButton';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -16,7 +16,7 @@ import _styles from '../InviteUserLearner/inviteUserLearner.module.scss';
 // import addUserData from '@/components/UserComps/UserCohorts/ChortMasterTab/Logic/addUserData';
 
 export default function InviteTab() {
-  const { cohortTab, setCohortTab, showActiveTab } = useHandleCohortTab();
+  // const { cohortTab, setCohortTab, showActiveTab } = useHandleCohortTab();
 
   const [userId, setUserId] = useState([]);
   const [usersForCohort, setUsersForCohort] = useState([]);
@@ -27,12 +27,10 @@ export default function InviteTab() {
   const { getCohortUserData } = useUserCourseData();
   const [removeAll, setRemoveAll] = useState(null);
   const [searchQuery , setSearchQuery] = useState('');
+  const [closePopUp , setClosePopUpAtom] = useRecoilState(ClosePopUpAtom)
 
   const { getUsersForAdmin } = useUserCourseData();
   function handleSelect(id) {
-    if (removeAll === false) {
-      setRemoveAll(null);
-    }
     if (!userId?.length) return setUserId([id]);
     if (userId?.includes(id)) {
       const newIds = userId?.filter((item) => item !== id);
@@ -164,6 +162,8 @@ export default function InviteTab() {
               clickHandler={() => {
                 setUserId([]);
                 setRemoveAll(false);
+                setSelectedCohortData(null);
+                setClosePopUpAtom(true);
                 // setRemoveAll(null);
                 // setCohortTab('Courses');
               }}

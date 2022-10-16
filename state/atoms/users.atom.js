@@ -86,6 +86,13 @@ export function getUserOrgObject(data = {}) {
   };
 }
 
+export const ClosePopUpAtom = atom({
+  key:'closePopup',
+  default: false
+});
+
+
+
 // will delete later if not used
 export const IsUpdatedAtom = atom({
   key: 'IsUpdated',

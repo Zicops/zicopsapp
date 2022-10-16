@@ -4,7 +4,7 @@ import CohortListCard from '@/components/common/CohortListCard';
 import IconBtn from '@/components/common/IconBtn';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
-import { SelectedCohortDataAtom } from '@/state/atoms/users.atom';
+import { ClosePopUpAtom, SelectedCohortDataAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -21,7 +21,7 @@ const UserCohortTab = () => {
   const [loading , setLoading] = useState(true);
   const { getUserCourseData,getCohortUserData } = useUserCourseData();
   const { setCohortTab } = useHandleCohortTab();
-
+  const [closePopUp , setClosePopUpAtom] = useRecoilState(ClosePopUpAtom)
 
   const [selectedCohortData , setSelectedCohortData] = useRecoilState(SelectedCohortDataAtom);
 
@@ -100,6 +100,7 @@ const UserCohortTab = () => {
               key={index}
               handleClick={() => {
                 setSelectedCohort(main);
+                setClosePopUpAtom(false);
                 setSelectedCohortData(cohort);
               }}>
               <div className={`${styles.btnContainer}`}>
