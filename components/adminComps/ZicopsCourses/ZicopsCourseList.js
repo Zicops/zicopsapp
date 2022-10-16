@@ -5,6 +5,7 @@ import { TableResponsiveRows } from '../../../helper/utils.helper';
 import { useState, useEffect } from 'react';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
 import Router from 'next/router';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -91,7 +92,11 @@ function LatestCourseList({ time }) {
     client: queryClient
   });
 
-  let latestCourses = data?.latestCourses.courses?.filter((c) => c?.is_active);
+  let latestCourses = sortArrByKeyInOrder(
+    data?.latestCourses.courses?.filter((c) => c?.is_active),
+    'created_at',
+    false
+  );
 
   return (
     <ZicopsTable

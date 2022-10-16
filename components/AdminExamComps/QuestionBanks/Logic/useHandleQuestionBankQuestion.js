@@ -148,13 +148,14 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
     setQuestionData({
       ...questionData,
       file: e.target.files[0],
-      attachmentType: e.target.files[0].type
+      attachmentType: e.target.files[0].type,
+      isUpdated: true
     });
   }
 
   function isOptionsDuplicate() {
     var optionArr = optionData.map(function (op) {
-      return op.description?.trim();
+      return op.description?.trim()?.toLowerCase();
     });
     var isDuplicate = optionArr.some((op, i) => {
       if (!op) return;
@@ -169,7 +170,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
   // checkbox, file and text input handler for option
   function optionInputHandler(e, optionIndex) {
     const currentOption = optionData[optionIndex];
-    const updatedOption = { ...currentOption };
+    const updatedOption = { ...currentOption, isUpdated: true };
 
     if (e.target.type === 'file') {
       const file = e.target.files[0];
@@ -290,7 +291,7 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
           description: option.description || '',
           isCorrect: option.isCorrect || false,
           qmId: questionRes?.data?.addQuestionBankQuestion?.id,
-          isActive: option.isActive || false,
+          isActive: option.isActive || true,
           attachmentType: option.attachmentType || '',
 
           // TODO: remove or update later
@@ -327,43 +328,48 @@ export default function useHandleQuestionBankQuestion(editData, closeQuestionMas
 
     const question = questionData;
     const options = optionData;
-    const sendQuestionData = {
-      id: question.id,
-      name: question.name || '',
-      description: question.description || '',
-      type: question.type || '',
-      difficulty: question.difficulty || 0,
-      hint: question.hint || '',
-      qbmId: question.qbmId || null,
-      attachmentType: question.attachmentType || '',
 
-      // TODO: remove or update later
-      createdBy: 'Zicops',
-      updatedBy: 'Zicops',
-      status: STATUS.flow[0]
-    };
-
-    if (question.file) {
-      sendQuestionData.file = question.file;
-    }
     let isError = false;
+    if (question?.isUpdated) {
+      const sendQuestionData = {
+        id: question.id,
+        name: question.name || '',
+        description: question.description || '',
+        type: question.type || '',
+        difficulty: question.difficulty || 0,
+        hint: question.hint || '',
+        qbmId: question.qbmId || null,
+        attachmentType: question.attachmentType || '',
 
-    if (!question.id) return setToastMsg({ type: 'danger', message: `Question id missing` });
+        // TODO: remove or update later
+        createdBy: 'Zicops',
+        updatedBy: 'Zicops',
+        status: QUESTION_STATUS[0]
+      };
 
-    await updateQuestion({ variables: sendQuestionData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update Question Error' });
-    });
+      if (question.file) {
+        sendQuestionData.file = question.file;
+      }
+
+      if (!question.id) return setToastMsg({ type: 'danger', message: `Question id missing` });
+
+      await updateQuestion({ variables: sendQuestionData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update Question Error' });
+      });
+    }
 
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
+      if (!option?.isUpdated) continue;
+
       const sendOptionData = {
         id: option.id,
         description: option.description || '',
         isCorrect: option.isCorrect || false,
         qmId: option.qmId,
-        isActive: option.isActive || false,
+        isActive: option.isActive || true,
         attachmentType: option.attachmentType || '',
 
         // TODO: remove or update later

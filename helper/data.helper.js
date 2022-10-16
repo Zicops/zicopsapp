@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import { GET_CATS_N_SUB_CATS, GET_SUB_CATS_BY_CAT, queryClient } from '../API/Queries';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
+import { DEFAULT_VALUES } from './constants.helper';
 
 export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
@@ -23,9 +24,11 @@ export async function createCourseAndUpdateContext(courseContextData, createCour
     return { type: 'warning', message: 'Please fill all the Course Master Details' };
   }
 
-  const { id, created_at, updated_at, ...sendData } = fullCourse;
+  const { id, created_at, updated_at, duration, name, ...sendData } = fullCourse;
 
-  const res = await createCourse({ variables: { ...sendData, status: 'SAVED' } }).catch((err) => {
+  const res = await createCourse({
+    variables: { ...sendData, name: fullCourse?.name?.trim(), status: 'SAVED' }
+  }).catch((err) => {
     console.log('Course Add Error: ', err);
     return { type: 'danger', message: 'Course Create Error' };
   });
@@ -34,7 +37,12 @@ export async function createCourseAndUpdateContext(courseContextData, createCour
     return { type: 'danger', message: 'Course Id not recieved in response' };
 
   console.log('course created', res);
-  updateCourseMaster(res.data.addCourse);
+
+  const _course = structuredClone(res.data.addCourse);
+  if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
+  if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
+  if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
+  updateCourseMaster(_course);
 
   const courseId = res.data.addCourse.id;
   setCourseVideo({ ...courseVideo, courseId: courseId });
@@ -105,9 +113,9 @@ export function sortTopicContentByIsDefault(topicContent) {
 }
 
 export function sortArrByKeyInOrder(array, key = 'sequence', isAsc = true) {
-  if (!array.length) return [];
+  if (!array?.length) return [];
 
-  const localArr = [...array];
+  const localArr = structuredClone(array || []);
   let ascVal = -1,
     desVal = 1;
   if (isAsc) {
@@ -131,6 +139,28 @@ export async function isNameDuplicate(QUERY, name, objPath, id = null, checkAgai
   const queryVariables = { publish_time: Date.now(), pageSize: LONG_PAGE_SIZE, pageCursor: '' };
   const results = await queryClient.query({ query: QUERY, variables: queryVariables });
 
+  const arrayOfNames = getNestedValueByString(results?.data, objPath) || [];
+
+  const isNameExist = arrayOfNames.some((obj) => {
+    if (id && obj.id === id) return false;
+
+    const _name = obj[checkAgainstKey] || obj.Name || obj.name;
+    return _name?.toLowerCase()?.trim() === name?.toLowerCase()?.trim();
+  });
+
+  return isNameExist;
+}
+
+export async function isNameDuplicateAdvanced(
+  QUERY,
+  variables,
+  name,
+  objPath,
+  client = queryClient,
+  id = null,
+  checkAgainstKey
+) {
+  const results = await client.query({ query: QUERY, variables: variables });
   const arrayOfNames = getNestedValueByString(results?.data, objPath) || [];
 
   const isNameExist = arrayOfNames.some((obj) => {

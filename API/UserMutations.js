@@ -3,7 +3,7 @@ import { createUploadLink } from 'apollo-upload-client';
 import { authLink } from './api.helper';
 
 const httpLink = createUploadLink({
-  uri: 'https://staging.zicops.com/um/api/v1/query'
+  uri: 'https://demo.zicops.com/um/api/v1/query'
 });
 
 export const userClient = new ApolloClient({
@@ -84,8 +84,8 @@ export const MAKE_ADMIN_USER = gql`
 `;
 
 export const INVITE_USERS = gql`
-  mutation InviteUsers($emails: [String!]!) {
-    inviteUsers(emails: $emails)
+  mutation InviteUsers($emails: [String!]!, $lsp_id: String!) {
+    inviteUsers(emails: $emails, lsp_id: $lsp_id)
   }
 `;
 

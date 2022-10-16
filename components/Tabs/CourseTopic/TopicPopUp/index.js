@@ -68,7 +68,7 @@ export default function TopicPopUp({
   const uploadStatus = useRecoilValue(uploadStatusAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
-  const assessmentData = useAddAssessment(editTopic?.id, setEditTopic);
+  const assessmentData = useAddAssessment(editTopic, setEditTopic);
 
   useEffect(() => {
     if (isEdit && !isPopUpDataPresent) setIsPopUpDataPresent(true);
@@ -76,7 +76,7 @@ export default function TopicPopUp({
 
   if (isEdit) {
     filteredTopicContent = filterTopicContent(topicContent, editTopic?.id);
-    closeBtnObj.name = 'Design Later';
+    closeBtnObj.name = 'Cancel';
     closeBtnObj.disabled = !!uploadStatus;
 
     submitBtnObj.name = 'Design';
@@ -130,6 +130,12 @@ export default function TopicPopUp({
                       <Button
                         clickHandler={() => updateTopicAndContext()}
                         isDisabled={!isEditTopicReady}
+                        customStyles={
+                          !!editTopic?.name && !!editTopic?.description
+                            ? { backgroundColor: 'var(--primary)', color: 'var(--black)' }
+                            : {}
+                        }
+                        styleClass={`${styles.updateTopicBtn}`}
                         text="Update"
                         type="button"
                       />
@@ -176,23 +182,29 @@ export default function TopicPopUp({
                   />
 
                   {/* subtitles accordion */}
-                  <Accordion
-                    title="Subtitles"
-                    isDisabled={!filteredTopicContent?.length}
-                    content={
-                      <SubtitleForm
-                        topicId={editTopic?.id || ''}
-                        courseId={editTopic?.courseId || ''}
-                      />
-                    }
-                  />
+                  {(addTopicContentLocalStates?.newTopicContent?.type === 'mp4' ||
+                    filteredTopicContent[0]?.type === 'mp4') && (
+                    <Accordion
+                      title="Subtitles"
+                      isDisabled={!filteredTopicContent?.length}
+                      content={
+                        <SubtitleForm
+                          topicId={editTopic?.id || ''}
+                          courseId={editTopic?.courseId || ''}
+                        />
+                      }
+                    />
+                  )}
 
                   {/* binge */}
-                  <Accordion
-                    title="Binge it"
-                    isDisabled={!filteredTopicContent?.length}
-                    content={<BingeForm topicVideo={topicVideo} />}
-                  />
+                  {(addTopicContentLocalStates?.newTopicContent?.type === 'mp4' ||
+                    filteredTopicContent[0]?.type === 'mp4') && (
+                    <Accordion
+                      title="Binge it"
+                      isDisabled={!filteredTopicContent?.length}
+                      content={<BingeForm topicVideo={topicVideo} />}
+                    />
+                  )}
 
                   {/* quiz */}
                   <Accordion
@@ -202,6 +214,7 @@ export default function TopicPopUp({
                       <QuizForm
                         topicId={editTopic?.id || ''}
                         courseId={editTopic?.courseId || ''}
+                        isScrom={filteredTopicContent[0]?.type === 'SCORM'}
                       />
                     }
                   />

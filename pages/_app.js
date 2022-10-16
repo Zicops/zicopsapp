@@ -12,6 +12,9 @@ import '../styles/global.scss';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
+  // for disabling log at all places
+  console.log = () => {};
+
   // toggle scrollbar opacity when scroll
   useEffect(() => {
     let timeout = null;

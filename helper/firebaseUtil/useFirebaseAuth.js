@@ -1,12 +1,8 @@
-import { useState, useEffect } from 'react';
-import { auth } from './firebaseConfig';
-import {
-  signOut,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged
-} from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { GIBBERISH_VALUE_FOR_LOGIN_STATE } from '../constants.helper';
+import { auth } from './firebaseConfig';
 
 const formatAuthUser = (user) => ({
   user: user,
@@ -41,8 +37,8 @@ export default function useFirebaseAuth() {
   const signIn = async (email, password) => {
     console.log(email, password);
     setErrorMsg(null);
-    await signInWithEmailAndPassword(auth, email, password)
-      .then((authUser) => {})
+    return await signInWithEmailAndPassword(auth, email, password)
+      .then((authUser) => authUser)
       .catch((error) => {
         const err = error.code.slice(5).split('-').join(' ');
         setErrorMsg(err);
@@ -57,7 +53,13 @@ export default function useFirebaseAuth() {
   //     });
   // };
 
-  const logOut = () => signOut(auth).then(clear);
+  const logOut = async () => {
+    sessionStorage.clear();
+    localStorage.removeItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
+    await signOut(auth).then(clear);
+
+    router.push('/login');
+  };
 
   useEffect(() => {
     onAuthStateChanged(auth, authStateChanged);

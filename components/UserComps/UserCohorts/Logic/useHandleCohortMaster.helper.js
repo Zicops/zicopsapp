@@ -12,12 +12,15 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData } from '@/state/atoms/users.atom';
 import { STATUS, StatusAtom } from '@/state/atoms/utils.atoms';
 import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import addUserData from '../ChortMasterTab/Logic/addUserData';
 import useCohortUserData from '../ChortMasterTab/Logic/useCohortUserData';
 
 export function useHandleCohortMaster() {
+
+  const router = useRouter();
   const [addCohortMain, { error }] = useMutation(ADD_COHORT_MAIN, {
     client: userClient
   });
@@ -29,7 +32,7 @@ export function useHandleCohortMaster() {
   });
 
   const { addUserToCohort } = addUserData();
-  const { getCohortManager, getCohortUserDetails , getCohortUser } = useCohortUserData();
+  const { getCohortManager, getCohortUserDetails, getCohortUser } = useCohortUserData();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [status, setStatus] = useRecoilState(StatusAtom);
@@ -62,7 +65,6 @@ export function useHandleCohortMaster() {
     if (!managers?.length > 0) errorMsg = 'Atleast add one manager';
 
     if (!!errorMsg) setToastMsg({ type: 'danger', message: errorMsg });
-
     return !!errorMsg;
   }
 
@@ -78,6 +80,7 @@ export function useHandleCohortMaster() {
   }, [cohortData]);
 
   async function saveCohortMaster() {
+    // console.log(cohortMasterData, cohortData);
     if (validatingCohortMaster()) return;
 
     const data = getUserData();
@@ -98,17 +101,18 @@ export function useHandleCohortMaster() {
     let isError = false;
     if (cohortMasterData?.id) {
       sendCohortData.cohort_id = cohortMasterData?.id;
-      const allUsers = await getCohortUser(cohortMasterData?.id,true);
+      const allUsers = await getCohortUser(cohortMasterData?.id, true);
+      if (allUsers?.length) sendCohortData.size = allUsers?.length;
       const oldManagers = allUsers?.filter((item) => item?.role?.toLowerCase() === 'manager');
-      const oldLearner = allUsers?.filter((item)=> item?.role?.toLowerCase() !== 'manager')
-      
+      const oldLearner = allUsers?.filter((item) => item?.role?.toLowerCase() !== 'manager');
+
       //promoting learner to manager
-      const promoteManager = oldLearner.filter(
-        ({ user_id: id1 }) => cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
+      const promoteManager = oldLearner?.filter(({ user_id: id1 }) =>
+        cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
       );
 
       //updating older manager that are removed
-      const removeManager = oldManagers.filter(
+      const removeManager = oldManagers?.filter(
         ({ user_id: id1 }) => !cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
       );
 
@@ -117,7 +121,7 @@ export function useHandleCohortMaster() {
         ({ id: id1 }) => !allUsers?.some(({ user_id: id2 }) => id2 === id1)
       );
 
-      console.log(removeManager , newManager , promoteManager , allUsers);
+      // console.log(removeManager, newManager, promoteManager, allUsers);
       // return ;
 
       if (removeManager?.length) {
@@ -138,7 +142,7 @@ export function useHandleCohortMaster() {
           const res = await updateUserCohort({ variables: sendData }).catch((err) => {
             if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing manager' });
           });
-          console.log(res);
+          // console.log(res);
         }
       }
 
@@ -159,10 +163,11 @@ export function useHandleCohortMaster() {
           const res = await updateUserCohort({ variables: sendData }).catch((err) => {
             if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing manager' });
           });
-          console.log(res);
+          // console.log(res);
         }
       }
-      
+
+      if (newManager?.length) sendCohortData.size = allUsers?.length + newManager?.length;
 
       //adding new managers
       if (newManager?.length) {
@@ -189,54 +194,59 @@ export function useHandleCohortMaster() {
         }
       }
 
+      // console.log(sendCohortData);
       const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
-        console.log(err);
+        // console.log(err);
         isError = !!err;
       });
 
-      console.log(res);
+      // console.log(res);
       if (isError)
         return setToastMsg({ type: 'danger', message: 'Error occured while updating cohort!' });
 
-      return;
+      return setToastMsg({ type: 'success', message: 'Updated cohort successfully!' });;
     }
 
-    console.log(sendCohortData);
-    const resCohortData = await addCohortMain({ variables: sendCohortData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-    });
+    // console.log(sendCohortData, 'add cohortmaster');
+    if (!cohortMasterData?.id) {
+      const resCohortData = await addCohortMain({ variables: sendCohortData }).catch((err) => {
+        // console.log(err);
+        isError = !!err;
+      });
 
-    if (isError)
-      return setToastMsg({ type: 'danger', message: 'Error occured while creating cohort!' });
+      if (isError)
+        return setToastMsg({ type: 'danger', message: 'Error occured while creating cohort!' });
 
-    // console.log(resCohortData?.data?.addCohortMain?.cohort_id);
-    const cohort_id = resCohortData?.data?.addCohortMain?.cohort_id;
+      // console.log(resCohortData?.data?.addCohortMain?.cohort_id);
+      const cohort_id = resCohortData?.data?.addCohortMain?.cohort_id;
 
-    setCohortData((prevValue) => ({ ...prevValue, id: cohort_id }));
-    if (!cohort_id)
-      return setToastMsg({ type: 'danger', message: 'Error occured in creating cohortID!' });
-    for (let i = 0; i < cohortMasterData?.managers?.length; i++) {
-      const sendLspData = {
-        user_id: cohortMasterData?.managers[i]?.id,
-        lsp_id: LEARNING_SPACE_ID
-      };
-      let res = await loadQueryDataAsync(
-        GET_USER_LEARNINGSPACES_DETAILS,
-        { ...sendLspData },
-        {},
-        userClient
-      );
-      console.log(res?.getUserLspByLspId);
-      const userLspData = res?.getUserLspByLspId;
-      const sendAddUserCohortData = {
-        id: cohortMasterData?.managers[i]?.id,
-        user_lsp_id: userLspData?.user_lsp_id,
-        cohort_id: cohort_id,
-        membership_status: 'Active',
-        role: 'Manager'
-      };
-      await addUserToCohort(sendAddUserCohortData);
+      setCohortData((prevValue) => ({ ...prevValue, id: cohort_id }));
+      if (!cohort_id)
+        return setToastMsg({ type: 'danger', message: 'Error occured in creating cohortID!' });
+      for (let i = 0; i < cohortMasterData?.managers?.length; i++) {
+        const sendLspData = {
+          user_id: cohortMasterData?.managers[i]?.id,
+          lsp_id: LEARNING_SPACE_ID
+        };
+        let res = await loadQueryDataAsync(
+          GET_USER_LEARNINGSPACES_DETAILS,
+          { ...sendLspData },
+          {},
+          userClient
+        );
+        // console.log(res?.getUserLspByLspId);
+        const userLspData = res?.getUserLspByLspId;
+        const sendAddUserCohortData = {
+          id: cohortMasterData?.managers[i]?.id,
+          user_lsp_id: userLspData?.user_lsp_id,
+          cohort_id: cohort_id,
+          membership_status: 'Active',
+          role: 'Manager'
+        };
+        await addUserToCohort(sendAddUserCohortData);
+      }
+      setToastMsg({ type: 'success', message: 'Added cohort successfully!' });
+      return router.push('/admin/user/user-cohort/'+ cohort_id)
     }
     // console.log(res);
   }

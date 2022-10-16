@@ -1,6 +1,7 @@
 import { subCategory } from '@/components/LearnerUserProfile/Logic/userData.helper';
 import { COURSE_TYPES, LANGUAGES } from '@/helper/constants.helper';
 import { loadCatSubCat } from '@/helper/data.helper';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { changeHandler, snakeCaseToTitleCase } from '../../../helper/common.helper';
@@ -8,22 +9,27 @@ import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import Button from '../../CustomVideoPlayer/Button';
 import styles from '../search.module.scss';
 
-export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
+export default function SearchHeader({
+  filters,
+  setFilters,
+  clearAllFilters,
+  catSubCat,
+  setActiveCatId
+}) {
   const router = useRouter();
   const { searchQuery } = router.query;
 
-  useEffect(()=>{
+  useEffect(() => {
     const { subCat, lang, cat, type } = router.query;
     const _filters = structuredClone(filters);
     if (subCat) _filters.subCategory = subCat;
     if (lang) _filters.lang = lang;
     if (cat) _filters.category = cat;
     if (type) _filters.type = type;
-    setFilters( _filters );
-  },[router.query])
+    setFilters(_filters);
+  }, [router.query]);
   // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
-
+  // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
 
   const Type = COURSE_TYPES?.map((v, i) => {
     return { value: v, label: snakeCaseToTitleCase(v), isDisabled: [1, 2].includes(i) };
@@ -37,9 +43,8 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
   //   { value: 'Bookmarks', label: 'Bookmarks' }
   // ];
 
-  
   // update sub cat based on cat
-  loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, filters?.category);
+  // loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, filters?.category);
 
   const Languages = LANGUAGES?.map((lang) => ({ value: lang, label: lang }));
   const isFilterPresent =
@@ -79,6 +84,7 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
 
       <div className={`${styles.searchParamDropdowns}`}>
         <LabeledDropdown
+          styleClass={styles.dropdown}
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Language',
@@ -88,26 +94,32 @@ export default function SearchHeader({ filters, setFilters, clearAllFilters }) {
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'lang')}
         />
         <LabeledDropdown
+          styleClass={styles.dropdown}
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Category',
-            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.cat],
+            options: [{ value: '', label: '-- Select --' }, ...catSubCat?.cat],
             value: { value: filters.category, label: filters.category },
             isSearchEnable: true
           }}
-          changeHandler={(e) => setFilters({ ...filters, category: e.value, subCategory: null })}
+          changeHandler={(e) => {
+            setActiveCatId(e);
+            setFilters({ ...filters, category: e.value, subCategory: null });
+          }}
         />
         <LabeledDropdown
+          styleClass={styles.dropdown}
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Sub-category',
-            options: [{ value: '', label: '-- Select --' }, ...catAndSubCatOption?.subCat],
+            options: [{ value: '', label: '-- Select --' }, ...catSubCat?.subCat],
             value: { value: filters.subCategory, label: filters.subCategory },
             isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'subCategory')}
         />
         <LabeledDropdown
+          styleClass={styles.dropdown}
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Type',

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { IMAGE_FILE_TYPES } from '@/helper/constants.helper';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+import { IsDataPresentAtom } from '../../PopUp/Logic/popUp.helper';
 import styles from '../formComponents.module.scss';
 import PreviewImageVideo from './PreviewImageVideo';
 
@@ -11,11 +13,17 @@ export default function BrowseAndUpload({
   handleRemove,
   isActive,
   isError,
-  acceptedTypes = '.jpeg, .png, .gif',
+  acceptedTypes = IMAGE_FILE_TYPES,
   hidePreviewBtns = false
 }) {
   const [showPreview, setShowPreview] = useState(false);
+  const [popUpData, setPopUpData] = useState(false);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+
+  useEffect(() => {
+    if (!showPreview && popUpData) setIsPopUpDataPresent(popUpData);
+  }, [showPreview]);
 
   return (
     <>
@@ -33,7 +41,9 @@ export default function BrowseAndUpload({
           name={inputName}
           accept={acceptedTypes}
           onChange={(e) => {
-            let fileTypes = acceptedTypes?.split(', ');
+            let fileTypes = acceptedTypes
+              ?.split(', ')
+              ?.map((t) => t?.trim()?.replace(/(\r\n|\n|\r)/gm, ''));
 
             if (e.target.value && !fileTypes?.some((t) => e.target.value?.includes(t))) {
               return setToastMsg({
@@ -51,6 +61,8 @@ export default function BrowseAndUpload({
               className={`${styles.preview}`}
               onClick={() => {
                 if (previewData?.fileName || previewData?.filePath) {
+                  setPopUpData(isPopUpDataPresent);
+                  setIsPopUpDataPresent(false);
                   setShowPreview(true);
                 } else {
                   setToastMsg([

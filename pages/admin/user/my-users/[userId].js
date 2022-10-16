@@ -1,14 +1,18 @@
 import { userClient } from '@/api/UserMutations';
 import {
   GET_USER_DETAIL,
+  GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_ORGANIZATION_DETAIL,
-  GET_USER_PREFERENCES
+  GET_USER_PREFERENCES,
+  GET_USER_PREFERENCES_DETAILS,
+  userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -22,6 +26,7 @@ import styles from '../user.module.scss';
 
 export default function UserProfilePage() {
   const [currentUserData, setCurrentUserData] = useState(null);
+  const adminData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const router = useRouter();
@@ -31,7 +36,10 @@ export default function UserProfilePage() {
     if (!currentUserId) return;
     // const userIds = [];
     // userIds.push(currentUserId);
+    const lspId = adminData?.lsp_id;
 
+    if(!lspId) return ;
+    
     const detailsRes = await loadQueryDataAsync(
       GET_USER_DETAIL,
       { user_id: [currentUserId] },
@@ -44,6 +52,19 @@ export default function UserProfilePage() {
     // console.log(userIds, userDetails, detailsRes);
 
     setCurrentUserData({ ...userDetails });
+    
+    
+    const userLearningSpaceData = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id: currentUserId , lsp_id:lspId},{},userQueryClient)
+    if (userLearningSpaceData?.error) return setToastMsg({ type: 'danger', message: 'User Load Error' });
+    
+    const { user_lsp_id } = userLearningSpaceData?.getUserLspByLspId;
+    
+    // console.log(user_lsp_id,'userLspid of',userDetails?.email)
+    if(!user_lsp_id) return ;
+    
+    setCurrentUserData((prev) => ({ ...prev, userLspId:  user_lsp_id })) ;
+    
+    if(!userDetails?.is_verified) return ;
 
     const detailPref = await loadQueryDataAsync(
       GET_USER_PREFERENCES,
@@ -54,12 +75,12 @@ export default function UserProfilePage() {
     if (detailPref?.error) return setToastMsg({ type: 'danger', message: 'User Pref Load Error' });
     const userPref = detailPref?.getUserPreferences;
     if (userPref.length) setCurrentUserData((prev) => ({ ...prev, ...userPref[0] }));
+    // console.log(detailPref,'pref')
     const prefArr = userPref?.filter(
-      (item) => item?.user_lsp_id === userPref[0]?.user_lsp_id && item?.is_active
+      (item) => item?.user_lsp_id === user_lsp_id && item?.is_active
     );
 
     const base = prefArr?.filter((item) => item?.is_base);
-    console.log(base);
     setCurrentUserData((prev) => ({
       ...prev,
       sub_categories: [...prefArr],
@@ -70,7 +91,7 @@ export default function UserProfilePage() {
 
     const detailOrg = await loadQueryDataAsync(
       GET_USER_ORGANIZATION_DETAIL,
-      { user_id: currentUserId, user_lsp_id: userPref[0]?.user_lsp_id },
+      { user_id: currentUserId, user_lsp_id: user_lsp_id },
       {},
       userClient
     );
@@ -105,11 +126,11 @@ export default function UserProfilePage() {
         />
 
         <MainBodyBox customStyle={{ minHeight: 'auto', maxHeight: 'none', height: 'min-content' }}>
-          <UserProfile currentUserData={currentUserData} />
+          <UserProfile currentUserData={currentUserData} setCurrentUserData={setCurrentUserData} />
         </MainBodyBox>
         <div className={`${styles.accordianContainer}`}>
-          <CoursesAccordian />
-          <CohortAccordian />
+          <CoursesAccordian currentUserData={currentUserData}/>
+          <CohortAccordian currentUserData={currentUserData}/>
           <LearningDashboardAccordian />
         </div>
       </MainBody>

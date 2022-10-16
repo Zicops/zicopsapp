@@ -194,7 +194,10 @@
 .textSubCategory {
   background-color: $black;
   border-radius: 8px;
-  padding: 5px 20px;
+  // padding: 5px 20px;
+  padding: 5px 10px;
+  font-weight: normal;
+  font-size: 16px;
 }
 
 .userTabContainer {
@@ -304,10 +307,14 @@
   }
 }
 
+$popUpHeight: 75vh;
 .cohortTabContainer {
+  display: flex;
+  flex-direction: column;
+
   position: relative;
 
-  height: 75vh;
+  height: $popUpHeight;
   width: 70vw;
   background-color: $darkTwo;
   color: $white;
@@ -326,6 +333,8 @@
     background-color: $secondary;
     border-radius: 50%;
 
+    cursor: pointer;
+
     img {
       height: 30px;
     }
@@ -343,6 +352,7 @@
       text-align: center;
       background-color: $darkOne;
       color: $darkThree;
+      cursor: pointer;
 
       padding: 5px 0px;
     }
@@ -354,7 +364,9 @@
   }
 
   .tabSection {
-    padding: 10px;
+    flex: 1;
+    padding: 15px;
+    overflow: hidden;
   }
 }
 .cardSliderBody {
@@ -365,7 +377,13 @@
 
 .container {
   height: 100%;
+  // max-height: 60vh;
+  // padding: 10px;
   overflow-y: auto;
+
+  .preferences {
+    height: 65vh;
+  }
 }
 
 .prefContainer {
@@ -430,17 +448,25 @@
   border-bottom: 1px solid var(--white);
   display: flex;
   justify-content: space-between;
-  padding: 0px 20px 10px;
+  padding: 15px;
   font-weight: 600;
-  p {
-    margin-right: 25px;
+  .checkBoxContainer {
+    flex: 0.25;
+  }
+
+  .firstName,
+  .lastName,
+  .email {
+    flex: 1;
   }
 }
 .courseTabContainer {
-  height: 500px;
-  overflow-y: scroll;
-  padding-right: 15px;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  // overflow-y: scroll;
+  // padding-right: 15px;
+  // padding: 20px;
   overflow: hidden;
 }
 .listCardContainer {
@@ -454,31 +480,44 @@
   flex-direction: column;
   gap: 15px;
 }
+.memberTab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
 .listCardTabContainer {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  overflow: auto;
+
   height: 100%;
-  overflow: scroll;
+  padding: 15px;
 }
 // //////Cohort-Details Tab //////////////////
 .detailsTopsection,
 .detailsBottomsection {
-  display: grid;
-  grid-template-columns: 25% auto;
-  gap: 15px;
-  height: 50%;
+  // display: grid;
+  // grid-template-columns: 25% auto;
+  // gap: 15px;
+  // height: 50%;
 }
-.detailsTopsection {
-  margin-bottom: 15px;
-}
+// .detailsTopsection {
+// margin-bottom: 15px;
+// }
 .topLeft,
 .topRight,
 .bottomLeft,
 .bottomRight {
+  // display: flex;
+  // flex-direction: column;
+
   background-color: $black;
   border-radius: 5px;
-  padding: 15px;
+  padding: 10px;
+  // margin: 10px;
 }
 .topLeft {
   img {
@@ -493,6 +532,7 @@
 .topRight {
   display: grid;
   grid-template-columns: 65% auto;
+
   .bigText {
     font-size: 1.7vw;
     font-weight: 600;
@@ -556,10 +596,11 @@
   }
 
   .buttonContainer {
-    width: 135px;
+    // width: 135px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    gap: 10px;
+    // align-items: center;
   }
 }
 
@@ -605,4 +646,120 @@
   justify-content: center;
 
   color: $white;
+}
+
+.memberList {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  overflow: auto;
+}
+.LeaderboardTabContainer {
+  height: 100%;
+  overflow-y: scroll;
+  padding-right: 15px;
+  padding: 20px;
+  overflow: hidden;
+
+  .searchbar {
+    padding: '0px 5px 15px';
+  }
+  .leaderboardHeader {
+    border-bottom: 1px solid $darkThree;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    text-align: center;
+    .name {
+      text-align: start;
+      flex: 2;
+    }
+    .brank {
+      flex: 1;
+    }
+    .crank {
+      display: flex;
+      justify-content: flex-end;
+      flex: 1;
+    }
+  }
+  .leaderboardScrollable {
+    height: calc(100% - 70px);
+    overflow-y: auto;
+    padding: 10px;
+  }
+  .leaderboardBody {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    margin: 10px 0;
+    background-color: $black;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid transparent;
+    &:hover {
+      border: 1px solid $primary;
+      cursor: pointer;
+    }
+    .profile {
+      display: flex;
+      flex: 2;
+      gap: 10px;
+      align-items: center;
+      img {
+        width: 35px;
+        height: 35px;
+      }
+    }
+    .brankText {
+      flex: 1;
+    }
+    .crankBlock {
+      display: flex;
+      flex: 1;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+      .crankImg {
+        height: 25px;
+        width: 25px;
+        img {
+          height: 100%;
+          width: 100%;
+        }
+      }
+      .crankArrow {
+        height: 25px;
+        width: 25px;
+      }
+    }
+  }
+}
+
+.detailsTab {
+  display: grid;
+  height: 100%;
+  grid-template-columns: calc(25% - 5px) calc(75% - 5px);
+  grid-template-rows: calc(55% - 5px) calc(45% - 5px);
+  gap: 10px;
+  // overflow: hidden;
+
+  // background-color: rgba($color: red, $alpha: 0.2);
+
+  .lastContainer {
+    // background-color: rgba($color: green, $alpha: 0.2);
+    display: flex;
+    flex-direction: column;
+
+    .listContainer {
+      // height: 80%;
+      overflow: auto;
+    }
+  }
 }

@@ -75,7 +75,7 @@ export async function getCohortCourses(cohortId = null) {
     coursesArr[i];
     const data = await loadQueryDataAsync(GET_COURSE, { course_id: coursesArr[i]?.CourseId });
     if (!data?.getCourse) return { error: 'Error while loading courses!' };
-    cohortCourses.push({ ...data?.getCourse, IsActive: coursesArr[i]?.IsActive });
+    cohortCourses.push({ ...data?.getCourse, IsActive: coursesArr[i]?.IsActive , cohortCourseId: coursesArr[i]?.id });
   }
 
   const activeCohortCourses = cohortCourses?.filter((item) => item?.IsActive);

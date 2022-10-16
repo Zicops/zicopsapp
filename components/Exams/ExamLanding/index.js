@@ -4,6 +4,7 @@ import AttempHistory from '@/components/AttemptHistory';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
@@ -21,7 +22,7 @@ import {
   queryClient
 } from '../../../API/Queries';
 import { LearnerExamAtom } from '../../../state/atoms/exams.atoms';
-import { getTopicExamObj, TopicExamAtom } from '../../../state/atoms/module.atoms';
+import { getTopicExamObj, TopicAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import ExamPreview from '../common/ExamPreview';
 import styles from './examLanding.module.scss';
@@ -44,6 +45,8 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
     client: queryClient
   });
 
+  const topicData = useRecoilValue(TopicAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
@@ -95,8 +98,9 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       qpId: masterData.QpId,
       name: masterData.Name,
       description: masterData.Description,
-      duration: masterData.Duration,
+      duration: +masterData.Duration / 60,
       scheduleType: masterData.ScheduleType,
+      questionIds: masterData.QuestionIds || [],
 
       code: masterData.Code,
       type: masterData.Type,
@@ -123,7 +127,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       description: paperMasterData?.Description,
       section_wise: paperMasterData?.SectionWise,
       difficultyLevel: paperMasterData?.DifficultyLevel,
-      suggested_duration: paperMasterData?.SuggestedDuration,
+      suggested_duration: +paperMasterData?.SuggestedDuration / 60,
       status: paperMasterData?.Status
     };
 
@@ -193,7 +197,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
       {},
       userQueryClient
     );
@@ -205,6 +209,15 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
           ea?.user_cp_id === userCourseProgressId
       ) || [];
 
+    const currentTopic = topicData
+      ?.filter((t) => t?.type === 'Assessment')
+      ?.sort((t1, t2) => {
+        t1?.sequence - t2?.sequence;
+      });
+
+    const index = currentTopic?.findIndex((t) => t?.id === topicExamData?.topicId);
+    const topicIndex = index >= 0 ? index + 1 : 0;
+
     const _examData = {
       ...learnerExamData,
       examData: {
@@ -215,11 +228,11 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       },
       landingPageData: {
         testSeries: fullCourse?.name,
-        testSequence: `M${topicExamData?.currentModule?.label.split(' ')[1]}A${
-          topicExamData?.currentTopic?.sequence
+        testSequence: `M${topicExamData?.currentModule?.label.split(' ')[1]}${
+          topicIndex ? `A${topicIndex}` : ''
         }`,
         isProctoring: false,
-        totalQuestions: 0,
+        totalQuestions: masterObj.questionIds?.length,
         isNegativeMarking: false,
         expertiseLevel: paperMaster?.difficultyLevel
       }

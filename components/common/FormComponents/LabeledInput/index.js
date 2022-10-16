@@ -1,5 +1,5 @@
-import { func, bool, string, number, shape } from 'prop-types';
-import { labeledInputWrapper, halfInputWrapper } from '../formComponents.module.scss';
+import { bool, func, number, oneOfType, shape, string } from 'prop-types';
+import { halfInputWrapper, labeledInputWrapper } from '../formComponents.module.scss';
 
 export default function LabeledInput({
   inputOptions,
@@ -33,7 +33,9 @@ export default function LabeledInput({
         className={`${label ? 'w-75' : 'w-100'} ${inputClass}`}
         name={inputName}
         placeholder={placeholder}
-        value={value?.toString() || ''}
+        value={
+          isNumericOnly ? value?.toString()?.replace(/^0+/, '') || '0' : value?.toString() || ''
+        }
         onKeyPress={(e) => {
           if (!isNumericOnly) return;
 
@@ -46,7 +48,6 @@ export default function LabeledInput({
         disabled={!!isDisabled}
         autoComplete={isAutoComplete?.toString()}
       />
-
     </div>
   );
 }
@@ -59,9 +60,9 @@ export default function LabeledInput({
 
 const LabeledInputObj = shape({
   inputName: string.isRequired,
-  label: string.isRequired,
+  label: string,
   placeholder: string.isRequired,
-  value: string || number,
+  value: oneOfType([string, number]),
   maxLength: number,
   isRequired: bool,
   isDisabled: bool,

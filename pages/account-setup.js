@@ -2,20 +2,18 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import LoginComp from '@/components/LoginComp';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useRecoilState } from 'recoil';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 
 const SignUp = () => {
-  const [isLogged, setIsLogged] = useState(0);
+  const userData = useRecoilState(UserStateAtom);
 
   const router = useRouter();
 
   // to check if we have use logged in or not
   // useEffect(() => {
-  //   if (userData) {
-  //     router.push('/');
-  //     return;
-  //   }
-  //   return;
-  // }, [userState]);
+  //   if (userData) return router.push('/');
+  // }, []);
 
   return (
     <>

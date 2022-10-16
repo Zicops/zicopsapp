@@ -1,6 +1,8 @@
+import { getUserCourseDataObj, UserCourseDataAtom } from '@/state/atoms/video.atom';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import { courseContext } from '../../state/contexts/CourseContext';
 import BottomTabsMenu from '../small/BottomTabsMenu';
 import {
@@ -23,11 +25,20 @@ export default function CourseBody({ isPreview = false }) {
     setActiveCourseTab,
     getModuleOptions,
     moduleData,
-    setSelectedModule
+    setSelectedModule,
+    setIsResourceShown
   } = useShowData(courseContextData);
 
   const router = useRouter();
   useLoadUserData(isPreview, setSelectedModule, getModuleOptions);
+  const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+
+  useEffect(() => {
+    setActiveCourseTab(tabs[0].name);
+    setIsResourceShown(null);
+    setSelectedModule(getModuleOptions()[0]);
+    if (isPreview) setUserCourseData(getUserCourseDataObj());
+  }, []);
 
   const props = {
     activeCourseTab: activeCourseTab,

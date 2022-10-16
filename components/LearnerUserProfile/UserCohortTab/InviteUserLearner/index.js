@@ -1,14 +1,16 @@
 import styles from './inviteUserLearner.module.scss';
 import { inviteTabData } from '../../Logic/userBody.helper';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-const InviteUserLearner = ({ inviteTabData }) => {
+const InviteUserLearner = ({ inviteTabData , handleSelect = ()=>{} , removeAll = null}) => {
+
+  // console.log(inviteTabData,'invite');
   return (
     <div className={`${styles.inviteUserLearner}`}>
-      <LabeledRadioCheckbox type="checkbox" />
+      <div className={`${styles.checkBoxContainer}`}><LabeledRadioCheckbox type="checkbox" changeHandler={handleSelect} isChecked={removeAll}/></div>
 
-      <p>{inviteTabData.firstName}</p>
-      <p>{inviteTabData.lastName}</p>
-      <p>{inviteTabData.emailId}</p>
+      <p className={`${styles.firstName}`}>{inviteTabData?.first_name}</p>
+      <p className={`${styles.lastName}`}>{inviteTabData?.last_name}</p>
+      <p className={`${styles.email}`}>{inviteTabData?.email}</p>
     </div>
   );
 };

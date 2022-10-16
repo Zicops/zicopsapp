@@ -2,8 +2,11 @@ import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { setContext } from '@apollo/client/link/context';
 import { getIdToken, onAuthStateChanged } from 'firebase/auth';
+import { LEARNING_SPACE_ID } from '../helper/constants.helper';
 
 export async function getLatestToken(token) {
+  if (!token) return null;
+
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   // getting renewed token before time expire
   const expTime = data?.exp - 60;
@@ -31,10 +34,12 @@ export const authLink = setContext(async (_, { headers }) => {
     ? sessionStorage.getItem('tokenF')
     : auth?.currentUser?.accessToken;
   const fireBaseToken = await getLatestToken(initialToken);
+
   return {
     headers: {
       ...headers,
-      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : 'Token Not found'
+      Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : '',
+      tenant: LEARNING_SPACE_ID
     }
   };
 });

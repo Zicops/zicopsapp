@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -65,7 +66,7 @@ export default function ExamsTable({ isEdit = false }) {
         exam_end: +schData?.End ? new Date(+schData?.End * 1000) : null,
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
-        is_schedule_active: schData?.IsActive || false
+        is_schedule_active: schData?.IsActive || true
       };
 
       if (!schObj.exam_end) {
@@ -76,7 +77,7 @@ export default function ExamsTable({ isEdit = false }) {
           return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
         });
 
-        const paperDuration = qpMetaRes?.data?.getQPMeta[0]?.SuggestedDuration || 0;
+        const paperDuration = (+qpMetaRes?.data?.getQPMeta[0]?.SuggestedDuration || 0) / 60;
         schObj.exam_end = new Date(
           startDate.setMinutes(startDate.getMinutes() + +schObj.buffer_time + +paperDuration)
         );
@@ -92,7 +93,7 @@ export default function ExamsTable({ isEdit = false }) {
     }
 
     if (!exams?.length) setLoading(false);
-    setExamData([...exams], setLoading(false));
+    setExamData(sortArrByKeyInOrder([...exams], 'CreatedAt', false), setLoading(false));
   }, []);
 
   const columns = [
@@ -131,7 +132,7 @@ export default function ExamsTable({ isEdit = false }) {
                 outline: '0',
                 border: '0'
               }}
-              onClick={() => router.push(`${addRoute}?isPreview=true`, addRoute)}>
+              onClick={() => router.push(`${router.asPath}/view/${params.row.id}`)}>
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>
             {isEdit && (
@@ -144,7 +145,9 @@ export default function ExamsTable({ isEdit = false }) {
                     outline: '0',
                     border: '0'
                   }}>
-                  <ToolTip title="Edit Exam Configurations" placement="bottom"><img src="/images/svg/edit-box-line.svg" width={20}></img></ToolTip>
+                  <ToolTip title="Edit Exam Configurations" placement="bottom">
+                    <img src="/images/svg/edit-box-line.svg" width={20}></img>
+                  </ToolTip>
                 </button>
               </>
             )}

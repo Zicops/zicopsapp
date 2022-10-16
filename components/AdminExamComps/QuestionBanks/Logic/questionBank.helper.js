@@ -10,7 +10,8 @@ export function getQuestionBankQuestionObject(data = {}) {
     attachmentType: data.attachmentType || '',
 
     qbmId: data.qbmId || null,
-    status: data.status || null
+    status: data.status || null,
+    isUpdated: data?.isUpdated || false
   };
 }
 
@@ -24,7 +25,7 @@ export function getQuestionOptionsObject(data = {}) {
     file: data.file || null,
 
     qmId: data.qmId || null,
-    isActive: data.isActive || false
+    isActive: data.isActive || true
   };
 }
 

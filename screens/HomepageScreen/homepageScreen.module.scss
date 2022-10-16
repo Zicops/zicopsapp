@@ -1,0 +1,34 @@
+@import '../../styles/base.scss';
+
+.homebody {
+  background-color: $bgTile;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.homePageLoader {
+  //   position: fixed;
+  //   z-index: 111;
+
+  opacity: 0.5;
+  //   height: calc(100vh - ($headerHeight + $footerHeight));
+  //   margin-top: $headerHeight;
+  width: 100%;
+
+  overflow: hidden;
+
+  .rowContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .cardContainer {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+
+    margin: auto 4%;
+  }
+}

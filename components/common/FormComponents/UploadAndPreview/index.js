@@ -16,16 +16,19 @@ const UploadAndPreview = ({
   styleClass = {},
   handleUpdateImage = () => {},
   initialImage = null,
-  closePopUp = () => {}
+  imageUrl = null,
+  uploadedFile = null,
+  closePopUp = () => {},
+  isDisabled = false
 }) => {
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(uploadedFile);
   const [preview, setPreview] = useState('');
   const [pop, setPop] = useState(false);
 
   useEffect(async () => {
     if (!initialImage) return;
 
-    const response = await fetch(initialImage, { mode: 'no-cors' });
+    const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(initialImage)}`);
     // here image is url/location of image
     const blob = await response.blob();
     const file = new File([blob], 'image.jpg', { type: blob.type });
@@ -35,9 +38,21 @@ const UploadAndPreview = ({
     setPop(true);
   }, []);
 
+  useEffect(async () => {
+    if (!imageUrl) return;
+
+    const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(imageUrl)}`);
+    // here image is url/location of image
+    const blob = await response.blob();
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+
+    setImage(file);
+  }, [imageUrl]);
+
   const handleRemove = () => {
     if (!image) return;
     setImage(null);
+    handleChange(null);
     return;
   };
 
@@ -116,6 +131,7 @@ const UploadAndPreview = ({
           ref={imgRef}
           style={{ display: 'none' }}
           type="file"
+          disabled={isDisabled}
         />
         {!initialImage && (
           <>
@@ -127,7 +143,7 @@ const UploadAndPreview = ({
               Preview
             </button>
             {isRemove && (
-              <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
+              <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image || isDisabled}>
                 Remove
               </button>
             )}

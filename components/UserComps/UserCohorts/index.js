@@ -28,9 +28,10 @@ const UserCohorts = () => {
     const data = resCohortData?.getCohortMains?.cohorts;
     if (!data) return setLoading(false);
     const list = data.map((item) => {
+      // console.log(item);
       return { ...item, id: item?.cohort_id };
     });
-    const cohorts = list?.filter((item)=>item?.is_active)
+    const cohorts = list?.filter((item) => item?.is_active);
     setCohortList([...cohorts], setLoading(false));
   }, []);
 
@@ -44,12 +45,12 @@ const UserCohorts = () => {
     {
       field: 'code',
       headerClassName: 'course-list-header',
-      headerName: 'Cohort Code',
+      headerName: 'Cohort code',
       flex: 1
     },
     {
       field: 'size',
-      headerName: 'Cohort Size',
+      headerName: 'Size',
       headerClassName: 'course-list-header',
       flex: 1
     },
@@ -69,10 +70,9 @@ const UserCohorts = () => {
                 outline: '0',
                 border: '0'
               }}
-              // onClick={() => {
-              //   setSelectedQB(getQuestionBankObject(params.row));
-              //   setEditPopUp(true);
-              // }}
+              onClick={() => {
+                router.push(router.asPath + `/view-cohort/${params?.row?.id}`);
+              }}
             >
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>

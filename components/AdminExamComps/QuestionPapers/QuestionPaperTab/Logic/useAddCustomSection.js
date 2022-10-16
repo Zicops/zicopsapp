@@ -49,12 +49,14 @@ export default function useAddCustomSection() {
     if (editSectionError) return setToastMsg({ type: 'danger', message: `Update Section Error` });
   }, [addSectionError, editSectionError]);
 
-  function isDuplicate() {
+  function isDuplicate(sectionId = null) {
     const sections = questionPaperTabData?.sectionData || [];
     if (!sections?.length) return false;
 
     const isExist = sections.some(
-      (sect) => sect?.name?.toLowerCase() === customSection?.name?.toLowerCase()
+      (sect) =>
+        sect?.name?.trim()?.toLowerCase() === customSection?.name?.trim()?.toLowerCase() &&
+        sect?.id !== sectionId
     );
 
     if (isExist) setToastMsg({ type: 'danger', message: 'Section with name already exist' });
@@ -114,7 +116,7 @@ export default function useAddCustomSection() {
   async function updateSection() {
     if (!questionPaperTabData.paperMaster.id)
       return setToastMsg({ type: 'danger', message: 'Add Question Paper First' });
-    if (isDuplicate()) return;
+    if (isDuplicate(customSection.id)) return;
 
     const sendData = {
       id: customSection.id,

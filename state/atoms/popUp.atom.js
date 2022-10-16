@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { atomFamily, selectorFamily } from 'recoil';
+import { atom, atomFamily, selectorFamily } from 'recoil';
 
 // all popUp states
 const popUpStates = {
@@ -70,4 +70,20 @@ function splitUrlToGetObjectFromHash(hash) {
   });
 
   return returnObj;
+}
+
+export const DeleteConfirmDataAtom = atom({
+  key: 'DeleteConfirmData',
+  default: getDeleteConfirmDataObj()
+});
+
+export function getDeleteConfirmDataObj(data = {}) {
+  return {
+    showConfirm: data?.showConfirm || false,
+    id: data?.id || null,
+    mutation: data?.mutation || null,
+    confirmMsg: data?.confirmMsg || null,
+    onDelete: () => {},
+    resKey: null
+  };
 }

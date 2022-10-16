@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { CohortMasterData, getCohortMasterObject } from '@/state/atoms/users.atom';
 import { useHandleCohortMaster } from '../Logic/useHandleCohortMaster.helper';
 
-const UserCohorts = ({ isEdit = false }) => {
+const UserCohorts = ({ isEdit = false , isReadOnly = false }) => {
   const [status, setStatus] = useRecoilState(StatusAtom);
 
   const [cohortMasterData, setCohortMasterData] = useRecoilState(CohortMasterData);
@@ -17,22 +17,22 @@ const UserCohorts = ({ isEdit = false }) => {
 
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(router?.query);
-    // console.log(cohortMasterData);
-  }, [router?.query]);
+  // useEffect(() => {
+  //   console.log(router?.query);
+  //   // console.log(cohortMasterData);
+  // }, [router?.query]);
   const tabData = [
     {
       name: 'Cohort Master',
-      component: <CohortMaster isEdit={isEdit} />
+      component: <CohortMaster isEdit={isEdit} isReadOnly={isReadOnly} />
     },
     {
       name: 'Users',
-      component: <Users />
+      component: <Users isReadOnly={isReadOnly}/>
     },
     {
       name: 'Course Mapping',
-      component: <CohortMapping />
+      component: <CohortMapping isReadOnly={isReadOnly}/>
     }
   ];
   const [tab, setTab] = useState(tabData[0].name);
@@ -43,11 +43,12 @@ const UserCohorts = ({ isEdit = false }) => {
         tabData={tabData}
         tab={tab}
         setTab={setTab}
-        customStyles={tab === tabData[2].name? {padding:'20px'}:{}}
+        customStyles={tab === tabData[2].name ? { padding: '20px' } : {}}
         footerObj={{
+          disableSubmit:isReadOnly,
           // submitDisplay: 'Save',
           showFooter: tab === tabData[0].name,
-          status: status || STATUS.display[0],
+          status: cohortMasterData?.status || status || STATUS.display[0],
           submitDisplay: cohortMasterData?.id ? 'Update' : 'Save',
           handleSubmit: () => saveCohortMaster(),
           handleCancel: () => {

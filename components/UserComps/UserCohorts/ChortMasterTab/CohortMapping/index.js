@@ -23,17 +23,17 @@ import { ADD_COURSE_COHORT_MAP } from '@/api/UserMutations';
 import { userQueryClient } from '@/api/UserQueries';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { mutationClient } from '@/api/Mutations';
+import { DELETE_COHORT_COURSE, mutationClient } from '@/api/Mutations';
 
-const CohortMapping = () => {
+const CohortMapping = ({isReadOnly = false}) => {
   const [courseAssignData, setCourseAssignData] = useState({
     expectedCompletionDays: null,
     isMandatory: false,
     isCourseAssigned: false
   });
 
-
-  const [loading , setLoading] = useState(false);
+  const [deleteCohortCourse] = useMutation(DELETE_COHORT_COURSE,{client:mutationClient}) ;
+  const [loading, setLoading] = useState(false);
   const [addCohortCourse] = useMutation(ADD_COURSE_COHORT_MAP, {
     client: mutationClient
   });
@@ -57,11 +57,10 @@ const CohortMapping = () => {
   const [selectedCourse, setSelectedCourse] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  const { assignCourseToOldUser } = assignCourseToUser();
+  const { assignCourseToOldUser , removeUserCohortCourses } = assignCourseToUser();
 
   function handleAssign(item, isRemove = false) {
-
-    setSelectedCourse({...item, isMandatory:courseAssignData?.isMandatory})
+    setSelectedCourse({ ...item, isMandatory: courseAssignData?.isMandatory });
     // setSelectedCourse({ ...item });
     if (!isRemove) return setIsAssignPopUpOpen(true);
 
@@ -70,39 +69,62 @@ const CohortMapping = () => {
 
   async function handleSubmit() {
     setLoading(true);
-    const {id,email} = getUserData();
-    
+    const { id, email } = getUserData();
+
     //adding end date after adding duration
     const endDate = new Date();
-    endDate.setDate(endDate.getDate()+parseInt(courseAssignData?.expectedCompletionDays));
-    
+    endDate.setDate(endDate.getDate() + parseInt(courseAssignData?.expectedCompletionDays));
+
     const sendData = {
-      CourseId:selectedCourse?.id,
-      CohortId:router?.query?.cohortId || cohortData?.id,
-      CourseType:selectedCourse?.type,
-      LspId:LEARNING_SPACE_ID,
-      CohortCode:cohortData?.cohort_code,
-      isMandatory:courseAssignData?.isMandatory,
-      CourseStatus:selectedCourse?.status,
-      AddedBy:JSON.stringify({user_id:id,role:'admin'}),
-      CreatedBy:email,
-      UpdatedBy:email,
-      IsActive:true,
-      ExpectedCompletion:courseAssignData?.expectedCompletionDays
-    }
-    console.log({...selectedCourse,endDate:endDate},'selected course');
-    let isError = false ;
-    const resCohortCourse = await addCohortCourse({variables:sendData}).catch((err)=>{isError = !!err});
-    if(isError) return setToastMsg({type:'danger',message:'error while assigning course to cohort!'})
+      CourseId: selectedCourse?.id,
+      CohortId: router?.query?.cohortId || cohortData?.id,
+      CourseType: selectedCourse?.type,
+      LspId: LEARNING_SPACE_ID,
+      CohortCode: cohortData?.cohort_code,
+      isMandatory: courseAssignData?.isMandatory,
+      CourseStatus: selectedCourse?.status,
+      AddedBy: JSON.stringify({ user_id: id, role: 'admin' }),
+      CreatedBy: email,
+      UpdatedBy: email,
+      IsActive: true,
+      ExpectedCompletion: courseAssignData?.expectedCompletionDays
+    };
+    console.log({ ...selectedCourse, endDate: endDate }, 'selected course');
+    let isError = false;
+    const resCohortCourse = await addCohortCourse({ variables: sendData }).catch((err) => {
+      isError = !!err;
+    });
+    if (isError)
+      return setToastMsg({ type: 'danger', message: 'error while assigning course to cohort!' });
     // console.log(resCohortCourse);
-    const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId,{...selectedCourse,endDate:endDate});
-    if(!isCourseAssigned) return setToastMsg({type:'danger',message:'error while assigning course to users!'})
+    const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId, {
+      ...selectedCourse,
+      endDate: endDate
+    });
+    if (!isCourseAssigned)
+      return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
+    setToastMsg({ type: 'success', message: 'Course added succesfully!' });
     setIsAssignPopUpOpen(false);
+    await loadAssignCourses(false);
     setCourseAssignData({
       expectedCompletionDays: null,
       isMandatory: false,
       isCourseAssigned: false
     });
+    return setLoading(false);
+  }
+
+  async function handleRemove() {
+    // console.log(selectedCourse,'selected course');
+    setLoading(true);
+    if(!selectedCourse?.cohortCourseId) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
+    const res = await deleteCohortCourse({variables:{id:selectedCourse?.cohortCourseId}}).catch((err)=>{console.log(err)});
+    // if(res?.deleteCourseCohort) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
+    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId,selectedCourse?.id);
+    if(!isRemoved) return setToastMsg({ type: 'danger', message: 'Error while removing course from user!' });
+    setToastMsg({ type: 'success', message: 'Course removed from cohort!' });
+    await loadAssignCourses(false);
+    setShowConfirmBox(false);
     return setLoading(false);
   }
 
@@ -163,27 +185,39 @@ const CohortMapping = () => {
   }
 
   useEffect(async () => {
-    if (!router?.query?.cohortId) {
-      console.log(cohortData?.id);
-      if (!cohortData?.id) return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
-      const data = await getCohortCourses(cohortData?.id);
-      if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
-      if (data?.allCourses) {
-        return setCourseData([...data?.allCourses]);
-      }
-      return;
-    }
-    setLoading(true);
-    const data = await getCohortCourses(router?.query?.cohortId);
-    if (data?.error) {setLoading(false);setToastMsg({ type: 'danger', message: data?.error }); return;}
-    if (data?.allCourses && data?.assignedCourses) {
-      setCourseData([...data?.allCourses]);
-      setLoading(false);
-      return setAssignedCourses([...data?.assignedCourses]);
-    }
-    setLoading(false);
-    return setCourseData([...data?.allCourses]);
+ loadAssignCourses();
   }, [router?.query]);
+
+async function loadAssignCourses(isAssign = true){
+  if (!router?.query?.cohortId) {
+    // console.log(cohortData?.id);
+    if (!cohortData?.id)
+      return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
+    const data = await getCohortCourses(cohortData?.id);
+    setLoading(isAssign);
+    if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
+    if (data?.allCourses) {
+      return setCourseData([...data?.allCourses],setLoading(false));
+    }
+    return;
+  }
+  setLoading(isAssign);
+  const data = await getCohortCourses(router?.query?.cohortId);
+  if (data?.error) {
+    setLoading(false);
+    setToastMsg({ type: 'danger', message: data?.error });
+    return;
+  }
+  if (data?.allCourses && data?.assignedCourses) {
+    // console.log(data?.assignedCourses,'assifnefa')
+    setCourseData([...data?.allCourses]);
+    setLoading(false);
+    return setAssignedCourses([...data?.assignedCourses]);
+  }
+  setLoading(false);
+  setAssignedCourses([]);
+  return setCourseData([...data?.allCourses]);
+}
   return (
     <>
       <div className={`${styles.courses_acc_head}`}>
@@ -202,9 +236,12 @@ const CohortMapping = () => {
         )}
         {!isAssigned && (
           <div className={`${styles.assign}`}>
-            <div>Assigned Courses:{assignedCourses?.length}</div>
+            <div className={`${styles.assignedCoursesContainer}`}>
+            <span>Assigned Courses:</span>
+            <span>{assignedCourses?.length}</span>
+            </div>
 
-            <div
+            {!isReadOnly&&(<div
               onClick={() => {
                 setIsAssigned(!isAssigned);
                 setPage('Assign Courses');
@@ -213,7 +250,7 @@ const CohortMapping = () => {
               className={`${styles.assignInner}`}>
               <img src="/images/svg/add-line-blue.svg" />
               Assign Courses
-            </div>
+            </div>)}
           </div>
         )}
       </div>
@@ -226,7 +263,7 @@ const CohortMapping = () => {
         />
       )}
       {page === 'Assign Courses' && (
-        <AllCourses section={courseSections[1]} handleSubmit={handleAssign} isLoading={loading}/>
+        <AllCourses section={courseSections[1]} handleSubmit={handleAssign} isLoading={loading} />
       )}
       <PopUp
         // title="Course Mapping Configuration"
@@ -293,6 +330,8 @@ const CohortMapping = () => {
             "Learners in the cohort won't be able to access the course once unassigned. Do you still wish to continue?"
           }
           btnObj={{
+            leftIsDisable: loading,
+            rightIsDisable:loading,
             handleClickLeft: () => handleRemove(),
             handleClickRight: () => setShowConfirmBox(false)
           }}

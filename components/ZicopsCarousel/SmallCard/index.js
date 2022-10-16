@@ -1,7 +1,14 @@
 import { useRouter } from 'next/router';
 import { truncateToN } from '../../../helper/common.helper';
 
-export default function SmallCard({ image, courseData, styleClass, carouselRefData, isShowProgress=false }) {
+export default function SmallCard({
+  image,
+  courseData,
+  styleClass,
+  carouselRefData,
+  isShowProgress = false,
+  notext = false
+}) {
   if (!courseData) return null;
   const router = useRouter();
 
@@ -26,7 +33,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
 
   let courseNameClass = 'coursename';
   if (courseData?.name?.length > 43) {
-    console.log(courseData?.name?.length);
+    // console.log(courseData?.name?.length);
     courseNameClass = 'coursenamesmall';
   }
   const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
@@ -35,7 +42,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
       <div
         style={{ maxWidth: '350px' }}
         className={`card_item ${styleClass}`}
-        onClick={gotoCourse}
+        onClick={!notext ? gotoCourse : () => {}}
         onMouseEnter={(e) =>
           handleMouseEnter(
             e,
@@ -47,11 +54,17 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
         {/* remove image later */}
         <div className="smallCard">
           <div className="smallCardWrapper">
-            <div className="banner">Self Paced</div>
-            <div className={courseNameClass}>
-              {courseData.name || 'Hands on Scripting with PYTHON'}
+            <div className="banner">
+              {courseData?.type?.split('-').join(' ') || (!notext ? 'Self Paced' : 'Labs')}
             </div>
-            <div className="courseowner">{courseData.owner || 'Scripting'}</div>
+            {!notext ? (
+              <div className={courseNameClass}>
+                {courseData.name || 'Hands on Scripting with PYTHON'}
+              </div>
+            ) : (
+              ''
+            )}
+            {!notext ? <div className="courseowner">{courseData.owner || 'Scripting'}</div> : ''}
           </div>
           <img
             src={courseData.tileImage || image || '/images/courses/workplace design.png'}
@@ -82,7 +95,9 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
           <div className="bottom-box">
             <div className="title-area">
               <div className="firstline">
-                <div className="title">{courseData?.name || 'Hands on Scripting with PYTHON'}</div>
+                <div className={`title ${courseData?.name?.length > 20 ? 'smallFont' : ''}`}>
+                  {courseData?.name || 'Hands on Scripting with PYTHON'}
+                </div>
               </div>
               <div className="secondline">
                 {courseData?.type?.split('-').join(' ') || 'Self Paced'}
@@ -94,15 +109,22 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
                 <div className="one">
                   <div className="one-text">
                     <span className="level noselect">Level:</span>
-                    <span className="value noselect">
+                    <span
+                      className={`value noselect ${
+                        courseData?.expertise_level?.split(',').join(' | ')?.length > 15
+                          ? 'smallLevelFont'
+                          : ''
+                      }`}>
                       {courseData?.expertise_level
                         ? courseData?.expertise_level.split(',').join(' | ')
                         : ' Beginner'}
                     </span>
                   </div>
                   <div className="one-text">
-                    <span className="level noselect">Duration:</span>
-                    <span className="value noselect">{courseData?.duration || ' 275'} mins</span>
+                    <span className="level noselect">Duration: </span>
+                    <span className="value noselect">
+                      {Math.floor(courseData?.duration / 60) || '275'} mins
+                    </span>
                   </div>
                 </div>
 
@@ -192,6 +214,7 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
             font-size: 10px;
             padding: 3px 7px;
             border-radius: 0 4px 0 0;
+            text-transform: capitalize;
           }
           .coursename {
             margin-top: 50px;
@@ -370,6 +393,12 @@ export default function SmallCard({ image, courseData, styleClass, carouselRefDa
             padding: 5px;
             margin: 3px 7px;
             border: 1px solid #6bcfcf;
+          }
+          .smallFont {
+            font-size: 0.9em;
+          }
+          .smallLevelFont {
+            font-size: 0.8em;
           }
         `}
       </style>

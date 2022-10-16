@@ -82,7 +82,7 @@ export default function ExamResult() {
       qpId: masterData.QpId,
       name: masterData.Name,
       description: masterData.Description,
-      duration: masterData.Duration,
+      duration: +masterData.Duration / 60,
       scheduleType: masterData.ScheduleType,
 
       code: masterData.Code,

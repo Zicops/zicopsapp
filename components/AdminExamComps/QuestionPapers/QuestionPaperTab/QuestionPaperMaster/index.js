@@ -1,4 +1,5 @@
 import CustomTooltip from '@/components/common/CustomTooltip';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -21,15 +22,17 @@ export default function QuestionPaperMaster() {
   const router = useRouter();
   const questionPaperId = router.query?.questionPaperId;
   const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
-
   const { handleInput, addNewQuestionPaper, updateQuestionPaper } = useHandlePaperTab();
 
   // cat and sub cat
-  const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
-  // update sub cat based on cat
-  loadCatSubCat(
-    catAndSubCatOption,
-    setCatAndSubCatOption,
+  // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
+  // // update sub cat based on cat
+  // loadCatSubCat(
+  //   catAndSubCatOption,
+  //   setCatAndSubCatOption,
+  //   questionPaperTabData.paperMaster?.category
+  // );
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat(
     questionPaperTabData.paperMaster?.category
   );
 
@@ -64,7 +67,7 @@ export default function QuestionPaperMaster() {
           inputName: 'category',
           label: 'Category:',
           placeholder: 'Select Category',
-          options: catAndSubCatOption?.cat,
+          options: [{ value: 'General', label: 'General' }, ...catSubCat?.cat],
           isDisabled: !!questionPaperTabData?.sectionData?.length,
           value: {
             value: questionPaperTabData.paperMaster?.category,
@@ -72,7 +75,10 @@ export default function QuestionPaperMaster() {
           },
           isSearchEnable: true
         }}
-        changeHandler={(e) => handleInput(e, 'category')}
+        changeHandler={(e) => {
+          setActiveCatId(e);
+          handleInput(e, 'category');
+        }}
       />
       <LabeledDropdown
         styleClass={styles.inputField}
@@ -80,14 +86,14 @@ export default function QuestionPaperMaster() {
           inputName: 'sub_category',
           label: 'Sub-Category:',
           placeholder: 'Select Sub-Category',
-          options: catAndSubCatOption?.subCat,
+          options: [{ value: 'General', label: 'General' }, ...catSubCat?.subCat],
           isDisabled: !!questionPaperTabData?.sectionData?.length,
           value: {
             value: questionPaperTabData.paperMaster?.sub_category,
             label: questionPaperTabData.paperMaster?.sub_category
           },
           isSearchEnable: true,
-          menuPlacement: 'auto'
+          menuPlacement: 'top'
         }}
         changeHandler={(e) => handleInput(e, 'sub_category')}
       />
@@ -128,7 +134,18 @@ export default function QuestionPaperMaster() {
       <div className={`${styles.footer}`}>
         <LabeledRadioCheckbox
           type="checkbox"
-          label={<span>Section Wise<CustomTooltip info={`${questionPaperTabData.paperMaster?.section_wise ? "Question paper will have sections":"Question paper will not have sections"}`}/></span>}
+          label={
+            <span>
+              Section Wise
+              <CustomTooltip
+                info={`${
+                  questionPaperTabData.paperMaster?.section_wise
+                    ? 'Question paper will have sections'
+                    : 'Question paper will not have sections'
+                }`}
+              />
+            </span>
+          }
           name="section_wise"
           isDisabled={!!questionPaperTabData?.sectionData?.length}
           isChecked={questionPaperTabData.paperMaster?.section_wise}

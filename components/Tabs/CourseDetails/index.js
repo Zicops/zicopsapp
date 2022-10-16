@@ -1,3 +1,4 @@
+import { VIDEO_FILE_TYPES } from '@/helper/constants.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useContext } from 'react';
 import { useRecoilState } from 'recoil';
@@ -105,7 +106,7 @@ export default function CourseDetails() {
               isVideo: true
             }}
             isError={!(courseVideo?.file || fullCourse.previewVideo) && courseError?.details}
-            acceptedTypes="video/*"
+            acceptedTypes={VIDEO_FILE_TYPES}
             inputName="uploadCourseVideo"
             isActive={fileData.uploadCourseVideo}
           />
@@ -172,7 +173,17 @@ export default function CourseDetails() {
         />
       </div>
 
-      <NextButton tabIndex={2} />
+      <NextButton
+        tabIndex={2}
+        isActive={
+          fullCourse?.sub_categories?.length &&
+          fullCourse.expertise_level?.length &&
+          (courseVideo?.file || fullCourse.previewVideo) &&
+          (courseTileImage?.file || fullCourse.tileImage) &&
+          (courseImage?.file || fullCourse.image) &&
+          fullCourse?.summary?.length
+        }
+      />
     </>
   );
 }

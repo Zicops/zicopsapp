@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -50,7 +51,8 @@ export default function QuestionPaperTable({ isEdit = false }) {
           sub_category: params.row.SubCategory,
           difficulty_level: params.row.DifficultyLevel,
           section_wise: params.row.SectionWise,
-          suggested_duration: params.row.SuggestedDuration
+          suggested_duration: +params.row.SuggestedDuration / 60,
+          status: params.row?.Status
         };
 
         return (
@@ -129,7 +131,9 @@ export default function QuestionPaperTable({ isEdit = false }) {
         return setToastMsg({ type: 'danger', message: 'question paper load error' });
 
       if (data?.getLatestQuestionPapers?.questionPapers)
-        setQuestionPaper(data.getLatestQuestionPapers.questionPapers);
+        setQuestionPaper(
+          sortArrByKeyInOrder(data.getLatestQuestionPapers.questionPapers, 'CreatedAt', false)
+        );
     });
   }, []);
 

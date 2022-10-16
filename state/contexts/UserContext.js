@@ -28,7 +28,7 @@ const UserContextProvider = (props) => {
         topic_id: data?.topic_id,
         time_stamp: data?.time_stamp,
         name: data?.name,
-        is_active: data?.is_active
+        is_active: data?.is_active || true
         // captureImg: data?.captureImg
       }
     ]);

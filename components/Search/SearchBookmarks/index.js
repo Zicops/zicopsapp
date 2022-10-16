@@ -1,3 +1,4 @@
+import Loader from '@/components/common/Loader';
 import BookmarkCard from '../../common/BookmarkCard';
 import TwoRowCarousel from '../../common/TwoRowCarousel';
 import styles from '../search.module.scss';
@@ -21,15 +22,25 @@ const data = [
   // { id: 14, img: '/images/courses/1.png' }
 ];
 
-export default function SearchBookmarks() {
+export default function SearchBookmarks({ data = [] }) {
   return (
     <>
       <div className={`${styles.searchBookmarkTitle}`}>Bookmarks</div>
-      <TwoRowCarousel
-        itemsArr={data}
-        carouselProps={{ containerClass: styles.bookmarkContainer }}
-        CardComp={BookmarkCard}
-      />
+      {data?.isLoading && <Loader customStyles={{ height: '100px', background: 'transparent' }} />}
+
+      {!data?.isLoading && (
+        <>
+          {data?.bookmarks?.length ? (
+            <TwoRowCarousel
+              itemsArr={data?.bookmarks}
+              carouselProps={{ containerClass: styles.bookmarkContainer }}
+              CardComp={BookmarkCard}
+            />
+          ) : (
+            <div className={`${styles.notFound}`}>No Bookmarks Found</div>
+          )}
+        </>
+      )}
     </>
   );
 }

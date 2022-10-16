@@ -1,3 +1,4 @@
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 
 export const ModuleAtom = atom({
@@ -73,6 +74,11 @@ export const uploadStatusAtom = atom({
   default: null
 });
 
+export const CourseTypeAtom = atom({
+  key: 'courseType',
+  default: COURSE_TYPES[0]
+});
+
 // object structures which can be used  for reset or immutable new object
 export function getModuleObject(data) {
   return {
@@ -85,7 +91,8 @@ export function getModuleObject(data) {
     owner: data.owner || '',
     duration: data.duration || 0,
     level: data.level || '',
-    setGlobal: data.setGlobal || false
+    setGlobal: data.setGlobal || false,
+    isUpdated: data?.isUpdated || false
   };
 }
 
@@ -96,7 +103,8 @@ export function getChapterObject(data) {
     sequence: data.sequence || 1,
     id: data.id || '',
     name: data.name || '',
-    description: data.description || ''
+    description: data.description || '',
+    isUpdated: data?.isUpdated || false
   };
 }
 
@@ -109,7 +117,8 @@ export function getTopicObject(data) {
     id: data.id || '',
     name: data.name || '',
     description: data.description || '',
-    type: data.type || ''
+    type: data.type || '',
+    isUpdated: data?.isUpdated || false
   };
 }
 
@@ -160,8 +169,8 @@ export function getBingeObject() {
     startTimeSec: 0,
     skipIntroDuration: 0,
     showTimeMin: 0,
-    showTimeSec: 0,
-    isFromEnd: false
+    showTimeSec: 5,
+    isFromEnd: true
   };
 }
 

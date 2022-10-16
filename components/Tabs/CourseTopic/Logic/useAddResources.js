@@ -15,11 +15,7 @@ export default function useAddResources(courseId = '', topicId = '') {
 
   // update resouce courseid and topicid
   useEffect(() => {
-    setNewResource({
-      ...newResource,
-      topicId: topicId,
-      courseId: courseId
-    });
+    setNewResource({ ...newResource, topicId: topicId, courseId: courseId });
   }, [topicId, courseId]);
 
   useEffect(() => {
@@ -46,13 +42,9 @@ export default function useAddResources(courseId = '', topicId = '') {
       if (!e.target.files) return;
       if (!e.target.files[0]) return;
 
-      console.log(e.target.files);
       if (!newResource.type) {
         e.target.value = '';
-        return setToastMsg({
-          type: 'danger',
-          message: `Please select the Resource Type first`
-        });
+        return setToastMsg({ type: 'danger', message: `Please select the Resource Type first` });
       }
 
       let acceptedTypeRegex = /sheet|csv/;
@@ -61,16 +53,13 @@ export default function useAddResources(courseId = '', topicId = '') {
 
       if (!acceptedTypeRegex.test(e.target.files[0].type)) {
         e.target.value = '';
-        return setToastMsg({
-          type: 'danger',
-          message: `Wrong Type of File Uploaded.`
-        });
+        return setToastMsg({ type: 'danger', message: `Wrong Type of File Uploaded.` });
       }
 
       setNewResource({
         ...newResource,
         file: e.target.files[0],
-        name: e.target.files[0].name
+        name: newResource?.name?.length ? newResource?.name : e.target.files[0].name
       });
 
       return;
@@ -84,7 +73,7 @@ export default function useAddResources(courseId = '', topicId = '') {
 
   // save in recoil state
   function addNewResource() {
-    addResources([...resources, newResource]);
+    addResources([...resources, { ...newResource, isNew: true }]);
     setNewResource(getResourcesObject({ courseId, topicId }));
     setIsResourcesFormVisible(false);
   }

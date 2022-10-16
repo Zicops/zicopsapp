@@ -1,0 +1,209 @@
+@import '../../../styles/base.scss';
+
+.main {
+  position: relative;
+  //   max-width: 250px;
+  //   min-width: 200px;
+  cursor: pointer;
+
+  aspect-ratio: $cardTileRatio;
+
+  &:hover .overlay {
+    opacity: 1;
+    // transform: scale(1.1);
+    transition: all 0.2s ease-out 0.6s;
+    width: 130%;
+    height: 130%;
+    z-index: 99;
+  }
+}
+
+.tileCard {
+  position: relative;
+  height: 100%;
+  background-color: var(--header-bg);
+  border-radius: 8px;
+}
+
+.img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  opacity: 1;
+  border-radius: 8px;
+}
+
+.banner {
+  position: absolute;
+  top: 4%;
+  right: 2%;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 0 4px 0 0;
+}
+
+.tileCardWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 20px;
+  line-height: 1.3em;
+  height: 100%;
+  width: 100%;
+  background-color: rgba($black, 0.5);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.2) 100%);
+  position: absolute;
+  z-index: 1;
+  border-radius: 8px;
+}
+
+.coursename {
+  // margin-top: 50px;
+  color: #ffffff;
+  font-size: $courseTitle;
+  font-weight: 600;
+  padding: 0px 7px;
+  border-radius: 0 4px 0 0;
+  text-shadow: -1px -1px 2px rgba(255, 255, 255, 0.1), 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.coursenamesmall {
+  color: #ffffff;
+  font-size: $courseTitleSmall;
+  font-weight: 600;
+  padding: 0px 7px;
+  border-radius: 0 4px 0 0;
+  text-shadow: -1px -1px 2px rgba(255, 255, 255, 0.1), 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.courseowner {
+  color: #ffffff;
+  font-size: 14px;
+  padding: 0px 7px;
+  border-radius: 0 4px 0 0;
+  text-shadow: -1px -1px 2px rgba(255, 255, 255, 0.1), 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #f1f1f1;
+  opacity: 0;
+  border-radius: 8px;
+  border: 5px $primary solid;
+  &.right {
+    left: -40%;
+  }
+  &.left {
+    right: -40%;
+    left: auto;
+  }
+}
+
+.bottomBox {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(90deg, rgb(34, 37, 41) 0%, rgba(0, 0, 0, 1) 100%);
+  font-size: 10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  align-content: space-between;
+}
+
+.titleArea {
+  padding: 5px 0;
+}
+
+.firstline {
+  display: flex;
+  justify-content: space-between;
+}
+
+.secondline {
+  padding: 3px 0;
+  font-size: 1.1em;
+  color: $primary;
+}
+
+.title {
+  font-size: 1.4em;
+  font-weight: 700;
+  line-height: 1.3em;
+  // max-width: 80%;
+}
+
+.rating {
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.addCoursePlus {
+  width: 20px;
+  position: absolute;
+  top: 4%;
+  right: 2%;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.addCoursePlus:hover {
+  background-color: #121212;
+  box-shadow: inset 0 0 10px 0 $primary;
+  cursor: pointer;
+}
+
+.descArea {
+  display: flex;
+}
+
+.mainDesc {
+  width: 100%;
+  align-items: center;
+}
+
+.one {
+  display: flex;
+  justify-content: space-between;
+}
+
+.oneText {
+  display: flex;
+  gap: 4px;
+  font-size: 1em;
+}
+
+.level {
+  color: #8f9494;
+}
+
+.value {
+  color: #d4c5c5;
+  font-weight: 600;
+}
+
+.description {
+  font-size: 1.1em;
+  color: #858f8f;
+  padding: 5px 0;
+}
+
+.category {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  padding-bottom: 5px;
+}
+
+.categoryUl {
+  display: flex;
+  font-size: 0.9em;
+}
+
+.categoryLi {
+  margin-right: 20px;
+  font-size: 1em;
+}

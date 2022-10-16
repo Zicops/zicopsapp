@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../../state/atoms/video.atom';
 import Button from '../Button';
@@ -27,6 +27,13 @@ export default function ControlBar({
 }) {
   const [hideBar, setHideBar] = useState(false);
   const videoData = useRecoilValue(VideoAtom);
+  const bookmarkRef = useRef();
+  const quizRef = useRef();
+
+  useEffect(() => {
+    bookmarkRef.current.innerHTML = '';
+    quizRef.current.innerHTML = '';
+  }, [videoData?.videoSrc]);
 
   let disablePreviousButton = true;
   let disableNextButton = true;
@@ -62,14 +69,17 @@ export default function ControlBar({
           <div className={`${styles.thumbnailContainer}`} ref={tooltip}>
             {/* <div className={`${styles.thumbnailInfo}`}>Some info will be here!</div> */}
             <div className={`${styles.thumbnailImage}`}>
-            <img src="" alt="" className={`${styles.previewImg}`} id="thumbnailImages" />
+              <img src="" alt="" className={`${styles.previewImg}`} id="thumbnailImages" />
             </div>
             <div className={`${styles.thumbnailTime}`}>{seek}</div>
           </div>
 
           <div className={`${styles.thumbIndicator}`} id="thumbIndicator"></div>
-          <div className={`${styles.bookmarkIndicator}`} id="bookmarkIndicator"></div>
-          <div className={`${styles.quizIndicator}`} id="quizIndicator"></div>
+          <div
+            className={`${styles.bookmarkIndicator}`}
+            ref={bookmarkRef}
+            id="bookmarkIndicator"></div>
+          <div className={`${styles.quizIndicator}`} ref={quizRef} id="quizIndicator"></div>
         </div>
       </div>
 

@@ -1,3 +1,4 @@
+import { CUSTOM_ERROR_MESSAGE } from '@/helper/constants.helper';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -71,6 +72,7 @@ export default function useHandleQuestionBank() {
   }, [createError, updateError]);
 
   async function createNewQuestionBank() {
+    setIsAddQuestionBankReady(false);
     // duplicate name check
     if (
       await isNameDuplicate(
@@ -79,6 +81,7 @@ export default function useHandleQuestionBank() {
         'getLatestQuestionBank.questionBanks'
       )
     ) {
+      setIsAddQuestionBankReady(true);
       return setToastMsg({ type: 'danger', message: 'Bank with same name already exist' });
     }
 
@@ -109,12 +112,14 @@ export default function useHandleQuestionBank() {
     }
     setIsPopUpDataPresent(false);
     setAddPopUp(false);
+    setIsAddQuestionBankReady(true);
 
     const questionTableRoute = `${router.asPath}/${res.data.createQuestionBank.id}`;
     router.push(`${questionTableRoute}?isTabOpen=true`, questionTableRoute);
   }
 
   async function updateQuestionBank() {
+    setIsAddQuestionBankReady(false);
     // duplicate name check
     if (
       await isNameDuplicate(
@@ -124,6 +129,7 @@ export default function useHandleQuestionBank() {
         questionBankData?.id
       )
     ) {
+      setIsAddQuestionBankReady(true);
       return setToastMsg({ type: 'danger', message: 'Bank with same name already exist' });
     }
 
@@ -144,6 +150,7 @@ export default function useHandleQuestionBank() {
 
     let isError = false;
     const res = await updateBank({ variables: sendData }).catch((err) => {
+      if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Question Bank Update Error' });
@@ -155,6 +162,7 @@ export default function useHandleQuestionBank() {
     }
     setIsPopUpDataPresent(false);
     setEditPopUp(false);
+    setIsAddQuestionBankReady(true);
   }
 
   return {

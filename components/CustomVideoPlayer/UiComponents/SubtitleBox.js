@@ -10,7 +10,8 @@ export default function SubtitleBox({ subtitleState }) {
 
   const { topicContent, currentTopicContentIndex, currentSubtitleIndex } = videoData;
   useEffect(() => {
-    setShowSubtitles(!!topicContent?.[currentTopicContentIndex]?.subtitleUrl?.length);
+    const isSubtitlePresent = !!topicContent?.[currentTopicContentIndex]?.subtitleUrl?.length;
+    if (showSubtitles && !isSubtitlePresent) setShowSubtitles(false);
   }, []);
 
   return (
@@ -64,10 +65,7 @@ export default function SubtitleBox({ subtitleState }) {
                   key={s.language}
                   className={`${i === currentSubtitleIndex ? styles.languageBtnActive : ''}`}
                   onClick={() => {
-                    setVideoData({
-                      ...videoData,
-                      currentSubtitleIndex: i
-                    });
+                    setVideoData({ ...videoData, currentSubtitleIndex: i });
                   }}>
                   {s.language}
                 </button>

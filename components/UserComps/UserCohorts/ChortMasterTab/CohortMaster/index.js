@@ -22,11 +22,13 @@ import { userClient } from '@/api/UserMutations';
 import useCohortUserData from '../Logic/useCohortUserData';
 import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
+import Loader from '@/components/common/Loader';
 
-const CohortMaster = ({ isEdit = false }) => {
-  const {  getCohortManager } = useCohortUserData();
+const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
+  const { getCohortManager } = useCohortUserData();
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
   const router = useRouter();
+  const cohortId = router?.query?.cohortId || null;
 
   const [cohortManager, setCohortManager] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -55,23 +57,28 @@ const CohortMaster = ({ isEdit = false }) => {
     setCohortData(getCohortMasterObject({}));
   }, []);
 
-  function formatUsers(userArr=null){
-    if(!userArr?.length) return setToastMsg({type:'danger',message:'No user found!'});
-    const data = userArr?.map((item)=>({
-     value: item?.full_name,
-     label: item?.full_name,
-     id: item?.id
-    }))
+  function formatUsers(userArr = null) {
+    if (!userArr?.length) return setToastMsg({ type: 'danger', message: 'No user found!' });
+    const data = userArr
+      ?.filter((user) => user?.is_verified && user?.is_active)
+      ?.map((item) => {
+        return {
+          value: item?.full_name,
+          label: item?.full_name,
+          id: item?.id
+        };
+      });
     return data;
   }
 
   useEffect(async () => {
     if (!isEdit) {
       const userList = await getUsersForAdmin();
-      if(userList?.error) return setToastMsg({type:'danger',message:userList?.error}) 
+      if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
       const managerList = formatUsers(userList);
       return setCohortManager([...managerList]);
     }
+    // if(isReadOnly) return console.log(router?.query)
     const { cohortId } = router?.query;
     if (!cohortId) return;
     const resCohort = await loadQueryDataAsync(
@@ -83,7 +90,7 @@ const CohortMaster = ({ isEdit = false }) => {
 
     const userList = await getUsersForAdmin();
     // console.log(managerList,'fs');
-    if(userList?.error) return setToastMsg({type:'danger',message:userList?.error}) 
+    if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
     const managerList = formatUsers(userList);
     setCohortManager([...managerList]);
 
@@ -92,11 +99,12 @@ const CohortMaster = ({ isEdit = false }) => {
     setCohortData(getCohortMasterObject(cohortDetail));
 
     const data = await getCohortManager(cohortId);
-    const cohortManager = data?.map((item) => ({
-      value: item?.name,
-      label: item?.name,
-      id: item?.id
-    }));
+    const cohortManager =
+      data?.map((item) => ({
+        value: item?.name,
+        label: item?.name,
+        id: item?.id
+      })) || [];
     setCohortData((prevValue) => ({ ...prevValue, managers: [...cohortManager] }));
   }, [router?.query]);
 
@@ -112,7 +120,8 @@ const CohortMaster = ({ isEdit = false }) => {
     value: selectedManagers,
     isSearchEnable: true,
     isMulti: true,
-    menuPlacement: 'top'
+    menuPlacement: 'top',
+    isDisabled:isReadOnly
   };
 
   function handleMulti(e, state, setState, inputName = null) {
@@ -122,6 +131,9 @@ const CohortMaster = ({ isEdit = false }) => {
     });
   }
 
+  if (cohortId && cohortData?.id !== cohortId)
+    return <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />;
+
   return (
     <>
       <LabeledInput
@@ -130,8 +142,10 @@ const CohortMaster = ({ isEdit = false }) => {
           label: 'Cohort Name:',
           placeholder: 'Enter Cohort Name (Upto 20 characters)',
           value: cohortData?.cohort_name,
-          maxLength: 20
-        }}
+          maxLength: 20,
+          isDisabled:isReadOnly
+        }
+      }
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);
         }}
@@ -145,7 +159,8 @@ const CohortMaster = ({ isEdit = false }) => {
           label: 'Cohort Code:',
           placeholder: 'Enter Cohort Code (Upto 10 characters)',
           value: cohortData?.cohort_code,
-          maxLength: 10
+          maxLength: 10,
+          isDisabled:isReadOnly
         }}
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);
@@ -159,6 +174,7 @@ const CohortMaster = ({ isEdit = false }) => {
           label: 'Type:',
           placeholder: 'Select Cohort Type(Open/Close)',
           options: difficultyOptions,
+          isDisabled:isReadOnly,
           value: {
             value: cohortData?.cohort_type,
             label: cohortData?.cohort_type
@@ -177,7 +193,8 @@ const CohortMaster = ({ isEdit = false }) => {
           label: 'Description:',
           placeholder: 'Enter Description (Upto 160 characters)',
           value: cohortData?.description,
-          maxLength: 160
+          maxLength: 160,
+          isDisabled:isReadOnly
         }}
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);
@@ -197,7 +214,9 @@ const CohortMaster = ({ isEdit = false }) => {
         label={'Cohort Image'}
         isRemove={true}
         description={false}
+        imageUrl={cohortData?.image_url}
         handleChange={setImage}
+        isDisabled={isReadOnly}
       />
     </>
   );

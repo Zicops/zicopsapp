@@ -1,3 +1,6 @@
+import { GET_LATEST_COURSES } from '@/api/Queries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { DEFAULT_VALUES } from '@/helper/constants.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -12,7 +15,7 @@ import {
 } from '../../../API/Mutations';
 import { createCourseAndUpdateContext } from '../../../helper/data.helper';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
-import { CourseTabAtom, isCourseUploadingAtom, tabData } from './tabs.helper';
+import { CourseTabAtom, IsCourseSavedAtom, isCourseUploadingAtom, tabData } from './tabs.helper';
 
 export default function useSaveCourse(courseContextData) {
   const {
@@ -38,6 +41,7 @@ export default function useSaveCourse(courseContextData) {
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
 
   const router = useRouter();
 
@@ -46,6 +50,10 @@ export default function useSaveCourse(courseContextData) {
 
     // saveCourseData();
   }, [tab]);
+
+  useEffect(() => {
+    setIsLoading(null);
+  }, []);
 
   function isValidData() {
     let isValid = false;
@@ -66,10 +74,10 @@ export default function useSaveCourse(courseContextData) {
       isValid =
         !!fullCourse?.sub_categories?.length &&
         !!fullCourse?.expertise_level?.length &&
-        !!fullCourse?.previewVideo?.length &&
-        !!fullCourse?.tileImage?.length &&
-        !!+fullCourse?.image?.length &&
-        !!+fullCourse?.summary?.length;
+        !!(courseVideo?.file || fullCourse.previewVideo) &&
+        !!(courseTileImage?.file || fullCourse.tileImage) &&
+        !!(courseImage?.file || fullCourse.image) &&
+        !!fullCourse?.summary?.length;
 
       _courseError.details = !isValid;
     }
@@ -81,8 +89,8 @@ export default function useSaveCourse(courseContextData) {
         !!fullCourse?.description?.length &&
         !!fullCourse?.prequisites?.length &&
         !!+fullCourse?.goodFor?.length &&
-        !!+fullCourse?.mustFor?.length;
-      !!+fullCourse?.related_skills?.length;
+        !!+fullCourse?.mustFor?.length &&
+        !!+fullCourse?.related_skills?.length;
 
       _courseError.about = !isValid;
     }
@@ -93,11 +101,31 @@ export default function useSaveCourse(courseContextData) {
 
   async function saveCourseData(isNextButton, tabIndex, showToastMsg = true) {
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
+    // check for duplicate course name
+    const queryVariables = {
+      publish_time: Date.now(),
+      pageSize: 999999,
+      pageCursor: '',
+      filters: { SearchText: fullCourse?.name?.trim() }
+    };
+    const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables);
+    const allCourses = courseRes?.latestCourses?.courses || null;
+
+    if (
+      allCourses &&
+      allCourses
+        ?.filter((c) => c?.name?.trim()?.toLowerCase() === fullCourse?.name?.trim()?.toLowerCase())
+        ?.filter((c) => c?.id !== fullCourse?.id)?.length > 0
+    ) {
+      setIsLoading(null);
+      return setToastMsg({ type: 'danger', message: 'Course with smae name already Exist' });
+    }
 
     if (!fullCourse.id) {
       const resObj = await createCourseAndUpdateContext(courseContextData, createCourse);
       setToastMsg({ type: resObj.type, message: resObj.message });
       setIsLoading(addCourseLoading ? 'SAVING...' : null);
+      setIsCourseSaved(true);
 
       if (isNextButton && resObj.type === 'success') {
         setTab(tabData[tabIndex || 0].name);
@@ -118,10 +146,17 @@ export default function useSaveCourse(courseContextData) {
     await uploadFile(courseTileImage, uploadTileImage, 'tileImage', 'uploadCourseTileImage');
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
-    console.log('var', fullCourse);
-    const courseUpdateResponse = await updateCourse({ variables: fullCourse });
+    const { duration, name, ...sendData } = fullCourse;
+    console.log('var', sendData);
+    const courseUpdateResponse = await updateCourse({
+      variables: { ...sendData, name: fullCourse?.name?.trim() }
+    });
 
-    updateCourseMaster(courseUpdateResponse.data.updateCourse);
+    const _course = structuredClone(courseUpdateResponse.data.updateCourse);
+    if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
+    if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
+    if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
+    updateCourseMaster(_course);
 
     setIsLoading(
       udpateCourseLoading && uploadImageLoading && uploadTileLoading && uploadPreviewLoading
@@ -132,6 +167,7 @@ export default function useSaveCourse(courseContextData) {
     if (showToastMsg) setToastMsg({ type: 'success', message: 'Course Updated' });
     console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
 
+    setIsCourseSaved(true);
     if (isNextButton) setTab(tabData[tabIndex || 0].name);
   }
 

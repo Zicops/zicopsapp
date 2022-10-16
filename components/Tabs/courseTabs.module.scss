@@ -55,7 +55,8 @@
     border-radius: 5px;
     background-color: $primary;
     white-space: nowrap;
-    color: $white;
+    color: $black;
+    // font-weight: bold;
     button {
       padding: 10px;
     }
@@ -513,4 +514,25 @@
   min-height: 100px;
   text-align: center;
   margin: 10px;
+}
+
+.editQuizContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  .editQuiz {
+    height: 20px;
+    cursor: pointer;
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.updateTopicBtn {
+  margin-bottom: 20px;
 }

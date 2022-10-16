@@ -8,6 +8,7 @@ import {
   userClient
 } from '@/api/UserMutations';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   getUserObject,
@@ -21,7 +22,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import useCommonHelper from './common.helper';
 
 export default function useHandleUserUpdate() {
-  const { getUserPreferences } = useCommonHelper();
+  // const { getUserPreferences } = useCommonHelper();
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
     client: userClient
   });
@@ -38,13 +40,14 @@ export default function useHandleUserUpdate() {
     client: userClient
   });
 
-  const [updatePreference, { error: updatePreferenceError }] = useMutation(UPDATE_USER_PREFERENCE, {
+  const [updatePreference, { error: updatePreferenceError , loading : prefLoading }] = useMutation(UPDATE_USER_PREFERENCE, {
     client: userClient
   });
 
   const [addPreference, { error: createPreferenceError }] = useMutation(ADD_USER_PREFERENCE, {
     client: userClient
   });
+
 
   //recoil states
   const userDataAbout = useRecoilValue(UserStateAtom);
@@ -54,11 +57,17 @@ export default function useHandleUserUpdate() {
   // local state
   const [userAboutData, setUserAboutData] = useState(getUserObject());
   const [userOrgData, setUserOrgData] = useState(getUserOrgObject());
+  const [_isSubmitDisable , setIsSubmitDisable] = useState(false);
 
   useEffect(() => {
     setUserAboutData(getUserObject(userDataAbout));
     setUserOrgData(getUserOrgObject(userDataOrgLsp));
   }, [userDataAbout, userDataOrgLsp]);
+
+  // useEffect(()=>{
+  //   if(prefLoading) return setIsSubmitDisable(true);
+  //   return setIsSubmitDisable(false)
+  // },[prefLoading])
 
   async function updateUserLearningSpaceDetails() {
     const sendLspData = {
@@ -115,8 +124,15 @@ export default function useHandleUserUpdate() {
   }
 
   async function updatePreferences(sub_categories = [], base_sub_category) {
+    setIsSubmitDisable(true);
     const { id } = getUserData();
-    const userPreferences = await getUserPreferences();
+    const preferenceData =  userDataGlobal?.preferences;
+
+    if(!preferenceData?.length) return setToastMsg({type:'danger' , message:'error while updating preferences'})
+
+    const userPreferences = preferenceData?.map((item) => {
+      return { ...item, name: item?.sub_category, category: item?.catData?.Name, isSelected: false };
+    }) 
 
     const selectedSubcartegory = sub_categories;
 
@@ -136,7 +152,7 @@ export default function useHandleUserUpdate() {
     let sub_categoriesArr;
     if (userPreferences.length) {
       const newArr = sub_categories.map((item) => item?.name);
-      console.log(newArr);
+      // console.log(newArr);
       sub_categoriesArr = userPreferences.filter((item) => {
         return !newArr.includes(item?.name);
       });
@@ -152,10 +168,11 @@ export default function useHandleUserUpdate() {
           is_base: false,
           is_active: false
         };
-        console.log(sendData);
+        // console.log(sendData);
         const res = await updatePreference({ variables: sendData }).catch((err) =>
           console.log(err)
         );
+        
       }
     }
 
@@ -192,6 +209,7 @@ export default function useHandleUserUpdate() {
         );
       }
     }
+    return setIsSubmitDisable(false)
   }
-  return { updateUserLearningSpaceDetails, updateUserOrganizationDetails, updatePreferences };
+  return { updateUserLearningSpaceDetails, updateUserOrganizationDetails, updatePreferences , _isSubmitDisable };
 }

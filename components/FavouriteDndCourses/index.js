@@ -29,8 +29,11 @@ export default function FavouriteDndCourses() {
     setCourseAssignData,
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
-    assignCourseToUser
+    assignCourseToUser,
+    isSaveDisabled
   } = useHandleCourseAssign();
+
+  const ASSIGNED_ROLE = ['cohort', 'admin'];
 
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -38,8 +41,8 @@ export default function FavouriteDndCourses() {
 
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
-  const [droppedByMe, setDroppedByMe] = useState(0);
-  const [droppedByAdmin, setDroppedByAdmin] = useState(0);
+  const [droppedByMe, setDroppedByMe] = useState([]);
+  const [droppedByAdmin, setDroppedByAdmin] = useState([]);
   const [isShowAll, setIsShowAll] = useState(false);
   const [isCoursePresent, setIsCoursePresent] = useState({
     selfAdded: false,
@@ -95,13 +98,12 @@ export default function FavouriteDndCourses() {
             })
           );
         }) || [];
-      setData(availableCourses);
+      updateCourseData(availableCourses);
 
       setDropped(assignedCourses);
     }
 
     loadCourses();
-    // setData(courses);
   }, [userData?.id]);
 
   useEffect(() => {
@@ -122,6 +124,10 @@ export default function FavouriteDndCourses() {
     if (!isShowAllAdmin) setIsShowAllAdmin(!!searchQuery);
   }, [searchQuery]);
 
+  function updateCourseData(courses) {
+    setData(courses?.sort((c1, c2) => +c1?.created_at - +c2?.created_at));
+  }
+
   const onMouseEnterHandler = () => {
     setHover(true);
   };
@@ -139,9 +145,9 @@ export default function FavouriteDndCourses() {
       const element = data.filter((e) => e.id === result.draggableId);
       // dropped.push(element);
       setCourseAssignData({ ...courseAssignData, fullCourse: element[0] });
-      setIsAssignPopUpOpen(true);
+      setIsAssignPopUpOpen(element[0]);
       // setDropped([...dropped, { ...element[0], added_by: { role: 'self' } }]);
-      setData(data.filter((each) => each.id !== result.draggableId));
+      updateCourseData(data.filter((each) => each.id !== result.draggableId));
       // setTotal(total + 1);
     }
     setIsDrag(false);
@@ -170,10 +176,13 @@ export default function FavouriteDndCourses() {
   }
 
   useEffect(() => {
-    const MyAssignedCourses = dropped.filter((course) => course.added_by.role == 'self');
-    const AdminAssignedCourses = dropped.filter((course) => course.added_by.role == 'admin');
-    setDroppedByMe(MyAssignedCourses.length);
-    setDroppedByAdmin(AdminAssignedCourses.length);
+    const myAssignedCourses = dropped?.filter((course) => course?.added_by?.role == 'self');
+    // console.log(dropped, 'added');
+    const adminAssignedCourses = dropped?.filter((course) =>
+      ASSIGNED_ROLE.includes(course?.added_by?.role?.toLowerCase())
+    );
+    setDroppedByMe(myAssignedCourses);
+    setDroppedByAdmin(adminAssignedCourses);
   }, [dropped]);
 
   return (
@@ -342,15 +351,15 @@ export default function FavouriteDndCourses() {
             <div className={styles.courseList}>
               <h4>
                 <span>
-                  Assigned By Me ({droppedByMe} / {LEARNING_FOLDER_CAPACITY})
+                  Assigned By Me ({droppedByMe?.length} / {LEARNING_FOLDER_CAPACITY})
                 </span>
                 <span className={styles.seeMore} onClick={() => setIsShowAll(!isShowAll)}>
-                  See {isShowAll ? 'Less' : 'More'}
+                  {droppedByMe?.length > 2 && <>See {isShowAll ? 'Less' : 'More'}</>}
                 </span>
               </h4>
 
               <div className={styles.cardContainer}>
-                {dropped?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
+                {droppedByMe?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
                   if (course?.added_by?.role !== 'self') return;
                   if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
 
@@ -365,17 +374,15 @@ export default function FavouriteDndCourses() {
               </div>
 
               <h4>
-                <span>
-                  Assigned By Admin ({droppedByAdmin})
-                </span>
+                <span>Assigned By Admin ({droppedByAdmin?.length})</span>
                 <span className={styles.seeMore} onClick={() => setIsShowAllAdmin(!isShowAllAdmin)}>
-                  See {isShowAllAdmin ? 'Less' : 'More'}
+                  {droppedByAdmin?.length > 2 && <>See {isShowAllAdmin ? 'Less' : 'More'}</>}
                 </span>
               </h4>
 
               <div className={styles.cardContainer}>
-                {dropped?.slice(0, isShowAllAdmin ? dropped?.length : 2)?.map((course) => {
-                  if (course?.added_by?.role !== 'admin') return;
+                {droppedByAdmin?.slice(0, isShowAllAdmin ? dropped?.length : 2)?.map((course) => {
+                  // if (course?.added_by?.role !== 'admin') return;
                   if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
 
                   if (!isCoursePresent?.adminAdded)
@@ -429,16 +436,20 @@ export default function FavouriteDndCourses() {
               isPrimary={false}
               type={'button'}
               clickHandler={() => {
+                updateCourseData([...data, isAssignPopUpOpen]);
                 setIsAssignPopUpOpen(false);
-                setCourseAssignData({ ...courseAssignData, endDate: new Date() });
+                setCourseAssignData({
+                  ...courseAssignData,
+                  endDate: new Date(),
+                  isMandatory: false
+                });
               }}
             />
             <UserButton
               text={'Save'}
               type={'button'}
-              clickHandler={() => {
-                assignCourseToUser();
-              }}
+              isDisabled={isSaveDisabled}
+              clickHandler={() => assignCourseToUser()}
             />
           </div>
         </div>

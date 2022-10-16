@@ -1,4 +1,6 @@
-import { changeHandler } from '../../../../helper/common.helper';
+import { filterAndSortChapter } from '@/helper/data.helper';
+import { ChapterAtom } from '@/state/atoms/module.atoms';
+import { useRecoilValue } from 'recoil';
 import LabeledDropdown from '../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
@@ -14,6 +16,9 @@ export default function ModulePopUp({
   handleSubmit,
   isEdit = false
 }) {
+  const chapterData = useRecoilValue(ChapterAtom);
+  const filteredAndSortedData = filterAndSortChapter(chapterData, moduleData?.id);
+
   const expertiseOptions = [
     { value: 'Beginner', label: 'Beginner' },
     { value: 'Competent', label: 'Competent' },
@@ -36,7 +41,9 @@ export default function ModulePopUp({
             maxLength: 60,
             value: moduleData.name
           }}
-          changeHandler={(e) => changeHandler(e, moduleData, setModuleData)}
+          changeHandler={(e) =>
+            setModuleData({ ...moduleData, name: e.target.value, isUpdated: true })
+          }
         />
 
         <LabeledDropdown
@@ -47,7 +54,7 @@ export default function ModulePopUp({
             options: expertiseOptions,
             value: moduleData.level ? { value: moduleData.level, label: moduleData.level } : null
           }}
-          changeHandler={(e) => changeHandler(e, moduleData, setModuleData, 'level')}
+          changeHandler={(e) => setModuleData({ ...moduleData, level: e.value, isUpdated: true })}
         />
 
         <div className={`center-element-with-flex`}>
@@ -61,7 +68,9 @@ export default function ModulePopUp({
               value: moduleData?.description,
               maxLength: 160
             }}
-            changeHandler={(e) => changeHandler(e, moduleData, setModuleData)}
+            changeHandler={(e) =>
+              setModuleData({ ...moduleData, description: e.target.value, isUpdated: true })
+            }
           />
         </div>
 
@@ -80,8 +89,10 @@ export default function ModulePopUp({
             name="isChapter"
             value="Beginner"
             isChecked={moduleData.isChapter}
-            isDisabled={isEdit}
-            changeHandler={(e) => changeHandler(e, moduleData, setModuleData)}
+            isDisabled={isEdit && filteredAndSortedData?.length}
+            changeHandler={(e) =>
+              setModuleData({ ...moduleData, isChapter: e.target.checked, isUpdated: true })
+            }
           />
         </div>
       </div>

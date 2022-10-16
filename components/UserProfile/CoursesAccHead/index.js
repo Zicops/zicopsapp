@@ -1,7 +1,31 @@
+import { snakeCaseToTitleCase } from '@/helper/common.helper';
+import { COURSE_TYPES } from '@/helper/constants.helper';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { useEffect, useState } from 'react';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../common/FormComponents/LabeledInput';
 import styles from './coursesAccHead.module.scss';
-const CoursesAccHead = ({ isFolder = false, handleClick = () => {}, courseCount = 0 }) => {
+const CoursesAccHead = ({
+  isFolder = false,
+  handleClick = () => {},
+  courseCount = 0,
+  getFilters = () => {}
+}) => {
+  const [filters, setFilters] = useState({
+    searchQuery: '',
+    cat: '',
+    subCat: '',
+    type: ''
+  });
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat();
+
+  useEffect(() => {
+    getFilters(filters);
+  }, [filters]);
+
+  const Type = COURSE_TYPES?.map((v, i) => {
+    return { value: v, label: snakeCaseToTitleCase(v), isDisabled: [1, 2].includes(i) };
+  });
   return (
     <>
       <div className={`${styles.coursesAcc_Head}`}>
@@ -12,31 +36,47 @@ const CoursesAccHead = ({ isFolder = false, handleClick = () => {}, courseCount 
             styleClass={styles.inputField}
             inputOptions={{
               inputName: 'search',
-              placeholder: 'Search'
+              placeholder: 'Search',
+              value: filters?.searchQuery
             }}
+            changeHandler={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
           />
         </div>
 
         <LabeledDropdown
           dropdownOptions={{
             isSearchEnable: true,
-            placeholder: 'Category'
+            options: [{ value: '', label: '-- Select --' }, ...catSubCat?.cat],
+            placeholder: 'Category',
+            value: { value: filters?.cat, label: filters?.cat }
           }}
-          changeHandler
+          changeHandler={(e) => {
+            setActiveCatId(e);
+            setFilters({ ...filters, cat: e.value, subCat: '' });
+          }}
         />
         <LabeledDropdown
           dropdownOptions={{
             isSearchEnable: true,
-            placeholder: 'Sub-Category'
+            placeholder: 'Sub-Category',
+            options: [{ value: '', label: '-- Select --' }, ...catSubCat?.subCat],
+            value: { value: filters?.subCat, label: filters?.subCat }
           }}
-          changeHandler
+          changeHandler={(e) => setFilters({ ...filters, subCat: e.value })}
         />
         <LabeledDropdown
           dropdownOptions={{
             isSearchEnable: true,
-            placeholder: 'Type'
+            placeholder: 'Type',
+            options: [
+              { value: '', label: '-- Select --' },
+              ...Type,
+              { value: 'Blog', label: 'Blog' },
+              { value: 'Bookmarks', label: 'Bookmarks' }
+            ],
+            value: { value: filters?.type, label: filters?.type }
           }}
-          changeHandler
+          changeHandler={(e) => setFilters({ ...filters, type: e.value })}
         />
         {isFolder && (
           <div className={`${styles.courseCount}`} data-count={courseCount}>

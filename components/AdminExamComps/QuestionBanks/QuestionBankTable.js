@@ -1,6 +1,7 @@
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import ToolTip from '@/components/common/ToolTip';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -36,9 +37,8 @@ export default function QuestionBankTable({ isEdit = false }) {
   const [questionBank, setQuestionBank] = useState([]);
 
   // load table data
+  const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
   useEffect(async () => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
-
     const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
     if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
 
@@ -56,13 +56,16 @@ export default function QuestionBankTable({ isEdit = false }) {
     }
 
     if (!questionBankData?.length) return setLoading(false);
-    setQuestionBank([...questionBankData], setLoading(false));
+    setQuestionBank(
+      sortArrByKeyInOrder([...questionBankData], 'created_at', false),
+      setLoading(false)
+    );
   }, []);
 
   // set refetch query in recoil
   useEffect(() => {
     function refetchBankData() {
-      refetch().then(({ data: { getLatestQuestionBank } }) => {
+      refetch(queryVariables).then(({ data: { getLatestQuestionBank } }) => {
         setQuestionBank(getLatestQuestionBank?.questionBanks);
       });
 

@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Skeleton } from '@mui/material';
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import BigCard from '../small/SingleBigCard';
 import CardSliderHeader from '../small/CardSliderHeader';
-import {CustomLeftArrow, CustomRightArrow} from '../small/SliderArrows'
+import { CustomLeftArrow, CustomRightArrow } from '../small/SliderArrows';
 import { useRouter } from 'next/router';
 
-const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false }) => {
+const BigCardSlider = ({
+  deviceType,
+  title,
+  type,
+  data,
+  slide,
+  bigBox = false,
+  handleTitleClick = () => {}
+}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const router = useRouter();
 
   const [cardData, setCardData] = useState(new Array(6).fill(null));
-  setTimeout(() => {
+  // setTimeout(() => {
+  //   setCardData(data);
+  // }, 2000);
+  useEffect(() => {
     setCardData(data);
-  }, 2000);
+  }, [data]);
 
   return (
     <>
@@ -25,7 +36,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
           marginRight: '4%',
           paddingTop: '10px'
         }}>
-        {cardData.every((d) => !d) ? (
+        {cardData?.every((d) => !d) ? (
           <Skeleton
             style={{ marginBottom: '10px' }}
             sx={{ bgcolor: 'dimgray' }}
@@ -34,7 +45,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
             height={40}
           />
         ) : (
-          <CardSliderHeader title={title} />
+          <CardSliderHeader title={title} handleTitleClick={handleTitleClick} />
         )}
         <Carousel
           swipeable={false}
@@ -51,7 +62,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
           removeArrowOnDeviceType={['tablet', 'mobile']}
           customLeftArrow={<CustomLeftArrow />}
           customRightArrow={<CustomRightArrow />}>
-          {cardData.map((data, index) => {
+          {cardData?.map((data, index) => {
             if (!data)
               return (
                 <Skeleton
@@ -70,10 +81,10 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
                 {data}
               </div>
             ) : (
-              <BigCard key={index} image={data.img} />
+              <BigCard key={data?.id} data={data} />
             );
           })}
-          <div className="last-text-big">See All</div>
+          {/* {bigBox ? (<div className="last-text-big">See All</div>) : ''}; */}
         </Carousel>
 
         <style jsx>{`
@@ -100,7 +111,7 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 300px;
+            height: 600px;
             color: var(--primary);
             background-color: #003548;
             border-radius: 8px;
@@ -113,4 +124,4 @@ const BigCardSlider = ({ deviceType, title, type, data, slide, bigBox = false })
   );
 };
 
-export default BigCardSlider
+export default BigCardSlider;

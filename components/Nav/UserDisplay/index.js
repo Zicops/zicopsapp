@@ -1,5 +1,7 @@
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { parseJson } from '@/helper/utils.helper';
+import { getUserDetailsObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { IsUpdatedAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
@@ -16,6 +18,7 @@ const UserDisplay = () => {
   });
 
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
   const [fullName, setFullName] = useState(
     `${userProfileData?.first_name} ${userProfileData?.last_name}`
@@ -31,36 +34,65 @@ const UserDisplay = () => {
     // console.log(userProfileData);
   }, [isUpdate]);
 
-  //refill the  recoil values
-  useEffect(async () => {
-    if (!userProfileData?.first_name && !userProfileData?.last_name) {
+  useEffect(() => {
+    async function loadAndSetUserData() {
       const data = getUserData();
       const userId = data?.id;
-      // const userId = [];
-      // userId.push(data?.id);
+      if (!userId) return;
       const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
         console.log(err);
       });
       if (userData?.error) return console.log('User data load error');
-      const basicInfo = userData?.data?.getUserDetails[0];
+      const basicInfo = userData?.data?.getUserDetails?.[0];
 
-      // const { user_id } = JSON.parse(sessionStorage.getItem('lspData'));
-      // const resData = await loadUserData({ variables: { user_id: user_id } }).catch((err) => {
-      //   console.log(err);
-      //   return setToastMsg({ type: 'danger', message: 'Error while retriveinng user data' });
-      // });
-
-      // console.log(resData?.data);
-      // const userData = resData?.data?.getUserDetails;
-      setUserProfileData((prevValue) => ({
-        ...prevValue,
-        ...data,
-        photoUrl: basicInfo?.photoUrl
-      }));
-      setFullName(`${data?.first_name} ${data?.last_name}`);
-      return;
+      setUserProfileData((prevValue) => ({ ...prevValue, ...basicInfo , photoUrl: basicInfo?.photoUrl }));
+      setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
     }
+
+    if(!userProfileData?.first_name && !userProfileData?.last_name) return loadAndSetUserData();
+
+    return loadAndSetUserData();
   }, []);
+
+  // //refill the  recoil values
+  // useEffect(async () => {
+  //   if (!userProfileData?.first_name && !userProfileData?.last_name) {
+  //     const data = getUserData();
+  //     const userId = data?.id;
+  //     // const userId = [];
+  //     // userId.push(data?.id);
+  //     const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
+  //       console.log(err);
+  //     });
+  //     if (userData?.error) return console.log('User data load error');
+  //     const basicInfo = userData?.data?.getUserDetails[0];
+
+  //     // const { user_id } = JSON.parse(sessionStorage.getItem('lspData'));
+  //     // const resData = await loadUserData({ variables: { user_id: user_id } }).catch((err) => {
+  //     //   console.log(err);
+  //     //   return setToastMsg({ type: 'danger', message: 'Error while retriveinng user data' });
+  //     // });
+
+  //     // console.log(resData?.data);
+  //     // const userData = resData?.data?.getUserDetails;
+  //     setUserProfileData((prevValue) => ({
+  //       ...prevValue,
+  //       ...data,
+  //       photoUrl: basicInfo?.photoUrl
+  //     }));
+  //     setFullName(`${data?.first_name} ${data?.last_name}`);
+  //     return;
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const user_lsp_id = parseJson(sessionStorage?.getItem('lspData'))?.user_lsp_id || null;
+    const loggedUserData = parseJson(sessionStorage?.getItem('loggedUser')) || null;
+    setUserDataGlobal({
+      ...userDataGlobal,
+      userDetails: getUserDetailsObj({ ...userProfileData, ...loggedUserData, user_lsp_id })
+    });
+  }, [userProfileData]);
 
   //update value in sessionStorage
 

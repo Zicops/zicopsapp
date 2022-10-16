@@ -19,7 +19,9 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import Loader from '@/components/common/Loader';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { UserExamDataAtom } from '@/state/atoms/video.atom';
@@ -33,6 +35,7 @@ export default function AnswerKeyPage() {
   const questionOptionData = useRecoilValue(QuestionOptionDataAtom);
   const userExamData = useRecoilValue(UserExamDataAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -77,7 +80,7 @@ export default function AnswerKeyPage() {
       subCategory: masterData.SubCategory,
 
       status: masterData.Status,
-      is_exam_active: masterData.IsActive
+      is_exam_active: masterData.IsActive || true
     };
 
     // const metaRes = await loadPaperMeta({
@@ -123,7 +126,7 @@ export default function AnswerKeyPage() {
       noAttempts: insData?.NoAttempts,
       instructions: insData?.Instructions || '',
       accessType: insData?.AccessType || '',
-      is_ins_active: insData?.IsActive || ''
+      is_ins_active: insData?.IsActive || true
     };
 
     // load schedule
@@ -145,7 +148,7 @@ export default function AnswerKeyPage() {
     //     examStart: new Date(+schData?.Start * 1000),
     //     examEnd: +schData?.End ? new Date(+schData?.End * 1000) : null,
     //     bufferTime: schData?.BufferTime || 0,
-    //     is_schedule_active: schData?.IsActive || false
+    //     is_schedule_active: schData?.IsActive || true
     //   };
     // }
 
@@ -156,19 +159,20 @@ export default function AnswerKeyPage() {
       return setToastMsg({ type: 'danger', message: 'Config load error' });
     });
     if (isError) return;
-    const confData = confRes?.data?.getExamConfiguration[0];
+    const confData = confRes?.getExamConfiguration[0];
+    // console.log(confData, confData?.ShowResult, confData?.ShowAnswer);
     const confObj = {
       configId: confData?.id || null,
       shuffle: confData?.Shuffle || false,
       display_hints: confData?.DisplayHints || false,
       show_result: confData?.ShowResult || false,
       show_answer: confData?.ShowAnswer || false,
-      is_config_active: confData?.IsActive || false
+      is_config_active: confData?.IsActive || true
     };
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: 'Zicops' },
+      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
       {},
       userQueryClient
     );
@@ -231,7 +235,6 @@ export default function AnswerKeyPage() {
     });
 
     userExamDataLoaded.currentAttemptId = currentExamAttemptData?.user_ea_id;
-    // console.log(userExamDataLoaded);
 
     const questionPaperId = masterObj?.qpId;
 
@@ -254,7 +257,7 @@ export default function AnswerKeyPage() {
     if (isError) return;
 
     // parse and set section data
-    const sections = sectionRes?.getQuestionPaperSections || [];
+    const sections = sortArrByKeyInOrder(sectionRes?.getQuestionPaperSections, 'CreatedAt') || [];
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i];
       fixedQuestionIds.push({
@@ -284,15 +287,16 @@ export default function AnswerKeyPage() {
       });
       if (isError) return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
 
+      const _mappings = sortArrByKeyInOrder(mappingRes?.getQPBankMappingBySectionId, 'CreatedAt');
       mappedQb = [
         ...mappedQb,
-        ...mappingRes?.getQPBankMappingBySectionId?.map((qbMappings) => {
+        ..._mappings?.map((qbMappings) => {
           return {
             id: qbMappings.id,
             qbId: qbMappings.QbId,
             difficulty_level: qbMappings.DifficultyLevel,
             sectionId: qbMappings.SectionId,
-            is_active: qbMappings.IsActive,
+            is_active: qbMappings.IsActive || true,
             question_marks: qbMappings.QuestionMarks,
             question_type: qbMappings.QuestionType,
             retrieve_type: qbMappings.RetrieveType,
@@ -398,29 +402,29 @@ export default function AnswerKeyPage() {
       }
     }
 
-    console.log(insObj, {
-      ...learnerExamData,
-      examData: {
-        ...masterObj,
-        ...insObj,
-        // ...schObj,
-        ...confObj,
-        totalMarks: totalMarks || '0'
-      },
-      // landingPageData: {
-      //   // testSeries: 'PMP Test Series',
-      //   // testSequence: 'M1A4',
-      //   isProctoring: 'No',
-      //   totalQuestions: totalQuestions || '0',
-      //   isNegativeMarking: 'No',
-      //   expertiseLevel: paperMaster?.difficultyLevel
-      // },
-      // insPageData: {
-      //   examTimeStandard: 'IST',
-      //   attempts: userExamDataLoaded?.userExamAttempts?.length
-      // },
-      sectionData: sectionData
-    });
+    // console.log(insObj, {
+    //   ...learnerExamData,
+    //   examData: {
+    //     ...masterObj,
+    //     ...insObj,
+    //     // ...schObj,
+    //     ...confObj,
+    //     totalMarks: totalMarks || '0'
+    //   },
+    //   // landingPageData: {
+    //   //   // testSeries: 'PMP Test Series',
+    //   //   // testSequence: 'M1A4',
+    //   //   isProctoring: 'No',
+    //   //   totalQuestions: totalQuestions || '0',
+    //   //   isNegativeMarking: 'No',
+    //   //   expertiseLevel: paperMaster?.difficultyLevel
+    //   // },
+    //   // insPageData: {
+    //   //   examTimeStandard: 'IST',
+    //   //   attempts: userExamDataLoaded?.userExamAttempts?.length
+    //   // },
+    //   sectionData: sectionData
+    // });
     setAttemptData(userExamDataLoaded);
     setAttemptedQuestions({
       ...learnerExamData,
@@ -447,12 +451,16 @@ export default function AnswerKeyPage() {
       sectionData: sectionData
     });
 
-    // console.log(userExamDataLoaded);
     setLoading(false);
   }, [examId, cpId, userData?.id, attemptData?.currentAttemptId]);
 
   // loader screen till loading
   if (loading) return <Loader />;
+
+  const activeAttemptNumber = (
+    attemptData?.userExamAttempts?.find((ea) => ea?.user_ea_id === attemptData?.currentAttemptId) ||
+    attemptData?.userExamAttempts?.[0]
+  )?.attempt_no;
 
   return (
     <div className={`${styles.answerKey}`}>
@@ -474,13 +482,7 @@ export default function AnswerKeyPage() {
             })) || [],
           value: {
             value: attemptData?.currentAttemptId || attemptData?.userExamAttempts?.[0]?.user_ea_id,
-            label: `Attempt ${
-              (
-                attemptData?.userExamAttempts?.find(
-                  (ea) => ea?.user_ea_id === attemptData?.currentAttemptId
-                ) || attemptData?.userExamAttempts?.[0]
-              )?.attempt_no
-            }`
+            label: `Attempt ${activeAttemptNumber}`
           }
         }}
         styleClass={styles.dropdownInput}
@@ -491,13 +493,13 @@ export default function AnswerKeyPage() {
         <p>Results</p>
         <AttemptsTable
           totalAttempts={attemptedQuestions?.examData?.noAttempts}
+          activeRow={activeAttemptNumber - 1}
           attemptData={
             attemptData?.userExamAttempts?.map((ea, i) => {
               const resultData = ea?.result?.result_status
                 ? JSON.parse(ea?.result?.result_status)
                 : {};
 
-              if (i === 0) console.log(ea);
               return {
                 attempt: ea?.attempt_no,
                 examScore: ea?.result?.user_score,
@@ -525,7 +527,6 @@ export default function AnswerKeyPage() {
 
                 {section?.questions?.map((each) => {
                   // const each = questionOptionData?.filter((q) => q?.question?.id === id)[0];
-
                   if (!each) return null;
 
                   return (
@@ -540,7 +541,7 @@ export default function AnswerKeyPage() {
                         showType={
                           attemptedQuestions?.examData?.show_answer ? 'marksObtained' : 'marks'
                         }
-                        showHints={attemptedQuestions?.examData?.display_hints || true}
+                        showHints={attemptedQuestions?.examData?.display_hints}
                       />
                     </div>
                   );

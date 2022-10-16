@@ -2,12 +2,12 @@ import styles from '../userProfile.module.scss';
 import { profilePreferencesData } from '../Logic/userProfile.helper';
 
 const ProfilePreferences = ({ currentUserData }) => {
-  console.log(currentUserData);
+  // console.log(currentUserData,'current user data');
   const preferences = currentUserData?.sub_categories?.map((item) => item?.sub_category);
   const userProfilePreferenceData = {
     base_language: 'English',
     'base_sub-category': currentUserData?.sub_category,
-    'sub-category_preferences': preferences?.join(',')
+    'sub-category_preferences': preferences?.join(', ')
   };
 
   return (

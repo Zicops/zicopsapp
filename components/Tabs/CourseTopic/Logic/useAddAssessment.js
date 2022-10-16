@@ -8,7 +8,7 @@ import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { courseContext } from '../../../../state/contexts/CourseContext';
 import { getAssessmentObj } from './courseTopic.helper';
 
-export default function useAddAssessment(topicId, setEditTopic) {
+export default function useAddAssessment(topic, setEditTopic) {
   const { fullCourse } = useContext(courseContext);
   const [loadExams, { error: errorLoadExam }] = useLazyQuery(GET_LATEST_EXAMS, {
     client: queryClient
@@ -27,11 +27,15 @@ export default function useAddAssessment(topicId, setEditTopic) {
   const [examOptions, setExamOptions] = useState([]);
 
   useEffect(() => {
-    setAssessmentData(getAssessmentObj({ topicId, courseId: fullCourse.id }));
-  }, [fullCourse?.id, topicId]);
+    if (topic?.type !== 'Assessment') return;
+
+    setAssessmentData(getAssessmentObj({ topicId: topic?.id, courseId: fullCourse.id }));
+  }, [fullCourse?.id, topic?.id]);
 
   // load table data
   useEffect(async () => {
+    if (topic?.type !== 'Assessment') return;
+
     const LARGE_PAGE_SIZE = 999999999999;
     const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
     let examData = null;
@@ -43,30 +47,38 @@ export default function useAddAssessment(topicId, setEditTopic) {
 
       const options = [];
       if (examData)
-        examData.forEach((exam) => options.push({ value: exam.id, label: exam.Name, ...exam }));
+        examData.forEach((exam) =>
+          options.push({
+            value: exam.id,
+            label: exam.Name,
+            ...exam,
+            duration: +exam?.duration / 60
+          })
+        );
 
       setExamOptions(options);
     });
 
     // topic exam
-    if (topicId) {
-      await loadTopicExamsData({ variables: { topic_id: topicId }, fetchPolicy: 'no-cache' }).then(
-        ({ data }) => {
-          if (errorTopicExamData)
-            return setToastMsg({ type: 'danger', message: 'Topic Exams Load Error' });
+    if (topic?.id) {
+      await loadTopicExamsData({
+        variables: { topic_id: topic?.id },
+        fetchPolicy: 'no-cache'
+      }).then(({ data }) => {
+        if (errorTopicExamData)
+          return setToastMsg({ type: 'danger', message: 'Topic Exams Load Error' });
 
-          const topicExam = data?.getTopicExams[0];
-          if (!topicExam) return;
+        const topicExam = data?.getTopicExams[0];
+        if (!topicExam) return;
 
-          const selectedExam = examData?.filter((ex) => ex?.id === topicExam?.examId)[0];
+        const selectedExam = examData?.filter((ex) => ex?.id === topicExam?.examId)[0];
 
-          setAssessmentData({
-            ...topicExam,
-            category: selectedExam?.Category,
-            sub_category: selectedExam?.SubCategory
-          });
-        }
-      );
+        setAssessmentData({
+          ...topicExam,
+          category: selectedExam?.Category,
+          sub_category: selectedExam?.SubCategory
+        });
+      });
     }
   }, []);
 

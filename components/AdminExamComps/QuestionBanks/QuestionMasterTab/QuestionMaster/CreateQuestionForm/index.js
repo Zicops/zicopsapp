@@ -2,7 +2,6 @@ import QuestionOptionView from '@/components/common/QuestionOptionView';
 import ToolTip from '@/components/common/ToolTip';
 import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
-import { changeHandler } from '../../../../../../helper/common.helper';
 import Button from '../../../../../common/Button';
 import LabeledDropdown from '../../../../../common/FormComponents/LabeledDropdown';
 import LabeledTextarea from '../../../../../common/FormComponents/LabeledTextarea';
@@ -86,15 +85,15 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
       {!showQuestionForm ? (
         <ToolTip title="Add new question" placement="bottom">
-        <div className={`center-element-with-flex`}>
-          <Button
-            text="Add Question"
-            clickHandler={() => {
-              setShouldCloseAccordion(true);
-              setShowQuestionForm(true);
-            }}
-          />
-        </div>
+          <div className={`center-element-with-flex`}>
+            <Button
+              text="Add Question"
+              clickHandler={() => {
+                setShouldCloseAccordion(true);
+                setShowQuestionForm(true);
+              }}
+            />
+          </div>
         </ToolTip>
       ) : (
         <>
@@ -111,7 +110,9 @@ export default function CreateQuestionForm({ data, isEdit }) {
                 ? { value: questionData.type, label: questionData.type }
                 : null
             }}
-            changeHandler={(e) => changeHandler(e, questionData, setQuestionData, 'type')}
+            changeHandler={(e) =>
+              setQuestionData({ ...questionData, isUpdated: true, type: e.value })
+            }
           />
 
           {questionData?.type === 'MCQ' && (
@@ -120,7 +121,9 @@ export default function CreateQuestionForm({ data, isEdit }) {
                 options={difficultyOptions}
                 inputName="difficulty"
                 selected={questionData.difficulty}
-                changeHandler={(e, val) => setQuestionData({ ...questionData, difficulty: val })}
+                changeHandler={(e, val) =>
+                  setQuestionData({ ...questionData, difficulty: val, isUpdated: true })
+                }
               />
 
               {/* question with file */}
@@ -132,7 +135,13 @@ export default function CreateQuestionForm({ data, isEdit }) {
                     value={questionData?.description}
                     fileNmae={questionData?.file?.name || questionData?.attachment}
                     accept={acceptedFileTypes.join(', ')}
-                    changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
+                    changeHandler={(e) =>
+                      setQuestionData({
+                        ...questionData,
+                        isUpdated: true,
+                        description: e.target.value
+                      })
+                    }
                     fileInputHandler={questionFileInputHandler}
                   />
                 </label>
@@ -150,7 +159,9 @@ export default function CreateQuestionForm({ data, isEdit }) {
                       rows: 4,
                       value: questionData?.hint
                     }}
-                    changeHandler={(e) => changeHandler(e, questionData, setQuestionData)}
+                    changeHandler={(e) =>
+                      setQuestionData({ ...questionData, isUpdated: true, hint: e.target.value })
+                    }
                   />
                 </label>
               </div>

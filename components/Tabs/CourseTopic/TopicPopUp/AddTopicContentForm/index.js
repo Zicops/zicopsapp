@@ -138,7 +138,10 @@ export default function AddTopicContentForm({
                     ? topicContent[0]?.duration
                     : newTopicContent?.duration || 0
                 }}
-                changeHandler={(e) => handleTopicContentInput(e)}
+                changeHandler={(e) => {
+                  const val = e.target.value?.replace(/^0+/, '');
+                  setNewTopicContent({ ...newTopicContent, duration: val });
+                }}
               />
             </div>
             <div className="w-45">seconds</div>

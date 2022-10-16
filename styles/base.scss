@@ -25,11 +25,13 @@ $bgFooter: #001111;
 $bgHeader: #0b0c0d;
 $popupBgColor: #323232;
 
-
 $headerHeight: 70px;
 $footerHeight: 100px;
 
 $cardTileRatio: 1.75;
+
+$courseTitle: 22px;
+$courseTitleSmall: 18px;
 // function for generating transparent color from base colors
 @function getLowOpacityColor($colorInHex, $opacityInHex) {
   @return rgba($colorInHex, $opacityInHex);
@@ -74,7 +76,7 @@ $cardTileRatio: 1.75;
     background-color: $darkTwo;
   }
 
-  @if $state =='error' {
+  @if $state == 'error' {
     border: 2px solid $error !important;
     animation: headShake 1s ease-out;
   }

@@ -1,3 +1,4 @@
+import { mutationClient } from '@/api/Mutations';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -51,6 +52,40 @@ export async function loadQueryDataAsync(
     .query({ query: QUERY, variables: variableObj, fetchPolicy: 'no-cache', ...options })
     .catch((err) => {
       console.log(`Load Data error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
+export async function loadAndCacheDataAsync(
+  QUERY,
+  variableObj = {},
+  options = {},
+  client = queryClient
+) {
+  const response = await client
+    .query({ query: QUERY, variables: variableObj, ...options })
+    .catch((err) => {
+      console.log(`Load Data error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
+export async function deleteData(
+  MUTATION,
+  variableObj = {},
+  options = {},
+  client = mutationClient
+) {
+  const response = await client
+    .mutate({ mutation: MUTATION, variables: variableObj, ...options })
+    .catch((err) => {
+      console.log(`Delete Data error:`, err);
     });
 
   if (response?.error) return response;

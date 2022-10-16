@@ -4,10 +4,12 @@ import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUs
 import ProfilePreferences from '@/components/LoginComp/ProfilePreferences';
 import SubCategoriesPreview from '@/components/LoginComp/SubCategoriesPreview';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { parseJson } from '@/helper/utils.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import CategoryPreferences from '../CategoryPreferences';
 import styles from '../learnerUserProfile.module.scss';
 import useCommonHelper from '../Logic/common.helper';
@@ -16,6 +18,8 @@ import { orgData, profilePref, userData } from '../Logic/userData.helper.js';
 import SingleUserDetail from '../SingleUserDetail';
 
 const UserAboutTab = () => {
+  const userDataGlobal = useRecoilValue(UserDataAtom);
+
   const [isEditable, setIsEditable] = useState(null);
   const { updateUserOrganizationDetails } = useHandleUserUpdate();
   const { updateAboutUser } = useHandleAddUserDetails();
@@ -36,44 +40,24 @@ const UserAboutTab = () => {
 
   useEffect(async () => {
     const { id } = getUserData();
-    const lspData = JSON.parse(sessionStorage.getItem('lspData'));
+    // const lspData = parseJson(sessionStorage.getItem('lspData'));
 
-    let data;
-
-    //for first time only...will delete later
-    if (!lspData?.user_lsp_id) {
-      const res = await loadUserPreferences({
-        variables: { user_id: id }
-      }).catch((err) => {
-        console.log(err);
-        return;
-      });
-      data = res?.data?.getUserPreferences[0];
-      console.log(data);
-    }
-
-    console.log(lspData, 'lspdata');
-
-    let userLspId = !!lspData?.user_lsp_id ? lspData?.user_lsp_id : data?.user_lsp_id;
-
-    if (!lspData) {
-      sessionStorage.setItem(
-        'lspData',
-        JSON.stringify({ user_id: id, user_lsp_id: data?.user_lsp_id })
-      );
-    }
-
-    const userPreferences = await getUserPreferences(userLspId);
+    // const userPreferences = await getUserPreferences(userLspId);
+    const userPreferences = userDataGlobal?.preferences;
     // const preferenceData = userPreferences.slice(0, 5);
     const preferenceData = userPreferences.filter((item) => item?.is_active);
-    console.log(preferenceData);
+    // console.log(preferenceData, userPreferences);
 
-    if (preferenceData) setSubCategory([...preferenceData]);
+    // if (!!preferenceData?.length) setSubCategory([...preferenceData]);
 
-    setSelected([...preferenceData]);
+    // if(!userDataGlobal?.preferences?.length) return
+
+    setSelected(preferenceData?.map((item) => {
+      return { ...item, name: item?.sub_category, category: item?.catData?.Name, isSelected: false };
+    })|| []);
 
     const baseSubcategory = preferenceData.filter((item) => item?.is_base);
-    console.log(baseSubcategory);
+    // console.log(baseSubcategory);
 
     const resOrg = await loadUserOrg({ variables: { user_id: id } }).catch((err) =>
       console.log(err)
@@ -85,7 +69,7 @@ const UserAboutTab = () => {
       sub_category: baseSubcategory[0]?.sub_category,
       ...orgData
     }));
-  }, []);
+  }, [userDataGlobal?.preferences]);
 
   return (
     <div className={`${styles.userAboutTab}`}>
@@ -114,7 +98,9 @@ const UserAboutTab = () => {
       {/* {userData.map((v) => (
         <CategoryPreferences userData={v} />
       ))} */}
-      <CategoryPreferences subCategoryData={subCategory} />
+      <CategoryPreferences
+        subCategoryData={userDataGlobal?.preferences?.filter((s) => s?.is_active)}
+      />
       <PopUp popUpState={[isOpen, setIsopen]} isFooterVisible={false}>
         <div className={`${styles.container}`}>
           {currentComponent === 2 && (
@@ -124,6 +110,7 @@ const UserAboutTab = () => {
               setSelected={setSelected}
               setCurrentComponent={setCurrentComponent}
               customStyle={[styles.prefContainer, styles.prefCat, styles.prefNav]}
+              customClass={styles.preferences}
             />
           )}
           {currentComponent === 3 && (

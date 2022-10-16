@@ -1,3 +1,4 @@
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 
 export const UserStateAtom = atom({
@@ -43,7 +44,7 @@ export const UsersOrganizationAtom = atom({
   default: getUserOrgObject()
 });
 
-export function getUserOrgObject(data={}) {
+export function getUserOrgObject(data = {}) {
   return {
     user_id: data?.user_id || null,
 
@@ -59,7 +60,7 @@ export function getUserOrgObject(data={}) {
 
     //learning space id basically Organization and we can find its unit for now make unit as pune
     user_lsp_id: data?.user_lsp_id || null,
-    lsp_id: data?.lsp_id || 'Zicops learning Spaces',
+    lsp_id: data?.lsp_id || LEARNING_SPACE_ID,
     status: data?.status || 'Active',
 
     // user role data
@@ -85,6 +86,13 @@ export function getUserOrgObject(data={}) {
   };
 }
 
+export const ClosePopUpAtom = atom({
+  key:'closePopup',
+  default: false
+});
+
+
+
 // will delete later if not used
 export const IsUpdatedAtom = atom({
   key: 'IsUpdated',
@@ -103,12 +111,27 @@ export function getCohortMasterObject(data = {}) {
     id: data?.cohort_id || null,
     cohort_name: data?.name || '',
     cohort_code: data?.code || '',
-    status: data?.status || 'active',
-    lsp_id: data?.lsp_id || 'Zicops learning Spaces',
+    status: data?.status || '',
+    lsp_id: data?.lsp_id || LEARNING_SPACE_ID,
     cohort_type: data?.type || '',
     description: data?.description || '',
     cohort_image: data?.cohort_image || null,
-    image_url:data?.imageUrl || '',
-    managers: []
+    image_url: data?.imageUrl || '',
+    managers: [],
+    size: data?.size || 0
+  };
+}
+
+export const SelectedCohortDataAtom = atom({
+  key: 'selectedCohortData',
+  default: getSelectedCohortDataObject()
+});
+
+export function getSelectedCohortDataObject(data = {}) {
+  return {
+    main: data?.main || null,
+    userCohort: data?.userCohort || null,
+    cohrotCourses: data?.cohrotCourses || [],
+    cohortUsers: data?.cohortUsers || []
   };
 }

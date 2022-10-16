@@ -14,15 +14,19 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Accordian from '../../../components/UserProfile/Accordian';
 
 // import AssignedCourses from '../../AssignedCourses';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
+import _styles from '../userProfile.module.scss';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
-const CoursesAccordian = () => {
+import { UserDataAtom } from '@/state/atoms/global.atom';
+import CurrentCourses from './CurrentCourses';
+
+const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
     isMandatory: false,
@@ -39,6 +43,7 @@ const CoursesAccordian = () => {
 
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
 
   const router = useRouter();
   const currentUserId = router?.query?.userId;
@@ -52,6 +57,7 @@ const CoursesAccordian = () => {
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [courseLoading , setCourseLoading] = useState(false);
 
   const { updateCourse } = useHandleUpdateCourse();
 
@@ -65,13 +71,18 @@ const CoursesAccordian = () => {
   }
 
   async function handleRemove() {
+    setLoading(true);
     const checkUpdate = await updateCourse(userCourseData, currentUserId, 'self');
-    console.log(checkUpdate);
+    // console.log(checkUpdate);
     await loadAssignedCourseData();
-    setShowConfirmBox(false);
+    setToastMsg({ type: 'success', message: 'Course Removed Succesfully' });
+    setLoading(false);
+    return setShowConfirmBox(false);
   }
 
   async function handleSubmit() {
+    // console.log(currentUserData);
+    if(!currentUserData?.userLspId) return setToastMsg({ type: 'danger', message: 'User lsp load error!' });;
     setLoading(true);
     setIsPopUpDataPresent(false);
     const { id } = getUserData();
@@ -82,6 +93,9 @@ const CoursesAccordian = () => {
       const courseArray = dataCourse.filter((item) => item.id !== userCourseData?.id);
       setDataCourse([...courseArray]);
       setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+
+      setLoading(false)
+      setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
       return setIsAssignPopUpOpen(false);
     }
@@ -89,7 +103,7 @@ const CoursesAccordian = () => {
     // console.log('hi')
     const sendData = {
       userId: router.query?.userId,
-      userLspId: 'Zicops',
+      userLspId: currentUserData?.userLspId,
       courseId: userCourseData?.id,
       addedBy: JSON.stringify({ userId: id, role: 'admin' }),
       courseType: userCourseData.type,
@@ -108,8 +122,14 @@ const CoursesAccordian = () => {
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
     const courseArray = dataCourse.filter((item) => item.id !== sendData?.courseId);
     setDataCourse([...courseArray]);
-    setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+    setCourseAssignData({
+      ...courseAssignData,
+      isCourseAssigned: true,
+      endDate: new Date(),
+      isMandatory: false
+    });
     await loadAssignedCourseData();
+    setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
     setIsAssignPopUpOpen(false);
     return setLoading(false);
   }
@@ -261,7 +281,8 @@ const CoursesAccordian = () => {
   }, [currentUserId]);
 
   async function loadAssignedCourseData() {
-    if (!currentUserId) return;
+    if (!currentUserId) return setCourseLoading(false);
+    setCourseLoading(true);
     const assignedCoursesRes = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS,
       {
@@ -324,7 +345,7 @@ const CoursesAccordian = () => {
         (course) => course?.added_by?.role.toLowerCase() === 'admin'
       );
 
-      setCurrentCourses(allAssignedCourses);
+      setCurrentCourses(allAssignedCourses,setCourseLoading(false));
       setAssignedCourses(adminAssignedCourses);
     }
   }
@@ -340,6 +361,7 @@ const CoursesAccordian = () => {
             setSelected(3);
           }}
         /> */}
+        
 
         <div className={`${styles.courses_acc_head}`}>
           {isAssignedPage && (
@@ -360,8 +382,7 @@ const CoursesAccordian = () => {
           {!isAssignedPage && (
             <div className={`${styles.assign}`}>
               <div>
-                Current courses:{' '}
-                {currentCourses?.filter((courses) => courses.completedPercentage)?.length}
+                Courses in learning folder {`(${currentCourses?.length})`}
               </div>
 
               <div
@@ -378,11 +399,12 @@ const CoursesAccordian = () => {
           )}
         </div>
         {/* {isAssignedPage && <AssignCourses section={courseSections[3]} />} */}
-        {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} />}
+        {/* {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} loading={courseLoading}/>} */}
+        {!isAssignedPage && <CurrentCourses courseData={currentCourses} handleSubmit={handleAssign} isLoading={courseLoading}/>}
         {/* {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />} */}
         {selectedPage === 'Assign Courses' && (
           <AssignCourses
-            isFolder={true}
+            // isFolder={true}
             isHead={true}
             type="assignCourses"
             assignedCourses={assignedCourses}
@@ -445,7 +467,7 @@ const CoursesAccordian = () => {
               <UserButton
                 text={'Save'}
                 type={'button'}
-                isDisabled={addCoueseLoading||loading}
+                isDisabled={loading}
                 clickHandler={() => {
                   handleSubmit();
                 }}
@@ -458,6 +480,8 @@ const CoursesAccordian = () => {
           <ConfirmPopUp
             title={'Are you sure about removing this course?'}
             btnObj={{
+              leftIsDisable : loading ,
+              rightIsDisable : loading,
               handleClickLeft: () => handleRemove(),
               handleClickRight: () => setShowConfirmBox(false)
             }}

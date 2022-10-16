@@ -42,7 +42,6 @@ export function customSelectStyles(
         fill: isReadonly ? 'none' : ''
       }
     }),
-
     menuList: (provided, state) => ({
       ...provided,
       padding: 0,
@@ -71,7 +70,7 @@ export function customSelectStyles(
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state?.isFocused ? 'var(--black)' : 'var(--dark_two)',
+      backgroundColor: state?.isFocused ? 'var(--black)' : 'var(--popup-bg-color)',
       color: state?.isSelected ? 'var(--white)' : 'var(--dark_three)',
       borderRadius: 0,
       boxShadow: 'none',
@@ -104,7 +103,7 @@ export function customSelectStyles(
     noOptionsMessage: (provided) => ({
       ...provided,
       borderRadius: '0',
-      backgroundColor: 'var(--dark_two)',
+      backgroundColor: 'var(--popup-bg-color)',
       color: 'var(--dark_three)',
       fontSize: '14px'
     })

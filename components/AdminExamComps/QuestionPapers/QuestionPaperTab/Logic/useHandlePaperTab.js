@@ -11,6 +11,7 @@ import {
 import { GET_LATEST_QUESTION_PAPERS_NAMES } from '../../../../../API/Queries';
 import { isNameDuplicate } from '../../../../../helper/data.helper';
 import {
+  getQuestionPaperMasterObject,
   getQuestionPaperTabDataObject,
   QuestionPaperTabDataAtom
 } from '../../../../../state/atoms/exams.atoms';
@@ -43,7 +44,11 @@ export default function useHandlePaperTab() {
     if (questionPaperId || questionPaperTabData?.paperMaster?.id) return;
     if (questionPaperTabData?.paperMaster?.isUpdated) return;
 
-    setQuestionPaperTabData(getQuestionPaperTabDataObject());
+    setQuestionPaperTabData(
+      getQuestionPaperTabDataObject({
+        paperMaster: getQuestionPaperMasterObject({ is_active: true })
+      })
+    );
   }, []);
 
   // useEffect(() => {
@@ -136,11 +141,11 @@ export default function useHandlePaperTab() {
       description: questionPaperData.description || '',
       section_wise: questionPaperData.section_wise || false,
       difficulty_level: questionPaperData.difficulty_level || 0,
-      suggested_duration: questionPaperData.suggested_duration || '0',
+      suggested_duration: ((questionPaperData.suggested_duration || 0) * 60)?.toString(),
 
       // TODO: update later
       status: STATUS.flow[0],
-      is_active: questionPaperData.is_active || false,
+      is_active: questionPaperData.is_active || true,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
     };
@@ -166,7 +171,7 @@ export default function useHandlePaperTab() {
       description: res?.Description || '',
       section_wise: res?.SectionWise || false,
       difficulty_level: res?.DifficultyLevel || 0,
-      suggested_duration: res?.SuggestedDuration || '0',
+      suggested_duration: (+res?.SuggestedDuration || 0) / 60,
       status: res?.Status || ''
     };
     tabData[paperMaster] = paperMaster;
@@ -207,11 +212,11 @@ export default function useHandlePaperTab() {
       description: questionPaperData.description || '',
       section_wise: questionPaperData.section_wise || false,
       difficulty_level: questionPaperData.difficulty_level || 0,
-      suggested_duration: questionPaperData.suggested_duration || '0',
+      suggested_duration: ((questionPaperData.suggested_duration || 0) * 60)?.toString(),
 
       // TODO: update later
       status: STATUS.flow[0],
-      is_active: questionPaperData.is_active || false,
+      is_active: questionPaperData.is_active || true,
       createdBy: 'Zicops',
       updatedBy: 'Zicops'
     };
@@ -237,7 +242,7 @@ export default function useHandlePaperTab() {
       description: res?.Description || '',
       section_wise: res?.SectionWise || false,
       difficulty_level: res?.DifficultyLevel || 0,
-      suggested_duration: res?.SuggestedDuration || '0',
+      suggested_duration: (+res?.SuggestedDuration || 0) / 60,
       status: res?.Status || '',
 
       isUpdated: null

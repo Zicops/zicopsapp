@@ -57,7 +57,7 @@ export default function ExamMasterTab() {
 
     if (!examId) {
       return setExamTabData(
-        getExamTabDataObject({ qpId: qpId, total_marks: await getTotalMarks(qpId) })
+        getExamTabDataObject(qpId ? { qpId: qpId, total_marks: await getTotalMarks(qpId) } : {})
       );
     }
 
@@ -79,7 +79,7 @@ export default function ExamMasterTab() {
       qpId: masterData.QpId,
       name: masterData.Name,
       description: masterData.Description,
-      duration: masterData.Duration,
+      duration: +masterData.Duration / 60,
       schedule_type: masterData.ScheduleType,
 
       code: masterData.Code,
@@ -88,7 +88,7 @@ export default function ExamMasterTab() {
       category: masterData.Category,
 
       status: masterData.Status,
-      is_exam_active: masterData.IsActive
+      is_exam_active: masterData.IsActive || true
     };
 
     setStatus(masterObj.status);
@@ -112,7 +112,7 @@ export default function ExamMasterTab() {
       no_attempts: +insData?.NoAttempts,
       instructions: insData?.Instructions || '',
       access_type: insData?.AccessType || '',
-      is_ins_active: insData?.IsActive || ''
+      is_ins_active: insData?.IsActive || true
     };
 
     // load schedule
@@ -135,7 +135,7 @@ export default function ExamMasterTab() {
         exam_end: +schData?.End ? new Date(+schData?.End * 1000) : null,
         buffer_time: schData?.BufferTime || 0,
         is_stretch: !!+schData?.End,
-        is_schedule_active: schData?.IsActive || false
+        is_schedule_active: schData?.IsActive || true
       };
     }
 
@@ -156,7 +156,7 @@ export default function ExamMasterTab() {
       display_hints: confData?.DisplayHints || false,
       show_result: confData?.ShowResult || false,
       show_answer: confData?.ShowAnswer || false,
-      is_config_active: confData?.IsActive || false
+      is_config_active: confData?.IsActive || true
     };
 
     setExamTabData({

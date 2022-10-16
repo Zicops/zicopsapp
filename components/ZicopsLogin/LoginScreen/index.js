@@ -1,4 +1,5 @@
 import { isEmail } from '@/helper/common.helper';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
@@ -6,7 +7,6 @@ import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
@@ -15,8 +15,11 @@ import { useMutation } from '@apollo/client';
 import LoginHeadOne from '../LoginHeadOne';
 import styles from '../zicopsLogin.module.scss';
 
-import HomeHeader from '@/components/HomePage/HomeHeader';
+import { GET_USER_ORGANIZATIONS, userQueryClient } from '@/api/UserQueries';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import HomeHeader from '@/components/HomePage/HomeHeader';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { GIBBERISH_VALUE_FOR_LOGIN_STATE, USER_STATUS } from '@/helper/constants.helper';
 
 const LoginScreen = ({ setPage }) => {
   const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
@@ -27,6 +30,7 @@ const LoginScreen = ({ setPage }) => {
   const [password, setPassword] = useState('');
 
   const [vidIsOpen, setVidIsOpen] = useState(false);
+  const [disableBtn, setDisableBtn] = useState(false);
   const vidRef = useRef();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -38,26 +42,35 @@ const LoginScreen = ({ setPage }) => {
 
   const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
 
+  useEffect(() => {
+    if (sessionStorage?.length && userData?.id && userData?.is_verified) return router.push('/');
+  }, [userData?.id]);
+
   const handleEmail = (e) => {
+    setDisableBtn(false);
     setEmail(e.target.value);
   };
 
   const handlePassword = (e) => {
+    setDisableBtn(false);
     setPassword(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setDisableBtn(true);
     const checkEmail = isEmail(email);
     if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
+
     if (!password) return setToastMsg({ type: 'danger', message: 'Enter password!!' });
 
-    await signIn(email, password);
+    const userData = await signIn(email, password);
 
-    if (errorMsg) return;
+    if (userData) loginUser();
+  };
 
+  async function loginUser() {
     sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
-
     let isError = false;
     const res = await userLogin({
       context: {
@@ -74,12 +87,26 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
+    // TODO: udpate this later and move it according to org flow
+    const orgRes = await loadQueryDataAsync(
+      GET_USER_ORGANIZATIONS,
+      { user_id: res?.data?.login?.id },
+      {},
+      userQueryClient
+    );
+    // console.log(orgRes);
+    sessionStorage?.setItem(
+      'lspData',
+      JSON.stringify({ user_lsp_id: orgRes?.getUserOrganizations?.[0]?.user_lsp_id })
+    );
+
     if (isError) return;
+    if (res?.data?.login?.status === USER_STATUS.disable)
+      return setToastMsg({ type: 'danger', message: 'Login Error' });
 
-    console.log(res?.data?.login?.is_verified);
     setUserData(getUserObject(res?.data?.login));
-
     sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+    localStorage.setItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
 
     if (!!res?.data?.login?.is_verified) {
       // setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
@@ -90,12 +117,13 @@ const LoginScreen = ({ setPage }) => {
       // }, 1500);
       return;
     }
+
     return router.push('/account-setup');
-  };
+  }
 
   useEffect(() => {
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
-    console.log(authUser);
+    // console.log(authUser);
   }, [errorMsg, authUser]);
 
   //to check if our user is logged in or not
@@ -142,7 +170,7 @@ const LoginScreen = ({ setPage }) => {
             </p>
           </div>
 
-          <LoginButton title={'Login'} isDisabled={loginLoading} />
+          <LoginButton title={'Login'} isDisabled={disableBtn} />
         </form>
       </ZicopsLogin>
       {!!vidIsOpen && (

@@ -3,6 +3,7 @@ import { ADD_USER_COURSE, userClient } from '@/api/UserMutations';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { getQueryData } from '@/helper/api.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
@@ -22,6 +23,7 @@ export default function useHandleCourseHero(isPreview) {
 
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
 
+  const userDataGlobal = useRecoilValue(UserDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
@@ -159,7 +161,7 @@ export default function useHandleCourseHero(isPreview) {
     setIsPopUpDataPresent(false);
     const sendData = {
       userId: userData?.id,
-      userLspId: 'Zicops',
+      userLspId: userDataGlobal?.userDetails?.user_lsp_id,
       courseId: fullCourse?.id,
       addedBy: JSON.stringify({ userId: userData.id, role: 'self' }),
       courseType: fullCourse?.type,

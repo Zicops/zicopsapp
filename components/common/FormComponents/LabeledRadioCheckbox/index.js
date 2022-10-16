@@ -1,4 +1,10 @@
-import { labeledRadioCheckboxWrapper, checkmark, radiomark } from '../formComponents.module.scss';
+import {
+  labeledRadioCheckboxWrapper,
+  checkmark,
+  radiomark,
+  disabled
+} from '../formComponents.module.scss';
+
 const LabeledRadioCheckbox = ({
   label,
   type,
@@ -20,7 +26,7 @@ const LabeledRadioCheckbox = ({
         disabled={isDisabled}
       />
       <span
-        className={`${type === 'checkbox' ? checkmark : radiomark} ${
+        className={`${type === 'checkbox' ? checkmark : radiomark} ${isDisabled ? disabled : ''} ${
           isError ? 'error' : ''
         }`}></span>
       {label}
