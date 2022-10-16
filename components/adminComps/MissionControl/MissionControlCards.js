@@ -1,5 +1,9 @@
+import ProductTour from '@/components/common/ProductTour';
+import ProductTourFooter from '@/components/common/ProductTour/ProductTourFooter';
+import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRecoilValue } from 'recoil';
 
 const Card = ({ image, text, width }) => {
   return (
@@ -47,6 +51,7 @@ const Card = ({ image, text, width }) => {
   );
 };
 const MissionControlCards = () => {
+  const showProductTour = useRecoilValue(ProductTourVisible);
   return (
     <>
       <div className="mission_control_body">
@@ -76,6 +81,7 @@ const MissionControlCards = () => {
             <Card image="/images/LabManagement.png" text="Lab Management" width="80px" />
           </div>
         </div>
+        {showProductTour && <ProductTour showInfoModal={true} />}
       </div>
       <style jsx>
         {`
