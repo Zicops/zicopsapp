@@ -35,7 +35,7 @@ const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onU
   const router = useRouter();
   useEffect(() => {
     if (!usersData.length) return;
-    return setData([...usersData?.filter((u) => u?.is_active && u?.is_verified)]);
+    return setData([...usersData]);
   }, [usersData]);
 
   useEffect(() => {

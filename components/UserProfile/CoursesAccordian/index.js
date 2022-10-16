@@ -24,6 +24,7 @@ import styles from './coursesAccordian.module.scss';
 import _styles from '../userProfile.module.scss';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
 import { UserDataAtom } from '@/state/atoms/global.atom';
+import CurrentCourses from './CurrentCourses';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -381,8 +382,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           {!isAssignedPage && (
             <div className={`${styles.assign}`}>
               <div>
-                Current courses:{' '}
-                {currentCourses?.filter((courses) => courses.completedPercentage)?.length}
+                Courses in learning folder {`(${currentCourses?.length})`}
               </div>
 
               <div
@@ -399,11 +399,12 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           )}
         </div>
         {/* {isAssignedPage && <AssignCourses section={courseSections[3]} />} */}
-        {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} loading={courseLoading}/>}
+        {/* {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} loading={courseLoading}/>} */}
+        {!isAssignedPage && <CurrentCourses courseData={currentCourses} handleSubmit={handleAssign} isLoading={courseLoading}/>}
         {/* {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />} */}
         {selectedPage === 'Assign Courses' && (
           <AssignCourses
-            isFolder={true}
+            // isFolder={true}
             isHead={true}
             type="assignCourses"
             assignedCourses={assignedCourses}

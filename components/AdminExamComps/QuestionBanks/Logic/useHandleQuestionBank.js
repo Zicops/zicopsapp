@@ -1,3 +1,4 @@
+import { CUSTOM_ERROR_MESSAGE } from '@/helper/constants.helper';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -149,6 +150,7 @@ export default function useHandleQuestionBank() {
 
     let isError = false;
     const res = await updateBank({ variables: sendData }).catch((err) => {
+      if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Question Bank Update Error' });

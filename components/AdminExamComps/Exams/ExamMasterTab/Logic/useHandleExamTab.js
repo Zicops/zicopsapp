@@ -1,3 +1,4 @@
+import { CUSTOM_ERROR_MESSAGE } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -149,6 +150,7 @@ export default function useHandleExamTab() {
     const sectionRes = await loadSectionId({ variables: { question_paper_id: qpId } }).catch(
       (err) => {
         console.log(err);
+        
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Section Id load error' });
       }
@@ -164,6 +166,7 @@ export default function useHandleExamTab() {
       const mapRes = await loadMappingData({ variables: { section_id: sectionId } }).catch(
         (err) => {
           console.log(err);
+        
           isError = !!err;
           return setToastMsg({ type: 'danger', message: 'Mapping load error' });
         }
@@ -217,6 +220,7 @@ export default function useHandleExamTab() {
       sendData.id = examTabData.id;
       response = await updateExam({ variables: sendData }).catch((err) => {
         console.log(err);
+        if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
         return setToastMsg({ type: 'danger', message: 'Update Exam Error' });
       });
       console.log(response?.data);
@@ -225,6 +229,7 @@ export default function useHandleExamTab() {
 
     // add new exam
     response = await addExam({ variables: sendData }).catch((err) => {
+      
       console.log(err);
       return setToastMsg({ type: 'danger', message: 'Add Exam Error' });
     });
@@ -252,6 +257,7 @@ export default function useHandleExamTab() {
     if (examTabData?.instructionId) {
       sendData.id = examTabData.instructionId;
       response = await updateExamInstruction({ variables: sendData }).catch((err) => {
+        if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
         console.log(err);
         return setToastMsg({ type: 'danger', message: 'Update Instructions Error' });
       });
@@ -291,6 +297,7 @@ export default function useHandleExamTab() {
     if (examTabData?.scheduleId) {
       sendData.id = examTabData.scheduleId;
       response = await updateExamSchedule({ variables: sendData }).catch((err) => {
+        if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
         console.log(err);
         return setToastMsg({ type: 'danger', message: 'Update Schedule Error' });
       });
@@ -324,6 +331,7 @@ export default function useHandleExamTab() {
     if (examTabData?.configId) {
       sendData.id = examTabData.configId;
       response = await updateExamConfig({ variables: sendData }).catch((err) => {
+        if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
         console.log(err);
         return setToastMsg({ type: 'danger', message: 'Update Config Error' });
       });
