@@ -21,7 +21,7 @@ import {
 } from '../../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
-export default function useAddQuiz(courseId = '', topicId = '') {
+export default function useAddQuiz(courseId = '', topicId = '' , isScrom = false) {
   const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
     client: mutationClient
   });
@@ -122,7 +122,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     setIsQuizReady(
       newQuiz.name &&
         newQuiz.type &&
-        (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec) &&
+        (isScrom ? true : (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec)) &&
         (questionRequired || (newQuiz?.formType === 'select' && newQuiz?.questionId))
     );
   }, [newQuiz]);

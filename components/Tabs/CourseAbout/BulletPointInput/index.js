@@ -12,7 +12,11 @@ export default function BulletPointInput({ placeholder, name, isBullet = true, i
   const [isKeyReleased, setIsKeyReleased] = useState(false);
 
   function addTag(newTag) {
+    
     const tagsAdded = [...fullCourse[name]];
+    if (tagsAdded?.some((t) => t?.toLowerCase() === newTag?.toLowerCase())) {
+      return setToastMsg({ type: 'danger', message: 'Cannot Add Duplicate value' });
+    }
     tagsAdded.push(newTag);
 
     updateCourseMaster({
@@ -29,9 +33,7 @@ export default function BulletPointInput({ placeholder, name, isBullet = true, i
 
     if ((key === 'Enter' || key === 'Tab') && trimmedInput.length) {
       e.preventDefault();
-      if (tagsAdded?.some((t) => t?.toLowerCase() === trimmedInput?.toLowerCase())) {
-        return setToastMsg({ type: 'danger', message: 'Cannot Add Duplicate value' });
-      }
+      
       addTag(trimmedInput);
     }
 
