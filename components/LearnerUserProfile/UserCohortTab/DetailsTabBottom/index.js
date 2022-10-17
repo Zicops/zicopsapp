@@ -43,7 +43,7 @@ const DetailsTabBottom = () => {
 
       // console.log(modifiedUserList, 'modiefied user list');
 
-      setSelectedCohortData((prevValue) => ({ ...prevValue, cohortUsers: modifiedUserList?.membership_status?.toLowerCase() === 'active' }));
+      setSelectedCohortData((prevValue) => ({ ...prevValue, cohortUsers: modifiedUserList?.filter((item)=> item?.membership_status?.toLowerCase() === 'active') }));
 
       const managers = modifiedUserList?.filter((item) => item?.role?.toLowerCase() === 'manager' && item?.membership_status?.toLowerCase() === 'active');
       const members = modifiedUserList?.filter((item) => item?.role?.toLowerCase() !== 'manager' && item?.membership_status?.toLowerCase() === 'active');
