@@ -22,7 +22,7 @@ const CurrentCourses = ({ courseData, handleSubmit = () => {}, isLoading = false
   ];
 
   useEffect(()=>{
-    if(!courseData?.length) return ;
+    if(!courseData?.length) return setLoading(false);
     // console.log(courseData);
     setOnGoingCourses([...courseData.filter((courses) => courses.completedPercentage)],setLoading(false))
     setAssignedCourses([...courseData?.filter(
