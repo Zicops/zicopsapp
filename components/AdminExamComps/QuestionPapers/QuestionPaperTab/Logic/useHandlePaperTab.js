@@ -1,3 +1,4 @@
+import { CUSTOM_ERROR_MESSAGE } from '@/helper/constants.helper';
 import { useMutation } from '@apollo/client/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -224,15 +225,16 @@ export default function useHandlePaperTab() {
     console.log(sendData);
     let isError = false;
     const questionPaperRes = await updatePaper({ variables: sendData }).catch((err) => {
+      if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
       console.log(err);
       isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update Question Paper Error' });
+      // return setToastMsg({ type: 'danger', message: 'Update Question Paper Error' });
     });
     console.log(questionPaperRes?.data);
 
     const res = questionPaperRes?.data?.updateQuestionPaper;
     if (!res || isError)
-      return setToastMsg({ type: 'danger', message: 'Update Question Paper Error' });
+      return ;
 
     const paperMaster = {
       id: res?.id,
