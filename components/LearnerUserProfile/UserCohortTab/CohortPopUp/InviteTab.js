@@ -67,14 +67,15 @@ export default function InviteTab() {
     if (!cohortUser?.length) cohortUser = [...selectedCohortData?.cohortUsers];
 
     const users = await getUsersForAdmin();
+    console.log(users,'users');
     if (!users?.length) return setLoading(false);
 
-    const _users = users?.filter((item) => item?.status?.toLowerCase() === 'active');
+    // const _users = users?.filter((item) => item?.status?.toLowerCase() === 'active');
     // console.log(_users);
 
     // flitering users who are not in cohort
     // console.log(users , selectedCohortData?.cohortUsers) ;
-    const inviteUserList = _users.filter(
+    const inviteUserList = users.filter(
       ({ id: id1 }) => !cohortUser?.some(({ user_id: id2 }) => id2 === id1)
     );
 
@@ -102,6 +103,7 @@ export default function InviteTab() {
     const updateUsers = usersForCohort.filter(({ id: id1 }) => !isAdded.some((id) => id === id1));
     setToastMsg({ type: 'success', message: 'User added successfully!' });
     setLoading(false);
+    setSelectedCohortData(prevValue => ({...prevValue , isUpdate:!prevValue?.isUpdate}));
     return setUsersForCohort(updateUsers);
   }
 

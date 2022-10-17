@@ -76,6 +76,7 @@ const UserCohortTab = () => {
       <div className={`${styles.listCardContainer}`}>
         {cohortData?.map((cohort , index) => {
           const { main , userCohort } = cohort;
+          // console.log(userCohort);
           const btnData = {
             imgSrc: '/images/svg/calendar-month.svg',
             display: 'Member',
@@ -98,7 +99,7 @@ const UserCohortTab = () => {
             <CohortListCard
               data={main}
               key={index}
-              handleClick={() => {
+              handleClick={userCohort?.membership_status?.toLowerCase() !== 'active' ? ()=>{}: () => {
                 setSelectedCohort(main);
                 setClosePopUpAtom(false);
                 setSelectedCohortData(cohort);

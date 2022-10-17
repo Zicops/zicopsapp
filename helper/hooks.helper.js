@@ -1,5 +1,5 @@
 import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
-import { UPDATE_USER, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
+import { UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
   GET_USER_COURSE_MAPS,
@@ -12,7 +12,7 @@ import {
 } from '@/api/UserQueries';
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { getUserOrgObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { getUserOrgObject, IsUpdatedAtom, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import {
   isPossiblePhoneNumber,
@@ -405,7 +405,8 @@ export default function useUserCourseData() {
             last_name: userList[i]?.last_name,
             membership_status: cohortUsers[j]?.membership_status,
             photo_url: userList[i]?.photo_url || '',
-            joined_on: moment.unix(cohortUsers[j]?.created_at).format('DD/MM/YYYY')
+            joined_on: moment.unix(cohortUsers[j]?.created_at).format('DD/MM/YYYY'),
+            ...cohortUsers[j]
           });
           break;
         }
@@ -655,4 +656,63 @@ export function useUpdateUserOrgData() {
     updateUserOrg,
     isFormCompleted
   };
+}
+
+export function useHandleCohortUsers(){
+
+  const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isUpdated , setIsUpdated] = useRecoilState(IsUpdatedAtom);
+
+  const [updateCohortMain, { error: updateCohortError }] = useMutation(UPDATE_COHORT_MAIN, {
+    client: userClient
+  });
+
+  const [updateUserCohort, { error : updateError }] = useMutation(UPDATE_USER_COHORT, {
+    client: userClient
+  });
+
+  async function removeCohortUser(userData = null , cohortData = null){
+    const { id } = getUserData();
+    if(!userData) return false;
+    const sendData = {
+      user_cohort_id: userData?.user_cohort_id,
+      user_id: userData?.user_id,
+      user_lsp_id: userData?.user_lsp_id,
+      cohort_id: userData?.cohort_id,
+      added_by: JSON.stringify({ user_id: id, role: 'Admin' }),
+      membership_status: 'Disable',
+      role: userData?.role
+    };
+    // console.log(sendData)
+    let isError = false;
+    const res = await updateUserCohort({ variables: sendData }).catch((err) => {
+      isError = true;
+      if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing user' });
+    });
+    
+    setIsUpdated(true);
+    const sendCohortData = {
+      cohort_id: cohortData?.cohort_id,
+      name: cohortData?.name,
+      description: cohortData?.description,
+      lsp_id: cohortData?.lsp_id || lspData?.lsp_id,
+      code: cohortData?.code,
+      status: 'SAVED',
+      type: cohortData?.type,
+      is_active: true,
+      size: cohortData?.size - 1 || 1
+    }
+
+    const resCohort = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
+      // console.log(err);
+      isError = !!err;
+    });
+
+
+    // console.log(res);
+    return !isError;
+
+  }
+
+  return {removeCohortUser};
 }

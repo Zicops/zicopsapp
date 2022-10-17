@@ -9,40 +9,54 @@ import styles from '../../learnerUserProfile.module.scss';
 import { memberTabData } from '../../Logic/userBody.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
-import { useRecoilState } from 'recoil';
-import { SelectedCohortDataAtom } from '@/state/atoms/users.atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { IsUpdatedAtom, SelectedCohortDataAtom } from '@/state/atoms/users.atom';
 import useUserCourseData from '@/helper/hooks.helper';
 import useHandleCohortTab from '../../Logic/useHandleCohortTab';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
 export default function MembersTab() {
   const [selectedCohort, setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
+  const [isUpdated,setIsUpdated] = useRecoilState(IsUpdatedAtom);
+  const setToastMsg = useRecoilState(ToastMsgAtom);
   const [cohortUsers, setCohortUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const { getCohortUserData } = useUserCourseData();
   const { getUsersOrgDetails } = useHandleCohortTab();
+  // const isManager = true;
 
   useEffect(async () => {
     // console.log(selectedCohort,'cohrot_data')
     if (!selectedCohort?.main?.cohort_id) return;
-    if (selectedCohort?.cohortUsers?.length)
+    if(selectedCohort?.isUpdated) return await loadUserData();
+    if(selectedCohort?.cohortUsers?.length)
       return setCohortUsers([...selectedCohort?.cohortUsers], setLoading(false));
-    const cohortUsers = await getCohortUserData(selectedCohort?.main?.cohort_id);
-
-    if (cohortUsers?.error)
-      return setToastMsg({ type: 'danger', message: 'Error while loading cohort users!' });
-
-    if (!cohortUsers?.length) return setLoading(false);
-
-    //removing duplicate data
-    const users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()];
-
-    const modifiedUsers = await getUsersOrgDetails(users);
-
-    setSelectedCohort((prevValue) => ({ ...prevValue, cohortUsers: modifiedUsers }));
-
-    return setCohortUsers([...modifiedUsers], setLoading(false));
+    await loadUserData();
+    return;
   }, [selectedCohort]);
+
+
+  async function loadUserData(){
+  setLoading(true);
+  const cohortUsers = await getCohortUserData(selectedCohort?.main?.cohort_id);
+
+  if (cohortUsers?.error)
+    return setToastMsg({ type: 'danger', message: 'Error while loading cohort users!' });
+
+  if (!cohortUsers?.length) return setLoading(false);
+
+  //removing duplicate data
+  const users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()];
+
+  const modifiedUsers = await getUsersOrgDetails(users);
+
+  setSelectedCohort((prevValue) => ({ ...prevValue, cohortUsers: modifiedUsers?.filter((user)=> user?.membership_status?.toLowerCase() === 'active') }));
+  // console.log(modifiedUsers);
+
+  return setCohortUsers([...modifiedUsers?.filter((user)=> user?.membership_status?.toLowerCase() === 'active')], setLoading(false));
+  }
+
   return (
     <div className={`${styles.courseTabContainer} ${styles.memberTab}`}>
       <div style={{ padding: '0px 5px 15px' }}>
@@ -93,6 +107,7 @@ export default function MembersTab() {
               data={member}
               isRoundImage={true}
               key={index}
+              isManager={selectedCohort?.userCohort?.role?.toLowerCase() === 'manager'}
               // handleClick={() => {
               //   setSelectedCohort(cohort);
               // }}
@@ -101,13 +116,17 @@ export default function MembersTab() {
                 <p>
                   <img src="/images/svg/calendar-month.svg" alt="" />
                   Joined On: {member?.joined_on}
+                  
+                  
                 </p>
 
                 <IconBtn color={btnData.color} isDisabled={btnData.isDisabled}>
                   <img src={btnData.imgSrc} alt="" />
                   {btnData.display}
                 </IconBtn>
+                
               </div>
+              
             </CohortListCard>
           );
         })}
