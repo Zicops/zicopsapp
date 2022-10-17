@@ -48,7 +48,7 @@ export default function CohortListCard({
     setLoading(false)
     // setRefetch(true);
     setShowConfirmBox(false);
-    setSelectedCohort((prev) => ({...prev , isUpdated:true}));
+    setSelectedCohort((prev) => ({...prev , isUpdated:!prev?.isUpdated}));
     return ;
   }
 
