@@ -87,16 +87,17 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
 
   async function handleRemoveUser(userData = null, cohortData = null){
     // console.log(userData)
-    if(!userData)setToastMsg({type:'danger',message:'User Data not found!'})
-    if(!cohortData)setToastMsg({type:'danger',message:'Cohort Data not found!'})
+    if(!userData)return setToastMsg({type:'danger',message:'User Data not found!'})
+    if(!cohortData)return setToastMsg({type:'danger',message:'Cohort Data not found!'})
     setLoading(true) ;
     const isRemoved = await removeCohortUser(userData,cohortData);
     // console.log(a,'adds');
-    if(!isRemoved) setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
+    if(!isRemoved) return setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
     setToastMsg({type:'success',message:"User removed succesfully!"})
+    setLoading(false)
     setRefetch(true);
-    setLoading(false);
-    return setShowConfirmBox(false);
+    setShowConfirmBox(false);
+    return ;
   }
   const columns = [
     {
