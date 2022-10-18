@@ -3,6 +3,7 @@ import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { USER_STATUS } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -35,7 +36,7 @@ export default function MyUser({ getUser }) {
       return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
     }
     setLoading(false);
-    setData([...usersData]);
+    setData(sortArrByKeyInOrder([...usersData], 'created_at', false));
     return;
   }, []);
 
