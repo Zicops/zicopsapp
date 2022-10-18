@@ -93,7 +93,12 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'category',
-          label: <>Category:<CustomTooltip info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.category} customStyle={CUSTOM_TOOLTIP_STYLE}/></>,
+          label: (
+            <>
+              Category:
+              <CustomTooltip info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.category} />
+            </>
+          ),
           placeholder: 'Select Category',
           options: [{ value: 'General', label: 'General' }, ...catSubCat.cat],
           value: { value: questionBankData?.category, label: questionBankData?.category },
@@ -114,7 +119,12 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'sub_category',
-          label: <>Sub-Category:<CustomTooltip info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addSubCategory} customStyle={CUSTOM_TOOLTIP_STYLE}/></>,
+          label: (
+            <>
+              Sub-Category:
+              <CustomTooltip info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addSubCategory} />
+            </>
+          ),
           placeholder: 'Select Sub-Category',
           options: [{ value: 'General', label: 'General' }, ...catSubCat.subCat],
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },

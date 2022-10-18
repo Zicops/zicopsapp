@@ -66,7 +66,16 @@ export default function QuestionPaperMaster() {
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'category',
-          label: 'Category:',
+          label: (
+            <>
+              Category:
+              <CustomTooltip
+                info={
+                  ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab.category
+                }
+              />
+            </>
+          ),
           placeholder: 'Select Category',
           options: [{ value: 'General', label: 'General' }, ...catSubCat?.cat],
           isDisabled: !!questionPaperTabData?.sectionData?.length,
@@ -85,7 +94,17 @@ export default function QuestionPaperMaster() {
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'sub_category',
-          label: 'Sub-Category:',
+          label: (
+            <>
+              Sub-Category:
+              <CustomTooltip
+                info={
+                  ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab
+                    .addSubCategory
+                }
+              />
+            </>
+          ),
           placeholder: 'Select Sub-Category',
           options: [{ value: 'General', label: 'General' }, ...catSubCat?.subCat],
           isDisabled: !!questionPaperTabData?.sectionData?.length,
@@ -105,7 +124,17 @@ export default function QuestionPaperMaster() {
           isFiftyFifty={true}
           dropdownOptions={{
             inputName: 'difficulty_level',
-            label: 'Difficulty Level:',
+            label: (
+              <>
+                Difficulty Level:
+                <CustomTooltip
+                  info={
+                    ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab
+                      .difficultyLevel
+                  }
+                />
+              </>
+            ),
             placeholder: 'Select the difficulty level',
             options: difficultyOptions,
             isDisabled: !!questionPaperTabData?.sectionData?.length,
@@ -123,7 +152,17 @@ export default function QuestionPaperMaster() {
           styleClass={styles.inputField}
           inputOptions={{
             inputName: 'suggested_duration',
-            label: 'Suggested Duration:',
+            label: (
+              <>
+                Suggested Duration:
+                <CustomTooltip
+                  info={
+                    ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab
+                      .suggestedDuration
+                  }
+                />
+              </>
+            ),
             placeholder: 'Enter duration in Minutes',
             value: questionPaperTabData.paperMaster?.suggested_duration,
             isNumericOnly: true
@@ -153,7 +192,9 @@ export default function QuestionPaperMaster() {
 
         <NextButton
           clickHandler={() => (questionPaperId ? updateQuestionPaper(1) : addNewQuestionPaper(1))}
-          tooltipText={ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab.nextBtn}
+          tooltipText={
+            ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab.nextBtn
+          }
         />
       </div>
     </div>

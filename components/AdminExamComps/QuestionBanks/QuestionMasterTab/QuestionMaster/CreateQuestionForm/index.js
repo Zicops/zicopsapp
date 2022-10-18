@@ -1,5 +1,7 @@
+import CustomTooltip from '@/components/common/CustomTooltip';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import Button from '../../../../../common/Button';
@@ -117,14 +119,24 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
           {questionData?.type === 'MCQ' && (
             <>
-              <RangeSlider
-                options={difficultyOptions}
-                inputName="difficulty"
-                selected={questionData.difficulty}
-                changeHandler={(e, val) =>
-                  setQuestionData({ ...questionData, difficulty: val, isUpdated: true })
-                }
-              />
+              <div className={styles.marginTop}>
+                <label>
+                  Difficulty Score:
+                  <CustomTooltip
+                    info={
+                      ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.difficultyLevel
+                    }
+                  />
+                  <RangeSlider
+                    options={difficultyOptions}
+                    inputName="difficulty"
+                    selected={questionData.difficulty}
+                    changeHandler={(e, val) =>
+                      setQuestionData({ ...questionData, difficulty: val, isUpdated: true })
+                    }
+                  />
+                </label>
+              </div>
 
               {/* question with file */}
               <div className={styles.marginTop}>
@@ -169,7 +181,14 @@ export default function CreateQuestionForm({ data, isEdit }) {
               {/* options */}
               <div className={styles.marginTop}>
                 Enter Options:
-                <span className={`${styles.hint}`}>Select the checkbox for the right option.</span>
+                <span className={`${styles.hint}`}>
+                  Select the checkbox for the right option.
+                  <CustomTooltip
+                    info={
+                      ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.selectCheckbox
+                    }
+                  />
+                </span>
                 {Array(NUMBER_OF_OPTIONS)
                   .fill(null)
                   .map((value, index) => (

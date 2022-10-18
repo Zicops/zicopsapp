@@ -75,10 +75,20 @@ export const ADMIN_EXAMS = {
         difficultyLevel: (
           <>
             <b>Difficulty Score:</b>
-            <p>
+            <br />
+            <span>
               Difficulty score defines Level of question. A question with difficulty score in range
               1-3 will be categorised as <b>Beginner level,</b> in range 4-7 as
-              <b>Competent level,</b> and in range 8-10 as <b>Proficient level</b>
+              <b> Competent level,</b> and in range 8-10 as <b>Proficient level</b>
+            </span>
+          </>
+        ),
+        selectCheckbox: (
+          <>
+            <b>Option Checkbox:</b>
+            <p>
+              Check multiple boxes in case of multiple right options for a question and marks will
+              be accordingly divided among the options
             </p>
           </>
         )
@@ -90,8 +100,8 @@ export const ADMIN_EXAMS = {
         uploadQuestionInfo: (
           <ul>
             Use Upload feature to:
-            <li>Upload MCQ questions with details in bulk in one go</li>
-            <li>Upload questions and options in text format only</li>
+            <li>- Upload MCQ questions with details in bulk in one go</li>
+            <li>- Upload questions and options in text format only</li>
             <b>Note: </b>No media file upload allowed for questions or options in bulk upload
           </ul>
         ),
@@ -107,7 +117,8 @@ export const ADMIN_EXAMS = {
           removeBtnUploaded: 'Click here to Remove Uploaded File',
           removeBtnEmpty: 'No File Uploaded',
           cancelBtn: 'Cancel and go back to Questions list',
-          saveBtn: 'Save Uploaded Questions'
+          saveBtn: 'Save Uploaded Questions',
+          uploadFile: 'Upload file'
         }
       }
     }
@@ -127,8 +138,8 @@ export const ADMIN_EXAMS = {
           <>
             <b>Question Paper - Section wise:</b>
             <ul>
-              <li>If checked then question paper will have sections</li>
-              <li>If not checked then question paper will not have sections</li>
+              <li>- If checked then question paper will have sections</li>
+              <li>- If not checked then question paper will not have sections</li>
             </ul>
           </>
         ),

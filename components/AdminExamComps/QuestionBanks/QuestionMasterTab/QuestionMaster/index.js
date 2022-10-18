@@ -46,6 +46,7 @@ export default function QuestionMaster({ isEdit, data }) {
                     ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
                       .uploadQuestionInfo
                   }
+                  customColor={true}
                 />
               </div>
             </div>
