@@ -151,14 +151,18 @@ export default function MissionControlHeader() {
             />
           </div> */}
           <div className="rightside_icon">
-            <Image
-              src="/images/svg/dvr.svg"
-              className="rightside_icon"
-              alt=""
-              height={'40px'}
-              width={'40px'}
-              onClick={() => setViewButtons(!viewButtons)}
-            />
+            <ToolTip title="Click here to know everythng about Admin Controls" placement="bottom">
+              <span>
+                <Image
+                  src="/images/svg/dvr.svg"
+                  className="rightside_icon"
+                  alt=""
+                  height={'40px'}
+                  width={'40px'}
+                  onClick={() => setViewButtons(!viewButtons)}
+                />
+              </span>
+            </ToolTip>
             {viewButtons && (
               <div className={styles.productTour_btn}>
                 <button onClick={handleClick}>Admin Tour</button>

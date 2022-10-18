@@ -18,9 +18,9 @@ export const PRODUCT_TOUR_FLOW = [
     id: 'myQuestionPaperPlus',
     index: 2,
     route: '/admin/exams/my-question-papers',
-    btnName: 'Create Question Bank',
+    btnName: 'Create Question Paper',
     title:
-      'Create new question paper using readily available zicops or your own curated question bank under any category and sub-category'
+      'Create new question paper using readily available zicops or your own curated question banks under any category and sub-category'
   },
   {
     id: 'myQuestionPaperSidebar',
@@ -43,6 +43,6 @@ export const PRODUCT_TOUR_FLOW = [
     route: '/admin/exams/my-exams',
     btnName: 'Manage Your Exams',
     title:
-      'Configure duration, passing criteria and attempt specifications from here and tranck all your exams'
+      'Configure duration, passing criteria and attempt specifications from here and track all your exams'
   }
 ];

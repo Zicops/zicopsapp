@@ -17,9 +17,8 @@ const ProductTourFooter = ({ data, isVisible }) => {
   const router = useRouter();
 
   useEffect(() => {
-
     const currentTour = PRODUCT_TOUR_FLOW?.[index === null ? 0 : index];
-    if(index === null) return;
+    if (index === null) return;
     // console.log(currentTour,index);
     setActiveTour(currentTour);
     if (!currentTour?.route?.includes(router?.asPath) && currentTour?.route) {
@@ -37,10 +36,9 @@ const ProductTourFooter = ({ data, isVisible }) => {
     // console.log(PRODUCT_TOUR_FLOW?.[currentIndex]?.id);
   }, [index]);
 
-
   const handleCloseProductTour = () => {
     setCloseProductTour(false);
-    setActiveTour({id:null});
+    setActiveTour({ id: null });
     return setIndex(null);
   };
 
@@ -63,31 +61,30 @@ const ProductTourFooter = ({ data, isVisible }) => {
                 </button>
               </span>
             ) : (
-              <button
-                onClick={() =>
-                  setIndex(index - 1)
-                }>
+              <button onClick={() => setIndex(index - 1)}>
                 <img src="/images/svg/play_arrow.svg" alt="" className={styles.reverse_img} />
               </button>
             )}
-            {/* {currentIndex === PRODUCT_TOUR_FLOW.length - 1 ? (
+            {index === PRODUCT_TOUR_FLOW.length - 1 ? (
               <span>
                 <button disabled>
                   <img src="/images/svg/play_arrow.svg" alt="" />
                 </button>
               </span>
-            ) : ( */}
-
-            <button
-              onClick={() =>
-                {return index === null ? setIndex(0) : setIndex(index + 1)}
-              }>
-              <img src="/images/svg/play_arrow.svg" alt="" />
-            </button>
-
-            {/* )} */}
+            ) : (
+              <button
+                onClick={() => {
+                  return index === null ? setIndex(0) : setIndex(index + 1);
+                }}>
+                <img src="/images/svg/play_arrow.svg" alt="" />
+              </button>
+            )}
           </div>
-          <button className={styles.close_btn} onClick={()=>{handleCloseProductTour()}}>
+          <button
+            className={styles.close_btn}
+            onClick={() => {
+              handleCloseProductTour();
+            }}>
             Close Info Panel
           </button>
         </div>

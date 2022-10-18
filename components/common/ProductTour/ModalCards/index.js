@@ -16,8 +16,7 @@ const ModalCards = ({ header, info, link }) => {
       <div className={styles.modalCards_info}>
         <p>{info}</p>
         <button onClick={handleClick}>
-          {/* <img src="./images/svg/arrow_forward.svg" alt="" /> */}
-          next
+          <img src="./images/svg/arrow_forward.svg" alt="" />
         </button>
       </div>
     </div>
