@@ -1,4 +1,8 @@
-import { ActiveTourAtom, ProductTourVisible } from '@/state/atoms/productTour.atom';
+import {
+  ActiveTourAtom,
+  ProductTourIndex,
+  ProductTourVisible
+} from '@/state/atoms/productTour.atom';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -11,6 +15,7 @@ import styles from './sidebar.module.scss';
 // move the styles in sidebar.module.scss in this folder
 export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductTooltipData }) {
   const activeTour = useRecoilValue(ActiveTourAtom);
+  const [index, setIndex] = useRecoilState(ProductTourIndex);
   const [showProductTour, setShowProductTour] = useRecoilState(ProductTourVisible);
   const router = useRouter();
   const lastItem = useRef();
@@ -18,6 +23,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
 
   const handleProductTour = () => {
     setShowProductTour(true);
+    return setIndex(0);
   };
 
   useEffect(() => {

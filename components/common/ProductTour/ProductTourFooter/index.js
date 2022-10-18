@@ -17,23 +17,13 @@ const ProductTourFooter = ({ data, isVisible }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const currentTour = PRODUCT_TOUR_FLOW?.[index === null ? 0 : index];
     if (index === null) return;
+    const currentTour = PRODUCT_TOUR_FLOW?.[index === 0 ? 0 : index];
     // console.log(currentTour,index);
     setActiveTour(currentTour);
     if (!currentTour?.route?.includes(router?.asPath) && currentTour?.route) {
       router.push(currentTour?.route);
     }
-    // if (currentIndex === null) {
-    //   setCurrentIndex((prev)=>{
-    //     if(PRODUCT_TOUR_FLOW?.length -1 ===)
-    //   });
-    // }
-    // console.log(currentTour?.route);
-    // if (activeTour === null) {
-    //   isVisible = false;
-    // }
-    // console.log(PRODUCT_TOUR_FLOW?.[currentIndex]?.id);
   }, [index]);
 
   const handleCloseProductTour = () => {
@@ -55,28 +45,55 @@ const ProductTourFooter = ({ data, isVisible }) => {
         <div className={styles.footer}>
           <div className={styles.btn_container}>
             {index === 0 || index === null ? (
-              <span>
-                <button disabled>
-                  <img src="/images/svg/play_arrow.svg" alt="" className={styles.reverse_img} />
-                </button>
-              </span>
+              <button disabled>
+                <svg
+                  style={{ transform: 'rotate(180deg)' }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="70"
+                  height="70"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path d="M9.5 17L14.5 12L9.5 7V17Z" fill="#C4C4C4" />
+                </svg>
+              </button>
             ) : (
               <button onClick={() => setIndex(index - 1)}>
-                <img src="/images/svg/play_arrow.svg" alt="" className={styles.reverse_img} />
+                <svg
+                  style={{ transform: 'rotate(180deg)' }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="70"
+                  height="70"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path d="M9.5 17L14.5 12L9.5 7V17Z" fill="#C4C4C4" />
+                </svg>
               </button>
             )}
             {index === PRODUCT_TOUR_FLOW.length - 1 ? (
-              <span>
-                <button disabled>
-                  <img src="/images/svg/play_arrow.svg" alt="" />
-                </button>
-              </span>
+              <button disabled>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="70"
+                  height="70"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path d="M9.5 17L14.5 12L9.5 7V17Z" fill="#C4C4C4" />
+                </svg>
+              </button>
             ) : (
               <button
                 onClick={() => {
                   return index === null ? setIndex(0) : setIndex(index + 1);
                 }}>
-                <img src="/images/svg/play_arrow.svg" alt="" />
+                {/* <img src="/images/svg/arrow_right.svg" alt=""  /> */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="70"
+                  height="70"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path d="M9.5 17L14.5 12L9.5 7V17Z" fill="#C4C4C4" />
+                </svg>
               </button>
             )}
           </div>

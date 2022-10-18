@@ -1,13 +1,17 @@
+import { ProductTourIndex } from '@/state/atoms/productTour.atom';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useRecoilState } from 'recoil';
 import ProductTooltip from '../ProductTooltip';
 import styles from '../productTour.module.scss';
 
 const ModalCards = ({ header, info, link }) => {
+  const [index, setIndex] = useRecoilState(ProductTourIndex);
   const router = useRouter();
   const handleClick = () => {
     // alert(link);
     router.push(link);
+    return setIndex(0);
   };
   // console.log(data);
   return (

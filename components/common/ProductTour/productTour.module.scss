@@ -122,12 +122,14 @@
             margin: 0;
             padding: 0;
 
-            img {
-                width: 50px;
-            }
+        }
 
-            .reverse_img {
-                rotate: 180deg;
+        button:disabled,
+        button[disabled] {
+            color: #666666;
+
+            svg {
+                opacity: 0.5;
             }
         }
     }
