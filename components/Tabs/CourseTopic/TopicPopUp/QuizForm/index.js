@@ -26,7 +26,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
     handleEditQuiz,
     editedQuiz,
     setEditedQuiz
-  } = useAddQuiz(courseId, topicId);
+  } = useAddQuiz(courseId, topicId , isScrom);
 
   const [quizzes, setQuizzes] = useRecoilState(QuizAtom);
   const quizMetaData = useRecoilValue(QuizMetaDataAtom);
@@ -120,7 +120,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                 name="formType"
                 value={'create'}
                 isDisabled={
-                  !(newQuiz?.name && (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec))
+                  !(newQuiz?.name && (isScrom ? true : (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec)))
                 }
                 isChecked={newQuiz?.formType === 'create'}
                 changeHandler={handleQuizInput}
@@ -132,7 +132,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                 value={'upload'}
                 isChecked={newQuiz?.formType === 'upload'}
                 isDisabled={
-                  !(newQuiz?.name && (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec))
+                  !(newQuiz?.name && (isScrom ? true : (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec)))
                 }
                 changeHandler={handleQuizInput}
               />
@@ -143,7 +143,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                 value={'select'}
                 isChecked={newQuiz?.formType === 'select'}
                 isDisabled={
-                  !(newQuiz?.name && (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec))
+                  !(newQuiz?.name && (isScrom ? true : (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec)))
                 }
                 changeHandler={handleQuizInput}
               />

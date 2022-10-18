@@ -70,7 +70,7 @@ function ZicopsCategoryList() {
 
   if (data)
     structuredClone(data?.allCatMain)
-      ?.sort((c1, c2) => c1?.CreatedAt - c2?.CreatedAt)
+      ?.sort((c1, c2) => c2?.CreatedAt - c1?.CreatedAt)
       ?.map((val, index) => categories.push({ index: index + 1, catName: val?.Name, ...val }));
 
   return (

@@ -27,10 +27,10 @@ export default function useAddModule(refetchDataAndUpdateRecoil) {
   // disable save button if data is not correct
   useEffect(() => {
     setIsAddModuleReady(
-      !!newModuleData.name && !!newModuleData.level && !!newModuleData.description
+      !!newModuleData.name?.trim() && !!newModuleData.level && !!newModuleData.description?.trim()
     );
     setIsPopUpDataPresent(
-      !!newModuleData.name || !!newModuleData.level || !!newModuleData.description
+      !!newModuleData.name?.trim() || !!newModuleData.level || !!newModuleData.description?.trim()
     );
   }, [newModuleData]);
 
@@ -51,9 +51,26 @@ export default function useAddModule(refetchDataAndUpdateRecoil) {
 
   // save course in database
   async function addNewModule() {
+    setIsAddModuleReady(false);
+    if (
+      !!moduleData?.find(
+        (mod) => mod?.name?.trim()?.toLowerCase() === newModuleData?.name?.trim()?.toLowerCase()
+      )
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Module with same name already exists in this course'
+      });
+
     // save in db
     let isError = false;
-    await createCourseModule({ variables: { ...newModuleData } }).catch((err) => {
+    await createCourseModule({
+      variables: {
+        ...newModuleData,
+        name: newModuleData?.name?.trim(),
+        description: newModuleData?.description?.trim()
+      }
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Module Create Error' });

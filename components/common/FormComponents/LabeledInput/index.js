@@ -1,4 +1,4 @@
-import { bool, func, number, shape, string } from 'prop-types';
+import { bool, func, number, oneOfType, shape, string } from 'prop-types';
 import { halfInputWrapper, labeledInputWrapper } from '../formComponents.module.scss';
 
 export default function LabeledInput({
@@ -62,7 +62,7 @@ const LabeledInputObj = shape({
   inputName: string.isRequired,
   label: string,
   placeholder: string.isRequired,
-  value: string || number,
+  value: oneOfType([string, number]),
   maxLength: number,
   isRequired: bool,
   isDisabled: bool,

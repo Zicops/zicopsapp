@@ -86,6 +86,13 @@ export function getUserOrgObject(data = {}) {
   };
 }
 
+export const ClosePopUpAtom = atom({
+  key:'closePopup',
+  default: false
+});
+
+
+
 // will delete later if not used
 export const IsUpdatedAtom = atom({
   key: 'IsUpdated',
@@ -110,7 +117,8 @@ export function getCohortMasterObject(data = {}) {
     description: data?.description || '',
     cohort_image: data?.cohort_image || null,
     image_url: data?.imageUrl || '',
-    managers: []
+    managers: [],
+    size: data?.size || 0
   };
 }
 

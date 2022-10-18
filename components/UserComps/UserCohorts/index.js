@@ -74,10 +74,9 @@ const UserCohorts = () => {
                 outline: '0',
                 border: '0'
               }}
-              // onClick={() => {
-              //   setSelectedQB(getQuestionBankObject(params.row));
-              //   setEditPopUp(true);
-              // }}
+              onClick={() => {
+                router.push(router.asPath + `/view-cohort/${params?.row?.id}`);
+              }}
             >
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>

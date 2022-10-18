@@ -2,6 +2,7 @@ import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper'
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -56,7 +57,10 @@ export default function QuestionBankTable({ isEdit = false }) {
     }
 
     if (!questionBankData?.length) return setLoading(false);
-    setQuestionBank([...questionBankData], setLoading(false));
+    setQuestionBank(
+      sortArrByKeyInOrder([...questionBankData], 'created_at', false),
+      setLoading(false)
+    );
   }, []);
 
   // set refetch query in recoil

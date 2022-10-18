@@ -1,25 +1,63 @@
-import CourseBoxCard from '@/components/common/CourseBoxCard';
-import styles from '../coursesAccordian.module.scss';
+// import CoursesAccHead from '@/components/UserProfile/CoursesAccHead';
+import CardContainer from '@/components/LearnerUserProfile/UserCoursesTab/CardContainer';
+import { ASSIGNED_COURSES } from '@/helper/constants.helper';
+import { useEffect, useState } from 'react';
 
-export default function CurrentCourses({ assignedCourses = [], onAssignClick = () => {} }) {
+const CurrentCourses = ({ courseData, handleSubmit = () => {}, isLoading = false}) => {
+
+  const [loading,setLoading] = useState(isLoading);
+
+  const [onGoingCourses , setOnGoingCourses] = useState([]);
+  const [assignedCourses , setAssignedCourses] = useState([]);
+  const [addedCourses , setAddedCourses] = useState([]);
+  const [cohortCourses , setCohortCourses] = useState([]);
+
+  
+
+  const courseSections = [
+    { displayType: 'Ongoing Courses', footerType: 'onGoing', data: onGoingCourses },
+    { displayType: 'Courses Added by Admin', footerType: 'adminFooter', data: assignedCourses , isRemove:true , handleAssign:handleSubmit , buttonText:'Remove'},
+    { displayType: 'Courses Added by Learner', footerType: 'added', data: addedCourses },
+    { displayType: 'Courses Added In Cohort', footerType: 'added', data: cohortCourses }
+  ];
+
+  useEffect(()=>{
+    if(!courseData?.length) return ;
+    // console.log(courseData);
+    setOnGoingCourses([...courseData.filter((courses) => courses.completedPercentage)],setLoading(false))
+    setAssignedCourses([...courseData?.filter(
+      (course) => course?.added_by?.role.toLowerCase() === ASSIGNED_COURSES[1]
+    )],setLoading(false))
+    setAddedCourses([...courseData?.filter(
+      (course) => !ASSIGNED_COURSES?.includes(course?.added_by?.role.toLowerCase()))],setLoading(false))
+    
+    setCohortCourses([...courseData?.filter(
+      (course) => course?.added_by?.role.toLowerCase() === ASSIGNED_COURSES[0] || course?.added_by?.role.toLowerCase() === ASSIGNED_COURSES[2]
+    )],setLoading(false))
+
+  },[courseData])
+
   return (
     <>
-      <div className={`${styles.courses_acc_head}`}>
-        <div className={`${styles.assign}`}>
-          <div>Current courses: {assignedCourses?.length}</div>
-
-          <div onClick={onAssignClick} className={`${styles.assignInner}`}>
-            <img src="/images/svg/add-line-blue.svg" />
-            Assign Courses
-          </div>
-        </div>
-      </div>
-
-      <div className={`${styles.courseContainer}`}>
-        {assignedCourses?.map((course) => (
-          <CourseBoxCard isAdmin={true} courseData={course}></CourseBoxCard>
-        ))}
-      </div>
+      {courseSections.map((section,index) => {
+          return (
+            <div key={index}>
+            <CardContainer
+              type={section?.displayType}
+              footerType={section?.footerType}
+              courseData={section?.data}
+              statusData={section?.statusData}
+              isRemove={section?.isRemove ? section?.isRemove : false}
+              handleSubmit={section?.handleAssign ?section?.handleAssign : ()=>{} }
+              buttonText={ section?.buttonText ? section?.buttonText : ''}
+              isLoading={loading}
+              isAdmin={true}
+              customStyles={{fontSize:'15px'}}
+            /></div>
+          );
+        })}
     </>
   );
-}
+};
+
+export default CurrentCourses;

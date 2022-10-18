@@ -39,7 +39,11 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
       if (data?.getQuestionBankQuestions)
-        setQbQuestions(data.getQuestionBankQuestions?.filter((q) => q?.Status === 'Y') || []);
+        setQbQuestions(
+          data.getQuestionBankQuestions
+            ?.filter((q) => q?.Status === 'Y')
+            ?.sort((c1, c2) => c2?.CreatedAt - c1?.CreatedAt) || []
+        );
     });
   }, [questionBankId]);
 
@@ -148,7 +152,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         title="View Question"
         popUpState={[popUpState, udpatePopUpState]}>
         <>
-          <QuestionOptionView questionData={viewQuestion} showType="difficulty" />
+          <QuestionOptionView showAnswer={true} questionData={viewQuestion} showType="difficulty" />
 
           <div style={{ float: 'right' }}>
             <ToolTip

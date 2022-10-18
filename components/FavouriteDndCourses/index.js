@@ -33,6 +33,8 @@ export default function FavouriteDndCourses() {
     isSaveDisabled
   } = useHandleCourseAssign();
 
+  const ASSIGNED_ROLE = ['cohort', 'admin'];
+
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const userData = useRecoilValue(UserStateAtom);
@@ -174,8 +176,11 @@ export default function FavouriteDndCourses() {
   }
 
   useEffect(() => {
-    const myAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'self');
-    const adminAssignedCourses = dropped.filter((course) => course?.added_by?.role == 'admin');
+    const myAssignedCourses = dropped?.filter((course) => course?.added_by?.role == 'self');
+    // console.log(dropped, 'added');
+    const adminAssignedCourses = dropped?.filter((course) =>
+      ASSIGNED_ROLE.includes(course?.added_by?.role?.toLowerCase())
+    );
     setDroppedByMe(myAssignedCourses);
     setDroppedByAdmin(adminAssignedCourses);
   }, [dropped]);
@@ -377,7 +382,7 @@ export default function FavouriteDndCourses() {
 
               <div className={styles.cardContainer}>
                 {droppedByAdmin?.slice(0, isShowAllAdmin ? dropped?.length : 2)?.map((course) => {
-                  if (course?.added_by?.role !== 'admin') return;
+                  // if (course?.added_by?.role !== 'admin') return;
                   if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
 
                   if (!isCoursePresent?.adminAdded)

@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -111,7 +112,8 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
-      if (data?.getQuestionBankQuestions) setQbQuestions(data.getQuestionBankQuestions);
+      if (data?.getQuestionBankQuestions)
+        setQbQuestions(sortArrByKeyInOrder(data.getQuestionBankQuestions, 'CreatedAt', false));
     });
   }, [metaData.qbId]);
 

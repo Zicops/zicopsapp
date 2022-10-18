@@ -18,8 +18,9 @@ export default function useCohortUserData() {
       userQueryClient
     );
     if (!resUsers?.getCohortUsers?.cohorts?.length) return;
-    const cohortUsers = resUsers?.getCohortUsers?.cohorts;
-    if (cohortDetails) return cohortUsers;
+    const _cohortUsers = resUsers?.getCohortUsers?.cohorts;
+    if (cohortDetails) return _cohortUsers;
+    const cohortUsers = _cohortUsers?.filter((user) => user?.membership_status?.toLowerCase() === 'active');
     const cohortUserIds = cohortUsers?.map((item) => item?.user_id);
     const cohortUserData = [];
 
@@ -41,7 +42,8 @@ export default function useCohortUserData() {
             name: `${userList[i]?.first_name} ${userList[i]?.last_name}`,
             email: userList[i]?.email,
             first_name: userList[i]?.first_name,
-            last_name: userList[i]?.last_name
+            last_name: userList[i]?.last_name,
+            ...cohortUsers[j]
           });
           break;
         }

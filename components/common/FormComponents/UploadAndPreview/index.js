@@ -20,7 +20,8 @@ const UploadAndPreview = ({
   tooltipTitle,
   imageUrl = null,
   uploadedFile = null,
-  closePopUp = () => {}
+  closePopUp = () => {},
+  isDisabled = false
 }) => {
   const [image, setImage] = useState(uploadedFile);
   const [preview, setPreview] = useState('');
@@ -132,6 +133,7 @@ const UploadAndPreview = ({
           ref={imgRef}
           style={{ display: 'none' }}
           type="file"
+          disabled={isDisabled}
         />
         {!initialImage && (
           <>
@@ -139,14 +141,13 @@ const UploadAndPreview = ({
                 Upload Photo
               </button>
             {description && <span className={`${styles.description}`}>{description}</span>}
-              <button className={`${styles.btn2}`} onClick={handleClick} disabled={!image}>
-                Preview
-              </button>
+            <button className={`${styles.btn2}`} onClick={handleClick} disabled={!image}>
+              Preview
+            </button>
             {isRemove && (
-                <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image}>
-                  Remove
-                </button>
-            )}
+              <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image || isDisabled}>
+                Remove
+              </button>
           </>
         )}
         <Dialog

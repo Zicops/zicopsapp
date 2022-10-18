@@ -25,7 +25,7 @@ import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import Loader from '@/components/common/Loader';
 
-const CohortMaster = ({ isEdit = false }) => {
+const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
   const { getCohortManager } = useCohortUserData();
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
   const router = useRouter();
@@ -79,6 +79,7 @@ const CohortMaster = ({ isEdit = false }) => {
       const managerList = formatUsers(userList);
       return setCohortManager([...managerList]);
     }
+    // if(isReadOnly) return console.log(router?.query)
     const { cohortId } = router?.query;
     if (!cohortId) return;
     const resCohort = await loadQueryDataAsync(
@@ -120,7 +121,8 @@ const CohortMaster = ({ isEdit = false }) => {
     value: selectedManagers,
     isSearchEnable: true,
     isMulti: true,
-    menuPlacement: 'top'
+    menuPlacement: 'top',
+    isDisabled:isReadOnly
   };
 
   function handleMulti(e, state, setState, inputName = null) {
@@ -141,8 +143,10 @@ const CohortMaster = ({ isEdit = false }) => {
           label: 'Cohort Name:',
           placeholder: 'Enter Cohort Name (Upto 20 characters)',
           value: cohortData?.cohort_name,
-          maxLength: 20
-        }}
+          maxLength: 20,
+          isDisabled:isReadOnly
+        }
+      }
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);
         }}
@@ -156,7 +160,8 @@ const CohortMaster = ({ isEdit = false }) => {
           label: 'Cohort Code:',
           placeholder: 'Enter Cohort Code (Upto 10 characters)',
           value: cohortData?.cohort_code,
-          maxLength: 10
+          maxLength: 10,
+          isDisabled:isReadOnly
         }}
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);
@@ -170,6 +175,7 @@ const CohortMaster = ({ isEdit = false }) => {
           label: 'Type:',
           placeholder: 'Select Cohort Type(Open/Close)',
           options: difficultyOptions,
+          isDisabled:isReadOnly,
           value: {
             value: cohortData?.cohort_type,
             label: cohortData?.cohort_type
@@ -188,7 +194,8 @@ const CohortMaster = ({ isEdit = false }) => {
           label: 'Description:',
           placeholder: 'Enter Description (Upto 160 characters)',
           value: cohortData?.description,
-          maxLength: 160
+          maxLength: 160,
+          isDisabled:isReadOnly
         }}
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);
@@ -211,6 +218,7 @@ const CohortMaster = ({ isEdit = false }) => {
         tooltipTitle={ADMIN_USERS.userCohort.cohortMaster}
         imageUrl={cohortData?.image_url}
         handleChange={setImage}
+        isDisabled={isReadOnly}
       />
     </>
   );

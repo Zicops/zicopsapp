@@ -68,7 +68,7 @@ export default function TopicPopUp({
   const uploadStatus = useRecoilValue(uploadStatusAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
-  const assessmentData = useAddAssessment(editTopic?.id, setEditTopic);
+  const assessmentData = useAddAssessment(editTopic, setEditTopic);
 
   useEffect(() => {
     if (isEdit && !isPopUpDataPresent) setIsPopUpDataPresent(true);

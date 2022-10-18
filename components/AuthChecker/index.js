@@ -1,14 +1,27 @@
 import { GIBBERISH_VALUE_FOR_LOGIN_STATE, PUBLIC_PATHS } from '@/helper/constants.helper';
 import { parseJson } from '@/helper/utils.helper';
+import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
+import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 const AuthChecker = ({ children }) => {
+  const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
+
   const router = useRouter();
   const [authorized, setAuthorized] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const { logOut } = useAuthUserContext();
+
+  function logUserOut() {
+    setUserDataGlobal(getUserGlobalDataObj());
+    setUserProfileData(getUserObject());
+
+    logOut();
+  }
 
   // https://stackoverflow.com/questions/20325763/browser-sessionstorage-share-between-tabs
   useEffect(() => {
@@ -17,13 +30,13 @@ const AuthChecker = ({ children }) => {
       if (!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE)) {
         if (!!PUBLIC_PATHS?.find((route) => router?.asPath?.includes(route))) return;
         if (isLoggedIn != null) {
-          logOut();
+          logUserOut();
           return setIsLoggedIn(null);
         }
 
         return setIsLoggedIn((prev) => {
           if (prev === 1) {
-            logOut();
+            logUserOut();
             return null;
           }
 
@@ -100,9 +113,12 @@ const AuthChecker = ({ children }) => {
     // redirect to login page if accessing a private page and not logged in
     const path = url.split('?')[0];
     // console.log(path);
-    if (!!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE)) return setAuthorized(true);
 
     const userData = parseJson(sessionStorage.getItem('loggedUser'));
+    // if (!userData?.is_verified && !PUBLIC_PATHS.includes(path) && !path?.includes('account-setup'))
+    //   return router.push('/account-setup');
+
+    if (!!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE)) return setAuthorized(true);
 
     if (!userData && !PUBLIC_PATHS.includes(path)) {
       //this is temporary will delete later

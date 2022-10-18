@@ -1,13 +1,14 @@
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useQuery } from '@apollo/client';
 import Router from 'next/router';
-import ZicopsTable from '../../common/ZicopsTable';
-import { TableResponsiveRows } from '../../../helper/utils.helper';
-import { useState, useEffect } from 'react';
-import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { CourseTypeAtom } from '@/state/atoms/module.atoms';
+import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
+import { TableResponsiveRows } from '../../../helper/utils.helper';
+import ZicopsTable from '../../common/ZicopsTable';
 
 const columns = [
   {
@@ -89,7 +90,11 @@ function MyLatestCourseList({ time }) {
     client: queryClient
   });
 
-  let latestCourses = data?.latestCourses.courses?.filter((c) => c?.is_active);
+  let latestCourses = sortArrByKeyInOrder(
+    data?.latestCourses.courses?.filter((c) => c?.is_active),
+    'created_at',
+    false
+  );
 
   return (
     <ZicopsTable

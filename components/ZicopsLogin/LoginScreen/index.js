@@ -43,7 +43,7 @@ const LoginScreen = ({ setPage }) => {
   const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
 
   useEffect(() => {
-    if (sessionStorage?.length && userData?.id) return router.push('/');
+    if (sessionStorage?.length && userData?.id && userData?.is_verified) return router.push('/');
   }, [userData?.id]);
 
   const handleEmail = (e) => {

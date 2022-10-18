@@ -47,7 +47,9 @@ const UserCoursesTab = () => {
     const userCourses = await getUserCourseData(99999);
     //  console.log(userCourses);
     if (userCourses?.length) {
-      setCourseState(userCourses,'completedPercentage', 100, setOnGoingCourses, 'not');
+      // setCourseState(userCourses,'completedPercentage', 100, setOnGoingCourses, 'not');
+      const onGCourses = userCourses?.filter((course)=> course?.completedPercentage > 0 && course?.completedPercentage < 100)
+      setOnGoingCourses([...onGCourses],setLoading(false));
       setCourseState(userCourses, 'completedPercentage', 100, setCompletedCourses);
       setCourseState(userCourses, 'added_by', 'self', setAddedCourses);
       setCourseState(userCourses, 'added_by', 'self', setAssignedCourses, 'not');
