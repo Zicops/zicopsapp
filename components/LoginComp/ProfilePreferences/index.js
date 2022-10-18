@@ -30,7 +30,9 @@ const ProfilePreferences = ({
   setSelected,
   hideBack = false,
   customStyle = [],
-  customClass
+  customClass,
+  isLearnerSide = false,
+  closePopUp = ()=>{}
 }) => {
   const [vidIsOpen, setVidIsOpen] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
@@ -311,8 +313,15 @@ const ProfilePreferences = ({
               Next
             </Button>
           ) : (
-            <Button
-              disabled={data?.length > 5}
+            <>{isLearnerSide&&(<Button
+            variant={'contained'}
+            className={`${styles.input_margin_transform}`}
+            onClick={() => {
+              closePopUp(false);
+            }}>
+            Close
+          </Button>)}<Button
+              disabled={data?.length > 5 || isLearnerSide}
               variant={'contained'}
               className={`${styles.input_margin_transform}`}
               onClick={() => {
@@ -320,6 +329,7 @@ const ProfilePreferences = ({
               }}>
               Skip
             </Button>
+            </>
           )}
         </div>
         {!!vidIsOpen && (
