@@ -17,7 +17,7 @@ export default function MyUser({ getUser }) {
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
 
-  const { newUserAboutData, setNewUserAboutData, updateAboutUser, isFormCompleted } =
+  const { newUserAboutData, setNewUserAboutData, updateAboutUser,updateUserLsp , isFormCompleted } =
     useUpdateUserAboutData();
 
   const [isLoading, setLoading] = useState(true);
@@ -28,8 +28,8 @@ export default function MyUser({ getUser }) {
   useEffect(async () => {
     setLoading(true);
 
-    const usersData = await getUsersForAdmin();
-    // console.log(usersData);
+    const usersData = await getUsersForAdmin(true);
+    console.log(usersData);
 
     if (usersData?.error) {
       setLoading(false);
@@ -163,7 +163,7 @@ export default function MyUser({ getUser }) {
           title={`Are you sure you want to disable user with email ${newUserAboutData?.email}`}
           btnObj={{
             handleClickLeft: async () => {
-              await updateAboutUser();
+              await updateUserLsp();
               setDisableAlert(false);
             },
             handleClickRight: () => setDisableAlert(false)

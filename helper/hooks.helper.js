@@ -1,5 +1,5 @@
 import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
-import { UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
+import { UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_LEARNINGSPACE_MAP, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
   GET_USER_COURSE_MAPS,
@@ -458,6 +458,8 @@ export default function useUserCourseData() {
 export function getUserAboutObject(data = {}) {
   return {
     id: data?.id || null,
+    user_id:data?.user_id || null ,
+    user_lsp_id: data?.user_lsp_id || null ,
     first_name: data?.first_name || '',
     last_name: data?.last_name || '',
     status: data?.status || null,
@@ -490,6 +492,9 @@ export function useUpdateUserAboutData() {
   // recoil
   const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [updateLsp, { error: createLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
+    client: userClient
+  });
 
   // local state
   const [multiUserArr, setMultiUserArr] = useState([]);
@@ -521,6 +526,26 @@ export function useUpdateUserAboutData() {
         newUserAboutData?.gender
     );
   }, [newUserAboutData]);
+
+  async function updateUserLsp(userData = null) {
+    userData = userData ? userData : newUserAboutData;
+    const sendLspData = {
+      user_id: userData?.id,
+      user_lsp_id: userData?.user_lsp_id,
+      lsp_id: userData?.lsp_id || LEARNING_SPACE_ID,
+      status: 'Disable',
+    };
+
+    console.log(sendLspData, 'updateUserLearningSpaceDetails');
+
+    let isError = false;
+    const res = await updateLsp({ variables: sendLspData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
+    });
+   console.log(res);
+  }
 
   async function updateAboutUser(userData = null) {
     userData = userData ? userData : newUserAboutData;
@@ -579,7 +604,8 @@ export function useUpdateUserAboutData() {
     setMultiUserArr,
     isFormCompleted,
     updateAboutUser,
-    updateMultiUserAbout
+    updateMultiUserAbout , 
+    updateUserLsp
   };
 }
 
