@@ -147,7 +147,7 @@ const UploadAndPreview = ({
             {isRemove && (
               <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image || isDisabled}>
                 Remove
-              </button>
+              </button>)}
           </>
         )}
         <Dialog
