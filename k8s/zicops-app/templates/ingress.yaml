@@ -7,6 +7,9 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 500m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '180'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '180'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '180'
     nginx.ingress.kubernetes.io/configuration-snippet: |
       set $csp_image_src_value "'self' data: https://googleapis.com https://storage.googleapis.com";
       set $csp_media_src_value "'self' data: blob: https://googleapis.com https://storage.googleapis.com";      
