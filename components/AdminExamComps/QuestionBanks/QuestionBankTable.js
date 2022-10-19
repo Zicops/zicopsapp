@@ -1,3 +1,4 @@
+import { CUSTOM_TOOLTIP_STYLE } from '@/components/common/CustomTooltip/customTooltip.helper';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
@@ -176,8 +177,15 @@ export default function QuestionBankTable({ isEdit = false }) {
       />
 
       {/* add question bank pop up */}
-      <PopUp title="Add Question Bank" popUpState={[addPopUp, setAddPopUp]} isFooterVisible={false}>
-        <AddQuestionBank closePopUp={() => setAddPopUp(false)} />
+      <PopUp
+        title="Add Question Bank"
+        popUpState={[addPopUp, setAddPopUp]}
+        isFooterVisible={false}
+        tooltipCloseBtnTitle={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.crossBtn}>
+        <AddQuestionBank
+          closePopUp={() => setAddPopUp(false)}
+          customTooltipStyle={CUSTOM_TOOLTIP_STYLE}
+        />
       </PopUp>
 
       {/* edit question bank pop up */}
@@ -185,7 +193,11 @@ export default function QuestionBankTable({ isEdit = false }) {
         title="Edit Question Bank"
         popUpState={[editPopUp, setEditPopUp]}
         isFooterVisible={false}>
-        <AddQuestionBank isEdit={true} closePopUp={() => setEditPopUp(false)} />
+        <AddQuestionBank
+          isEdit={true}
+          closePopUp={() => setEditPopUp(false)}
+          customTooltipStyle={CUSTOM_TOOLTIP_STYLE}
+        />
       </PopUp>
     </>
   );

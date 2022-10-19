@@ -1,4 +1,5 @@
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -108,7 +109,10 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
             setSectionData();
             udpateAddQuestionMetaDataPopUp(true);
           }}
-          tooltipText="Create and add new question"
+          tooltipText={
+            ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionsTab.addSection.addQuestionBtn
+          }
+          tooltipPlacement="right"
         />
       </BlackBox>
     </>

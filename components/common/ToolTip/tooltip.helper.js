@@ -118,7 +118,10 @@ export const ADMIN_EXAMS = {
           removeBtnEmpty: 'No File Uploaded',
           cancelBtn: 'Cancel and go back to Questions list',
           saveBtn: 'Save Uploaded Questions',
-          uploadFile: 'Upload file'
+          uploadFile: 'Upload file',
+          accordionOpen: 'Expand to view details',
+          accordionClose: 'Collapse',
+          editModeBtn: 'Open in edit mode to make changes'
         }
       }
     }
@@ -187,7 +190,10 @@ export const ADMIN_EXAMS = {
         addQuestionBtn: 'Create and add new question',
         addSectionBtn: 'Create and add new section',
         cancelBtn: 'Cancel and go back to question paper list',
-        updateBtn: 'Save new changes to this question paper'
+        updateBtn: 'Save new changes to this question paper',
+        addSection: {
+          addQuestionBtn: 'Add Questions to this sections'
+        }
       },
       addQuestionMetaData: {
         existingQuestionBank: 'Select questions from existing question bank',
@@ -228,11 +234,11 @@ export const ADMIN_EXAMS = {
 
 export const ADMIN_COURSES = {
   zicopsCourses: {
-    addBtn: 'Add Zicops Courses'
+    addBtn: ''
   },
   myCourses: {
-    addBtn: 'Add My Courses',
-    editBtn: 'Edit Courses',
+    addBtn: '',
+    editBtn: '',
     courseMaster: {
       active: '',
       display: '',
@@ -242,13 +248,13 @@ export const ADMIN_COURSES = {
       updateBtn: ''
     },
     details: {
-      dragNdrop: 'Drag and drop categories/sub-categories',
-      previewCourse: 'Preview uploaded course',
-      removeCourse: 'Remove uploaded course',
-      previewCourseImage: 'Preview uploaded course display image',
-      removeCourseImage: 'Remove uploaded course display image',
-      previewCoursePicture: 'Preview uploaded course page display picture',
-      removeCoursePicture: 'Remove uploaded course page display picture',
+      dragNdrop: '',
+      previewCourse: '',
+      removeCourse: '',
+      previewCourseImage: '',
+      removeCourseImage: '',
+      previewCoursePicture: '',
+      removeCoursePicture: '',
       nextBtn: '',
       previewBtn: '',
       cancelBtn: '',
@@ -276,46 +282,46 @@ export const ADMIN_COURSES = {
     }
   },
   categories: {
-    addBtn: 'Add Categories'
+    addBtn: ''
   },
   addSubCategories: {
-    addBtn: 'Add Sub Categories'
+    addBtn: ''
   },
   sidebarData: {
-    zicopsCourses: 'view zicops courses',
-    myCourses: 'view all my courses',
-    categories: 'view all categories',
-    addSubCategories: 'view all sub-categories',
-    dashboard: 'view dashboard'
+    zicopsCourses: '',
+    myCourses: '',
+    categories: '',
+    addSubCategories: '',
+    dashboard: ''
   }
 };
 
 export const ADMIN_USERS = {
   sidebarData: {
-    myUsers: 'View all your users',
-    userCohort: 'View user cohorts'
+    myUsers: '',
+    userCohort: ''
   },
   myUsers: {
-    addBtn: 'Add Users',
-    viewBtn: 'View user details',
-    editBtn: 'Edit user details',
-    disableBtn: 'Disable user'
+    addBtn: '',
+    viewBtn: '',
+    editBtn: '',
+    disableBtn: ''
   },
   userCohort: {
-    addBtn: 'Add User Cohorts',
-    viewBtn: 'View Cohort',
-    editBtn: 'Edit Cohort',
-    downloadBtn: 'Download Cohort',
+    addBtn: '',
+    viewBtn: '',
+    editBtn: '',
+    downloadBtn: '',
     cohortMaster: {
-      uploadBtn: 'Upload your recent photo',
-      previewBtn: 'Preview image',
-      removeBtn: 'Delete and upload new image',
+      uploadBtn: '',
+      previewBtn: '',
+      removeBtn: '',
       cancelBtn: '',
       saveBtn: ''
     },
     users: {
-      addUserToCohort: 'Add User to Cohort list',
-      editBtn: 'Edit user details'
+      addUserToCohort: '',
+      editBtn: ''
     }
   }
 };
@@ -326,69 +332,69 @@ export const LEARNER_HOME = {
 };
 
 export const LEARNER_SELF_LANDING = {
-  courseFolder: 'view your courses',
-  singleCard: 'assign this course to yourself',
-  calendarPreviousBtn: 'View previous month',
-  calendarNextBtn: 'View next month'
+  courseFolder: '',
+  singleCard: '',
+  calendarPreviousBtn: '',
+  calendarNextBtn: ''
 };
 
 export const LEARNER_CLASSROOM = {
-  bookNow: 'Book your seat in this classroom',
-  seeMore: 'view more classroom courses'
+  bookNow: '',
+  seeMore: ''
 };
 
 export const LEARNER_COURSES = {
-  registerBtn: 'register your seat in this classroom',
-  heartIcon: 'add to your favourite',
-  resources: 'view resources of this topic',
-  playerBar: 'your topic video',
-  topicResources: 'view topic resources',
-  topicNotes: 'view your topic notes and bookmarks',
-  notesAddBtn: 'add new note',
+  registerBtn: '',
+  heartIcon: '',
+  resources: '',
+  playerBar: '',
+  topicResources: '',
+  topicNotes: '',
+  notesAddBtn: '',
   videoPlayer: {
-    playBtn: 'play video',
-    pauseBtn: 'pause video',
-    nextVideoBtn: 'play next video',
-    previousVideoBtn: 'play previous video',
+    playBtn: '',
+    pauseBtn: '',
+    nextVideoBtn: '',
+    previousVideoBtn: '',
     forwardsBtn: '',
     backwardsBtn: '',
-    replayBtn: 'replay video again',
-    soundBar: 'change volume levels'
+    replayBtn: '',
+    soundBar: ''
   },
   videoTopbar: {
-    backBtn: 'close video player',
-    languageBtn: 'language and subtitles',
-    resourcesBtn: 'topic resources',
-    discussionBtn: 'discussions',
+    backBtn: '',
+    languageBtn: '',
+    resourcesBtn: '',
+    discussionBtn: '',
     bookmarksBtn: {
-      view: 'view your bookmarks',
-      addBtn: 'add bookmark',
-      timeStamp: 'bookmark time stamp'
+      view: '',
+      addBtn: '',
+      timeStamp: ''
     },
     notesBtn: {
-      view: 'view your notes',
-      addBtn: 'add notes'
+      view: '',
+      addBtn: ''
     },
-    quizBtn: 'Quiz'
+    quizBtn: ''
   }
 };
 
 export const LEARNER_LABS = {
-  arrowKeyUp: 'move pacman up',
-  arrowKeyDown: 'move pacman down',
-  arrowKeyLeft: 'move pacman left',
-  arrowKeyRight: 'move pacman right',
-  enterBtnDisabled: 'move pacman to door of a room',
-  enterBtnActive: 'enter in the lab',
-  roomReactJs: 'go to React Js labs',
-  roomCpp: 'go to C++ labs',
-  roomAngularJs: 'go to Angular Js labs',
-  roomTailwind: 'go to Tailwind CSS labs',
-  roomGraphQL: 'go to GraphQL labs',
-  roomNodeJs: 'go to Node Js labs',
-  roomTensorFlow: 'go to TensorFlow labs',
-  roomHtml: 'go to HTML labs',
-  roomPython: 'go to Python labs',
-  roomPhp: 'go to PHP labs',
-  pacMan: 'Hello! I am pacman'
+  arrowKeyUp: '',
+  arrowKeyDown: '',
+  arrowKeyLeft: '',
+  arrowKeyRight: '',
+  enterBtnDisabled: '',
+  enterBtnActive: '',
+  roomReactJs: '',
+  roomCpp: '',
+  roomAngularJs: '',
+  roomTailwind: '',
+  roomGraphQL: '',
+  roomNodeJs: '',
+  roomTensorFlow: '',
+  roomHtml: '',
+  roomPython: '',
+  roomPhp: '',
+  pacMan: ''
 };

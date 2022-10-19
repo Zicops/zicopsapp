@@ -124,7 +124,8 @@ export default function MyQuestionBanks() {
       <PopUp
         title="Edit Question Bank"
         popUpState={[editPopUp, setEditPopUp]}
-        isFooterVisible={false}>
+        isFooterVisible={false}
+        tooltipCloseBtnTitle={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.crossBtn}>
         <AddQuestionBank isEdit={true} closePopUp={() => setEditPopUp(false)} />
       </PopUp>
     </>

@@ -1,6 +1,7 @@
 import { array, bool, func, oneOf, shape, string } from 'prop-types';
 import Popup from 'reactjs-popup';
 import ConfirmPopUp from '../ConfirmPopUp';
+import ToolTip from '../ToolTip';
 import useHandlePopUp from './Logic/useHandlePopUp';
 import styles from './popUp.module.scss';
 
@@ -13,7 +14,8 @@ export default function PopUp({
   positionLeft = '',
   size = 'medium',
   customStyles = {},
-  children
+  children,
+  tooltipCloseBtnTitle
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState);
 
@@ -47,7 +49,9 @@ export default function PopUp({
                   if (closeBtn.disabled) return;
                   closePopUp();
                 }}>
-                <img src="/images/circular-cross.png" alt="" />
+                <ToolTip title={tooltipCloseBtnTitle}>
+                  <img src="/images/circular-cross.png" alt="" />
+                </ToolTip>
               </div>
             </div>
 

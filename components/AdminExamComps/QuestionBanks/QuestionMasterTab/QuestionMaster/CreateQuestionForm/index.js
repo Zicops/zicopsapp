@@ -1,4 +1,5 @@
 import CustomTooltip from '@/components/common/CustomTooltip';
+import { CUSTOM_TOOLTIP_STYLE } from '@/components/common/CustomTooltip/customTooltip.helper';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
@@ -59,6 +60,14 @@ export default function CreateQuestionForm({ data, isEdit }) {
             <div className={styles.container}>
               <Accordion
                 title={d.question.description}
+                tooltipTitleOpen={
+                  ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                    .uploadQuestionScreen.accordionOpen
+                }
+                tooltipTitleClose={
+                  ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                    .uploadQuestionScreen.accordionClose
+                }
                 content={
                   <div className={`${styles.questionPreview}`}>
                     <QuestionOptionView
@@ -68,7 +77,14 @@ export default function CreateQuestionForm({ data, isEdit }) {
                     />
 
                     <div style={{ textAlign: 'right', marginRight: '10px' }}>
-                      <Button text={'Edit'} clickHandler={() => activateEdit(index)} />
+                      <Button
+                        text={'Edit'}
+                        clickHandler={() => activateEdit(index)}
+                        tooltipTitle={
+                          ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                            .uploadQuestionScreen.editModeBtn
+                        }
+                      />
                     </div>
                   </div>
                 }
@@ -187,6 +203,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
                     info={
                       ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.selectCheckbox
                     }
+                    customBtnStyle={{ margin: 0 }}
                   />
                 </span>
                 {Array(NUMBER_OF_OPTIONS)

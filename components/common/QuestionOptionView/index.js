@@ -78,7 +78,6 @@ export default function QuestionOptionView({
                 info={
                   ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.difficultyLevel
                 }
-                customStyle={CUSTOM_TOOLTIP_STYLE}
               />
             </span>
           )}

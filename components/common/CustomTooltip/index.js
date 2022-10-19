@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './customTooltip.module.scss';
 
-const CustomTooltip = ({ info, image, customStyle, customColor }) => {
+const CustomTooltip = ({ info, image, customStyle, customColor, customBtnStyle }) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,8 @@ const CustomTooltip = ({ info, image, customStyle, customColor }) => {
           e.stopPropagation();
           setShow(true);
         }}
-        className={styles.infoButton}>
+        className={styles.infoButton}
+        style={customBtnStyle}>
         {/* <img src="/images/svg/error_outline_dark.svg" alt="tooltip icon" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"

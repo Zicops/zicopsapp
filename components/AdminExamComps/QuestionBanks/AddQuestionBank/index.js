@@ -1,5 +1,4 @@
 import CustomTooltip from '@/components/common/CustomTooltip';
-import { CUSTOM_TOOLTIP_STYLE } from '@/components/common/CustomTooltip/customTooltip.helper';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
@@ -18,7 +17,12 @@ import LabeledInput from '../../../common/FormComponents/LabeledInput';
 import useHandleQuestionBank from '../Logic/useHandleQuestionBank';
 import styles from './addQuestionBank.module.scss';
 
-export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = true }) {
+export default function AddQuestionBank({
+  isEdit = false,
+  closePopUp,
+  isPopUp = true,
+  customTooltipStyle
+}) {
   const [loadQBQuestions, { error: errorQBQuestionsData }] = useLazyQuery(
     GET_QUESTION_BANK_QUESTIONS,
     { client: queryClient }
@@ -96,7 +100,10 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           label: (
             <>
               Category:
-              <CustomTooltip info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.category} />
+              <CustomTooltip
+                info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.category}
+                customStyle={customTooltipStyle}
+              />
             </>
           ),
           placeholder: 'Select Category',
@@ -122,7 +129,10 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
           label: (
             <>
               Sub-Category:
-              <CustomTooltip info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addSubCategory} />
+              <CustomTooltip
+                info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addSubCategory}
+                customStyle={customTooltipStyle}
+              />
             </>
           ),
           placeholder: 'Select Sub-Category',
