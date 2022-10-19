@@ -60,7 +60,7 @@ export default function DropDownSubMenu({
                 key={title}
                 className={`${styles.subMenuItem} ${
                   elements.customStyle ? elements.customClass : styles[`dropdown_item_${index + 1}`]
-                }`}
+                } ${title?.length > 16 ? styles.fontSizeSmall : ''}`}
                 style={customStyles}
                 onClick={(e) => {
                   // e.stopPropagation();
