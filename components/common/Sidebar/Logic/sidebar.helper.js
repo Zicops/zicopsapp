@@ -1,4 +1,5 @@
 import { ADMIN_COURSES, ADMIN_EXAMS, ADMIN_USERS } from '../../ToolTip/tooltip.helper';
+import { PRODUCT_TOUR_FLOW } from '../../ProductTour/productTour.flow';
 
 export const courseSidebarData = {
   image: '/images/CourseManagement.png',
@@ -44,7 +45,8 @@ export const examSidebarData = {
     {
       title: 'My Question Banks',
       link: '/admin/exams/my-question-bank',
-      description: ADMIN_EXAMS.sidebarData.myQuestionBanks
+      description: ADMIN_EXAMS.sidebarData.myQuestionBanks,
+      tourId: PRODUCT_TOUR_FLOW?.[1]?.id
     },
     {
       title: 'Zicops Question Papers',
@@ -54,7 +56,8 @@ export const examSidebarData = {
     {
       title: 'My Question Papers',
       link: '/admin/exams/my-question-papers',
-      description: ADMIN_EXAMS.sidebarData.myQuestionPapers
+      description: ADMIN_EXAMS.sidebarData.myQuestionPapers,
+      tourId: PRODUCT_TOUR_FLOW?.[3]?.id
     },
     {
       title: 'Zicops Exams',
@@ -64,7 +67,8 @@ export const examSidebarData = {
     {
       title: 'My Exams',
       link: '/admin/exams/my-exams',
-      description: ADMIN_EXAMS.sidebarData.myExams
+      description: ADMIN_EXAMS.sidebarData.myExams,
+      tourId: PRODUCT_TOUR_FLOW?.[5]?.id
     }
   ]
 };

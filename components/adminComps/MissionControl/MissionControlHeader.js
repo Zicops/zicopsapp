@@ -2,18 +2,26 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Select from 'react-select';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { SiteMapAtom } from '../../../state/atoms/sitemap.atom';
 import styles from './missionControl.module.scss';
 import Sitemap from '../../common/AdminHeader/Sitemap';
 import PopUp from '../../common/PopUp';
 import ToolTip from '@/components/common/ToolTip';
+import { ProductTourVisible } from '@/state/atoms/productTour.atom';
+import Dropdown from '@/components/common/Dropdown';
 
 export default function MissionControlHeader() {
   const [showSitemap, setShowSitemap] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const siteMap = useRecoilValue(SiteMapAtom);
   const router = useRouter();
+  const [viewButtons, setViewButtons] = useState(false);
+  const [viewProductTour, setViewProductTour] = useRecoilState(ProductTourVisible);
+
+  const handleClick = () => {
+    setViewProductTour(true);
+  };
 
   const customStyles = {
     container: (provided, state) => ({
@@ -110,7 +118,7 @@ export default function MissionControlHeader() {
     <>
       <div className="mission_control_header">
         <div className="icons">
-          <div className={`rightside_icon first_icon ${styles.searchBar}`}>
+          {/* <div className={`rightside_icon first_icon ${styles.searchBar}`}>
             {showSearch && (
               <Select
                 options={siteMap.map((val) => {
@@ -141,6 +149,32 @@ export default function MissionControlHeader() {
               width={'40px'}
               onClick={() => setShowSearch(true)}
             />
+          </div> */}
+          <div className="rightside_icon">
+            <ToolTip title="Click here to know everythng about Admin Controls" placement="bottom">
+              <span>
+                <Image
+                  src="/images/svg/dvr.svg"
+                  className="rightside_icon"
+                  alt=""
+                  height={'40px'}
+                  width={'40px'}
+                  onClick={() => setViewButtons(!viewButtons)}
+                />
+              </span>
+            </ToolTip>
+            {viewButtons && (
+              <div className={styles.productTour_btn}>
+                <button onClick={handleClick}>Admin Tour</button>
+                <button>Documentation</button>
+                {/* <Dropdown
+                  options={floorOptions}
+                  handleChange={(e) => setFloor(e)}
+                  value={floor}
+                  customStyles={{ width: '100%' }}
+                /> */}
+              </div>
+            )}
           </div>
           <ToolTip title="Settings" placement="top-start">
             <div className="rightside_icon">

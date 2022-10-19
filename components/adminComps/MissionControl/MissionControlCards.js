@@ -1,7 +1,11 @@
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_HOME } from '@/components/common/ToolTip/tooltip.helper';
+import ProductTour from '@/components/common/ProductTour';
+import ProductTourFooter from '@/components/common/ProductTour/ProductTourFooter';
+import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRecoilValue } from 'recoil';
 
 const Card = ({ image, text, width, tooltipTitle }) => {
   return (
@@ -51,6 +55,7 @@ const Card = ({ image, text, width, tooltipTitle }) => {
   );
 };
 const MissionControlCards = () => {
+  const showProductTour = useRecoilValue(ProductTourVisible);
   return (
     <>
       <div className="mission_control_body">
@@ -120,6 +125,7 @@ const MissionControlCards = () => {
             />
           </div>
         </div>
+        {showProductTour && <ProductTour showInfoModal={true} />}
       </div>
       <style jsx>
         {`
