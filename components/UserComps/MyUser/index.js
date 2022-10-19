@@ -112,7 +112,7 @@ export default function MyUser({ getUser }) {
       headerName: 'Status',
       flex: 0.5,
       renderCell: (params) => {
-        return <>{params?.row?.status || 'Invited'}</>;
+        return <>{params?.row?.lsp_status?.toLowerCase() === 'disable' ? 'Disable' : (params?.row?.status || 'Invited') }</>;
       }
     },
     {
