@@ -1,3 +1,5 @@
+import { PRODUCT_TOUR_FLOW } from '../../ProductTour/productTour.flow';
+
 export const courseSidebarData = {
   image: '/images/CourseManagement.png',
   heading: 'Course Management',
@@ -32,32 +34,35 @@ export const examSidebarData = {
     {
       title: 'Zicops Question Banks',
       link: '/admin/exams/zicops-question-bank',
-      description:'View Zicops Question Banks'
+      description: 'View Zicops Question Banks'
     },
     {
       title: 'My Question Banks',
       link: '/admin/exams/my-question-bank',
-      description:'View and Create your Question Banks'
+      description: 'View and Create your Question Banks',
+      tourId: PRODUCT_TOUR_FLOW?.[1]?.id
     },
     {
       title: 'Zicops Question Papers',
       link: '/admin/exams/zicops-question-papers',
-      description:'View Zicops Question Papers'
+      description: 'View Zicops Question Papers'
     },
     {
       title: 'My Question Papers',
       link: '/admin/exams/my-question-papers',
-      description:'View and Create your Question Papers'
+      description: 'View and Create your Question Papers',
+      tourId: PRODUCT_TOUR_FLOW?.[3]?.id
     },
     {
       title: 'Zicops Exams',
       link: '/admin/exams/zicops-exam',
-      description:'View Zicops Exams'
+      description: 'View Zicops Exams'
     },
     {
       title: 'My Exams',
       link: '/admin/exams/my-exams',
-      description:'View and Create your Exams'
+      description: 'View and Create your Exams',
+      tourId: PRODUCT_TOUR_FLOW?.[5]?.id
     }
   ]
 };
