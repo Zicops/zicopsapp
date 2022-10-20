@@ -89,7 +89,7 @@ const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onU
     // console.log(data);
     if (!data?.length) {
       setIsBtnDisabled(false);
-      return setToastMsg({ type: 'danger', message: 'error while adding user!' });
+      return setToastMsg({ type: 'danger', message: 'Error while adding user!' });
     }
 
     const sendCohortData = {
