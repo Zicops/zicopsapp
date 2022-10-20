@@ -151,7 +151,9 @@ export default function MissionControlHeader() {
             />
           </div> */}
           <div className="rightside_icon">
-            <ToolTip title="Click here to know everythng about Admin Controls" placement="bottom">
+            <ToolTip
+              title="Click here to know everythng about Admin Controls"
+              placement="left-start">
               <span>
                 <Image
                   src="/images/svg/dvr.svg"

@@ -155,7 +155,7 @@ export default function AddQuestionBank({
           </ToolTip>
           <ToolTip
             title={`${
-              isEdit
+              isAddQuestionBankReady
                 ? `${ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addBtnActive}`
                 : `${ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addBtnDisabled}`
             }`}
