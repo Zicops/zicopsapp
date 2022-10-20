@@ -16,9 +16,10 @@ export default function AddTopicContentForm({
   data,
   addNewTopicContent,
   isAddTopicContentReady,
-  topicContent
+  topicContent,
+  handleCancel = ()=>{}
 }) {
-  const { fullCourse } = useContext(courseContext);
+  const { fullCourse , updateCourseMaster } = useContext(courseContext);
   const { newTopicContent, newTopicVideo, setNewTopicVideo } = data;
   const { handleTopicContentInput, handleTopicVideoInput } = inputHandlers;
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -28,18 +29,31 @@ export default function AddTopicContentForm({
     setNewTopicContent({
       ...newTopicContent,
       is_default: true,
-      type: topicContent?.[0]?.type || null
+      type: topicContent?.[0]?.type || null,
+      language:null , 
     });
+
+    setNewTopicVideo({ ...newTopicVideo, file: null })
   }, []);
 
+
+  
+  let selectedLanguages = topicContent?.map((content) => content?.language) ;
+  const lanuages = [...fullCourse?.language]?.filter((lang) => 
+     !selectedLanguages?.includes(lang)
+  );
+
+
+  
   const languageOptions = [];
-  fullCourse?.language?.map((lang) => languageOptions.push({ value: lang, label: lang }));
+  lanuages?.map((lang) => languageOptions.push({ value: lang, label: lang }));
 
   const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
   const typeOptions = [];
   types?.map((type) => typeOptions.push({ value: type, label: type }));
 
   let acceptedFiles = ['.zip', '.rar', '.tar.gz'].join(', ');
+
   // .WEBM, .MPG, .MP2, .MPEG, .MPE, .MPV, .OGG, .MP4, .M4P, .M4V, .AVI, .WMV, .MOV, .QT, .FLV, .SWF, AVCHD,
   if (newTopicContent?.type === types[3]) acceptedFiles = ['.mp4'].join(', ');
 
@@ -81,7 +95,7 @@ export default function AddTopicContentForm({
         changeHandler={(e) => handleTopicContentInput(e, 'type')}
       />
 
-      {newTopicContent?.type && (
+      {newTopicContent?.type && newTopicContent?.language && (
         <>
           {/* Upload Course Video */}
           <div className={`center-element-with-flex ${styles.marginBottom}`}>
@@ -150,6 +164,12 @@ export default function AddTopicContentForm({
       )}
 
       <div className="center-element-with-flex">
+      {!!topicContent?.length &&<Button
+          text="Cancel"
+          styleClass={`${styles.topicContentSmallBtn}`}
+          // isDisabled={!isAddTopicContentReady}
+          clickHandler={()=>{handleCancel();}}
+        />}
         <Button
           text="Add"
           styleClass={`${styles.topicContentSmallBtn} ${
