@@ -5,6 +5,9 @@ import { GET_QUESTION_OPTIONS, queryClient } from 'API/Queries';
 import { array, object, oneOf } from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import CustomTooltip from '../CustomTooltip';
+import { CUSTOM_TOOLTIP_STYLE } from '../CustomTooltip/customTooltip.helper';
+import { ADMIN_EXAMS } from '../ToolTip/tooltip.helper';
 import Option from './Option';
 import styles from './questionOptionView.module.scss';
 
@@ -69,7 +72,14 @@ export default function QuestionOptionView({
 
         <section className={`${styles.questionData}`}>
           {showType === 'difficulty' && (
-            <span>Difficulty Score: {questionData?.difficulty || 0}</span>
+            <span>
+              Difficulty Score: {questionData?.difficulty || 0}{' '}
+              <CustomTooltip
+                info={
+                  ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.difficultyLevel
+                }
+              />
+            </span>
           )}
 
           {showType === 'marks' && <span>Marks: {questionData?.question_marks || 0}</span>}

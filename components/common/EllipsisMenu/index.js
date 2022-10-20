@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import ToolTip from '../ToolTip';
+import { ADMIN_USERS } from '../ToolTip/tooltip.helper';
 import styles from './ellipsisMenu.module.scss';
 
 export default function EllipsisMenu({ buttonArr = [] }) {
@@ -42,17 +44,23 @@ export default function EllipsisMenu({ buttonArr = [] }) {
       {isMenuVisible && (
         <div className={styles.dropdown}>
           <ul>
-            <li>
-              <button onClick={btn1?.handleClick}>{btn1?.text || 'View'}</button>
-            </li>
-            <li>
-              <button onClick={btn2?.handleClick}>{btn2?.text || 'Edit'}</button>
-            </li>
+            <ToolTip title={ADMIN_USERS.myUsers.viewBtn} placement="right">
+              <li>
+                <button onClick={btn1?.handleClick}>{btn1?.text || 'View'}</button>
+              </li>
+            </ToolTip>
+            <ToolTip title={ADMIN_USERS.myUsers.editBtn} placement="right">
+              <li>
+                <button onClick={btn2?.handleClick}>{btn2?.text || 'Edit'}</button>
+              </li>
+            </ToolTip>
             {btns.map((btn) => {
               return (
-                <li>
-                  <button onClick={btn?.handleClick}>{btn?.text}</button>
-                </li>
+                <ToolTip title={`${btn?.text} user`} placement="right">
+                  <li>
+                    <button onClick={btn?.handleClick}>{btn?.text}</button>
+                  </li>
+                </ToolTip>
               );
             })}
           </ul>

@@ -43,19 +43,25 @@ export default function TabContainer({
     if (index >= 0) return tabData[index].component;
     return tabData[0].component;
   }
-  let saveButtonTitle = 'Save Master details and proceed with question addition';
-  let cancelButtonTitle = 'Cancel and go back to question paper list';
-  let updateButtonTitle = 'Save new changes to this question paper';
+
+  let saveButtonTitle = '';
+  let cancelButtonTitle = '';
+  let updateButtonTitle = '';
   if (tab === 'Question Master') {
-    saveButtonTitle = 'Save Uploaded Questions';
-    cancelButtonTitle = 'Cancel and go back to Questions list';
+    saveButtonTitle = 'Save all the questions to bank';
+    cancelButtonTitle = 'Close and go back to Questions list';
   } else if (tab === 'Configuration') {
     updateButtonTitle = 'Save updated details';
     cancelButtonTitle = 'Cancel and go back to Exam list';
+  } else if (tab === 'Questions') {
+    updateButtonTitle = 'Save Changes to question paper';
+    cancelButtonTitle = 'Close and go back to question paper list';
   }
 
-  let tooltipStatus = 'Question paper details saved';
-  if (status === 'DRAFT') {
+  let tooltipStatus = '';
+  if (status === 'SAVED') {
+    tooltipStatus = 'Question paper details saved';
+  } else if (status === 'DRAFT') {
     tooltipStatus = 'Question Paper not saved';
   } else if (status === 'FAILED') {
     tooltipStatus = 'Failed to save Question paper';

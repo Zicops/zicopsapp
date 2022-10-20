@@ -1,3 +1,4 @@
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import ProductTour from '@/components/common/ProductTour';
 import { PRODUCT_TOUR_FLOW } from '@/components/common/ProductTour/productTour.flow';
 import { PROD_TOUR_ADMIN_EXAMS } from '@/components/common/ProductTour/productTour.helper';
@@ -26,7 +27,7 @@ const MyExams = () => {
           title="My Exams"
           isAddShown={true}
           pageRoute="/admin/exams/my-exams/add"
-          tooltipTitle="Create new Exam"
+          tooltipTitle={ADMIN_EXAMS.myExams.addBtn}
           isProductTooltip={showProductTourComps}
           productTooltipData={PRODUCT_TOUR_FLOW?.[4]}
           tourId={PRODUCT_TOUR_FLOW?.[4]?.id}

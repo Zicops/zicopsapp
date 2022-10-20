@@ -1,3 +1,4 @@
+import ToolTip from '@/components/common/ToolTip';
 import Image from 'next/image';
 import Button from '../Button';
 import { BOX } from '../Logic/customVideoPlayer.helper';
@@ -7,10 +8,12 @@ export default function ButtonWithBox({
   btnComp = null,
   handleClick,
   isBoxActive = false,
-  boxComponent = null
+  boxComponent = null,
+  tooltipTitle=""
 }) {
   return (
     <>
+    <ToolTip title={tooltipTitle} placement="bottom">
       <div className="position-relative">
         <Button>
           {btnImg && (
@@ -31,6 +34,7 @@ export default function ButtonWithBox({
         {/* subtitle and language element */}
         {!!isBoxActive && boxComponent && boxComponent}
       </div>
+      </ToolTip>
     </>
   );
 }

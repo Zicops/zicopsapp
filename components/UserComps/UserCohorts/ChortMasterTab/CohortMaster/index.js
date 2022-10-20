@@ -2,6 +2,7 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { useRef, useState, useEffect } from 'react';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { CohortMasterData, getCohortMasterObject } from '@/state/atoms/users.atom';
 import { useRecoilState } from 'recoil';
 import { changeHandler, getCurrentEpochTime } from '@/helper/common.helper';
@@ -214,6 +215,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
         label={'Cohort Image'}
         isRemove={true}
         description={false}
+        tooltipTitle={ADMIN_USERS.userCohort.cohortMaster}
         imageUrl={cohortData?.image_url}
         handleChange={setImage}
         isDisabled={isReadOnly}

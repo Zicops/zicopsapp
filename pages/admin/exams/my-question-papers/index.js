@@ -1,3 +1,4 @@
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import ProductTour from '@/components/common/ProductTour';
 import { PRODUCT_TOUR_FLOW } from '@/components/common/ProductTour/productTour.flow';
 import { PROD_TOUR_ADMIN_EXAMS } from '@/components/common/ProductTour/productTour.helper';
@@ -26,7 +27,7 @@ export default function MyQuestionPapers() {
           title="My Question Papers"
           isAddShown={true}
           pageRoute="/admin/exams/my-question-papers/add"
-          tooltipTitle="Create new Question Paper"
+          tooltipTitle={ADMIN_EXAMS.myQuestionPapers.addBtn}
           isProductTooltip={showProductTourComps}
           productTooltipData={PRODUCT_TOUR_FLOW?.[2]}
           tourId={PRODUCT_TOUR_FLOW?.[2]?.id}

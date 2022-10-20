@@ -7,13 +7,15 @@ import Select from 'react-select';
 import { useRecoilState } from 'recoil';
 import Sitemap from '../common/AdminHeader/Sitemap';
 import PopUp from '../common/PopUp';
+import ToolTip from '../common/ToolTip';
 import styles from './courseHead.module.scss';
 
 export default function CourseHead({
   title,
   hideCourseTypeDropdown = false,
   hidePlus = false,
-  handlePlusClick = null
+  handlePlusClick = null,
+  tooltipTitle = '' 
 }) {
   const [showSitemap, setShowSitemap] = useState(false);
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
@@ -73,9 +75,9 @@ export default function CourseHead({
             alt=""
             onClick={handlePlusClick ? handlePlusClick : gotoAddcourse}
           />
-        )}
-        <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
-        <img
+          )}
+          <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
+          <img
           src="/images/sitemap_icon.png"
           className="rightside_icon"
           alt=""

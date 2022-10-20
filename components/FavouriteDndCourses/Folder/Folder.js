@@ -1,6 +1,8 @@
 import { Box } from '@mui/material';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { IconButton } from '@material-ui/core';
+import ToolTip from '@/components/common/ToolTip';
+import { LEARNER_SELF_LANDING } from '@/components/common/ToolTip/tooltip.helper';
 
 export default function Folder({ isDrag, total, handleClick = () => {} }) {
   // let isDrag = true;
@@ -39,7 +41,9 @@ export default function Folder({ isDrag, total, handleClick = () => {} }) {
             transformOrigin: 'bottom',
             transition: 'transform 0.2s, boxShadow 0.2s'
           }}>
-          <img src={'images/frontFolder.png'} alt={'folder'} />
+          <ToolTip title={LEARNER_SELF_LANDING.courseFolder}>
+            <img src={'images/frontFolder.png'} alt={'folder'} />
+          </ToolTip>
         </Box>
         <Box
           fontWeight={600}

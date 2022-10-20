@@ -6,13 +6,11 @@ import { makeStyles } from '@material-ui/core';
 const ToolTip = ({ children, placement, title = "", image, buttonName }) => {
   const useTooltipStyles = makeStyles((theme) => ({
     tooltip: {
-      backgroundColor: '#484848',
-      outline: '1px solid #b5b5b5',
+      backgroundColor: '#4b5c6b',
     },
     arrow: {
       '&.MuiTooltip-arrow::before': {
-        background: '#484848',
-        outline: '1px solid #b5b5b5'
+        background: '#4b5c6b',
       }
     }
   }));
@@ -26,7 +24,8 @@ const ToolTip = ({ children, placement, title = "", image, buttonName }) => {
           <>
             <div
               style={{
-                fontSize: '12px',
+                fontSize: '13px',
+                fontWeight:'600',
                 padding: '5px',
                 maxWidth: '150px',
                 wordWrap: 'wrap',

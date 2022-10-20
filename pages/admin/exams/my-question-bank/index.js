@@ -1,3 +1,4 @@
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import ProductTour from '@/components/common/ProductTour';
 import { PRODUCT_TOUR_FLOW } from '@/components/common/ProductTour/productTour.flow';
 import { PROD_TOUR_ADMIN_EXAMS } from '@/components/common/ProductTour/productTour.helper';
@@ -28,7 +29,7 @@ export default function MyQuestionBanks() {
           title="My Question Banks"
           isAddShown={true}
           handleClickForPlus={() => udpatePopUpState(true)}
-          tooltipTitle="Create new Question Bank"
+          tooltipTitle={ADMIN_EXAMS.myQuestionBanks.addBtn}
           isProductTooltip={showProductTourComps}
           productTooltipData={PRODUCT_TOUR_FLOW?.[0]}
           tourId={PRODUCT_TOUR_FLOW?.[0]?.id}

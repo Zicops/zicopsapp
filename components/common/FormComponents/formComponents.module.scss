@@ -3,10 +3,12 @@
 .labeledInputWrapper {
   display: flex;
   align-items: baseline;
+
   label {
     width: 25%;
     color: $white;
   }
+
   input,
   input.inputStyles {
     padding: 10px;
@@ -21,6 +23,7 @@
       /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
       @include inputStylesFor('hasValue');
     }
+
     &:focus {
       @include inputStylesFor('focus');
     }
@@ -44,6 +47,7 @@
         }
       }
     }
+
     :global(.country.highlight) {
       background-color: $black;
     }
@@ -55,20 +59,25 @@
         background-color: inherit !important;
       }
     }
+
     &:hover {
       background-color: inherit;
     }
   }
 }
+
 .labeledDropdownWrapper {
   display: flex;
   align-items: baseline;
   flex: 1;
+
   label {
     width: 25%;
     color: $white;
+    display: flex;
   }
 }
+
 .labeledTextareaWrapper {
   display: flex;
   align-items: baseline;
@@ -91,6 +100,7 @@
       /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
       @include inputStylesFor('hasValue');
     }
+
     &:focus {
       @include inputStylesFor('focus');
     }
@@ -100,6 +110,7 @@
     }
   }
 }
+
 /* Customize the label (the container) */
 .labeledRadioCheckboxWrapper {
   position: relative;
@@ -151,11 +162,12 @@
     // (hidden when not checked)
     display: none;
   }
+
   // input[type='checkbox']:hover~.checkmark {
   //     border: 1px solid white;
   // }
   /* Show checkmark on checked */
-  input[type='checkbox']:checked ~ .checkmark:after {
+  input[type='checkbox']:checked~.checkmark:after {
     display: block;
   }
 
@@ -170,11 +182,12 @@
     border: 2px solid $primary;
     background-color: transparent;
   }
+
   // input[type='radio']:hover~.radiomark {
   //     border: 2px solid white;
   // }
   /* Show radio selected on select */
-  input[type='radio']:checked ~ .radiomark {
+  input[type='radio']:checked~.radiomark {
     background-color: $primary;
   }
 
@@ -197,6 +210,7 @@
   label {
     width: 50%;
   }
+
   input {
     width: 50%;
   }
@@ -272,6 +286,7 @@
         left: 0;
         color: $primary;
       }
+
       &.remove {
         right: 0;
         color: $secondaryBlack;
@@ -294,20 +309,18 @@
   height: 10px;
   border-radius: 5px;
   background: rgb(105, 255, 93);
-  background: linear-gradient(
-    90deg,
-    rgba(105, 255, 93, 1) 0%,
-    rgba(59, 250, 56, 1) 10%,
-    rgba(71, 218, 48, 1) 20%,
-    rgba(56, 255, 0, 1) 30%,
-    rgba(251, 255, 91, 1) 40%,
-    rgba(239, 251, 35, 1) 50%,
-    rgba(249, 255, 0, 1) 60%,
-    rgba(251, 177, 0, 1) 70%,
-    rgba(255, 83, 10, 1) 80%,
-    rgba(255, 21, 21, 1) 90%,
-    rgba(255, 0, 0, 1) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(105, 255, 93, 1) 0%,
+      rgba(59, 250, 56, 1) 10%,
+      rgba(71, 218, 48, 1) 20%,
+      rgba(56, 255, 0, 1) 30%,
+      rgba(251, 255, 91, 1) 40%,
+      rgba(239, 251, 35, 1) 50%,
+      rgba(249, 255, 0, 1) 60%,
+      rgba(251, 177, 0, 1) 70%,
+      rgba(255, 83, 10, 1) 80%,
+      rgba(255, 21, 21, 1) 90%,
+      rgba(255, 0, 0, 1) 100%);
   outline: none;
   opacity: 0.7;
   -webkit-transition: 0.2s;
@@ -343,6 +356,7 @@
     justify-content: space-between;
     color: $white;
     width: 110%;
+
     option[label='10'] {
       left: -2px;
     }
@@ -390,6 +404,7 @@
     }
   }
 }
+
 // OtpINputField scss
 .otp {
   padding: 0;
@@ -408,6 +423,7 @@
     outline: 0;
     box-shadow: none;
   }
+
   &.value {
     width: 50px;
     border-bottom: 3px solid $secondaryBlack;
@@ -431,7 +447,7 @@
   }
 
   :global(.mantine-RichTextEditor-toolbarInner) {
-    > div {
+    >div {
       margin: 0px;
 
       button {
@@ -475,10 +491,12 @@
       //   background-color: rgb(74, 144, 144);
       // }
     }
+
     .description {
       color: $bgBody;
       font-size: 12px;
     }
+
     .btn2 {
       cursor: pointer;
       border: none;
@@ -487,6 +505,7 @@
       font-size: 0.85rem;
       // text-decoration: underline;
     }
+
     button[disabled] {
       color: $darkThree;
     }
@@ -522,6 +541,7 @@
     :global(.ql-active .ql-stroke) {
       stroke: $white !important;
     }
+
     :global(.ql-stroke) {
       stroke: $darkThree !important;
     }
@@ -529,9 +549,11 @@
     :global(.ql-active .ql-fill) {
       stroke: $white !important;
     }
+
     :global(.ql-fill) {
       fill: $darkThree !important;
     }
+
     :global(.ql-editor.ql-blank::before) {
       color: $darkThree !important;
 
@@ -547,9 +569,11 @@
       //   border-top: 0px;
       // }
     }
+
     :global(.ql-snow) {
       color: $white !important;
     }
+
     :global(.ql-editor) {
       min-height: 100px !important;
     }

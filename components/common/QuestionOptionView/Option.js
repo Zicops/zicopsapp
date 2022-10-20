@@ -2,6 +2,7 @@ import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Log
 import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import ToolTip from '../ToolTip';
+import { ADMIN_EXAMS } from '../ToolTip/tooltip.helper';
 import styles from './questionOptionView.module.scss';
 
 export default function Option({
@@ -49,7 +50,9 @@ export default function Option({
 
         <div className={`${styles.correctImgContainer}`}>
           {imgSrc && (
-            <ToolTip title={`${isCorrect ? 'Correct' : 'Wrong'} Answer`} placement="right">
+            <ToolTip
+              title={ADMIN_EXAMS.zicopsQuestionBanks.questionsScreen.viewQuestions.correctAnswer}
+              placement="right">
               <img src={imgSrc} />
             </ToolTip>
           )}
