@@ -65,13 +65,13 @@ export default function addUserData() {
     });
 
     const sendCohortData = {
-      cohort_id: cohortData?.id,
-      name: cohortData?.cohort_name,
+      cohort_id: cohortData?.id || cohortData?.cohort_id,
+      name: cohortData?.cohort_name || cohortData?.name,
       description: cohortData?.description,
       lsp_id: cohortData?.lsp_id || lspData?.lsp_id,
-      code: cohortData?.cohort_code,
+      code: cohortData?.cohort_code || cohortData?.code,
       status: 'SAVED',
-      type: cohortData?.cohort_type,
+      type: cohortData?.cohort_type || cohortData?.type,
       is_active: true,
       size: cohortData?.size - 1 || 1
     }
