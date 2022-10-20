@@ -50,12 +50,14 @@ export default function InviteTab() {
     setLoading(true);
     let cohortUser = [];
     if (!selectedCohortData?.cohortUsers?.length) {
-      const cohortUsers = await getCohortUserData(selectedCohortData?.main?.cohort_id);
+      const _cohortUsers = await getCohortUserData(selectedCohortData?.main?.cohort_id);
 
-      if (cohortUsers?.error)
+      if (_cohortUsers?.error)
         return setToastMsg({ type: 'danger', message: 'Error while loading cohort users!' });
 
-      if (!cohortUsers?.length) return setLoading(false);
+      if (!_cohortUsers?.length) return setLoading(false);
+
+      const cohortUsers = _cohortUsers?.filter((users) => users?.membership_status?.toLowerCase() === 'active') ;
 
       //removing duplicate data
       const _users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()];
