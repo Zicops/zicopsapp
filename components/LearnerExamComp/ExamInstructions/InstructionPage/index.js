@@ -8,6 +8,7 @@ import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
 import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
 import styles from '../../learnerExam.module.scss';
 import { data, getIsExamAccessible } from '../../Logic/exam.helper';
+import { passingCriteriaSymbol } from '../Logic/examInstruction.helper';
 
 const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn = () => {} }) => {
   let learnerExamData = useRecoilValue(LearnerExamAtom);
@@ -93,7 +94,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
           </span>
           <span>
             <img src="/images/ExamInstructions/percent.png" alt="cannot found" /> Passing criteria
-            <span>:</span> <span>{learnerExamData?.examData?.passingCriteria || 'N/A'}</span>
+            <span>:</span> <span>{passingCriteriaSymbol(learnerExamData?.examData?.passingCriteria) || 'N/A'}</span>
           </span>
           {isType.takeAnyTime && (
             <span>
