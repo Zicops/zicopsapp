@@ -93,6 +93,11 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   useEffect(async () => {
     if (!fullCourse.id) return;
     if (!userData.id) return;
+    
+    updateModuleData([]);
+    updateChapterData([]);
+    updateTopicData([]);
+    updateTopicContent([]);
 
     setIsLoading(
       loadingModuleData &&
