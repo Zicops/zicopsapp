@@ -2,7 +2,7 @@ import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { Skeleton } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../helper/common.helper';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
@@ -48,6 +48,14 @@ export default function CourseHero({ isPreview = false }) {
     duration,
     owner: provisionedBy
   } = fullCourse;
+
+  useEffect(()=>{
+    if(!router?.query?.isAssign) return;
+    if(!fullCourse?.id) return ;
+    if(router?.query?.courseId !== fullCourse?.id) return ;
+    if(courseAssignData?.isCourseAssigned) return ;
+    return setIsAssignPopUpOpen(true);
+  },[fullCourse]);
 
   return (
     <div
