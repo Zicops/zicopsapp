@@ -255,7 +255,7 @@ export default function useUserCourseData() {
       (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
     );
 
-    if (!userCourses?.length) return setToastMsg({ type: 'info', message: 'No courses found!' });
+    if (!userCourses?.length) return setToastMsg({ type: 'info', message: 'No courses in your learning folder' });
 
     return userCourses;
   }
