@@ -529,6 +529,10 @@ export function useUpdateUserAboutData() {
 
   async function updateUserLsp(userData = null) {
     userData = userData ? userData : newUserAboutData;
+
+    // console.log(userData);
+
+    if(userData?.status?.toLowerCase() === 'disabled') return setToastMsg({type:'info',message:'User is already disabled!'});
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,

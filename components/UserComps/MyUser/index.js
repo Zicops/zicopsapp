@@ -166,6 +166,7 @@ export default function MyUser({ getUser }) {
               const a = await updateUserLsp();
               setDisableAlert(false);
               if(a) return setToastMsg({type:'success',message:`Successfully disabled ${newUserAboutData?.email}`}) ;
+              if(a === undefined) return ;
               return setToastMsg({type:'danger',message:`Error while disabling ${newUserAboutData?.email}`})
             },
             handleClickRight: () => setDisableAlert(false)
