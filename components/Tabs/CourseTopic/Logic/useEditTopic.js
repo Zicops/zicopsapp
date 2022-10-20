@@ -330,7 +330,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           await updateCourseTopicContent({ variables: updateContentData }).catch((err) =>
             console.log(err)
           )
-        ).data;
+        )?.data;
       } else {
         console.log('sendContentData', sendContentData);
         data = await (

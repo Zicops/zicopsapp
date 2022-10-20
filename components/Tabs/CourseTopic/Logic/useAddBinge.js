@@ -80,7 +80,7 @@ export default function useAddBinge() {
 
     setBingeData({
       ...bingeData,
-      [e.target.name]: isNaN(value) ? '' : value
+      [e.target.name]: isNaN(value) ? '0' : value
     });
   }
 
