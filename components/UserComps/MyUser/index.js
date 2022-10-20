@@ -163,8 +163,10 @@ export default function MyUser({ getUser }) {
           title={`Are you sure you want to disable user with email ${newUserAboutData?.email}`}
           btnObj={{
             handleClickLeft: async () => {
-              await updateUserLsp();
+              const a = await updateUserLsp();
               setDisableAlert(false);
+              if(a) return setToastMsg({type:'success',message:`Successfully disabled ${newUserAboutData?.email}`}) ;
+              return setToastMsg({type:'danger',message:`Error while disabling ${newUserAboutData?.email}`})
             },
             handleClickRight: () => setDisableAlert(false)
           }}
