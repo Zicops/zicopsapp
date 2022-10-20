@@ -22,7 +22,7 @@ export default function addUserData() {
 
   async function addUserToCohort(data = {}) {
     const { id, role } = getUserData();
-    if (!data?.id) return;
+    if (!data?.user_id) return;
     const sendCohortData = {
       user_id: data?.user_id,
       user_lsp_id: data?.user_lsp_id,
@@ -40,9 +40,9 @@ export default function addUserData() {
       }
     );
     if (isError)
-     return setToastMsg({ type: 'danger', message: 'error occured while adding user cohort mapping' });
+     return setToastMsg({ type: 'danger', message: 'Error occured while adding user cohort mapping' });
     // console.log(resCohort, 'adduserData');
-    return isError;
+    return !isError;
   }
 
   async function removeCohortUser(userData = null , cohortData = null){

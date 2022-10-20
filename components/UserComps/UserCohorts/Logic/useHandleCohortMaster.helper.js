@@ -187,14 +187,15 @@ export function useHandleCohortMaster() {
           );
           const userLspData = res?.getUserLspByLspId;
           const sendAddUserCohortData = {
-            user_id: userLspData?.user_id,
+            user_id: newManager[i]?.id,
             user_lsp_id: userLspData?.user_lsp_id,
             cohort_id: cohortMasterData?.id,
             membership_status: 'Active',
             role: 'Manager'
           };
+          // console.log(sendAddUserCohortData,'add');
           const add = await addUserToCohort(sendAddUserCohortData);
-          console.log(add,'add');
+          // console.log(add,'add');
           if(add) continue;
         }
       }
@@ -244,7 +245,7 @@ export function useHandleCohortMaster() {
         // console.log(res?.getUserLspByLspId);
         const userLspData = res?.getUserLspByLspId;
         const sendAddUserCohortData = {
-          id: cohortMasterData?.managers[i]?.id,
+          user_id: cohortMasterData?.managers[i]?.id,
           user_lsp_id: userLspData?.user_lsp_id,
           cohort_id: cohort_id,
           membership_status: 'Active',
