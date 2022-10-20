@@ -545,6 +545,7 @@ export function useUpdateUserAboutData() {
       return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
     });
    console.log(res);
+   return !isError ;
   }
 
   async function updateAboutUser(userData = null) {
