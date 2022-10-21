@@ -1,5 +1,5 @@
 import { GET_COHORT_COURSES, queryClient } from '@/api/Queries';
-import { ADD_USER_COHORT, ADD_USER_COURSE, UPDATE_USER_COHORT, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
+import { ADD_USER_COHORT, ADD_USER_COURSE, UPDATE_COHORT_MAIN, UPDATE_USER_COHORT, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import { GET_USER_COURSE_MAPS, GET_USER_LATEST_COHORTS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATION_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
@@ -18,6 +18,10 @@ export default function useHandleCohortTab() {
 
   //for adding user to cohorts
 
+  const [updateCohortMainData, { error: updateCohortError }] = useMutation(UPDATE_COHORT_MAIN, {
+    client: userClient
+  });
+
   const [addToCohort, { error, loading }] = useMutation(ADD_USER_COHORT, {
     client: userClient
   });
@@ -35,7 +39,6 @@ export default function useHandleCohortTab() {
   const [updateUserCohort, { error : updateError }] = useMutation(UPDATE_USER_COHORT, {
     client: userClient
   });
-  
 
 
   function showActiveTab(tab) {
@@ -105,7 +108,7 @@ export default function useHandleCohortTab() {
         }
       }
 
-      console.log(oldCourses,'oldCOurses',addNewCourses)
+      // console.log(oldCourses,'oldCOurses',addNewCourses)
       // need to update old courses. check if it is assigned by admin or cohort
       if(oldCourses?.length){
         for(let i = 0 ; i < oldCourses?.length ; i++){
@@ -115,7 +118,7 @@ export default function useHandleCohortTab() {
           }catch(e){
             console.log(e,'error in try catch course assign');
           }
-          console.log(addedBy,'added by')
+          // console.log(addedBy,'added by')
           if(addedBy?.role?.toLowerCase() === 'self' ){
           const sendData ={
             userCourseId: oldCourses[i]?.user_course_id,
@@ -151,7 +154,7 @@ export default function useHandleCohortTab() {
 
     const resLsp = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{lsp_id:lsp_id, user_id:user_id},{},userQueryClient);
         if(resLsp?.error) return false;
-        console.log(resLsp?.getUserLspByLspId);
+        // console.log(resLsp?.getUserLspByLspId);
         return resLsp?.getUserLspByLspId ;  
   }
 
@@ -242,11 +245,12 @@ export default function useHandleCohortTab() {
     if (!userOrgData?.lsp_id) return false;
     if (!userData?.length) return false;
     const updateUserData = [];
+    // console.log(userData,'iserdataorg')
     for (let i = 0; i < userData?.length; i++) {
-      const userLspData = await getUserLspData(userData[i]?.user_id, userOrgData?.lsp_id);
+      // const userLspData = await getUserLspData(userData[i]?.user_id, userOrgData?.lsp_id);
       const organizationData = await loadQueryDataAsync(
         GET_USER_ORGANIZATION_DETAIL,
-        { user_id: userData[i]?.user_id, user_lsp_id: userLspData?.user_lsp_id },
+        { user_id: userData[i]?.user_id, user_lsp_id: userData[i]?.user_lsp_id },
         {},
         userQueryClient
       );
@@ -261,7 +265,29 @@ export default function useHandleCohortTab() {
     if (!updateUserData?.length) return userData;
     return updateUserData;
   }
+
+  async function updateCohortMain(cohortData = null){
+    if(!cohortData) return ;
+    const sendCohortData = {
+      cohort_id: cohortData?.cohort_id,
+      name: cohortData?.name,
+      description: cohortData?.description,
+      lsp_id: cohortData?.lsp_id ,
+      code: cohortData?.code,
+      status: 'SAVED',
+      type: cohortData?.type,
+      is_active: true,
+      size: cohortData?.size
+    }
+
+    console.log(sendCohortData,'sendDCOhroshos')
+
+    const resCohort = await updateCohortMainData({ variables: sendCohortData }).catch((err) => {
+      // console.log(err);
+      isError = !!err;
+    });
+  }
   
 
-  return { cohortTab, setCohortTab, showActiveTab , addUserToCohort , getUsersOrgDetails }
+  return { cohortTab, setCohortTab, showActiveTab , addUserToCohort , getUsersOrgDetails , updateCohortMain }
 }

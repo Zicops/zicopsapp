@@ -45,7 +45,7 @@ export default function addUserData() {
     return !isError;
   }
 
-  async function removeCohortUser(userData = null , cohortData = null){
+  async function removeCohortUser(userData = null , cohortData = null , cohortSize = null){
     const { id } = getUserData();
     if(!userData) return false;
     const sendData = {
@@ -73,7 +73,7 @@ export default function addUserData() {
       status: 'SAVED',
       type: cohortData?.cohort_type || cohortData?.type,
       is_active: true,
-      size: cohortData?.size - 1 || 1
+      size: cohortSize - 1 || 1
     }
 
     const resCohort = await updateCohortMain({ variables: sendCohortData }).catch((err) => {

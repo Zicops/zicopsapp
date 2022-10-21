@@ -40,15 +40,16 @@ export default function CohortListCard({
     if(!userData)return setToastMsg({type:'danger',message:'User Data not found!'})
     if(!cohortData)return setToastMsg({type:'danger',message:'Cohort Data not found!'})
     setLoading(true) ;
-    const isRemoved = await removeCohortUser(userData,cohortData);
+    let cohortSize = selectedCohort?.cohortUsers?.length ;
+    const isRemoved = await removeCohortUser(userData,cohortData,cohortSize);
     // console.log(a,'adds');
     if(!isRemoved) return setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
     setIsUpdated(true);
     setToastMsg({type:'success',message:"User removed succesfully!"})
     setLoading(false)
+    setSelectedCohort((prev) => ({...prev , isUpdated: true}));
     // setRefetch(true);
     setShowConfirmBox(false);
-    setSelectedCohort((prev) => ({...prev , isUpdated:!prev?.isUpdated}));
     return ;
   }
 
@@ -61,7 +62,7 @@ export default function CohortListCard({
 
       <div className={`${styles.cardBody}`}>
         {/* <p className={`${styles.title}`}>{cohortData?.title || 'Start with Project Management'}</p> */}
-        <p className={`${styles.title}`}>{data?.name}</p>
+        <p className={`${styles.title}`}>{data?.name || data?.email}</p>
 
         {/* <p className={`${styles.desc}`}>{cohortData?.description}</p> */}
         <p className={`${styles.desc}`}>{data?.description || 'Zicops'}</p>

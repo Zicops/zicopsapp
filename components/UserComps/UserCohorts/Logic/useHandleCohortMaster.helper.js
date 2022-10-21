@@ -235,6 +235,11 @@ export function useHandleCohortMaster() {
         }
       }
 
+      const cohortUsers = await getCohortUser(cohortMasterData?.id, true);
+      // if (_allUsers?.length) sendCohortData.size = _allUsers?.length;
+      const activeUsers = cohortUsers?.filter((item) => item?.membership_status?.toLowerCase() !== 'disable') ;
+
+    if (activeUsers?.length) sendCohortData.size = activeUsers?.length;
       // console.log(sendCohortData);
       const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
         // console.log(err);
