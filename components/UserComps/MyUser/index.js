@@ -112,7 +112,8 @@ export default function MyUser({ getUser }) {
       headerName: 'Status',
       flex: 0.5,
       renderCell: (params) => {
-        return <>{params?.row?.lsp_status?.toLowerCase() === 'disable' ? 'Disable' : (params?.row?.status || 'Invited') }</>;
+        const lspStatus = params?.row?.lsp_status?.toLowerCase() ;
+        return <>{lspStatus === 'disabled' || lspStatus === 'disable' ? 'Disabled' : (params?.row?.status || 'Invited') }</>;
       }
     },
     {
@@ -129,12 +130,15 @@ export default function MyUser({ getUser }) {
               {
                 text: 'Disable',
                 handleClick: () => {
+                  // const status = params?.row?.status; 
+                  const lspStatus = params?.row?.lsp_status ;
+                  // console.log(status,'status',lspStatus)
                   setNewUserAboutData(
                     // TODO: delete user here
                     getUserAboutObject({
                       ...params.row,
                       is_active: true,
-                      status: USER_STATUS.disable
+                      status: lspStatus?.length ? USER_STATUS.disable : "Active" 
                     })
                   );
                   setDisableAlert(true);
