@@ -132,6 +132,7 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
       headerName: 'Action',
       sortable: false,
       renderCell: (params) => {
+
         return (
           <>
             <ToolTip title={ADMIN_USERS.userCohort.users.editBtn}>
@@ -148,7 +149,7 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
             </ToolTip>
-            <button
+            {!isReadOnly &&(<button
               style={{
                 cursor: 'pointer',
                 backgroundColor: 'transparent',
@@ -165,7 +166,7 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
                 // handleRemoveUser(params?.row , cohortData);
               }}>
               <img src="/images/svg/delete-outline.svg" width={20}></img>
-            </button>
+            </button>)}
           </>
         );
       },
