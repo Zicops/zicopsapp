@@ -119,8 +119,9 @@ export default function useAddTopicContent(topic) {
           prevUploadDuration + variable_buffer_time <= duration ||
           prevUploadDuration - variable_buffer_time >= duration
         ) {
+          e.target.value = null;
           setToastMsg({ type: 'danger', message: 'Video Length Should be same for all videos!!' });
-          return;
+          return setNewTopicVideo({ ...newTopicVideo, file: null });
         }
       }
 

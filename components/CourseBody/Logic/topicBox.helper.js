@@ -22,12 +22,14 @@ export function imageTypeTopicBox(type) {
 }
 
 export function passingCriteriaSymbol(passingCriteria) {
-  if (!passingCriteria) return ``;
+  if (!passingCriteria) return 'N/A';
   //checking if passing criteria is marks or Percentage
+  const passingCriteriaArr = passingCriteria?.split('-') || [] ;
+  if(!+passingCriteriaArr?.[0]) return 'N/A' ;
   const updatedPassingCriteria =
-    passingCriteria?.split('-')[1] === 'Percentage'
-      ? passingCriteria?.split('-')[0] + '%'
-      : passingCriteria?.split('-')[0];
+    passingCriteriaArr?.[1] === 'Percentage'
+      ? passingCriteriaArr?.[0] + '%'
+      : passingCriteriaArr?.[0];
 
   return `${updatedPassingCriteria}`;
 }

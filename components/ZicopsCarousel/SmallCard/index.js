@@ -7,7 +7,8 @@ export default function SmallCard({
   styleClass,
   carouselRefData,
   isShowProgress = false,
-  notext = false
+  notext = false,
+  showAssignSymbol = true
 }) {
   if (!courseData) return null;
   const router = useRouter();
@@ -29,6 +30,10 @@ export default function SmallCard({
   }
   const gotoCourse = () => {
     router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
+  };
+
+  const gotoAssignCourses = () => {
+    router.push(courseData?.id ? `/course/${courseData.id}?isAssign=true` : '/courses',`/course/${courseData.id}` );
   };
 
   let courseNameClass = 'coursename';
@@ -103,7 +108,11 @@ export default function SmallCard({
                 {courseData?.type?.split('-').join(' ') || 'Self Paced'}
               </div>
             </div>
-            <img className="addCoursePlus" src="/images/svg/add-line.svg" />
+           {showAssignSymbol &&<div onClick={(e)=>{
+              e.stopPropagation();
+              // alert('hi');
+              gotoAssignCourses();
+            }}><img className="addCoursePlus" src="/images/svg/add-line.svg" /></div>}
             <div className="desc-area">
               <div className="main-desc">
                 <div className="one">

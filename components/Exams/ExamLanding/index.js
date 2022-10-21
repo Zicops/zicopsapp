@@ -101,6 +101,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       duration: +masterData.Duration / 60,
       scheduleType: masterData.ScheduleType,
       questionIds: masterData.QuestionIds || [],
+      totalQuestions: masterData.TotalCount || 0,
 
       code: masterData.Code,
       type: masterData.Type,
@@ -232,7 +233,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
           topicIndex ? `A${topicIndex}` : ''
         }`,
         isProctoring: false,
-        totalQuestions: masterObj.questionIds?.length,
+        totalQuestions: masterObj?.totalQuestions,
         isNegativeMarking: false,
         expertiseLevel: paperMaster?.difficultyLevel
       }

@@ -73,7 +73,7 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
     for (let i = 0; i < users?.length; i++) {
       let found = false;
       for (let j = 0; j < cohortUser?.length; j++) {
-        if (cohortUser[j]?.id === users[i]?.id) {
+        if (cohortUser[j]?.id === users[i]?.id && cohortUser[j]?.membership_status?.toLowerCase() === 'active') {
           found = true;
           break;
         }
@@ -221,7 +221,7 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
         <ConfirmPopUp
           title={'Are you sure you want to remove this user from cohort?'}
           btnObj={{
-            leftIsDisable: loading,
+            leftIsDisable:loading,
             rightIsDisable:loading,
             handleClickLeft: () => handleRemoveUser(selectedUser,cohortData),
             handleClickRight: () => setShowConfirmBox(false)

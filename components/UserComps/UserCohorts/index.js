@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import CohortMasterTab from './ChortMasterTab';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 const UserCohorts = () => {
   const { viewBtn, editBtn, downloadBtn } = ADMIN_USERS.userCohort;
@@ -35,7 +36,7 @@ const UserCohorts = () => {
       return { ...item, id: item?.cohort_id };
     });
     const cohorts = list?.filter((item) => item?.is_active);
-    setCohortList([...cohorts], setLoading(false));
+    setCohortList(sortArrByKeyInOrder([...cohorts], 'created_at', false), setLoading(false));
   }, []);
 
   const columns = [

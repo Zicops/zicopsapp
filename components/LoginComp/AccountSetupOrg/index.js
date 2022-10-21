@@ -54,7 +54,7 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
             inputName: 'role',
             label: 'Learning Space Role:',
             placeholder: 'Auto Populated',
-            value: `${userOrgLsp?.user_role}`,
+            value: `${userBasicData?.role}`,
             maxLength: 60,
             isDisabled: true
           }}
