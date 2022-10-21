@@ -60,6 +60,7 @@ const CohortMapping = ({isReadOnly = false}) => {
   const { assignCourseToOldUser , removeUserCohortCourses } = assignCourseToUser();
 
   function handleAssign(item, isRemove = false) {
+    if( isReadOnly) return ;
     setSelectedCourse({ ...item, isMandatory: courseAssignData?.isMandatory });
     // setSelectedCourse({ ...item });
     if (!isRemove) return setIsAssignPopUpOpen(true);
