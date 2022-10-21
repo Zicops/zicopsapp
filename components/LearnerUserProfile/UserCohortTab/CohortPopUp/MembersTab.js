@@ -23,39 +23,28 @@ export default function MembersTab() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const { getCohortUserData } = useUserCourseData();
-  const { getUsersOrgDetails } = useHandleCohortTab();
+  const { getUsersOrgDetails , getCohortUser } = useHandleCohortTab();
   // const isManager = true;
 
   useEffect(async () => {
     // console.log(selectedCohort,'cohrot_data')
     if (!selectedCohort?.main?.cohort_id) return;
-    if(selectedCohort?.isUpdated) return await loadUserData();
+    if( typeof selectedCohort?.isUpdated == 'boolean'){
+      setLoading(true);
+      const _cohrotUsers = await getCohortUser();
+      // console.log(_cohrotUsers,'cohortuSerssss');
+      return setCohortUsers(_cohrotUsers,setLoading(false));
+    }
+
     if(selectedCohort?.cohortUsers?.length)
       return setCohortUsers([...selectedCohort?.cohortUsers], setLoading(false));
-    await loadUserData();
+    
+    setLoading(true);
+    const _cohrotUsers = await getCohortUser();
+    // console.log(_cohrotUsers,'cohortuSerssss');
+    setCohortUsers(_cohrotUsers,setLoading(false));
     return;
   }, [selectedCohort]);
-
-
-  async function loadUserData(){
-  setLoading(true);
-  const cohortUsers = await getCohortUserData(selectedCohort?.main?.cohort_id);
-
-  if (cohortUsers?.error)
-    return setToastMsg({ type: 'danger', message: 'Error while loading cohort users!' });
-
-  if (!cohortUsers?.length) return setLoading(false);
-
-  //removing duplicate data
-  const users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()];
-
-  const modifiedUsers = await getUsersOrgDetails(users);
-
-  setSelectedCohort((prevValue) => ({ ...prevValue, cohortUsers: modifiedUsers?.filter((user)=> user?.membership_status?.toLowerCase() === 'active') }));
-  // console.log(modifiedUsers);
-
-  return setCohortUsers([...modifiedUsers?.filter((user)=> user?.membership_status?.toLowerCase() === 'active')], setLoading(false));
-  }
 
   return (
     <div className={`${styles.courseTabContainer} ${styles.memberTab}`}>

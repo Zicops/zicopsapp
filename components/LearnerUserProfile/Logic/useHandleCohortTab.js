@@ -3,6 +3,7 @@ import { ADD_USER_COHORT, ADD_USER_COURSE, UPDATE_USER_COHORT, UPDATE_USER_COURS
 import { GET_USER_COURSE_MAPS, GET_USER_LATEST_COHORTS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATION_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData, SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -35,6 +36,8 @@ export default function useHandleCohortTab() {
   const [updateUserCohort, { error : updateError }] = useMutation(UPDATE_USER_COHORT, {
     client: userClient
   });
+
+  const { getCohortUserData } = useUserCourseData();
   
 
 
@@ -261,7 +264,27 @@ export default function useHandleCohortTab() {
     if (!updateUserData?.length) return userData;
     return updateUserData;
   }
+
+  async function getCohortUser(){
+    // setLoading(true);
+    const cohortUsers = await getCohortUserData(selectedCohort?.main?.cohort_id);
+  
+    if (cohortUsers?.error)
+      return setToastMsg({ type: 'danger', message: 'Error while loading cohort users!' });
+  
+    if (!cohortUsers?.length) return false;
+  
+    //removing duplicate data
+    const users = [...new Map(cohortUsers.map((m) => [m?.user_id, m])).values()];
+  
+    const modifiedUsers = await getUsersOrgDetails(users);
+  
+    setSelectedCohort((prevValue) => ({ ...prevValue, cohortUsers: modifiedUsers?.filter((user)=> user?.membership_status?.toLowerCase() === 'active') }));
+    // console.log(modifiedUsers);
+  
+    return [...modifiedUsers?.filter((user)=> user?.membership_status?.toLowerCase() === 'active')];
+    }
   
 
-  return { cohortTab, setCohortTab, showActiveTab , addUserToCohort , getUsersOrgDetails }
+  return { cohortTab, setCohortTab, showActiveTab , addUserToCohort , getUsersOrgDetails ,getCohortUser }
 }
