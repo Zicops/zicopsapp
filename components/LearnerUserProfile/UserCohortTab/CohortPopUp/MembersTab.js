@@ -29,7 +29,9 @@ export default function MembersTab() {
   useEffect(async () => {
     // console.log(selectedCohort,'cohrot_data')
     if (!selectedCohort?.main?.cohort_id) return;
-    if(selectedCohort?.isUpdated) return await loadUserData();
+    if(selectedCohort?.isUpdated){ 
+      setSelectedCohort((prevValue) => ({...prevValue , isUpdated:false}));
+      return await loadUserData();}
     if(selectedCohort?.cohortUsers?.length)
       return setCohortUsers([...selectedCohort?.cohortUsers], setLoading(false));
     await loadUserData();

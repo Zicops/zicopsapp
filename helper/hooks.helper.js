@@ -702,9 +702,10 @@ export function useHandleCohortUsers(){
     client: userClient
   });
 
-  async function removeCohortUser(userData = null , cohortData = null){
+  async function removeCohortUser(userData = null , cohortData = null , cohortSize = null){
     const { id } = getUserData();
     if(!userData) return false;
+    if(!cohortSize) return false ;
     const sendData = {
       user_cohort_id: userData?.user_cohort_id,
       user_id: userData?.user_id,
@@ -731,7 +732,7 @@ export function useHandleCohortUsers(){
       status: 'SAVED',
       type: cohortData?.type,
       is_active: true,
-      size: cohortData?.size - 1 || 1
+      size: cohortSize - 1
     }
 
     const resCohort = await updateCohortMain({ variables: sendCohortData }).catch((err) => {

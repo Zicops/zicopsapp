@@ -92,7 +92,11 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
     if(!userData)return setToastMsg({type:'danger',message:'User Data not found!'})
     if(!cohortData)return setToastMsg({type:'danger',message:'Cohort Data not found!'})
     setLoading(true) ;
-    const isRemoved = await removeCohortUser(userData,cohortData);
+    // const cohortSize = cohortData?.size ;
+    let cohortSize;
+    if(cohortUserData?.length) cohortSize = cohortUserData?.length;
+    // console.log(cohortSize,'cohrotSIsfiasbf');
+    const isRemoved = await removeCohortUser(userData,cohortData,cohortSize);
     // console.log(a,'adds');
     if(!isRemoved) return setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
     setToastMsg({type:'success',message:"User removed succesfully!"})
