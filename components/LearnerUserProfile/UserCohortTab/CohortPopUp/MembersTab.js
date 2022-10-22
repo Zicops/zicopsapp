@@ -21,7 +21,7 @@ export default function MembersTab() {
   const setToastMsg = useRecoilState(ToastMsgAtom);
   const [cohortUsers, setCohortUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { getCohortUserData } = useUserCourseData();
   const { getUsersOrgDetails } = useHandleCohortTab();
   // const isManager = true;
@@ -30,7 +30,9 @@ export default function MembersTab() {
     // console.log(selectedCohort,'cohrot_data')
     if (!selectedCohort?.main?.cohort_id) return;
     if(selectedCohort?.isUpdated){ 
+      // console.log('isUpdated called')
       setSelectedCohort((prevValue) => ({...prevValue , isUpdated:false}));
+      // setLoading(true);
       return await loadUserData();}
     if(selectedCohort?.cohortUsers?.length)
       return setCohortUsers([...selectedCohort?.cohortUsers], setLoading(false));
@@ -41,6 +43,7 @@ export default function MembersTab() {
 
   async function loadUserData(){
   setLoading(true);
+  // console.log('updated loadUsers is called')
   const cohortUsers = await getCohortUserData(selectedCohort?.main?.cohort_id);
 
   if (cohortUsers?.error)

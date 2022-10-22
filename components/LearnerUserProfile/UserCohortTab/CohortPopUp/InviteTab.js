@@ -105,7 +105,7 @@ export default function InviteTab() {
     const updateUsers = usersForCohort.filter(({ id: id1 }) => !isAdded.some((id) => id === id1));
     setToastMsg({ type: 'success', message: 'User added successfully!' });
     setLoading(false);
-    setSelectedCohortData(prevValue => ({...prevValue , isUpdate:true}));
+    setSelectedCohortData(prevValue => ({...prevValue , isUpdated:true}));
     return setUsersForCohort(updateUsers);
   }
 
