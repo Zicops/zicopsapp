@@ -1,0 +1,93 @@
+@import '../../../styles/base.scss';
+
+.formWrapper {
+    display: flex;
+    
+
+
+    label {
+        color: $white;
+        margin-bottom: 5px;
+    }
+
+    input {
+        
+        height: 40px;
+        font-size: 1.1vw;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid $darkThree;
+        border-radius: 4px;
+        background: $bgHeader;
+    }
+}
+
+.labeledInputWrapper {
+    display: flex;
+    flex-direction: column;
+    // height: 40px;
+    // font-family: 'Open Sans';
+  
+    label {
+        color: $white;
+        margin-bottom: 5px;
+        font-size: 15px;
+    }
+    input,
+    input.inputStyles {
+      padding: 10px;
+      border: 2px solid $darkThree;
+      background-color: $darkTwo;
+      color: $secondaryBlack;
+      font-size: 13px;
+      border-radius: 0px;
+      width: 25vw;
+      caret-color: $white;
+      height: 45px;
+  
+      &:not(:placeholder-shown) {
+        /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+        @include inputStylesFor('hasValue');
+      }
+  
+      &:focus {
+        @include inputStylesFor('focus');
+      }
+  
+      &:disabled {
+        @include inputStylesFor('disabled');
+      }
+    }
+  
+    div.countryCodeBtn {
+      background-color: $darkTwo;
+      color: $white;
+  
+      :global(.country-list) {
+        background-color: inherit;
+        color: inherit;
+  
+        li {
+          &:hover {
+            background-color: $darkThree;
+          }
+        }
+      }
+  
+      :global(.country.highlight) {
+        background-color: $black;
+      }
+  
+      :global(.selected-flag) {
+        background-color: inherit !important;
+  
+        &:hover {
+          background-color: inherit !important;
+        }
+      }
+  
+      &:hover {
+        background-color: inherit;
+      }
+    }
+  }
