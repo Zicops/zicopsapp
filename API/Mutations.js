@@ -630,6 +630,7 @@ export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
 export const ADD_TOPIC_CONTENT = gql`
   mutation addTopicContent(
     $topicId: String
+    $moduleId: String
     $language: String
     $startTime: Int
     $duration: Int
@@ -643,6 +644,7 @@ export const ADD_TOPIC_CONTENT = gql`
     addTopicContent(
       topicId: $topicId
       courseId: $courseId
+      moduleId: $moduleId
       topicContent: {
         language: $language
         startTime: $startTime

@@ -310,6 +310,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
       const sendContentData = {
         courseId: fullCourse.id,
         topicId: content.topicId,
+        moduleId: content?.moduleId,
         language: content.language,
         type: content.type,
         duration: content.duration,
