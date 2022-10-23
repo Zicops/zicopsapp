@@ -125,6 +125,7 @@ export function getTopicObject(data) {
 export function getTopicContentObject(data) {
   return {
     topicId: data.topicId,
+    moduleId: data.moduleId,
     id: data.id || '',
     language: data.language || '',
     type: data.type || '',
