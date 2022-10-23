@@ -1,0 +1,36 @@
+@import '../../../styles/base.scss';
+
+.labeledTextareaWrapper {
+    display: flex;
+    flex-direction: column;
+    // align-items: baseline;
+  
+    label {
+      color: $white;
+      margin-bottom: 5px;
+    }
+  
+    textarea {
+      resize: none;
+      border: 2px solid $darkThree;
+      background-color: #202222;
+      color: var(--white);
+      font-size: 13px;
+      padding: 10px;
+      font-family: 'Open Sans';
+      width: 100%;
+  
+      &:not(:placeholder-shown) {
+        /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+        @include inputStylesFor('hasValue');
+      }
+  
+      &:focus {
+        @include inputStylesFor('focus');
+      }
+  
+      &:disabled {
+        @include inputStylesFor('disabled');
+      }
+    }
+  }
