@@ -53,8 +53,8 @@ export const orgInputData = [
   {
     type: formType?.uploadInput,
     inputOptions: {
-      placeholder: 'Organization Logo',
       inputName: 'orgLogo',
+      placeholder: 'Organization Logo',
       label: 'Organization logo* :'
     }
   },

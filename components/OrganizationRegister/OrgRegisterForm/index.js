@@ -8,9 +8,18 @@ import { useRecoilState } from 'recoil';
 import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
 import { changeHandler } from '@/helper/common.helper';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import LabeledTextarea from 'common/components/LabeledTextarea';
+import UploadAndPreview from 'common/components/UploadAndPreview';
+import { useEffect, useState } from 'react';
 
 const OrgRegisterForm = () => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    setOrgTempDetails({ ...orgTempDetails, orgLogo: image });
+    return;
+  }, [image]);
 
   const INPUT_OBJECT = {
     normalInput: function (obj = {}) {
@@ -31,7 +40,9 @@ const OrgRegisterForm = () => {
       return <PhoneInputBox />;
     },
     uploadInput: function (obj = {}) {
-      // return <LabeledInputs />
+      const file = orgTempDetails[`${obj?.inputOptions?.inputName}`] ;
+      return <UploadAndPreview inputOptions={obj?.inputOptions} handleChange={setImage}
+      uploadedFile={file}/>
     },
     dropDown: function (obj = {}) {
       const val = orgTempDetails[`${obj?.inputOptions?.inputName}`];
@@ -46,8 +57,13 @@ const OrgRegisterForm = () => {
         />
       );
     },
-    textArea: function (obj = {}) {
-      // return <LabeledInputs />
+    textAreaInput: function (obj = {}) {
+      obj.inputOptions.value = orgTempDetails[`${obj?.inputOptions?.inputName}`];
+      return <LabeledTextarea inputOptions={obj?.inputOptions}
+      styleClass={styles?.inputStyle}
+      changeHandler={(e) => {
+        changeHandler(e, orgTempDetails, setOrgTempDetails);
+      }}/>
     }
   };
   return (
@@ -56,8 +72,8 @@ const OrgRegisterForm = () => {
         return <>{INPUT_OBJECT[`${form?.type}`](form)}</>;
       })}
       <div className={`${styles?.btnContainer}`}>
-      <Button size='small'>Click Me</Button>
-      <Button size='medium' theme='dark'>Click Me</Button></div>
+      <Button size='small' theme='dark'>Cancel</Button>
+      <Button clickHandler={()=>{console.log(orgTempDetails,'org data')}}>Submit</Button></div>
     </div>
   );
 };
