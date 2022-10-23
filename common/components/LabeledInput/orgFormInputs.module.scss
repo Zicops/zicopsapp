@@ -1,26 +1,26 @@
 @import '../../../styles/base.scss';
 
-.formWrapper {
-    display: flex;
+// .formWrapper {
+//     display: flex;
     
 
 
-    label {
-        color: $white;
-        margin-bottom: 5px;
-    }
+//     label {
+//         color: $white;
+//         margin-bottom: 5px;
+//     }
 
-    input {
+//     input {
         
-        height: 40px;
-        font-size: 1.1vw;
-        margin-bottom: 10px;
-        padding: 10px;
-        border: 1px solid $darkThree;
-        border-radius: 4px;
-        background: $bgHeader;
-    }
-}
+//         height: 40px;
+//         font-size: 1.1vw;
+//         margin-bottom: 10px;
+//         padding: 10px;
+//         border: 1px solid $darkThree;
+//         border-radius: 4px;
+//         background: $bgHeader;
+//     }
+// }
 
 .labeledInputWrapper {
     display: flex;
