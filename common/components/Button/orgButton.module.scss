@@ -1,0 +1,44 @@
+@import '../../../styles/base.scss';
+
+
+.basicButton {
+    height: 45px;
+    width: 25%;
+    border-radius: 4px;
+    padding: 10px;
+    background: $primary;
+    font-size: 15px;
+    // font-weight: 550;
+    opacity: 0.8;
+    cursor: pointer;
+    &:hover {
+        opacity: 1;
+      }
+      &:disabled {
+        background-color: $darkThree !important;
+        border-color: $darkThree !important;
+        cursor: no-drop;
+      }
+}
+
+// .smallBtn {
+//     width: 10%;
+//     padding: 5px;
+// }
+
+// .logInBtn {
+//     width: 30%;
+// }
+
+.btnPrimary {
+    background-color: $primary;
+    color: $black;
+    border: none;
+  }
+  
+  .btnDark {
+    background-color: transparent;
+    color: $primary;
+    border: $primary 2px solid;
+  }
+  

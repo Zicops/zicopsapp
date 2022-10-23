@@ -41,9 +41,8 @@
       color: $secondaryBlack;
       font-size: 13px;
       border-radius: 0px;
-      width: 25vw;
       caret-color: $white;
-      height: 45px;
+      height: 40px;
   
       &:not(:placeholder-shown) {
         /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */

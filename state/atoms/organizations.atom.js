@@ -12,7 +12,7 @@ orgLogo:data?.orgLogo,
 orgIndustry:data?.orgIndustry,
 orgType:data?.orgType,
 
-orgEmployess: data?.orgEmployess ,
+orgEmployess: data?.orgEmployees ,
 orgUrl:data?.orgUrl,
 orgLinkdInUrl:data?.orgLinkdInUrl,
 orgFacebookUrl:data?.orgFacebookUrl,

@@ -2,7 +2,8 @@
 
 .inputStyle {
     margin-bottom: 10px;
-    width: 400px;
+    // width: 400px;
+    width: 100%;
     input {
       color: $white;
       background-color: $darkOne;
@@ -25,6 +26,13 @@
     justify-content: center;
     align-items:center;
     flex-direction: column;
-    
-    
+    width: 400px;
+    margin: auto;
+    .btnContainer{
+      display: flex;
+      width: 100%;
+      gap: 10px;
+      // flex-direction: column;
+    }
+
 }

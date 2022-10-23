@@ -80,7 +80,7 @@ export const orgInputData = [
     type: formType?.dropDown,
     inputOptions: {
       placeholder: 'Select number of employees',
-      inputName: 'orgEmployess',
+      inputName: 'orgEmployees',
       label: 'Number of employees :',
       options: numberEmployessOption
     }
