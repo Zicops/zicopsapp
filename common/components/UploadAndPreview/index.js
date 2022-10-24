@@ -110,8 +110,8 @@ const UploadAndPreview = ({
       const imageFile = dataURLtoFile(preview, `${file?.name}`);
       const { name, size, type } = imageFile;
       if (name === file.name && size === file.size && type === file.size)
-        return handleChange(imageFile);
-      else return handleChange(imageFile);
+        return handleChange((prevValue) => ({...prevValue , [`${inputName}`]:imageFile}));
+      else return handleChange((prevValue) => ({...prevValue , [`${inputName}`]:imageFile}));;
     } else return;
   }, [preview]);
 
