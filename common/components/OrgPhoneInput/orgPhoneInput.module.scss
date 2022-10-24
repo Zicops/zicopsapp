@@ -1,0 +1,73 @@
+@import '../../../styles/base.scss';
+
+
+.labeledInputWrapper {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 10px;
+
+    label {
+        width: 25%;
+        color: $white;
+    }
+
+    input,
+    input.inputStyles {
+        padding: 10px;
+        border: 2px solid $darkThree;
+        background-color: $darkTwo;
+        color: $secondaryBlack;
+        font-size: 13px;
+        border-radius: 0px;
+        font-family: 'Open Sans';
+        caret-color: $white;
+
+        &:not(:placeholder-shown) {
+            /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
+            @include inputStylesFor('hasValue');
+            border: 1px solid $darkThree;
+            border-radius: 5px;
+            height: 40px;
+        }
+
+        &:focus {
+            @include inputStylesFor('focus');
+        }
+
+        &:disabled {
+            @include inputStylesFor('disabled');
+        }
+    }
+
+    div.countryCodeBtn {
+        background-color: $darkTwo;
+        color: $white;
+
+        :global(.country-list) {
+            background-color: inherit;
+            color: inherit;
+
+            li {
+                &:hover {
+                    background-color: $darkThree;
+                }
+            }
+        }
+
+        :global(.country.highlight) {
+            background-color: $black;
+        }
+
+        :global(.selected-flag) {
+            background-color: inherit !important;
+
+            &:hover {
+                background-color: inherit !important;
+            }
+        }
+
+        &:hover {
+            background-color: inherit;
+        }
+    }
+}
