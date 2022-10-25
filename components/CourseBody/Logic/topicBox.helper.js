@@ -1,3 +1,10 @@
+import { atom } from 'recoil';
+
+export const ShowNotAssignedErrorAtom = atom({
+  key: 'ShowNotAssignedError',
+  default: false
+});
+
 export function imageTypeTopicBox(type) {
   let topicImage;
   switch (type) {
@@ -24,8 +31,8 @@ export function imageTypeTopicBox(type) {
 export function passingCriteriaSymbol(passingCriteria) {
   if (!passingCriteria) return 'N/A';
   //checking if passing criteria is marks or Percentage
-  const passingCriteriaArr = passingCriteria?.split('-') || [] ;
-  if(!+passingCriteriaArr?.[0]) return 'N/A' ;
+  const passingCriteriaArr = passingCriteria?.split('-') || [];
+  if (!+passingCriteriaArr?.[0]) return 'N/A';
   const updatedPassingCriteria =
     passingCriteriaArr?.[1] === 'Percentage'
       ? passingCriteriaArr?.[0] + '%'

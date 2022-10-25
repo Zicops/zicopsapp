@@ -31,7 +31,11 @@ import {
 } from '../../../../state/atoms/video.atom';
 import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
-import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
+import {
+  imageTypeTopicBox,
+  passingCriteriaSymbol,
+  ShowNotAssignedErrorAtom
+} from '../../Logic/topicBox.helper';
 import useLoadExamData from '../../Logic/useLoadExamData';
 
 let topicInstance = 0;
@@ -74,7 +78,7 @@ export default function TopicBox({
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [topicCountDisplay, setTopicCountDisplay] = useState(0);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
 
   const [examData, setExamData] = useState({
     id: null,
@@ -571,14 +575,6 @@ export default function TopicBox({
           )}
         </div>
       </div>
-
-      {showAlert && (
-        <AlertBox
-          title="Course Not Assigned"
-          description="Please assign course to access the course contents"
-          handleClose={() => setShowAlert(false)}
-        />
-      )}
     </>
   );
 }
