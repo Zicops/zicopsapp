@@ -217,7 +217,8 @@ export default function useHandleAddUserDetails() {
     //   is_active: userOrgData?.preferences_is_active
     // };
 
-    const sendPreferenceData = sub_categories.map((item) => {
+
+    if(sub_categories?.length && !!base_sub_category){    const sendPreferenceData = sub_categories.map((item) => {
       let is_base = item === base_sub_category ? true : false;
       return {
         user_id: userDataAbout?.id,
@@ -254,6 +255,8 @@ export default function useHandleAddUserDetails() {
       sub_category: dataPref?.sub_category,
       preferences_is_active: dataPref?.is_active
     }));
+  }
+
 
     // ORGANIZATION USER ROLE MUTATION
     // console.log(userDataOrgLsp, 'data at start of addUserRoleDetails');

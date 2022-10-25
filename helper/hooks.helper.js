@@ -1,5 +1,5 @@
 import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
-import { UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
+import { UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_LEARNINGSPACE_MAP, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
   GET_USER_COURSE_MAPS,
@@ -255,7 +255,7 @@ export default function useUserCourseData() {
       (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
     );
 
-    if (!userCourses?.length) return setToastMsg({ type: 'info', message: 'No courses found!' });
+    if (!userCourses?.length) return setToastMsg({ type: 'info', message: 'No courses in your learning folder' });
 
     return userCourses;
   }
@@ -458,6 +458,8 @@ export default function useUserCourseData() {
 export function getUserAboutObject(data = {}) {
   return {
     id: data?.id || null,
+    user_id:data?.user_id || null ,
+    user_lsp_id: data?.user_lsp_id || null ,
     first_name: data?.first_name || '',
     last_name: data?.last_name || '',
     status: data?.status || null,
@@ -490,6 +492,9 @@ export function useUpdateUserAboutData() {
   // recoil
   const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [updateLsp, { error: createLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
+    client: userClient
+  });
 
   // local state
   const [multiUserArr, setMultiUserArr] = useState([]);
@@ -521,6 +526,31 @@ export function useUpdateUserAboutData() {
         newUserAboutData?.gender
     );
   }, [newUserAboutData]);
+
+  async function updateUserLsp(userData = null) {
+    userData = userData ? userData : newUserAboutData;
+
+//     console.log(userData,'userData');
+//  return ;
+    if(userData?.status?.toLowerCase() === 'disabled') return setToastMsg({type:'info',message:'User is already disabled!'});
+    const sendLspData = {
+      user_id: userData?.id,
+      user_lsp_id: userData?.user_lsp_id,
+      lsp_id: userData?.lsp_id || LEARNING_SPACE_ID,
+      status: 'Disabled',
+    };
+
+    console.log(sendLspData, 'updateUserLearningSpaceDetails');
+
+    let isError = false;
+    const res = await updateLsp({ variables: sendLspData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
+    });
+   console.log(res);
+   return !isError ;
+  }
 
   async function updateAboutUser(userData = null) {
     userData = userData ? userData : newUserAboutData;
@@ -579,7 +609,8 @@ export function useUpdateUserAboutData() {
     setMultiUserArr,
     isFormCompleted,
     updateAboutUser,
-    updateMultiUserAbout
+    updateMultiUserAbout , 
+    updateUserLsp
   };
 }
 
@@ -671,9 +702,10 @@ export function useHandleCohortUsers(){
     client: userClient
   });
 
-  async function removeCohortUser(userData = null , cohortData = null){
+  async function removeCohortUser(userData = null , cohortData = null , cohortSize = null){
     const { id } = getUserData();
     if(!userData) return false;
+    if(!cohortSize) return false ;
     const sendData = {
       user_cohort_id: userData?.user_cohort_id,
       user_id: userData?.user_id,
@@ -700,7 +732,7 @@ export function useHandleCohortUsers(){
       status: 'SAVED',
       type: cohortData?.type,
       is_active: true,
-      size: cohortData?.size - 1 || 1
+      size: cohortSize - 1
     }
 
     const resCohort = await updateCohortMain({ variables: sendCohortData }).catch((err) => {

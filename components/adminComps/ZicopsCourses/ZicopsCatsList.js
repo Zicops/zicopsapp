@@ -5,6 +5,7 @@ import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ApolloProvider, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useRecoilState } from 'recoil';
 import { GET_CATS_MAIN, queryClient } from '../../../API/Queries';
 import { TableResponsiveRows } from '../../../helper/utils.helper';
@@ -97,6 +98,7 @@ const ZicopsCatsList = () => {
           title="Zicops Categories"
           hideCourseTypeDropdown={true}
           handlePlusClick={() => udpatePopUpState(true)}
+          tooltipTitle={ADMIN_COURSES.categories.addBtn}
         />
 
         <ApolloProvider client={queryClient}>

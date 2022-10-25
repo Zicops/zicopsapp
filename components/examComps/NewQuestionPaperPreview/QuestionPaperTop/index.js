@@ -39,7 +39,7 @@ const QuestionPaperTop = ({ setIsQuestion }) => {
               {getPassingMarks(
                 learnerExamData?.examData?.passingCriteria,
                 learnerExamData?.examData?.totalMarks
-              ) || 0}
+              ) || 'N/A'}
             </span>
           </p>
           <p>

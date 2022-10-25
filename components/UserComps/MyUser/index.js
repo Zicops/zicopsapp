@@ -3,6 +3,7 @@ import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { USER_STATUS } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -16,7 +17,7 @@ export default function MyUser({ getUser }) {
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
 
-  const { newUserAboutData, setNewUserAboutData, updateAboutUser, isFormCompleted } =
+  const { newUserAboutData, setNewUserAboutData, updateAboutUser,updateUserLsp , isFormCompleted } =
     useUpdateUserAboutData();
 
   const [isLoading, setLoading] = useState(true);
@@ -27,15 +28,15 @@ export default function MyUser({ getUser }) {
   useEffect(async () => {
     setLoading(true);
 
-    const usersData = await getUsersForAdmin();
-    // console.log(usersData);
+    const usersData = await getUsersForAdmin(true);
+    console.log(usersData);
 
     if (usersData?.error) {
       setLoading(false);
       return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
     }
     setLoading(false);
-    setData([...usersData]);
+    setData(sortArrByKeyInOrder([...usersData], 'created_at', false));
     return;
   }, []);
 
@@ -111,7 +112,8 @@ export default function MyUser({ getUser }) {
       headerName: 'Status',
       flex: 0.5,
       renderCell: (params) => {
-        return <>{params?.row?.status || 'Invited'}</>;
+        const lspStatus = params?.row?.lsp_status?.toLowerCase() ;
+        return <>{lspStatus === 'disabled' || lspStatus === 'disable' ? 'Disabled' : (params?.row?.status || 'Invited') }</>;
       }
     },
     {
@@ -128,12 +130,15 @@ export default function MyUser({ getUser }) {
               {
                 text: 'Disable',
                 handleClick: () => {
+                  // const status = params?.row?.status; 
+                  const lspStatus = params?.row?.lsp_status ;
+                  // console.log(status,'status',lspStatus)
                   setNewUserAboutData(
                     // TODO: delete user here
                     getUserAboutObject({
                       ...params.row,
                       is_active: true,
-                      status: USER_STATUS.disable
+                      status: lspStatus?.length ? USER_STATUS.disable : "Active" 
                     })
                   );
                   setDisableAlert(true);
@@ -162,8 +167,11 @@ export default function MyUser({ getUser }) {
           title={`Are you sure you want to disable user with email ${newUserAboutData?.email}`}
           btnObj={{
             handleClickLeft: async () => {
-              await updateAboutUser();
+              const a = await updateUserLsp();
               setDisableAlert(false);
+              if(a) return setToastMsg({type:'success',message:`Successfully disabled ${newUserAboutData?.email}`}) ;
+              if(a === undefined) return ;
+              return setToastMsg({type:'danger',message:`Error while disabling ${newUserAboutData?.email}`})
             },
             handleClickRight: () => setDisableAlert(false)
           }}

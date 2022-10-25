@@ -2,6 +2,7 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { useRef, useState, useEffect } from 'react';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { CohortMasterData, getCohortMasterObject } from '@/state/atoms/users.atom';
 import { useRecoilState } from 'recoil';
 import { changeHandler, getCurrentEpochTime } from '@/helper/common.helper';
@@ -60,7 +61,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
   function formatUsers(userArr = null) {
     if (!userArr?.length) return setToastMsg({ type: 'danger', message: 'No user found!' });
     const data = userArr
-      ?.filter((user) => user?.is_verified && user?.is_active)
+      ?.filter((user) => user?.status?.toLowerCase() === 'active')
       ?.map((item) => {
         return {
           value: item?.full_name,
@@ -74,6 +75,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
   useEffect(async () => {
     if (!isEdit) {
       const userList = await getUsersForAdmin();
+      console.log(userList,'list')
       if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
       const managerList = formatUsers(userList);
       return setCohortManager([...managerList]);
@@ -92,6 +94,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
     // console.log(managerList,'fs');
     if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
     const managerList = formatUsers(userList);
+    
     setCohortManager([...managerList]);
 
     const cohortDetail = resCohort?.getCohortDetails;
@@ -214,6 +217,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
         label={'Cohort Image'}
         isRemove={true}
         description={false}
+        tooltipTitle={ADMIN_USERS.userCohort.cohortMaster}
         imageUrl={cohortData?.image_url}
         handleChange={setImage}
         isDisabled={isReadOnly}

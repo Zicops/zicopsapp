@@ -14,7 +14,8 @@ export default function SearchHeader({
   setFilters,
   clearAllFilters,
   catSubCat,
-  setActiveCatId
+  setActiveCatId,
+  isFiltersDisabled = false
 }) {
   const router = useRouter();
   const { searchQuery } = router.query;
@@ -88,8 +89,10 @@ export default function SearchHeader({
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Language',
-            options: Languages,
-            value: { value: filters.lang, label: filters.lang }
+            options: [{ value: '', label: '-- Select --' }, ...Languages],
+            value: { value: filters.lang, label: filters.lang },
+            isDisabled: isFiltersDisabled,
+            isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'lang')}
         />
@@ -100,6 +103,7 @@ export default function SearchHeader({
             placeholder: 'Category',
             options: [{ value: '', label: '-- Select --' }, ...catSubCat?.cat],
             value: { value: filters.category, label: filters.category },
+            isDisabled: isFiltersDisabled,
             isSearchEnable: true
           }}
           changeHandler={(e) => {
@@ -114,6 +118,7 @@ export default function SearchHeader({
             placeholder: 'Sub-category',
             options: [{ value: '', label: '-- Select --' }, ...catSubCat?.subCat],
             value: { value: filters.subCategory, label: filters.subCategory },
+            isDisabled: isFiltersDisabled,
             isSearchEnable: true
           }}
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'subCategory')}
@@ -129,7 +134,8 @@ export default function SearchHeader({
               { value: 'Blog', label: 'Blog' },
               { value: 'Bookmarks', label: 'Bookmarks' }
             ],
-            value: { value: filters.type, label: snakeCaseToTitleCase(filters.type) }
+            value: { value: filters.type, label: snakeCaseToTitleCase(filters.type) },
+            isDisabled: isFiltersDisabled
           }}
           changeHandler={(e) => changeHandler(e, filters, setFilters, 'type')}
         />

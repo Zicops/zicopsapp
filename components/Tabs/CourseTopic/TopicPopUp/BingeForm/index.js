@@ -29,7 +29,7 @@ export default function BingeForm({ topicVideo }) {
                   type="text"
                   name="startTimeMin"
                   className={`${style.valuae}`}
-                  value={bingeData.startTimeMin}
+                  value={bingeData.startTimeMin || 0}
                   onChange={handleInput}
                 />
                 :
@@ -37,7 +37,7 @@ export default function BingeForm({ topicVideo }) {
                   type="text"
                   name="startTimeSec"
                   className={`${style.valuae}`}
-                  value={bingeData.startTimeSec}
+                  value={bingeData.startTimeSec || 0}
                   onChange={handleInput}
                 />
                 {/* <span className={`${value">20:00</span> */}
@@ -49,7 +49,7 @@ export default function BingeForm({ topicVideo }) {
                   type="text"
                   name="skipIntroDuration"
                   className={`${style.durationvalue}`}
-                  value={bingeData.skipIntroDuration}
+                  value={bingeData.skipIntroDuration || 0}
                   onChange={handleInput}
                 />
                 {/* <span className={`${value">00</span> */}
@@ -66,7 +66,7 @@ export default function BingeForm({ topicVideo }) {
                   type="text"
                   name="showTimeMin"
                   className={`${style.value}`}
-                  value={bingeData.showTimeMin}
+                  value={bingeData.showTimeMin || 0}
                   onChange={handleInput}
                 />
                 <span>:</span>
@@ -74,7 +74,7 @@ export default function BingeForm({ topicVideo }) {
                   type="text"
                   name="showTimeSec"
                   className={`${style.value}`}
-                  value={bingeData.showTimeSec}
+                  value={bingeData.showTimeSec || 0}
                   onChange={handleInput}
                 />
                 {/* <span className={`${value">00:15</span> */}

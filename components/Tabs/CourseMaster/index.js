@@ -1,5 +1,6 @@
 import { DELETE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { deleteData } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
@@ -172,6 +173,7 @@ export default function CourseMaster() {
           fullCourse?.owner &&
           fullCourse?.language?.length
         }
+        tooltipTitle={ADMIN_COURSES.myCourses.courseMaster.nextBtn}
       />
 
       {showConfirmBox && (

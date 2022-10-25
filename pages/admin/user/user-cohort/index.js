@@ -5,6 +5,7 @@ import { userSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helpe
 
 import Sidebar from '@/components/common/Sidebar';
 import UserCohorts from '@/components/UserComps/UserCohorts';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 
 const UserCohort = () => {
   return (
@@ -14,6 +15,7 @@ const UserCohort = () => {
         <AdminHeader
           title="User Cohorts"
           isAddShown={true}
+          tooltipTitle={ADMIN_USERS.userCohort.addBtn}
           pageRoute="/admin/user/user-cohort/add-cohort"
         />
         <MainBodyBox>

@@ -760,6 +760,7 @@ export const GET_EXAM_META = gql`
       Status
       Category
       SubCategory
+      TotalCount
     }
   }
 `;

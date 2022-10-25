@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import ToolTip from '../common/ToolTip';
 
 const Accordion = ({
   title,
   content,
   closeAccordion,
   onClose = function () {},
-  isDisabled = false
+  isDisabled = false,
+  tooltipTitleOpen,
+  tooltipTitleClose
 }) => {
   const [isActive, setIsActive] = useState(false);
 
@@ -33,9 +36,13 @@ const Accordion = ({
             }}>
             <div>
               {isActive ? (
-                <img src="/images/accordionOn.png" />
+                <ToolTip title={tooltipTitleClose}>
+                  <img src="/images/accordionOn.png" />
+                </ToolTip>
               ) : (
-                <img src="/images/accordionOff.png" />
+                <ToolTip title={tooltipTitleOpen}>
+                  <img src="/images/accordionOff.png" />
+                </ToolTip>
               )}
             </div>
             <div className="accordion-title-text">{title}</div>

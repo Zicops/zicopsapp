@@ -163,6 +163,7 @@ export default function TopicPopUp({
                         inputHandlers={inputHandlers}
                         addNewTopicContent={addNewTopicContent}
                         isAddTopicContentReady={isAddTopicContentReady}
+                        handleCancel={toggleTopicContentForm}
                       />
                     )}
                   </div>
