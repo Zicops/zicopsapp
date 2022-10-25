@@ -1,14 +1,14 @@
 import OrgRegisterForm from '@/components/OrganizationRegister/OrgRegisterForm';
 import React, { useEffect } from 'react';
-import Button from '../Button';
-import OrgCongratulations from '../OrgCongratulations';
-import OrgEmail from '../OrgEmail';
-import Tabs from '../Tabs';
-import { TAB_DATA } from '../Tabs/tabs.helper';
+// import Button from '../../Button';
+// import OrgCongratulations from '../../OrgCongratulations';
+// import OrgEmail from '../OrgEmail';
+// import Tabs from '../Tabs';
+// import { TAB_DATA } from '../Tabs/tabs.helper';
 // import OrgButton from '../OrgButton';
 import styles from './orgFormLayout.module.scss';
 
-const OrgFormLayout = ({ children, headerTitle, headerImg, isHeaderVisible }) => {
+const OrgFormLayout = ({ children, headerTitle = null, headerImg = null , isHeaderVisible }) => {
   return (
     <div className={`${styles.layout}`}>
       <div>
@@ -26,15 +26,15 @@ const OrgFormLayout = ({ children, headerTitle, headerImg, isHeaderVisible }) =>
               />
             </svg>
           </button>
-          <img src="./images/svg/zicops_logo.svg" alt="zicops logo" />
-          {/* <img src={headerImg} alt="zicops logo" /> */}
+          {/* <img src="./images/svg/zicops_logo.svg" alt="zicops logo" /> */}
+          <img src={headerImg || "./images/svg/zicops_logo.svg"} alt="logo" />
         </div>
         <div className={`${styles.info_layout}`}>
           <div className={`${styles.header_title}`}>
             {isHeaderVisible && (
               <>
                 <img src="./images/svg/add_home.svg" alt="" />
-                <p style={{ marginBottom: '20px' }}>Create Learning Space</p>
+                <p style={{ marginBottom: '20px' }}>{headerTitle||'Create Learning Space'}</p>
               </>
             )}
             {/* <p>{headerTitle}</p> */}

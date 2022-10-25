@@ -1,4 +1,4 @@
-@import '../../../styles/base.scss';
+@import '../../../../styles/base.scss';
 
 .page_layout {
     margin-top: 65px;
@@ -24,16 +24,9 @@
         margin: 25px 0;
     }
 
-    .form_title {
-        font-size: 16px;
-        margin-bottom: 10px;
-        color: $secondaryBlack;
-    }
-
     .btnContainer {
         display: flex;
-        justify-content: space-between;
-        gap: 15px;
+        justify-content: flex-end;
         margin-top: 25px;
     }
 }

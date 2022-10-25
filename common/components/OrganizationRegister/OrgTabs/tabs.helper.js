@@ -1,7 +1,6 @@
-// import OrgRegisterForm from '@/components/OrganizationRegister/OrgRegisterForm';
-import OrgContactForm from '../OrgContactForm';
-// import OrgHomePage from '../OrgHomePage';
-import OrgUnitForm from '../OrgUnitForm';
+import OrgContactForm from "../OrganizationForms/OrgContactForm";
+import OrgUnitForm from "../OrganizationForms/OrgUnitForm";
+
 
 export const TAB_DATA = [
   {

@@ -1,6 +1,6 @@
 import Select from 'react-select';
 import { labeledDropdownWrapper } from './orgDropDown.module.scss';
-import { customSelectStyles } from '../../utils/formComponent.helper';
+import { customSelectStyles } from '../OrganizationRegister/utils/formComponent.helper';
 
 export default function Dropdown({
   dropdownOptions,

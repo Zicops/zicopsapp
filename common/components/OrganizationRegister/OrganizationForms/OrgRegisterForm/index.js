@@ -1,27 +1,30 @@
-import Dropdown from 'common/components/DropDown';
 import PhoneInputBox from '@/components/common/FormComponents/PhoneInputBox';
-import Button from 'common/components/Button';
-import LabeledInputs from 'common/components/LabeledInput';
-import { orgInputData } from '../helper/orgRegister.helper';
-import styles from '../organizationRegister.module.scss';
-import { useRecoilState } from 'recoil';
-import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
 import { changeHandler } from '@/helper/common.helper';
-import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
+import Button from 'common/components/Button';
+import Dropdown from 'common/components/DropDown';
+import LabeledInputs from 'common/components/LabeledInput';
 import LabeledTextarea from 'common/components/LabeledTextarea';
+import useHandleOrgForm from 'common/components/OrganizationRegister/utils/orgResgisterForm.helper';
+import OrgCongratulations from 'common/components/OrgCongratulations';
 import UploadAndPreview from 'common/components/UploadAndPreview';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import useHandleOrgForm from 'common/utils/orgResgisterForm.helper';
+import { useRecoilState } from 'recoil';
+import { orgRegisterData } from '../../helper/orgRegister.helper';
+import styles from '../../organizationRegister.module.scss';
 
 const OrgRegisterForm = () => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
   const { isOrgRegisterationReady } = useHandleOrgForm();
+  const [isFormSubmit , setIsFormSubmit] = useState(false);
+  const router = useRouter();
 
-  useEffect(() => {
-    setOrgTempDetails({ ...orgTempDetails, orgLogo: image });
-    return;
-  }, [image]);
+  // useEffect(() => {
+  //   setOrgTempDetails({ ...orgTempDetails, orgLogo: image });
+  //   return;
+  // }, [image]);
 
   const INPUT_OBJECT = {
     normalInput: function (obj = {}) {
@@ -46,7 +49,7 @@ const OrgRegisterForm = () => {
       return (
         <UploadAndPreview
           inputOptions={obj?.inputOptions}
-          handleChange={setImage}
+          handleChange={setOrgTempDetails}
           uploadedFile={file}
         />
       );
@@ -79,7 +82,7 @@ const OrgRegisterForm = () => {
   };
   return (
     <div className={`${styles?.orgRegisterContainer}`}>
-      {orgInputData?.map((form) => {
+      {orgRegisterData?.map((form) => {
         return <>{INPUT_OBJECT[`${form?.type}`](form)}</>;
       })}
       <div className={`${styles?.btnContainer}`}>
@@ -89,11 +92,14 @@ const OrgRegisterForm = () => {
         <Button
           clickHandler={() => {
             console.log(orgTempDetails, 'org data');
+            setIsFormSubmit(true);
+
           }}
           isDisabled={!isOrgRegisterationReady}>
           Submit
         </Button>
       </div>
+      {isFormSubmit&&(<OrgCongratulations title={'Organization created sccessfully!'} shape={'square'} clickHandle={()=>{router.push('/login')}}/>)}
     </div>
   );
 };

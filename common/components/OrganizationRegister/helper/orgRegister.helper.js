@@ -1,4 +1,6 @@
 import styles from '../organizationRegister.module.scss';
+import { Country } from 'country-state-city';
+
 
 export const industriesOption = [
   { label: 'Software', value: 'Software' },
@@ -36,10 +38,208 @@ export const formType = {
   phoneInput: 'phoneInput',
   uploadInput: 'uploadInput',
   dropDown: 'dropDown',
-  textArea: 'textAreaInput'
+  textArea: 'textAreaInput',
+  iconInput: 'iconInput'
 };
 
-export const orgInputData = [
+
+export const COUNTRIES = Country?.getAllCountries()?.map((country) => ({value:country?.name , label:country?.name , countryCode : country?.isoCode}));
+
+export const orgUnitData = [
+  {
+    type: formType?.iconInput,
+    inputOptions: {
+      placeholder: 'Enter organization name',
+      inputName: 'orgName',
+      label: 'Organization name :',
+      maxLength: 60
+    },
+    iconType: true
+  },
+  {
+    type: formType?.normalInput,
+    inputOptions: {
+      placeholder: 'Enter organization unit name',
+      inputName: 'orgUnitName',
+      label: 'Organization unit name :',
+      maxLength: 60
+    },
+    styleClass: styles?.inputStyle
+  },
+  {
+    type: formType?.textArea,
+    inputOptions: {
+      placeholder: 'Enter your organization’s postal adress',
+      inputName: 'orgPostalAddress',
+      label: 'Postal address :',
+      maxLength: 60
+    },
+    styleClass: styles?.inputStyle
+  },
+  {
+    type: formType?.dropDown,
+    inputOptions: {
+      placeholder: 'Select country',
+      inputName: 'orgCountry',
+      label: 'Country* :',
+      options: COUNTRIES,
+      isSearchEnable: true
+    }
+  },
+  {
+    type: formType?.dropDown,
+    inputOptions: {
+      placeholder: 'Select state',
+      inputName: 'orgState',
+      label: 'State* :',
+      // options: industriesOption.
+      noOptionsMessage: 'Select Country First',
+      isSearchEnable: true
+    }
+  },
+  {
+    type: formType?.normalInput,
+    inputOptions: {
+      placeholder: 'Select city',
+      inputName: 'orgCity',
+      label: 'City* :',
+      maxLength: 60
+    },
+    styleClass: styles?.inputStyle
+  },
+  {
+    type: formType?.normalInput,
+    inputOptions: {
+      placeholder: 'Enter postal-code',
+      inputName: 'orgPostalCode',
+      label: 'Postal-code* :',
+      maxLength: 60
+    },
+    styleClass: styles?.inputStyle
+  },
+  {
+    type: formType?.dropDown,
+    inputOptions: {
+      placeholder: 'Select number of employees',
+      inputName: 'orgEmployees',
+      label: 'Number of employees* :',
+      options: numberEmployessOption
+    }
+  },
+  {
+    type: formType?.uploadInput,
+    inputOptions: {
+      placeholder: 'Upload Photo',
+      inputName: 'orgUnitLogo',
+      label: 'Organization unit logo* :'
+    }
+  },
+  {
+    type: formType?.normalInput,
+    inputOptions: {
+      placeholder: 'Enter learning space name',
+      inputName: 'orgLearningSpaceName',
+      label: 'Learning space name* :',
+      maxLength: 60
+    },
+    styleClass: styles?.inputStyle
+  },
+  {
+    type: formType?.iconInput,
+    inputOptions: {
+      placeholder: 'Enter learning space URL preference',
+      inputName: 'orgLearningSpaceUrl',
+      label: 'Learning space URL preference* :',
+      maxLength: 60
+    },
+    iconType: '.zicops.com'
+  },
+  {
+    type: formType?.uploadInput,
+    inputOptions: {
+      placeholder: 'Upload Photo',
+      inputName: 'orgProfilePhoto',
+      label: 'Learning space profile* :'
+    }
+  }
+];
+
+export const orgContactPersonData = [
+  {
+    type: formType?.normalInput,
+    inputOptions: {
+      placeholder: 'Enter firstname',
+      inputName: 'orgPersonFirstname',
+      label: 'First name :',
+      maxLength: 60
+    },
+    styleClass: styles?.inputStyle
+  },
+  {
+    type: formType?.normalInput,
+    inputOptions: {
+      placeholder: 'Enter lastname',
+      inputName: 'orgPersonLastname',
+      label: 'Last name :',
+      maxLength: 60
+    },
+    styleClass: styles?.inputStyle
+  },
+  {
+    type: formType?.iconInput,
+    inputOptions: {
+      placeholder: 'Enter email id',
+      inputName: 'orgPersonEmailId',
+      label: 'Email id :'
+    },
+    iconType: true
+  },
+  {
+    type: formType?.phoneInput,
+    inputOptions: {
+      placeholder: '000 000 0000',
+      inputName: 'orgPersonContactNumber',
+      label: 'Contact number :'
+    }
+  },
+  {
+    type: formType?.dropDown,
+    inputOptions: {
+      placeholder: 'Select role in the organization',
+      inputName: 'orgPersonRole',
+      label: 'Organization role :',
+      options: industriesOption
+    }
+  },
+  // {
+  //      type: 'normalInput',
+  //      inputOptions: {
+  //        placeholder: 'Enter organizational role',
+  //        inputName: 'orgPersonRoleOthers',
+  //        label: 'Please specify others :'
+  //       }
+  //     },
+  {
+    type: formType?.normalInput,
+    inputOptions: {
+      placeholder: 'Enter your organization LinkedIn URL',
+      inputName: 'orgLinkdInUrl',
+      label: 'LinkedIn :'
+    }
+  },
+
+  {
+    type: formType?.textArea,
+    inputOptions: {
+      placeholder: 'Enter your remarks (purpose)',
+      inputName: 'orgPersonRemarks',
+      label: 'Remarks (Purpose) :'
+    },
+    styleClass: styles?.inputStyle
+  }
+];
+
+export const orgRegisterData = [
   {
     type: formType?.normalInput,
     inputOptions: {
@@ -122,3 +322,4 @@ export const orgInputData = [
     }
   }
 ];
+

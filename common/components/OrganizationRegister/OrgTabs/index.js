@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TAB_DATA } from './tabs.helper';
 import styles from './tabs.module.scss';
 
-const Tabs = ({ tabData }) => {
+const OrgTabs = ({ tabData }) => {
   // const tabData = TAB_DATA;
   const [activeTab, setActiveTab] = useState(tabData[0]?.id);
 
@@ -37,4 +37,4 @@ const Tabs = ({ tabData }) => {
   );
 };
 
-export default Tabs;
+export default OrgTabs;

@@ -1,11 +1,16 @@
+import Button from 'common/components/Button';
+import LabeledInputs from 'common/components/LabeledInput';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import Button from '../Button';
-import LabeledInputs from '../LabeledInput';
 import OrgFormLayout from '../OrgFormLayout';
+// import Button from '../../Button';
+// import LabeledInputs from '../../LabeledInput';
+// import OrgFormLayout from '../OrgFormLayout';
 import styles from './orgGetStarted.module.scss';
 
 const OrgGetStarted = () => {
   const [emailValue, setEmailValue] = useState();
+  const router = useRouter();
   return (
     <OrgFormLayout isHeaderVisible={false}>
       <div className={`${styles.page_layout}`}>
@@ -26,10 +31,10 @@ const OrgGetStarted = () => {
           }}
         />
         <div className={`${styles.btnContainer}`}>
-          <Button size="medium" theme="dark" isBold="bold">
+          <Button size="medium" theme="dark" isBold="bold" clickHandler={()=>{router.push('/create-learning-space/org-register-form')}}>
             Register Organization
           </Button>
-          <Button size="small" isBold="bold">
+          <Button size="small" isBold="bold" clickHandler={()=>{router.push('/create-learning-space/org-unit-form')}}>
             Proceed
           </Button>
         </div>

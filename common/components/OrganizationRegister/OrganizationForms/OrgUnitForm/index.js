@@ -1,19 +1,18 @@
-import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
-import { orgUnitData } from 'common/utils/formComponent.helper';
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import LabeledInputs from '../LabeledInput';
-import LabeledDropdown from '../DropDown';
-import styles from '../OrganizationRegister/organizationRegister.module.scss';
-import Button from '../Button';
-import LabeledTextarea from '../LabeledTextArea';
-import UploadAndPreview from '../UploadAndPreview';
-import InputWithCheckbox from '@/components/common/InputWithCheckbox';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import IconLabeledInputs from '../IconLabeledInput';
 import { changeHandler } from '@/helper/common.helper';
-import useHandleOrgForm from 'common/utils/orgResgisterForm.helper';
-import { Country, State, City }  from 'country-state-city';
+import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
+import Button from 'common/components/Button';
+import LabeledDropdown from 'common/components/DropDown';
+import IconLabeledInputs from 'common/components/IconLabeledInput';
+import LabeledInputs from 'common/components/LabeledInput';
+import LabeledTextarea from 'common/components/LabeledTextArea';
+import useHandleOrgForm from 'common/components/OrganizationRegister/utils/orgResgisterForm.helper';
+import UploadAndPreview from 'common/components/UploadAndPreview';
+import { State } from 'country-state-city';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { orgUnitData } from '../../helper/orgRegister.helper';
+import styles from '../../organizationRegister.module.scss';
 
 const OrgUnitForm = ({ setTab = () => {} }) => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
@@ -132,7 +131,7 @@ const OrgUnitForm = ({ setTab = () => {} }) => {
         <Button size="small" theme="dark" clickHandler={() => console.log(orgTempDetails)}>
           Cancel
         </Button>
-        <Button size="small" clickHandler={() => setTab(2)} isDisabled={isUnitFormReady}>
+        <Button size="small" clickHandler={() => setTab(2)} isDisabled={!isUnitFormReady}>
           Next
         </Button>
       </div>

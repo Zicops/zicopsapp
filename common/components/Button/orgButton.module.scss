@@ -9,10 +9,10 @@
     background: $primary;
     font-size: 15px;
     // font-weight: 550;
-    opacity: 0.8;
+    opacity: 1;
     cursor: pointer;
     &:hover {
-        opacity: 1;
+        opacity: 0.8;
       }
       &:disabled {
         background-color: $darkThree !important;

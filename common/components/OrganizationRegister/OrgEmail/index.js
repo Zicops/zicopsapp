@@ -1,11 +1,13 @@
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import Button from '../Button';
-import LabeledInputs from '../LabeledInput';
+import Button from '../../Button';
+import LabeledInputs from '../../LabeledInput';
 import OrgFormLayout from '../OrgFormLayout';
 import styles from './orgEmail.module.scss';
 
 const OrgEmail = () => {
   const [emailValue, setEmailValue] = useState();
+  const router = useRouter();
   return (
     <OrgFormLayout isHeaderVisible={false}>
       <div className={`${styles.page_layout}`}>
@@ -25,7 +27,7 @@ const OrgEmail = () => {
           }}
         />
         <div className={`${styles.btnContainer}`}>
-          <Button size="small" isBold="bold">
+          <Button size="small" isBold="bold" clickHandler={()=>{router.push('create-learning-space/org-register')}}>
             Proceed
           </Button>
         </div>

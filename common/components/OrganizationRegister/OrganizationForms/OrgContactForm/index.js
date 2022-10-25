@@ -1,17 +1,17 @@
-import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
-import { orgContactPersonData, orgUnitData } from 'common/utils/formComponent.helper';
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import LabeledInputs from '../LabeledInput';
-import LabeledDropdown from '../DropDown';
-import styles from '../OrganizationRegister/organizationRegister.module.scss';
-import PhoneInputBox from '@/components/common/FormComponents/PhoneInputBox';
-import Button from '../Button';
-import LabeledTextarea from '../LabeledTextArea';
-import OrgPhoneInput from '../OrgPhoneInput';
-import IconLabeledInputs from '../IconLabeledInput';
 import { changeHandler } from '@/helper/common.helper';
-import useHandleOrgForm from 'common/utils/orgResgisterForm.helper';
+import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
+import useHandleOrgForm from 'common/components/OrganizationRegister/utils/orgResgisterForm.helper';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { orgContactPersonData } from '../../helper/orgRegister.helper';
+import Button from 'common/components/Button';
+import LabeledDropdown from 'common/components/DropDown';
+import IconLabeledInputs from 'common/components/IconLabeledInput';
+import LabeledInputs from 'common/components/LabeledInput';
+import LabeledTextarea from 'common/components/LabeledTextArea';
+import styles from '../../organizationRegister.module.scss';
+import OrgPhoneInput from 'common/components/OrgPhoneInput';
+// import OrgPhoneInput from '../OrgPhoneInput';
 
 const OrgContactForm = ({ setTab = () => {} }) => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);

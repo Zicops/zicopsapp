@@ -38,7 +38,11 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/info/contact-us',
   '/info/tour',
   '/info/careers',
-  '/account-select'
+  '/account-select',
+  '/create-learning-space',
+  '/create-learning-space/org-register',
+  '/create-learning-space/org-register-form',
+  '/create-learning-space/org-unit-form'
 ];
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
