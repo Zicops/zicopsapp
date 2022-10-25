@@ -1,4 +1,5 @@
 import styles from '../../components/OrganizationRegister/organizationRegister.module.scss';
+import { Country, State, City }  from 'country-state-city';
 
 // labeled dropdown react multi select styles
 export function customSelectStyles(
@@ -123,7 +124,7 @@ export const industriesOption = [
   { label: 'Telecomminication', value: 'Telecomminication' },
   { label: 'Others', value: 'Others' }
 ];
-
+ 
 export const bussinessTypeOption = [
   { label: 'Small Business(1-50)', value: 'Small Business' },
   { label: 'Mid size', value: 'Mid size' },
@@ -151,6 +152,8 @@ export const formType = {
   textArea: 'textAreaInput',
   iconInput: 'iconInput'
 };
+
+export const COUNTRIES = Country?.getAllCountries()?.map((country) => ({value:country?.name , label:country?.name , countryCode : country?.isoCode}));
 
 export const orgUnitData = [
   {
@@ -189,7 +192,8 @@ export const orgUnitData = [
       placeholder: 'Select country',
       inputName: 'orgCountry',
       label: 'Country* :',
-      options: industriesOption
+      options: COUNTRIES,
+      isSearchEnable: true
     }
   },
   {
@@ -198,7 +202,9 @@ export const orgUnitData = [
       placeholder: 'Select state',
       inputName: 'orgState',
       label: 'State* :',
-      options: industriesOption
+      // options: industriesOption.
+      noOptionsMessage: 'Select Country First',
+      isSearchEnable: true
     }
   },
   {

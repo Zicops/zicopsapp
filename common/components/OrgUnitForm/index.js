@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import LabeledInputs from '../LabeledInput';
 import LabeledDropdown from '../DropDown';
-import styles from '../../../components/OrganizationRegister/organizationRegister.module.scss';
+import styles from '../OrganizationRegister/organizationRegister.module.scss';
 import Button from '../Button';
 import LabeledTextarea from '../LabeledTextArea';
 import UploadAndPreview from '../UploadAndPreview';
@@ -13,15 +13,34 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import IconLabeledInputs from '../IconLabeledInput';
 import { changeHandler } from '@/helper/common.helper';
 import useHandleOrgForm from 'common/utils/orgResgisterForm.helper';
+import { Country, State, City }  from 'country-state-city';
 
 const OrgUnitForm = ({ setTab = () => {} }) => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
   const [image, setImage] = useState(null);
   const { isUnitFormReady } = useHandleOrgForm();
+  const [formData , setFormData] = useState(orgUnitData) ;
 
-  useEffect(() => {
-    console.log(isUnitFormReady);
-  }, [isUnitFormReady]);
+  useEffect(async() => {
+    if(!orgTempDetails?.orgCountry?.value?.length) return ;
+    // if(!orgTempDetails?.orgState?.length) return ;
+
+    //  console.log(orgTempDetails?.orgCountry)
+     const state = State.getStatesOfCountry(orgTempDetails?.orgCountry?.countryCode);
+     const stateOptions = state?.map((state) => ({value:state?.name , label: state?.name}));
+     const formArr = formData ;
+     formArr[4].inputOptions.options = stateOptions ;
+    //  console.log(formArr);
+     setFormData([...formArr]);
+     return ;
+     
+  }, [orgTempDetails?.orgCountry?.value]);
+
+
+  function handleDropDown(e , state , setState , inputName){
+    if(inputName.toLowerCase() === 'orgstate') return setState({...state, [inputName]:e?.value});
+    return setState({...state, [inputName]:{value:e?.value ,countryCode: e?.countryCode}});
+  }
 
   const INPUT_OBJECT = {
     normalInput: function (obj = {}) {
@@ -59,14 +78,21 @@ const OrgUnitForm = ({ setTab = () => {} }) => {
       );
     },
     dropDown: function (obj = {}) {
-      const val = orgTempDetails[`${obj?.inputOptions?.inputName}`];
+      const data = orgTempDetails[`${obj?.inputOptions?.inputName}`] ;
+      let val ;
+      if(obj.inputOptions.inputName === 'orgState'){
+        val = data
+      }
+      else {val = data?.value }
       obj.inputOptions.value = { value: val, label: val };
       return (
         <LabeledDropdown
           dropdownOptions={obj?.inputOptions}
           styleClass={styles?.inputStyle}
           changeHandler={(e) =>
-            changeHandler(e, orgTempDetails, setOrgTempDetails, `${obj?.inputOptions?.inputName}`)
+            {
+            // changeHandler(e, orgTempDetails, setOrgTempDetails, `${obj?.inputOptions?.inputName}`)
+            handleDropDown(e, orgTempDetails, setOrgTempDetails, `${obj?.inputOptions?.inputName}`)}
           }
         />
       );
@@ -86,7 +112,7 @@ const OrgUnitForm = ({ setTab = () => {} }) => {
   };
   return (
     <div className={`${styles?.orgRegisterContainer}`}>
-      {orgUnitData?.map((form) => {
+      {formData?.map((form) => {
         return <>{INPUT_OBJECT[`${form?.type}`](form)}</>;
       })}
       <div className={`${styles?.checkboxContainer}`}>
@@ -106,7 +132,7 @@ const OrgUnitForm = ({ setTab = () => {} }) => {
         <Button size="small" theme="dark" clickHandler={() => console.log(orgTempDetails)}>
           Cancel
         </Button>
-        <Button size="small" clickHandler={() => setTab(2)} isDisabled={!isUnitFormReady}>
+        <Button size="small" clickHandler={() => setTab(2)} isDisabled={isUnitFormReady}>
           Next
         </Button>
       </div>

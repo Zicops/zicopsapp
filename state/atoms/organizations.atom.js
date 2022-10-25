@@ -21,7 +21,7 @@ export function getOrgsTempDetails(data = {}) {
     //org unit data
     orgUnitName: data?.orgUnitName || '',
     orgPostalAddress: data?.orgPostalAddress || '',
-    orgCountry: data?.orgCountry || '',
+    orgCountry: data?.orgCountry || {value:"" , countryCode: ""},
     orgState: data?.orgState || '',
     orgCity: data?.orgCity || '',
     orgPostalCode: data?.orgPostalCode || '',
