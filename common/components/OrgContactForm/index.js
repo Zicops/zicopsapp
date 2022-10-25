@@ -1,6 +1,6 @@
 import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
 import { orgContactPersonData, orgUnitData } from 'common/utils/formComponent.helper';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import LabeledInputs from '../LabeledInput';
 import LabeledDropdown from '../DropDown';
@@ -16,6 +16,26 @@ import useHandleOrgForm from 'common/utils/orgResgisterForm.helper';
 const OrgContactForm = ({ setTab = () => {} }) => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
   const { isContactFormReady } = useHandleOrgForm();
+  const [formData,setFormData] = useState(orgContactPersonData);
+
+  useEffect(()=>{
+   if(orgTempDetails?.orgPersonRole?.toLowerCase() !== 'others') return setFormData(orgContactPersonData);
+   if(formData?.length === 8) return ;
+   const formInput =  {
+     type: 'normalInput',
+     inputOptions: {
+       placeholder: 'Enter organizational role',
+       inputName: 'orgPersonRoleOthers',
+       label: 'Please specify others :'
+      }
+    }
+    const data = [...orgContactPersonData];
+    data?.splice(orgContactPersonData?.length - 2,0,formInput)
+    // console.log('ipdae',orgContactPersonData,data)
+    setFormData([...data])
+    return;
+
+  },[orgTempDetails])
 
   const INPUT_OBJECT = {
     normalInput: function (obj = {}) {
@@ -85,7 +105,7 @@ const OrgContactForm = ({ setTab = () => {} }) => {
   };
   return (
     <div className={`${styles?.orgRegisterContainer}`}>
-      {orgContactPersonData?.map((form) => {
+      {formData?.map((form) => {
         return <>{INPUT_OBJECT[`${form?.type}`](form)}</>;
       })}
       <div className={`${styles?.btnContainer}`}>
