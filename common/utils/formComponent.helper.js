@@ -315,15 +315,14 @@ export const orgContactPersonData = [
       options: industriesOption
     }
   },
-  {
-    type: formType?.normalInput,
-    inputOptions: {
-      placeholder: 'Enter organizational role',
-      inputName: 'orgPersonRoleOthers',
-      label: 'Please specify others :'
-    }
-  },
-
+  // {
+  //      type: 'normalInput',
+  //      inputOptions: {
+  //        placeholder: 'Enter organizational role',
+  //        inputName: 'orgPersonRoleOthers',
+  //        label: 'Please specify others :'
+  //       }
+  //     },
   {
     type: formType?.normalInput,
     inputOptions: {
