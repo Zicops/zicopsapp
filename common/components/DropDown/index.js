@@ -18,7 +18,7 @@ export default function Dropdown({
     value,
     isDisabled,
     isReadonly,
-    isSearchEnable,
+    isSearchEnable = true,
     isMulti,
     noOptionsMessage = 'No Options',
     menuPlacement = 'bottom'
