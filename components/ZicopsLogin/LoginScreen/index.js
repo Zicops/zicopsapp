@@ -87,6 +87,8 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
+    if (isError) return;
+
     // TODO: udpate this later and move it according to org flow
     const orgRes = await loadQueryDataAsync(
       GET_USER_ORGANIZATIONS,
