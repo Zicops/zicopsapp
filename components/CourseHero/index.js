@@ -1,5 +1,7 @@
+import { displayUnixDate } from '@/helper/utils.helper';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { Skeleton } from '@mui/material';
+import moment from 'moment';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
@@ -49,13 +51,13 @@ export default function CourseHero({ isPreview = false }) {
     owner: provisionedBy
   } = fullCourse;
 
-  useEffect(()=>{
-    if(!router?.query?.isAssign) return;
-    if(!fullCourse?.id) return ;
-    if(router?.query?.courseId !== fullCourse?.id) return ;
-    if(courseAssignData?.isCourseAssigned) return ;
+  useEffect(() => {
+    if (!router?.query?.isAssign) return;
+    if (!fullCourse?.id) return;
+    if (router?.query?.courseId !== fullCourse?.id) return;
+    if (courseAssignData?.isCourseAssigned) return;
     return setIsAssignPopUpOpen(true);
-  },[fullCourse]);
+  }, [fullCourse]);
 
   return (
     <div
@@ -116,8 +118,13 @@ export default function CourseHero({ isPreview = false }) {
               {isLoading ? (
                 <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={400} />
               ) : (
-                `** Suggested duration for completion of this course is ${duration?.toString()}`
+                `** Suggested duration for completion of this course is ${duration?.toString()} mins`
               )}
+              <br />
+              {userCourseData?.userCourseMapping?.end_date &&
+                `The course completion date is ${displayUnixDate(
+                  userCourseData?.userCourseMapping?.end_date
+                )}`}
             </p>
           </div>
 
