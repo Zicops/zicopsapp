@@ -11,6 +11,7 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledTextarea from 'common/components/LabeledTextarea';
 import UploadAndPreview from 'common/components/UploadAndPreview';
 import { useEffect, useState } from 'react';
+import OrgCongratulations from 'common/components/OrgCongratulations';
 
 const OrgRegisterForm = () => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
@@ -40,9 +41,14 @@ const OrgRegisterForm = () => {
       return <PhoneInputBox />;
     },
     uploadInput: function (obj = {}) {
-      const file = orgTempDetails[`${obj?.inputOptions?.inputName}`] ;
-      return <UploadAndPreview inputOptions={obj?.inputOptions} handleChange={setImage}
-      uploadedFile={file}/>
+      const file = orgTempDetails[`${obj?.inputOptions?.inputName}`];
+      return (
+        <UploadAndPreview
+          inputOptions={obj?.inputOptions}
+          handleChange={setImage}
+          uploadedFile={file}
+        />
+      );
     },
     dropDown: function (obj = {}) {
       const val = orgTempDetails[`${obj?.inputOptions?.inputName}`];
@@ -59,11 +65,15 @@ const OrgRegisterForm = () => {
     },
     textAreaInput: function (obj = {}) {
       obj.inputOptions.value = orgTempDetails[`${obj?.inputOptions?.inputName}`];
-      return <LabeledTextarea inputOptions={obj?.inputOptions}
-      styleClass={styles?.inputStyle}
-      changeHandler={(e) => {
-        changeHandler(e, orgTempDetails, setOrgTempDetails);
-      }}/>
+      return (
+        <LabeledTextarea
+          inputOptions={obj?.inputOptions}
+          styleClass={styles?.inputStyle}
+          changeHandler={(e) => {
+            changeHandler(e, orgTempDetails, setOrgTempDetails);
+          }}
+        />
+      );
     }
   };
   return (
@@ -72,8 +82,17 @@ const OrgRegisterForm = () => {
         return <>{INPUT_OBJECT[`${form?.type}`](form)}</>;
       })}
       <div className={`${styles?.btnContainer}`}>
-      <Button size='small' theme='dark'>Cancel</Button>
-      <Button clickHandler={()=>{console.log(orgTempDetails,'org data')}}>Submit</Button></div>
+        <Button size="small" theme="dark">
+          Cancel
+        </Button>
+        <Button
+          clickHandler={() => {
+            console.log(orgTempDetails, 'org data');
+          }}>
+          Submit
+        </Button>
+      </div>
+      <OrgCongratulations title="Organization created sccessfully!" shape="square" />
     </div>
   );
 };

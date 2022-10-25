@@ -6,6 +6,11 @@
     padding: 30px;
     background: url('../../../public/images/starrySky2.png');
     background-size: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow-y: scroll;
 
     .header {
         button {
@@ -29,6 +34,7 @@
             color: $white;
             font-size: 20px;
             margin-top: 30px;
+            width: 33%;
         }
     }
 

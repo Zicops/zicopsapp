@@ -15,6 +15,10 @@
         gap: 30px;
         margin-bottom: 15px;
         cursor: pointer;
+
+        span {
+            flex: 1;
+        }
     }
 
     .tab_title {

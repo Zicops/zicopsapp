@@ -1,0 +1,32 @@
+@import '../../../styles/base.scss';
+
+.page_layout {
+    margin-top: 65px;
+
+    img {
+        width: 40px;
+    }
+
+    .page_head {
+        font-size: 25px;
+        font-weight: 600;
+    }
+
+    .labeled_input {
+        border: 1px solid $darkThree;
+        background: $darkOne;
+        height: 40px;
+        width: 100%;
+    }
+
+    .page_title {
+        color: $darkThree;
+        margin: 25px 0;
+    }
+
+    .btnContainer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 25px;
+    }
+}
