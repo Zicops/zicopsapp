@@ -298,6 +298,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
     const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+    
+     if(!assignedCoursesToUser?.length) setCourseLoading(false);
 
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
