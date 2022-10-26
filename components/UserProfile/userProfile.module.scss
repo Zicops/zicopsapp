@@ -160,3 +160,17 @@
 
   color: $white;
 }
+
+
+.addOrgPopUp{
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 25px;
+
+  .addOrgButtonContainer{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}

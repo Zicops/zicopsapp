@@ -1,5 +1,5 @@
 import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
-import { UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_LEARNINGSPACE_MAP, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
+import { ADD_USER_ORGANIZATION_MAP, UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_LEARNINGSPACE_MAP, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
   GET_USER_COURSE_MAPS,
@@ -638,6 +638,10 @@ export function useUpdateUserOrgData() {
     client: userClient
   });
 
+  const [addOrg, { error: createOrgError }] = useMutation(ADD_USER_ORGANIZATION_MAP, {
+    client: userClient
+  });
+
   // recoil
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -681,11 +685,29 @@ export function useUpdateUserOrgData() {
     return _userData;
   }
 
+  async function addUserOrg(userData=null){
+    if(!userData) return false;
+    let isError = false;
+    const res = await addOrg({ variables: userData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if (isError)
+      return setToastMsg({ type: 'danger', message: 'Add User Org Error' });
+
+    const data = res?.data?.addUserOrganizationMap[0];
+    const _userData = { ...newUserOrgData, ...data };
+    setUserOrgData(_userData);
+    return _userData ;
+  }
+
   return {
     newUserOrgData,
     setNewUserOrgData,
     updateUserOrg,
-    isFormCompleted
+    isFormCompleted,
+    addUserOrg
   };
 }
 
