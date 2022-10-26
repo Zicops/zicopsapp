@@ -26,4 +26,6 @@ spec:
             - name: http-zicops-app
               containerPort: {{ .Values.image.port }}
               protocol: TCP
-
+          env:
+            - name: ZICOPS_HOST
+              value: {{ .Values.image.host | quote }}
