@@ -21,7 +21,11 @@ export const PUBLIC_PATHS = [
   '/info/collaborate',
   '/info/contact-us',
   '/info/tour',
-  '/info/careers'
+  '/info/careers',
+  '/create-learning-space',
+  '/create-learning-space/org-register',
+  '/create-learning-space/org-register-form',
+  '/create-learning-space/org-unit-form'
 ];
 export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
