@@ -28,7 +28,7 @@ export default function AddTopicContentForm({
   useEffect(() => {
     setNewTopicContent({
       ...newTopicContent,
-      is_default: true,
+      is_default: !topicContent?.length,
       type: topicContent?.[0]?.type || null,
       language:null , 
     });
