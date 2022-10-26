@@ -5,9 +5,12 @@ import { useRecoilState } from 'recoil';
 export default function useHandleOrgForm() {
   const [orgData, setOrgData] = useRecoilState(OrganizationDetailsAtom);
 
+  const SHEET_URL = 'http://localhost:3000/api/sheet'
+
   const [isUnitFormReady, setIsUnitFormReady] = useState(false);
   const [isContactFormReady, setIsContactFormReady] = useState(false);
   const [isOrgRegisterationReady, setIsOrgRegisterationReady] = useState(false);
+
 
   useEffect(() => {
     setIsOrgRegisterationReady(
@@ -44,5 +47,59 @@ export default function useHandleOrgForm() {
         !!orgData?.orgPersonRemarks?.length
     );
   }, [orgData]);
-  return { isUnitFormReady, isContactFormReady, isOrgRegisterationReady };
+
+  function getBase64(file, onLoadCallback) {
+    return new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function() { resolve(reader.result); };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+  async function handleOrgRegisterForm(){
+    if(!isOrgRegisterationReady) return false;
+
+    const dataFormat = getOrgResiterObject(orgData) ;
+
+    const orgLogoBase64 = await getBase64(dataFormat?.orgLogo) ;
+
+    const orgDataObject = {...dataFormat , orgLogo: orgLogoBase64};
+
+    const sendData = []
+
+    Object.entries(orgDataObject).forEach(([key, value]) => {
+      sendData.push(`${key}: ${value}`);
+    })
+
+    console.log(sendData,'sendOrgData');
+
+    const res = await fetch(SHEET_URL, {
+      method: 'post',
+      headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({'data':sendData}),
+      cache: 'default'
+    })
+
+    console.log(res,'response');
+  }
+
+  function getOrgResiterObject(data={}){
+    return {
+    orgName: data?.orgName || '',
+    orgLogo: data?.orgLogo || null,
+    orgIndustry: data?.orgIndustry || '',
+    orgType: data?.orgType || '',
+
+    orgEmployees: data?.orgEmployees || '',
+    orgUrl: data?.orgUrl || '',
+    orgLinkdInUrl: data?.orgLinkdInUrl || '',
+    orgFacebookUrl: data?.orgFacebookUrl || '',
+    orgTwitterUrl: data?.orgTwitterUrl || '',
+    }
+  }
+  return { isUnitFormReady, isContactFormReady, isOrgRegisterationReady , handleOrgRegisterForm };
 }

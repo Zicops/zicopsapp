@@ -17,7 +17,7 @@ import styles from '../../organizationRegister.module.scss';
 const OrgRegisterForm = () => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
   // const [image, setImage] = useState(null);
-  const { isOrgRegisterationReady } = useHandleOrgForm();
+  const { isOrgRegisterationReady , handleOrgRegisterForm } = useHandleOrgForm();
   const [isFormSubmit , setIsFormSubmit] = useState(false);
   const router = useRouter();
 
@@ -90,9 +90,12 @@ const OrgRegisterForm = () => {
           Cancel
         </Button>
         <Button
-          clickHandler={() => {
+          clickHandler={async() => {
             console.log(orgTempDetails, 'org data');
-            setIsFormSubmit(true);
+
+            const res = await handleOrgRegisterForm()
+           
+            // setIsFormSubmit(true);
 
           }}
           isDisabled={!isOrgRegisterationReady}>

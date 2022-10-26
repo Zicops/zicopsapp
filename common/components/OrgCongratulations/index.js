@@ -17,7 +17,7 @@ const OrgCongratulations = ({ title, shape, clickHandle = () => {} }) => {
         <div className={`${styles.overlay}`}>
           <div className={`${styles.congratulations_body}`} style={customStyle}>
             <div>
-              <img src={'./images/svg/org_congrats_frame.svg'} alt="" />
+              <img src={'/images/svg/org_congrats_frame.svg'} alt="" />
             </div>
             <p>
               Thankyou for registering with Zicops Learning Spaces. Your details have been submitted

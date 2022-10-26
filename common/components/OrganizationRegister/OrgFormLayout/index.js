@@ -27,13 +27,13 @@ const OrgFormLayout = ({ children, headerTitle = null, headerImg = null , isHead
             </svg>
           </button>
           {/* <img src="./images/svg/zicops_logo.svg" alt="zicops logo" /> */}
-          <img src={headerImg || "./images/svg/zicops_logo.svg"} alt="logo" />
+          <img src={headerImg || "/images/svg/zicops_logo.svg"} alt="logo" />
         </div>
         <div className={`${styles.info_layout}`}>
           <div className={`${styles.header_title}`}>
             {isHeaderVisible && (
               <>
-                <img src="./images/svg/add_home.svg" alt="" />
+                <img src="/images/svg/add_home.svg" alt="" />
                 <p style={{ marginBottom: '20px' }}>{headerTitle||'Create Learning Space'}</p>
               </>
             )}
