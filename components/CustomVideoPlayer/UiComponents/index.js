@@ -140,7 +140,9 @@ export default function UiComponents({
       id: 1,
       btnImg: '/images/svg/hub.svg',
       handleClick: () => switchBox(1),
-      boxComponent: <ResourcesList updateIsPlayingTo={updateIsPlayingTo} />
+      boxComponent: (
+        <ResourcesList isPlaying={playerState.isPlaying} updateIsPlayingTo={updateIsPlayingTo} />
+      )
     },
     {
       id: 2,
