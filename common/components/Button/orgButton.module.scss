@@ -2,13 +2,14 @@
 
 
 .basicButton {
+  font-family: 'open sans';
     height: 45px;
     width: 25%;
     border-radius: 4px;
     padding: 10px;
     background: $primary;
     font-size: 15px;
-    // font-weight: 550;
+    font-weight: 600;
     opacity: 1;
     cursor: pointer;
     &:hover {
