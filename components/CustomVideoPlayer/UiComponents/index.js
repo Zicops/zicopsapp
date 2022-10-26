@@ -166,7 +166,10 @@ export default function UiComponents({
         <Bookmark
           freezeState={freezeState}
           bookmarkState={[bookmarkData, setBookmarkData]}
-          handleSave={() => handleSaveBookmark()}
+          handleSave={async () => {
+            await handleSaveBookmark();
+            updateIsPlayingTo(true);
+          }}
           updateIsPlayingTo={updateIsPlayingTo}
           playerState={playerState}
         />
