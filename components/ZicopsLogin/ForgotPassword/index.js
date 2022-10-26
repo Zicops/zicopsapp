@@ -15,7 +15,7 @@ const ForgotPassword = ({ setPage }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
   const [sendEmail, setSendEmail] = useState('');
-  const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function handleEmail(e, setState) {
     setState(e.target.value);
@@ -25,31 +25,33 @@ const ForgotPassword = ({ setPage }) => {
     const checkEmail = isEmail(sendEmail);
     if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
     const sendData = {
-      email:sendEmail
-    }
+      email: sendEmail
+    };
     // const res = fetch('https://demo.zicops.com/um/reset-password' , sendData)
 
     setLoading(true);
 
-    const data = await fetch("https://demo.zicops.com/um/reset-password", {
+    const data = await fetch('https://demo.zicops.com/um/reset-password', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(sendData),
-  })
+      body: JSON.stringify(sendData)
+    });
 
-  console.log(data?.status,'status');
-  if(data?.status === 200){
+    console.log(data?.status, 'status');
+    if (data?.status === 200) {
+      setLoading(false);
+      router?.push('/login');
+      return setToastMsg({
+        type: 'success',
+        message: `Send reset password mail to email: ${sendEmail}`
+      });
+    }
+
     setLoading(false);
-    router?.push('/login');
-    return setToastMsg({type:'success',message:`Send reset password mail to email: ${sendEmail}`});
+    return;
   }
-
-  setLoading(false);
-  return ;
-
-}
 
   return (
     <>
@@ -78,7 +80,7 @@ const ForgotPassword = ({ setPage }) => {
           />
 
           <div className="change_buttons">
-            <LoginButton title={'Send Email'} handleClick={handleSubmit} isDisabled={loading}/>
+            <LoginButton title={'Send Email'} handleClick={handleSubmit} isDisabled={loading} />
           </div>
           <div className={`${styles.small_text}`}>
             Did not received mail to reset password?<p onClick={handleSubmit}>Resend</p>

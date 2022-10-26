@@ -40,6 +40,7 @@ export default function Search() {
         clearAllFilters={clearAllFilters}
         catSubCat={catSubCat}
         setActiveCatId={setActiveCatId}
+        isFiltersDisabled={isLoading}
       />
 
       {showBookMark && <SearchBookmarks data={bookmarkData} />}

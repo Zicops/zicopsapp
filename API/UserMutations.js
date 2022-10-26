@@ -1053,39 +1053,54 @@ export const ADD_USER_EXAM_RESULTS = gql`
 `;
 
 export const ADD_COURSE_COHORT_MAP = gql`
-mutation AddCourseCohort($CourseId:String,$CohortId:String,$CourseType:String,$LspId:String,$CohortCode:String,$isMandatory:Boolean,$CourseStatus:String,$AddedBy:String,$IsActive:Boolean,$CreatedBy:String,$UpdatedBy:String,$ExpectedCompletion:Int){
-  addCourseCohort(input: {
-    CourseId:$CourseId
-    CohortId:$CohortId
-    CourseType:$CourseType
-    LspId:$LspId
-    CohortCode:$CohortCode
-    isMandatory:$isMandatory
-    CourseStatus:$CourseStatus
-    AddedBy:$AddedBy
-    CreatedBy:$CreatedBy
-    UpdatedBy:$UpdatedBy
-    IsActive:$IsActive
-    ExpectedCompletion:$ExpectedCompletion
-  }) {
-    id
-    CourseId
-    CohortId
-    CourseType
-    LspId
-    CohortCode
-    isMandatory
-    CourseStatus
-    AddedBy
-    CreatedAt
-    UpdatedAt
-    CreatedBy
-    UpdatedBy
-    IsActive
-    ExpectedCompletion
+  mutation AddCourseCohort(
+    $CourseId: String
+    $CohortId: String
+    $CourseType: String
+    $LspId: String
+    $CohortCode: String
+    $isMandatory: Boolean
+    $CourseStatus: String
+    $AddedBy: String
+    $IsActive: Boolean
+    $CreatedBy: String
+    $UpdatedBy: String
+    $ExpectedCompletion: Int
+  ) {
+    addCourseCohort(
+      input: {
+        CourseId: $CourseId
+        CohortId: $CohortId
+        CourseType: $CourseType
+        LspId: $LspId
+        CohortCode: $CohortCode
+        isMandatory: $isMandatory
+        CourseStatus: $CourseStatus
+        AddedBy: $AddedBy
+        CreatedBy: $CreatedBy
+        UpdatedBy: $UpdatedBy
+        IsActive: $IsActive
+        ExpectedCompletion: $ExpectedCompletion
+      }
+    ) {
+      id
+      CourseId
+      CohortId
+      CourseType
+      LspId
+      CohortCode
+      isMandatory
+      CourseStatus
+      AddedBy
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      ExpectedCompletion
+    }
   }
-}
-`
+`;
 
 export const ADD_USER_QUIZ_ATTEMPT = gql`
   mutation addUserQuizAttempt(
