@@ -42,18 +42,21 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
       customClass: styles['selectedSubMenuItem']
     });
 
-    for (let i = 0; i < 4; i++) {
+    let prefCount = 0;
+    for (let i = 0; i < activePreferences?.length; i++) {
+      ++prefCount;
+      if (prefCount > 4) break;
       if (activePreferences[i]?.is_base) {
-        prefArray.unshift({
-          title: activePreferences[i]?.sub_category,
-          asUrl: '/search-page',
-          link: `${activePreferences[i]?.sub_category}`,
-          customStyle: {
-            backgroundColor: 'var(--primary)',
-            color: 'var(--black)'
-          },
-          customClass: styles['selectedSubMenuItem']
-        });
+        // prefArray.unshift({
+        //   title: activePreferences[i]?.sub_category,
+        //   asUrl: '/search-page',
+        //   link: `${activePreferences[i]?.sub_category}`,
+        //   customStyle: {
+        //     backgroundColor: 'var(--primary)',
+        //     color: 'var(--black)'
+        //   },
+        //   customClass: styles['selectedSubMenuItem']
+        // });
       } else {
         prefArray.push({
           title: activePreferences[i]?.sub_category,
