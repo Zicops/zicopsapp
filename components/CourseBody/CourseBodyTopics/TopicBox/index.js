@@ -1,8 +1,10 @@
+import { GET_USER_EXAM_ATTEMPTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
-import AlertBox from '@/components/common/AlertBox';
 import { BookmarkStartTimeAtom } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { Skeleton } from '@mui/material';
 import moment from 'moment';
@@ -64,6 +66,8 @@ export default function TopicBox({
   const topicData = useRecoilValue(TopicAtom);
   const topicContentData = useRecoilValue(TopicContentAtom);
   const quizProgressData = useRecoilValue(QuizProgressDataAtom);
+  const userData = useRecoilValue(UserStateAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
 
   const router = useRouter();
   const activateExam = router?.query?.activateExam || null;
@@ -80,6 +84,7 @@ export default function TopicBox({
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [topicCountDisplay, setTopicCountDisplay] = useState(0);
+  const [examAttempts, setExamAttempts] = useState([]);
   const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
 
   const [examData, setExamData] = useState({
@@ -316,9 +321,34 @@ export default function TopicBox({
     });
   }, []);
 
-  // useEffect(() => {
-  //   console.log('q', quizData);
-  // }, [quizData]);
+  // load user exam attempts data
+  useEffect(() => {
+    if (type !== 'Assessment') return;
+    const topicExam = examData;
+    if (!topicExam?.id) return;
+
+    async function loadUserExamAttempts() {
+      const attemptRes = await loadQueryDataAsync(
+        GET_USER_EXAM_ATTEMPTS,
+        { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
+        {},
+        userQueryClient
+      );
+      const userCourseProgressId = userCourseData?.userCourseProgress?.find(
+        (cp) => cp?.topic_id === topicExam.topicId
+      )?.user_cp_id;
+      const examAttemptData =
+        attemptRes?.getUserExamAttempts?.filter(
+          (ea) =>
+            ea?.exam_id === topicExam.examId &&
+            ea?.attempt_status === 'completed' &&
+            ea?.user_cp_id === userCourseProgressId
+        ) || [];
+      setExamAttempts(examAttemptData);
+    }
+
+    loadUserExamAttempts();
+  }, [examData]);
 
   async function loadTopicExam(obj) {
     if (topic?.type !== 'Assessment') return;
@@ -564,7 +594,11 @@ export default function TopicBox({
 
                 <span>
                   Attempt:{' '}
-                  {+data?.examData?.noAttempts < 0 ? 'Unlimited' : data?.examData?.noAttempts}
+                  {+data?.examData?.noAttempts < 0 ? (
+                    <>{examAttempts?.length}/&infin;</>
+                  ) : (
+                    `${examAttempts?.length}/${data?.examData?.noAttempts}`
+                  )}
                 </span>
 
                 {!!data?.examData?.duration && (
