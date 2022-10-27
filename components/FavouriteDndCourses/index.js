@@ -227,7 +227,7 @@ export default function FavouriteDndCourses() {
                   Drag your favorite course in folder
                 </Box>
                 <Box px={12} fontSize={'13px'} color={'rgba(255,255,255,0.5)'} mb={5}>
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Drag and drop to add self paced courses to your learning folder.
                 </Box>
                 <Droppable droppableId="character">
                   {(provided) => (
