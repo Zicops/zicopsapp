@@ -28,7 +28,21 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
     if (!userPreferences?.length) return setLoading(false);
     const activePreferences = userPreferences?.filter((item) => item?.is_active);
     const prefArray = [];
-    for (let i = 0; i < 5; i++) {
+
+    // base pref
+    const basePref = activePreferences?.find((pref) => pref?.is_base);
+    prefArray.unshift({
+      title: basePref?.sub_category,
+      asUrl: '/search-page',
+      link: `${basePref?.sub_category}`,
+      customStyle: {
+        backgroundColor: 'var(--primary)',
+        color: 'var(--black)'
+      },
+      customClass: styles['selectedSubMenuItem']
+    });
+
+    for (let i = 0; i < 4; i++) {
       if (activePreferences[i]?.is_base) {
         prefArray.unshift({
           title: activePreferences[i]?.sub_category,
