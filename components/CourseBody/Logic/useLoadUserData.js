@@ -23,6 +23,7 @@ import {
   filterTopicContent,
   sortArrByKeyInOrder
 } from '@/helper/data.helper';
+import { parseJson } from '@/helper/utils.helper';
 import {
   ChapterAtom,
   isLoadingAtom,
@@ -242,7 +243,17 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
       data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
 
-      if (data?.userCourseMapping?.user_course_id) {
+      //in order to not load course progress of self-unassigned course
+
+      const courseStatus = parseJson(data?.userCourseMapping);
+
+      let showCourseProgress = true ;
+
+      if(courseStatus?.toLowerCase() === 'disabled'){
+         showCourseProgress = false;
+      }
+
+      if (data?.userCourseMapping?.user_course_id && showCourseProgress) {
         const progressRes = await loadUserCourseProgress({
           variables: {
             userId: userData?.id,

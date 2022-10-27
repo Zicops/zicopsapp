@@ -1,7 +1,8 @@
 import { GET_COURSE } from '@/api/Queries';
-import { ADD_USER_COURSE, userClient } from '@/api/UserMutations';
+import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { getQueryData } from '@/helper/api.helper';
+import { USER_STATUS } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -15,6 +16,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleCourseHero(isPreview) {
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
+  const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
 
   const router = useRouter();
 
@@ -58,9 +60,18 @@ export default function useHandleCourseHero(isPreview) {
   useEffect(() => {
     if (isPreview) return;
 
+    let isAssigned = false;
+
+    const courseMap = userCourseData?.userCourseMapping;
+
+    if (!courseMap?.user_course_id) {
+      isAssigned = false;
+    } else {
+      isAssigned = courseMap?.course_status?.toLowerCase() !== 'disabled' ? true : false;
+    }
     setCourseAssignData({
       ...courseAssignData,
-      isCourseAssigned: !!userCourseData?.userCourseMapping?.user_course_id
+      isCourseAssigned: isAssigned
     });
   }, [userCourseData]);
 
@@ -159,6 +170,7 @@ export default function useHandleCourseHero(isPreview) {
 
   async function assignCourseToUser() {
     setIsPopUpDataPresent(false);
+    const { userCourseMapping } = userCourseData;
     const sendData = {
       userId: userData?.id,
       userLspId: userDataGlobal?.userDetails?.user_lsp_id,
@@ -169,6 +181,25 @@ export default function useHandleCourseHero(isPreview) {
       courseStatus: 'open',
       endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
+
+    // update course if user is reassigning this course to himself again
+    if (userCourseMapping?.user_course_id) {
+      
+      sendData.userCourseId = userCourseMapping?.user_course_id;
+
+      let isError = false;
+      const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
+      if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
+      console.log( res?.data?.updateUserCourse, 'userCourseMap');
+
+      setUserCourseData({
+        ...userCourseData,
+        userCourseMapping: res?.data?.updateUserCourse || {}
+      });
+      setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+      setIsAssignPopUpOpen(false);
+      return;
+    }
 
     let isError = false;
     const res = await addUserCourse({ variables: sendData }).catch((err) => {
@@ -188,6 +219,31 @@ export default function useHandleCourseHero(isPreview) {
     setIsAssignPopUpOpen(false);
   }
 
+  async function unassignCourseFromUser() {
+    const { userCourseMapping } = userCourseData;
+    // console.log()
+    if (!userCourseMapping) return;
+    const sendData = {
+      userCourseId: userCourseMapping?.user_course_id,
+      userId: userCourseMapping?.user_id,
+      userLspId: userCourseMapping?.user_lsp_id,
+      courseId: userCourseMapping?.course_id,
+      addedBy: JSON.stringify({ userId: userData?.id, role: userData?.role }),
+      courseType: userCourseMapping?.course_type,
+      isMandatory: userCourseMapping?.is_mandatory,
+      courseStatus: USER_STATUS?.disable,
+      endDate: userCourseMapping?.end_date
+    };
+
+    // console.log(sendData,'chohrotdata');
+    let isError = false;
+    const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
+    if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
+    setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
+    setToastMsg({ type: 'success', message: 'Course Removed Successfully!' });
+    return;
+  }
+
   return {
     courseAssignData,
     setCourseAssignData,
@@ -195,6 +251,7 @@ export default function useHandleCourseHero(isPreview) {
     setIsAssignPopUpOpen,
     activateVideoPlayer,
     assignCourseToUser,
-    showPreviewVideo
+    showPreviewVideo,
+    unassignCourseFromUser
   };
 }
