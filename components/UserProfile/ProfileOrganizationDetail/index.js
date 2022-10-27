@@ -41,6 +41,8 @@ const ProfileOrganizationDetail = ({ currentUserData, setCurrentUserData }) => {
   setToastMsg({type:'success',message:'Added urser Org successfully'});
   setCurrentUserData({ ...currentUserData, ...res });
 
+  return router.reload();
+
   }
 
   useEffect(() => {

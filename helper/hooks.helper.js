@@ -399,7 +399,7 @@ export default function useUserCourseData() {
           cohortUserData.push({
             user_id: userList[i]?.id,
             role: cohortUsers[j]?.role,
-            name: `${userList[i]?.first_name} ${userList[i]?.last_name}`,
+            name: userList[i]?.first_name ? `${userList[i]?.first_name} ${userList[i]?.last_name}` : '',
             email: userList[i]?.email,
             first_name: userList[i]?.first_name,
             last_name: userList[i]?.last_name,
