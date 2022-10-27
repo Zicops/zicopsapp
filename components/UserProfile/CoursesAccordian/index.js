@@ -344,7 +344,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
     if (allAssignedCourses?.length) {
       const adminAssignedCourses = allAssignedCourses?.filter(
-        (course) => course?.added_by?.role.toLowerCase() === 'admin'
+        (course) => course?.added_by?.role.toLowerCase() !== 'self'
       );
 
       setCurrentCourses(allAssignedCourses,setCourseLoading(false));
