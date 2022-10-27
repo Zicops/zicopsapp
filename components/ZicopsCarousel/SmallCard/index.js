@@ -10,8 +10,8 @@ export default function SmallCard({
   notext = false,
   showAssignSymbol = true
 }) {
-  if (!courseData) return null;
   const router = useRouter();
+  if (!courseData?.name) return null;
 
   function handleMouseEnter(e, start = 0, end = 0) {
     if (e.currentTarget.parentNode.dataset.index === start.toString()) {
