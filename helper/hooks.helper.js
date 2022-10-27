@@ -246,7 +246,8 @@ export default function useUserCourseData() {
         added_by: added_by,
         created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
-        timeLeft: courseDuraton - (courseDuraton * (courseDuraton || 0)) / 100
+        timeLeft: courseDuraton - (courseDuraton * (courseDuraton || 0)) / 100,
+        ...assignedCoursesToUser[i]
       });
     } // end of for loop
 
