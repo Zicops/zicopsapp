@@ -196,7 +196,10 @@ export default function useUserCourseData() {
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
 
-    const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+    const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter((course) => course?.course_status?.toLowerCase() !== 'disabled'
+    )
+
+    const assignedCoursesToUser = _assignedCourses;
 
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
