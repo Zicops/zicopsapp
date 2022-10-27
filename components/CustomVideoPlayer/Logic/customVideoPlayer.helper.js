@@ -1,3 +1,13 @@
+import { atom } from 'recoil';
+
+export const BookmarkStartTimeAtom = atom({
+  key: 'BookmarkStartTime',
+  default: {
+    topicId: null,
+    time: null
+  }
+});
+
 export function addCallbackToEvent(element, eventCallbackArrObj, isRemoveCallback) {
   eventCallbackArrObj.forEach((callbackObj) => {
     if (isRemoveCallback)

@@ -1,5 +1,6 @@
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import AlertBox from '@/components/common/AlertBox';
+import { BookmarkStartTimeAtom } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
@@ -70,6 +71,7 @@ export default function TopicBox({
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
+  const bookmarkStartTime = useRecoilValue(BookmarkStartTimeAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
@@ -161,6 +163,32 @@ export default function TopicBox({
     setTopicCountDisplay(getTopicsIndex().next()?.value);
     // return () => getTopicsIndex(true).next();
   }, []);
+
+  // udpate course hero based on state set (bookmark and continue with course btn)
+  useEffect(() => {
+    if (topic?.id !== bookmarkStartTime?.topicId) return;
+
+    if (type === 'Assessment')
+      // if (!userCourseData?.userCourseMapping?.user_course_id) return;
+      return loadTopicExam();
+
+    // if (type === 'Content') {
+    if (!topicContent.length) return console.log('no topic content found');
+
+    setTopicExamData(getTopicExamObj());
+    updateVideoData(
+      videoData,
+      setVideoData,
+      { moduleId: moduleId, topicId: topic.id },
+      topicData,
+      topicContent,
+      allModuleOptions,
+      currrentModule,
+      setSelectedModule,
+      userCourseData,
+      setUserCourseData
+    );
+  }, [bookmarkStartTime, topicContent.length]);
 
   // auto play video when next or previous button clciked (module switch)
   // set exam data if 1st one is exam
@@ -256,6 +284,7 @@ export default function TopicBox({
 
     const allQuiz = [];
 
+    setQuizData([]);
     async function loadQuiz() {
       let topicQuiz = allQuiz?.find((quiz) => quiz?.topicId === topic?.id);
 
