@@ -228,7 +228,7 @@ export default function useHandleCourseHero(isPreview) {
       userId: userCourseMapping?.user_id,
       userLspId: userCourseMapping?.user_lsp_id,
       courseId: userCourseMapping?.course_id,
-      addedBy: JSON.stringify({ userId: userData?.id, role: userData?.role }),
+      addedBy: JSON.stringify({ userId: userData?.id, role: "self" }),
       courseType: userCourseMapping?.course_type,
       isMandatory: userCourseMapping?.is_mandatory,
       courseStatus: USER_STATUS?.disable,
