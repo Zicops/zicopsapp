@@ -1,3 +1,4 @@
+import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -33,6 +34,7 @@ export default function MyUserPage() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   //handle emails
   async function handleMail() {
+    const {user_lsp_id} = parseJson(sessionStorage?.getItem('lspData'));
     if (loading) return;
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add atleast one email!' });
@@ -45,7 +47,7 @@ export default function MyUserPage() {
     let isError = false;
     let errorMsg;
     const resEmail = await inviteUsers({
-      variables: { emails: emails, lsp_id: userOrgData?.lsp_id }
+      variables: { emails: emails, lsp_id: userOrgData?.lsp_id || user_lsp_id }
     }).catch((err) => {
       errorMsg = err.message;
       isError = !!err;
