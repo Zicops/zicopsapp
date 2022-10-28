@@ -14,5 +14,13 @@ module.exports = {
   },
   images: {
     domains: ['storage.googleapis.com']
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/homepage',
+        destination: '/static/index.html'
+      }
+    ];
   }
 };
