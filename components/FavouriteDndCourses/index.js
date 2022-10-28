@@ -406,6 +406,7 @@ export default function FavouriteDndCourses() {
         // size="smaller"
         customStyles={{ width: '400px' }}
         isFooterVisible={false}
+        onCloseWithCross={() => updateCourseData([...data, isAssignPopUpOpen])}
         positionLeft="50%">
         <div className={`${styles.assignCoursePopUp}`}>
           <p className={`${styles.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
