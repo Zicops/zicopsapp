@@ -63,6 +63,17 @@ export default function UserProfilePage() {
     if(!user_lsp_id) return ;
     
     setCurrentUserData((prev) => ({ ...prev, userLspId:  user_lsp_id })) ;
+
+    const detailOrg = await loadQueryDataAsync(
+      GET_USER_ORGANIZATION_DETAIL,
+      { user_id: currentUserId, user_lsp_id: user_lsp_id },
+      {},
+      userClient
+    );
+    if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
+    const userOrg = detailOrg?.getUserOrgDetails;
+
+    setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
     
     if(!userDetails?.is_verified) return ;
 
@@ -89,16 +100,16 @@ export default function UserProfilePage() {
 
     // console.log(currentUserData);
 
-    const detailOrg = await loadQueryDataAsync(
-      GET_USER_ORGANIZATION_DETAIL,
-      { user_id: currentUserId, user_lsp_id: user_lsp_id },
-      {},
-      userClient
-    );
-    if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
-    const userOrg = detailOrg?.getUserOrgDetails;
+    // const detailOrg = await loadQueryDataAsync(
+    //   GET_USER_ORGANIZATION_DETAIL,
+    //   { user_id: currentUserId, user_lsp_id: user_lsp_id },
+    //   {},
+    //   userClient
+    // );
+    // if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
+    // const userOrg = detailOrg?.getUserOrgDetails;
     // console.log(userOrg);
-    if (userPref.length) setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
+    // if (userPref?.length) setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
   }, [currentUserId]);
 
   return (
