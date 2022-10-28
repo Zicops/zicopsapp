@@ -52,7 +52,7 @@ export default function CoursesTab() {
     //common between usercourses and cohortcourses progress
     for (let i = 0; i < _cohortCourses?.length; i++) {
       for (let j = 0; j < userCourses?.length; j++) {
-        console.log(userCourses[j]?.id, _cohortCourses[i]);
+        // console.log(userCourses[j]?.id, _cohortCourses[i]);
         if (userCourses[j]?.id === _cohortCourses[i]?.CourseId) {
           _userCohortCourse.push({
             ...userCourses[j],

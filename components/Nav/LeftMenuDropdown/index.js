@@ -28,18 +28,35 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
     if (!userPreferences?.length) return setLoading(false);
     const activePreferences = userPreferences?.filter((item) => item?.is_active);
     const prefArray = [];
-    for (let i = 0; i < 5; i++) {
+
+    // base pref
+    const basePref = activePreferences?.find((pref) => pref?.is_base);
+    prefArray.unshift({
+      title: basePref?.sub_category,
+      asUrl: '/search-page',
+      link: `${basePref?.sub_category}`,
+      customStyle: {
+        backgroundColor: 'var(--primary)',
+        color: 'var(--black)'
+      },
+      customClass: styles['selectedSubMenuItem']
+    });
+
+    let prefCount = 0;
+    for (let i = 0; i < activePreferences?.length; i++) {
+      ++prefCount;
+      if (prefCount > 4) break;
       if (activePreferences[i]?.is_base) {
-        prefArray.unshift({
-          title: activePreferences[i]?.sub_category,
-          asUrl: '/search-page',
-          link: `${activePreferences[i]?.sub_category}`,
-          customStyle: {
-            backgroundColor: 'var(--primary)',
-            color: 'var(--black)'
-          },
-          customClass: styles['selectedSubMenuItem']
-        });
+        // prefArray.unshift({
+        //   title: activePreferences[i]?.sub_category,
+        //   asUrl: '/search-page',
+        //   link: `${activePreferences[i]?.sub_category}`,
+        //   customStyle: {
+        //     backgroundColor: 'var(--primary)',
+        //     color: 'var(--black)'
+        //   },
+        //   customClass: styles['selectedSubMenuItem']
+        // });
       } else {
         prefArray.push({
           title: activePreferences[i]?.sub_category,

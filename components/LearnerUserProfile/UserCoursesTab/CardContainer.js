@@ -91,7 +91,7 @@ export default function CardContainer({
               return (
                 <CourseBoxCard
                   isAdmin={isAdmin}
-                  courseData={course}
+                  courseData={{...course, duration: (course?.duration / (60*60))?.toFixed(2)}}
                   footerType={footerType}
                   cardWidth={cardSizeData.cardWidth}>
                   {footerType === 'added' && (
@@ -122,7 +122,7 @@ export default function CardContainer({
             ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
             ?.map((course) => (
               <CourseLIstCard
-                courseData={course}
+                courseData={{...course, duration: (course?.duration / (60*60))?.toFixed(2)}}
                 statusData={statusData}
                 footerType={footerType} isAdmin={isAdmin}></CourseLIstCard>
             ))}

@@ -21,7 +21,7 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
                 {courseData?.is_mandatory ? 'Mandatory' : 'Not Mandatory'}
               </span>
             </p>
-            <p className={styles.percent}>{courseData?.timeLeft || '3'} hours of content left</p>
+            <p className={styles.percent}>{isNaN(+courseData?.timeLeft)? 0.00 : courseData?.timeLeft} hours of content left</p>
           </>
         )}
       </section>

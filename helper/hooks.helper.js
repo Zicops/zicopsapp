@@ -242,14 +242,15 @@ export default function useUserCourseData() {
         parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 
       // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      const courseDuraton = +courseRes?.getCourse?.duration * 60;
+      const courseDuraton = +courseRes?.getCourse?.duration / (60*60);
+      const progressPercent = userProgressArr?.length ? courseProgress : '0';
       allAssignedCourses.push({
         ...courseRes?.getCourse,
-        completedPercentage: userProgressArr?.length ? courseProgress : '0',
+        completedPercentage: progressPercent,
         added_by: added_by,
         created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
-        timeLeft: courseDuraton - (courseDuraton * (courseDuraton || 0)) / 100,
+        timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
         ...assignedCoursesToUser[i]
       });
     } // end of for loop

@@ -140,7 +140,9 @@ export default function UiComponents({
       id: 1,
       btnImg: '/images/svg/hub.svg',
       handleClick: () => switchBox(1),
-      boxComponent: <ResourcesList updateIsPlayingTo={updateIsPlayingTo} />
+      boxComponent: (
+        <ResourcesList isPlaying={playerState.isPlaying} updateIsPlayingTo={updateIsPlayingTo} />
+      )
     },
     {
       id: 2,
@@ -164,7 +166,10 @@ export default function UiComponents({
         <Bookmark
           freezeState={freezeState}
           bookmarkState={[bookmarkData, setBookmarkData]}
-          handleSave={() => handleSaveBookmark()}
+          handleSave={async () => {
+            await handleSaveBookmark();
+            updateIsPlayingTo(true);
+          }}
           updateIsPlayingTo={updateIsPlayingTo}
           playerState={playerState}
         />
