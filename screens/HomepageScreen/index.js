@@ -183,8 +183,9 @@ export default function HomepageScreen() {
           pageSize
         );
         setBaseSubcategoryCourses(
-          baseSubCatCourses?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) ||
-            []
+          baseSubCatCourses?.latestCourses?.courses?.filter(
+            (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+          ) || []
         );
       } else {
         setBaseSubcategoryCourses([]);

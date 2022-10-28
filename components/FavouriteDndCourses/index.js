@@ -24,7 +24,7 @@ import useHandleCourseAssign from './Logic/useHandleCourseAssign';
 import styles from './favouriteDndCourses.module.scss';
 import Loader from '../common/Loader';
 
-export default function FavouriteDndCourses() {
+export default function FavouriteDndCourses({ isLoading }) {
   const {
     courseAssignData,
     setCourseAssignData,
@@ -56,13 +56,17 @@ export default function FavouriteDndCourses() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isUpdated, setIsUpdated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!userData?.id) return;
 
     loadCourses();
   }, [userData?.id]);
+
+  useEffect(() => {
+    isLoading(loading);
+  }, [loading]);
 
   useEffect(() => {
     if (!isUpdated) return;
@@ -80,7 +84,10 @@ export default function FavouriteDndCourses() {
       isError = !!err;
       console.log(err);
     });
-    if (isError) return setToastMsg({ type: 'danger', message: 'course load error' });
+    if (isError) {
+      setLoading(false);
+      return setToastMsg({ type: 'danger', message: 'course load error' });
+    }
 
     const mapRes = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS,
@@ -95,9 +102,12 @@ export default function FavouriteDndCourses() {
       if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
     });
 
-    const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [] ;
+    const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [];
     let userCourses = [];
-    if(_userCourses?.length) userCourses = _userCourses?.filter((course) => course?.course_status?.toLowerCase() !== 'disabled');
+    if (_userCourses?.length)
+      userCourses = _userCourses?.filter(
+        (course) => course?.course_status?.toLowerCase() !== 'disabled'
+      );
     const userCourseMaps = userCourses || [];
     const assignedCourses = [];
     const availableCourses =
@@ -276,6 +286,7 @@ export default function FavouriteDndCourses() {
                                       <Box
                                         width={'100%'}
                                         height={'100%'}
+                                        minHeight={'22vh'}
                                         border={'2px dashed #6ECDCD'}
                                         sx={{ borderRadius: '5px' }}
                                         overflow={'hidden'}
@@ -404,7 +415,6 @@ export default function FavouriteDndCourses() {
               </h4>
 
               <div className={styles.cardContainer}>
-
                 {loading ? (
                   <strong className={`${styles.notFound}`}>Loading Courses...</strong>
                 ) : // <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />
@@ -438,6 +448,7 @@ export default function FavouriteDndCourses() {
         // size="smaller"
         customStyles={{ width: '400px' }}
         isFooterVisible={false}
+        onCloseWithCross={() => updateCourseData([...data, isAssignPopUpOpen])}
         positionLeft="50%">
         <div className={`${styles.assignCoursePopUp}`}>
           <p className={`${styles.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
