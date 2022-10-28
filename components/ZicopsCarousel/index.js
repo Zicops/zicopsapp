@@ -128,7 +128,6 @@ const CardSlider = ({
           customLeftArrow={<CustomLeftArrow />}
           customRightArrow={<CustomRightArrow />}>
           {data?.map((d, index) => {
-            if (!d?.name) return;
             if (!d)
               return (
                 <Skeleton
@@ -139,6 +138,8 @@ const CardSlider = ({
                   height={120}
                 />
               );
+
+            if (!d?.name) return;
             if (type === 'small')
               return (
                 <SmallCard
