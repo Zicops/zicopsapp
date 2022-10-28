@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const months = [
   'January',
   'February',
@@ -12,6 +14,12 @@ export const months = [
   'November',
   'December'
 ];
+
+export function displayUnixDate(unixTime) {
+  if (!unixTime) return '';
+
+  return moment.unix(unixTime).format('MMM Do, YYYY (dddd)');
+}
 
 export function getYearsFromNow(numberOfYearsFromNow) {
   let currentYear = new Date().getFullYear();

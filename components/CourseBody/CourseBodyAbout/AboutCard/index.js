@@ -17,7 +17,7 @@ export default function AboutCard({ isDataLoaded, fullCourse }) {
                   <div>Course Duration: </div>
                 </div>
                 <div className="col_50 abstract">
-                  <div>{fullCourse.duration}</div>
+                  <div>{fullCourse.duration} mins</div>
                 </div>
               </>
             ) : (

@@ -21,7 +21,9 @@ export const PUBLIC_PATHS = [
   '/info/collaborate',
   '/info/contact-us',
   '/info/tour',
-  '/info/careers'
+  '/info/careers',
+  '/homepage',
+  '/static'
 ];
 export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
@@ -38,7 +40,9 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/info/contact-us',
   '/info/tour',
   '/info/careers',
-  '/account-select'
+  '/account-select',
+  '/homepage',
+  '/static'
 ];
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];

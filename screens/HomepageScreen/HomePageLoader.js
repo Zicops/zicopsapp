@@ -4,7 +4,7 @@ import { Skeleton } from '@mui/material';
 import { useEffect } from 'react';
 import styles from './homepageScreen.module.scss';
 
-export default function HomePageLoader() {
+export default function HomePageLoader({ heroHeight = 380 }) {
   const rowCount = 3;
   const cardCount = 7;
 
@@ -17,7 +17,12 @@ export default function HomePageLoader() {
 
   return (
     <div className={`${styles.homePageLoader}`}>
-      <Skeleton sx={{ bgcolor: 'dimgray' }} variant="rectangular" animation="wave" height={380} />
+      <Skeleton
+        sx={{ bgcolor: 'dimgray' }}
+        variant="rectangular"
+        animation="wave"
+        height={heroHeight}
+      />
 
       <div className={`${styles.rowContainer}`}>
         {[...Array(rowCount)].map((v, index) => (

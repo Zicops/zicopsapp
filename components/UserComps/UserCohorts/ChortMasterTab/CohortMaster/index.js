@@ -75,7 +75,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
   useEffect(async () => {
     if (!isEdit) {
       const userList = await getUsersForAdmin();
-      console.log(userList,'list')
+      // console.log(userList,'list')
       if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
       const managerList = formatUsers(userList);
       return setCohortManager([...managerList]);

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { courseContext } from '../../state/contexts/CourseContext';
+import AlertBox from '../common/AlertBox';
 import BottomTabsMenu from '../small/BottomTabsMenu';
 import {
   coursebody,
@@ -12,6 +13,7 @@ import {
 } from './courseBody.module.scss';
 import CoursePageTabs from './CoursePageTabs';
 import { tabs } from './Logic/courseBody.helper';
+import { ShowNotAssignedErrorAtom } from './Logic/topicBox.helper';
 import useLoadUserData from './Logic/useLoadUserData';
 import useShowData from './Logic/useShowData';
 
@@ -32,6 +34,7 @@ export default function CourseBody({ isPreview = false }) {
   const router = useRouter();
   useLoadUserData(isPreview, setSelectedModule, getModuleOptions);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
+  const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
 
   useEffect(() => {
     setActiveCourseTab(tabs[0].name);
@@ -79,6 +82,14 @@ export default function CourseBody({ isPreview = false }) {
           </>
         )}
       </div>
+
+      {showAlert && (
+        <AlertBox
+          title="Course Not Assigned"
+          description="Please assign course to access the course contents"
+          handleClose={() => setShowAlert(false)}
+        />
+      )}
     </>
   );
 }

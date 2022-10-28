@@ -10,6 +10,7 @@ export default function PopUp({
   popUpState = [],
   closeBtn = {},
   submitBtn = {},
+  onCloseWithCross = () => {},
   isFooterVisible = true,
   positionLeft = '',
   size = 'medium',
@@ -48,6 +49,7 @@ export default function PopUp({
                 onClick={() => {
                   if (closeBtn.disabled) return;
                   closePopUp();
+                  onCloseWithCross();
                 }}>
                 <ToolTip title={tooltipCloseBtnTitle}>
                   <img src="/images/circular-cross.png" alt="" />
