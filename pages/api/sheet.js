@@ -21,7 +21,7 @@ export default async function googleSheetApiHandler(req, res) {
     const getSheetData = await googleSheet.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: 'Sheet1!A:H'
+      range: 'Sheet1!A:J'
     });
 
     res.send(getSheetData);
@@ -47,7 +47,7 @@ export default async function googleSheetApiHandler(req, res) {
     const response = await googleSheet.spreadsheets.values.update({
       auth,
       spreadsheetId,
-      range: `Sheet1!E${req?.body?.rowStart}:H`,
+      range: `Sheet1!K${req?.body?.rowStart}:AZ`,
       valueInputOption: 'USER_ENTERED',
       resource: {
         values: [req?.body?.data || []]

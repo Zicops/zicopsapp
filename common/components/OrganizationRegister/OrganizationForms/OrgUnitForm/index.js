@@ -16,9 +16,10 @@ import styles from '../../organizationRegister.module.scss';
 
 const OrgUnitForm = ({ setTab = () => {} }) => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
-  const [image, setImage] = useState(null);
-  const { isUnitFormReady } = useHandleOrgForm();
+  // const [image, setImage] = useState(null);
+  const { isUnitFormReady , fetchUnitFormData } = useHandleOrgForm();
   const [formData , setFormData] = useState(orgUnitData) ;
+  const [orgData , setOrgData] = useState({});
 
   useEffect(async() => {
     if(!orgTempDetails?.orgCountry?.value?.length) return ;
@@ -35,9 +36,37 @@ const OrgUnitForm = ({ setTab = () => {} }) => {
      
   }, [orgTempDetails?.orgCountry?.value]);
 
+  useEffect(async()=>{
+    const orgData  = await fetchUnitFormData();
+    console.log(orgData?.data?.values,'org data')
+    const excelFormData = orgData?.data?.values || [];
+    let foundAt = false ;
+    for(let i = 0 ; i < excelFormData?.length ; i++){
+      for(let j = 0; j < 1 ; j++){
+        if(excelFormData[i][0] === orgTempDetails?.orgName){
+          foundAt = i;
+          break;
+        }
+        if(typeof foundAt === 'number'){
+          break;
+        }
+      }
+    }
+
+    //index+1 will give use row start
+    if(typeof foundAt === 'boolean'){
+      return ;
+    } 
+    
+    setOrgTempDetails((prevValue) => ({...prevValue, index: (foundAt + 1)}));
+    // console.log(foundAt,'found at row');
+    return ;
+    
+  },[])
+
 
   function handleDropDown(e , state , setState , inputName){
-    if(inputName.toLowerCase() === 'orgstate') return setState({...state, [inputName]:e?.value});
+    if(inputName.toLowerCase() === 'orgstate' || inputName.toLowerCase() === 'orgemployees') return setState({...state, [inputName]:e?.value});
     return setState({...state, [inputName]:{value:e?.value ,countryCode: e?.countryCode}});
   }
 
@@ -79,7 +108,7 @@ const OrgUnitForm = ({ setTab = () => {} }) => {
     dropDown: function (obj = {}) {
       const data = orgTempDetails[`${obj?.inputOptions?.inputName}`] ;
       let val ;
-      if(obj.inputOptions.inputName === 'orgState'){
+      if(obj.inputOptions.inputName === 'orgState' || obj.inputOptions.inputName === 'orgEmployees'){
         val = data
       }
       else {val = data?.value }

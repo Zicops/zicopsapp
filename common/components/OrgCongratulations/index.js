@@ -20,8 +20,8 @@ const OrgCongratulations = ({ title, shape, clickHandle = () => {} }) => {
               <img src={'/images/svg/org_congrats_frame.svg'} alt="" />
             </div>
             <p>
-              Thankyou for registering with Zicops Learning Spaces. Your details have been submitted
-              for verification and we will reach out to you in 2 business days.
+              {title ||
+                'Thankyou for registering with Zicops Learning Spaces. Your details have been submitted for verification and we will reach out to you in 2 business days.'}
             </p>
             {/* <p>{title}</p> */}
             <div className={`${styles.btn_container}`}>

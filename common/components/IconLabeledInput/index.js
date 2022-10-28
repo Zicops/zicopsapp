@@ -53,7 +53,11 @@ const IconLabeledInputs = ({
     image = icon ? BLUE_TICK_SVG : RED_TICK_SVG;
   }
   if (typeof icon === 'string') {
-    {
+    if( icon === 'none'){
+      inputStyle.width = '100%';
+      image = null
+    }
+    else{
       iconStyle.width = '25%';
       inputStyle.width = '75%';
       image = icon;

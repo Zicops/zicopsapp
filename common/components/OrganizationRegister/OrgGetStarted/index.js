@@ -15,7 +15,7 @@ const OrgGetStarted = () => {
     <OrgFormLayout isHeaderVisible={false}>
       <div className={`${styles.page_layout}`}>
         <div>
-          <img src="./images/svg/flag.svg" alt="" />
+          <img src="/images/svg/flag.svg" alt="" />
           <p className={`${styles.page_head}`}>Lets get started</p>
         </div>
         <p className={`${styles.page_title}`}>
@@ -34,7 +34,7 @@ const OrgGetStarted = () => {
           <Button size="medium" theme="dark" isBold="bold" clickHandler={()=>{router.push('/create-learning-space/org-register-form')}}>
             Register Organization
           </Button>
-          <Button size="small" isBold="bold" clickHandler={()=>{router.push('/create-learning-space/org-unit-form')}}>
+          <Button size="small" isBold="bold" clickHandler={()=>{router.push('/create-learning-space/org-unit-form')}} isDisabled={true}>
             Proceed
           </Button>
         </div>

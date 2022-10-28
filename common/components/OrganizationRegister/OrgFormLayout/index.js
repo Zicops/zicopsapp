@@ -1,4 +1,5 @@
 import OrgRegisterForm from '@/components/OrganizationRegister/OrgRegisterForm';
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 // import Button from '../../Button';
 // import OrgCongratulations from '../../OrgCongratulations';
@@ -9,11 +10,12 @@ import React, { useEffect } from 'react';
 import styles from './orgFormLayout.module.scss';
 
 const OrgFormLayout = ({ children, headerTitle = null, headerImg = null , isHeaderVisible }) => {
+  const router = useRouter();
   return (
     <div className={`${styles.layout}`}>
       <div>
         <div className={`${styles.header}`}>
-          <button>
+          <button onClick={()=>{router.back()}}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -27,13 +29,13 @@ const OrgFormLayout = ({ children, headerTitle = null, headerImg = null , isHead
             </svg>
           </button>
           {/* <img src="./images/svg/zicops_logo.svg" alt="zicops logo" /> */}
-          <img src={headerImg || "/images/svg/zicops_logo.svg"} alt="logo" />
+          <img src={"/images/svg/zicops_logo.svg"} alt="logo" />
         </div>
         <div className={`${styles.info_layout}`}>
           <div className={`${styles.header_title}`}>
             {isHeaderVisible && (
               <>
-                <img src="/images/svg/add_home.svg" alt="" />
+                <img src={headerImg||"/images/svg/add_home.svg"} alt="" />
                 <p style={{ marginBottom: '20px' }}>{headerTitle||'Create Learning Space'}</p>
               </>
             )}

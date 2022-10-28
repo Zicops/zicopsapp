@@ -1,9 +1,11 @@
 import { changeHandler } from '@/helper/common.helper';
-import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
+import { OrganizationDetailsAtom , getOrgsTempDetails } from '@/state/atoms/organizations.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import useHandleOrgForm from 'common/components/OrganizationRegister/utils/orgResgisterForm.helper';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { orgContactPersonData } from '../../helper/orgRegister.helper';
+import OrgCongratulations from 'common/components/OrgCongratulations';
 import Button from 'common/components/Button';
 import LabeledDropdown from 'common/components/DropDown';
 import IconLabeledInputs from 'common/components/IconLabeledInput';
@@ -11,31 +13,35 @@ import LabeledInputs from 'common/components/LabeledInput';
 import LabeledTextarea from 'common/components/LabeledTextArea';
 import styles from '../../organizationRegister.module.scss';
 import OrgPhoneInput from 'common/components/OrgPhoneInput';
+import { useRouter } from 'next/router';
 // import OrgPhoneInput from '../OrgPhoneInput';
 
 const OrgContactForm = ({ setTab = () => {} }) => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
-  const { isContactFormReady } = useHandleOrgForm();
-  const [formData,setFormData] = useState(orgContactPersonData);
+  const { isContactFormReady, handleContactPersonForm } = useHandleOrgForm();
+  const [formData, setFormData] = useState(orgContactPersonData);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isFormSubmit, setIsFormSubmit] = useState(false);
+  const router = useRouter();
 
-  useEffect(()=>{
-   if(orgTempDetails?.orgPersonRole?.toLowerCase() !== 'others') return setFormData(orgContactPersonData);
-   if(formData?.length === 8) return ;
-   const formInput =  {
-     type: 'normalInput',
-     inputOptions: {
-       placeholder: 'Enter organizational role',
-       inputName: 'orgPersonRoleOthers',
-       label: 'Please specify others :'
+  useEffect(() => {
+    if (orgTempDetails?.orgPersonRole?.toLowerCase() !== 'others')
+      return setFormData(orgContactPersonData);
+    if (formData?.length === 8) return;
+    const formInput = {
+      type: 'normalInput',
+      inputOptions: {
+        placeholder: 'Enter organizational role',
+        inputName: 'orgPersonRoleOthers',
+        label: 'Please specify others :'
       }
-    }
+    };
     const data = [...orgContactPersonData];
-    data?.splice(orgContactPersonData?.length - 2,0,formInput)
+    data?.splice(orgContactPersonData?.length - 2, 0, formInput);
     // console.log('ipdae',orgContactPersonData,data)
-    setFormData([...data])
+    setFormData([...data]);
     return;
-
-  },[orgTempDetails])
+  }, [orgTempDetails]);
 
   const INPUT_OBJECT = {
     normalInput: function (obj = {}) {
@@ -114,11 +120,27 @@ const OrgContactForm = ({ setTab = () => {} }) => {
         </Button>
         <Button
           size="small"
-          clickHandler={() => console.log(orgTempDetails)}
+          clickHandler={async () => {
+            const res = await handleContactPersonForm();
+            if (!res) {
+              return setToastMsg({ type: 'danger', message: 'Error while filling the form!' });
+            }
+            setIsFormSubmit(true);
+          }}
           isDisabled={!isContactFormReady}>
           Submit
         </Button>
       </div>
+      {isFormSubmit && (
+        <OrgCongratulations
+          title={null}
+          shape={'square'}
+          clickHandle={() => {
+            router.push('/home');
+            setOrgTempDetails(getOrgsTempDetails({}));
+          }}
+        />
+      )}
     </div>
   );
 };

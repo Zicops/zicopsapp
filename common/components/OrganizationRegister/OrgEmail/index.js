@@ -1,13 +1,20 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import Button from '../../Button';
 import LabeledInputs from '../../LabeledInput';
 import OrgFormLayout from '../OrgFormLayout';
 import styles from './orgEmail.module.scss';
+import { changeHandler , isEmail } from '@/helper/common.helper';
+import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
+import { useEffect } from 'react';
 
 const OrgEmail = () => {
-  const [emailValue, setEmailValue] = useState();
+  const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
   const router = useRouter();
+  useEffect(()=>{
+    // console.log(orgTempDetails?.orgPersonEmailId)
+  },[orgTempDetails?.orgPersonEmailId])
   return (
     <OrgFormLayout isHeaderVisible={false}>
       <div className={`${styles.page_layout}`}>
@@ -21,13 +28,20 @@ const OrgEmail = () => {
         </p>
         <LabeledInputs
           inputOptions={{
-            inputName: 'spocEmail',
+            inputName: 'orgPersonEmailId',
             placeholder: 'Enter your work email address',
-            value: emailValue
+            value: orgTempDetails?.orgPersonEmailId
           }}
+          changeHandler={(e) => changeHandler(e, orgTempDetails, setOrgTempDetails)}
         />
         <div className={`${styles.btnContainer}`}>
-          <Button size="small" isBold="bold" clickHandler={()=>{router.push('create-learning-space/org-register')}}>
+          <Button
+            size="small"
+            isBold="bold"
+            isDisabled={!(orgTempDetails?.orgPersonEmailId?.length && isEmail(orgTempDetails?.orgPersonEmailId))}
+            clickHandler={() => {
+              router.push('create-learning-space/org-register');
+            }}>
             Proceed
           </Button>
         </div>

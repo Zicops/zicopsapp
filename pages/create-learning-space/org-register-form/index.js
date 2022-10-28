@@ -16,7 +16,7 @@ const OrganizationRegisterForm = () => {
       {mounted ? createPortal(<VrBackground />, ref.current) : null} */}
 
       {/* <HomePage /> */}
-      <OrgFormLayout isHeaderVisible={true} headerTitle={'Organization Registration'} headerImg={'/images/corporate_fare.svg'}><OrgRegisterForm /></OrgFormLayout>
+      <OrgFormLayout isHeaderVisible={true} headerTitle={'Organization Registration'} headerImg={'/images/svg/corporate_fare.svg'}><OrgRegisterForm /></OrgFormLayout>
     </>
   );
 };

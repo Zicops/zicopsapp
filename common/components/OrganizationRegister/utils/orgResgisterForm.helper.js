@@ -27,7 +27,7 @@ export default function useHandleOrgForm() {
       !!orgData?.orgName?.length &&
         !!orgData?.orgUnitName?.length &&
         !!orgData?.orgPostalAddress?.length &&
-        !!orgData?.orgCountry?.length &&
+        !!orgData?.orgCountry?.value?.length &&
         !!orgData?.orgState?.length &&
         !!orgData?.orgCity.length &&
         !!orgData?.orgPostalCode?.length &&
@@ -41,7 +41,7 @@ export default function useHandleOrgForm() {
         !!orgData?.orgPersonLastname?.length &&
         !!orgData?.orgPersonEmailId?.length &&
         !!orgData?.orgPersonContactNumber?.length &&
-        !!orgData?.orgPersonRole?.length &&
+        !!orgData?.orgPersonRole?.length ||
         !!orgData?.orgPersonRoleOthers.length &&
         !!orgData?.orgPersonRemarks?.length
     );
@@ -89,7 +89,9 @@ export default function useHandleOrgForm() {
   }
 
   async function handleContactPersonForm() {
-    // if (!isUnitFormReady && !isContactFormReady) return false;
+    if (!isUnitFormReady && !isContactFormReady) return false;
+
+    if(!orgData?.index) return ;
 
     const contactDataFormat = getOrgContactObject(orgData);
 
@@ -111,22 +113,24 @@ export default function useHandleOrgForm() {
     const sendContactData = [];
 
     Object.entries(orgContactDataObject).forEach(([key, value]) => {
-      sendContactData.push(`${key}: ${value}`);
+      sendContactData.push(`${value}`);
     });
 
     console.log(sendContactData, 'sendContactData');
 
-    // const res = await fetch(SHEET_URL, {
-    //   method: 'post',
-    //   headers: {
-    //     Accept: 'application.json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ data: sendContactData }),
-    //   cache: 'default'
-    // });
+    const res = await fetch(SHEET_URL, {
+      method: 'put',
+      headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data: sendContactData , rowStart: orgData?.index }),
+      cache: 'default'
+    });
 
     // console.log(res, 'contact form response');
+    if(!res?.status === 200) return false ;
+    return res ;
   }
 
   async function fetchUnitFormData() {
@@ -139,7 +143,7 @@ export default function useHandleOrgForm() {
       cache: 'default'
     }).then((r) => r.json());
 
-    // console.log(res, 'contact form response');
+    console.log(res, 'contact form response');
     return res;
   }
 
@@ -154,7 +158,8 @@ export default function useHandleOrgForm() {
       orgUrl: data?.orgUrl || '',
       orgLinkdInUrl: data?.orgLinkdInUrl || '',
       orgFacebookUrl: data?.orgFacebookUrl || '',
-      orgTwitterUrl: data?.orgTwitterUrl || ''
+      orgTwitterUrl: data?.orgTwitterUrl || '' , 
+      orgPersonEmailId: data?.orgPersonEmailId
     };
   }
 

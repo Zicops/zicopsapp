@@ -54,7 +54,7 @@ export const orgUnitData = [
       label: 'Organization name :',
       maxLength: 60
     },
-    iconType: true
+    iconType: 'none'
   },
   {
     type: formType?.normalInput,

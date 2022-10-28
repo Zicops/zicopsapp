@@ -95,14 +95,14 @@ const OrgRegisterForm = () => {
 
             const res = await handleOrgRegisterForm()
            
-            // setIsFormSubmit(true);
+            setIsFormSubmit(true);
 
           }}
           isDisabled={!isOrgRegisterationReady}>
           Submit
         </Button>
       </div>
-      {isFormSubmit&&(<OrgCongratulations title={'Organization created sccessfully!'} shape={'square'} clickHandle={()=>{router.push('/login')}}/>)}
+      {isFormSubmit&&(<OrgCongratulations title={'Organization created sccessfully!'} shape={'square'} clickHandle={()=>{router.push('/create-learning-space/org-unit-form')}}/>)}
     </div>
   );
 };
