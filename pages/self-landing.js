@@ -1,3 +1,8 @@
+import ClassRoomBanner from '@/components/ClassRoomBanner';
+import { classroomData } from '@/components/ClassRoomBanner/classRoomBanner.helper';
+import HeroSliderContainer from '@/components/HeroSliderContainer';
+import SearchSubCat from '@/components/Search/SearchSubCat';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useEffect } from 'react';
 import { bigImages, sliderImages } from '../API/DemoSliderData';
 import CommonCalendar from '../components/common/CommonCalendar';
@@ -97,9 +102,7 @@ export default function Self() {
     ]
   };
 
-  useEffect(() => {
-    console.log(screen.width);
-  }, []);
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat();
 
   return (
     <div
@@ -111,32 +114,40 @@ export default function Self() {
       }}>
       {/*<HeroSlider />*/}
       <FavouriteDndCourses />
-      <ZicopsCarousel title="Subscribed Classroom Courses" data={sliderImages} />
-      <ZicopsCarousel title="Recomended For You" data={sliderImages} />
+      <ZicopsCarousel title="Mandatory Courses" data={sliderImages} />
+      <ZicopsCarousel title="Continue with your Courses" data={sliderImages} />
+      <ZicopsCarousel title="Courses in <Base Subcategory>" data={sliderImages} />
 
-      <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
+      <HeroSliderContainer>
+        {classroomData.map((item) => (
+          <ClassRoomBanner data={item} />
+        ))}
+      </HeroSliderContainer>
+      {/* <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
         <div className="w-60 border_right">
           <SimpleTable tableData={tableData} tableHeight="70vh" tableHeading="Mandatory Courses" />
         </div>
         <div className="w-40 calender_box">
           <CommonCalendar />
         </div>
-      </div>
+      </div> */}
       {/* <SelfPacedMiddle /> */}
+      <ZicopsCarousel title="Courses in <Base Category>" data={sliderImages} />
+      <ZicopsCarousel title="Courses from your learning space" data={sliderImages} />
+      <ZicopsCarousel title="Trending Courses" data={sliderImages} />
+      
+      <SearchSubCat
+        data={catSubCat?.subCat?.map((s) => ({
+          ...s,
+          name: s?.Name,
+          img: s?.ImageUrl,
+          handleClick: (subCat) => setFilters({ ...filters, subCategory: subCat })
+        }))}
+      />
 
-      <ZicopsCarousel title="Trending" data={sliderImages} />
-      <BigCardSlider title="Recomended Premier Courses" data={bigImages} slide={realSquare} />
-      <ZicopsCarousel title="Live Events" data={sliderImages} />
-      <ZicopsCarousel title="Your Attended Events" data={sliderImages} />
-      <ZicopsCarousel title="Upcoming Events" data={sliderImages} />
-      <ZicopsCarousel title="Live Events" data={sliderImages} />
+      <ZicopsCarousel title="Courses from your Preferred Sub-Categories" data={sliderImages} />
+      <ZicopsCarousel title="Latest Courses" data={sliderImages} />
 
-      {/* <Link href="/courses">
-      <a>Courses</a>
-      </Link> */}
-      {/* <Link href="/admin">
-      <a style={{display:'flex', justifyContent: 'center', color: 'var(--primary)'}}><h2>Go to Admin Module</h2></a>
-      </Link> */}
     </div>
   );
 }
