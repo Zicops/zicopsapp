@@ -5,6 +5,7 @@ import {
   ADD_USER_PREFERENCE,
   ADD_USER_ROLE,
   UPDATE_USER,
+  UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
   userClient
 } from '@/api/UserMutations';
@@ -37,6 +38,10 @@ export default function useHandleAddUserDetails() {
   const [updateOrg, { error: updateOrgErr }] = useMutation(UPDATE_USER_ORGANIZATION_MAP, {
     client: userClient
   });
+  const [updateLsp, { error: updateLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
+    client: userClient
+  });
+
 
   const [addOrg, { error: createOrgError }] = useMutation(ADD_USER_ORGANIZATION_MAP, {
     client: userClient
@@ -116,12 +121,12 @@ export default function useHandleAddUserDetails() {
     }
 
     let isError = false;
+    const sendLspData = {
+      user_id: userDataAbout?.id,
+      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
+      status: 'Active'
+    };
     if(!userLspId){
-      const sendLspData = {
-        user_id: userDataAbout?.id,
-        lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
-        status: 'Active'
-      };
   
       // console.log(sendLspData, 'addUserLearningSpaceDetails');
   
@@ -145,7 +150,16 @@ export default function useHandleAddUserDetails() {
       userLspId = dataLsp?.user_lsp_id ;
 
     }
+    else{sendLspData.user_lsp_id = userLspId ;
 
+    const resLsp = await updateLsp({ variables: sendLspData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if(isError) return setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+
+    setUserDataOrgLsp((prevValue) => ({ ...prevValue, user_lsp_id: userLspId }));}
   // ORGANIZATION DATA MUTATION
 
     // console.log(userDataOrgLsp, 'data at start of addUserOrganizationDetails');
