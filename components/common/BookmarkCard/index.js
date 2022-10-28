@@ -1,10 +1,77 @@
-import { UserCourseDataAtom } from '@/state/atoms/video.atom';
+import { ActiveCourseTabAtom, tabs } from '@/components/CourseBody/Logic/courseBody.helper';
+import { BookmarkStartTimeAtom } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
+import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './bookmarkCard.module.scss';
 
 export default function BookmarkCard({ data = {}, styleClass, bookmarkData = null }) {
+  const router = useRouter();
+  const [videoData, setVideoData] = useRecoilState(VideoAtom);
+  const [bookmarkStartTime, setBookmarkStartTime] = useRecoilState(BookmarkStartTimeAtom);
+  const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabAtom);
+
+  useEffect(() => {
+    setBookmarkStartTime({ ...bookmarkStartTime, topicId: null, time: null });
+  }, []);
+
   const gotoPage = () => {
-    alert('go go go!');
+    // alert('go go go!');
+    const timeArr = data?.timestamp?.split(':');
+    const time =
+      timeArr.length === 2
+        ? +timeArr[0] * 60 + +timeArr[1]
+        : +timeArr[0] * 60 * 60 + +timeArr[1] * 60 + +timeArr[2];
+
+    if (router.pathname !== '/course/[courseId]') {
+      router.push(`/course/${data?.course_id}`);
+    }
+    if (!videoData?.startPlayer && tabs[0].name !== activeCourseTab)
+      setActiveCourseTab(tabs[0].name);
+    setBookmarkStartTime({
+      ...bookmarkStartTime,
+      time,
+      topicId: !!videoData?.startPlayer ? null : bookmarkData?.topic_id || data?.topic_id
+    });
+    // console.log({
+    //   ...videoData,
+    //   videoSrc: topicContent[0]?.contentUrl || null,
+    //   type: topicContent[0]?.type || null,
+    //   startPlayer: true,
+    //   isPreview: false,
+    //   currentTopicIndex: currentTopicIndex,
+
+    //   topicContent: topicContent,
+    //   currentTopicContentIndex: 0,
+    //   currentSubtitleIndex: 0,
+
+    //   allModuleTopic: filteredTopicData,
+    //   currentModuleId: moduleId,
+
+    //   allModuleOptions: allModuleOptions,
+    //   currentModuleIndex: currentModuleIndex,
+    //   setNewModule: setSelectedModule
+    // });
+    // setVideoData({
+    //   ...videoData,
+    //   videoSrc: topicContent[0]?.contentUrl || null,
+    //   type: topicContent[0]?.type || null,
+    //   startPlayer: true,
+    //   isPreview: false,
+    //   currentTopicIndex: currentTopicIndex,
+
+    //   topicContent: topicContent,
+    //   currentTopicContentIndex: 0,
+    //   currentSubtitleIndex: 0,
+
+    //   allModuleTopic: filteredTopicData,
+    //   currentModuleId: moduleId,
+
+    //   allModuleOptions: allModuleOptions,
+    //   currentModuleIndex: currentModuleIndex,
+    //   setNewModule: setSelectedModule
+    // });
   };
 
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);

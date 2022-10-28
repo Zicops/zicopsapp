@@ -11,6 +11,8 @@ export default function CourseHeader({
   duration,
   isLoading,
   isCourseAssigned,
+  isCourseUnassign,
+  handleUnAssign,
   handleAssign,
   isPreview
 }) {
@@ -83,6 +85,23 @@ export default function CourseHeader({
               height={20}
               alt=""
               onClick={() => (isCourseAssigned ? {} : handleAssign())}
+            />
+          </div>
+        )}
+      </div>
+      <div className={`icons col_25 ${style.assignCourseBtn}`}>
+        {isCourseUnassign && (
+          <div
+            tooltip={
+               'Unassign this course'
+            }
+            flow="down">
+            <img
+              style={{ cursor: 'pointer' }}
+              src={'/images/svg/cross.svg'}
+              height={20}
+              alt=""
+              onClick={() => (handleUnAssign())}
             />
           </div>
         )}

@@ -10,15 +10,17 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from '../customVideoPlayer.module.scss';
 
-export default function ResourcesList({ updateIsPlayingTo }) {
+export default function ResourcesList({ isPlaying, updateIsPlayingTo }) {
   const resources = useRecoilValue(ResourcesAtom);
   const videoData = useRecoilValue(VideoAtom);
   const filteredResources = filterResources(resources, videoData?.topicContent?.[0]?.topicId);
 
-  const [showDoc, setShowDoc] = useState(null);
+  const [showDoc, setShowDoc] = useState(false);
 
   useEffect(() => {
-    updateIsPlayingTo(!showDoc);
+    if (showDoc === false) return;
+    if (isPlaying && showDoc) updateIsPlayingTo(false);
+    if (!isPlaying && !showDoc) updateIsPlayingTo(true);
   }, [showDoc]);
 
   return (

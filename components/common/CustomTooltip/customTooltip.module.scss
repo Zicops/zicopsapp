@@ -31,12 +31,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: end;
+  align-items: flex-end;
   text-align: start;
   border: 1px solid $darkThree;
   box-shadow: 1px 1px 5px 0 $darkOne;
   z-index: 10;
-  animation: tooltip-in-right .7s;
+  animation: tooltip-in-right 0.7s;
 
   button {
     width: 20px;
@@ -56,13 +56,12 @@
 }
 
 .reverse {
-  animation: tooltip-in-left .7s;
+  animation: tooltip-in-left 0.7s;
 }
 
 @keyframes tooltip-in-right {
   from {
     transform: translateX(100%);
-
   }
 
   to {
@@ -73,7 +72,6 @@
 @keyframes tooltip-in-left {
   from {
     transform: translateX(-100%);
-
   }
 
   to {

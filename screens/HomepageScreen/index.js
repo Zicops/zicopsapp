@@ -15,6 +15,7 @@ import styles from './homepageScreen.module.scss';
 
 const skeletonCardCount = 5;
 const time = Date.now();
+let timer = null;
 
 export default function HomepageScreen() {
   const userData = useRecoilValue(UserDataAtom);
@@ -102,10 +103,10 @@ export default function HomepageScreen() {
   }
 
   const pageSize = 28;
-  let timer = null;
   useEffect(() => {
+    setIsLoading(true);
     if (!(userData?.preferences?.length && userData?.preferences?.[0]?.catData)) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         setActiveSubcatArr([]);
         setOngoingCourses([]);
         setLearningFolderCourses([]);
@@ -141,9 +142,7 @@ export default function HomepageScreen() {
       //   (s) => s?.Name === baseSubcategoryObj?.sub_category
       // )?.CatId;
       // console.log(catId, catSubCat);
-      const parentOfBase = baseSubcategoryObj?.catData?.Name;
       // setParentOfBaseSubcategory(catSubCat?.subCatGrp?.[catId]?.cat?.Name);
-      if (parentOfBase) setParentOfBaseSubcategory(parentOfBase);
       setActiveSubcatArr(activeSubcategories);
 
       const userCourseData = await getUserCourseData(28);
@@ -191,7 +190,9 @@ export default function HomepageScreen() {
         setBaseSubcategoryCourses([]);
       }
 
-      if (parentOfBase) {
+      const parentOfBase = baseSubcategoryObj?.catData?.Name;
+      if (!!parentOfBase) {
+        setParentOfBaseSubcategory(parentOfBase);
         let baseSubCatParentCourses = await getLatestCoursesByFilters(
           { Category: parentOfBase },
           pageSize
@@ -202,6 +203,7 @@ export default function HomepageScreen() {
           ) || []
         );
       } else {
+        setParentOfBaseSubcategory(null);
         setParentOfBaseSubcategoryCourses([]);
       }
 
@@ -366,7 +368,7 @@ export default function HomepageScreen() {
         bigBox={true}
         handleTitleClick={() => router.push('search-page')}
       />
-      {!!parentOfBaseSubcategoryCourses?.length && (
+      {!!parentOfBaseSubcategoryCourses?.length && !!parentOfBaseSubcategory && (
         <ZicopsCarousel
           title={`Courses in ${parentOfBaseSubcategory}`}
           data={parentOfBaseSubcategoryCourses}
