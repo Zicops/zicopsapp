@@ -95,7 +95,10 @@ export default function FavouriteDndCourses() {
       if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
     });
 
-    const userCourseMaps = mapRes?.getUserCourseMaps?.user_courses || [];
+    const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [] ;
+    let userCourses = [];
+    if(_userCourses?.length) userCourses = _userCourses?.filter((course) => course?.course_status?.toLowerCase() !== 'disabled');
+    const userCourseMaps = userCourses || [];
     const assignedCourses = [];
     const availableCourses =
       courseRes?.latestCourses?.courses?.filter((c) => {
