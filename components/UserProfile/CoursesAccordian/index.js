@@ -298,6 +298,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
     const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+    
+     if(!assignedCoursesToUser?.length) setCourseLoading(false);
 
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
@@ -342,7 +344,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
     if (allAssignedCourses?.length) {
       const adminAssignedCourses = allAssignedCourses?.filter(
-        (course) => course?.added_by?.role.toLowerCase() === 'admin'
+        (course) => course?.added_by?.role.toLowerCase() !== 'self'
       );
 
       setCurrentCourses(allAssignedCourses,setCourseLoading(false));

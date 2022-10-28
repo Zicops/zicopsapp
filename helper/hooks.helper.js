@@ -1,5 +1,5 @@
 import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
-import { UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_LEARNINGSPACE_MAP, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
+import { ADD_USER_ORGANIZATION_MAP, UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_LEARNINGSPACE_MAP, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
   GET_USER_COURSE_MAPS,
@@ -196,7 +196,10 @@ export default function useUserCourseData() {
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
 
-    const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+    const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter((course) => course?.course_status?.toLowerCase() !== 'disabled'
+    )
+
+    const assignedCoursesToUser = _assignedCourses;
 
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
@@ -239,14 +242,16 @@ export default function useUserCourseData() {
         parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 
       // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      const courseDuraton = +courseRes?.getCourse?.duration * 60;
+      const courseDuraton = +courseRes?.getCourse?.duration / (60*60);
+      const progressPercent = userProgressArr?.length ? courseProgress : '0';
       allAssignedCourses.push({
         ...courseRes?.getCourse,
-        completedPercentage: userProgressArr?.length ? courseProgress : '0',
+        completedPercentage: progressPercent,
         added_by: added_by,
         created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
-        timeLeft: courseDuraton - (courseDuraton * (courseDuraton || 0)) / 100
+        timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
+        ...assignedCoursesToUser[i]
       });
     } // end of for loop
 
@@ -399,7 +404,7 @@ export default function useUserCourseData() {
           cohortUserData.push({
             user_id: userList[i]?.id,
             role: cohortUsers[j]?.role,
-            name: `${userList[i]?.first_name} ${userList[i]?.last_name}`,
+            name: userList[i]?.first_name ? `${userList[i]?.first_name} ${userList[i]?.last_name}` : '',
             email: userList[i]?.email,
             first_name: userList[i]?.first_name,
             last_name: userList[i]?.last_name,
@@ -638,6 +643,10 @@ export function useUpdateUserOrgData() {
     client: userClient
   });
 
+  const [addOrg, { error: createOrgError }] = useMutation(ADD_USER_ORGANIZATION_MAP, {
+    client: userClient
+  });
+
   // recoil
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -681,11 +690,29 @@ export function useUpdateUserOrgData() {
     return _userData;
   }
 
+  async function addUserOrg(userData=null){
+    if(!userData) return false;
+    let isError = false;
+    const res = await addOrg({ variables: userData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if (isError)
+      return setToastMsg({ type: 'danger', message: 'Add User Org Error' });
+
+    const data = res?.data?.addUserOrganizationMap[0];
+    const _userData = { ...newUserOrgData, ...data };
+    setUserOrgData(_userData);
+    return _userData ;
+  }
+
   return {
     newUserOrgData,
     setNewUserOrgData,
     updateUserOrg,
-    isFormCompleted
+    isFormCompleted,
+    addUserOrg
   };
 }
 

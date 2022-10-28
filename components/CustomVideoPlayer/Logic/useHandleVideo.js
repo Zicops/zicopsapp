@@ -5,7 +5,7 @@ import {
   userClient
 } from '@/api/UserMutations';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { THUMBNAIL_GAP, SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
+import { SYNC_DATA_IN_SECONDS, THUMBNAIL_GAP } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -26,7 +26,7 @@ import {
   UserCourseDataAtom,
   VideoAtom
 } from '../../../state/atoms/video.atom';
-import { addCallbackToEvent } from './customVideoPlayer.helper';
+import { addCallbackToEvent, BookmarkStartTimeAtom } from './customVideoPlayer.helper';
 
 export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [updateUserCourse, { error: updateUserCourseErr }] = useMutation(UPDATE_USER_COURSE, {
@@ -41,6 +41,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     { client: userClient }
   );
 
+  const [bookmarkStartTime, setBookmarkStartTime] = useRecoilState(BookmarkStartTimeAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const userData = useRecoilValue(UserStateAtom);
 
@@ -92,6 +93,21 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     });
   }, [videoData, playerState]);
 
+  useEffect(() => {
+    if (!+bookmarkStartTime?.time || isNaN(+bookmarkStartTime?.time)) return;
+    if (!videoElement.current) return;
+
+    const bookmarkTime = +bookmarkStartTime?.time;
+
+    videoElement.current.currentTime = bookmarkTime;
+    setPlayerState({ ...playerState, progress: bookmarkTime });
+    videoContainer.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center'
+    });
+  }, [bookmarkStartTime, videoElement.current]);
+
   // update user course data
   useEffect(async () => {
     if (videoData?.isPreview) return;
@@ -139,7 +155,13 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
             const vidDur = videoElement?.current?.duration;
             const startProgress = +topicProgress[0]?.video_progress;
 
-            if (startProgress < 98) {
+            if (+bookmarkStartTime?.time || !isNaN(+bookmarkStartTime?.time)) {
+              const bookmarkTime = +bookmarkStartTime?.time;
+
+              videoElement.current.currentTime = bookmarkTime;
+              setPlayerState({ ...playerState, progress: bookmarkTime });
+              setBookmarkStartTime({ ...bookmarkStartTime, topicId: null, time: null });
+            } else if (startProgress < 98) {
               videoElement.current.currentTime = (vidDur * startProgress) / 100;
               setPlayerState({ ...playerState, progress: startProgress });
             }

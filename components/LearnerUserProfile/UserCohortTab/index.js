@@ -89,7 +89,8 @@ const UserCohortTab = () => {
             btnData.color = 'var(--primary)';
           }
 
-          if (userCohort?.membership_status?.toLowerCase() !== 'active') {
+          const isActive = userCohort?.membership_status?.toLowerCase() === 'active';
+          if (!isActive) {
             btnData.display = 'Resigned';
             btnData.color = 'red';
             btnData.isDisabled = true;
@@ -99,6 +100,7 @@ const UserCohortTab = () => {
             <CohortListCard
               data={main}
               key={index}
+              isActive={isActive}
               handleClick={userCohort?.membership_status?.toLowerCase() !== 'active' ? ()=>{}: () => {
                 setSelectedCohort(main);
                 setClosePopUpAtom(false);

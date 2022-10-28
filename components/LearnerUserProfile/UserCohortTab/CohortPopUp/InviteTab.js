@@ -13,6 +13,8 @@ import UserButton from '@/components/common/UserButton';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import useHandleCohortTab from '../../Logic/useHandleCohortTab';
 import _styles from '../InviteUserLearner/inviteUserLearner.module.scss';
+import Loader from '@/components/common/Loader';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 // import addUserData from '@/components/UserComps/UserCohorts/ChortMasterTab/Logic/addUserData';
 
 export default function InviteTab() {
@@ -69,7 +71,7 @@ export default function InviteTab() {
     if (!cohortUser?.length) cohortUser = [...selectedCohortData?.cohortUsers];
 
     const users = await getUsersForAdmin();
-    console.log(users,'users');
+    // console.log(users,'users');
     if (!users?.length) return setLoading(false);
 
     // const _users = users?.filter((item) => item?.status?.toLowerCase() === 'active');
@@ -105,7 +107,7 @@ export default function InviteTab() {
     const updateUsers = usersForCohort.filter(({ id: id1 }) => !isAdded.some((id) => id === id1));
     setToastMsg({ type: 'success', message: 'User added successfully!' });
     setLoading(false);
-    setSelectedCohortData(prevValue => ({...prevValue , isUpdate:true}));
+    setSelectedCohortData(prevValue => ({...prevValue , isUpdated:true  , inviteUser:[...updateUsers]}));
     return setUsersForCohort(updateUsers);
   }
 
@@ -133,13 +135,26 @@ export default function InviteTab() {
         </div>
         <div className={`${styles.inviteComponents}`}>
           {loading ? (
-            <strong className={`${styles.fallbackMsg}`}>Loading Users...</strong>
+            // <strong className={`${styles.fallbackMsg}`}>Loading Users...</strong>
+            <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />
           ) : (
-            !usersForCohort?.length && (
+            !usersForCohort?.length ? (
               <strong className={`${styles.fallbackMsg}`}>No Users Found</strong>
-            )
+            ) : <>{usersForCohort?.map((invite) => {
+              let name = invite?.first_name+' '+invite?.last_name ;
+               if (!name?.toLowerCase()?.trim()?.includes(searchQuery?.toLowerCase()?.trim()))
+               return null;
+              return (
+                <InviteUserLearner
+                  inviteTabData={invite}
+                  key={invite.id}
+                  handleSelect={() => handleSelect(invite.id)}
+                  removeAll={removeAll}
+                />
+              );
+            })}</>
           )}
-          {usersForCohort?.map((invite) => {
+          {/* {usersForCohort?.map((invite) => {
             let name = invite?.first_name+' '+invite?.last_name ;
              if (!name?.toLowerCase()?.trim()?.includes(searchQuery?.toLowerCase()?.trim()))
              return null;
@@ -151,7 +166,7 @@ export default function InviteTab() {
                 removeAll={removeAll}
               />
             );
-          })}
+          })} */}
         </div>
         <div className={`${styles.addUserBottomContainer}`}>
           <div className={`${styles.leftSide}`}>
