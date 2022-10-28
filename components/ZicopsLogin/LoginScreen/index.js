@@ -1,7 +1,7 @@
 import { isEmail } from '@/helper/common.helper';
 import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
+import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
@@ -35,6 +35,7 @@ const LoginScreen = ({ setPage }) => {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [userData, setUserData] = useRecoilState(UserStateAtom);
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   // const [error, setError] = useState(null);
 
@@ -87,6 +88,8 @@ const LoginScreen = ({ setPage }) => {
       return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
 
+    if (isError) return;
+
     // TODO: udpate this later and move it according to org flow
     const orgRes = await loadQueryDataAsync(
       GET_USER_ORGANIZATIONS,
@@ -95,6 +98,9 @@ const LoginScreen = ({ setPage }) => {
       userQueryClient
     );
     // console.log(orgRes);
+    if(orgRes?.getUserOrganizations?.length){
+      setUserOrgData(orgRes?.getUserOrganizations[0]);
+    }
     sessionStorage?.setItem(
       'lspData',
       JSON.stringify({ user_lsp_id: orgRes?.getUserOrganizations?.[0]?.user_lsp_id })

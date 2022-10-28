@@ -19,7 +19,7 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
               Expected Completion by {courseData?.expected_completion || '22-06-2022'}
               <div className={`${styles.dot}`}></div>
               <span className={`${styles.mandatory}`}>
-                {!!courseData?.isMandatory && 'Mandatory'}
+                {courseData?.is_mandatory ? 'Mandatory' : 'Not Mandatory'}
               </span>
             </p>
             <p className={styles.percent}>

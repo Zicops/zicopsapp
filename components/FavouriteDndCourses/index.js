@@ -22,6 +22,7 @@ import Folder from './Folder/Folder';
 import ListCard from './ListCard';
 import useHandleCourseAssign from './Logic/useHandleCourseAssign';
 import styles from './favouriteDndCourses.module.scss';
+import Loader from '../common/Loader';
 
 export default function FavouriteDndCourses() {
   const {
@@ -54,57 +55,69 @@ export default function FavouriteDndCourses() {
   const [hover, setHover] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!userData?.id) return;
 
-    async function loadCourses() {
-      const queryVariables = { publish_time: getUnixFromDate(), pageSize: 9999999, pageCursor: '' };
-      let isError = false;
-      const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables).catch(
-        (err) => {
-          isError = !!err;
-          console.log(err);
-        }
-      );
-      if (isError) return setToastMsg({ type: 'danger', message: 'course load error' });
-
-      const mapRes = await loadQueryDataAsync(
-        GET_USER_COURSE_MAPS,
-        {
-          ...queryVariables,
-          user_id: userData?.id
-        },
-        {},
-        userQueryClient
-      ).catch((err) => {
-        if (err?.message?.includes('no user course found')) return;
-        if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
-      });
-
-      const userCourseMaps = mapRes?.getUserCourseMaps?.user_courses || [];
-      const assignedCourses = [];
-      const availableCourses =
-        courseRes?.latestCourses?.courses?.filter((c) => {
-          return (
-            c?.is_active &&
-            c?.is_display &&
-            !userCourseMaps?.find((map) => {
-              let added_by = {};
-              if (map?.added_by) added_by = JSON.parse(map?.added_by);
-              const isAssigned = map?.course_id === c?.id;
-              if (isAssigned) assignedCourses.push({ ...c, added_by });
-              return isAssigned;
-            })
-          );
-        }) || [];
-      updateCourseData(availableCourses);
-
-      setDropped(assignedCourses);
-    }
-
     loadCourses();
   }, [userData?.id]);
+
+  useEffect(() => {
+    if (!isUpdated) return;
+    loadCourses();
+    setIsUpdated(false);
+  }, [isUpdated]);
+
+  //loads user assigned courses
+
+  async function loadCourses() {
+    setLoading(true);
+    const queryVariables = { publish_time: getUnixFromDate(), pageSize: 9999999, pageCursor: '' };
+    let isError = false;
+    const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables).catch((err) => {
+      isError = !!err;
+      console.log(err);
+    });
+    if (isError) return setToastMsg({ type: 'danger', message: 'course load error' });
+
+    const mapRes = await loadQueryDataAsync(
+      GET_USER_COURSE_MAPS,
+      {
+        ...queryVariables,
+        user_id: userData?.id
+      },
+      {},
+      userQueryClient
+    ).catch((err) => {
+      if (err?.message?.includes('no user course found')) return;
+      if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+    });
+
+    const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [] ;
+    let userCourses = [];
+    if(_userCourses?.length) userCourses = _userCourses?.filter((course) => course?.course_status?.toLowerCase() !== 'disabled');
+    const userCourseMaps = userCourses || [];
+    const assignedCourses = [];
+    const availableCourses =
+      courseRes?.latestCourses?.courses?.filter((c) => {
+        return (
+          c?.is_active &&
+          c?.is_display &&
+          !userCourseMaps?.find((map) => {
+            let added_by = {};
+            if (map?.added_by) added_by = JSON.parse(map?.added_by);
+            const isAssigned = map?.course_id === c?.id;
+            if (isAssigned) assignedCourses.push({ ...c, added_by });
+            return isAssigned;
+          })
+        );
+      }) || [];
+    updateCourseData(availableCourses);
+
+    setDropped(assignedCourses, setLoading(false));
+  }
 
   useEffect(() => {
     if (courseAssignData?.isCourseAssigned) {
@@ -176,6 +189,7 @@ export default function FavouriteDndCourses() {
   }
 
   useEffect(() => {
+    console.log(dropped, 'isbfi');
     const myAssignedCourses = dropped?.filter((course) => course?.added_by?.role == 'self');
     // console.log(dropped, 'added');
     const adminAssignedCourses = dropped?.filter((course) =>
@@ -224,10 +238,10 @@ export default function FavouriteDndCourses() {
                     display: isDrag ? 'none' : '',
                     transition: 'display 0.1s'
                   }}>
-                  Drag your favorite course in folder
+                  Drag your favourite course in folder
                 </Box>
                 <Box px={12} fontSize={'13px'} color={'rgba(255,255,255,0.5)'} mb={5}>
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                  Drag and drop to add self paced courses to your learning folder.
                 </Box>
                 <Droppable droppableId="character">
                   {(provided) => (
@@ -359,17 +373,26 @@ export default function FavouriteDndCourses() {
               </h4>
 
               <div className={styles.cardContainer}>
-                {droppedByMe?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
-                  if (course?.added_by?.role !== 'self') return;
-                  if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
-
-                  if (!isCoursePresent?.selfAdded)
-                    setIsCoursePresent({ ...isCoursePresent, selfAdded: true });
-                  return <ListCard courseData={course} footerType={'added'} />;
-                })}
-
-                {!isCoursePresent?.selfAdded && (
+                {/* {!isCoursePresent?.selfAdded && (
                   <div className={styles.notFound}>No Courses Added</div>
+                )} */}
+                {loading ? (
+                  <strong className={`${styles.notFound}`}>Loading Courses...</strong>
+                ) : // <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />
+                !droppedByMe?.length ? (
+                  <strong className={`${styles.notFound}`}>No Courses Added</strong>
+                ) : (
+                  <>
+                    {droppedByMe?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
+                      if (course?.added_by?.role !== 'self') return;
+                      if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery))
+                        return;
+
+                      if (!isCoursePresent?.selfAdded)
+                        setIsCoursePresent({ ...isCoursePresent, selfAdded: true });
+                      return <ListCard courseData={course} footerType={'added'} />;
+                    })}
+                  </>
                 )}
               </div>
 
@@ -381,17 +404,26 @@ export default function FavouriteDndCourses() {
               </h4>
 
               <div className={styles.cardContainer}>
-                {droppedByAdmin?.slice(0, isShowAllAdmin ? dropped?.length : 2)?.map((course) => {
-                  // if (course?.added_by?.role !== 'admin') return;
-                  if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery)) return;
 
-                  if (!isCoursePresent?.adminAdded)
-                    setIsCoursePresent({ ...isCoursePresent, adminAdded: true });
-                  return <ListCard courseData={course} footerType={'assigned'} />;
-                })}
+                {loading ? (
+                  <strong className={`${styles.notFound}`}>Loading Courses...</strong>
+                ) : // <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />
+                !droppedByAdmin?.length ? (
+                  <strong className={`${styles.notFound}`}>No Courses Added by Admin</strong>
+                ) : (
+                  <>
+                    {droppedByAdmin
+                      ?.slice(0, isShowAllAdmin ? dropped?.length : 2)
+                      ?.map((course) => {
+                        // if (course?.added_by?.role !== 'admin') return;
+                        if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery))
+                          return;
 
-                {!isCoursePresent?.adminAdded && (
-                  <div className={styles.notFound}>No Courses Added By Admin</div>
+                        if (!isCoursePresent?.adminAdded)
+                          setIsCoursePresent({ ...isCoursePresent, adminAdded: true });
+                        return <ListCard courseData={course} footerType={'assigned'} />;
+                      })}
+                  </>
                 )}
               </div>
             </div>
@@ -450,7 +482,10 @@ export default function FavouriteDndCourses() {
               text={'Save'}
               type={'button'}
               isDisabled={isSaveDisabled}
-              clickHandler={() => assignCourseToUser()}
+              clickHandler={async () => {
+                await assignCourseToUser();
+                setIsUpdated(true);
+              }}
             />
           </div>
         </div>
