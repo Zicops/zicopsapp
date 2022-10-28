@@ -14,14 +14,14 @@ export default function useHandleOrgForm() {
   useEffect(() => {
     setIsOrgRegisterationReady(
       !!orgData?.orgName?.length &&
-        !!orgData?.orgLogo &&
+        // !!orgData?.orgLogo &&
         !!orgData?.orgIndustry?.length &&
         !!orgData?.orgType?.length &&
         !!orgData?.orgEmployees?.length &&
-        !!orgData?.orgUrl.length &&
-        !!orgData?.orgLinkdInUrl?.length &&
-        !!orgData?.orgFacebookUrl?.length &&
-        !!orgData?.orgTwitterUrl?.length
+        !!orgData?.orgUrl.length 
+        // !!orgData?.orgLinkdInUrl?.length &&
+        // !!orgData?.orgFacebookUrl?.length &&
+        // !!orgData?.orgTwitterUrl?.length
     );
     setIsUnitFormReady(
       !!orgData?.orgName?.length &&
@@ -42,12 +42,13 @@ export default function useHandleOrgForm() {
         !!orgData?.orgPersonEmailId?.length &&
         !!orgData?.orgPersonContactNumber?.length &&
         !!orgData?.orgPersonRole?.length ||
-        !!orgData?.orgPersonRoleOthers.length &&
-        !!orgData?.orgPersonRemarks?.length
+        !!orgData?.orgPersonRoleOthers.length
+        // !!orgData?.orgPersonRemarks?.length
     );
   }, [orgData]);
 
   function getBase64(file, onLoadCallback) {
+    if(!file) return ""
     return new Promise(function (resolve, reject) {
       var reader = new FileReader();
       reader.onload = function () {

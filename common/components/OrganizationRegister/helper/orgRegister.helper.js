@@ -170,7 +170,7 @@ export const orgContactPersonData = [
     inputOptions: {
       placeholder: 'Enter firstname',
       inputName: 'orgPersonFirstname',
-      label: 'First name :',
+      label: 'First name * :',
       maxLength: 60
     },
     styleClass: styles?.inputStyle
@@ -180,7 +180,7 @@ export const orgContactPersonData = [
     inputOptions: {
       placeholder: 'Enter lastname',
       inputName: 'orgPersonLastname',
-      label: 'Last name :',
+      label: 'Last name * :',
       maxLength: 60
     },
     styleClass: styles?.inputStyle
@@ -190,7 +190,7 @@ export const orgContactPersonData = [
     inputOptions: {
       placeholder: 'Enter email id',
       inputName: 'orgPersonEmailId',
-      label: 'Email id :'
+      label: 'Email id * :'
     },
     iconType: true
   },
@@ -199,7 +199,7 @@ export const orgContactPersonData = [
     inputOptions: {
       placeholder: '000 000 0000',
       inputName: 'orgPersonContactNumber',
-      label: 'Contact number :'
+      label: 'Contact number * :'
     }
   },
   {
@@ -207,7 +207,7 @@ export const orgContactPersonData = [
     inputOptions: {
       placeholder: 'Select role in the organization',
       inputName: 'orgPersonRole',
-      label: 'Organization role :',
+      label: 'Organization role * :',
       options: industriesOption
     }
   },
@@ -245,7 +245,7 @@ export const orgRegisterData = [
     inputOptions: {
       placeholder: 'Enter organization name',
       inputName: 'orgName',
-      label: 'Organization name :',
+      label: 'Organization name * :',
       maxLength: 60
     },
     styleClass: styles?.inputStyle
@@ -255,7 +255,7 @@ export const orgRegisterData = [
     inputOptions: {
       inputName: 'orgLogo',
       placeholder: 'Organization Logo',
-      label: 'Organization logo* :'
+      label: 'Organization logo * :'
     }
   },
   {
@@ -263,7 +263,7 @@ export const orgRegisterData = [
     inputOptions: {
       placeholder: 'Select Industry',
       inputName: 'orgIndustry',
-      label: 'Industry* :',
+      label: 'Industry * :',
       options: industriesOption
     }
   },
@@ -272,7 +272,7 @@ export const orgRegisterData = [
     inputOptions: {
       placeholder: 'Select type',
       inputName: 'orgType',
-      label: 'Type* :',
+      label: 'Type * :',
       options: bussinessTypeOption
     }
   },
@@ -281,7 +281,7 @@ export const orgRegisterData = [
     inputOptions: {
       placeholder: 'Select number of employees',
       inputName: 'orgEmployees',
-      label: 'Number of employees :',
+      label: 'Number of employees:',
       options: numberEmployessOption
     }
   },
@@ -290,7 +290,7 @@ export const orgRegisterData = [
     inputOptions: {
       placeholder: 'Enter your organization website URL',
       inputName: 'orgUrl',
-      label: 'Website* :',
+      label: 'Website * :',
       maxLength: 60
     }
   },
