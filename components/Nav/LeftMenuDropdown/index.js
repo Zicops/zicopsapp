@@ -47,6 +47,7 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
       ++prefCount;
       if (prefCount > 4) break;
       if (activePreferences[i]?.is_base) {
+        --prefCount;
         // prefArray.unshift({
         //   title: activePreferences[i]?.sub_category,
         //   asUrl: '/search-page',
