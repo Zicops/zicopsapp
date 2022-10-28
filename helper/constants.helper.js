@@ -25,7 +25,7 @@ export const PUBLIC_PATHS = [
   '/create-learning-space',
   '/create-learning-space/org-register',
   '/create-learning-space/org-register-form',
-  '/create-learning-space/org-unit-form'
+  '/create-learning-space/org-unit-form',
   '/homepage',
   '/static'
 ];
@@ -48,7 +48,7 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/create-learning-space',
   '/create-learning-space/org-register',
   '/create-learning-space/org-register-form',
-  '/create-learning-space/org-unit-form'
+  '/create-learning-space/org-unit-form',
   '/homepage',
   '/static'
 ];
