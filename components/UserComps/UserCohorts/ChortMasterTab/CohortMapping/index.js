@@ -90,8 +90,9 @@ const CohortMapping = ({isReadOnly = false}) => {
       IsActive: true,
       ExpectedCompletion: courseAssignData?.expectedCompletionDays
     };
-    console.log({ ...selectedCourse, endDate: endDate }, 'selected course');
+    console.log({ ...selectedCourse, endDate: endDate }, 'selected course',sendData);
     let isError = false;
+    // return ;
     const resCohortCourse = await addCohortCourse({ variables: sendData }).catch((err) => {
       isError = !!err;
     });
@@ -100,7 +101,8 @@ const CohortMapping = ({isReadOnly = false}) => {
     // console.log(resCohortCourse);
     const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId, {
       ...selectedCourse,
-      endDate: endDate
+      endDate: endDate,
+      ...sendData
     });
     if (!isCourseAssigned)
       return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
