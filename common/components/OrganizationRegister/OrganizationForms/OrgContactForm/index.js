@@ -1,4 +1,4 @@
-import { changeHandler } from '@/helper/common.helper';
+import { changeHandler , isEmail} from '@/helper/common.helper';
 import { OrganizationDetailsAtom , getOrgsTempDetails } from '@/state/atoms/organizations.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import useHandleOrgForm from 'common/components/OrganizationRegister/utils/orgResgisterForm.helper';
@@ -91,7 +91,7 @@ const OrgContactForm = ({ setTab = () => {} }) => {
       return (
         <IconLabeledInputs
           inputOptions={obj?.inputOptions}
-          icon={obj?.iconType}
+          icon={isEmail(obj.inputOptions.value)}
           changeHandler={(e) => changeHandler(e, orgTempDetails, setOrgTempDetails)}
         />
       );
