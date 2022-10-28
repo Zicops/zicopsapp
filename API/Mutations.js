@@ -1828,7 +1828,7 @@ export const DELETE_COURSE_TOPIC = gql`
 `;
 
 export const DELETE_COHORT_COURSE = gql`
-  mutation deleteCourseCohort($id: ID) {
-    deleteCourseCohort(id: $id)
-  }
-`;
+mutation deleteCourseCohort($id: ID){
+  deleteCourseCohort(id: $id)
+}
+`
