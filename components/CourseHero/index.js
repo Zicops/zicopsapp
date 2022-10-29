@@ -68,7 +68,8 @@ export default function CourseHero({ isPreview = false }) {
     console.log(userCourseData?.userCourseMapping)
     if(!userCourseData?.userCourseMapping) return;
     const addedBy = parseJson(userCourseData?.userCourseMapping?.added_by);
-    console.log(addedBy?.role?.toLowerCase())
+    // console.log(addedBy?.role?.toLowerCase())
+    if(!courseAssignData?.isCourseAssigned) return ;
     if(addedBy?.role?.toLowerCase() !== 'self') return setIsCourseUnassign(false);
     return setIsCourseUnassign(true);
   },[userCourseData])
