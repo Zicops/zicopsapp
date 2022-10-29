@@ -134,6 +134,20 @@ export default function CourseMaster() {
         }
       />
 
+      {/* course publisher */}
+      <LabeledInput
+        styleClass={`${styles.marginBottom}`}
+        inputClass={!fullCourse?.name?.publisher && courseError?.master ? 'error' : ''}
+        inputOptions={{
+          inputName: 'publisher',
+          label: 'Publisher / Author',
+          placeholder: 'Enter name of the Publisher / Author',
+          maxLength: 60,
+          value: fullCourse?.publisher
+        }}
+        changeHandler={handleChange}
+      />
+
       {/* language */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
