@@ -8,7 +8,7 @@ import {
 import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Logic/questionBank.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { QUESTION_STATUS } from '@/helper/constants.helper';
-import { getMinuteSecondsFromSeconds, secondsToMinutes } from '@/helper/utils.helper';
+import { secondsToMinutes } from '@/helper/utils.helper';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ import {
 } from '../../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
-export default function useAddQuiz(courseId = '', topicId = '' , isScrom = false) {
+export default function useAddQuiz(courseId = '', topicId = '', isScrom = false) {
   const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
     client: mutationClient
   });
@@ -34,6 +34,7 @@ export default function useAddQuiz(courseId = '', topicId = '' , isScrom = false
   const topicContent = useRecoilValue(TopicContentAtom);
 
   // local state
+  const [quizTemp, setQuizTemp] = useState(null);
   const [isQuizFormVisible, setIsQuizFormVisible] = useState(false);
   const [isQuizReady, setIsQuizReady] = useState(false);
   const [editedQuiz, setEditedQuiz] = useState(null);
@@ -122,7 +123,7 @@ export default function useAddQuiz(courseId = '', topicId = '' , isScrom = false
     setIsQuizReady(
       newQuiz.name &&
         newQuiz.type &&
-        (isScrom ? true : (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec)) &&
+        (isScrom ? true : !!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec) &&
         (questionRequired || (newQuiz?.formType === 'select' && newQuiz?.questionId))
     );
   }, [newQuiz]);
@@ -158,6 +159,12 @@ export default function useAddQuiz(courseId = '', topicId = '' , isScrom = false
 
   function toggleQuizForm(val) {
     if (typeof val === 'boolean') return setIsQuizFormVisible(!!val);
+    if (val === 'closeForm' && quizTemp) {
+      const _quizzes = structuredClone(quizzes);
+      if (quizTemp?.data && !isNaN(+quizTemp.index)) _quizzes[quizTemp?.index] = quizTemp?.data;
+
+      setQuizzes(_quizzes);
+    }
 
     setIsQuizFormVisible(!isQuizFormVisible);
   }
@@ -279,7 +286,7 @@ export default function useAddQuiz(courseId = '', topicId = '' , isScrom = false
     setNewQuiz(_quiz);
     setEditedQuiz({ ..._quiz, isEditQuiz: false });
     const _quizzes = structuredClone(quizzes);
-    _quizzes?.splice(index, 1);
+    setQuizTemp({ index, data: _quizzes?.splice(index, 1)[0] });
     setQuizzes(_quizzes);
   }
 
