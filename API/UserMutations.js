@@ -84,7 +84,7 @@ export const MAKE_ADMIN_USER = gql`
 `;
 
 export const INVITE_USERS = gql`
-  mutation InviteUsers($emails: [String!]!, $lsp_id: String!) {
+  mutation InviteUsers($emails: [String!]!, $lsp_id: String) {
     inviteUsers(emails: $emails, lsp_id: $lsp_id)
   }
 `;
