@@ -37,6 +37,7 @@ const ProfilePreferences = ({
 }) => {
   const [vidIsOpen, setVidIsOpen] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
+  const vidRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   // const [searchQuery, setSearchQuery] = useState('')
   const [filteredData, setFilteredData] = useState([]);
@@ -90,6 +91,7 @@ const ProfilePreferences = ({
 
   useEffect(() => {
     if (!catSubCat?.subCat?.length) return;
+    return ;
 
     setData(
       catSubCat?.subCat?.map((s) => {
