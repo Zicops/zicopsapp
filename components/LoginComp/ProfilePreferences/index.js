@@ -91,7 +91,7 @@ const ProfilePreferences = ({
 
   useEffect(() => {
     if (!catSubCat?.subCat?.length) return;
-    return ;
+    // return ;
 
     setData(
       catSubCat?.subCat?.map((s) => {
