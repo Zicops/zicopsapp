@@ -412,7 +412,8 @@ export default function TopicBox({
         onClick={() => {
           if (
             !router?.asPath?.includes('preview') &&
-            !userCourseData?.userCourseMapping?.user_course_id
+            !userCourseData?.userCourseMapping?.user_course_id ||
+            userCourseData?.userCourseMapping?.course_status?.toLowerCase() === 'disabled'
           )
             return setShowAlert(true);
 
