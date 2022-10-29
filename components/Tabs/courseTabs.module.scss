@@ -536,3 +536,11 @@
 .updateTopicBtn {
   margin-bottom: 20px;
 }
+
+.expertiseLevelCheckboxes{
+  width: 25%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+}
