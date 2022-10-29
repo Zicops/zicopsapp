@@ -16,6 +16,7 @@ import {
 import Accordion from '@/components/common/Accordion';
 import Loader from '@/components/common/Loader';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
+import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
 // import AnswerKeyPDF from '@/components/LearnerExamComp/AnswerKeyPDF';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LearnerExamAtom } from '@/state/atoms/exams.atoms';
@@ -50,6 +51,13 @@ export default function ExamResult() {
 
   let resultIndex = 2;
   if (isShowResult) resultIndex = learnerExamData?.resultData?.isPassed ? 0 : 1;
+  if (
+    getPassingMarks(
+      learnerExamData?.examData?.passingCriteria,
+      learnerExamData?.examData?.totalMarks
+    ) === 0
+  )
+    resultIndex = 2;
 
   useEffect(async () => {
     return;
@@ -465,12 +473,21 @@ export default function ExamResult() {
     setLoading(false);
   }, [examId, cpId, userData?.id, userExamData?.currentAttemptId]);
 
+  useEffect(() => {
+    if (!examId) return;
+    if (!cpId) return;
+
+    if (!learnerExamData || !learnerExamData?.examData?.id) return handleReturnToMainScreen();
+  }, [learnerExamData, examId, cpId]);
+
   const currentAttemptData = userExamData?.userExamAttempts.find(
     (ea) => ea?.user_ea_id === userExamData?.currentAttemptId
   );
 
   function handleReturnToMainScreen() {
     const courseId = userCourseData?.userCourseMapping?.course_id;
+    if (!courseId) return router.push(`/answer-key/cp/${cpId}/exam/${examId}`);
+
     router.push(`/course/${courseId}?activateExam=${examId}`, `/course/${courseId}`);
   }
 

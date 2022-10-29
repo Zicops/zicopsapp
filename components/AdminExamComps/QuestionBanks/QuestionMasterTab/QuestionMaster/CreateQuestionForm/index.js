@@ -29,10 +29,24 @@ export default function CreateQuestionForm({ data, isEdit }) {
   } = data;
 
   const NUMBER_OF_OPTIONS = 4;
-  const difficultyOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => ({
-    label: val,
-    value: val
-  }));
+
+  const difficultyLevels = ['Beginner (0-3)', 'Competent (4-7)', 'Proficient (8- 10)'];
+  const difficultyOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => {
+    let tooltipMsg = difficultyLevels[0];
+    if (val > 3) tooltipMsg = difficultyLevels[1];
+    if (val > 7) tooltipMsg = difficultyLevels[2];
+
+    return {
+      label: (
+        <>
+          <ToolTip title={tooltipMsg} placement="bottom">
+            <span>{val}</span>
+          </ToolTip>
+        </>
+      ),
+      value: val
+    };
+  });
 
   const [shouldCloseAccordion, setShouldCloseAccordion] = useState(null);
   const [showQuestionForm, setShowQuestionForm] = useState(false);
@@ -143,15 +157,15 @@ export default function CreateQuestionForm({ data, isEdit }) {
                       ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.difficultyLevel
                     }
                   />
-                  <RangeSlider
-                    options={difficultyOptions}
-                    inputName="difficulty"
-                    selected={questionData.difficulty}
-                    changeHandler={(e, val) =>
-                      setQuestionData({ ...questionData, difficulty: val, isUpdated: true })
-                    }
-                  />
                 </label>
+                <RangeSlider
+                  options={difficultyOptions}
+                  inputName="difficulty"
+                  selected={questionData.difficulty}
+                  changeHandler={(e, val) =>
+                    setQuestionData({ ...questionData, difficulty: val, isUpdated: true })
+                  }
+                />
               </div>
 
               {/* question with file */}
