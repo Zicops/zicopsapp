@@ -113,6 +113,14 @@ const MyCourseList = () => {
   return (
     <>
       <div className="content-panel">
+        <div className="search-area">
+          <select className="search" name="search">
+            <option value="Name">Name</option>
+            <option value="Owner">Owner</option>
+            <option value="Category">Category</option>
+          </select>
+          <input className="search" type="text" placeholder="Search..." />
+        </div>
         <MyLatestCourseList time={time} />
       </div>
 
@@ -123,6 +131,23 @@ const MyCourseList = () => {
             color: var(--white);
             box-shadow: -2px 2px 10px 0 #000000, 2px -2px 5px 0 #686868;
             border-radius: 10px;
+          }
+          .search-area{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 40px;
+            height: 60px;
+            gap: 10px;
+          } 
+          .search {
+            align: right;
+            padding: 5px;
+            margin-bottom: -20px;
+            background-color: transparent;
+            border: none;
+            color: var(--dark_three);
+            border-bottom: 1px solid;
           }
         `}
       </style>
