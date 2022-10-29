@@ -8,6 +8,8 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
+import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
@@ -36,7 +38,7 @@ export default function UserProfilePage() {
     if (!currentUserId) return;
     // const userIds = [];
     // userIds.push(currentUserId);
-    const lspId = adminData?.lsp_id;
+    const lspId = adminData?.lsp_id || LEARNING_SPACE_ID;
 
     if(!lspId) return ;
     
