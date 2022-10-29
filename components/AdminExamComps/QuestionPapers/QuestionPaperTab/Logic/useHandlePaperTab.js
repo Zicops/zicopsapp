@@ -199,14 +199,14 @@ export default function useHandlePaperTab() {
         GET_LATEST_QUESTION_PAPERS_NAMES,
         questionPaperData?.name,
         'getLatestQuestionPapers.questionPapers',
-        questionPaperData?.id
+        questionPaperData?.id || questionPaperId
       )
     ) {
       return setToastMsg({ type: 'danger', message: 'Paper with same name already exist' });
     }
 
     const sendData = {
-      id: questionPaperData.id,
+      id: questionPaperData.id || questionPaperId,
       name: questionPaperData.name || '',
       category: questionPaperData.category || '',
       sub_category: questionPaperData.sub_category || '',
@@ -233,8 +233,7 @@ export default function useHandlePaperTab() {
     console.log(questionPaperRes?.data);
 
     const res = questionPaperRes?.data?.updateQuestionPaper;
-    if (!res || isError)
-      return ;
+    if (!res || isError) return;
 
     const paperMaster = {
       id: res?.id,
