@@ -121,7 +121,7 @@ export default function HomepageScreen() {
         setSubCategory2Courses([]);
         setSubCategory3Courses([]);
         setSubCategory4Courses([]);
-
+        setIsLoading(false);
         return clearTimeout(timer);
       }, 3000);
       return;
@@ -131,10 +131,10 @@ export default function HomepageScreen() {
     async function loadAndSetHomePageRows() {
       setIsLoading(true);
       const subcatArr = userData?.preferences;
-      // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
-      const activeSubcategories = subcatArr?.filter(
-        (item) => item?.is_active && item?.sub_category
-      );
+      const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
+      // const activeSubcategories = subcatArr?.filter(
+      //   (item) => item?.is_active && item?.sub_category
+      // );
       const baseSubcategoryObj = subcatArr?.filter((item) => item?.is_base)[0];
       if (baseSubcategoryObj?.sub_category) setBaseSubcategory(baseSubcategoryObj?.sub_category);
 
