@@ -77,7 +77,7 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
         footerObj={{
           submitDisplay: isEdit ? 'Update' : 'Save',
           disableSubmit: isUploading,
-          status: status || STATUS.display[0],
+          status: status ? (status === 'Y' ? STATUS.flow[0] : status) : STATUS.display[0],
           handleSubmit: isEdit ? updateQuestionAndOptions : addQuestionAndOptions,
           handleCancel: () => closeQuestionMasterTab()
         }}
