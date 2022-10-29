@@ -17,6 +17,7 @@ import {
   InputAdornment,
   TextField
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import useHandleAddUserDetails from '../Logic/useHandleAddUser';
@@ -44,6 +45,7 @@ const ProfilePreferences = ({
   const [addCat, setAddCat] = useState(false);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const router = useRouter();
 
   const { catSubCat } = useHandleCatSubCat();
 
