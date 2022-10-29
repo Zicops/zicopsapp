@@ -2,6 +2,7 @@ import InputWithCheckbox from '@/common/InputWithCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import RangeSlider from '@/components/common/FormComponents/RangeSlider';
 import UploadForm from '@/components/common/FormComponents/UploadForm';
+import { getFileNameFromUrl } from '@/helper/utils.helper';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getQuizObject, QuizAtom, QuizMetaDataAtom } from '../../../../../state/atoms/module.atoms';
 import Bar from '../../../../common/Bar';
@@ -190,7 +191,9 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                     <TextInputWithFile
                       inputName="question"
                       value={newQuiz?.question}
-                      fileNmae={newQuiz?.questionFile?.name}
+                      fileNmae={
+                        newQuiz?.questionFile?.name || getFileNameFromUrl(newQuiz?.attachment)
+                      }
                       accept={acceptedType.join(', ')}
                       changeHandler={handleQuizInput}
                       fileInputHandler={handleQuizInput}
@@ -233,7 +236,9 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                         inputChangeHandler={(e) => handleQuizInput(e, index)}
                         fileInputHandler={(e) => handleQuizInput(e, index)}
                         optionData={{
-                          fileName: newQuiz?.options[index]?.file?.name,
+                          fileName:
+                            newQuiz?.options[index]?.file?.name ||
+                            getFileNameFromUrl(newQuiz?.options[index]?.attachment),
                           inputValue: newQuiz?.options[index]?.option,
                           isCorrect: newQuiz?.options[index]?.isCorrect,
                           inputName: 'option'
@@ -299,7 +304,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
             <div className="center-element-with-flex">
               <Button
                 text="Cancel"
-                clickHandler={() => toggleQuizForm('closeForm')}
+                clickHandler={() => toggleQuizForm(newQuiz?.questionId)}
                 styleClass={styles.topicContentSmallBtn}
               />
               <Button
