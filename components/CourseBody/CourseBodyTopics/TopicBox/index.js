@@ -63,6 +63,7 @@ export default function TopicBox({
 }) {
   const { name, description, type } = topic;
   const duration = topicContent[0]?.duration.toString();
+  // const duration = 3965;
   const topicData = useRecoilValue(TopicAtom);
   const topicContentData = useRecoilValue(TopicContentAtom);
   const quizProgressData = useRecoilValue(QuizProgressDataAtom);
@@ -405,6 +406,13 @@ export default function TopicBox({
       })
       ?.filter((quiz) => quiz?.topic_id === topic?.id)?.length || 0;
   const totalQuiz = quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0;
+
+  function displayDuration(duration) {
+    if (duration <= 60) return `${duration} seconds`;
+
+    return `${Math.floor(duration / 60)}:${moment.utc(duration * 1000).format('ss')} mins `;
+  }
+
   return (
     <>
       <div
@@ -549,7 +557,7 @@ export default function TopicBox({
                         width={100}
                       />
                     ) : duration ? (
-                      `Duration : ${moment.utc(duration * 1000).format('mm:ss')} mins`
+                      `Duration : ${displayDuration(duration)}`
                     ) : (
                       'N/A'
                     )}

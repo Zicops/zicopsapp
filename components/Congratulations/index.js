@@ -49,10 +49,11 @@ const Congratulations = (props) => {
         />
       </CongratulationsScreen>
       <CongratulationsFooter>
-        <CongratulationsScreenButton 
-        title={downloadBtn} 
-        handleClick={handleDownload} 
-        title={
+        <CongratulationsScreenButton
+          // title={downloadBtn}
+          disable={true}
+          handleClick={handleDownload}
+          title={
             <ToolTip title="Download your result" placement="bottom">
               <span>Download Result</span>
             </ToolTip>
@@ -60,7 +61,7 @@ const Congratulations = (props) => {
         />
         <CongratulationsScreenButton
           handleClick={() => router.push(`/answer-key/cp/${cpId}/exam/${examId}`)}
-          title={'View Attempt History'}
+          // title={'View Attempt History'}
           disable={isSampleTest}
           title={
             <ToolTip title="View all attempts" placement="bottom">
