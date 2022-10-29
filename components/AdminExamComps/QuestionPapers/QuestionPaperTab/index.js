@@ -131,6 +131,8 @@ export default function QuestionPaperTab() {
 
     // reloading qb section map after add or edit
     async function refetchQBSectionMapping(sectionId) {
+      if (!sectionId) return;
+
       // refetch question bank section mapping
       let isError = false;
       const mappingRes = await refetchMapping({
