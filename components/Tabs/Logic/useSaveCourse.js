@@ -65,6 +65,7 @@ export default function useSaveCourse(courseContextData) {
         !!fullCourse?.category?.length &&
         !!fullCourse?.sub_category?.length &&
         !!fullCourse?.owner?.length &&
+        !!fullCourse?.publisher?.length &&
         !!+fullCourse?.language?.length;
 
       _courseError.master = !isValid;

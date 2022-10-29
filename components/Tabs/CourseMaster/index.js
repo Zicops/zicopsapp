@@ -137,7 +137,7 @@ export default function CourseMaster() {
       {/* course publisher */}
       <LabeledInput
         styleClass={`${styles.marginBottom}`}
-        inputClass={!fullCourse?.name?.publisher && courseError?.master ? 'error' : ''}
+        inputClass={!fullCourse?.publisher?.length && courseError?.master ? 'error' : ''}
         inputOptions={{
           inputName: 'publisher',
           label: 'Publisher / Author',
@@ -184,6 +184,7 @@ export default function CourseMaster() {
           fullCourse?.name &&
           fullCourse?.category &&
           fullCourse?.sub_category &&
+          fullCourse?.publisher &&
           fullCourse?.owner &&
           fullCourse?.language?.length
         }
