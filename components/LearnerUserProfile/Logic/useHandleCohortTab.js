@@ -3,6 +3,7 @@ import { ADD_USER_COHORT, ADD_USER_COURSE, UPDATE_COHORT_MAIN, UPDATE_USER_COHOR
 import { GET_USER_COURSE_MAPS, GET_USER_LATEST_COHORTS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATION_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData, SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -160,7 +161,8 @@ export default function useHandleCohortTab() {
 
   async function addUserToCohort(userIds = [] , cohortId = null){
 
-      if(!userOrgData?.lsp_id) return ;
+      // if(!userOrgData?.lsp_id && !LEARNING_SPACE_ID) return ;
+      if(!userOrgData?.lsp_id) setUserOrgData((prev) => ({...prev , lsp_id: LEARNING_SPACE_ID}));
 
       if(!userIds?.length) return setToastMsg({type:'info',message:'Make sure to add users!'});
 
@@ -168,7 +170,7 @@ export default function useHandleCohortTab() {
 
       for(let i = 0 ; i < userIds?.length ; i++){
 
-        const userLspData = await getUserLspData(userIds[i],userOrgData?.lsp_id);
+        const userLspData = await getUserLspData(userIds[i],LEARNING_SPACE_ID);
         if(!userLspData) return setToastMsg({ type: 'danger', message: 'Error occured while loading user lsp id' });
 
         //checking if user is already added to cohort  or not because he may have been disabled and again added
