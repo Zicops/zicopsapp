@@ -7,6 +7,7 @@ import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { DisabledUserAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -16,8 +17,10 @@ export default function MyUser({ getUser }) {
   const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
+  const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
+  const [currentDisabledUser, setCurrentDisabledUser] = useState(null);
 
-  const { newUserAboutData, setNewUserAboutData, updateAboutUser,updateUserLsp , isFormCompleted } =
+  const { newUserAboutData, setNewUserAboutData, updateAboutUser, updateUserLsp, isFormCompleted } =
     useUpdateUserAboutData();
 
   const [isLoading, setLoading] = useState(true);
@@ -112,8 +115,16 @@ export default function MyUser({ getUser }) {
       headerName: 'Status',
       flex: 0.5,
       renderCell: (params) => {
-        const lspStatus = params?.row?.lsp_status?.toLowerCase() ;
-        return <>{lspStatus === 'disabled' || lspStatus === 'disable' ? 'Disabled' : (params?.row?.status || 'Invited') }</>;
+        let status = '';
+        if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
+        const lspStatus = params?.row?.lsp_status?.toLowerCase();
+        return (
+          <>
+            {lspStatus === 'disabled' || lspStatus === 'disable' || status === 'disable'
+              ? 'Disabled'
+              : params?.row?.status || 'Invited'}
+          </>
+        );
       }
     },
     {
@@ -130,17 +141,18 @@ export default function MyUser({ getUser }) {
               {
                 text: 'Disable',
                 handleClick: () => {
-                  // const status = params?.row?.status; 
-                  const lspStatus = params?.row?.lsp_status ;
+                  // const status = params?.row?.status;
+                  const lspStatus = params?.row?.lsp_status;
                   // console.log(status,'status',lspStatus)
                   setNewUserAboutData(
                     // TODO: delete user here
                     getUserAboutObject({
                       ...params.row,
                       is_active: true,
-                      status: lspStatus?.length ? USER_STATUS.disable : "Active" 
+                      status: lspStatus?.length ? USER_STATUS.disable : 'Active'
                     })
                   );
+                  setCurrentDisabledUser(params?.row?.id);
                   setDisableAlert(true);
                 }
               }
@@ -169,9 +181,19 @@ export default function MyUser({ getUser }) {
             handleClickLeft: async () => {
               const a = await updateUserLsp();
               setDisableAlert(false);
-              if(a) return setToastMsg({type:'success',message:`Successfully disabled ${newUserAboutData?.email}`}) ;
-              if(a === undefined) return ;
-              return setToastMsg({type:'danger',message:`Error while disabling ${newUserAboutData?.email}`})
+              if (a) {
+                setDisabledUserList((prev) => [...prev, currentDisabledUser]);
+                setCurrentDisabledUser(null);
+                return setToastMsg({
+                  type: 'success',
+                  message: `Successfully disabled ${newUserAboutData?.email}`
+                });
+              }
+              if (a === undefined) return;
+              return setToastMsg({
+                type: 'danger',
+                message: `Error while disabling ${newUserAboutData?.email}`
+              });
             },
             handleClickRight: () => setDisableAlert(false)
           }}
