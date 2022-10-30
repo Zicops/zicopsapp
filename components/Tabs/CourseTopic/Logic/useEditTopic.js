@@ -446,7 +446,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             difficulty: quiz.difficulty || 0,
             hint: quiz?.hint || '',
             qbmId: quiz?.qbId || null,
-            attachmentType: '',
+            attachmentType: quiz?.attachmentType || '',
 
             // TODO: remove or update later
             createdBy: 'Zicops',
@@ -454,6 +454,10 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             status: QUESTION_STATUS[1]
           };
           console.log(sendQuestionData);
+          if (quiz?.questionFile) {
+            sendQuestionData.file = quiz?.questionFile;
+            sendQuestionData.attachmentType = quiz?.attachmentType || '';
+          }
           const quesRes = await updateQuestion({ variables: sendQuestionData }).catch((err) => {
             console.log(err);
             isError = !!err;
