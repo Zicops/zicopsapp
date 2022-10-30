@@ -7,10 +7,11 @@ export default function SmallCard({
   styleClass,
   carouselRefData,
   isShowProgress = false,
-  notext = false
+  notext = false,
+  showAssignSymbol = true
 }) {
-  if (!courseData) return null;
   const router = useRouter();
+  if (!courseData?.name) return null;
 
   function handleMouseEnter(e, start = 0, end = 0) {
     if (e.currentTarget.parentNode.dataset.index === start.toString()) {
@@ -29,6 +30,13 @@ export default function SmallCard({
   }
   const gotoCourse = () => {
     router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
+  };
+
+  const gotoAssignCourses = () => {
+    router.push(
+      courseData?.id ? `/course/${courseData.id}?isAssign=true` : '/courses',
+      `/course/${courseData.id}`
+    );
   };
 
   let courseNameClass = 'coursename';
@@ -66,10 +74,7 @@ export default function SmallCard({
             )}
             {!notext ? <div className="courseowner">{courseData.owner || 'Scripting'}</div> : ''}
           </div>
-          <img
-            src={courseData.tileImage || image || '/images/courses/workplace design.png'}
-            alt=""
-          />
+          <img src={courseData.tileImage || image || '/images/dnd1.jpg'} alt="" />
           {/* <LinearProgress
             sx={{
               height: '5px',
@@ -103,7 +108,16 @@ export default function SmallCard({
                 {courseData?.type?.split('-').join(' ') || 'Self Paced'}
               </div>
             </div>
-            <img className="addCoursePlus" src="/images/svg/add-line.svg" />
+            {showAssignSymbol && (
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // alert('hi');
+                  gotoAssignCourses();
+                }}>
+                <img className="addCoursePlus" src="/images/svg/add-line.svg" />
+              </div>
+            )}
             <div className="desc-area">
               <div className="main-desc">
                 <div className="one">

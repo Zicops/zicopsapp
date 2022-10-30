@@ -118,7 +118,7 @@ const AuthChecker = ({ children }) => {
     // if (!userData?.is_verified && !PUBLIC_PATHS.includes(path) && !path?.includes('account-setup'))
     //   return router.push('/account-setup');
 
-    if (!!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE)) return setAuthorized(true);
+    if (!!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE) && userData) return setAuthorized(true);  
 
     if (!userData && !PUBLIC_PATHS.includes(path)) {
       //this is temporary will delete later

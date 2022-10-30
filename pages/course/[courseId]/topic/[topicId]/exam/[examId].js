@@ -41,14 +41,14 @@ import ExamScreenPage from '@/components/LearnerExamComp/ExamScreenPage';
 import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { DIFFICULTY, getUnixFromDate } from '@/helper/utils.helper';
 import { getResultsObj, LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, UserExamDataAtom } from '@/state/atoms/video.atom';
 import moment from 'moment';
-import { sortArrByKeyInOrder } from '@/helper/data.helper';
-import { UserDataAtom } from '@/state/atoms/global.atom';
 
 const ExamScreen = () => {
   const [loadMaster] = useLazyQuery(GET_EXAM_META, { client: queryClient });
@@ -104,6 +104,7 @@ const ExamScreen = () => {
   const [questionData, setQuestionData] = useRecoilState(QuestionOptionDataAtom);
   const [current, setCurrent] = useState({ id: 0, question: {}, options: [] });
   const [isLearner, setIsLearner] = useState(false);
+  const [isExamEnded, setIsExamEnded] = useState(false);
   const [startExam, setStartExam] = useState('startNewAttempt');
 
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
@@ -1005,8 +1006,11 @@ const ExamScreen = () => {
     setStartExam('start');
   }
 
+  let shouldSync = true;
   async function syncDataWithBackend(isPaperActive = false) {
+    if (!shouldSync) return;
     if (!isLearner) return;
+    if (!isExamEnded) return console.log('exam ended so not syncing');
 
     const _examData = structuredClone(userExamData);
     console.log(_examData);
@@ -1066,6 +1070,9 @@ const ExamScreen = () => {
   }
 
   async function calculateResult(isNewAttempt = null) {
+    setIsExamEnded(true);
+    shouldSync = false;
+    isSyncing = true;
     const marks = 0;
     const allQuestionIds = [];
     const allOptions = [];
@@ -1172,12 +1179,10 @@ const ExamScreen = () => {
         userCourseId: cpData?.user_course_id,
         topicId: cpData?.topic_id,
         topicType: cpData?.topic_type,
-        status: cpData?.status,
+        status: COURSE_PROGRESS_STATUS[2],
         timestamp: '',
         videoProgress: ''
       };
-
-      sendData.status = COURSE_PROGRESS_STATUS[2];
 
       // console.log('course progress', sendData);
       const progressRes = await updateUserCourseProgress({ variables: sendData }).catch((err) => {
@@ -1227,7 +1232,6 @@ const ExamScreen = () => {
       }
     });
   }
-
   return (
     <>
       <ExamScreenPage

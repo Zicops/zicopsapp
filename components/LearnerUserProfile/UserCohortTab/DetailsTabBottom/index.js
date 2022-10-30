@@ -43,10 +43,11 @@ const DetailsTabBottom = () => {
 
       // console.log(modifiedUserList, 'modiefied user list');
 
-      setSelectedCohortData((prevValue) => ({ ...prevValue, cohortUsers: modifiedUserList }));
+      setSelectedCohortData((prevValue) => ({ ...prevValue, cohortUsers: modifiedUserList?.filter((item)=> item?.membership_status?.toLowerCase() === 'active') }));
 
-      const managers = modifiedUserList?.filter((item) => item?.role?.toLowerCase() === 'manager');
-      const members = modifiedUserList?.filter((item) => item?.role?.toLowerCase() !== 'manager');
+      const managers = modifiedUserList?.filter((item) => item?.role?.toLowerCase() === 'manager' && item?.membership_status?.toLowerCase() === 'active');
+      const members = modifiedUserList?.filter((item) => item?.role?.toLowerCase() !== 'manager' && item?.membership_status?.toLowerCase() === 'active');
+
 
       return setCohortMembers({ members: members, managers: managers }, setLoading(false));
     }
@@ -77,15 +78,16 @@ const DetailsTabBottom = () => {
 
       <div className={`${styles.bottomRight} ${styles.lastContainer}`}>
         <p className={`${styles.text}`}>Active Members</p>
-        <div className={`${styles.listContainer}`}>
+        <div className={`${styles.listContainer} ${styles.list}`}>
           <div className={`${styles.memberList}`}>
             {loading ? (
               <strong className={`${styles.fallbackMsg}`}>Loading Users...</strong>
             ) : (
-              !cohortMembers?.managers?.length && (
+              !cohortMembers?.members?.length && (
                 <strong className={`${styles.fallbackMsg}`}>No Users Found</strong>
               )
             )}
+             
             {cohortMembers?.members?.map((user, index) => {
               return (
                 <div key={index}>

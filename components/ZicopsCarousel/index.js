@@ -19,7 +19,11 @@ const CardSlider = ({
   handleTitleClick = () => {}
 }) => {
   const carouselRef = useRef(0);
+  const COURSES_ASSIGNED_TITLE = ['continue with your courses', 'courses in your learning folder'];
   // type=sqaure cardShape changes /circle/ . Have to override hover from global scss
+
+  let isAssigned = false;
+  if (COURSES_ASSIGNED_TITLE?.includes(title?.toLowerCase())) isAssigned = true;
   let variableClass = 'card_ietms';
   let itemCount = {
     desktop: 0,
@@ -134,9 +138,12 @@ const CardSlider = ({
                   height={120}
                 />
               );
+
+            if (!d?.name) return;
             if (type === 'small')
               return (
                 <SmallCard
+                  showAssignSymbol={!isAssigned}
                   key={index}
                   styleClass={index === 0 ? 'card_ietms_start' : ''}
                   carouselRefData={carouselRef.current}

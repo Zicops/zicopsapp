@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../../helper/data.helper';
 import {
+  TopicAtom,
   TopicContentAtom,
   TopicVideoAtom,
   uploadStatusAtom
@@ -65,6 +66,7 @@ export default function TopicPopUp({
 
   // recoil state
   const topicContent = useRecoilValue(TopicContentAtom);
+  const topicData =  useRecoilValue(TopicAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
@@ -128,6 +130,21 @@ export default function TopicPopUp({
 
                     <div className="center-element-with-flex">
                       <Button
+                        clickHandler={() => {
+                          const currentTopic = topicData.find((t) => t.id === editTopic?.id);
+                          if(currentTopic) setEditTopic(currentTopic);
+                          toggleEditTopicForm(false)}}
+                        // isDisabled={!isEditTopicReady}
+                        // customStyles={
+                        //   !!editTopic?.name && !!editTopic?.description
+                        //     ? { backgroundColor: 'var(--primary)', color: 'var(--black)' }
+                        //     : {}
+                        // }
+                        styleClass={`${styles.updateTopicBtn}`}
+                        text="Cancel"
+                        type="button"
+                      />
+                      <Button
                         clickHandler={() => updateTopicAndContext()}
                         isDisabled={!isEditTopicReady}
                         customStyles={
@@ -163,6 +180,7 @@ export default function TopicPopUp({
                         inputHandlers={inputHandlers}
                         addNewTopicContent={addNewTopicContent}
                         isAddTopicContentReady={isAddTopicContentReady}
+                        handleCancel={toggleTopicContentForm}
                       />
                     )}
                   </div>

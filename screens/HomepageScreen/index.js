@@ -4,17 +4,19 @@ import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { constSelector, useRecoilValue } from 'recoil';
 import HomePageLoader from './HomePageLoader';
 import styles from './homepageScreen.module.scss';
 
 const skeletonCardCount = 5;
 const time = Date.now();
+let timer = null;
 
 export default function HomepageScreen() {
   const userData = useRecoilValue(UserDataAtom);
@@ -98,14 +100,21 @@ export default function HomepageScreen() {
       pageCursor: '',
       filters: filters
     });
-    return courses;
+    const _toBeSortedCourses = structuredClone(courses) || [];
+
+    _toBeSortedCourses.latestCourses.courses = sortArrByKeyInOrder(
+        [..._toBeSortedCourses?.latestCourses?.courses],
+        'updated_at',
+        false
+      )
+    return _toBeSortedCourses;
   }
 
   const pageSize = 28;
-  let timer = null;
   useEffect(() => {
+    setIsLoading(true);
     if (!(userData?.preferences?.length && userData?.preferences?.[0]?.catData)) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         setActiveSubcatArr([]);
         setOngoingCourses([]);
         setLearningFolderCourses([]);
@@ -120,7 +129,7 @@ export default function HomepageScreen() {
         setSubCategory2Courses([]);
         setSubCategory3Courses([]);
         setSubCategory4Courses([]);
-
+        setIsLoading(false);
         return clearTimeout(timer);
       }, 3000);
       return;
@@ -130,10 +139,10 @@ export default function HomepageScreen() {
     async function loadAndSetHomePageRows() {
       setIsLoading(true);
       const subcatArr = userData?.preferences;
-      // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
-      const activeSubcategories = subcatArr?.filter(
-        (item) => item?.is_active && item?.sub_category
-      );
+      const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
+      // const activeSubcategories = subcatArr?.filter(
+      //   (item) => item?.is_active && item?.sub_category
+      // );
       const baseSubcategoryObj = subcatArr?.filter((item) => item?.is_base)[0];
       if (baseSubcategoryObj?.sub_category) setBaseSubcategory(baseSubcategoryObj?.sub_category);
 
@@ -141,9 +150,7 @@ export default function HomepageScreen() {
       //   (s) => s?.Name === baseSubcategoryObj?.sub_category
       // )?.CatId;
       // console.log(catId, catSubCat);
-      const parentOfBase = baseSubcategoryObj?.catData?.Name;
       // setParentOfBaseSubcategory(catSubCat?.subCatGrp?.[catId]?.cat?.Name);
-      if (parentOfBase) setParentOfBaseSubcategory(parentOfBase);
       setActiveSubcatArr(activeSubcategories);
 
       const userCourseData = await getUserCourseData(28);
@@ -184,14 +191,17 @@ export default function HomepageScreen() {
           pageSize
         );
         setBaseSubcategoryCourses(
-          baseSubCatCourses?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) ||
-            []
+          baseSubCatCourses?.latestCourses?.courses?.filter(
+            (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+          ) || []
         );
       } else {
         setBaseSubcategoryCourses([]);
       }
 
-      if (parentOfBase) {
+      const parentOfBase = baseSubcategoryObj?.catData?.Name;
+      if (!!parentOfBase) {
+        setParentOfBaseSubcategory(parentOfBase);
         let baseSubCatParentCourses = await getLatestCoursesByFilters(
           { Category: parentOfBase },
           pageSize
@@ -202,6 +212,7 @@ export default function HomepageScreen() {
           ) || []
         );
       } else {
+        setParentOfBaseSubcategory(null);
         setParentOfBaseSubcategoryCourses([]);
       }
 
@@ -366,7 +377,7 @@ export default function HomepageScreen() {
         bigBox={true}
         handleTitleClick={() => router.push('search-page')}
       />
-      {!!parentOfBaseSubcategoryCourses?.length && (
+      {!!parentOfBaseSubcategoryCourses?.length && !!parentOfBaseSubcategory && (
         <ZicopsCarousel
           title={`Courses in ${parentOfBaseSubcategory}`}
           data={parentOfBaseSubcategoryCourses}

@@ -1,6 +1,8 @@
 import { GET_COHORT_DETAILS, GET_USER_LATEST_COHORTS, userQueryClient } from '@/api/UserQueries';
 import CohortBoxCard from '@/components/common/CohortBoxCard';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import CohortPopUp from '@/components/LearnerUserProfile/UserCohortTab/CohortPopUp';
+import addUserData from '@/components/UserComps/UserCohorts/ChortMasterTab/Logic/addUserData';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import { parseJson } from '@/helper/utils.helper';
@@ -22,13 +24,33 @@ const CohortAccordian = ({ currentUserData = null }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const currentUserId = router?.query?.userId;
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const {removeCohortUser} = addUserData();
+
+  useEffect(()=>{
+    console.log(cohortData,'cohortdata')
+  },[cohortData])
+
+  async function handleRemoveUser(cohortData = null){
+    if(!cohortData)return setToastMsg({type:'danger',message:'Cohort Data not found!'})
+    setLoading(true) ;
+    const isRemoved = await removeCohortUser(cohortData?.userCohort,cohortData?.main);
+    // console.log(a,'adds');
+    if(!isRemoved) return setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
+    setToastMsg({type:'success',message:"User removed succesfully!"})
+    setLoading(false)
+    await loadCohortData();
+    setShowConfirmBox(false);
+    return ;
+  }
 
   useEffect(async () => {
     if(!currentUserData?.userLspId) return ;
-    // if (!currentUserData?.user_lsp_id)
-    //   return setToastMsg({ type: 'danger', mesaage: 'Error while loading user data!' });
+    return loadCohortData();
+   
+  }, [currentUserData?.userLspId]);
 
-    // console.log(currentUserData, 'currentUsr');
+  async function loadCohortData(){
     setLoading(true);
 
     const sendData = {
@@ -49,7 +71,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
 
     //removing duplicates cohort list
     const userCohorts = cohorts.filter(
-      (v, i, a) => a.findIndex((v2) => v2?.cohort_id === v?.cohort_id) === i
+      (v, i, a) => a.findIndex((v2) => v2?.cohort_id === v?.cohort_id && v?.membership_status.toLowerCase() === 'active') === i
     );
     const cohortDetails = [];
 
@@ -68,7 +90,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
     }
     if (!cohortDetails?.length) return setLoading(false);
     return setCohortData([...cohortDetails], setLoading(false));
-  }, [currentUserData?.userLspId]);
+  }
 
   return (
     <>
@@ -99,6 +121,8 @@ const CohortAccordian = ({ currentUserData = null }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    setSelectedCohortData(cohort);
+                    setShowConfirmBox(true);
                   }}>
                   Remove
                 </button>
@@ -107,6 +131,17 @@ const CohortAccordian = ({ currentUserData = null }) => {
           })}
         </div>
       </Accordian>
+      {showConfirmBox && (
+        <ConfirmPopUp
+          title={'Are you sure you want to remove this user from cohort?'}
+          btnObj={{
+            leftIsDisable:loading,
+            rightIsDisable:loading,
+            handleClickLeft: () => handleRemoveUser(selectedCohortData),
+            handleClickRight: () => setShowConfirmBox(false)
+          }}
+        />
+      )}
 
       <CohortPopUp cohortData={selectedCohort} closePopUp={() => setSelectedCohort(null)} />
     </>

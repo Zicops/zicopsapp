@@ -23,6 +23,7 @@ export const ADD_COURSE = gql`
     $previewVideo: String
     $tileImage: String
     $owner: String
+    $publisher: String
     $duration: Int
     $expertise_level: String
     $language: [String]
@@ -51,7 +52,7 @@ export const ADD_COURSE = gql`
       course: {
         name: $name
         lspId: "Zicops learning Spaces"
-        publisher: "Zicops"
+        publisher: $publisher
         description: $description
         summary: $summary
         instructor: $instructor
@@ -93,6 +94,7 @@ export const ADD_COURSE = gql`
       previewVideo
       tileImage
       owner
+      publisher
       duration
       expertise_level
       language
@@ -258,6 +260,7 @@ export const UPDATE_COURSE = gql`
     $previewVideo: String
     $tileImage: String
     $owner: String
+    $publisher: String
     $duration: Int
     $expertise_level: String
     $language: [String]
@@ -293,6 +296,7 @@ export const UPDATE_COURSE = gql`
         previewVideo: $previewVideo
         tileImage: $tileImage
         owner: $owner
+        publisher: $publisher
         duration: $duration
         expertise_level: $expertise_level
         language: $language
@@ -327,6 +331,7 @@ export const UPDATE_COURSE = gql`
       previewVideo
       tileImage
       owner
+      publisher
       duration
       expertise_level
       language
@@ -630,6 +635,7 @@ export const UPLOAD_TOPIC_CONTENT_SUBTITLE = gql`
 export const ADD_TOPIC_CONTENT = gql`
   mutation addTopicContent(
     $topicId: String
+    $moduleId: String
     $language: String
     $startTime: Int
     $duration: Int
@@ -643,6 +649,7 @@ export const ADD_TOPIC_CONTENT = gql`
     addTopicContent(
       topicId: $topicId
       courseId: $courseId
+      moduleId: $moduleId
       topicContent: {
         language: $language
         startTime: $startTime
@@ -1826,7 +1833,7 @@ export const DELETE_COURSE_TOPIC = gql`
 `;
 
 export const DELETE_COHORT_COURSE = gql`
-mutation deleteCourseCohort($id: ID){
-  deleteCourseCohort(id: $id)
-}
-`
+  mutation deleteCourseCohort($id: ID) {
+    deleteCourseCohort(id: $id)
+  }
+`;

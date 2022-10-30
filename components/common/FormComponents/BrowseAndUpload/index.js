@@ -2,6 +2,7 @@ import { IMAGE_FILE_TYPES } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+import ToolTip from '../../ToolTip';
 import { IsDataPresentAtom } from '../../PopUp/Logic/popUp.helper';
 import styles from '../formComponents.module.scss';
 import PreviewImageVideo from './PreviewImageVideo';
@@ -12,6 +13,8 @@ export default function BrowseAndUpload({
   previewData,
   handleRemove,
   isActive,
+  previewTooltipTitle,
+  removeTooltipTitle,
   isError,
   acceptedTypes = IMAGE_FILE_TYPES,
   hidePreviewBtns = false
@@ -57,6 +60,7 @@ export default function BrowseAndUpload({
 
         {!hidePreviewBtns && (
           <div className={`${styles.btnContainer}`}>
+            <ToolTip title={previewTooltipTitle}>
             <button
               className={`${styles.preview}`}
               onClick={() => {
@@ -73,9 +77,12 @@ export default function BrowseAndUpload({
               }}>
               Preview
             </button>
+            </ToolTip>
+            <ToolTip title={removeTooltipTitle}>
             <button className={`${styles.remove}`} onClick={handleRemove}>
               Remove
             </button>
+            </ToolTip>
           </div>
         )}
       </div>

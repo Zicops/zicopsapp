@@ -23,7 +23,11 @@ export default function LabeledInput({
   return (
     <div className={`${labeledInputWrapper} ${isFiftyFifty ? halfInputWrapper : ''} ${styleClass}`}>
       {label && (
-        <label htmlFor={inputName} aria-label={inputName} className="w-100">
+        <label
+          htmlFor={inputName}
+          aria-label={inputName}
+          className="w-100"
+          style={{ display: 'flex' }}>
           {label}
         </label>
       )}

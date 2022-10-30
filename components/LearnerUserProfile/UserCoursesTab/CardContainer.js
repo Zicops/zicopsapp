@@ -1,9 +1,11 @@
 import CourseBoxCard from '@/components/common/CourseBoxCard';
 import CourseLIstCard from '@/components/common/CourseLIstCard';
+import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 
 export default function CardContainer({
+  customStyles = {},
   isAdmin = false,
   isRemove = false,
   type,
@@ -23,6 +25,8 @@ export default function CardContainer({
     cardWidth: 300,
     cardCount: 4
   });
+
+  const isUnix = !isNaN(+courseData?.created_at);
 
   useEffect(() => {
     if (!cardContainerRef.current) return;
@@ -49,7 +53,7 @@ export default function CardContainer({
       {!hideTopBar && (
         <>
           <div className={`${styles.courseTabHeader}`}>
-            <p className={`${styles.text}`}>{type}</p>
+            <p className={`${styles.text}`} style={customStyles}>{type}</p>
 
             <div className={`${styles.imageContainer}`}>
               <img
@@ -87,13 +91,15 @@ export default function CardContainer({
               return (
                 <CourseBoxCard
                   isAdmin={isAdmin}
-                  courseData={course}
+                  courseData={{...course, duration: (course?.duration / (60*60))?.toFixed(2)}}
                   footerType={footerType}
                   cardWidth={cardSizeData.cardWidth}>
                   {footerType === 'added' && (
                     <div className={`${styles.leftAlign}`}>
                       <p>Duration: {course?.duration || 240} mins</p>
-                      <p>Added on {course?.created_at || '22-06-2022'}</p>
+                      <p>Added on {(isUnix
+            ? moment(getDateTimeFromUnix(courseData?.created_at)).format('DD-MM-YYYY')
+            : courseData?.created_at) || '22-06-2022'}</p>
                     </div>
                   )}
                   {footerType === 'adminFooter' && (
@@ -116,7 +122,7 @@ export default function CardContainer({
             ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
             ?.map((course) => (
               <CourseLIstCard
-                courseData={course}
+                courseData={{...course, duration: (course?.duration / (60*60))?.toFixed(2)}}
                 statusData={statusData}
                 footerType={footerType} isAdmin={isAdmin}></CourseLIstCard>
             ))}

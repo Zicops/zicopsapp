@@ -3,14 +3,15 @@ import moment from 'moment';
 import styles from './courseListCard.module.scss';
 
 export default function ProgressBarFooter({ courseData, isCompleted }) {
-
-  
   return (
     <div className={`${styles.progressBarFooter}`}>
       <section>
         {isCompleted ? (
           <>
-            <p>Completed on {moment.unix(courseData?.updated_at).format("DD/MM/YYYY") || '22-06-2022'}</p>
+            <p>
+              Completed on{' '}
+              {moment.unix(courseData?.updated_at).format('DD/MM/YYYY') || '22-06-2022'}
+            </p>
           </>
         ) : (
           <>
@@ -18,10 +19,12 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
               Expected Completion by {courseData?.expected_completion || '22-06-2022'}
               <div className={`${styles.dot}`}></div>
               <span className={`${styles.mandatory}`}>
-                {courseData?.isMandatory || 'Mandatory'}
+                {courseData?.is_mandatory ? 'Mandatory' : 'Not Mandatory'}
               </span>
             </p>
-            <p className={styles.percent}>{courseData?.timeLeft || '3'} hours of content left</p>
+            <p className={styles.percent}>
+              {isNaN(+courseData?.timeLeft) ? 0.0 : courseData?.timeLeft} hours of content left
+            </p>
           </>
         )}
       </section>

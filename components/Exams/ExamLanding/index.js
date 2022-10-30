@@ -101,6 +101,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       duration: +masterData.Duration / 60,
       scheduleType: masterData.ScheduleType,
       questionIds: masterData.QuestionIds || [],
+      totalQuestions: masterData.TotalCount || 0,
 
       code: masterData.Code,
       type: masterData.Type,
@@ -168,7 +169,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       schObj = {
         scheduleId: schData?.id || null,
         examStart: new Date(+schData?.Start * 1000),
-        examEnd: new Date(+schData?.End * 1000),
+        examEnd: +schData?.End ? new Date(+schData?.End * 1000) : null,
         bufferTime: schData?.BufferTime || 0,
         is_schedule_active: schData?.IsActive || false
       };
@@ -232,7 +233,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
           topicIndex ? `A${topicIndex}` : ''
         }`,
         isProctoring: false,
-        totalQuestions: masterObj.questionIds?.length,
+        totalQuestions: masterObj?.totalQuestions,
         isNegativeMarking: false,
         expertiseLevel: paperMaster?.difficultyLevel
       }
@@ -250,11 +251,14 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
 
   useEffect(() => {
     let timer = null;
-    if (userExamData?.isBtnActive) return clearInterval(timer);
+    // if (userExamData?.isBtnActive) return clearInterval(timer);
+    // timer = setInterval(() => setCounter((prev) => !prev), SYNC_DATA_IN_SECONDS * 1000);
+    // return () => clearInterval(timer);
 
-    timer = setInterval(() => setCounter((prev) => !prev), SYNC_DATA_IN_SECONDS * 1000);
+    if (userExamData?.isBtnActive) return clearTimeout(timer);
+    timer = setTimeout(() => setCounter((prev) => !prev), SYNC_DATA_IN_SECONDS * 1000);
+    return () => clearTimeout(timer);
 
-    return () => clearInterval(timer);
   }, [counter]);
 
   useEffect(() => {

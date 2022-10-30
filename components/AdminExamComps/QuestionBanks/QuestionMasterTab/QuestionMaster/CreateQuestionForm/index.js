@@ -1,5 +1,8 @@
+import CustomTooltip from '@/components/common/CustomTooltip';
+import { CUSTOM_TOOLTIP_STYLE } from '@/components/common/CustomTooltip/customTooltip.helper';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { OPTION_LABEL } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import Button from '../../../../../common/Button';
@@ -26,10 +29,24 @@ export default function CreateQuestionForm({ data, isEdit }) {
   } = data;
 
   const NUMBER_OF_OPTIONS = 4;
-  const difficultyOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => ({
-    label: val,
-    value: val
-  }));
+
+  const difficultyLevels = ['Beginner (0-3)', 'Competent (4-7)', 'Proficient (8- 10)'];
+  const difficultyOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => {
+    let tooltipMsg = difficultyLevels[0];
+    if (val > 3) tooltipMsg = difficultyLevels[1];
+    if (val > 7) tooltipMsg = difficultyLevels[2];
+
+    return {
+      label: (
+        <>
+          <ToolTip title={tooltipMsg} placement="bottom">
+            <span>{val}</span>
+          </ToolTip>
+        </>
+      ),
+      value: val
+    };
+  });
 
   const [shouldCloseAccordion, setShouldCloseAccordion] = useState(null);
   const [showQuestionForm, setShowQuestionForm] = useState(false);
@@ -57,6 +74,14 @@ export default function CreateQuestionForm({ data, isEdit }) {
             <div className={styles.container}>
               <Accordion
                 title={d.question.description}
+                tooltipTitleOpen={
+                  ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                    .uploadQuestionScreen.accordionOpen
+                }
+                tooltipTitleClose={
+                  ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                    .uploadQuestionScreen.accordionClose
+                }
                 content={
                   <div className={`${styles.questionPreview}`}>
                     <QuestionOptionView
@@ -66,7 +91,14 @@ export default function CreateQuestionForm({ data, isEdit }) {
                     />
 
                     <div style={{ textAlign: 'right', marginRight: '10px' }}>
-                      <Button text={'Edit'} clickHandler={() => activateEdit(index)} />
+                      <Button
+                        text={'Edit'}
+                        clickHandler={() => activateEdit(index)}
+                        tooltipTitle={
+                          ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab
+                            .uploadQuestionScreen.editModeBtn
+                        }
+                      />
                     </div>
                   </div>
                 }
@@ -117,14 +149,24 @@ export default function CreateQuestionForm({ data, isEdit }) {
 
           {questionData?.type === 'MCQ' && (
             <>
-              <RangeSlider
-                options={difficultyOptions}
-                inputName="difficulty"
-                selected={questionData.difficulty}
-                changeHandler={(e, val) =>
-                  setQuestionData({ ...questionData, difficulty: val, isUpdated: true })
-                }
-              />
+              <div className={styles.marginTop}>
+                <label>
+                  Difficulty Score:
+                  <CustomTooltip
+                    info={
+                      ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.difficultyLevel
+                    }
+                  />
+                </label>
+                <RangeSlider
+                  options={difficultyOptions}
+                  inputName="difficulty"
+                  selected={questionData.difficulty}
+                  changeHandler={(e, val) =>
+                    setQuestionData({ ...questionData, difficulty: val, isUpdated: true })
+                  }
+                />
+              </div>
 
               {/* question with file */}
               <div className={styles.marginTop}>
@@ -169,7 +211,15 @@ export default function CreateQuestionForm({ data, isEdit }) {
               {/* options */}
               <div className={styles.marginTop}>
                 Enter Options:
-                <span className={`${styles.hint}`}>Select the checkbox for the right option.</span>
+                <span className={`${styles.hint}`}>
+                  Select the checkbox for the right option.
+                  <CustomTooltip
+                    info={
+                      ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.selectCheckbox
+                    }
+                    customBtnStyle={{ margin: 0 }}
+                  />
+                </span>
                 {Array(NUMBER_OF_OPTIONS)
                   .fill(null)
                   .map((value, index) => (

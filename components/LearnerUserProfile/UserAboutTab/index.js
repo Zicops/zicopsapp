@@ -111,6 +111,8 @@ const UserAboutTab = () => {
               setCurrentComponent={setCurrentComponent}
               customStyle={[styles.prefContainer, styles.prefCat, styles.prefNav]}
               customClass={styles.preferences}
+              isLearnerSide={true}
+              closePopUp={setIsopen}
             />
           )}
           {currentComponent === 3 && (

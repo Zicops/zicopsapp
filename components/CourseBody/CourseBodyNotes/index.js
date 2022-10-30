@@ -4,6 +4,7 @@ import LineText from '@/components/common/LineText';
 import useHandleNotes from '@/components/CustomVideoPlayer/Logic/useHandleNotes';
 import NoteCard from '@/components/CustomVideoPlayer/UiComponents/Notes/NoteCard';
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
+import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { userContext } from '@/state/contexts/UserContext';
 import { useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -13,6 +14,7 @@ import { courseContext } from '../../../state/contexts/CourseContext';
 import Dropdown from '../../common/Dropdown';
 import styles from '../courseBody.module.scss';
 import Header from '../Header';
+import { ShowNotAssignedErrorAtom } from '../Logic/topicBox.helper';
 import useShowData from '../Logic/useShowData';
 import TopicFileSlider from '../TopicFileSlider';
 
@@ -26,6 +28,8 @@ export default function CourseBodyNotes() {
     isNotesVisible,
     toggleNotesVisibility
   } = useShowData(courseContextData);
+  const userCourseData = useRecoilValue(UserCourseDataAtom);
+  const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
   const moduleData = useRecoilValue(ModuleAtom);
   const topicData = useRecoilValue(TopicAtom);
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
@@ -82,7 +86,12 @@ export default function CourseBodyNotes() {
               <div className={`${styles.notesCardsContainer}`}>
                 <div
                   className={`${styles.addNote}`}
-                  onClick={() => addNewNote(isNotesVisible.split('|:|')[0])}>
+                  onClick={() => {
+                    if (!userCourseData?.userCourseMapping?.user_course_id)
+                      return setShowAlert(true);
+
+                    addNewNote(isNotesVisible.split('|:|')[0]);
+                  }}>
                   <span>+</span>
                   Add Note
                 </div>

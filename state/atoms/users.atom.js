@@ -52,7 +52,7 @@ export function getUserOrgObject(data = {}) {
     organization_name: data?.user_organization_name || 'Zicops',
     organization_unit: data?.organization_unit || 'Zicops ,India',
 
-    user_organization_id: data?.user_organization_id || 'Zicops, Pune',
+    user_organization_id: data?.user_organization_id || '',
     organization_id: data?.organization_id || 'Zicops',
     organization_role: data?.organization_role || '',
     employee_id: data?.employee_id || '',
@@ -85,6 +85,13 @@ export function getUserOrgObject(data = {}) {
     updated_by: data?.updated_by || 'Zicops'
   };
 }
+
+export const ClosePopUpAtom = atom({
+  key:'closePopup',
+  default: false
+});
+
+
 
 // will delete later if not used
 export const IsUpdatedAtom = atom({
@@ -128,3 +135,42 @@ export function getSelectedCohortDataObject(data = {}) {
     cohortUsers: data?.cohortUsers || []
   };
 }
+
+
+export const SelectedUserAtom = atom({
+  key:'selectedUserData',
+  default: getSelectedUserData()
+})
+
+export function getSelectedUserData(data = {}){
+  return {
+    id: data?.id || null,
+    first_name: data?.first_name || '',
+    last_name: data?.last_name || '',
+    status: data?.status || null,
+    role: data?.role || 'Learner',
+
+    //for now dont update email
+    email: data?.email || '',
+    phone: data?.phone || '',
+    photo_url: data?.photo_url || null,
+    Photo: data?.Photo || null,
+    gender: data?.gender || null,
+
+    //only do isVerified true when users do its basic account setup
+    is_verified: data?.is_verified || false,
+
+
+    user_lsp_id: data?.user_lsp_id || null,
+    lsp_id: data?.lsp_id || LEARNING_SPACE_ID,
+
+    user_organization_id: data?.user_organization_id || 'Zicops, Pune',
+    organization_id: data?.organization_id || 'Zicops',
+
+  }
+}
+
+export const DisabledUserAtom = atom({
+  key:'disabled',
+  default:[]
+})

@@ -7,6 +7,9 @@ import Sitemap from './Sitemap';
 import AdminSubHeader from './AdminSubHeader';
 import ToolTip from '../ToolTip';
 import CustomTooltip from '../CustomTooltip';
+import ProductTooltip from '../ProductTour/ProductTooltip';
+import { ActiveTourAtom } from '@/state/atoms/productTour.atom';
+import { useRecoilValue } from 'recoil';
 
 export default function AdminHeader({
   title,
@@ -15,8 +18,12 @@ export default function AdminHeader({
   isAddShown = false,
   isShowOption = false,
   subHeaderData = null,
-  tooltipTitle=""
+  tooltipTitle = '',
+  isProductTooltip,
+  productTooltipData,
+  tourId
 }) {
+  const activeTour = useRecoilValue(ActiveTourAtom);
   const [showSitemap, setShowSitemap] = useState(false);
   const router = useRouter();
   const route = router.route;
@@ -63,18 +70,33 @@ export default function AdminHeader({
           {/* TODO: remove first condition */}
           {!route.includes('admin/courses') && isAddShown && (
             <span>
-              <ToolTip title={tooltipTitle} placement="left">
-                <img
-                  src="/images/plus_big.png"
-                  className="rightside_icon"
-                  alt=""
-                  onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
-                />
-              </ToolTip>
+              {isProductTooltip ? (
+                <ProductTooltip
+                  title={productTooltipData.title}
+                  buttonName={productTooltipData?.btnName}
+                  tooltipIsOpen={activeTour?.id === tourId}
+                  placement="left-start">
+                  <img
+                    src="/images/plus_big.png"
+                    className="rightside_icon"
+                    alt=""
+                    onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+                  />
+                </ProductTooltip>
+              ) : (
+                <ToolTip title={tooltipTitle} placement="left">
+                  <img
+                    src="/images/plus_big.png"
+                    className="rightside_icon"
+                    alt=""
+                    onClick={pageRoute ? gotoPageRoute : handleClickForPlus}
+                  />
+                </ToolTip>
+              )}
               {/* <CustomTooltip info="create new question bank" /> */}
             </span>
           )}
-          <ToolTip title="View Settings" placement="bottom">
+          <ToolTip title="Manage Configurations" placement="bottom">
             <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
           </ToolTip>
           <ToolTip title="View Sitemap" placement="right">

@@ -8,7 +8,7 @@ import {
 import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Logic/questionBank.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { QUESTION_STATUS } from '@/helper/constants.helper';
-import { getMinuteSecondsFromSeconds, secondsToMinutes } from '@/helper/utils.helper';
+import { secondsToMinutes } from '@/helper/utils.helper';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ import {
 } from '../../../../state/atoms/module.atoms';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 
-export default function useAddQuiz(courseId = '', topicId = '') {
+export default function useAddQuiz(courseId = '', topicId = '', isScrom = false) {
   const [createQuestionBank, { error: createError }] = useMutation(CREATE_QUESTION_BANK, {
     client: mutationClient
   });
@@ -34,6 +34,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   const topicContent = useRecoilValue(TopicContentAtom);
 
   // local state
+  const [quizTemp, setQuizTemp] = useState([]);
   const [isQuizFormVisible, setIsQuizFormVisible] = useState(false);
   const [isQuizReady, setIsQuizReady] = useState(false);
   const [editedQuiz, setEditedQuiz] = useState(null);
@@ -104,7 +105,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     let isOptionsCompleted = 0,
       isOneChecked = false;
 
-    options.forEach((option) => {
+    options?.forEach((option) => {
       const isComplete = option?.option || option?.file;
       isOptionsCompleted += isComplete ? 1 : 0;
 
@@ -122,7 +123,7 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     setIsQuizReady(
       newQuiz.name &&
         newQuiz.type &&
-        (!!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec) &&
+        (isScrom ? true : !!+newQuiz?.startTimeMin || !!+newQuiz?.startTimeSec) &&
         (questionRequired || (newQuiz?.formType === 'select' && newQuiz?.questionId))
     );
   }, [newQuiz]);
@@ -158,6 +159,15 @@ export default function useAddQuiz(courseId = '', topicId = '') {
 
   function toggleQuizForm(val) {
     if (typeof val === 'boolean') return setIsQuizFormVisible(!!val);
+
+    const quizTempIndex = quizTemp?.findIndex((q) => q?.data?.questionId === val);
+    if (quizTempIndex >= 0) {
+      const _quizzes = structuredClone(quizzes);
+      const quizData = quizTemp[quizTempIndex];
+      if (quizData?.data && !isNaN(+quizData.index)) _quizzes[quizData?.index] = quizData?.data;
+
+      setQuizzes(_quizzes);
+    }
 
     setIsQuizFormVisible(!isQuizFormVisible);
   }
@@ -236,7 +246,23 @@ export default function useAddQuiz(courseId = '', topicId = '') {
   async function handleEditQuiz(quiz, index) {
     toggleQuizForm(true);
     let _quiz = quiz;
-    console.log(quiz);
+
+    const quizTempIndex = quizTemp?.findIndex((q) => quiz?.questionId === q?.data?.questionId);
+
+    if (quizTempIndex >= 0) {
+      const _quizzes = structuredClone(quizzes);
+      const quizData = quizTemp[quizTempIndex];
+
+      _quiz = { ..._quiz, ...quizData?.data };
+
+      setNewQuiz(_quiz);
+      setEditedQuiz({ ..._quiz, isEditQuiz: false });
+
+      _quizzes?.splice(index, 1);
+      setQuizzes(_quizzes);
+      return;
+    }
+
     if (quiz?.questionId) {
       const quesRes = await loadQueryDataAsync(GET_QUESTION_BY_ID, {
         question_ids: [quiz?.questionId]
@@ -250,7 +276,6 @@ export default function useAddQuiz(courseId = '', topicId = '') {
 
       const timeObj = secondsToMinutes(+quiz?.startTime);
 
-      console.log(question);
       _quiz = {
         ..._quiz,
         startTimeMin: +timeObj?.minute || 0,
@@ -264,12 +289,12 @@ export default function useAddQuiz(courseId = '', topicId = '') {
 
         questionId: quiz?.questionId || null,
         question: question?.Description || '',
-        questionFile: question?.Attachment || null,
+        attachment: question?.Attachment || null,
 
         options: options?.map((op) => ({
           id: op?.id,
           option: op?.Description || '',
-          file: op?.Attachment || null,
+          attachment: op?.Attachment || null,
           attachmentType: op?.AttachmentType || '',
           isCorrect: op?.IsCorrect || false
         }))
@@ -279,8 +304,15 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     setNewQuiz(_quiz);
     setEditedQuiz({ ..._quiz, isEditQuiz: false });
     const _quizzes = structuredClone(quizzes);
-    _quizzes?.splice(index, 1);
+
+    const _quizTemp = structuredClone(quizTemp);
+    const _q = _quizzes?.splice(index, 1)[0];
+
+    _quizTemp.push({ index, data: { ..._quiz, ..._q } });
+    setQuizTemp(_quizTemp);
+
     setQuizzes(_quizzes);
+    return;
   }
 
   // save in recoil state
@@ -291,7 +323,12 @@ export default function useAddQuiz(courseId = '', topicId = '') {
     )
       return setToastMsg({ type: 'danger', message: 'Quiz name cannot be same in one topic.' });
 
-    console.log(newQuiz);
+    const _quizTemp = structuredClone(quizTemp);
+    const quizTempIndex = quizTemp?.findIndex((q) => q?.data?.questionId === newQuiz?.questionId);
+    if (quizTempIndex >= 0) _quizTemp[quizTempIndex].data = newQuiz;
+
+    setQuizTemp(_quizTemp);
+
     setQuizzes([...quizzes, { ...newQuiz, isEditQuiz: true }]);
     setNewQuiz(getQuizObject({ courseId, topicId }));
     setIsQuizFormVisible(false);

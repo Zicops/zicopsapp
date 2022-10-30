@@ -1,5 +1,6 @@
 import AttempHistory from '@/components/AttemptHistory';
 import RTE from '@/components/common/FormComponents/RTE';
+import ToolTip from '@/components/common/ToolTip';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -8,6 +9,7 @@ import { LearnerExamAtom } from '../../../../state/atoms/exams.atoms';
 import LabeledRadioCheckbox from '../../../common/FormComponents/LabeledRadioCheckbox';
 import styles from '../../learnerExam.module.scss';
 import { data, getIsExamAccessible } from '../../Logic/exam.helper';
+import { passingCriteriaSymbol } from '../Logic/examInstruction.helper';
 
 const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn = () => {} }) => {
   let learnerExamData = useRecoilValue(LearnerExamAtom);
@@ -40,7 +42,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
 
     setIsExamAccessible(terms && getIsExamAccessible(learnerExamData) && isAttemptLeft);
   }, [terms]);
-
+  
   return (
     <div className={`${styles.examInstContainer}`}>
       <div
@@ -93,7 +95,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
           </span>
           <span>
             <img src="/images/ExamInstructions/percent.png" alt="cannot found" /> Passing criteria
-            <span>:</span> <span>{learnerExamData?.examData?.passingCriteria || 'N/A'}</span>
+            <span>:</span> <span>{passingCriteriaSymbol(learnerExamData?.examData?.passingCriteria) || 'N/A'}</span>
           </span>
           {isType.takeAnyTime && (
             <span>
@@ -164,7 +166,9 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
         </div>
       </div>
       <div className={`${styles.viewHistory}`}>
-        <a onClick={() => setIsAttempyHistoryOpen(true)}>View Attempt History</a>
+        <ToolTip title="Check previous attempts" placement="right">
+          <a onClick={() => setIsAttempyHistoryOpen(true)}>View Attempt History</a>
+        </ToolTip>
       </div>
       <div
         className={
@@ -244,20 +248,31 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
         </div>
         <div className={`${styles.agreeText}`}>
           <LabeledRadioCheckbox
-            label="I have read and understood all the instructions given above and agree to adhere to them."
+            label={
+              <ToolTip title="Click to accept and proceed" placement="right">
+                <span>
+                  I have read and understood all the instructions given above and agree to adhere to
+                  them.
+                </span>
+              </ToolTip>
+            }
             type="checkbox"
             changeHandler={() => setTerms(!terms)}
           />
         </div>
 
         <div className={`${styles.btn}`}>
-          <button onClick={handleStart} disabled={!isExamAccessible}>
-            Start
-          </button>
-          <button onClick={handleBackBtn}>Back</button>
+          <ToolTip title="Start exam now" placement="left">
+            <button onClick={handleStart} disabled={!isExamAccessible}>
+              Start
+            </button>
+          </ToolTip>
+          <ToolTip title="Cancel and go back to Main page" placement="left">
+            <button onClick={handleBackBtn}>Back</button>
+          </ToolTip>
         </div>
       </div>
-
+            
       {isAttemptHistoryOpen && (
         <AttempHistory
           examId={learnerExamData?.examData?.id}

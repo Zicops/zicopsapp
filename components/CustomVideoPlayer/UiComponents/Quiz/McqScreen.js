@@ -42,7 +42,7 @@ export default function McqScreen({
 
         {!!question?.hint && displayHint && (
           <span className={styles.hintBtn} onClick={() => setShowHint(!showHint)}>
-            <span>Hint </span>: {showHint && question?.hint}
+            <span>Show Hint </span>: {showHint && question?.hint}
           </span>
         )}
       </div>

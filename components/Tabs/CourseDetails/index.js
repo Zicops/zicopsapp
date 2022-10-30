@@ -1,3 +1,4 @@
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { VIDEO_FILE_TYPES } from '@/helper/constants.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useContext } from 'react';
@@ -56,7 +57,7 @@ export default function CourseDetails() {
       <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label className="w-25">Level of Expertise:</label>
 
-        <div className="w-25">
+        <div className={`${styles.expertiseLevelCheckboxes}`}>
           <LabeledRadioCheckbox
             type="checkbox"
             label="Beginner"
@@ -66,9 +67,9 @@ export default function CourseDetails() {
             isChecked={fullCourse.expertise_level.includes('Beginner')}
             changeHandler={handleChange}
           />
-        </div>
+          {/* </div>
 
-        <div className="w-25">
+        <div className="w-25"> */}
           <LabeledRadioCheckbox
             type="checkbox"
             label="Competent"
@@ -78,9 +79,9 @@ export default function CourseDetails() {
             isChecked={fullCourse.expertise_level.includes('Competent')}
             changeHandler={handleChange}
           />
-        </div>
+          {/* </div>
 
-        <div className="w-25">
+        <div className="w-25"> */}
           <LabeledRadioCheckbox
             type="checkbox"
             label="Proficient"
@@ -91,6 +92,7 @@ export default function CourseDetails() {
             changeHandler={handleChange}
           />
         </div>
+        <div className="w-50"></div>
       </div>
 
       {/* Upload Course Video */}
@@ -109,6 +111,8 @@ export default function CourseDetails() {
             acceptedTypes={VIDEO_FILE_TYPES}
             inputName="uploadCourseVideo"
             isActive={fileData.uploadCourseVideo}
+            previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCourse}
+            removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCourse}
           />
         </div>
         <div className={`w-50 ${styles.fileName}`}>
@@ -130,6 +134,8 @@ export default function CourseDetails() {
             isError={!(courseTileImage?.file || fullCourse.tileImage) && courseError?.details}
             inputName="uploadCourseImage"
             isActive={fileData.uploadCourseImage}
+            previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCourseImage}
+            removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCourseImage}
           />
         </div>
         <div className={`w-50 ${styles.fileName}`}>
@@ -151,6 +157,8 @@ export default function CourseDetails() {
             isError={!(courseImage?.file || fullCourse.image) && courseError?.details}
             inputName="myfile"
             isActive={fileData.myfile}
+            previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCoursePicture}
+            removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCoursePicture}
           />
         </div>
         <div className={`w-50 ${styles.fileName}`}>{truncateToN(fileData.myfile, 55)}</div>
@@ -183,6 +191,7 @@ export default function CourseDetails() {
           (courseImage?.file || fullCourse.image) &&
           fullCourse?.summary?.length
         }
+        tooltipTitle={ADMIN_COURSES.myCourses.details.nextBtn}
       />
     </>
   );

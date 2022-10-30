@@ -22,9 +22,9 @@ export default function addUserData() {
 
   async function addUserToCohort(data = {}) {
     const { id, role } = getUserData();
-    if (!data?.id) return;
+    if (!data?.user_id) return;
     const sendCohortData = {
-      user_id: data?.id,
+      user_id: data?.user_id,
       user_lsp_id: data?.user_lsp_id,
       cohort_id: data?.cohort_id,
       added_by: JSON.stringify({ user_id: id, role: role }),
@@ -40,11 +40,12 @@ export default function addUserData() {
       }
     );
     if (isError)
-     return setToastMsg({ type: 'danger', message: 'error occured while adding user cohort mapping' });
+     return setToastMsg({ type: 'danger', message: 'Error occured while adding user cohort mapping' });
     // console.log(resCohort, 'adduserData');
+    return !isError;
   }
 
-  async function removeCohortUser(userData = null , cohortData = null){
+  async function removeCohortUser(userData = null , cohortData = null , cohortSize = null){
     const { id } = getUserData();
     if(!userData) return false;
     const sendData = {
@@ -64,15 +65,15 @@ export default function addUserData() {
     });
 
     const sendCohortData = {
-      cohort_id: cohortData?.id,
-      name: cohortData?.cohort_name,
+      cohort_id: cohortData?.id || cohortData?.cohort_id,
+      name: cohortData?.cohort_name || cohortData?.name,
       description: cohortData?.description,
       lsp_id: cohortData?.lsp_id || lspData?.lsp_id,
-      code: cohortData?.cohort_code,
+      code: cohortData?.cohort_code || cohortData?.code,
       status: 'SAVED',
-      type: cohortData?.cohort_type,
+      type: cohortData?.cohort_type || cohortData?.type,
       is_active: true,
-      size: cohortData?.size - 1 || 1
+      size: cohortSize - 1 || 1
     }
 
     const resCohort = await updateCohortMain({ variables: sendCohortData }).catch((err) => {

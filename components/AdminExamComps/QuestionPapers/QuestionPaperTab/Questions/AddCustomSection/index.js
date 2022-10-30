@@ -1,3 +1,6 @@
+import CustomTooltip from '@/components/common/CustomTooltip';
+import { CUSTOM_TOOLTIP_STYLE } from '@/components/common/CustomTooltip/customTooltip.helper';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../../helper/common.helper';
@@ -55,7 +58,18 @@ export default function AddCustomSection({ editData }) {
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'difficulty_level',
-          label: 'Difficulty Level:',
+          label: (
+            <>
+              Difficulty Level:
+              <CustomTooltip
+                info={
+                  ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab
+                    .difficultyLevel
+                }
+                customStyle={CUSTOM_TOOLTIP_STYLE}
+              />
+            </>
+          ),
           placeholder: 'Select Difficulty Level',
           value: { label: customSection.difficulty_level, value: customSection.difficulty_level },
           options: difficultyOptions

@@ -1,4 +1,4 @@
-import { GET_EXAM_CONFIG } from '@/api/Queries';
+import { GET_EXAM_CONFIG, GET_EXAM_INSTRUCTION, GET_EXAM_META, queryClient } from '@/api/Queries';
 import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { secondsToHMS } from '@/helper/utils.helper';
@@ -23,6 +23,16 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
   const router = useRouter();
 
   useEffect(async () => {
+    // const masterRes = await loadQueryDataAsync(
+    //   GET_EXAM_INSTRUCTION,
+    //   {exam_id: examId},
+    //   {},
+    //   queryClient
+    // );
+
+    // if (masterRes?.error) return setToastMsg({ type: 'danger', message: 'Exam Meta Load Error' });
+
+    // console.log(masterRes?.getExamInstruction?.[0]?.PassingCriteria,'master');
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
       { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
@@ -64,7 +74,7 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
     const _tableData = [];
 
     function getFormattedDate(unixDate) {
-      return moment(getDateTimeFromUnix(unixDate)).format('LLL');
+      return moment.unix(unixDate).format('LLL');
     }
 
     attemptData?.forEach((ea) => {
@@ -76,8 +86,9 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
         FinishedAt: getFormattedDate(resultData?.finishedAt || ea?.result?.created_at),
         TotalDuration: secondsToHMS(ea?.attempt_duration),
         Score: `${ea?.result?.user_score} / ${resultData?.totalMarks}`,
-        Result: configData?.ShowResult ? resultData?.status : 'completed'
+        Result: configData?.ShowResult ? resultData?.status : 'completed',
       };
+      // if(masterRes?.getExamInstruction?.[0]?.PassingCriteria?.toLowerCase() === '0-marks') data.Result = 'Completed'
       _tableData.push(data);
     });
 
@@ -143,7 +154,10 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
                       <td>{d?.FinishedAt} (IST)</td>
                       <td>{d?.TotalDuration}</td>
                       <td>{d?.Score}</td>
-                      <td className={d?.Result?.includes('failed') ? styles.red : styles.green}>
+                      <td
+                        className={`${d?.Result?.includes('failed') ? styles.red : styles.green} ${
+                          styles.result
+                        }`}>
                         {d?.Result}
                       </td>
                     </tr>

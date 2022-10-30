@@ -125,6 +125,7 @@ export const GET_LATEST_COURSES = gql`
         previewVideo
         tileImage
         owner
+        publisher
         duration
         expertise_level
         language
@@ -173,6 +174,7 @@ export const GET_COURSE = gql`
       previewVideo
       tileImage
       owner
+      publisher
       duration
       expertise_level
       language
@@ -760,6 +762,7 @@ export const GET_EXAM_META = gql`
       Status
       Category
       SubCategory
+      TotalCount
     }
   }
 `;

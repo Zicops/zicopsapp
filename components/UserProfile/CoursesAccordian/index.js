@@ -9,7 +9,7 @@ import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper'
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { getUnixFromDate } from '@/helper/utils.helper';
+import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -24,6 +24,8 @@ import styles from './coursesAccordian.module.scss';
 import _styles from '../userProfile.module.scss';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
 import { UserDataAtom } from '@/state/atoms/global.atom';
+import CurrentCourses from './CurrentCourses';
+import moment from 'moment';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -125,7 +127,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       ...courseAssignData,
       isCourseAssigned: true,
       endDate: new Date(),
-      isMandatory: false
+      isMandatory: false,
+      
     });
     await loadAssignedCourseData();
     setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
@@ -297,6 +300,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
     const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+    
+     if(!assignedCoursesToUser?.length) setCourseLoading(false);
 
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
@@ -332,16 +337,22 @@ const CoursesAccordian = ({ currentUserData = null }) => {
         continue;
       }
 
+      console.log(assignedCoursesToUser[i],'assinged courses to user')
+
       allAssignedCourses.push({
         ...courseRes?.getCourse,
         completedPercentage: userProgressArr?.length ? courseProgress : 0,
-        added_by: JSON.parse(courseMap?.added_by)
+        addedby: parseJson(courseMap?.added_by),
+        addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
+        expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
+        ...assignedCoursesToUser[i],
+        created_at:assignedCoursesToUser[i]?.created_at
       });
     }
 
     if (allAssignedCourses?.length) {
       const adminAssignedCourses = allAssignedCourses?.filter(
-        (course) => course?.added_by?.role.toLowerCase() === 'admin'
+        (course) => course?.addedby?.role.toLowerCase() !== 'self'
       );
 
       setCurrentCourses(allAssignedCourses,setCourseLoading(false));
@@ -381,8 +392,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           {!isAssignedPage && (
             <div className={`${styles.assign}`}>
               <div>
-                Current courses:{' '}
-                {currentCourses?.filter((courses) => courses.completedPercentage)?.length}
+                Courses in learning folder {`(${currentCourses?.length})`}
               </div>
 
               <div
@@ -399,11 +409,12 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           )}
         </div>
         {/* {isAssignedPage && <AssignCourses section={courseSections[3]} />} */}
-        {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} loading={courseLoading}/>}
+        {/* {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} loading={courseLoading}/>} */}
+        {!isAssignedPage && <CurrentCourses courseData={currentCourses} handleSubmit={handleAssign} isLoading={courseLoading}/>}
         {/* {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />} */}
         {selectedPage === 'Assign Courses' && (
           <AssignCourses
-            isFolder={true}
+            // isFolder={true}
             isHead={true}
             type="assignCourses"
             assignedCourses={assignedCourses}

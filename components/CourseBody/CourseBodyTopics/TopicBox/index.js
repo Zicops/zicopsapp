@@ -1,7 +1,10 @@
+import { GET_USER_EXAM_ATTEMPTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
-import AlertBox from '@/components/common/AlertBox';
+import { BookmarkStartTimeAtom } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { Skeleton } from '@mui/material';
 import moment from 'moment';
@@ -31,7 +34,11 @@ import {
 } from '../../../../state/atoms/video.atom';
 import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
-import { imageTypeTopicBox, passingCriteriaSymbol } from '../../Logic/topicBox.helper';
+import {
+  imageTypeTopicBox,
+  passingCriteriaSymbol,
+  ShowNotAssignedErrorAtom
+} from '../../Logic/topicBox.helper';
 import useLoadExamData from '../../Logic/useLoadExamData';
 
 let topicInstance = 0;
@@ -56,9 +63,12 @@ export default function TopicBox({
 }) {
   const { name, description, type } = topic;
   const duration = topicContent[0]?.duration.toString();
+  // const duration = 3965;
   const topicData = useRecoilValue(TopicAtom);
   const topicContentData = useRecoilValue(TopicContentAtom);
   const quizProgressData = useRecoilValue(QuizProgressDataAtom);
+  const userData = useRecoilValue(UserStateAtom);
+  const userDataGlobal = useRecoilValue(UserDataAtom);
 
   const router = useRouter();
   const activateExam = router?.query?.activateExam || null;
@@ -66,6 +76,7 @@ export default function TopicBox({
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
+  const bookmarkStartTime = useRecoilValue(BookmarkStartTimeAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
@@ -74,7 +85,8 @@ export default function TopicBox({
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [topicCountDisplay, setTopicCountDisplay] = useState(0);
-  const [showAlert, setShowAlert] = useState(false);
+  const [examAttempts, setExamAttempts] = useState([]);
+  const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
 
   const [examData, setExamData] = useState({
     id: null,
@@ -157,6 +169,32 @@ export default function TopicBox({
     setTopicCountDisplay(getTopicsIndex().next()?.value);
     // return () => getTopicsIndex(true).next();
   }, []);
+
+  // udpate course hero based on state set (bookmark and continue with course btn)
+  useEffect(() => {
+    if (topic?.id !== bookmarkStartTime?.topicId) return;
+
+    if (type === 'Assessment')
+      // if (!userCourseData?.userCourseMapping?.user_course_id) return;
+      return loadTopicExam();
+
+    // if (type === 'Content') {
+    if (!topicContent.length) return console.log('no topic content found');
+
+    setTopicExamData(getTopicExamObj());
+    updateVideoData(
+      videoData,
+      setVideoData,
+      { moduleId: moduleId, topicId: topic.id },
+      topicData,
+      topicContent,
+      allModuleOptions,
+      currrentModule,
+      setSelectedModule,
+      userCourseData,
+      setUserCourseData
+    );
+  }, [bookmarkStartTime, topicContent.length]);
 
   // auto play video when next or previous button clciked (module switch)
   // set exam data if 1st one is exam
@@ -252,6 +290,7 @@ export default function TopicBox({
 
     const allQuiz = [];
 
+    setQuizData([]);
     async function loadQuiz() {
       let topicQuiz = allQuiz?.find((quiz) => quiz?.topicId === topic?.id);
 
@@ -283,9 +322,34 @@ export default function TopicBox({
     });
   }, []);
 
-  // useEffect(() => {
-  //   console.log('q', quizData);
-  // }, [quizData]);
+  // load user exam attempts data
+  useEffect(() => {
+    if (type !== 'Assessment') return;
+    const topicExam = examData;
+    if (!topicExam?.id) return;
+
+    async function loadUserExamAttempts() {
+      const attemptRes = await loadQueryDataAsync(
+        GET_USER_EXAM_ATTEMPTS,
+        { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
+        {},
+        userQueryClient
+      );
+      const userCourseProgressId = userCourseData?.userCourseProgress?.find(
+        (cp) => cp?.topic_id === topicExam.topicId
+      )?.user_cp_id;
+      const examAttemptData =
+        attemptRes?.getUserExamAttempts?.filter(
+          (ea) =>
+            ea?.exam_id === topicExam.examId &&
+            ea?.attempt_status === 'completed' &&
+            ea?.user_cp_id === userCourseProgressId
+        ) || [];
+      setExamAttempts(examAttemptData);
+    }
+
+    loadUserExamAttempts();
+  }, [examData]);
 
   async function loadTopicExam(obj) {
     if (topic?.type !== 'Assessment') return;
@@ -342,6 +406,13 @@ export default function TopicBox({
       })
       ?.filter((quiz) => quiz?.topic_id === topic?.id)?.length || 0;
   const totalQuiz = quizData?.filter((quiz) => quiz?.topicId === topic?.id)?.length || 0;
+
+  function displayDuration(duration) {
+    if (duration <= 60) return `${duration} seconds`;
+
+    return `${Math.floor(duration / 60)}:${moment.utc(duration * 1000).format('ss')} mins `;
+  }
+
   return (
     <>
       <div
@@ -349,7 +420,8 @@ export default function TopicBox({
         onClick={() => {
           if (
             !router?.asPath?.includes('preview') &&
-            !userCourseData?.userCourseMapping?.user_course_id
+            !userCourseData?.userCourseMapping?.user_course_id ||
+            userCourseData?.userCourseMapping?.course_status?.toLowerCase() === 'disabled'
           )
             return setShowAlert(true);
 
@@ -486,7 +558,7 @@ export default function TopicBox({
                         width={100}
                       />
                     ) : duration ? (
-                      `Duration : ${moment.utc(duration * 1000).format('mm:ss')} mins`
+                      `Duration : ${displayDuration(duration)}`
                     ) : (
                       'N/A'
                     )}
@@ -531,7 +603,11 @@ export default function TopicBox({
 
                 <span>
                   Attempt:{' '}
-                  {+data?.examData?.noAttempts < 0 ? 'Unlimited' : data?.examData?.noAttempts}
+                  {+data?.examData?.noAttempts < 0 ? (
+                    <>{examAttempts?.length}/&infin;</>
+                  ) : (
+                    `${examAttempts?.length}/${data?.examData?.noAttempts}`
+                  )}
                 </span>
 
                 {!!data?.examData?.duration && (
@@ -571,14 +647,6 @@ export default function TopicBox({
           )}
         </div>
       </div>
-
-      {showAlert && (
-        <AlertBox
-          title="Course Not Assigned"
-          description="Please assign course to access the course contents"
-          handleClose={() => setShowAlert(false)}
-        />
-      )}
     </>
   );
 }

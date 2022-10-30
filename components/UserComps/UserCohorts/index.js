@@ -1,3 +1,5 @@
+import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { GET_COHORT_MAINS, userQueryClient } from '@/api/UserQueries';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { loadQueryDataAsync } from '@/helper/api.helper';
@@ -6,8 +8,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import CohortMasterTab from './ChortMasterTab';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 const UserCohorts = () => {
+  const { viewBtn, editBtn, downloadBtn } = ADMIN_USERS.userCohort;
   const [cohortList, setCohortList] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -32,7 +36,7 @@ const UserCohorts = () => {
       return { ...item, id: item?.cohort_id };
     });
     const cohorts = list?.filter((item) => item?.is_active);
-    setCohortList([...cohorts], setLoading(false));
+    setCohortList(sortArrByKeyInOrder([...cohorts], 'created_at', false), setLoading(false));
   }, []);
 
   const columns = [
@@ -63,6 +67,7 @@ const UserCohorts = () => {
       renderCell: (params) => {
         return (
           <>
+            <ToolTip title={viewBtn}>
             <button
               style={{
                 cursor: 'pointer',
@@ -76,6 +81,8 @@ const UserCohorts = () => {
             >
               <img src="/images/svg/eye-line.svg" width={20}></img>
             </button>
+            </ToolTip>
+            <ToolTip title={editBtn}>
             <button
               style={{
                 cursor: 'pointer',
@@ -88,6 +95,7 @@ const UserCohorts = () => {
               }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
+            </ToolTip>
             {/* <button
               style={{
                 cursor: 'pointer',

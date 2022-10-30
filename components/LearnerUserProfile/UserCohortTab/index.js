@@ -4,7 +4,7 @@ import CohortListCard from '@/components/common/CohortListCard';
 import IconBtn from '@/components/common/IconBtn';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
-import { SelectedCohortDataAtom } from '@/state/atoms/users.atom';
+import { ClosePopUpAtom, SelectedCohortDataAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -21,7 +21,7 @@ const UserCohortTab = () => {
   const [loading , setLoading] = useState(true);
   const { getUserCourseData,getCohortUserData } = useUserCourseData();
   const { setCohortTab } = useHandleCohortTab();
-
+  const [closePopUp , setClosePopUpAtom] = useRecoilState(ClosePopUpAtom)
 
   const [selectedCohortData , setSelectedCohortData] = useRecoilState(SelectedCohortDataAtom);
 
@@ -76,6 +76,7 @@ const UserCohortTab = () => {
       <div className={`${styles.listCardContainer}`}>
         {cohortData?.map((cohort , index) => {
           const { main , userCohort } = cohort;
+          // console.log(userCohort);
           const btnData = {
             imgSrc: '/images/svg/calendar-month.svg',
             display: 'Member',
@@ -88,7 +89,8 @@ const UserCohortTab = () => {
             btnData.color = 'var(--primary)';
           }
 
-          if (userCohort?.membership_status?.toLowerCase() !== 'active') {
+          const isActive = userCohort?.membership_status?.toLowerCase() === 'active';
+          if (!isActive) {
             btnData.display = 'Resigned';
             btnData.color = 'red';
             btnData.isDisabled = true;
@@ -98,8 +100,10 @@ const UserCohortTab = () => {
             <CohortListCard
               data={main}
               key={index}
-              handleClick={() => {
+              isActive={isActive}
+              handleClick={userCohort?.membership_status?.toLowerCase() !== 'active' ? ()=>{}: () => {
                 setSelectedCohort(main);
+                setClosePopUpAtom(false);
                 setSelectedCohortData(cohort);
               }}>
               <div className={`${styles.btnContainer}`}>

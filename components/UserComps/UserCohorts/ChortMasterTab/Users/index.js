@@ -1,6 +1,8 @@
 import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import PopUp from '@/components/common/PopUp';
+import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { loadQueryDataAsync } from '@/helper/api.helper';
@@ -71,7 +73,7 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
     for (let i = 0; i < users?.length; i++) {
       let found = false;
       for (let j = 0; j < cohortUser?.length; j++) {
-        if (cohortUser[j]?.id === users[i]?.id) {
+        if (cohortUser[j]?.id === users[i]?.id && cohortUser[j]?.membership_status?.toLowerCase() === 'active') {
           found = true;
           break;
         }
@@ -87,16 +89,21 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
 
   async function handleRemoveUser(userData = null, cohortData = null){
     // console.log(userData)
-    if(!userData)setToastMsg({type:'danger',message:'User Data not found!'})
-    if(!cohortData)setToastMsg({type:'danger',message:'Cohort Data not found!'})
+    if(!userData)return setToastMsg({type:'danger',message:'User Data not found!'})
+    if(!cohortData)return setToastMsg({type:'danger',message:'Cohort Data not found!'})
     setLoading(true) ;
-    const isRemoved = await removeCohortUser(userData,cohortData);
+    // const cohortSize = cohortData?.size ;
+    let cohortSize;
+    if(cohortUserData?.length) cohortSize = cohortUserData?.length;
+    // console.log(cohortSize,'cohrotSIsfiasbf');
+    const isRemoved = await removeCohortUser(userData,cohortData,cohortSize);
     // console.log(a,'adds');
-    if(!isRemoved) setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
+    if(!isRemoved) return setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
     setToastMsg({type:'success',message:"User removed succesfully!"})
+    setLoading(false)
     setRefetch(true);
-    setLoading(false);
-    return setShowConfirmBox(false);
+    setShowConfirmBox(false);
+    return ;
   }
   const columns = [
     {
@@ -129,8 +136,10 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
       headerName: 'Action',
       sortable: false,
       renderCell: (params) => {
+
         return (
           <>
+            <ToolTip title={ADMIN_USERS.userCohort.users.editBtn}>
             <button
               style={{
                 cursor: 'pointer',
@@ -143,7 +152,8 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
               }}>
               <img src="/images/svg/edit-box-line.svg" width={20}></img>
             </button>
-            <button
+            </ToolTip>
+            {!isReadOnly &&(<button
               style={{
                 cursor: 'pointer',
                 backgroundColor: 'transparent',
@@ -160,7 +170,7 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
                 // handleRemoveUser(params?.row , cohortData);
               }}>
               <img src="/images/svg/delete-outline.svg" width={20}></img>
-            </button>
+            </button>)}
           </>
         );
       },
@@ -172,7 +182,9 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
     <div className={`${styles.usersContainer}`}>
       <div className={`${styles.usersTopContainer}`}>
         <span>Total Users: {cohortUserData?.length}</span>
-        {!isReadOnly&&(<button
+        {!isReadOnly&&(
+        <ToolTip title={ADMIN_USERS.userCohort.users.addUserToCohort}>
+        <button
           className={`${styles.cohortButton1}`}
           onClick={() => {
             setIsOpen((prevValue) => !prevValue);
@@ -186,7 +198,8 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
             <path d="M22 22V10H26V22H38V26H26V38H22V26H10V22H22Z" fill="black" />
           </svg>
           Add Users to Cohort
-        </button>)}
+         </button> 
+         </ToolTip>)}
       </div>
       <ZicopsTable
         columns={columns}
@@ -213,7 +226,7 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
         <ConfirmPopUp
           title={'Are you sure you want to remove this user from cohort?'}
           btnObj={{
-            leftIsDisable: loading,
+            leftIsDisable:loading,
             rightIsDisable:loading,
             handleClickLeft: () => handleRemoveUser(selectedUser,cohortData),
             handleClickRight: () => setShowConfirmBox(false)

@@ -5,6 +5,8 @@ import {
   ADD_USER_PREFERENCE,
   ADD_USER_ROLE,
   UPDATE_USER,
+  UPDATE_USER_LEARNINGSPACE_MAP,
+  UPDATE_USER_ORGANIZATION_MAP,
   userClient
 } from '@/api/UserMutations';
 import { GET_USER_LEARNINGSPACES_DETAILS, userQueryClient } from '@/api/UserQueries';
@@ -33,6 +35,13 @@ export default function useHandleAddUserDetails() {
   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
     client: userClient
   });
+  const [updateOrg, { error: updateOrgErr }] = useMutation(UPDATE_USER_ORGANIZATION_MAP, {
+    client: userClient
+  });
+  const [updateLsp, { error: updateLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
+    client: userClient
+  });
+
 
   const [addOrg, { error: createOrgError }] = useMutation(ADD_USER_ORGANIZATION_MAP, {
     client: userClient
@@ -112,12 +121,12 @@ export default function useHandleAddUserDetails() {
     }
 
     let isError = false;
+    const sendLspData = {
+      user_id: userDataAbout?.id,
+      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
+      status: 'Active'
+    };
     if(!userLspId){
-      const sendLspData = {
-        user_id: userDataAbout?.id,
-        lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
-        status: 'Active'
-      };
   
       // console.log(sendLspData, 'addUserLearningSpaceDetails');
   
@@ -141,10 +150,20 @@ export default function useHandleAddUserDetails() {
       userLspId = dataLsp?.user_lsp_id ;
 
     }
+    else{sendLspData.user_lsp_id = userLspId ;
 
+    const resLsp = await updateLsp({ variables: sendLspData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if(isError) return setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+
+    setUserDataOrgLsp((prevValue) => ({ ...prevValue, user_lsp_id: userLspId }));}
   // ORGANIZATION DATA MUTATION
 
     // console.log(userDataOrgLsp, 'data at start of addUserOrganizationDetails');
+    
     const sendOrgData = {
       user_id: userDataAbout?.id,
       employee_id: userOrgData?.employee_id,
@@ -156,12 +175,31 @@ export default function useHandleAddUserDetails() {
       is_active: userOrgData?.org_is_active || true
     };
 
+    let _updateOrg = false ;
+    let dataOrg ;
+    if(userOrgData?.user_organization_id?.length){
+      _updateOrg = true ;
+      sendOrgData.user_organization_id = userOrgData?.user_organization_id;
+    }
+
     isError = false;
+    if(!_updateOrg){
     const resOrg = await addOrg({ variables: sendOrgData }).catch((err) => {
       // console.log(err);
       isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update User Org Error' });
-    });
+      return setToastMsg({ type: 'danger', message: 'Add User Org Error' });
+    }); 
+    if(!isError) dataOrg = resOrg?.data?.addUserOrganizationMap[0];
+  }
+
+    if(_updateOrg){
+      const resOrg = await updateOrg({ variables: sendOrgData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Add User Org Error' });;
+      });
+      if(!isError) dataOrg = resOrg?.data?.updateUserOrganizationMap;
+    }
 
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
@@ -169,7 +207,7 @@ export default function useHandleAddUserDetails() {
       return router.push('/account-setup');
     }
 
-    const dataOrg = resOrg?.data?.addUserOrganizationMap[0];
+    // const dataOrg = resOrg?.data?.addUserOrganizationMap[0];
 
     //updating atom after first mutation call
     setUserDataOrgLsp((prevValue) => ({
@@ -217,7 +255,8 @@ export default function useHandleAddUserDetails() {
     //   is_active: userOrgData?.preferences_is_active
     // };
 
-    const sendPreferenceData = sub_categories.map((item) => {
+
+    if(sub_categories?.length && !!base_sub_category){    const sendPreferenceData = sub_categories.map((item) => {
       let is_base = item === base_sub_category ? true : false;
       return {
         user_id: userDataAbout?.id,
@@ -254,6 +293,8 @@ export default function useHandleAddUserDetails() {
       sub_category: dataPref?.sub_category,
       preferences_is_active: dataPref?.is_active
     }));
+  }
+
 
     // ORGANIZATION USER ROLE MUTATION
     // console.log(userDataOrgLsp, 'data at start of addUserRoleDetails');

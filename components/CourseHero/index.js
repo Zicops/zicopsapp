@@ -1,12 +1,16 @@
+import { displayUnixDate } from '@/helper/utils.helper';
+import { parseJson } from '@/helper/utils.helper';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { Skeleton } from '@mui/material';
+import moment from 'moment';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../helper/common.helper';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
 import { courseContext } from '../../state/contexts/CourseContext';
+import ConfirmPopUp from '../common/ConfirmPopUp';
 import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '../common/InputDatePicker';
 import PopUp from '../common/PopUp';
@@ -25,12 +29,15 @@ export default function CourseHero({ isPreview = false }) {
     setIsAssignPopUpOpen,
     activateVideoPlayer,
     assignCourseToUser,
-    showPreviewVideo
+    showPreviewVideo,
+    unassignCourseFromUser
   } = useHandleCourseHero(isPreview);
 
+  const [isCourseUnassign , setIsCourseUnassign] = useState(false);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
   const isLoading = useRecoilValue(isLoadingAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+  const [isUnAssignPopUpOpen , setIsUnAssignPopUpOpen] = useState(false);
 
   const router = useRouter();
   const { fullCourse } = useContext(courseContext);
@@ -48,6 +55,25 @@ export default function CourseHero({ isPreview = false }) {
     duration,
     owner: provisionedBy
   } = fullCourse;
+
+  useEffect(()=>{
+    if(!router?.query?.isAssign) return;
+    if(!fullCourse?.id) return ;
+    if(router?.query?.courseId !== fullCourse?.id) return ;
+    if(courseAssignData?.isCourseAssigned) return ;
+    return setIsAssignPopUpOpen(true);
+  }, [fullCourse]);
+
+  useEffect(()=>{
+    // console.log(userCourseData?.userCourseMapping)
+    if(!userCourseData?.userCourseMapping) return;
+    const addedBy = parseJson(userCourseData?.userCourseMapping?.added_by);
+    // console.log(addedBy?.role?.toLowerCase())
+    // if(userCourseData?.userCourseMapping?.course_status?.toLowerCase() === 'disabled') return ;
+    if(addedBy?.role?.toLowerCase() !== 'self' || !courseAssignData?.isCourseAssigned) return setIsCourseUnassign(false);
+    if(courseAssignData?.isCourseAssigned) return setIsCourseUnassign(true); 
+    return setIsCourseUnassign(true);
+  },[userCourseData , courseAssignData?.isCourseAssigned])
 
   return (
     <div
@@ -72,6 +98,8 @@ export default function CourseHero({ isPreview = false }) {
             isLoading={isLoading}
             isPreview={isPreview}
             isCourseAssigned={courseAssignData?.isCourseAssigned}
+            isCourseUnassign={isCourseUnassign}
+            handleUnAssign={()=> setIsUnAssignPopUpOpen(true)}
             handleAssign={() => setIsAssignPopUpOpen(true)}
           />
 
@@ -108,8 +136,13 @@ export default function CourseHero({ isPreview = false }) {
               {isLoading ? (
                 <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={400} />
               ) : (
-                `** Suggested duration for completion of this course is ${duration?.toString()}`
+                `** Suggested duration for completion of this course is ${duration?.toString()} mins`
               )}
+              <br />
+              {userCourseData?.userCourseMapping?.end_date &&
+                `The course completion date is ${displayUnixDate(
+                  userCourseData?.userCourseMapping?.end_date
+                )}`}
             </p>
           </div>
 
@@ -232,6 +265,17 @@ export default function CourseHero({ isPreview = false }) {
           </div>
         </div>
       </PopUp>
+      {isUnAssignPopUpOpen && (
+        <ConfirmPopUp
+          title={'Are you sure you want to remove this course?'}
+          btnObj={{
+            // leftIsDisable: loading,
+            // rightIsDisable:loading,
+            handleClickLeft: async() => {await unassignCourseFromUser() ;setIsUnAssignPopUpOpen(false); setIsCourseUnassign(false)},
+            handleClickRight: () => setIsUnAssignPopUpOpen(false)
+          }}
+        />
+      )}
     </div>
   );
 }

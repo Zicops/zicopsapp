@@ -1,5 +1,5 @@
 import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
-import { UPDATE_USER, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
+import { ADD_USER_ORGANIZATION_MAP, UPDATE_COHORT_MAIN, UPDATE_USER, UPDATE_USER_COHORT, UPDATE_USER_LEARNINGSPACE_MAP, UPDATE_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
   GET_USER_COURSE_MAPS,
@@ -12,7 +12,7 @@ import {
 } from '@/api/UserQueries';
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { getUserOrgObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { getUserOrgObject, IsUpdatedAtom, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import {
   isPossiblePhoneNumber,
@@ -196,7 +196,10 @@ export default function useUserCourseData() {
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
 
-    const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
+    const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter((course) => course?.course_status?.toLowerCase() !== 'disabled'
+    )
+
+    const assignedCoursesToUser = _assignedCourses;
 
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
@@ -239,14 +242,16 @@ export default function useUserCourseData() {
         parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 
       // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      const courseDuraton = +courseRes?.getCourse?.duration * 60;
+      const courseDuraton = +courseRes?.getCourse?.duration / (60*60);
+      const progressPercent = userProgressArr?.length ? courseProgress : '0';
       allAssignedCourses.push({
         ...courseRes?.getCourse,
-        completedPercentage: userProgressArr?.length ? courseProgress : '0',
+        completedPercentage: progressPercent,
         added_by: added_by,
         created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
-        timeLeft: courseDuraton - (courseDuraton * (courseDuraton || 0)) / 100
+        timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
+        ...assignedCoursesToUser[i]
       });
     } // end of for loop
 
@@ -255,7 +260,7 @@ export default function useUserCourseData() {
       (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
     );
 
-    if (!userCourses?.length) return setToastMsg({ type: 'info', message: 'No courses found!' });
+    if (!userCourses?.length) return setToastMsg({ type: 'info', message: 'No courses in your learning folder' });
 
     return userCourses;
   }
@@ -399,13 +404,14 @@ export default function useUserCourseData() {
           cohortUserData.push({
             user_id: userList[i]?.id,
             role: cohortUsers[j]?.role,
-            name: `${userList[i]?.first_name} ${userList[i]?.last_name}`,
+            name: userList[i]?.first_name ? `${userList[i]?.first_name} ${userList[i]?.last_name}` : '',
             email: userList[i]?.email,
             first_name: userList[i]?.first_name,
             last_name: userList[i]?.last_name,
             membership_status: cohortUsers[j]?.membership_status,
             photo_url: userList[i]?.photo_url || '',
-            joined_on: moment.unix(cohortUsers[j]?.created_at).format('DD/MM/YYYY')
+            joined_on: moment.unix(cohortUsers[j]?.created_at).format('DD/MM/YYYY'),
+            ...cohortUsers[j]
           });
           break;
         }
@@ -457,6 +463,8 @@ export default function useUserCourseData() {
 export function getUserAboutObject(data = {}) {
   return {
     id: data?.id || null,
+    user_id:data?.user_id || null ,
+    user_lsp_id: data?.user_lsp_id || null ,
     first_name: data?.first_name || '',
     last_name: data?.last_name || '',
     status: data?.status || null,
@@ -489,6 +497,9 @@ export function useUpdateUserAboutData() {
   // recoil
   const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [updateLsp, { error: createLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
+    client: userClient
+  });
 
   // local state
   const [multiUserArr, setMultiUserArr] = useState([]);
@@ -520,6 +531,31 @@ export function useUpdateUserAboutData() {
         newUserAboutData?.gender
     );
   }, [newUserAboutData]);
+
+  async function updateUserLsp(userData = null) {
+    userData = userData ? userData : newUserAboutData;
+
+//     console.log(userData,'userData');
+//  return ;
+    if(userData?.status?.toLowerCase() === 'disabled') return setToastMsg({type:'info',message:'User is already disabled!'});
+    const sendLspData = {
+      user_id: userData?.id,
+      user_lsp_id: userData?.user_lsp_id,
+      lsp_id: userData?.lsp_id || LEARNING_SPACE_ID,
+      status: 'Disabled',
+    };
+
+    console.log(sendLspData, 'updateUserLearningSpaceDetails');
+
+    let isError = false;
+    const res = await updateLsp({ variables: sendLspData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
+    });
+   console.log(res);
+   return !isError ;
+  }
 
   async function updateAboutUser(userData = null) {
     userData = userData ? userData : newUserAboutData;
@@ -578,7 +614,8 @@ export function useUpdateUserAboutData() {
     setMultiUserArr,
     isFormCompleted,
     updateAboutUser,
-    updateMultiUserAbout
+    updateMultiUserAbout , 
+    updateUserLsp
   };
 }
 
@@ -603,6 +640,10 @@ export function getUserOrgMapObject(data = {}) {
 export function useUpdateUserOrgData() {
   //have to delete updateAbout later
   const [updateOrg, { error: updateOrgErr }] = useMutation(UPDATE_USER_ORGANIZATION_MAP, {
+    client: userClient
+  });
+
+  const [addOrg, { error: createOrgError }] = useMutation(ADD_USER_ORGANIZATION_MAP, {
     client: userClient
   });
 
@@ -649,10 +690,88 @@ export function useUpdateUserOrgData() {
     return _userData;
   }
 
+  async function addUserOrg(userData=null){
+    if(!userData) return false;
+    let isError = false;
+    const res = await addOrg({ variables: userData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if (isError)
+      return setToastMsg({ type: 'danger', message: 'Add User Org Error' });
+
+    const data = res?.data?.addUserOrganizationMap[0];
+    const _userData = { ...newUserOrgData, ...data };
+    setUserOrgData(_userData);
+    return _userData ;
+  }
+
   return {
     newUserOrgData,
     setNewUserOrgData,
     updateUserOrg,
-    isFormCompleted
+    isFormCompleted,
+    addUserOrg
   };
+}
+
+export function useHandleCohortUsers(){
+
+  const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isUpdated , setIsUpdated] = useRecoilState(IsUpdatedAtom);
+
+  const [updateCohortMain, { error: updateCohortError }] = useMutation(UPDATE_COHORT_MAIN, {
+    client: userClient
+  });
+
+  const [updateUserCohort, { error : updateError }] = useMutation(UPDATE_USER_COHORT, {
+    client: userClient
+  });
+
+  async function removeCohortUser(userData = null , cohortData = null , cohortSize = null){
+    const { id } = getUserData();
+    if(!userData) return false;
+    if(!cohortSize) return false ;
+    const sendData = {
+      user_cohort_id: userData?.user_cohort_id,
+      user_id: userData?.user_id,
+      user_lsp_id: userData?.user_lsp_id,
+      cohort_id: userData?.cohort_id,
+      added_by: JSON.stringify({ user_id: id, role: 'Admin' }),
+      membership_status: 'Disable',
+      role: userData?.role
+    };
+    // console.log(sendData)
+    let isError = false;
+    const res = await updateUserCohort({ variables: sendData }).catch((err) => {
+      isError = true;
+      if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing user' });
+    });
+    
+    setIsUpdated(true);
+    const sendCohortData = {
+      cohort_id: cohortData?.cohort_id,
+      name: cohortData?.name,
+      description: cohortData?.description,
+      lsp_id: cohortData?.lsp_id || lspData?.lsp_id,
+      code: cohortData?.code,
+      status: 'SAVED',
+      type: cohortData?.type,
+      is_active: true,
+      size: cohortSize - 1
+    }
+
+    const resCohort = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
+      // console.log(err);
+      isError = !!err;
+    });
+
+
+    // console.log(res);
+    return !isError;
+
+  }
+
+  return {removeCohortUser};
 }

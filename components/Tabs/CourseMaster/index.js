@@ -1,5 +1,6 @@
 import { DELETE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { deleteData } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
@@ -133,6 +134,20 @@ export default function CourseMaster() {
         }
       />
 
+      {/* course publisher */}
+      <LabeledInput
+        styleClass={`${styles.marginBottom}`}
+        inputClass={!fullCourse?.publisher?.length && courseError?.master ? 'error' : ''}
+        inputOptions={{
+          inputName: 'publisher',
+          label: 'Publisher / Author',
+          placeholder: 'Enter name of the Publisher / Author',
+          maxLength: 60,
+          value: fullCourse?.publisher
+        }}
+        changeHandler={handleChange}
+      />
+
       {/* language */}
       <LabeledDropdown
         styleClass={styles.marginBottom}
@@ -169,9 +184,11 @@ export default function CourseMaster() {
           fullCourse?.name &&
           fullCourse?.category &&
           fullCourse?.sub_category &&
+          fullCourse?.publisher &&
           fullCourse?.owner &&
           fullCourse?.language?.length
         }
+        tooltipTitle={ADMIN_COURSES.myCourses.courseMaster.nextBtn}
       />
 
       {showConfirmBox && (

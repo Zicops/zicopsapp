@@ -22,6 +22,19 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
 
   return (
     <div className={`${styles.questionBankContainer}`}>
+
+      {/*  name */}
+      <LabeledInput
+        styleClass={`${styles.inputField}`}
+        inputOptions={{
+          inputName: 'Name',
+          label: 'Name:',
+          placeholder: 'Enter the name in less than 60 characters',
+          value: catSubCatData?.Name,
+          maxLength: 60
+        }}
+        changeHandler={(e) => changeHandler(e, catSubCatData, setCatSubCatData)}
+      />
       {/* cat data */}
       {isSubCat && (
         <LabeledDropdown
@@ -41,18 +54,7 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
         />
       )}
 
-      {/*  name */}
-      <LabeledInput
-        styleClass={`${styles.inputField}`}
-        inputOptions={{
-          inputName: 'Name',
-          label: 'Name:',
-          placeholder: 'Enter the name in less than 60 characters',
-          value: catSubCatData?.Name,
-          maxLength: 60
-        }}
-        changeHandler={(e) => changeHandler(e, catSubCatData, setCatSubCatData)}
-      />
+      
 
       {/* description */}
       <LabeledInput

@@ -15,7 +15,7 @@
 }
 
 .course_management {
-  padding: 30px;
+  padding: 30px 10px;
   margin-bottom: 20px;
   .sidebar_img {
     border: 2px solid #63c0c0;
@@ -23,6 +23,12 @@
     height: 80px;
     width: 80px;
     padding: 10px;
+  }
+  .course_management_btn{
+    background: none;
+    border: none;
+    margin-top: 10px;
+    cursor: pointer;
   }
 }
 .sidebar_menu {

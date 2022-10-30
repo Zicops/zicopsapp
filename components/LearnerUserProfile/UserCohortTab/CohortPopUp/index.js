@@ -1,7 +1,7 @@
-import { SelectedCohortDataAtom } from '@/state/atoms/users.atom';
+import { ClosePopUpAtom, SelectedCohortDataAtom } from '@/state/atoms/users.atom';
 import { useEffect } from 'react';
 import Popup from 'reactjs-popup';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../learnerUserProfile.module.scss';
 import useHandleCohortTab from '../../Logic/useHandleCohortTab';
 import { cohortTabData } from '../../Logic/userBody.helper';
@@ -10,16 +10,17 @@ export default function CohortPopUp({ cohortData, closePopUp = () => {} }) {
   const { cohortTab, setCohortTab, showActiveTab } = useHandleCohortTab();
 
   const [selectedCohort, setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
+  const closePopUpAtom = useRecoilValue(ClosePopUpAtom);
 
   useEffect(() => {
-    console.log(selectedCohort, 'selected cohort');
+    // console.log(selectedCohort, 'selected cohort');
     if (cohortTab === 'Invites' && selectedCohort?.userCohort?.role?.toLowerCase() !== 'manager')
       return setCohortTab('Courses');
   }, [cohortData]);
 
   return (
     <Popup
-      open={cohortData != null}
+      open={cohortData != null && !closePopUpAtom}
       closeOnDocumentClick={false}
       closeOnEscape={false}
       overlayStyle={{ background: 'rgba(0,0,0, 0.5)' }}>

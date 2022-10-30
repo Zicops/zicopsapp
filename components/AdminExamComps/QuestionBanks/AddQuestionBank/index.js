@@ -1,4 +1,6 @@
+import CustomTooltip from '@/components/common/CustomTooltip';
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
@@ -15,7 +17,12 @@ import LabeledInput from '../../../common/FormComponents/LabeledInput';
 import useHandleQuestionBank from '../Logic/useHandleQuestionBank';
 import styles from './addQuestionBank.module.scss';
 
-export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = true }) {
+export default function AddQuestionBank({
+  isEdit = false,
+  closePopUp,
+  isPopUp = true,
+  customTooltipStyle
+}) {
   const [loadQBQuestions, { error: errorQBQuestionsData }] = useLazyQuery(
     GET_QUESTION_BANK_QUESTIONS,
     { client: queryClient }
@@ -90,7 +97,15 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'category',
-          label: 'Category:',
+          label: (
+            <>
+              Category:
+              <CustomTooltip
+                info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.category}
+                customStyle={customTooltipStyle}
+              />
+            </>
+          ),
           placeholder: 'Select Category',
           options: [{ value: 'General', label: 'General' }, ...catSubCat.cat],
           value: { value: questionBankData?.category, label: questionBankData?.category },
@@ -111,7 +126,15 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
         styleClass={styles.inputField}
         dropdownOptions={{
           inputName: 'sub_category',
-          label: 'Sub-Category:',
+          label: (
+            <>
+              Sub-Category:
+              <CustomTooltip
+                info={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addSubCategory}
+                customStyle={customTooltipStyle}
+              />
+            </>
+          ),
           placeholder: 'Select Sub-Category',
           options: [{ value: 'General', label: 'General' }, ...catSubCat.subCat],
           value: { value: questionBankData?.sub_category, label: questionBankData?.sub_category },
@@ -125,16 +148,16 @@ export default function AddQuestionBank({ isEdit = false, closePopUp, isPopUp = 
 
       {isPopUp && (
         <div className={`${styles.btnContainer}`}>
-          <ToolTip title="Cancel and Go Back to Question Banks list" placement="left">
+          <ToolTip title={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.cancelBtn} placement="left">
             <div>
               <Button text={'Cancel'} clickHandler={closePopUp} />
             </div>
           </ToolTip>
           <ToolTip
             title={`${
-              isEdit
-                ? 'Save new changes to this question paper'
-                : 'Add and proceed to Question Creation'
+              isAddQuestionBankReady
+                ? `${ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addBtnActive}`
+                : `${ADMIN_EXAMS.myQuestionBanks.addQuestionBank.addBtnDisabled}`
             }`}
             placement="right">
             <div>

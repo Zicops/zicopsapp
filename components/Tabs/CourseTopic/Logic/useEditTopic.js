@@ -310,6 +310,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
       const sendContentData = {
         courseId: fullCourse.id,
         topicId: content.topicId,
+        moduleId: content?.moduleId,
         language: content.language,
         type: content.type,
         duration: content.duration,
@@ -330,7 +331,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           await updateCourseTopicContent({ variables: updateContentData }).catch((err) =>
             console.log(err)
           )
-        ).data;
+        )?.data;
       } else {
         console.log('sendContentData', sendContentData);
         data = await (
@@ -445,7 +446,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             difficulty: quiz.difficulty || 0,
             hint: quiz?.hint || '',
             qbmId: quiz?.qbId || null,
-            attachmentType: '',
+            attachmentType: quiz?.attachmentType || '',
 
             // TODO: remove or update later
             createdBy: 'Zicops',
@@ -453,6 +454,10 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             status: QUESTION_STATUS[1]
           };
           console.log(sendQuestionData);
+          if (quiz?.questionFile) {
+            sendQuestionData.file = quiz?.questionFile;
+            sendQuestionData.attachmentType = quiz?.attachmentType || '';
+          }
           const quesRes = await updateQuestion({ variables: sendQuestionData }).catch((err) => {
             console.log(err);
             isError = !!err;

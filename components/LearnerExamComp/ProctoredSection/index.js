@@ -3,6 +3,7 @@ import Image from 'next/image';
 import styles from './proctor.module.scss';
 import { useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import ToolTip from '@/components/common/ToolTip';
 
 const ProctoredSection = () => {
   const userData = useRecoilValue(UserStateAtom);
@@ -10,7 +11,9 @@ const ProctoredSection = () => {
   return (
     <div className={`${styles.proctor_section}`}>
       <div>
-        <button className={`${styles.proctor_section_btn}`}>Issue?</button>
+        <ToolTip title="Report any issue" placement="bottom">
+          <button className={`${styles.proctor_section_btn}`}>Issue?</button>
+        </ToolTip>
         <button className={`${styles.proctor_section_btn}`}>Chat</button>
       </div>
       <div className={`${styles.proctor_section_img}`}>

@@ -1,4 +1,8 @@
+import AddCatSubCat from '@/components/adminComps/ZicopsCourses/AddCatSubCat';
+import PopUp from '@/components/common/PopUp';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FilterListSharpIcon from '@mui/icons-material/FilterListSharp';
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,7 +17,11 @@ import {
   InputAdornment,
   TextField
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import useHandleAddUserDetails from '../Logic/useHandleAddUser';
+import SubCategoryAdd from '../SubCategoryAdd';
 import CustomAccordion from './CustomAccordion';
 import styles from './profilePreferences.module.scss';
 
@@ -23,20 +31,52 @@ const ProfilePreferences = ({
   setSelected,
   hideBack = false,
   customStyle = [],
-  customClass
+  customClass,
+  isLearnerSide = false,
+  closePopUp = ()=>{}
 }) => {
+  const [vidIsOpen, setVidIsOpen] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
+  const vidRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   // const [searchQuery, setSearchQuery] = useState('')
   const [filteredData, setFilteredData] = useState([]);
   const [searchedData, setSearchedData] = useState([]);
   const [searched, setSearched] = useState(false);
+  const [addCat, setAddCat] = useState(false);
+  const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const router = useRouter();
 
   const { catSubCat } = useHandleCatSubCat();
 
   const handleIcon = () => {
     setIsOpen(!isOpen);
   };
+
+  const { updateAboutUser, addUserLearningSpaceDetails, isSubmitDisable } =
+  useHandleAddUserDetails();
+
+  async function handleCompleteSetup() {
+    // console.log(selected);
+    // const sub_categories = selected.map((item) => item.name);
+
+    // setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
+
+    let isError = false;
+    isError = await addUserLearningSpaceDetails([],false);
+    if (isError) return;
+    isError = await updateAboutUser();
+
+    if (isError) return;
+
+    setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
+
+    router.prefetch('/');
+    setVidIsOpen(true);
+    vidRef?.current?.play();
+    // console.log('from add');
+  }
 
   const [categories, setCategories] = useState([]);
   const [data, setData] = useState([]);
@@ -51,6 +91,7 @@ const ProfilePreferences = ({
 
   useEffect(() => {
     if (!catSubCat?.subCat?.length) return;
+    // return ;
 
     setData(
       catSubCat?.subCat?.map((s) => {
@@ -133,7 +174,7 @@ const ProfilePreferences = ({
   return (
     <>
       <div ref={myRef} className={`${styles.container} ${customClass}`}>
-        <Grow in={isVisible || isFiltered || searched}>
+        {!(data?.length < 5) && (<Grow in={isVisible || isFiltered || searched}>
           <div className={`${styles.filter_main_container} ${customStyle[0]}`}>
             <div className={`${styles.title}`}>Sub-Category Selection</div>
             <div className={`${styles.subtitle}`}>
@@ -222,28 +263,37 @@ const ProfilePreferences = ({
               )}
             </div>
           </div>
-        </Grow>
-        <div
-          ref={scrollRef}
-          className={`${styles.category_and_subCategory} ${customStyle[1]}`}
-          // height={'350px'} sx={{overflowY: 'scroll'}}
-        >
-          {(isFiltered ? filteredData : categories).map((category) => (
-            <CustomAccordion
-              selected={selected}
-              setSelected={setSelected}
-              searched={searched}
-              searchedData={searchedData}
-              data={data}
-              setData={setData}
-              category={category}
-            />
-          ))}
-        </div>
+        </Grow>)}
+        {(data?.length < 5) ? (
+          <p style={{ textAlign: 'center', fontSize: '20px' }}>
+            There are less than 5 or no subcategories in your learning space. Please continue with your
+            journey by skipping preferences selection here.
+          </p>
+        ) : (
+          <div
+            ref={scrollRef}
+            className={`${styles.category_and_subCategory} ${customStyle[1]}`}
+            // height={'350px'} sx={{overflowY: 'scroll'}}
+          >
+            {(isFiltered ? filteredData : categories).map((category) => (
+              <CustomAccordion
+                selected={selected}
+                setSelected={setSelected}
+                searched={searched}
+                searchedData={searchedData}
+                data={data}
+                setData={setData}
+                category={category}
+              />
+            ))}
+          </div>
+        )}
+
         <Box mt={3} />
       </div>
       <div className={`${styles.navigator} ${customStyle[2]}`}>
         <span />
+
         <div className={`${styles.navigatorBtns} `}>
           {!hideBack && (
             <Button
@@ -256,16 +306,43 @@ const ProfilePreferences = ({
             </Button>
           )}
 
-          <Button
-            disabled={selected.length < 5}
+          {!(data?.length < 5) ? (
+            <Button
+              disabled={selected.length < 5}
+              variant={'contained'}
+              className={`${styles.input_margin_transform}`}
+              onClick={() => {
+                setCurrentComponent(3);
+              }}>
+              Next
+            </Button>
+          ) : (
+            <>{isLearnerSide&&(<Button
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
             onClick={() => {
-              setCurrentComponent(3);
+              closePopUp(false);
             }}>
-            Next
-          </Button>
+            Close
+          </Button>)}<Button
+              disabled={data?.length > 5 || isLearnerSide}
+              variant={'contained'}
+              className={`${styles.input_margin_transform}`}
+              onClick={() => {
+                handleCompleteSetup();
+              }}>
+              Skip
+            </Button>
+            </>
+          )}
         </div>
+        {!!vidIsOpen && (
+          <div className={`${styles.introVideoContainer}`}>
+            <video ref={vidRef} onEnded={() => router.push('/')} disablePictureInPicture>
+              <source src="/videos/loginIntro.mp4" type="video/mp4" />
+            </video>
+          </div>
+        )}
       </div>
     </>
   );

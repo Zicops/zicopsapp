@@ -1,5 +1,7 @@
+import { CUSTOM_TOOLTIP_STYLE } from '@/components/common/CustomTooltip/customTooltip.helper';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
@@ -135,7 +137,7 @@ export default function QuestionBankTable({ isEdit = false }) {
                   setSelectedQB(getQuestionBankObject(params.row));
                   setEditPopUp(true);
                 }}>
-                <ToolTip title="Edit Bank" placement="bottom">
+                <ToolTip title={ADMIN_EXAMS.myQuestionBanks.editBtn} placement="bottom">
                   <img src="/images/edit-icon.png" width={20}></img>
                 </ToolTip>
               </button>
@@ -152,7 +154,7 @@ export default function QuestionBankTable({ isEdit = false }) {
                 setSelectedQB(getQuestionBankObject(params.row));
                 router.push(router.asPath + `/${params.row.id}`);
               }}>
-              <ToolTip title="View Bank" placement="bottom">
+              <ToolTip title={ADMIN_EXAMS.myQuestionBanks.viewBtn} placement="bottom">
                 <img src="/images/svg/eye-line.svg" width={20}></img>
               </ToolTip>
             </button>
@@ -175,8 +177,15 @@ export default function QuestionBankTable({ isEdit = false }) {
       />
 
       {/* add question bank pop up */}
-      <PopUp title="Add Question Bank" popUpState={[addPopUp, setAddPopUp]} isFooterVisible={false}>
-        <AddQuestionBank closePopUp={() => setAddPopUp(false)} />
+      <PopUp
+        title="Add Question Bank"
+        popUpState={[addPopUp, setAddPopUp]}
+        isFooterVisible={false}
+        tooltipCloseBtnTitle={ADMIN_EXAMS.myQuestionBanks.addQuestionBank.crossBtn}>
+        <AddQuestionBank
+          closePopUp={() => setAddPopUp(false)}
+          customTooltipStyle={CUSTOM_TOOLTIP_STYLE}
+        />
       </PopUp>
 
       {/* edit question bank pop up */}
@@ -184,7 +193,11 @@ export default function QuestionBankTable({ isEdit = false }) {
         title="Edit Question Bank"
         popUpState={[editPopUp, setEditPopUp]}
         isFooterVisible={false}>
-        <AddQuestionBank isEdit={true} closePopUp={() => setEditPopUp(false)} />
+        <AddQuestionBank
+          isEdit={true}
+          closePopUp={() => setEditPopUp(false)}
+          customTooltipStyle={CUSTOM_TOOLTIP_STYLE}
+        />
       </PopUp>
     </>
   );

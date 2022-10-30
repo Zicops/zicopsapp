@@ -298,8 +298,14 @@ select.nav_search_dropdow:selected {
   padding: 7px 10px !important;
 }
 
+.fontSizeSmall{
+  font-size: 14px;
+ 
+}
+
 .subMenuItem {
-  max-width: 180px;
+  max-width: 200px;
+  overflow: hidden;
 }
 
 .selectedSubMenuItem {

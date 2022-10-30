@@ -13,7 +13,7 @@ const UserCohorts = ({ isEdit = false , isReadOnly = false }) => {
   const [status, setStatus] = useRecoilState(StatusAtom);
 
   const [cohortMasterData, setCohortMasterData] = useRecoilState(CohortMasterData);
-  const { saveCohortMaster } = useHandleCohortMaster();
+  const { saveCohortMaster , isSubmitDisable } = useHandleCohortMaster();
 
   const router = useRouter();
 
@@ -45,7 +45,7 @@ const UserCohorts = ({ isEdit = false , isReadOnly = false }) => {
         setTab={setTab}
         customStyles={tab === tabData[2].name ? { padding: '20px' } : {}}
         footerObj={{
-          disableSubmit:isReadOnly,
+          disableSubmit:isReadOnly || isSubmitDisable,
           // submitDisplay: 'Save',
           showFooter: tab === tabData[0].name,
           status: cohortMasterData?.status || status || STATUS.display[0],

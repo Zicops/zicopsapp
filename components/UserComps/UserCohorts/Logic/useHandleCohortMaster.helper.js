@@ -40,6 +40,8 @@ export function useHandleCohortMaster() {
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
   const [cohortMasterData, setCohortMasterData] = useState(null);
 
+  const [isSubmitDisable , setIsSubmitDisable] = useState(false);
+
   function validatingCohortMaster() {
     const {
       id,
@@ -82,9 +84,12 @@ export function useHandleCohortMaster() {
   async function saveCohortMaster() {
     // console.log(cohortMasterData, cohortData);
     if (validatingCohortMaster()) return;
+    setIsSubmitDisable(true);
 
     const data = getUserData();
     const { id } = data;
+
+    let cohortSize = 0 ;
 
     const sendCohortData = {
       name: cohortMasterData?.cohort_name,
@@ -101,10 +106,14 @@ export function useHandleCohortMaster() {
     let isError = false;
     if (cohortMasterData?.id) {
       sendCohortData.cohort_id = cohortMasterData?.id;
-      const allUsers = await getCohortUser(cohortMasterData?.id, true);
-      if (allUsers?.length) sendCohortData.size = allUsers?.length;
-      const oldManagers = allUsers?.filter((item) => item?.role?.toLowerCase() === 'manager');
+      const _allUsers = await getCohortUser(cohortMasterData?.id, true);
+      if (_allUsers?.length) sendCohortData.size = _allUsers?.length;
+      const allUsers = _allUsers?.filter((item) => item?.membership_status?.toLowerCase() !== 'disable') ;
+      const oldManagers = allUsers?.filter((item) => item?.role?.toLowerCase() === 'manager' );
       const oldLearner = allUsers?.filter((item) => item?.role?.toLowerCase() !== 'manager');
+      const disableUsers = _allUsers?.filter((item) => item?.membership_status?.toLowerCase() === 'disable');
+
+      cohortSize = allUsers?.length;
 
       //promoting learner to manager
       const promoteManager = oldLearner?.filter(({ user_id: id1 }) =>
@@ -118,10 +127,18 @@ export function useHandleCohortMaster() {
 
       //new manager that are not in cohort
       const newManager = cohortMasterData?.managers?.filter(
-        ({ id: id1 }) => !allUsers?.some(({ user_id: id2 }) => id2 === id1)
+        ({ id: id1 }) => !_allUsers?.some(({ user_id: id2 }) => id2 === id1)
       );
 
-      // console.log(removeManager, newManager, promoteManager, allUsers);
+      //disable user that are in cohort
+      const promoteDisableManager = disableUsers?.filter(({ user_id: id1 }) =>
+        cohortMasterData?.managers?.some(({ id: id2 }) => id2 === id1)
+      );
+
+      // console.log(allUsers,
+      //   oldManagers,
+      //   oldLearner,
+      //   disableUsers)
       // return ;
 
       if (removeManager?.length) {
@@ -140,7 +157,7 @@ export function useHandleCohortMaster() {
             role: 'Learner'
           };
           const res = await updateUserCohort({ variables: sendData }).catch((err) => {
-            if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing manager' });
+            if (!!err) return setToastMsg({ type: 'danger', message: 'Error while removing manager' });
           });
           // console.log(res);
         }
@@ -161,13 +178,34 @@ export function useHandleCohortMaster() {
             role: 'Manager'
           };
           const res = await updateUserCohort({ variables: sendData }).catch((err) => {
-            if (!!err) setToastMsg({ type: 'danger', message: 'Error while removing manager' });
+            if (!!err) return setToastMsg({ type: 'danger', message: 'Error while updating manager' });
           });
           // console.log(res);
         }
       }
 
-      if (newManager?.length) sendCohortData.size = allUsers?.length + newManager?.length;
+      if (promoteDisableManager?.length) {
+        cohortSize = allUsers?.length + promoteDisableManager?.length ;
+        for (let i = 0; i < promoteDisableManager?.length; i++) {
+          const data = await getCohortUserDetails(cohortMasterData?.id, promoteDisableManager[i]?.user_id);
+          if (!data?.length) break;
+          const sendData = {
+            user_cohort_id: data[0]?.user_cohort_id,
+            user_id: data[0]?.user_id,
+            user_lsp_id: data[0]?.user_lsp_id,
+            cohort_id: data[0]?.cohort_id,
+            added_by: JSON.stringify({ user_id: id, role: 'Admin' }),
+            membership_status: 'Active',
+            role: 'Manager'
+          };
+          const res = await updateUserCohort({ variables: sendData }).catch((err) => {
+            if (!!err) return setToastMsg({ type: 'danger', message: 'Error while updating manager' });
+          });
+          // console.log(res);
+        }
+      }
+
+      if (newManager?.length) sendCohortData.size = cohortSize + newManager?.length;
 
       //adding new managers
       if (newManager?.length) {
@@ -184,16 +222,24 @@ export function useHandleCohortMaster() {
           );
           const userLspData = res?.getUserLspByLspId;
           const sendAddUserCohortData = {
-            id: cohortMasterData?.managers[i]?.id,
+            user_id: newManager[i]?.id,
             user_lsp_id: userLspData?.user_lsp_id,
             cohort_id: cohortMasterData?.id,
             membership_status: 'Active',
             role: 'Manager'
           };
-          await addUserToCohort(sendAddUserCohortData);
+          // console.log(sendAddUserCohortData,'add');
+          const add = await addUserToCohort(sendAddUserCohortData);
+          // console.log(add,'add');
+          if(add) continue;
         }
       }
 
+      const cohortUsers = await getCohortUser(cohortMasterData?.id, true);
+      // if (_allUsers?.length) sendCohortData.size = _allUsers?.length;
+      const activeUsers = cohortUsers?.filter((item) => item?.membership_status?.toLowerCase() !== 'disable') ;
+
+    if (activeUsers?.length) sendCohortData.size = activeUsers?.length;
       // console.log(sendCohortData);
       const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
         // console.log(err);
@@ -203,6 +249,8 @@ export function useHandleCohortMaster() {
       // console.log(res);
       if (isError)
         return setToastMsg({ type: 'danger', message: 'Error occured while updating cohort!' });
+
+      setIsSubmitDisable(false);
 
       return setToastMsg({ type: 'success', message: 'Updated cohort successfully!' });;
     }
@@ -237,7 +285,7 @@ export function useHandleCohortMaster() {
         // console.log(res?.getUserLspByLspId);
         const userLspData = res?.getUserLspByLspId;
         const sendAddUserCohortData = {
-          id: cohortMasterData?.managers[i]?.id,
+          user_id: cohortMasterData?.managers[i]?.id,
           user_lsp_id: userLspData?.user_lsp_id,
           cohort_id: cohort_id,
           membership_status: 'Active',
@@ -246,7 +294,9 @@ export function useHandleCohortMaster() {
         await addUserToCohort(sendAddUserCohortData);
       }
       setToastMsg({ type: 'success', message: 'Added cohort successfully!' });
+      setIsSubmitDisable(false);
       return router.push('/admin/user/user-cohort/'+ cohort_id)
+
     }
     // console.log(res);
   }
@@ -264,5 +314,5 @@ export function useHandleCohortMaster() {
     */
   }
 
-  return { saveCohortMaster, assignCourseToUser };
+  return { saveCohortMaster, assignCourseToUser , isSubmitDisable };
 }
