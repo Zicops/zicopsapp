@@ -1,7 +1,7 @@
 // import { func, bool, string, number, shape } from 'prop-types';
 import { labeledTextareaWrapper } from './orgFormTextArea.module.scss';
 
-export default function LabeledTextarea({ inputOptions, styleClass, changeHandler, isError }) {
+const LabeledTextarea = ({ inputOptions, styleClass, changeHandler, isError }) =>{
   const {
     inputName,
     rows = 4,
@@ -34,3 +34,4 @@ export default function LabeledTextarea({ inputOptions, styleClass, changeHandle
     </div>
   );
 }
+export default LabeledTextarea;
