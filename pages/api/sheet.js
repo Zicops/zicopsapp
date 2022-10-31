@@ -29,10 +29,14 @@ export default async function googleSheetApiHandler(req, res) {
   }
 
   if (req?.method === 'POST') {
+    // console.log(req?.body?.sheet,'ufui');
+    let sheet = !!req?.body?.sheet ? req?.body?.sheet : 'Sheet1'
+    // const range = `${sheet}!A2:B`
+    // console.log(sheet,'sfs')
     const response = await googleSheet.spreadsheets.values.append({
       auth,
       spreadsheetId,
-      range: 'Sheet1!A2:B',
+      range: `${sheet}!A2:B`,
       valueInputOption: 'USER_ENTERED',
       resource: {
         values: [req?.body?.data || []]

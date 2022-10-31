@@ -74,7 +74,7 @@ export default function useHandleOrgForm() {
       sendData.push(`${value}`);
     });
 
-    console.log(sendData, 'sendOrgData');
+    // console.log(sendData, 'sendOrgData');
 
     const res = await fetch(SHEET_URL, {
       method: 'post',
@@ -163,7 +163,14 @@ export default function useHandleOrgForm() {
       body: JSON.stringify({
         recipient: 'joy@zicops.com',
         subject: 'Request to register organization',
-        message: `Request received by ${orgData?.orgPersonEmailId}`
+        message: ` Hello Admin,
+        Received a request for creating new Organization from ${orgData?.orgPersonEmailId}.
+        ${orgData?.orgName}
+        ${orgData?.orgUrl}
+        You can find the full request in this google sheet
+        https://docs.google.com/spreadsheets/d/10Nn5Wn3jwp7dHjY0AekjQvzT1B25SXsc1_VNR5XW4H8/
+        Regards,
+        Zicops Bot. `
       }),
       cache: 'default'
     });
@@ -171,6 +178,24 @@ export default function useHandleOrgForm() {
     // console.log(res,'res at eiasf');
 
     return res;
+  }
+
+  async function addEmail(){
+    if(!orgData?.orgPersonEmailId) return false;
+
+    const res = await fetch(SHEET_URL, {
+      method: 'post',
+      headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data: [orgData?.orgPersonEmailId] , sheet: "Emails" }),
+      cache: 'default'
+    });
+
+    if(!res?.status === 200) return false;
+    return true ;
+
   }
 
   function getOrgResiterObject(data = {}) {
@@ -219,6 +244,7 @@ export default function useHandleOrgForm() {
     isOrgRegisterationReady,
     handleOrgRegisterForm,
     handleContactPersonForm,
-    fetchUnitFormData
+    fetchUnitFormData,
+    addEmail
   };
 }

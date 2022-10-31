@@ -8,10 +8,13 @@ import styles from './orgEmail.module.scss';
 import { changeHandler , isEmail } from '@/helper/common.helper';
 import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
 import { useEffect } from 'react';
+import useHandleOrgForm from '../utils/orgResgisterForm.helper'
 
 const OrgEmail = () => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
   const router = useRouter();
+
+  const { addEmail } = useHandleOrgForm();
   useEffect(()=>{
     // console.log(orgTempDetails?.orgPersonEmailId)
   },[orgTempDetails?.orgPersonEmailId])
@@ -41,7 +44,10 @@ const OrgEmail = () => {
             size="small"
             isBold="bold"
             isDisabled={!(orgTempDetails?.orgPersonEmailId?.length && isEmail(orgTempDetails?.orgPersonEmailId))}
-            clickHandler={() => {
+            clickHandler={async() => {
+              if(!orgTempDetails?.orgPersonEmailId?.length) return ;
+              const res = await addEmail();
+              if(!res) return setToastMsg({type:'danger', message:'Error while sending the mail retry!'});
               router.push('create-learning-space/org-register');
             }}>
             Proceed
