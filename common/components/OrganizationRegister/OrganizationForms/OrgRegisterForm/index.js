@@ -4,7 +4,7 @@ import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
 import Button from 'common/components/Button';
 import Dropdown from 'common/components/DropDown';
 import LabeledInputs from 'common/components/LabeledInput';
-import LabeledTextarea from 'common/components/LabeledTextarea';
+// import LabeledTextarea from 'common/components/LabeledTextArea';
 import useHandleOrgForm from 'common/components/OrganizationRegister/utils/orgResgisterForm.helper';
 import OrgCongratulations from 'common/components/OrgCongratulations';
 import UploadAndPreview from 'common/components/UploadAndPreview';
@@ -67,18 +67,18 @@ const OrgRegisterForm = () => {
         />
       );
     },
-    textAreaInput: function (obj = {}) {
-      obj.inputOptions.value = orgTempDetails[`${obj?.inputOptions?.inputName}`];
-      return (
-        <LabeledTextarea
-          inputOptions={obj?.inputOptions}
-          styleClass={styles?.inputStyle}
-          changeHandler={(e) => {
-            changeHandler(e, orgTempDetails, setOrgTempDetails);
-          }}
-        />
-      );
-    }
+    // textAreaInput: function (obj = {}) {
+    //   obj.inputOptions.value = orgTempDetails[`${obj?.inputOptions?.inputName}`];
+    //   return (
+    //     <LabeledTextarea
+    //       inputOptions={obj?.inputOptions}
+    //       styleClass={styles?.inputStyle}
+    //       changeHandler={(e) => {
+    //         changeHandler(e, orgTempDetails, setOrgTempDetails);
+    //       }}
+    //     />
+    //   );
+    // }
   };
   return (
     <div className={`${styles?.orgRegisterContainer}`}>
