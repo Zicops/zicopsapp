@@ -30,9 +30,11 @@ const OrgEmail = () => {
           inputOptions={{
             inputName: 'orgPersonEmailId',
             placeholder: 'Enter your work email address',
-            value: orgTempDetails?.orgPersonEmailId
+            value: orgTempDetails?.orgPersonEmailId,
+            
           }}
           changeHandler={(e) => changeHandler(e, orgTempDetails, setOrgTempDetails)}
+          inputClass={styles?.inputStyle}
         />
         <div className={`${styles.btnContainer}`}>
           <Button

@@ -1,4 +1,4 @@
-import OrgRegisterForm from '@/components/OrganizationRegister/OrgRegisterForm';
+// import OrgRegisterForm from '@/components/OrganizationRegister/OrgRegisterForm';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 // import Button from '../../Button';

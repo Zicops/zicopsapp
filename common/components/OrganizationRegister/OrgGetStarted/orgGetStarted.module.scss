@@ -1,4 +1,5 @@
 @import '../../../../styles/base.scss';
+
 .page_layout {
     margin-top: 65px;
 
@@ -21,11 +22,12 @@
     .page_title {
         color: $darkThree;
         margin: 25px 0;
+        font-size: 17px;
     }
 
     .form_title {
         font-size: 16px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         color: $secondaryBlack;
     }
 
@@ -34,5 +36,84 @@
         justify-content: space-between;
         gap: 15px;
         margin-top: 25px;
+    }
+}
+
+.formContainerWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    z-index: 5;
+    gap: 60px;
+
+    .formContainer {
+        display: flex;
+        flex-direction: row;
+
+        position: relative;
+
+        // background-color: $black;
+        background-color: transparent;
+        border: 2px solid $darkThree;
+        // border-radius: 25px;
+        width: 100%;
+        height: 45px;
+        padding: 6px;
+
+        .searchBar {
+            width: 100%;
+            left: 0;
+            margin: -5px 0;
+            z-index: 1;
+
+            // to hide options after 3
+            :global(.search__option) {
+                &:nth-child(n + 4) {
+                    display: none;
+                }
+            }
+        }
+
+        // input[type='text'] {
+        //   border: none;
+        //   width: 80%;
+        //   font-family: 'Open Sans';
+        //   background-color: $black;
+        //   color: $darkThree;
+        // }
+
+        // input:focus {
+        //   outline: none;
+        // }
+
+        button {
+            border: 1px solid $primary;
+            background: $primary;
+            width: 15%;
+            font-weight: 700;
+            font-size: medium;
+            font-family: 'Open Sans';
+            margin: 0px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+
+            img {
+                object-fit: contain;
+                height: 100%;
+                padding: 5px;
+            }
+        }
+
+        span {
+            width: 35px;
+        }
     }
 }
