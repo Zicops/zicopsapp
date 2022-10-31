@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-const senderEmail = 'vajresh005@gmail.com';
+const senderEmail = 'noreply@zicops.com';
 
 export default function sendEmail(req, res) {
   const { recipient, subject, message } = req.body;
@@ -17,6 +17,7 @@ export default function sendEmail(req, res) {
     auth: {
       user: senderEmail,
       pass: process.env.GMAIL_PASSWORD
+      //rjzhqtwxevqqhukj
     }
   });
   let mailOptions = { from: senderEmail, to: recipient, subject: subject, text: message };
