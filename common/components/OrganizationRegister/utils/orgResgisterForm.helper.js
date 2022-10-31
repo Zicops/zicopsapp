@@ -88,7 +88,9 @@ export default function useHandleOrgForm() {
 
     const resEmail = await sendMail();
 
-    console.log(res, 'response', resEmail);
+    // console.log(res, 'response', resEmail);
+    if(!(resEmail?.status === 200 && res?.status === 200)) return false
+    return true ;
   }
 
   async function handleContactPersonForm() {
@@ -165,6 +167,8 @@ export default function useHandleOrgForm() {
       }),
       cache: 'default'
     });
+
+    // console.log(res,'res at eiasf');
 
     return res;
   }

@@ -1,6 +1,7 @@
 import PhoneInputBox from '@/components/common/FormComponents/PhoneInputBox';
 import { changeHandler } from '@/helper/common.helper';
 import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import Button from 'common/components/Button';
 import Dropdown from 'common/components/DropDown';
 import LabeledInputs from 'common/components/LabeledInput';
@@ -16,6 +17,7 @@ import styles from '../../organizationRegister.module.scss';
 
 const OrgRegisterForm = () => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   // const [image, setImage] = useState(null);
   const { isOrgRegisterationReady , handleOrgRegisterForm } = useHandleOrgForm();
   const [isFormSubmit , setIsFormSubmit] = useState(false);
@@ -94,8 +96,12 @@ const OrgRegisterForm = () => {
             console.log(orgTempDetails, 'org data');
 
             const res = await handleOrgRegisterForm()
+
+            if (!res) {
+              return setToastMsg({ type: 'danger', message: 'Error while filling the form!. Try Again later' });
+            }
            
-            setIsFormSubmit(true);
+            setIsFormSubmit(true,router.push('/home'));
 
           }}
           isDisabled={!isOrgRegisterationReady}>
