@@ -162,7 +162,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
             const vidDur = videoElement?.current?.duration;
             const startProgress = +topicProgress[0]?.video_progress;
 
-            if (+bookmarkStartTime?.time || !isNaN(+bookmarkStartTime?.time)) {
+            if (+bookmarkStartTime?.time && !isNaN(+bookmarkStartTime?.time)) {
               const bookmarkTime = +bookmarkStartTime?.time;
 
               videoElement.current.currentTime = bookmarkTime;
