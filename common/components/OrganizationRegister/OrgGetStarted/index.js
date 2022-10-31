@@ -6,6 +6,8 @@ import OrgFormLayout from '../OrgFormLayout';
 import styles from './orgGetStarted.module.scss';
 import CreatableSelect from 'react-select/creatable';
 import { customSelectStyles } from '@/components/common/FormComponents/Logic/formComponents.helper';
+import { useRecoilState } from 'recoil';
+import { OrganizationDetailsAtom } from '@/state/atoms/organizations.atom';
 
 const OrgGetStarted = () => {
   const [emailValue, setEmailValue] = useState();
@@ -25,6 +27,7 @@ const OrgGetStarted = () => {
   const [options, setOptions] = useState(orgDataOptions || []);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const router = useRouter();
+  const [orgTempDetails , setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
 
   const defaultStyles = customSelectStyles();
   const customStyles = {
@@ -98,7 +101,12 @@ const OrgGetStarted = () => {
                   setIsMenuVisible(e.length);
                 }}
                 onCreateOption={(newOption) => {
-                  alert('Org creation flow');
+                  // console.log(newOption,'newoptions');
+
+                  setOrgTempDetails((prev) => ({...prev , orgName:newOption}));
+                  router.push('/create-learning-space/org-register-form');
+
+                  // alert('Org creation flow');
                 }}
               />
             </div>
@@ -119,6 +127,7 @@ const OrgGetStarted = () => {
           <Button
             size="small"
             isBold="bold"
+            isDisabled={true}
             clickHandler={() => {
               router.push('/create-learning-space/org-unit-form');
             }}>

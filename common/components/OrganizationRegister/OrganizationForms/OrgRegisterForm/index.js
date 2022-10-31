@@ -88,12 +88,12 @@ const OrgRegisterForm = () => {
         return <>{INPUT_OBJECT[`${form?.type}`](form)}</>;
       })}
       <div className={`${styles?.btnContainer}`}>
-        <Button size="small" theme="dark">
+        <Button size="small" theme="dark" clickHandler={()=>{router.push('/create-learning-space/org-register')}}>
           Cancel
         </Button>
         <Button
           clickHandler={async() => {
-            console.log(orgTempDetails, 'org data');
+            // console.log(orgTempDetails, 'org data');
 
             const res = await handleOrgRegisterForm()
 
