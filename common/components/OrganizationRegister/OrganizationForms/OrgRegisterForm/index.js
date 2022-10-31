@@ -98,10 +98,11 @@ const OrgRegisterForm = () => {
             const res = await handleOrgRegisterForm()
 
             if (!res) {
+              router.push('/home')
               return setToastMsg({ type: 'danger', message: 'Error while filling the form!. Try Again later' });
             }
            
-            setIsFormSubmit(true,router.push('/home'));
+            setIsFormSubmit(true);
 
           }}
           isDisabled={!isOrgRegisterationReady}>
