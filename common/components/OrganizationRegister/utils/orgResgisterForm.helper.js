@@ -18,10 +18,10 @@ export default function useHandleOrgForm() {
         !!orgData?.orgIndustry?.length &&
         !!orgData?.orgType?.length &&
         !!orgData?.orgEmployees?.length &&
-        !!orgData?.orgUrl.length 
-        // !!orgData?.orgLinkdInUrl?.length &&
-        // !!orgData?.orgFacebookUrl?.length &&
-        // !!orgData?.orgTwitterUrl?.length
+        !!orgData?.orgUrl.length
+      // !!orgData?.orgLinkdInUrl?.length &&
+      // !!orgData?.orgFacebookUrl?.length &&
+      // !!orgData?.orgTwitterUrl?.length
     );
     setIsUnitFormReady(
       !!orgData?.orgName?.length &&
@@ -37,18 +37,18 @@ export default function useHandleOrgForm() {
         !!orgData?.orgCheckbox
     );
     setIsContactFormReady(
-      !!orgData?.orgPersonFirstname?.length &&
+      (!!orgData?.orgPersonFirstname?.length &&
         !!orgData?.orgPersonLastname?.length &&
         !!orgData?.orgPersonEmailId?.length &&
         !!orgData?.orgPersonContactNumber?.length &&
-        !!orgData?.orgPersonRole?.length ||
+        !!orgData?.orgPersonRole?.length) ||
         !!orgData?.orgPersonRoleOthers.length
-        // !!orgData?.orgPersonRemarks?.length
+      // !!orgData?.orgPersonRemarks?.length
     );
   }, [orgData]);
 
   function getBase64(file, onLoadCallback) {
-    if(!file) return ""
+    if (!file) return '';
     return new Promise(function (resolve, reject) {
       var reader = new FileReader();
       reader.onload = function () {
@@ -86,13 +86,15 @@ export default function useHandleOrgForm() {
       cache: 'default'
     });
 
-    console.log(res, 'response');
+    const resEmail = await sendMail();
+
+    console.log(res, 'response', resEmail);
   }
 
   async function handleContactPersonForm() {
     if (!isUnitFormReady && !isContactFormReady) return false;
 
-    if(!orgData?.index) return ;
+    if (!orgData?.index) return;
 
     const contactDataFormat = getOrgContactObject(orgData);
 
@@ -125,13 +127,13 @@ export default function useHandleOrgForm() {
         Accept: 'application.json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ data: sendContactData , rowStart: orgData?.index }),
+      body: JSON.stringify({ data: sendContactData, rowStart: orgData?.index }),
       cache: 'default'
     });
 
     // console.log(res, 'contact form response');
-    if(!res?.status === 200) return false ;
-    return res ;
+    if (!res?.status === 200) return false;
+    return res;
   }
 
   async function fetchUnitFormData() {
@@ -148,6 +150,25 @@ export default function useHandleOrgForm() {
     return res;
   }
 
+  async function sendMail() {
+    if (!orgData?.orgPersonEmailId?.length) return false;
+    const res = await fetch('http://localhost:3000/api/sendEmail', {
+      method: 'post',
+      headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        recipient: 'joy@zicops.com',
+        subject: 'Request to register organization',
+        message: `Request received by ${orgData?.orgPersonEmailId}`
+      }),
+      cache: 'default'
+    });
+
+    return res;
+  }
+
   function getOrgResiterObject(data = {}) {
     return {
       orgName: data?.orgName || '',
@@ -159,7 +180,7 @@ export default function useHandleOrgForm() {
       orgUrl: data?.orgUrl || '',
       orgLinkdInUrl: data?.orgLinkdInUrl || '',
       orgFacebookUrl: data?.orgFacebookUrl || '',
-      orgTwitterUrl: data?.orgTwitterUrl || '' , 
+      orgTwitterUrl: data?.orgTwitterUrl || '',
       orgPersonEmailId: data?.orgPersonEmailId
     };
   }
