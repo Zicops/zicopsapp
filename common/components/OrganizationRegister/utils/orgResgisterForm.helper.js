@@ -163,10 +163,12 @@ export default function useHandleOrgForm() {
       body: JSON.stringify({
         recipient: 'joy@zicops.com',
         subject: 'Request to register organization',
-        message: ` Hello Admin,
-        Received a request for creating new Organization from ${orgData?.orgPersonEmailId}.
-        ${orgData?.orgName}
-        ${orgData?.orgUrl}
+        message: `
+        Hello Admin,
+        Received a request for creating new Organization from :-
+        Contact Persons Email: ${orgData?.orgPersonEmailId} email.
+        Organization's Name:   ${orgData?.orgName}
+        Organization's Url:    ${orgData?.orgUrl}
         You can find the full request in this google sheet
         https://docs.google.com/spreadsheets/d/10Nn5Wn3jwp7dHjY0AekjQvzT1B25SXsc1_VNR5XW4H8/
         Regards,
