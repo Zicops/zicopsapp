@@ -127,7 +127,7 @@ export default function useHandleAddCatSubCat(isSubCat) {
       await isNameDuplicateAdvanced(GET_SUB_CATS_MAIN, {}, catSubCatData?.Name, 'allSubCatMain')
     ) {
       setIsSubmitDisabled(false);
-      return setToastMsg({ type: 'danger', message: 'Category with same name already exist' });
+      return setToastMsg({ type: 'danger', message: 'Sub-Category with same name already exist' });
     }
 
     const sendData = {

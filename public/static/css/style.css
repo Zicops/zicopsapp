@@ -5,6 +5,13 @@
     --animate-delay: 0.3s;
 }
 
+.animate{
+    opacity: 0;
+}
+.show{
+    opacity: 1;
+}
+
 body{
     margin: 0;
     padding: 0;
@@ -107,6 +114,9 @@ section{
     width: 50%;
     overflow: hidden;
 }
+.main-image{
+    width: 100%;
+}
 .left{
     padding-left: 6%;
     padding-right: 6%;
@@ -128,6 +138,9 @@ section{
     color: #6BCFCF;
     font-size: 50px;
     font-weight: 900;
+}
+.left b {
+    color: #6BCFCF;
 }
 .left .subheading {
     font-size: 18px;

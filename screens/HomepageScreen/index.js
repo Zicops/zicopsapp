@@ -4,12 +4,13 @@ import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { constSelector, useRecoilValue } from 'recoil';
 import HomePageLoader from './HomePageLoader';
 import styles from './homepageScreen.module.scss';
 
@@ -99,7 +100,14 @@ export default function HomepageScreen() {
       pageCursor: '',
       filters: filters
     });
-    return courses;
+    const _toBeSortedCourses = structuredClone(courses) || [];
+
+    _toBeSortedCourses.latestCourses.courses = sortArrByKeyInOrder(
+        [..._toBeSortedCourses?.latestCourses?.courses],
+        'updated_at',
+        false
+      )
+    return _toBeSortedCourses;
   }
 
   const pageSize = 28;
@@ -121,7 +129,7 @@ export default function HomepageScreen() {
         setSubCategory2Courses([]);
         setSubCategory3Courses([]);
         setSubCategory4Courses([]);
-
+        setIsLoading(false);
         return clearTimeout(timer);
       }, 3000);
       return;
@@ -131,10 +139,10 @@ export default function HomepageScreen() {
     async function loadAndSetHomePageRows() {
       setIsLoading(true);
       const subcatArr = userData?.preferences;
-      // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
-      const activeSubcategories = subcatArr?.filter(
-        (item) => item?.is_active && item?.sub_category
-      );
+      const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
+      // const activeSubcategories = subcatArr?.filter(
+      //   (item) => item?.is_active && item?.sub_category
+      // );
       const baseSubcategoryObj = subcatArr?.filter((item) => item?.is_base)[0];
       if (baseSubcategoryObj?.sub_category) setBaseSubcategory(baseSubcategoryObj?.sub_category);
 

@@ -17,6 +17,7 @@ import {
   InputAdornment,
   TextField
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import useHandleAddUserDetails from '../Logic/useHandleAddUser';
@@ -36,6 +37,7 @@ const ProfilePreferences = ({
 }) => {
   const [vidIsOpen, setVidIsOpen] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
+  const vidRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   // const [searchQuery, setSearchQuery] = useState('')
   const [filteredData, setFilteredData] = useState([]);
@@ -44,6 +46,7 @@ const ProfilePreferences = ({
   const [addCat, setAddCat] = useState(false);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const router = useRouter();
 
   const { catSubCat } = useHandleCatSubCat();
 
@@ -88,6 +91,7 @@ const ProfilePreferences = ({
 
   useEffect(() => {
     if (!catSubCat?.subCat?.length) return;
+    // return ;
 
     setData(
       catSubCat?.subCat?.map((s) => {

@@ -65,13 +65,15 @@ export default function CourseHero({ isPreview = false }) {
   }, [fullCourse]);
 
   useEffect(()=>{
-    console.log(userCourseData?.userCourseMapping)
+    // console.log(userCourseData?.userCourseMapping)
     if(!userCourseData?.userCourseMapping) return;
     const addedBy = parseJson(userCourseData?.userCourseMapping?.added_by);
-    console.log(addedBy?.role?.toLowerCase())
-    if(addedBy?.role?.toLowerCase() !== 'self') return setIsCourseUnassign(false);
+    // console.log(addedBy?.role?.toLowerCase())
+    // if(userCourseData?.userCourseMapping?.course_status?.toLowerCase() === 'disabled') return ;
+    if(addedBy?.role?.toLowerCase() !== 'self' || !courseAssignData?.isCourseAssigned) return setIsCourseUnassign(false);
+    if(courseAssignData?.isCourseAssigned) return setIsCourseUnassign(true); 
     return setIsCourseUnassign(true);
-  },[userCourseData])
+  },[userCourseData , courseAssignData?.isCourseAssigned])
 
   return (
     <div

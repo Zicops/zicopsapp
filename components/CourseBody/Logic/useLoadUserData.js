@@ -245,11 +245,11 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
       //in order to not load course progress of self-unassigned course
 
-      const courseStatus = parseJson(data?.userCourseMapping);
+      const course_status = parseJson(data?.userCourseMapping);
 
       let showCourseProgress = true ;
 
-      if(courseStatus?.toLowerCase() === 'disabled'){
+      if(course_status?.toLowerCase() === 'disabled'){
          showCourseProgress = false;
       }
 

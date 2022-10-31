@@ -240,6 +240,7 @@ export default function useHandleCourseHero(isPreview) {
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
+    setUserCourseData((prev) => ({...prev , userCourseMapping: res?.data?.updateUserCourse }))
     setToastMsg({ type: 'success', message: 'Course Removed Successfully!' });
     return;
   }

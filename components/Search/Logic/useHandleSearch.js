@@ -139,47 +139,49 @@ export default function useHandleSearch() {
   useEffect(() => {
     if (!courses?.length) return;
 
-    const _filteredCourses = courses?.filter((course, i) => {
-      const nameFilter = course?.name
-        ?.trim()
-        ?.toLowerCase()
-        ?.includes(searchQuery?.trim()?.toLowerCase());
-      let langFilter = true,
-        catFilter = true,
-        subCatFilter = true,
-        typeFilter = true;
+    // const _filteredCourses = courses?.filter((course, i) => {
+    //   // const nameFilter = course?.name
+    //   //   ?.trim()
+    //   //   ?.toLowerCase()
+    //   //   ?.includes(searchQuery?.trim()?.toLowerCase());
+    //   let langFilter = true,
+    //     catFilter = true,
+    //     subCatFilter = true,
+    //     typeFilter = true;
 
-      if (filters?.lang)
-        langFilter = course?.language
-          ?.map((lang) => lang?.toLowerCase()?.trim())
-          ?.includes(filters?.lang?.trim()?.toLowerCase());
-      if (filters?.category)
-        catFilter = course?.category
-          ?.trim()
-          ?.toLowerCase()
-          ?.includes(filters?.category?.trim()?.toLowerCase());
-      if (filters?.subCategory)
-        subCatFilter =
-          course?.sub_categories?.findIndex((subCat) =>
-            subCat?.name
-              ?.trim()
-              ?.toLowerCase()
-              ?.includes(filters?.subCategory?.trim()?.toLowerCase())
-          ) > 0 ||
-          course?.sub_category
-            ?.trim()
-            ?.toLowerCase()
-            ?.includes(filters?.subCategory?.trim()?.toLowerCase());
-      if (filters?.type)
-        typeFilter = course?.type
-          ?.trim()
-          ?.toLowerCase()
-          ?.includes(filters?.type?.trim()?.toLowerCase());
+    //   if (filters?.lang)
+    //     langFilter = course?.language
+    //       ?.map((lang) => lang?.toLowerCase()?.trim())
+    //       ?.includes(filters?.lang?.trim()?.toLowerCase());
+    //   if (filters?.category)
+    //     catFilter = course?.category
+    //       ?.trim()
+    //       ?.toLowerCase()
+    //       ?.includes(filters?.category?.trim()?.toLowerCase());
+    //   if (filters?.subCategory)
+    //     subCatFilter =
+    //       course?.sub_categories?.findIndex((subCat) =>
+    //         subCat?.name
+    //           ?.trim()
+    //           ?.toLowerCase()
+    //           ?.includes(filters?.subCategory?.trim()?.toLowerCase())
+    //       ) > 0 ||
+    //       course?.sub_category
+    //         ?.trim()
+    //         ?.toLowerCase()
+    //         ?.includes(filters?.subCategory?.trim()?.toLowerCase());
+    //   if (filters?.type)
+    //     typeFilter = course?.type
+    //       ?.trim()
+    //       ?.toLowerCase()
+    //       ?.includes(filters?.type?.trim()?.toLowerCase());
 
-      return nameFilter && langFilter && catFilter && subCatFilter && typeFilter;
-    });
+    //   // return nameFilter && langFilter && catFilter && subCatFilter && typeFilter;
+    //   return langFilter && catFilter && subCatFilter && typeFilter;
+    // });
 
-    setFilteredCourses(_filteredCourses);
+    // setFilteredCourses(_filteredCourses);
+    setFilteredCourses(courses);
     setIsLoading(false);
   }, [courses, filters, searchQuery]);
 

@@ -279,7 +279,8 @@ export const ADMIN_COURSES = {
       previewBtn: '',
       cancelBtn: '',
       updateBtn: ''
-    }
+    },
+    subtitles: 'Add Unique subtitle files (.vtt)'
   },
   categories: {
     addBtn: ''
