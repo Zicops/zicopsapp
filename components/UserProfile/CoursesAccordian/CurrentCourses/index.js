@@ -24,16 +24,16 @@ const CurrentCourses = ({ courseData, handleSubmit = () => {}, isLoading = false
   useEffect(()=>{
     if(!courseData?.length) return ;
     // console.log(courseData);
-    const role = courseData?.addedby?.role.toLowerCase() ;
+    // const role = courseData?.addedby?.role.toLowerCase() ;
     setOnGoingCourses([...courseData.filter((courses) => courses.completedPercentage)],setLoading(false))
     setAssignedCourses([...courseData?.filter(
-      (course) => role === ASSIGNED_COURSES[1]
+      (course) => course?.added_by?.toLowerCase() === ASSIGNED_COURSES[1]
     )],setLoading(false))
     setAddedCourses([...courseData?.filter(
-      (course) => !ASSIGNED_COURSES?.includes(role))],setLoading(false))
+      (course) => !ASSIGNED_COURSES?.includes(course?.added_by?.toLowerCase()))],setLoading(false))
     
     setCohortCourses([...courseData?.filter(
-      (course) => role === ASSIGNED_COURSES[0] || role === ASSIGNED_COURSES[2]
+      (course) => course?.added_by?.toLowerCase() === ASSIGNED_COURSES[0] || course?.added_by?.toLowerCase() === ASSIGNED_COURSES[2]
     )],setLoading(false))
 
   },[courseData])

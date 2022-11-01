@@ -337,15 +337,17 @@ const CoursesAccordian = ({ currentUserData = null }) => {
         continue;
       }
 
-      console.log(assignedCoursesToUser[i],'assinged courses to user')
+      // console.log(assignedCoursesToUser[i],'assinged courses to user')
+      let added_by =
+        parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 
       allAssignedCourses.push({
         ...courseRes?.getCourse,
+        ...assignedCoursesToUser[i],
         completedPercentage: userProgressArr?.length ? courseProgress : 0,
-        addedby: parseJson(courseMap?.added_by),
+        added_by: added_by,
         addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
-        ...assignedCoursesToUser[i],
         created_at:assignedCoursesToUser[i]?.created_at
       });
     }
