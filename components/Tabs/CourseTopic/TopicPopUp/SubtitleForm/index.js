@@ -24,7 +24,9 @@ export default function SubtitleForm({ courseId, topicId }) {
 
   const subtitles = useRecoilValue(TopicSubtitleAtom);
 
-  const languageOptions = LANGUAGES?.map((lang) => ({ label: lang, value: lang }));
+  const languageOptions = LANGUAGES?.filter(
+    (lang) => !subtitles.find((sub) => sub.language === lang)
+  )?.map((lang) => ({ label: lang, value: lang }));
 
   return (
     <>
