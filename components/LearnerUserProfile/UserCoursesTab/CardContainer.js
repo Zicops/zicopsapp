@@ -96,10 +96,8 @@ export default function CardContainer({
                   cardWidth={cardSizeData.cardWidth}>
                   {footerType === 'added' && (
                     <div className={`${styles.leftAlign}`}>
-                      <p>Duration: {course?.duration || 240} mins</p>
-                      <p>Added on {(isUnix
-            ? moment(getDateTimeFromUnix(courseData?.created_at)).format('DD-MM-YYYY')
-            : courseData?.created_at) || '22-06-2022'}</p>
+                     <p>Duration: {(course?.duration / (60*60))?.toFixed(2) || 240} mins</p>
+                      <p>Added on {course?.addedOn || '22-06-2022'}</p>
                     </div>
                   )}
                   {footerType === 'adminFooter' && (
