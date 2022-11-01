@@ -1,3 +1,6 @@
+import { GET_COURSE_TOPICS, GET_TOPIC_EXAMS, queryClient } from '@/api/Queries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { bigImages, sliderImages } from '../API/DemoSliderData';
@@ -9,7 +12,7 @@ import BigCardSlider from '../components/medium/BigCardSlider';
 import ZicopsCarousel from '../components/ZicopsCarousel';
 
 export default function LearnerExams() {
-  const router = useRouter();
+  const router = useRouter(); 
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -50,10 +53,64 @@ export default function LearnerExams() {
   const buttonObj = {
     style: { margin: '0px 10px', padding: '2px 10px', border: '1px solid var(--primary)' }
   };
+  const { getUserCourseData } = useUserCourseData();
 
   useEffect(() => {
     console.log(screen.width);
+    loadExamData()
   }, []);
+
+  async function getTopics(courseId = null){
+    //return an empty array in case of error
+    
+    if(!courseId) return [];
+    const topicRes = await loadQueryDataAsync(GET_COURSE_TOPICS,{ course_id: courseId } , {} , queryClient);
+    if(topicRes?.error) return [];
+    if(!topicRes?.getTopics?.length) return [];
+    return [...topicRes?.getTopics];
+  }
+
+  async function getTopicExams(topicId = null){
+    if(!topicId) return [];
+    const examRes = await loadQueryDataAsync(GET_TOPIC_EXAMS,{ topic_id: topicId},{}, queryClient);
+    if(examRes?.error) return [];
+    if(!examRes?.getTopicExams?.length)  return [];
+    return [...examRes?.getTopicExams] ;
+  }
+
+  async function loadExamData(){
+    const courseData = await getUserCourseData(30);
+    if(!courseData?.length) return ;
+    //filtering course data if id doesnt exist
+    const _courseData = courseData?.filter((course) => !!course?.id) ;
+    // let courseId = [] 
+    // const courseIds = _courseData?.map((course) => course?.id);
+
+    let assessmentTopics = [];
+    // need later for courses down exam
+    let assessmentCourses = [];
+    for(let i = 0 ; i < _courseData?.length ; i++){
+      const courseTopics = await getTopics(_courseData[i]?.id);
+      if(!courseTopics?.length) continue ;
+      const filteredTopics =  courseTopics?.filter((topic) => topic?.type?.toLowerCase() === 'assessment') ;
+      if(!filteredTopics?.length) continue ;
+      assessmentTopics = assessmentTopics.concat(filteredTopics);
+      assessmentCourses = assessmentCourses.concat(_courseData[i]);
+    }
+
+    // console.log(assessmentTopics,'assasas',assessmentCourses)
+    if(!assessmentTopics?.length) return ;
+
+    // load topic exams 
+    let exams = [];
+    for(let i = 0 ; i < assessmentTopics?.length ; i++){
+      const topicExams = await getTopicExams(assessmentTopics[i]?.id);
+      if(!topicExams?.length) continue;
+      exams = exams.concat(topicExams);
+    }
+    console.log(exams,'exams');
+    
+  }
 
   const [showTable, setShowTable] = useState(false);
 
