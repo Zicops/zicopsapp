@@ -31,7 +31,7 @@
 .assignCourseBtn {
   display: flex;
   justify-content: flex-end;
-
+  gap: 10px;
   div {
     position: relative;
     border: 1px solid $primary;

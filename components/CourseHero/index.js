@@ -53,7 +53,8 @@ export default function CourseHero({ isPreview = false }) {
     category,
     sub_category: subCategory,
     duration,
-    owner: provisionedBy
+    owner: provisionedBy,
+    publisher: publishedBy
   } = fullCourse;
 
   useEffect(()=>{
@@ -89,9 +90,11 @@ export default function CourseHero({ isPreview = false }) {
         </span>
 
         <div className={`${style.course_header_text}`}>
+
           <CourseHeader
             courseTitle={courseTitle}
             provisionedBy={provisionedBy}
+            publishedBy={publishedBy}
             category={category}
             subCategory={subCategory}
             duration={duration?.toString()}
@@ -99,7 +102,7 @@ export default function CourseHero({ isPreview = false }) {
             isPreview={isPreview}
             isCourseAssigned={courseAssignData?.isCourseAssigned}
             isCourseUnassign={isCourseUnassign}
-            handleUnAssign={()=> setIsUnAssignPopUpOpen(true)}
+            handleUnAssign={() => setIsUnAssignPopUpOpen(true)}
             handleAssign={() => setIsAssignPopUpOpen(true)}
           />
 
@@ -271,7 +274,11 @@ export default function CourseHero({ isPreview = false }) {
           btnObj={{
             // leftIsDisable: loading,
             // rightIsDisable:loading,
-            handleClickLeft: async() => {await unassignCourseFromUser() ;setIsUnAssignPopUpOpen(false); setIsCourseUnassign(false)},
+            handleClickLeft: async () => {
+              await unassignCourseFromUser();
+              setIsUnAssignPopUpOpen(false);
+              setIsCourseUnassign(false);
+            },
             handleClickRight: () => setIsUnAssignPopUpOpen(false)
           }}
         />
