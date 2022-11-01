@@ -512,6 +512,7 @@ export default function ExamResult() {
             +learnerExamData?.examData?.noAttempts > 0 ? learnerExamData?.examData?.noAttempts : ''
           }
           attemptData={{
+            attemptId: userExamData?.currentAttemptId,
             attempt: currentAttemptData?.attempt_no || 1,
             examScore: learnerExamData?.resultData?.examScore,
             totalMarks: learnerExamData?.examData?.totalMarks

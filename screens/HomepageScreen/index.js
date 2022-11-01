@@ -4,12 +4,13 @@ import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { constSelector, useRecoilValue } from 'recoil';
 import HomePageLoader from './HomePageLoader';
 import styles from './homepageScreen.module.scss';
 
@@ -99,7 +100,14 @@ export default function HomepageScreen() {
       pageCursor: '',
       filters: filters
     });
-    return courses;
+    const _toBeSortedCourses = structuredClone(courses) || [];
+
+    _toBeSortedCourses.latestCourses.courses = sortArrByKeyInOrder(
+        [..._toBeSortedCourses?.latestCourses?.courses],
+        'updated_at',
+        false
+      )
+    return _toBeSortedCourses;
   }
 
   const pageSize = 28;

@@ -169,3 +169,8 @@ export function getSelectedUserData(data = {}){
 
   }
 }
+
+export const DisabledUserAtom = atom({
+  key:'disabled',
+  default:[]
+})
