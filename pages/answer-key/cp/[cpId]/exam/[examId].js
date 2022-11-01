@@ -45,6 +45,7 @@ export default function AnswerKeyPage() {
   const router = useRouter();
   const cpId = router?.query?.cpId;
   const examId = router?.query?.examId;
+  const attemptId = router?.query?.attemptId;
 
   useEffect(async () => {
     setLoading(true);
@@ -185,9 +186,10 @@ export default function AnswerKeyPage() {
         })
         ?.sort((a1, a2) => a1?.attempt_no - a2?.attempt_no) || [];
 
+    const activeAttemptId = attemptId || attemptData?.currentAttemptId;
     let currentExamAttemptData =
       examAttemptData?.find((ea) => {
-        return ea?.user_ea_id === attemptData?.currentAttemptId;
+        return ea?.user_ea_id === activeAttemptId;
       }) || null;
 
     if (!currentExamAttemptData) currentExamAttemptData = examAttemptData[0];
@@ -452,7 +454,7 @@ export default function AnswerKeyPage() {
     });
 
     setLoading(false);
-  }, [examId, cpId, userData?.id, attemptData?.currentAttemptId]);
+  }, [examId, cpId, userData?.id, attemptData?.currentAttemptId, attemptId]);
 
   // loader screen till loading
   if (loading) return <Loader />;
