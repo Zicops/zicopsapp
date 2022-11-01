@@ -80,7 +80,7 @@ const ProfilePreferences = ({
   }
 
   const [categories, setCategories] = useState([]);
-  const [data, setData] = useState('default');
+  const [data, setData] = useState('loading');
 
   useEffect(() => {
     if (catSubCat.isDataLoaded === null) return;
@@ -178,7 +178,7 @@ const ProfilePreferences = ({
   return (
     <>
       <div ref={myRef} className={`${styles.container} ${customClass}`}>
-        {data === 'default' ? (<></>):  data?.length > 5 && data !== 'default' ? (
+        {data?.length > 5 && data !== 'loading' ? (
           <Grow in={isVisible || isFiltered || searched}>
             <div className={`${styles.filter_main_container} ${customStyle[0]}`}>
               <div className={`${styles.title}`}>Sub-Category Selection</div>
@@ -270,11 +270,11 @@ const ProfilePreferences = ({
             </div>
           </Grow>
         ): <></>}
-        {data === 'default' ? (
+        {data === 'loading' ? (
           <>
             <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />
           </>
-        ) : data?.length > 5 && data !== 'default' ? (
+        ) : data?.length > 5 && data !== 'loading' ? (
           <div
             ref={scrollRef}
             className={`${styles.category_and_subCategory} ${customStyle[1]}`}
