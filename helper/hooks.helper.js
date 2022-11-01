@@ -36,7 +36,8 @@ export function useHandleCatSubCat(selectedCategory) {
     subCat: [],
     allSubCat: [],
     subCatGrp: {},
-    isFiltered: null
+    isFiltered: null,
+    isDataLoaded: null
   });
   // this will have the whole cat object not just id
   const [activeCatId, setActiveCatId] = useState(null);
@@ -71,7 +72,8 @@ export function useHandleCatSubCat(selectedCategory) {
       subCat: _subCat,
       allSubCat: allSubCat,
       subCatGrp: _subCatGrp,
-      isFiltered: allSubCat?.length !== _subCat?.length
+      isFiltered: allSubCat?.length !== _subCat?.length,
+      isDataLoaded: true
     });
     setRefetch(null);
   }, [refetch]);
