@@ -62,7 +62,9 @@ export default function AssessmentForm({ data }) {
           value: examOptions?.filter((option) => option?.value === assessmentData?.examId)[0],
           isSearchEnable: true
         }}
-        changeHandler={(e) => setAssessmentData({ ...assessmentData, examId: e.value })}
+        changeHandler={(e) =>
+          setAssessmentData({ ...assessmentData, examId: e.value, category: '', sub_category: '' })
+        }
       />
     </>
   );

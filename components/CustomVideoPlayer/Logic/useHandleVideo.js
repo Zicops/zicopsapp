@@ -94,6 +94,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   }, [videoData, playerState]);
 
   useEffect(() => {
+    if (!bookmarkStartTime?.isClickedWhenPlayerOn) return;
     if (!+bookmarkStartTime?.time || isNaN(+bookmarkStartTime?.time)) return;
     if (!videoElement.current) return;
 
@@ -101,6 +102,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     videoElement.current.currentTime = bookmarkTime;
     setPlayerState({ ...playerState, progress: bookmarkTime });
+    setBookmarkStartTime({
+      ...bookmarkStartTime,
+      topicId: null,
+      time: null,
+      isClickedWhenPlayerOn: null
+    });
     videoContainer.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
@@ -155,12 +162,17 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
             const vidDur = videoElement?.current?.duration;
             const startProgress = +topicProgress[0]?.video_progress;
 
-            if (+bookmarkStartTime?.time || !isNaN(+bookmarkStartTime?.time)) {
+            if (+bookmarkStartTime?.time && !isNaN(+bookmarkStartTime?.time)) {
               const bookmarkTime = +bookmarkStartTime?.time;
 
               videoElement.current.currentTime = bookmarkTime;
               setPlayerState({ ...playerState, progress: bookmarkTime });
-              setBookmarkStartTime({ ...bookmarkStartTime, topicId: null, time: null });
+              setBookmarkStartTime({
+                ...bookmarkStartTime,
+                topicId: null,
+                time: null,
+                isClickedWhenPlayerOn: null
+              });
             } else if (startProgress < 98) {
               videoElement.current.currentTime = (vidDur * startProgress) / 100;
               setPlayerState({ ...playerState, progress: startProgress });
