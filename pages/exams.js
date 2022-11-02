@@ -1,8 +1,18 @@
-import { GET_COURSE_TOPICS, GET_EXAM_META, GET_TOPIC_EXAMS, queryClient } from '@/api/Queries';
+import {
+  GET_COURSE_TOPICS,
+  GET_EXAM_META,
+  GET_EXAM_SCHEDULE,
+  GET_TOPIC_EXAMS,
+  queryClient
+} from '@/api/Queries';
+import { GET_USER_EXAM_ATTEMPTS, userQueryClient } from '@/api/UserQueries';
+import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import useUserCourseData from '@/helper/hooks.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { bigImages, sliderImages } from '../API/DemoSliderData';
 import CommonCalendar from '../components/common/CommonCalendar';
 import SimpleTable from '../components/common/SimpleTable';
@@ -12,11 +22,10 @@ import BigCardSlider from '../components/medium/BigCardSlider';
 import ZicopsCarousel from '../components/ZicopsCarousel';
 
 export default function LearnerExams() {
-  const router = useRouter(); 
-  const [takeAnyTimeExams , setTakeAnyTimeExams] = useState([]);
-  const [scheduleExams , setScheduleExams] = useState([]);
-
-
+  const router = useRouter();
+  const [takeAnyTimeExams, setTakeAnyTimeExams] = useState([]);
+  const [scheduleExams, setScheduleExams] = useState([]);
+  const userGlobalData = useRecoilValue(UserDataAtom);
 
   const realSquare = {
     desktop: {
@@ -61,74 +70,160 @@ export default function LearnerExams() {
   const { getUserCourseData } = useUserCourseData();
 
   useEffect(() => {
-    console.log(screen.width);
-    loadExamData()
+    // console.log(screen.width);
+    loadUserAttemptsAndResults();
+    loadExamData();
   }, []);
 
-  async function getTopics(courseId = null){
+  async function loadUserAttemptsAndResults() {
+    if (!userGlobalData?.userDetails?.user_lsp_id?.length) return;
+    const { user_lsp_id, id } = userGlobalData?.userDetails;
+    const resAttempts = await loadQueryDataAsync(
+      GET_USER_EXAM_ATTEMPTS,
+      { user_id: id, user_lsp_id: user_lsp_id },
+      {},
+      userQueryClient
+    );
+    if (resAttempts?.error)
+      return setToastMsg({ type: 'danger', message: 'Error while loading user attempts' });
+    console.log(resAttempts?.getUserExamAttempts, 'eras');
+    // if no attempts are there there wont be any results as well
+    if(resAttempts?.getUserExamAttempts?.length)return [];
+
+    const examAttemptIds = resAttempts?.getUserExamAttempts?.map((attempt) => attempt?.user_ea_id);
+
+    // for(let i = 0 ; i < examAttemptIds?.length ; i++){
+    //   const results = 
+    // }
+
+  }
+
+  async function getTopics(courseId = null) {
     //return an empty array in case of error
-    
-    if(!courseId) return [];
-    const topicRes = await loadQueryDataAsync(GET_COURSE_TOPICS,{ course_id: courseId } , {} , queryClient);
-    if(topicRes?.error) return [];
-    if(!topicRes?.getTopics?.length) return [];
+
+    if (!courseId) return [];
+    const topicRes = await loadQueryDataAsync(
+      GET_COURSE_TOPICS,
+      { course_id: courseId },
+      {},
+      queryClient
+    );
+    if (topicRes?.error) return [];
+    if (!topicRes?.getTopics?.length) return [];
     return [...topicRes?.getTopics];
   }
 
-  async function getTopicExams(topicId = null){
-    if(!topicId) return [];
-    const examRes = await loadQueryDataAsync(GET_TOPIC_EXAMS,{ topic_id: topicId},{}, queryClient);
-    if(examRes?.error) return [];
-    if(!examRes?.getTopicExams?.length)  return [];
-    return [...examRes?.getTopicExams] ;
+  async function getTopicExams(topicId = null) {
+    if (!topicId) return [];
+    const examRes = await loadQueryDataAsync(
+      GET_TOPIC_EXAMS,
+      { topic_id: topicId },
+      {},
+      queryClient
+    );
+    if (examRes?.error) return [];
+    if (!examRes?.getTopicExams?.length) return [];
+    return [...examRes?.getTopicExams];
   }
 
-  async function getExamsMeta(examIds = []){
-    if(!examIds?.length) return ;
-    const examMetaRes = await loadQueryDataAsync(GET_EXAM_META,{exam_ids:examIds},{},queryClient);
-    if(examMetaRes?.error) return [];
-    if(!examMetaRes?.getExamsMeta?.length) return [] ;
-    return [...examMetaRes?.getExamsMeta]
+  async function getExamsMeta(examIds = []) {
+    if (!examIds?.length) return;
+    const examMetaRes = await loadQueryDataAsync(
+      GET_EXAM_META,
+      { exam_ids: examIds },
+      {},
+      queryClient
+    );
+    if (examMetaRes?.error) return [];
+    if (!examMetaRes?.getExamsMeta?.length) return [];
+    return [...examMetaRes?.getExamsMeta];
   }
 
-  async function loadExamData(){
-    // userCourseMap -> topics => examsmetas => userExamAttempts => 
+  async function getExamSchedule(examId = null) {
+    if (!examId) return [];
+    const examSchedule = await loadQueryDataAsync(
+      GET_EXAM_SCHEDULE,
+      { exam_id: examId },
+      {},
+      queryClient
+    );
+    if (examSchedule?.error) return [];
+    if (!examSchedule?.getExamSchedule?.length) return [];
+    return [...examSchedule?.getExamSchedule];
+  }
+
+  async function loadExamData() {
+    // userCourseMap -> topics => examsmetas => userExamAttempts =>
     // for schedule exams => exam schedule
     // for anytime exam -> userExamReuslts
+    
+    const topicCourseMap = [];
     const courseData = await getUserCourseData(30);
-    if(!courseData?.length) return ;
+    if (!courseData?.length) return;
     //filtering course data if id doesnt exist
-    const _courseData = courseData?.filter((course) => !!course?.id) ;
-    // let courseId = [] 
+    const _courseData = courseData?.filter((course) => !!course?.id);
+    // let courseId = []
     // const courseIds = _courseData?.map((course) => course?.id);
 
     let assessmentTopics = [];
     // need later for courses down exam
     let assessmentCourses = [];
-    for(let i = 0 ; i < _courseData?.length ; i++){
+    for (let i = 0; i < _courseData?.length; i++) {
       const courseTopics = await getTopics(_courseData[i]?.id);
-      if(!courseTopics?.length) continue ;
-      const filteredTopics =  courseTopics?.filter((topic) => topic?.type?.toLowerCase() === 'assessment') ;
-      if(!filteredTopics?.length) continue ;
+      if (!courseTopics?.length) continue;
+      const filteredTopics = courseTopics?.filter(
+        (topic) => topic?.type?.toLowerCase() === 'assessment'
+      );
+      if (!filteredTopics?.length) continue;
       assessmentTopics = assessmentTopics.concat(filteredTopics);
       assessmentCourses = assessmentCourses.concat(_courseData[i]);
+      // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
+      for(let j = 0 ; j < filteredTopics?.length ; j++){
+        topicCourseMap.push({[`${filteredTopics[j]?.id}`]: {courseName:_courseData[i]?.name , topicId: filteredTopics[j]?.id}})
+      }
     }
 
-    // console.log(assessmentTopics,'assasas',assessmentCourses)
-    if(!assessmentTopics?.length) return ;
+    // console.log(assessmentTopics,'assasas',topicDataData)
+    if (!assessmentTopics?.length) return;
 
-    // load topic exams 
+    const examCourseMap = [];
+    // load topic exams
     let exams = [];
-    for(let i = 0 ; i < assessmentTopics?.length ; i++){
+    for (let i = 0; i < assessmentTopics?.length; i++) {
       const topicExams = await getTopicExams(assessmentTopics[i]?.id);
-      if(!topicExams?.length) continue;
+      if (!topicExams?.length) continue;
+      examCourseMap.push({[`${topicExams[0]?.examId}`]:{courseName:topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName , examId : topicExams[0]?.examId }})
       exams = exams.concat(topicExams);
     }
-    // console.log(exams,'exams');
-    if(!exams?.length) return ;
-    const examsIds = exams?.map((exam) => exam?.examId)
-    const examMetas = await getExamsMeta(examsIds) ;
-    console.log(examMetas,'metas')
+    console.log(exams,'exams',examCourseMap);
+
+    //loop to take exam related data in one piece
+
+    if (!exams?.length) return;
+    // for(let i = 0 ; i < exams?.length ; i++){
+    //     for(let j = 0 ; j < resultData?.length ; j++){
+          
+    //     }
+    // }
+    const examsIds = exams?.map((exam) => exam?.examId);
+    const examMetas = await getExamsMeta(examsIds);
+
+    let scheduleExams = [];
+    const takeAnyTime = examMetas?.filter((exam) => {
+      if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
+        scheduleExams.push(exam);
+      }
+      return exam?.ScheduleType?.toLowerCase() !== SCHEDULE_TYPE[0];
+    });
+
+    if (scheduleExams.length) {
+      for (let i = 0; i < scheduleExams?.length; i++) {
+        const schedule = await getExamSchedule(scheduleExams[i]?.id);
+        if (!schedule?.length) continue;
+        scheduleExams[i] = { ...scheduleExams[i], ...schedule[0] };
+      }
+    }
+    // console.log(takeAnyTime , scheduleExams);
   }
 
   const [showTable, setShowTable] = useState(false);
