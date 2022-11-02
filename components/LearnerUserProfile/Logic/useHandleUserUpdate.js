@@ -128,7 +128,7 @@ export default function useHandleUserUpdate() {
     const { id } = getUserData();
     const preferenceData =  userDataGlobal?.preferences;
 
-    if(!preferenceData?.length) return setToastMsg({type:'danger' , message:'error while updating preferences'})
+    // if(!preferenceData?.length) return setToastMsg({type:'danger' , message:'error while updating preferences'})
 
     const userPreferences = preferenceData?.map((item) => {
       return { ...item, name: item?.sub_category, category: item?.catData?.Name, isSelected: false };
@@ -150,7 +150,7 @@ export default function useHandleUserUpdate() {
     // console.log(selectedSubcartegory);
     //delete preferences that are deselected
     let sub_categoriesArr;
-    if (userPreferences.length) {
+    if (userPreferences?.length) {
       const newArr = sub_categories.map((item) => item?.name);
       // console.log(newArr);
       sub_categoriesArr = userPreferences.filter((item) => {
@@ -158,7 +158,7 @@ export default function useHandleUserUpdate() {
       });
       // console.log(userPreferences, sub_categoriesArr);
     }
-    if (sub_categoriesArr.length) {
+    if (sub_categoriesArr?.length) {
       for (let i = 0; i < sub_categoriesArr.length; i++) {
         let sendData = {
           user_preference_id: sub_categoriesArr[i]?.user_preference_id,
