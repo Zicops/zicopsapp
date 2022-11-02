@@ -1,4 +1,4 @@
-import { GET_COURSE_TOPICS, GET_TOPIC_EXAMS, queryClient } from '@/api/Queries';
+import { GET_COURSE_TOPICS, GET_EXAM_META, GET_TOPIC_EXAMS, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { useRouter } from 'next/router';
@@ -13,6 +13,11 @@ import ZicopsCarousel from '../components/ZicopsCarousel';
 
 export default function LearnerExams() {
   const router = useRouter(); 
+  const [takeAnyTimeExams , setTakeAnyTimeExams] = useState([]);
+  const [scheduleExams , setScheduleExams] = useState([]);
+
+
+
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -78,7 +83,18 @@ export default function LearnerExams() {
     return [...examRes?.getTopicExams] ;
   }
 
+  async function getExamsMeta(examIds = []){
+    if(!examIds?.length) return ;
+    const examMetaRes = await loadQueryDataAsync(GET_EXAM_META,{exam_ids:examIds},{},queryClient);
+    if(examMetaRes?.error) return [];
+    if(!examMetaRes?.getExamsMeta?.length) return [] ;
+    return [...examMetaRes?.getExamsMeta]
+  }
+
   async function loadExamData(){
+    // userCourseMap -> topics => examsmetas => userExamAttempts => 
+    // for schedule exams => exam schedule
+    // for anytime exam -> userExamReuslts
     const courseData = await getUserCourseData(30);
     if(!courseData?.length) return ;
     //filtering course data if id doesnt exist
@@ -108,8 +124,11 @@ export default function LearnerExams() {
       if(!topicExams?.length) continue;
       exams = exams.concat(topicExams);
     }
-    console.log(exams,'exams');
-    
+    // console.log(exams,'exams');
+    if(!exams?.length) return ;
+    const examsIds = exams?.map((exam) => exam?.examId)
+    const examMetas = await getExamsMeta(examsIds) ;
+    console.log(examMetas,'metas')
   }
 
   const [showTable, setShowTable] = useState(false);
