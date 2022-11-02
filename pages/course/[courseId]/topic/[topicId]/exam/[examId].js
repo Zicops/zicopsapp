@@ -1010,7 +1010,7 @@ const ExamScreen = () => {
   async function syncDataWithBackend(isPaperActive = false) {
     if (!shouldSync) return;
     if (!isLearner) return;
-    if (!isExamEnded) return console.log('exam ended so not syncing');
+    if (isExamEnded) return console.log('exam ended so not syncing');
 
     const _examData = structuredClone(userExamData);
     console.log(_examData);

@@ -92,12 +92,14 @@ export default function CardContainer({
               return (
                 <CourseBoxCard
                   isAdmin={isAdmin}
-                  courseData={{...course, duration: (course?.duration / (60*60))?.toFixed(2)}}
+                  courseData={{...course, duration: (course?.duration / (60))?.toFixed(2)}}
                   footerType={footerType}
                   cardWidth={cardSizeData.cardWidth}>
                   {footerType === 'added' && (
                     <div className={`${styles.leftAlign}`}>
-                      <p>Duration: {(course?.duration / (60*60))?.toFixed(2) || 240} mins</p>
+
+                     <p>Duration: {(course?.duration / (60))?.toFixed(2) || 240} mins</p>
+
                       <p>Added on {course?.addedOn || '22-06-2022'}</p>
                     </div>
                   )}

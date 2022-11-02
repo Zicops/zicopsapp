@@ -246,13 +246,13 @@ export default function useUserCourseData() {
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
       allAssignedCourses.push({
         ...courseRes?.getCourse,
-        completedPercentage: progressPercent,
-        created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
+        ...assignedCoursesToUser[i],
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
+        completedPercentage: progressPercent,
+        created_at: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
         timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
-        ...assignedCoursesToUser[i],
         added_by: added_by,
       });
     } // end of for loop
