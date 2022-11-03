@@ -87,7 +87,7 @@ export default function LearnerExams() {
 
   useEffect(() => {
     // console.log(examResults,'examreso')
-    if (!examResults?.length) return;
+    if (!examResults?.length) return ;
     if (!examCourseMapping?.length) return;
     //loop to finally add results and course name
     const examFinalResult = [];
@@ -133,7 +133,7 @@ export default function LearnerExams() {
       return setToastMsg({ type: 'danger', message: 'Error while loading user attempts' });
 
     // if no attempts are there there wont be any results as well
-    if (!resAttempts?.getUserExamAttempts?.length) return [];
+    if (!resAttempts?.getUserExamAttempts?.length) return setLoading(false);
 
     const examAttemptIds = resAttempts?.getUserExamAttempts?.map((attempt) => attempt?.user_ea_id);
 
@@ -238,7 +238,7 @@ export default function LearnerExams() {
 
     const topicCourseMap = [];
     const courseData = await getUserCourseData(30);
-    if (!courseData?.length) return;
+    if (!courseData?.length) return setLoading(false);
     //filtering course data if id doesnt exist
     const _courseData = courseData?.filter((course) => !!course?.id);
     // let courseId = []
