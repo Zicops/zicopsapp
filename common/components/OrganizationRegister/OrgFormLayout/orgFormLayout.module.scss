@@ -13,6 +13,17 @@
     overflow-y: scroll;
 
     .header {
+
+        height: 30px;
+    align-items: baseline;
+    justify-content: flex-start;
+    display: flex;
+
+
+        img{
+            object-fit: contain;
+            height: 100%;
+        }
         button {
             background: none;
             border: none;
