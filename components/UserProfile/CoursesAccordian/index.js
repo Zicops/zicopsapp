@@ -338,6 +338,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       }
 
       // console.log(assignedCoursesToUser[i],'assinged courses to user')
+
       let added_by =
         parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 

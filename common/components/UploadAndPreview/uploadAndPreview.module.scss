@@ -1,0 +1,99 @@
+@import '../../../styles/base.scss';
+
+//Upload and preview
+.uploadAndPreviewContainer {
+    display: flex;
+    // align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 10px;
+    
+  
+    label {
+      color: $white;
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .btnLower{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+  
+    .inputContainer {
+      display: inherit;
+      align-items: center;
+      gap: 5px;
+      flex-direction: column;
+      
+      
+  
+    //   button:nth-last-child(2) {
+    //     color: $primary;
+    //   }
+  
+      .btn {
+        padding: 10px 16px;
+        cursor: pointer;
+        border: none;
+        // background-color: $primary;
+        // color: $black;
+        color: $darkThree !important;
+        border-radius: 3px;
+        font-size: 0.875rem;
+
+        border: 2px solid $darkThree;
+        background-color: $darkTwo;
+
+        padding: 5px 10px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 40px;
+
+
+        // :hover {
+        //   background-color: rgb(74, 144, 144);
+        // }
+      }
+
+  
+      .description {
+        color: $bgBody;
+        font-size: 12px;
+      }
+  
+      .btn2 {
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        color: $white;
+        font-size: 0.85rem;
+        // text-decoration: underline;
+      }
+  
+      button[disabled] {
+        color: $darkThree;
+      }
+    }
+  }
+  
+  .searchInputContainer {
+    position: relative;
+    width: 100%;
+  
+    img {
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      transform: translateY(-50%);
+    }
+  
+    input {
+      padding-left: 30px;
+    }
+  }
+  

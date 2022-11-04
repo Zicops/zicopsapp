@@ -1,0 +1,39 @@
+@import '../../../../styles/base.scss';
+
+.tab {
+    color: $primary;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 16px;
+    font-weight: 600;
+    background: transparent;
+
+    .tabHeader {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 15px;
+        cursor: pointer;
+
+        span {
+            flex: 1;
+        }
+    }
+
+    .tab_title {
+        border-bottom: 4px solid $primary;
+    }
+
+    .tab_title_inactive {
+        color: $secondaryBlack;
+        border-bottom: 4px solid $secondaryBlack;
+    }
+
+}
+
+// .tabData {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+// }

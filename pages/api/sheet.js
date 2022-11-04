@@ -9,7 +9,7 @@ export default async function googleSheetApiHandler(req, res) {
   });
   const client = await auth.getClient();
   const googleSheet = google.sheets({ version: 'v4', auth: client });
-  const spreadsheetId = '1zR9gTU11oejLOBSQfNkY5JK413z8RWr67u6bgZ4yqfs';
+  const spreadsheetId = '10Nn5Wn3jwp7dHjY0AekjQvzT1B25SXsc1_VNR5XW4H8';
 
   if (req?.method === 'GET') {
     // const getMetaData = await googleSheet.spreadsheets.get({
@@ -21,7 +21,7 @@ export default async function googleSheetApiHandler(req, res) {
     const getSheetData = await googleSheet.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: 'Sheet1!A:B'
+      range: 'Sheet1!A:J'
     });
 
     res.send(getSheetData);
@@ -29,13 +29,17 @@ export default async function googleSheetApiHandler(req, res) {
   }
 
   if (req?.method === 'POST') {
+    // console.log(req?.body?.sheet,'ufui');
+    let sheet = !!req?.body?.sheet ? req?.body?.sheet : 'Sheet1'
+    // const range = `${sheet}!A2:B`
+    // console.log(sheet,'sfs')
     const response = await googleSheet.spreadsheets.values.append({
       auth,
       spreadsheetId,
-      range: 'Sheet1!A2:B',
+      range: `${sheet}!A2:B`,
       valueInputOption: 'USER_ENTERED',
       resource: {
-        values: [['NextJS', 'The framework for Production']]
+        values: [req?.body?.data || []]
       }
     });
 
@@ -47,10 +51,10 @@ export default async function googleSheetApiHandler(req, res) {
     const response = await googleSheet.spreadsheets.values.update({
       auth,
       spreadsheetId,
-      range: 'Sheet1!A2:B2',
+      range: `Sheet1!K${req?.body?.rowStart}:AZ`,
       valueInputOption: 'USER_ENTERED',
       resource: {
-        values: [['Jamstack', 'Future of the Web']]
+        values: [req?.body?.data || []]
       }
     });
 
