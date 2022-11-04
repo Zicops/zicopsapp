@@ -8,9 +8,10 @@ import {
 } from '@/api/Queries';
 import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import ZicopsTable from '@/components/common/ZicopsTable';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import useUserCourseData from '@/helper/hooks.helper';
-import { parseJson } from '@/helper/utils.helper';
+import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -26,15 +27,15 @@ import ZicopsCarousel from '../components/ZicopsCarousel';
 
 export default function LearnerExams() {
   const router = useRouter();
-  const [takeAnyTimeExams, setTakeAnyTimeExams] = useState([]);
-  const [scheduleExams, setScheduleExams] = useState([]);
+  const [takeAnyTimeExamsData, setTakeAnyTimeExamsData] = useState([]);
+  const [scheduleExamsData, setScheduleExamsData] = useState([]);
   const [examAttempts, setExamAttempts] = useState([]);
   const [examResults, setExamResults] = useState([]);
   const [examCourseMapping, setExamCourseMapping] = useState([]);
-  const [examResultTableData , setExamResultTableData] = useState([]);
+  const [examResultTableData, setExamResultTableData] = useState([]);
   const userGlobalData = useRecoilValue(UserDataAtom);
 
-  const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const realSquare = {
     desktop: {
@@ -59,19 +60,8 @@ export default function LearnerExams() {
     }
   };
   const tableData = {
-    columnHeader: ['Exam Name', 'Source', 'Schedule'],
-    rowData: [
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule'],
-      ['Design Thinking', 'Course', 'Schedule']
-    ]
+    columnHeader: ['Exam Name', 'Course Name', 'Exam Date'],
+    rowData: scheduleExamsData
   };
   const buttonObj = {
     style: { margin: '0px 10px', padding: '2px 10px', border: '1px solid var(--primary)' }
@@ -87,7 +77,7 @@ export default function LearnerExams() {
 
   useEffect(() => {
     // console.log(examResults,'examreso')
-    if (!examResults?.length) return ;
+    if (!examResults?.length) return;
     if (!examCourseMapping?.length) return;
     //loop to finally add results and course name
     const examFinalResult = [];
@@ -95,30 +85,32 @@ export default function LearnerExams() {
     for (let i = 0; i < examResults?.length; i++) {
       // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
       for (let j = 0; j < examCourseMapping?.length; j++) {
-        
         if (examResults[i]?.exam_id === examCourseMapping[j]?.examId) {
           examFinalResult.push({ ...examResults[i], ...examCourseMapping[j] });
         }
       }
     }
-    console.log(examFinalResult, 'final reult');
+    // console.log(examFinalResult, 'final reult');
     //formating exam result table data
     const examsResult = examFinalResult?.map((exam) => ({
       id: exam?.user_ea_id,
-      courseName:exam?.courseName,
-      examName:exam?.Name,
-      examDate:moment.unix(exam?.created_at).format('DD/MM/YYYY'),
-      examAttempt:exam?.attempt_no,
-      examStatus:exam?.attempt_status?.toUpperCase(),
-      examScore:exam?.score,
+      courseName: exam?.courseName,
+      examName: exam?.Name,
+      examDate: moment.unix(exam?.created_at).format('DD/MM/YYYY'),
+      examAttempt: exam?.attempt_no,
+      examStatus: exam?.attempt_status?.toUpperCase(),
+      examScore: exam?.score,
       totalMarks: parseJson(exam?.result_status)?.totalMarks
+    }));
 
-    }))
-
-    if(!examsResult?.length) return setLoading(false);
-    setExamResultTableData([...examsResult], setLoading(false));
-    return ;
+    if (!examsResult?.length) return;
+    setExamResultTableData([...examsResult]);
+    return;
   }, [examResults, examCourseMapping]);
+
+  useEffect(() => {
+    console.log(scheduleExamsData, 'exam esche');
+  }, [scheduleExamsData]);
 
   async function loadUserAttemptsAndResults() {
     if (!userGlobalData?.userDetails?.user_lsp_id?.length) return;
@@ -158,7 +150,9 @@ export default function LearnerExams() {
         };
       }
     }
-    const completedAttempts = attempts?.filter((attemp) => attemp?.attempt_status?.toLowerCase() === 'completed')
+    const completedAttempts = attempts?.filter(
+      (attemp) => attemp?.attempt_status?.toLowerCase() === 'completed'
+    );
     if (completedAttempts?.length) return setExamResults([...completedAttempts]);
   }
 
@@ -268,7 +262,7 @@ export default function LearnerExams() {
     }
 
     // console.log(assessmentTopics,'assasas',topicDataData)
-    if (!assessmentTopics?.length) return;
+    if (!assessmentTopics?.length) return setLoading(false);
 
     const examCourseMap = [];
 
@@ -288,7 +282,7 @@ export default function LearnerExams() {
 
     //loop to take exam related data in one piece
 
-    if (!exams?.length) return;
+    if (!exams?.length) return setLoading(false);
 
     // to get exam metas
     const examsIds = exams?.map((exam) => exam?.examId);
@@ -329,54 +323,97 @@ export default function LearnerExams() {
         scheduleExams[i] = { ...scheduleExams[i], ...schedule[0] };
       }
     }
-    // console.log(takeAnyTimeExams, scheduleExams);
-    if (!examAttempts?.length) return setTakeAnyTimeExams([...takeAnyTimeExams]);
+    console.log(takeAnyTimeExams, scheduleExams);
+    // if (!examAttempts?.length) return setTakeAnyTimeExams([...takeAnyTimeExams]);
 
-    //filtering out exam based on attempts
-    console.log(examAttempts, 's', takeAnyTimeExams);
+    let currentTime = getUnixFromDate();
 
-    const scheduleExamsWithAttempt = scheduleExams?.filter(
-      (exam) => parseInt(exam?.noAttempts) > 0
+    let sExams = scheduleExams?.filter((exam) => parseInt(exam?.Start) > currentTime);
+    setScheduleExamsData(
+      sExams?.map((exam) => [
+        exam?.Name,
+        exam?.courseName,
+        moment.unix(exam?.Start).format('LLL')
+        // examTime:
+      ]),
+      setLoading(false)
     );
+
+    // setScheduleExamsData(
+    //   sExams?.map((exam) => ({
+    //     id: exam?.examId,
+    //     examName: exam?.Name,
+    //     courseName: exam?.courseName,
+    //     examStartDate: moment.unix(exam?.Start).format('LLL'),
+    //     // examTime:
+    //   }))
+    // );
+
+    // new Date(+exam?.Start * 1000).toDateString()
+
+    // const scheduleExamsWithAttempt = scheduleExams?.filter(
+    //   (exam) => parseInt(exam?.noAttempts) > 0
+    // );
     const takeAnyTimeExamsWithAttempt = takeAnyTimeExams?.filter(
       (exam) => parseInt(exam?.noAttempts) > 0
     );
 
     // declare a flag in order  to see if the exam can be on table or not. for exam having exhausted attempt dont push into array, other wise push them
-    for (let i = 0; i < scheduleExamsWithAttempt?.length; i++) {
-      let found = 0;
-      for (let j = 0; j < examAttempts?.length; j++) {
-        if (scheduleExamsWithAttempt[i]?.examId === examAttempts[j]?.exam_id) {
-          console.log('afs', examAttempts[j]);
-          examAttempts?.every((attempt) => {
-            if (attempt?.attempt_no >= parseInt(scheduleExamsWithAttempt[i]?.noAttempts)) {
-              found = 1;
-              return false;
-            }
-            return true;
-          });
-        }
-      }
-      if (!!found) {
-      }
-    }
   }
 
-  const [showTable, setShowTable] = useState(false);
+  const [showTable, setShowTable] = useState('');
+
+  // const resultTableRef = useRef();
+
+  const examTables = [
+    {
+      name: 'scheduletable',
+      tableData: (tableData = {
+        columnHeader: ['Exam Name', 'Course Name', 'Exam Date'],
+        rowData: scheduleExamsData
+      }),
+      tableHeading:'Schedule Exams'
+    },
+    {
+      name: 'anytimetable',
+      tableData: (tableData = {
+        columnHeader: ['Exam Name', 'Course Name', 'Duration'],
+        rowData: takeAnyTimeExamsData
+      }),
+      tableHeading:'Take Anytime Exams'
+    }
+  ];
 
   const btnOptions = [
-    { name: 'Schedule Exams', isActive: false },
+    {
+      name: 'Schedule Exams',
+      isActive: showTable === 'scheduletable',
+      handleClick: () => setShowTable('scheduletable')
+    },
     {
       name: 'Take Anytime Exams',
-      handleClick: () => setShowTable(!showTable),
-      isActive: showTable
+      handleClick: () => setShowTable('anytimetable'),
+      isActive: showTable === 'anytimetable'
     },
+    // {
+    //   name: 'Open Available Exams',
+    //   handleClick: () => router.push('/exam'),
+    //   isActive: false
+    // },
     {
-      name: 'Open Available Exams',
-      handleClick: () => router.push('/exam'),
-      isActive: false
-    },
-    { name: 'Completed Exams', isActive: false }
+      name: 'Completed Exams',
+      isActive: false,
+      handleClick: () => {
+        setShowTable('')
+        const y = simpleTableRef.current.offsetTop - 100;
+        console.log(y);
+        // simpleTableRef?.current?.scrollIntoView({
+        //   top: y,
+        //   behavior: 'smooth'
+        // });
+        window?.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
   ];
 
   const columns = [
@@ -419,6 +456,27 @@ export default function LearnerExams() {
     {
       field: 'totalMarks',
       headerName: 'Total Marks',
+      headerClassName: 'course-list-header',
+      flex: 1
+    }
+  ];
+
+  const scheduleColumns = [
+    {
+      field: 'courseName',
+      headerName: 'Course Name',
+      headerClassName: 'course-list-header',
+      flex: 1
+    },
+    {
+      field: 'examName',
+      headerName: 'Exam Name',
+      headerClassName: 'course-list-header',
+      flex: 1
+    },
+    {
+      field: 'examStartDate',
+      headerName: 'Exam Date',
       headerClassName: 'course-list-header',
       flex: 1
     }
@@ -587,9 +645,10 @@ export default function LearnerExams() {
           />
         </div>
 
-        {showTable && (
+        {/* {showTable === 'anytimetable' && (
           <div className="w-45 border_right" style={{ background: 'var(--black)', margin: 'auto' }}>
             <SimpleTable
+              loading={loading}
               tableData={tableData}
               lastCellObj={buttonObj}
               tableHeading="Take Anytime Exams"
@@ -606,7 +665,34 @@ export default function LearnerExams() {
               }}
             />
           </div>
-        )}
+        )} */}
+        {examTables?.map((table) => (
+          <>
+            {showTable === table?.name && (
+              <div
+                className="w-45 border_right"
+                style={{ background: 'var(--black)', margin: 'auto' }}>
+                <SimpleTable
+                  loading={loading}
+                  tableData={table?.tableData}
+                  lastCellObj={buttonObj}
+                  tableHeading={table?.tableHeading}
+                  headingStyle={{
+                    color: 'var(--white)',
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    textAlign: 'left',
+                    margin: '0',
+                    marginLeft: '60px',
+                    textShadow: 'none',
+                    textTransform: 'none',
+                    letterSpacing: '1px'
+                  }}
+                />
+              </div>
+            )}
+          </>
+        ))}
 
         <div className="w-35 calender_box">
           <CommonCalendar />
@@ -618,9 +704,9 @@ export default function LearnerExams() {
       <ZicopsCarousel title="Quesiton Banks" data={sliderImages} />
       <ZicopsCarousel data={sliderImages} />
       <BigCardSlider title="X-Athons" data={bigImages} slide={realSquare} />
-
-      <div>
-        <div className="resultContainer" ref={simpleTableRef}>
+      {/* <div ref={simpleTableRef} style={{marginBottom:'20px'}}></div> */}
+      <div ref={simpleTableRef}>
+        <div className="resultContainer">
           <ZicopsSimpleTable
             columns={columns}
             loading={loading}

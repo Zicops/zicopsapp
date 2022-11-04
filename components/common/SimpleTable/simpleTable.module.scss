@@ -99,3 +99,12 @@
   background-color: $primary;
   color: $black
 }
+
+.noDataFound{
+  text-align: center;
+  width: 100%;
+  margin: 40% 0;
+  font-weight: 600;
+  font-size: large;
+  color: $primary;
+}
