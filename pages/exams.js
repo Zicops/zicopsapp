@@ -406,7 +406,7 @@ export default function LearnerExams() {
       handleClick: () => {
         setShowTable('')
         const y = simpleTableRef.current.offsetTop - 100;
-        console.log(y);
+        // console.log(y);
         // simpleTableRef?.current?.scrollIntoView({
         //   top: y,
         //   behavior: 'smooth'
