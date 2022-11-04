@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 
 const OrgContactForm = ({ setTab = () => {} }) => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
-  const { isContactFormReady, handleContactPersonForm } = useHandleOrgForm();
+  const { isContactFormReady, handleContactPersonForm , isButtonDisable } = useHandleOrgForm();
   const [formData, setFormData] = useState(orgContactPersonData);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isFormSubmit, setIsFormSubmit] = useState(false);
@@ -127,7 +127,7 @@ const OrgContactForm = ({ setTab = () => {} }) => {
             }
             setIsFormSubmit(true);
           }}
-          isDisabled={!isContactFormReady}>
+          isDisabled={!isContactFormReady || isButtonDisable}>
           Submit
         </Button>
       </div>
