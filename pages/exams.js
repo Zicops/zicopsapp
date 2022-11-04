@@ -29,14 +29,16 @@ export default function LearnerExams() {
   const router = useRouter();
   const [takeAnyTimeExamsData, setTakeAnyTimeExamsData] = useState([]);
   const [scheduleExamsData, setScheduleExamsData] = useState([]);
+  const [examResultTableData, setExamResultTableData] = useState([]);
+
   const [examAttempts, setExamAttempts] = useState([]);
   const [examResults, setExamResults] = useState([]);
-  const [examCourseMapping, setExamCourseMapping] = useState([]);
-  const [examResultTableData, setExamResultTableData] = useState([]);
+  const [examCourseMapping, setExamCourseMapping] = useState({ scheduleExam: [], takeAnyTime: [] });
+
   const userGlobalData = useRecoilValue(UserDataAtom);
 
   const [loading, setLoading] = useState(false);
-
+  const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false);
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -76,17 +78,17 @@ export default function LearnerExams() {
   }, []);
 
   useEffect(() => {
-    // console.log(examResults,'examreso')
+    console.log(examResults, 'examreso');
     if (!examResults?.length) return;
-    if (!examCourseMapping?.length) return;
+    if (!examCourseMapping?.scheduleExam?.length) return;
     //loop to finally add results and course name
     const examFinalResult = [];
 
     for (let i = 0; i < examResults?.length; i++) {
       // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
-      for (let j = 0; j < examCourseMapping?.length; j++) {
-        if (examResults[i]?.exam_id === examCourseMapping[j]?.examId) {
-          examFinalResult.push({ ...examResults[i], ...examCourseMapping[j] });
+      for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
+        if (examResults[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
+          examFinalResult.push({ ...examResults[i], ...examCourseMapping?.scheduleExam[j] });
         }
       }
     }
@@ -106,14 +108,35 @@ export default function LearnerExams() {
     if (!examsResult?.length) return;
     setExamResultTableData([...examsResult]);
     return;
-  }, [examResults, examCourseMapping]);
+  }, [examResults, examCourseMapping?.scheduleExam]);
 
   useEffect(() => {
-    console.log(scheduleExamsData, 'exam esche');
-  }, [scheduleExamsData]);
+    if (!examCourseMapping?.takeAnyTime?.length) return;
+    const takeAnyTimeExamArray = [];
+    // loop over each exam and check for their attempts
+
+    for (let i = 0; i < examCourseMapping?.takeAnyTime?.length; i++) {
+      console.log(examCourseMapping?.takeAnyTime[i]);
+      const filterAttempt = examAttempts?.filter(
+        (exam) => exam?.exam_id === examCourseMapping?.takeAnyTime[i]?.examId
+      );
+      if (filterAttempt?.length < parseInt(examCourseMapping?.takeAnyTime[i]?.noAttempts)) {
+        takeAnyTimeExamArray.push({ ...examCourseMapping?.takeAnyTime[i] });
+      }
+    }
+    if(!takeAnyTimeExamArray?.length) setTakeAnyTimeExamsData([]);
+    setTakeAnyTimeExamsData([
+      ...takeAnyTimeExamArray?.map((exam) => [
+        exam?.Name,
+        exam?.courseName,
+        `${exam?.Duration / 60} mins`
+      ])
+    ]);
+  }, [examCourseMapping?.takeAnyTime]);
 
   async function loadUserAttemptsAndResults() {
     if (!userGlobalData?.userDetails?.user_lsp_id?.length) return;
+    setIsAttemptsLoaded(false);
     const { user_lsp_id, id } = userGlobalData?.userDetails;
     const resAttempts = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
@@ -125,14 +148,15 @@ export default function LearnerExams() {
       return setToastMsg({ type: 'danger', message: 'Error while loading user attempts' });
 
     // if no attempts are there there wont be any results as well
-    if (!resAttempts?.getUserExamAttempts?.length) return setLoading(false);
+    if (!resAttempts?.getUserExamAttempts?.length)
+      return setLoading(false, setIsAttemptsLoaded(true));
 
     const examAttemptIds = resAttempts?.getUserExamAttempts?.map((attempt) => attempt?.user_ea_id);
 
     const attempts = resAttempts?.getUserExamAttempts;
     // return;
 
-    setExamAttempts([...attempts]);
+    setExamAttempts([...attempts], setIsAttemptsLoaded(true));
 
     for (let i = 0; i < attempts?.length; i++) {
       const results = await loadQueryDataAsync(
@@ -153,7 +177,7 @@ export default function LearnerExams() {
     const completedAttempts = attempts?.filter(
       (attemp) => attemp?.attempt_status?.toLowerCase() === 'completed'
     );
-    if (completedAttempts?.length) return setExamResults([...completedAttempts]);
+    if (completedAttempts?.length) return setExamResults([...attempts]);
   }
 
   async function getTopics(courseId = null) {
@@ -228,7 +252,7 @@ export default function LearnerExams() {
     // for schedule exams => exam schedule
     // for anytime exam -> userExamReuslts
 
-    await loadUserAttemptsAndResults();
+    // await loadUserAttemptsAndResults();
 
     const topicCourseMap = [];
     const courseData = await getUserCourseData(30);
@@ -313,8 +337,8 @@ export default function LearnerExams() {
       takeAnyTimeExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
       return;
     });
-
-    setExamCourseMapping([...scheduleExams, ...takeAnyTimeExams]);
+    // scheduleExam:[],takeAnyTime:[]
+    setExamCourseMapping({ scheduleExam: [...scheduleExams], takeAnyTime: [...takeAnyTimeExams] });
 
     if (scheduleExams.length) {
       for (let i = 0; i < scheduleExams?.length; i++) {
@@ -354,11 +378,8 @@ export default function LearnerExams() {
     // const scheduleExamsWithAttempt = scheduleExams?.filter(
     //   (exam) => parseInt(exam?.noAttempts) > 0
     // );
-    const takeAnyTimeExamsWithAttempt = takeAnyTimeExams?.filter(
-      (exam) => parseInt(exam?.noAttempts) > 0
-    );
-
-    // declare a flag in order  to see if the exam can be on table or not. for exam having exhausted attempt dont push into array, other wise push them
+    // setTake;
+    //for takeanytime exam check for a state to make sure if exams are loaded or not
   }
 
   const [showTable, setShowTable] = useState('');
@@ -368,19 +389,19 @@ export default function LearnerExams() {
   const examTables = [
     {
       name: 'scheduletable',
-      tableData: (tableData = {
+      tableData: {
         columnHeader: ['Exam Name', 'Course Name', 'Exam Date'],
         rowData: scheduleExamsData
-      }),
-      tableHeading:'Schedule Exams'
+      },
+      tableHeading: 'Schedule Exams'
     },
     {
       name: 'anytimetable',
-      tableData: (tableData = {
+      tableData: {
         columnHeader: ['Exam Name', 'Course Name', 'Duration'],
         rowData: takeAnyTimeExamsData
-      }),
-      tableHeading:'Take Anytime Exams'
+      },
+      tableHeading: 'Take Anytime Exams'
     }
   ];
 
@@ -404,7 +425,7 @@ export default function LearnerExams() {
       name: 'Completed Exams',
       isActive: false,
       handleClick: () => {
-        setShowTable('')
+        setShowTable('');
         const y = simpleTableRef.current.offsetTop - 100;
         // console.log(y);
         // simpleTableRef?.current?.scrollIntoView({
