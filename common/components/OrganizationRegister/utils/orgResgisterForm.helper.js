@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 export default function useHandleOrgForm() {
   const [orgData, setOrgData] = useRecoilState(OrganizationDetailsAtom);
 
-  const SHEET_URL = 'http://localhost:3000/api/sheet';
+  const SHEET_URL = '/api/sheet';
 
   const [isUnitFormReady, setIsUnitFormReady] = useState(false);
   const [isContactFormReady, setIsContactFormReady] = useState(false);
