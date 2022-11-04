@@ -120,6 +120,9 @@ export default function LearnerExams() {
       const filterAttempt = examAttempts?.filter(
         (exam) => exam?.exam_id === examCourseMapping?.takeAnyTime[i]?.examId
       );
+      if(parseInt(examCourseMapping?.takeAnyTime[i]?.noAttempts) === -1){
+        takeAnyTimeExamArray.push({ ...examCourseMapping?.takeAnyTime[i] });
+      }
       if (filterAttempt?.length < parseInt(examCourseMapping?.takeAnyTime[i]?.noAttempts)) {
         takeAnyTimeExamArray.push({ ...examCourseMapping?.takeAnyTime[i] });
       }
