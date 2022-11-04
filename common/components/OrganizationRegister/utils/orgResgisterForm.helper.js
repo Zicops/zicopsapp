@@ -6,6 +6,7 @@ export default function useHandleOrgForm() {
   const [orgData, setOrgData] = useRecoilState(OrganizationDetailsAtom);
 
   const SHEET_URL = '/api/sheet';
+  const SHEET_URL_EMAIL = '/api/sendEmail'
 
   const [isUnitFormReady, setIsUnitFormReady] = useState(false);
   const [isContactFormReady, setIsContactFormReady] = useState(false);
@@ -159,7 +160,7 @@ export default function useHandleOrgForm() {
 
   async function sendMail() {
     if (!orgData?.orgPersonEmailId?.length) return false;
-    const res = await fetch('http://localhost:3000/api/sendEmail', {
+    const res = await fetch(SHEET_URL_EMAIL, {
       method: 'post',
       headers: {
         Accept: 'application.json',
