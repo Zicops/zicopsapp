@@ -1,0 +1,56 @@
+@import '../../../../styles/base.scss';
+
+.page_layout {
+    margin-top: 65px;
+
+    img {
+        width: 40px;
+    }
+
+    .page_head {
+        font-size: 25px;
+        font-weight: 600;
+    }
+
+    // .labeled_input {
+    //     border: 1px solid $darkThree;
+    //     background: $darkOne;
+    //     height: 40px;
+    //     width: 100%;
+    // }
+
+    .page_title {
+        color: $darkThree;
+        margin: 25px 0;
+        font-size: 17px;
+    }
+
+    .btnContainer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 25px;
+    }
+}
+
+.inputStyle {
+    margin-bottom: 10px;
+    // width: 400px;
+    width: 100%;
+  
+    input {
+      color: $white;
+      background-color: $darkOne;
+      width: 100%;
+      outline: 0;
+      //border: 0;
+      border: 2px solid #6bcfcf;
+      // flex: 1;
+      //color: $secondaryBlack;
+      padding: 7px 10px;
+      border-radius: 3px;
+      font-size: 16px;
+      margin-bottom: 5px;
+      // height: 40px;
+    }
+  }
+  

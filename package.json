@@ -26,6 +26,7 @@
     "@types/react": "17.0.48",
     "apollo-upload-client": "17.0.0",
     "chart.js": "3.8.2",
+    "country-state-city": "^3.1.2",
     "firebase": "9.8.4",
     "googleapis": "^108.0.0",
     "graphql": "16.3.0",
