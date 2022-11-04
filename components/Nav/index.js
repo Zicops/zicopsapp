@@ -61,7 +61,8 @@ export default function Nav() {
             <ToolTip
               title={`${!isOnLearnerSide ? 'Go Back to Admin Home' : 'Go Back to Learner Home'}`}
               placement="bottom">
-              <img src="/images/zicops-header-logo.png" />
+                {/* <img src="/images/zicops-header-logo.png" /> */}
+              <img src="/images/svg/asset-6.svg" />
             </ToolTip>
           </a>
         </Link>

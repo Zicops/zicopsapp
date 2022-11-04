@@ -29,7 +29,7 @@ const OrgFormLayout = ({ children, headerTitle = null, headerImg = null , isHead
             </svg>
           </button>
           {/* <img src="./images/svg/zicops_logo.svg" alt="zicops logo" /> */}
-          <img src={"/images/svg/zicops_logo.svg"} alt="logo" />
+          <img src={"/images/svg/asset-6.svg"} alt="logo" />
         </div>
         <div className={`${styles.info_layout}`}>
           <div className={`${styles.header_title}`}>
