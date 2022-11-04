@@ -10,6 +10,7 @@ export default function useHandleOrgForm() {
   const [isUnitFormReady, setIsUnitFormReady] = useState(false);
   const [isContactFormReady, setIsContactFormReady] = useState(false);
   const [isOrgRegisterationReady, setIsOrgRegisterationReady] = useState(false);
+  const [isButtonDisable , setIsButtonDisable] = useState(false);
 
   useEffect(() => {
     setIsOrgRegisterationReady(
@@ -61,6 +62,7 @@ export default function useHandleOrgForm() {
 
   async function handleOrgRegisterForm() {
     if (!isOrgRegisterationReady) return false;
+    setIsButtonDisable(true);
 
     const dataFormat = getOrgResiterObject(orgData);
 
@@ -88,7 +90,8 @@ export default function useHandleOrgForm() {
 
     const resEmail = await sendMail();
 
-    // console.log(res, 'response', resEmail);
+    console.log(resEmail, 'response', res?.status);
+    setIsButtonDisable(false)
     if(!(resEmail?.status === 200 && res?.status === 200)) return false
     return true ;
   }
@@ -97,6 +100,7 @@ export default function useHandleOrgForm() {
     if (!isUnitFormReady && !isContactFormReady) return false;
 
     if (!orgData?.index) return;
+    setIsButtonDisable(true);
 
     const contactDataFormat = getOrgContactObject(orgData);
 
@@ -134,6 +138,7 @@ export default function useHandleOrgForm() {
     });
 
     // console.log(res, 'contact form response');
+    setIsButtonDisable(false)
     if (!res?.status === 200) return false;
     return res;
   }
@@ -185,6 +190,7 @@ export default function useHandleOrgForm() {
   async function addEmail(){
     if(!orgData?.orgPersonEmailId) return false;
 
+    setIsButtonDisable(true);
     const res = await fetch(SHEET_URL, {
       method: 'post',
       headers: {
@@ -195,6 +201,7 @@ export default function useHandleOrgForm() {
       cache: 'default'
     });
 
+    setIsButtonDisable(false);
     if(!res?.status === 200) return false;
     return true ;
 
@@ -247,6 +254,7 @@ export default function useHandleOrgForm() {
     handleOrgRegisterForm,
     handleContactPersonForm,
     fetchUnitFormData,
-    addEmail
+    addEmail,
+    isButtonDisable
   };
 }

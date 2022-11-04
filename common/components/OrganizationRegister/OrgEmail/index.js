@@ -14,7 +14,7 @@ const OrgEmail = () => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
   const router = useRouter();
 
-  const { addEmail } = useHandleOrgForm();
+  const { addEmail , isButtonDisable } = useHandleOrgForm();
   useEffect(()=>{
     // console.log(orgTempDetails?.orgPersonEmailId)
   },[orgTempDetails?.orgPersonEmailId])
@@ -43,7 +43,7 @@ const OrgEmail = () => {
           <Button
             size="small"
             isBold="bold"
-            isDisabled={!(orgTempDetails?.orgPersonEmailId?.length && isEmail(orgTempDetails?.orgPersonEmailId))}
+            isDisabled={!(orgTempDetails?.orgPersonEmailId?.length && isEmail(orgTempDetails?.orgPersonEmailId)) || isButtonDisable}
             clickHandler={async() => {
               if(!orgTempDetails?.orgPersonEmailId?.length) return ;
               const res = await addEmail();

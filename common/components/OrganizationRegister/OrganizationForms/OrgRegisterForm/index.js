@@ -19,7 +19,7 @@ const OrgRegisterForm = () => {
   const [orgTempDetails, setOrgTempDetails] = useRecoilState(OrganizationDetailsAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   // const [image, setImage] = useState(null);
-  const { isOrgRegisterationReady , handleOrgRegisterForm } = useHandleOrgForm();
+  const { isOrgRegisterationReady , handleOrgRegisterForm , isButtonDisable } = useHandleOrgForm();
   const [isFormSubmit , setIsFormSubmit] = useState(false);
   const router = useRouter();
 
@@ -105,7 +105,7 @@ const OrgRegisterForm = () => {
             setIsFormSubmit(true);
 
           }}
-          isDisabled={!isOrgRegisterationReady}>
+          isDisabled={!isOrgRegisterationReady || isButtonDisable}>
           Submit
         </Button>
       </div>
