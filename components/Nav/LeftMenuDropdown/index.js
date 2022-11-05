@@ -15,6 +15,7 @@ import styles from '../nav.module.scss';
 import useUserCourseData from '@/helper/hooks.helper.js';
 import { useRecoilState } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
+import { UserDataAtom } from '@/state/atoms/global.atom.js';
 export default function LeftMenuDropdown({ isOnLearnerSide }) {
   const { isAdmin } = useContext(userContext);
   const { anchorEl, handleClick, handleClose, open, gotoAdmin, gotoUser } = useDropDownHandle();
@@ -22,10 +23,102 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [loading, setLoading] = useState(true);
   const [preferences, setPreferences] = useState([]);
+  const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
 
   useEffect(async () => {
+    if (!userGlobalData?.isPrefAdded) {
+      loadUserPreferences();
+      return;
+    }
+    if(!userGlobalData?.preferences?.length){
+      loadUserPreferences();
+      return;
+    }
+    if (userGlobalData?.isPrefUpdated) {
+      loadUserPreferences();
+      setUserGlobalData((prevValue) => ({ ...prevValue, isPrefUpdated: false }));
+      return;
+    }
+    const activePreferences = userGlobalData?.preferences?.filter((item) => item?.is_active);
+    const prefArray = [];
+
+    // base pref
+    const basePref = activePreferences?.find((pref) => pref?.is_base);
+    prefArray.unshift({
+      title: basePref?.sub_category,
+      asUrl: '/search-page',
+      link: `${basePref?.sub_category}`,
+      customStyle: {
+        backgroundColor: 'var(--primary)',
+        color: 'var(--black)'
+      },
+      customClass: styles['selectedSubMenuItem']
+    });
+
+    let prefCount = 0;
+    for (let i = 0; i < activePreferences?.length; i++) {
+      ++prefCount;
+      if (prefCount > 4) break;
+      if (activePreferences[i]?.is_base) {
+        --prefCount;
+        // prefArray.unshift({
+        //   title: activePreferences[i]?.sub_category,
+        //   asUrl: '/search-page',
+        //   link: `${activePreferences[i]?.sub_category}`,
+        //   customStyle: {
+        //     backgroundColor: 'var(--primary)',
+        //     color: 'var(--black)'
+        //   },
+        //   customClass: styles['selectedSubMenuItem']
+        // });
+      } else {
+        prefArray.push({
+          title: activePreferences[i]?.sub_category,
+          link: `${activePreferences[i]?.sub_category}`,
+          asUrl: '/search-page'
+        });
+      }
+    }
+    // console.log(prefArray,'prefArray');
+    prefArray.push({
+      title: (
+        <>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0 14V16H6V14H0ZM0 2V4H10V2H0ZM10 18V16H18V14H10V12H8V18H10ZM4 6V8H0V10H4V12H6V6H4ZM18 10V8H8V10H18ZM12 6H14V4H18V2H14V0H12V6Z"
+              fill="#C4C4C4"
+            />
+          </svg>
+          Preference Center
+        </>
+      ),
+      link: '/',
+      isPreferenceCentre: true,
+      customStyle: {
+        backgroundColor: 'var(--black)',
+        color: 'var(--white)',
+        borderColor: 'var(--white)',
+        fontSize: '13px'
+      },
+      customClass: `${styles['dropdown_item_5']} ${
+        styles.preferenceCentreMenuItem
+      } `
+    });
+    setPreferences([...prefArray], setLoading(false));
+    return;
+  }, []);
+
+  async function loadUserPreferences() {
     const userPreferences = await getUserPreferences();
-    if (!userPreferences?.length) return setLoading(false);
+    if (!userPreferences?.length) {
+      setUserGlobalData((prevValue) => ({ ...prevValue, preferences: [], isPrefAdded: true }));
+      return setLoading(false);
+    }
     const activePreferences = userPreferences?.filter((item) => item?.is_active);
     const prefArray = [];
 
@@ -97,8 +190,7 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
       } `
     });
     setPreferences([...prefArray], setLoading(false));
-  }, []);
-
+  }
   // useEffect(()=>{
   //  if(!userOrgData?.sub_categories?.length) return setLoading(false);
 

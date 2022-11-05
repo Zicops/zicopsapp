@@ -23,7 +23,7 @@ import useCommonHelper from './common.helper';
 
 export default function useHandleUserUpdate() {
   // const { getUserPreferences } = useCommonHelper();
-  const userDataGlobal = useRecoilValue(UserDataAtom);
+  const [userDataGlobal,setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [updateAbout, { error: createError }] = useMutation(UPDATE_USER, {
     client: userClient
   });
@@ -209,7 +209,8 @@ export default function useHandleUserUpdate() {
         );
       }
     }
-    return setIsSubmitDisable(false)
+    setUserDataGlobal((prev)=>({...prev , isPrefUpdated:true})) ;
+     return setIsSubmitDisable(false)
   }
   return { updateUserLearningSpaceDetails, updateUserOrganizationDetails, updatePreferences , _isSubmitDisable };
 }

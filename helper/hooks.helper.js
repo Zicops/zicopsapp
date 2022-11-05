@@ -269,6 +269,7 @@ export default function useUserCourseData() {
 
   async function getUserPreferences() {
     // if(!userLspId) setToastMsg({type:'danger' , message:'Need to provide user lsp id^!'});
+    // console.log('user pref called')
     const userData = getUserData();
     let userLspData = parseJson(sessionStorage?.getItem('lspData'));
 
@@ -304,6 +305,8 @@ export default function useUserCourseData() {
       {},
       userQueryClient
     );
+
+    if(!resPref?.getUserPreferences?.length) return [];
     const catAndSubCatRes = await loadAndCacheDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
@@ -367,7 +370,7 @@ export default function useUserCourseData() {
       sub_category: basePreference?.[0]?.sub_category,
       sub_categories: preferences
     }));
-    setUserDataGlobal({ ...userDataGlobal, preferences: prefArr });
+    setUserDataGlobal({ ...userDataGlobal, preferences: prefArr , isPrefAdded:true });
     return prefArr;
   }
 
