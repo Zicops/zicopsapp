@@ -11,11 +11,14 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '180'
     nginx.ingress.kubernetes.io/proxy-read-timeout: '180'
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      set $csp_image_src_value "'self' data: https://googleapis.com https://storage.googleapis.com https://amplifyapp.com";
-      set $csp_media_src_value "'self' data: blob: https://googleapis.com https://storage.googleapis.com https://amplifyapp.com https://*.amplifyapp.com";      
-      set $csp_frame_src_value "'self' https://zicops.whereby.com https://googleapis.com https://storage.googleapis.com https://docs.google.com https://amplifyapp.com";
+      set $csp_image_src_value "'self' data: https://googleapis.com https://storage.googleapis.com https://master.*.amplifyapp.com";
+      set $csp_media_src_value "'self' data: blob: https://googleapis.com https://storage.googleapis.com https://amplifyapp.com https://master.*.amplifyapp.com";      
+      set $csp_frame_src_value "'self' https://zicops.whereby.com https://googleapis.com https://storage.googleapis.com https://docs.google.com https://master.*.amplifyapp.com";
       set $origin_amp "false";
-      if ($http_origin ~* ((https://master.[a-z0-9\-]+\.amplifyapp\.com))$ ) { set $origin_amp "true"; }
+      if ($http_origin ~* "https://[a-z0-9]+\.amplifyapp\.com") {
+        set $origin_amp "true";
+      }
+      
       more_clear_headers 'Access-Control-Allow-Credentials';
       more_clear_headers 'Access-Control-Allow-Origin';
       more_clear_headers 'Access-Control-Allow-Headers';
@@ -23,9 +26,9 @@ metadata:
       more_clear_headers 'Access-Control-Expose-Headers';
       more_clear_headers 'Last-Modified';
       # To make sure Vary header is cleaned completely we need to clear it explicitely together with "gzip_vary off"
+      set $frame_addtional $csp_frame_src_value;
       if ($origin_amp = "true") {
-        # add $http_origin to $csp_frame_src_value
-        set $csp_frame_src_value "$csp_frame_src_value $http_origin";
+        set $frame_addtional "$csp_frame_src_value https://*.amplifyapp.com";
       }
       more_clear_headers 'Vary';
       more_set_headers "X-XSS-Protection: 1; mode=block";
