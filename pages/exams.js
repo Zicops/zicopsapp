@@ -16,7 +16,7 @@ import { UserDataAtom } from '@/state/atoms/global.atom';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { bigImages, sliderImages } from '../API/DemoSliderData';
 import CommonCalendar from '../components/common/CommonCalendar';
 import SimpleTable from '../components/common/SimpleTable';
@@ -27,6 +27,7 @@ import ZicopsCarousel from '../components/ZicopsCarousel';
 
 export default function LearnerExams() {
   const router = useRouter();
+  const [userGlobalData , setUserGlobalData] = useRecoilState(UserDataAtom);
   const [takeAnyTimeExamsData, setTakeAnyTimeExamsData] = useState([]);
   const [scheduleExamsData, setScheduleExamsData] = useState([]);
   const [examResultTableData, setExamResultTableData] = useState([]);
@@ -35,7 +36,7 @@ export default function LearnerExams() {
   const [examResults, setExamResults] = useState([]);
   const [examCourseMapping, setExamCourseMapping] = useState({ scheduleExam: [], takeAnyTime: [] });
 
-  const userGlobalData = useRecoilValue(UserDataAtom);
+  // const userGlobalData = useRecoilValue(UserDataAtom);
 
   const [loading, setLoading] = useState(false);
   const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false);
@@ -120,14 +121,14 @@ export default function LearnerExams() {
       const filterAttempt = examAttempts?.filter(
         (exam) => exam?.exam_id === examCourseMapping?.takeAnyTime[i]?.examId
       );
-      if(parseInt(examCourseMapping?.takeAnyTime[i]?.noAttempts) === -1){
+      if (parseInt(examCourseMapping?.takeAnyTime[i]?.noAttempts) === -1) {
         takeAnyTimeExamArray.push({ ...examCourseMapping?.takeAnyTime[i] });
       }
       if (filterAttempt?.length < parseInt(examCourseMapping?.takeAnyTime[i]?.noAttempts)) {
         takeAnyTimeExamArray.push({ ...examCourseMapping?.takeAnyTime[i] });
       }
     }
-    if(!takeAnyTimeExamArray?.length) setTakeAnyTimeExamsData([]);
+    if (!takeAnyTimeExamArray?.length) setTakeAnyTimeExamsData([]);
     setTakeAnyTimeExamsData([
       ...takeAnyTimeExamArray?.map((exam) => [
         exam?.Name,
@@ -694,8 +695,11 @@ export default function LearnerExams() {
           <>
             {showTable === table?.name && (
               <div
-                className="w-45 border_right"
+                className="w-45 border_right tableSection"
                 style={{ background: 'var(--black)', margin: 'auto' }}>
+                <div className="closeTable" onClick={()=>{setShowTable('')}}>
+                  <img src="/images/circular-cross.png" alt="" />
+                </div>
                 <SimpleTable
                   loading={loading}
                   tableData={table?.tableData}
@@ -765,6 +769,24 @@ export default function LearnerExams() {
           scroll-snap-type: y mandatory;
           scroll-snap-type: mandatory;
           scroll-snap-points-y: repeat(300px);
+        }
+        .tableSection{
+          position: relative;
+        }
+        .closeTable {
+          color: var(--white);
+          font-size: 20px;
+          cursor: pointer;
+          position: absolute;
+          right: 1%;
+          top: 1%;
+          height: 25px;
+          width: 25px;
+          
+        }
+        .closeTable img {
+          height: 100%;
+          width: 100%;
         }
       `}</style>
     </div>

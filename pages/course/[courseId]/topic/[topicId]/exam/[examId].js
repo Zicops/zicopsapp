@@ -249,7 +249,7 @@ const ExamScreen = () => {
 
     if (!data?.userCourseProgress?.length && data?.userCourseMapping?.user_course_id) {
       const progressRes = await loadUserCourseProgress({
-        variables: { userId: userData?.id, userCourseId: data?.userCourseMapping?.user_course_id },
+        variables: { userId: userData?.id, userCourseId: [data?.userCourseMapping?.user_course_id] },
         fetchPolicy: 'no-cache'
       });
       const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;

@@ -151,7 +151,7 @@ export const GET_USER_COURSE_MAPS_BY_COURSE_ID = gql`
 `;
 
 export const GET_USER_COURSE_PROGRESS = gql`
-  query getUserCourseProgressByMapId($userId: String!, $userCourseId: ID!) {
+  query getUserCourseProgressByMapId($userId: String!, $userCourseId: [ID!]) {
     getUserCourseProgressByMapId(user_id: $userId, user_course_id: $userCourseId) {
       user_cp_id
       user_id
@@ -556,3 +556,41 @@ export const GET_USER_QUIZ_ATTEMPTS = gql`
     }
   }
 `;
+
+
+// combined queries
+
+// export const GET_USER_META = gql`
+// query getUserMeta($user_id:){
+//   getUserPreferences(user_id: $user_id) {
+//     user_preference_id
+//     user_id
+//     user_lsp_id
+//     sub_category
+//     is_base
+//     is_active
+//     created_by
+//     updated_by
+//     created_at
+//     updated_at
+//   }
+
+//   getUserDetails(user_ids: $user_id) {
+//     id
+//     first_name
+//     last_name
+//     status
+//     role
+//     is_verified
+//     is_active
+//     gender
+//     created_by
+//     updated_by
+//     created_at
+//     updated_at
+//     email
+//     phone
+//     photo_url
+//   }
+// }
+// `

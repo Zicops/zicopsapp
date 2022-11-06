@@ -257,7 +257,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         const progressRes = await loadUserCourseProgress({
           variables: {
             userId: userData?.id,
-            userCourseId: data?.userCourseMapping?.user_course_id
+            userCourseId: [data?.userCourseMapping?.user_course_id]
           },
           fetchPolicy: 'no-cache'
         }).catch((err) => {
