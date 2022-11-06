@@ -14,9 +14,8 @@ metadata:
       set $csp_image_src_value "'self' data: https://googleapis.com https://storage.googleapis.com https://amplifyapp.com";
       set $csp_media_src_value "'self' data: blob: https://googleapis.com https://storage.googleapis.com https://amplifyapp.com https://*.amplifyapp.com";      
       set $csp_frame_src_value "'self' https://zicops.whereby.com https://googleapis.com https://storage.googleapis.com https://docs.google.com https://amplifyapp.com";
-      set $cors false;
-      if ($http_origin ~* ((https://[A-Za-z0-9\-]+\.zicops\.com))$ ) { set $cors 'true'; }
-      if ($http_origin ~* ((https://[A-Za-z0-9\-]+\.amplifyapp\.com))$ ) { set $cors 'true'; }
+      set $origin_amp false;
+      if ($http_origin ~* ((https://[A-Za-z0-9\-]+\.amplifyapp\.com))$ ) { set $origin_amp 'true'; }
       more_clear_headers 'Access-Control-Allow-Credentials';
       more_clear_headers 'Access-Control-Allow-Origin';
       more_clear_headers 'Access-Control-Allow-Headers';
@@ -24,12 +23,9 @@ metadata:
       more_clear_headers 'Access-Control-Expose-Headers';
       more_clear_headers 'Last-Modified';
       # To make sure Vary header is cleaned completely we need to clear it explicitely together with "gzip_vary off"
-      if ($cors = "true") {
-        more_set_headers 'Access-Control-Allow-Origin: $http_origin';
-        more_set_headers 'Access-Control-Allow-Credentials: true';
-        more_set_headers 'Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS';
-        more_set_headers 'Access-Control-Allow-Headers: accept,allow,x-my-custom-header';
-        more_set_headers 'Access-Control-Max-Age: 1728000';
+      if ($origin_amp = "true") {
+        # add $http_origin to $csp_frame_src_value
+        set $csp_frame_src_value "$csp_frame_src_value $http_origin";
       }      
       more_clear_headers 'Vary';
       more_set_headers "X-XSS-Protection: 1; mode=block";
