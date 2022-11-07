@@ -15,7 +15,7 @@ metadata:
       set $csp_media_src_value "'self' data: blob: https://googleapis.com https://storage.googleapis.com";      
       set $csp_frame_src_value "'self' https://zicops.whereby.com https://googleapis.com https://storage.googleapis.com https://docs.google.com";
       set $origin_amp "false";
-      if ($http_origin ~* "https://master.[a-z0-9]+\.amplifyapp\.com") {
+      if ($http_origin ~* "https://master.\[a-z0-9]+\.amplifyapp\.com") {
         set $origin_amp "true";
       }
       
