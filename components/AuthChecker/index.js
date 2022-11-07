@@ -93,7 +93,9 @@ const AuthChecker = ({ children }) => {
 
   useEffect(() => {
     // on initial load - run auth check
-    authCheck(router.asPath);
+    //added comment 
+
+    authCheck(router.asPath); 
 
     // on route change start - hide page content by setting authorized to false
     const hideContent = () => setAuthorized(false);
