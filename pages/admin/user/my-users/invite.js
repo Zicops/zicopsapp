@@ -38,10 +38,7 @@ export default function MyUserPage() {
   //handle emails
   async function handleMail() {
     const { user_lsp_id } = parseJson(sessionStorage?.getItem('lspData'));
-    console.log(emailId,'sdsd');
-
-    setIsOpen(true);
-    return ;
+    // console.log(emailId,'sdsd');
     if (loading) return;
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add atleast one email!' });
@@ -72,7 +69,7 @@ export default function MyUserPage() {
 
     setToastMsg({ type: 'success', message: `Emails send successfully!` });
 
-    return router.push('/admin/user/my-users');
+    return setIsOpen(true);
   }
 
   // set default tab on comp change
@@ -123,7 +120,7 @@ export default function MyUserPage() {
             tab={tab}
             setTab={setTab}
             footerObj={{
-              disableSubmit: (loading || !emailId?.length),
+              disableSubmit: loading || !emailId?.length,
               hideStatus: true,
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
               isActive: !!emailId?.length,
@@ -137,7 +134,11 @@ export default function MyUserPage() {
             }}
           />
           <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
-            <InviteUserEmails closePopUp={setIsOpen} userEmails={emailId?.length? emailId : []}/>
+            <InviteUserEmails
+              closePopUp={setIsOpen}
+              userEmails={emailId?.length ? emailId?.map((item) => item?.props?.children[0]) : []}
+              userType={userType}
+            />
           </PopUp>
         </MainBodyBox>
       </MainBody>
