@@ -1,52 +1,62 @@
+import { INVITE_USERS, userClient } from '@/api/UserMutations';
+import { isEmail } from '@/helper/common.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useMutation } from '@apollo/client';
+import { useRecoilState } from 'recoil';
+import { read, utils } from 'xlsx';
 import UploadForm from '../common/FormComponents/UploadForm';
 
 export default function BulkUpload() {
-  async function CSV_XLSX_File_Selected_Event(e) {
-    let ext = e.target.file;
-    ext = ext.split('.');
-    ext = ext[ext.length - 1];
-    var files = inputElement.files || [];
+  const [inviteUsers, { data, loading }] = useMutation(INVITE_USERS, {
+    client: userClient
+  });
+
+  const [emails, setEmails] = useRecoilState(UsersEmailIdAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  async function CSV_XLSX_File_Selected_Event(files) {
     if (!files.length) return;
-    var file = files[0];
-    var reader = new FileReader();
+
+    const file = files[0];
+    const reader = new FileReader();
     reader.onloadend = async function (event) {
-      var arrayBuffer = reader.result;
-      var options = { type: 'array' };
-      var workbook = XLSX.read(arrayBuffer, options);
-      //console.timeEnd();
+      const arrayBuffer = reader.result;
+      const options = { type: 'array' };
+      const workbook = read(arrayBuffer, options);
 
-      var sheetName = workbook.SheetNames;
-      var sheet = workbook.Sheets[sheetName];
-      var sheet_to_html = XLSX.utils.sheet_to_html(sheet);
-      var sheet_to_json = XLSX.utils.sheet_to_json(sheet);
+      const sheetName = workbook.SheetNames;
+      const sheet = workbook.Sheets[sheetName];
+      const results = utils?.sheet_to_json(sheet) || [];
 
-      if (sheet_to_json.length === 0) {
-        var sheet_to_csv = [XLSX.utils.sheet_to_csv(sheet)];
-        var results = sheet_to_csv;
-      }
+      const uniqueEmails = [];
+      console.log(results);
 
-      if (sheet_to_json.length > 0) {
-        var results = sheet_to_json;
-      }
+      results?.forEach((row) => {
+        const email = row?.__EMPTY;
+        const isEmailValid = isEmail(email);
+        if (isEmailValid && !uniqueEmails?.includes(email)) {
+          uniqueEmails.push(email);
+        }
+      });
 
-      let Parsed_File_Obj = {
-        sheet_to_html: sheet_to_html,
-        results: results,
-        ext: ext
-      };
+      if (!uniqueEmails?.length)
+        return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
 
-      console.log('Parsed_File_Obj');
-      console.log(Parsed_File_Obj);
+      setEmails(uniqueEmails);
     };
     reader.readAsArrayBuffer(file);
   }
+
   return (
     <>
       <UploadForm
         filePath="/templates/user-invite-template.xlsx"
         fileName="Bulk Invite Template"
+        acceptedTypes=".xlsx, .csv"
         handleFileUpload={(e) => {
-          console.log(e.target.files);
+          CSV_XLSX_File_Selected_Event(e.target.files);
         }}
       />
     </>

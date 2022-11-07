@@ -6,6 +6,7 @@ export default function UploadForm({
   customStyles,
   leftGapClass,
   filePath,
+  acceptedTypes = null,
   fileName = 'Questions Upload Template',
   handleFileUpload = () => {}
 }) {
@@ -27,7 +28,7 @@ export default function UploadForm({
       <div className={styles.upload}>
         <label>Upload Profiles: </label>
         <span>Upload Excel filled with data as per the standard template</span>
-        <BrowseAndUpload handleFileUpload={handleFileUpload} />
+        <BrowseAndUpload acceptedTypes={acceptedTypes} handleFileUpload={handleFileUpload} />
       </div>
     </div>
   );
