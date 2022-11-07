@@ -26,9 +26,8 @@ metadata:
       more_clear_headers 'Access-Control-Expose-Headers';
       more_clear_headers 'Last-Modified';
       # To make sure Vary header is cleaned completely we need to clear it explicitely together with "gzip_vary off"
-      set $frame_addtional $csp_frame_src_value;
       if ($origin_amp = "true") {
-        set $frame_addtional "$csp_frame_src_value https://*.amplifyapp.com";
+        set $csp_image_src_value "'self' data: https://googleapis.com https://storage.googleapis.com https://master.*.amplifyapp.com https://*.amplifyapp.com $http_origin";
       }
       more_clear_headers 'Vary';
       more_set_headers "X-XSS-Protection: 1; mode=block";
