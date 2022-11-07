@@ -1,3 +1,5 @@
+import PopUp from '@/components/common/PopUp';
+import InviteUserEmails from '@/components/UserComps/MyUser/InviteUserEmails';
 import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -23,6 +25,7 @@ export default function MyUserPage() {
 
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isOpen, setIsOpen] = useState(false);
   // const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   // const [disableButton, setDisableButton] = useState(false);
 
@@ -34,7 +37,11 @@ export default function MyUserPage() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   //handle emails
   async function handleMail() {
-    const {user_lsp_id} = parseJson(sessionStorage?.getItem('lspData'));
+    const { user_lsp_id } = parseJson(sessionStorage?.getItem('lspData'));
+    console.log(emailId,'sdsd');
+
+    setIsOpen(true);
+    return ;
     if (loading) return;
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add atleast one email!' });
@@ -116,7 +123,7 @@ export default function MyUserPage() {
             tab={tab}
             setTab={setTab}
             footerObj={{
-              disableSubmit: loading,
+              disableSubmit: (loading || !emailId?.length),
               hideStatus: true,
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
               isActive: !!emailId?.length,
@@ -129,6 +136,9 @@ export default function MyUserPage() {
               }
             }}
           />
+          <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
+            <InviteUserEmails closePopUp={setIsOpen} userEmails={emailId?.length? emailId : []}/>
+          </PopUp>
         </MainBodyBox>
       </MainBody>
     </>
