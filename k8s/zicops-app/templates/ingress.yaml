@@ -14,11 +14,6 @@ metadata:
       set $csp_image_src_value "'self' data: https://googleapis.com https://storage.googleapis.com";
       set $csp_media_src_value "'self' data: blob: https://googleapis.com https://storage.googleapis.com";      
       set $csp_frame_src_value "'self' https://zicops.whereby.com https://googleapis.com https://storage.googleapis.com https://docs.google.com";
-      set $origin_amp "false";
-      if ($http_origin ~* "^(https?:\/\/master.[a-z0-9]+\.amplifyapp\.com)$") {
-        set $origin_amp "true";
-      }
-      
       more_clear_headers 'Access-Control-Allow-Credentials';
       more_clear_headers 'Access-Control-Allow-Origin';
       more_clear_headers 'Access-Control-Allow-Headers';
@@ -26,9 +21,6 @@ metadata:
       more_clear_headers 'Access-Control-Expose-Headers';
       more_clear_headers 'Last-Modified';
       # To make sure Vary header is cleaned completely we need to clear it explicitely together with "gzip_vary off"
-      if ($origin_amp = "true") {
-        set $csp_image_src_value "'self' data: https://googleapis.com https://storage.googleapis.com https://master.*.amplifyapp.com https://*.amplifyapp.com $http_origin";
-      }
       more_clear_headers 'Vary';
       more_set_headers "X-XSS-Protection: 1; mode=block";
       more_set_headers "X-Frame-Options: sameorigin";
@@ -37,7 +29,7 @@ metadata:
       more_set_headers "Surrogate-Control: no-store";
       more_set_headers "Referrer-Policy: no-referrer-when-downgrade";
       more_set_headers "X-DNS-Prefetch-Control: off";
-      more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src ${csp_image_src_value}; media-src ${csp_media_src_value};frame-src ${csp_frame_src_value} ;connect-src 'self' https://googleapis.com https://securetoken.googleapis.com https://storage.googleapis.com https://zicops-one.firebaseapp.com zicops-one.firebaseapp.com https://identitytoolkit.googleapis.com";
+      more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src ${csp_image_src_value}; media-src ${csp_media_src_value};frame-src * ;connect-src 'self' https://googleapis.com https://securetoken.googleapis.com https://storage.googleapis.com https://zicops-one.firebaseapp.com zicops-one.firebaseapp.com https://identitytoolkit.googleapis.com";
       more_set_headers "Strict-Transport-Security: max-age=15724800; includeSubDomains";
 spec:
   rules:
