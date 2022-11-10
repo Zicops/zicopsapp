@@ -66,7 +66,7 @@ const CourseContextProvider = (props) => {
       tileImage: data.tileImage || '',
       owner: data.owner || '',
       publisher: data.publisher || '',
-      duration: Math.floor((data.duration || 0) / 60) || 0,
+      duration: Math.ceil((data.duration || 0) / 60) || 0,
       expertise_level: data.expertise_level || '',
       language: data.language || [],
       benefits: data.benefits || [],

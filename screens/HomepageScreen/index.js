@@ -103,10 +103,10 @@ export default function HomepageScreen() {
     const _toBeSortedCourses = structuredClone(courses) || [];
 
     _toBeSortedCourses.latestCourses.courses = sortArrByKeyInOrder(
-        [..._toBeSortedCourses?.latestCourses?.courses],
-        'updated_at',
-        false
-      )
+      [..._toBeSortedCourses?.latestCourses?.courses],
+      'updated_at',
+      false
+    );
     return _toBeSortedCourses;
   }
 
@@ -187,7 +187,8 @@ export default function HomepageScreen() {
 
       if (baseSubcategoryObj?.sub_category) {
         let baseSubCatCourses = await getLatestCoursesByFilters(
-          { SubCategory: baseSubcategory },
+          { SubCategory: baseSubcategoryObj?.sub_category },
+          // { SubCategory: baseSubcategory },
           pageSize
         );
         setBaseSubcategoryCourses(
