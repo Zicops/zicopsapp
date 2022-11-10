@@ -60,7 +60,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const [quizProgressData, setQuizProgressData] = useRecoilState(QuizProgressDataAtom);
 
-  const [isTopicContentDataLoaded, setIsTopicContentDataLoaded] = useState(false);
+  const [topicContentDataLoaded, setTopicContentDataLoaded] = useState(null);
 
   // module, chapter, topic data query obj
   const [loadCourseData, { error: errorCourseData, loading: loadingCourseData }] = useLazyQuery(
@@ -104,7 +104,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   useEffect(async () => {
     if (!fullCourse.id) return;
     if (!userData.id) return;
-
+    console.log('data de', moduleData);
     updateModuleData([]);
     updateChapterData([]);
     updateTopicData([]);
@@ -493,11 +493,12 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
   useEffect(async () => {
     if (!moduleData?.length) return;
-    if (isTopicContentDataLoaded) return;
+    if (topicContentDataLoaded !== null) return;
 
-    const topicContentDataLoaded = [];
+    const topicContentData = [];
+
     for (let i = 1; i < moduleData.length; i++) {
-      const mod = moduleData?.[1];
+      const mod = moduleData?.[i];
 
       if (mod?.id) {
         const topicContentRes = await loadTopicContentData({
@@ -508,19 +509,25 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         });
 
         if (topicContentRes?.data?.getTopicContentByModuleId?.length) {
-          topicContentDataLoaded.push(
+          topicContentData.push(
             ...structuredClone(topicContentRes?.data?.getTopicContentByModuleId)
           );
         }
       }
     }
 
+    if (topicContentData?.length) setTopicContentDataLoaded(topicContentData);
+  }, [moduleData]);
+
+  useEffect(async () => {
+    if (!topicContentDataLoaded?.length) return;
+
     const moduleDataLoaded = structuredClone(moduleData);
     const topicDataLoaded = structuredClone(topicData);
 
     topicDataLoaded?.forEach((topic) => {
       const filteredTopicContent = filterTopicContent(topicContentDataLoaded, topic?.id);
-      // console.log(filteredTopicContent);
+
       if (filteredTopicContent?.length) topic.topicContentData = filteredTopicContent;
     });
 
@@ -534,8 +541,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     if (topicDataLoaded?.length) updateTopicData(topicDataLoaded);
 
     updateTopicContent([...topicContent, ...topicContentDataLoaded]);
-    setIsTopicContentDataLoaded(true);
-  }, [moduleData]);
+  }, [topicContentDataLoaded]);
 
   useEffect(() => {
     if (errorModuleData) return setToastMsg({ type: 'danger', message: 'Module Load Error' });
