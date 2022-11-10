@@ -217,6 +217,8 @@ export default function useUserCourseData() {
 
     const assignedCoursesToUser = _assignedCourses;
 
+    console.log(_assignedCourses,'assigned courses')
+
     const userCourseId = [];
 
     const allAssignedCourses = [];
@@ -235,7 +237,7 @@ export default function useUserCourseData() {
       userClient
     );
 
-    // console.log(courseProgressRes, 'sds');
+    console.log(courseProgressRes, 'sds');
 
     if (courseProgressRes?.error) {
       setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
@@ -258,7 +260,7 @@ export default function useUserCourseData() {
     let userCourseArray = [];
 
     for (let i = 0; i < coursesMeta?.length; i++) {
-      if (!coursesMeta[i]?.courseProgres?.length) continue;
+      // if (!coursesMeta[i]?.courseProgres?.length) continue;
       let topicsStarted = 0;
       let userProgressArr = coursesMeta[i]?.courseProgres;
       userProgressArr?.map((topic) => {
@@ -269,7 +271,7 @@ export default function useUserCourseData() {
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-        console.log( userProgressArr,userProgressArr?.length,topicsStarted)
+        // console.log( userProgressArr,userProgressArr?.length,topicsStarted)
 
       const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
         course_id: coursesMeta[i]?.course_id
@@ -344,7 +346,7 @@ export default function useUserCourseData() {
     const userCourses = _userCourses.filter(
       (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
     );
-    console.log(userCourseArray, userCourses);
+    console.log(userCourseArray,"courses");
     if (!userCourses?.length)
       return setToastMsg({ type: 'info', message: 'No courses in your learning folder' });
 
