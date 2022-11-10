@@ -1,3 +1,4 @@
+import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -33,10 +34,13 @@ export default function MyUserPage() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   //handle emails
   async function handleMail() {
+    const { user_lsp_id } = parseJson(sessionStorage?.getItem('lspData'));
     if (loading) return;
     if (emailId.length === 0)
-      return setToastMsg({ type: 'warning', message: 'Add atleast one email!' });
-    let emails = emailId.map((item) => item?.props?.children[0]);
+      return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
+    let emails = !tabData[0]?.name.includes('Invite')
+      ? emailId
+      : emailId.map((item) => item?.props?.children[0]);
     // console.log(emails, emailId);
     //for removing duplicate email ids
     emails = emails.filter((value, index) => emails.indexOf(value) === index);
@@ -52,7 +56,7 @@ export default function MyUserPage() {
     });
 
     if (isError) {
-      const message = JSON.parse(errorMsg.split('body:')[1]);
+      const message = JSON.parse(errorMsg?.split('body:')[1]);
       if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.emailError)
         return setToastMsg({ type: 'danger', message: `Email already exists!` });
       return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
@@ -70,6 +74,10 @@ export default function MyUserPage() {
   useEffect(() => {
     setTab(tabData[0].name);
   }, [tabData]);
+
+  useEffect(() => {
+    setEmailId([]);
+  }, []);
 
   // update type props
   useEffect(() => {
@@ -103,7 +111,15 @@ export default function MyUserPage() {
             dropdownData: {
               label: 'User Type:',
               value: userType,
-              handleChange: (e) => setUserType(e.target.value)
+              handleChange: (e) => setUserType(e.target.value),
+              options: [
+                { value: 'Internal', display: 'Internal' },
+                {
+                  value: 'External',
+                  display: 'External',
+                  isDisabled: !!tabData[0].name.includes('Bulk')
+                }
+              ]
             }
           }}
         />

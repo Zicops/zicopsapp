@@ -381,7 +381,7 @@ export default function useHandleAddUserDetails() {
     const data = res?.data?.updateUser;
     const _userData = { ...userAboutData, ...data };
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
-    setUserDataAbout(_userData);
+    setUserDataAbout({..._userData,isUserUpdated:true});
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
     // console.log(isError,'iserror')
 

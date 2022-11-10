@@ -58,15 +58,13 @@ export default function FavouriteDndCourses({ isLoading }) {
   const [isUpdated, setIsUpdated] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!userData?.id) return;
 
-    loadCourses();
+    isLoading(true);
+    await loadCourses();
+    isLoading(false);
   }, [userData?.id]);
-
-  useEffect(() => {
-    isLoading(loading);
-  }, [loading]);
 
   useEffect(() => {
     if (!isUpdated) return;

@@ -1,0 +1,54 @@
+@import '../../../styles/base.scss';
+
+.inputStyle {
+  margin-bottom: 10px;
+  // width: 400px;
+  width: 100%;
+
+  input {
+    color: $white;
+    background-color: $darkOne;
+    width: 100%;
+    outline: 0;
+    //border: 0;
+    border: 2px solid #6bcfcf;
+    // flex: 1;
+    //color: $secondaryBlack;
+    padding: 7px 10px;
+    // border-radius: 3px;
+    font-size: 16px;
+    margin-bottom: 5px;
+    // height: 40px;
+  }
+}
+
+
+.orgRegisterContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin: auto;
+
+  .checkboxContainer {
+    display: flex;
+    margin: 15px 0;
+    color: $darkThree;
+    font-size: 12px;
+
+    span {
+      color: $primary;
+    }
+
+  }
+
+  .btnContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 10px;
+    // flex-direction: column;
+  }
+
+}

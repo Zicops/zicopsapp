@@ -1,5 +1,6 @@
 import { customSelectStyles } from '@/components/common/FormComponents/Logic/formComponents.helper';
 import ScrollDownAnimation from '@/components/common/ScrollDownAnimation';
+import Button from 'common/components/Button';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
@@ -71,7 +72,7 @@ const HomeInputField = () => {
   return (
     <>
       <div className={`${styles.formContainerWrapper}`}>
-        <form className={`${styles.formContainer}`}>
+        {/* <form className={`${styles.formContainer}`}>
           <span>
             <img src="./images/search2.png" alt="not found" />
           </span>
@@ -100,7 +101,8 @@ const HomeInputField = () => {
           </div>
 
           <button>GO</button>
-        </form>
+        </form> */}
+        <div className={`${styles.buttonContainer}`}><Button size={'large'}  clickHandler={()=>{ router?.push('/create-learning-space')}}>Create Learning Space</Button></div>
         <ScrollDownAnimation />
       </div>
       <footer className={`${styles.HomeFooter}`}>

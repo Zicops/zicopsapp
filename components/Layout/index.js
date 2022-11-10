@@ -14,7 +14,7 @@ import Nav from '../Nav';
 import { main } from './layout.module.scss';
 
 export default function Layout({ children }) {
-  const [userData, setUserData] = useRecoilState(UserStateAtom);
+  const [userAboutData, setUserData] = useRecoilState(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [deleteConfirmData, setDeleteConfirmData] = useRecoilState(DeleteConfirmDataAtom);
@@ -24,23 +24,10 @@ export default function Layout({ children }) {
 
   //refill the  recoil values
   useEffect(async () => {
-    if (userData?.id) return;
+   
+    if(!userAboutData?.id?.length) return loadUserData();
 
-    const data = getUserData();
-    if (data === 'User Data Not Found') return;
-    // const userId = [];
-    // userId.push(data?.id);
-    const userId = data?.id;
-    const userData = await loadQueryDataAsync(
-      GET_USER_DETAIL,
-      { user_id: [userId] },
-      {},
-      userQueryClient
-    );
-    if (userData?.error) return console.log('User data load error');
-    const basicInfo = userData?.getUserDetails?.[0];
-
-    setUserData({ ...userData, ...data, ...basicInfo });
+    if(userAboutData?.isUserUpdated) return loadUserData();
 
     // const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId,lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
     // if(userLearningSpaceData?.error) return console.log('User lsp load error!');
@@ -50,6 +37,25 @@ export default function Layout({ children }) {
     // setUserOrgData(getUserOrgObject({user_lsp_id:userLearningSpaceData?.getUserLspByLspId?.user_lsp_id}));
     return;
   }, []);
+
+  async function loadUserData(){
+    const data = getUserData();
+      if (data === 'User Data Not Found') return;
+      // const userId = [];
+      // userId.push(data?.id);
+      const userId = data?.id;
+    const userData = await loadQueryDataAsync(
+      GET_USER_DETAIL,
+      { user_id: [userId] },
+      {},
+      userQueryClient
+    );
+    if (userData?.error) return console.log('User data load error');
+    const basicInfo = userData?.getUserDetails?.[0];
+
+    setUserData((prev)=>({ ...prev, ...data, ...basicInfo , isUserUpdated:false }));
+    return ;
+  }
 
   useEffect(() => {
     setIsFullHeight(HIDE_HEADER_FOOTER_FOR_ROUTE.includes(router.pathname) ? 1 : 0);

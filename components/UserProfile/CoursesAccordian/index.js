@@ -311,7 +311,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
       const courseProgressRes = await loadQueryDataAsync(
         GET_USER_COURSE_PROGRESS,
-        { userId: currentUserId, userCourseId: mapId },
+        { userId: currentUserId, userCourseId: [mapId] },
         {},
         userClient
       );
@@ -338,6 +338,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       }
 
       // console.log(assignedCoursesToUser[i],'assinged courses to user')
+
       let added_by =
         parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 
@@ -352,12 +353,13 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       });
     }
 
-    if (allAssignedCourses?.length) {
-      const adminAssignedCourses = allAssignedCourses?.filter(
+    const _userCourses = allAssignedCourses?.filter((course) => course?.name?.length);
+    if (_userCourses?.length) {
+      const adminAssignedCourses = _userCourses?.filter(
         (course) => course?.addedby?.role.toLowerCase() !== 'self'
       );
 
-      setCurrentCourses(allAssignedCourses,setCourseLoading(false));
+      setCurrentCourses(_userCourses,setCourseLoading(false));
       setAssignedCourses(adminAssignedCourses);
     }
   }
