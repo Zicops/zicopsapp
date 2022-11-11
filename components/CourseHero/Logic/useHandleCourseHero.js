@@ -59,16 +59,19 @@ export default function useHandleCourseHero(isPreview) {
   useEffect(async () => {
     if (!courseId) return;
 
-    let courseData = null;
-    if (isPreview) {
-      courseData = await loadAndCacheDataAsync(GET_COURSE, {
-        course_id: courseId
-      });
-    } else {
-      courseData = await loadQueryDataAsync(GET_COURSE, {
-        course_id: router?.query?.courseId
-      });
-    }
+    const loadFullCourseData = isPreview ? loadQueryDataAsync : loadAndCacheDataAsync;
+    const courseData = await loadFullCourseData(GET_COURSE, {
+      course_id: courseId
+    });
+    // if (!isPreview) {
+    // courseData = await loadAndCacheDataAsync(GET_COURSE, {
+    //   course_id: courseId
+    // });
+    // } else {
+    //   courseData = await loadQueryDataAsync(GET_COURSE, {
+    //     course_id: courseId
+    //   });
+    // }
 
     if (courseData?.getCourse && !isDataLoaded) {
       updateCourseMaster(courseData.getCourse);
