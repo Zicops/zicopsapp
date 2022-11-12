@@ -46,9 +46,6 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   const { fullCourse } = useContext(courseContext);
   const { setBookmarkData } = useContext(userContext);
 
-  const router = useRouter();
-  const courseId = router?.query?.courseId;
-
   // recoil states
   const userData = useRecoilValue(UserStateAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
@@ -102,15 +99,6 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     useLazyQuery(GET_USER_COURSE_PROGRESS, {
       client: userQueryClient
     });
-
-  useEffect(() => {
-    if (fullCourse?.id === courseId) return;
-
-    updateModuleData([]);
-    updateChapterData([]);
-    updateTopicData([]);
-    updateTopicContent([]);
-  }, [courseId, fullCourse?.id]);
 
   // load module, chapter, topic data and set in recoil
   useEffect(async () => {

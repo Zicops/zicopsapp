@@ -240,8 +240,7 @@ export default function useHandleCourseHero(isPreview) {
 
       setUserCourseData({
         ...userCourseData,
-        userCourseMapping: res?.data?.updateUserCourse || {},
-        isCourseAssigned: true
+        userCourseMapping: res?.data?.updateUserCourse || {}
       });
       setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
       setIsAssignPopUpOpen(false);
@@ -260,8 +259,7 @@ export default function useHandleCourseHero(isPreview) {
 
     setUserCourseData({
       ...userCourseData,
-      userCourseMapping: res?.data?.addUserCourse[0] || {},
-      isCourseAssigned: true
+      userCourseMapping: res?.data?.addUserCourse[0] || {}
     });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
     setIsAssignPopUpOpen(false);

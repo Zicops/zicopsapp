@@ -5,7 +5,7 @@ import { getIdToken, onAuthStateChanged } from 'firebase/auth';
 import { LEARNING_SPACE_ID } from '../helper/constants.helper';
 
 export async function getLatestToken(token) {
-  if (token) {
+  if (!token) return null;
 
   const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   // getting renewed token before time expire
@@ -16,7 +16,7 @@ export async function getLatestToken(token) {
   // const newToken = await getIdToken(auth?.currentUser, true);
   // sessionStorage.setItem('tokenF', newToken);
   // return newToken;
-  }
+
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, () => {
       if (!auth?.currentUser) return;
