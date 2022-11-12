@@ -39,7 +39,6 @@ import { QuizProgressDataAtom, UserCourseDataAtom } from '@/state/atoms/video.at
 import { courseContext } from '@/state/contexts/CourseContext';
 import { userContext } from '@/state/contexts/UserContext';
 import { useLazyQuery } from '@apollo/client';
-import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -507,7 +506,6 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   useEffect(async () => {
     if (!moduleData?.length) return;
     if (topicContentDataLoaded !== null) return;
-    if (courseId !== fullCourse?.id) return;
 
     const topicContentData = [];
 
