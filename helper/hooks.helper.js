@@ -258,7 +258,7 @@ export default function useUserCourseData() {
     let userCourseArray = [];
 
     for (let i = 0; i < coursesMeta?.length; i++) {
-      if (!coursesMeta[i]?.courseProgres?.length) continue;
+      // if (!coursesMeta[i]?.courseProgres?.length) continue;
       let topicsStarted = 0;
       let userProgressArr = coursesMeta[i]?.courseProgres;
       userProgressArr?.map((topic) => {
