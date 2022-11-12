@@ -35,24 +35,27 @@ const UserDisplay = () => {
   }, [isUpdate]);
 
   useEffect(() => {
-    async function loadAndSetUserData() {
-      const data = getUserData();
-      const userId = data?.id;
-      if (!userId) return;
-      const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
-        console.log(err);
-      });
-      if (userData?.error) return console.log('User data load error');
-      const basicInfo = userData?.data?.getUserDetails?.[0];
+    
 
-      setUserProfileData((prevValue) => ({ ...prevValue, ...basicInfo , photoUrl: basicInfo?.photoUrl }));
-      setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
-    }
+    if(!userProfileData?.id?.length) return loadAndSetUserData();
+    if(userProfileData?.isUserUpdated) return loadAndSetUserData();
 
-    if(!userProfileData?.first_name && !userProfileData?.last_name) return loadAndSetUserData();
+    return ;
+  }, [userProfileData]);
 
-    return loadAndSetUserData();
-  }, []);
+  async function loadAndSetUserData() {
+    const data = getUserData();
+    const userId = data?.id;
+    if (!userId) return;
+    const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
+      console.log(err);
+    });
+    if (userData?.error) return console.log('User data load error');
+    const basicInfo = userData?.data?.getUserDetails?.[0];
+
+    setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
+    setUserProfileData((prevValue) => ({ ...prevValue, ...basicInfo , photoUrl: basicInfo?.photoUrl , isUserUpdated:false }));
+  }
 
   // //refill the  recoil values
   // useEffect(async () => {

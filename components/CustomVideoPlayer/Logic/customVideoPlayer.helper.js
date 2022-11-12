@@ -4,7 +4,8 @@ export const BookmarkStartTimeAtom = atom({
   key: 'BookmarkStartTime',
   default: {
     topicId: null,
-    time: null
+    time: null,
+    isClickedWhenPlayerOn: null
   }
 });
 

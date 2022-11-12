@@ -60,7 +60,10 @@ const Congratulations = (props) => {
           }
         />
         <CongratulationsScreenButton
-          handleClick={() => router.push(`/answer-key/cp/${cpId}/exam/${examId}`)}
+          handleClick={() => {
+            const answerKeyRoute = `/answer-key/cp/${cpId}/exam/${examId}`;
+            router.push(`${answerKeyRoute}?attemptId=${attemptData?.attemptId}`, answerKeyRoute);
+          }}
           // title={'View Attempt History'}
           disable={isSampleTest}
           title={

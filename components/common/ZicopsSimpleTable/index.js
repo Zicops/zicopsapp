@@ -12,7 +12,8 @@ export default function ZicopsSimpleTable({
   headingStyleClass,
   rowsPerPageOptions,
   headingStyle,
-  pageSize
+  pageSize,
+  loading = false
 }) {
   return (
     <>
@@ -46,6 +47,7 @@ export default function ZicopsSimpleTable({
             pageSize={pageSize}
             rowsPerPageOptions={[rowsPerPageOptions]}
             pagination
+            loading={loading}
           />
         </div>
       </div>

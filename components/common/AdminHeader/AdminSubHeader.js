@@ -3,6 +3,12 @@ import styles from './adminHeader.module.scss';
 export default function AdminSubHeader({ leftBtnData = [], dropdownData = {} }) {
   const [btn1, btn2, ...extraLeftCompArr] = leftBtnData;
   const { label, isHidden = false, handleChange, inputName } = dropdownData;
+  let options = !!dropdownData?.options?.length
+    ? dropdownData?.options
+    : [
+        { value: 'Internal', display: 'Internal' },
+        { value: 'External', display: 'External' }
+      ];
 
   return (
     <div className={styles.subHeader}>
@@ -26,8 +32,14 @@ export default function AdminSubHeader({ leftBtnData = [], dropdownData = {} }) 
         <div className={styles.right}>
           <label htmlFor="dropdown">{label}</label>
           <select name={inputName} id="dropdown" onChange={handleChange}>
-            <option value="Internal">Internal</option>
-            <option value="External">External</option>
+            {/* <option value="Internal">Internal</option>
+            <option value="External">External</option> */}
+            {options?.map((obj) => (
+              <option value={obj?.value} disabled={!!obj.isDisabled}>
+                {obj.display}
+              </option>
+            ))}
+            {/* <option value="External">External</option> */}
           </select>
         </div>
       )}

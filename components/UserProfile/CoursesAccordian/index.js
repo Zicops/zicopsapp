@@ -9,7 +9,7 @@ import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper'
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { getUnixFromDate } from '@/helper/utils.helper';
+import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -25,6 +25,7 @@ import _styles from '../userProfile.module.scss';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import CurrentCourses from './CurrentCourses';
+import moment from 'moment';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -126,7 +127,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       ...courseAssignData,
       isCourseAssigned: true,
       endDate: new Date(),
-      isMandatory: false
+      isMandatory: false,
+      
     });
     await loadAssignedCourseData();
     setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
@@ -309,7 +311,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
       const courseProgressRes = await loadQueryDataAsync(
         GET_USER_COURSE_PROGRESS,
-        { userId: currentUserId, userCourseId: mapId },
+        { userId: currentUserId, userCourseId: [mapId] },
         {},
         userClient
       );
@@ -335,19 +337,29 @@ const CoursesAccordian = ({ currentUserData = null }) => {
         continue;
       }
 
+      // console.log(assignedCoursesToUser[i],'assinged courses to user')
+
+      let added_by =
+        parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
+
       allAssignedCourses.push({
         ...courseRes?.getCourse,
+        ...assignedCoursesToUser[i],
         completedPercentage: userProgressArr?.length ? courseProgress : 0,
-        added_by: JSON.parse(courseMap?.added_by)
+        added_by: added_by,
+        addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
+        expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
+        created_at:assignedCoursesToUser[i]?.created_at
       });
     }
 
-    if (allAssignedCourses?.length) {
-      const adminAssignedCourses = allAssignedCourses?.filter(
-        (course) => course?.added_by?.role.toLowerCase() !== 'self'
+    const _userCourses = allAssignedCourses?.filter((course) => course?.name?.length);
+    if (_userCourses?.length) {
+      const adminAssignedCourses = _userCourses?.filter(
+        (course) => course?.addedby?.role.toLowerCase() !== 'self'
       );
 
-      setCurrentCourses(allAssignedCourses,setCourseLoading(false));
+      setCurrentCourses(_userCourses,setCourseLoading(false));
       setAssignedCourses(adminAssignedCourses);
     }
   }

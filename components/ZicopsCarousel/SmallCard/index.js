@@ -137,7 +137,7 @@ export default function SmallCard({
                   <div className="one-text">
                     <span className="level noselect">Duration: </span>
                     <span className="value noselect">
-                      {Math.floor(courseData?.duration / 60) || '275'} mins
+                      {Math.ceil(courseData?.duration / 60) || '275'} mins
                     </span>
                   </div>
                 </div>

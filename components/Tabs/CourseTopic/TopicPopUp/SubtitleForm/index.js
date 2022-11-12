@@ -1,3 +1,5 @@
+import ToolTip from '@/components/common/ToolTip';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
@@ -22,7 +24,9 @@ export default function SubtitleForm({ courseId, topicId }) {
 
   const subtitles = useRecoilValue(TopicSubtitleAtom);
 
-  const languageOptions = LANGUAGES?.map((lang) => ({ label: lang, value: lang }));
+  const languageOptions = LANGUAGES?.filter(
+    (lang) => !subtitles.find((sub) => sub.language === lang)
+  )?.map((lang) => ({ label: lang, value: lang }));
 
   return (
     <>
@@ -73,21 +77,30 @@ export default function SubtitleForm({ courseId, topicId }) {
                 clickHandler={toggleSubtitlesForm}
                 styleClass={styles.topicContentSmallBtn}
               />
-              <Button
-                text="Add"
-                clickHandler={addNewSubtitles}
-                styleClass={`${styles.topicContentSmallBtn} ${
-                  isSubtitlesReady ? styles.formFilled : ''
-                }`}
-                isDisabled={!isSubtitlesReady}
-              />
+              <ToolTip title={ADMIN_COURSES.myCourses.subtitles}>
+                <span>
+                  <Button
+                    text="Add"
+                    clickHandler={addNewSubtitles}
+                    styleClass={`${styles.topicContentSmallBtn} ${
+                      isSubtitlesReady ? styles.formFilled : ''
+                    }`}
+                    isDisabled={!isSubtitlesReady}
+                  />
+                </span>
+              </ToolTip>
             </div>
           </div>
         </>
       )}
 
       <div className={`${styles.centerAccordinBtn}`}>
-        <IconButton styleClass="btnBlack" text="Add Subtitles" handleClick={toggleSubtitlesForm} />
+        <IconButton
+          styleClass="btnBlack"
+          text="Add Subtitles"
+          tooltipText={ADMIN_COURSES.myCourses.subtitles}
+          handleClick={toggleSubtitlesForm}
+        />
       </div>
     </>
   );

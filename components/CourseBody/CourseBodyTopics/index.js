@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
@@ -33,6 +34,9 @@ export default function CourseBodyTopics() {
     showResources
   } = useShowData(courseContextData);
 
+  const router = useRouter();
+  const courseId = router?.query?.courseId;
+
   const { fullCourse } = courseContextData;
   const chapterData = useRecoilValue(ChapterAtom);
   const topic = useRecoilValue(TopicAtom);
@@ -44,10 +48,12 @@ export default function CourseBodyTopics() {
   const isChapterPresent = currentModule?.isChapter;
 
   let filteredAndSortedData = [];
-  if (isChapterPresent) {
-    filteredAndSortedData = filterAndSortChapter(chapterData, selectedModule?.value);
-  } else {
-    filteredAndSortedData = filterAndSortTopics(topic, selectedModule?.value);
+  if (fullCourse?.id === courseId) {
+    if (isChapterPresent) {
+      filteredAndSortedData = filterAndSortChapter(chapterData, selectedModule?.value);
+    } else {
+      filteredAndSortedData = filterAndSortTopics(topic, selectedModule?.value);
+    }
   }
 
   let topicIndex = 0;
@@ -69,7 +75,7 @@ export default function CourseBodyTopics() {
       />
 
       {isChapterPresent && filteredAndSortedData
-        ? filteredAndSortedData.map((chapter, index) => (
+        ? filteredAndSortedData?.map((chapter, index) => (
             <ChapterRow
               topics={topic}
               name={chapter.name}
@@ -84,7 +90,7 @@ export default function CourseBodyTopics() {
               showResources={showResources}
             />
           ))
-        : filteredAndSortedData.map((topic, index) => {
+        : filteredAndSortedData?.map((topic, index) => {
             const filteredTopicContent = filterTopicContent(topicContent, topic.id);
 
             return (

@@ -33,11 +33,11 @@ export default function CourseHero({ isPreview = false }) {
     unassignCourseFromUser
   } = useHandleCourseHero(isPreview);
 
-  const [isCourseUnassign , setIsCourseUnassign] = useState(false);
+  const [isCourseUnassign, setIsCourseUnassign] = useState(false);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
   const isLoading = useRecoilValue(isLoadingAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
-  const [isUnAssignPopUpOpen , setIsUnAssignPopUpOpen] = useState(false);
+  const [isUnAssignPopUpOpen, setIsUnAssignPopUpOpen] = useState(false);
 
   const router = useRouter();
   const { fullCourse } = useContext(courseContext);
@@ -53,27 +53,29 @@ export default function CourseHero({ isPreview = false }) {
     category,
     sub_category: subCategory,
     duration,
-    owner: provisionedBy
+    owner: provisionedBy,
+    publisher: publishedBy
   } = fullCourse;
 
-  useEffect(()=>{
-    if(!router?.query?.isAssign) return;
-    if(!fullCourse?.id) return ;
-    if(router?.query?.courseId !== fullCourse?.id) return ;
-    if(courseAssignData?.isCourseAssigned) return ;
+  useEffect(() => {
+    if (!router?.query?.isAssign) return;
+    if (!fullCourse?.id) return;
+    if (router?.query?.courseId !== fullCourse?.id) return;
+    if (courseAssignData?.isCourseAssigned) return;
     return setIsAssignPopUpOpen(true);
   }, [fullCourse]);
 
-  useEffect(()=>{
+  useEffect(() => {
     // console.log(userCourseData?.userCourseMapping)
-    if(!userCourseData?.userCourseMapping) return;
+    if (!userCourseData?.userCourseMapping) return;
     const addedBy = parseJson(userCourseData?.userCourseMapping?.added_by);
     // console.log(addedBy?.role?.toLowerCase())
     // if(userCourseData?.userCourseMapping?.course_status?.toLowerCase() === 'disabled') return ;
-    if(addedBy?.role?.toLowerCase() !== 'self' || !courseAssignData?.isCourseAssigned) return setIsCourseUnassign(false);
-    if(courseAssignData?.isCourseAssigned) return setIsCourseUnassign(true); 
+    if (addedBy?.role?.toLowerCase() !== 'self' || !courseAssignData?.isCourseAssigned)
+      return setIsCourseUnassign(false);
+    if (courseAssignData?.isCourseAssigned) return setIsCourseUnassign(true);
     return setIsCourseUnassign(true);
-  },[userCourseData , courseAssignData?.isCourseAssigned])
+  }, [userCourseData, courseAssignData?.isCourseAssigned]);
 
   return (
     <div
@@ -92,6 +94,7 @@ export default function CourseHero({ isPreview = false }) {
           <CourseHeader
             courseTitle={courseTitle}
             provisionedBy={provisionedBy}
+            publishedBy={publishedBy}
             category={category}
             subCategory={subCategory}
             duration={duration?.toString()}
@@ -99,7 +102,7 @@ export default function CourseHero({ isPreview = false }) {
             isPreview={isPreview}
             isCourseAssigned={courseAssignData?.isCourseAssigned}
             isCourseUnassign={isCourseUnassign}
-            handleUnAssign={()=> setIsUnAssignPopUpOpen(true)}
+            handleUnAssign={() => setIsUnAssignPopUpOpen(true)}
             handleAssign={() => setIsAssignPopUpOpen(true)}
           />
 
@@ -136,7 +139,9 @@ export default function CourseHero({ isPreview = false }) {
               {isLoading ? (
                 <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={400} />
               ) : (
-                `** Suggested duration for completion of this course is ${duration?.toString()} mins`
+                `** Suggested duration for completion of this course is ${Math.ceil(
+                  (duration || 0) / 30
+                )} days`
               )}
               <br />
               {userCourseData?.userCourseMapping?.end_date &&
@@ -271,7 +276,11 @@ export default function CourseHero({ isPreview = false }) {
           btnObj={{
             // leftIsDisable: loading,
             // rightIsDisable:loading,
-            handleClickLeft: async() => {await unassignCourseFromUser() ;setIsUnAssignPopUpOpen(false); setIsCourseUnassign(false)},
+            handleClickLeft: async () => {
+              await unassignCourseFromUser();
+              setIsUnAssignPopUpOpen(false);
+              setIsCourseUnassign(false);
+            },
             handleClickRight: () => setIsUnAssignPopUpOpen(false)
           }}
         />

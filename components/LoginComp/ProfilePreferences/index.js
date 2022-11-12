@@ -1,4 +1,5 @@
 import AddCatSubCat from '@/components/adminComps/ZicopsCourses/AddCatSubCat';
+import Loader from '@/components/common/Loader';
 import PopUp from '@/components/common/PopUp';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
@@ -37,6 +38,7 @@ const ProfilePreferences = ({
 }) => {
   const [vidIsOpen, setVidIsOpen] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
+  const vidRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   // const [searchQuery, setSearchQuery] = useState('')
   const [filteredData, setFilteredData] = useState([]);
@@ -54,7 +56,7 @@ const ProfilePreferences = ({
   };
 
   const { updateAboutUser, addUserLearningSpaceDetails, isSubmitDisable } =
-  useHandleAddUserDetails();
+    useHandleAddUserDetails();
 
   async function handleCompleteSetup() {
     // console.log(selected);
@@ -78,10 +80,11 @@ const ProfilePreferences = ({
   }
 
   const [categories, setCategories] = useState([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState('loading');
 
   useEffect(() => {
-    if (!catSubCat?.cat?.length) return;
+    if (catSubCat.isDataLoaded === null) return;
+    if (!catSubCat?.cat?.length && catSubCat?.isDataLoaded) return setData([]);
 
     const allCatNames = [];
     catSubCat?.cat?.forEach((c) => allCatNames.push(c?.Name));
@@ -89,7 +92,10 @@ const ProfilePreferences = ({
   }, [catSubCat?.cat]);
 
   useEffect(() => {
-    if (!catSubCat?.subCat?.length) return;
+    if (catSubCat.isDataLoaded === null) return;
+    if (!catSubCat?.subCat?.length && catSubCat?.isDataLoaded) return setData([]);
+    // if (catSubCat?.subCat?.length) return setData([]);
+    // return setData([]);
 
     setData(
       catSubCat?.subCat?.map((s) => {
@@ -172,102 +178,103 @@ const ProfilePreferences = ({
   return (
     <>
       <div ref={myRef} className={`${styles.container} ${customClass}`}>
-        {!(data?.length < 5) && (<Grow in={isVisible || isFiltered || searched}>
-          <div className={`${styles.filter_main_container} ${customStyle[0]}`}>
-            <div className={`${styles.title}`}>Sub-Category Selection</div>
-            <div className={`${styles.subtitle}`}>
-              Select minimum 5 sub-categories of your choice ( Selected: {selected.length} )
-            </div>
-            <div className={`${styles.filter_container}`}>
-              <TextField
-                fullWidth
-                placeholder={'Search category/sub-category'}
-                size={'small'}
-                onChange={handleQuery}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleIcon} edge="end">
-                        {!isOpen && (
-                          <Badge color="error" variant="dot" invisible={!isFiltered}>
-                            <FilterListSharpIcon />
-                          </Badge>
-                        )}
-                        {isOpen && <CloseSharpIcon />}
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-              />
-              {isOpen && (
-                <div className={`${styles.filter_drop}`}>
-                  <p>Select Category</p>
-                  <Grid container spacing={2}>
-                    {categories.map((category) => (
-                      <Grid item xs={4}>
-                        <div
-                          className={`${styles.checkbox_container} ${styles.checkbox_container_filter}`}
+        {data?.length > 5 && data !== 'loading' ? (
+          <Grow in={isVisible || isFiltered || searched}>
+            <div className={`${styles.filter_main_container} ${customStyle[0]}`}>
+              <div className={`${styles.title}`}>Sub-Category Selection</div>
+              <div className={`${styles.subtitle}`}>
+                Select minimum 5 sub-categories of your choice ( Selected: {selected.length} )
+              </div>
+              <div className={`${styles.filter_container}`}>
+                <TextField
+                  fullWidth
+                  placeholder={'Search category/sub-category'}
+                  size={'small'}
+                  onChange={handleQuery}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleIcon} edge="end">
+                          {!isOpen && (
+                            <Badge color="error" variant="dot" invisible={!isFiltered}>
+                              <FilterListSharpIcon />
+                            </Badge>
+                          )}
+                          {isOpen && <CloseSharpIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+                {isOpen && (
+                  <div className={`${styles.filter_drop}`}>
+                    <p>Select Category</p>
+                    <Grid container spacing={2}>
+                      {categories.map((category) => (
+                        <Grid item xs={4}>
+                          <div
+                            className={`${styles.checkbox_container} ${styles.checkbox_container_filter}`}
+                            onClick={() => {
+                              if (filteredData.some((obj) => obj === category)) {
+                                deleteFilter(category);
+                              } else setFilteredData([...filteredData, category]);
+                            }}>
+                            <div>{category}</div>
+                            <Checkbox
+                              size={'small'}
+                              checked={filteredData.some((obj) => obj === category)}
+                              // onChange={() => {
+                              //     setData(handleClick(subCategory))
+                              // }}
+                            />
+                          </div>
+                        </Grid>
+                      ))}
+                    </Grid>
+                    <div className={`${styles.apply_btn}`}>
+                      <span />
+                      <div className={`${styles.navigatorBtns}`}>
+                        <Button
+                          disabled={!isFiltered}
+                          size={'small'}
+                          variant={'outlined'}
+                          className={`${styles.transform_text}`}
                           onClick={() => {
-                            if (filteredData.some((obj) => obj === category)) {
-                              deleteFilter(category);
-                            } else setFilteredData([...filteredData, category]);
+                            setIsFiltered(false);
+                            setIsOpen(false);
+                            setFilteredData([]);
                           }}>
-                          <div>{category}</div>
-                          <Checkbox
-                            size={'small'}
-                            checked={filteredData.some((obj) => obj === category)}
-                            // onChange={() => {
-                            //     setData(handleClick(subCategory))
-                            // }}
-                          />
-                        </div>
-                      </Grid>
-                    ))}
-                  </Grid>
-                  <div className={`${styles.apply_btn}`}>
-                    <span />
-                    <div className={`${styles.navigatorBtns}`}>
-                      <Button
-                        disabled={!isFiltered}
-                        size={'small'}
-                        variant={'outlined'}
-                        className={`${styles.transform_text}`}
-                        onClick={() => {
-                          setIsFiltered(false);
-                          setIsOpen(false);
-                          setFilteredData([]);
-                        }}>
-                        Clear
-                      </Button>
-                      <Button
-                        size={'small'}
-                        variant={'contained'}
-                        className={`${styles.input_margin_transform}`}
-                        disabled={filteredData.length === 0}
-                        onClick={() => {
-                          setIsFiltered(true);
-                          setIsOpen(false);
-                        }}>
-                        Apply
-                      </Button>
+                          Clear
+                        </Button>
+                        <Button
+                          size={'small'}
+                          variant={'contained'}
+                          className={`${styles.input_margin_transform}`}
+                          disabled={filteredData.length === 0}
+                          onClick={() => {
+                            setIsFiltered(true);
+                            setIsOpen(false);
+                          }}>
+                          Apply
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        </Grow>)}
-        {(data?.length < 5) ? (
-          <p style={{ textAlign: 'center', fontSize: '20px' }}>
-            There are less than 5 or no subcategories in your learning space. Please continue with your
-            journey by skipping preferences selection here.
-          </p>
-        ) : (
+          </Grow>
+        ): <></>}
+        {data === 'loading' ? (
+          <>
+            <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />
+          </>
+        ) : data?.length > 5 && data !== 'loading' ? (
           <div
             ref={scrollRef}
             className={`${styles.category_and_subCategory} ${customStyle[1]}`}
@@ -285,6 +292,11 @@ const ProfilePreferences = ({
               />
             ))}
           </div>
+        ) : (
+          <p style={{ textAlign: 'center', fontSize: '20px' }}>
+            There are less than 5 or no subcategories in your learning space. Please continue with
+            your journey by skipping preferences selection here.
+          </p>
         )}
 
         <Box mt={3} />
@@ -315,22 +327,26 @@ const ProfilePreferences = ({
               Next
             </Button>
           ) : (
-            <>{isLearnerSide&&(<Button
-            variant={'contained'}
-            className={`${styles.input_margin_transform}`}
-            onClick={() => {
-              closePopUp(false);
-            }}>
-            Close
-          </Button>)}<Button
-              disabled={data?.length > 5 || isLearnerSide}
-              variant={'contained'}
-              className={`${styles.input_margin_transform}`}
-              onClick={() => {
-                handleCompleteSetup();
-              }}>
-              Skip
-            </Button>
+            <>
+              {isLearnerSide && (
+                <Button
+                  variant={'contained'}
+                  className={`${styles.input_margin_transform}`}
+                  onClick={() => {
+                    closePopUp(false);
+                  }}>
+                  Close
+                </Button>
+              )}
+              <Button
+                disabled={data?.length > 5 || isLearnerSide}
+                variant={'contained'}
+                className={`${styles.input_margin_transform}`}
+                onClick={() => {
+                  handleCompleteSetup();
+                }}>
+                Skip
+              </Button>
             </>
           )}
         </div>

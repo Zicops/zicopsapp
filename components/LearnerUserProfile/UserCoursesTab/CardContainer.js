@@ -27,6 +27,7 @@ export default function CardContainer({
   });
 
   const isUnix = !isNaN(+courseData?.created_at);
+  // console.log(courseData,'safa')
 
   useEffect(() => {
     if (!cardContainerRef.current) return;
@@ -91,15 +92,15 @@ export default function CardContainer({
               return (
                 <CourseBoxCard
                   isAdmin={isAdmin}
-                  courseData={{...course, duration: (course?.duration / (60*60))?.toFixed(2)}}
+                  courseData={{...course, duration: (course?.duration / (60))?.toFixed(2)}}
                   footerType={footerType}
                   cardWidth={cardSizeData.cardWidth}>
                   {footerType === 'added' && (
                     <div className={`${styles.leftAlign}`}>
-                      <p>Duration: {course?.duration || 240} mins</p>
-                      <p>Added on {(isUnix
-            ? moment(getDateTimeFromUnix(courseData?.created_at)).format('DD-MM-YYYY')
-            : courseData?.created_at) || '22-06-2022'}</p>
+
+                     <p>Duration: {(course?.duration / (60))?.toFixed(2) || 240} mins</p>
+
+                      <p>Added on {course?.addedOn || '22-06-2022'}</p>
                     </div>
                   )}
                   {footerType === 'adminFooter' && (

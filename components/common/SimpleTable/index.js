@@ -1,4 +1,5 @@
 import { arrayOf, shape, string } from 'prop-types';
+import Loader from '../Loader';
 import styles from './simpleTable.module.scss';
 
 export default function SimpleTable({
@@ -8,6 +9,7 @@ export default function SimpleTable({
   headingStyle,
   headingStyleClass,
   lastCellObj,
+  loading= false
 }) {
   const { columnHeader, rowData } = tableData;
 
@@ -33,8 +35,7 @@ export default function SimpleTable({
 
           {/* table body */}
           <div className={`${styles.tableBody}`}>
-            {/* table row */}
-            {rowData?.map((rows, rowIndex) => (
+            { loading ? <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }}/> : !rowData?.length ? <div className={`${styles.noDataFound}`}>No data found!</div> : <>{rowData?.map((rows, rowIndex) => (
               <div className={`${styles.row}`} key={rowIndex}>
                 {/* table cell */}
                 {rows?.map((cell, cellIndex) => (
@@ -48,7 +49,9 @@ export default function SimpleTable({
                   </span>
                 ))}
               </div>
-            ))}
+            ))}</>}
+            {/* table row */}
+            {}
           </div>
         </div>
       </div>

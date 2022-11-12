@@ -57,7 +57,7 @@ export default function CourseDetails() {
       <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label className="w-25">Level of Expertise:</label>
 
-        <div className="w-25">
+        <div className={`${styles.expertiseLevelCheckboxes}`}>
           <LabeledRadioCheckbox
             type="checkbox"
             label="Beginner"
@@ -67,9 +67,9 @@ export default function CourseDetails() {
             isChecked={fullCourse.expertise_level.includes('Beginner')}
             changeHandler={handleChange}
           />
-        </div>
+          {/* </div>
 
-        <div className="w-25">
+        <div className="w-25"> */}
           <LabeledRadioCheckbox
             type="checkbox"
             label="Competent"
@@ -79,9 +79,9 @@ export default function CourseDetails() {
             isChecked={fullCourse.expertise_level.includes('Competent')}
             changeHandler={handleChange}
           />
-        </div>
+          {/* </div>
 
-        <div className="w-25">
+        <div className="w-25"> */}
           <LabeledRadioCheckbox
             type="checkbox"
             label="Proficient"
@@ -92,6 +92,7 @@ export default function CourseDetails() {
             changeHandler={handleChange}
           />
         </div>
+        <div className="w-50"></div>
       </div>
 
       {/* Upload Course Video */}

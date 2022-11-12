@@ -29,10 +29,12 @@ export default function BookmarkCard({ data = {}, styleClass, bookmarkData = nul
     }
     if (!videoData?.startPlayer && tabs[0].name !== activeCourseTab)
       setActiveCourseTab(tabs[0].name);
+
     setBookmarkStartTime({
       ...bookmarkStartTime,
       time,
-      topicId: !!videoData?.startPlayer ? null : bookmarkData?.topic_id || data?.topic_id
+      topicId: !!videoData?.startPlayer ? null : bookmarkData?.topic_id || data?.topic_id,
+      isClickedWhenPlayerOn: !!videoData?.startPlayer
     });
     // console.log({
     //   ...videoData,
