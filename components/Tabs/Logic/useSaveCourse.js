@@ -123,6 +123,7 @@ export default function useSaveCourse(courseContextData) {
     }
 
     if (!fullCourse.id) {
+      if (!isValidData()) return setIsLoading(null);
       const resObj = await createCourseAndUpdateContext(courseContextData, createCourse);
       setToastMsg({ type: resObj.type, message: resObj.message });
       setIsLoading(addCourseLoading ? 'SAVING...' : null);
