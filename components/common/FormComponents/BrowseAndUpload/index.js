@@ -1,9 +1,9 @@
 import { IMAGE_FILE_TYPES } from '@/helper/constants.helper';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
-import ToolTip from '../../ToolTip';
 import { IsDataPresentAtom } from '../../PopUp/Logic/popUp.helper';
+import ToolTip from '../../ToolTip';
 import styles from '../formComponents.module.scss';
 import PreviewImageVideo from './PreviewImageVideo';
 
@@ -17,8 +17,10 @@ export default function BrowseAndUpload({
   removeTooltipTitle,
   isError,
   acceptedTypes = IMAGE_FILE_TYPES,
-  hidePreviewBtns = false
+  hidePreviewBtns = false,
+  shouldShowPreview = true
 }) {
+  const inputRef = useRef();
   const [showPreview, setShowPreview] = useState(false);
   const [popUpData, setPopUpData] = useState(false);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -41,6 +43,7 @@ export default function BrowseAndUpload({
 
         <input
           type="file"
+          ref={inputRef}
           name={inputName}
           accept={acceptedTypes}
           onChange={(e) => {
@@ -55,33 +58,41 @@ export default function BrowseAndUpload({
               });
             }
             handleFileUpload(e);
+            e.target.value = '';
           }}
         />
 
         {!hidePreviewBtns && (
           <div className={`${styles.btnContainer}`}>
-            <ToolTip title={previewTooltipTitle}>
-            <button
-              className={`${styles.preview}`}
-              onClick={() => {
-                if (previewData?.fileName || previewData?.filePath) {
-                  setPopUpData(isPopUpDataPresent);
-                  setIsPopUpDataPresent(false);
-                  setShowPreview(true);
-                } else {
-                  setToastMsg([
-                    ...toastMsg,
-                    { type: 'warning', message: 'No File detected, Please Upload a File' }
-                  ]);
-                }
-              }}>
-              Preview
-            </button>
-            </ToolTip>
+            {!!shouldShowPreview && (
+              <ToolTip title={previewTooltipTitle}>
+                <button
+                  className={`${styles.preview}`}
+                  onClick={() => {
+                    if (previewData?.fileName || previewData?.filePath) {
+                      setPopUpData(isPopUpDataPresent);
+                      setIsPopUpDataPresent(false);
+                      setShowPreview(true);
+                    } else {
+                      setToastMsg([
+                        ...toastMsg,
+                        { type: 'warning', message: 'No File detected, Please Upload a File' }
+                      ]);
+                    }
+                  }}>
+                  Preview
+                </button>
+              </ToolTip>
+            )}
             <ToolTip title={removeTooltipTitle}>
-            <button className={`${styles.remove}`} onClick={handleRemove}>
-              Remove
-            </button>
+              <button
+                className={`${styles.remove}`}
+                onClick={() => {
+                  handleRemove();
+                  inputRef.current.value = '';
+                }}>
+                Remove
+              </button>
             </ToolTip>
           </div>
         )}

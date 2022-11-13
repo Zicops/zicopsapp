@@ -89,9 +89,12 @@ export default function QuestionMaster({ isEdit, data, uploadDataState, setIsBul
             acceptedTypes=".csv"
             handleFileUpload={handleBulkUpload}
             filePath={'/templates/question-bank-template.csv'}
+            handleRemove={() => setUploadData(null)}
           />
         )}
       </div>
+
+      <div style={{ textAlign: 'right' }}>{uploadData?.[0]?.name}</div>
     </>
   );
 }
