@@ -40,6 +40,15 @@
 }
 
 // bookmark
+.subcatContainer {
+  & > div > div {
+    visibility: hidden;
+  }
+  &:hover > div > div {
+    visibility: visible;
+  }
+}
+
 .bookmarkContainer {
   margin: 0 calc(4% + 10px);
 }
