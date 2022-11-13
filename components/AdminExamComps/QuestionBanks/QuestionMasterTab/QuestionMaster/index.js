@@ -6,13 +6,24 @@ import { useEffect, useState } from 'react';
 import styles from '../questionMasterTab.module.scss';
 import CreateQuestionForm from './CreateQuestionForm';
 
-export default function QuestionMaster({ isEdit, data }) {
+export default function QuestionMaster({ isEdit, data, uploadDataState, setIsBulkUpload }) {
   const [visibleForm, setVisibleForm] = useState(data?.questionData?.type ? 'create' : null);
+
+  const [uploadData, setUploadData] = uploadDataState;
 
   useEffect(() => {
     if (visibleForm === 'create') return;
     setVisibleForm(isEdit ? 'create' : null);
   }, [isEdit]);
+
+  useEffect(() => {
+    setIsBulkUpload(visibleForm === 'upload');
+    setUploadData(null);
+  }, [visibleForm]);
+
+  function handleBulkUpload(e) {
+    setUploadData(e.target.files);
+  }
 
   return (
     <>
@@ -73,7 +84,12 @@ export default function QuestionMaster({ isEdit, data }) {
         {visibleForm === 'create' && <CreateQuestionForm isEdit={isEdit} data={data} />}
 
         {visibleForm === 'upload' && (
-          <UploadForm leftGapClass={'w-12'} filePath={'/templates/question-bank-template.xlsx'} />
+          <UploadForm
+            leftGapClass={'w-12'}
+            acceptedTypes=".csv"
+            handleFileUpload={handleBulkUpload}
+            filePath={'/templates/question-bank-template.csv'}
+          />
         )}
       </div>
     </>
