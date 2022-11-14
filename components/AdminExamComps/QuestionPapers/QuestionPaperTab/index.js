@@ -41,13 +41,17 @@ export default function QuestionPaperTab() {
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
   const [masterData, setMasterData] = useState(null);
 
+  useEffect(() => {
+    setQuestionPaperTabData(getQuestionPaperTabDataObject());
+  }, []);
+
+  useEffect(() => {
+    if (router?.pathname?.endsWith('add')) setTab(paperTabData[0]?.name);
+  }, []);
+
   // load section data and qb mappings
   useEffect(async () => {
-    if (!questionPaperId) {
-      setQuestionPaperTabData(getQuestionPaperTabDataObject());
-      setTab(paperTabData[0].name);
-      return;
-    }
+    if (!questionPaperId) return;
 
     const sectionData = [];
     let mappedQb = [];
@@ -55,7 +59,7 @@ export default function QuestionPaperTab() {
     // load sections
     let isError = false;
     let paperMaster = questionPaperTabData?.paperMaster;
-    if (!questionPaperTabData?.paperMaster?.name) {
+    if (!questionPaperTabData?.paperMaster?.name || !questionPaperTabData?.paperMaster?.id) {
       const metaRes = await loadPaperMeta({
         variables: { question_paper_id: [questionPaperId] }
       }).catch((err) => {
