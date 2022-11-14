@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../state/contexts/CourseContext';
 import Button from '../common/Button';
-import ConfirmPopUp from '../common/ConfirmPopUp';
 import TabContainer from '../common/TabContainer';
 import styles from './courseTabs.module.scss';
 import {
@@ -15,7 +14,6 @@ import {
   tabData
 } from './Logic/tabs.helper';
 import useSaveCourse from './Logic/useSaveCourse';
-
 export default function CourseTabs() {
   const courseContextData = useContext(courseContext);
 
@@ -56,6 +54,7 @@ export default function CourseTabs() {
       // return false;
       if (Router.pathname !== url && !confirm(confirmationMessage)) {
         // setShowConfirmBox(1);
+        router.push(`${router.asPath}?shallowRoute=true`, router.asPath, { shallow: true });
         Router.events.emit('routeChangeError');
 
         // if (showConfirmBox !== 2)
