@@ -58,7 +58,6 @@ export default function BrowseAndUpload({
               });
             }
             handleFileUpload(e);
-            e.target.value = '';
           }}
         />
 
