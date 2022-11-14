@@ -6,7 +6,12 @@ import { useEffect, useState } from 'react';
 import styles from '../questionMasterTab.module.scss';
 import CreateQuestionForm from './CreateQuestionForm';
 
-export default function QuestionMaster({ isEdit, data, uploadDataState, setIsBulkUpload }) {
+export default function QuestionMaster({
+  isEdit,
+  data,
+  uploadDataState = [],
+  setIsBulkUpload = () => {}
+}) {
   const [visibleForm, setVisibleForm] = useState(data?.questionData?.type ? 'create' : null);
 
   const [uploadData, setUploadData] = uploadDataState;
