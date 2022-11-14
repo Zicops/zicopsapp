@@ -2,6 +2,7 @@ import AttempHistory from '@/components/AttemptHistory';
 import RTE from '@/components/common/FormComponents/RTE';
 import ToolTip from '@/components/common/ToolTip';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -42,7 +43,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
 
     setIsExamAccessible(terms && getIsExamAccessible(learnerExamData) && isAttemptLeft);
   }, [terms]);
-  
+
   return (
     <div className={`${styles.examInstContainer}`}>
       <div
@@ -95,7 +96,10 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
           </span>
           <span>
             <img src="/images/ExamInstructions/percent.png" alt="cannot found" /> Passing criteria
-            <span>:</span> <span>{passingCriteriaSymbol(learnerExamData?.examData?.passingCriteria) || 'N/A'}</span>
+            <span>:</span>{' '}
+            <span>
+              {passingCriteriaSymbol(learnerExamData?.examData?.passingCriteria) || 'N/A'}
+            </span>
           </span>
           {isType.takeAnyTime && (
             <span>
@@ -113,8 +117,8 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
               <img src="/images/ExamInstructions/event.png" alt="cannot found" /> Exam Date
               <span>:</span>{' '}
               <span>
-                {learnerExamData?.examData?.examStart?.toDateString
-                  ? learnerExamData?.examData?.examStart?.toDateString()
+                {!!learnerExamData?.examData?.examStart
+                  ? moment(learnerExamData?.examData?.examStart).format('LL')
                   : 'N/A'}
               </span>
             </span>
@@ -272,7 +276,7 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
           </ToolTip>
         </div>
       </div>
-            
+
       {isAttemptHistoryOpen && (
         <AttempHistory
           examId={learnerExamData?.examData?.id}
