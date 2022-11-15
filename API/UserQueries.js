@@ -269,6 +269,77 @@ export const GET_USER_PREFERENCES_DETAILS = gql`
   }
 `;
 
+export const GET_USER_NOTES_BOOKMARKS = gql`
+  query getUserNotesAndBookmarks(
+    $user_id: String!
+    $user_lsp_id: String
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $course_id: String
+  ) {
+    getUserNotes(
+      user_id: $user_id
+      user_lsp_id: $user_lsp_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+      course_id: $course_id
+    ) {
+      notes {
+        user_notes_id
+        user_id
+        user_lsp_id
+        course_id
+        module_id
+        topic_id
+        sequence
+        status
+        details
+        is_active
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+
+    getUserBookmarks(
+      user_id: $user_id
+      user_lsp_id: $user_lsp_id
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+      course_id: $course_id
+    ) {
+      bookmarks {
+        user_bm_id
+        user_id
+        user_lsp_id
+        user_course_id
+        course_id
+        module_id
+        topic_id
+        name
+        time_stamp
+        is_active
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
 export const GET_USER_NOTES = gql`
   query getUserNotes(
     $user_id: String!
@@ -556,7 +627,6 @@ export const GET_USER_QUIZ_ATTEMPTS = gql`
     }
   }
 `;
-
 
 // combined queries
 
