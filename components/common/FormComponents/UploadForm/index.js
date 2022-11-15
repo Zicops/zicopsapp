@@ -7,8 +7,10 @@ export default function UploadForm({
   leftGapClass,
   filePath,
   acceptedTypes = null,
+  showPreview = false,
   fileName = 'Questions Upload Template',
-  handleFileUpload = () => {}
+  handleFileUpload = () => {},
+  handleRemove = () => {}
 }) {
   return (
     <div className={styles.uploadForm} style={customStyles}>
@@ -28,7 +30,12 @@ export default function UploadForm({
       <div className={styles.upload}>
         <label>Upload Profiles: </label>
         <span>Upload Excel filled with data as per the standard template</span>
-        <BrowseAndUpload acceptedTypes={acceptedTypes} handleFileUpload={handleFileUpload} />
+        <BrowseAndUpload
+          shouldShowPreview={showPreview}
+          acceptedTypes={acceptedTypes}
+          handleFileUpload={handleFileUpload}
+          handleRemove={handleRemove}
+        />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { IsCourseSavedAtom } from '@/components/Tabs/Logic/tabs.helper';
-import { COURSE_TYPES, DEFAULT_VALUES } from '@/helper/constants.helper';
+import { DEFAULT_VALUES } from '@/helper/constants.helper';
 import { ApolloProvider, useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -24,12 +24,16 @@ export default function EditCoursePage() {
   const { updateCourseMaster, fullCourse } = useContext(courseContext);
   const router = useRouter();
   const editCourseId = router.query?.courseId || null;
+  const shallowRoute = router.query?.shallowRoute || null;
+
   const [loadCourseData, { error: errorCourseData }] = useLazyQuery(GET_COURSE, {
     client: queryClient
   });
 
   useEffect(() => {
     if (!editCourseId) return;
+    if (shallowRoute) return;
+
     loadCourseData({ variables: { course_id: editCourseId }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
         if (errorCourseData) return setToastMsg({ type: 'danger', message: 'course load error' });

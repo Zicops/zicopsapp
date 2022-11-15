@@ -3,6 +3,7 @@ import { isEmail } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { read, utils } from 'xlsx';
 import UploadForm from '../common/FormComponents/UploadForm';
@@ -16,11 +17,19 @@ export default function BulkUpload() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
+  const [fileData, setFileData] = useState(null);
+
+  useEffect(() => {
+    if (!emails?.length) setFileData(null);
+  }, [emails]);
+
   async function CSV_XLSX_File_Selected_Event(files) {
     if (!files.length) return;
 
     const file = files[0];
+    setFileData(file);
     const reader = new FileReader();
+
     reader.onloadend = async function (event) {
       const arrayBuffer = reader.result;
       const options = { type: 'array' };
@@ -41,8 +50,10 @@ export default function BulkUpload() {
         }
       });
 
-      if (!uniqueEmails?.length)
+      if (!uniqueEmails?.length) {
+        setFileData(null);
         return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
+      }
 
       setEmails(uniqueEmails);
     };
@@ -55,10 +66,14 @@ export default function BulkUpload() {
         filePath="/templates/user-invite-template.xlsx"
         fileName="Bulk Invite Template"
         acceptedTypes=".xlsx, .csv"
-        handleFileUpload={(e) => {
-          CSV_XLSX_File_Selected_Event(e.target.files);
+        handleRemove={() => {
+          setFileData(null);
+          setEmails([]);
         }}
+        handleFileUpload={(e) => CSV_XLSX_File_Selected_Event(e.target.files)}
       />
+
+      <div style={{ textAlign: 'right', marginTop: '20px' }}>{fileData?.name}</div>
     </>
   );
 }

@@ -9,7 +9,10 @@ export default function SearchSubCat({ data }) {
       {data?.length ? (
         <TwoRowCarousel
           itemsArr={data}
-          carouselProps={{ containerClass: styles.bookmarkContainer }}
+          carouselProps={{
+            containerClass: styles.bookmarkContainer,
+            twoRowCarouselClass: styles.subcatContainer
+          }}
           CardComp={SubCatCard}
           // cardProps={{ name: 'Investment & Finance' }}
           responsiveViews={[7, 6, 6]}

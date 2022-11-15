@@ -38,7 +38,7 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import ExamScreenPage from '@/components/LearnerExamComp/ExamScreenPage';
-import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
+import { getEndTime, getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
@@ -213,6 +213,9 @@ const ExamScreen = () => {
         bufferTime: schData?.BufferTime || 0,
         is_schedule_active: schData?.IsActive || true
       };
+      if (!schObj?.examEnd) {
+        schObj.examEnd = new Date(getEndTime({ examData: { ...schObj, ...masterObj } }));
+      }
     }
 
     // load config
@@ -249,7 +252,10 @@ const ExamScreen = () => {
 
     if (!data?.userCourseProgress?.length && data?.userCourseMapping?.user_course_id) {
       const progressRes = await loadUserCourseProgress({
-        variables: { userId: userData?.id, userCourseId: [data?.userCourseMapping?.user_course_id] },
+        variables: {
+          userId: userData?.id,
+          userCourseId: [data?.userCourseMapping?.user_course_id]
+        },
         fetchPolicy: 'no-cache'
       });
       const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
