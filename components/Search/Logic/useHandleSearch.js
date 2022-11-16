@@ -137,7 +137,7 @@ export default function useHandleSearch() {
   }, [courseLoading]);
 
   useEffect(() => {
-    if (!courses?.length) return;
+    // if (!courses?.length) return;
 
     // const _filteredCourses = courses?.filter((course, i) => {
     //   // const nameFilter = course?.name
