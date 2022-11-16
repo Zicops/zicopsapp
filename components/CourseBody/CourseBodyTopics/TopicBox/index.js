@@ -340,7 +340,7 @@ export default function TopicBox({
     async function loadUserExamAttempts() {
       const attemptRes = await loadQueryDataAsync(
         GET_USER_EXAM_ATTEMPTS,
-        { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
+        { user_id: userData?.id, exam_id: topicExam?.examId },
         {},
         userQueryClient
       );

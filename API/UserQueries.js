@@ -423,8 +423,8 @@ export const GET_USER_BOOKMARKS = gql`
 `;
 
 export const GET_USER_EXAM_ATTEMPTS = gql`
-  query getUserExamAttempts($user_id: String!, $user_lsp_id: String!) {
-    getUserExamAttempts(user_id: $user_id, user_lsp_id: $user_lsp_id) {
+  query getUserExamAttempts($user_id: String, $exam_id: String!) {
+    getUserExamAttempts(user_id: $user_id, exam_id: $exam_id) {
       user_ea_id
       user_id
       user_lsp_id
@@ -444,19 +444,23 @@ export const GET_USER_EXAM_ATTEMPTS = gql`
 `;
 
 export const GET_USER_EXAM_RESULTS = gql`
-  query getUserExamResults($user_id: String!, $user_ea_id: String!) {
-    getUserExamResults(user_id: $user_id, user_ea_id: $user_ea_id) {
-      user_er_id
+  query getUserExamResults($user_ea_details: [UserExamResultDetails!]!) {
+    getUserExamResults(user_ea_details: $user_ea_details) {
       user_id
       user_ea_id
-      user_score
-      correct_answers
-      wrong_answers
-      result_status
-      created_by
-      updated_by
-      created_at
-      updated_at
+      results {
+        user_er_id
+        user_id
+        user_ea_id
+        user_score
+        correct_answers
+        wrong_answers
+        result_status
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
     }
   }
 `;

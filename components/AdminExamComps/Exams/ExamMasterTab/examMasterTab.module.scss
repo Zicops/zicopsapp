@@ -144,7 +144,7 @@
 
     input,
     select {
-      color:inherit;
+      color: inherit;
       background-color: inherit;
     }
 
@@ -191,5 +191,26 @@
 
   div {
     margin-top: 0px;
+  }
+}
+
+.examResultsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    list-style: none;
+  }
+
+  .btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
   }
 }

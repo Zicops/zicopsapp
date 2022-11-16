@@ -198,7 +198,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
+      { user_id: userData?.id, exam_id: examId },
       {},
       userQueryClient
     );
@@ -258,7 +258,6 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
     if (userExamData?.isBtnActive) return clearTimeout(timer);
     timer = setTimeout(() => setCounter((prev) => !prev), SYNC_DATA_IN_SECONDS * 1000);
     return () => clearTimeout(timer);
-
   }, [counter]);
 
   useEffect(() => {
