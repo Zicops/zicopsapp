@@ -1,4 +1,4 @@
-import styles from './TextHeaderWithEditIcon.module.scss';
+import styles from './textHeaderWithEditIcon.module.scss';
 
 export default function TextHeaderWithEditIcon({headingText, showIcon = true, handleClick}) {
   return (
