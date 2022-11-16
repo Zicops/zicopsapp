@@ -1,9 +1,12 @@
 // components\AdminExamComps\Exams\ExamMasterTab\ExamResults.js
 
 import IconBtn from '@/components/common/IconBtn';
+import Loader from '@/components/common/Loader';
 import PopUp from '@/components/common/PopUp';
 import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
+import { parseJson, secondsToHMS } from '@/helper/utils.helper';
 import { ExamTabDataAtom } from '@/state/atoms/exams.atoms';
+import moment from 'moment';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from './examMasterTab.module.scss';
@@ -28,8 +31,12 @@ export default function ExamResults() {
 
     averageMarks: examResultsData?.averageMarks?.toPrecision(4),
     highestMarks: examResultsData?.highestMarks,
-    lowestMarks: examResultsData?.lowestMarks
+    lowestMarks: examResultsData?.lowestMarks,
+
+    userExamResult: examResultsData?.allAttempts || null
   };
+
+  let serialNo = 0;
 
   return (
     <>
@@ -55,8 +62,70 @@ export default function ExamResults() {
         <PopUp
           title={'Individual Performance of Participants'}
           popUpState={[showDetailsResults, setShowDetailsResults]}
+          size="large"
           isFooterVisible={false}>
-          Result data
+          {examData?.userExamResult != null ? (
+            <div className={styles.resultsTable}>
+              <table>
+                <thead>
+                  <tr>
+                    <td>Sr No</td>
+                    <td>Attempted By</td>
+                    <td>Attempt Number</td>
+                    <td>Time Taken</td>
+                    <td>Finished At</td>
+                    <td>Marks Obtained</td>
+                    <td>No of questions answered correctly</td>
+                    <td>No of questions answered incorrect</td>
+                    <td>Result Status</td>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {examData?.userExamResult?.length ? (
+                    examData?.userExamResult?.map((attemptData) => {
+                      if (!attemptData?.resultData) return;
+
+                      const results = attemptData?.resultData?.results?.[0];
+                      const status = parseJson(results?.result_status)?.status;
+                      const resultStatus = +passingMarks === 0 ? 'completed' : status;
+
+                      return (
+                        <tr key={attemptData?.user_ea_id}>
+                          <td>{++serialNo}</td>
+                          <td>
+                            {attemptData?.userData?.first_name} {attemptData?.userData?.last_name}
+                          </td>
+                          <td>{attemptData?.attempt_no}</td>
+                          <td>{secondsToHMS(attemptData?.attempt_duration)}</td>
+                          <td>
+                            {moment.unix(results?.finishedAt || results?.created_at).format('LLL')}
+                          </td>
+                          <td>{results?.user_score}</td>
+                          <td>{results?.correct_answers}</td>
+                          <td>{results?.wrong_answers}</td>
+                          <td
+                            className={`${
+                              resultStatus?.includes('failed') ? styles.red : styles.green
+                            } ${styles.result}`}>
+                            {resultStatus}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={10} className={styles.fallback}>
+                        No Attempts Data Found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <Loader customStyles={{ maxHeight: '300px' }} />
+          )}
         </PopUp>
       )}
     </>

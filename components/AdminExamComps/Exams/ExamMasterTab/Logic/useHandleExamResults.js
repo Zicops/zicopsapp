@@ -1,4 +1,9 @@
-import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
+import {
+  GET_USER_DETAIL,
+  GET_USER_EXAM_ATTEMPTS,
+  GET_USER_EXAM_RESULTS,
+  userQueryClient
+} from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -17,6 +22,7 @@ export default function useHandleExamResults() {
   useEffect(async () => {
     if (!examId) return;
 
+    // user attempts
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
       { exam_id: examId },
@@ -66,58 +72,69 @@ export default function useHandleExamResults() {
       }
     }
 
-    const resultRes = await loadQueryDataAsync(
-      GET_USER_EXAM_RESULTS,
-      { user_ea_details: _examResultsData?.user_ea_details },
-      {},
-      userQueryClient
-    );
+    // attempt results
+    let resultRes = null;
+    if (_examResultsData?.user_ea_details?.length) {
+      resultRes = loadQueryDataAsync(
+        GET_USER_EXAM_RESULTS,
+        { user_ea_details: _examResultsData?.user_ea_details },
+        {},
+        userQueryClient
+      );
 
-    if (resultRes?.error) return setToastMsg({ type: 'danger', message: 'Result Load Error' });
-
-    const allResults = resultRes?.getUserExamResults;
-
-    _examResultsData.allResults = allResults;
-
-    const allUserScore = [];
-    for (let i = 0; i < allResults?.length; i++) {
-      const resultData = allResults?.[i]?.results?.[0];
-
-      const resultStatus = parseJson(resultData?.result_status);
-      console.log(resultData, resultStatus);
-
-      if (resultStatus?.status === 'passed') _examResultsData.usersPassed += 1;
-      if (resultStatus?.status === 'failed') _examResultsData.usersFailed += 1;
-
-      allUserScore.push(+resultData?.user_score);
-      //     "user_id": "dmFqcmVzaDAwNUBnbWFpbC5jb20=",
-      //     "user_ea_id": "cdqfgtafbmogdqll6u6g",
-      //     "results": [
-      //         {
-      //             "user_er_id": "cdqfh02fbmogdqll6u9g",
-      //             "user_id": "dmFqcmVzaDAwNUBnbWFpbC5jb20=",
-      //             "user_ea_id": "cdqfgtafbmogdqll6u6g",
-      //             "user_score": 0,
-      //             "correct_answers": 0,
-      //             "wrong_answers": 5,
-      //             "result_status": "{\"status\":\"failed\",\"totalMarks\":25,\"passingMarks\":15,\"finishedAt\":1668610175}",
-      //             "created_by": "vajresh005@gmail.com",
-      //             "updated_by": "vajresh005@gmail.com",
-      //             "created_at": "1668610176",
-      //             "updated_at": "1668610176",
-      //             "__typename": "UserExamResult"
-      //         }
+      if (resultRes?.error) return setToastMsg({ type: 'danger', message: 'Result Load Error' });
     }
 
-    _examResultsData.highestMarks = Math.max(...allUserScore);
-    _examResultsData.lowestMarks = Math.min(...allUserScore);
+    // user details
+    const userData = [];
+    if (_examResultsData?.allUserIds?.length) {
+      const userDetailsRes = await loadQueryDataAsync(
+        GET_USER_DETAIL,
+        { user_id: [...new Set(_examResultsData?.allUserIds)] },
+        {},
+        userQueryClient
+      );
 
-    //   https://stackoverflow.com/questions/52139703/average-with-the-reduce-method-in-javascript
-    _examResultsData.averageMarks = allUserScore?.reduce(function (avg, value, _, { length }) {
-      return avg + value / length;
-    }, 0);
+      if (userDetailsRes?.error)
+        return setToastMsg({ type: 'danger', message: 'User Data Load Error' });
 
-    console.log(allAttempts, _examResultsData, allResults);
+      userData.push(...userDetailsRes?.getUserDetails);
+    }
+
+    const results = await resultRes;
+    const allResults = results?.getUserExamResults;
+    if (allResults?.length) {
+      _examResultsData.allResults = allResults;
+
+      const allUserScore = [];
+      for (let i = 0; i < allResults?.length; i++) {
+        const resultData = allResults?.[i]?.results?.[0];
+
+        const resultStatus = parseJson(resultData?.result_status);
+        console.log(resultData, resultStatus);
+
+        if (resultStatus?.status === 'passed') _examResultsData.usersPassed += 1;
+        if (resultStatus?.status === 'failed') _examResultsData.usersFailed += 1;
+
+        allUserScore.push(+resultData?.user_score);
+      }
+
+      _examResultsData.highestMarks = Math.max(...allUserScore);
+      _examResultsData.lowestMarks = Math.min(...allUserScore);
+
+      //   https://stackoverflow.com/questions/52139703/average-with-the-reduce-method-in-javascript
+      _examResultsData.averageMarks = allUserScore?.reduce(function (avg, value, _, { length }) {
+        return avg + value / length;
+      }, 0);
+    }
+
+    _examResultsData?.allAttempts?.forEach((attempt) => {
+      attempt.userData = userData?.find((d) => d?.id === attempt?.user_id);
+      attempt.resultData =
+        _examResultsData?.allResults?.find((r) => r?.user_ea_id === attempt?.user_ea_id) || null;
+    });
+
+    console.log(allAttempts, _examResultsData);
     setExamResultsData(_examResultsData);
   }, [examId]);
 
