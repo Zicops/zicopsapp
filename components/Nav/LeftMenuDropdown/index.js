@@ -97,7 +97,8 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
           Preference Center
         </>
       ),
-      link: '/',
+      link: '/my-profile?basepref=' + basePref?.sub_category,
+      asUrl: '/my-profile',
       isPreferenceCentre: true,
       customStyle: {
         backgroundColor: 'var(--black)',
@@ -177,7 +178,8 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
           Preference Center
         </>
       ),
-      link: '/',
+      link: '/my-profile?basepref=' + basePref?.sub_category,
+      asUrl: '/my-profile',
       isPreferenceCentre: true,
       customStyle: {
         backgroundColor: 'var(--black)',
