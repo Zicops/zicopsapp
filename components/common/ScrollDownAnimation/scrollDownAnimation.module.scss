@@ -12,10 +12,10 @@ $ANIMATION_DURATION : 1000ms;
         animation-delay: 0;
     }
     .imageMiddle {
-        animation-delay: $ANIMATION_DURATION * 1 / 3;
+        animation-delay: calc($ANIMATION_DURATION * 1 / 3);
     }
     .imageBottom {
-        animation-delay: $ANIMATION_DURATION * 2 / 3;
+        animation-delay: calc($ANIMATION_DURATION * 2 / 3);
     }
 }
 

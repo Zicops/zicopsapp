@@ -37,7 +37,7 @@ export default function Folder({ isDrag, total, handleClick = () => {} }) {
           right={-5}
           sx={{
             transform: isDrag ? 'rotateX(30deg)' : '',
-            boxShadow: isDrag ? '0px 1px 0px rgba(110, 205, 205, 0.17)' : '',
+            // boxShadow: isDrag ? '0px 1px 0px rgba(110, 205, 205, 0.17)' : '',
             transformOrigin: 'bottom',
             transition: 'transform 0.2s, boxShadow 0.2s'
           }}>

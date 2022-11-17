@@ -73,12 +73,14 @@ const BigCardSlider = ({
                 />
               );
 
+            let imgSrc = `/images/${data}.png`;
             return bigBox ? (
               <div
                 className="bigBox"
                 key={index}
                 onClick={() => router.push('/search-page/?lang=' + data, '/search-page')}>
-                {data}
+                <img src={imgSrc} alt="" />
+                <span>{data}</span>
               </div>
             ) : (
               <BigCard key={data?.id} data={data} />
@@ -96,15 +98,26 @@ const BigCardSlider = ({
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            border: 2px solid transparent;
-            border-radius: 10px;
+            // border: 2px solid transparent;
+            border-radius: 20px;
             font-size: 2rem;
             font-weight: bolder;
             word-break: break-word;
-            box-shadow: 5px -5px 10px 0 #86868640, -5px 5px 10px 0 #00000080;
+            // box-shadow: 5px -5px 10px 0 #86868640, -5px 5px 10px 0 #00000080;
+            transition: scale 0.3s;
+          }
+          .bigBox img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+          }
+          .bigBox span {
+            z-index: 2;
           }
           .bigBox:hover {
-            border: 2px solid var(--dark_three);
+            // border: 2px solid var(--dark_three);
+            scale: 1.05;
+            transition: scale 0.3s;
           }
           .last-text-big {
             // padding: 48% 0;
