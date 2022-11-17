@@ -39,12 +39,16 @@ import { QuizProgressDataAtom, UserCourseDataAtom } from '@/state/atoms/video.at
 import { courseContext } from '@/state/contexts/CourseContext';
 import { userContext } from '@/state/contexts/UserContext';
 import { useLazyQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useLoadUserData(isPreview, setSelectedModule, getModuleOptions) {
   const { fullCourse } = useContext(courseContext);
   const { setBookmarkData } = useContext(userContext);
+
+  const router = useRouter();
+  const courseId = router?.query?.courseId;
 
   // recoil states
   const userData = useRecoilValue(UserStateAtom);
@@ -99,6 +103,15 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     useLazyQuery(GET_USER_COURSE_PROGRESS, {
       client: userQueryClient
     });
+
+  useEffect(() => {
+    if (fullCourse?.id === courseId) return;
+
+    updateModuleData([]);
+    updateChapterData([]);
+    updateTopicData([]);
+    updateTopicContent([]);
+  }, [courseId, fullCourse?.id]);
 
   // load module, chapter, topic data and set in recoil
   useEffect(async () => {
@@ -494,6 +507,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   useEffect(async () => {
     if (!moduleData?.length) return;
     if (topicContentDataLoaded !== null) return;
+    if (courseId !== fullCourse?.id) return;
 
     const topicContentData = [];
 

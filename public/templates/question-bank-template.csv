@@ -1,0 +1,10 @@
+Sample Question Template,,,,,,,,,
+"Instructions:
+1. Do not change the format or structure of this file
+2. Do not delete any column
+3. Do not add any new column
+4. Do not rename any column header
+5. Sample data in row 1 is only for reference, please delete before final upload
+6. Please enter comma (,) separated values in required column for multiple correct options",,,,,,,,,
+5,Question Type,Difficulty Score,Question,Hint,Option A,Option B,Option C,Option D,Correct Option(s)
+1,MCQ,8,Find the output of following code,NA,1250,2,50,250,"A,D"

@@ -1795,6 +1795,12 @@ export const UPLOAD_STATIC_CONTENT = gql`
   }
 `;
 
+export const BULK_UPLOAD_QUESTIONS = gql`
+  mutation bulkAddQuestionBankQuestions($csv: Upload!, $qbId: String!) {
+    bulkAddQuestionBankQuestions(qbId: $qbId, qfile: $csv)
+  }
+`;
+
 // DELETE
 export const DELETE_CAT_MAIN = gql`
   mutation deleteCatMain($id: ID) {

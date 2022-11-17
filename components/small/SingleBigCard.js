@@ -29,13 +29,13 @@ export default function BigCard({data}) {
               position: absolute;
               width: 100%;
               top: 5%;
-              font-size: 2.5vw;
-              font-weight: normal;
+              font-size: 2.2vw;
+              font-weight: bold;
               text-transform: uppercase;
               word-wrap: break-word;
               text-align: center;
               padding: 20px;
-              text-shadow: 2px 3px 5px rgba(0, 0, 0, 1);
+              text-shadow: 3px 4px 5px rgba(0, 0, 0, 1);
             }
           `}
         </style>

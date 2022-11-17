@@ -1,0 +1,27 @@
+@import '../../../styles/base.scss';
+.AdminInfoWraper {
+    background-color: transparent;
+    border-radius: 16px;
+    padding: 20px 10px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.singleWraper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    padding: 15px 0px;
+}
+
+.singleImage img {
+    width: 2.6vw;
+    padding-right: 20px;
+}
+
+.smallText {
+    font-size: 1vw;
+    color: $bgBody;
+    // padding-bottom: 2px;
+}
