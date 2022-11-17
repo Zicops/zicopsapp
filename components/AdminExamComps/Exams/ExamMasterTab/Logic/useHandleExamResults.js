@@ -31,7 +31,7 @@ export default function useHandleExamResults() {
     );
     if (attemptRes?.error) return setToastMsg({ type: 'danger', message: 'Attempts Load Error' });
 
-    const allAttempts = attemptRes?.getUserExamAttempts;
+    const allAttempts = attemptRes?.getUserExamAttempts || [];
     const _examResultsData = {
       allUserIds: [],
       user_ea_details: [],

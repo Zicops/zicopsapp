@@ -7,6 +7,7 @@ import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper'
 import { parseJson, secondsToHMS } from '@/helper/utils.helper';
 import { ExamTabDataAtom } from '@/state/atoms/exams.atoms';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from './examMasterTab.module.scss';
@@ -17,26 +18,32 @@ export default function ExamResults() {
   const { examResultsData } = useHandleExamResults();
   const examTabData = useRecoilValue(ExamTabDataAtom);
 
+  const router = useRouter();
+  const examId = router.query?.examId;
+
   const passingMarks = getPassingMarks(
     `${examTabData?.passing_criteria}-${examTabData?.passing_criteria_type}`,
     examTabData?.total_marks
   );
 
   const examData = {
-    numberOfAttempts: examResultsData?.allAttempts?.length,
+    numberOfAttempts: examResultsData?.allAttempts?.length || 0,
     uniqueAttempts: [...new Set(examResultsData?.allUserIds)]?.length,
 
     passedParticipants: +passingMarks === 0 ? 'N/A' : examResultsData?.usersPassed,
     failedParticipants: +passingMarks === 0 ? 'N/A' : examResultsData?.usersFailed,
 
-    averageMarks: examResultsData?.averageMarks?.toPrecision(4),
-    highestMarks: examResultsData?.highestMarks,
-    lowestMarks: examResultsData?.lowestMarks,
+    averageMarks: examResultsData?.averageMarks?.toPrecision(4) || 'N/A',
+    highestMarks: examResultsData?.highestMarks || 'N/A',
+    lowestMarks: examResultsData?.lowestMarks || 'N/A',
 
-    userExamResult: examResultsData?.allAttempts || null
+    userExamResult: examResultsData?.allAttempts
   };
 
   let serialNo = 0;
+
+  if (examTabData?.id !== examId || examResultsData?.allAttempts == null)
+    return <Loader customStyles={{ height: '100%', backgroundColor: 'transparent' }} />;
 
   return (
     <>
