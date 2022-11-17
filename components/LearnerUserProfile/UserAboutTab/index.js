@@ -8,6 +8,7 @@ import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import CategoryPreferences from '../CategoryPreferences';
@@ -33,6 +34,7 @@ const UserAboutTab = () => {
   const { getUserPreferences } = useCommonHelper();
 
   const [subCategory, setSubCategory] = useState([]);
+  const [baseSubCategory, setBaseSubCategory] = useState('');
   const [isOpen, setIsopen] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(2);
   const [selected, setSelected] = useState([]);
@@ -71,6 +73,18 @@ const UserAboutTab = () => {
     }));
   }, [userDataGlobal?.preferences]);
 
+  const router = useRouter();
+
+  useEffect(() => {
+    const basepref = router.query?.basepref;
+    if (!basepref) return;
+    if (basepref) {
+      setIsopen(true);
+      setCurrentComponent(3);
+      setBaseSubCategory(basepref);
+    } 
+  }, [router.query]);
+
   return (
     <div className={`${styles.userAboutTab}`}>
       <SingleUserDetail
@@ -101,7 +115,7 @@ const UserAboutTab = () => {
       <CategoryPreferences
         subCategoryData={userDataGlobal?.preferences?.filter((s) => s?.is_active)}
       />
-      <PopUp popUpState={[isOpen, setIsopen]} isFooterVisible={false}>
+      <PopUp positionLeft="50%" popUpState={[isOpen, setIsopen]} isFooterVisible={false}>
         <div className={`${styles.container}`}>
           {currentComponent === 2 && (
             <ProfilePreferences
@@ -118,6 +132,7 @@ const UserAboutTab = () => {
           {currentComponent === 3 && (
             <SubCategoriesPreview
               isUpdate={true}
+              basepref={baseSubCategory}
               selected={selected}
               setSelected={setSelected}
               setCurrentComponent={setCurrentComponent}

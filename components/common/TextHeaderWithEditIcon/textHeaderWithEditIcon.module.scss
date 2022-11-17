@@ -1,0 +1,21 @@
+@import '../../../styles/base.scss';
+
+.textEditIcon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text {
+    color: var(--white);
+    font-weight: 600;
+    font-size: 22px;
+}
+
+.Icon img {
+    width: 1.5vw;
+
+    &:hover {
+        cursor: pointer;
+    }
+}

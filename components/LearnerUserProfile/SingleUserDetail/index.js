@@ -1,3 +1,4 @@
+import TextHeaderWithEditIcon from '@/components/common/TextHeaderWithEditIcon';
 import styles from '../learnerUserProfile.module.scss';
 import UserInfoWraper from '../UserInfoWraper';
 
@@ -11,13 +12,14 @@ const SingleUserDetail = ({
 }) => {
   return (
     <>
-      <div className={`${styles.textEditIcon}`}>
+      {/* <div className={`${styles.textEditIcon}`}>
         <div className={`${styles.text}`}>{headingText}</div>
         <div className={`${styles.Icon}`} onClick={toggleEditable}>
           <img src="/images/svg/edit.svg" />
         </div>
       </div>
-      <hr />
+      <hr /> */}
+      <TextHeaderWithEditIcon headingText={headingText} handleClick={toggleEditable} />
       <UserInfoWraper
         userData={userData}
         toggleEditable={toggleEditable}
