@@ -6,11 +6,11 @@ export default function SingleInfoBlock({ userData, showImg = true, isEditable =
     <div className={`${styles.singleWraper}`}>
       {showImg && (
         <div className={`${styles.singleImage}`}>
-          <img src={userData.image} />
+          <img src={userData?.image} />
         </div>
       )}
       <div className={`${styles.textWraper}`}>
-        <div className={`${styles.smallText}`}>{userData.label}:</div>
+        <div className={`${styles.smallText}`}>{userData?.label}:</div>
         {isEditable ? (
           userData?.label === 'Contact' ? (
             <div className={`${styles.contactInputContainer}`}>
@@ -28,9 +28,9 @@ export default function SingleInfoBlock({ userData, showImg = true, isEditable =
             <LabeledInput
               styleClass={`${styles.inputField}`}
               inputOptions={{
-                inputName: `${userData.inputName}`,
-                placeholder: `Enter ${userData.label}`,
-                value: userData.info,
+                inputName: `${userData?.inputName}`,
+                placeholder: `Enter ${userData?.label}`,
+                value: userData?.info,
                 maxLength: 60,
                 isDisabled: false
               }}
@@ -38,7 +38,7 @@ export default function SingleInfoBlock({ userData, showImg = true, isEditable =
             />
           )
         ) : (
-          <div className={`${styles.largeText}`}>{userData.info}</div>
+          <div className={`${styles.largeText}`}>{userData?.info}</div>
         )}
       </div>
     </div>

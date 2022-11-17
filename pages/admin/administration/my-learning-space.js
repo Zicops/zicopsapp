@@ -9,73 +9,66 @@ import BulkUpload from '@/components/UserComps/BulkUpload';
 import InviteUser from '@/components/UserComps/InviteUser';
 import AdminInfoWrapper from './AdminInfoWrapper';
 
-const userData = [
-  {
-    image: '/images/svg/account_circle.svg',
-    inputName: 'first_name',
-    info: 'Information Technology',
-    label: 'Industry'
-  },
-  {
-    image: '/images/svg/account_circle.svg',
-    inputName: 'last_name',
-    info: 'Organization',
-    label: 'Type'
-  },
-  {
-    image: '/images/svg/mail.svg',
-    inputName: 'email',
-    info: '750',
-    label: 'Number of Employees'
-  },
-  {
-    image: '/images/svg/call.svg',
-    inputName: 'phone',
-    info: 'Pune',
-    label: 'City'
-  },
-  {
-    image: '/images/svg/call.svg',
-    inputName: 'phone',
-    info: 'https://zicops.com/',
-    label: 'Website'
-  },
-  {
-    image: '/images/svg/call.svg',
-    inputName: 'phone',
-    info: 'www.linkedin.com/company/zicops/',
-    label: 'LinkedIn'
-  }
-];
+
 
 export default function LspPage() {
+  const lspData = [
+    {
+      image: '/images/svg/account_circle.svg',
+      inputName: 'first_name',
+      info: 'Zicops',
+      label: 'Organization Name'
+    },
+    {
+      image: '/images/svg/account_circle.svg',
+      inputName: 'last_name',
+      info: 'India',
+      label: 'Country'
+    },
+    {
+      image: '/images/svg/call.svg',
+      inputName: 'phone',
+      info: 'Maharashtra',
+      label: 'State'
+    },
+    {
+      image: '/images/svg/call.svg',
+      inputName: 'phone',
+      info: 'Pune',
+      label: 'City'
+    },
+    {
+      image: '/images/svg/call.svg',
+      inputName: 'phone',
+      info: 'Palladion, Hosur Road, Bengaluru',
+      label: 'Address'
+    }
+  ];
+
   return (
     <>
       <Sidebar sidebarItemsArr={administrationSideBarData} />
       <MainBody>
-        <AdminHeader
-          title="Zicops Learning Space 1"
-          pageRoute="/admin/administration"
-        />
-      <MainBodyBox>
-        <div style={{ padding: '30px' }}>
-          <TextHeaderWithEditIcon headingText="Learning Space Details" />
-          <AdminInfoWrapper
-            data={userData}
-            // isEditable={isEditable}
-            // toggleEditable={false}
-            // handleUpdate={() => {}}
-          />
-          <TextHeaderWithEditIcon headingText="Learning Spaces (2)" />
-          {/* <AdminInfoWrapper
+        <AdminHeader title="Zicops Learning Space 1" pageRoute="/admin/administration" />
+        <MainBodyBox>
+          <div style={{ padding: '30px' }}>
+            <TextHeaderWithEditIcon headingText="Learning Space Details" />
+            <AdminInfoWrapper
+              data={lspData}
+              // isEditable={isEditable}
+              // toggleEditable={false}
+              // handleUpdate={() => {}}
+            />
+            <TextHeaderWithEditIcon headingText="Admins" showIcon={false} />
+            {/* <AdminInfoWrapper
               data={userData}
               // isEditable={isEditable}
               // toggleEditable={false}
               // handleUpdate={() => {}}
             /> */}
-        </div>
+          </div>
         </MainBodyBox>
-        </MainBody>
+      </MainBody>
     </>
   );
 }

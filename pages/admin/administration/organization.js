@@ -13,7 +13,7 @@ import { useState } from 'react';
 import AdminInfoWrapper from './AdminInfoWrapper';
 
 export default function OrgPage() {
-const userData = [
+const orgData = [
   {
     image: '/images/svg/account_circle.svg',
     inputName: 'first_name',
@@ -90,12 +90,12 @@ const [isEditable, setIsEditable] = useState(0);
           <div style={{ padding: '30px' }}>
             <TextHeaderWithEditIcon headingText="Organization Details" />
             <AdminInfoWrapper
-              data={userData}
+              data={orgData}
               isEditable={isEditable}
               // toggleEditable={false}
               // handleUpdate={() => {}}
             />
-            <TextHeaderWithEditIcon headingText="Learning Spaces (2)" />
+            <TextHeaderWithEditIcon headingText="Learning Spaces (2)" showIcon={false} />
             {/* <AdminInfoWrapper
               data={userData}
               // isEditable={isEditable}

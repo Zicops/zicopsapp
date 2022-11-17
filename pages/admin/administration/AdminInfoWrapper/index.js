@@ -13,15 +13,15 @@ const AdminInfoWrapper = ({
   }
   return (
     <div className={`${styles.AdminInfoWraper}`}>
-      {data.map((v, i) => (
+      {data?.map((v, i) => (
         <SingleInfoBlock key={i} userData={v} isEditable={isEditable} showImg={false} />
       ))}
 
-      {isEditable && (
+      {isEditable ? (
         <div className={`${styles.AdminInfoButtonContainer}`}>
           <Button text={'Update'} clickHandler={handleClick} styleClass={styles.updateBtn} />
         </div>
-      )}
+      ) : ''}
     </div>
   );
 };
