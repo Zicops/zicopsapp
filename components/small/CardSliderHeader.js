@@ -40,7 +40,7 @@ const CardSliderHeader = ({ title, handleTitleClick = () => {} }) => {
           color: var(--white);
           font-weight: 600;
           cursor: pointer;
-          font-size: 22px;
+          font-size: 24px;
         }
       `}</style>
     </>
