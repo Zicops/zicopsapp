@@ -9,49 +9,69 @@ import SingleUserDetail from '@/components/LearnerUserProfile/SingleUserDetail';
 import UserInfoWraper from '@/components/LearnerUserProfile/UserInfoWraper';
 import BulkUpload from '@/components/UserComps/BulkUpload';
 import InviteUser from '@/components/UserComps/InviteUser';
-import { useState } from 'react';
+import { getOrgDetails, updateOrgDetails } from './helper/orgdata.helper'
+import { useEffect, useState } from 'react';
 import AdminInfoWrapper from './AdminInfoWrapper';
+import { OrganizationAtom } from './atoms/orgs.atom';
+import { useRecoilState } from 'recoil';
+import { useMutation } from '@apollo/client';
+import { UPDATE_ORGANIZATION_DETAILS, userClient } from '@/api/UserMutations';
 
 export default function OrgPage() {
-const orgData = [
+   const [updateOrg] = useMutation(UPDATE_ORGANIZATION_DETAILS, {
+    client: userClient
+    });
+  const [isEditable, setIsEditable] = useState(false);
+  const [orgUpdateData, setOrgUpdateData] = useRecoilState(OrganizationAtom);
+  const [orgData, setOrgData] = useState([]);
+  
+  useEffect(async() => {
+    const data = await getOrgDetails(["Wmljb3BzaHR0cC8vemljb3BzLmNvbUlU"]) 
+    setOrgUpdateData(data.getOrganizations[0])
+  const _orgData = [
   {
-    image: '/images/svg/account_circle.svg',
-    inputName: 'first_name',
-    info: 'Information Technology',
+    inputName: 'industry',
+    info: data?.getOrganizations[0].industry,
     label: 'Industry'
   },
   {
-    image: '/images/svg/account_circle.svg',
-    inputName: 'last_name',
-    info: 'Organization',
+    inputName: 'type',
+    info: data?.getOrganizations[0].type,
     label: 'Type'
   },
   {
-    image: '/images/svg/mail.svg',
-    inputName: 'email',
-    info: '750',
+    inputName: 'employee_count',
+    info:  data?.getOrganizations[0].employee_count,
     label: 'Number of Employees'
   },
   {
-    image: '/images/svg/call.svg',
-    inputName: 'phone',
-    info: 'Pune',
-    label: 'City'
-  },
-  {
-    image: '/images/svg/call.svg',
-    inputName: 'phone',
-    info: 'https://zicops.com/',
+    inputName: 'website',
+    info: data?.getOrganizations[0].website,
     label: 'Website'
   },
   {
-    image: '/images/svg/call.svg',
-    inputName: 'phone',
-    info: 'www.linkedin.com/company/zicops/',
-    label: 'LinkedIn'
+    inputName: 'subdomain',
+    info: data?.getOrganizations[0].subdomain,
+    label: 'Subdomain'
   }
-];
-const [isEditable, setIsEditable] = useState(0);
+    ];
+    setOrgData(_orgData)
+    console.log(orgUpdateData)
+  }, [])
+  
+    async function updateOrgDetails(orgData) {
+       const res = await updateOrg({ variables: orgData }).catch((err) => {
+          console.log(err,'error at update user');
+        
+       });
+      console.log(res)
+      return res;
+    }
+  const handleUpdate = () => {
+    console.log(orgUpdateData)
+    updateOrgDetails(orgUpdateData);
+    setIsEditable(false)
+  }
   return (
     <>
       <Sidebar sidebarItemsArr={administrationSideBarData} />
@@ -88,12 +108,11 @@ const [isEditable, setIsEditable] = useState(0);
         />
         <MainBodyBox>
           <div style={{ padding: '30px' }}>
-            <TextHeaderWithEditIcon headingText="Organization Details" />
+            <TextHeaderWithEditIcon headingText="Organization Details"  handleClick={() => setIsEditable(!isEditable)}/>
             <AdminInfoWrapper
               data={orgData}
               isEditable={isEditable}
-              // toggleEditable={false}
-              // handleUpdate={() => {}}
+              handleUpdate={handleUpdate}
             />
             <TextHeaderWithEditIcon headingText="Learning Spaces (2)" showIcon={false} />
             {/* <AdminInfoWrapper
