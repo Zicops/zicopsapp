@@ -943,4 +943,3 @@ export const GET_COHORT_COURSES = gql`
     }
   }
 `;
-

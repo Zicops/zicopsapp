@@ -1,18 +1,15 @@
 import Button from '@/components/common/Button';
 import styles from '../administration.module.scss';
-import { updateOrgDetails } from '../helper/orgdata.helper';
 import SingleInfoBlock from '../SingleInfoBlock';
 
 const AdminInfoWrapper = ({
   data,
   isEditable,
   // toggleEditable,
-  handleUpdate = function () {}
+  // handleUpdate = function () {}
 }) => {
 
   function handleClick() {
-    handleUpdate();
-   
   }
   return (
     <div className={`${styles.AdminInfoWraper}`}>
