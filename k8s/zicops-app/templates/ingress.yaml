@@ -35,7 +35,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /stage/?(.*)
+          - path: /?(.*)
             pathType: Prefix  
             backend:
               service:
