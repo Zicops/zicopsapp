@@ -1,7 +1,7 @@
 import Button from '@/components/common/Button';
 import styles from '../administration.module.scss';
 import SingleInfoBlock from '../SingleInfoBlock';
-import { updateOrgDetails } from '../helper/orgdata.helper';
+import { updateOrgDetails } from '../../../../helper/orgdata.helper';
 const AdminInfoWrapper = ({
   data,
   isEditable,

@@ -1,8 +1,8 @@
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import styles from '../administration.module.scss';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { updateOrgDetails } from '../helper/orgdata.helper';
-import { LearningSpaceAtom, OrganizationAtom, OrganizationUnitAtom } from '../atoms/orgs.atom';
+import { updateOrgDetails } from '../../../../helper/orgdata.helper';
+import { LearningSpaceAtom, OrganizationAtom, OrganizationUnitAtom } from '../../../../state/atoms/orgs.atom';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
 import { useState , useEffect } from 'react';

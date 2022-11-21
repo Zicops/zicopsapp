@@ -9,14 +9,15 @@ import SingleUserDetail from '@/components/LearnerUserProfile/SingleUserDetail';
 import UserInfoWraper from '@/components/LearnerUserProfile/UserInfoWraper';
 import BulkUpload from '@/components/UserComps/BulkUpload';
 import InviteUser from '@/components/UserComps/InviteUser';
-import { getOrgDetails, updateOrgDetails } from './helper/orgdata.helper'
+import { getOrgDetails} from '@/helper/orgdata.helper';
 import { useEffect, useState } from 'react';
 import AdminInfoWrapper from './AdminInfoWrapper';
-import { OrganizationAtom } from './atoms/orgs.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRecoilState } from 'recoil';
 import { useMutation } from '@apollo/client';
 import { UPDATE_ORGANIZATION_DETAILS, userClient } from '@/api/UserMutations';
+import ZicopsTable from '../../../components/common/ZicopsTable';
+import { OrganizationAtom } from '@/state/atoms/orgs.atom';
 
 export default function OrgPage() {
    const [updateOrg] = useMutation(UPDATE_ORGANIZATION_DETAILS, {
@@ -117,12 +118,14 @@ export default function OrgPage() {
               handleUpdate={handleUpdate}
             />
             <TextHeaderWithEditIcon headingText="Learning Spaces (2)" showIcon={false} />
-            {/* <AdminInfoWrapper
-              data={userData}
-              // isEditable={isEditable}
-              // toggleEditable={false}
-              // handleUpdate={() => {}}
-            /> */}
+              {/* <ZicopsTable
+      columns={columns}
+      data={latestCourses}
+      pageSize={pageSize}
+      rowsPerPageOptions={[3]}
+      tableHeight="70vh"
+      loading={loading}
+    /> */}
           </div>
         </MainBodyBox>
       </MainBody>

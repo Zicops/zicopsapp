@@ -1,6 +1,6 @@
 import { UPDATE_ORGANIZATION_DETAILS, userClient } from '@/api/UserMutations';
-import { useQuery,useLazyQuery, useMutation } from '@apollo/client';
-import { GET_ORGANIZATIONS_DETAILS, GET_LSP_DETAILS , GET_ORG_UNITS_DETAILS, userQueryClient } from '../../../../API/UserQueries';
+import { useMutation } from '@apollo/client';
+import { GET_ORGANIZATIONS_DETAILS, GET_LSP_DETAILS , GET_ORG_UNITS_DETAILS, userQueryClient } from '../API/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 
 export async function getOrgDetails(orgIdsArr) {

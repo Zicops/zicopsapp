@@ -8,13 +8,13 @@ import TextHeaderWithEditIcon from '@/components/common/TextHeaderWithEditIcon';
 import BulkUpload from '@/components/UserComps/BulkUpload';
 import InviteUser from '@/components/UserComps/InviteUser';
 import { useState, useEffect } from 'react';
-import {LearningSpaceAtom, OrganizationUnitAtom  } from './atoms/orgs.atom';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
 import AdminInfoWrapper from './AdminInfoWrapper';
-import { getLspDetails , getOuDetails } from './helper/orgdata.helper'
 import { UPDATE_LEARNING_SPACE_DETAILS, UPDATE_ORGAINIZATION_UNIT_DETAILS, userClient } from '@/api/UserMutations';
+import { getOuDetails , getLspDetails} from '@/helper/orgdata.helper';
+import { LearningSpaceAtom , OrganizationUnitAtom } from '@/state/atoms/orgs.atom';
 
 
 export default function LspPage() {
