@@ -15,9 +15,10 @@ const SubCategoriesPreview = ({
   setSelected,
   customStyle = [],
   isUpdate = false,
-  popUpClose = () => {}
+  popUpClose = () => {},
+  basepref = ''
 }) => {
-  const [primary, setPrimary] = useState('');
+  const [primary, setPrimary] = useState(basepref);
   const [vidIsOpen, setVidIsOpen] = useState(false);
 
   const { updateAboutUser, addUserLearningSpaceDetails, isSubmitDisable } =
@@ -129,7 +130,7 @@ const SubCategoriesPreview = ({
             onClick={() => {
               setCurrentComponent(2);
             }}>
-            Back
+            {basepref ? 'Add' : 'Back'}
           </Button>
           <Button
             disabled={primary === '' || isSubmitDisable || _isSubmitDisable}

@@ -8,8 +8,8 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http-zicops-app
+      targetPort: zapp-prod
       protocol: TCP
-      name: http-zicops-app
+      name: zapp-prod
   selector:
     {{- include "zicops-app.selectorLabels" . | nindent 4 }}

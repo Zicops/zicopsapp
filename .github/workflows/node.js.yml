@@ -8,7 +8,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: zicops-production-cost-one
+  GKE_CLUSTER: zicops-dot-com-1
   GKE_ZONE: asia-south1-a
   NAMESPACE: production
   SERVICE_NAME: zicops-app
@@ -48,7 +48,6 @@ jobs:
     - run: |
         gcloud auth configure-docker -q
     - name: Push image to GCP
-      if: ${{ github.ref == 'refs/heads/main' }}
       run: |
            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
@@ -58,7 +57,6 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
     - name: Deploy to zicops-one
-      if: ${{ github.ref == 'refs/heads/main' }}
       run: |
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE \

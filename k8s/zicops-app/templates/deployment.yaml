@@ -23,7 +23,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http-zicops-app
+            - name: zapp-prod
               containerPort: {{ .Values.image.port }}
               protocol: TCP
           env:

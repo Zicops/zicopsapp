@@ -95,12 +95,16 @@ const MissionControlCards = () => {
             />
           </div>
           <div className="new_row">
-            <Card
-              image="/images/Administration.png"
-              text="Administration"
-              width="60px"
-              tooltipTitle={ADMIN_HOME.administrationManagement}
-            />
+            <Link href="/admin/administration/organization">
+              <a>
+                <Card
+                  image="/images/Administration.png"
+                  text="Administration"
+                  width="60px"
+                  tooltipTitle={ADMIN_HOME.administrationManagement}
+                />
+              </a>
+            </Link>
             <Link href="/admin/exams/my-question-bank">
               <a>
                 <Card

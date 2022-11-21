@@ -5,7 +5,7 @@ image:
   tag: ${GITHUB_SHA}
   port: 3000
   pullPolicy: Always
-  host: https://demo.zicops.com
+  host: https://zicops.com
 
 service:
   type: ClusterIP

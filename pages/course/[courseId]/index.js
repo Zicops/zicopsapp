@@ -55,9 +55,9 @@ export default function Course() {
             <CardSlider title="Related Courses" data={sliderImages} />
             <CardSlider title="Recomended Courses" data={sliderImages} /> */}
 
-            <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} />
-            <ZicopsCarousel title="Distance Learning" data={sliderImages} />
-            <ZicopsCarousel title="Cloud Certification Courses" data={sliderImages} />
+            <ZicopsCarousel title="Your Other Subscribed Courses" data={sliderImages} />
+            <ZicopsCarousel title="Courses in this sub-category" data={sliderImages} />
+            <ZicopsCarousel title="Courses in this category" data={sliderImages} />
           </div>
         </ModuleContextProvider>
       </CourseContextProvider>

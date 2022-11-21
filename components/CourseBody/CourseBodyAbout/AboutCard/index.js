@@ -54,7 +54,7 @@ export default function AboutCard({ isDataLoaded, fullCourse }) {
                   <div>Expected Completion Time: </div>
                 </div>
                 <div className="col_50 abstract">
-                  <div>{fullCourse.competion_time}</div>
+                  <div>{Math.ceil((fullCourse?.duration || 0) / 30)} days</div>
                 </div>
               </>
             ) : (
@@ -64,20 +64,20 @@ export default function AboutCard({ isDataLoaded, fullCourse }) {
         </div>
 
         <div className="col_33">
-          {/* <div className="row">
+          <div className="row">
             {isDataLoaded ? (
               <>
                 <div className="col_25">
-                  <div>Instructor: </div>
+                  <div>Publisher: </div>
                 </div>
                 <div className="col_75 abstract">
-                  <h4>{fullCourse.instructor}</h4>
+                  <h4>{fullCourse.publisher}</h4>
                 </div>
               </>
             ) : (
               <Skeleton sx={{ bgcolor: 'var(--skeleton-dark)' }} variant="text" width={350} />
             )}
-          </div> */}
+          </div>
         </div>
         <div className="col_33"></div>
       </div>

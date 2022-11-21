@@ -20,7 +20,7 @@ export default function ViewDoc({ url }) {
         url={url}
         queryParams="hl=en"
         loaded={() => setIsLoaded(true)}
-        overrideLocalhost="https://demo.zicops.com/admin/courses"
+        overrideLocalhost="https://zicops.com/admin/courses"
         // viewerUrl={'https://docs.google.com/gview?url=%URL%&embedded=true'}
         // url={'https://file-examples.com/wp-content/uploads/2017/02/file-sample_100kB.doc'}
         // viewer="office"
