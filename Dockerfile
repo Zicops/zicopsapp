@@ -19,6 +19,7 @@ COPY --from=builder /zicops-app/public ./public
 COPY --from=builder /zicops-app/.next ./.next
 COPY --from=builder /zicops-app/node_modules ./node_modules
 COPY --from=builder /zicops-app/package.json ./package.json
+COPY --from=builder /zicops-app/credentials.json ./credentials.json
 
 EXPOSE 3000
 CMD ["npm", "start"]
