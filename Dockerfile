@@ -1,6 +1,7 @@
 FROM node:lts as dependencies
 WORKDIR /zicops-app
 COPY package.json ./
+COPY credentials.json ./
 RUN npm install
 
 FROM node:lts as builder
