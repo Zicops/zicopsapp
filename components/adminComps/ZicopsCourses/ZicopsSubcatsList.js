@@ -1,14 +1,15 @@
 import { DELETE_SUB_CAT_MAIN } from '@/api/Mutations';
 import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
+import TableSearchComp from '@/components/common/TableSearchComp';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ApolloProvider } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useRecoilState } from 'recoil';
 import { queryClient } from '../../../API/Queries';
-import { TableResponsiveRows } from '../../../helper/utils.helper';
+import { isWordIncluded, TableResponsiveRows } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
 import CourseHead from '../../CourseHead';
 import AddCatSubCat from './AddCatSubCat';
@@ -16,6 +17,8 @@ import AddCatSubCat from './AddCatSubCat';
 function ZicopsSubCategoryList() {
   const [pageSize, setPageSize] = useState(6);
   const [data, setData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterCol, setFilterCol] = useState('SubCatName');
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
 
   useEffect(() => {
@@ -92,15 +95,33 @@ function ZicopsSubCategoryList() {
     }
   ];
 
+  const options = [
+    { label: 'Sub Category', value: 'SubCatName' },
+    { label: 'Category', value: 'CatName' }
+  ];
+
   return (
-    <ZicopsTable
-      columns={columns}
-      data={data}
-      pageSize={pageSize}
-      rowsPerPageOptions={[3]}
-      tableHeight="70vh"
-      loading={data === null}
-    />
+    <>
+      <TableSearchComp
+        options={options}
+        handleSearch={(val) => setSearchQuery(val)}
+        handleOptionChange={(val) => setFilterCol(val)}
+        delayMS={0}
+      />
+      <ZicopsTable
+        columns={columns}
+        data={data?.filter((subCat) => {
+          let searchCol = subCat?.SubCatName;
+          if (filterCol === options[1]?.value) searchCol = subCat?.CatName;
+
+          return isWordIncluded(searchCol, searchQuery);
+        })}
+        pageSize={pageSize}
+        rowsPerPageOptions={[3]}
+        tableHeight="70vh"
+        loading={data === null}
+      />
+    </>
   );
 }
 

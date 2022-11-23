@@ -1,20 +1,22 @@
 import { DELETE_CAT_MAIN } from '@/api/Mutations';
 import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
+import TableSearchComp from '@/components/common/TableSearchComp';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ApolloProvider, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useRecoilState } from 'recoil';
 import { GET_CATS_MAIN, queryClient } from '../../../API/Queries';
-import { TableResponsiveRows } from '../../../helper/utils.helper';
+import { isWordIncluded, TableResponsiveRows } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
 import CourseHead from '../../CourseHead';
 import AddCatSubCat from './AddCatSubCat';
 
 function ZicopsCategoryList() {
   const [pageSize, setPageSize] = useState(6);
+  const [searchQuery, setSearchQuery] = useState('');
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
 
   useEffect(() => {
@@ -74,14 +76,17 @@ function ZicopsCategoryList() {
       ?.map((val, index) => categories.push({ index: index + 1, catName: val?.Name, ...val }));
 
   return (
-    <ZicopsTable
-      columns={columns}
-      data={categories}
-      pageSize={pageSize}
-      rowsPerPageOptions={[3]}
-      tableHeight="70vh"
-      loading={loading}
-    />
+    <>
+      <TableSearchComp handleSearch={(val) => setSearchQuery(val)} delayMS={0} />
+      <ZicopsTable
+        columns={columns}
+        data={categories?.filter((cat) => isWordIncluded(cat?.catName, searchQuery))}
+        pageSize={pageSize}
+        rowsPerPageOptions={[3]}
+        tableHeight="70vh"
+        loading={loading}
+      />
+    </>
   );
 }
 
