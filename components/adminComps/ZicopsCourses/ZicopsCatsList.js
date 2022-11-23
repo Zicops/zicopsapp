@@ -1,7 +1,6 @@
 import { DELETE_CAT_MAIN } from '@/api/Mutations';
 import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
-import TableSearchComp from '@/components/common/TableSearchComp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
@@ -77,7 +76,6 @@ function ZicopsCategoryList() {
 
   return (
     <>
-      <TableSearchComp handleSearch={(val) => setSearchQuery(val)} delayMS={0} />
       <ZicopsTable
         columns={columns}
         data={categories?.filter((cat) => isWordIncluded(cat?.catName, searchQuery))}
@@ -85,6 +83,8 @@ function ZicopsCategoryList() {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={loading}
+        showCustomSearch={true}
+        searchProps={{ handleSearch: (val) => setSearchQuery(val), delayMS: 0 }}
       />
     </>
   );

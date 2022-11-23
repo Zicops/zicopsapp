@@ -1,7 +1,6 @@
 import { DELETE_SUB_CAT_MAIN } from '@/api/Mutations';
 import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
-import TableSearchComp from '@/components/common/TableSearchComp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
@@ -102,12 +101,6 @@ function ZicopsSubCategoryList() {
 
   return (
     <>
-      <TableSearchComp
-        options={options}
-        handleSearch={(val) => setSearchQuery(val)}
-        handleOptionChange={(val) => setFilterCol(val)}
-        delayMS={0}
-      />
       <ZicopsTable
         columns={columns}
         data={data?.filter((subCat) => {
@@ -120,6 +113,13 @@ function ZicopsSubCategoryList() {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={data === null}
+        showCustomSearch={true}
+        searchProps={{
+          options,
+          handleSearch: (val) => setSearchQuery(val),
+          handleOptionChange: (val) => setFilterCol(val),
+          delayMS: 0
+        }}
       />
     </>
   );
