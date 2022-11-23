@@ -1,6 +1,6 @@
 import { UPDATE_ORGANIZATION_DETAILS, userClient } from '@/api/UserMutations';
 import { useMutation } from '@apollo/client';
-import { GET_ORGANIZATIONS_DETAILS, GET_LSP_DETAILS , GET_ORG_UNITS_DETAILS, userQueryClient } from '../API/UserQueries';
+import { GET_ORGANIZATIONS_DETAILS, GET_LSP_DETAILS ,GET_LSP_DETAILS_BY_ORG, GET_ORG_UNITS_DETAILS, userQueryClient } from '../API/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 
 export async function getOrgDetails(orgIdsArr) {
@@ -14,6 +14,14 @@ export async function getOrgDetails(orgIdsArr) {
 export function getLspDetails(lspIdArr) {
   const data = loadAndCacheDataAsync(GET_LSP_DETAILS,
     { lsp_ids: lspIdArr },
+    {},
+    userQueryClient,
+  );
+  return data;
+};
+export function getLsps(orgId) {
+  const data = loadAndCacheDataAsync(GET_LSP_DETAILS_BY_ORG,
+    { org_id: orgId },
     {},
     userQueryClient,
   );

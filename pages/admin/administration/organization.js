@@ -9,7 +9,7 @@ import SingleUserDetail from '@/components/LearnerUserProfile/SingleUserDetail';
 import UserInfoWraper from '@/components/LearnerUserProfile/UserInfoWraper';
 import BulkUpload from '@/components/UserComps/BulkUpload';
 import InviteUser from '@/components/UserComps/InviteUser';
-import { getOrgDetails} from '@/helper/orgdata.helper';
+import { getLspDetails, getLsps, getOrgDetails } from '@/helper/orgdata.helper';
 import { useEffect, useState } from 'react';
 import AdminInfoWrapper from './AdminInfoWrapper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -20,61 +20,134 @@ import ZicopsTable from '../../../components/common/ZicopsTable';
 import { OrganizationAtom } from '@/state/atoms/orgs.atom';
 
 export default function OrgPage() {
-   const [updateOrg] = useMutation(UPDATE_ORGANIZATION_DETAILS, {
+  const [updateOrg] = useMutation(UPDATE_ORGANIZATION_DETAILS, {
     client: userClient
-    });
+  });
   const [isEditable, setIsEditable] = useState(false);
   const [orgUpdateData, setOrgUpdateData] = useRecoilState(OrganizationAtom);
   const [orgData, setOrgData] = useState([]);
+  const [allLspData, setAllLspData] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  
-  useEffect(async() => {
-    const data = await getOrgDetails(["Wmljb3BzaHR0cC8vemljb3BzLmNvbUlU"]) 
-    setOrgUpdateData(data.getOrganizations[0])
-  const _orgData = [
-  {
-    inputName: 'industry',
-    info: data?.getOrganizations[0].industry,
-    label: 'Industry'
-  },
-  {
-    inputName: 'type',
-    info: data?.getOrganizations[0].type,
-    label: 'Type'
-  },
-  {
-    inputName: 'employee_count',
-    info:  data?.getOrganizations[0].employee_count,
-    label: 'Number of Employees'
-  },
-  {
-    inputName: 'website',
-    info: data?.getOrganizations[0].website,
-    label: 'Website'
-  },
-  {
-    inputName: 'subdomain',
-    info: data?.getOrganizations[0].subdomain,
-    label: 'Subdomain'
-  }
+  const [pageSize, setPageSize] = useState(6);
+  useEffect(async () => {
+    const data = await getOrgDetails(['Wmljb3BzaHR0cC8vemljb3BzLmNvbUlU']);
+    const lspData = await getLsps('Wmljb3BzaHR0cC8vemljb3BzLmNvbUlU');
+    setOrgUpdateData(data?.getOrganizations?.[0]);
+    const lspdata = lspData?.getLearningSpacesByOrgId.map((data) => {
+      return {...data, id: data?.lsp_id}; 
+    })?.filter((data) => data.id)
+    console.log(lspdata)
+    setAllLspData(lspdata);
+    const _orgData = [
+      {
+        inputName: 'industry',
+        info: data?.getOrganizations[0].industry,
+        label: 'Industry'
+      },
+      {
+        inputName: 'type',
+        info: data?.getOrganizations[0].type,
+        label: 'Type'
+      },
+      {
+        inputName: 'employee_count',
+        info: data?.getOrganizations[0].employee_count,
+        label: 'Number of Employees'
+      },
+      {
+        inputName: 'website',
+        info: data?.getOrganizations[0].website,
+        label: 'Website'
+      },
+      {
+        inputName: 'subdomain',
+        info: data?.getOrganizations[0].subdomain,
+        label: 'Subdomain'
+      }
     ];
-    setOrgData(_orgData)
-    console.log(orgUpdateData)
-  }, [])
-  
-    async function updateOrgDetails(orgData) {
-       const res = await updateOrg({ variables: orgData }).catch((err) => {
-          console.log(err,'error at update user');
-        return setToastMsg({ type: 'danger', message: "user is a not zicops admin: Unauthorized" });
-       });
-      console.log(res)
-      return res;
-    }
-  const handleUpdate = () => {
-    console.log(orgUpdateData)
-    updateOrgDetails(orgUpdateData);
-    setIsEditable(false)
+    setOrgData(_orgData);
+    console.log(allLspData);
+  }, []);
+
+  async function updateOrgDetails(orgData) {
+    const res = await updateOrg({ variables: orgData }).catch((err) => {
+      console.log(err, 'error at update user');
+      return setToastMsg({ type: 'danger', message: 'user is a not zicops admin: Unauthorized' });
+    });
+    console.log(res);
+    return res;
   }
+  const handleUpdate = () => {
+    console.log(orgUpdateData);
+    updateOrgDetails(orgUpdateData);
+    setIsEditable(false);
+  };
+
+  const columns = [
+    {
+      field: 'name',
+      headerName: 'Name',
+      headerClassName: 'organization-list-header',
+      flex: 1.5
+    },
+    {
+      field: 'no_users',
+      headerClassName: 'organization-list-header',
+      headerName: 'No_users',
+      flex: 1
+    },
+    {
+      field: 'status',
+      headerClassName: 'organization-list-header',
+      headerName: 'Status',
+      flex: 1
+    },
+    // {
+    //   field: 'type',
+    //   headerClassName: 'organization-list-header',
+    //   headerName: 'Type',
+    //   flex: 1
+    // },
+    // {
+    //   field: 'website',
+    //   headerClassName: 'organization-list-header',
+    //   headerName: 'Website',
+    //   flex: 1
+    // },
+    {
+      field: 'action',
+      headerClassName: 'organization-list-header',
+      headerName: 'Action',
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <button
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                outline: '0',
+                border: '0'
+              }}
+              onClick={() => Router.push(`/preview?courseId=${params.row.id}`)}>
+              <img src="/images/svg/eye-line.svg" width={20}></img>
+            </button>
+            <button
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                outline: '0',
+                border: '0'
+              }}
+              onClick={() => editCourse(params.row.id)}>
+              <img src="/images/svg/edit-box-line.svg" width={20}></img>
+            </button>
+          </>
+        );
+      },
+      flex: 0.5
+    }
+  ];
   return (
     <>
       <Sidebar sidebarItemsArr={administrationSideBarData} />
@@ -111,21 +184,21 @@ export default function OrgPage() {
         />
         <MainBodyBox>
           <div style={{ padding: '30px' }}>
-            <TextHeaderWithEditIcon headingText="Organization Details"  handleClick={() => setIsEditable(!isEditable)}/>
-            <AdminInfoWrapper
-              data={orgData}
-              isEditable={isEditable}
-              handleUpdate={handleUpdate}
+            <TextHeaderWithEditIcon
+              headingText="Organization Details"
+              handleClick={() => setIsEditable(!isEditable)}
             />
+            <AdminInfoWrapper data={orgData} isEditable={isEditable} handleUpdate={handleUpdate} />
             <TextHeaderWithEditIcon headingText="Learning Spaces (2)" showIcon={false} />
-              {/* <ZicopsTable
-      columns={columns}
-      data={latestCourses}
-      pageSize={pageSize}
-      rowsPerPageOptions={[3]}
-      tableHeight="70vh"
-      loading={loading}
-    /> */}
+            <ZicopsTable
+              columns={columns}
+              data={allLspData}
+              pageSize={pageSize}
+              rowsPerPageOptions={[3]}
+              tableHeight="70vh"
+              // rowId={(row) => row.lsp_id}
+              // loading={loading}
+            />
           </div>
         </MainBodyBox>
       </MainBody>
