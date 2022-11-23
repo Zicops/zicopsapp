@@ -433,12 +433,18 @@ export const GET_TOPIC_QUIZ = gql`
 `;
 
 export const GET_LATEST_QUESTION_BANK = gql`
-  query latestQuestionBank($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query latestQuestionBank(
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $searchText: String
+  ) {
     getLatestQuestionBank(
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      searchText: $searchText
     ) {
       questionBanks {
         id

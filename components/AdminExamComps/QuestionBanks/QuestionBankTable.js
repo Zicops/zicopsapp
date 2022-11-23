@@ -25,6 +25,7 @@ export default function QuestionBankTable({ isEdit = false }) {
   const [loadQuestionBank, { loading: loadRefetch, error: errorQuestionBankData, refetch }] =
     useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -41,6 +42,8 @@ export default function QuestionBankTable({ isEdit = false }) {
   // load table data
   const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
   useEffect(async () => {
+    if (searchQuery) queryVariables.searchText = searchQuery;
+
     const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
     if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
 
@@ -62,7 +65,7 @@ export default function QuestionBankTable({ isEdit = false }) {
       sortArrByKeyInOrder([...questionBankData], 'created_at', false),
       setLoading(false)
     );
-  }, []);
+  }, [searchQuery]);
 
   // set refetch query in recoil
   useEffect(() => {
@@ -174,6 +177,8 @@ export default function QuestionBankTable({ isEdit = false }) {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={loading}
+        showCustomSearch={true}
+        searchProps={{ handleSearch: (val) => setSearchQuery(val) }}
       />
 
       {/* add question bank pop up */}
