@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_QUESTION_BANK_QUESTIONS, queryClient } from '../../../API/Queries';
-import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
+import { getPageSizeBasedOnScreen, isWordIncluded } from '../../../helper/utils.helper';
 import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import Button from '../../common/Button';
@@ -26,6 +26,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('viewQuestions'));
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [qbQuestions, setQbQuestions] = useState([]);
   const [viewQuestion, setViewQuestion] = useState(null);
 
@@ -141,11 +142,13 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
     <>
       <ZicopsTable
         columns={columns}
-        data={qbQuestions}
+        data={qbQuestions?.filter((question) => isWordIncluded(question?.Description, searchQuery))}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="60vh"
         loading={loading}
+        showCustomSearch={true}
+        searchProps={{ handleSearch: (val) => setSearchQuery(val), delayMS: 0 }}
       />
 
       {/* view question pop up */}

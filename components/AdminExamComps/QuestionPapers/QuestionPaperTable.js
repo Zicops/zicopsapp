@@ -22,6 +22,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [questionPaper, setQuestionPaper] = useState([]);
   const [masterData, setMasterData] = useState(null);
 
@@ -124,6 +125,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
   // load table data
   useEffect(() => {
     const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
+    if (searchQuery) queryVariables.searchText = searchQuery;
 
     loadQuestionPaper({ variables: queryVariables }).then(({ data }) => {
       if (errorQuestionPaperData)
@@ -134,7 +136,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
           sortArrByKeyInOrder(data.getLatestQuestionPapers.questionPapers, 'CreatedAt', false)
         );
     });
-  }, []);
+  }, [searchQuery]);
 
   return (
     <>
@@ -145,6 +147,8 @@ export default function QuestionPaperTable({ isEdit = false }) {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={loading}
+        showCustomSearch={true}
+        searchProps={{ handleSearch: (val) => setSearchQuery(val) }}
       />
 
       {/* preview popup */}

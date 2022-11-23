@@ -28,13 +28,18 @@ export default function ExamsTable({ isEdit = false }) {
   const router = useRouter();
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [examData, setExamData] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   // load table data
   useEffect(async () => {
-    const queryVariables = { publish_time: Date.now(), pageSize: 9999999, pageCursor: '' };
+    const queryVariables = {
+      publish_time: Date.now(),
+      pageSize: 9999999,
+      pageCursor: '',
+      searchText: searchQuery
+    };
 
     const res = await loadExams({ variables: queryVariables });
     if (loadExamErr) return setToastMsg({ type: 'danger', message: 'exams load error' });
@@ -95,7 +100,7 @@ export default function ExamsTable({ isEdit = false }) {
 
     if (!exams?.length) setLoading(false);
     setExamData(sortArrByKeyInOrder([...exams], 'CreatedAt', false), setLoading(false));
-  }, []);
+  }, [searchQuery]);
 
   const columns = [
     {
@@ -135,7 +140,7 @@ export default function ExamsTable({ isEdit = false }) {
               }}
               onClick={() => router.push(`${router.asPath}/view/${params.row.id}`)}>
               <ToolTip title="View Exam" placement="bottom">
-              <img src="/images/svg/eye-line.svg" width={20}></img>
+                <img src="/images/svg/eye-line.svg" width={20}></img>
               </ToolTip>
             </button>
             {isEdit && (
@@ -170,6 +175,8 @@ export default function ExamsTable({ isEdit = false }) {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={loading}
+        showCustomSearch={true}
+        searchProps={{ handleSearch: (val) => setSearchQuery(val) }}
       />
     </>
   );
