@@ -33,12 +33,18 @@ export const GET_USER_DETAIL = gql`
   }
 `;
 export const GET_USERS_FOR_ADMIN = gql`
-  query GetUsersForAdmin($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query GetUsersForAdmin(
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $filters: UserFilters
+  ) {
     getUsersForAdmin(
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      filters: $filters
     ) {
       users {
         id
@@ -490,13 +496,20 @@ export const GET_USER_EXAM_PROGRESS = gql`
 `;
 
 export const GET_COHORT_MAINS = gql`
-  query GetCohortMains($lsp_id: String!, $publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query GetCohortMains(
+    $lsp_id: String!
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $searchText: String
+  ) {
     getCohortMains(
       lsp_id: $lsp_id
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      searchText: $searchText
     ) {
       cohorts {
         cohort_id

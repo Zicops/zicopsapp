@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../API/Queries';
-import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
+import { getPageSizeBasedOnScreen, isWordIncluded } from '../../../helper/utils.helper';
 import { QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
@@ -125,7 +125,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
   // load table data
   useEffect(() => {
     const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
-    if (searchQuery) queryVariables.searchText = searchQuery;
+    // if (searchQuery) queryVariables.searchText = searchQuery;
 
     loadQuestionPaper({ variables: queryVariables }).then(({ data }) => {
       if (errorQuestionPaperData)
@@ -136,19 +136,23 @@ export default function QuestionPaperTable({ isEdit = false }) {
           sortArrByKeyInOrder(data.getLatestQuestionPapers.questionPapers, 'CreatedAt', false)
         );
     });
-  }, [searchQuery]);
+    // }, [searchQuery]);
+  }, []);
 
   return (
     <>
       <ZicopsTable
         columns={columns}
-        data={questionPaper}
+        data={questionPaper?.filter((paper) => isWordIncluded(paper?.name, searchQuery))}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={loading}
         showCustomSearch={true}
-        searchProps={{ handleSearch: (val) => setSearchQuery(val) }}
+        searchProps={{
+          handleSearch: (val) => setSearchQuery(val),
+          delayMS: 0
+        }}
       />
 
       {/* preview popup */}
