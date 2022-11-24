@@ -398,7 +398,7 @@ export default function TopicBox({
     width: `${userCourseData?.userCourseProgress?.[currentProgressIndex]?.video_progress || 0}%`
   };
 
-  if (topic?.id === userCourseData?.activeTopic?.id) {
+  if (topic?.id === userCourseData?.activeTopic?.id && videoData?.type === 'mp4') {
     progressBarStyles.width = `${userCourseData?.videoData?.progress || 0}%`;
   }
 
