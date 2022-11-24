@@ -1846,8 +1846,8 @@ export const DELETE_CAT_MAIN = gql`
 `;
 
 export const DELETE_SUB_CAT_MAIN = gql`
-  mutation deleteSubCatMain($id: ID) {
-    deleteSubCatMain(id: $id)
+  mutation deleteSubCatMain($id: ID, $cat_id: String) {
+    deleteSubCatMain(id: $id, cat_id: $cat_id)
   }
 `;
 

@@ -8,7 +8,8 @@ export default function DeleteBtn({
   confrimMsg = null,
   mutation = null,
   resKey = null,
-  onDelete = () => {}
+  onDelete = () => {},
+  variableObj = {}
 }) {
   const [deleteConfirmData, setDeleteConfirmData] = useRecoilState(DeleteConfirmDataAtom);
 
@@ -23,7 +24,8 @@ export default function DeleteBtn({
             mutation: mutation,
             confirmMsg: confrimMsg,
             onDelete: onDelete,
-            resKey: resKey
+            resKey: resKey,
+            variableObj: variableObj || {}
           })
         }>
         <img src="/images/svg/delete-outline.svg" width={20}></img>

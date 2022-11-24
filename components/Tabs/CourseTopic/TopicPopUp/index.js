@@ -88,6 +88,8 @@ export default function TopicPopUp({
     if (!filteredTopicContent.length) {
       toggleTopicContentForm(true);
       submitBtnObj.disabled = true;
+    } else {
+      toggleTopicContentForm(false);
     }
     topicVideo = useRecoilValue(TopicVideoAtom)[0] || addTopicContentLocalStates.newTopicVideo;
   }

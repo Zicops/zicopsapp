@@ -94,6 +94,7 @@ function ZicopsSubCategoryList() {
             </button>
             <DeleteBtn
               id={params?.id}
+              variableObj={{ cat_id: params?.row?.CatId }}
               resKey="deleteSubCatMain"
               mutation={DELETE_SUB_CAT_MAIN}
               onDelete={() => setRefetch(true)}

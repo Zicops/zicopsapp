@@ -77,7 +77,8 @@ export default function Layout({ children }) {
               let isDeleted = 'localDelete';
               if (deleteConfirmData?.id) {
                 isDeleted = await deleteData(deleteConfirmData?.mutation, {
-                  id: deleteConfirmData?.id
+                  id: deleteConfirmData?.id,
+                  ...deleteConfirmData?.variableObj
                 });
               }
               console.log(isDeleted, deleteConfirmData);
