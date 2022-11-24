@@ -4,17 +4,18 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { changeHandler } from '@/helper/common.helper';
 import { getFileNameFromUrl } from '@/helper/utils.helper';
-import { useEffect } from 'react';
+import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
+import { useRecoilValue } from 'recoil';
 import styles from './addCatSubCat.module.scss';
 import useHandleAddCatSubCat from './Logic/useHandleAddCatSubCat';
 
 export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
+  const popUpState = useRecoilValue(PopUpStatesAtomFamily('addCatSubCat'));
   const {
     catSubCatData,
     catoptions,
     setCatSubCatData,
     isAddReady,
-    isSubmitDisabled,
     handleFileInput,
     addCategory,
     addSubCategory
@@ -22,7 +23,6 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
 
   return (
     <div className={`${styles.questionBankContainer}`}>
-
       {/*  name */}
       <LabeledInput
         styleClass={`${styles.inputField}`}
@@ -53,8 +53,6 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
           }
         />
       )}
-
-      
 
       {/* description */}
       <LabeledInput
@@ -92,8 +90,8 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
         </div>
         <div>
           <Button
-            text={'Add'}
-            isDisabled={!isAddReady || isSubmitDisabled}
+            text={popUpState?.id ? 'Update' : 'Add'}
+            isDisabled={!isAddReady}
             styleClass={isAddReady ? 'bg-primary' : ''}
             clickHandler={() => {
               isSubCat ? addSubCategory() : addCategory();

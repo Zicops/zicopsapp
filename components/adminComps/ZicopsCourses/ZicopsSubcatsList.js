@@ -78,10 +78,20 @@ function ZicopsSubCategoryList() {
       field: '',
       headerClassName: 'course-list-header',
       headerName: 'Action',
-      flex: 0.5,
+      flex: 0.8,
       renderCell: (params) => {
         return (
           <>
+            <button
+              onClick={() => udpatePopUpState(params?.row)}
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                outline: '0',
+                border: '0'
+              }}>
+              <img src="/images/svg/edit-box-line.svg" width={20}></img>
+            </button>
             <DeleteBtn
               id={params?.id}
               resKey="deleteSubCatMain"
@@ -170,7 +180,9 @@ const ZicopsSubcatsList = () => {
           .content-panel {
             margin: 30px 10px 10px 10px;
             color: var(--white);
-            height: calc(60vh + 100px);
+            // height: calc(60vh + 100px);
+            min-height: 70vh;
+            max-height: 80vh;
             box-shadow: -2px 2px 10px 0 #000000, 2px -2px 5px 0 #686868;
             border-radius: 10px;
           }

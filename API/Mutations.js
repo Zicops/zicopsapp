@@ -13,6 +13,43 @@ export const mutationClient = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+export const UPDATE_CATS_MAIN = gql`
+  mutation updateCatMain($catMainInput: CatMainInput) {
+    updateCatMain(input: $catMainInput) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      LspId
+    }
+  }
+`;
+
+export const UPDATE_SUB_CATS_MAIN = gql`
+  mutation updateSubCatMain($subCatMainInput: SubCatMainInput) {
+    updateSubCatMain(input: $subCatMainInput) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CatId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      LspId
+    }
+  }
+`;
+
 export const ADD_COURSE = gql`
   mutation addCourse(
     $name: String
