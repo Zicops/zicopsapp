@@ -61,7 +61,7 @@ export function useHandleCatSubCat(selectedCategory) {
     // if (Object.keys(catSubCat?.subCatGrp || {})?.length) return setCatSubCatState(catSubCat);
     // console.log('fetch');
 
-    const catAndSubCatRes = await loadAndCacheDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
+    const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
       return { ...subCat, value: subCat?.Name, label: subCat?.Name };

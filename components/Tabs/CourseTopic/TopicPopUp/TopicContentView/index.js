@@ -1,9 +1,17 @@
-import { useRecoilValue } from 'recoil';
-import { TopicSubtitleAtom, uploadStatusAtom } from '../../../../../state/atoms/module.atoms';
+import { DELETE_COURSE_TOPIC_CONTENT } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  TopicContentAtom,
+  TopicSubtitleAtom,
+  uploadStatusAtom
+} from '../../../../../state/atoms/module.atoms';
 
 export default function TopicContentView({ topicContent, toggleTopicContentForm }) {
   const topicSubtitle = useRecoilValue(TopicSubtitleAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
+
+  const [topicContentArr, setTopicContentArr] = useRecoilState(TopicContentAtom);
 
   return (
     <>
@@ -11,6 +19,7 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
         <>
           {topicContent.map((content, index) => {
             const isSubtitleAdded = topicSubtitle[index]?.file || topicSubtitle[index]?.subtitleUrl;
+            console.log(content);
             return (
               <div className="content_added" key={content.language}>
                 <div className="content_details">
@@ -35,6 +44,24 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                     Content Added {isSubtitleAdded ? 'With Subtitle' : ''}{' '}
                     {content.is_default ? `(default)` : ''}
                   </div>
+
+                  <DeleteBtn
+                    id={content?.id}
+                    resKey="deleteTopicContent"
+                    mutation={DELETE_COURSE_TOPIC_CONTENT}
+                    onDelete={() => {
+                      console.log('delete');
+                      const _topicContentArr = structuredClone(topicContentArr);
+                      const currentTopicIndex = _topicContentArr?.findIndex(
+                        (tc) => tc?.id === content?.id
+                      );
+                      if (currentTopicIndex >= 0) {
+                        _topicContentArr?.splice(currentTopicIndex, 1);
+                      }
+
+                      setTopicContentArr(_topicContentArr);
+                    }}
+                  />
                 </div>
               </div>
             );
