@@ -19,7 +19,6 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
         <>
           {topicContent.map((content, index) => {
             const isSubtitleAdded = topicSubtitle[index]?.file || topicSubtitle[index]?.subtitleUrl;
-            console.log(content);
             return (
               <div className="content_added" key={content.language}>
                 <div className="content_details">
@@ -50,7 +49,6 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                     resKey="deleteTopicContent"
                     mutation={DELETE_COURSE_TOPIC_CONTENT}
                     onDelete={() => {
-                      console.log('delete');
                       const _topicContentArr = structuredClone(topicContentArr);
                       const currentTopicIndex = _topicContentArr?.findIndex(
                         (tc) => tc?.id === content?.id

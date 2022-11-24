@@ -382,6 +382,7 @@ export const GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID = gql`
 export const GET_TOPIC_RESOURCES = gql`
   query getTopicResources($topic_id: String) {
     getTopicResources(topic_id: $topic_id) {
+      id
       name
       type
       topicId

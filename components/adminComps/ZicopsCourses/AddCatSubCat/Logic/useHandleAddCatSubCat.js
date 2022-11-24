@@ -141,7 +141,7 @@ export default function useHandleAddCatSubCat(isSubCat) {
       sendData.id = popUpState?.id;
       console.log(sendData);
 
-      await updateCategory({ variables: sendData }).catch((err) => {
+      await updateCategory({ variables: { catMainInput: sendData } }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Category Error' });
@@ -205,7 +205,7 @@ export default function useHandleAddCatSubCat(isSubCat) {
       sendData.id = popUpState?.id;
       console.log(sendData);
 
-      await updateSubCategory({ variables: sendData }).catch((err) => {
+      await updateSubCategory({ variables: { subCatMainInput: sendData } }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Sub Category Error' });
