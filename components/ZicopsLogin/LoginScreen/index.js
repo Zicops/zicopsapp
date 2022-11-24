@@ -44,7 +44,7 @@ const LoginScreen = ({ setPage }) => {
   const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
 
   useEffect(() => {
-    if (sessionStorage?.length && userData?.id && userData?.is_verified) return router.push('/');
+    if (sessionStorage?.length && userData?.id && userData?.is_verified) return router.push('/learning-spaces');
   }, [userData?.id]);
 
   const handleEmail = (e) => {
@@ -116,7 +116,7 @@ const LoginScreen = ({ setPage }) => {
 
     if (!!res?.data?.login?.is_verified) {
       // setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
-      router.prefetch('/');
+      router.prefetch('/learning-spaces');
       setVidIsOpen(true);
       vidRef.current.play();
       // setTimeout(() => {

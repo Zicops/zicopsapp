@@ -33,37 +33,37 @@ export default function LspPage() {
   useEffect(async () => {
     const orgutdata = await getOuDetails(["V21samIzQnphSFIwY0M4dmVtbGpiM0J6TG1OdmJVbFVLb2xrYXRhICwgU2VjdG9yIDU3MDAwMDg4S29sa2F0YVdlc3QgQmVuZ2FsSW5kaWE="])
     const lspdata = await getLspDetails(["V21samIzQnphSFIwY0M4dmVtbGpiM0J6TG1OdmJVbFVWMjFzYW1JelFucGhTRkl3WTBNNGRtVnRiR3BpTTBKNlRHMU9kbUpWYkZWTGIyeHJZWFJoSUN3Z1UyVmpkRzl5SURVM01EQXdNRGc0UzI5c2EyRjBZVmRsYzNRZ1FtVnVaMkZzU1c1a2FXRT0="])
-    setLspUpdateData(lspdata?.getLearningSpaceDetails[0])
-    setOrgUnitUpdateData(orgutdata?.getOrganizationUnits[0])
+    setLspUpdateData(lspdata?.getLearningSpaceDetails?.[0])
+    setOrgUnitUpdateData(orgutdata?.getOrganizationUnits?.[0])
     const lspData = [
     {
       inputName: 'name',
-      info: lspdata?.getLearningSpaceDetails[0].name,
+      info: lspdata?.getLearningSpaceDetails?.[0].name,
       label: 'Organization Name'
     },
     {
       inputName: 'country',
-      info: orgutdata?.getOrganizationUnits[0].country,
+      info: orgutdata?.getOrganizationUnits?.[0].country,
       label: 'Country'
     },
     {
       inputName: 'state',
-      info: orgutdata?.getOrganizationUnits[0].state,
+      info: orgutdata?.getOrganizationUnits?.[0].state,
       label: 'State'
     },
     {
       inputName: 'city',
-      info: orgutdata?.getOrganizationUnits[0].city,
+      info: orgutdata?.getOrganizationUnits?.[0].city,
       label: 'City'
     },
     {
       inputName: 'address',
-      info: orgutdata?.getOrganizationUnits[0].address,
+      info: orgutdata?.getOrganizationUnits?.[0].address,
       label: 'Address'
     }
     ];
     setLspDataArr(lspData)
-    console.log(orgutdata?.getOrganizationUnits[0])
+    // console.log(orgutdata?.getOrganizationUnits[0])
   }, [])
   
     async function updateLspDetails(lspData) {

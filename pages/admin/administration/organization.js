@@ -33,7 +33,7 @@ export default function OrgPage() {
     const data = await getOrgDetails(['Wmljb3BzaHR0cC8vemljb3BzLmNvbUlU']);
     const lspData = await getLsps('Wmljb3BzaHR0cC8vemljb3BzLmNvbUlU');
     setOrgUpdateData(data?.getOrganizations?.[0]);
-    const lspdata = lspData?.getLearningSpacesByOrgId.map((data) => {
+    const lspdata = lspData?.getLearningSpacesByOrgId?.map((data) => {
       return {...data, id: data?.lsp_id}; 
     })?.filter((data) => data.id)
     console.log(lspdata)
@@ -41,27 +41,27 @@ export default function OrgPage() {
     const _orgData = [
       {
         inputName: 'industry',
-        info: data?.getOrganizations[0].industry,
+        info: data?.getOrganizations?.[0].industry,
         label: 'Industry'
       },
       {
         inputName: 'type',
-        info: data?.getOrganizations[0].type,
+        info: data?.getOrganizations?.[0].type,
         label: 'Type'
       },
       {
         inputName: 'employee_count',
-        info: data?.getOrganizations[0].employee_count,
+        info: data?.getOrganizations?.[0].employee_count,
         label: 'Number of Employees'
       },
       {
         inputName: 'website',
-        info: data?.getOrganizations[0].website,
+        info: data?.getOrganizations?.[0].website,
         label: 'Website'
       },
       {
         inputName: 'subdomain',
-        info: data?.getOrganizations[0].subdomain,
+        info: data?.getOrganizations?.[0].subdomain,
         label: 'Subdomain'
       }
     ];
@@ -114,39 +114,39 @@ export default function OrgPage() {
     //   headerName: 'Website',
     //   flex: 1
     // },
-    {
-      field: 'action',
-      headerClassName: 'organization-list-header',
-      headerName: 'Action',
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              onClick={() => Router.push(`/preview?courseId=${params.row.id}`)}>
-              <img src="/images/svg/eye-line.svg" width={20}></img>
-            </button>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              onClick={() => editCourse(params.row.id)}>
-              <img src="/images/svg/edit-box-line.svg" width={20}></img>
-            </button>
-          </>
-        );
-      },
-      flex: 0.5
-    }
+    // {
+    //   field: 'action',
+    //   headerClassName: 'organization-list-header',
+    //   headerName: 'Action',
+    //   sortable: false,
+    //   renderCell: (params) => {
+    //     return (
+    //       <>
+    //         <button
+    //           style={{
+    //             cursor: 'pointer',
+    //             backgroundColor: 'transparent',
+    //             outline: '0',
+    //             border: '0'
+    //           }}
+    //           onClick={() => Router.push(`/preview?courseId=${params.row.id}`)}>
+    //           <img src="/images/svg/eye-line.svg" width={20}></img>
+    //         </button>
+    //         <button
+    //           style={{
+    //             cursor: 'pointer',
+    //             backgroundColor: 'transparent',
+    //             outline: '0',
+    //             border: '0'
+    //           }}
+    //           onClick={() => editCourse(params.row.id)}>
+    //           <img src="/images/svg/edit-box-line.svg" width={20}></img>
+    //         </button>
+    //       </>
+    //     );
+    //   },
+    //   flex: 0.5
+    // }
   ];
   return (
     <>
@@ -196,6 +196,7 @@ export default function OrgPage() {
               pageSize={pageSize}
               rowsPerPageOptions={[3]}
               tableHeight="70vh"
+              customStyles={{padding:0}}
               // rowId={(row) => row.lsp_id}
               // loading={loading}
             />
