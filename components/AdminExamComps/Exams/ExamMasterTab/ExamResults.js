@@ -34,8 +34,8 @@ export default function ExamResults() {
     failedParticipants: +passingMarks === 0 ? 'N/A' : examResultsData?.usersFailed,
 
     averageMarks: examResultsData?.averageMarks?.toPrecision(4) || 'N/A',
-    highestMarks: examResultsData?.highestMarks || 'N/A',
-    lowestMarks: examResultsData?.lowestMarks || 'N/A',
+    highestMarks: examResultsData?.highestMarks == null ? 'N/A' : examResultsData?.highestMarks,
+    lowestMarks: examResultsData?.lowestMarks == null ? 'N/A' : examResultsData?.lowestMarks,
 
     userExamResult: examResultsData?.allAttempts
   };

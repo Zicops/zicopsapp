@@ -31,7 +31,10 @@ export default function useHandleExamResults() {
     );
     if (attemptRes?.error) return setToastMsg({ type: 'danger', message: 'Attempts Load Error' });
 
-    const allAttempts = attemptRes?.getUserExamAttempts || [];
+    const allAttempts =
+      attemptRes?.getUserExamAttempts?.filter(
+        (attempt) => attempt?.attempt_status === 'completed'
+      ) || [];
     const _examResultsData = {
       allUserIds: [],
       user_ea_details: [],
@@ -48,7 +51,7 @@ export default function useHandleExamResults() {
     };
     for (let i = 0; i < allAttempts?.length; i++) {
       const attempt = allAttempts?.[i];
-      //   console.log(attempt);
+      console.log(attempt);
       // attempt_duration: '41';
       // attempt_no: 1;
       // attempt_start_time: '1668608000';
