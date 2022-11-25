@@ -645,6 +645,89 @@ export const GET_USER_QUIZ_ATTEMPTS = gql`
   }
 `;
 
+
+export const GET_ORGANIZATIONS_DETAILS = gql`
+  query GetOrganizations($org_ids: [String]) {
+    getOrganizations(org_ids: $org_ids) {
+    org_id
+    name
+    logo_url
+    industry
+    type
+    subdomain
+    employee_count
+    website
+    linkedin_url
+    facebook_url
+    twitter_url
+    status
+    created_at
+    updated_at
+    created_by
+    updated_by
+    }
+  }
+`;
+export const GET_LSP_DETAILS_BY_ORG = gql`
+ query GetLearningSpacesByOrgId($org_id: String!) { 
+  getLearningSpacesByOrgId(org_id: $org_id) {
+    lsp_id
+    org_id
+    ou_id
+    name
+    logo_url
+    profile_url
+    no_users
+    owners
+    is_default
+    status
+    created_at
+    updated_at
+    created_by
+    updated_by
+  }
+}`;
+
+export const GET_LSP_DETAILS = gql`
+ query GetLearningSpaceDetails($lsp_ids: [String]) { 
+  getLearningSpaceDetails(lsp_ids: $lsp_ids) {
+    lsp_id
+    org_id
+    ou_id
+    name
+    logo_url
+    profile_url
+    no_users
+    owners
+    is_default
+    status
+    created_at
+    updated_at
+    created_by
+    updated_by
+  }
+}`;
+export const GET_ORG_UNITS_DETAILS = gql`
+ query GetOrganizationUnits($ou_ids: [String]) { 
+  getOrganizationUnits(ou_ids: $ou_ids) {
+    ou_id
+    org_id
+    emp_count
+    address
+    city
+    state
+    country
+    postal_code
+    status
+    created_at
+    updated_at
+    created_by
+    updated_by
+  }
+}`;
+
+
+
 // combined queries
 
 // export const GET_USER_META = gql`
