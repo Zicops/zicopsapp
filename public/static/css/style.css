@@ -11,7 +11,9 @@
 .show{
     opacity: 1;
 }
-
+/* html{
+    scroll-behavior: smooth;
+} */
 body{
     margin: 0;
     padding: 0;
@@ -219,15 +221,15 @@ section{
 .snap-parent {
     overflow: scroll;
     height: 100%;
-    scroll-snap-points-y: repeat(100vh);
-    scroll-snap-type: y mandatory;
+    /* scroll-snap-points-y: repeat(100vh);
+    scroll-snap-type: y mandatory; */
 }
 .snap-parent::-webkit-scrollbar {
     display: none;
 }
 .snap-section1, .snap-section2, .snap-section3, .snap-section4 {
     height: 100vh;
-    scroll-snap-align: start;
+    /* scroll-snap-align: start; */
     position: relative;
     background-repeat: no-repeat;
     background-size: cover;
@@ -262,6 +264,23 @@ section{
     color: #868686;
 }
 
+.stiky-parent{
+    /* scroll-snap-points-y: repeat(100vh);
+    scroll-snap-type: y mandatory; */
+}
+.stick-top{
+    /* position: fixed; */
+    /* height: 100%;
+    width: 100%; */
+    transition: 350ms ease-in;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    /* scroll-snap-align: start; */
+    /* background: #fff;
+    padding: 5px;
+    right: 20px; */
+}
 /* Mobile Responsive */
 @media screen and (max-width: 500px) {
     nav ul, .buttons{

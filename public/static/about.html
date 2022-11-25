@@ -13,11 +13,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/static/assets/jquery-3.6.1.min.js" defer></script>
     <script src="/static/js/main.js" defer></script>
 </head>
 <body>
     <nav id="navbar">
-        <span class="logo">
+        <span class="logo" id="logo">
             <img src="/static/img/ZicopsNewLogo.svg" alt="">
         </span>
         <ul>
@@ -32,7 +33,7 @@
             <span class="login"><span class="user-icon"></span>Login</span>
         </span>
     </nav>
-    <section class="section-1">
+    <section class="section-1" id="top">
         <div class="left">
             <div class="heading animate ">Confused how to</div>
             <div class="heading1 animate  animate__delay-1s">manage the entire </div>
@@ -125,7 +126,19 @@
             <img src="/static/img/Frame (2).png" alt="">
         </div>
     </section>
-    <div id="snap-body">
+    <div id="snap-start"></div>
+    <!-- <div class="snap-parent"> -->
+        <div class="snap-section snap-section1">Superb experience</div>
+        <div class="snap-section snap-section2">Super-app</div>
+        <div class="snap-section snap-section3">Cost-effective</div>
+        <div class="snap-section snap-section4">
+            <div class="content">
+                <b>Stop</b> running behind<br><b>multiple apps</b> to cater to<br>your <b>learning needs</b>.
+                <p>Adopt Zicops and cater to your entire<br>Workspace Learning and development.</p>
+            </div>
+        </div>
+    <!-- </div> -->
+    <!-- <div id="snap-body">
         <div class="snap-parent">
             <div class="snap-section1">Superb experience</div>
             <div class="snap-section2">Super-app</div>
@@ -137,6 +150,49 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+        <!-- <main class="scroll-container">
+	<section class="scroll-item is-visible">
+		<figure class="scroll-item__bg-image" data-img>
+			<img src='https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='mountain'>
+		</figure>
+		<h2>Scroll item 1</h2>
+		<div class="scroll-item__content">
+			<div class="scroll-item__inner" data-observer>
+				<span>Scroll me</span>
+				<span>↓</span>
+			</div>
+		</div>
+	</section>
+	<section class="scroll-item">
+		<h2>Scroll item 2</h2>
+		<div class="scroll-item__content">
+			<div class="scroll-item__inner" data-observer>
+				<span>Keep scrolling</span>
+				<span>↓</span>
+			</div>
+		</div>
+	</section>
+	<section class="scroll-item">
+		<figure class="scroll-item__bg-image" data-img>
+			<img src='https://images.unsplash.com/photo-1509515837298-2c67a3933321?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='night sky'>
+		</figure>
+		<h2>Scroll item 3</h2>
+		<div class="scroll-item__content">
+			<div class="scroll-item__inner" data-observer>
+				<span>I fade in and out on scroll</span>
+				<span>↓</span>
+			</div>
+		</div>
+	</section>
+	<section class="scroll-item">
+		<h2>Scroll item 4</h2>
+		<div class="scroll-item__content">
+			<div class="scroll-item__inner" data-observer>
+				<span>The end.</span>
+			</div>
+		</div>
+	</section>
+</main> -->
 </body>
 </html>
