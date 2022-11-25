@@ -1,22 +1,28 @@
-import { useLazyQuery } from '@apollo/client';
+import { BULK_UPLOAD_QUESTIONS, mutationClient } from '@/api/Mutations';
+import { SelectedQuestionBankAtom } from '@/state/atoms/exams.atoms';
+import { STATUS, StatusAtom } from '@/state/atoms/utils.atoms';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_QUESTION_OPTIONS, queryClient } from '../../../../API/Queries';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import TabContainer from '../../../common/TabContainer';
+import AddQuestionBank from '../AddQuestionBank';
 import useHandleQuestionBankQuestion from '../Logic/useHandleQuestionBankQuestion';
 import QuestionMaster from './QuestionMaster';
-import AddQuestionBank from '../AddQuestionBank';
-import { STATUS, StatusAtom } from '@/state/atoms/utils.atoms';
 
 export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuestionMasterTab }) {
   const [loadOptions, { error: errorOptionsData }] = useLazyQuery(GET_QUESTION_OPTIONS, {
     client: queryClient
   });
+  const [bulkUploadQuestions] = useMutation(BULK_UPLOAD_QUESTIONS, { client: mutationClient });
 
+  const selectedQb = useRecoilValue(SelectedQuestionBankAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [status, setStatus] = useRecoilState(StatusAtom);
   const [questionData, setQuestionData] = useState(null);
+  const [isBulkUpload, setIsBulkUpload] = useState(null);
+  const [uploadData, setUploadData] = useState(null);
 
   useEffect(async () => {
     if (!editQuestionData) return;
@@ -63,10 +69,36 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
     },
     {
       name: 'Question Master',
-      component: <QuestionMaster data={data} isEdit={isEdit} />
+      component: (
+        <QuestionMaster
+          data={data}
+          isEdit={isEdit}
+          uploadDataState={[uploadData, setUploadData]}
+          setIsBulkUpload={setIsBulkUpload}
+        />
+      )
     }
   ];
   const [tab, setTab] = useState(tabData[1].name);
+
+  async function handleFormSubmit() {
+    if (isBulkUpload) {
+      const res = await bulkUploadQuestions({
+        variables: { csv: uploadData[0], qbId: selectedQb?.id }
+      });
+
+      if (res?.data?.bulkAddQuestionBankQuestions) {
+        setToastMsg({ type: 'success', message: 'Question Bank Uploaded' });
+        closeQuestionMasterTab();
+        return;
+      }
+
+      return setToastMsg({ type: 'danger', message: 'Failed to upload file' });
+    }
+
+    if (isEdit) return updateQuestionAndOptions();
+    addQuestionAndOptions();
+  }
 
   return (
     <>
@@ -75,10 +107,10 @@ export default function QuestionMasterTab({ isEdit, editQuestionData, closeQuest
         tab={tab}
         setTab={setTab}
         footerObj={{
-          submitDisplay: isEdit ? 'Update' : 'Save',
+          submitDisplay: isBulkUpload ? 'Upload' : isEdit ? 'Update' : 'Save',
           disableSubmit: isUploading,
           status: status ? (status === 'Y' ? STATUS.flow[0] : status) : STATUS.display[0],
-          handleSubmit: isEdit ? updateQuestionAndOptions : addQuestionAndOptions,
+          handleSubmit: handleFormSubmit,
           handleCancel: () => closeQuestionMasterTab()
         }}
       />

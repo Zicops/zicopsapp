@@ -207,6 +207,50 @@ export const GET_COURSE = gql`
   }
 `;
 
+export const GET_COURSE_DATA = gql`
+  query getCourseData($course_id: String) {
+    getCourseModules(course_id: $course_id) {
+      id
+      name
+      isChapter
+      description
+      courseId
+      owner
+      duration
+      created_at
+      updated_at
+      level
+      sequence
+      setGlobal
+    }
+    getCourseChapters(course_id: $course_id) {
+      id
+      name
+      description
+      moduleId
+      courseId
+      created_at
+      updated_at
+      sequence
+    }
+    getTopics(course_id: $course_id) {
+      id
+      name
+      description
+      type
+      moduleId
+      chapterId
+      courseId
+      created_at
+      updated_at
+      sequence
+      created_by
+      updated_by
+      image
+    }
+  }
+`;
+
 export const GET_COURSE_MODULES = gql`
   query getCourseModules($course_id: String) {
     getCourseModules(course_id: $course_id) {
@@ -288,6 +332,31 @@ export const GET_COURSE_TOPICS_CONTENT = gql`
 export const GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID = gql`
   query getTopicContent($course_id: String) {
     getTopicContentByCourseId(course_id: $course_id) {
+      id
+      language
+      topicId
+      courseId
+      startTime
+      duration
+      skipIntroDuration
+      nextShowTime
+      fromEndTime
+      created_at
+      updated_at
+      type
+      contentUrl
+      subtitleUrl {
+        url
+        language
+      }
+      is_default
+    }
+  }
+`;
+
+export const GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID = gql`
+  query getTopicContent($module_id: String) {
+    getTopicContentByModuleId(module_id: $module_id) {
       id
       language
       topicId

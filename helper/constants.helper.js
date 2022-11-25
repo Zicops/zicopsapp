@@ -7,10 +7,8 @@ export const THUMBNAIL_GAP = 25;
 export const LEARNING_FOLDER_CAPACITY = 30;
 export const GIBBERISH_VALUE_FOR_LOGIN_STATE = '32Xnwiqodh98bjkxqw';
 
-
 //need to delete chorot later
-export const ASSIGNED_COURSES = ['cohort','admin','chorot'];
-
+export const ASSIGNED_COURSES = ['cohort', 'admin', 'chorot'];
 
 export const PUBLIC_PATHS = [
   '/login',
@@ -66,20 +64,7 @@ export const CUSTOM_ERROR_MESSAGE = {
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
 
-export const LANGUAGES = [
-  'English',
-  'Hindi',
-  'Marathi',
-  'Bengali',
-  'Telegu',
-  'Tamil',
-  'Kannada',
-  'Punjabi',
-  'Assamese',
-  'Orria',
-  'Bhojpuri',
-  'Maithili'
-];
+export const LANGUAGES = ['English', 'Hindi', 'Arabic'];
 
 export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';
 export const VIDEO_FILE_TYPES = '.mp4, .mkv';

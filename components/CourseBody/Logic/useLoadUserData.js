@@ -1,8 +1,9 @@
 import {
   GET_COURSE_CHAPTERS,
+  GET_COURSE_DATA,
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
-  GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID,
+  GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID,
   GET_TOPIC_RESOURCES_BY_COURSE_ID,
   queryClient
 } from '@/api/Queries';
@@ -23,7 +24,6 @@ import {
   filterTopicContent,
   sortArrByKeyInOrder
 } from '@/helper/data.helper';
-import { parseJson } from '@/helper/utils.helper';
 import {
   ChapterAtom,
   isLoadingAtom,
@@ -39,12 +39,16 @@ import { QuizProgressDataAtom, UserCourseDataAtom } from '@/state/atoms/video.at
 import { courseContext } from '@/state/contexts/CourseContext';
 import { userContext } from '@/state/contexts/UserContext';
 import { useLazyQuery } from '@apollo/client';
-import { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useLoadUserData(isPreview, setSelectedModule, getModuleOptions) {
   const { fullCourse } = useContext(courseContext);
   const { setBookmarkData } = useContext(userContext);
+
+  const router = useRouter();
+  const courseId = router?.query?.courseId;
 
   // recoil states
   const userData = useRecoilValue(UserStateAtom);
@@ -60,7 +64,13 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const [quizProgressData, setQuizProgressData] = useRecoilState(QuizProgressDataAtom);
 
+  const [topicContentDataLoaded, setTopicContentDataLoaded] = useState(null);
+
   // module, chapter, topic data query obj
+  const [loadCourseData, { error: errorCourseData, loading: loadingCourseData }] = useLazyQuery(
+    GET_COURSE_DATA,
+    { client: queryClient }
+  );
   const [loadModuleData, { error: errorModuleData, loading: loadingModuleData }] = useLazyQuery(
     GET_COURSE_MODULES,
     { client: queryClient }
@@ -73,9 +83,13 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     client: queryClient
   });
   const [loadTopicContentData, { error: errorTopicContentData, loading: loadingTopicData }] =
-    useLazyQuery(GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID, {
+    useLazyQuery(GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID, {
       client: queryClient
     });
+  // const [loadTopicContentData, { error: errorTopicContentData, loading: loadingTopicData }] =
+  //   useLazyQuery(GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID, {
+  //     client: queryClient
+  //   });
   const [loadResourcesData, { error: errorResourcesData, loading: loadingResourceData }] =
     useLazyQuery(GET_TOPIC_RESOURCES_BY_COURSE_ID, {
       client: queryClient
@@ -90,55 +104,98 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       client: userQueryClient
     });
 
+  useEffect(() => {
+    if (fullCourse?.id === courseId) return;
+
+    updateModuleData([]);
+    updateChapterData([]);
+    updateTopicData([]);
+    updateTopicContent([]);
+  }, [courseId, fullCourse?.id]);
+
   // load module, chapter, topic data and set in recoil
   useEffect(async () => {
     if (!fullCourse.id) return;
     if (!userData.id) return;
-    
+    console.log('data de', moduleData);
     updateModuleData([]);
     updateChapterData([]);
     updateTopicData([]);
     updateTopicContent([]);
 
-    setIsLoading(
-      loadingModuleData &&
-        loadingChapterData &&
-        loadingTopicData &&
-        loadingResourceData &&
-        loadingCourseMaps &&
-        loadingCourseProgress
-    );
+    // setIsLoading(
+    //   loadingModuleData &&
+    //     loadingChapterData &&
+    //     loadingTopicData &&
+    //     // loadingResourceData &&
+    //     loadingCourseMaps &&
+    //     loadingCourseProgress
+    // );
 
-    const moduleRes = await loadModuleData({
+    // const moduleRes = await loadModuleData({
+    //   variables: { course_id: fullCourse.id },
+    //   fetchPolicy: 'no-cache'
+    // }).catch((err) => {
+    //   if (err) setToastMsg({ type: 'danger', message: 'Module Load Error' });
+    // });
+    // const chapterRes = await loadChapterData({
+    //   variables: { course_id: fullCourse.id },
+    //   fetchPolicy: 'no-cache'
+    // }).catch((err) => {
+    //   if (err) setToastMsg({ type: 'danger', message: 'Chapter Load Error' });
+    // });
+    // const topicRes = await loadTopicData({
+    //   variables: { course_id: fullCourse.id },
+    //   fetchPolicy: 'no-cache'
+    // }).catch((err) => {
+    //   if (err) setToastMsg({ type: 'danger', message: 'Topic Load Error' });
+    // });
+    // const topicContentRes = await loadTopicContentData({
+    //   variables: { course_id: fullCourse.id },
+    //   fetchPolicy: 'no-cache'
+    // }).catch((err) => {
+    //   if (err) setToastMsg({ type: 'danger', message: 'Topic Content Load Error' });
+    // });
+
+    // const topicContentDataLoaded = structuredClone(
+    //   topicContentRes?.data?.getTopicContentByCourseId
+    // );
+    setIsLoading(loadingCourseData);
+    const courseDataRes = await loadCourseData({
       variables: { course_id: fullCourse.id },
       fetchPolicy: 'no-cache'
     }).catch((err) => {
-      if (err) alert('Module Load Error');
+      if (err) setToastMsg({ type: 'danger', message: 'Topic Content Load Error' });
     });
-    const chapterRes = await loadChapterData({
-      variables: { course_id: fullCourse.id },
-      fetchPolicy: 'no-cache'
-    }).catch((err) => {
-      if (err) alert('Chapter Load Error');
-    });
-    const topicRes = await loadTopicData({
-      variables: { course_id: fullCourse.id },
-      fetchPolicy: 'no-cache'
-    }).catch((err) => {
-      if (err) alert('Module Load Error');
-    });
-    const topicContentRes = await loadTopicContentData({
-      variables: { course_id: fullCourse.id },
-      fetchPolicy: 'no-cache'
-    }).catch((err) => {
-      if (err) alert('Module Load Error');
-    });
-    const moduleDataLoaded = structuredClone(moduleRes?.data?.getCourseModules);
-    const chapterDataLoaded = structuredClone(chapterRes?.data?.getCourseChapters);
-    const topicDataLoaded = structuredClone(topicRes?.data?.getTopics);
-    const topicContentDataLoaded = structuredClone(
-      topicContentRes?.data?.getTopicContentByCourseId
+
+    const moduleDataLoaded = structuredClone(courseDataRes?.data?.getCourseModules)?.sort(
+      (m1, m2) => {
+        const sequenceDiff = m1?.sequence - m2?.sequence;
+        if (!sequenceDiff) return m1?.created_at - m2?.created_at;
+
+        return sequenceDiff;
+      }
     );
+    const chapterDataLoaded = structuredClone(courseDataRes?.data?.getCourseChapters);
+    const topicDataLoaded = structuredClone(courseDataRes?.data?.getTopics);
+    const topicContentDataLoaded = [];
+    // for (let i = 0; i < moduleDataLoaded.length; i++) {
+    const mod = moduleDataLoaded?.[0];
+    if (mod?.id) {
+      const topicContentRes = await loadTopicContentData({
+        variables: { module_id: mod?.id },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        if (err) setToastMsg({ type: 'danger', message: 'Contnent Load Error' });
+      });
+
+      if (topicContentRes?.data?.getTopicContentByModuleId?.length) {
+        topicContentDataLoaded.push(
+          ...structuredClone(topicContentRes?.data?.getTopicContentByModuleId)
+        );
+      }
+    }
+    // }
 
     // new logic
     // chapterDataLoaded
@@ -167,17 +224,112 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         topic.userProgress = {};
       });
     chapterDataLoaded?.sort((m1, m2) => m1?.sequence - m2?.sequence);
-    moduleDataLoaded
-      ?.sort((m1, m2) => m1?.sequence - m2?.sequence)
-      ?.forEach((mod) => {
-        const filteredChapterData = filterAndSortChapter(chapterDataLoaded, mod?.id);
-        const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicDataLoaded, mod?.id);
+    moduleDataLoaded?.forEach((mod) => {
+      const filteredChapterData = filterAndSortChapter(chapterDataLoaded, mod?.id);
+      const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicDataLoaded, mod?.id);
 
-        mod.chapterData = filteredChapterData;
-        mod.topicData = filteredTopicData;
-      });
+      mod.chapterData = filteredChapterData;
+      mod.topicData = filteredTopicData;
+    });
+    // if (!isPreview) {
+    // const notesDataRes = await loadQueryDataAsync(
+    //   GET_USER_NOTES,
+    //   {
+    //     user_id: userData?.id,
+    //     publish_time: Date.now(),
+    //     pageCursor: '',
+    //     pageSize: 9999999999999,
+    //     course_id: fullCourse?.id
+    //   },
+    //   {},
+    //   userClient
+    // );
+    // setFloatingNotes(
+    //   notesDataRes?.getUserNotes?.notes
+    //     ?.filter((notes) => notes?.is_active)
+    //     ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+    // );
+    // const bookmarkDataRes = await loadQueryDataAsync(
+    //   GET_USER_BOOKMARKS,
+    //   {
+    //     user_id: userData?.id,
+    //     publish_time: Date.now(),
+    //     pageCursor: '',
+    //     pageSize: 9999999999999,
+    //     course_id: fullCourse?.id
+    //   },
+    //   {},
+    //   userClient
+    // );
+    // // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
+    // setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+    // const allQuizProgress = [];
+    // for (let i = 0; i < topicDataLoaded.length; i++) {
+    //   const topic = topicDataLoaded[i];
+    //   if (topic?.type !== 'Content') continue;
+    //   const quizProgessDataRes = await loadQueryDataAsync(
+    //     GET_USER_QUIZ_ATTEMPTS,
+    //     { user_id: userData?.id, topic_id: topic?.id },
+    //     {},
+    //     userClient
+    //   );
+    //   if (quizProgessDataRes?.getUserQuizAttempts?.length)
+    //     allQuizProgress.push(...quizProgessDataRes?.getUserQuizAttempts);
+    // }
+    // // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
+    // // console.log(allQuizProgress);
+    // setQuizProgressData(allQuizProgress);
+    // const data = { userCourseMapping: {}, userCourseProgress: [] };
+    // const mapRes = await loadUserCourseMaps({
+    //   variables: { userId: userData?.id, courseId: fullCourse?.id },
+    //   fetchPolicy: 'no-cache'
+    // }).catch((err) => {
+    //   if (err?.message?.includes('no user course found')) return;
+    //   if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+    // });
+    // // console.log(mapRes);
+    // if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
+    //   return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+    // data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
+    // //in order to not load course progress of self-unassigned course
+    // const course_status = parseJson(data?.userCourseMapping);
+    // let showCourseProgress = true;
+    // if (course_status?.toLowerCase() === 'disabled') {
+    //   showCourseProgress = false;
+    // }
+    // if (data?.userCourseMapping?.user_course_id && showCourseProgress) {
+    //   const progressRes = await loadUserCourseProgress({
+    //     variables: {
+    //       userId: userData?.id,
+    //       userCourseId: [data?.userCourseMapping?.user_course_id]
+    //     },
+    //     fetchPolicy: 'no-cache'
+    //   }).catch((err) => {
+    //     if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+    //   });
+    //   const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+    //   if (courseProgress?.length) data.userCourseProgress = courseProgress;
+    // }
+    // setUserCourseData({
+    //   ...userCourseData,
+    //   allModules: moduleDataLoaded,
+    //   activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
+    //   userCourseMapping: data?.userCourseMapping || {},
+    //   userCourseProgress: data?.userCourseProgress || []
+    // });
+    // }
+
+    // previous logic
+    const sortedData = sortArrByKeyInOrder([...moduleDataLoaded], 'sequence', 1);
+    updateModuleData(sortedData || []);
+    setSelectedModule(getModuleOptions(sortedData)[0] || {});
+
+    updateChapterData(chapterDataLoaded || []);
+    updateTopicData(topicDataLoaded || []);
+    updateTopicContent(topicContentDataLoaded || []);
 
     if (!isPreview) {
+      // user notes
       const notesDataRes = await loadQueryDataAsync(
         GET_USER_NOTES,
         {
@@ -196,6 +348,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
           ?.map((noteObj) => getNoteCardObj(noteObj)) || []
       );
 
+      // user bookmarks
       const bookmarkDataRes = await loadQueryDataAsync(
         GET_USER_BOOKMARKS,
         {
@@ -211,6 +364,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
       setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks || []);
 
+      // topic quiz
       const allQuizProgress = [];
       for (let i = 0; i < topicDataLoaded.length; i++) {
         const topic = topicDataLoaded[i];
@@ -229,62 +383,54 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       // console.log(allQuizProgress);
       setQuizProgressData(allQuizProgress);
 
-      const data = { userCourseMapping: {}, userCourseProgress: [] };
-      const mapRes = await loadUserCourseMaps({
-        variables: { userId: userData?.id, courseId: fullCourse?.id },
-        fetchPolicy: 'no-cache'
-      }).catch((err) => {
-        if (err?.message?.includes('no user course found')) return;
-        if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
-      });
-      // console.log(mapRes);
-      if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
-        return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+      // // user course progress
+      // const data = { userCourseMapping: {}, userCourseProgress: [] };
+      // if (!userCourseData?.userCourseMapping?.user_course_id && userCourseData?.isCourseAssigned) {
+      //   const mapRes = await loadUserCourseMaps({
+      //     variables: { userId: userData?.id, courseId: fullCourse?.id },
+      //     fetchPolicy: 'no-cache'
+      //   }).catch((err) => {
+      //     if (err?.message?.includes('no user course found')) return;
+      //     if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+      //   });
+      //   // console.log(mapRes);
+      //   if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
+      //     return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+      //   data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
+      // }
 
-      data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
+      // //in order to not load course progress of self-unassigned course
 
-      //in order to not load course progress of self-unassigned course
+      // const course_status = parseJson(data?.userCourseMapping);
 
-      const course_status = parseJson(data?.userCourseMapping);
+      // let showCourseProgress = true;
 
-      let showCourseProgress = true ;
+      // if (course_status?.toLowerCase() === 'disabled') {
+      //   showCourseProgress = false;
+      // }
 
-      if(course_status?.toLowerCase() === 'disabled'){
-         showCourseProgress = false;
-      }
+      // if (data?.userCourseMapping?.user_course_id && showCourseProgress) {
+      //   const progressRes = await loadUserCourseProgress({
+      //     variables: {
+      //       userId: userData?.id,
+      //       userCourseId: [data?.userCourseMapping?.user_course_id]
+      //     },
+      //     fetchPolicy: 'no-cache'
+      //   }).catch((err) => {
+      //     if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+      //   });
+      //   const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+      //   if (courseProgress?.length) data.userCourseProgress = courseProgress;
+      // }
 
-      if (data?.userCourseMapping?.user_course_id && showCourseProgress) {
-        const progressRes = await loadUserCourseProgress({
-          variables: {
-            userId: userData?.id,
-            userCourseId: [data?.userCourseMapping?.user_course_id]
-          },
-          fetchPolicy: 'no-cache'
-        }).catch((err) => {
-          if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-        });
-        const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
-        if (courseProgress?.length) data.userCourseProgress = courseProgress;
-      }
-
-      setUserCourseData({
-        ...userCourseData,
-        allModules: moduleDataLoaded,
-        activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
-        userCourseMapping: data?.userCourseMapping || {},
-        userCourseProgress: data?.userCourseProgress || []
-      });
+      // console.log(userCourseData?.userCourseMapping);
+      // setUserCourseData({
+      //   ...userCourseData,
+      //   allModules: moduleDataLoaded,
+      //   activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
+      //   userCourseProgress: data?.userCourseProgress || []
+      // });
     }
-
-    // previous logic
-    const sortedData = sortArrByKeyInOrder([...moduleDataLoaded], 'sequence', 1);
-    updateModuleData(sortedData || []);
-    setSelectedModule(getModuleOptions(sortedData)[0] || {});
-
-    updateChapterData(chapterDataLoaded || []);
-    updateTopicData(topicDataLoaded || []);
-    updateTopicContent(topicContentDataLoaded || []);
-
     // loadModuleData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
     //   ({ data }) => {
     //     if (errorModuleData) alert('Module Load Error');
@@ -322,12 +468,94 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
     loadResourcesData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
-        if (errorResourcesData) alert('Resources Load Error');
+        if (errorResourcesData) setToastMsg({ type: 'danger', message: 'Resources Load Error' });
 
         updateResources(data.getResourcesByCourseId || []);
       }
     );
-  }, [fullCourse?.id, userData.id]);
+  }, [fullCourse?.id, userData?.id]);
+
+  useEffect(async () => {
+    if (isPreview) return;
+    if (!moduleData?.length) return;
+    if (!userCourseData?.userCourseMapping?.user_course_id) return;
+    if (!userCourseData?.isCourseAssigned) return;
+    if (userCourseData?.userCourseProgress?.length || userCourseData?.allModules?.length) return;
+
+    // user course progress
+    //in order to not load course progress of self-unassigned course
+    const progressRes = await loadUserCourseProgress({
+      variables: {
+        userId: userData?.id,
+        userCourseId: [userCourseData?.userCourseMapping?.user_course_id]
+      },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
+      if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+    });
+    const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+    const userCourseProgress = courseProgress || [];
+
+    setUserCourseData({
+      ...userCourseData,
+      allModules: moduleData,
+      activeModule: { index: 0, id: moduleData[0]?.id },
+      userCourseProgress: userCourseProgress || []
+    });
+  }, [userCourseData, moduleData]);
+
+  useEffect(async () => {
+    if (!moduleData?.length) return;
+    if (topicContentDataLoaded !== null) return;
+    if (courseId !== fullCourse?.id) return;
+
+    const topicContentData = [];
+
+    for (let i = 1; i < moduleData.length; i++) {
+      const mod = moduleData?.[i];
+
+      if (mod?.id) {
+        const topicContentRes = await loadTopicContentData({
+          variables: { module_id: mod?.id },
+          fetchPolicy: 'no-cache'
+        }).catch((err) => {
+          if (err) setToastMsg({ type: 'danger', message: 'Contnent Load Error' });
+        });
+
+        if (topicContentRes?.data?.getTopicContentByModuleId?.length) {
+          topicContentData.push(
+            ...structuredClone(topicContentRes?.data?.getTopicContentByModuleId)
+          );
+        }
+      }
+    }
+
+    if (topicContentData?.length) setTopicContentDataLoaded(topicContentData);
+  }, [moduleData]);
+
+  useEffect(async () => {
+    if (!topicContentDataLoaded?.length) return;
+
+    const moduleDataLoaded = structuredClone(moduleData);
+    const topicDataLoaded = structuredClone(topicData);
+
+    topicDataLoaded?.forEach((topic) => {
+      const filteredTopicContent = filterTopicContent(topicContentDataLoaded, topic?.id);
+
+      if (filteredTopicContent?.length) topic.topicContentData = filteredTopicContent;
+    });
+
+    moduleDataLoaded?.forEach((mod) => {
+      const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicDataLoaded, mod?.id);
+
+      if (filteredTopicData?.length) mod.topicData = filteredTopicData;
+    });
+
+    if (moduleDataLoaded?.length) updateModuleData(moduleDataLoaded);
+    if (topicDataLoaded?.length) updateTopicData(topicDataLoaded);
+
+    updateTopicContent([...topicContent, ...topicContentDataLoaded]);
+  }, [topicContentDataLoaded]);
 
   useEffect(() => {
     if (errorModuleData) return setToastMsg({ type: 'danger', message: 'Module Load Error' });

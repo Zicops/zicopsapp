@@ -1,7 +1,8 @@
 import { GET_COURSE } from '@/api/Queries';
 import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
+import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
-import { getQueryData } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_STATUS } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
@@ -9,7 +10,7 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -18,7 +19,13 @@ export default function useHandleCourseHero(isPreview) {
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
 
+  const [loadUserCourseMaps, { error: errorCourseMapsLoad, loading: loadingCourseMaps }] =
+    useLazyQuery(GET_USER_COURSE_MAPS_BY_COURSE_ID, {
+      client: userQueryClient
+    });
+
   const router = useRouter();
+  const courseId = router?.query?.courseId;
 
   const { updateCourseMaster, isDataLoaded, setIsDataLoaded, fullCourse } =
     useContext(courseContext);
@@ -43,19 +50,62 @@ export default function useHandleCourseHero(isPreview) {
     setVideoData(getVideoObject());
   }, []);
 
-  const {
-    data: courseData,
-    loading,
-    error
-  } = getQueryData(GET_COURSE, { course_id: router?.query?.courseId }, { fetchPolicy: 'no-cache' });
+  // const {
+  //   data: courseData,
+  //   loading,
+  //   error
+  // } = getQueryData(GET_COURSE, { course_id: router?.query?.courseId }, { fetchPolicy: 'no-cache' });
 
-  useEffect(() => {
+  useEffect(async () => {
+    if (!courseId) return;
+
+    const loadFullCourseData = isPreview ? loadQueryDataAsync : loadAndCacheDataAsync;
+    const courseData = await loadFullCourseData(GET_COURSE, {
+      course_id: courseId
+    });
+    // if (!isPreview) {
+    // courseData = await loadAndCacheDataAsync(GET_COURSE, {
+    //   course_id: courseId
+    // });
+    // } else {
+    //   courseData = await loadQueryDataAsync(GET_COURSE, {
+    //     course_id: courseId
+    //   });
+    // }
+
     if (courseData?.getCourse && !isDataLoaded) {
       updateCourseMaster(courseData.getCourse);
 
       setIsDataLoaded(true);
     }
-  }, [courseData]);
+  }, [courseId]);
+
+  useEffect(async () => {
+    if (!userData?.id) return;
+    if (!fullCourse?.id) return;
+    // user course progress
+    const mapRes = await loadUserCourseMaps({
+      variables: { userId: userData?.id, courseId: fullCourse?.id },
+      fetchPolicy: 'no-cache'
+    }).catch((err) => {
+      if (err?.message?.includes('no user course found')) return;
+      if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+    });
+    // console.log(mapRes);
+    if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
+      return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+
+    const userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID?.[0] || {};
+
+    console.log(userCourseMapping, 1111111111111111);
+    setUserCourseData({
+      ...userCourseData,
+      userCourseMapping: userCourseMapping || {},
+      isCourseAssigned:
+        !!Object.keys(userCourseMapping).length &&
+        userCourseMapping?.course_status?.toLowerCase() !== 'disabled'
+    });
+  }, [fullCourse, userData]);
 
   useEffect(() => {
     if (isPreview) return;
@@ -184,17 +234,17 @@ export default function useHandleCourseHero(isPreview) {
 
     // update course if user is reassigning this course to himself again
     if (userCourseMapping?.user_course_id) {
-      
       sendData.userCourseId = userCourseMapping?.user_course_id;
 
       let isError = false;
       const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
       if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
-      console.log( res?.data?.updateUserCourse, 'userCourseMap');
+      console.log(res?.data?.updateUserCourse, 'userCourseMap');
 
       setUserCourseData({
         ...userCourseData,
-        userCourseMapping: res?.data?.updateUserCourse || {}
+        userCourseMapping: res?.data?.updateUserCourse || {},
+        isCourseAssigned: true
       });
       setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
       setIsAssignPopUpOpen(false);
@@ -213,7 +263,8 @@ export default function useHandleCourseHero(isPreview) {
 
     setUserCourseData({
       ...userCourseData,
-      userCourseMapping: res?.data?.addUserCourse[0] || {}
+      userCourseMapping: res?.data?.addUserCourse[0] || {},
+      isCourseAssigned: true
     });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
     setIsAssignPopUpOpen(false);
@@ -228,7 +279,7 @@ export default function useHandleCourseHero(isPreview) {
       userId: userCourseMapping?.user_id,
       userLspId: userCourseMapping?.user_lsp_id,
       courseId: userCourseMapping?.course_id,
-      addedBy: JSON.stringify({ userId: userData?.id, role: "self" }),
+      addedBy: JSON.stringify({ userId: userData?.id, role: 'self' }),
       courseType: userCourseMapping?.course_type,
       isMandatory: userCourseMapping?.is_mandatory,
       courseStatus: USER_STATUS?.disable,
@@ -240,7 +291,7 @@ export default function useHandleCourseHero(isPreview) {
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
-    setUserCourseData((prev) => ({...prev , userCourseMapping: res?.data?.updateUserCourse }))
+    setUserCourseData((prev) => ({ ...prev, userCourseMapping: res?.data?.updateUserCourse }));
     setToastMsg({ type: 'success', message: 'Course Removed Successfully!' });
     return;
   }

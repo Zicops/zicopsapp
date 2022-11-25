@@ -46,7 +46,7 @@ export default function DropDownSubMenu({
           position={'initial'}
           viewScroll={'initial'}>
           {subData.map((elements, index) => {
-            const { title, link } = elements;
+            const { title, link, asUrl } = elements;
             let customStyles = {
               border: '1px solid var(--primary)',
               margin: `${index === 0 ? '1px 2px 0 2px' : '0 2px'}`
@@ -69,7 +69,7 @@ export default function DropDownSubMenu({
                   const route = arrowpositon === 'right'? `search-page?subCat=${link}&isPref=true` : `${link}?tabName=${title}`
                   const maskUrl = elements?.asUrl ? elements?.asUrl : link;
                   router.push(route,maskUrl);}
-                  else router.push(link);
+                  else router.push(link, asUrl);
                 }}>
                 {title}
               </MenuItem>

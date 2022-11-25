@@ -58,15 +58,13 @@ export default function FavouriteDndCourses({ isLoading }) {
   const [isUpdated, setIsUpdated] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!userData?.id) return;
 
-    loadCourses();
+    isLoading(true);
+    await loadCourses();
+    isLoading(false);
   }, [userData?.id]);
-
-  useEffect(() => {
-    isLoading(loading);
-  }, [loading]);
 
   useEffect(() => {
     if (!isUpdated) return;
@@ -236,7 +234,8 @@ export default function FavouriteDndCourses({ isLoading }) {
                   mb={0.5}
                   sx={{
                     transform: !isDrag ? 'translate(0, 160px)' : 'translate(0, 0)',
-                    transition: 'transform 0.2s'
+                    transition: 'transform 0.2s',
+                    marginBottom: '-28px'
                   }}>
                   Drop the favorite course in folder
                 </Box>
@@ -244,9 +243,9 @@ export default function FavouriteDndCourses({ isLoading }) {
                   fontSize={'22px'}
                   mb={0.5}
                   sx={{
-                    // transform: isDrag ? 'translate(0, 0)' : '',
-                    display: isDrag ? 'none' : '',
-                    transition: 'display 0.1s'
+                    // transform: !isDrag ? 'translate(0, 0)' :
+                    opacity: isDrag ? '0' : '1',
+                    // transition: 'display 0.1s'
                   }}>
                   Drag your favourite course in folder
                 </Box>

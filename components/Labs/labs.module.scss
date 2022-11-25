@@ -412,9 +412,9 @@ $side: calc($cellHeightWidth - $diff);
   -webkit-clip-path: polygon(
     0 0,
     $side 0,
-    $side -1 * $side/4,
-    $side/3 $side/2,
-    $side $side + $side/4,
+    $side calc(-1 * $side/4),
+    calc($side/3) calc($side/2),
+    $side calc($side + $side/4),
     $side $side,
     0 $side
   );
@@ -456,9 +456,9 @@ $side: calc($cellHeightWidth - $diff);
     -webkit-clip-path: polygon(
       0 0,
       $side 0,
-      $side $side/2,
-      $side/3 $side/2,
-      $side $side/2,
+      $side calc($side/2),
+      calc($side/3) calc($side/2),
+      $side calc($side/2),
       $side $side,
       0 $side
     );

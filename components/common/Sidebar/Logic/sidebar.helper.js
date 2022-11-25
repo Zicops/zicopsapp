@@ -94,3 +94,45 @@ export const userSideBarData = {
     }
   ]
 };
+
+export const administrationSideBarData = {
+  image: '/images/UserManagement.png',
+  heading: 'Administration',
+  data: [
+    {
+      title: 'My Learning Space',
+      link: '/admin/administration/my-learning-space',
+      description: ADMIN_USERS.sidebarData.myUsers
+    },
+    {
+      title: 'Organization',
+      link: '/admin/administration/organization',
+      description: ADMIN_USERS.sidebarData.myUsers
+    },
+    {
+      title: 'Subscription & Billing',
+      link: '',
+      description: ADMIN_USERS.sidebarData.myUsers
+    },
+    {
+      title: 'Notifications Manager',
+      link: '',
+      description: ADMIN_USERS.sidebarData.myUsers
+    },
+    {
+      title: 'Settings',
+      link: '',
+      description: ADMIN_USERS.sidebarData.myUsers
+    },
+    {
+      title: 'App Integration',
+      link: '',
+      description: ADMIN_USERS.sidebarData.myUsers
+    }
+    // {
+    //   title: 'User Roles',
+    //   // link: '/admin/user/users-roles'
+    //   link: ''
+    // },
+  ]
+};

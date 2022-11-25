@@ -3,9 +3,8 @@ import RTE from '@/components/common/FormComponents/RTE';
 import Loader from '@/components/common/Loader';
 import NextButton from '@/components/common/NextButton';
 import ToolTip from '@/components/common/ToolTip';
-import { ADMIN_EXAMS} from '@/components/common/ToolTip/tooltip.helper';
-import { TOOLTIP_STYLE } from '@/components/common/ToolTip/tooltip.helper';
-import { MAX_ATTEMPT_COUNT, TOOLTIP_IMG_SRC } from '@/helper/constants.helper';
+import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
+import { MAX_ATTEMPT_COUNT } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -367,7 +366,7 @@ export default function ExamMaster() {
             }
             name="is_attempts_visible"
             isChecked={examTabData?.is_attempts_visible}
-            isDisabled={isPreview}
+            isDisabled={isPreview || examTabData?.schedule_type === SCHEDULE_TYPE[0]}
             changeHandler={(e) => {
               const isChecked = e.target.checked;
               setExamTabData({
@@ -388,7 +387,7 @@ export default function ExamMaster() {
                 placeholder: 'Select Max Attempts',
                 options: maxAttemptsOptions,
                 value: { value: examTabData?.no_attempts, label: examTabData?.no_attempts },
-                isDisabled: isPreview
+                isDisabled: isPreview || examTabData?.schedule_type === SCHEDULE_TYPE[0]
               }}
               isFiftyFifty={true}
               changeHandler={(e) => changeHandler(e, examTabData, setExamTabData, 'no_attempts')}
@@ -463,7 +462,15 @@ export default function ExamMaster() {
             value={SCHEDULE_TYPE[0]}
             isDisabled={!!examTabData?.id}
             isChecked={examTabData.schedule_type === 'scheduled'}
-            changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
+            changeHandler={(e) => {
+              // changeHandler(e, examTabData, setExamTabData);
+              setExamTabData({
+                ...examTabData,
+                schedule_type: SCHEDULE_TYPE[0],
+                is_attempts_visible: true,
+                no_attempts: 1
+              });
+            }}
           />
           <LabeledRadioCheckbox
             type="radio"

@@ -1,6 +1,8 @@
+import Button from '@/components/common/Button';
+import PopUp from '@/components/common/PopUp';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   GET_QB_SECTION_MAPPING_BY_SECTION,
@@ -16,6 +18,7 @@ import {
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { STATUS, StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
+import Preview from '../Preview';
 import { paperTabData, QuestionPaperTabAtom } from './Logic/questionPaperTab.helper';
 import useHandlePaperTab from './Logic/useHandlePaperTab';
 
@@ -36,14 +39,19 @@ export default function QuestionPaperTab() {
   const [status, setStatus] = useRecoilState(StatusAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
+  const [masterData, setMasterData] = useState(null);
+
+  useEffect(() => {
+    setQuestionPaperTabData(getQuestionPaperTabDataObject());
+  }, []);
+
+  useEffect(() => {
+    if (router?.pathname?.endsWith('add')) setTab(paperTabData[0]?.name);
+  }, []);
 
   // load section data and qb mappings
   useEffect(async () => {
-    if (!questionPaperId) {
-      setQuestionPaperTabData(getQuestionPaperTabDataObject());
-      setTab(paperTabData[0].name);
-      return;
-    }
+    if (!questionPaperId) return;
 
     const sectionData = [];
     let mappedQb = [];
@@ -51,7 +59,7 @@ export default function QuestionPaperTab() {
     // load sections
     let isError = false;
     let paperMaster = questionPaperTabData?.paperMaster;
-    if (!questionPaperTabData?.paperMaster?.name) {
+    if (!questionPaperTabData?.paperMaster?.name || !questionPaperTabData?.paperMaster?.id) {
       const metaRes = await loadPaperMeta({
         variables: { question_paper_id: [questionPaperId] }
       }).catch((err) => {
@@ -201,8 +209,26 @@ export default function QuestionPaperTab() {
           submitDisplay: questionPaperId ? 'Update' : 'Save',
           handleSubmit: questionPaperId ? updateQuestionPaper : addNewQuestionPaper,
           handleCancel: () => router.push('/admin/exams/my-question-papers')
-        }}
-      />
+        }}>
+        {!!questionPaperId && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', flex: 1 }}>
+            <Button
+              clickHandler={() => setMasterData(questionPaperTabData?.paperMaster)}
+              text="Preview"
+            />
+          </div>
+        )}
+      </TabContainer>
+
+      {/* preview popup */}
+      {masterData && (
+        <PopUp
+          title={masterData?.name}
+          popUpState={[!!masterData, setMasterData]}
+          isFooterVisible={false}>
+          <Preview masterData={masterData || {}} />
+        </PopUp>
+      )}
     </>
   );
 }

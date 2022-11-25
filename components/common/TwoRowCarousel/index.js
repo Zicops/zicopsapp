@@ -26,7 +26,7 @@ export default function TwoRowCarousel({
 
   return (
     <>
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }} className={carouselProps?.twoRowCarouselClass}>
         <ItemSlider
           carouselProps={carouselProps}
           noDataFound={!isResourcesFound}

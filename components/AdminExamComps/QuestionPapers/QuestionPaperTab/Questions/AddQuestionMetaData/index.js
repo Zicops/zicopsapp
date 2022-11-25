@@ -112,8 +112,9 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
       if (errorQBQuestionsData)
         return setToastMsg({ type: 'danger', message: 'QB Questions load error' });
 
-      if (data?.getQuestionBankQuestions)
-        setQbQuestions(sortArrByKeyInOrder(data.getQuestionBankQuestions, 'CreatedAt', false));
+      const questionsArr = data.getQuestionBankQuestions?.filter((q) => q?.Status === 'Y') || [];
+      if (questionsArr?.length)
+        setQbQuestions(sortArrByKeyInOrder(questionsArr, 'CreatedAt', false));
     });
   }, [metaData.qbId]);
 

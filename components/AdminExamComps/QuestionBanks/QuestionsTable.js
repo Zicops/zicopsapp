@@ -31,6 +31,8 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
 
   // load table data
   useEffect(() => {
+    if (!questionBankId) return;
+
     loadQBQuestions({
       variables: { question_bank_id: questionBankId },
       fetchPolicy: 'no-cache'

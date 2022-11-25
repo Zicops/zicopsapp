@@ -139,8 +139,11 @@ export default function TopicBox({
       (res) => res?.getTopicExams?.[0]
     );
 
-    if (!topicExam)
-      return setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
+    if (!topicExam) {
+      if (router?.asPath?.includes('admin'))
+        setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
+      return;
+    }
 
     setExamData({
       id: topicExam.id,
@@ -223,8 +226,14 @@ export default function TopicBox({
           (res) => res.getTopicExams[0]
         );
 
-        if (!topicExam)
-          return setToastMsg({ type: 'danger', message: `No exam added for topic: ${topic.name}` });
+        if (!topicExam) {
+          if (router?.asPath?.includes('admin'))
+            setToastMsg({
+              type: 'danger',
+              message: `No exam added for topic: ${topic.name}`
+            });
+          return;
+        }
 
         // reset recoil and set new data
         setVideoData(getVideoObject());
@@ -419,8 +428,8 @@ export default function TopicBox({
         className={`${styles.topic}`}
         onClick={() => {
           if (
-            !router?.asPath?.includes('preview') &&
-            !userCourseData?.userCourseMapping?.user_course_id ||
+            (!router?.asPath?.includes('preview') &&
+              !userCourseData?.userCourseMapping?.user_course_id) ||
             userCourseData?.userCourseMapping?.course_status?.toLowerCase() === 'disabled'
           )
             return setShowAlert(true);
