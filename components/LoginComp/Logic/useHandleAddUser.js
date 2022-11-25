@@ -111,9 +111,9 @@ export default function useHandleAddUserDetails() {
 
   async function addUserLearningSpaceDetails(sub_categories = [], base_sub_category) {
     // console.log(userDataOrgLsp, 'data at start of addUserLearningDetails');
-
+    const lspId = sessionStorage.getItem('lsp_id');
     setSubmitDisable(true);
-    const resLearning = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userDataAbout?.id  , lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
+    const resLearning = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userDataAbout?.id  , lsp_id:lspId},{},userQueryClient);
     if(resLearning?.error) return setToastMsg({ type: 'danger', message: 'Error while loading learning space details!' });
     let userLspId = null ;
     if(resLearning?.getUserLspByLspId){
@@ -123,7 +123,7 @@ export default function useHandleAddUserDetails() {
     let isError = false;
     const sendLspData = {
       user_id: userDataAbout?.id,
-      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
+      lsp_id: userOrgData?.lsp_id || lspId,
       status: 'Active'
     };
     if(!userLspId){
