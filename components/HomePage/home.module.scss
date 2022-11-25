@@ -270,7 +270,7 @@ $DELAY: calc($DURATION / 2);
 
   .btn {
     padding: 20px 0;
-    margin-top: 10px;
+    // margin-top: 10px;
 
     button {
       outline: none;
@@ -304,6 +304,7 @@ $DELAY: calc($DURATION / 2);
   flex-direction: column;
   z-index: 5;
   gap: 60px;
+ 
   .formContainer {
     display: flex;
     flex-direction: row;
@@ -445,4 +446,22 @@ $DELAY: calc($DURATION / 2);
     opacity: 1;
     z-index: 10;
   }
+}
+@media screen and (max-width:1920px) {
+  .btn {
+    margin-top: 10px;
+  }
+
+  // .formContainerWrapper {
+  //   transform: scale(0.9);
+  // }
+}
+
+@media screen and (max-width:1400px) {
+.btn{
+ margin-top: 35px;
+}
+.formContainerWrapper{
+  transform: scale(0.9);
+}
 }
