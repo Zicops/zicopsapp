@@ -31,8 +31,10 @@ export default function LspPage() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   
   useEffect(async () => {
-    const orgutdata = await getOuDetails(["V21samIzQnphSFIwY0M4dmVtbGpiM0J6TG1OdmJVbFVLb2xrYXRhICwgU2VjdG9yIDU3MDAwMDg4S29sa2F0YVdlc3QgQmVuZ2FsSW5kaWE="])
-    const lspdata = await getLspDetails(["V21samIzQnphSFIwY0M4dmVtbGpiM0J6TG1OdmJVbFVWMjFzYW1JelFucGhTRkl3WTBNNGRtVnRiR3BpTTBKNlRHMU9kbUpWYkZWTGIyeHJZWFJoSUN3Z1UyVmpkRzl5SURVM01EQXdNRGc0UzI5c2EyRjBZVmRsYzNRZ1FtVnVaMkZzU1c1a2FXRT0="])
+    const ouId = sessionStorage.getItem('ou_id');
+    const lspId = sessionStorage.getItem('lsp_id');
+    const orgutdata = await getOuDetails([ouId])
+    const lspdata = await getLspDetails([lspId])
     setLspUpdateData(lspdata?.getLearningSpaceDetails?.[0])
     setOrgUnitUpdateData(orgutdata?.getOrganizationUnits?.[0])
     const lspData = [

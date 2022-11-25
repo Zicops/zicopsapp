@@ -100,6 +100,8 @@ const LearningSpaces = () => {
               isDisabled={lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.disable}
               lspId={data.lsp_id}
               lspName={data.name}
+              orgId={data.org_id }
+              ouId={data.ou_id}
             />
           ))}
         </div>

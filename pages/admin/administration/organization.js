@@ -30,8 +30,9 @@ export default function OrgPage() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [pageSize, setPageSize] = useState(6);
   useEffect(async () => {
-    const data = await getOrgDetails(['Wmljb3BzaHR0cC8vemljb3BzLmNvbUlU']);
-    const lspData = await getLsps('Wmljb3BzaHR0cC8vemljb3BzLmNvbUlU');
+    const orgId = sessionStorage.getItem('org_id');
+    const data = await getOrgDetails([orgId]);
+    const lspData = await getLsps(orgId);
     setOrgUpdateData(data?.getOrganizations?.[0]);
     const lspdata = lspData?.getLearningSpacesByOrgId?.map((data) => {
       return {...data, id: data?.lsp_id}; 
