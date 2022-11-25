@@ -1,3 +1,5 @@
+import { DELETE_EXAM } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
@@ -38,7 +40,7 @@ export default function ExamsTable({ isEdit = false }) {
       publish_time: Date.now(),
       pageSize: 9999999,
       pageCursor: '',
-      searchText: searchQuery
+      searchText: searchQuery?.trim()
     };
 
     const res = await loadExams({ variables: queryVariables });
@@ -157,6 +159,12 @@ export default function ExamsTable({ isEdit = false }) {
                     <img src="/images/svg/edit-box-line.svg" width={20}></img>
                   </ToolTip>
                 </button>
+                <DeleteBtn
+                  id={params?.id}
+                  resKey="deleteExam"
+                  mutation={DELETE_EXAM}
+                  onDelete={() => setSearchQuery(' ')}
+                />
               </>
             )}
           </>

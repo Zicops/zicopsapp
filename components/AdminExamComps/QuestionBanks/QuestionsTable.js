@@ -1,3 +1,5 @@
+import { DELETE_QUESTION_BANK_QUESTION } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
@@ -101,21 +103,6 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
         };
         return (
           <>
-            {isEdit && (
-              <button
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  outline: '0',
-                  border: '0'
-                }}
-                onClick={() => openEditQuestionMasterTab(data)}>
-                <ToolTip title="Edit Question" placement="bottom">
-                  <img src="/images/svg/edit-box-line.svg" width={20}></img>
-                </ToolTip>
-              </button>
-            )}
-
             <button
               style={{
                 cursor: 'pointer',
@@ -131,10 +118,40 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
                 <img src="/images/svg/eye-line.svg" width={20}></img>
               </ToolTip>
             </button>
+
+            {isEdit && (
+              <>
+                <button
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: 'transparent',
+                    outline: '0',
+                    border: '0'
+                  }}
+                  onClick={() => openEditQuestionMasterTab(data)}>
+                  <ToolTip title="Edit Question" placement="bottom">
+                    <img src="/images/svg/edit-box-line.svg" width={20}></img>
+                  </ToolTip>
+                </button>
+
+                <DeleteBtn
+                  id={params?.id}
+                  resKey="deleteQuestionBankQuestion"
+                  mutation={DELETE_QUESTION_BANK_QUESTION}
+                  onDelete={() => {
+                    const _questions = structuredClone(qbQuestions);
+                    const index = _questions?.findIndex((q) => q?.id === params.row.id);
+                    if (index >= 0) _questions?.splice(index, 1);
+
+                    setQbQuestions(_questions);
+                  }}
+                />
+              </>
+            )}
           </>
         );
       },
-      flex: 0.5
+      flex: 0.6
     }
   ];
 

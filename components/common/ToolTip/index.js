@@ -49,7 +49,7 @@ const ToolTip = ({ children, placement, title = '', image, buttonName }) => {
         enterDelay={1000}
         // leaveDelay={1000}
       >
-        <span>{children}</span>
+        <>{children}</>
       </Tooltip>
     </>
   );

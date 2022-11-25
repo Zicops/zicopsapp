@@ -1898,3 +1898,39 @@ export const DELETE_COHORT_COURSE = gql`
     deleteCourseCohort(id: $id)
   }
 `;
+
+export const DELETE_QUESTION_BANK = gql`
+  mutation deleteQuestionBank($id: ID) {
+    deleteQuestionBank(id: $id)
+  }
+`;
+
+export const DELETE_QUESTION_BANK_QUESTION = gql`
+  mutation deleteQuestionBankQuestion($id: ID) {
+    deleteQuestionBankQuestion(id: $id)
+  }
+`;
+
+export const DELETE_QUESTION_PAPER = gql`
+  mutation deleteQuestionPaper($id: ID) {
+    deleteQuestionPaper(id: $id)
+  }
+`;
+
+export const DELETE_QUESTION_PAPER_SECTION = gql`
+  mutation deleteQuestionPaperSection($id: ID) {
+    deleteQuestionPaperSection(id: $id)
+  }
+`;
+
+export const DELETE_SECTION_TO_BANK = gql`
+  mutation deleteSectionToBank($id: ID) {
+    deleteSectionToBank(id: $id)
+  }
+`;
+
+export const DELETE_EXAM = gql`
+  mutation deleteExam($id: ID) {
+    deleteExam(id: $id)
+  }
+`;

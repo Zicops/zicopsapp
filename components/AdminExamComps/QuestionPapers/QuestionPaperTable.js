@@ -1,3 +1,5 @@
+import { DELETE_QUESTION_PAPER } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
@@ -91,6 +93,19 @@ export default function QuestionPaperTable({ isEdit = false }) {
                     <img src="/images/svg/edit-box-line.svg" width={20}></img>
                   </ToolTip>
                 </button>
+
+                <DeleteBtn
+                  id={params?.id}
+                  resKey="deleteQuestionPaper"
+                  mutation={DELETE_QUESTION_PAPER}
+                  onDelete={() => {
+                    const _papers = structuredClone(questionPaper);
+                    const index = _papers?.findIndex((qp) => qp?.id === params.row.id);
+                    if (index >= 0) _papers?.splice(index, 1);
+
+                    setQuestionPaper(_papers);
+                  }}
+                />
 
                 <ToolTip title={ADMIN_EXAMS.myQuestionPapers.createExamBtn} placement="bottom">
                   <button
