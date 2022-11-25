@@ -7,43 +7,89 @@ import TabContainer from '@/components/common/TabContainer';
 import TextHeaderWithEditIcon from '@/components/common/TextHeaderWithEditIcon';
 import BulkUpload from '@/components/UserComps/BulkUpload';
 import InviteUser from '@/components/UserComps/InviteUser';
+import { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useMutation } from '@apollo/client';
 import AdminInfoWrapper from './AdminInfoWrapper';
-
+import { UPDATE_LEARNING_SPACE_DETAILS, UPDATE_ORGAINIZATION_UNIT_DETAILS, userClient } from '@/api/UserMutations';
+import { getOuDetails , getLspDetails} from '@/helper/orgdata.helper';
+import { LearningSpaceAtom , OrganizationUnitAtom } from '@/state/atoms/orgs.atom';
 
 
 export default function LspPage() {
-  const lspData = [
+   const [upadateLsp] = useMutation(UPDATE_LEARNING_SPACE_DETAILS, {
+    client: userClient
+   });
+   const [updateOrgUnit] = useMutation(UPDATE_ORGAINIZATION_UNIT_DETAILS, {
+    client: userClient
+    });
+  const [lspDataArr, setLspDataArr] = useState([]);
+  const [isEditable, setIsEditable] = useState(false);
+  const [lspUpdateData, setLspUpdateData] = useRecoilState(LearningSpaceAtom);
+  const [orgUnitUpdateData, setOrgUnitUpdateData] = useRecoilState(OrganizationUnitAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  
+  useEffect(async () => {
+    const ouId = sessionStorage.getItem('ou_id');
+    const lspId = sessionStorage.getItem('lsp_id');
+    const orgutdata = await getOuDetails([ouId])
+    const lspdata = await getLspDetails([lspId])
+    setLspUpdateData(lspdata?.getLearningSpaceDetails?.[0])
+    setOrgUnitUpdateData(orgutdata?.getOrganizationUnits?.[0])
+    const lspData = [
     {
-      image: '/images/svg/account_circle.svg',
-      inputName: 'first_name',
-      info: 'Zicops',
+      inputName: 'name',
+      info: lspdata?.getLearningSpaceDetails?.[0].name,
       label: 'Organization Name'
     },
     {
-      image: '/images/svg/account_circle.svg',
-      inputName: 'last_name',
-      info: 'India',
+      inputName: 'country',
+      info: orgutdata?.getOrganizationUnits?.[0].country,
       label: 'Country'
     },
     {
-      image: '/images/svg/call.svg',
-      inputName: 'phone',
-      info: 'Maharashtra',
+      inputName: 'state',
+      info: orgutdata?.getOrganizationUnits?.[0].state,
       label: 'State'
     },
     {
-      image: '/images/svg/call.svg',
-      inputName: 'phone',
-      info: 'Pune',
+      inputName: 'city',
+      info: orgutdata?.getOrganizationUnits?.[0].city,
       label: 'City'
     },
     {
-      image: '/images/svg/call.svg',
-      inputName: 'phone',
-      info: 'Palladion, Hosur Road, Bengaluru',
+      inputName: 'address',
+      info: orgutdata?.getOrganizationUnits?.[0].address,
       label: 'Address'
     }
-  ];
+    ];
+    setLspDataArr(lspData)
+    // console.log(orgutdata?.getOrganizationUnits[0])
+  }, [])
+  
+    async function updateLspDetails(lspData) {
+       const res = await upadateLsp({ variables: lspData }).catch((err) => {
+          console.log(err,'error at update user');
+        
+       });
+      console.log(res)
+      return res;
+  }
+    async function updateOrgUnitDetails(orgUnitData) {
+       const res = await updateOrgUnit({ variables: orgUnitData }).catch((err) => {
+          return setToastMsg({ type: 'danger', message: "user is a not zicops admin: Unauthorized" }); 
+       });
+      console.log(res)
+      return res;
+  }
+  
+    const handleUpdate = () => {
+    console.log(lspUpdateData ,orgUnitUpdateData )
+      updateLspDetails(lspUpdateData);
+      updateOrgUnitDetails(orgUnitUpdateData)
+      setIsEditable(false)
+  }
 
   return (
     <>
@@ -52,14 +98,14 @@ export default function LspPage() {
         <AdminHeader title="Zicops Learning Space 1" pageRoute="/admin/administration" />
         <MainBodyBox>
           <div style={{ padding: '30px' }}>
-            <TextHeaderWithEditIcon headingText="Learning Space Details" />
+            <TextHeaderWithEditIcon headingText="Learning Space Details" handleClick={() => setIsEditable(!isEditable)} />
             <AdminInfoWrapper
-              data={lspData}
-              // isEditable={isEditable}
+              data={lspDataArr}
+              isEditable={isEditable}
               // toggleEditable={false}
-              // handleUpdate={() => {}}
+              handleUpdate={handleUpdate}
             />
-            <TextHeaderWithEditIcon headingText="Admins" showIcon={false} />
+            <TextHeaderWithEditIcon headingText="Admins" showIcon={false}  />
             {/* <AdminInfoWrapper
               data={userData}
               // isEditable={isEditable}
