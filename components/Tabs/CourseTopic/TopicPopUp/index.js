@@ -85,12 +85,7 @@ export default function TopicPopUp({
     submitBtnObj.handleClick = handleEditTopicSubmit;
     submitBtnObj.disabled = !!uploadStatus;
 
-    if (!filteredTopicContent.length) {
-      toggleTopicContentForm(true);
-      submitBtnObj.disabled = true;
-    } else {
-      toggleTopicContentForm(false);
-    }
+    if (!filteredTopicContent.length) submitBtnObj.disabled = true;
     topicVideo = useRecoilValue(TopicVideoAtom)[0] || addTopicContentLocalStates.newTopicVideo;
   }
 

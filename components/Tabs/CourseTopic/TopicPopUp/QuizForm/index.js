@@ -1,4 +1,6 @@
+import { DELETE_TOPIC_QUIZ } from '@/api/Mutations';
 import InputWithCheckbox from '@/common/InputWithCheckbox';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import RangeSlider from '@/components/common/FormComponents/RangeSlider';
 import UploadForm from '@/components/common/FormComponents/UploadForm';
@@ -52,6 +54,19 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                 <span className={styles.editQuiz} onClick={() => handleEditQuiz(quiz, index)}>
                   <img src="/images/svg/edit-box-line.svg" alt="" />
                 </span>
+
+                <DeleteBtn
+                  id={quiz?.id}
+                  resKey="deleteQuiz"
+                  mutation={DELETE_TOPIC_QUIZ}
+                  onDelete={() => {
+                    const _quiz = structuredClone(quizzes);
+                    const index = _quiz?.findIndex((q) => q?.id === quiz?.id);
+                    if (index >= 0) _quiz.splice(index, 1);
+
+                    setQuizzes(_quiz);
+                  }}
+                />
               </div>
             }
           />

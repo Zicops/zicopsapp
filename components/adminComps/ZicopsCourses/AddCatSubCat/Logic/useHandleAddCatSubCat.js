@@ -172,7 +172,7 @@ export default function useHandleAddCatSubCat(isSubCat) {
   }
 
   async function addSubCategory() {
-    setIsAddReady(true);
+    setIsAddReady(false);
     // duplicate name check
     if (
       await isNameDuplicateAdvanced(

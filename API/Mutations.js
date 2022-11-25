@@ -1881,6 +1881,12 @@ export const DELETE_COURSE_TOPIC_CONTENT = gql`
   }
 `;
 
+export const DELETE_TOPIC_QUIZ = gql`
+  mutation deleteQuiz($id: ID) {
+    deleteQuiz(id: $id)
+  }
+`;
+
 export const DELETE_TOPIC_RESOURCES = gql`
   mutation deleteTopicResource($id: ID) {
     deleteTopicResource(id: $id)
