@@ -1,3 +1,5 @@
+import PopUp from '@/components/common/PopUp';
+import InviteUserEmails from '@/components/UserComps/MyUser/InviteUserEmails';
 import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -23,6 +25,7 @@ export default function MyUserPage() {
 
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isOpen, setIsOpen] = useState(false);
   // const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   // const [disableButton, setDisableButton] = useState(false);
 
@@ -67,7 +70,7 @@ export default function MyUserPage() {
 
     setToastMsg({ type: 'success', message: `Emails send successfully!` });
 
-    return router.push('/admin/user/my-users');
+    return setIsOpen(true);
   }
 
   // set default tab on comp change
@@ -130,7 +133,7 @@ export default function MyUserPage() {
             tab={tab}
             setTab={setTab}
             footerObj={{
-              disableSubmit: loading,
+              disableSubmit: loading || !emailId?.length,
               hideStatus: true,
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
               isActive: !!emailId?.length,
@@ -143,6 +146,13 @@ export default function MyUserPage() {
               }
             }}
           />
+          <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
+            <InviteUserEmails
+              closePopUp={setIsOpen}
+              userEmails={emailId?.length ? emailId?.map((item) => item?.props?.children[0]) : []}
+              userType={userType}
+            />
+          </PopUp>
         </MainBodyBox>
       </MainBody>
     </>
