@@ -25,6 +25,7 @@ const LearningSpaces = () => {
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
+  const [ userDetails , setUserDetails] = useState({})
   const [getUserLsp] = useLazyQuery(GET_USER_LEARNINGSPACES, {
     client: userClient
   });
@@ -34,6 +35,7 @@ const LearningSpaces = () => {
   const UserLsp = async () => {
     let isError = false;
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
+    setUserDetails(userData)
     console.log(userData);
     const res = await getUserLsp({
       variables: { user_id: userData?.id }
@@ -104,6 +106,9 @@ const LearningSpaces = () => {
               ouId={data.ou_id}
             />
           ))}
+          <>
+          {userDetails?.role === "Admin" && <AddLsp />}
+          </>
         </div>
       </div>
       <div className={`${styles.login_Footer}`}>

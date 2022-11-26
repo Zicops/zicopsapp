@@ -95,7 +95,7 @@ export default function LspPage() {
     <>
       <Sidebar sidebarItemsArr={administrationSideBarData} />
       <MainBody>
-        <AdminHeader title="Zicops Learning Space 1" pageRoute="/admin/administration" />
+        <AdminHeader title={lspUpdateData.name} pageRoute="/admin/administration" />
         <MainBodyBox>
           <div style={{ padding: '30px' }}>
             <TextHeaderWithEditIcon headingText="Learning Space Details" handleClick={() => setIsEditable(!isEditable)} />

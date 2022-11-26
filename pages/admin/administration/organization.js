@@ -154,7 +154,7 @@ export default function OrgPage() {
       <Sidebar sidebarItemsArr={administrationSideBarData} />
       <MainBody>
         <AdminHeader
-          title="Zicops Learning Space 1"
+          title={orgUpdateData.name}
           pageRoute="/admin/administration"
           // subHeaderData={{
           //   leftBtnData: [
@@ -190,7 +190,7 @@ export default function OrgPage() {
               handleClick={() => setIsEditable(!isEditable)}
             />
             <AdminInfoWrapper data={orgData} isEditable={isEditable} handleUpdate={handleUpdate} />
-            <TextHeaderWithEditIcon headingText="Learning Spaces (2)" showIcon={false} />
+            <TextHeaderWithEditIcon headingText={`Learning Spaces (${allLspData.length})`}  showIcon={false} />
             <ZicopsTable
               columns={columns}
               data={allLspData}
