@@ -21,12 +21,14 @@ import {
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
+  DisabledUserAtom,
   getUserOrgObject,
   IsUpdatedAtom,
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
+import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -596,6 +598,7 @@ export function useUpdateUserAboutData() {
   const [multiUserArr, setMultiUserArr] = useState([]);
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
+  const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
 
   useEffect(() => {
     let isPhValid = false;
@@ -628,6 +631,10 @@ export function useUpdateUserAboutData() {
 
     //     console.log(userData,'userData');
     //  return ;
+    // if (disabledUserList)
+
+    // finding is admin is trying to disable the recent user or not
+    if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
     if (userData?.status?.toLowerCase() === 'disabled')
       return setToastMsg({ type: 'info', message: 'User is already disabled!' });
     const sendLspData = {
