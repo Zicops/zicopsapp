@@ -1,10 +1,57 @@
+// var lastScrollTop = 0;
+// // https://stackoverflow.com/questions/31223341/detecting-scroll-direction
+// function isScrollingDown() {
+//   var st = window.pageYOffset || document.documentElement.scrollTop;
+//   const res = st > lastScrollTop;
+//   lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+//   return res;
+// }
+let btns = document.querySelectorAll('.mouse-cursor-gradient-tracking-btn');
+
+btns.forEach((btn) => {
+  btn.style.setProperty('--x', '0px');
+  btn.style.setProperty('--y', '0px');
+  btn.addEventListener('mousemove', (e) => {
+    let rect = e.target.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
+    btn.style.setProperty('--x', x + 'px');
+    btn.style.setProperty('--y', y + 'px');
+  });
+});
+
+
+const snapSections = document.querySelectorAll('.snap-section');
+
+let observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+    });
+  },
+  {
+    threshold: 0.1
+  }
+);
+
+snapSections.forEach((section) => {
+  observer.observe(section);
+});
+
 window.onscroll = function () {
-  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-    document.getElementById('navbar').style.height = '50px';
-    document.getElementById('navbar').style.backgroundColor = '#131518';
+  if (document.body.scrollTop > 1 || document.documentElement.scrollTop > 1) {
+    document.querySelector('.logo').style.padding = '20px 0';
+    const OFFSET_PIXEL = 25;
+    if (document.body.offsetHeight - (window.innerHeight + window.scrollY) <= OFFSET_PIXEL) {
+      // you're at the bottom of the page
+      document.getElementById('navbar').style.backgroundColor = 'transparent';
+    } else {
+      document.getElementById('navbar').style.backgroundColor = '#0d0f11';
+    }
   } else {
-    document.getElementById('navbar').style.height = '100px';
-    document.getElementById('navbar').style.backgroundColor = 'transparent';
+    document.querySelector('.logo').style.padding = '30px 0';
   }
 };
 
@@ -27,91 +74,3 @@ function reveal() {
 
 window.addEventListener('scroll', reveal);
 reveal();
-
-let direction = 'up';
-let prevYPosition = 0;
-
-// const setScrollDirection = () => {
-//   if (scrollRoot.scrollTop > prevYPosition) {
-//     direction = 'down';
-//   } else {
-//     direction = 'up';
-//   }
-
-//   prevYPosition = scrollRoot.scrollTop;
-// };
-
-// $(document).ready(function () {});
-const snapSections = document.querySelectorAll('.snap-section');
-
-let observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        // setScrollDirection();
-        console.log(entry, entry.target, direction, prevYPosition);
-        entry.target.style.color = 'red';
-        entry.target.scrollIntoView({behavior: 'smooth'});
-        // entry.target.classList.add('stick-top');
-        // document.getElementById('navbar').style.height = '100px';
-        // document.getElementById('navbar').style.backgroundColor = 'transparent';
-        // alert(entry.target.classList);
-        // observer.unobserve(snapSections);
-      } else {
-        entry.target.style.color = 'blue';
-        // entry.target.classList.remove('stick-top');
-      }
-    });
-  },
-  {
-    // root: null,
-    // rootMargin: '0px 0px',
-    threshold: 0.6
-  }
-);
-
-snapSections.forEach((section) => {
-  observer.observe(section);
-});
-
-// const targets = document.querySelectorAll('[data-observer]');
-// const images = document.querySelectorAll('[data-img]');
-
-// const options = {
-//   rootMargin: '0px',
-//   threshold: 1.0
-// };
-
-// const addClass = (el) => {
-//   if (!el.classList.contains('is-visible')) {
-//     el.classList.add('is-visible');
-//   }
-// };
-
-// const removeClass = (el) => {
-//   if (el.classList.contains('is-visible')) {
-//     el.classList.remove('is-visible');
-//   }
-// };
-
-// const doThings = (entries, observer) => {
-//   entries.forEach((entry) => {
-//     if (entry.isIntersecting) {
-//       addClass(entry.target);
-//     } else {
-//       removeClass(entry.target);
-//     }
-//   });
-// };
-
-// const observer = new IntersectionObserver(doThings, options);
-
-// const observer2 = new IntersectionObserver(doThings, { ...options, threshold: 0.4 });
-
-// targets.forEach((target) => {
-//   observer.observe(target);
-// });
-
-// images.forEach((target) => {
-//   observer2.observe(target);
-// });
