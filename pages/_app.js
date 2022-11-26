@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Zicops - Demo</title>
+        <title>Zicops</title>
         <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
       </Head>
 
