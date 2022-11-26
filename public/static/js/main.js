@@ -52,6 +52,7 @@ window.onscroll = function () {
     }
   } else {
     document.querySelector('.logo').style.padding = '30px 0';
+    document.getElementById('navbar').style.backgroundColor = 'transparent';
   }
 };
 
@@ -74,3 +75,4 @@ function reveal() {
 
 window.addEventListener('scroll', reveal);
 reveal();
+
