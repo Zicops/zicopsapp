@@ -149,7 +149,11 @@ export default function MyUserPage() {
           <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
             <InviteUserEmails
               closePopUp={setIsOpen}
-              userEmails={emailId?.length ? emailId?.map((item) => item?.props?.children[0]) : []}
+              userEmails={
+                !tabData[0]?.name.includes('Invite')
+                  ? emailId
+                  : emailId.map((item) => item?.props?.children[0])
+              }
               userType={userType}
             />
           </PopUp>
