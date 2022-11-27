@@ -103,7 +103,7 @@ export default function useHandleAddUserDetails() {
       //   userDataAbout?.id &&
       userOrgData?.employee_id.length > 0 &&
         userOrgData?.organization_role.length > 0 &&
-        userOrgData?.user_role.length > 0 &&
+        userOrgData?.user_lsp_role.length > 0 &&
         userOrgData?.organization_unit.length > 0 &&
         userOrgData?.organization_name.length > 0
     );
@@ -112,6 +112,7 @@ export default function useHandleAddUserDetails() {
   async function addUserLearningSpaceDetails(sub_categories = [], base_sub_category) {
     // console.log(userDataOrgLsp, 'data at start of addUserLearningDetails');
     const lspId = sessionStorage.getItem('lsp_id');
+    // const userLspId = sessionStorage.getItem('user_lsp_id')
     setSubmitDisable(true);
     const resLearning = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userDataAbout?.id  , lsp_id:lspId},{},userQueryClient);
     if(resLearning?.error) return setToastMsg({ type: 'danger', message: 'Error while loading learning space details!' });
@@ -295,40 +296,44 @@ export default function useHandleAddUserDetails() {
     }));
   }
 
+  setSubmitDisable(false);
+  return isError ;
+
+  // commented user role map because not needed to add new map here 
 
     // ORGANIZATION USER ROLE MUTATION
     // console.log(userDataOrgLsp, 'data at start of addUserRoleDetails');
-    const sendRoleData = {
-      user_id: userDataAbout?.id,
-      user_lsp_id: userLspId,
-      role: userOrgData?.user_role || 'Learner',
-      is_active: true
-    };
-    // console.log(sendRoleData);
+    // const sendRoleData = {
+    //   user_id: userDataAbout?.id,
+    //   user_lsp_id: userLspId,
+    //   role: userOrgData?.user_role || 'Learner',
+    //   is_active: true
+    // };
+    // // console.log(sendRoleData);
 
-    isError = false;
-    const resRole = await addRole({ variables: sendRoleData }).catch((err) => {
-      // console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Update User role Error' });
-    });
+    // isError = false;
+    // const resRole = await addRole({ variables: sendRoleData }).catch((err) => {
+    //   // console.log(err);
+    //   isError = !!err;
+    //   return setToastMsg({ type: 'danger', message: 'Update User role Error' });
+    // });
 
-    if (isError) {
-      setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
-      return;
-      return router.push('/account-setup');
-    }
+    // if (isError) {
+    //   setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
+    //   return;
+    //   return router.push('/account-setup');
+    // }
 
-    const dataRole = resRole?.data?.addUserRoles[0];
+    // const dataRole = resRole?.data?.addUserRoles[0];
 
-    setUserDataOrgLsp((prevValue) => ({
-      ...prevValue,
-      user_role: dataRole?.role,
-      user_role_id: dataRole?.user_role_id
-    }));
+    // setUserDataOrgLsp((prevValue) => ({
+    //   ...prevValue,
+    //   user_role: dataRole?.role,
+    //   user_role_id: dataRole?.user_role_id
+    // }));
 
-    setSubmitDisable(false);
-    return isError;
+    // setSubmitDisable(false);
+    // return isError;
   }
 
   async function updateAboutUser(newImage = null,isVerified = true) {
