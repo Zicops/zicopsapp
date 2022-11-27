@@ -390,6 +390,7 @@ section{
     .mediumText {
         font-size: 36px;
         text-align: center;
+        line-height: 45px;
     }
 
     .logo-right {
@@ -436,10 +437,12 @@ section{
         font-size: 36px;
         text-align: center;
         margin-bottom: 50px;
+        line-height: 45px;
     }
 
     .text b {
         font-size: 40px;
+        line-height: 45px;
         color: #6bcfcf;
     }
 

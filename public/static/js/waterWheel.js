@@ -9,7 +9,7 @@ $(document).ready(function () {
     sizeMultiplier: 0.8, // determines how drastically the size of each item changes
     opacityMultiplier: 1, // determines how drastically the opacity of each item changes
     horizon: 0, // how "far in" the horizontal/vertical horizon should be set from the container wall. 0 for auto
-    flankingItems: 2, // the number of items visible on either side of the center
+    flankingItems: 4, // the number of items visible on either side of the center
 
     // animation
     speed: 1000, // speed in milliseconds it will take to rotate from one to the next
