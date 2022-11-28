@@ -66,7 +66,7 @@ export function getUserOrgObject(data = {}) {
 
     // user role data
     user_role_id: data?.user_role_id || null,
-    user_lsp_role: data?.user_lsp_role || 'Learner',
+    user_lsp_role: data?.user_lsp_role || '',
     role_is_active: data?.role_is_active || true,
 
     // user language data

@@ -47,11 +47,12 @@ export const ADD_COURSE = gql`
     $category: String
     $sub_category: String
     $sub_categories: [sub_categories_input]
+    $lspId: String
   ) {
     addCourse(
       course: {
         name: $name
-        lspId: "Zicops learning Spaces"
+        lspId: $lspId
         publisher: $publisher
         description: $description
         summary: $summary
