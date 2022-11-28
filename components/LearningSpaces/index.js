@@ -29,6 +29,10 @@ const LearningSpaces = () => {
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
+  // const [userDetails, setUserDetails] = useState({});
+  const [orgDetails, setOrgDetails] = useState([]);
+  const [orgIds, setOrgIds] = useState([]);
+  const [orglspData, setOrglspData] = useState([]);
   const [userLspIds , setUserLspIds] = useState([]);
   const [userRoles , setUserRoles] = useState([]);
   const [ userDetails , setUserDetails] = useState({})
@@ -38,18 +42,18 @@ const LearningSpaces = () => {
   const [getLspDetails] = useLazyQuery(GET_LSP_DETAILS, {
     client: userClient
   });
-  const [getOrganizationDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS,{client: userClient}) ;
+  const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
+    client: userClient
+  });
+
   const UserLsp = async () => {
-    let isError = false;
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
-    setUserDetails(userData)
+    setUserDetails(userData);
     console.log(userData);
     const res = await getUserLsp({
       variables: { user_id: userData?.id }
     }).catch((err) => {
-      console.log(err);
-      // isError = !!err;
-      // return setToastMsg({ type: 'danger', message: 'Login Error' });
+      console.error(err);
     });
     const _lspArr = [];
     const _lspStatus = [];
@@ -70,17 +74,29 @@ const LearningSpaces = () => {
   };
 
   const LspDetails = async () => {
-    let isError = false;
-    // console.log(lspIds);
     const res = await getLspDetails({
       variables: { lsp_ids: lspIds }
     }).catch((err) => {
-      console.log(err);
-      // isError = !!err;
-      // return setToastMsg({ type: 'danger', message: 'Login Error' });
+      console.error(err);
     });
     setLspsDetails(res?.data?.getLearningSpaceDetails);
+    const _orgArr = [];
+    res?.data?.getLearningSpaceDetails?.map((data) => {
+      if(data.is_default) return
+      _orgArr.push(data.org_id);
+    });
+    setOrgIds(_orgArr);
+    console.log(res?.data?.getLearningSpaceDetails);
+  };
 
+  const OrgDetails = async () => {
+    const res = await getOrgDetails({
+      variables: { org_ids: orgIds }
+    }).catch((err) => {
+      console.error(err);
+    });
+    setOrgDetails(res?.data?.getOrganizations);
+    console.log(res?.data);
   };
 
 
@@ -89,11 +105,24 @@ const LearningSpaces = () => {
     if (!domainArr.includes(URL)) return;
     UserLsp();
   }, []);
+
   useEffect(() => {
     if (!domainArr.includes(URL)) return;
     if (!lspIds.length) return;
     LspDetails();
   }, [lspIds]);
+
+  useEffect(() => {
+    if (!orgIds.length) return;
+    OrgDetails();
+  }, [orgIds]);
+
+  useEffect(() => {
+    if (!orgDetails.length) return;
+    const _newArr = orgDetails?.map((item, i) => Object.assign({}, item, lspsDetails[i]));
+    setOrglspData(_newArr);
+  }, [orgDetails]);
+
   return (
     <div className={`${styles.loginMainContainer}`}>
       <div className={`${styles.ZicopsLogo}`}>
@@ -108,23 +137,25 @@ const LearningSpaces = () => {
           sub_heading={'Select your Learning space'}
         />
         <div className={`${styles.login_body}`}>
-          {lspsDetails?.map((data, index) => (
+          {orglspData?.map((data, index) => (
             <LspCard
-              image={data.logo_url || '/images/svg/amdocs.svg'}
-              path={lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.invite ? '/account-setup' : '/'}
-              website="www.amdocs.zicops.com"
+              image={data.profile_url || '/images/zicopsIcon.png'}
+              path={
+                lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.invite ? '/account-setup' : '/'
+              }
+              website={data.subdomain}
               status={data.status}
               isDisabled={lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.disable}
               lspId={data.lsp_id}
               lspName={data.name}
-              orgId={data.org_id }
+              orgId={data.org_id}
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
               userLspRole={userRoles?.[index]?.role}
             />
           ))}
           <>
-          //only for owners to request for creating new lsp
+          {/* only for owners to request for creating new lsp */}
           {/* {userDetails?.role === "Admin" && <AddLsp />} */}
           </>
         </div>

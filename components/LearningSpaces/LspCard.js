@@ -23,7 +23,7 @@ const LspCard = ({ image, website, lspName, lspId , orgId, ouId, path, isDisable
       <p className={`${styles.lspWebsiteName}`}>{website}</p>
       <div className={`${styles.lspCardMain} ${isDisabled  ? styles.lspCardDisable : "" }`}>
         <div className={`${styles.lspCardImage} ${isDisabled  ? styles.lspImageDisable : "" }`}>
-          <img src={image} alt="" height={50} width={60} />
+          <img src={image} alt=""  />
         </div>
       </div>
       <p className={`${styles.lspName} ${isDisabled ? styles.lspNameDisable : "" }`}>{lspName}</p>
