@@ -46,7 +46,8 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
             placeholder: 'Select Category',
             options: catoptions,
             value: { value: catSubCatData?.CatId, label: catSubCatData?.CatName },
-            isSearchEnable: true
+            isSearchEnable: true,
+            isDisabled: !!catSubCatData?.id
           }}
           changeHandler={(e) =>
             setCatSubCatData({ ...catSubCatData, CatId: e.value, CatName: e.label })
@@ -79,6 +80,7 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
               filePath: catSubCatData?.File || catSubCatData?.ImageUrl
             }}
             inputName="image"
+            hideRemoveBtn={true}
             isActive={catSubCatData?.File || catSubCatData?.ImageUrl}
           />
         </div>

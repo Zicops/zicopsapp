@@ -160,7 +160,7 @@ const ZicopsSubcatsList = () => {
 
         {/* add cat pop up */}
         <PopUp
-          title="Add New Sub Category"
+          title={popUpState?.id ? 'Edit Sub Category' : 'Add New Sub Category'}
           popUpState={[popUpState, udpatePopUpState]}
           closeBtn={closePopUp}
           isFooterVisible={false}>
