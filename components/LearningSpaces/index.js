@@ -7,12 +7,15 @@ import LspCard from './LspCard';
 import { useLazyQuery } from '@apollo/client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import LoginHeadOne from '../ZicopsLogin/LoginHeadOne';
-import { GET_LSP_DETAILS, GET_USER_LEARNINGSPACES } from '@/api/UserQueries';
+import { GET_LSP_DETAILS, GET_ORGANIZATIONS_DETAILS, GET_USER_LEARNINGSPACES } from '@/api/UserQueries';
 import { userClient } from '@/api/UserMutations';
 import { useRouter } from 'next/router';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 const LearningSpaces = () => {
   const { asPath } = useRouter();
+
+  const [userGlobalData,setUserGlobalData] = useRecoilState(UserDataAtom); 
   const origin =
     typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
 
@@ -25,15 +28,19 @@ const LearningSpaces = () => {
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
+  const [userLspIds , setUserLspIds] = useState([]);
+  const [ userDetails , setUserDetails] = useState({})
   const [getUserLsp] = useLazyQuery(GET_USER_LEARNINGSPACES, {
     client: userClient
   });
   const [getLspDetails] = useLazyQuery(GET_LSP_DETAILS, {
     client: userClient
   });
+  const [getOrganizationDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS,{client: userClient}) ;
   const UserLsp = async () => {
     let isError = false;
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
+    setUserDetails(userData)
     console.log(userData);
     const res = await getUserLsp({
       variables: { user_id: userData?.id }
@@ -44,18 +51,22 @@ const LearningSpaces = () => {
     });
     const _lspArr = [];
     const _lspStatus = [];
+    const _userLspIds = [];
     res?.data?.getUserLsps?.map((data) => {
       if (data.lsp_id === 'd8685567-cdae-4ee0-a80e-c187848a760e') return;
       _lspArr.push(data.lsp_id);
       _lspStatus.push(data.status);
+      _userLspIds.push(data?.user_lsp_id);
     });
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
+    setUserLspIds(_userLspIds);
+    console.log(_userLspIds,'lspStatus');
   };
 
   const LspDetails = async () => {
     let isError = false;
-    console.log(lspIds);
+    // console.log(lspIds);
     const res = await getLspDetails({
       variables: { lsp_ids: lspIds }
     }).catch((err) => {
@@ -64,10 +75,12 @@ const LearningSpaces = () => {
       // return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
     setLspsDetails(res?.data?.getLearningSpaceDetails);
-    console.log(res?.data?.getLearningSpaceDetails);
+
   };
 
+
   useEffect(() => {
+    setUserGlobalData((prevValue) => ({...prevValue,isPrefAdded:false}));
     if (!domainArr.includes(URL)) return;
     UserLsp();
   }, []);
@@ -75,7 +88,6 @@ const LearningSpaces = () => {
     if (!domainArr.includes(URL)) return;
     if (!lspIds.length) return;
     LspDetails();
-    console.log(lspStatus);
   }, [lspIds]);
   return (
     <div className={`${styles.loginMainContainer}`}>
@@ -102,8 +114,13 @@ const LearningSpaces = () => {
               lspName={data.name}
               orgId={data.org_id }
               ouId={data.ou_id}
+              userLspId={userLspIds?.[index]}
             />
           ))}
+          <>
+          //only for owners to request for creating new lsp
+          {/* {userDetails?.role === "Admin" && <AddLsp />} */}
+          </>
         </div>
       </div>
       <div className={`${styles.login_Footer}`}>

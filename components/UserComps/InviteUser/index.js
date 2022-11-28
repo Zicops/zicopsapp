@@ -19,6 +19,15 @@ export default function InviteUser({ userType }) {
     setUserEmailIDs([...emailIds]);
   }, [emailIds]);
 
+  useEffect(()=>{
+    console.log('called')
+  if(userEmailIDs === null){
+    setEmailIds([]);
+    setUserEmailIDs([]);
+  }
+  return;
+  },[userEmailIDs])
+
   return (
     <>
       To:

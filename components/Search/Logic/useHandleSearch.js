@@ -85,7 +85,7 @@ export default function useHandleSearch() {
     // console.log(filterObj, filter);
     if (filterObj?.DurationMin) queryVariables.filters.DurationMin = filterObj.DurationMin;
     if (filterObj?.DurationMax) queryVariables.filters.DurationMax = filterObj.DurationMax;
-    if (filterObj?.LspId) queryVariables.filters.DurationMax = filterObj.LspId;
+    if (filterObj?.LspId) queryVariables.filters.LspId = filterObj.LspId;
 
     const courseRes = await loadCourses({ variables: queryVariables });
     if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
