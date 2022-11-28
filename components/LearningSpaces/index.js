@@ -81,7 +81,8 @@ const LearningSpaces = () => {
     });
     setLspsDetails(res?.data?.getLearningSpaceDetails);
     const _orgArr = [];
-    res?.data?.getLearningSpaceDetails.map((data) => {
+    res?.data?.getLearningSpaceDetails?.map((data) => {
+      if(data.is_default) return
       _orgArr.push(data.org_id);
     });
     setOrgIds(_orgArr);
