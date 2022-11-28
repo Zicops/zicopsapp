@@ -638,7 +638,22 @@ export const GET_ORG_UNITS_DETAILS = gql`
   }
 }`;
 
+export const GET_USER_LSP_ROLES = gql`
+query GetUserLspRoles($user_id: String!, $user_lsp_ids:[String!]!){
+  getUserLspRoles(user_id: $user_id, user_lsp_ids: $user_lsp_ids) {
+    user_role_id
+    user_id
+    user_lsp_id
+    role
+    is_active
+    created_by
+    updated_by
+    created_at
+    updated_at
+  }
+}
 
+`
 
 // combined queries
 

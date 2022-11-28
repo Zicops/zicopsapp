@@ -178,7 +178,8 @@ export default function HomepageScreen() {
       );
 
       setIsLoading(false);
-      const getLSPCourses = await getLatestCoursesByFilters({ LspId: userOrg?.lsp_id }, pageSize);
+      const _lspId = sessionStorage?.getItem('lsp_id')
+      const getLSPCourses = await getLatestCoursesByFilters({ LspId: _lspId }, pageSize);
       setLearningSpaceCourses(
         getLSPCourses?.latestCourses?.courses?.filter(
           (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
@@ -306,9 +307,21 @@ export default function HomepageScreen() {
     }
 
     loadAndSetHomePageRows();
-
+    
     return () => clearTimeout(timer);
   }, [userData?.preferences]);
+
+  const [lspId,setLspId]  = useState(null);
+  useEffect(()=>{
+    if(!userOrg?.lsp_id){
+      const _lspId = sessionStorage?.getItem('lsp_id')
+      if(!_lspId) return router.push('/login');
+      console.log(_lspId,'lsps');
+      setLspId(_lspId);
+      return;
+    }
+    return ;
+  },[])
 
   if (isLoading) return <HomePageLoader />;
 
@@ -355,7 +368,7 @@ export default function HomepageScreen() {
           data={learningSpaceCourses}
           handleTitleClick={() =>
             router.push(
-              `search-page?filter=${JSON.stringify({ LspId: userOrg?.lsp_id })}`,
+              `search-page?filter=${JSON.stringify({ LspId: lspId})}`,
               'search-page'
             )
           }
