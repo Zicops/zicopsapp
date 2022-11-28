@@ -208,7 +208,7 @@ export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateR
                       resKey: 'deleteCourseTopic',
                       mutation: DELETE_COURSE_TOPIC,
                       onDelete: async () => {
-                        const _top = filteredTopics?.filter((t) => t?.id !== topic?.id);
+                        const _top = filteredAndSortedData?.filter((t) => t?.id !== topic?.id);
                         await updateSequence(_top, updateCourseTopic);
                         refetchDataAndUpdateRecoil('topic');
                       }
