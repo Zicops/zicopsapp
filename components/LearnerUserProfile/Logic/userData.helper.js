@@ -22,6 +22,12 @@ export const userData = [
     inputName: 'phone',
     info: '+91 9876543219',
     label: 'Contact'
+  },
+  {
+    image:'/images/svg/account_circle.svg',
+    inputName: 'gender',
+    info:'',
+    label:'Gender'
   }
 ];
 export const orgData = [
