@@ -61,7 +61,7 @@ export function getUserOrgObject(data = {}) {
 
     
     user_lsp_id: data?.user_lsp_id || null,
-    lsp_id: data?.lsp_id,
+    lsp_id: data?.lsp_id || null,
     status: data?.status || 'Active',
 
     // user role data
