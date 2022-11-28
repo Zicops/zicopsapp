@@ -37,8 +37,10 @@ export default function OrgPage() {
     const lspdata = lspData?.getLearningSpacesByOrgId?.map((data) => {
       return {...data, id: data?.lsp_id}; 
     })?.filter((data) => data.id)
-    console.log(lspdata)
-    setAllLspData(lspdata);
+    const _newLspData = lspdata.filter((data)=> !data.is_default)
+    console.log(_newLspData)
+    setAllLspData(_newLspData);
+
     const _orgData = [
       {
         inputName: 'industry',
@@ -149,6 +151,7 @@ export default function OrgPage() {
     //   flex: 0.5
     // }
   ];
+ 
   return (
     <>
       <Sidebar sidebarItemsArr={administrationSideBarData} />
