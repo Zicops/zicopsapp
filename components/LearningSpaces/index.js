@@ -138,7 +138,7 @@ const LearningSpaces = () => {
         <div className={`${styles.login_body}`}>
           {orglspData?.map((data, index) => (
             <LspCard
-              image={data.logo_url || '/images/zicopsIcon.png'}
+              image={data.profile_url || '/images/zicopsIcon.png'}
               path={
                 lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.invite ? '/account-setup' : '/'
               }
@@ -153,7 +153,7 @@ const LearningSpaces = () => {
             />
           ))}
           <>
-          //only for owners to request for creating new lsp
+          {/* only for owners to request for creating new lsp */}
           {/* {userDetails?.role === "Admin" && <AddLsp />} */}
           </>
         </div>
