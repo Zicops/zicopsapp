@@ -144,7 +144,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                 isChecked={newQuiz?.formType === 'create'}
                 changeHandler={handleQuizInput}
               />
-              <LabeledRadioCheckbox
+              {/* <LabeledRadioCheckbox
                 type="radio"
                 label="Upload Quiz"
                 name="formType"
@@ -157,7 +157,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                   )
                 }
                 changeHandler={handleQuizInput}
-              />
+              /> */}
               <LabeledRadioCheckbox
                 type="radio"
                 label="Select Quiz"
