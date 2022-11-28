@@ -91,22 +91,22 @@ const LoginScreen = ({ setPage }) => {
     if (isError) return;
 
     // TODO: udpate this later and move it according to org flow
-    const orgRes = await loadQueryDataAsync(
-      GET_USER_ORGANIZATIONS,
-      { user_id: res?.data?.login?.id },
-      {},
-      userQueryClient
-    );
-    // console.log(orgRes);
-    if(orgRes?.getUserOrganizations?.length){
-      setUserOrgData(orgRes?.getUserOrganizations[0]);
-    }
-    sessionStorage?.setItem(
-      'lspData',
-      JSON.stringify({ user_lsp_id: orgRes?.getUserOrganizations?.[0]?.user_lsp_id })
-    );
+    // const orgRes = await loadQueryDataAsync(
+    //   GET_USER_ORGANIZATIONS,
+    //   { user_id: res?.data?.login?.id },
+    //   {},
+    //   userQueryClient
+    // );
+    // // console.log(orgRes);
+    // if(orgRes?.getUserOrganizations?.length){
+    //   setUserOrgData(orgRes?.getUserOrganizations[0]);
+    // }
+    // sessionStorage?.setItem(
+    //   'lspData',
+    //   JSON.stringify({ user_lsp_id: orgRes?.getUserOrganizations?.[0]?.user_lsp_id })
+    // );
 
-    if (isError) return;
+    // if (isError) return;
     if (res?.data?.login?.status === USER_STATUS.disable)
       return setToastMsg({ type: 'danger', message: 'Login Error' });
 
@@ -182,7 +182,7 @@ const LoginScreen = ({ setPage }) => {
       </ZicopsLogin>
       {!!vidIsOpen && (
         <div className={`${styles.introVideoContainer}`}>
-          <video ref={vidRef} onEnded={() => router.push('/')} disablePictureInPicture>
+          <video ref={vidRef} onEnded={() => router.push('/learning-spaces')} disablePictureInPicture>
             <source src="/videos/loginIntro.mp4" type="video/mp4" />
           </video>
         </div>
