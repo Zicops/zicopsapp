@@ -191,6 +191,7 @@ export default function useUserCourseData() {
 
   async function getUserCourseData(pageSize = 999999999) {
     const { id } = getUserData();
+    const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
     let currentUserId = id;
     if (!currentUserId) return;
     // return setToastMsg({
@@ -217,7 +218,9 @@ export default function useUserCourseData() {
       (course) => course?.course_status?.toLowerCase() !== 'disabled'
     );
 
-    const assignedCoursesToUser = _assignedCourses;
+    const currentLspCourses = _assignedCourses?.filter((courseMap) => courseMap?.user_lsp_id === user_lsp_id);
+
+    const assignedCoursesToUser = currentLspCourses;
 
     const userCourseId = [];
 
