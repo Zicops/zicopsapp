@@ -12,11 +12,15 @@ import {
   GET_USER_LEARNINGSPACES,
   GET_ORGANIZATIONS_DETAILS
 } from '@/api/UserQueries';
+
 import { userClient } from '@/api/UserMutations';
 import { useRouter } from 'next/router';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 const LearningSpaces = () => {
   const { asPath } = useRouter();
+
+  const [userGlobalData,setUserGlobalData] = useRecoilState(UserDataAtom); 
   const origin =
     typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
 
@@ -33,6 +37,8 @@ const LearningSpaces = () => {
   const [orgDetails, setOrgDetails] = useState([]);
   const [orgIds, setOrgIds] = useState([]);
   const [orglspData, setOrglspData] = useState([]);
+  const [userLspIds , setUserLspIds] = useState([]);
+
   const [getUserLsp] = useLazyQuery(GET_USER_LEARNINGSPACES, {
     client: userClient
   });
@@ -42,6 +48,7 @@ const LearningSpaces = () => {
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
+
   const UserLsp = async () => {
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
     setUserDetails(userData);
@@ -53,17 +60,20 @@ const LearningSpaces = () => {
     });
     const _lspArr = [];
     const _lspStatus = [];
+    const _userLspIds = [];
     res?.data?.getUserLsps?.map((data) => {
       if (data.lsp_id === 'd8685567-cdae-4ee0-a80e-c187848a760e') return;
       _lspArr.push(data.lsp_id);
       _lspStatus.push(data.status);
+      _userLspIds.push(data?.user_lsp_id);
     });
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
+    setUserLspIds(_userLspIds);
+    console.log(_userLspIds,'lspStatus');
   };
 
   const LspDetails = async () => {
-    console.log(lspIds);
     const res = await getLspDetails({
       variables: { lsp_ids: lspIds }
     }).catch((err) => {
@@ -88,7 +98,9 @@ const LearningSpaces = () => {
     console.log(res?.data);
   };
 
+
   useEffect(() => {
+    setUserGlobalData((prevValue) => ({...prevValue,isPrefAdded:false}));
     if (!domainArr.includes(URL)) return;
     UserLsp();
   }, []);
@@ -137,9 +149,14 @@ const LearningSpaces = () => {
               lspName={data.name}
               orgId={data.org_id}
               ouId={data.ou_id}
+              userLspId={userLspIds?.[index]}
             />
           ))}
-          <>{userDetails?.role === 'Admin' && <AddLsp />}</>
+
+          <>
+          //only for owners to request for creating new lsp
+          {/* {userDetails?.role === "Admin" && <AddLsp />} */}
+          </>
         </div>
       </div>
       <div className={`${styles.login_Footer}`}>

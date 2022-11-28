@@ -38,7 +38,8 @@ export default function UserProfilePage() {
     if (!currentUserId) return;
     // const userIds = [];
     // userIds.push(currentUserId);
-    const lspId = adminData?.lsp_id || LEARNING_SPACE_ID;
+    const _lspId = sessionStorage?.getItem('lsp_id');
+    const lspId = _lspId? _lspId : (adminData?.lsp_id || LEARNING_SPACE_ID);
 
     if(!lspId) return ;
     
@@ -59,7 +60,7 @@ export default function UserProfilePage() {
     const userLearningSpaceData = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id: currentUserId , lsp_id:lspId},{},userQueryClient)
     if (userLearningSpaceData?.error) return setToastMsg({ type: 'danger', message: 'User Load Error' });
     
-    const { user_lsp_id } = userLearningSpaceData?.getUserLspByLspId;
+    const user_lsp_id  = userLearningSpaceData?.getUserLspByLspId?.user_lsp_id;
     
     // console.log(user_lsp_id,'userLspid of',userDetails?.email)
     if(!user_lsp_id) return ;
