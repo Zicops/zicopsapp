@@ -173,7 +173,7 @@ export default function QuestionBankTable({ isEdit = false }) {
                   id={params?.id}
                   resKey="deleteQuestionBank"
                   mutation={DELETE_QUESTION_BANK}
-                  onDelete={() => setSearchQuery(' ')}
+                  onDelete={() => setSearchQuery((prev) => `${prev} `)}
                 />
               </>
             )}

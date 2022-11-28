@@ -163,7 +163,7 @@ export default function ExamsTable({ isEdit = false }) {
                   id={params?.id}
                   resKey="deleteExam"
                   mutation={DELETE_EXAM}
-                  onDelete={() => setSearchQuery(' ')}
+                  onDelete={() => setSearchQuery((prev) => `${prev} `)}
                 />
               </>
             )}
