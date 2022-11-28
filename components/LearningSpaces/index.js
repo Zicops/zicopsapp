@@ -152,7 +152,6 @@ const LearningSpaces = () => {
               userLspId={userLspIds?.[index]}
             />
           ))}
-
           <>
           //only for owners to request for creating new lsp
           {/* {userDetails?.role === "Admin" && <AddLsp />} */}
