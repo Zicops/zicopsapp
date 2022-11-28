@@ -7,11 +7,12 @@ import LspCard from './LspCard';
 import { useLazyQuery } from '@apollo/client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import LoginHeadOne from '../ZicopsLogin/LoginHeadOne';
-import { GET_LSP_DETAILS, GET_ORGANIZATIONS_DETAILS, GET_USER_LEARNINGSPACES } from '@/api/UserQueries';
+import { GET_LSP_DETAILS, GET_ORGANIZATIONS_DETAILS, GET_USER_LEARNINGSPACES, GET_USER_LSP_ROLES, userQueryClient } from '@/api/UserQueries';
 import { userClient } from '@/api/UserMutations';
 import { useRouter } from 'next/router';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
+import { loadQueryData, loadQueryDataAsync } from '@/helper/api.helper';
 const LearningSpaces = () => {
   const { asPath } = useRouter();
 
@@ -29,6 +30,7 @@ const LearningSpaces = () => {
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
   const [userLspIds , setUserLspIds] = useState([]);
+  const [userRoles , setUserRoles] = useState([]);
   const [ userDetails , setUserDetails] = useState({})
   const [getUserLsp] = useLazyQuery(GET_USER_LEARNINGSPACES, {
     client: userClient
@@ -61,7 +63,10 @@ const LearningSpaces = () => {
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
     setUserLspIds(_userLspIds);
-    console.log(_userLspIds,'lspStatus');
+    if(!_userLspIds?.length) return;
+    const resRole = await loadQueryDataAsync(GET_USER_LSP_ROLES,{user_id:userData?.id , user_lsp_ids:_userLspIds},{},userQueryClient);
+    setUserRoles([...resRole?.getUserLspRoles])
+    console.log(resRole,'roles');
   };
 
   const LspDetails = async () => {
@@ -80,7 +85,7 @@ const LearningSpaces = () => {
 
 
   useEffect(() => {
-    setUserGlobalData((prevValue) => ({...prevValue,isPrefAdded:false}));
+    setUserGlobalData((prevValue) => ({...prevValue,isPrefAdded:false,isOrgAdded:false}));
     if (!domainArr.includes(URL)) return;
     UserLsp();
   }, []);
@@ -115,6 +120,7 @@ const LearningSpaces = () => {
               orgId={data.org_id }
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
+              userLspRole={userRoles?.[index]?.role}
             />
           ))}
           <>

@@ -39,7 +39,7 @@ export const orgData = [
   },
   {
     image: '/images/svg/where_to_vote.svg',
-    inputName: 'organization_unit',
+    inputName: 'learningSpace_name',
     info: 'Hinjewadi, Pune, Maharashtra, India',
     label: 'Organization Unit'
   },
@@ -52,7 +52,7 @@ export const orgData = [
 
   {
     image: '/images/svg/school.svg',
-    inputName: 'user_role',
+    inputName: 'user_lsp_role',
     info: 'Learner',
     label: 'Learning Space Role'
   }

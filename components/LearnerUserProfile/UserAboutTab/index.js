@@ -1,8 +1,9 @@
-import { GET_USER_ORGANIZATIONS, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
+import { GET_ORGANIZATIONS_DETAILS, GET_USER_ORGANIZATIONS, GET_USER_PREFERENCES, userQueryClient } from '@/api/UserQueries';
 import PopUp from '@/components/common/PopUp';
 import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
 import ProfilePreferences from '@/components/LoginComp/ProfilePreferences';
 import SubCategoriesPreview from '@/components/LoginComp/SubCategoriesPreview';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
@@ -42,8 +43,10 @@ const UserAboutTab = () => {
 
   useEffect(async () => {
     const { id } = getUserData();
-    // const lspData = parseJson(sessionStorage.getItem('lspData'));
-
+    const lspId = sessionStorage.getItem('lsp_id');
+    const lspName = sessionStorage?.getItem('lsp_name');
+    const userLspId = sessionStorage?.getItem('user_lsp_id');
+    const userLspRole = sessionStorage?.getItem('user_lsp_role');
     // const userPreferences = await getUserPreferences(userLspId);
     const userPreferences = userDataGlobal?.preferences;
     // const preferenceData = userPreferences.slice(0, 5);
@@ -65,12 +68,23 @@ const UserAboutTab = () => {
       console.log(err)
     );
 
-    const orgData = resOrg?.data?.getUserOrganizations[0];
+    const orgData = resOrg?.data?.getUserOrganizations?.filter((orgMap) => orgMap?.user_lsp_id === userLspId);
+
+    const orgId = orgData[0]?.organization_id ;
+
+    const orgDetails = await loadQueryDataAsync(GET_ORGANIZATIONS_DETAILS,{org_ids:[orgId]},{},userQueryClient);
+    // console.log(orgDetails?.getOrganizations);
+
+    const _orgDetails = orgDetails?.getOrganizations;
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
       sub_category: baseSubcategory[0]?.sub_category,
-      ...orgData
+      learningSpace_name: lspName,
+      organization_name:_orgDetails[0]?.name,
+      user_lsp_role:userLspRole,
+      ...orgData[0]
     }));
+    console.log(userAccountDetails,'sf');
   }, [userDataGlobal?.preferences]);
 
   const router = useRouter();
