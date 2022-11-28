@@ -25,7 +25,7 @@ const DragDrop = ({ data, contextData, isError = false }) => {
           onDragStart={highlightDroppable}
           onDragEnd={handleOnDragEnd}>
           <label htmlFor="name3" className="col_25">
-            Additional Categories / Sub-categories
+            Additional Sub-categories
           </label>
 
           <div className="col_25">
