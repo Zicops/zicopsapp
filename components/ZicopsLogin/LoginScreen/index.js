@@ -124,6 +124,7 @@ const LoginScreen = ({ setPage }) => {
       return;
     }
 
+    return router.push('/learning-spaces');
     return router.push('/account-setup');
   }
 
