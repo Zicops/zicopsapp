@@ -25,6 +25,7 @@ const UserDisplay = () => {
   );
   const router = useRouter();
 
+  const [lspName , setLspName] = useState("");
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   useEffect(() => {
@@ -36,11 +37,12 @@ const UserDisplay = () => {
 
   useEffect(() => {
     
+    const lspName = sessionStorage?.getItem('lsp_name');
+    if(!lspName) return ;
+    if(!userProfileData?.id?.length) {setLspName(lspName); return loadAndSetUserData()}
+    if(userProfileData?.isUserUpdated) {setLspName(lspName); return loadAndSetUserData()}
 
-    if(!userProfileData?.id?.length) return loadAndSetUserData();
-    if(userProfileData?.isUserUpdated) return loadAndSetUserData();
-
-    return ;
+    return setLspName(lspName);
   }, [userProfileData]);
 
   async function loadAndSetUserData() {
@@ -54,7 +56,7 @@ const UserDisplay = () => {
     const basicInfo = userData?.data?.getUserDetails?.[0];
 
     setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
-    setUserProfileData((prevValue) => ({ ...prevValue, ...basicInfo , photoUrl: basicInfo?.photoUrl , isUserUpdated:false }));
+    setUserProfileData((prevValue) => ({ ...prevValue, ...basicInfo , photoUrl: basicInfo?.photoUrl , isUserUpdated:false}));
   }
 
   // //refill the  recoil values
@@ -117,7 +119,7 @@ const UserDisplay = () => {
 
           <div className={styles.profilename}>
             <div className={styles.name}>{fullName ? truncateTo16(`${fullName}`) : ''}</div>
-            <div className={styles.desg}>Zicops</div>
+            <div className={styles.desg}>{lspName || 'Zicops'}</div>
           </div>
         </div>
         <RightDropDownMenu />

@@ -130,7 +130,9 @@ export default function useHandleUserUpdate() {
 
     // if(!preferenceData?.length) return setToastMsg({type:'danger' , message:'error while updating preferences'})
 
-    const userPreferences = preferenceData?.map((item) => {
+    const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
+    const _userPreference = preferenceData?.filter((pref) => pref?.user_lsp_id === user_lsp_id);
+    const userPreferences = _userPreference?.map((item) => {
       return { ...item, name: item?.sub_category, category: item?.catData?.Name, isSelected: false };
     }) 
 
@@ -178,7 +180,7 @@ export default function useHandleUserUpdate() {
 
     // console.log(sub_categories);
     //temp way need to be delete later
-    const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
+    // const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
 
     for (let i = 0; i < selectedSubcartegory?.length; i++) {
       let is_base = selectedSubcartegory[i]?.name === base_sub_category ? true : false;
