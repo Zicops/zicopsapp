@@ -7,7 +7,11 @@ import LspCard from './LspCard';
 import { useLazyQuery } from '@apollo/client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import LoginHeadOne from '../ZicopsLogin/LoginHeadOne';
-import { GET_LSP_DETAILS, GET_USER_LEARNINGSPACES } from '@/api/UserQueries';
+import {
+  GET_LSP_DETAILS,
+  GET_USER_LEARNINGSPACES,
+  GET_ORGANIZATIONS_DETAILS
+} from '@/api/UserQueries';
 import { userClient } from '@/api/UserMutations';
 import { useRouter } from 'next/router';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
@@ -25,24 +29,27 @@ const LearningSpaces = () => {
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
-  const [ userDetails , setUserDetails] = useState({})
+  const [userDetails, setUserDetails] = useState({});
+  const [orgDetails, setOrgDetails] = useState([]);
+  const [orgIds, setOrgIds] = useState([]);
+  const [orglspData, setOrglspData] = useState([]);
   const [getUserLsp] = useLazyQuery(GET_USER_LEARNINGSPACES, {
     client: userClient
   });
   const [getLspDetails] = useLazyQuery(GET_LSP_DETAILS, {
     client: userClient
   });
+  const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
+    client: userClient
+  });
   const UserLsp = async () => {
-    let isError = false;
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
-    setUserDetails(userData)
+    setUserDetails(userData);
     console.log(userData);
     const res = await getUserLsp({
       variables: { user_id: userData?.id }
     }).catch((err) => {
-      console.log(err);
-      // isError = !!err;
-      // return setToastMsg({ type: 'danger', message: 'Login Error' });
+      console.error(err);
     });
     const _lspArr = [];
     const _lspStatus = [];
@@ -56,29 +63,53 @@ const LearningSpaces = () => {
   };
 
   const LspDetails = async () => {
-    let isError = false;
     console.log(lspIds);
     const res = await getLspDetails({
       variables: { lsp_ids: lspIds }
     }).catch((err) => {
-      console.log(err);
-      // isError = !!err;
-      // return setToastMsg({ type: 'danger', message: 'Login Error' });
+      console.error(err);
     });
     setLspsDetails(res?.data?.getLearningSpaceDetails);
+    const _orgArr = [];
+    res?.data?.getLearningSpaceDetails.map((data) => {
+      _orgArr.push(data.org_id);
+    });
+    setOrgIds(_orgArr);
     console.log(res?.data?.getLearningSpaceDetails);
+  };
+
+  const OrgDetails = async () => {
+    const res = await getOrgDetails({
+      variables: { org_ids: orgIds }
+    }).catch((err) => {
+      console.error(err);
+    });
+    setOrgDetails(res?.data?.getOrganizations);
+    console.log(res?.data);
   };
 
   useEffect(() => {
     if (!domainArr.includes(URL)) return;
     UserLsp();
   }, []);
+
   useEffect(() => {
     if (!domainArr.includes(URL)) return;
     if (!lspIds.length) return;
     LspDetails();
-    console.log(lspStatus);
   }, [lspIds]);
+
+  useEffect(() => {
+    if (!orgIds.length) return;
+    OrgDetails();
+  }, [orgIds]);
+
+  useEffect(() => {
+    if (!orgDetails.length) return;
+    const _newArr = orgDetails?.map((item, i) => Object.assign({}, item, lspsDetails[i]));
+    setOrglspData(_newArr);
+  }, [orgDetails]);
+
   return (
     <div className={`${styles.loginMainContainer}`}>
       <div className={`${styles.ZicopsLogo}`}>
@@ -93,22 +124,22 @@ const LearningSpaces = () => {
           sub_heading={'Select your Learning space'}
         />
         <div className={`${styles.login_body}`}>
-          {lspsDetails?.map((data, index) => (
+          {orglspData?.map((data, index) => (
             <LspCard
-              image={data.logo_url || '/images/svg/amdocs.svg'}
-              path={lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.invite ? '/account-setup' : '/'}
-              website="www.amdocs.zicops.com"
+              image={data.logo_url || '/images/zicopsIcon.png'}
+              path={
+                lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.invite ? '/account-setup' : '/'
+              }
+              website={data.subdomain}
               status={data.status}
               isDisabled={lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.disable}
               lspId={data.lsp_id}
               lspName={data.name}
-              orgId={data.org_id }
+              orgId={data.org_id}
               ouId={data.ou_id}
             />
           ))}
-          <>
-          {userDetails?.role === "Admin" && <AddLsp />}
-          </>
+          <>{userDetails?.role === 'Admin' && <AddLsp />}</>
         </div>
       </div>
       <div className={`${styles.login_Footer}`}>
