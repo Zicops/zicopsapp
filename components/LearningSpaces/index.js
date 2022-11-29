@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { loadQueryData, loadQueryDataAsync } from '@/helper/api.helper';
+import Link from 'next/link';
 const LearningSpaces = () => {
   const { asPath } = useRouter();
 
@@ -126,9 +127,9 @@ const LearningSpaces = () => {
   return (
     <div className={`${styles.loginMainContainer}`}>
       <div className={`${styles.ZicopsLogo}`}>
-        {/* <Link href="/home"> */}
+        <Link href="/home">
         <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} />
-        {/* </Link> */}
+        </Link>
       </div>
       <div className={`${styles.zicops_login}`}>
         <LoginHeadOne

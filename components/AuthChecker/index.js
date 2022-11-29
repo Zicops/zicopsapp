@@ -114,7 +114,7 @@ const AuthChecker = ({ children }) => {
     if (userOrg?.lsp_id) return;
 
     const _lspId = sessionStorage?.getItem('lsp_id');
-    const _userLspId = sesssionStorage?.getItem('user_lsp_id');
+    const _userLspId = sessionStorage?.getItem('user_lsp_id');
     
     if (!_lspId) return router.push('/learning-spaces');
 
