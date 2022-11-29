@@ -9,7 +9,7 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { CohortMasterData } from '@/state/atoms/users.atom';
+import { CohortMasterData, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { STATUS, StatusAtom } from '@/state/atoms/utils.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -38,6 +38,7 @@ export function useHandleCohortMaster() {
   const [status, setStatus] = useRecoilState(StatusAtom);
 
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [cohortMasterData, setCohortMasterData] = useState(null);
 
   const [isSubmitDisable , setIsSubmitDisable] = useState(false);
@@ -83,6 +84,8 @@ export function useHandleCohortMaster() {
 
   async function saveCohortMaster() {
     // console.log(cohortMasterData, cohortData);
+    const lspId = sessionStorage.getItem('lsp_id');
+    const _lspId = userOrgData?.lsp_id ? userOrgData?.lsp_id : lspId;
     if (validatingCohortMaster()) return;
     setIsSubmitDisable(true);
 
@@ -94,7 +97,7 @@ export function useHandleCohortMaster() {
     const sendCohortData = {
       name: cohortMasterData?.cohort_name,
       description: cohortMasterData?.description,
-      lsp_id: LEARNING_SPACE_ID || lspData?.lsp_id,
+      lsp_id: lspId,
       code: cohortMasterData?.cohort_code,
       status: 'SAVED',
       type: cohortMasterData?.cohort_type,
