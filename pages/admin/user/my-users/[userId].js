@@ -1,6 +1,7 @@
 import { userClient } from '@/api/UserMutations';
 import {
   GET_USER_DETAIL,
+  GET_USER_LEARNINGSPACES,
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_ORGANIZATION_DETAIL,
   GET_USER_PREFERENCES,
@@ -34,6 +35,7 @@ export default function UserProfilePage() {
   const router = useRouter();
   const currentUserId = router?.query?.userId;
 
+
   useEffect(async () => {
     if (!currentUserId) return;
     // const userIds = [];
@@ -62,7 +64,6 @@ export default function UserProfilePage() {
     
     const user_lsp_id  = userLearningSpaceData?.getUserLspByLspId?.user_lsp_id;
     
-    // console.log(user_lsp_id,'userLspid of',userDetails?.email)
     if(!user_lsp_id) return ;
     
     setCurrentUserData((prev) => ({ ...prev, userLspId:  user_lsp_id })) ;
@@ -75,6 +76,10 @@ export default function UserProfilePage() {
     );
     if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
     const userOrg = detailOrg?.getUserOrgDetails;
+
+    // console.log(userOrg,'userOrg')
+
+    if(!userOrg) return ;
 
     setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
     
