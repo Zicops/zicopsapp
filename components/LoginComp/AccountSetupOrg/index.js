@@ -40,8 +40,9 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
       // return setToastMsg({ type: 'danger', message: 'Login Error' });
     });
     const name = res?.data?.getOrganizations[0]?.name;
-    let orgName = name ? name : '';
-    setUserOrgLsp((prev) => ({ ...prev, organization_name: orgName }));
+    // let orgName = name?.length ? name : '';
+    // console.log(name,'orgnkgfk')
+    setUserOrgLsp((prev) => ({ ...prev, organization_name: name, organization_id:orgIds[0] }));
   };
 
   //load lsp details
@@ -88,6 +89,10 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
     loadLspDetails([lspId]);
     loadUserLspRole([userLspId],id);
   }, []);
+
+  useEffect(()=>{
+    console.log(userOrgLsp?.organization_name,'lsp')
+  },[userOrgLsp])
   return (
     <>
       <div className={`${styles.container}`}>
@@ -117,7 +122,7 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
         <Box mt={3} />
         <LabeledInput
           inputOptions={{
-            inputName: 'role',
+            inputName: 'user_lsp_role',
             label: 'Learning Space Role:',
             placeholder: 'Auto Populated',
             value: `${userOrgLsp?.user_lsp_role}`,
