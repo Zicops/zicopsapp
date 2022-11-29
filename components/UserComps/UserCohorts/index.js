@@ -9,16 +9,21 @@ import { useEffect, useState } from 'react';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import CohortMasterTab from './ChortMasterTab';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { useRecoilState } from 'recoil';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 
 const UserCohorts = () => {
   const { viewBtn, editBtn, downloadBtn } = ADMIN_USERS.userCohort;
   const [cohortList, setCohortList] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   useEffect(async () => {
+    const lspId = sessionStorage.getItem('lsp_id');
+    const _lspId = userOrgData?.lsp_id ? userOrgData?.lsp_id : lspId;
     const sendData = {
-      lsp_id: LEARNING_SPACE_ID,
+      lsp_id: _lspId,
       publish_time: getCurrentEpochTime(),
       pageCursor: '',
       pageSize: 100
