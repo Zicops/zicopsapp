@@ -6,16 +6,15 @@ import { useRecoilState } from 'recoil';
 
 function PushNotificationLayout({ children }) {
   //   const router = useRouter();
-  const [notifications, setNotifications] = useRecoilState(NotificationAtom);
+  // const [notifications, setNotifications] = useRecoilState(NotificationAtom);
   useEffect(() => {
     setToken();
 
     // Event listener that listens for the push notification event in the background
     if ('serviceWorker' in navigator) {
-      console.log('service worker called');
       navigator.serviceWorker.addEventListener('message', (event) => {
         console.log('event for the service worker', event);
-        alert(event.data.firebaseMessaging.payload.notification.title);
+        // alert(event.data.firebaseMessaging.payload.notification.title);
         //   setNotifications([])
         getMessage();
       });
@@ -27,7 +26,7 @@ function PushNotificationLayout({ children }) {
         const token = await firebaseCloudMessaging.init();
         if (token) {
           console.log('token', token);
-          // getMessage();
+          getMessage();
         }
       } catch (error) {
         console.log(error);
@@ -43,10 +42,12 @@ function PushNotificationLayout({ children }) {
   // Get the push notification message and triggers a toast to show it
   function getMessage() {
     const messaging = getMessaging();
-    onMessage(messaging, (payload) => {
-      console.log('Message received. ', payload);
-      // ...
-    });
+    console.log('messaging', messaging);
+    // onMessage(messaging, (payload) => {
+    //   console.log('Message received. ', payload);
+
+    //   // ...
+    // });
     // const messaging = getMessaging(app);
     // messaging.onMessage((message) => {
     //   console.log(message?.notification?.title);
