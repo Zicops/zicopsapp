@@ -1,5 +1,6 @@
 import AuthChecker from '@/components/AuthChecker';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
+import PushNotificationLayout from 'newComponents/PushNotificationLayout';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
@@ -49,13 +50,15 @@ function MyApp({ Component, pageProps }) {
           <RecoilRoot>
             <CourseContextProvider>
               <UserContextProvider>
-                <AuthChecker>
-                  <Layout>
-                    <Component {...pageProps} />
+                <PushNotificationLayout>
+                  <AuthChecker>
+                    <Layout>
+                      <Component {...pageProps} />
 
-                    <Toaster />
-                  </Layout>
-                </AuthChecker>
+                      <Toaster />
+                    </Layout>
+                  </AuthChecker>
+                </PushNotificationLayout>
               </UserContextProvider>
             </CourseContextProvider>
           </RecoilRoot>
