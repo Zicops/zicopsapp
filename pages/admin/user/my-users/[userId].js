@@ -39,7 +39,7 @@ export default function UserProfilePage() {
     // const userIds = [];
     // userIds.push(currentUserId);
     const _lspId = sessionStorage?.getItem('lsp_id');
-    const lspId = _lspId? _lspId : (adminData?.lsp_id || LEARNING_SPACE_ID);
+    const lspId = _lspId? _lspId : adminData?.lsp_id;
 
     if(!lspId) return ;
     
