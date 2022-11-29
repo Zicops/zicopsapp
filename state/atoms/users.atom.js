@@ -49,7 +49,7 @@ export function getUserOrgObject(data = {}) {
     user_id: data?.user_id || null,
 
     //organization data
-    organization_name: data?.user_organization_name || '',
+    organization_name: data?.organization_name,
     organization_unit: data?.organization_unit || '',
     learningSpace_name: data?.learningSpace_name || '',
 
