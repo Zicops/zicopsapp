@@ -93,7 +93,7 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
       <div className={`${styles.container}`}>
         <LabeledInput
           inputOptions={{
-            inputName: 'org-name',
+            inputName: 'organization_name',
             label: 'Organization:',
             placeholder: 'Auto-populated',
             value: `${userOrgLsp?.organization_name}`,
@@ -105,7 +105,7 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
         <Box mt={3} />
         <LabeledInput
           inputOptions={{
-            inputName: 'organization_unit',
+            inputName: 'learningSpace_name',
             label: 'Learning Space:',
             placeholder: 'Auto-populated',
             value: `${userOrgLsp?.learningSpace_name}`,

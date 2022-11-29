@@ -9,7 +9,7 @@ import {
   UPDATE_USER_ORGANIZATION_MAP,
   userClient
 } from '@/api/UserMutations';
-import { GET_USER_LEARNINGSPACES_DETAILS, userQueryClient } from '@/api/UserQueries';
+import { GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATIONS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { CUSTOM_ERROR_MESSAGE, LEARNING_SPACE_ID, USER_STATUS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -109,17 +109,38 @@ export default function useHandleAddUserDetails() {
     );
   }, [userOrgData]);
 
+  async function getUserOrgMapId(userLspId = ''){
+    if(!userLspId?.length) return false;
+    const res = await loadQueryDataAsync(GET_USER_ORGANIZATIONS,{user_id:userDataAbout?.id},{},userQueryClient);
+    if(res?.error) return setToastMsg({type:'Error',message:'Error while loading user org'});
+    const userOrgMap = res?.getUserOrganizations?.filter((org) => org?.user_lsp_id === userLspId);
+    console.log(res);
+    if(!userOrgMap?.length) return false ;
+    return userOrgData[0]?.user_organization_id ;
+  }
+
   async function addUserLearningSpaceDetails(sub_categories = [], base_sub_category) {
     // console.log(userDataOrgLsp, 'data at start of addUserLearningDetails');
     const lspId = sessionStorage.getItem('lsp_id');
-    // const userLspId = sessionStorage.getItem('user_lsp_id')
+    let userLspId = sessionStorage.getItem('user_lsp_id')
     setSubmitDisable(true);
+
+    //load user_lsp_id
+
+    if(!userLspId){
     const resLearning = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userDataAbout?.id  , lsp_id:lspId},{},userQueryClient);
     if(resLearning?.error) return setToastMsg({ type: 'danger', message: 'Error while loading learning space details!' });
-    let userLspId = null ;
+    // let userLspId = null ;
+
     if(resLearning?.getUserLspByLspId){
       userLspId = resLearning?.getUserLspByLspId?.user_lsp_id;
     }
+  }
+
+  const userOrgId = await getUserOrgMapId(userLspId);
+
+  // console.log(userOrgId,'user org id');
+  // return true;
 
     let isError = false;
     const sendLspData = {
@@ -178,13 +199,13 @@ export default function useHandleAddUserDetails() {
 
     let _updateOrg = false ;
     let dataOrg ;
-    if(userOrgData?.user_organization_id?.length){
+    if(!!userOrgId){
       _updateOrg = true ;
-      sendOrgData.user_organization_id = userOrgData?.user_organization_id;
+      sendOrgData.user_organization_id = userOrgId;
     }
 
     isError = false;
-    if(!_updateOrg){
+    if(!userOrgId){
     const resOrg = await addOrg({ variables: sendOrgData }).catch((err) => {
       // console.log(err);
       isError = !!err;
@@ -217,7 +238,7 @@ export default function useHandleAddUserDetails() {
     }));
 
     // LANGUAGE DATA MUTATION
-    console.log(userDataOrgLsp, 'data at start of addUserLanguageDetails');
+    // console.log(userDataOrgLsp, 'data at start of addUserLanguageDetails');
     const sendLangData = {
       user_id: userDataAbout?.id,
       user_lsp_id:userLspId,
@@ -226,7 +247,7 @@ export default function useHandleAddUserDetails() {
       is_active: userOrgData?.lang_is_active || true
     };
 
-    console.log(sendLangData, 'addUserLanguageDetails');
+    // console.log(sendLangData, 'addUserLanguageDetails');
     isError = false;
     const resLang = await addLanguage({ variables: sendLangData }).catch((err) => {
       // console.log(err);

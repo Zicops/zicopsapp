@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import styles from './learningSpaces.module.scss';
 import { useRecoilState } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-const LspCard = ({ image, website, lspName, lspId , orgId, ouId, path, isDisabled=false , userLspId}) => {
+const LspCard = ({ image, website, lspName, lspId , orgId, ouId, path, isDisabled=false , userLspId , userLspRole}) => {
   const router = useRouter();
   const [userOrgData ,  setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const onHandleLsp = () => {
@@ -14,7 +14,8 @@ const LspCard = ({ image, website, lspName, lspId , orgId, ouId, path, isDisable
     sessionStorage.setItem('lsp_name',lspName);
     sessionStorage.setItem('org_id',orgId );
     sessionStorage.setItem('ou_id',ouId );
-    sessionStorage.setItem('user_lsp_id',userLspId)
+    sessionStorage.setItem('user_lsp_id',userLspId);
+    sessionStorage.setItem('user_lsp_role',userLspRole);
     router.push(path)
   }
   return (

@@ -654,7 +654,26 @@ query GetUserLspRoles($user_id: String!, $user_lsp_ids:[String!]!){
 }
 
 `
-
+export const GET_LEARNINGSPACES_BY_ORGID = gql`
+query GetLearningSpacesByOrgId($org_id:String!){
+  getLearningSpacesByOrgId(org_id: $org_id) {
+    lsp_id
+    org_id
+    ou_id
+    name
+    logo_url
+    profile_url
+    no_users
+    owners
+    is_default
+    status
+    created_at
+    updated_at
+    created_by
+    updated_by
+  }
+}
+`
 // combined queries
 
 // export const GET_USER_META = gql`

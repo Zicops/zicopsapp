@@ -1,6 +1,6 @@
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import Router from 'next/router';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
@@ -9,6 +9,7 @@ import { useRecoilValue } from 'recoil';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
 import { TableResponsiveRows } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 
 const columns = [
   {
@@ -67,6 +68,8 @@ function editCourse(courseId) {
 function MyLatestCourseList({ time, searchParam }) {
   const [pageSize, setPageSize] = useState(6);
   const courseType = useRecoilValue(CourseTypeAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const [latestCourses, setLatestCourse] = useState([]);
 
   useEffect(() => {
     const screenWidth = window.screen.width;
@@ -78,24 +81,39 @@ function MyLatestCourseList({ time, searchParam }) {
     });
   }, []);
 
-  const { data, loading } = useQuery(GET_LATEST_COURSES, {
-    variables: {
-      publish_time: time,
-      pageSize: 999999,
-      pageCursor: '',
-      filters: {
-        Type: courseType,
-        SearchText: searchParam
+  useEffect(() => {
+    if (!userOrgData?.lsp_id) return;
+
+    loadMyCourses({
+      variables: {
+        publish_time: time,
+        pageSize: 1000,
+        pageCursor: '',
+        filters: {
+          Type: courseType,
+          SearchText: searchParam,
+          LspId: userOrgData?.lsp_id
+        }
       }
-    },
+    }).then((res) => {
+      const _latestCourses = sortArrByKeyInOrder(
+        res?.data?.latestCourses.courses?.filter((c) => c?.is_active),
+        'created_at',
+        false
+      );
+      setLatestCourse(_latestCourses);
+    });
+  }, [userOrgData?.lsp_id]);
+
+  const [loadMyCourses, { loading }] = useLazyQuery(GET_LATEST_COURSES, {
     client: queryClient
   });
 
-  let latestCourses = sortArrByKeyInOrder(
-    data?.latestCourses.courses?.filter((c) => c?.is_active),
-    'created_at',
-    false
-  );
+  // let latestCourses = sortArrByKeyInOrder(
+  //   data?.latestCourses.courses?.filter((c) => c?.is_active),
+  //   'created_at',
+  //   false
+  // );
 
   return (
     <ZicopsTable
