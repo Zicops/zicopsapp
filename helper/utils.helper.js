@@ -239,3 +239,19 @@ export function parseJson(stringifiedJson) {
     return '';
   }
 }
+
+// https://stackoverflow.com/a/7195540/13419786
+export function getUnixTimeAt(hours = 7, minutes = 0, seconds = 0) {
+  const now = new Date();
+
+  now.setHours(hours);
+  now.setMinutes(minutes);
+  now.setSeconds(seconds);
+
+  const unixTimestamp = Math.floor(now / 1000);
+  return unixTimestamp;
+}
+
+export function isWordIncluded(sentence = '', word = '') {
+  return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
+}

@@ -173,7 +173,7 @@ export default function AnswerKeyPage() {
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
+      { user_id: userData?.id, exam_id: examId },
       {},
       userQueryClient
     );
@@ -207,13 +207,14 @@ export default function AnswerKeyPage() {
 
         const resultRes = await loadQueryDataAsync(
           GET_USER_EXAM_RESULTS,
-          { user_id: userData?.id, user_ea_id: attempt?.user_ea_id },
+          { user_ea_details: [{ user_id: userData?.id, user_ea_id: attempt?.user_ea_id }] },
           {},
           userQueryClient
         );
 
         if (resultRes?.error) return setToastMsg({ type: 'danger', message: 'Result Load Error' });
-        examAttemptData[i].result = resultRes?.getUserExamResults || [];
+        examAttemptData[i].result = resultRes?.getUserExamResults?.[0]?.results?.[0] || {};
+        console.log(resultRes);
       }
 
       // resultRes = await loadQueryDataAsync(
@@ -358,6 +359,8 @@ export default function AnswerKeyPage() {
         for (let j = 0; j < questions.length; j++) {
           const question = questions[j];
           const allOptions = [];
+          if (!question.id) continue;
+
           const optionsRes = await loadQueryDataAsync(GET_QUESTION_OPTIONS, {
             question_id: question.id
           }).catch((err) => {
@@ -366,7 +369,7 @@ export default function AnswerKeyPage() {
             setToastMsg({ type: 'danger', message: 'Options load error' });
           });
           if (isError) continue;
-          if (optionsRes?.getOptionsForQuestions[0]?.options) {
+          if (optionsRes?.getOptionsForQuestions?.[0]?.options) {
             optionsRes?.data?.getOptionsForQuestions[0].options.map((option) => {
               allOptions.push({
                 id: option.id,

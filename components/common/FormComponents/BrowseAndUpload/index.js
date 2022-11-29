@@ -18,6 +18,7 @@ export default function BrowseAndUpload({
   isError,
   acceptedTypes = IMAGE_FILE_TYPES,
   hidePreviewBtns = false,
+  hideRemoveBtn = false,
   shouldShowPreview = true
 }) {
   const inputRef = useRef();
@@ -83,16 +84,19 @@ export default function BrowseAndUpload({
                 </button>
               </ToolTip>
             )}
-            <ToolTip title={removeTooltipTitle}>
-              <button
-                className={`${styles.remove}`}
-                onClick={() => {
-                  handleRemove();
-                  inputRef.current.value = '';
-                }}>
-                Remove
-              </button>
-            </ToolTip>
+
+            {!hideRemoveBtn && (
+              <ToolTip title={removeTooltipTitle}>
+                <button
+                  className={`${styles.remove}`}
+                  onClick={() => {
+                    handleRemove();
+                    inputRef.current.value = '';
+                  }}>
+                  Remove
+                </button>
+              </ToolTip>
+            )}
           </div>
         )}
       </div>

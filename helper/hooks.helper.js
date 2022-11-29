@@ -274,7 +274,7 @@ export default function useUserCourseData() {
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-        console.log( userProgressArr,userProgressArr?.length,topicsStarted)
+      console.log(userProgressArr, userProgressArr?.length, topicsStarted);
 
       const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
         course_id: coursesMeta[i]?.course_id
