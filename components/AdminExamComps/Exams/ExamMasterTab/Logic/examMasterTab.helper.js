@@ -2,6 +2,7 @@ import { atom, selector } from 'recoil';
 import { ExamTabDataAtom } from '../../../../../state/atoms/exams.atoms';
 import Configuration from '../Configuration';
 import ExamMaster from '../ExamMaster';
+import ExamResults from '../ExamResults';
 import Schedule from '../Schedule';
 
 export const SCHEDULE_TYPE = ['scheduled', 'anytime'];
@@ -35,6 +36,10 @@ export function getTabData() {
     {
       name: 'Configuration',
       component: <Configuration />
+    },
+    {
+      name: 'Exam Results',
+      component: <ExamResults />
     }
   ];
 }

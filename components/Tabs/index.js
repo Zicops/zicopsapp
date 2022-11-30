@@ -1,3 +1,4 @@
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { STATUS } from '@/state/atoms/utils.atoms';
 import Router, { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ import styles from './courseTabs.module.scss';
 import {
   CourseTabAtom,
   getDateTimeFromUnix,
+  getDefaultLsp,
   IsCourseSavedAtom,
   isCourseUploadingAtom,
   tabData
@@ -23,6 +25,7 @@ export default function CourseTabs() {
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+  const [userOrgData,setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   // TODO: set to first tab when new course is opened
   // useEffect(() => {
@@ -109,6 +112,21 @@ export default function CourseTabs() {
   //     Router.events.off('routeChangeStart', beforeRouteHandler);
   //   };
   // }, []);
+
+
+  useEffect(()=>{
+    
+    if(fullCourse?.lspId) return ;
+    courseContextData?.updateCourseMaster({ ...fullCourse, lspId:userOrgData?.lsp_id });
+    defaultLsp();
+  },[])
+
+  async function defaultLsp(){
+    const orgId = sessionStorage?.getItem('org_id');
+    const defaultLsp = await getDefaultLsp(orgId);
+    // console.log(defaultLsp)
+    setUserOrgData((prevValue)=>({...prevValue,defaultLsp:defaultLsp}))
+  }
 
   const displayTime =
     fullCourse.updated_at || fullCourse.created_at

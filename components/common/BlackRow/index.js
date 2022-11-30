@@ -17,17 +17,17 @@ export default function BlackRow({
 
       {extraComp}
       <div className={`${styles.actions}`}>
-        {!!Object.keys(deleteProps).length && (
-          <div className={`${styles.editImg}`}>
-            <DeleteBtn {...deleteProps} />
-          </div>
-        )}
-
         <div className={`${styles.editImg}`} onClick={editHandler}>
           <ToolTip title={tooltipTitle} placement="bottom">
             <img src="/images/svg/edit-box-line.svg" alt="" />
           </ToolTip>
         </div>
+
+        {!!Object.keys(deleteProps).length && (
+          <div className={`${styles.editImg}`}>
+            <DeleteBtn {...deleteProps} />
+          </div>
+        )}
       </div>
     </div>
   );

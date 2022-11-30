@@ -98,6 +98,7 @@ export default function QuestionPaperTab() {
     const sections = sectionRes?.data?.getQuestionPaperSections;
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i];
+      if (!section.id) continue;
 
       sectionData.push({
         id: section.id,

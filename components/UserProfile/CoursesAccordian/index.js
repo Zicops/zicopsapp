@@ -58,7 +58,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [courseLoading , setCourseLoading] = useState(false);
+  const [courseLoading, setCourseLoading] = useState(false);
 
   const { updateCourse } = useHandleUpdateCourse();
 
@@ -83,7 +83,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   async function handleSubmit() {
     // console.log(currentUserData);
-    if(!currentUserData?.userLspId) return setToastMsg({ type: 'danger', message: 'User lsp load error!' });;
+    if (!currentUserData?.userLspId)
+      return setToastMsg({ type: 'danger', message: 'User lsp load error!' });
     setLoading(true);
     setIsPopUpDataPresent(false);
     const { id } = getUserData();
@@ -95,7 +96,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       setDataCourse([...courseArray]);
       setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
 
-      setLoading(false)
+      setLoading(false);
       setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
       return setIsAssignPopUpOpen(false);
@@ -127,8 +128,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       ...courseAssignData,
       isCourseAssigned: true,
       endDate: new Date(),
-      isMandatory: false,
-      
+      isMandatory: false
     });
     await loadAssignedCourseData();
     setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
@@ -280,10 +280,11 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   // load assigned courses
   useEffect(() => {
     loadAssignedCourseData();
-  }, [currentUserId]);
+  }, [currentUserId, currentUserData]);
 
   async function loadAssignedCourseData() {
     if (!currentUserId) return setCourseLoading(false);
+    if (!currentUserData?.userLspId) return setCourseLoading(false);
     setCourseLoading(true);
     const assignedCoursesRes = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS,
@@ -299,9 +300,13 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
-    const assignedCoursesToUser = assignedCoursesRes?.getUserCourseMaps?.user_courses;
-    
-     if(!assignedCoursesToUser?.length) setCourseLoading(false);
+    const userLspCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter(
+      (courseMap) => courseMap?.user_lsp_id === currentUserData?.userLspId
+    );
+
+    if(!userLspCourses?.length) setCourseLoading(false);
+    const assignedCoursesToUser = userLspCourses;
+    if (!assignedCoursesToUser?.length) setCourseLoading(false);
 
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
@@ -349,7 +354,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
         added_by: added_by,
         addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
-        created_at:assignedCoursesToUser[i]?.created_at
+        created_at: assignedCoursesToUser[i]?.created_at
       });
     }
 
@@ -359,7 +364,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
         (course) => course?.addedby?.role.toLowerCase() !== 'self'
       );
 
-      setCurrentCourses(_userCourses,setCourseLoading(false));
+      setCurrentCourses(_userCourses, setCourseLoading(false));
       setAssignedCourses(adminAssignedCourses);
     }
   }
@@ -375,7 +380,6 @@ const CoursesAccordian = ({ currentUserData = null }) => {
             setSelected(3);
           }}
         /> */}
-        
 
         <div className={`${styles.courses_acc_head}`}>
           {isAssignedPage && (
@@ -395,9 +399,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           )}
           {!isAssignedPage && (
             <div className={`${styles.assign}`}>
-              <div>
-                Courses in learning folder {`(${currentCourses?.length})`}
-              </div>
+              <div>Courses in learning folder {`(${currentCourses?.length})`}</div>
 
               <div
                 onClick={() => {
@@ -414,7 +416,13 @@ const CoursesAccordian = ({ currentUserData = null }) => {
         </div>
         {/* {isAssignedPage && <AssignCourses section={courseSections[3]} />} */}
         {/* {!isAssignedPage && <AssignCourses type="currentCourses" section={courseSections[0]} loading={courseLoading}/>} */}
-        {!isAssignedPage && <CurrentCourses courseData={currentCourses} handleSubmit={handleAssign} isLoading={courseLoading}/>}
+        {!isAssignedPage && (
+          <CurrentCourses
+            courseData={currentCourses}
+            handleSubmit={handleAssign}
+            isLoading={courseLoading}
+          />
+        )}
         {/* {selectedPage === 'Current Courses' && <AssignCourses section={courseSections[1]} />} */}
         {selectedPage === 'Assign Courses' && (
           <AssignCourses
@@ -494,8 +502,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           <ConfirmPopUp
             title={'Are you sure about removing this course?'}
             btnObj={{
-              leftIsDisable : loading ,
-              rightIsDisable : loading,
+              leftIsDisable: loading,
+              rightIsDisable: loading,
               handleClickLeft: () => handleRemove(),
               handleClickRight: () => setShowConfirmBox(false)
             }}

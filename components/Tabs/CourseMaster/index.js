@@ -1,14 +1,16 @@
 import { DELETE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { deleteData } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useContext, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { changeHandler } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
@@ -16,6 +18,7 @@ import LabeledInput from '../../common/FormComponents/LabeledInput';
 import SwitchButton from '../../common/FormComponents/SwitchButton';
 import NextButton from '../common/NextButton';
 import styles from '../courseTabs.module.scss';
+import { getDefaultLsp } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 
 export default function CourseMaster() {
@@ -25,6 +28,8 @@ export default function CourseMaster() {
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
 
   // cat and sub cat
   // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
@@ -158,7 +163,7 @@ export default function CourseMaster() {
         }
       />
 
-      <div className={`w-100 center-element-with-flex ${styles.switchContainer}`}>
+      {/* <div className={`w-100 center-element-with-flex ${styles.switchContainer}`}>
         <SwitchButton
           label="Active"
           inputName="is_active"
@@ -176,8 +181,37 @@ export default function CourseMaster() {
           isChecked={fullCourse?.is_display || false}
           handleChange={handleChange}
         />
-      </div>
+      </div> */}
 
+      <div style={{display:'flex'}}>
+        <div className={`w-25`}>
+          Privacy Settings
+        </div>
+        <div className={`w-75`} style={{display:'flex',gap:'100px'}}>
+          <LabeledRadioCheckbox
+            type="radio"
+            label="Organisation Level"
+            name="lspId"
+            isChecked={fullCourse?.lspId === userOrgData?.defaultLsp}
+            changeHandler={
+              (e) => {
+                updateCourseMaster({ ...fullCourse,lspId:userOrgData?.defaultLsp});
+              }
+            }
+          />
+          <LabeledRadioCheckbox
+            type="radio"
+            label="Learning Space Level"
+            name="lspId"
+            isChecked={fullCourse?.lspId === userOrgData?.lsp_id}
+            changeHandler={
+              (e) => {
+                updateCourseMaster({ ...fullCourse, lspId:userOrgData?.lsp_id });
+              }
+            }
+          />
+        </div>
+      </div>
       <NextButton
         tabIndex={1}
         isActive={
@@ -191,7 +225,7 @@ export default function CourseMaster() {
         tooltipTitle={ADMIN_COURSES.myCourses.courseMaster.nextBtn}
       />
 
-      {showConfirmBox && (
+      {/* {showConfirmBox && (
         <ConfirmPopUp
           title={
             'Are you sure about deleting this course? This will delete the course permanently!'
@@ -210,7 +244,7 @@ export default function CourseMaster() {
             handleClickRight: () => setShowConfirmBox(false)
           }}
         />
-      )}
+      )} */}
     </>
   );
 }

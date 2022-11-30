@@ -22,6 +22,12 @@ export const userData = [
     inputName: 'phone',
     info: '+91 9876543219',
     label: 'Contact'
+  },
+  {
+    image:'/images/svg/account_circle.svg',
+    inputName: 'gender',
+    info:'',
+    label:'Gender'
   }
 ];
 export const orgData = [
@@ -39,7 +45,7 @@ export const orgData = [
   },
   {
     image: '/images/svg/where_to_vote.svg',
-    inputName: 'organization_unit',
+    inputName: 'learningSpace_name',
     info: 'Hinjewadi, Pune, Maharashtra, India',
     label: 'Organization Unit'
   },
@@ -52,7 +58,7 @@ export const orgData = [
 
   {
     image: '/images/svg/school.svg',
-    inputName: 'user_role',
+    inputName: 'user_lsp_role',
     info: 'Learner',
     label: 'Learning Space Role'
   }

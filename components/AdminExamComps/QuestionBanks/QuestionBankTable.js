@@ -1,4 +1,6 @@
+import { DELETE_QUESTION_BANK } from '@/api/Mutations';
 import { CUSTOM_TOOLTIP_STYLE } from '@/components/common/CustomTooltip/customTooltip.helper';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
@@ -25,6 +27,7 @@ export default function QuestionBankTable({ isEdit = false }) {
   const [loadQuestionBank, { loading: loadRefetch, error: errorQuestionBankData, refetch }] =
     useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -41,6 +44,8 @@ export default function QuestionBankTable({ isEdit = false }) {
   // load table data
   const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
   useEffect(async () => {
+    if (searchQuery) queryVariables.searchText = searchQuery?.trim();
+
     const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
     if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
 
@@ -62,7 +67,7 @@ export default function QuestionBankTable({ isEdit = false }) {
       sortArrByKeyInOrder([...questionBankData], 'created_at', false),
       setLoading(false)
     );
-  }, []);
+  }, [searchQuery]);
 
   // set refetch query in recoil
   useEffect(() => {
@@ -115,7 +120,12 @@ export default function QuestionBankTable({ isEdit = false }) {
       field: 'noOfQuestions',
       headerClassName: 'course-list-header',
       headerName: 'No. of Questions',
-      flex: 1
+      flex: 0.8,
+      renderCell: (params) => {
+        return (
+          <div style={{ textAlign: 'center', width: '100%' }}>{params?.row?.noOfQuestions}</div>
+        );
+      }
     },
     {
       field: 'action',
@@ -125,24 +135,6 @@ export default function QuestionBankTable({ isEdit = false }) {
       renderCell: (params) => {
         return (
           <>
-            {isEdit && (
-              <button
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  outline: '0',
-                  border: '0'
-                }}
-                onClick={() => {
-                  setSelectedQB(getQuestionBankObject(params.row));
-                  setEditPopUp(true);
-                }}>
-                <ToolTip title={ADMIN_EXAMS.myQuestionBanks.editBtn} placement="bottom">
-                  <img src="/images/edit-icon.png" width={20}></img>
-                </ToolTip>
-              </button>
-            )}
-
             <button
               style={{
                 cursor: 'pointer',
@@ -158,10 +150,37 @@ export default function QuestionBankTable({ isEdit = false }) {
                 <img src="/images/svg/eye-line.svg" width={20}></img>
               </ToolTip>
             </button>
+
+            {isEdit && (
+              <>
+                <button
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: 'transparent',
+                    outline: '0',
+                    border: '0'
+                  }}
+                  onClick={() => {
+                    setSelectedQB(getQuestionBankObject(params.row));
+                    setEditPopUp(true);
+                  }}>
+                  <ToolTip title={ADMIN_EXAMS.myQuestionBanks.editBtn} placement="bottom">
+                    <img src="/images/edit-icon.png" width={20}></img>
+                  </ToolTip>
+                </button>
+
+                <DeleteBtn
+                  id={params?.id}
+                  resKey="deleteQuestionBank"
+                  mutation={DELETE_QUESTION_BANK}
+                  onDelete={() => setSearchQuery((prev) => `${prev} `)}
+                />
+              </>
+            )}
           </>
         );
       },
-      flex: 0.5
+      flex: 0.6
     }
   ];
 
@@ -174,6 +193,8 @@ export default function QuestionBankTable({ isEdit = false }) {
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={loading}
+        showCustomSearch={true}
+        searchProps={{ handleSearch: (val) => setSearchQuery(val) }}
       />
 
       {/* add question bank pop up */}

@@ -1,3 +1,5 @@
+import { DELETE_QUESTION_PAPER } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
@@ -6,7 +8,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_PAPERS, queryClient } from '../../../API/Queries';
-import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
+import { getPageSizeBasedOnScreen, isWordIncluded } from '../../../helper/utils.helper';
 import { QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
@@ -22,6 +24,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [questionPaper, setQuestionPaper] = useState([]);
   const [masterData, setMasterData] = useState(null);
 
@@ -91,6 +94,19 @@ export default function QuestionPaperTable({ isEdit = false }) {
                   </ToolTip>
                 </button>
 
+                <DeleteBtn
+                  id={params?.id}
+                  resKey="deleteQuestionPaper"
+                  mutation={DELETE_QUESTION_PAPER}
+                  onDelete={() => {
+                    const _papers = structuredClone(questionPaper);
+                    const index = _papers?.findIndex((qp) => qp?.id === params.row.id);
+                    if (index >= 0) _papers?.splice(index, 1);
+
+                    setQuestionPaper(_papers);
+                  }}
+                />
+
                 <ToolTip title={ADMIN_EXAMS.myQuestionPapers.createExamBtn} placement="bottom">
                   <button
                     onClick={() => {
@@ -124,6 +140,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
   // load table data
   useEffect(() => {
     const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
+    // if (searchQuery) queryVariables.searchText = searchQuery;
 
     loadQuestionPaper({ variables: queryVariables }).then(({ data }) => {
       if (errorQuestionPaperData)
@@ -134,17 +151,23 @@ export default function QuestionPaperTable({ isEdit = false }) {
           sortArrByKeyInOrder(data.getLatestQuestionPapers.questionPapers, 'CreatedAt', false)
         );
     });
+    // }, [searchQuery]);
   }, []);
 
   return (
     <>
       <ZicopsTable
         columns={columns}
-        data={questionPaper}
+        data={questionPaper?.filter((paper) => isWordIncluded(paper?.name, searchQuery))}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={loading}
+        showCustomSearch={true}
+        searchProps={{
+          handleSearch: (val) => setSearchQuery(val),
+          delayMS: 0
+        }}
       />
 
       {/* preview popup */}

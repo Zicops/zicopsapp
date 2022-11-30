@@ -21,12 +21,14 @@ import {
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
+  DisabledUserAtom,
   getUserOrgObject,
   IsUpdatedAtom,
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
+import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -189,6 +191,7 @@ export default function useUserCourseData() {
 
   async function getUserCourseData(pageSize = 999999999) {
     const { id } = getUserData();
+    const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
     let currentUserId = id;
     if (!currentUserId) return;
     // return setToastMsg({
@@ -215,7 +218,9 @@ export default function useUserCourseData() {
       (course) => course?.course_status?.toLowerCase() !== 'disabled'
     );
 
-    const assignedCoursesToUser = _assignedCourses;
+    const currentLspCourses = _assignedCourses?.filter((courseMap) => courseMap?.user_lsp_id === user_lsp_id);
+
+    const assignedCoursesToUser = currentLspCourses;
 
     const userCourseId = [];
 
@@ -269,7 +274,7 @@ export default function useUserCourseData() {
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-        console.log( userProgressArr,userProgressArr?.length,topicsStarted)
+      console.log(userProgressArr, userProgressArr?.length, topicsStarted);
 
       const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
         course_id: coursesMeta[i]?.course_id
@@ -356,32 +361,38 @@ export default function useUserCourseData() {
     // console.log('user pref called')
     const userData = getUserData();
     let userLspData = parseJson(sessionStorage?.getItem('lspData'));
-
+    const lspId = sessionStorage.getItem('lsp_id');
     if (userData === 'User Data Not Found' && !userLspData) return;
     const { id } = getUserData();
     if (!userLspData?.user_lsp_id) {
+    // console.log('userLspCalled 3')
+
+      if(!lspId) return ;
       const userLearningSpaceData = await loadQueryDataAsync(
         GET_USER_LEARNINGSPACES_DETAILS,
-        { user_id: id, lsp_id: LEARNING_SPACE_ID },
+        { user_id: id, lsp_id: lspId },
         {},
         userQueryClient
       );
       if (userLearningSpaceData?.error)
         return setToastMsg({ type: 'danger', message: 'Error while loading user preferences^!' });
       //temporary solution only valid for one lsp...need to change later!
-      if (userLearningSpaceData?.getUserLspByLspId)
-        sessionStorage?.setItem(
-          'lspData',
-          JSON.stringify(userLearningSpaceData?.getUserLspByLspId)
-        );
+      // if (userLearningSpaceData?.getUserLspByLspId)
+      //   sessionStorage?.setItem(
+      //     'lspData',
+      //     JSON.stringify(userLearningSpaceData?.getUserLspByLspId)
+      //   );
       // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
-      setUserOrgData(
-        getUserOrgObject({ user_lsp_id: userLearningSpaceData?.getUserLspByLspId?.user_lsp_id })
-      );
+      // setUserOrgData(
+      //   getUserOrgObject({ user_lsp_id: userLearningSpaceData?.getUserLspByLspId?.user_lsp_id })
+      // );
     }
-    const { user_lsp_id } = parseJson(sessionStorage?.getItem('lspData'));
+    // const { user_lsp_id } = parseJson(sessionStorage?.getItem('lspData'));
+    const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
 
-    if (!user_lsp_id) setToastMsg({ type: 'danger', message: 'Need to provide user lsp id!' });
+    // if (!user_lsp_id) setToastMsg({ type: 'danger', message: 'Need to provide user lsp id!' });
+
+    if(!user_lsp_id) return;
 
     const resPref = await loadQueryDataAsync(
       GET_USER_PREFERENCES,
@@ -596,6 +607,7 @@ export function useUpdateUserAboutData() {
   const [multiUserArr, setMultiUserArr] = useState([]);
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
+  const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
 
   useEffect(() => {
     let isPhValid = false;
@@ -628,6 +640,10 @@ export function useUpdateUserAboutData() {
 
     //     console.log(userData,'userData');
     //  return ;
+    // if (disabledUserList)
+
+    // finding is admin is trying to disable the recent user or not
+    if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
     if (userData?.status?.toLowerCase() === 'disabled')
       return setToastMsg({ type: 'info', message: 'User is already disabled!' });
     const sendLspData = {
