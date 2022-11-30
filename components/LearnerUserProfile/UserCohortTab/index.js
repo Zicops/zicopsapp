@@ -37,7 +37,7 @@ const UserCohortTab = () => {
 
     if(!user_lsp_id) return setToastMsg({type:'danger',mesaage:'Cannot find user_lsp_id while loading cohorts!'});
     const sendData = {
-      user_id:user_id,
+      user_id:user_id?.id,
       user_lsp_id:user_lsp_id,
       publish_time:getCurrentEpochTime(),
       pageCursor:"",

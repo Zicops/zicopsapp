@@ -15,6 +15,7 @@ import AdminInfoWrapper from './AdminInfoWrapper';
 import { UPDATE_LEARNING_SPACE_DETAILS, UPDATE_ORGAINIZATION_UNIT_DETAILS, userClient } from '@/api/UserMutations';
 import { getOuDetails , getLspDetails} from '@/helper/orgdata.helper';
 import { LearningSpaceAtom , OrganizationUnitAtom } from '@/state/atoms/orgs.atom';
+import MyUser from '@/components/UserComps/MyUser';
 
 
 export default function LspPage() {
@@ -29,6 +30,7 @@ export default function LspPage() {
   const [lspUpdateData, setLspUpdateData] = useRecoilState(LearningSpaceAtom);
   const [orgUnitUpdateData, setOrgUnitUpdateData] = useRecoilState(OrganizationUnitAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [selectedUser, setSelectedUser] = useState([]);
   
   useEffect(async () => {
     const ouId = sessionStorage.getItem('ou_id');
@@ -112,6 +114,7 @@ export default function LspPage() {
               // toggleEditable={false}
               // handleUpdate={() => {}}
             /> */}
+            <MyUser getUser={(list) => setSelectedUser(list)} customStyle={{padding:'0px 0px'}} isAdministration={true}/>
           </div>
         </MainBodyBox>
       </MainBody>
