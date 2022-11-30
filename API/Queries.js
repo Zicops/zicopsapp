@@ -118,6 +118,7 @@ export const GET_LATEST_COURSES = gql`
       courses {
         id
         name
+        lspId
         description
         summary
         instructor
@@ -167,6 +168,7 @@ export const GET_COURSE = gql`
     getCourse(course_id: $course_id) {
       id
       name
+      lspId
       description
       summary
       instructor
