@@ -152,6 +152,7 @@ export default function useHandleCohortTab() {
 
   async function getUserLspData(user_id=null,lsp_id=null){
     if(!user_id) return false;
+    if(!lsp_id) return false;
 
     const resLsp = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{lsp_id:lsp_id, user_id:user_id},{},userQueryClient);
         if(resLsp?.error) return false;

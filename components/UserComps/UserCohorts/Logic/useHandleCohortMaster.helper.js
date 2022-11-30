@@ -215,8 +215,10 @@ export function useHandleCohortMaster() {
         for (let i = 0; i < newManager?.length; i++) {
           const sendLspData = {
             user_id: newManager[i]?.id,
-            lsp_id: LEARNING_SPACE_ID
+            lsp_id: lspId
           };
+    // console.log('userLspCalled 2')
+
           let res = await loadQueryDataAsync(
             GET_USER_LEARNINGSPACES_DETAILS,
             { ...sendLspData },
