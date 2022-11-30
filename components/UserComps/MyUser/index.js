@@ -1,7 +1,10 @@
+import { userClient } from '@/api/UserMutations';
+import { GET_USER_LSP_ROLES } from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
@@ -34,11 +37,24 @@ export default function MyUser({ getUser }) {
     setLoading(true);
 
     const usersData = await getUsersForAdmin(true);
-    console.log(usersData);
 
     if (usersData?.error) {
       setLoading(false);
       return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
+    }
+    for (let i = 0; i < usersData.length; i++) {
+      const user = usersData[i];
+      const res = await loadQueryDataAsync(
+        GET_USER_LSP_ROLES,
+        {
+          user_id: user?.id,
+          user_lsp_ids: [user?.user_lsp_id]
+        },
+        {},
+        userClient
+      );
+      user.role = res?.getUserLspRoles?.[0]?.role;
+      user.roleData = res?.getUserLspRoles?.[0];
     }
     setLoading(false);
     setData(sortArrByKeyInOrder([...usersData], 'created_at', false));
