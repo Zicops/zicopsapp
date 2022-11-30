@@ -9,6 +9,9 @@ import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { isWordIncluded } from '@/helper/utils.helper';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+
 
 const UserCohorts = () => {
   const { viewBtn, editBtn, downloadBtn } = ADMIN_USERS.userCohort;
@@ -16,10 +19,13 @@ const UserCohorts = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   useEffect(async () => {
+    const lspId = sessionStorage.getItem('lsp_id');
+    const _lspId = userOrgData?.lsp_id ? userOrgData?.lsp_id : lspId;
     const sendData = {
-      lsp_id: LEARNING_SPACE_ID,
+      lsp_id: _lspId,
       publish_time: getCurrentEpochTime(),
       pageCursor: '',
       pageSize: 100

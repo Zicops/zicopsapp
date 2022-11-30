@@ -76,6 +76,7 @@ const UserAboutTab = () => {
     // console.log(orgDetails?.getOrganizations);
 
     const _orgDetails = orgDetails?.getOrganizations;
+    if(!_orgDetails) return ;
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
       sub_category: baseSubcategory[0]?.sub_category,

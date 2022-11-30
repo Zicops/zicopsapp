@@ -365,6 +365,9 @@ export default function useUserCourseData() {
     if (userData === 'User Data Not Found' && !userLspData) return;
     const { id } = getUserData();
     if (!userLspData?.user_lsp_id) {
+    // console.log('userLspCalled 3')
+
+      if(!lspId) return ;
       const userLearningSpaceData = await loadQueryDataAsync(
         GET_USER_LEARNINGSPACES_DETAILS,
         { user_id: id, lsp_id: lspId },

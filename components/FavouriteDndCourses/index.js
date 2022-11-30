@@ -75,6 +75,7 @@ export default function FavouriteDndCourses({ isLoading }) {
   //loads user assigned courses
 
   async function loadCourses() {
+    const userLspId = sessionStorage.getItem('user_lsp_id');
     setLoading(true);
     const queryVariables = { publish_time: getUnixFromDate(), pageSize: 9999999, pageCursor: '' };
     let isError = false;
@@ -104,7 +105,7 @@ export default function FavouriteDndCourses({ isLoading }) {
     let userCourses = [];
     if (_userCourses?.length)
       userCourses = _userCourses?.filter(
-        (course) => course?.course_status?.toLowerCase() !== 'disabled'
+        (course) => course?.course_status?.toLowerCase() !== 'disabled' || course?.user_lsp_id === userLspId
       );
     const userCourseMaps = userCourses || [];
     const assignedCourses = [];

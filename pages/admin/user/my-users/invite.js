@@ -52,7 +52,7 @@ export default function MyUserPage() {
     let isError = false;
     let errorMsg;
     const resEmail = await inviteUsers({
-      variables: { emails: emails, lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID }
+      variables: { emails: emails, lsp_id: userOrgData?.lsp_id }
     }).catch((err) => {
       errorMsg = err.message;
       isError = !!err;
@@ -108,7 +108,7 @@ export default function MyUserPage() {
                     { name: 'Bulk Upload', component: <BulkUpload userType={userType} /> }
                   ]);
                 },
-                isHidden: tabData[0].name.includes('Bulk')
+                isHidden: tabData[0]?.name?.includes('Bulk')
               }
             ],
             dropdownData: {
@@ -120,7 +120,7 @@ export default function MyUserPage() {
                 {
                   value: 'External',
                   display: 'External',
-                  isDisabled: !!tabData[0].name.includes('Bulk')
+                  isDisabled: !!tabData[0]?.name?.includes('Bulk')
                 }
               ]
             }
@@ -150,9 +150,9 @@ export default function MyUserPage() {
             <InviteUserEmails
               closePopUp={setIsOpen}
               userEmails={
-                !tabData[0]?.name.includes('Invite')
+                !tabData[0]?.name?.includes('Invite')
                   ? emailId
-                  : emailId.map((item) => item?.props?.children[0])
+                  : emailId?.map((item) => item?.props?.children[0])
               }
               userType={userType}
             />

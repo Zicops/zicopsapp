@@ -29,10 +29,11 @@ export default function assignCourseToUser() {
   //get user course send data
   async function getUserCourseData(course_data = null, user_id = null) {
     const { id } = getUserData();
+    const lspId = sessionStorage.getItem('lsp_id');
     if (!user_id) return setToastMsg({ type: 'danger', message: 'Need user_id to add course!' });
     const resLsp = await loadQueryDataAsync(
       GET_USER_LEARNINGSPACES_DETAILS,
-      { user_id: user_id, lsp_id: LEARNING_SPACE_ID },
+      { user_id: user_id, lsp_id: lspId  },
       {},
       userQueryClient
     );
