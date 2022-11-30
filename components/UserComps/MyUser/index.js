@@ -5,7 +5,7 @@ import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { USER_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
-import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
+import { getPageSizeBasedOnScreen, isWordIncluded } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { DisabledUserAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
@@ -24,6 +24,8 @@ export default function MyUser({ getUser }) {
     useUpdateUserAboutData();
 
   const [isLoading, setLoading] = useState(true);
+  const [filterCol, setFilterCol] = useState('email');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
@@ -49,7 +51,7 @@ export default function MyUser({ getUser }) {
 
   const columns = [
     {
-      field: 'emails',
+      field: 'email',
       headerClassName: 'course-list-header',
       flex: 2,
       renderHeader: (params) => (
@@ -163,15 +165,28 @@ export default function MyUser({ getUser }) {
     }
   ];
 
+  const options = [
+    { label: 'Email', value: 'email' },
+    { label: 'First Name', value: 'first_name' },
+    { label: 'Last Name', value: 'last_name' }
+  ];
+
   return (
     <>
       <ZicopsTable
         columns={columns}
-        data={data}
+        data={data?.filter((user) => isWordIncluded(user?.[filterCol], searchQuery))}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="75vh"
         loading={isLoading}
+        showCustomSearch={true}
+        searchProps={{
+          handleOptionChange: (val) => setFilterCol(val),
+          handleSearch: (val) => setSearchQuery(val),
+          options,
+          delayMS: 0
+        }}
       />
 
       {disableAlert && (

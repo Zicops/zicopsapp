@@ -36,7 +36,9 @@ export default function useHandleTabs(courseContextData) {
 
   useEffect(() => {
     setCouseIdForFileContext();
+  }, [fullCourse?.id]);
 
+  useEffect(() => {
     setFileData({
       myfile: courseImage.file?.name || getFileNameFromUrl(fullCourse.image, 'img'),
       uploadCourseImage:

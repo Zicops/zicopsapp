@@ -24,10 +24,9 @@ export default function Layout({ children }) {
 
   //refill the  recoil values
   useEffect(async () => {
-   
-    if(!userAboutData?.id?.length) return loadUserData();
+    if (!userAboutData?.id?.length) return loadUserData();
 
-    if(userAboutData?.isUserUpdated) return loadUserData();
+    if (userAboutData?.isUserUpdated) return loadUserData();
 
     // const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId,lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
     // if(userLearningSpaceData?.error) return console.log('User lsp load error!');
@@ -38,12 +37,12 @@ export default function Layout({ children }) {
     return;
   }, []);
 
-  async function loadUserData(){
+  async function loadUserData() {
     const data = getUserData();
-      if (data === 'User Data Not Found') return;
-      // const userId = [];
-      // userId.push(data?.id);
-      const userId = data?.id;
+    if (data === 'User Data Not Found') return;
+    // const userId = [];
+    // userId.push(data?.id);
+    const userId = data?.id;
     const userData = await loadQueryDataAsync(
       GET_USER_DETAIL,
       { user_id: [userId] },
@@ -53,8 +52,8 @@ export default function Layout({ children }) {
     if (userData?.error) return console.log('User data load error');
     const basicInfo = userData?.getUserDetails?.[0];
 
-    setUserData((prev)=>({ ...prev, ...data, ...basicInfo , isUserUpdated:false }));
-    return ;
+    setUserData((prev) => ({ ...prev, ...data, ...basicInfo, isUserUpdated: false }));
+    return;
   }
 
   useEffect(() => {
@@ -67,7 +66,7 @@ export default function Layout({ children }) {
       <main className={main}>{children}</main>
       {!isFullHeight && <Footer />}
 
-      {deleteConfirmData?.showConfirm && deleteConfirmData?.mutation && deleteConfirmData?.id && (
+      {deleteConfirmData?.showConfirm && deleteConfirmData?.mutation && (
         <ConfirmPopUp
           title={
             deleteConfirmData?.confirmMsg ||
@@ -75,13 +74,17 @@ export default function Layout({ children }) {
           }
           btnObj={{
             handleClickLeft: async () => {
-              const isDeleted = await deleteData(deleteConfirmData?.mutation, {
-                id: deleteConfirmData?.id
-              });
+              let isDeleted = 'localDelete';
+              if (deleteConfirmData?.id) {
+                isDeleted = await deleteData(deleteConfirmData?.mutation, {
+                  id: deleteConfirmData?.id,
+                  ...deleteConfirmData?.variableObj
+                });
+              }
               console.log(isDeleted, deleteConfirmData);
               setDeleteConfirmData(getDeleteConfirmDataObj());
 
-              if (!isDeleted?.[deleteConfirmData?.resKey])
+              if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey])
                 return setToastMsg({ type: 'danger', message: 'Failed to Delete' });
 
               deleteConfirmData?.onDelete();

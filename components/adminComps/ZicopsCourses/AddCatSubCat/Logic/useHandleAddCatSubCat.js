@@ -1,5 +1,11 @@
-import { ADD_CAT_MAIN, ADD_SUB_CAT_MAIN, mutationClient } from '@/api/Mutations';
-import { GET_CATS_MAIN, GET_SUB_CATS_MAIN } from '@/api/Queries';
+import {
+  ADD_CAT_MAIN,
+  ADD_SUB_CAT_MAIN,
+  mutationClient,
+  UPDATE_CATS_MAIN,
+  UPDATE_SUB_CATS_MAIN
+} from '@/api/Mutations';
+import { GET_CATS_MAIN, GET_SUB_CATS_MAIN, queryClient } from '@/api/Queries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { isNameDuplicateAdvanced } from '@/helper/data.helper';
@@ -18,6 +24,12 @@ export default function useHandleAddCatSubCat(isSubCat) {
   const [addNewSubCategory, { error: addSubCategoryErr }] = useMutation(ADD_SUB_CAT_MAIN, {
     client: mutationClient
   });
+  const [updateCategory, { error: updateCategoryErr }] = useMutation(UPDATE_CATS_MAIN, {
+    client: mutationClient
+  });
+  const [updateSubCategory, { error: updateSubCategoryErr }] = useMutation(UPDATE_SUB_CATS_MAIN, {
+    client: mutationClient
+  });
 
   // recoil state
   const userOrg = useRecoilValue(UsersOrganizationAtom);
@@ -28,7 +40,6 @@ export default function useHandleAddCatSubCat(isSubCat) {
   // local state
   const [catSubCatData, setCatSubCatData] = useState(getCatSubCatData());
   const [isAddReady, setIsAddReady] = useState(false);
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [catoptions, setCatOptions] = useState([]);
 
   useEffect(() => {
@@ -43,6 +54,17 @@ export default function useHandleAddCatSubCat(isSubCat) {
   useEffect(() => {
     setCatSubCatData({ ...catSubCatData, isSubCat: isSubCat, LspId: userOrg?.lsp_id });
   }, [isSubCat]);
+
+  useEffect(() => {
+    if (!popUpState?.id) return;
+
+    setCatSubCatData({
+      ...catSubCatData,
+      isSubCat: isSubCat,
+      LspId: userOrg?.lsp_id,
+      ...popUpState
+    });
+  }, [popUpState]);
 
   // disable submit if data not complete
   useEffect(() => {
@@ -84,13 +106,24 @@ export default function useHandleAddCatSubCat(isSubCat) {
     if (addCategoryErr) return setToastMsg({ type: 'danger', message: 'Add Category Error' });
     if (addSubCategoryErr)
       return setToastMsg({ type: 'danger', message: 'Add Sub Category Error' });
-  }, [addCategoryErr, addSubCategoryErr]);
+    if (updateCategoryErr) return setToastMsg({ type: 'danger', message: 'Update Category Error' });
+    if (updateSubCategoryErr)
+      return setToastMsg({ type: 'danger', message: 'Update Sub Category Error' });
+  }, [addCategoryErr, addSubCategoryErr, updateCategoryErr, updateSubCategoryErr]);
 
   async function addCategory() {
-    setIsSubmitDisabled(true);
+    setIsAddReady(false);
     // duplicate name check
-    if (await isNameDuplicateAdvanced(GET_CATS_MAIN, {}, catSubCatData?.Name, 'allCatMain')) {
-      setIsSubmitDisabled(false);
+    if (
+      await isNameDuplicateAdvanced(
+        GET_CATS_MAIN,
+        {},
+        catSubCatData?.Name,
+        'allCatMain',
+        queryClient,
+        popUpState?.id
+      )
+    ) {
       return setToastMsg({ type: 'danger', message: 'Category with same name already exist' });
     }
 
@@ -103,9 +136,28 @@ export default function useHandleAddCatSubCat(isSubCat) {
       LspId: catSubCatData?.LspId
     };
 
+    let isError = false;
+    if (popUpState?.id) {
+      sendData.id = popUpState?.id;
+      console.log(sendData);
+
+      await updateCategory({ variables: { catMainInput: sendData } }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update Category Error' });
+      });
+      // console.log(res);
+
+      if (isError) return;
+
+      setIsPopUpDataPresent(false);
+      udpatePopUpState(false);
+      setToastMsg({ type: 'success', message: 'Category Updated' });
+      return;
+    }
+
     // console.log(sendData);
 
-    let isError = false;
     const res = await addNewCategory({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -113,20 +165,25 @@ export default function useHandleAddCatSubCat(isSubCat) {
     });
     // console.log(res);
 
-    if (isError) return setIsSubmitDisabled(false);
+    if (isError) return;
 
     setIsPopUpDataPresent(false);
     udpatePopUpState(false);
-    setIsSubmitDisabled(false);
   }
 
   async function addSubCategory() {
-    setIsSubmitDisabled(true);
+    setIsAddReady(false);
     // duplicate name check
     if (
-      await isNameDuplicateAdvanced(GET_SUB_CATS_MAIN, {}, catSubCatData?.Name, 'allSubCatMain')
+      await isNameDuplicateAdvanced(
+        GET_SUB_CATS_MAIN,
+        {},
+        catSubCatData?.Name,
+        'allSubCatMain',
+        queryClient,
+        popUpState?.id
+      )
     ) {
-      setIsSubmitDisabled(false);
       return setToastMsg({ type: 'danger', message: 'Sub-Category with same name already exist' });
     }
 
@@ -143,6 +200,26 @@ export default function useHandleAddCatSubCat(isSubCat) {
     // console.log(sendData);
 
     let isError = false;
+
+    if (popUpState?.id) {
+      sendData.id = popUpState?.id;
+      console.log(sendData);
+
+      await updateSubCategory({ variables: { subCatMainInput: sendData } }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update Sub Category Error' });
+      });
+      // console.log(res);
+
+      if (isError) return;
+
+      setIsPopUpDataPresent(false);
+      udpatePopUpState(false);
+      setToastMsg({ type: 'success', message: 'Sub Category Updated' });
+      return;
+    }
+
     const res = await addNewSubCategory({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -150,18 +227,16 @@ export default function useHandleAddCatSubCat(isSubCat) {
     });
     // console.log(res);
 
-    if (isError) return setIsSubmitDisabled(false);
+    if (isError) return;
 
     setIsPopUpDataPresent(false);
     udpatePopUpState(false);
-    setIsSubmitDisabled(false);
   }
 
   return {
     catSubCatData,
     setCatSubCatData,
     isAddReady,
-    isSubmitDisabled,
     handleFileInput,
     addCategory,
     addSubCategory,

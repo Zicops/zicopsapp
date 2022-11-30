@@ -1,21 +1,23 @@
+import { GET_COHORT_MAINS, userQueryClient } from '@/api/UserQueries';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
-import { GET_COHORT_MAINS, userQueryClient } from '@/api/UserQueries';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { getCurrentEpochTime } from '@/helper/common.helper';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { isWordIncluded } from '@/helper/utils.helper';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getCurrentEpochTime } from '@/helper/common.helper';
-import CohortMasterTab from './ChortMasterTab';
-import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useRecoilState } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+
 
 const UserCohorts = () => {
   const { viewBtn, editBtn, downloadBtn } = ADMIN_USERS.userCohort;
   const [cohortList, setCohortList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
   const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
@@ -27,6 +29,7 @@ const UserCohorts = () => {
       publish_time: getCurrentEpochTime(),
       pageCursor: '',
       pageSize: 100
+      // ,searchText: searchQuery
     };
     const resCohortData = await loadQueryDataAsync(
       GET_COHORT_MAINS,
@@ -42,6 +45,7 @@ const UserCohorts = () => {
     });
     const cohorts = list?.filter((item) => item?.is_active);
     setCohortList(sortArrByKeyInOrder([...cohorts], 'created_at', false), setLoading(false));
+    // }, [searchQuery]);
   }, []);
 
   const columns = [
@@ -73,33 +77,32 @@ const UserCohorts = () => {
         return (
           <>
             <ToolTip title={viewBtn}>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              onClick={() => {
-                router.push(router.asPath + `/view-cohort/${params?.row?.id}`);
-              }}
-            >
-              <img src="/images/svg/eye-line.svg" width={20}></img>
-            </button>
+              <button
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0'
+                }}
+                onClick={() => {
+                  router.push(router.asPath + `/view-cohort/${params?.row?.id}`);
+                }}>
+                <img src="/images/svg/eye-line.svg" width={20}></img>
+              </button>
             </ToolTip>
             <ToolTip title={editBtn}>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}
-              onClick={() => {
-                router.push(router.asPath + `/${params?.row?.id}`);
-              }}>
-              <img src="/images/svg/edit-box-line.svg" width={20}></img>
-            </button>
+              <button
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0'
+                }}
+                onClick={() => {
+                  router.push(router.asPath + `/${params?.row?.id}`);
+                }}>
+                <img src="/images/svg/edit-box-line.svg" width={20}></img>
+              </button>
             </ToolTip>
             {/* <button
               style={{
@@ -126,10 +129,15 @@ const UserCohorts = () => {
       {/* <CohortMasterTab /> */}
       <ZicopsTable
         columns={columns}
-        data={cohortList}
+        data={cohortList?.filter((cohort) => isWordIncluded(cohort?.name, searchQuery))}
         tableHeight="70vh"
         hideFooterPagination={true}
         loading={loading}
+        showCustomSearch={true}
+        searchProps={{
+          handleSearch: (val) => setSearchQuery(val),
+          delayMS: 0
+        }}
       />
     </>
   );
