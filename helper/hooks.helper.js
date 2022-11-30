@@ -36,7 +36,7 @@ import {
 } from 'libphonenumber-js';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import { LEARNING_SPACE_ID } from './constants.helper';
@@ -218,7 +218,9 @@ export default function useUserCourseData() {
       (course) => course?.course_status?.toLowerCase() !== 'disabled'
     );
 
-    const currentLspCourses = _assignedCourses?.filter((courseMap) => courseMap?.user_lsp_id === user_lsp_id);
+    const currentLspCourses = _assignedCourses?.filter(
+      (courseMap) => courseMap?.user_lsp_id === user_lsp_id
+    );
 
     const assignedCoursesToUser = currentLspCourses;
 
@@ -365,9 +367,9 @@ export default function useUserCourseData() {
     if (userData === 'User Data Not Found' && !userLspData) return;
     const { id } = getUserData();
     if (!userLspData?.user_lsp_id) {
-    // console.log('userLspCalled 3')
+      // console.log('userLspCalled 3')
 
-      if(!lspId) return ;
+      if (!lspId) return;
       const userLearningSpaceData = await loadQueryDataAsync(
         GET_USER_LEARNINGSPACES_DETAILS,
         { user_id: id, lsp_id: lspId },
@@ -392,7 +394,7 @@ export default function useUserCourseData() {
 
     // if (!user_lsp_id) setToastMsg({ type: 'danger', message: 'Need to provide user lsp id!' });
 
-    if(!user_lsp_id) return;
+    if (!user_lsp_id) return;
 
     const resPref = await loadQueryDataAsync(
       GET_USER_PREFERENCES,
@@ -597,6 +599,7 @@ export function useUpdateUserAboutData() {
   });
 
   // recoil
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [updateLsp, { error: createLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
@@ -643,14 +646,14 @@ export function useUpdateUserAboutData() {
     // if (disabledUserList)
 
     // finding is admin is trying to disable the recent user or not
-    if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
-    if (userData?.status?.toLowerCase() === 'disabled')
-      return setToastMsg({ type: 'info', message: 'User is already disabled!' });
+    // if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
+    // if (userData?.status?.toLowerCase() === 'disabled')
+    //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      lsp_id: userData?.lsp_id || LEARNING_SPACE_ID,
-      status: 'Disabled'
+      lsp_id: userOrgData?.lsp_id,
+      status: userData?.status
     };
 
     console.log(sendLspData, 'updateUserLearningSpaceDetails');
