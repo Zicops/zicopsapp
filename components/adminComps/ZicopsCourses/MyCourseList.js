@@ -1,13 +1,13 @@
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
-import { getUnixTimeAt, TableResponsiveRows } from '../../../helper/utils.helper';
+import { getUnixFromDate, TableResponsiveRows } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 
 const columns = [
   {
@@ -127,7 +127,7 @@ function MyLatestCourseList({ time, searchParam }) {
 let debounceTimer;
 
 const MyCourseList = () => {
-  var time = getUnixTimeAt();
+  var time = getUnixFromDate();
   const [searchParam, setSearchParam] = useState('');
 
   function startSearch(val, delay) {

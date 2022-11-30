@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import Switch from '@mui/material/Switch';
 import ZicopsTable from '../../common/ZicopsTable';
-import { TableResponsiveRows } from '../../../helper/utils.helper';
+import { getUnixFromDate, TableResponsiveRows } from '../../../helper/utils.helper';
 import { useState, useEffect } from 'react';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
 import Router from 'next/router';
@@ -111,7 +111,7 @@ function LatestCourseList({ time }) {
 }
 
 const ZicopsCourseList = () => {
-  var time = Date.now();
+  var time = getUnixFromDate();
   return (
     <>
       <div className="content-panel">
