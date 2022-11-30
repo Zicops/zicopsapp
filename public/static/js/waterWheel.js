@@ -7,9 +7,9 @@ $(document).ready(function () {
     horizonOffset: 0, // offset each item from the "horizon" by this amount (causes arching)
     horizonOffsetMultiplier: 1, // multipled by horizon offset to increase/decrease offset for each additional item
     sizeMultiplier: 0.8, // determines how drastically the size of each item changes
-    opacityMultiplier: 1, // determines how drastically the opacity of each item changes
+    opacityMultiplier: 0.7, // determines how drastically the opacity of each item changes
     horizon: 0, // how "far in" the horizontal/vertical horizon should be set from the container wall. 0 for auto
-    flankingItems: 2, // the number of items visible on either side of the center
+    flankingItems: 4, // the number of items visible on either side of the center
 
     // animation
     speed: 1000, // speed in milliseconds it will take to rotate from one to the next
@@ -48,4 +48,17 @@ $(document).ready(function () {
     carousel.next();
     return false;
   });
+
+  $('.mouse-cursor-gradient-tracking-btn').on('click', function () {
+    // $('.popup').show();
+    Calendly.initPopupWidget({
+      url: 'https://calendly.com/skylinemeridian/30min?hide_gdpr_banner=0'
+    });
+    return false;
+  });
+
+  // $('.close-popup').on('click', function () {
+  //   $('.popup').hide();
+  // })
+ 
 });

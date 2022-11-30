@@ -48,7 +48,7 @@ window.onscroll = function () {
       // you're at the bottom of the page
       document.getElementById('navbar').style.backgroundColor = 'transparent';
     } else {
-      document.getElementById('navbar').style.backgroundColor = '#0d0f11';
+      document.getElementById('navbar').style.backgroundColor = '#131518';
     }
   } else {
     document.querySelector('.logo').style.padding = '30px 0';
@@ -76,3 +76,9 @@ function reveal() {
 window.addEventListener('scroll', reveal);
 reveal();
 
+// Calendly.initInlineWidget({
+//   url: 'https://calendly.com/skylinemeridian',
+//   parentElement: document.getElementById('SAMPLEdivID'),
+//   prefill: {},
+//   utm: {}
+// });
