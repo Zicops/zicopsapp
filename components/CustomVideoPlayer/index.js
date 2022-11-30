@@ -7,6 +7,7 @@ import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
 import DraggableDiv from './DraggableDiv';
 import useHandleNotes from './Logic/useHandleNotes';
+import useHandleScorm from './Logic/useHandleScorm';
 import useVideoPlayer from './Logic/useHandleVideo';
 import SkipButtons from './SkipButtons';
 import UiComponents from './UiComponents';
@@ -53,6 +54,7 @@ export default function CustomVideo({ set }) {
     freezeScreen,
     setFreezeScreen
   } = useVideoPlayer(videoElement, videoContainer, set);
+  useHandleScorm();
 
   const { handleClose, handlePin, deleteNote, handleNote } = useHandleNotes();
 

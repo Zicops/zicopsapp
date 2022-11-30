@@ -83,7 +83,7 @@ export async function deleteData(
   client = mutationClient
 ) {
   const response = await client
-    .mutate({ mutation: MUTATION, variables: variableObj, ...options })
+    .mutate({ mutation: structuredClone(MUTATION), variables: variableObj, ...options })
     .catch((err) => {
       console.log(`Delete Data error:`, err);
     });

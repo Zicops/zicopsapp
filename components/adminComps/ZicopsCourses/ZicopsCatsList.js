@@ -1,20 +1,21 @@
 import { DELETE_CAT_MAIN } from '@/api/Mutations';
 import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ApolloProvider, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useRecoilState } from 'recoil';
 import { GET_CATS_MAIN, queryClient } from '../../../API/Queries';
-import { TableResponsiveRows } from '../../../helper/utils.helper';
+import { isWordIncluded, TableResponsiveRows } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
 import CourseHead from '../../CourseHead';
 import AddCatSubCat from './AddCatSubCat';
 
 function ZicopsCategoryList() {
   const [pageSize, setPageSize] = useState(6);
+  const [searchQuery, setSearchQuery] = useState('');
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
 
   useEffect(() => {
@@ -55,6 +56,16 @@ function ZicopsCategoryList() {
       renderCell: (params) => {
         return (
           <>
+            <button
+              onClick={() => udpatePopUpState(params?.row)}
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                outline: '0',
+                border: '0'
+              }}>
+              <img src="/images/svg/edit-box-line.svg" width={20}></img>
+            </button>
             <DeleteBtn
               id={params?.id}
               resKey="deleteCatMain"
@@ -74,14 +85,18 @@ function ZicopsCategoryList() {
       ?.map((val, index) => categories.push({ index: index + 1, catName: val?.Name, ...val }));
 
   return (
-    <ZicopsTable
-      columns={columns}
-      data={categories}
-      pageSize={pageSize}
-      rowsPerPageOptions={[3]}
-      tableHeight="70vh"
-      loading={loading}
-    />
+    <>
+      <ZicopsTable
+        columns={columns}
+        data={categories?.filter((cat) => isWordIncluded(cat?.catName, searchQuery))}
+        pageSize={pageSize}
+        rowsPerPageOptions={[3]}
+        tableHeight="70vh"
+        loading={loading}
+        showCustomSearch={true}
+        searchProps={{ handleSearch: (val) => setSearchQuery(val), delayMS: 0 }}
+      />
+    </>
   );
 }
 
@@ -113,7 +128,7 @@ const ZicopsCatsList = () => {
 
         {/* add cat pop up */}
         <PopUp
-          title="Add New Category"
+          title={popUpState?.id ? `Update Category` : `Add New Category`}
           popUpState={[popUpState, udpatePopUpState]}
           closeBtn={closePopUp}
           isFooterVisible={false}>
@@ -134,7 +149,9 @@ const ZicopsCatsList = () => {
           .content-panel {
             margin: 30px 10px 10px 10px;
             color: var(--white);
-            height: calc(60vh + 100px);
+            // height: calc(60vh + 100px);
+            min-height: 70vh;
+            max-height: 80vh;
             box-shadow: -2px 2px 10px 0 #000000, 2px -2px 5px 0 #686868;
             border-radius: 10px;
           }

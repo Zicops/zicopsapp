@@ -6,7 +6,7 @@ import { getQueryData, loadQueryDataAsync } from '@/helper/api.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
@@ -26,6 +26,7 @@ export default function useHandleCourseAssign() {
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userDataGlobal = useRecoilValue(UserDataAtom);
+  const userOrgData =  useRecoilValue(UsersOrganizationAtom);
 
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
@@ -37,12 +38,12 @@ export default function useHandleCourseAssign() {
   const [isSaveDisabled, setisSaveDisabled] = useState(false);
 
   async function assignCourseToUser() {
-    const {user_lsp_id} = parseJson(sessionStorage?.getItem('lspData'));
+    const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
     setisSaveDisabled(false);
     setIsPopUpDataPresent(false);
     const sendData = {
       userId: userData?.id,
-      userLspId: userDataGlobal?.userDetails?.user_lsp_id || user_lsp_id ,
+      userLspId: userOrgData?.user_lsp_id || user_lsp_id ,
       courseId: courseAssignData?.fullCourse?.id,
       addedBy: JSON.stringify({ userId: userData.id, role: 'self' }),
       courseType: courseAssignData?.fullCourse?.type,

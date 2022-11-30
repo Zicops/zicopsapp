@@ -382,6 +382,7 @@ export const GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID = gql`
 export const GET_TOPIC_RESOURCES = gql`
   query getTopicResources($topic_id: String) {
     getTopicResources(topic_id: $topic_id) {
+      id
       name
       type
       topicId
@@ -433,12 +434,18 @@ export const GET_TOPIC_QUIZ = gql`
 `;
 
 export const GET_LATEST_QUESTION_BANK = gql`
-  query latestQuestionBank($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query latestQuestionBank(
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $searchText: String
+  ) {
     getLatestQuestionBank(
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      searchText: $searchText
     ) {
       questionBanks {
         id
@@ -640,12 +647,18 @@ export const GET_QUESTION_OPTIONS_WITHOUT_ANSWER = gql`
 `;
 
 export const GET_LATEST_QUESTION_PAPERS = gql`
-  query latestQuestionPapers($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query latestQuestionPapers(
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $searchText: String
+  ) {
     getLatestQuestionPapers(
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      searchText: $searchText
     ) {
       questionPapers {
         id
@@ -762,12 +775,18 @@ export const GET_FIXED_QUESTION = gql`
 `;
 
 export const GET_LATEST_EXAMS = gql`
-  query getLatestExams($publish_time: Int, $pageCursor: String, $pageSize: Int) {
+  query getLatestExams(
+    $publish_time: Int
+    $pageCursor: String
+    $pageSize: Int
+    $searchText: String
+  ) {
     getLatestExams(
       publish_time: $publish_time
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      searchText: $searchText
     ) {
       exams {
         id

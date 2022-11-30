@@ -1,9 +1,22 @@
-import { useRecoilValue } from 'recoil';
-import { TopicSubtitleAtom, uploadStatusAtom } from '../../../../../state/atoms/module.atoms';
+import { DELETE_COURSE_TOPIC_CONTENT } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  QuizAtom,
+  TopicContentAtom,
+  TopicSubtitleAtom,
+  uploadStatusAtom
+} from '../../../../../state/atoms/module.atoms';
 
 export default function TopicContentView({ topicContent, toggleTopicContentForm }) {
   const topicSubtitle = useRecoilValue(TopicSubtitleAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
+  const quizzes = useRecoilValue(QuizAtom);
+  const subtitles = useRecoilValue(TopicSubtitleAtom);
+
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [topicContentArr, setTopicContentArr] = useRecoilState(TopicContentAtom);
 
   return (
     <>
@@ -35,6 +48,39 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                     Content Added {isSubtitleAdded ? 'With Subtitle' : ''}{' '}
                     {content.is_default ? `(default)` : ''}
                   </div>
+
+                  <DeleteBtn
+                    id={content?.id}
+                    resKey="deleteTopicContent"
+                    mutation={DELETE_COURSE_TOPIC_CONTENT}
+                    deleteCondition={() => {
+                      // const isSubsExists = !!subtitles?.length;
+                      // if (isSubsExists) {
+                      //   setToastMsg({ type: 'danger', message: 'Delete All Subtitles First' });
+                      //   return false;
+                      // }
+
+                      const isQuizExists = !!quizzes?.length;
+                      if (isQuizExists) {
+                        setToastMsg({ type: 'danger', message: 'Delete All Quiz First' });
+                        return false;
+                      }
+
+                      return true;
+                    }}
+                    onDelete={() => {
+                      const _topicContentArr = structuredClone(topicContentArr);
+                      const currentTopicIndex = _topicContentArr?.findIndex(
+                        (tc) => tc?.id === content?.id
+                      );
+                      if (currentTopicIndex >= 0) {
+                        _topicContentArr?.splice(currentTopicIndex, 1);
+                      }
+
+                      if (!_topicContentArr?.length) toggleTopicContentForm();
+                      setTopicContentArr(_topicContentArr);
+                    }}
+                  />
                 </div>
               </div>
             );

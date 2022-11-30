@@ -1,5 +1,6 @@
 import { GridColumnMenuContainer, GridFilterMenuItem, SortGridMenuItems } from '@mui/x-data-grid';
 import StyledDataGrid from '../../common/StyledDataGrid';
+import TableSearchComp from '../TableSearchComp';
 import {
   CustomAscendingIcon,
   CustomDescendingIcon,
@@ -28,37 +29,43 @@ const ZicopsTable = ({
   tableHeight,
   customStyles = {},
   loading = false,
-  hideFooterPagination = false
+  hideFooterPagination = false,
+  showCustomSearch = false,
+  searchProps = {}
 }) => {
   return (
-    <div style={{ height: tableHeight }}>
-      <StyledDataGrid
-        rows={data || []}
-        columns={columns}
-        style={customStyles}
-        hideFooterPagination={hideFooterPagination}
-        sx={{
-          border: 0,
-          pt: 2,
-          pb: 2,
-          px: 5,
-          color: '#fff'
-        }}
-        autoHeight={false}
-        // disableColumnMenu={true}
-        disableSelectionOnClick
-        components={{
-          Pagination: CustomPagination,
-          ColumnSortedDescendingIcon: CustomDescendingIcon,
-          ColumnSortedAscendingIcon: CustomAscendingIcon,
-          ColumnMenu: CustomColumnMenu
-        }}
-        pageSize={pageSize}
-        rowsPerPageOptions={rowsPerPageOptions}
-        pagination
-        loading={loading}
-      />
-    </div>
+    <>
+      {!!showCustomSearch && <TableSearchComp {...searchProps} />}
+
+      <div style={{ height: tableHeight }}>
+        <StyledDataGrid
+          rows={data || []}
+          columns={columns}
+          style={customStyles}
+          hideFooterPagination={hideFooterPagination}
+          sx={{
+            border: 0,
+            pt: 2,
+            pb: 2,
+            px: 5,
+            color: '#fff'
+          }}
+          autoHeight={false}
+          // disableColumnMenu={true}
+          disableSelectionOnClick
+          components={{
+            Pagination: CustomPagination,
+            ColumnSortedDescendingIcon: CustomDescendingIcon,
+            ColumnSortedAscendingIcon: CustomAscendingIcon,
+            ColumnMenu: CustomColumnMenu
+          }}
+          pageSize={pageSize}
+          rowsPerPageOptions={rowsPerPageOptions}
+          pagination
+          loading={loading}
+        />
+      </div>
+    </>
   );
 };
 

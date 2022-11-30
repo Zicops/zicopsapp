@@ -21,6 +21,7 @@
     "@mui/x-date-pickers": "5.0.0-alpha.5",
     "@radix-ui/react-navigation-menu": "0.1.2",
     "@reach/menu-button": "0.16.2",
+    "@sendgrid/mail": "^7.7.0",
     "@stitches/react": "1.2.7",
     "@szhsin/react-menu": "3.0.0",
     "@types/react": "17.0.48",

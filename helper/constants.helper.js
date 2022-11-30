@@ -1,7 +1,7 @@
 export const OPTION_LABEL = ['A', 'B', 'C', 'D'];
 export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const USER_STATUS = { invite: 'Invited', activate: 'Active', disable: 'Disabled' };
-export const USER_MAP_STATUS = { invite: 'invited', activate: 'active', disable: 'disable' };
+export const USER_MAP_STATUS = { invite: '', activate: 'active', disable: 'disable' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;

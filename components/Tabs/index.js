@@ -1,3 +1,4 @@
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { STATUS } from '@/state/atoms/utils.atoms';
 import Router, { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ import styles from './courseTabs.module.scss';
 import {
   CourseTabAtom,
   getDateTimeFromUnix,
+  getDefaultLsp,
   IsCourseSavedAtom,
   isCourseUploadingAtom,
   tabData
@@ -23,12 +25,17 @@ export default function CourseTabs() {
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   // TODO: set to first tab when new course is opened
   // useEffect(() => {
   //   console.log(router);
   //   setTab(tabData[0].name);
   // }, [fullCourse?.id]);
+
+  useEffect(() => {
+    if (router.asPath === '/admin/courses') setTab(tabData[0].name);
+  }, []);
 
   useEffect(() => {
     setIsCourseSaved(false);
