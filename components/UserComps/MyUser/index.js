@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
-export default function MyUser({ getUser }) {
+export default function MyUser({ getUser , isAdministration = false , customStyle = {} }) {
   const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
@@ -55,8 +55,14 @@ export default function MyUser({ getUser }) {
       user.role = res?.getUserLspRoles?.[0]?.role;
       user.roleData = res?.getUserLspRoles?.[0];
     }
+    let users = [];
+    if(isAdministration){
+      users = usersData?.filter((user) => user?.role?.toLowerCase() === 'admin');
+      // console.log(users,'users')
+    }
+    else{users = [...usersData];}
     setLoading(false);
-    setData(sortArrByKeyInOrder([...usersData], 'created_at', false));
+    setData(sortArrByKeyInOrder([...users], 'created_at', false));
     return;
   }, []);
 
@@ -207,6 +213,7 @@ export default function MyUser({ getUser }) {
           options,
           delayMS: 0
         }}
+        customStyles={customStyle}
       />
 
       {disableAlert && (
