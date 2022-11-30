@@ -5,7 +5,7 @@ import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { USER_STATUS } from '@/helper/constants.helper';
+import { USER_MAP_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen, isWordIncluded } from '@/helper/utils.helper';
@@ -37,7 +37,6 @@ export default function MyUser({ getUser }) {
     setLoading(true);
 
     const usersData = await getUsersForAdmin(true);
-
     if (usersData?.error) {
       setLoading(false);
       return setToastMsg({ type: 'danger', message: `${usersData?.error}` });
@@ -124,7 +123,9 @@ export default function MyUser({ getUser }) {
       headerName: 'Role',
       flex: 0.5,
       renderCell: (params) => {
-        return <>{params?.row?.role || 'Learner'}</>;
+        return (
+          <span style={{ textTransform: 'capitalize' }}>{params?.row?.role || 'Learner'}</span>
+        );
       }
     },
     {
@@ -157,23 +158,26 @@ export default function MyUser({ getUser }) {
               { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
               // { handleClick: () => alert(`Edit ${params.id}`) },
               {
-                text: 'Disable',
+                text: params?.row?.lsp_status === USER_MAP_STATUS.disable ? 'Enable' : 'Disable',
                 handleClick: () => {
                   // const status = params?.row?.status;
                   const lspStatus = params?.row?.lsp_status;
-                  // console.log(status,'status',lspStatus)
+                  const isDisabled =
+                    lspStatus?.toLowerCase() === USER_MAP_STATUS.disable?.toLowerCase();
                   setNewUserAboutData(
                     // TODO: delete user here
                     getUserAboutObject({
                       ...params.row,
                       is_active: true,
-                      status: lspStatus?.length ? USER_STATUS.disable : 'Active'
+                      status: isDisabled ? USER_MAP_STATUS.activate : USER_MAP_STATUS.disable
                     })
                   );
-                  setCurrentDisabledUser(params?.row?.id);
+
+                  if (isDisabled) setCurrentDisabledUser(params?.row?.id);
                   setDisableAlert(true);
                 }
-              }
+              },
+              { text: 'Make Admin' }
             ]}
           />
         </>
@@ -207,17 +211,38 @@ export default function MyUser({ getUser }) {
 
       {disableAlert && (
         <ConfirmPopUp
-          title={`Are you sure you want to disable user with email ${newUserAboutData?.email}`}
+          title={`Are you sure you want to ${
+            newUserAboutData?.status === USER_MAP_STATUS?.disable ? 'disable' : 'enable'
+          } user with email ${newUserAboutData?.email}`}
           btnObj={{
             handleClickLeft: async () => {
               const a = await updateUserLsp();
               setDisableAlert(false);
               if (a) {
-                setDisabledUserList((prev) => [...prev, currentDisabledUser]);
+                const isDisabled = newUserAboutData?.status === USER_MAP_STATUS?.disable;
+
+                if (isDisabled) {
+                  setDisabledUserList((prev) => [...prev, currentDisabledUser]);
+                } else {
+                  const _allDisabledUsers = structuredClone(disabledUserList);
+                  const i = _allDisabledUsers?.findIndex(
+                    (userId) => userId === newUserAboutData?.id
+                  );
+                  if (i >= 0) _allDisabledUsers.splice(i, 1);
+                  setDisabledUserList(_allDisabledUsers);
+                }
                 setCurrentDisabledUser(null);
+
+                const _allUsers = structuredClone(data);
+                const i = _allUsers?.findIndex((user) => user?.id === newUserAboutData?.id);
+                if (i >= 0) _allUsers[i].lsp_status = newUserAboutData?.status;
+                setData(_allUsers);
+
                 return setToastMsg({
                   type: 'success',
-                  message: `Successfully disabled ${newUserAboutData?.email}`
+                  message: `Successfully ${isDisabled ? 'disable' : 'enable'} ${
+                    newUserAboutData?.email
+                  }`
                 });
               }
               if (a === undefined) return;
