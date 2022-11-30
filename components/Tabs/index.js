@@ -25,13 +25,17 @@ export default function CourseTabs() {
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
-  const [userOrgData,setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   // TODO: set to first tab when new course is opened
   // useEffect(() => {
   //   console.log(router);
   //   setTab(tabData[0].name);
   // }, [fullCourse?.id]);
+
+  useEffect(() => {
+    if (router.asPath === '/admin/courses') setTab(tabData[0].name);
+  }, []);
 
   useEffect(() => {
     setIsCourseSaved(false);
@@ -112,21 +116,6 @@ export default function CourseTabs() {
   //     Router.events.off('routeChangeStart', beforeRouteHandler);
   //   };
   // }, []);
-
-
-  useEffect(()=>{
-    
-    if(fullCourse?.lspId) return ;
-    courseContextData?.updateCourseMaster({ ...fullCourse, lspId:userOrgData?.lsp_id });
-    defaultLsp();
-  },[])
-
-  async function defaultLsp(){
-    const orgId = sessionStorage?.getItem('org_id');
-    const defaultLsp = await getDefaultLsp(orgId);
-    // console.log(defaultLsp)
-    setUserOrgData((prevValue)=>({...prevValue,defaultLsp:defaultLsp}))
-  }
 
   const displayTime =
     fullCourse.updated_at || fullCourse.created_at

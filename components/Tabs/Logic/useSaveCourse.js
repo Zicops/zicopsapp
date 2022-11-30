@@ -52,10 +52,6 @@ export default function useSaveCourse(courseContextData) {
   }, [tab]);
 
   useEffect(() => {
-    if (router.asPath === '/admin/courses') setTab(tabData[0].name);
-  }, []);
-
-  useEffect(() => {
     setIsLoading(null);
   }, []);
 
