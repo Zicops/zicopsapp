@@ -117,20 +117,6 @@ export default function CourseTabs() {
   //   };
   // }, []);
 
-  useEffect(() => {
-    if (fullCourse?.lspId) return;
-    courseContextData?.updateCourseMaster({ ...fullCourse, lspId: userOrgData?.lsp_id });
-
-    defaultLsp();
-  }, []);
-
-  async function defaultLsp() {
-    const orgId = sessionStorage?.getItem('org_id');
-    const defaultLsp = await getDefaultLsp(orgId);
-    // console.log(defaultLsp)
-    setUserOrgData((prevValue) => ({ ...prevValue, defaultLsp: defaultLsp }));
-  }
-
   const displayTime =
     fullCourse.updated_at || fullCourse.created_at
       ? `(at ${getDateTimeFromUnix(fullCourse.updated_at || fullCourse.created_at)})`
