@@ -184,12 +184,22 @@ section{
     position: relative;
     pointer-events: none;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     gap: 10px;
 }
+.mouse-cursor-gradient-tracking-btn span p{
+    display: flex;
+    flex-direction: column;
+    font-size: 22px;
+    font-weight: bold;
+}
+.mouse-cursor-gradient-tracking-btn span p small{
+    font-size: 16px;
+    font-weight: normal;
+}
 .mouse-cursor-gradient-tracking-btn span::after {
-    content: url(/static/img/arrow_forward.svg);
+    content: url(../../images/bigarrowrightblack.png);
 }
 
 .mouse-cursor-gradient-tracking-btn::before {
@@ -302,7 +312,7 @@ section{
     .first {
         width: 100%;
         min-height: 100vh;
-        background-color: #1a1b26;
+        background-color: #131518;
         position: relative;
         display: flex;
         justify-content: center;
@@ -311,7 +321,7 @@ section{
         overflow: hidden;
     }
 
-    .first p {
+    .first > p {
         color: white;
         font-size: 36px;
         text-align: center;
@@ -354,7 +364,9 @@ section{
 
     .slider-section {
         display: flex;
-        background-color: #1a1b26;
+        /* background-color: #1a1b26; */
+        background-color: #131518;
+        padding-top: 100px;
     }
 
     .slider-left {
@@ -386,9 +398,12 @@ section{
         color: white;
         text-align: center;
     }
+    .cta-under-slider p{
+        color: #868686;
+    }
 
     .mediumText {
-        font-size: 36px;
+        font-size: 28px;
         text-align: center;
         line-height: 45px;
     }
@@ -415,7 +430,7 @@ section{
     .section-with-text {
         width: 100%;
         min-height: 90vh;
-        background-color: #1a1b26;
+        background-color: #131518;
         position: relative;
         display: flex;
         justify-content: center;
@@ -446,6 +461,38 @@ section{
         color: #6bcfcf;
     }
 
+    .popup{
+        width: 800px;
+        height: 500px;
+
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 999;
+
+        background-color: #6a3bbb;
+        box-shadow: 0 0 10px 0px #00000080;
+        display: none;
+
+        border-radius: 20px;
+    }
+    .close-popup{
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background-color: #41FFFF;
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+        [data-id="branding"] {
+            display: none !important;
+        }
 /* Mobile Responsive */
 @media screen and (max-width: 500px) {
     nav ul, .buttons{
