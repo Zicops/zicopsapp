@@ -668,6 +668,20 @@ export function useUpdateUserAboutData() {
     return !isError;
   }
 
+  async function updateUserRole(userData = null) {
+    userData = userData ? userData : newUserAboutData;
+
+    console.log(userData,'sifhishfi')
+    const sendRoleData = {
+      user_role_id: userData?.roleData?.user_lsp_id,
+      user_id: userData?.id,
+      user_lsp_id: userData?.user_lsp_id,
+      role: "Admin",
+      is_active: true,
+    }
+    console.log(sendRoleData,'role data');
+  }
+
   async function updateAboutUser(userData = null) {
     userData = userData ? userData : newUserAboutData;
     const sendUserData = {
@@ -726,7 +740,8 @@ export function useUpdateUserAboutData() {
     isFormCompleted,
     updateAboutUser,
     updateMultiUserAbout,
-    updateUserLsp
+    updateUserLsp,
+    updateUserRole
   };
 }
 
