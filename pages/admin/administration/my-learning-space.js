@@ -31,14 +31,22 @@ export default function LspPage() {
   const [orgUnitUpdateData, setOrgUnitUpdateData] = useRecoilState(OrganizationUnitAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [selectedUser, setSelectedUser] = useState([]);
-  
-  useEffect(async () => {
-    const ouId = sessionStorage.getItem('ou_id');
+  const [showIcon , setShowIcon] = useState(false)
+  const get_Lsp_Details = async() => {
+     const ouId = sessionStorage.getItem('ou_id');
     const lspId = sessionStorage.getItem('lsp_id');
+    const userDetails = JSON.parse(sessionStorage.getItem('loggedUser'));
     const orgutdata = await getOuDetails([ouId])
     const lspdata = await getLspDetails([lspId])
+    console.log(lspdata);
     setLspUpdateData(lspdata?.getLearningSpaceDetails?.[0])
     setOrgUnitUpdateData(orgutdata?.getOrganizationUnits?.[0])
+    const getOwner = lspdata?.getLearningSpaceDetails?.[0]?.owners.map((owner) => owner)
+    console.log(getOwner)
+    console.log(userDetails.id)
+    if (getOwner?.map((owner)=> owner === userDetails.id ) ) {
+      setShowIcon(true)
+    }
     const lspData = [
     {
       inputName: 'name',
@@ -67,8 +75,13 @@ export default function LspPage() {
     }
     ];
     setLspDataArr(lspData)
+  }
+  
+  useEffect( () => {
+   get_Lsp_Details()
     // console.log(orgutdata?.getOrganizationUnits[0])
   }, [])
+
   
     async function updateLspDetails(lspData) {
        const res = await upadateLsp({ variables: lspData }).catch((err) => {
@@ -85,13 +98,14 @@ export default function LspPage() {
       console.log(res)
       return res;
   }
-  
+
     const handleUpdate = () => {
     console.log(lspUpdateData ,orgUnitUpdateData )
       updateLspDetails(lspUpdateData);
       updateOrgUnitDetails(orgUnitUpdateData)
       setIsEditable(false)
   }
+
 
   return (
     <>
@@ -100,7 +114,7 @@ export default function LspPage() {
         <AdminHeader title={lspUpdateData.name} pageRoute="/admin/administration" />
         <MainBodyBox>
           <div style={{ padding: '30px' }}>
-            <TextHeaderWithEditIcon headingText="Learning Space Details" handleClick={() => setIsEditable(!isEditable)} />
+            <TextHeaderWithEditIcon headingText="Learning Space Details" showIcon={showIcon} isEditable={isEditable} handleClick={() => setIsEditable(!isEditable)} />
             <AdminInfoWrapper
               data={lspDataArr}
               isEditable={isEditable}
