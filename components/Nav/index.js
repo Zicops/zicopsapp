@@ -16,13 +16,15 @@ import ToolTip from '../common/ToolTip';
 import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
 import { useLazyQuery } from '@apollo/client';
 import { userClient } from '@/api/UserMutations';
+import { useRecoilState } from 'recoil';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
 
   const [showNotification, setShowNotification] = useState(false);
   const notificationBarRef = useRef(null);
-  const [orgDetails, setOrgDetails] = useState([]);
+  const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
   const handleClickInside = () => setShowNotification(!showNotification);
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
@@ -31,15 +33,21 @@ export default function Nav() {
 
   const OrgDetails = async () => {
     const orgId = sessionStorage.getItem('org_id');
-    const res = await getOrgDetails({
-      variables: { org_ids: orgId }
-    }).catch((err) => {
-      console.error(err);
-    });
-    setOrgDetails(res?.data?.getOrganizations);
-    console.log(res?.data?.getOrganizations);
+    if (orgId) {
+      const res = await getOrgDetails({
+        variables: { org_ids: orgId }
+      }).catch((err) => {
+        console.error(err);
+      });
+      setOrgData((prevValue) => ({
+        ...prevValue,
+        logo_url: res?.data?.getOrganizations[0]?.logo_url
+      }));
+    }
   };
   useEffect(() => {
+    console.log(orgData);
+    if (orgData?.logo_url?.length) return;
     OrgDetails();
   }, []);
   useEffect(() => {
@@ -82,9 +90,7 @@ export default function Nav() {
               title={`${!isOnLearnerSide ? 'Go Back to Admin Home' : 'Go Back to Learner Home'}`}
               placement="bottom">
               {/* <img src="/images/zicops-header-logo.png" /> */}
-              {orgDetails?.map((data) => (
-                <img src={data?.logo_url || '/images/svg/asset-6.svg'} />
-              ))}
+              <img src={orgData?.logo_url || '/images/svg/asset-6.svg'} />
             </ToolTip>
           </a>
         </Link>

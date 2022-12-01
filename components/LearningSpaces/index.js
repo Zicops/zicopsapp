@@ -7,7 +7,13 @@ import LspCard from './LspCard';
 import { useLazyQuery } from '@apollo/client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import LoginHeadOne from '../ZicopsLogin/LoginHeadOne';
-import { GET_LSP_DETAILS, GET_ORGANIZATIONS_DETAILS, GET_USER_LEARNINGSPACES, GET_USER_LSP_ROLES, userQueryClient } from '@/api/UserQueries';
+import {
+  GET_LSP_DETAILS,
+  GET_ORGANIZATIONS_DETAILS,
+  GET_USER_LEARNINGSPACES,
+  GET_USER_LSP_ROLES,
+  userQueryClient
+} from '@/api/UserQueries';
 import { userClient } from '@/api/UserMutations';
 import { useRouter } from 'next/router';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
@@ -34,9 +40,9 @@ const LearningSpaces = () => {
   const [orgDetails, setOrgDetails] = useState([]);
   const [orgIds, setOrgIds] = useState([]);
   const [orglspData, setOrglspData] = useState([]);
-  const [userLspIds , setUserLspIds] = useState([]);
-  const [userRoles , setUserRoles] = useState([]);
-  const [ userDetails , setUserDetails] = useState({})
+  const [userLspIds, setUserLspIds] = useState([]);
+  const [userRoles, setUserRoles] = useState([]);
+  const [userDetails, setUserDetails] = useState({});
   const [getUserLsp] = useLazyQuery(GET_USER_LEARNINGSPACES, {
     client: userClient
   });
@@ -68,10 +74,15 @@ const LearningSpaces = () => {
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
     setUserLspIds(_userLspIds);
-    if(!_userLspIds?.length) return;
-    const resRole = await loadQueryDataAsync(GET_USER_LSP_ROLES,{user_id:userData?.id , user_lsp_ids:_userLspIds},{},userQueryClient);
-    setUserRoles([...resRole?.getUserLspRoles])
-    console.log(resRole,'roles');
+    if (!_userLspIds?.length) return;
+    const resRole = await loadQueryDataAsync(
+      GET_USER_LSP_ROLES,
+      { user_id: userData?.id, user_lsp_ids: _userLspIds },
+      {},
+      userQueryClient
+    );
+    setUserRoles([...resRole?.getUserLspRoles]);
+    console.log(resRole, 'roles');
   };
 
   const LspDetails = async () => {
@@ -83,7 +94,7 @@ const LearningSpaces = () => {
     setLspsDetails(res?.data?.getLearningSpaceDetails);
     const _orgArr = [];
     res?.data?.getLearningSpaceDetails?.map((data) => {
-      if(data.is_default) return
+      if (data.is_default) return;
       _orgArr.push(data.org_id);
     });
     setOrgIds(_orgArr);
@@ -100,9 +111,8 @@ const LearningSpaces = () => {
     console.log(res?.data);
   };
 
-
   useEffect(() => {
-    setUserGlobalData((prevValue) => ({...prevValue,isPrefAdded:false,isOrgAdded:false}));
+    setUserGlobalData((prevValue) => ({ ...prevValue, isPrefAdded: false, isOrgAdded: false }));
     if (!domainArr.includes(URL)) return;
     UserLsp();
   }, []);
@@ -120,7 +130,9 @@ const LearningSpaces = () => {
 
   useEffect(() => {
     if (!orgDetails.length) return;
-    const _newArr = orgDetails?.map((item, i) => Object.assign({}, item, lspsDetails[i]));
+    const _newArr = orgDetails?.map((item, i) =>
+      Object.assign({}, item, { org_logo_url: item.logo_url }, lspsDetails[i])
+    );
     setOrglspData(_newArr);
   }, [orgDetails]);
 
@@ -128,7 +140,7 @@ const LearningSpaces = () => {
     <div className={`${styles.loginMainContainer}`}>
       <div className={`${styles.ZicopsLogo}`}>
         <Link href="/home">
-        <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} />
+          <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} />
         </Link>
       </div>
       <div className={`${styles.zicops_login}`}>
@@ -150,14 +162,15 @@ const LearningSpaces = () => {
               lspId={data.lsp_id}
               lspName={data.name}
               orgId={data.org_id}
+              logo={data.org_logo_url}
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
               userLspRole={userRoles?.[index]?.role}
             />
           ))}
           <>
-          {/* only for owners to request for creating new lsp */}
-          {/* {userDetails?.role === "Admin" && <AddLsp />} */}
+            {/* only for owners to request for creating new lsp */}
+            {/* {userDetails?.role === "Admin" && <AddLsp />} */}
           </>
         </div>
       </div>

@@ -52,7 +52,7 @@ export function getUserOrgObject(data = {}) {
     organization_name: data?.organization_name,
     organization_unit: data?.organization_unit || '',
     learningSpace_name: data?.learningSpace_name || '',
-
+    logo_url: data?.logo_url || '',
     user_organization_id: data?.user_organization_id || '',
     organization_id: data?.organization_id || '',
     organization_role: data?.organization_role || '',
