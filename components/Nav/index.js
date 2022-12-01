@@ -82,7 +82,7 @@ export default function Nav() {
               title={`${!isOnLearnerSide ? 'Go Back to Admin Home' : 'Go Back to Learner Home'}`}
               placement="bottom">
               {/* <img src="/images/zicops-header-logo.png" /> */}
-              {orgDetails.map((data) => (
+              {orgDetails?.map((data) => (
                 <img src={data?.logo_url || '/images/svg/asset-6.svg'} />
               ))}
             </ToolTip>
