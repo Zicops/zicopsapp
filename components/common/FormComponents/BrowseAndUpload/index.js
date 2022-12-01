@@ -19,6 +19,7 @@ export default function BrowseAndUpload({
   acceptedTypes = IMAGE_FILE_TYPES,
   hidePreviewBtns = false,
   hideRemoveBtn = false,
+  isDisabled = false,
   shouldShowPreview = true
 }) {
   const inputRef = useRef();
@@ -47,6 +48,7 @@ export default function BrowseAndUpload({
           ref={inputRef}
           name={inputName}
           accept={acceptedTypes}
+          disabled={isDisabled}
           onChange={(e) => {
             let fileTypes = acceptedTypes
               ?.split(', ')
