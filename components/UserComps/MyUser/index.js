@@ -77,35 +77,39 @@ export default function MyUser({ getUser , isAdministration = false , customStyl
       flex: 2,
       renderHeader: (params) => (
         <div className="center-elements-with-flex">
-          <LabeledRadioCheckbox
-            type="checkbox"
-            isChecked={data?.length !== 0 && selectedUser.length === data.length}
-            changeHandler={(e) => {
-              setSelectedUser(e.target.checked ? [...data.map((row) => row)] : []);
-            }}
-          />
+          {!isAdministration &&
+            <LabeledRadioCheckbox
+              type="checkbox"
+              isChecked={data?.length !== 0 && selectedUser.length === data.length}
+              changeHandler={(e) => {
+                setSelectedUser(e.target.checked ? [...data.map((row) => row)] : []);
+              }}
+            />
+          }
           Email Id
         </div>
       ),
       renderCell: (params) => {
         return (
           <div className="center-elements-with-flex">
-            <LabeledRadioCheckbox
-              type="checkbox"
-              isChecked={selectedUser?.find((u) => u?.id === params.id)}
-              changeHandler={(e) => {
-                const userList = [...selectedUser];
+            {!isAdministration &&
+              <LabeledRadioCheckbox
+                type="checkbox"
+                isChecked={selectedUser?.find((u) => u?.id === params.id)}
+                changeHandler={(e) => {
+                  const userList = [...selectedUser];
 
-                if (e.target.checked) {
-                  userList.push(params?.row);
-                } else {
-                  const index = userList.findIndex((u) => u?.id === params.id);
-                  userList.splice(index, 1);
-                }
+                  if (e.target.checked) {
+                    userList.push(params?.row);
+                  } else {
+                    const index = userList.findIndex((u) => u?.id === params.id);
+                    userList.splice(index, 1);
+                  }
 
-                setSelectedUser(userList);
-              }}
-            />
+                  setSelectedUser(userList);
+                }}
+              />
+            }
             {params.row?.email}
           </div>
         );
@@ -152,7 +156,11 @@ export default function MyUser({ getUser , isAdministration = false , customStyl
         );
       }
     },
-    {
+   
+  ];
+  if (!isAdministration) {
+    columns.push(
+       {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
@@ -189,8 +197,8 @@ export default function MyUser({ getUser , isAdministration = false , customStyl
         </>
       )
     }
-  ];
-
+    )
+  } 
   const options = [
     { label: 'Email', value: 'email' },
     { label: 'First Name', value: 'first_name' },
