@@ -61,7 +61,7 @@ export default function SmallCard({
         onMouseLeave={handleMouseLeave}>
         {/* remove image later */}
         <div className="smallCard">
-          <div className="smallCardWrapper">
+          {/* <div className="smallCardWrapper">
             <div className="banner">
               {courseData?.type?.split('-').join(' ') || (!notext ? 'Self Paced' : 'Labs')}
             </div>
@@ -73,7 +73,7 @@ export default function SmallCard({
               ''
             )}
             {!notext ? <div className="courseowner">{courseData.owner || 'Scripting'}</div> : ''}
-          </div>
+          </div> */}
           <img src={courseData.tileImage || image || '/images/dnd1.jpg'} alt="" />
           {/* <LinearProgress
             sx={{
