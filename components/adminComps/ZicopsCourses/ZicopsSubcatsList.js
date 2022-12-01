@@ -4,9 +4,10 @@ import PopUp from '@/components/common/PopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { ApolloProvider } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { queryClient } from '../../../API/Queries';
 import { isWordIncluded, TableResponsiveRows } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
@@ -18,6 +19,7 @@ function ZicopsSubCategoryList() {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCol, setFilterCol] = useState('SubCatName');
+  const userOrg = useRecoilValue(UsersOrganizationAtom);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
 
   useEffect(() => {
@@ -38,7 +40,7 @@ function ZicopsSubCategoryList() {
   }, [popUpState]);
 
   useEffect(() => {
-    if (!catSubCat?.allSubCat?.length) return;
+    if (!catSubCat?.allSubCat?.length) return setData([]);
     const _data = [];
 
     structuredClone(catSubCat?.allSubCat)
@@ -55,6 +57,7 @@ function ZicopsSubCategoryList() {
     setData(_data);
   }, [catSubCat]);
 
+  const _lspId = userOrg?.lsp_id;
   const columns = [
     {
       field: 'index',
@@ -82,23 +85,25 @@ function ZicopsSubCategoryList() {
       renderCell: (params) => {
         return (
           <>
-            <button
-              onClick={() => udpatePopUpState(params?.row)}
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0'
-              }}>
-              <img src="/images/svg/edit-box-line.svg" width={20}></img>
-            </button>
-            <DeleteBtn
+            {_lspId === params?.row?.LspId && (
+              <button
+                onClick={() => udpatePopUpState(params?.row)}
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0'
+                }}>
+                <img src="/images/svg/edit-box-line.svg" width={20}></img>
+              </button>
+            )}
+            {/* <DeleteBtn
               id={params?.id}
               variableObj={{ cat_id: params?.row?.CatId }}
               resKey="deleteSubCatMain"
               mutation={DELETE_SUB_CAT_MAIN}
               onDelete={() => setRefetch(true)}
-            />
+            /> */}
           </>
         );
       }

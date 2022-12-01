@@ -63,7 +63,28 @@ export function useHandleCatSubCat(selectedCategory) {
     // if (Object.keys(catSubCat?.subCatGrp || {})?.length) return setCatSubCatState(catSubCat);
     // console.log('fetch');
 
-    const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
+    const _lspId = sessionStorage?.getItem('lsp_id');
+    const zltplPune = '6bc01264-07c2-518e-9b1e-a6fd54249132';
+
+    const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      lsp_ids: [zltplPune]
+    });
+    const currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      lsp_ids: [_lspId]
+    });
+    // zicops lsp cat subcat
+    const zicopsCats = (await zicopsLspData)?.allCatMain || [];
+    const zicopsSubCats = (await zicopsLspData)?.allSubCatMain || [];
+
+    // current lsp cat subcat
+    const currentLspCats = (await currentLspData)?.allCatMain || [];
+    const currentLspSubCats = (await currentLspData)?.allSubCatMain || [];
+
+    // merging both lsp cat subcat
+    const catAndSubCatRes = { allSubCatMain: [], allCatMain: [] };
+    catAndSubCatRes.allCatMain.push(...[...zicopsCats, ...currentLspCats]);
+    catAndSubCatRes.allSubCatMain.push(...[...zicopsSubCats, ...currentLspSubCats]);
+
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
       return { ...subCat, value: subCat?.Name, label: subCat?.Name };
@@ -671,15 +692,15 @@ export function useUpdateUserAboutData() {
   async function updateUserRole(userData = null) {
     userData = userData ? userData : newUserAboutData;
 
-    console.log(userData,'sifhishfi')
+    console.log(userData, 'sifhishfi');
     const sendRoleData = {
       user_role_id: userData?.roleData?.user_lsp_id,
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      role: "Admin",
-      is_active: true,
-    }
-    console.log(sendRoleData,'role data');
+      role: 'Admin',
+      is_active: true
+    };
+    console.log(sendRoleData, 'role data');
   }
 
   async function updateAboutUser(userData = null) {
