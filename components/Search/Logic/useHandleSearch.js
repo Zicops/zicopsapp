@@ -70,8 +70,13 @@ export default function useHandleSearch() {
       );
       return;
     }
-
-    const queryVariables = { publish_time: time, pageSize: 999, pageCursor: '', filters: {} };
+    const _lspId = sessionStorage?.getItem('lsp_id');
+    const queryVariables = {
+      publish_time: time,
+      pageSize: 999,
+      pageCursor: '',
+      filters: { LspId: _lspId }
+    };
     if (searchQuery) {
       queryVariables.filters.SearchText = searchQuery;
       setBookmarkData({ ...bookmarkData, isLoading: true });

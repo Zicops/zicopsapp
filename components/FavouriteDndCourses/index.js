@@ -76,8 +76,14 @@ export default function FavouriteDndCourses({ isLoading }) {
 
   async function loadCourses() {
     const userLspId = sessionStorage.getItem('user_lsp_id');
+    const _lspId = sessionStorage?.getItem('lsp_id');
     setLoading(true);
-    const queryVariables = { publish_time: getUnixFromDate(), pageSize: 9999999, pageCursor: '' };
+    const queryVariables = {
+      publish_time: getUnixFromDate(),
+      pageSize: 9999999,
+      pageCursor: '',
+      filters: { LspId: _lspId }
+    };
     let isError = false;
     const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables).catch((err) => {
       isError = !!err;
@@ -105,7 +111,8 @@ export default function FavouriteDndCourses({ isLoading }) {
     let userCourses = [];
     if (_userCourses?.length)
       userCourses = _userCourses?.filter(
-        (course) => course?.course_status?.toLowerCase() !== 'disabled' || course?.user_lsp_id === userLspId
+        (course) =>
+          course?.course_status?.toLowerCase() !== 'disabled' || course?.user_lsp_id === userLspId
       );
     const userCourseMaps = userCourses || [];
     const assignedCourses = [];
@@ -245,7 +252,7 @@ export default function FavouriteDndCourses({ isLoading }) {
                   mb={0.5}
                   sx={{
                     // transform: !isDrag ? 'translate(0, 0)' :
-                    opacity: isDrag ? '0' : '1',
+                    opacity: isDrag ? '0' : '1'
                     // transition: 'display 0.1s'
                   }}>
                   Drag your favourite course in folder

@@ -17,13 +17,18 @@ import {
 import { userClient } from '@/api/UserMutations';
 import { useRouter } from 'next/router';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
-import { UserDataAtom } from '@/state/atoms/global.atom';
+import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { loadQueryData, loadQueryDataAsync } from '@/helper/api.helper';
 import Link from 'next/link';
+import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
+import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 const LearningSpaces = () => {
   const { asPath } = useRouter();
+  const { logOut } = useAuthUserContext();
 
-  const [userGlobalData,setUserGlobalData] = useRecoilState(UserDataAtom); 
+  const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
+  const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  // const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const origin =
     typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
 
@@ -139,9 +144,20 @@ const LearningSpaces = () => {
   return (
     <div className={`${styles.loginMainContainer}`}>
       <div className={`${styles.ZicopsLogo}`}>
-        <Link href="/home">
-          <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} />
-        </Link>
+        <div>
+          <Link href="/home">
+            <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} />
+          </Link>
+        </div>
+        <div
+          className={`${styles.LogoutButton}`}
+          onClick={() => {
+            setUserGlobalData(getUserGlobalDataObj());
+            setUserProfileData(getUserObject());
+            logOut();
+          }}>
+          Logout
+        </div>
       </div>
       <div className={`${styles.zicops_login}`}>
         <LoginHeadOne

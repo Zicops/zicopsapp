@@ -30,7 +30,6 @@ export default function CourseMaster() {
   const router = useRouter();
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
-
   // cat and sub cat
   // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
   // update sub cat based on cat
@@ -183,32 +182,29 @@ export default function CourseMaster() {
         />
       </div> */}
 
-      <div style={{display:'flex'}}>
-        <div className={`w-25`}>
-          Privacy Settings
-        </div>
-        <div className={`w-75`} style={{display:'flex',gap:'100px'}}>
+      <div style={{ display: 'flex' }}>
+        <div className={`w-25`}>Privacy Settings</div>
+        <div className={`w-75`} style={{ display: 'flex', gap: '100px' }}>
           <LabeledRadioCheckbox
             type="radio"
             label="Organisation Level"
             name="lspId"
             isChecked={fullCourse?.lspId === userOrgData?.defaultLsp}
-            changeHandler={
-              (e) => {
-                updateCourseMaster({ ...fullCourse,lspId:userOrgData?.defaultLsp});
-              }
-            }
+            // isDisabled={!!fullCourse?.id}
+            isDisabled={true}
+            changeHandler={(e) => {
+              updateCourseMaster({ ...fullCourse, lspId: userOrgData?.defaultLsp });
+            }}
           />
           <LabeledRadioCheckbox
             type="radio"
             label="Learning Space Level"
             name="lspId"
             isChecked={fullCourse?.lspId === userOrgData?.lsp_id}
-            changeHandler={
-              (e) => {
-                updateCourseMaster({ ...fullCourse, lspId:userOrgData?.lsp_id });
-              }
-            }
+            isDisabled={true}
+            changeHandler={(e) => {
+              updateCourseMaster({ ...fullCourse, lspId: userOrgData?.lsp_id });
+            }}
           />
         </div>
       </div>
