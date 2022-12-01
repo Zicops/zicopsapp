@@ -20,10 +20,11 @@ export default function MyUser({ getUser , isAdministration = false , customStyl
   const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
+  const [isMakeAdminAlert, setIsMakeAdminAlert] = useState(false);
   const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
   const [currentDisabledUser, setCurrentDisabledUser] = useState(null);
 
-  const { newUserAboutData, setNewUserAboutData, updateAboutUser, updateUserLsp, isFormCompleted } =
+  const { newUserAboutData, setNewUserAboutData, updateAboutUser, updateUserLsp, isFormCompleted, updateUserRole} =
     useUpdateUserAboutData();
 
   const [isLoading, setLoading] = useState(true);
@@ -157,37 +158,42 @@ export default function MyUser({ getUser , isAdministration = false , customStyl
       headerClassName: 'course-list-header',
       headerName: 'Action',
       flex: 0.4,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const buttonArr = [
+          { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
+          // { handleClick: () => alert(`Edit ${params.id}`) },
+          {
+            text: params?.row?.lsp_status === USER_MAP_STATUS.disable ? 'Enable' : 'Disable',
+            handleClick: () => {
+              // const status = params?.row?.status;
+              const lspStatus = params?.row?.lsp_status;
+              const isDisabled =
+                lspStatus?.toLowerCase() === USER_MAP_STATUS.disable?.toLowerCase();
+              setNewUserAboutData(
+                // TODO: delete user here
+                getUserAboutObject({
+                  ...params.row,
+                  is_active: true,
+                  status: isDisabled ? USER_MAP_STATUS.activate : USER_MAP_STATUS.disable
+                })
+              );
+
+              if (isDisabled) setCurrentDisabledUser(params?.row?.id);
+              setDisableAlert(true);
+            }
+          }
+        ];
+
+        if(params?.row?.role?.toLowerCase() === 'learner'){
+          buttonArr.push({text:'Make Admin', handleClick:()=>{setIsMakeAdminAlert(true),updateUserRole(params?.row)}})
+        }
+       return (
         <>
           <EllipsisMenu
-            buttonArr={[
-              { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
-              // { handleClick: () => alert(`Edit ${params.id}`) },
-              {
-                text: params?.row?.lsp_status === USER_MAP_STATUS.disable ? 'Enable' : 'Disable',
-                handleClick: () => {
-                  // const status = params?.row?.status;
-                  const lspStatus = params?.row?.lsp_status;
-                  const isDisabled =
-                    lspStatus?.toLowerCase() === USER_MAP_STATUS.disable?.toLowerCase();
-                  setNewUserAboutData(
-                    // TODO: delete user here
-                    getUserAboutObject({
-                      ...params.row,
-                      is_active: true,
-                      status: isDisabled ? USER_MAP_STATUS.activate : USER_MAP_STATUS.disable
-                    })
-                  );
-
-                  if (isDisabled) setCurrentDisabledUser(params?.row?.id);
-                  setDisableAlert(true);
-                }
-              },
-              { text: 'Make Admin' }
-            ]}
+            buttonArr={buttonArr}
           />
         </>
-      )
+      )}
     }
   ];
 
@@ -262,6 +268,10 @@ export default function MyUser({ getUser , isAdministration = false , customStyl
           }}
         />
       )}
+      {isMakeAdminAlert && <ConfirmPopUp title={`Are you sure you want to make ${newUserAboutData?.email} an Admin`} btnObj={{
+        handleClickLeft: async()=>{},
+        handleClickRight: () => setIsMakeAdminAlert(false)
+      }} />}
     </>
   );
 }
