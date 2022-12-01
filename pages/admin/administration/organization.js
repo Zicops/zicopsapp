@@ -29,8 +29,11 @@ export default function OrgPage() {
   const [allLspData, setAllLspData] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [pageSize, setPageSize] = useState(6);
+   const [showIcon , setShowIcon] = useState(false)
   useEffect(async () => {
     const orgId = sessionStorage.getItem('org_id');
+    const userDetails = JSON.parse(sessionStorage.getItem('loggedUser'));
+    const lspId = sessionStorage.getItem('lsp_id');
     const data = await getOrgDetails([orgId]);
     const lspData = await getLsps(orgId);
     setOrgUpdateData(data?.getOrganizations?.[0]);
@@ -39,7 +42,11 @@ export default function OrgPage() {
     })?.filter((data) => data.id)
     const _newLspData = lspdata.filter((data)=> !data.is_default)
     setAllLspData(_newLspData);
-
+    const getOwner = lspData?.getLearningSpacesByOrgId?.filter((data) =>data?.lsp_id === lspId)
+    console.log(getOwner?.[0].owners)
+      if (getOwner?.[0]?.owners?.map((owner)=> owner === userDetails.id )) {
+      setShowIcon(true)
+    }
     const _orgData = [
       {
         inputName: 'industry',
@@ -65,6 +72,21 @@ export default function OrgPage() {
         inputName: 'subdomain',
         info: data?.getOrganizations?.[0].subdomain,
         label: 'Subdomain'
+      },
+      {
+        inputName: 'facebook_url',
+        info: data?.getOrganizations?.[0].facebook_url,
+        label: 'Facebook Url'
+      },
+      {
+        inputName: 'linkedin_url',
+        info: data?.getOrganizations?.[0].linkedin_url,
+        label: 'Linkedin Url'
+      },
+      {
+        inputName: 'twitter_url',
+        info: data?.getOrganizations?.[0].twitter_url,
+        label: 'Twitter Url'
       }
     ];
     setOrgData(_orgData);
@@ -78,7 +100,7 @@ export default function OrgPage() {
     return res;
   }
   const handleUpdate = () => {
-    // console.log(orgUpdateData);
+    console.log(orgUpdateData);
     updateOrgDetails(orgUpdateData);
     setIsEditable(false);
   };
@@ -188,6 +210,7 @@ export default function OrgPage() {
             <TextHeaderWithEditIcon
               headingText="Organization Details"
               handleClick={() => setIsEditable(!isEditable)}
+              showIcon={showIcon}
               isEditable={isEditable}
             />
             <AdminInfoWrapper data={orgData} isEditable={isEditable} handleUpdate={handleUpdate} />
