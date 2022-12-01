@@ -100,7 +100,7 @@ export default function LspPage() {
         <AdminHeader title={lspUpdateData.name} pageRoute="/admin/administration" />
         <MainBodyBox>
           <div style={{ padding: '30px' }}>
-            <TextHeaderWithEditIcon headingText="Learning Space Details" handleClick={() => setIsEditable(!isEditable)} />
+            <TextHeaderWithEditIcon headingText="Learning Space Details" isEditable={isEditable} handleClick={() => setIsEditable(!isEditable)} />
             <AdminInfoWrapper
               data={lspDataArr}
               isEditable={isEditable}

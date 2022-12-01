@@ -38,7 +38,6 @@ export default function OrgPage() {
       return {...data, id: data?.lsp_id}; 
     })?.filter((data) => data.id)
     const _newLspData = lspdata.filter((data)=> !data.is_default)
-    console.log(_newLspData)
     setAllLspData(_newLspData);
 
     const _orgData = [
@@ -69,7 +68,6 @@ export default function OrgPage() {
       }
     ];
     setOrgData(_orgData);
-    console.log(allLspData);
   }, []);
 
   async function updateOrgDetails(orgData) {
@@ -77,11 +75,10 @@ export default function OrgPage() {
       console.log(err, 'error at update user');
       return setToastMsg({ type: 'danger', message: 'user is a not zicops admin: Unauthorized' });
     });
-    console.log(res);
     return res;
   }
   const handleUpdate = () => {
-    console.log(orgUpdateData);
+    // console.log(orgUpdateData);
     updateOrgDetails(orgUpdateData);
     setIsEditable(false);
   };
@@ -191,6 +188,7 @@ export default function OrgPage() {
             <TextHeaderWithEditIcon
               headingText="Organization Details"
               handleClick={() => setIsEditable(!isEditable)}
+              isEditable={isEditable}
             />
             <AdminInfoWrapper data={orgData} isEditable={isEditable} handleUpdate={handleUpdate} />
             <TextHeaderWithEditIcon headingText={`Learning Spaces (${allLspData.length})`}  showIcon={false} />
