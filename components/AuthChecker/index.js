@@ -110,15 +110,22 @@ const AuthChecker = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!router.asPath?.includes('admin')) return;
+
+    const _userLspRole = sessionStorage?.getItem('user_lsp_role');
+    if (!_userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
+  }, [router?.asPath]);
+
   function lspCheck() {
     if (userOrg?.lsp_id) return;
 
     const _lspId = sessionStorage?.getItem('lsp_id');
     const _userLspId = sessionStorage?.getItem('user_lsp_id');
-    
+
     if (!_lspId) return router.push('/learning-spaces');
 
-    return setUserOrg((prevValue) => ({ ...prevValue, lsp_id: _lspId , user_lsp_id: _userLspId }));
+    return setUserOrg((prevValue) => ({ ...prevValue, lsp_id: _lspId, user_lsp_id: _userLspId }));
   }
 
   function authCheck(url) {
@@ -147,6 +154,7 @@ const AuthChecker = ({ children }) => {
       return;
     } else {
       // lspCheck();
+
       setAuthorized(true);
     }
   }
