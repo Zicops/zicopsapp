@@ -101,7 +101,7 @@ function MyLatestCourseList({ time, searchParam }) {
       );
       setLatestCourse(_latestCourses);
     });
-  }, [userOrgData?.lsp_id]);
+  }, [userOrgData?.lsp_id, searchParam]);
 
   const [loadMyCourses, { loading }] = useLazyQuery(GET_LATEST_COURSES, {
     client: queryClient

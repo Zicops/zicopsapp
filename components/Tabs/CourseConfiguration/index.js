@@ -11,17 +11,17 @@ import useHandleConfig from './Logic/useHandleConfig';
 
 export default function CourseConfiguration() {
   const courseContextData = useContext(courseContext);
-  const { publishDate, expireDate, setPublishDate, setExpireDate } =
-    useHandleConfig(courseContextData);
+  // const { publishDate, expireDate, setPublishDate, setExpireDate } =
+  //   useHandleConfig(courseContextData);
 
-    const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
+  const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
 
-    const [showConfirmBox, setShowConfirmBox] = useState(false);
+  // const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   return (
     <>
-      <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        {/* publis date */}
+      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
+        {/* publis date *
         <>
           <label htmlFor="publish_date" className={`w-25`}>
             Publish Date
@@ -35,7 +35,7 @@ export default function CourseConfiguration() {
           </div>
         </>
 
-        {/* expiry date */}
+        {/* expiry date *
         <>
           <label htmlFor="expire_date" className={`w-25`}>
             Expire Date
@@ -48,7 +48,7 @@ export default function CourseConfiguration() {
             />
           </div>
         </>
-      </div>
+      </div> */}
 
       {/* Quality Control Check */}
       <div className={`center-element-with-flex ${styles.marginBottom}`}>
@@ -58,9 +58,10 @@ export default function CourseConfiguration() {
 
         <div className="w-75">
           <SwitchButton
-            inputName="quality"
-            // isChecked={false}
-            // handleChange={handleChange}
+            label="Freeze"
+            inputName="qa_required"
+            isChecked={fullCourse?.qa_required || false}
+            handleChange={handleChange}
           />
         </div>
       </div>
@@ -73,9 +74,10 @@ export default function CourseConfiguration() {
 
         <div className="w-75">
           <SwitchButton
-            inputName="visible"
-            // isChecked={false}
-            // handleChange={handleChange}
+            label="Display"
+            inputName="is_display"
+            isChecked={fullCourse?.is_display || false}
+            handleChange={handleChange}
           />
         </div>
 
@@ -99,7 +101,7 @@ export default function CourseConfiguration() {
         />
       </div> */}
       </div>
-      {showConfirmBox && (
+      {/* {showConfirmBox && (
         <ConfirmPopUp
           title={
             'Are you sure about deleting this course? This will delete the course permanently!'
@@ -118,7 +120,7 @@ export default function CourseConfiguration() {
             handleClickRight: () => setShowConfirmBox(false)
           }}
         />
-      )}
+      )} */}
     </>
   );
 }

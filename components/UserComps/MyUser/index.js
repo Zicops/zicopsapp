@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
-export default function MyUser({ getUser , isAdministration = false , customStyle = {} }) {
+export default function MyUser({ getUser, isAdministration = false, customStyle = {} }) {
   const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
@@ -56,11 +56,12 @@ export default function MyUser({ getUser , isAdministration = false , customStyl
       user.roleData = res?.getUserLspRoles?.[0];
     }
     let users = [];
-    if(isAdministration){
+    if (isAdministration) {
       users = usersData?.filter((user) => user?.role?.toLowerCase() === 'admin');
       // console.log(users,'users')
+    } else {
+      users = [...usersData];
     }
-    else{users = [...usersData];}
     setLoading(false);
     setData(sortArrByKeyInOrder([...users], 'created_at', false));
     return;
@@ -144,11 +145,11 @@ export default function MyUser({ getUser , isAdministration = false , customStyl
         if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
         const lspStatus = params?.row?.lsp_status?.toLowerCase();
         return (
-          <>
+          <span style={{ textTransform: 'capitalize' }}>
             {lspStatus === 'disabled' || lspStatus === 'disable' || status === 'disable'
               ? 'Disabled'
-              : params?.row?.status || 'Invited'}
-          </>
+              : params?.row?.lsp_status || 'Invited'}
+          </span>
         );
       }
     },

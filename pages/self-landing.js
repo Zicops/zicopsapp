@@ -51,12 +51,13 @@ export default function Self() {
   const { catSubCat, setActiveCatId } = useHandleCatSubCat();
 
   async function getLatestCoursesByFilters(filters, pageSize = 28) {
+    const _lspId = sessionStorage?.getItem('lsp_id');
     // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
     const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
       publish_time: time,
       pageSize: pageSize,
       pageCursor: '',
-      filters: filters
+      filters: { LspId: _lspId, ...filters }
     });
     return courses;
   }
