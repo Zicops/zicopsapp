@@ -13,15 +13,35 @@ import Notifications from '../Notifications';
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import UserDisplay from './UserDisplay';
 import ToolTip from '../common/ToolTip';
+import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
+import { useLazyQuery } from '@apollo/client';
+import { userClient } from '@/api/UserMutations';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
 
   const [showNotification, setShowNotification] = useState(false);
   const notificationBarRef = useRef(null);
-
+  const [orgDetails, setOrgDetails] = useState([]);
   const handleClickInside = () => setShowNotification(!showNotification);
 
+  const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
+    client: userClient
+  });
+
+  const OrgDetails = async () => {
+    const orgId = sessionStorage.getItem('org_id');
+    const res = await getOrgDetails({
+      variables: { org_ids: orgId }
+    }).catch((err) => {
+      console.error(err);
+    });
+    setOrgDetails(res?.data?.getOrganizations);
+    console.log(res?.data?.getOrganizations);
+  };
+  useEffect(() => {
+    OrgDetails();
+  }, []);
   useEffect(() => {
     const handleClickOutside = (e) => {
       // console.log(e.target, notificationBarRef.current);
@@ -61,8 +81,10 @@ export default function Nav() {
             <ToolTip
               title={`${!isOnLearnerSide ? 'Go Back to Admin Home' : 'Go Back to Learner Home'}`}
               placement="bottom">
-                {/* <img src="/images/zicops-header-logo.png" /> */}
-              <img src="/images/svg/asset-6.svg" />
+              {/* <img src="/images/zicops-header-logo.png" /> */}
+              {orgDetails.map((data) => (
+                <img src={data?.logo_url || '/images/svg/asset-6.svg'} />
+              ))}
             </ToolTip>
           </a>
         </Link>
