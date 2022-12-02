@@ -2,11 +2,17 @@ import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { setContext } from '@apollo/client/link/context';
 import { getIdToken, onAuthStateChanged } from 'firebase/auth';
-import { LEARNING_SPACE_ID } from '../helper/constants.helper';
+
+const API_BASE = 'https://demo.zicops.com';
+export const API_LINKS = {
+  notification: `${API_BASE}/ns/api/v1/query`,
+  courseCreator: `${API_BASE}/cc/api/v1/query`,
+  courseQuery: `${API_BASE}/cq/api/v1/query`,
+  userClient: `${API_BASE}/um/api/v1/query`
+};
 
 export async function getLatestToken(token) {
   if (token) {
-
     const data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
     // getting renewed token before time expire
     const expTime = data?.exp - 60;
