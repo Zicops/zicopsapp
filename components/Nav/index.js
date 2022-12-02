@@ -33,6 +33,7 @@ export default function Nav() {
 
   const OrgDetails = async () => {
     const orgId = sessionStorage.getItem('org_id');
+    if (!orgId) return;
       const res = await getOrgDetails({
         variables: { org_ids: orgId }
       }).catch((err) => {
@@ -44,7 +45,6 @@ export default function Nav() {
       }));
   };
   useEffect(() => {
-    console.log(orgData);
     if (orgData?.logo_url?.length) return;
     OrgDetails();
   }, []);

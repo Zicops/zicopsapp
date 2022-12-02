@@ -124,17 +124,17 @@ const LearningSpaces = () => {
 
   useEffect(() => {
     if (!domainArr.includes(URL)) return;
-    if (!lspIds.length) return;
+    if (!lspIds?.length) return;
     LspDetails();
   }, [lspIds]);
 
   useEffect(() => {
-    if (!orgIds.length) return;
+    if (!orgIds?.length) return;
     OrgDetails();
   }, [orgIds]);
 
   useEffect(() => {
-    if (!orgDetails.length) return;
+    if (!orgDetails?.length) return;
     const _newArr = orgDetails?.map((item, i) =>
       Object.assign({}, item, { org_logo_url: item.logo_url }, lspsDetails[i])
     );
