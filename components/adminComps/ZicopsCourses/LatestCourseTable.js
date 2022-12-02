@@ -34,7 +34,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
         publish_time: time,
         pageSize: 1000,
         pageCursor: '',
-        status: courseStatus,
+        status: zicopsLspId ? COURSE_STATUS.publish : courseStatus,
         filters: {
           Type: courseType,
           SearchText: searchParam?.trim(),
@@ -127,6 +127,11 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
     }
   ];
 
+  const filterOptions = [
+    { label: 'Saved', value: COURSE_STATUS.save },
+    { label: 'Published', value: COURSE_STATUS.publish }
+  ];
+
   return (
     <>
       <ZicopsTable
@@ -144,12 +149,10 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
             { label: 'Category', value: 'Category' }
           ],
           handleSearch: (val) => setSearchParam(val),
-          filterOptions: [
-            { label: 'Saved', value: COURSE_STATUS.save },
-            { label: 'Published', value: COURSE_STATUS.publish }
-          ],
+          filterOptions: !zicopsLspId ? filterOptions : [],
           handleFilterOptionChange: setCourseStatus,
-          selectedFilter: courseStatus
+          selectedFilter: courseStatus,
+          filterDisplayText: 'Filter By Status'
         }}
       />
     </>

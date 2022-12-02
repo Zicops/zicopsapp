@@ -1,13 +1,14 @@
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import LatestCourseTable from './LatestCourseTable';
 
 const ZicopsCourseList = () => {
-  const zltplPune = '6bc01264-07c2-518e-9b1e-a6fd54249132';
+  const zicopsLsp = COMMON_LSPS.zicops;
 
   return (
     <>
       <div className="content-panel">
         {/* <LatestCourseList time={time} /> */}
-        <LatestCourseTable zicopsLspId={zltplPune} />
+        <LatestCourseTable zicopsLspId={zicopsLsp} />
       </div>
 
       <style jsx>

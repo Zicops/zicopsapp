@@ -2,6 +2,7 @@
 
 .searchArea {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
   align-items: flex-end;
   padding: 0 40px;
@@ -9,6 +10,9 @@
   gap: 10px;
 }
 .filterComp {
+  display: flex;
+  gap: 20px;
+
   flex: 0.8;
 }
 .searchComp {

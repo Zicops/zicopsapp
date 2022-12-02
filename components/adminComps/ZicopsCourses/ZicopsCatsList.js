@@ -1,5 +1,6 @@
 import PopUp from '@/components/common/PopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { ApolloProvider, useQuery } from '@apollo/client';
@@ -28,10 +29,10 @@ function ZicopsCategoryList() {
   }, []);
 
   const _lspId = userOrg?.lsp_id;
-  const zltplPune = '6bc01264-07c2-518e-9b1e-a6fd54249132';
+  const zicopsLsp = COMMON_LSPS.zicops;
 
   const { data: zicopsLspData, loading: zicopsLspDataLoading } = useQuery(GET_CATS_MAIN, {
-    variables: { lsp_ids: [zltplPune] }
+    variables: { lsp_ids: [zicopsLsp] }
   });
   const {
     data: currentLspData,

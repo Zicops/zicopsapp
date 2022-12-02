@@ -9,6 +9,7 @@ export default function TableSearchComp({
   handleOptionChange = () => {},
   handleSearch = null,
   selectedFilter = null,
+  filterDisplayText = 'Filter By',
   delayMS = 1000
 }) {
   function startSearch(val, delay) {
@@ -21,38 +22,6 @@ export default function TableSearchComp({
   return (
     <>
       <div className={styles.searchArea}>
-        {!!filterOptions?.length && (
-          <div className={`${styles.filterComp}`} style={{ display: 'flex' }}>
-            <div className={`w-12`}>Filter By:</div>
-            <div className={`w-75`} style={{ display: 'flex', gap: '20px' }}>
-              {filterOptions?.map((op) => {
-                return (
-                  <LabeledRadioCheckbox
-                    type="radio"
-                    label={op?.label}
-                    value={op?.value}
-                    isChecked={op?.value === selectedFilter}
-                    isDisabled={op?.isDisabled}
-                    changeHandler={(e) => handleFilterOptionChange(e.target.value)}
-                  />
-                );
-              })}
-            </div>
-          </div>
-          // <select
-          //   className={styles.search}
-          //   name="search"
-          //   onChange={(e) => handleFilterOptionChange(e?.target?.value)}>
-          //   {filterOptions?.map((op) => {
-          //     return (
-          //       <option value={op?.value} disabled={op?.isDisabled}>
-          //         {op?.label}
-          //       </option>
-          //     );
-          // })}
-          // </select>
-        )}
-
         <div className={`${styles.searchComp}`}>
           {options?.length ? (
             <select
@@ -83,6 +52,38 @@ export default function TableSearchComp({
             />
           )}
         </div>
+
+        {!!filterOptions?.length && (
+          <div className={`${styles.filterComp}`}>
+            <div>{filterDisplayText}:</div>
+            <div className={`w-75`} style={{ display: 'flex', gap: '20px' }}>
+              {filterOptions?.map((op) => {
+                return (
+                  <LabeledRadioCheckbox
+                    type="radio"
+                    label={op?.label}
+                    value={op?.value}
+                    isChecked={op?.value === selectedFilter}
+                    isDisabled={op?.isDisabled}
+                    changeHandler={(e) => handleFilterOptionChange(e.target.value)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          // <select
+          //   className={styles.search}
+          //   name="search"
+          //   onChange={(e) => handleFilterOptionChange(e?.target?.value)}>
+          //   {filterOptions?.map((op) => {
+          //     return (
+          //       <option value={op?.value} disabled={op?.isDisabled}>
+          //         {op?.label}
+          //       </option>
+          //     );
+          // })}
+          // </select>
+        )}
       </div>
     </>
   );
