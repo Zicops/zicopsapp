@@ -1,5 +1,10 @@
 import { atom } from 'recoil';
 
+export const FcmTokenAtom = atom({
+  key: 'FcmToken',
+  default: null
+});
+
 export const NotificationAtom = atom({
   key: 'Notification',
   default: []

@@ -5,40 +5,14 @@ const db = getFirestore(app);
 const notificationCollectionRef = collection(db, 'notification');
 const tokenCollectionRef = collection(db, 'tokens');
 
-export const addFcmToken = async (userId) => {
-  addDoc(tokenCollectionRef, {
-    noteTitle: noteTitle,
-    noteDesc: noteDesc
-  }).then(() => {
-    setNoteTitle('');
-    setNoteDesc('');
-  });
-
-  return dataArr;
-};
-
-export const addUserNotification = async (userId) => {
-  addDoc(tokenCollectionRef, {
-    noteTitle: noteTitle,
-    noteDesc: noteDesc
-  }).then(() => {
-    setNoteTitle('');
-    setNoteDesc('');
-  });
-
-  return dataArr;
-};
-
-export const updateUserNotification = async (userId) => {
-  addDoc(tokenCollectionRef, {
-    noteTitle: noteTitle,
-    noteDesc: noteDesc
-  }).then(() => {
-    setNoteTitle('');
-    setNoteDesc('');
-  });
-
-  return dataArr;
+export const addUserNotification = async (notificationData) => {
+  return addDoc(tokenCollectionRef, {
+    Body: notificationData?.Body,
+    CreatedAt: notificationData?.CreatedAt,
+    IsRead: notificationData?.IsRead,
+    Title: notificationData?.Title,
+    UserID: notificationData?.userId
+  }).then((data) => data);
 };
 
 export const getAllNotifications = async (userId) => {

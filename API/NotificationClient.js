@@ -16,3 +16,25 @@ export const GET_FCM_TOKEN = gql`
     getFCMToken
   }
 `;
+
+export const GET_ALL_NOTIFICATIONS = gql`
+  query getAll($prevPageSnapShot: String!, $pageSize: Int!) {
+    getAll(prevPageSnapShot: $prevPageSnapShot, pageSize: $pageSize) {
+      messages {
+        title
+        body
+        created_at
+        user_id
+      }
+      nextPageSnapShot
+    }
+  }
+`;
+
+export const SEND_NOTIFICATIONS = gql`
+  mutation sendNotification($title: String!, $body: String!, $emails: [String]!) {
+    sendNotification(notification: { title: $title, body: $body, emails: $emails }) {
+      statuscode
+    }
+  }
+`;
