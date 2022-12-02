@@ -12,9 +12,13 @@ export const NotificationAtom = atom({
 
 export function getNotificationObj(data) {
   return {
-    body: data.body || '',
-    isRead: data.isRead || '',
     title: data.title || '',
-    message_id: data.message_id || ''
+    body: data.body || '',
+    isRead: data.isRead || false,
+    img: data?.img || '',
+    link: data?.link || '',
+    route: data?.route || '',
+    fcmMessageId: data.fcmMessageId || null,
+    duration: data?.duration || ''
   };
 }
