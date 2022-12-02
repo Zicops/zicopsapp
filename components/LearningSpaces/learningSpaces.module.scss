@@ -15,6 +15,17 @@
   align-items: flex-end;
   height: 80px;
   padding: 0 4%;
+  .LogoutButton{
+    color: $primary;
+    border: 2px solid $primary;
+    border-radius: 2px;
+    padding:10px 20px;
+    cursor: pointer;
+    &:hover{
+      color: $black;
+      background-color: $primary;
+    }
+  }
 }
 
 .zicops_logo {

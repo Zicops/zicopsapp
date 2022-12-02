@@ -250,10 +250,13 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   useEffect(async () => {
     const currentTime = new Date().getTime();
+    const _lspId = sessionStorage?.getItem('lsp_id');
+
     const sendData = {
       publish_time: Math.floor(currentTime / 1000),
       pageCursor: '',
-      pageSize: 100
+      pageSize: 100,
+      filters: { LspId: _lspId }
     };
     const res = await loadLastestCourseData({ variables: sendData }).catch((err) => {
       console.log(err);
@@ -304,7 +307,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       (courseMap) => courseMap?.user_lsp_id === currentUserData?.userLspId
     );
 
-    if(!userLspCourses?.length) setCourseLoading(false);
+    if (!userLspCourses?.length) setCourseLoading(false);
     const assignedCoursesToUser = userLspCourses;
     if (!assignedCoursesToUser?.length) setCourseLoading(false);
 

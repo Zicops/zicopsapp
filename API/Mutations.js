@@ -125,6 +125,7 @@ export const ADD_COURSE = gql`
     ) {
       id
       name
+      lspId
       description
       summary
       instructor
@@ -362,6 +363,7 @@ export const UPDATE_COURSE = gql`
     ) {
       id
       name
+      lspId
       description
       summary
       instructor

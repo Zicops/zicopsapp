@@ -6,11 +6,12 @@ import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { getUnixTimeAt } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { constSelector, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import HomePageLoader from './HomePageLoader';
 import styles from './homepageScreen.module.scss';
 
@@ -92,13 +93,16 @@ export default function HomepageScreen() {
       slidesToSlide: 1
     }
   };
-  async function getLatestCoursesByFilters(filters, pageSize = 28) {
+
+  async function getLatestCoursesByFilters(filters = {}, pageSize = 28) {
+    const _lspId = sessionStorage?.getItem('lsp_id');
+
     // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
     const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
-      publish_time: time,
+      publish_time: getUnixTimeAt(),
       pageSize: pageSize,
       pageCursor: '',
-      filters: filters
+      filters: { LspId: _lspId, ...filters }
     });
     const _toBeSortedCourses = structuredClone(courses) || [];
 
@@ -178,7 +182,7 @@ export default function HomepageScreen() {
       );
 
       setIsLoading(false);
-      const _lspId = sessionStorage?.getItem('lsp_id')
+      const _lspId = sessionStorage?.getItem('lsp_id');
       const getLSPCourses = await getLatestCoursesByFilters({ LspId: _lspId }, pageSize);
       setLearningSpaceCourses(
         getLSPCourses?.latestCourses?.courses?.filter(
@@ -307,21 +311,21 @@ export default function HomepageScreen() {
     }
 
     loadAndSetHomePageRows();
-    
+
     return () => clearTimeout(timer);
   }, [userData?.preferences]);
 
-  const [lspId,setLspId]  = useState(null);
-  useEffect(()=>{
-    if(!userOrg?.lsp_id){
-      const _lspId = sessionStorage?.getItem('lsp_id')
-      if(!_lspId) return router.push('/login');
-      console.log(_lspId,'lsps');
+  const [lspId, setLspId] = useState(null);
+  useEffect(() => {
+    if (!userOrg?.lsp_id) {
+      const _lspId = sessionStorage?.getItem('lsp_id');
+      if (!_lspId) return router.push('/login');
+      console.log(_lspId, 'lsps');
       setLspId(_lspId);
       return;
     }
-    return ;
-  },[])
+    return;
+  }, []);
 
   if (isLoading) return <HomePageLoader />;
 
@@ -367,10 +371,7 @@ export default function HomepageScreen() {
           title="Courses from your learning space"
           data={learningSpaceCourses}
           handleTitleClick={() =>
-            router.push(
-              `search-page?filter=${JSON.stringify({ LspId: lspId})}`,
-              'search-page'
-            )
+            router.push(`search-page?filter=${JSON.stringify({ LspId: lspId })}`, 'search-page')
           }
         />
       )}
