@@ -2,8 +2,11 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { authLink } from './api.helper';
 
+let url = new URL(window.location.href);
+let origin = url.hostname;
+
 const httpLink = createUploadLink({
-  uri: 'https://demo.zicops.com/um/api/v1/query'
+  uri: `https://${origin}/um/api/v1/query`
 });
 
 export const userClient = new ApolloClient({
