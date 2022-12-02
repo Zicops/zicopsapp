@@ -110,12 +110,22 @@ export default function useSaveCourse(courseContextData) {
     // check for duplicate course name
     const queryVariables = {
       publish_time: Date.now(),
-      pageSize: 999999,
+      pageSize: 1,
       pageCursor: '',
       filters: { SearchText: fullCourse?.name?.trim() }
     };
-    const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables);
-    const allCourses = courseRes?.latestCourses?.courses || null;
+    const publishedCourseRes = loadQueryDataAsync(GET_LATEST_COURSES, {
+      ...queryVariables,
+      status: COURSE_STATUS.publish
+    });
+    const savedCourseRes = loadQueryDataAsync(GET_LATEST_COURSES, {
+      ...queryVariables,
+      status: COURSE_STATUS.save
+    });
+    const allCourses = [
+      ...(await savedCourseRes)?.latestCourses?.courses,
+      ...(await publishedCourseRes)?.latestCourses?.courses
+    ];
 
     if (
       allCourses &&

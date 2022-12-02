@@ -136,6 +136,7 @@ export default function CourseTabs() {
     if (courseStatus === COURSE_STATUS.publish) return 'Published';
     if (courseStatus === COURSE_STATUS.freeze) return 'Publish';
     if (fullCourse?.id) return 'Update';
+
     return 'Save';
   }
 
@@ -164,7 +165,8 @@ export default function CourseTabs() {
           ),
           submitDisplay: getSubmitBtnText(),
           disableSubmit: !!isCourseUploading || courseStatus === COURSE_STATUS.publish,
-          handleSubmit: () => saveCourseData(false, null, true, true),
+          handleSubmit: () =>
+            saveCourseData(false, null, true, courseStatus === COURSE_STATUS.freeze),
           cancelDisplay: 'Cancel',
           handleCancel: () => router.push('/admin/course/my-courses')
         }}>

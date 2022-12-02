@@ -79,6 +79,11 @@ export const DEFAULT_VALUES = {
   previewVideo: 'default-video.mp4'
 };
 
+// ztlp pune lsp
+export const COMMON_LSPS = {
+  zicops: '6bc01264-07c2-518e-9b1e-a6fd54249132'
+};
+
 export const COURSE_STATUS = {
   draft: 'DRAFT',
   upload: 'UPLOADING',

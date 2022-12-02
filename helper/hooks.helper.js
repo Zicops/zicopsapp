@@ -22,13 +22,11 @@ import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
-  getUserOrgObject,
   IsUpdatedAtom,
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
-import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -39,7 +37,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
-import { LEARNING_SPACE_ID } from './constants.helper';
+import { COMMON_LSPS, LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
 
@@ -64,10 +62,10 @@ export function useHandleCatSubCat(selectedCategory) {
     // console.log('fetch');
 
     const _lspId = sessionStorage?.getItem('lsp_id');
-    const zltplPune = '6bc01264-07c2-518e-9b1e-a6fd54249132';
+    const zicopsLsp = COMMON_LSPS.zicops;
 
     const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
-      lsp_ids: [zltplPune]
+      lsp_ids: [zicopsLsp]
     });
     const currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [_lspId]
