@@ -1,3 +1,4 @@
+import { COURSE_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -63,11 +64,14 @@ function editCourse(courseId) {
   Router.push(`/admin/courses/${courseId}`);
 }
 
-function MyLatestCourseList({ time, searchParam }) {
+function MyLatestCourseList({ time }) {
   const [pageSize, setPageSize] = useState(6);
   const courseType = useRecoilValue(CourseTypeAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [latestCourses, setLatestCourse] = useState([]);
+
+  const [courseStatus, setCourseStatus] = useState(COURSE_STATUS.save);
+  const [searchParam, setSearchParam] = useState('');
 
   useEffect(() => {
     const screenWidth = window.screen.width;
@@ -87,6 +91,7 @@ function MyLatestCourseList({ time, searchParam }) {
         publish_time: time,
         pageSize: 1000,
         pageCursor: '',
+        status: courseStatus,
         filters: {
           Type: courseType,
           SearchText: searchParam,
@@ -95,13 +100,13 @@ function MyLatestCourseList({ time, searchParam }) {
       }
     }).then((res) => {
       const _latestCourses = sortArrByKeyInOrder(
-        res?.data?.latestCourses.courses?.filter((c) => c?.is_active),
+        res?.data?.latestCourses?.courses?.filter((c) => c?.is_active),
         'created_at',
         false
       );
       setLatestCourse(_latestCourses);
     });
-  }, [userOrgData?.lsp_id, searchParam]);
+  }, [userOrgData?.lsp_id, searchParam, courseStatus]);
 
   const [loadMyCourses, { loading }] = useLazyQuery(GET_LATEST_COURSES, {
     client: queryClient
@@ -121,6 +126,21 @@ function MyLatestCourseList({ time, searchParam }) {
       rowsPerPageOptions={[3]}
       tableHeight="70vh"
       loading={loading}
+      showCustomSearch={true}
+      searchProps={{
+        options: [
+          { label: 'Name', value: 'Name' },
+          { label: 'Owner', value: 'Owner' },
+          { label: 'Category', value: 'Category' }
+        ],
+        handleSearch: (val) => setSearchParam(val),
+        filterOptions: [
+          { label: 'Saved', value: COURSE_STATUS.save },
+          { label: 'Published', value: COURSE_STATUS.publish }
+        ],
+        handleFilterOptionChange: setCourseStatus,
+        selectedFilter: courseStatus
+      }}
     />
   );
 }
@@ -128,7 +148,6 @@ let debounceTimer;
 
 const MyCourseList = () => {
   var time = getUnixFromDate();
-  const [searchParam, setSearchParam] = useState('');
 
   function startSearch(val, delay) {
     clearTimeout(debounceTimer);
@@ -140,7 +159,7 @@ const MyCourseList = () => {
   return (
     <>
       <div className="content-panel">
-        <div className="search-area">
+        {/* <div className="search-area">
           <select className="search" name="search">
             <option value="Name">Name</option>
             <option value="Owner" disabled>
@@ -156,8 +175,8 @@ const MyCourseList = () => {
             placeholder="Search..."
             onChange={(e) => startSearch(e.target.value, 1000)}
           />
-        </div>
-        <MyLatestCourseList time={time} searchParam={searchParam} />
+        </div> */}
+        <MyLatestCourseList time={time} />
       </div>
 
       <style jsx>
