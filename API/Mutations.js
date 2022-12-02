@@ -13,6 +13,43 @@ export const mutationClient = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+export const UPDATE_CATS_MAIN = gql`
+  mutation updateCatMain($catMainInput: CatMainInput) {
+    updateCatMain(input: $catMainInput) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      LspId
+    }
+  }
+`;
+
+export const UPDATE_SUB_CATS_MAIN = gql`
+  mutation updateSubCatMain($subCatMainInput: SubCatMainInput) {
+    updateSubCatMain(input: $subCatMainInput) {
+      id
+      Name
+      Description
+      ImageUrl
+      Code
+      CatId
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+      LspId
+    }
+  }
+`;
+
 export const ADD_COURSE = gql`
   mutation addCourse(
     $name: String
@@ -47,11 +84,12 @@ export const ADD_COURSE = gql`
     $category: String
     $sub_category: String
     $sub_categories: [sub_categories_input]
+    $lspId: String
   ) {
     addCourse(
       course: {
         name: $name
-        lspId: "Zicops learning Spaces"
+        lspId: $lspId
         publisher: $publisher
         description: $description
         summary: $summary
@@ -87,6 +125,7 @@ export const ADD_COURSE = gql`
     ) {
       id
       name
+      lspId
       description
       summary
       instructor
@@ -324,6 +363,7 @@ export const UPDATE_COURSE = gql`
     ) {
       id
       name
+      lspId
       description
       summary
       instructor
@@ -1809,8 +1849,8 @@ export const DELETE_CAT_MAIN = gql`
 `;
 
 export const DELETE_SUB_CAT_MAIN = gql`
-  mutation deleteSubCatMain($id: ID) {
-    deleteSubCatMain(id: $id)
+  mutation deleteSubCatMain($id: ID, $cat_id: String) {
+    deleteSubCatMain(id: $id, cat_id: $cat_id)
   }
 `;
 
@@ -1838,8 +1878,62 @@ export const DELETE_COURSE_TOPIC = gql`
   }
 `;
 
+export const DELETE_COURSE_TOPIC_CONTENT = gql`
+  mutation deleteTopicContent($id: ID) {
+    deleteTopicContent(id: $id)
+  }
+`;
+
+export const DELETE_TOPIC_QUIZ = gql`
+  mutation deleteQuiz($id: ID) {
+    deleteQuiz(id: $id)
+  }
+`;
+
+export const DELETE_TOPIC_RESOURCES = gql`
+  mutation deleteTopicResource($id: ID) {
+    deleteTopicResource(id: $id)
+  }
+`;
+
 export const DELETE_COHORT_COURSE = gql`
   mutation deleteCourseCohort($id: ID) {
     deleteCourseCohort(id: $id)
+  }
+`;
+
+export const DELETE_QUESTION_BANK = gql`
+  mutation deleteQuestionBank($id: ID) {
+    deleteQuestionBank(id: $id)
+  }
+`;
+
+export const DELETE_QUESTION_BANK_QUESTION = gql`
+  mutation deleteQuestionBankQuestion($id: ID) {
+    deleteQuestionBankQuestion(id: $id)
+  }
+`;
+
+export const DELETE_QUESTION_PAPER = gql`
+  mutation deleteQuestionPaper($id: ID) {
+    deleteQuestionPaper(id: $id)
+  }
+`;
+
+export const DELETE_QUESTION_PAPER_SECTION = gql`
+  mutation deleteQuestionPaperSection($id: ID) {
+    deleteQuestionPaperSection(id: $id)
+  }
+`;
+
+export const DELETE_SECTION_TO_BANK = gql`
+  mutation deleteSectionToBank($id: ID) {
+    deleteSectionToBank(id: $id)
+  }
+`;
+
+export const DELETE_EXAM = gql`
+  mutation deleteExam($id: ID) {
+    deleteExam(id: $id)
   }
 `;

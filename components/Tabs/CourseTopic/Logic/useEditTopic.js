@@ -350,7 +350,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           file: topicVideo[index].file
         };
 
-        if (sendContentData?.type === 'mp4') {
+        if (sendContentData?.type === 'mp4' && sendVideoData?.file) {
           await uploadCourseContentVideo({
             variables: sendVideoData,
             context: {

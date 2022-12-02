@@ -4,6 +4,8 @@ import CourseAbout from '../CourseAbout';
 import CourseDetails from '../CourseDetails';
 import CourseMaster from '../CourseMaster';
 import CourseTopic from '../CourseTopic';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { GET_LEARNINGSPACES_BY_ORGID, userQueryClient } from '@/api/UserQueries';
 
 export const tabData = [
   {
@@ -49,4 +51,13 @@ export function getDateTimeFromUnix(unixTimestamp) {
   const d = new Date(unixTimestamp * 1000);
 
   return `${d.toLocaleString()}`;
+}
+
+export async function getDefaultLsp(orgId = ""){
+  if(orgId === "") return false;
+  const res = await loadQueryDataAsync(GET_LEARNINGSPACES_BY_ORGID,{org_id:orgId},{},userQueryClient);
+  if(res?.error) return false;
+  // console.log(res);
+  const defaultLsp = res?.getLearningSpacesByOrgId?.filter((lsp) => lsp?.is_default) ;
+  return defaultLsp[0]?.lsp_id ;
 }

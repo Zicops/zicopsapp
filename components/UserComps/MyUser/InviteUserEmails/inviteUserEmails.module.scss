@@ -1,0 +1,43 @@
+@import '../../../../styles/base.scss';
+
+.inviteUserContainer {
+  display: flex;
+  gap: 40px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+//   align-items: center;
+  .titleContainer {
+    font-size: 20px;
+  }
+  .emailContainer {
+    display: flex;
+    padding: 5px 20px;
+    // min-height: 20vh;
+    max-height: 40vh;
+    gap: 5px;
+    width: 100%;
+    flex-wrap: wrap;
+    overflow: auto;
+    .emailPills {
+      height: fit-content;
+      background-color: #484848;
+      border-radius: 20px;
+      padding: 2px 8px;
+      text-align: center;
+      span {
+        background-color: #040404;
+        border-radius: 20px;
+        padding: 0 10px;
+        margin-left: 5px;
+        font-size: 15px;
+      }
+    }
+  }
+  .buttonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+}

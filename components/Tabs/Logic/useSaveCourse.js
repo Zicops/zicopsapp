@@ -1,6 +1,6 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { DEFAULT_VALUES } from '@/helper/constants.helper';
+import { COURSE_STATUS, DEFAULT_VALUES } from '@/helper/constants.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -100,17 +100,32 @@ export default function useSaveCourse(courseContextData) {
     return isValid;
   }
 
-  async function saveCourseData(isNextButton, tabIndex, showToastMsg = true) {
+  async function saveCourseData(isNextButton, tabIndex, showToastMsg = true, isPublishing = false) {
+    if (fullCourse?.status === COURSE_STATUS.publish) {
+      if (isNextButton) setTab(tabData[tabIndex || 0].name);
+      return;
+    }
+
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
     // check for duplicate course name
     const queryVariables = {
       publish_time: Date.now(),
-      pageSize: 999999,
+      pageSize: 1,
       pageCursor: '',
       filters: { SearchText: fullCourse?.name?.trim() }
     };
-    const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables);
-    const allCourses = courseRes?.latestCourses?.courses || null;
+    const publishedCourseRes = loadQueryDataAsync(GET_LATEST_COURSES, {
+      ...queryVariables,
+      status: COURSE_STATUS.publish
+    });
+    const savedCourseRes = loadQueryDataAsync(GET_LATEST_COURSES, {
+      ...queryVariables,
+      status: COURSE_STATUS.save
+    });
+    const allCourses = [
+      ...(await savedCourseRes)?.latestCourses?.courses,
+      ...(await publishedCourseRes)?.latestCourses?.courses
+    ];
 
     if (
       allCourses &&
@@ -148,10 +163,14 @@ export default function useSaveCourse(courseContextData) {
     await uploadFile(courseTileImage, uploadTileImage, 'tileImage', 'uploadCourseTileImage');
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
-    const { duration, name, ...sendData } = fullCourse;
+    const { duration, name, status, ...sendData } = fullCourse;
     console.log('var', sendData);
     const courseUpdateResponse = await updateCourse({
-      variables: { ...sendData, name: fullCourse?.name?.trim() }
+      variables: {
+        ...sendData,
+        name: fullCourse?.name?.trim(),
+        status: isPublishing ? COURSE_STATUS.publish : status
+      }
     });
 
     const _course = structuredClone(courseUpdateResponse.data.updateCourse);

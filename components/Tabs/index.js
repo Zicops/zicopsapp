@@ -1,3 +1,5 @@
+import { COURSE_STATUS } from '@/helper/constants.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { STATUS } from '@/state/atoms/utils.atoms';
 import Router, { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -17,12 +19,14 @@ import useSaveCourse from './Logic/useSaveCourse';
 export default function CourseTabs() {
   const courseContextData = useContext(courseContext);
 
+  const { updateCourseMaster } = courseContextData;
   const { fullCourse, saveCourseData } = useSaveCourse(courseContextData);
   const router = useRouter();
-  const [showConfirmBox, setShowConfirmBox] = useState(0);
+  const [courseStatus, setCourseStatus] = useState(fullCourse?.status);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   // TODO: set to first tab when new course is opened
   // useEffect(() => {
@@ -31,8 +35,21 @@ export default function CourseTabs() {
   // }, [fullCourse?.id]);
 
   useEffect(() => {
+    if (router.asPath === '/admin/courses') setTab(tabData[0].name);
+  }, []);
+
+  useEffect(() => {
     setIsCourseSaved(false);
   }, [fullCourse]);
+
+  useEffect(() => {
+    if (!isCourseSaved) return;
+    let _status = fullCourse.status || STATUS.display[0];
+    if (fullCourse?.qa_required) _status = COURSE_STATUS.freeze;
+    if (fullCourse?.status === COURSE_STATUS.publish) _status = COURSE_STATUS.publish;
+
+    setCourseStatus(_status);
+  }, [fullCourse?.status, isCourseSaved]);
 
   useEffect(() => {
     if (isCourseSaved) {
@@ -115,6 +132,14 @@ export default function CourseTabs() {
       ? `(at ${getDateTimeFromUnix(fullCourse.updated_at || fullCourse.created_at)})`
       : '';
 
+  function getSubmitBtnText() {
+    if (courseStatus === COURSE_STATUS.publish) return 'Published';
+    if (courseStatus === COURSE_STATUS.freeze) return 'Publish';
+    if (fullCourse?.id) return 'Update';
+
+    return 'Save';
+  }
+
   return (
     <>
       <TabContainer
@@ -132,15 +157,16 @@ export default function CourseTabs() {
             isCourseUploading
           ) : (
             <>
-              {fullCourse.status || STATUS.display[0]}{' '}
+              {courseStatus}{' '}
               <span style={{ fontSize: '12px', fontWeight: '400' }}>
                 {isCourseUploading ? '' : displayTime}
               </span>
             </>
           ),
-          submitDisplay: fullCourse.id ? 'Update' : 'Save',
-          disableSubmit: !!isCourseUploading,
-          handleSubmit: () => saveCourseData(false),
+          submitDisplay: getSubmitBtnText(),
+          disableSubmit: !!isCourseUploading || courseStatus === COURSE_STATUS.publish,
+          handleSubmit: () =>
+            saveCourseData(false, null, true, courseStatus === COURSE_STATUS.freeze),
           cancelDisplay: 'Cancel',
           handleCancel: () => router.push('/admin/course/my-courses')
         }}>

@@ -1,0 +1,220 @@
+@import '../../styles/base.scss';
+
+.loginMainContainer {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+.ZicopsLogo {
+  position: fixed;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 80px;
+  padding: 0 4%;
+  .LogoutButton{
+    color: $primary;
+    border: 2px solid $primary;
+    border-radius: 2px;
+    padding:10px 20px;
+    cursor: pointer;
+    &:hover{
+      color: $black;
+      background-color: $primary;
+    }
+  }
+}
+
+.zicops_logo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 150px;
+  padding: 5px;
+
+  img {
+    width: 66%;
+    height: 70%;
+    margin-bottom: 30px;
+    object-fit: contain;
+  }
+}
+
+//LoginButton Component
+.login_Button {
+  flex: 1;
+  margin: 10px 0px;
+
+  button {
+    background-color: $primary;
+    width: 100%;
+    flex: 1;
+    color: $black;
+    padding: 7px 10px;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid $primary;
+
+    &:disabled {
+      background-color: $darkThree !important;
+      border-color: $darkThree !important;
+      cursor: no-drop;
+    }
+  }
+
+  button:hover {
+    background-color: $primary;
+    box-shadow: 0 0 10px 0 $darkThree;
+    color: $black;
+    cursor: pointer;
+  }
+
+  .small_text {
+    font-size: 14px;
+    color: $secondaryBlack;
+    font-weight: bold;
+    text-align: center;
+
+    span a {
+      color: $primary;
+      text-decoration: underline;
+    }
+
+    span a:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.zicops_login {
+  background-image: url('/images/starrySky2.png');
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  overflow: auto;
+  outline: 1px dashed lightgray;
+  flex: none;
+  height: 100vh;
+  width: 100vw;
+  font-family: Open Sans, sans-serif;
+  flex-flow: column nowrap;
+  scroll-snap-type: y mandatory;
+  justify-content: center;
+  align-items: center;
+}
+
+.heading {
+  font-size: 25px;
+  color: $white;
+  font-weight: bold;
+}
+
+.sub_heading {
+  display: flex;
+  align-items: center;
+  padding: 10px 0 30px;
+
+  p {
+    font-size: 20px;
+    color: $secondaryBlack;
+    font-weight: 700;
+  }
+}
+
+.text {
+  font-size: 14px;
+  color: $white;
+  font-weight: 500;
+}
+
+.login_body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 16px;
+  gap: 16px;
+}
+
+//LoginFooter component
+.login_Footer {
+  position: fixed;
+  width: 100%;
+  height: 27px;
+  bottom: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+
+  .foot_text {
+    font-size: 14px;
+    color: #747474;
+  }
+}
+.lspContainer {
+  text-align: center;
+}
+
+.lspWebsiteName {
+  color: $bgBody;
+  padding-bottom: 10px;
+}
+.lspCardMain,
+.lspCardDisable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $darkOne;
+  height: 200px;
+  width: 245px;
+  border-radius: 8px;
+  cursor: pointer;
+  .lspCardImage {
+    width: 100px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+.lspImageDisable {
+  opacity: 0.3;
+}
+.lspCardDisable {
+  background-color: #0b0c0d;
+}
+.lspName {
+  color: $white;
+  font-size: 18px;
+  padding-top: 10px;
+}
+.lspNameDisable {
+  color: #7d7b7b;
+}
+.addLspContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  border: 2px dashed $darkOne;
+  background-color: transparent;
+  color: $bgBody;
+  height: 200px;
+  width: 245px;
+  font-size: 18px;
+  border-radius: 8px;
+  .addLspIcon{
+    cursor: pointer;
+  }
+  .addLspText {
+    width: 60%;
+    line-height: 28px;
+    text-align: center;
+  }
+}

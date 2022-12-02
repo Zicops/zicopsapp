@@ -36,7 +36,9 @@ export default function useHandleTabs(courseContextData) {
 
   useEffect(() => {
     setCouseIdForFileContext();
+  }, [fullCourse?.id]);
 
+  useEffect(() => {
     setFileData({
       myfile: courseImage.file?.name || getFileNameFromUrl(fullCourse.image, 'img'),
       uploadCourseImage:
@@ -174,7 +176,7 @@ export default function useHandleTabs(courseContextData) {
 
   function handleChange(e) {
     if (e.target.type === 'checkbox') {
-      if (e.target.name.includes('is_')) {
+      if (e.target.name.includes('is_') || e.target.name.includes('qa')) {
         // toggle button
         updateCourseMaster({
           ...fullCourse,

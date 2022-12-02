@@ -1,3 +1,4 @@
+import { API_LINKS } from '@/api/api.helper';
 import AuthChecker from '@/components/AuthChecker';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
 import Head from 'next/head';
@@ -13,10 +14,12 @@ import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   // for disabling log at all places
+  console.log('API_DYANMIC', API_LINKS.notification);
   console.log = () => {};
 
   // toggle scrollbar opacity when scroll
   useEffect(() => {
+    localStorage.setItem('API_DYANMIC', API_LINKS.notification);
     let timeout = null;
     function updateOpacity() {
       if (timeout) {
@@ -40,7 +43,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Zicops - Demo</title>
+        <title>Zicops</title>
         <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
       </Head>
 

@@ -287,7 +287,7 @@ const ExamScreen = () => {
 
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
+      { user_id: userData?.id, exam_id: examId },
       {},
       userQueryClient
     );
@@ -309,7 +309,11 @@ const ExamScreen = () => {
       );
       resultRes = await loadQueryDataAsync(
         GET_USER_EXAM_RESULTS,
-        { user_id: userData?.id, user_ea_id: currentExamAttemptData?.user_ea_id },
+        {
+          user_ea_details: [
+            { user_id: userData?.id, user_ea_id: currentExamAttemptData?.user_ea_id }
+          ]
+        },
         { fetchPolicy: 'no-cache' },
         userQueryClient
       );

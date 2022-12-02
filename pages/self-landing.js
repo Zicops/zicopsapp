@@ -4,7 +4,7 @@ import { classroomData } from '@/components/ClassRoomBanner/classRoomBanner.help
 import HeroSliderContainer from '@/components/HeroSliderContainer';
 import SearchSubCat from '@/components/Search/SearchSubCat';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_TYPES } from '@/helper/constants.helper';
+import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -51,12 +51,14 @@ export default function Self() {
   const { catSubCat, setActiveCatId } = useHandleCatSubCat();
 
   async function getLatestCoursesByFilters(filters, pageSize = 28) {
+    const _lspId = sessionStorage?.getItem('lsp_id');
     // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
     const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
       publish_time: time,
       pageSize: pageSize,
       pageCursor: '',
-      filters: filters
+      status: COURSE_STATUS.publish,
+      filters: { LspId: _lspId, ...filters }
     });
     return courses;
   }

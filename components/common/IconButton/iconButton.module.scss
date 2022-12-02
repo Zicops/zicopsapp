@@ -2,7 +2,7 @@
 
 // .btnLight{
 
-// } 
+// }
 
 .btnBlack {
   background-color: $black;
@@ -16,7 +16,8 @@
   transition: all 0.3s;
 }
 .btnBlack:hover {
-    box-shadow: 16.564px -3.824px 30.82px 15.18px rgba(107, 207, 207, 0.07), 0px -7px 9.5px 0.5px rgba(0, 0, 0, 0.56), 0px -7px 34.04px 11.96px rgba(4, 4, 4, 0.15);
+  box-shadow: 16.564px -3.824px 30.82px 15.18px rgba(107, 207, 207, 0.07),
+    0px -7px 9.5px 0.5px rgba(0, 0, 0, 0.56), 0px -7px 34.04px 11.96px rgba(4, 4, 4, 0.15);
 }
 .btnGrey {
   background-color: #858f8f;
@@ -59,4 +60,6 @@
     0px -7px 35px 10px #ffffff48;
 }
 
-
+.iconBtn:disabled {
+  cursor: no-drop;
+}
