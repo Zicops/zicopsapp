@@ -93,3 +93,7 @@ export const COURSE_STATUS = {
   publish: 'PUBLISHED',
   reject: 'REJECTED'
 };
+
+
+//need to delete later
+export const PRODUCT_TOUR_PATHS = ['exams'];
