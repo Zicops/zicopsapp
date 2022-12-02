@@ -9,7 +9,8 @@ export default function BlackRow({
   editHandler,
   deleteProps = {},
   extraComp,
-  tooltipTitle
+  tooltipTitle,
+  isDisabled = false
 }) {
   return (
     <div className={`${styles.head} ${styles[type + 'Head']}`}>
@@ -17,16 +18,20 @@ export default function BlackRow({
 
       {extraComp}
       <div className={`${styles.actions}`}>
-        <div className={`${styles.editImg}`} onClick={editHandler}>
-          <ToolTip title={tooltipTitle} placement="bottom">
-            <img src="/images/svg/edit-box-line.svg" alt="" />
-          </ToolTip>
-        </div>
+        {!isDisabled && (
+          <>
+            <div className={`${styles.editImg}`} onClick={editHandler}>
+              <ToolTip title={tooltipTitle} placement="bottom">
+                <img src="/images/svg/edit-box-line.svg" alt="" />
+              </ToolTip>
+            </div>
 
-        {!!Object.keys(deleteProps).length && (
-          <div className={`${styles.editImg}`}>
-            <DeleteBtn {...deleteProps} />
-          </div>
+            {!!Object.keys(deleteProps).length && (
+              <div className={`${styles.editImg}`}>
+                <DeleteBtn {...deleteProps} />
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

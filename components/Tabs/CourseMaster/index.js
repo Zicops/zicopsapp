@@ -3,7 +3,7 @@ import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { deleteData } from '@/helper/api.helper';
-import { LANGUAGES } from '@/helper/constants.helper';
+import { COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -36,6 +36,9 @@ export default function CourseMaster() {
   // loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, fullCourse?.category);
   const { catSubCat, setActiveCatId } = useHandleCatSubCat(fullCourse?.category);
 
+  let isDisabled = !!fullCourse?.qa_required;
+  if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
+
   // const allCatOptions = [];
   // data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
   const categoryDropdownOptions = {
@@ -46,7 +49,8 @@ export default function CourseMaster() {
     value: fullCourse?.category
       ? { value: fullCourse?.category, label: fullCourse?.category }
       : null,
-    isSearchEnable: true
+    isSearchEnable: true,
+    isDisabled: isDisabled
   };
 
   // const allSubcatOptions = [];
@@ -59,7 +63,8 @@ export default function CourseMaster() {
     value: fullCourse?.sub_category
       ? { value: fullCourse?.sub_category, label: fullCourse?.sub_category }
       : null,
-    isSearchEnable: true
+    isSearchEnable: true,
+    isDisabled: isDisabled
   };
 
   const allOwners = [{ value: 'Zicops', label: 'Zicops' }];
@@ -70,7 +75,8 @@ export default function CourseMaster() {
     placeholder: 'Select the owner of the course',
     options: allOwners,
     value: fullCourse?.owner ? { value: fullCourse?.owner, label: fullCourse?.owner } : null,
-    isSearchEnable: true
+    isSearchEnable: true,
+    isDisabled: isDisabled
   };
 
   const allLanguages = LANGUAGES?.map((lang) => ({ label: lang, value: lang }));
@@ -85,7 +91,8 @@ export default function CourseMaster() {
     value: allSelectedLanguages,
     isSearchEnable: true,
     menuPlacement: 'top',
-    isMulti: true
+    isMulti: true,
+    isDisabled: isDisabled
   };
 
   return (
@@ -99,7 +106,8 @@ export default function CourseMaster() {
           label: 'Name',
           placeholder: 'Enter name of the course (Upto 60 characters)',
           maxLength: 60,
-          value: fullCourse?.name
+          value: fullCourse?.name,
+          isDisabled: isDisabled
         }}
         changeHandler={handleChange}
       />
@@ -147,7 +155,8 @@ export default function CourseMaster() {
           label: 'Publisher / Author',
           placeholder: 'Enter name of the Publisher / Author',
           maxLength: 60,
-          value: fullCourse?.publisher
+          value: fullCourse?.publisher,
+          isDisabled: isDisabled
         }}
         changeHandler={handleChange}
       />
