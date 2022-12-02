@@ -3,7 +3,7 @@ import { getMessaging, getToken } from 'firebase/messaging';
 import { firebaseConfig } from './firebaseConfig';
 
 export const app = initializeApp(firebaseConfig);
-const messaging = getMessaging();
+const messaging = getMessaging(app);
 
 export default async function getFCMToken() {
   try {

@@ -34,7 +34,8 @@ export default function Layout({ children }) {
 
         if (event?.data?.notification?.title) {
           setToastMsg({ type: 'info', message: event?.data?.notification?.title });
-          setNotifications([...notifications, event?.data?.notification]);
+
+          setNotifications((prev) => [...prev, event?.data?.notification]);
         }
         // alert(event.data.firebaseMessaging.payload.notification.title);
         //   setNotifications([])
