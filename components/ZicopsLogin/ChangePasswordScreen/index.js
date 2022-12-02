@@ -72,7 +72,7 @@ const ChangePasswordScreen = ({ setPage }) => {
             </Tooltip>
           }
         />
-        <form className="login_body" onSubmit={handleSubmit}>
+        <div className="login_body" onSubmit={handleSubmit}>
           {/* <LoginEmail placeholder={'Enter current password'} chngeHandle={handleCurrentPassword} /> */}
           <LoginEmail
             placeholder={'Enter new password'}
@@ -88,7 +88,7 @@ const ChangePasswordScreen = ({ setPage }) => {
             {/* <LoginButton title={'Cancel'} /> */}
             <LoginButton title={'Change'} handleClick={handleSubmit} />
           </div>
-        </form>
+        </div>
       </ZicopsLogin>
       <style jsx>{`
         .login_body {
