@@ -43,6 +43,7 @@ const ChangePasswordScreen = ({ setPage }) => {
       .then((data) => {
         confirmPasswordReset(auth, code, newPassword)
           .then((data) => {
+            setToastMsg({ type: 'success', message: 'Password updated successfully!' });
             router.push('/login');
           })
           .catch((error) => {
@@ -71,7 +72,7 @@ const ChangePasswordScreen = ({ setPage }) => {
             </Tooltip>
           }
         />
-        <div className="login_body">
+        <form className="login_body" onSubmit={handleSubmit}>
           {/* <LoginEmail placeholder={'Enter current password'} chngeHandle={handleCurrentPassword} /> */}
           <LoginEmail
             placeholder={'Enter new password'}
@@ -87,7 +88,7 @@ const ChangePasswordScreen = ({ setPage }) => {
             {/* <LoginButton title={'Cancel'} /> */}
             <LoginButton title={'Change'} handleClick={handleSubmit} />
           </div>
-        </div>
+        </form>
       </ZicopsLogin>
       <style jsx>{`
         .login_body {
