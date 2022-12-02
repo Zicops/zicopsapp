@@ -26,6 +26,7 @@ import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import CurrentCourses from './CurrentCourses';
 import moment from 'moment';
+import { COURSE_STATUS } from '@/helper/constants.helper';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -256,6 +257,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       publish_time: Math.floor(currentTime / 1000),
       pageCursor: '',
       pageSize: 100,
+      status: COURSE_STATUS.publish,
       filters: { LspId: _lspId }
     };
     const res = await loadLastestCourseData({ variables: sendData }).catch((err) => {
