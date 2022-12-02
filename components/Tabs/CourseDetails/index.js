@@ -1,5 +1,6 @@
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import { VIDEO_FILE_TYPES } from '@/helper/constants.helper';
+import { COURSE_STATUS, VIDEO_FILE_TYPES } from '@/helper/constants.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useContext } from 'react';
 import { useRecoilState } from 'recoil';
@@ -30,6 +31,9 @@ export default function CourseDetails() {
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
   const subCatObject = { value: fullCourse.sub_category, label: fullCourse.sub_category };
 
+  let isDisabled = !!fullCourse?.qa_required;
+  if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
+
   return (
     <>
       <LabeledDropdown
@@ -49,6 +53,7 @@ export default function CourseDetails() {
       <div className={`${styles.marginBottom}`}>
         <DragDrop
           contextData={courseContextData}
+          isFreezed={isDisabled}
           isError={!fullCourse?.sub_categories?.length && courseError?.details}
         />
       </div>
@@ -65,6 +70,7 @@ export default function CourseDetails() {
             value="Beginner"
             isError={!fullCourse?.expertise_level?.length && courseError?.details}
             isChecked={fullCourse.expertise_level.includes('Beginner')}
+            isDisabled={isDisabled}
             changeHandler={handleChange}
           />
           {/* </div>
@@ -77,6 +83,7 @@ export default function CourseDetails() {
             value="Competent"
             isError={!fullCourse?.expertise_level?.length && courseError?.details}
             isChecked={fullCourse.expertise_level.includes('Competent')}
+            isDisabled={isDisabled}
             changeHandler={handleChange}
           />
           {/* </div>
@@ -89,10 +96,28 @@ export default function CourseDetails() {
             value="Proficient"
             isError={!fullCourse?.expertise_level?.length && courseError?.details}
             isChecked={fullCourse.expertise_level.includes('Proficient')}
+            isDisabled={isDisabled}
             changeHandler={handleChange}
           />
         </div>
-        <div className="w-50"></div>
+        <div className="w-50">
+          <LabeledInput
+            // styleClass={`${styles.marginBottom}`}
+            isFiftyFifty={true}
+            inputClass={
+              !fullCourse?.expected_completion?.length && courseError?.details ? 'error' : ''
+            }
+            inputOptions={{
+              inputName: 'expected_completion',
+              label: 'Suggested Duration: ',
+              placeholder: 'Enter Suggested Duration in days',
+              maxLength: 4,
+              value: fullCourse?.expected_completion,
+              isDisabled: isDisabled
+            }}
+            changeHandler={handleChange}
+          />
+        </div>
       </div>
 
       {/* Upload Course Video */}
@@ -110,6 +135,8 @@ export default function CourseDetails() {
             isError={!(courseVideo?.file || fullCourse.previewVideo) && courseError?.details}
             acceptedTypes={VIDEO_FILE_TYPES}
             inputName="uploadCourseVideo"
+            isDisabled={isDisabled}
+            hideRemoveBtn={isDisabled}
             isActive={fileData.uploadCourseVideo}
             previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCourse}
             removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCourse}
@@ -133,6 +160,8 @@ export default function CourseDetails() {
             }}
             isError={!(courseTileImage?.file || fullCourse.tileImage) && courseError?.details}
             inputName="uploadCourseImage"
+            isDisabled={isDisabled}
+            hideRemoveBtn={isDisabled}
             isActive={fileData.uploadCourseImage}
             previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCourseImage}
             removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCourseImage}
@@ -156,6 +185,8 @@ export default function CourseDetails() {
             }}
             isError={!(courseImage?.file || fullCourse.image) && courseError?.details}
             inputName="myfile"
+            isDisabled={isDisabled}
+            hideRemoveBtn={isDisabled}
             isActive={fileData.myfile}
             previewTooltipTitle={ADMIN_COURSES.myCourses.details.previewCoursePicture}
             removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCoursePicture}
@@ -174,7 +205,8 @@ export default function CourseDetails() {
             placeholder: 'Provide and outline of the course in less than 500 characters...',
             rows: 4,
             value: fullCourse?.summary,
-            maxLength: 500
+            maxLength: 500,
+            isDisabled: isDisabled
           }}
           isError={!fullCourse?.summary?.length && courseError?.details}
           changeHandler={handleChange}

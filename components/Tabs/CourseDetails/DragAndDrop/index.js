@@ -1,11 +1,13 @@
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import React from 'react';
+import { courseContext } from '@/state/contexts/CourseContext';
+import React, { useContext } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import useHandleDragDrop from '../../Logic/useHandleDragDrop';
 
 // TODO: update this component later
-const DragDrop = ({ data, contextData, isError = false }) => {
+const DragDrop = ({ data, contextData, isError = false, isFreezed = false }) => {
+  const { fullCourse } = useContext(courseContext);
   const {
     draglist,
     droplist,
@@ -55,6 +57,7 @@ const DragDrop = ({ data, contextData, isError = false }) => {
                       return (
                         <Draggable
                           key={name + dragOrder + index}
+                          isDragDisabled={isFreezed}
                           draggableId={'drag_' + dragOrder}
                           index={index}>
                           {(provided) => (
@@ -94,7 +97,11 @@ const DragDrop = ({ data, contextData, isError = false }) => {
                   {droplist.map(({ dragOrder, name, rank }, index) => {
                     // console.log(dragOrder, name, index);
                     return (
-                      <Draggable key={name + rank} draggableId={'drop_' + rank} index={index}>
+                      <Draggable
+                        y={name + rank}
+                        isDragDisabled={isFreezed}
+                        draggableId={'drop_' + rank}
+                        index={index}>
                         {(provided) => (
                           <div
                             className="wrap_drop disableTextSelection"
@@ -104,11 +111,13 @@ const DragDrop = ({ data, contextData, isError = false }) => {
                             <div className="Sr_no">{rank + 1}</div>
                             <div className="inner_drop_ele">
                               {name}
-                              <span
-                                data-index={`${dragOrder}::${name}::${index}::${rank}`}
-                                onClick={removeItem}>
-                                x
-                              </span>
+                              {!isFreezed && (
+                                <span
+                                  data-index={`${dragOrder}::${name}::${index}::${rank}`}
+                                  onClick={removeItem}>
+                                  x
+                                </span>
+                              )}
                             </div>
                           </div>
                         )}

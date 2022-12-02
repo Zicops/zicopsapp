@@ -22,13 +22,11 @@ import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
-  getUserOrgObject,
   IsUpdatedAtom,
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
-import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -39,7 +37,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
-import { LEARNING_SPACE_ID } from './constants.helper';
+import { COMMON_LSPS, LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
 
@@ -63,7 +61,28 @@ export function useHandleCatSubCat(selectedCategory) {
     // if (Object.keys(catSubCat?.subCatGrp || {})?.length) return setCatSubCatState(catSubCat);
     // console.log('fetch');
 
-    const catAndSubCatRes = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
+    const _lspId = sessionStorage?.getItem('lsp_id');
+    const zicopsLsp = COMMON_LSPS.zicops;
+
+    const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      lsp_ids: [zicopsLsp]
+    });
+    const currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      lsp_ids: [_lspId]
+    });
+    // zicops lsp cat subcat
+    const zicopsCats = (await zicopsLspData)?.allCatMain || [];
+    const zicopsSubCats = (await zicopsLspData)?.allSubCatMain || [];
+
+    // current lsp cat subcat
+    const currentLspCats = (await currentLspData)?.allCatMain || [];
+    const currentLspSubCats = (await currentLspData)?.allSubCatMain || [];
+
+    // merging both lsp cat subcat
+    const catAndSubCatRes = { allSubCatMain: [], allCatMain: [] };
+    catAndSubCatRes.allCatMain.push(...[...zicopsCats, ...currentLspCats]);
+    catAndSubCatRes.allSubCatMain.push(...[...zicopsSubCats, ...currentLspSubCats]);
+
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
       return { ...subCat, value: subCat?.Name, label: subCat?.Name };
@@ -671,15 +690,15 @@ export function useUpdateUserAboutData() {
   async function updateUserRole(userData = null) {
     userData = userData ? userData : newUserAboutData;
 
-    console.log(userData,'sifhishfi')
+    console.log(userData, 'sifhishfi');
     const sendRoleData = {
       user_role_id: userData?.roleData?.user_lsp_id,
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      role: "Admin",
-      is_active: true,
-    }
-    console.log(sendRoleData,'role data');
+      role: 'Admin',
+      is_active: true
+    };
+    console.log(sendRoleData, 'role data');
   }
 
   async function updateAboutUser(userData = null) {

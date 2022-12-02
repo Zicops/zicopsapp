@@ -1,7 +1,7 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
+import { COURSE_STATUS, LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -82,6 +82,7 @@ export default function FavouriteDndCourses({ isLoading }) {
       publish_time: getUnixFromDate(),
       pageSize: 9999999,
       pageCursor: '',
+      status: COURSE_STATUS.publish,
       filters: { LspId: _lspId }
     };
     let isError = false;

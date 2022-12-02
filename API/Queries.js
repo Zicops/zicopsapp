@@ -104,6 +104,7 @@ export const GET_LATEST_COURSES = gql`
   query LatestCourses(
     $publish_time: Int
     $pageCursor: String
+    $status: Status
     $pageSize: Int
     $filters: CoursesFilters
   ) {
@@ -112,7 +113,7 @@ export const GET_LATEST_COURSES = gql`
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
-      status: SAVED
+      status: $status
       filters: $filters
     ) {
       courses {

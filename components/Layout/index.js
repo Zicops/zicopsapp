@@ -1,7 +1,9 @@
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { deleteData, loadQueryDataAsync } from '@/helper/api.helper';
 import { HIDE_HEADER_FOOTER_FOR_ROUTE } from '@/helper/constants.helper';
+import getFCMToken from '@/helper/firebaseUtil/firebase.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { NotificationAtom } from '@/state/atoms/notification.atom';
 import { DeleteConfirmDataAtom, getDeleteConfirmDataObj } from '@/state/atoms/popUp.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -18,9 +20,40 @@ export default function Layout({ children }) {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [deleteConfirmData, setDeleteConfirmData] = useRecoilState(DeleteConfirmDataAtom);
+  const [notifications, setNotifications] = useRecoilState(NotificationAtom);
 
   const [isFullHeight, setIsFullHeight] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    setToken();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        console.log('event for the service worker', event);
+
+        if (event?.data?.notification?.title) {
+          setToastMsg({ type: 'info', message: event?.data?.notification?.title });
+
+          setNotifications((prev) => [...prev, event?.data?.notification]);
+        }
+        // alert(event.data.firebaseMessaging.payload.notification.title);
+        //   setNotifications([])
+      });
+    }
+
+    async function setToken() {
+      try {
+        const token = await getFCMToken();
+        console.log('token', token);
+        if (token) {
+          console.log('token', token);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, []);
 
   //refill the  recoil values
   useEffect(async () => {

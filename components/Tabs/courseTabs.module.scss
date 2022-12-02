@@ -49,7 +49,7 @@
     width: fit-content;
     margin-bottom: 10px;
     margin-right: 10px;
-    padding-left: 10px;
+    padding: 10px;
 
     border: 1px solid $primary;
     border-radius: 5px;
@@ -57,8 +57,12 @@
     white-space: nowrap;
     color: $black;
     // font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
     button {
-      padding: 10px;
+      color: $black;
     }
   }
 
@@ -537,7 +541,7 @@
   margin-bottom: 20px;
 }
 
-.expertiseLevelCheckboxes{
+.expertiseLevelCheckboxes {
   width: 25%;
   display: flex;
   flex-wrap: wrap;

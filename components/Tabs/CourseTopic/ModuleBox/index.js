@@ -20,12 +20,15 @@ import IconButton from '../../../common/IconButton';
 import styles from '../../courseTabs.module.scss';
 import { getSequenceNumber } from '../Logic/courseTopic.helper';
 
-export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateRecoil }) {
+export default function ModuleBox({
+  mod,
+  activateHandlers,
+  refetchDataAndUpdateRecoil,
+  isDisabled = false
+}) {
   const [updateCourseModule] = useMutation(UPDATE_COURSE_MODULE);
   const [updateCourseChapter] = useMutation(UPDATE_COURSE_CHAPTER);
   const [updateCourseTopic] = useMutation(UPDATE_COURSE_TOPIC);
-
-  const { fullCourse } = useContext(courseContext);
 
   const isChapterPresent = mod.isChapter;
   const {
@@ -83,6 +86,7 @@ export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateR
           title={`Module ${mod.sequence} : ${mod.name}`}
           type="large"
           editHandler={() => activateEditModule(mod.id)}
+          isDisabled={isDisabled}
           deleteProps={{
             id: mod?.id,
             resKey: 'deleteCourseModule',
@@ -118,6 +122,7 @@ export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateR
                       type="medium"
                       title={`Chapter ${chapter.sequence} : ${chapter.name}`}
                       editHandler={() => activateEditChapter(chapter.id)}
+                      isDisabled={isDisabled}
                       deleteProps={{
                         id: chapter?.id,
                         resKey: 'deleteCourseChapter',
@@ -148,6 +153,7 @@ export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateR
                             type="small"
                             title={`Topic ${++topicIndex} : ${topic.name}`}
                             editHandler={() => activateEditTopic(topic.id)}
+                            isDisabled={isDisabled}
                             deleteProps={{
                               id: topic?.id,
                               resKey: 'deleteCourseTopic',
@@ -165,6 +171,7 @@ export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateR
                     <span className={`${styles.buttonGap}`}>
                       <IconButton
                         text="Add Topic"
+                        isDisabled={isDisabled}
                         handleClick={() =>
                           constructTopicData(
                             fullCourse.id,
@@ -182,6 +189,7 @@ export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateR
             <span className={`${styles.buttonGap}`}>
               <IconButton
                 text="Add Chapter"
+                isDisabled={isDisabled}
                 handleClick={() =>
                   constructChapterData(
                     fullCourse.id,
@@ -203,6 +211,7 @@ export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateR
                     type="small"
                     title={`Topic ${++topicIndex} : ${topic.name}`}
                     editHandler={() => activateEditTopic(topic.id)}
+                    isDisabled={isDisabled}
                     deleteProps={{
                       id: topic?.id,
                       resKey: 'deleteCourseTopic',
@@ -220,6 +229,7 @@ export default function ModuleBox({ mod, activateHandlers, refetchDataAndUpdateR
             <span className={`${styles.buttonGap}`}>
               <IconButton
                 text="Add Topic"
+                isDisabled={isDisabled}
                 handleClick={() =>
                   constructTopicData(fullCourse.id, mod.id, getSequenceNumber(topicData, mod.id))
                 }
