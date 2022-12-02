@@ -2,8 +2,8 @@ import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
 import { firebaseConfig } from './firebaseConfig';
 
-export const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+export const app = process.browser ? initializeApp(firebaseConfig) : null;
+const messaging = !!app ? getMessaging(app) : null;
 
 export default async function getFCMToken() {
   try {
