@@ -81,30 +81,10 @@ export default function CourseConfiguration() {
             handleChange={handleChange}
           />
         </div>
-
-        {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <SwitchButton
-          label="Active"
-          inputName="is_active"
-          isChecked={fullCourse?.is_active}
-          handleChange={(e) => {
-            if (!fullCourse?.is_active)
-              return updateCourseMaster({ ...fullCourse, is_active: true });
-
-            setShowConfirmBox(true);
-          }}
-        />
-        <SwitchButton
-          label="Display"
-          inputName="is_display"
-          isChecked={fullCourse?.is_display || false}
-          handleChange={handleChange}
-        />
-      </div> */}
       </div>
 
       {/* disable course */}
-      <div className={`center-element-with-flex ${styles.marginBottom}`}>
+      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label htmlFor="visible" className="w-25">
           Expire Course
         </label>
@@ -126,8 +106,8 @@ export default function CourseConfiguration() {
             }
           />
         </div>
-
-        {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
+      </div> */}
+      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <SwitchButton
           label="Active"
           inputName="is_active"
@@ -146,7 +126,6 @@ export default function CourseConfiguration() {
           handleChange={handleChange}
         />
       </div> */}
-      </div>
       {/* {showConfirmBox && (
         <ConfirmPopUp
           title={
