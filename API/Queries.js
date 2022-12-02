@@ -1,12 +1,8 @@
 import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client';
 import { authLink } from './api.helper';
 
-let url = new URL(window.location.href);
-let origin = url.hostname;
-
 const httpLink = createHttpLink({
-  // uri: 'https://demo.zicops.com/cq/api/v1/query'
-  uri: `https://${origin}/cq/api/v1/query`
+  uri: `https://demo.zicops.com/cq/api/v1/query`
 });
 
 // Set query Client
