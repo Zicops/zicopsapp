@@ -7,7 +7,7 @@ const origin = process.browser && window?.location?.origin ? window.location.ori
 const API_BASE = !!origin && origin?.includes('localhost') ? 'https://demo.zicops.com' : origin;
 
 export const API_LINKS = {
-  notification: `${API_BASE}/ns/api/v1/query`,
+  notification: `${API_BASE}/ns/query`,
   courseCreator: `${API_BASE}/cc/api/v1/query`,
   courseQuery: `${API_BASE}/cq/api/v1/query`,
   userClient: `${API_BASE}/um/api/v1/query`

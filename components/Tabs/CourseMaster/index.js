@@ -57,7 +57,7 @@ export default function CourseMaster() {
   // data?.allSubCategories?.map((val) => allSubcatOptions.push({ value: val, label: val }));
   const subcategoryDropdownOptions = {
     inputName: 'sub_category',
-    label: 'Select Base Sub-category',
+    label: 'Base Sub-category',
     placeholder: 'Select the sub-category of the course',
     options: catSubCat.subCat,
     value: fullCourse?.sub_category
