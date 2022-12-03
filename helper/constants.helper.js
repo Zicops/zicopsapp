@@ -56,7 +56,7 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
 
 // export const LEARNING_SPACE_ID = 'Zicops learning Spaces';
- export const LEARNING_SPACE_ID = 'd8685567-cdae-4ee0-a80e-c187848a760e';
+export const LEARNING_SPACE_ID = 'd8685567-cdae-4ee0-a80e-c187848a760e';
 
 export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS',
@@ -77,4 +77,19 @@ export const DEFAULT_VALUES = {
   image: 'default-image.jpg',
   tileImage: 'default-image.jpg',
   previewVideo: 'default-video.mp4'
+};
+
+// ztlp pune lsp
+export const COMMON_LSPS = {
+  zicops: '6bc01264-07c2-518e-9b1e-a6fd54249132'
+};
+
+export const COURSE_STATUS = {
+  draft: 'DRAFT',
+  upload: 'UPLOADING',
+  update: 'UPDATING',
+  save: 'SAVED',
+  freeze: 'FREEZED',
+  publish: 'PUBLISHED',
+  reject: 'REJECTED'
 };

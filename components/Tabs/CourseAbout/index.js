@@ -14,6 +14,8 @@ export default function CourseAbout() {
   const { fullCourse, handleChange, updateCourseMaster } = useHandleTabs(courseContextData);
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
 
+  const isFreezed = fullCourse?.qa_required;
+
   return (
     <div>
       {/* outcomes */}
@@ -26,6 +28,7 @@ export default function CourseAbout() {
             placeholder="Add Learning Objectives/Outcomes and press enter"
             name="outcomes"
             isError={!fullCourse?.outcomes?.length && courseError?.about}
+            isDisabled={isFreezed}
           />
         </div>
       </div>
@@ -40,6 +43,7 @@ export default function CourseAbout() {
             placeholder="Add Program Highlights/Benefits and press enter"
             name="benefits"
             isError={!fullCourse?.benefits?.length && courseError?.about}
+            isDisabled={isFreezed}
           />
         </div>
       </div>
@@ -57,7 +61,8 @@ export default function CourseAbout() {
             placeholder: 'Provide description of the course',
             rows: 4,
             value: fullCourse?.description,
-            maxLength: 2000
+            maxLength: 2000,
+            isDisabled: isFreezed
           }}
           changeHandler={handleChange}
         />
@@ -73,6 +78,7 @@ export default function CourseAbout() {
             placeholder="Add Pre-requisites and press enter"
             name="prequisites"
             isError={!fullCourse?.prequisites?.length && courseError?.about}
+            isDisabled={isFreezed}
           />
         </div>
       </div>
@@ -87,6 +93,7 @@ export default function CourseAbout() {
             placeholder="Add Good For and press enter"
             name="goodFor"
             isError={!fullCourse?.goodFor?.length && courseError?.about}
+            isDisabled={isFreezed}
           />
         </div>
 
@@ -98,6 +105,7 @@ export default function CourseAbout() {
             placeholder="Add Must For and press enter"
             name="mustFor"
             isError={!fullCourse?.mustFor?.length && courseError?.about}
+            isDisabled={isFreezed}
           />
         </div>
       </div>
@@ -113,6 +121,7 @@ export default function CourseAbout() {
             name="related_skills"
             isBullet={false}
             isError={!fullCourse?.related_skills?.length && courseError?.about}
+            isDisabled={isFreezed}
           />
           {/* <TagInput
             placeholder="Add Related Skills"

@@ -1,8 +1,8 @@
 import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client';
-import { authLink } from './api.helper';
+import { API_LINKS, authLink } from './api.helper';
 
 const httpLink = createHttpLink({
-  uri: 'https://demo.zicops.com/cq/api/v1/query'
+  uri: API_LINKS.courseQuery
 });
 
 // Set query Client
@@ -104,6 +104,7 @@ export const GET_LATEST_COURSES = gql`
   query LatestCourses(
     $publish_time: Int
     $pageCursor: String
+    $status: Status
     $pageSize: Int
     $filters: CoursesFilters
   ) {
@@ -112,7 +113,7 @@ export const GET_LATEST_COURSES = gql`
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
-      status: SAVED
+      status: $status
       filters: $filters
     ) {
       courses {

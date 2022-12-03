@@ -1,10 +1,10 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
-import { authLink } from './api.helper';
+import { API_LINKS, authLink } from './api.helper';
 import customFetch from './customFetch';
 
 const link = createUploadLink({
-  uri: 'https://demo.zicops.com/cc/api/v1/query',
+  uri: API_LINKS.courseCreator,
   fetch: customFetch
 });
 // Set Mutation Client

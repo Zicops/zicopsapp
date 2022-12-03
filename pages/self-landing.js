@@ -4,7 +4,7 @@ import { classroomData } from '@/components/ClassRoomBanner/classRoomBanner.help
 import HeroSliderContainer from '@/components/HeroSliderContainer';
 import SearchSubCat from '@/components/Search/SearchSubCat';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_TYPES } from '@/helper/constants.helper';
+import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -57,6 +57,7 @@ export default function Self() {
       publish_time: time,
       pageSize: pageSize,
       pageCursor: '',
+      status: COURSE_STATUS.publish,
       filters: { LspId: _lspId, ...filters }
     });
     return courses;

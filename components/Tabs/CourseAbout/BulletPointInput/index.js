@@ -4,7 +4,13 @@ import { useContext, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../../courseTabs.module.scss';
 
-export default function BulletPointInput({ placeholder, name, isBullet = true, isError }) {
+export default function BulletPointInput({
+  placeholder,
+  name,
+  isBullet = true,
+  isError,
+  isDisabled = false
+}) {
   const { fullCourse, updateCourseMaster } = useContext(courseContext);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -12,7 +18,6 @@ export default function BulletPointInput({ placeholder, name, isBullet = true, i
   const [isKeyReleased, setIsKeyReleased] = useState(false);
 
   function addTag(newTag) {
-    
     const tagsAdded = [...fullCourse[name]];
     if (tagsAdded?.some((t) => t?.toLowerCase() === newTag?.toLowerCase())) {
       return setToastMsg({ type: 'danger', message: 'Cannot Add Duplicate value' });
@@ -33,7 +38,7 @@ export default function BulletPointInput({ placeholder, name, isBullet = true, i
 
     if ((key === 'Enter' || key === 'Tab') && trimmedInput.length) {
       e.preventDefault();
-      
+
       addTag(trimmedInput);
     }
 
@@ -70,13 +75,14 @@ export default function BulletPointInput({ placeholder, name, isBullet = true, i
         {fullCourse[name]?.map((tag, index) => (
           <span key={index} className={`w-100 ${isBullet ? styles.bullets : styles.tags}`}>
             {tag}
-            <button onClick={() => deleteTag(index)}>x</button>
+            {!isDisabled && <button onClick={() => deleteTag(index)}>x</button>}
           </span>
         ))}
         {/* </ul> */}
         <input
           name={name}
           value={input}
+          disabled={isDisabled}
           placeholder={placeholder}
           onKeyDown={onKeyDown}
           onKeyUp={() => setIsKeyReleased(true)}

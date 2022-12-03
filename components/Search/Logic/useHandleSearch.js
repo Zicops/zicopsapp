@@ -1,6 +1,7 @@
 import { userClient } from '@/api/UserMutations';
 import { GET_USER_BOOKMARKS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { COURSE_STATUS } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
@@ -75,6 +76,7 @@ export default function useHandleSearch() {
       publish_time: time,
       pageSize: 999,
       pageCursor: '',
+      status: COURSE_STATUS.publish,
       filters: { LspId: _lspId }
     };
     if (searchQuery) {

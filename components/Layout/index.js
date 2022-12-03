@@ -2,6 +2,7 @@ import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { deleteData, loadQueryDataAsync } from '@/helper/api.helper';
 import { HIDE_HEADER_FOOTER_FOR_ROUTE } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { NotificationAtom } from '@/state/atoms/notification.atom';
 import { DeleteConfirmDataAtom, getDeleteConfirmDataObj } from '@/state/atoms/popUp.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -15,9 +16,9 @@ import { main } from './layout.module.scss';
 
 export default function Layout({ children }) {
   const [userAboutData, setUserData] = useRecoilState(UserStateAtom);
-  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [deleteConfirmData, setDeleteConfirmData] = useRecoilState(DeleteConfirmDataAtom);
+  const [notifications, setNotifications] = useRecoilState(NotificationAtom);
 
   const [isFullHeight, setIsFullHeight] = useState(0);
   const router = useRouter();

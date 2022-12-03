@@ -1,4 +1,5 @@
 import AuthChecker from '@/components/AuthChecker';
+import PushNotificationLayout from '@/components/Layout/PushNotificationLayout';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
 import Head from 'next/head';
 import { useEffect } from 'react';
@@ -50,11 +51,13 @@ function MyApp({ Component, pageProps }) {
             <CourseContextProvider>
               <UserContextProvider>
                 <AuthChecker>
-                  <Layout>
-                    <Component {...pageProps} />
+                  <PushNotificationLayout>
+                    <Layout>
+                      <Component {...pageProps} />
 
-                    <Toaster />
-                  </Layout>
+                      <Toaster />
+                    </Layout>
+                  </PushNotificationLayout>
                 </AuthChecker>
               </UserContextProvider>
             </CourseContextProvider>
