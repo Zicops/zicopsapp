@@ -150,6 +150,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         let isLearner = false;
         let isAdmin = false;
         isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
+        isLearner = !isAdmin ;
         if (adminLearnerList?.admins?.includes(params?.row?.id)) {
           isLearner = false;
           isAdmin = true;
@@ -193,6 +194,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         let isLearner = false;
         let isAdmin = false;
         isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
+        isLearner = !isAdmin ;
 
         if (adminLearnerList?.admins?.includes(params?.row?.id)) {
           isLearner = false;
