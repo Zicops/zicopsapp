@@ -14,9 +14,12 @@ export async function getUsersForAdmin(isAdmin = false) {
 
   // console.log(resLspUser,'lspusers');
   //removing duplicate values
-  const userIds = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps
-    ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
-    ?.map((user) => user?.user_id);
+  const _userIds = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps
+  ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
+  ?.map((user) => user?.user_id);
+
+//removing null value
+const userIds = _userIds?.filter((userId) => !!userId) ;
 
   const lspUsers = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps ;
 
