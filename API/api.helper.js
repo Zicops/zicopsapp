@@ -2,14 +2,12 @@ import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { setContext } from '@apollo/client/link/context';
 import { getIdToken, onAuthStateChanged } from 'firebase/auth';
-import Router from 'next/router';
 
-const hostname = process.browser && window?.location?.hostname ? window.location.hostname : '';
-const origin = process.browser && window?.location?.origin ? window.location.origin : '';
-const API_BASE = origin ? origin : 'https://demo.zicops.com';
+const origin = process.browser && window?.location?.origin ? window.location.origin : null;
+const API_BASE = !!origin && origin?.includes('localhost') ? 'https://demo.zicops.com' : origin;
 
 export const API_LINKS = {
-  notification: `${API_BASE}/ns/api/v1/query`,
+  notification: `${API_BASE}/ns/query`,
   courseCreator: `${API_BASE}/cc/api/v1/query`,
   courseQuery: `${API_BASE}/cq/api/v1/query`,
   userClient: `${API_BASE}/um/api/v1/query`

@@ -128,7 +128,7 @@ export default function Nav() {
             <ToolTip title="Show Notifications" placement="right">
               <li
                 onClick={handleClickInside}
-                data-count={notifications?.length}
+                data-count={notifications?.filter((n) => !n?.isRead)?.length}
                 className={`${styles.notificationIcon} ${
                   !!notifications?.length && styles.activeNotificationIcon
                 }`}>

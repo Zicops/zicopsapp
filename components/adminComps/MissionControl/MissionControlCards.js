@@ -1,7 +1,6 @@
+import ProductTour from '@/components/common/ProductTour';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_HOME } from '@/components/common/ToolTip/tooltip.helper';
-import ProductTour from '@/components/common/ProductTour';
-import ProductTourFooter from '@/components/common/ProductTour/ProductTourFooter';
 import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,7 +10,19 @@ const Card = ({ image, text, width, tooltipTitle }) => {
   return (
     <>
       <ToolTip title={tooltipTitle}>
-        <div className="card">
+        <div
+          className="card"
+          // onClick={() => {
+          //   sendNotification(
+          //     {
+          //       title: 'Card Clicked',
+          //       body: 'Hopefully Clicked on Labs',
+          //       emails: ['vajresh@zicops.com', 'joy@zicops.com']
+          //     },
+          //     { context: { headers: { 'fcm-token': fcmToken } } }
+          //   );
+          // }}
+        >
           <div className="card_icon">
             <Image src={image} alt="" width={width} height={'70px'} />
           </div>
