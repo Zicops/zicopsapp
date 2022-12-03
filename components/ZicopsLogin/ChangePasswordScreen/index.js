@@ -72,7 +72,7 @@ const ChangePasswordScreen = ({ setPage }) => {
             </Tooltip>
           }
         />
-        <div className="login_body" onSubmit={handleSubmit}>
+        <div className="login_body">
           {/* <LoginEmail placeholder={'Enter current password'} chngeHandle={handleCurrentPassword} /> */}
           <LoginEmail
             placeholder={'Enter new password'}
