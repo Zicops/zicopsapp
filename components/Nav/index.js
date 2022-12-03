@@ -15,7 +15,6 @@ import ToolTip from '../common/ToolTip';
 import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
 import { useLazyQuery } from '@apollo/client';
 import { userClient } from '@/api/UserMutations';
-import { useRecoilState } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import UserDisplay from './UserDisplay';
 
