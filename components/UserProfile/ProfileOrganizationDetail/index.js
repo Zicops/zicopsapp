@@ -46,10 +46,12 @@ const ProfileOrganizationDetail = ({ currentUserData, setCurrentUserData }) => {
   }
 
   useEffect(() => {
+    // console.log(currentUserData,'soh')
     if (isEditData) return;
 
+
     setNewUserOrgData(getUserOrgMapObject(currentUserData));
-    if(!currentUserData?.is_verified && !currentUserData?.user_organization_id){
+    if(!currentUserData?.is_verified || !currentUserData?.user_organization_id){
       // setIsAddPopupOpen(true);
       setIsAddData(true);
     }

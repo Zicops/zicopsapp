@@ -9,10 +9,9 @@ import {
 } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
 import {
-  GET_USER_BOOKMARKS,
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
   GET_USER_COURSE_PROGRESS,
-  GET_USER_NOTES,
+  GET_USER_NOTES_BOOKMARKS,
   GET_USER_QUIZ_ATTEMPTS,
   userQueryClient
 } from '@/api/UserQueries';
@@ -330,8 +329,8 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
     if (!isPreview) {
       // user notes
-      const notesDataRes = await loadQueryDataAsync(
-        GET_USER_NOTES,
+      loadQueryDataAsync(
+        GET_USER_NOTES_BOOKMARKS,
         {
           user_id: userData?.id,
           publish_time: Date.now(),
@@ -341,28 +340,30 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         },
         {},
         userClient
-      );
-      setFloatingNotes(
-        notesDataRes?.getUserNotes?.notes
-          ?.filter((notes) => notes?.is_active)
-          ?.map((noteObj) => getNoteCardObj(noteObj)) || []
-      );
+      ).then((notesBookmarkDataRes) => {
+        setFloatingNotes(
+          notesBookmarkDataRes?.getUserNotes?.notes
+            ?.filter((notes) => notes?.is_active)
+            ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+        );
+        setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+      });
 
       // user bookmarks
-      const bookmarkDataRes = await loadQueryDataAsync(
-        GET_USER_BOOKMARKS,
-        {
-          user_id: userData?.id,
-          publish_time: Date.now(),
-          pageCursor: '',
-          pageSize: 9999999999999,
-          course_id: fullCourse?.id
-        },
-        {},
-        userClient
-      );
+      // const bookmarkDataRes = await loadQueryDataAsync(
+      //   GET_USER_BOOKMARKS,
+      //   {
+      //     user_id: userData?.id,
+      //     publish_time: Date.now(),
+      //     pageCursor: '',
+      //     pageSize: 9999999999999,
+      //     course_id: fullCourse?.id
+      //   },
+      //   {},
+      //   userClient
+      // );
       // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
-      setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+      // setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
 
       // topic quiz
       const allQuizProgress = [];
@@ -370,7 +371,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         const topic = topicDataLoaded[i];
         if (topic?.type !== 'Content') continue;
 
-        const quizProgessDataRes = await loadQueryDataAsync(
+        const quizProgessDataRes = loadQueryDataAsync(
           GET_USER_QUIZ_ATTEMPTS,
           { user_id: userData?.id, topic_id: topic?.id },
           {},
@@ -381,7 +382,9 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       }
       // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
       // console.log(allQuizProgress);
-      setQuizProgressData(allQuizProgress);
+      Promise.allSettled(allQuizProgress).then((results) => {
+        setQuizProgressData(results);
+      });
 
       // // user course progress
       // const data = { userCourseMapping: {}, userCourseProgress: [] };

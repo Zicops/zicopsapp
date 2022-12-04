@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:700");
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Montserrat, sans-serif;
+}
+
+figure {
+    margin: 0;
+}
+
+.scroll-container {
+    height: 100vh;
+    overflow: scroll;
+    scroll-snap-type: y mandatory;
+}
+
+.scroll-item {
+    position: relative;
+    scroll-snap-align: start;
+    height: 100vh;
+    background-color: #212121;
+}
+
+.scroll-item:nth-child(2) {
+    background-color: #e040fb;
+}
+
+.scroll-item:nth-child(2n) h2 {
+    background-color: #1d276b;
+}
+
+.scroll-item:nth-child(3n) .scroll-item__bg-image img {
+    object-position: bottom;
+}
+
+.scroll-item h2 {
+    position: sticky;
+    top: 0;
+    margin: 0;
+    padding: 1rem;
+    background-color: #283593;
+    color: #a1aae6;
+    z-index: 1;
+}
+
+.scroll-item__content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.scroll-item__content span {
+    display: block;
+}
+
+.scroll-item__inner {
+    border: 2px solid white;
+    padding: 1rem;
+    transition: opacity 800ms, transform 800ms;
+    opacity: 0;
+    transform: translate3d(0, -1.5rem, 0);
+}
+
+.scroll-item__inner.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+.scroll-item__bg-image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.scroll-item__bg-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.scroll-item__bg-image::after {
+    display: block;
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: background 1000ms;
+}
+
+.scroll-item__bg-image.is-visible::after {
+    background: rgba(0, 0, 0, 0.3);
+}

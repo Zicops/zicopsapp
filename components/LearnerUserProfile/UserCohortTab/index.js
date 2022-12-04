@@ -14,6 +14,7 @@ import useUserCourseData from '@/helper/hooks.helper';
 import CohortPopUp from './CohortPopUp';
 import useHandleCohortTab from '../Logic/useHandleCohortTab';
 import { cohortTabData } from '../Logic/userBody.helper';
+import { parseJson } from '@/helper/utils.helper';
 
 const UserCohortTab = () => {
   const [selectedCohort, setSelectedCohort] = useState(null);
@@ -30,11 +31,13 @@ const UserCohortTab = () => {
   },[selectedCohortData])
 
   useEffect(async()=>{
-    const {user_id , user_lsp_id} = JSON.parse(sessionStorage?.getItem('lspData'));
+    // const {user_id , user_lsp_id} = JSON.parse(sessionStorage?.getItem('lspData'));
+    const user_id = parseJson(sessionStorage?.getItem('loggedUser'));
+    const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
 
     if(!user_lsp_id) return setToastMsg({type:'danger',mesaage:'Cannot find user_lsp_id while loading cohorts!'});
     const sendData = {
-      user_id:user_id,
+      user_id:user_id?.id,
       user_lsp_id:user_lsp_id,
       publish_time:getCurrentEpochTime(),
       pageCursor:"",

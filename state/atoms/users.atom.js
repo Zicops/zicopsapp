@@ -49,23 +49,24 @@ export function getUserOrgObject(data = {}) {
     user_id: data?.user_id || null,
 
     //organization data
-    organization_name: data?.user_organization_name || 'Zicops',
-    organization_unit: data?.organization_unit || 'Zicops ,India',
+    organization_name: data?.organization_name,
+    organization_unit: data?.organization_unit || '',
+    learningSpace_name: data?.learningSpace_name || '',
 
     user_organization_id: data?.user_organization_id || '',
-    organization_id: data?.organization_id || 'Zicops',
+    organization_id: data?.organization_id || '',
     organization_role: data?.organization_role || '',
     employee_id: data?.employee_id || '',
-    org_is_active: data?.org_is_active || true, // user language and role mutation also have is_active
+    org_is_active: data?.org_is_active || true,
 
-    //learning space id basically Organization and we can find its unit for now make unit as pune
+    
     user_lsp_id: data?.user_lsp_id || null,
-    lsp_id: data?.lsp_id || LEARNING_SPACE_ID,
+    lsp_id: data?.lsp_id || null,
     status: data?.status || 'Active',
 
     // user role data
     user_role_id: data?.user_role_id || null,
-    user_role: data?.role || 'Learner',
+    user_lsp_role: data?.user_lsp_role || '',
     role_is_active: data?.role_is_active || true,
 
     // user language data

@@ -15,5 +15,6 @@ export const isDisabledArr = [
   'Organization Unit',
   'Learning Space Role',
   'Base Sub-category',
-  'Base Language'
+  'Base Language',
+  'Gender'
 ];

@@ -5,7 +5,7 @@ import {
 } from '@/state/atoms/productTour.atom';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ProductTooltip from '../ProductTour/ProductTooltip';
@@ -66,7 +66,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
               const tourData = activeTour?.id === val?.tourId ? activeTour : null;
 
               return (
-                <>
+                <Fragment key={val.link}>
                   {isProductTooltip ? (
                     <ProductTooltip
                       title={tourData?.title}
@@ -101,7 +101,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
                       </span>
                     </ToolTip>
                   )}
-                </>
+                </Fragment>
               );
             })}
           </ul>

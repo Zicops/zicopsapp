@@ -1,7 +1,7 @@
 import { GIBBERISH_VALUE_FOR_LOGIN_STATE, PUBLIC_PATHS } from '@/helper/constants.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
-import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
+import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import { useRecoilState } from 'recoil';
 const AuthChecker = ({ children }) => {
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
+  const [userOrg, setUserOrg] = useRecoilState(UsersOrganizationAtom);
 
   const router = useRouter();
   const [authorized, setAuthorized] = useState(true);
@@ -109,6 +110,24 @@ const AuthChecker = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!router.asPath?.includes('admin')) return;
+
+    const _userLspRole = sessionStorage?.getItem('user_lsp_role');
+    if (!_userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
+  }, [router?.asPath]);
+
+  function lspCheck() {
+    if (userOrg?.lsp_id) return;
+
+    const _lspId = sessionStorage?.getItem('lsp_id');
+    const _userLspId = sessionStorage?.getItem('user_lsp_id');
+
+    if (!_lspId) return router.push('/learning-spaces');
+
+    return setUserOrg((prevValue) => ({ ...prevValue, lsp_id: _lspId, user_lsp_id: _userLspId }));
+  }
+
   function authCheck(url) {
     // redirect to login page if accessing a private page and not logged in
     const path = url.split('?')[0];
@@ -118,7 +137,11 @@ const AuthChecker = ({ children }) => {
     // if (!userData?.is_verified && !PUBLIC_PATHS.includes(path) && !path?.includes('account-setup'))
     //   return router.push('/account-setup');
 
-    if (!!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE) && userData) return setAuthorized(true);  
+    if (!!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE) && userData) {
+      if (['/learning-spaces'].includes(path)) return setAuthorized(true);
+      lspCheck();
+      return setAuthorized(true);
+    }
 
     if (!userData && !PUBLIC_PATHS.includes(path)) {
       //this is temporary will delete later
@@ -128,7 +151,10 @@ const AuthChecker = ({ children }) => {
         pathname: '/login'
         // query: { returnUrl: router.asPath }
       });
+      return;
     } else {
+      // lspCheck();
+
       setAuthorized(true);
     }
   }
