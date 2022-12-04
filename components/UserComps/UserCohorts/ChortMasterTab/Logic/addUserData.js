@@ -47,6 +47,7 @@ export default function addUserData() {
 
   async function removeCohortUser(userData = null , cohortData = null , cohortSize = null){
     const { id } = getUserData();
+    const lspId = sessionStorage.getItem('lsp_id')
     if(!userData) return false;
     const sendData = {
       user_cohort_id: userData?.user_cohort_id,
@@ -68,7 +69,7 @@ export default function addUserData() {
       cohort_id: cohortData?.id || cohortData?.cohort_id,
       name: cohortData?.cohort_name || cohortData?.name,
       description: cohortData?.description,
-      lsp_id: cohortData?.lsp_id || lspData?.lsp_id,
+      lsp_id: cohortData?.lsp_id || lspId,
       code: cohortData?.cohort_code || cohortData?.code,
       status: 'SAVED',
       type: cohortData?.cohort_type || cohortData?.type,

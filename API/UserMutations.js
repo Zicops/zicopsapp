@@ -1,9 +1,9 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
-import { authLink } from './api.helper';
+import { API_LINKS, authLink } from './api.helper';
 
 const httpLink = createUploadLink({
-  uri: 'https://zicops.com/um/api/v1/query'
+  uri: API_LINKS.userClient
 });
 
 export const userClient = new ApolloClient({
@@ -1182,6 +1182,145 @@ export const UPDATE_USER_QUIZ_ATTEMPT = gql`
       updated_by
       created_at
       updated_at
+    }
+  }
+`;
+export const UPDATE_ORGANIZATION_DETAILS = gql`
+  mutation updateOrganization(
+    $org_id: ID
+    $name: String!
+    $industry: String!
+    $type: String!
+    $subdomain: String!
+    $employee_count: Int!
+    $website: String!
+    $linkedin_url: String
+    $facebook_url: String
+    $twitter_url: String
+    $status: String!
+  ) {
+    updateOrganization(
+      input: {
+        org_id: $org_id
+        name: $name
+        industry: $industry
+        type: $type
+        subdomain: $subdomain
+        employee_count: $employee_count
+        website: $website
+        linkedin_url: $linkedin_url
+        facebook_url: $facebook_url
+        twitter_url: $twitter_url
+        status: $status
+      }
+    ) {
+      org_id
+      name
+      logo_url
+      industry
+      type
+      subdomain
+      employee_count
+      website
+      linkedin_url
+      facebook_url
+      twitter_url
+      status
+      created_at
+      updated_at
+      created_by
+      updated_by
+    }
+  }
+`;
+
+export const UPDATE_LEARNING_SPACE_DETAILS = gql`
+  mutation updateLearningSpace(
+    $org_id: String!
+    $ou_id: String!
+    $lsp_id: ID
+    $name: String!
+    $no_users: Int!
+    $is_default: Boolean!
+    $status: String!
+    $logo_url: String
+    $profile_url: String
+    $owners: [String]
+  ) {
+    updateLearningSpace(
+      input: {
+        org_id: $org_id
+        ou_id: $ou_id
+        lsp_id: $lsp_id
+        name: $name
+        no_users: $no_users
+        is_default: $is_default
+        status: $status
+        logo_url: $logo_url
+        profile_url: $profile_url
+        owners: $owners
+      }
+    ) {
+      lsp_id
+      org_id
+      ou_id
+      name
+      logo_url
+      profile_url
+      no_users
+      owners
+      is_default
+      status
+      created_at
+      updated_at
+      created_by
+      updated_by
+    }
+  }
+`;
+
+export const UPDATE_ORGAINIZATION_UNIT_DETAILS = gql`
+  mutation updateOrganizationUnit(
+    $org_id: String!
+    $ou_id: ID
+    $address: String!
+    $city: String!
+    $state: String!
+    $country: String!
+    $status: String!
+    $postal_code: String!
+    $emp_count: Int!
+    $created_by: String
+    $updated_by: String
+  ) {
+    updateOrganizationUnit(
+      input: {
+        org_id: $org_id
+        ou_id: $ou_id
+        emp_count: $emp_count
+        address: $address
+        city: $city
+        state: $state
+        country: $country
+        postal_code: $postal_code
+        status: $status
+        created_by: $created_by
+        updated_by: $updated_by
+      }
+    ) {
+      ou_id
+      org_id
+      emp_count
+      address
+      city
+      state
+      country
+      postal_code
+      status
+      created_at
+      updated_at
+      created_by
+      updated_by
     }
   }
 `;

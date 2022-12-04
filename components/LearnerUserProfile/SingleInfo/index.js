@@ -33,26 +33,29 @@ const SingleInfo = ({ userData, isEditable = true, isOrg = false }) => {
       : userDataMain[`${userData.inputName}`];
   }
 
-  useEffect(async () => {
-    const { id } = getUserData();
-    if (!userMetaData?.organization_id) {
-      const resOrg = await loadUserOrg({ variables: { user_id: id } }).catch((err) =>
-        console.log(err)
-      );
+  // useEffect(async () => {
+  //   const { id } = getUserData();
+  //   if (!userMetaData?.organization_id) {
+  //     const resOrg = await loadUserOrg({ variables: { user_id: id } }).catch((err) =>
+  //       console.log(err)
+  //     );
 
-      const orgData = resOrg?.data?.getUserOrganizations[0];
+  //     const orgData = resOrg?.data?.getUserOrganizations[0];
 
-      // const data = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
-      // console.log(data);
-      setUserMetaData((prevValue) => ({
-        ...prevValue,
-        sub_category: baseSubcategory[0]?.sub_category,
-        ...orgData
-      }));
-      return;
-    }
-  }, []);
+  //     // const data = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
+  //     // console.log(data);
+  //     setUserMetaData((prevValue) => ({
+  //       ...prevValue,
+  //       sub_category: baseSubcategory[0]?.sub_category,
+  //       ...orgData
+  //     }));
+  //     return;
+  //   }
+  // }, []);
 
+  // useEffect(()=>{
+  //   console.log(userMetaData,'meta data');
+  // },[])
   return (
     <div className={`${styles.singleWraper}`}>
       <div className={`${styles.singleImage}`}>

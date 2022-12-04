@@ -47,7 +47,8 @@ const CourseContextProvider = (props) => {
     is_active: true,
     category: '',
     sub_category: '',
-    sub_categories: []
+    sub_categories: [],
+    lspId:null
   });
   const updateCourseMaster = (data) => {
     const sub_categories_filtered = data.sub_categories?.filter((s) => s.name);
@@ -90,7 +91,8 @@ const CourseContextProvider = (props) => {
       is_active: typeof data.is_active === 'boolean' ? data.is_active : true,
       category: data.category || '',
       sub_category: data.sub_category || '',
-      sub_categories: sub_categories || [] //this is an array that contains objects
+      lspId: data.lspId || '',
+      sub_categories: sub_categories || [] ,//this is an array that contains objects
     });
   };
   return (

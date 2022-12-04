@@ -1,26 +1,29 @@
 import Link from 'next/link';
-import styles from './nav.module.scss';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { AdminMenu, truncateTo16, UserMenu } from './Logic/nav.helper';
-import { useHandleNav } from './Logic/useHandleNav';
-import LeftMenuDropdown from './LeftMenuDropdown';
-import { userContext } from '../../state/contexts/UserContext';
 import { useRouter } from 'next/router';
-import RightDropDownMenu from './RightDropDownMenu';
-import AllNotification from '../Notifications';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { userContext } from '../../state/contexts/UserContext';
 import Notifications from '../Notifications';
+import LeftMenuDropdown from './LeftMenuDropdown';
+import { AdminMenu, UserMenu } from './Logic/nav.helper';
+import { useHandleNav } from './Logic/useHandleNav';
+import styles from './nav.module.scss';
 
+import { NotificationAtom } from '@/state/atoms/notification.atom';
+import { useRecoilState } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
-import UserDisplay from './UserDisplay';
 import ToolTip from '../common/ToolTip';
+import UserDisplay from './UserDisplay';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
 
+  const [notifications, setNotifications] = useRecoilState(NotificationAtom);
   const [showNotification, setShowNotification] = useState(false);
   const notificationBarRef = useRef(null);
 
-  const handleClickInside = () => setShowNotification(!showNotification);
+  const handleClickInside = () => {
+    setShowNotification(!showNotification);
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -61,7 +64,7 @@ export default function Nav() {
             <ToolTip
               title={`${!isOnLearnerSide ? 'Go Back to Admin Home' : 'Go Back to Learner Home'}`}
               placement="bottom">
-                {/* <img src="/images/zicops-header-logo.png" /> */}
+              {/* <img src="/images/zicops-header-logo.png" /> */}
               <img src="/images/svg/asset-6.svg" />
             </ToolTip>
           </a>
@@ -123,7 +126,12 @@ export default function Nav() {
               </li>
             )} */}
             <ToolTip title="Show Notifications" placement="right">
-              <li onClick={handleClickInside} className={styles.notificationIcon}>
+              <li
+                onClick={handleClickInside}
+                data-count={notifications?.filter((n) => !n?.isRead)?.length}
+                className={`${styles.notificationIcon} ${
+                  !!notifications?.length && styles.activeNotificationIcon
+                }`}>
                 {showNotification ? (
                   <svg
                     width="25"

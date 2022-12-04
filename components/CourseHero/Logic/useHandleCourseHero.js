@@ -7,7 +7,7 @@ import { USER_STATUS } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -37,6 +37,7 @@ export default function useHandleCourseHero(isPreview) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom); 
 
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
@@ -223,7 +224,7 @@ export default function useHandleCourseHero(isPreview) {
     const { userCourseMapping } = userCourseData;
     const sendData = {
       userId: userData?.id,
-      userLspId: userDataGlobal?.userDetails?.user_lsp_id,
+      userLspId: userOrgData?.user_lsp_id,
       courseId: fullCourse?.id,
       addedBy: JSON.stringify({ userId: userData.id, role: 'self' }),
       courseType: fullCourse?.type,

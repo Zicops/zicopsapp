@@ -81,6 +81,7 @@ export function getDeleteConfirmDataObj(data = {}) {
   return {
     showConfirm: data?.showConfirm || false,
     id: data?.id || null,
+    variableObj: {},
     mutation: data?.mutation || null,
     confirmMsg: data?.confirmMsg || null,
     onDelete: () => {},

@@ -1,4 +1,5 @@
 import { mutationClient } from '@/api/Mutations';
+import { notificationClient, SEND_NOTIFICATIONS } from '@/api/NotificationClient';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -83,9 +84,21 @@ export async function deleteData(
   client = mutationClient
 ) {
   const response = await client
-    .mutate({ mutation: MUTATION, variables: variableObj, ...options })
+    .mutate({ mutation: structuredClone(MUTATION), variables: variableObj, ...options })
     .catch((err) => {
       console.log(`Delete Data error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
+export async function sendNotification(variableObj = {}, options = {}) {
+  const response = await notificationClient
+    .mutate({ mutation: SEND_NOTIFICATIONS, variables: variableObj, ...options })
+    .catch((err) => {
+      console.error(`Send Notification error:`, err);
     });
 
   if (response?.error) return response;

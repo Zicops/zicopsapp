@@ -15,8 +15,11 @@ export function useHandleNav(isAdmin, setAdmin) {
     // window.localStorage.setItem('isAdmin', route.includes('admin') ? 1 : 0);
 
     // setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
-    setAdmin(userData?.role?.toLowerCase() === 'admin');
-  }, [userData?.role]);
+    const role = sessionStorage?.getItem('user_lsp_role');
+    if(!role) return ;
+    console.log(role,'role')
+    setAdmin(role.toLowerCase() === 'admin');
+  }, [userData?.id]);
 
   useEffect(() => {
     setIsOnLearnerSide(!router?.pathname?.includes('/admin'));
