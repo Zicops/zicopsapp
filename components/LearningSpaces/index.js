@@ -118,12 +118,12 @@ const LearningSpaces = () => {
 
   useEffect(() => {
     setUserGlobalData((prevValue) => ({ ...prevValue, isPrefAdded: false, isOrgAdded: false }));
-    if (!domainArr.includes(URL)) return;
+    // if (!domainArr.includes(URL)) return;
     UserLsp();
   }, []);
 
   useEffect(() => {
-    if (!domainArr.includes(URL)) return;
+    // if (!domainArr.includes(URL)) return;
     if (!lspIds?.length) return;
     LspDetails();
   }, [lspIds]);
