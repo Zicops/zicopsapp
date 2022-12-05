@@ -1,18 +1,17 @@
-import React from 'react';
 import SingleNotification from '../SingleNotification';
 
 const AllNotifications = ({ style, data }) => {
   return (
     <div>
-      {data.map((element) => {
-        const { description, img, link, duration, status,route } = element;
+      {data?.map((element) => {
+        const { body, img, link, duration, isRead, route, title } = element;
         return (
           <SingleNotification
-            description={description}
+            description={body}
             img={img}
             link={link}
             duration={duration}
-            status={status}
+            status={isRead}
             style={style}
             route={route}
           />

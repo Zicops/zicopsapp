@@ -1,3 +1,4 @@
+import { API_LINKS } from '@/api/api.helper';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import HomeHeader from '@/components/HomePage/HomeHeader';
 import { isEmail } from '@/helper/common.helper';
@@ -31,7 +32,7 @@ const ForgotPassword = ({ setPage }) => {
 
     setLoading(true);
 
-    const data = await fetch('https://demo.zicops.com/um/reset-password', {
+    const data = await fetch(API_LINKS?.resetPassword, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -59,7 +60,7 @@ const ForgotPassword = ({ setPage }) => {
       <ZicopsLogin>
         <LoginHeadOne
           heading={'Reset Password'}
-          sub_heading={'Start your first step to learning here!'}
+          sub_heading={'Send reset email to your registered email id'}
         />
         <div className="login_body">
           {/* <input
@@ -83,7 +84,7 @@ const ForgotPassword = ({ setPage }) => {
             <LoginButton title={'Send Email'} handleClick={handleSubmit} isDisabled={loading} />
           </div>
           <div className={`${styles.small_text}`}>
-            Did not received mail to reset password?<p onClick={handleSubmit}>Resend</p>
+            Did not receive email to reset password?<p onClick={handleSubmit}>Resend</p>
           </div>
         </div>
       </ZicopsLogin>
