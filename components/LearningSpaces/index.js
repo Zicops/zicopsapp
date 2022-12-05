@@ -124,18 +124,20 @@ const LearningSpaces = () => {
 
   useEffect(() => {
     if (!domainArr.includes(URL)) return;
-    if (!lspIds.length) return;
+    if (!lspIds?.length) return;
     LspDetails();
   }, [lspIds]);
 
   useEffect(() => {
-    if (!orgIds.length) return;
+    if (!orgIds?.length) return;
     OrgDetails();
   }, [orgIds]);
 
   useEffect(() => {
-    if (!orgDetails.length) return;
-    const _newArr = orgDetails?.map((item, i) => Object.assign({}, item, lspsDetails[i]));
+    if (!orgDetails?.length) return;
+    const _newArr = orgDetails?.map((item, i) =>
+      Object.assign({}, item, { org_logo_url: item.logo_url }, lspsDetails[i])
+    );
     setOrglspData(_newArr);
   }, [orgDetails]);
 
@@ -176,6 +178,7 @@ const LearningSpaces = () => {
               lspId={data.lsp_id}
               lspName={data.name}
               orgId={data.org_id}
+              logo={data.org_logo_url}
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
               userLspRole={userRoles?.[index]?.role}
