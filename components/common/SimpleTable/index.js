@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { arrayOf, shape, string } from 'prop-types';
 import Loader from '../Loader';
 import styles from './simpleTable.module.scss';
@@ -9,9 +10,10 @@ export default function SimpleTable({
   headingStyle,
   headingStyleClass,
   lastCellObj,
-  loading= false
+  loading = false
 }) {
   const { columnHeader, rowData } = tableData;
+  const router = useRouter();
 
   return (
     <>
@@ -35,21 +37,36 @@ export default function SimpleTable({
 
           {/* table body */}
           <div className={`${styles.tableBody}`}>
-            { loading ? <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }}/> : !rowData?.length ? <div className={`${styles.noDataFound}`}>No data found!</div> : <>{rowData?.map((rows, rowIndex) => (
-              <div className={`${styles.row}`} key={rowIndex}>
-                {/* table cell */}
-                {rows?.map((cell, cellIndex) => (
-                  <span
-                    className={`w-25 ${
-                      (cellIndex + 1 === rows.length && lastCellObj) && styles.scheduleBtnHover
-                    }`}
-                    key={cellIndex + cell}
-                    style={cellIndex + 1 === rows.length ? lastCellObj?.style : {}}>
-                    {cell}
-                  </span>
+            {loading ? (
+              <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />
+            ) : !rowData?.length ? (
+              <div className={`${styles.noDataFound}`}>No data found!</div>
+            ) : (
+              <>
+                {rowData?.map((rows, rowIndex) => (
+                  <div className={`${styles.row}`} key={rowIndex}>
+                    {/* table cell */}
+                    {rows?.examData?.map((cell, cellIndex) => (
+                      <span
+                        onClick={() => {
+                          console.log(rows, 'cell', cellIndex);
+                          router?.push(
+                            `/course/${rows?.courseId}?activateExam=${rows?.examId}`,
+                            `/course/${rows?.courseId}`
+                          );
+                        }}
+                        className={`w-25 ${
+                          cellIndex + 1 === rows.length && lastCellObj && styles.scheduleBtnHover
+                        }`}
+                        key={cellIndex + cell}
+                        style={cellIndex + 1 === rows.length ? lastCellObj?.style : {}}>
+                        {cell}
+                      </span>
+                    ))}
+                  </div>
                 ))}
-              </div>
-            ))}</>}
+              </>
+            )}
             {/* table row */}
             {}
           </div>
