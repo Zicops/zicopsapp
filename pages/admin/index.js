@@ -1,7 +1,15 @@
+import { ProductTourVisible } from '@/state/atoms/productTour.atom';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import MissionControlCards from '../../components/adminComps/MissionControl/MissionControlCards';
 import MissionControlHeader from '../../components/adminComps/MissionControl/MissionControlHeader';
 
 export default function AdminHome() {
+  const [showProductTour , setShowProductTour] = useRecoilState(ProductTourVisible)
+  useEffect(()=>{
+    setShowProductTour(false);
+    return;
+  },[])
   return (
     <>
       <div className="content">
