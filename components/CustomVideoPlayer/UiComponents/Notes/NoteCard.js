@@ -2,7 +2,7 @@ import { ADD_USER_NOTES, UPDATE_USER_NOTES, userClient } from '@/api/UserMutatio
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
@@ -32,6 +32,8 @@ export default function NoteCard({
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
+  //added org object
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   const [activeNote, setActiveNote] = useState(null);
 
@@ -39,12 +41,12 @@ export default function NoteCard({
 
   async function saveNotes(noteData, isDelete) {
     // if (noteObj?.details.length === 0) return;
-    // console.log(noteObj);
+    // console.log(noteObj); 
     if (!noteData?.user_notes_id && !noteData?.details.length) return console.log('skip');
 
     const sendNotesData = {
       user_id: userData?.id,
-      user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id,
+      user_lsp_id: userOrgData?.user_lsp_id,
       course_id: fullCourse?.id,
       topic_id: videoData?.topicContent[0]?.topicId,
       module_id: videoData?.currentModuleId,
