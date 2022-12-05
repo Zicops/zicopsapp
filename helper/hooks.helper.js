@@ -6,6 +6,7 @@ import {
   UPDATE_USER_COHORT,
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
+  UPDATE_USER_ROLE,
   userClient
 } from '@/api/UserMutations';
 import {
@@ -624,6 +625,9 @@ export function useUpdateUserAboutData() {
   const [updateLsp, { error: createLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
     client: userClient
   });
+  const [updateRole, { error: createRoleError }] = useMutation(UPDATE_USER_ROLE, {
+    client: userClient
+  });
 
   // local state
   const [multiUserArr, setMultiUserArr] = useState([]);
@@ -675,7 +679,7 @@ export function useUpdateUserAboutData() {
       status: userData?.status
     };
 
-    console.log(sendLspData, 'updateUserLearningSpaceDetails');
+    // console.log(sendLspData, 'updateUserLearningSpaceDetails');
 
     let isError = false;
     const res = await updateLsp({ variables: sendLspData }).catch((err) => {
@@ -688,17 +692,30 @@ export function useUpdateUserAboutData() {
   }
 
   async function updateUserRole(userData = null) {
-    userData = userData ? userData : newUserAboutData;
+    const userRoleData = userData ? userData?.roleData : newUserAboutData;
 
-    console.log(userData, 'sifhishfi');
+    console.log(userRoleData,'rianf')
+    if(!userData?.roleData?.user_role_id) return false;
+
+    // console.log(userData?.roleData, 'sifhishfi');
+    // return ;
     const sendRoleData = {
-      user_role_id: userData?.roleData?.user_lsp_id,
+      user_role_id: userRoleData?.user_role_id,
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      role: 'Admin',
+      role: userData?.updateTo,
       is_active: true
     };
-    console.log(sendRoleData, 'role data');
+
+    let isError = false ;
+    const res = await updateRole({variables: sendRoleData}).catch((err) => {
+      isError = !!err;
+    })
+
+    // console.log(res,'update role data');
+    if(isError) return isError;
+    return res?.data?.updateUserRole;
+    
   }
 
   async function updateAboutUser(userData = null) {
