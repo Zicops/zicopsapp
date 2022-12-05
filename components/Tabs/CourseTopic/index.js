@@ -1,3 +1,6 @@
+import { COURSE_STATUS } from '@/helper/constants.helper';
+import { courseContext } from '@/state/contexts/CourseContext';
+import { useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ModuleAtom } from '../../../state/atoms/module.atoms';
 import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
@@ -79,6 +82,11 @@ export default function CourseTopic() {
     addNewTopic
   } = useAddTopic(refetchDataAndUpdateRecoil, activateEditTopic);
 
+  const { fullCourse } = useContext(courseContext);
+
+  let isDisabled = !!fullCourse?.qa_required;
+  if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
+
   return (
     <>
       {/* module */}
@@ -87,6 +95,7 @@ export default function CourseTopic() {
           <ModuleBox
             key={mod.id}
             mod={mod}
+            isDisabled={isDisabled}
             refetchDataAndUpdateRecoil={refetchDataAndUpdateRecoil}
             activateHandlers={{
               activateEditModule,
@@ -102,6 +111,7 @@ export default function CourseTopic() {
       <div className="center-element-with-flex">
         <IconButton
           text="Add Module"
+          isDisabled={isDisabled}
           styleClass="btnBlack"
           handleClick={() => setAddModulePopUp(true)}
         />

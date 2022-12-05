@@ -12,6 +12,7 @@ import Button from '../../../common/Button';
 import PopUp from '../../../common/PopUp';
 import { IsDataPresentAtom } from '../../../common/PopUp/Logic/popUp.helper';
 import Accordion from '../../../small/Accordion';
+import styles from '../../courseTabs.module.scss';
 import useAddAssessment from '../Logic/useAddAssessment';
 import AddTopicContentForm from './AddTopicContentForm';
 import AddTopicForm from './AddTopicForm';
@@ -22,7 +23,6 @@ import QuizForm from './QuizForm';
 import ResourcesForm from './ResourcesForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentView from './TopicContentView';
-import styles from '../../courseTabs.module.scss';
 
 export default function TopicPopUp({
   addTopicData = {},
@@ -66,7 +66,7 @@ export default function TopicPopUp({
 
   // recoil state
   const topicContent = useRecoilValue(TopicContentAtom);
-  const topicData =  useRecoilValue(TopicAtom);
+  const topicData = useRecoilValue(TopicAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
@@ -132,8 +132,9 @@ export default function TopicPopUp({
                       <Button
                         clickHandler={() => {
                           const currentTopic = topicData.find((t) => t.id === editTopic?.id);
-                          if(currentTopic) setEditTopic(currentTopic);
-                          toggleEditTopicForm(false)}}
+                          if (currentTopic) setEditTopic(currentTopic);
+                          toggleEditTopicForm(false);
+                        }}
                         // isDisabled={!isEditTopicReady}
                         // customStyles={
                         //   !!editTopic?.name && !!editTopic?.description

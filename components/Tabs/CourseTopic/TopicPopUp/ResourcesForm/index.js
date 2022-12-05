@@ -1,14 +1,16 @@
-import { useRecoilValue } from 'recoil';
-import { ResourcesAtom } from '../../../../../state/atoms/module.atoms';
-import styles from '../../../courseTabs.module.scss';
-import Bar from '../../../../common/Bar';
-import IconButton from '../../../../common/IconButton';
-import useAddResources from '../../Logic/useAddResources';
-import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
-import BrowseAndUpload from '../../../../common/FormComponents/BrowseAndUpload';
-import Button from '../../../../common/Button';
-import LabeledInput from '../../../../common/FormComponents/LabeledInput';
+import { DELETE_TOPIC_RESOURCES } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
+import { useRecoilState } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
+import { ResourcesAtom } from '../../../../../state/atoms/module.atoms';
+import Bar from '../../../../common/Bar';
+import Button from '../../../../common/Button';
+import BrowseAndUpload from '../../../../common/FormComponents/BrowseAndUpload';
+import LabeledDropdown from '../../../../common/FormComponents/LabeledDropdown';
+import LabeledInput from '../../../../common/FormComponents/LabeledInput';
+import IconButton from '../../../../common/IconButton';
+import styles from '../../../courseTabs.module.scss';
+import useAddResources from '../../Logic/useAddResources';
 
 export default function ResourcesForm({ courseId, topicId }) {
   const {
@@ -20,7 +22,7 @@ export default function ResourcesForm({ courseId, topicId }) {
     isResourceReady
   } = useAddResources(courseId, topicId);
 
-  const resources = useRecoilValue(ResourcesAtom);
+  const [resources, setResources] = useRecoilState(ResourcesAtom);
 
   const fileTypes = ['PDF', 'EXCEL', 'DOC', 'LINK'];
   const resourceTypesOptions = [];
@@ -29,8 +31,29 @@ export default function ResourcesForm({ courseId, topicId }) {
   return (
     <>
       {resources &&
-        resources.map((res, index) => (
-          <Bar key={res.name + index} index={index + 1} text={res.name} type={res.type} />
+        resources?.map((res, index) => (
+          <Bar
+            key={res.name + index}
+            index={index + 1}
+            text={res.name}
+            type={
+              <>
+                {res.type}
+                <DeleteBtn
+                  id={res?.id}
+                  resKey="deleteTopicResource"
+                  mutation={DELETE_TOPIC_RESOURCES}
+                  onDelete={() => {
+                    const _resources = structuredClone(resources);
+                    const resIndex = _resources?.findIndex((r) => r?.id === res?.id);
+                    if (resIndex >= 0) _resources.splice(resIndex, 1);
+
+                    setResources(_resources);
+                  }}
+                />
+              </>
+            }
+          />
         ))}
 
       {isResourcesFormVisible && (

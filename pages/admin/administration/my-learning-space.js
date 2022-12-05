@@ -15,6 +15,7 @@ import AdminInfoWrapper from './AdminInfoWrapper';
 import { UPDATE_LEARNING_SPACE_DETAILS, UPDATE_ORGAINIZATION_UNIT_DETAILS, userClient } from '@/api/UserMutations';
 import { getOuDetails , getLspDetails} from '@/helper/orgdata.helper';
 import { LearningSpaceAtom , OrganizationUnitAtom } from '@/state/atoms/orgs.atom';
+import MyUser from '@/components/UserComps/MyUser';
 
 
 export default function LspPage() {
@@ -29,14 +30,23 @@ export default function LspPage() {
   const [lspUpdateData, setLspUpdateData] = useRecoilState(LearningSpaceAtom);
   const [orgUnitUpdateData, setOrgUnitUpdateData] = useRecoilState(OrganizationUnitAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  
-  useEffect(async () => {
-    const ouId = sessionStorage.getItem('ou_id');
+  const [selectedUser, setSelectedUser] = useState([]);
+  const [showIcon , setShowIcon] = useState(false)
+  const get_Lsp_Details = async() => {
+     const ouId = sessionStorage.getItem('ou_id');
     const lspId = sessionStorage.getItem('lsp_id');
+    const userDetails = JSON.parse(sessionStorage.getItem('loggedUser'));
     const orgutdata = await getOuDetails([ouId])
     const lspdata = await getLspDetails([lspId])
+    console.log(lspdata);
     setLspUpdateData(lspdata?.getLearningSpaceDetails?.[0])
     setOrgUnitUpdateData(orgutdata?.getOrganizationUnits?.[0])
+    const getOwner = lspdata?.getLearningSpaceDetails?.[0]?.owners.map((owner) => owner)
+    console.log(getOwner)
+    console.log(userDetails.id)
+    if (getOwner?.map((owner)=> owner === userDetails.id ) ) {
+      setShowIcon(true)
+    }
     const lspData = [
     {
       inputName: 'name',
@@ -65,8 +75,13 @@ export default function LspPage() {
     }
     ];
     setLspDataArr(lspData)
+  }
+  
+  useEffect( () => {
+   get_Lsp_Details()
     // console.log(orgutdata?.getOrganizationUnits[0])
   }, [])
+
   
     async function updateLspDetails(lspData) {
        const res = await upadateLsp({ variables: lspData }).catch((err) => {
@@ -83,7 +98,7 @@ export default function LspPage() {
       console.log(res)
       return res;
   }
-  
+
     const handleUpdate = () => {
     console.log(lspUpdateData ,orgUnitUpdateData )
       updateLspDetails(lspUpdateData);
@@ -91,14 +106,15 @@ export default function LspPage() {
       setIsEditable(false)
   }
 
+
   return (
     <>
       <Sidebar sidebarItemsArr={administrationSideBarData} />
       <MainBody>
-        <AdminHeader title="Zicops Learning Space 1" pageRoute="/admin/administration" />
+        <AdminHeader title={lspUpdateData.name} pageRoute="/admin/administration" />
         <MainBodyBox>
           <div style={{ padding: '30px' }}>
-            <TextHeaderWithEditIcon headingText="Learning Space Details" handleClick={() => setIsEditable(!isEditable)} />
+            <TextHeaderWithEditIcon headingText="Learning Space Details" showIcon={showIcon} isEditable={isEditable} handleClick={() => setIsEditable(!isEditable)} />
             <AdminInfoWrapper
               data={lspDataArr}
               isEditable={isEditable}
@@ -112,6 +128,7 @@ export default function LspPage() {
               // toggleEditable={false}
               // handleUpdate={() => {}}
             /> */}
+            <MyUser getUser={(list) => setSelectedUser(list)} customStyle={{padding:'0px 0px'}} isAdministration={true}/>
           </div>
         </MainBodyBox>
       </MainBody>

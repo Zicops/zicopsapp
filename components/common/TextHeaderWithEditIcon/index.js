@@ -1,6 +1,6 @@
 import styles from './textHeaderWithEditIcon.module.scss';
 
-export default function TextHeaderWithEditIcon({headingText, showIcon = true, handleClick}) {
+export default function TextHeaderWithEditIcon({ headingText, isEditable = false, showIcon = true, handleClick}) {
   return (
     <>
       <div className={`${styles.textEditIcon}`}>
@@ -8,7 +8,12 @@ export default function TextHeaderWithEditIcon({headingText, showIcon = true, ha
         {showIcon && (
           <div className={`${styles.Icon}`} onClick={handleClick}>
             {/* //toggleEditable */}
-            <img src="/images/svg/edit.svg" />
+            {isEditable ?
+              <img src="/images/svg/cross.svg" />
+              :
+              <img src="/images/svg/edit.svg" />
+            }
+              
           </div>
         )}
       </div>

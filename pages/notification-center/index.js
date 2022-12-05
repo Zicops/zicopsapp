@@ -1,10 +1,12 @@
-import notificationData from '@/components/Notifications/data';
-import React, { useEffect, useState } from 'react';
 import CoursePageTabs from '@/components/CourseBody/CoursePageTabs';
 import AllNotifications from '@/components/Notifications/AllNotifications';
+import { NotificationAtom } from '@/state/atoms/notification.atom';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import styles from './notification.module.scss';
 
 const NotificationCenter = () => {
+  const [notification, setNotifications] = useRecoilState(NotificationAtom);
   const style = {
     borderBottom: 'none',
     marginTop: '15px',
@@ -20,25 +22,15 @@ const NotificationCenter = () => {
   const tabsHeader = [
     {
       name: 'All',
-      comp: <AllNotifications data={notificationData} style={style} />
+      comp: <AllNotifications data={notification} style={style} />
     },
     {
       name: 'Unread',
-      comp: (
-        <AllNotifications
-          data={notificationData.filter((items) => items.status === 'unread')}
-          style={style}
-        />
-      )
+      comp: <AllNotifications data={notification.filter((items) => !items?.isRead)} style={style} />
     },
     {
       name: 'Read',
-      comp: (
-        <AllNotifications
-          data={notificationData.filter((items) => items.status === 'read')}
-          style={style}
-        />
-      )
+      comp: <AllNotifications data={notification.filter((items) => items?.isRead)} style={style} />
     }
   ];
 
@@ -60,18 +52,16 @@ const NotificationCenter = () => {
 
   return (
     <div className={`${styles.notificationPage}`}>
-        <div className={`${styles.notificationHeader}`}>
-            <p>Notification Center</p>
-        </div>
-            <CoursePageTabs
-                // customStyles={{ width: '905px', justifyContent: 'flex-start', margin: 'auto' }}
-                tabData={tabsHeader}
-                activeCourseTab={activeCourseTab}
-                setActiveTab={setActiveCourseTab}
-            />
-        <div className={`${styles.notificationTabBody}`}>
-            {showActiveTab(activeCourseTab)}  
-        </div>
+      <div className={`${styles.notificationHeader}`}>
+        <p>Notification Center</p>
+      </div>
+      <CoursePageTabs
+        // customStyles={{ width: '905px', justifyContent: 'flex-start', margin: 'auto' }}
+        tabData={tabsHeader}
+        activeCourseTab={activeCourseTab}
+        setActiveTab={setActiveCourseTab}
+      />
+      <div className={`${styles.notificationTabBody}`}>{showActiveTab(activeCourseTab)}</div>
     </div>
   );
 };

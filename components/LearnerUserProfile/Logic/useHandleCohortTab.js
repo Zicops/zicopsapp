@@ -152,6 +152,7 @@ export default function useHandleCohortTab() {
 
   async function getUserLspData(user_id=null,lsp_id=null){
     if(!user_id) return false;
+    if(!lsp_id) return false;
 
     const resLsp = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{lsp_id:lsp_id, user_id:user_id},{},userQueryClient);
         if(resLsp?.error) return false;
@@ -162,7 +163,8 @@ export default function useHandleCohortTab() {
   async function addUserToCohort(userIds = [] , cohortId = null){
 
       // if(!userOrgData?.lsp_id && !LEARNING_SPACE_ID) return ;
-      if(!userOrgData?.lsp_id) setUserOrgData((prev) => ({...prev , lsp_id: LEARNING_SPACE_ID}));
+      const lspId = sessionStorage.getItem('lsp_id');
+      if(!userOrgData?.lsp_id) setUserOrgData((prev) => ({...prev , lsp_id: lspId}));
 
       if(!userIds?.length) return setToastMsg({type:'info',message:'Make sure to add users!'});
 
@@ -170,7 +172,7 @@ export default function useHandleCohortTab() {
 
       for(let i = 0 ; i < userIds?.length ; i++){
 
-        const userLspData = await getUserLspData(userIds[i],LEARNING_SPACE_ID);
+        const userLspData = await getUserLspData(userIds[i],lspId);
         if(!userLspData) return setToastMsg({ type: 'danger', message: 'Error occured while loading user lsp id' });
 
         //checking if user is already added to cohort  or not because he may have been disabled and again added
