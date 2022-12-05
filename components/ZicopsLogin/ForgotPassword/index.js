@@ -1,3 +1,4 @@
+import { API_LINKS } from '@/api/api.helper';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import HomeHeader from '@/components/HomePage/HomeHeader';
 import { isEmail } from '@/helper/common.helper';
@@ -31,7 +32,7 @@ const ForgotPassword = ({ setPage }) => {
 
     setLoading(true);
 
-    const data = await fetch('https://demo.zicops.com/um/reset-password', {
+    const data = await fetch(API_LINKS?.resetPassword, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

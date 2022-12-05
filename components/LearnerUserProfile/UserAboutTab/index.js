@@ -43,6 +43,7 @@ const UserAboutTab = () => {
 
   useEffect(async () => {
     const { id } = getUserData();
+    if (!id) return;
     const lspId = sessionStorage.getItem('lsp_id');
     const lspName = sessionStorage?.getItem('lsp_name');
     const userLspId = sessionStorage?.getItem('user_lsp_id');

@@ -281,7 +281,7 @@ $DELAY: calc($DURATION / 2);
 
     .text {
       color: $white;
-      font-size: 1.2em;
+      // font-size: 1.2em;
       text-align: center;
       // height: 85px;
       width: 505px;
@@ -324,7 +324,6 @@ $DELAY: calc($DURATION / 2);
   align-items: center;
   flex-direction: column;
   z-index: 5;
-  gap: 60px;
  
   .formContainer {
     display: flex;
@@ -471,17 +470,31 @@ $DELAY: calc($DURATION / 2);
   .btn {
     margin-top: 10px;
   }
+     .text {
+       font-size: 1.2em;
+     }
+         .formContainerWrapper {
+           gap: 60px;
+         }
 
   // .formContainerWrapper {
-  //   transform: scale(0.9);
+  //   transform: scale(0.6);
   // }
 }
 
 @media screen and (max-width:1400px) {
 .btn{
- margin-top: 35px;
+ margin-top: -20px;
 }
 .formContainerWrapper{
-  transform: scale(0.9);
+  gap: 40px;
+}
+
+  .text{
+    font-size: 1em;
+  }
+
+.formContainerWrapper{
+  transform: scale(0.8);
 }
 }
