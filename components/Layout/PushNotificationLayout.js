@@ -92,44 +92,8 @@ export default function PushNotificationLayout({ children }) {
         { context: { headers: { 'fcm-token': token } } },
         notificationClient
       );
-      // const allNotifications = {
-      //   getAll: {
-      //     messages: [
-      //       {
-      //         title: 'Checking',
-      //         body: 'Unique message ID',
-      //         created_at: 1670005303
-      //       },
-      //       {
-      //         title: 'Hey',
-      //         body: 'Its me',
-      //         created_at: 1669915613
-      //       },
-      //       {
-      //         title: 'Checking  Ncoiweoiv',
-      //         body: 'Unique message ID vare',
-      //         created_at: 1670005303
-      //       },
-      //       {
-      //         title: 'Hey vaer',
-      //         body: 'Its mev vaevre',
-      //         created_at: 1669915613
-      //       },
-      //       {
-      //         title: 'Checking',
-      //         body: 'Unique vomearvn ',
-      //         created_at: 1670005303
-      //       },
-      //       {
-      //         title: 'Hey',
-      //         body: 'Its me',
-      //         created_at: 1669915613
-      //       }
-      //     ]
-      //   }
-      // };
 
-      const messages = allNotifications?.getAll?.messages || []; // || notificationData;
+      const messages = allNotifications?.getAll?.messages || [];
       const allMsg =
         messages?.map((msg) =>
           getNotificationObj({
@@ -139,6 +103,7 @@ export default function PushNotificationLayout({ children }) {
             img: '/images/dnd1.jpg',
             link: '',
             route: '',
+            fcmMessageId: msg?.message_id,
             duration: moment.unix(msg?.created_at).fromNow()
           })
         ) || [];
@@ -146,15 +111,24 @@ export default function PushNotificationLayout({ children }) {
       console.log('All Notifications', allNotifications, allMsg);
 
       // Problem:  Keeps duplicating notifications on each render
-      setNotifications((prev) => [...allMsg, ...prev]);
+      // setNotifications((prev) => [...allMsg, ...prev]);
+
+      setNotifications((prev) => {
+        const prevs = structuredClone(prev) || [];
+        // Getting all previous notifications and removing the duplicates ny filtering with new notifications
+        const filteredPrevs = allMsg.filter((msg) =>
+          prevs.some((n) => msg.fcmMessageId === n.message_id)
+        );
+        // then adding new notifications with previous notifications thats filtered to not have new notifications
+        return [...allMsg, ...filteredPrevs];
+      });
     }
 
     async function saveNotification(notificationData, token) {
-      const res = await saveNotificationToFirebase(
-        { variables: notificationData,
-          context: { headers: { 'fcm-token': token } }
-        }
-      );
+      const res = await saveNotificationToFirebase({
+        variables: notificationData,
+        context: { headers: { 'fcm-token': token } }
+      });
     }
 
     async function setToken() {
