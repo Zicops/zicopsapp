@@ -60,7 +60,7 @@ const ForgotPassword = ({ setPage }) => {
       <ZicopsLogin>
         <LoginHeadOne
           heading={'Reset Password'}
-          sub_heading={'Start your first step to learning here!'}
+          sub_heading={'Send reset email to your registered email id'}
         />
         <div className="login_body">
           {/* <input
@@ -84,7 +84,7 @@ const ForgotPassword = ({ setPage }) => {
             <LoginButton title={'Send Email'} handleClick={handleSubmit} isDisabled={loading} />
           </div>
           <div className={`${styles.small_text}`}>
-            Did not received mail to reset password?<p onClick={handleSubmit}>Resend</p>
+            Did not receive email to reset password?<p onClick={handleSubmit}>Resend</p>
           </div>
         </div>
       </ZicopsLogin>
