@@ -17,15 +17,21 @@ export const GET_FCM_TOKEN = gql`
   }
 `;
 export const ADD_NOTIFICATION_TO_FIRESTORE = gql`
-  mutation {
+  mutation (
+    $title: String!
+    $body: String!
+    $user_id: String!
+    $is_read: Boolean!
+    $message_id: String!
+  ){
     addToFirestore(
       message: [
         { 
-          title: "string", 
-          body: "string", 
-          user_id: "string", 
-          is_read: true, 
-          message_id: "string" 
+          title: $title, 
+          body: $body, 
+          user_id: $user_id, 
+          is_read: $is_read, 
+          message_id: $message_id 
         }
       ]
     )
@@ -47,12 +53,8 @@ export const GET_ALL_NOTIFICATIONS = gql`
 `;
 
 export const SEND_NOTIFICATIONS = gql`
-  mutation sendNotification($title: String!, $body: String!, $emails: [String]!) {
-    sendNotification(notification: { 
-      title: $title, 
-      body: $body, 
-      emails: $emails 
-    }) {
+  mutation sendNotification($title: String!, $body: String!, $userId: [String]!) {
+    sendNotification(notification: { title: $title, body: $body, user_id: $userId }) {
       statuscode
     }
   }
