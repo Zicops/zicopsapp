@@ -1,38 +1,32 @@
-import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
-import CoursesAccHead from '@/components/UserProfile/CoursesAccHead';
-import CardContainer from '@/components/LearnerUserProfile/UserCoursesTab/CardContainer';
-import styles from '../../../userComps.module.scss';
-import CohortAssignedCourses from './CohortAssignedCourses';
-import { useEffect, useState } from 'react';
-import AllCourses from './AllCourses';
-import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { CohortMasterData } from '@/state/atoms/users.atom';
-import { GET_COHORT_COURSES, GET_COURSE, GET_LATEST_COURSES, queryClient } from '@/api/Queries';
-import { useLazyQuery, useMutation } from '@apollo/client';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { DELETE_COHORT_COURSE, mutationClient } from '@/api/Mutations';
+import { ADD_COURSE_COHORT_MAP } from '@/api/UserMutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import UserButton from '@/components/common/UserButton';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import PopUp from '@/components/common/PopUp';
-import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { getCohortCourses } from '../Logic/cohortMaster.helper';
-import assignCourseToUser from '../Logic/assignCourseToUser';
-import { ADD_COURSE_COHORT_MAP } from '@/api/UserMutations';
-import { userQueryClient } from '@/api/UserQueries';
+import UserButton from '@/components/common/UserButton';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { DELETE_COHORT_COURSE, mutationClient } from '@/api/Mutations';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { CohortMasterData } from '@/state/atoms/users.atom';
+import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import styles from '../../../userComps.module.scss';
+import assignCourseToUser from '../Logic/assignCourseToUser';
+import { getCohortCourses } from '../Logic/cohortMaster.helper';
+import AllCourses from './AllCourses';
+import CohortAssignedCourses from './CohortAssignedCourses';
 
-const CohortMapping = ({isReadOnly = false}) => {
+const CohortMapping = ({ isReadOnly = false }) => {
   const [courseAssignData, setCourseAssignData] = useState({
     expectedCompletionDays: null,
     isMandatory: false,
     isCourseAssigned: false
   });
 
-  const [deleteCohortCourse] = useMutation(DELETE_COHORT_COURSE,{client:mutationClient}) ;
+  const [deleteCohortCourse] = useMutation(DELETE_COHORT_COURSE, { client: mutationClient });
   const [loading, setLoading] = useState(false);
   const [addCohortCourse] = useMutation(ADD_COURSE_COHORT_MAP, {
     client: mutationClient
@@ -57,10 +51,10 @@ const CohortMapping = ({isReadOnly = false}) => {
   const [selectedCourse, setSelectedCourse] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  const { assignCourseToOldUser , removeUserCohortCourses } = assignCourseToUser();
+  const { assignCourseToOldUser, removeUserCohortCourses } = assignCourseToUser();
 
   function handleAssign(item, isRemove = false) {
-    if( isReadOnly) return ;
+    if (isReadOnly) return;
     setSelectedCourse({ ...item, isMandatory: courseAssignData?.isMandatory });
     // setSelectedCourse({ ...item });
     if (!isRemove) return setIsAssignPopUpOpen(true);
@@ -90,7 +84,7 @@ const CohortMapping = ({isReadOnly = false}) => {
       IsActive: true,
       ExpectedCompletion: courseAssignData?.expectedCompletionDays
     };
-    console.log({ ...selectedCourse, endDate: endDate }, 'selected course',sendData);
+    console.log({ ...selectedCourse, endDate: endDate }, 'selected course', sendData);
     let isError = false;
     // return ;
     const resCohortCourse = await addCohortCourse({ variables: sendData }).catch((err) => {
@@ -120,11 +114,17 @@ const CohortMapping = ({isReadOnly = false}) => {
   async function handleRemove() {
     // console.log(selectedCourse,'selected course');
     setLoading(true);
-    if(!selectedCourse?.cohortCourseId) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
-    const res = await deleteCohortCourse({variables:{id:selectedCourse?.cohortCourseId}}).catch((err)=>{console.log(err)});
+    if (!selectedCourse?.cohortCourseId)
+      return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
+    const res = await deleteCohortCourse({
+      variables: { id: selectedCourse?.cohortCourseId }
+    }).catch((err) => {
+      console.log(err);
+    });
     // if(res?.deleteCourseCohort) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
-    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId,selectedCourse?.id);
-    if(!isRemoved) return setToastMsg({ type: 'danger', message: 'Error while removing course from user!' });
+    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId, selectedCourse?.id);
+    if (!isRemoved)
+      return setToastMsg({ type: 'danger', message: 'Error while removing course from user!' });
     setToastMsg({ type: 'success', message: 'Course removed from cohort!' });
     await loadAssignCourses(false);
     setShowConfirmBox(false);
@@ -188,39 +188,39 @@ const CohortMapping = ({isReadOnly = false}) => {
   }
 
   useEffect(async () => {
- loadAssignCourses();
+    loadAssignCourses();
   }, [router?.query]);
 
-async function loadAssignCourses(isAssign = true){
-  if (!router?.query?.cohortId) {
-    // console.log(cohortData?.id);
-    if (!cohortData?.id)
-      return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
-    const data = await getCohortCourses(cohortData?.id);
-    setLoading(isAssign);
-    if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
-    if (data?.allCourses) {
-      return setCourseData([...data?.allCourses],setLoading(false));
+  async function loadAssignCourses(isAssign = true) {
+    if (!router?.query?.cohortId) {
+      // console.log(cohortData?.id);
+      if (!cohortData?.id)
+        return setToastMsg({ type: 'danger', message: 'Add Cohort Master First!' });
+      const data = await getCohortCourses(cohortData?.id);
+      setLoading(isAssign);
+      if (data?.error) return setToastMsg({ type: 'danger', message: data?.error });
+      if (data?.allCourses) {
+        return setCourseData([...data?.allCourses], setLoading(false));
+      }
+      return;
     }
-    return;
-  }
-  setLoading(isAssign);
-  const data = await getCohortCourses(router?.query?.cohortId);
-  if (data?.error) {
+    setLoading(isAssign);
+    const data = await getCohortCourses(router?.query?.cohortId);
+    if (data?.error) {
+      setLoading(false);
+      setToastMsg({ type: 'danger', message: data?.error });
+      return;
+    }
+    if (data?.allCourses && data?.assignedCourses) {
+      // console.log(data?.assignedCourses,'assifnefa')
+      setCourseData([...data?.allCourses]);
+      setLoading(false);
+      return setAssignedCourses([...data?.assignedCourses]);
+    }
     setLoading(false);
-    setToastMsg({ type: 'danger', message: data?.error });
-    return;
+    setAssignedCourses([]);
+    return setCourseData([...data?.allCourses]);
   }
-  if (data?.allCourses && data?.assignedCourses) {
-    // console.log(data?.assignedCourses,'assifnefa')
-    setCourseData([...data?.allCourses]);
-    setLoading(false);
-    return setAssignedCourses([...data?.assignedCourses]);
-  }
-  setLoading(false);
-  setAssignedCourses([]);
-  return setCourseData([...data?.allCourses]);
-}
   return (
     <>
       <div className={`${styles.courses_acc_head}`}>
@@ -240,20 +240,22 @@ async function loadAssignCourses(isAssign = true){
         {!isAssigned && (
           <div className={`${styles.assign}`}>
             <div className={`${styles.assignedCoursesContainer}`}>
-            <span>Assigned Courses:</span>
-            <span>{assignedCourses?.length}</span>
+              <span>Assigned Courses:</span>
+              <span>{assignedCourses?.length}</span>
             </div>
 
-            {!isReadOnly&&(<div
-              onClick={() => {
-                setIsAssigned(!isAssigned);
-                setPage('Assign Courses');
-                setSelected(3);
-              }}
-              className={`${styles.assignInner}`}>
-              <img src="/images/svg/add-line-blue.svg" />
-              Assign Courses
-            </div>)}
+            {!isReadOnly && (
+              <div
+                onClick={() => {
+                  setIsAssigned(!isAssigned);
+                  setPage('Assign Courses');
+                  setSelected(3);
+                }}
+                className={`${styles.assignInner}`}>
+                <img src="/images/svg/add-line-blue.svg" />
+                Assign Courses
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -334,7 +336,7 @@ async function loadAssignCourses(isAssign = true){
           }
           btnObj={{
             leftIsDisable: loading,
-            rightIsDisable:loading,
+            rightIsDisable: loading,
             handleClickLeft: () => handleRemove(),
             handleClickRight: () => setShowConfirmBox(false)
           }}

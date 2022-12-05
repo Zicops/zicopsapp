@@ -1,22 +1,26 @@
 export const data = [
   {
     id: 1,
-    icon: '/images/Zicops-logo-icon.png',
+    // icon: '/images/Zicops-logo-icon.png',
+    icon: '/images/brand/zicops-icon.png',
     text: 'Readily Available or Create your own Self Paced Courses | Live Training Courses | Labs & Simulations | Exams.'
   },
   {
     id: 2,
-    icon: '/images/Zicops-logo-icon1.png',
+    // icon: '/images/Zicops-logo-icon1.png',
+    icon: '/images/brand/zicops-icon.png',
     text: 'Private Learning Space for Organizations to manage & scale Learning.'
   },
   {
     id: 3,
-    icon: '/images/Zicops-logo-icon2.png',
+    // icon: '/images/Zicops-logo-icon2.png',
+    icon: '/images/brand/zicops-icon.png',
     text: 'Scale your Organization circle of Learning unhindered with zero cozt addition of users & Cohorts.'
   },
   {
     id: 4,
-    icon: '/images/Zicops-logo-icon3.png',
+    // icon: '/images/Zicops-logo-icon3.png',
+    icon: '/images/brand/zicops-icon.png',
     text: 'Entire Learning Ecosystem in a single platform.'
   }
 ];

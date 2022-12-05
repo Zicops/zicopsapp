@@ -340,7 +340,7 @@ export default function TopicBox({
     async function loadUserExamAttempts() {
       const attemptRes = await loadQueryDataAsync(
         GET_USER_EXAM_ATTEMPTS,
-        { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
+        { user_id: userData?.id, exam_id: topicExam?.examId },
         {},
         userQueryClient
       );
@@ -398,7 +398,7 @@ export default function TopicBox({
     width: `${userCourseData?.userCourseProgress?.[currentProgressIndex]?.video_progress || 0}%`
   };
 
-  if (topic?.id === userCourseData?.activeTopic?.id) {
+  if (topic?.id === userCourseData?.activeTopic?.id && videoData?.type === 'mp4') {
     progressBarStyles.width = `${userCourseData?.videoData?.progress || 0}%`;
   }
 

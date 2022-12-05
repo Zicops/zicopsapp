@@ -1,8 +1,10 @@
+import { DELETE_QUESTION_PAPER_SECTION, DELETE_SECTION_TO_BANK } from '@/api/Mutations';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { GET_QUESTION_BANK_NAME, queryClient } from '../../../../../../API/Queries';
 import { QuestionPaperTabDataAtom } from '../../../../../../state/atoms/exams.atoms';
 import { PopUpStatesAtomFamily } from '../../../../../../state/atoms/popUp.atom';
@@ -24,7 +26,8 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
   const [customSectionPopUp, udpateCustomSectionPopUp] = useRecoilState(
     PopUpStatesAtomFamily('editCustomSection')
   );
-  const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
   const isSectionWise = questionPaperTabData.paperMaster?.section_wise;
 
   const [qbData, setQbData] = useState([]);
@@ -68,6 +71,31 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
               udpateCustomSectionPopUp(true);
             }}
             tooltipTitle="Edit Section"
+            deleteProps={{
+              id: section?.id,
+              resKey: 'deleteQuestionPaperSection',
+              mutation: DELETE_QUESTION_PAPER_SECTION,
+              deleteCondition: () => {
+                const sectionMappings = questionPaperTabData?.mappedQb?.filter(
+                  (map) => map?.sectionId === section?.id
+                );
+                if (!!sectionMappings?.length) {
+                  setToastMsg({
+                    type: 'danger',
+                    message: "Delete Section's Mappings First"
+                  });
+                  return false;
+                }
+                return true;
+              },
+              onDelete: async () => {
+                const _sectionData = structuredClone(questionPaperTabData?.sectionData);
+                const index = _sectionData?.findIndex((s) => s?.id === section?.id);
+                if (index >= 0) _sectionData?.splice(index, 1);
+
+                setQuestionPaperTabData({ ...questionPaperTabData, sectionData: _sectionData });
+              }
+            }}
           />
         )}
 
@@ -97,6 +125,31 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
                 setEditMetaData(metaData);
                 setSectionData();
                 udpateEditQuestionMetaDataPopUp(true);
+              }}
+              deleteProps={{
+                id: metaData?.id,
+                resKey: 'deleteSectionToBank',
+                mutation: DELETE_SECTION_TO_BANK,
+                // deleteCondition: () => {
+                //   const sectionMappings = questionPaperTabData?.mappedQb?.filter(
+                //     (map) => map?.sectionId === section?.id
+                //   );
+                //   if (!!sectionMappings?.length) {
+                //     setToastMsg({
+                //       type: 'danger',
+                //       message: "Delete Section's Mappings First"
+                //     });
+                //     return false;
+                //   }
+                //   return true;
+                // },
+                onDelete: async () => {
+                  const _qbData = structuredClone(questionPaperTabData?.mappedQb);
+                  const index = _qbData?.findIndex((qbMap) => qbMap?.id === metaData?.id);
+                  if (index >= 0) _qbData?.splice(index, 1);
+
+                  setQuestionPaperTabData({ ...questionPaperTabData, mappedQb: _qbData });
+                }
               }}
             />
           );

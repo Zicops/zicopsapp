@@ -45,6 +45,7 @@
 }
 .logo img {
   max-width: 150px;
+  max-height: $headerHeight;
 }
 
 .menu {
@@ -298,9 +299,8 @@ select.nav_search_dropdow:selected {
   padding: 7px 10px !important;
 }
 
-.fontSizeSmall{
+.fontSizeSmall {
   font-size: 14px;
- 
 }
 
 .subMenuItem {
@@ -322,4 +322,8 @@ select.nav_search_dropdow:selected {
   cursor: pointer;
   display: flex;
   margin-left: 5px;
+}
+
+.activeNotificationIcon {
+  @include showRedCountAtCorner(15px, 8px, $primary, $black);
 }

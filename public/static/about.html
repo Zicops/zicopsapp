@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Zicops Homepage</title>
+    <title>About Zicops</title>
     <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
 
     <link rel="stylesheet" href="/static/css/style.css" />
@@ -13,18 +13,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/static/assets/jquery-3.6.1.min.js" defer></script>
     <script src="/static/js/main.js" defer></script>
 </head>
 <body>
     <nav id="navbar">
-        <span class="logo">
-            <img src="/static/img/ZicopsNewLogo.svg" alt="">
-        </span>
+        <a class="logo" id="logo" href="/home">
+            <img src="../images/brand/zicops-new-logo.svg" alt="">
+        </a>
         <ul>
             <li class="active">About</li>
             <li>Features</li>
             <li>Pricing</li>
-            <li>Updates</li>
+            <a href="/static/partner.html"><li>Collaborate</li></a>
             <li>Blogs</li>
         </ul>
         <span class="buttons">
@@ -39,7 +40,7 @@
             <div class="heading2 animate  animate__delay-2s"><span>learning environment</span></div>
             <div class="heading3 animate  animate__delay-3s">of your <b>organization?</b></div>
             <div class="subheading animate  animate__delay-5s">A learning super-app for all your learning needs.</div>
-            <button class="primary-btn animate  animate__delay-5s">Find Out How <span class="arrow"></span></button>
+            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
         </div>
         <div class="right animate  animate__delay-4s">
             <img class="main-image" src="/static/img/Group 1.png" alt="">
@@ -76,7 +77,7 @@
             <div class="heading2 animate  animate__delay-2s"><b>Investment</b> on your</div>
             <div class="heading3 animate  animate__delay-3s">organization's learning.</b></div>
             <div class="subheading animate  animate__delay-5s">A LearnOps platform that brings all  your learning operations in a single platform.</div>
-            <button class="primary-btn animate  animate__delay-5s">Find Out How <span class="arrow"></span></button>
+            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
         </div>
     </section>
     <section class="section-2">
@@ -86,7 +87,7 @@
             <div class="heading2 animate  animate__delay-2s"><span>right trainers</span> for your</div>
             <div class="heading3 animate  animate__delay-3s">diverse learning needs?</div>
             <div class="subheading animate  animate__delay-5s">With library of Zicops offerings just plug and begin your learning. On the top you can also build and customize as per own needs.</div>
-            <button class="primary-btn animate  animate__delay-5s">Find Out How <span class="arrow"></span></button>
+            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
         </div>
         <div class="right animate  animate__delay-5s">
             <img src="/static/img/Frame.png" alt="">
@@ -109,28 +110,29 @@
             <div class="heading1 animate  animate__delay-1s">and <b>empower your</b></div>
             <div class="heading2 animate  animate__delay-2s"><b>employees</b> internally</div>
             <div class="subheading animate  animate__delay-5s">A private learning space balancing administrative and personal learning goals.</div>
-            <button class="primary-btn animate  animate__delay-5s">Find Out How <span class="arrow"></span></button>
+            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
         </div>
     </section>
-    <section class="section-2">
+    <section id="snap-start" class="section-2">
         <div class="left">
             <div class="heading animate ">Need a <b>single source</b></div>
             <div class="heading1 animate  animate__delay-1s"><b>of truth</b> to know your</div>
             <div class="heading2 animate  animate__delay-2s">organizations <br> skill matrix </div>
             <!-- <div class="heading3 animate  animate__delay-3s"></div> -->
             <div class="subheading animate  animate__delay-5s">Find a clarity on your strength and skill gaps in your organization with this Enterprise Learning platform.</div>
-            <button class="primary-btn animate  animate__delay-5s">Find Out How <span class="arrow"></span></button>
+            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
         </div>
         <div class="right animate  animate__delay-5s">
             <img src="/static/img/Frame (2).png" alt="">
         </div>
     </section>
+
     <div id="snap-body">
         <div class="snap-parent">
-            <div class="snap-section1">Superb experience</div>
-            <div class="snap-section2">Super-app</div>
-            <div class="snap-section3">Cost-effective</div>
-            <div class="snap-section4">
+            <div class="snap-section snap-section1">Superb experience</div>
+            <div class="snap-section snap-section2">Super-app</div>
+            <div class="snap-section snap-section3">Cost-effective</div>
+            <div class="snap-section snap-section4">
                 <div class="content">
                     <b>Stop</b> running behind<br><b>multiple apps</b> to cater to<br>your <b>learning needs</b>.
                     <p>Adopt Zicops and cater to your entire<br>Workspace Learning and development.</p>

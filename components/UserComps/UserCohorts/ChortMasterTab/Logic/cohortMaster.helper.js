@@ -31,9 +31,8 @@ export async function getUsersForCohort(isTable = false) {
       id: item?.id
     });
   });
-  if (!managerList?.length)
-    return {error:'No user is verified'}
-    // setToastMsg({ type: 'danger', message: 'None of the user is verified' });
+  if (!managerList?.length) return { error: 'No user is verified' };
+  // setToastMsg({ type: 'danger', message: 'None of the user is verified' });
   if (managerList?.length) return managerList;
 }
 
@@ -43,10 +42,12 @@ export async function getCohortCourses(cohortId = null) {
   //   client: queryClient
   // });
 
+  const _lspId = sessionStorage?.getItem('lsp_id');
   const sendData = {
     publish_time: getCurrentEpochTime(),
     pageCursor: '',
-    pageSize: 100
+    pageSize: 100,
+    filters: { LspId: _lspId }
   };
 
   const res = await loadQueryDataAsync(GET_LATEST_COURSES, { ...sendData }, {}, queryClient);
@@ -58,7 +59,7 @@ export async function getCohortCourses(cohortId = null) {
   const courseData = res?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display);
 
   console.log(courseData);
-  if(!courseData) return { error:'Error while loading courses!v'};
+  if (!courseData) return { error: 'Error while loading courses!v' };
 
   const cohortCoursesRes = await loadQueryDataAsync(
     GET_COHORT_COURSES,
@@ -75,7 +76,11 @@ export async function getCohortCourses(cohortId = null) {
     coursesArr[i];
     const data = await loadQueryDataAsync(GET_COURSE, { course_id: coursesArr[i]?.CourseId });
     if (!data?.getCourse) return { error: 'Error while loading courses!' };
-    cohortCourses.push({ ...data?.getCourse, IsActive: coursesArr[i]?.IsActive , cohortCourseId: coursesArr[i]?.id });
+    cohortCourses.push({
+      ...data?.getCourse,
+      IsActive: coursesArr[i]?.IsActive,
+      cohortCourseId: coursesArr[i]?.id
+    });
   }
 
   const activeCohortCourses = cohortCourses?.filter((item) => item?.IsActive);

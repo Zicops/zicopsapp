@@ -1,6 +1,7 @@
 import { userClient } from '@/api/UserMutations';
 import { GET_USER_BOOKMARKS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { COURSE_STATUS } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
@@ -70,8 +71,14 @@ export default function useHandleSearch() {
       );
       return;
     }
-
-    const queryVariables = { publish_time: time, pageSize: 999, pageCursor: '', filters: {} };
+    const _lspId = sessionStorage?.getItem('lsp_id');
+    const queryVariables = {
+      publish_time: time,
+      pageSize: 999,
+      pageCursor: '',
+      status: COURSE_STATUS.publish,
+      filters: { LspId: _lspId }
+    };
     if (searchQuery) {
       queryVariables.filters.SearchText = searchQuery;
       setBookmarkData({ ...bookmarkData, isLoading: true });
@@ -85,7 +92,7 @@ export default function useHandleSearch() {
     // console.log(filterObj, filter);
     if (filterObj?.DurationMin) queryVariables.filters.DurationMin = filterObj.DurationMin;
     if (filterObj?.DurationMax) queryVariables.filters.DurationMax = filterObj.DurationMax;
-    if (filterObj?.LspId) queryVariables.filters.DurationMax = filterObj.LspId;
+    if (filterObj?.LspId) queryVariables.filters.LspId = filterObj.LspId;
 
     const courseRes = await loadCourses({ variables: queryVariables });
     if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });

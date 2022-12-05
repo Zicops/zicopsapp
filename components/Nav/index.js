@@ -1,27 +1,53 @@
 import Link from 'next/link';
-import styles from './nav.module.scss';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { AdminMenu, truncateTo16, UserMenu } from './Logic/nav.helper';
-import { useHandleNav } from './Logic/useHandleNav';
-import LeftMenuDropdown from './LeftMenuDropdown';
-import { userContext } from '../../state/contexts/UserContext';
 import { useRouter } from 'next/router';
-import RightDropDownMenu from './RightDropDownMenu';
-import AllNotification from '../Notifications';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { userContext } from '../../state/contexts/UserContext';
 import Notifications from '../Notifications';
+import LeftMenuDropdown from './LeftMenuDropdown';
+import { AdminMenu, UserMenu } from './Logic/nav.helper';
+import { useHandleNav } from './Logic/useHandleNav';
+import styles from './nav.module.scss';
 
+import { NotificationAtom } from '@/state/atoms/notification.atom';
+import { useRecoilState } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
-import UserDisplay from './UserDisplay';
 import ToolTip from '../common/ToolTip';
+import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
+import { useLazyQuery } from '@apollo/client';
+import { userClient } from '@/api/UserMutations';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import UserDisplay from './UserDisplay';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
 
+  const [notifications, setNotifications] = useRecoilState(NotificationAtom);
   const [showNotification, setShowNotification] = useState(false);
   const notificationBarRef = useRef(null);
-
+  const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
   const handleClickInside = () => setShowNotification(!showNotification);
 
+  const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
+    client: userClient
+  });
+
+  const OrgDetails = async () => {
+    const orgId = sessionStorage.getItem('org_id');
+    if (!orgId) return;
+      const res = await getOrgDetails({
+        variables: { org_ids: orgId }
+      }).catch((err) => {
+        console.error(err);
+      });
+      setOrgData((prevValue) => ({
+        ...prevValue,
+        logo_url: res?.data?.getOrganizations[0]?.logo_url
+      }));
+  };
+  useEffect(() => {
+    if (orgData?.logo_url?.length) return;
+    OrgDetails();
+  }, []);
   useEffect(() => {
     const handleClickOutside = (e) => {
       // console.log(e.target, notificationBarRef.current);
@@ -61,8 +87,8 @@ export default function Nav() {
             <ToolTip
               title={`${!isOnLearnerSide ? 'Go Back to Admin Home' : 'Go Back to Learner Home'}`}
               placement="bottom">
-                {/* <img src="/images/zicops-header-logo.png" /> */}
-              <img src="/images/svg/asset-6.svg" />
+              {/* <img src="/images/zicops-header-logo.png" /> */}
+              <img src={orgData?.logo_url || '/images/svg/asset-6.svg'} />
             </ToolTip>
           </a>
         </Link>
@@ -123,7 +149,12 @@ export default function Nav() {
               </li>
             )} */}
             <ToolTip title="Show Notifications" placement="right">
-              <li onClick={handleClickInside} className={styles.notificationIcon}>
+              <li
+                onClick={handleClickInside}
+                data-count={notifications?.filter((n) => !n?.isRead)?.length}
+                className={`${styles.notificationIcon} ${
+                  !!notifications?.length && styles.activeNotificationIcon
+                }`}>
                 {showNotification ? (
                   <svg
                     width="25"

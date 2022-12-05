@@ -1,11 +1,13 @@
 import styles from '../zicopsLogin.module.scss';
 
-const LoginHeadOne = ({ heading, sub_heading, info }) => {
+const LoginHeadOne = ({ heading, sub_heading, info , showImage = true }) => {
   return (
     <>
-      <div className={`${styles.zicops_logo}`}>
-        <img src={'/images/Zicops-logo-icon.png'}/>
-      </div>
+      {showImage &&
+        <div className={`${styles.zicops_logo}`}>
+          <img src={'/images/brand/zicops-icon.png'} />
+        </div>
+      }
       <div className={`${styles.heading}`}>{heading}</div>
       <div className={`${styles.sub_heading}`}>
           <p>

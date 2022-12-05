@@ -1,7 +1,7 @@
 import { GET_EXAM_CONFIG, GET_EXAM_INSTRUCTION, GET_EXAM_META, queryClient } from '@/api/Queries';
 import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { secondsToHMS } from '@/helper/utils.helper';
+import { parseJson, secondsToHMS } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -23,6 +23,7 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
   const router = useRouter();
 
   useEffect(async () => {
+    if (!examId) return;
     // const masterRes = await loadQueryDataAsync(
     //   GET_EXAM_INSTRUCTION,
     //   {exam_id: examId},
@@ -35,7 +36,7 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
     // console.log(masterRes?.getExamInstruction?.[0]?.PassingCriteria,'master');
     const attemptRes = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id },
+      { user_id: userData?.id, exam_id: examId },
       {},
       userQueryClient
     );
@@ -58,13 +59,13 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
 
       const resultRes = await loadQueryDataAsync(
         GET_USER_EXAM_RESULTS,
-        { user_id: userData?.id, user_ea_id: attempt?.user_ea_id },
+        { user_ea_details: [{ user_id: userData?.id, user_ea_id: attempt?.user_ea_id }] },
         {},
         userQueryClient
       );
 
       if (resultRes?.error) return setToastMsg({ type: 'danger', message: 'Result Load Error' });
-      attemptData[i].result = resultRes?.getUserExamResults || [];
+      attemptData[i].result = resultRes?.getUserExamResults?.[0]?.results?.[0] || {};
     }
 
     const examConfigRes = await loadQueryDataAsync(GET_EXAM_CONFIG, { exam_id: examId });
@@ -78,7 +79,7 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
     }
 
     attemptData?.forEach((ea) => {
-      const resultData = JSON.parse(ea?.result?.result_status);
+      const resultData = parseJson(ea?.result?.result_status || '');
 
       const data = {
         Attempt: `Attempt ${ea?.attempt_no}`,
@@ -86,7 +87,7 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
         FinishedAt: getFormattedDate(resultData?.finishedAt || ea?.result?.created_at),
         TotalDuration: secondsToHMS(ea?.attempt_duration),
         Score: `${ea?.result?.user_score} / ${resultData?.totalMarks}`,
-        Result: configData?.ShowResult ? resultData?.status : 'completed',
+        Result: configData?.ShowResult ? resultData?.status : 'completed'
       };
       // if(masterRes?.getExamInstruction?.[0]?.PassingCriteria?.toLowerCase() === '0-marks') data.Result = 'Completed'
       _tableData.push(data);
