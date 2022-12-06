@@ -1,9 +1,6 @@
-import { displayUnixDate } from '@/helper/utils.helper';
-import { parseJson } from '@/helper/utils.helper';
+import { displayUnixDate, parseJson } from '@/helper/utils.helper';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { Skeleton } from '@mui/material';
-import moment from 'moment';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -77,6 +74,7 @@ export default function CourseHero({ isPreview = false }) {
     return setIsCourseUnassign(true);
   }, [userCourseData, courseAssignData?.isCourseAssigned]);
 
+  const suggestedDuration = fullCourse?.expected_completion || 1;
   return (
     <div
       className={`${style.course_header}`}
@@ -139,9 +137,9 @@ export default function CourseHero({ isPreview = false }) {
               {isLoading ? (
                 <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={400} />
               ) : (
-                `** Suggested duration for completion of this course is ${Math.ceil(
-                  (duration || 0) / 30
-                )} days`
+                `** Suggested duration for completion of this course is ${suggestedDuration} day${
+                  suggestedDuration > 1 ? 's' : ''
+                }`
               )}
               <br />
               {userCourseData?.userCourseMapping?.end_date &&
