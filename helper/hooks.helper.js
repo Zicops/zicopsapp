@@ -68,9 +68,13 @@ export function useHandleCatSubCat(selectedCategory) {
     const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
-    const currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
-      lsp_ids: [_lspId]
-    });
+    console.log(_lspId, zicopsLsp);
+    let currentLspData = null;
+    if (_lspId !== zicopsLsp) {
+      currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+        lsp_ids: [_lspId]
+      });
+    }
     // zicops lsp cat subcat
     const zicopsCats = (await zicopsLspData)?.allCatMain || [];
     const zicopsSubCats = (await zicopsLspData)?.allSubCatMain || [];
@@ -694,8 +698,8 @@ export function useUpdateUserAboutData() {
   async function updateUserRole(userData = null) {
     const userRoleData = userData ? userData?.roleData : newUserAboutData;
 
-    console.log(userRoleData,'rianf')
-    if(!userData?.roleData?.user_role_id) return false;
+    console.log(userRoleData, 'rianf');
+    if (!userData?.roleData?.user_role_id) return false;
 
     // console.log(userData?.roleData, 'sifhishfi');
     // return ;
@@ -707,15 +711,14 @@ export function useUpdateUserAboutData() {
       is_active: true
     };
 
-    let isError = false ;
-    const res = await updateRole({variables: sendRoleData}).catch((err) => {
+    let isError = false;
+    const res = await updateRole({ variables: sendRoleData }).catch((err) => {
       isError = !!err;
-    })
+    });
 
     // console.log(res,'update role data');
-    if(isError) return isError;
+    if (isError) return isError;
     return res?.data?.updateUserRole;
-    
   }
 
   async function updateAboutUser(userData = null) {
