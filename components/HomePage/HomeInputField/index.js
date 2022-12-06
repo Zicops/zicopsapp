@@ -47,7 +47,7 @@ const HomeInputField = () => {
   const routerConfig = [
     {
       path: '../static/about.html',
-      title: 'About Zicops'
+      title: 'Corporates'
     },
     {
       path: '/info/tour',
@@ -55,7 +55,7 @@ const HomeInputField = () => {
     },
     {
       path: '../static/partner.html',
-      title: 'Content Partner'
+      title: 'Content Partners'
     },
     {
       path: '/info/contact-us',
