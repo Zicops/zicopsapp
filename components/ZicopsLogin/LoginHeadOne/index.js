@@ -5,7 +5,7 @@ const LoginHeadOne = ({ heading, sub_heading, info , showImage = true }) => {
     <>
       {showImage &&
         <div className={`${styles.zicops_logo}`}>
-          <img src={'/images/Zicops-logo-icon.png'} />
+          <img src={'/images/brand/zicops-icon.png'} />
         </div>
       }
       <div className={`${styles.heading}`}>{heading}</div>

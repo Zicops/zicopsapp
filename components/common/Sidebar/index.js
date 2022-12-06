@@ -1,3 +1,4 @@
+import { PRODUCT_TOUR_PATH, PRODUCT_TOUR_PATHS } from '@/helper/constants.helper';
 import {
   ActiveTourAtom,
   ProductTourIndex,
@@ -32,7 +33,11 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
     });
 
     if (lastItem?.current) observer.observe(lastItem?.current);
+
   }, []);
+
+  const isProductTourValid = PRODUCT_TOUR_PATHS.includes(router?.asPath?.split('/')?.[2]);
+
 
   return (
     <>
@@ -50,11 +55,11 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
             alt=""
           />
           <h3>{sidebarItemsArr.heading || 'Admin Management'}</h3>
-          <ToolTip title="Take a tour" placement="bottom">
+          { isProductTourValid&&<ToolTip title="Take a tour" placement="bottom">
             <button onClick={handleProductTour} className={styles.course_management_btn}>
               <img src="/images/svg/hub.svg" alt="" />
             </button>
-          </ToolTip>
+          </ToolTip>}
         </div>
 
         <div className={styles.sidebar_menu}>

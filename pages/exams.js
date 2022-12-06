@@ -79,7 +79,7 @@ export default function LearnerExams() {
   }, []);
 
   useEffect(() => {
-    console.log(examResults, 'examreso');
+    // console.log(examResults, 'examreso');
     if (!examResults?.length) return;
     if (!examCourseMapping?.scheduleExam?.length) return;
     //loop to finally add results and course name
@@ -111,13 +111,14 @@ export default function LearnerExams() {
     return;
   }, [examResults, examCourseMapping?.scheduleExam]);
 
+
   useEffect(() => {
     if (!examCourseMapping?.takeAnyTime?.length) return;
     const takeAnyTimeExamArray = [];
     // loop over each exam and check for their attempts
 
     for (let i = 0; i < examCourseMapping?.takeAnyTime?.length; i++) {
-      console.log(examCourseMapping?.takeAnyTime[i]);
+      // console.log(examCourseMapping?.takeAnyTime[i]);
       const filterAttempt = examAttempts?.filter(
         (exam) => exam?.exam_id === examCourseMapping?.takeAnyTime[i]?.examId
       );
@@ -129,12 +130,14 @@ export default function LearnerExams() {
       }
     }
     if (!takeAnyTimeExamArray?.length) setTakeAnyTimeExamsData([]);
+    console.log(takeAnyTimeExamArray, 'sfoho');
     setTakeAnyTimeExamsData([
-      ...takeAnyTimeExamArray?.map((exam) => [
-        exam?.Name,
-        exam?.courseName,
-        `${exam?.Duration / 60} mins`
-      ])
+      ...takeAnyTimeExamArray?.map((exam) => ({
+        examData: [exam?.Name, exam?.courseName, `${exam?.Duration / 60} mins`],
+        examId: exam?.id,
+        courseId: exam?.courseId,
+        topicId: exam?.topicId
+      }))
     ]);
   }, [examCourseMapping?.takeAnyTime]);
 
@@ -283,7 +286,8 @@ export default function LearnerExams() {
         topicCourseMap.push({
           [`${filteredTopics[j]?.id}`]: {
             courseName: _courseData[i]?.name,
-            topicId: filteredTopics[j]?.id
+            topicId: filteredTopics[j]?.id,
+            courseId: _courseData[i]?.id
           }
         });
       }
@@ -302,7 +306,9 @@ export default function LearnerExams() {
       examCourseMap.push({
         [`${topicExams[0]?.examId}`]: {
           courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
-          examId: topicExams[0]?.examId
+          examId: topicExams[0]?.examId,
+          topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
+          courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId
         }
       });
       exams = exams.concat(topicExams);
@@ -351,19 +357,25 @@ export default function LearnerExams() {
         scheduleExams[i] = { ...scheduleExams[i], ...schedule[0] };
       }
     }
-    console.log(takeAnyTimeExams, scheduleExams);
+    // console.log(takeAnyTimeExams, scheduleExams);
     // if (!examAttempts?.length) return setTakeAnyTimeExams([...takeAnyTimeExams]);
 
     let currentTime = getUnixFromDate();
 
     let sExams = scheduleExams?.filter((exam) => parseInt(exam?.Start) > currentTime);
+   
     setScheduleExamsData(
-      sExams?.map((exam) => [
-        exam?.Name,
-        exam?.courseName,
-        moment.unix(exam?.Start).format('LLL')
-        // examTime:
-      ]),
+      sExams?.map((exam) => ({
+        examData: [
+          exam?.Name,
+          exam?.courseName,
+          moment.unix(exam?.Start).format('LLL')
+          // examTime:
+        ],
+        examId: exam?.id,
+        courseId: exam?.courseId,
+        topicId: exam?.topicId
+      })),
       setLoading(false)
     );
 
@@ -697,7 +709,11 @@ export default function LearnerExams() {
               <div
                 className="w-45 border_right tableSection"
                 style={{ background: 'var(--black)', margin: 'auto' }}>
-                <div className="closeTable" onClick={()=>{setShowTable('')}}>
+                <div
+                  className="closeTable"
+                  onClick={() => {
+                    setShowTable('');
+                  }}>
                   <img src="/images/circular-cross.png" alt="" />
                 </div>
                 <SimpleTable
@@ -770,7 +786,7 @@ export default function LearnerExams() {
           scroll-snap-type: mandatory;
           scroll-snap-points-y: repeat(300px);
         }
-        .tableSection{
+        .tableSection {
           position: relative;
         }
         .closeTable {
@@ -782,7 +798,6 @@ export default function LearnerExams() {
           top: 1%;
           height: 25px;
           width: 25px;
-          
         }
         .closeTable img {
           height: 100%;

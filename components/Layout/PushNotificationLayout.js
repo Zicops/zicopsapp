@@ -1,4 +1,9 @@
-import { GET_ALL_NOTIFICATIONS, GET_FCM_TOKEN, notificationClient } from '@/api/NotificationClient';
+import {
+  ADD_NOTIFICATION_TO_FIRESTORE,
+  GET_ALL_NOTIFICATIONS,
+  GET_FCM_TOKEN,
+  notificationClient
+} from '@/api/NotificationClient';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import getFCMToken from '@/helper/firebaseUtil/firebase.helper';
 import {
@@ -16,6 +21,9 @@ import notificationData from '../Notifications/data';
 
 export default function PushNotificationLayout({ children }) {
   const [sendFcmToken] = useMutation(GET_FCM_TOKEN, { client: notificationClient });
+  const [saveNotificationToFirebase] = useMutation(ADD_NOTIFICATION_TO_FIRESTORE, {
+    client: notificationClient
+  });
   const userAboutData = useRecoilValue(UserStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [notification, setNotifications] = useRecoilState(NotificationAtom);
@@ -24,9 +32,9 @@ export default function PushNotificationLayout({ children }) {
 
   useEffect(() => {
     if (!userAboutData?.id) return;
+
     setToken().then((token) => {
       if (!token) return;
-
       loadAllNotifications(token);
     });
 
@@ -37,8 +45,8 @@ export default function PushNotificationLayout({ children }) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         console.log('event for the service worker', event);
 
-        if (event?.data?.notification?.title) {
-          setToastMsg({ type: 'info', message: event?.data?.notification?.title });
+        if (event?.data?.notification?.body) {
+          setToastMsg({ type: 'info', message: event?.data?.notification?.body });
 
           setNotifications((prev) => {
             const allMsg = structuredClone(prev) || [];
@@ -62,6 +70,17 @@ export default function PushNotificationLayout({ children }) {
               ...prev
             ];
           });
+
+          // save to firestore
+          let firstoreData = {
+            title: event?.data?.notification?.title || '',
+            body: event?.data?.notification?.body,
+            user_id: userAboutData?.id,
+            is_read: false,
+            message_id: event?.data?.fcmMessageId
+          };
+
+          saveNotification(firstoreData, fcmToken);
         }
       });
     }
@@ -110,14 +129,13 @@ export default function PushNotificationLayout({ children }) {
       //   }
       // };
 
-      const messages = allNotifications?.getAll?.messages || notificationData;
+      const messages = allNotifications?.getAll?.messages || []; // || notificationData;
       const allMsg =
         messages?.map((msg) =>
           getNotificationObj({
             title: msg?.title,
             body: msg?.body,
-            // TODO: remove this random boolean val
-            isRead: msg?.isRead || Boolean(Math.round(Math.random())),
+            isRead: msg?.isRead || false,
             img: '/images/dnd1.jpg',
             link: '',
             route: '',
@@ -125,21 +143,29 @@ export default function PushNotificationLayout({ children }) {
           })
         ) || [];
 
-      console.log(allNotifications, allMsg);
+      console.log('All Notifications', allNotifications, allMsg);
+
+      // Problem:  Keeps duplicating notifications on each render
       setNotifications((prev) => [...allMsg, ...prev]);
+    }
+
+    async function saveNotification(notificationData, token) {
+      const res = await saveNotificationToFirebase(
+        { variables: notificationData,
+          context: { headers: { 'fcm-token': token } }
+        }
+      );
     }
 
     async function setToken() {
       try {
         const token = await getFCMToken();
         if (!token) return null;
-
         console.log('token', token);
         setFcmToken(token);
         sendFcmToken({ context: { headers: { 'fcm-token': token } } }).catch((err) =>
           console.error(err)
         );
-
         return token;
       } catch (error) {
         console.log(error);

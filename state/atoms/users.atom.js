@@ -175,3 +175,8 @@ export const DisabledUserAtom = atom({
   key:'disabled',
   default:[]
 })
+
+export const AdminLearnerListAtom = atom({
+  key:'adminLearnerList',
+  default: {admins:[],learners:[]}
+})

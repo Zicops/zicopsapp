@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from '../home.module.scss';
-const HomeHeader = ({ showLogin = true, showBackBtn = false }) => {
+const HomeHeader = ({ showLogin = true, showBackBtn = false, showLogo = true }) => {
   return (
     <>
       <header className={`${styles.HomeHeader}`}>
         <Link href="/home">
           <a className={`${styles.ZicopsLogo}`}>
-            <img src="/images/svg/asset-6.svg" alt="zicops logo" />
+            {showLogo ? <img src="/images/brand/zicops-new-logo.svg" alt="zicops logo" /> : ''}
           </a>
         </Link>
 

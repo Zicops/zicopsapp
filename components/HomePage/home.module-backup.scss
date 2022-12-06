@@ -1,0 +1,472 @@
+// @import '../../styles/base.scss';
+
+// $DURATION: 1000ms;
+// $DELAY: calc($DURATION / 2);
+
+// .vrContainer {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   height: 100vh;
+//   width: 100%;
+//   z-index: -1;
+
+//   // fallback if vr is not loaded
+//   @include transparentBackground(url('/images/starrySky2.png'), 1);
+
+//   .vrBackground {
+//     overflow: hidden;
+//   }
+// }
+
+// .container {
+//   font-family: 'Open Sans';
+//   background: url('/images/starrySky2.png');
+//   background-position: center;
+//   background-size: cover;
+
+//   position: relative;
+
+//   display: flex;
+//   overflow: hidden;
+//   outline: 1px dashed lightgray;
+//   // flex: none;
+//   height: 100vh;
+//   width: 100vw;
+//   flex-flow: column nowrap;
+//   scroll-snap-type: y mandatory;
+
+//   section {
+//     height: 100%;
+//     width: 100%;
+//   }
+// }
+
+// .slideIndicator {
+//   position: absolute;
+//   top: 50%;
+//   transform: translateY(-50%);
+//   right: 3%;
+
+//   // background-color: $darkThree;
+//   border: 2px solid $darkThree;
+//   border-radius: 10px;
+
+//   div {
+//     height: 30px;
+//     width: 3px;
+//     border-radius: 10px;
+//     background-color: $darkThree;
+//     margin: 8px 5px;
+//     cursor: pointer;
+//     &.active {
+//       background-color: $primary;
+//     }
+//   }
+// }
+// .wheeldownZoomOut {
+//   animation: wheeldownZoomOut $DURATION ease-in;
+//   z-index: 99;
+// }
+// .wheeldownZoomIn {
+//   animation: wheeldownZoomIn $DURATION ease-out;
+//   z-index: 99;
+//   animation-delay: calc($DELAY/2 - $DELAY * 0.2);
+// }
+
+// .wheelupZoomIn {
+//   animation: wheelupZoomIn $DURATION ease-in;
+//   z-index: 99;
+// }
+// .wheelupZoomOut {
+//   animation: wheelupZoomOut $DURATION ease-out;
+//   z-index: 99;
+//   animation-delay: calc($DELAY/2 - $DELAY * 0.2);
+// }
+
+// @keyframes wheeldownZoomOut {
+//   0% {
+//     margin-top: 0px;
+//     transform: scale(1);
+//   }
+//   100% {
+//     margin-top: 60px;
+//     transform: scale(4);
+//     opacity: 0;
+//   }
+// }
+// @keyframes wheeldownZoomIn {
+//   0% {
+//     margin-top: -70px;
+//     transform: scale(0);
+//   }
+
+//   100% {
+//     margin-top: 0px;
+//     transform: scale(1);
+//   }
+// }
+
+// @keyframes wheelupZoomIn {
+//   0% {
+//     margin-top: 0px;
+//     transform: scale(1);
+//   }
+
+//   100% {
+//     margin-top: -70px;
+//     transform: scale(0);
+//   }
+// }
+// @keyframes wheelupZoomOut {
+//   0% {
+//     margin-top: 0px;
+//     transform: scale(4);
+//   }
+
+//   100% {
+//     margin-top: 0px;
+//     transform: scale(1);
+//     // opacity: 0;
+//   }
+// }
+
+// .homepageSlides {
+//   height: 100%;
+//   position: absolute;
+//   left: 50%;
+//   transform: translateX(-50%) scale(0);
+//   transition-delay: calc($DELAY/2);
+// }
+// .showActiveSlide {
+//   transform: scale(1);
+// }
+// .hideOtherSlides {
+//   transform: scale(0);
+// }
+
+// // .HomeContainer {
+// //   font-family: 'Open Sans';
+// //   background-image: url('../../public/images/starrySky2.png');
+// //   background-position: center;
+// //   background-size: cover;
+// //   height: 100vh;
+// //   scroll-snap-align: start;
+// // }
+
+// //Home Header
+// .HomeHeader {
+//   position: fixed;
+//   width: 100%;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: flex-end;
+//   height: 80px;
+//   padding: 0 4%;
+
+//   .backBtn {
+//     display: flex;
+//     justify-content: flex-end;
+//     gap: 5px;
+//     align-items: center;
+//     color: $primary;
+//     cursor: pointer;
+//     font-size: medium;
+//     font-weight: bold;
+//   }
+
+//   .Login {
+//     display: flex;
+//     justify-content: flex-end;
+//     gap: 10px;
+//     align-items: center;
+
+//     width: 100px;
+//     cursor: pointer;
+
+//     font-size: 18px;
+//     font-weight: 600;
+//     color: $primary;
+//     &:hover {
+//       color: $white;
+//     }
+//     img {
+//       object-fit: contain;
+//       width: 20px;
+//     }
+//   }
+
+//   .ZicopsLogo {
+//     width: 180px;
+//     img {
+//       object-fit: contain;
+//       width: 100%;
+//     }
+//   }
+// }
+
+// //HomeBody
+// .HomeBody {
+//   //background-color: $darkTwo;
+//   display: flex;
+//   flex-direction: column;
+//   // justify-content: space-evenly;
+//   align-items: center;
+//   height: 60%;
+//   // width: 60%;
+//   margin-top: 120px;
+//   // scroll-snap-type: y mandatory;
+//   position: fixed;
+//   left: 50%;
+//   transform: translate(-50%);
+//   z-index: 99;
+
+//   .scrollContainer {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     width: 100%;
+//     min-height: 220px;
+
+//     .scrollItems {
+//       // transform: scale(0.5);
+//       display: flex;
+//       flex-direction: column;
+//       align-items: center;
+//     }
+
+//     .Lcontainer {
+//       display: flex;
+//       flex-direction: column;
+//       justify-content: center;
+//       align-items: center;
+//       margin-bottom: 20px;
+//       // background-color: $darkTwo;
+//       height: 150px;
+//       width: 150px;
+//       // margin-bottom: 30px;
+//       // padding: 5px;
+//       // overflow: hidden;
+//       img:nth-child(1) {
+//         width: 100%;
+//         height: 100%;
+//         object-fit: contain;
+//       }
+//       // :nth-child(1) {
+//       //   width: 100%;
+//       //   height: 100%;
+//       //   // margin-bottom: 10px;
+//       //   object-fit: contain;
+//       // }
+
+//       // :nth-child(2) {
+//       //   width: 66%;
+//       // }
+//     }
+
+//     .text {
+//       color: $white;
+//       font-size: 1.2em;
+//       text-align: center;
+//       // height: 85px;
+//       width: 505px;
+//     }
+//   }
+
+//   .btn {
+//     padding: 20px 0;
+//     // margin-top: 10px;
+
+//     button {
+//       outline: none;
+//       border: 2px solid $primary;
+//       background-color: transparent;
+//       padding: 5px 20px;
+//       border-radius: 18px;
+//       font-family: 'Open Sans';
+//       color: $primary;
+//       cursor: pointer;
+
+//       &:hover {
+//         background: $primary;
+//         color: $white;
+//       }
+//     }
+//   }
+// }
+
+// .buttonContainer{
+//   // margin-top: 30px;
+//   width: 25%;
+// }
+
+// .formContainerWrapper {
+//   width: 100%;
+//   position: absolute;
+//   bottom: 20%;
+//   display: flex;
+//   align-items: center;
+//   flex-direction: column;
+//   z-index: 5;
+//   gap: 60px;
+ 
+//   .formContainer {
+//     display: flex;
+//     flex-direction: row;
+
+//     position: relative;
+
+//     background-color: $black;
+//     border: 2px solid $primary;
+//     border-radius: 25px;
+//     width: 450px;
+//     height: 40px;
+//     padding: 5px;
+
+//     .searchBar {
+//       width: 100%;
+//       left: 0;
+//       margin: -5px 0;
+//       z-index: 1;
+
+//       // to hide options after 3
+//       :global(.search__option) {
+//         &:nth-child(n + 4) {
+//           display: none;
+//         }
+//       }
+//     }
+//     // input[type='text'] {
+//     //   border: none;
+//     //   width: 80%;
+//     //   font-family: 'Open Sans';
+//     //   background-color: $black;
+//     //   color: $darkThree;
+//     // }
+
+//     // input:focus {
+//     //   outline: none;
+//     // }
+
+//     button {
+//       border: 1px solid $primary;
+//       background: $primary;
+//       width: 15%;
+//       font-weight: 700;
+//       font-size: medium;
+//       font-family: 'Open Sans';
+//       margin: 0px;
+//       border-radius: 20px;
+//       cursor: pointer;
+//     }
+
+//     span {
+//       position: absolute;
+//       top: 0;
+//       left: 0;
+//       height: 100%;
+
+//       img {
+//         object-fit: contain;
+//         height: 100%;
+//         padding: 5px;
+//       }
+//     }
+
+//     span {
+//       width: 35px;
+//     }
+//   }
+// }
+
+// //Footer
+
+// .HomeFooter {
+//   position: fixed;
+//   width: 100%;
+//   height: 27px;
+//   bottom: 40px;
+//   font-size: small;
+
+//   .HomeFooterInner {
+//     display: flex;
+//     justify-content: space-evenly;
+
+//     font-family: 'Open Sans';
+
+//     max-width: 60%;
+//     margin: auto;
+//     color: $white;
+//   }
+// }
+
+// // Animation for homepage scroll
+// .animated {
+//   margin-top: 120px;
+// }
+
+
+// .homeFooterElement {
+//   transition: 1s linear;
+// }
+
+// .move_up {
+//   position: relative;
+//   transform: translateY(calc(-91vh + $headerHeight));
+// }
+
+// .footerOverlay {
+//   background-color: $black;
+//   height: 100vh;
+//   width: 98vw;
+//   opacity: 0;
+// }
+
+// .footerOverlayZoom {
+//   position: fixed;
+//   inset: 0;
+//   animation: showOverlay 1500ms ;
+// }
+
+// .footerOverlayNone {
+//   display: none;
+//   height: 0;
+//   width: 0;
+// }
+
+// @keyframes showOverlay {
+//   0% {
+//     opacity: 0.2;
+//   }
+
+//   20% {
+//     opacity: 0.5;
+//   }
+
+//   60% {
+//     opacity: 0.7;
+//   }
+
+//   100% {
+//     opacity: 1;
+//     z-index: 10;
+//   }
+// }
+// @media screen and (max-width:1920px) {
+//   .btn {
+//     margin-top: 10px;
+//   }
+
+//   // .formContainerWrapper {
+//   //   transform: scale(0.9);
+//   // }
+// }
+
+// @media screen and (max-width:1400px) {
+// .btn{
+//  margin-top: 35px;
+// }
+// .formContainerWrapper{
+//   transform: scale(0.9);
+// }
+// }

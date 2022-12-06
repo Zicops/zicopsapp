@@ -74,13 +74,21 @@ export default function HomePage() {
   }
   return (
     <div className={`${styles.container}`} onWheel={showSlidesOnScroll}>
-      <HomeHeader />
+      <HomeHeader showLogo ={false} />
 
       <SlideIndicator
         count={maxSlideCount}
         activeSlide={slideIndex}
         showSlidesOnScroll={showSlidesOnClick}
       />
+
+      <div className={`${styles.homeCenter}`}>
+        <div className={`${styles.zicopsLogo}`}>
+          <img src="/images/brand/logorectangle.png" />
+          {/* <img src="./images/Zicops-logo-text.png" /> */}
+        </div>
+      
+      
 
       {[...Array(maxSlideCount).fill(null)].map((v, i) => {
         const { activeSlide, isLastScrollUp } = slideData;
@@ -112,8 +120,9 @@ export default function HomePage() {
           </CSSTransition>
         );
       })}
-
+        
       <HomeInputField />
+      </div>
     </div>
   );
 }

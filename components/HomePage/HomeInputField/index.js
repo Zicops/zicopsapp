@@ -34,7 +34,6 @@ const HomeInputField = () => {
     })
   };
 
-  
   const router = useRouter();
   const locationKey = router?.asPath;
   // console.log(locationKey);
@@ -51,22 +50,21 @@ const HomeInputField = () => {
       title: 'About Zicops'
     },
     {
-      path: '/tour',
-      title: 'Take a tour'
+      path: '/info/tour',
+      title: 'Features'
     },
     {
       path: '../static/partner.html',
-      title: 'Collaborate with us'
+      title: 'Content Partner'
     },
     {
-      path: '/contact-us',
+      path: '/info/contact-us',
       title: 'Contact Us'
     },
-    {
-      path: '/careers',
-      title: 'Careers'
-    },
-    
+    // {
+    //   path: '/careers',
+    //   title: 'Careers'
+    // }
   ];
 
   return (
@@ -102,7 +100,15 @@ const HomeInputField = () => {
 
           <button>GO</button>
         </form> */}
-        <div className={`${styles.buttonContainer}`}><Button size={'large'}  clickHandler={()=>{ router?.push('/create-learning-space')}}>Create Learning Space</Button></div>
+        <div className={`${styles.buttonContainer}`}>
+          <Button
+            size={'large'}
+            clickHandler={() => {
+              router?.push('/create-learning-space');
+            }}>
+            Book A Demo
+          </Button>
+        </div>
         <ScrollDownAnimation />
       </div>
       <footer className={`${styles.HomeFooter}`}>
@@ -128,10 +134,10 @@ const HomeInputField = () => {
             isOverLay ? styles.footerOverlayZoom : styles.footerOverlayNone
           }`}
           onAnimationStart={() => {
-            router.prefetch(`info/${selected}`);
+            router.prefetch(`${selected}`);
           }}
           onAnimationEnd={() => {
-            router.push(`info/${selected}`);
+            router.push(`${selected}`);
             setIsOverLay(false);
           }}></div>
       </footer>

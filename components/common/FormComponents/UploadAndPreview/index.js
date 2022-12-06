@@ -6,6 +6,9 @@ import ImageCropper from '../../ImageCropper';
 import styles from '../formComponents.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import ToolTip from '../../ToolTip';
+import { IMAGE_FILE_TYPES } from '@/helper/constants.helper';
+import { useRecoilState } from 'recoil';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
 const UploadAndPreview = ({
   inputName,
@@ -26,6 +29,7 @@ const UploadAndPreview = ({
   const [image, setImage] = useState(uploadedFile);
   const [preview, setPreview] = useState('');
   const [pop, setPop] = useState(false);
+  const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
 
   useEffect(async () => {
     if (!initialImage) return;
@@ -60,6 +64,13 @@ const UploadAndPreview = ({
 
   function handleImage(e) {
     const file = e.target.files[0];
+    // console.log(file?.type?.split('/')?.[1],'file name')
+    if(!IMAGE_FILE_TYPES.includes(file?.type?.split('/')?.[1])) {
+     setImage(null);
+     handleChange(null);
+     setToastMsg({type:'danger',message:`Select only images of type ${IMAGE_FILE_TYPES}`})
+     return ;
+    }
     if (file) {
       setImage(file);
       setTimeout(() => {

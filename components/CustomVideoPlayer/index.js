@@ -116,6 +116,8 @@ export default function CustomVideo({ set }) {
   // binge logic
   let bingeTimeout = null;
   useEffect(() => {
+    if (!showBingeButtons) return clearTimeout(bingeTimeout);
+
     // start 5 sec timer to play next video
     if (showBingeButtons) {
       bingeTimeout = setTimeout(() => {
