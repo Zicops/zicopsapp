@@ -32,9 +32,9 @@ const Card = ({ image, text, width, tooltipTitle }) => {
       <style jsx>
         {`
           .card {
+            background-color: var(--tile-bg);
             width: 300px;
             height: 200px;
-            background-color: var(--tile-bg);
             color: var(--primary);
             display: flex;
             flex-wrap: wrap;
@@ -60,6 +60,26 @@ const Card = ({ image, text, width, tooltipTitle }) => {
             margin-top: 20px;
             color: white;
           }
+          @media screen and (max-width:2560px) {
+            .card{
+               width: 300px;
+              height: 200px;
+            }
+          }
+           @media screen and (max-width:1440px) {
+           .card{
+               width: 260px;
+              height: 180px;
+            }
+          }
+
+        @media screen and (max-width:1024px) {
+           .card{
+               width: 210px;
+              height: 180px;
+            }
+          }
+          
         `}
       </style>
     </>
