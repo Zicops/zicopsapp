@@ -38,7 +38,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
-import { COMMON_LSPS, LEARNING_SPACE_ID } from './constants.helper';
+import { COMMON_LSPS, COURSE_TOPIC_STATUS, LEARNING_SPACE_ID } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
 
@@ -290,17 +290,19 @@ export default function useUserCourseData() {
 
     for (let i = 0; i < coursesMeta?.length; i++) {
       // if (!coursesMeta[i]?.courseProgres?.length) continue;
+      let topicsCompleted = 0;
       let topicsStarted = 0;
       let userProgressArr = coursesMeta[i]?.courseProgres;
       userProgressArr?.map((topic) => {
-        if (topic?.status !== 'not-started') ++topicsStarted;
+        if (topic?.status !== COURSE_TOPIC_STATUS.assign) ++topicsStarted;
+        if (topic?.status === COURSE_TOPIC_STATUS.completed) ++topicsCompleted;
       });
 
       const courseProgress = userProgressArr?.length
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-      console.log(userProgressArr, userProgressArr?.length, topicsStarted);
+      // console.log(userProgressArr, userProgressArr?.length, topicsStarted);
 
       const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
         course_id: coursesMeta[i]?.course_id
@@ -325,7 +327,9 @@ export default function useUserCourseData() {
         created_at: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(coursesMeta[i]?.end_date).format('DD/MM/YYYY'),
         timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
-        added_by: added_by
+        added_by: added_by,
+        isCourseCompleted: topicsCompleted === userProgressArr?.length,
+        isCourseStarted: topicsStarted > 0
       });
     }
 
