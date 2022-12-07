@@ -1,5 +1,6 @@
 import PopUp from '@/components/common/PopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -31,9 +32,16 @@ function ZicopsCategoryList() {
   const _lspId = userOrg?.lsp_id;
   const zicopsLsp = COMMON_LSPS.zicops;
 
-  const { data: zicopsLspData, loading: zicopsLspDataLoading } = useQuery(GET_CATS_MAIN, {
-    variables: { lsp_ids: [zicopsLsp] }
-  });
+  let zicopsLspData = null;
+  let zicopsLspDataLoading = false;
+
+  if (_lspId !== zicopsLsp) {
+    const { data, loading } = loadQueryDataAsync(GET_CATS_MAIN, {
+      variables: { lsp_ids: [zicopsLsp] }
+    });
+    zicopsLspData = data;
+    zicopsLspDataLoading = loading;
+  }
   const {
     data: currentLspData,
     loading: currentLspDataLoading,

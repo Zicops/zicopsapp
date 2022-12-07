@@ -2,7 +2,7 @@ export const OPTION_LABEL = ['A', 'B', 'C', 'D'];
 export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const USER_STATUS = { invite: 'Invited', activate: 'Active', disable: 'Disabled' };
 export const USER_MAP_STATUS = { invite: '', activate: 'active', disable: 'disable' };
-export const USER_LSP_ROLE = {admin:'admin',learner:'learner'}
+export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
@@ -95,6 +95,11 @@ export const COURSE_STATUS = {
   reject: 'REJECTED'
 };
 
+export const COURSE_TOPIC_STATUS = {
+  assign: 'non-started',
+  started: 'in-progress',
+  completed: 'completed'
+};
 
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
