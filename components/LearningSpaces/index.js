@@ -96,12 +96,14 @@ const LearningSpaces = () => {
     }).catch((err) => {
       console.error(err);
     });
-    setLspsDetails(res?.data?.getLearningSpaceDetails);
+    const lsps =  res?.data?.getLearningSpaceDetails?.filter((data) => !data?.is_default)
+    setLspsDetails(lsps);
     const _orgArr = [];
-    res?.data?.getLearningSpaceDetails?.map((data) => {
-      if (data.is_default) return;
-      _orgArr.push(data.org_id);
-    });
+    lsps?.forEach((data)=> _orgArr.push(data?.org_id) )
+    // res?.data?.getLearningSpaceDetails?.map((data) => {
+    //   if (data.is_default) return;
+    //   _orgArr.push(data.org_id);
+    // });
     setOrgIds(_orgArr);
     console.log(res?.data?.getLearningSpaceDetails);
   };
