@@ -1,16 +1,33 @@
+import { UPDATE_COURSE } from '@/api/Mutations';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { COURSE_STATUS } from '@/helper/constants.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
+import { useMutation } from '@apollo/client';
 import moment from 'moment';
-import { useContext } from 'react';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useRecoilState } from 'recoil';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import RadioBox from '../common/RadioBox';
 import SwitchBox from '../common/SwitchBox';
 import styles from '../courseTabs.module.scss';
+import { isCourseUploadingAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 import CourseDetailsTable from './CourseDetailsTable';
 
 export default function CourseConfiguration() {
+  const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
+
+  const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
+
   const courseContextData = useContext(courseContext);
+  const [showConfirmBox, setShowConfirmBox] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsLoading(courseUploading ? 'UPDATING...' : null);
+  }, [courseUploading]);
   // const { publishDate, expireDate, setPublishDate, setExpireDate } =
   //   useHandleConfig(courseContextData);
 
@@ -18,7 +35,7 @@ export default function CourseConfiguration() {
 
   // const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const isDisabled = fullCourse?.status === COURSE_STATUS.publish;
+  const isDisabled = [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse?.status);
 
   return (
     <>
@@ -103,7 +120,8 @@ export default function CourseConfiguration() {
               name: 'qa_required',
               isDisabled: isDisabled,
               isChecked: fullCourse?.qa_required || false,
-              changeHandler: handleChange
+              handleChange: (e) =>
+                updateCourseMaster({ ...fullCourse, qa_required: e.target.checked })
             }}
           />
           <div className="w-50" style={{ margin: '15px' }}></div>
@@ -121,7 +139,7 @@ export default function CourseConfiguration() {
       </div>
 
       {/* Expire */}
-      {fullCourse?.status === COURSE_STATUS.publish && (
+      {isDisabled && (
         <div>
           <h4>Expire Course</h4>
 
@@ -133,14 +151,7 @@ export default function CourseConfiguration() {
                 name: 'expire',
                 isDisabled: fullCourse?.status === COURSE_STATUS.reject,
                 isChecked: fullCourse?.status === COURSE_STATUS.reject,
-                changeHandler: () =>
-                  updateCourseMaster({
-                    ...fullCourse,
-                    status:
-                      fullCourse?.status === COURSE_STATUS.reject
-                        ? COURSE_STATUS.publish
-                        : COURSE_STATUS.reject
-                  })
+                handleChange: () => setShowConfirmBox(true)
               }}
             />
             <div className="w-50" style={{ margin: '15px' }}></div>
@@ -165,12 +176,30 @@ export default function CourseConfiguration() {
 
           <CourseDetailsTable
             data={[
-              { title: 'Created Date', value: moment(fullCourse?.created_on).format('lll') },
-              { title: 'Published on', value: moment(fullCourse?.publish_date).format('lll') },
-              { title: 'Live on', value: moment(fullCourse?.publish_date).format('lll') },
+              {
+                title: 'Created Date',
+                value: moment(+fullCourse?.created_at * 1000).format('lll')
+              },
+              {
+                title: 'Published on',
+                value: fullCourse?.publish_date
+                  ? moment(+fullCourse?.publish_date * 1000).format('lll')
+                  : 'N/A'
+              },
+              {
+                title: 'Live on',
+                value: fullCourse?.publish_date
+                  ? moment(+fullCourse?.publish_date * 1000).format('lll')
+                  : 'N/A'
+              },
               { title: 'Created By', value: fullCourse?.created_by },
               { title: 'Published by', value: fullCourse?.created_by },
-              { title: 'Expiring On', value: 'Perpetual' }
+              {
+                title: 'Expired On',
+                value: +fullCourse?.expiry_date
+                  ? moment(+fullCourse?.expiry_date * 1000).format('lll')
+                  : 'N/A'
+              }
             ]}
           />
         </div>
@@ -218,26 +247,31 @@ export default function CourseConfiguration() {
           handleChange={handleChange}
         />
       </div> */}
-      {/* {showConfirmBox && (
+      {showConfirmBox && (
         <ConfirmPopUp
-          title={
-            'Are you sure about deleting this course? This will delete the course permanently!'
-          }
+          title={'Are you sure about expiring this course?'}
           btnObj={{
             handleClickLeft: async () => {
-              const isDeleted = await deleteData(DELETE_COURSE, { id: fullCourse?.id });
-              // console.log(isDeleted);
+              // updateCourseMaster({
+              //   ...fullCourse,
+              //   status: e.target.checked ? COURSE_STATUS.reject : COURSE_STATUS.publish
+              // });
+              const { duration, status, ...fullCourseData } = fullCourse;
+              console.log('var', sendData);
+              const sendData = {
+                ...fullCourseData,
+                status: COURSE_STATUS.reject,
+                expiry_date: getUnixFromDate()
+              };
+
+              await updateCourse({ variables: sendData });
               setShowConfirmBox(false);
-
-              if (!isDeleted?.deleteCourse)
-                return setToastMsg({ type: 'danger', message: 'Course Delete Error' });
-
               router.push('/admin/course/my-courses');
             },
             handleClickRight: () => setShowConfirmBox(false)
           }}
         />
-      )} */}
+      )}
     </>
   );
 }
