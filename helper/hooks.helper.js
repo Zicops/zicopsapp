@@ -68,7 +68,7 @@ export function useHandleCatSubCat(selectedCategory) {
     const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
-    console.log(_lspId, zicopsLsp);
+
     let currentLspData = null;
     if (_lspId !== zicopsLsp) {
       currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
@@ -76,12 +76,16 @@ export function useHandleCatSubCat(selectedCategory) {
       });
     }
     // zicops lsp cat subcat
-    const zicopsCats = (await zicopsLspData)?.allCatMain || [];
-    const zicopsSubCats = (await zicopsLspData)?.allSubCatMain || [];
+    const zicopsCats =
+      (await zicopsLspData)?.allCatMain?.map((c) => ({ ...c, LspId: zicopsLsp })) || [];
+    const zicopsSubCats =
+      (await zicopsLspData)?.allSubCatMain?.map((c) => ({ ...c, LspId: zicopsLsp })) || [];
 
     // current lsp cat subcat
-    const currentLspCats = (await currentLspData)?.allCatMain || [];
-    const currentLspSubCats = (await currentLspData)?.allSubCatMain || [];
+    const currentLspCats =
+      (await currentLspData)?.allCatMain?.map((c) => ({ ...c, LspId: _lspId })) || [];
+    const currentLspSubCats =
+      (await currentLspData)?.allSubCatMain?.map((c) => ({ ...c, LspId: _lspId })) || [];
 
     // merging both lsp cat subcat
     const catAndSubCatRes = { allSubCatMain: [], allCatMain: [] };
