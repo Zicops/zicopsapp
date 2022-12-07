@@ -1,10 +1,13 @@
 import { COURSE_STATUS } from '@/helper/constants.helper';
+import moment from 'moment';
 import { useContext } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import SwitchButton from '../../common/FormComponents/SwitchButton';
+import RadioBox from '../common/RadioBox';
+import SwitchBox from '../common/SwitchBox';
 import styles from '../courseTabs.module.scss';
 import useHandleTabs from '../Logic/useHandleTabs';
+import CourseDetailsTable from './CourseDetailsTable';
 
 export default function CourseConfiguration() {
   const courseContextData = useContext(courseContext);
@@ -15,7 +18,7 @@ export default function CourseConfiguration() {
 
   // const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const isCoursePublished = fullCourse?.status === COURSE_STATUS.publish;
+  const isDisabled = fullCourse?.status === COURSE_STATUS.publish;
 
   return (
     <>
@@ -49,40 +52,129 @@ export default function CourseConfiguration() {
         </>
       </div> */}
 
-      {/* Quality Control Check */}
-      <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <label htmlFor="quality" className="w-25">
-          Freeze Course
-        </label>
+      {/* visiblity */}
+      <div>
+        <h4>Access Control</h4>
 
-        <div className="w-75">
-          <SwitchButton
-            // label="Freeze"
-            inputName="qa_required"
-            isDisabled={isCoursePublished}
-            isChecked={fullCourse?.qa_required || false}
-            handleChange={handleChange}
+        <div className={`w-100 ${styles.boxContainer}`}>
+          <RadioBox
+            labeledInputProps={{
+              label: 'Open',
+              name: 'display',
+              isDisabled: isDisabled,
+              description: 'Will be available to all users whether assigned or not',
+              isChecked: fullCourse?.is_display,
+              changeHandler: (e) => updateCourseMaster({ ...fullCourse, is_display: true })
+            }}
+          />
+          <RadioBox
+            labeledInputProps={{
+              label: 'Closed',
+              name: 'display',
+              isDisabled: isDisabled,
+              description: 'Will be available to only those assigned to the course',
+              isChecked: !fullCourse?.is_display,
+              changeHandler: (e) => updateCourseMaster({ ...fullCourse, is_display: false })
+            }}
           />
         </div>
-      </div>
 
-      {/* visiblity */}
-      <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <label htmlFor="visible" className="w-25">
-          Visibility in the Learning space
-        </label>
-
-        <div className="w-75">
+        {/* <div className="w-75">
           <SwitchButton
             // label="Display"
             inputName="is_display"
-            isDisabled={isCoursePublished}
+            isDisabled={isDisabled}
             isChecked={fullCourse?.is_display || false}
             handleChange={handleChange}
           />
-        </div>
+        </div> */}
       </div>
 
+      {/* Freeze */}
+      <div>
+        <h4>Freeze your account</h4>
+
+        <div className={`w-100 ${styles.boxContainer}`}>
+          <SwitchBox
+            labeledInputProps={{
+              label: 'Freeze',
+              description:
+                'Once a course is frozen it is no longer available and reasy for approval/Publishing',
+              name: 'qa_required',
+              isDisabled: isDisabled,
+              isChecked: fullCourse?.qa_required || false,
+              changeHandler: handleChange
+            }}
+          />
+          <div className="w-50" style={{ margin: '15px' }}></div>
+        </div>
+
+        {/* <div className="w-75">
+          <SwitchButton
+            // label="Freeze"
+            inputName="qa_required"
+            isDisabled={isDisabled}
+            isChecked={fullCourse?.qa_required || false}
+            handleChange={handleChange}
+          />
+        </div> */}
+      </div>
+
+      {/* Expire */}
+      {fullCourse?.status === COURSE_STATUS.publish && (
+        <div>
+          <h4>Expire Course</h4>
+
+          <div className={`w-100 ${styles.boxContainer}`}>
+            <SwitchBox
+              labeledInputProps={{
+                label: 'Expire',
+                description: 'No one will be able to access the course after expiration',
+                name: 'expire',
+                isDisabled: fullCourse?.status === COURSE_STATUS.reject,
+                isChecked: fullCourse?.status === COURSE_STATUS.reject,
+                changeHandler: () =>
+                  updateCourseMaster({
+                    ...fullCourse,
+                    status:
+                      fullCourse?.status === COURSE_STATUS.reject
+                        ? COURSE_STATUS.publish
+                        : COURSE_STATUS.reject
+                  })
+              }}
+            />
+            <div className="w-50" style={{ margin: '15px' }}></div>
+          </div>
+
+          {/* <div className="w-75">
+          <SwitchButton
+            // label="Freeze"
+            inputName="qa_required"
+            isDisabled={isDisabled}
+            isChecked={fullCourse?.qa_required || false}
+            handleChange={handleChange}
+          />
+        </div> */}
+        </div>
+      )}
+
+      {/* course details */}
+      {!!fullCourse?.id && (
+        <div>
+          <h4>Details</h4>
+
+          <CourseDetailsTable
+            data={[
+              { title: 'Created Date', value: moment(fullCourse?.created_on).format('lll') },
+              { title: 'Published on', value: moment(fullCourse?.publish_date).format('lll') },
+              { title: 'Live on', value: moment(fullCourse?.publish_date).format('lll') },
+              { title: 'Created By', value: fullCourse?.created_by },
+              { title: 'Published by', value: fullCourse?.created_by },
+              { title: 'Expiring On', value: 'Perpetual' }
+            ]}
+          />
+        </div>
+      )}
       {/* disable course */}
       {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label htmlFor="visible" className="w-25">
