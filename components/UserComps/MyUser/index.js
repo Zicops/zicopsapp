@@ -10,10 +10,10 @@ import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen, isWordIncluded } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { AdminLearnerListAtom, DisabledUserAtom } from '@/state/atoms/users.atom';
+import { AdminLearnerListAtom, DisabledUserAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
 export default function MyUser({ getUser, isAdministration = false, customStyle = {} }) {
@@ -23,6 +23,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
   const [isMakeAdminAlert, setIsMakeAdminAlert] = useState(false);
   const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
   const [adminLearnerList, setAdminLearnerList] = useRecoilState(AdminLearnerListAtom);
+  const userData = useRecoilValue(UserStateAtom);
   const [currentDisabledUser, setCurrentDisabledUser] = useState(null);
   const [currentSelectedUser, setCurrentSelectedUser] = useState(null);
 
@@ -83,7 +84,6 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
     getUser(selectedUser);
   }, [selectedUser]);
 
-  
   const columns = [
     {
       field: 'email',
@@ -150,7 +150,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         let isLearner = false;
         let isAdmin = false;
         isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
-        isLearner = !isAdmin ;
+        isLearner = !isAdmin;
         if (adminLearnerList?.admins?.includes(params?.row?.id)) {
           isLearner = false;
           isAdmin = true;
@@ -161,7 +161,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         }
 
         return (
-          <span style={{ textTransform: 'capitalize' }}>{isLearner?'Learner':'Admin'}</span>
+          <span style={{ textTransform: 'capitalize' }}>{isLearner ? 'Learner' : 'Admin'}</span>
         );
       }
     },
@@ -194,7 +194,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         let isLearner = false;
         let isAdmin = false;
         isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
-        isLearner = !isAdmin ;
+        isLearner = !isAdmin;
 
         if (adminLearnerList?.admins?.includes(params?.row?.id)) {
           isLearner = false;
@@ -233,10 +233,11 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
             handleClick: () => {
               setCurrentSelectedUser({
                 ...params?.row,
-                updateTo: isLearner  ? 'Admin' : 'Learner'
+                updateTo: isLearner ? 'Admin' : 'Learner'
               });
               setIsMakeAdminAlert(true);
-            }
+            },
+            hideBtn: userData?.id === params.id
           }
         ];
 
@@ -352,7 +353,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
                 if (foundAt >= 0) {
                   const learners = structuredClone(adminLearnerList?.learners);
                   learners?.splice(foundAt, 1);
-                  console.log('1',learners);
+                  console.log('1', learners);
                   setAdminLearnerList((prevValue) => ({
                     admins: [...prevValue?.admins, isRoleUpdate?.user_id],
                     learners: [...learners]
@@ -378,7 +379,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
                 if (foundAt >= 0) {
                   const admins = structuredClone(adminLearnerList?.admins);
                   admins?.splice(foundAt, 1);
-                  console.log(admins,'3');
+                  console.log(admins, '3');
                   setAdminLearnerList((prev) => ({
                     admins: [...admins],
                     learners: [...prev?.learners, isRoleUpdate?.user_id]
