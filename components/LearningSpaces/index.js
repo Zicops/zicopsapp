@@ -104,7 +104,7 @@ const LearningSpaces = () => {
     //   if (data.is_default) return;
     //   _orgArr.push(data.org_id);
     // });
-    lsps?.forEach((lsp) => _orgArr.push(data.org_id));
+    lsps?.forEach((lsp) => _orgArr.push(lsp?.org_id));
     setOrgIds(_orgArr);
     console.log(res?.data?.getLearningSpaceDetails);
   };
