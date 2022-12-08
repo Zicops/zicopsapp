@@ -118,7 +118,7 @@ export default function CourseConfiguration() {
               description:
                 'Once a course is frozen it is no longer available and reasy for approval/Publishing',
               name: 'qa_required',
-              isDisabled: isDisabled,
+              isDisabled: +fullCourse?.duration === 0 ? true : isDisabled,
               isChecked: fullCourse?.qa_required || false,
               handleChange: (e) =>
                 updateCourseMaster({ ...fullCourse, qa_required: e.target.checked })
@@ -193,7 +193,10 @@ export default function CourseConfiguration() {
                   : 'N/A'
               },
               { title: 'Created By', value: fullCourse?.created_by },
-              { title: 'Published by', value: fullCourse?.created_by },
+              {
+                title: 'Published by',
+                value: fullCourse?.approvers?.[0] ? fullCourse?.approvers?.[0] : 'N/A'
+              },
               {
                 title: 'Expired On',
                 value: +fullCourse?.expiry_date

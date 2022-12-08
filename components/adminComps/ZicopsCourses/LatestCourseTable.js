@@ -149,8 +149,8 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
         searchProps={{
           options: [
             { label: 'Name', value: 'Name' },
-            { label: 'Owner', value: 'Owner' },
-            { label: 'Category', value: 'Category' }
+            { label: 'Owner', value: 'Owner', isDisabled: true },
+            { label: 'Category', value: 'Category', isDisabled: true }
           ],
           handleSearch: (val) => setSearchParam(val),
           filterOptions: !zicopsLspId ? filterOptions : [],
