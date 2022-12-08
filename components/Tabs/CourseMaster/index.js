@@ -1,24 +1,19 @@
-import { DELETE_COURSE } from '@/api/Mutations';
-import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import { deleteData } from '@/helper/api.helper';
 import { COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { changeHandler } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../common/FormComponents/LabeledInput';
-import SwitchButton from '../../common/FormComponents/SwitchButton';
 import NextButton from '../common/NextButton';
 import styles from '../courseTabs.module.scss';
-import { getDefaultLsp } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 
 export default function CourseMaster() {
@@ -38,6 +33,7 @@ export default function CourseMaster() {
 
   let isDisabled = !!fullCourse?.qa_required;
   if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
+  if (fullCourse?.status === COURSE_STATUS.reject) isDisabled = true;
 
   // const allCatOptions = [];
   // data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
