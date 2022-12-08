@@ -1,6 +1,4 @@
-import AddCatSubCat from '@/components/adminComps/ZicopsCourses/AddCatSubCat';
 import Loader from '@/components/common/Loader';
-import PopUp from '@/components/common/PopUp';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -22,7 +20,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import useHandleAddUserDetails from '../Logic/useHandleAddUser';
-import SubCategoryAdd from '../SubCategoryAdd';
 import CustomAccordion from './CustomAccordion';
 import styles from './profilePreferences.module.scss';
 
@@ -34,7 +31,7 @@ const ProfilePreferences = ({
   customStyle = [],
   customClass,
   isLearnerSide = false,
-  closePopUp = ()=>{}
+  closePopUp = () => {}
 }) => {
   const [vidIsOpen, setVidIsOpen] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
@@ -65,7 +62,7 @@ const ProfilePreferences = ({
     // setUserAccountData((prevValue) => ({ ...prevValue, sub_category: primary }));
 
     let isError = false;
-    isError = await addUserLearningSpaceDetails([],false);
+    isError = await addUserLearningSpaceDetails([], false);
     if (isError) return;
     isError = await updateAboutUser();
 
@@ -175,10 +172,11 @@ const ProfilePreferences = ({
     setIsOpen(false);
   }, [isVisible]);
 
+  const isSubcatPresent = data?.length >= 5;
   return (
     <>
       <div ref={myRef} className={`${styles.container} ${customClass}`}>
-        {data?.length > 5 && data !== 'loading' ? (
+        {isSubcatPresent && data !== 'loading' ? (
           <Grow in={isVisible || isFiltered || searched}>
             <div className={`${styles.filter_main_container} ${customStyle[0]}`}>
               <div className={`${styles.title}`}>Sub-Category Selection</div>
@@ -269,12 +267,14 @@ const ProfilePreferences = ({
               </div>
             </div>
           </Grow>
-        ): <></>}
+        ) : (
+          <></>
+        )}
         {data === 'loading' ? (
           <>
             <Loader customStyles={{ backgroundColor: 'transparent', height: '100%' }} />
           </>
-        ) : data?.length > 5 && data !== 'loading' ? (
+        ) : isSubcatPresent && data !== 'loading' ? (
           <div
             ref={scrollRef}
             className={`${styles.category_and_subCategory} ${customStyle[1]}`}
@@ -316,7 +316,7 @@ const ProfilePreferences = ({
             </Button>
           )}
 
-          {!(data?.length < 5) ? (
+          {isSubcatPresent ? (
             <Button
               disabled={selected.length < 5}
               variant={'contained'}
@@ -339,7 +339,7 @@ const ProfilePreferences = ({
                 </Button>
               )}
               <Button
-                disabled={data?.length > 5 || isLearnerSide}
+                disabled={isSubcatPresent || isLearnerSide}
                 variant={'contained'}
                 className={`${styles.input_margin_transform}`}
                 onClick={() => {
