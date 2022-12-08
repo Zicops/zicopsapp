@@ -40,7 +40,7 @@ const SingleNotification = ({
           variables: firstoreData,
           context: { headers: { 'fcm-token': fcmToken } }
         });
-        alert(messageId);
+        // alert(messageId);
         console.log('Updated Firestore', res);
         // router.push(route);
       }}>

@@ -105,3 +105,13 @@ export async function sendNotification(variableObj = {}, options = {}) {
 
   return response?.data || {};
 }
+
+// ============ How to use =============
+// sendNotification(
+//   {
+//     title: 'Stri ng1',
+//     body: 'This is a notification body',
+//     user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+//   },
+//   { context: { headers: { 'fcm-token': fcmToken } } }
+// );
