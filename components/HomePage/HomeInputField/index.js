@@ -54,13 +54,13 @@ const HomeInputField = () => {
       title: 'Features'
     },
     {
-      path: '../static/partner.html',
+      path: '../static/content-partners.html',
       title: 'Content Partners'
     },
     {
       path: '/info/contact-us',
       title: 'Contact Us'
-    },
+    }
     // {
     //   path: '/careers',
     //   title: 'Careers'
