@@ -1,6 +1,7 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, DEFAULT_VALUES } from '@/helper/constants.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -163,15 +164,16 @@ export default function useSaveCourse(courseContextData) {
     await uploadFile(courseTileImage, uploadTileImage, 'tileImage', 'uploadCourseTileImage');
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
-    const { duration, name, status, ...sendData } = fullCourse;
+    const { duration, name, status, ...fullCourseData } = fullCourse;
     console.log('var', sendData);
-    const courseUpdateResponse = await updateCourse({
-      variables: {
-        ...sendData,
-        name: fullCourse?.name?.trim(),
-        status: isPublishing ? COURSE_STATUS.publish : status
-      }
-    });
+    const sendData = {
+      ...fullCourseData,
+      name: fullCourse?.name?.trim(),
+      status: isPublishing ? COURSE_STATUS.publish : status.ADD_COURSE
+    };
+    if (isPublishing) sendData.publish_date = getUnixFromDate();
+
+    const courseUpdateResponse = await updateCourse({ variables: sendData });
 
     const _course = structuredClone(courseUpdateResponse.data.updateCourse);
     if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
