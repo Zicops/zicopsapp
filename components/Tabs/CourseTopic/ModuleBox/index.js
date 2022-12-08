@@ -26,6 +26,8 @@ export default function ModuleBox({
   refetchDataAndUpdateRecoil,
   isDisabled = false
 }) {
+  const { fullCourse } = useContext(courseContext);
+
   const [updateCourseModule] = useMutation(UPDATE_COURSE_MODULE);
   const [updateCourseChapter] = useMutation(UPDATE_COURSE_CHAPTER);
   const [updateCourseTopic] = useMutation(UPDATE_COURSE_TOPIC);

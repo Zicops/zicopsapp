@@ -132,6 +132,10 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
     { label: 'Published', value: COURSE_STATUS.publish }
   ];
 
+  if (zicopsLspId == null) {
+    filterOptions.push({ label: 'Expired', value: COURSE_STATUS.reject });
+  }
+
   return (
     <>
       <ZicopsTable

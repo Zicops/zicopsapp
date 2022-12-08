@@ -8,6 +8,7 @@ import {
 import { GET_CATS_MAIN, GET_SUB_CATS_MAIN, queryClient } from '@/api/Queries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { isNameDuplicateAdvanced } from '@/helper/data.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -43,13 +44,30 @@ export default function useHandleAddCatSubCat(isSubCat) {
   const [catoptions, setCatOptions] = useState([]);
 
   useEffect(() => {
+    const _lspId = userOrg?.lsp_id;
+    const zicopsLsp = COMMON_LSPS.zicops;
+    if (!_lspId) return;
+
     async function loadCategories() {
-      const catRes = await loadQueryDataAsync(GET_CATS_MAIN);
+      const zicopsLspData =
+        zicopsLsp !== _lspId
+          ? await loadQueryDataAsync(GET_CATS_MAIN, { lsp_ids: [zicopsLsp] })
+          : {};
+      const currentLspData = await loadQueryDataAsync(GET_CATS_MAIN, { lsp_ids: [_lspId] });
+
+      const data = [];
+
+      const updatedCatList =
+        currentLspData?.allCatMain?.map((cat) => ({ ...cat, LspId: _lspId })) || [];
+
+      data.push(...updatedCatList);
+      data.push(...(zicopsLspData?.allCatMain || []));
+
       // console.log(catRes);
-      setCatOptions(catRes?.allCatMain?.map((cat) => ({ label: cat?.Name, value: cat?.id })));
+      setCatOptions(data?.map((cat) => ({ label: cat?.Name, value: cat?.id })));
     }
     loadCategories();
-  }, []);
+  }, [userOrg?.lsp_id]);
 
   useEffect(() => {
     setCatSubCatData({ ...catSubCatData, isSubCat: isSubCat, LspId: userOrg?.lsp_id });

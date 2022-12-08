@@ -1,54 +1,72 @@
 import PopUp from '@/components/common/PopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { ApolloProvider, useQuery } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_CATS_MAIN, queryClient } from '../../../API/Queries';
-import { isWordIncluded, TableResponsiveRows } from '../../../helper/utils.helper';
+import { getPageSizeBasedOnScreen, isWordIncluded } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
 import CourseHead from '../../CourseHead';
 import AddCatSubCat from './AddCatSubCat';
 
 function ZicopsCategoryList() {
-  const [pageSize, setPageSize] = useState(6);
+  const [catData, setCatData] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+
   const userOrg = useRecoilValue(UsersOrganizationAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
 
-  useEffect(() => {
-    const screenWidth = window.screen.width;
-    console.log(screenWidth);
-    TableResponsiveRows.forEach((r, i) => {
-      if (r.breakpoint <= screenWidth) {
-        setPageSize(r.pageSize);
-      }
-    });
-  }, []);
+  let zicopsLspData = null;
+  let zicopsLspDataLoading = false;
+
+  // if (_lspId !== zicopsLsp) {
+  //   const { data, loading } = loadQueryDataAsync(GET_CATS_MAIN, { lsp_ids: [zicopsLsp] });
+  //   zicopsLspData = data;
+  //   zicopsLspDataLoading = loading;
+  // }
+  // const {
+  //   data: currentLspData,
+  //   loading: currentLspDataLoading,
+  //   refetch
+  // } = useQuery(GET_CATS_MAIN, { variables: { lsp_ids: [_lspId] } });
 
   const _lspId = userOrg?.lsp_id;
-  const zicopsLsp = COMMON_LSPS.zicops;
 
-  const { data: zicopsLspData, loading: zicopsLspDataLoading } = useQuery(GET_CATS_MAIN, {
-    variables: { lsp_ids: [zicopsLsp] }
-  });
-  const {
-    data: currentLspData,
-    loading: currentLspDataLoading,
-    refetch
-  } = useQuery(GET_CATS_MAIN, { variables: { lsp_ids: [_lspId] } });
+  useEffect(() => {
+    if (!_lspId) return;
 
-  const data = { allCatMain: [] };
-  data.allCatMain.push(...(currentLspData?.allCatMain || []));
-  data.allCatMain.push(...(zicopsLspData?.allCatMain || []));
+    loadCategories();
+  }, [_lspId]);
+
+  async function loadCategories() {
+    const zicopsLsp = COMMON_LSPS.zicops;
+
+    const zicopsLspData =
+      zicopsLsp !== _lspId ? await loadQueryDataAsync(GET_CATS_MAIN, { lsp_ids: [zicopsLsp] }) : {};
+    const currentLspData = await loadQueryDataAsync(GET_CATS_MAIN, { lsp_ids: [_lspId] });
+
+    const data = { allCatMain: [] };
+
+    const updatedCatList =
+      currentLspData?.allCatMain?.map((cat) => ({ ...cat, LspId: _lspId })) || [];
+
+    data.allCatMain.push(...updatedCatList);
+    data.allCatMain.push(...(zicopsLspData?.allCatMain || []));
+
+    setCatData(data);
+  }
 
   const loading = zicopsLspDataLoading && currentLspDataLoading;
 
   useEffect(() => {
     if (popUpState) return;
-    refetch();
+    loadCategories();
   }, [popUpState]);
 
   const columns = [
@@ -97,8 +115,8 @@ function ZicopsCategoryList() {
   ];
   let categories = [];
 
-  if (data?.allCatMain?.length)
-    structuredClone(data?.allCatMain || {})
+  if (catData?.allCatMain?.length)
+    structuredClone(catData?.allCatMain || {})
       ?.sort((c1, c2) => c2?.CreatedAt - c1?.CreatedAt)
       ?.map((val, index) => categories.push({ index: index + 1, catName: val?.Name, ...val }));
 
@@ -107,7 +125,7 @@ function ZicopsCategoryList() {
       <ZicopsTable
         columns={columns}
         data={categories?.filter((cat) => isWordIncluded(cat?.catName, searchQuery))}
-        pageSize={pageSize}
+        pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
         loading={loading}
