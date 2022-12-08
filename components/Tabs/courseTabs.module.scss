@@ -102,7 +102,7 @@
 
     color: $secondaryBlack;
     font-size: inherit;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
 
     &:not(:placeholder-shown) {
       /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
@@ -438,7 +438,7 @@
     background-color: #202222;
     color: $secondaryBlack;
     font-size: 13px;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
 
     &:focus {
       border: 2px solid $primary;

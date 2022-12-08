@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Open+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 :root{
   --primary: #6bcfcf;
@@ -34,9 +34,9 @@ html,
 body, h1, h2, h3, h4, h5, p, ul, li {
   padding: 0;
   margin: 0;
-  /* font-family: -apple-system, Open Sans, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  /* font-family: -apple-system, Poppins, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -152,7 +152,7 @@ input:-webkit-autofill{
   background-color: #202222;
   color: var(--white);
   font-size: 13px;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
 }
 .row input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #868686;
@@ -179,7 +179,7 @@ input:-webkit-autofill{
   background-color: #202222;
   color: #868686;
   font-size: 13px;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
 }
 .row select option{
   font-size: 14px;
@@ -452,7 +452,7 @@ transition: All 0.3s ease;
   border-radius: 3px;
   color: #858f8f;
   font-size: 13px;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
   /* border: 2px solid #63c0c0;
   color: gray;
   background-color: transparent;
@@ -502,7 +502,7 @@ transition: All 0.3s ease;
 .btn_add{
   background-color:#000000 ;
   color:#ffffff;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
   border: none;
   min-width: 150px;
   padding: 10px 5px;
@@ -521,7 +521,7 @@ transition: All 0.3s ease;
 .btn_lightblack{
   background-color:#202222 ;
   color:#ffffff;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
   border: none;
   min-width: 150px;
   padding: 10px 5px;
@@ -537,7 +537,7 @@ transition: All 0.3s ease;
 .btn_grey{
   background-color:#858f8f ;
   color:#ffffff;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
   border: none;
   min-width: 150px;
   padding: 10px 5px;
@@ -1113,7 +1113,7 @@ transition: All 0.3s ease;
   background-color: #202222;
   color: #858f8f;
   font-size: 13px;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
 }
 .row input:focus, .row select:focus, .row textarea:focus{
   border: 2px solid #6bcfcf;
@@ -1276,7 +1276,7 @@ transition: All 0.3s ease;
   font-size: 35px;
   font-weight: 600;
   letter-spacing: 3px;
-  font-family: 'Open Sans' sans-serif;
+  font-family: 'Poppins' sans-serif;
   text-transform: uppercase;
   color:white;
   text-align: center;
@@ -1340,7 +1340,7 @@ transition: All 0.3s ease;
   margin: 10px 0;
   display: flex;
   justify-content: space-between;
-  font-family: 'Open Sans' sans-serif;
+  font-family: 'Poppins' sans-serif;
   cursor: pointer;
 }
 

@@ -4,9 +4,12 @@ const AllNotifications = ({ style, data }) => {
   return (
     <div>
       {data?.map((element) => {
-        const { body, img, link, duration, isRead, route, title } = element;
+        const { body, img, link, duration, isRead, route, title, fcmMessageId } = element;
         return (
           <SingleNotification
+            key={fcmMessageId}
+            title={title}
+            messageId={fcmMessageId}
             description={body}
             img={img}
             link={link}
