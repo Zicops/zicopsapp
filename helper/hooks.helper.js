@@ -38,7 +38,12 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
-import { COMMON_LSPS, COURSE_TOPIC_STATUS, LEARNING_SPACE_ID } from './constants.helper';
+import {
+  COMMON_LSPS,
+  COURSE_STATUS,
+  COURSE_TOPIC_STATUS,
+  LEARNING_SPACE_ID
+} from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
 
@@ -322,6 +327,8 @@ export default function useUserCourseData() {
       const courseDuraton = +courseRes?.getCourse?.duration / (60 * 60);
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
 
+      if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
+
       userCourseArray.push({
         ...courseRes?.getCourse,
         ...coursesMeta[i],
@@ -332,7 +339,8 @@ export default function useUserCourseData() {
         expected_completion: moment.unix(coursesMeta[i]?.end_date).format('DD/MM/YYYY'),
         timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
         added_by: added_by,
-        isCourseCompleted: topicsCompleted === userProgressArr?.length,
+        isCourseCompleted:
+          topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
         isCourseStarted: topicsStarted > 0
       });
     }

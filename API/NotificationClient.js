@@ -20,7 +20,6 @@ export const ADD_NOTIFICATION_TO_FIRESTORE = gql`
   mutation (
     $title: String!
     $body: String!
-    $user_id: String!
     $is_read: Boolean!
     $message_id: String!
   ){
@@ -29,7 +28,6 @@ export const ADD_NOTIFICATION_TO_FIRESTORE = gql`
         { 
           title: $title, 
           body: $body, 
-          user_id: $user_id, 
           is_read: $is_read, 
           message_id: $message_id 
         }

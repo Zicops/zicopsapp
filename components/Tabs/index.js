@@ -22,7 +22,7 @@ export default function CourseTabs() {
   const { updateCourseMaster } = courseContextData;
   const { fullCourse, saveCourseData } = useSaveCourse(courseContextData);
   const router = useRouter();
-  const [courseStatus, setCourseStatus] = useState(fullCourse?.status);
+  const [courseStatus, setCourseStatus] = useState(fullCourse?.status || STATUS.display[0]);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
@@ -50,7 +50,11 @@ export default function CourseTabs() {
     if (fullCourse?.status === COURSE_STATUS.reject) _status = 'EXPIRED';
 
     setCourseStatus(_status);
-  }, [fullCourse?.qa_required, fullCourse?.status, isCourseSaved]);
+  }, [fullCourse?.status, isCourseSaved]);
+
+  useEffect(() => {
+    if (!fullCourse?.qa_required) setCourseStatus(fullCourse?.status);
+  }, [fullCourse?.qa_required]);
 
   useEffect(() => {
     if (isCourseSaved) {

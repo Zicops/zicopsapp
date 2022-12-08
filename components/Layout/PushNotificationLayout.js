@@ -75,7 +75,7 @@ export default function PushNotificationLayout({ children }) {
           let firstoreData = {
             title: event?.data?.notification?.title || '',
             body: event?.data?.notification?.body,
-            user_id: userAboutData?.id,
+            // user_id: userAboutData?.id,
             is_read: false,
             message_id: event?.data?.fcmMessageId
           };
@@ -136,6 +136,7 @@ export default function PushNotificationLayout({ children }) {
         const token = await getFCMToken();
         if (!token) return null;
         console.log('token', token);
+        sessionStorage.setItem('fcm-token', token);
         setFcmToken(token);
         sendFcmToken({ context: { headers: { 'fcm-token': token } } }).catch((err) =>
           console.error(err)

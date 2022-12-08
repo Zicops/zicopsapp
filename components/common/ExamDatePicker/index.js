@@ -105,7 +105,7 @@ const ExamDatePicker = ({ text, datePicker_label }) => {
             background-color: #202222;
             color: #858f8f;
             font-size: 13px;
-            font-family: Open Sans;
+            font-family: Poppins;
         }`}
       </style>
     </>
