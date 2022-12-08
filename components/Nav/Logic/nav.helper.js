@@ -10,7 +10,7 @@ export const AdminMenu = [
   { title: 'Vendor', link: '/admin' },
   { title: 'Lab', link: '/admin' },
   { title: 'Analytics', link: '/admin' },
-  { title: 'Administration', link: '/admin' }
+  { title: 'Administration', link: '/admin/administration/organization' }
 ];
 
 export const UserMenu = [

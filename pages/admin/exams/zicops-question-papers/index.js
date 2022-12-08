@@ -1,3 +1,4 @@
+import NoAccess from '@/components/NoAccess';
 import QuestionPaperTable from '../../../../components/AdminExamComps/QuestionPapers/QuestionPaperTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
@@ -16,13 +17,14 @@ const ZicopsQuestionPapers = () => {
           pageRoute="/admin/exams/my-question-papers/add"
           tooltipTitle="Create new Question Paper"
         />
-        <MainBodyBox>
-          {/* <div style={{ padding: '50px' }}>
+
+        {/* <div style={{ padding: '50px' }}>
             <QuizOptionInput />
           </div> */}
-
+        {/* <MainBodyBox>
           <QuestionPaperTable />
-        </MainBodyBox>
+        </MainBodyBox> */}
+        <NoAccess />
       </MainBody>
     </>
   );

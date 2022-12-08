@@ -1,0 +1,139 @@
+.partner-section {
+    padding: 0 20px;
+    position: relative;
+    overflow: hidden;
+}
+.partner-images {
+    height: 400px;
+}
+.partner-image{
+    width: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+.footer {
+    padding: 0 20px;
+}
+
+.slider {
+    height: 90vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+#carousel {
+    position: absolute;
+    top: 50%;
+}
+
+#carousel .slide-item img {
+    height: 65vh;
+    position: absolute;
+    top: 0;
+    border-radius: 10px;
+}
+.content-block{
+    max-width: 500px;
+}
+.footer {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #121318AB;
+}
+
+.mobile.grad1{
+    position: absolute;
+    top: 10%;
+    right: 0;
+    height: 400px;
+    width: 100%;
+}
+.mobile.grad2{
+    position: absolute;
+    top: 25%;
+    left: 0;
+    height: 600px;
+    width: 100%;
+}
+.mobile.grad3{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    height: 600px;
+    width: 100%;
+}
+.mobile.grad4{
+    position: absolute;
+    bottom: 0%;
+    left: 0;
+    height: 400px;
+    width: 100%;
+}
+.desktop {
+    display: none;
+}
+@media only screen and (min-width: 768px) {
+    .mobile{
+        display: none;
+    }
+    .desktop {
+        display: block;
+    }
+    .sec {
+        height: 80vh;
+    }
+    .partner-images {
+        height: 500px;
+    }
+    .partner-image {
+        height: 100%;
+        object-fit: contain;
+    }
+    .partner-section {
+        padding: 0 100px;
+    }
+    .footer p {
+        text-align: center;
+    }
+        .desktop.grad1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 190vh;
+            width: 50vw;
+        }
+        .desktop.grad2 {
+            position: absolute;
+            top: 12%;
+            right: 0;
+            height: 200vh;
+            width: 60vw;
+        }
+        .desktop.grad3 {
+            position: absolute;
+            top: 40%;
+            left: 0;
+            height: 190vh;
+            width: 60vw;
+        }
+        .desktop.grad4 {
+            position: absolute;
+            top: 60%;
+            right: 0;
+            height: 190vh;
+            width: 60vw;
+        }
+        .desktop.grad5 {
+            position: absolute;
+            bottom: -100vh;
+            left: 0;
+            height: 200vh;
+            width: 60vw;
+        }
+}

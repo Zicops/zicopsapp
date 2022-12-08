@@ -47,20 +47,20 @@ const HomeInputField = () => {
   const routerConfig = [
     {
       path: '../static/about.html',
-      title: 'About Zicops'
+      title: 'Corporates'
     },
     {
       path: '/info/tour',
       title: 'Features'
     },
     {
-      path: '../static/partner.html',
-      title: 'Content Partner'
+      path: '../static/content-partners.html',
+      title: 'Content Partners'
     },
     {
       path: '/info/contact-us',
       title: 'Contact Us'
-    },
+    }
     // {
     //   path: '/careers',
     //   title: 'Careers'

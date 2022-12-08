@@ -1,15 +1,21 @@
 $(document).ready(function () {
+  let screenSize = window?.screen?.width;
+
+  // let separation = screenSize < 430 ? 40 : 200;
+  let separation = screenSize/8;
+  let flankingItems = screenSize < 430 ? 2 : 4;
+
   var carousel = $('#carousel').waterwheelCarousel({
     // number tweeks to change apperance
     startingItem: 1, // item to place in the center of the carousel. Set to 0 for auto
-    separation: 200, // distance between items in carousel
+    separation: separation, // distance between items in carousel
     separationMultiplier: 0.75, // multipled by separation distance to increase/decrease distance for each additional item
     horizonOffset: 0, // offset each item from the "horizon" by this amount (causes arching)
     horizonOffsetMultiplier: 1, // multipled by horizon offset to increase/decrease offset for each additional item
     sizeMultiplier: 0.8, // determines how drastically the size of each item changes
     opacityMultiplier: 0.7, // determines how drastically the opacity of each item changes
     horizon: 0, // how "far in" the horizontal/vertical horizon should be set from the container wall. 0 for auto
-    flankingItems: 4, // the number of items visible on either side of the center
+    flankingItems: flankingItems, // the number of items visible on either side of the center
 
     // animation
     speed: 1000, // speed in milliseconds it will take to rotate from one to the next
@@ -39,15 +45,15 @@ $(document).ready(function () {
     movedFromCenter: $.noop // fired when an item has finished moving from the center
   });
 
-  $('#prev').bind('click', function () {
-    carousel.prev();
-    return false;
-  });
+  // $('#prev').bind('click', function () {
+  //   carousel.prev();
+  //   return false;
+  // });
 
-  $('#next').bind('click', function () {
-    carousel.next();
-    return false;
-  });
+  // $('#next').bind('click', function () {
+  //   carousel.next();
+  //   return false;
+  // });
 
   $('.mouse-cursor-gradient-tracking-btn').on('click', function () {
     // $('.popup').show();

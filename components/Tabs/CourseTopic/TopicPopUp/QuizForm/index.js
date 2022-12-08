@@ -191,7 +191,14 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                     changeHandler={handleQuizInput}
                   />
                 </div>
-
+                <label>
+                  Difficulty Score:
+                  {/* <CustomTooltip
+                    info={
+                      ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.viewQuestions.difficultyLevel
+                    }
+                  /> */}
+                </label>
                 <RangeSlider
                   options={difficultyOptions}
                   inputName="difficulty"

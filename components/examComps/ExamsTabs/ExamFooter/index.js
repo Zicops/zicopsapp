@@ -39,7 +39,7 @@ export default function ExamFooter() {
           border-radius: 50px;
           min-width: 155px;
           margin: 5px;
-          font-family: 'Open Sans';
+          font-family: 'Poppins';
           font-size: 13px;
           font-weight: 800;
           cursor: pointer;
