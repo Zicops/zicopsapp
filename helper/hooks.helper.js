@@ -789,7 +789,8 @@ export function useUpdateUserAboutData() {
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
       if (disabledUserList?.includes(user?.id)) continue;
-      if (user?.lsp_status === USER_STATUS?.activate || user?.lsp_status === "") {
+      // console.log(disabledUserList,'fs',user?.lsp_status)
+      if (user?.lsp_status?.toLowerCase() === USER_STATUS?.activate?.toLowerCase() || user?.lsp_status === "") {
         const userSendLspData = {
           id: user?.id,
           user_lsp_id: user?.user_lsp_id,
