@@ -1,6 +1,8 @@
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { useUpdateUserAboutData } from '@/helper/hooks.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -11,15 +13,19 @@ import MyUser from '../../../../components/UserComps/MyUser';
 export default function MyUserPage() {
   const [selectedUser, setSelectedUser] = useState([]);
   const [userType, setUserType] = useState('Internal');
+  const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  const { setMultiUserArr, updateMultiUserAbout } = useUpdateUserAboutData();
+  const { setMultiUserArr, updateMultiUserAbout , disableMultiUser } = useUpdateUserAboutData();
 
   const btnData = [
     {
       text: 'Disable User',
-      handleClick: () => {
-        console.log(selectedUser);
-        updateMultiUserAbout();
+      handleClick: async() => {
+        // console.log(selectedUser);
+        const success = disableMultiUser(selectedUser);
+        if(!success) return setToastMsg({type:'danger',message:'Error while disabling users'});
+        return setToastMsg({type:'success',message:'Users are successfully disable.'});
+        // updateMultiUserAbout();
       }
     },
     {
@@ -43,7 +49,7 @@ export default function MyUserPage() {
   ];
 
   useEffect(() => {
-    console.log(selectedUser);
+    // console.log(selectedUser,'cureent users');
     setMultiUserArr(selectedUser);
   }, [selectedUser]);
 

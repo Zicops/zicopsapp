@@ -42,7 +42,8 @@ import {
   COMMON_LSPS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
-  LEARNING_SPACE_ID
+  LEARNING_SPACE_ID,
+  USER_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
@@ -692,6 +693,7 @@ export function useUpdateUserAboutData() {
     // if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
     // if (userData?.status?.toLowerCase() === 'disabled')
     //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
+
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
@@ -780,6 +782,33 @@ export function useUpdateUserAboutData() {
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
   }
 
+  async function disableMultiUser(users = []) {
+    if (!users?.length) return;
+    let userIds = []
+    let isError = false;
+    for (let i = 0; i < users?.length; i++) {
+      const user = users[i];
+      if (disabledUserList?.includes(user?.id)) continue;
+      if (user?.lsp_status === USER_STATUS?.activate || user?.lsp_status === "") {
+        const userSendLspData = {
+          id: user?.id,
+          user_lsp_id: user?.user_lsp_id,
+          status: USER_STATUS?.disable
+        };
+        const isDisable = await updateUserLsp(userSendLspData);
+        if (!isDisable) {
+          isError = true;
+          break;
+        }
+        userIds?.push(user?.id);
+      }
+    }
+    if(!isError){
+      if(!userIds?.length) return;
+      setDisabledUserList((prev) => [...prev, ...userIds])
+    }
+    return !isError;
+  }
   async function updateMultiUserAbout() {
     for (let i = 0; i < multiUserArr.length; i++) {
       const user = multiUserArr[i];
@@ -796,7 +825,8 @@ export function useUpdateUserAboutData() {
     updateAboutUser,
     updateMultiUserAbout,
     updateUserLsp,
-    updateUserRole
+    updateUserRole,
+    disableMultiUser
   };
 }
 
