@@ -5,11 +5,11 @@ import {
   UPDATE_CATS_MAIN,
   UPDATE_SUB_CATS_MAIN
 } from '@/api/Mutations';
-import { GET_CATS_MAIN, GET_SUB_CATS_MAIN, queryClient } from '@/api/Queries';
+import { GET_CATS_MAIN } from '@/api/Queries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
-import { isNameDuplicateAdvanced } from '@/helper/data.helper';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -31,6 +31,8 @@ export default function useHandleAddCatSubCat(isSubCat) {
   const [updateSubCategory, { error: updateSubCategoryErr }] = useMutation(UPDATE_SUB_CATS_MAIN, {
     client: mutationClient
   });
+
+  const { catSubCat } = useHandleCatSubCat();
 
   // recoil state
   const userOrg = useRecoilValue(UsersOrganizationAtom);
@@ -133,17 +135,26 @@ export default function useHandleAddCatSubCat(isSubCat) {
     setIsAddReady(false);
     // duplicate name check
     if (
-      await isNameDuplicateAdvanced(
-        GET_CATS_MAIN,
-        {},
-        catSubCatData?.Name,
-        'allCatMain',
-        queryClient,
-        popUpState?.id
-      )
-    ) {
+      catSubCat?.cat?.some((cat) => {
+        if (cat?.id === popUpState?.id) return false;
+
+        return cat?.Name?.toLowerCase()?.trim() === catSubCatData?.Name?.toLowerCase()?.trim();
+      })
+    )
       return setToastMsg({ type: 'danger', message: 'Category with same name already exist' });
-    }
+
+    // if (
+    //   await isNameDuplicateAdvanced(
+    //     GET_CATS_MAIN,
+    //     {},
+    //     catSubCatData?.Name,
+    //     'allCatMain',
+    //     queryClient,
+    //     popUpState?.id
+    //   )
+    // ) {
+    //   return setToastMsg({ type: 'danger', message: 'Category with same name already exist' });
+    // }
 
     const sendData = {
       Name: catSubCatData?.Name?.trim(),
@@ -192,18 +203,28 @@ export default function useHandleAddCatSubCat(isSubCat) {
   async function addSubCategory() {
     setIsAddReady(false);
     // duplicate name check
+
     if (
-      await isNameDuplicateAdvanced(
-        GET_SUB_CATS_MAIN,
-        {},
-        catSubCatData?.Name,
-        'allSubCatMain',
-        queryClient,
-        popUpState?.id
-      )
-    ) {
+      catSubCat?.subCat?.some((subcat) => {
+        if (subcat?.id === popUpState?.id) return false;
+
+        return subcat?.Name?.toLowerCase()?.trim() === catSubCatData?.Name?.toLowerCase()?.trim();
+      })
+    )
       return setToastMsg({ type: 'danger', message: 'Sub-Category with same name already exist' });
-    }
+
+    // if (
+    //   await isNameDuplicateAdvanced(
+    //     GET_SUB_CATS_MAIN,
+    //     {},
+    //     catSubCatData?.Name,
+    //     'allSubCatMain',
+    //     queryClient,
+    //     popUpState?.id
+    //   )
+    // ) {
+    //   return setToastMsg({ type: 'danger', message: 'Sub-Category with same name already exist' });
+    // }
 
     const sendData = {
       CatId: catSubCatData?.CatId,
