@@ -1,0 +1,64 @@
+.partner-section {
+    padding: 0 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero img{
+    width: 100%;
+    z-index: 0;
+    filter: saturation(50%);
+}
+.learner, .admin{
+    position: relative;
+    height: 100%;
+    margin-bottom: -10px;
+}
+
+.transparent-btn{
+    outline: 0;
+    border: 0;
+    border-radius: 0;
+    /* padding: 15px; */
+    height: 50px;
+
+    position: absolute;
+    z-index: 1;
+
+    bottom: 40px;
+    left: 20px;
+    right: 20px;
+
+    background-color: #101012E6;
+    font-family: 'Poppins';
+}
+.transparent-btn span{
+    font-size: 18px;
+    color: var(--activeText);
+}
+.transparent-btn span::after {
+    content: url('/static/img/Vector (5).png');
+    height: 16px;
+    margin-left: 10px;
+    margin-bottom: -5px;
+}
+.partner-images {
+    height: 400px;
+}
+
+.partner-image {
+    width: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
+.footer {
+    padding: 0 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #121318AB;
+}

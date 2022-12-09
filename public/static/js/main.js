@@ -82,3 +82,9 @@ reveal();
 //   prefill: {},
 //   utm: {}
 // });
+
+$(document).ready(function () {
+  $('.learner').on('mouseover', function () {
+    $(this).find('.transparent-btn').css('background-color', 'white');
+  })    
+})
