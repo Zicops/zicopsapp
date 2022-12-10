@@ -103,6 +103,7 @@ export default function useHandleAddUserDetails() {
         isPhValid &&
         userOrgData?.language.length > 0 &&
         userAboutData?.gender?.length > 0
+
     );
     setIsOrganizationSetupReady(
       //   userDataAbout?.id &&
