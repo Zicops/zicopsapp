@@ -2,6 +2,7 @@ import { GET_USER_EXAM_ATTEMPTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { BookmarkStartTimeAtom } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
+import { limitValueInRange } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -395,7 +396,9 @@ export default function TopicBox({
       userCourseData?.userCourseProgress?.[currentProgressIndex]?.status === 'completed'
         ? 'green'
         : '',
-    width: `${userCourseData?.userCourseProgress?.[currentProgressIndex]?.video_progress || 0}%`
+    width: `${limitValueInRange(
+      +userCourseData?.userCourseProgress?.[currentProgressIndex]?.video_progress
+    )}%`
   };
 
   if (topic?.id === userCourseData?.activeTopic?.id && videoData?.type === 'mp4') {
@@ -499,7 +502,7 @@ export default function TopicBox({
           </div> */}
         </div>
 
-        <div className={`${styles.topic_loop} ${isTopicActive ? 'activeTopic' : ''}`}>
+        <div className={`${styles.topic_loop} ${isTopicActive ? styles.activeTopic : ''}`}>
           <div className={`${styles.topic_img}`}>
             <img src={`${topicImageLink}`} alt="" />
           </div>

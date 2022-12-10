@@ -2,7 +2,7 @@ import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../state/atoms/video.atom';
-import AlertBox from '../common/AlertBox';
+import ConfirmPopUp from '../common/ConfirmPopUp';
 import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
@@ -315,12 +315,26 @@ export default function CustomVideo({ set }) {
         )}
       </div>
       {showPopup && (
-        <AlertBox
+        <ConfirmPopUp
           title="Topic Status"
-          description={scormCompleted ? 'Your topic is now completed!!' : 'Quizzes are pending, please complete your quizzes to complete this topic.'}
-          handleClose={() => {
-            setShowPopup(false);
-            setScormCompleted(false);
+          message={
+            scormCompleted
+              ? 'Your topic is now completed!!'
+              : 'Quizzes are pending, please complete your quizzes to complete this topic.'
+          }
+          btnObj={{
+            handleClickLeft: () => setShowPopup(false),
+            textLeft: 'Close',
+            handleClose: () => setShowPopup(false),
+            handleClickRight: () => {
+              setShowPopup(false);
+              console.log(videoData);
+              playNextVideo(null, true);
+            },
+            textRight: 'Next',
+            rightIsDisable:
+              videoData?.currentModuleIndex + 1 === videoData?.allModuleOptions.length &&
+              videoData?.allModuleTopic?.length === videoData?.currentTopicIndex + 1
           }}
         />
       )}
