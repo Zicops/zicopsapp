@@ -65,22 +65,23 @@ zicopsapp (root directory)
 ```
 
 ## Module classes
+
 Module Classname should be add like this
 `` classname={`${styles.ComponentClass} globalClassName`} ``
 
 classname should be in camelCase
 
-
 pageName/index.js+styles.scss
 
-compoennts/  pageComponent/subcompoent1/subcomp2
+compoennts/ pageComponent/subcompoent1/subcomp2
 
 ## Global classes
 
 class name should be in kebab case (class-name)
 
 ## Check HTML box model
-*{
-    border: 1px solid lightblue;
-    background-color: rgba(red, 0.1)!important;
+
+\*{
+border: 1px solid lightblue;
+background-color: rgba(red, 0.1)!important;
 }
