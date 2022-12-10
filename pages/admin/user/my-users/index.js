@@ -30,7 +30,8 @@ export default function MyUserPage() {
       text: 'Reset  Password',
       handleClick: async() => {
         const success = await resetMultiPassword(selectedUser);
-        console.log(success,'fs');
+        if(!success) return setToastMsg({type:'danger',message:'Error while resetting password!'});
+        return setToastMsg({type:'success',message:'Password resetted successfully.'})
       }
     },
     {
@@ -75,7 +76,7 @@ export default function MyUserPage() {
           <MyUser getUser={(list) => setSelectedUser(list)} />
           {disableAlert && (
         <ConfirmPopUp
-          title={`Are you sure you want to disable these users?`}
+          title={`Are you sure you want to disable multiple users?`}
           btnObj={{
             handleClickLeft:async()=> {
               const success = await disableMultiUser(selectedUser);
