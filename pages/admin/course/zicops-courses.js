@@ -4,6 +4,7 @@ import ZicopsCourseTable from '../../../components/ZicopsCourseTable';
 import CourseHead from '../../../components/CourseHead';
 import { courseSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import NoAccess from '@/components/NoAccess';
 
 const ZicopsCourses = () => {
   return (
@@ -17,7 +18,8 @@ const ZicopsCourses = () => {
           tooltipTitle={ADMIN_COURSES.zicopsCourses.addBtn}
         />
 
-        <ZicopsCourseList />
+        <NoAccess />
+        {/* <ZicopsCourseList /> */}
         {/* <ZicopsCourseTable /> */}
       </div>
     </div>

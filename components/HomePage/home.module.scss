@@ -20,7 +20,7 @@ $DELAY: calc($DURATION / 2);
 }
 
 .container {
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
   background: url('/images/starrySky2.png');
   background-position: center;
   background-size: cover;
@@ -42,6 +42,13 @@ $DELAY: calc($DURATION / 2);
   }
 }
 
+.homeCenter{
+  height: 60vh;
+  // background-color: #12345680;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .slideIndicator {
   position: absolute;
   top: 50%;
@@ -62,6 +69,14 @@ $DELAY: calc($DURATION / 2);
     &.active {
       background-color: $primary;
     }
+  }
+}
+
+.zicopsLogo{
+  position: absolute;
+  width: 250px;
+  img{
+    width: 100%;
   }
 }
 .wheeldownZoomOut {
@@ -132,10 +147,10 @@ $DELAY: calc($DURATION / 2);
 }
 
 .homepageSlides {
-  height: 100%;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) scale(0);
+  // height: 100%;
+  // position: absolute;
+  // left: 50%;
+  // transform: translateX(-50%) scale(0);
   transition-delay: calc($DELAY/2);
 }
 .showActiveSlide {
@@ -146,7 +161,7 @@ $DELAY: calc($DURATION / 2);
 }
 
 // .HomeContainer {
-//   font-family: 'Open Sans';
+//   font-family: 'Poppins';
 //   background-image: url('../../public/images/starrySky2.png');
 //   background-position: center;
 //   background-size: cover;
@@ -245,23 +260,28 @@ $DELAY: calc($DURATION / 2);
       height: 150px;
       width: 150px;
       // margin-bottom: 30px;
-      padding: 5px;
-
-      :nth-child(1) {
-        width: 66%;
-        height: 70%;
-        margin-bottom: 10px;
+      // padding: 5px;
+      // overflow: hidden;
+      img:nth-child(1) {
+        width: 100%;
+        height: 100%;
         object-fit: contain;
       }
+      // :nth-child(1) {
+      //   width: 100%;
+      //   height: 100%;
+      //   // margin-bottom: 10px;
+      //   object-fit: contain;
+      // }
 
-      :nth-child(2) {
-        width: 66%;
-      }
+      // :nth-child(2) {
+      //   width: 66%;
+      // }
     }
 
     .text {
       color: $white;
-      font-size: 1.2em;
+      // font-size: 1.2em;
       text-align: center;
       // height: 85px;
       width: 505px;
@@ -278,7 +298,7 @@ $DELAY: calc($DURATION / 2);
       background-color: transparent;
       padding: 5px 20px;
       border-radius: 18px;
-      font-family: 'Open Sans';
+      font-family: 'Poppins';
       color: $primary;
       cursor: pointer;
 
@@ -292,7 +312,8 @@ $DELAY: calc($DURATION / 2);
 
 .buttonContainer{
   // margin-top: 30px;
-  width: 25%;
+  // width: 25%;
+  width: 300px;
 }
 
 .formContainerWrapper {
@@ -303,7 +324,6 @@ $DELAY: calc($DURATION / 2);
   align-items: center;
   flex-direction: column;
   z-index: 5;
-  gap: 60px;
  
   .formContainer {
     display: flex;
@@ -334,7 +354,7 @@ $DELAY: calc($DURATION / 2);
     // input[type='text'] {
     //   border: none;
     //   width: 80%;
-    //   font-family: 'Open Sans';
+    //   font-family: 'Poppins';
     //   background-color: $black;
     //   color: $darkThree;
     // }
@@ -349,7 +369,7 @@ $DELAY: calc($DURATION / 2);
       width: 15%;
       font-weight: 700;
       font-size: medium;
-      font-family: 'Open Sans';
+      font-family: 'Poppins';
       margin: 0px;
       border-radius: 20px;
       cursor: pointer;
@@ -387,11 +407,10 @@ $DELAY: calc($DURATION / 2);
     display: flex;
     justify-content: space-evenly;
 
-    font-family: 'Open Sans';
-
     max-width: 60%;
     margin: auto;
-    color: $white;
+    font-size: 16px;
+    color: $header;
   }
 }
 
@@ -451,17 +470,31 @@ $DELAY: calc($DURATION / 2);
   .btn {
     margin-top: 10px;
   }
+     .text {
+       font-size: 1.2em;
+     }
+         .formContainerWrapper {
+           gap: 60px;
+         }
 
   // .formContainerWrapper {
-  //   transform: scale(0.9);
+  //   transform: scale(0.6);
   // }
 }
 
-@media screen and (max-width:1400px) {
+@media screen and (max-width:1440px) {
 .btn{
- margin-top: 35px;
+ margin-top: -20px;
 }
 .formContainerWrapper{
-  transform: scale(0.9);
+  gap: 40px;
+}
+
+  .text{
+    font-size: 1em;
+  }
+
+.formContainerWrapper{
+  transform: scale(0.8);
 }
 }

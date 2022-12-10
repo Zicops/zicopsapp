@@ -30,9 +30,9 @@
   width: 150px;
   padding: 5px;
   img {
-    width: 66%;
-    height: 70%;
-    margin-bottom: 30px;
+    width: 100%;
+    height: 100%;
+    // margin-bottom: 30px;
     object-fit: contain;
   }
 }
@@ -82,7 +82,7 @@
 }
 
 .zicops_login {
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
   background-image: url('/images/starrySky2.png');
   background-position: center;
   background-size: cover;

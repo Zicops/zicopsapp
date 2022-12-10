@@ -6,6 +6,7 @@ import {
   UPDATE_USER_COHORT,
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
+  UPDATE_USER_ROLE,
   userClient
 } from '@/api/UserMutations';
 import {
@@ -37,7 +38,12 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
-import { COMMON_LSPS, LEARNING_SPACE_ID } from './constants.helper';
+import {
+  COMMON_LSPS,
+  COURSE_STATUS,
+  COURSE_TOPIC_STATUS,
+  LEARNING_SPACE_ID
+} from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
 
@@ -67,16 +73,24 @@ export function useHandleCatSubCat(selectedCategory) {
     const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
-    const currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
-      lsp_ids: [_lspId]
-    });
+
+    let currentLspData = null;
+    if (_lspId !== zicopsLsp) {
+      currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+        lsp_ids: [_lspId]
+      });
+    }
     // zicops lsp cat subcat
-    const zicopsCats = (await zicopsLspData)?.allCatMain || [];
-    const zicopsSubCats = (await zicopsLspData)?.allSubCatMain || [];
+    const zicopsCats =
+      (await zicopsLspData)?.allCatMain?.map((c) => ({ ...c, LspId: zicopsLsp })) || [];
+    const zicopsSubCats =
+      (await zicopsLspData)?.allSubCatMain?.map((c) => ({ ...c, LspId: zicopsLsp })) || [];
 
     // current lsp cat subcat
-    const currentLspCats = (await currentLspData)?.allCatMain || [];
-    const currentLspSubCats = (await currentLspData)?.allSubCatMain || [];
+    const currentLspCats =
+      (await currentLspData)?.allCatMain?.map((c) => ({ ...c, LspId: _lspId })) || [];
+    const currentLspSubCats =
+      (await currentLspData)?.allSubCatMain?.map((c) => ({ ...c, LspId: _lspId })) || [];
 
     // merging both lsp cat subcat
     const catAndSubCatRes = { allSubCatMain: [], allCatMain: [] };
@@ -285,17 +299,19 @@ export default function useUserCourseData() {
 
     for (let i = 0; i < coursesMeta?.length; i++) {
       // if (!coursesMeta[i]?.courseProgres?.length) continue;
+      let topicsCompleted = 0;
       let topicsStarted = 0;
       let userProgressArr = coursesMeta[i]?.courseProgres;
       userProgressArr?.map((topic) => {
-        if (topic?.status !== 'not-started') ++topicsStarted;
+        if (topic?.status !== COURSE_TOPIC_STATUS.assign) ++topicsStarted;
+        if (topic?.status === COURSE_TOPIC_STATUS.completed) ++topicsCompleted;
       });
 
       const courseProgress = userProgressArr?.length
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-      console.log(userProgressArr, userProgressArr?.length, topicsStarted);
+      // console.log(userProgressArr, userProgressArr?.length, topicsStarted);
 
       const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
         course_id: coursesMeta[i]?.course_id
@@ -311,6 +327,8 @@ export default function useUserCourseData() {
       const courseDuraton = +courseRes?.getCourse?.duration / (60 * 60);
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
 
+      if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
+
       userCourseArray.push({
         ...courseRes?.getCourse,
         ...coursesMeta[i],
@@ -320,7 +338,10 @@ export default function useUserCourseData() {
         created_at: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(coursesMeta[i]?.end_date).format('DD/MM/YYYY'),
         timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
-        added_by: added_by
+        added_by: added_by,
+        isCourseCompleted:
+          topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
+        isCourseStarted: topicsStarted > 0
       });
     }
 
@@ -624,6 +645,9 @@ export function useUpdateUserAboutData() {
   const [updateLsp, { error: createLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
     client: userClient
   });
+  const [updateRole, { error: createRoleError }] = useMutation(UPDATE_USER_ROLE, {
+    client: userClient
+  });
 
   // local state
   const [multiUserArr, setMultiUserArr] = useState([]);
@@ -675,7 +699,7 @@ export function useUpdateUserAboutData() {
       status: userData?.status
     };
 
-    console.log(sendLspData, 'updateUserLearningSpaceDetails');
+    // console.log(sendLspData, 'updateUserLearningSpaceDetails');
 
     let isError = false;
     const res = await updateLsp({ variables: sendLspData }).catch((err) => {
@@ -688,17 +712,29 @@ export function useUpdateUserAboutData() {
   }
 
   async function updateUserRole(userData = null) {
-    userData = userData ? userData : newUserAboutData;
+    const userRoleData = userData ? userData?.roleData : newUserAboutData;
 
-    console.log(userData, 'sifhishfi');
+    console.log(userRoleData, 'rianf');
+    if (!userData?.roleData?.user_role_id) return false;
+
+    // console.log(userData?.roleData, 'sifhishfi');
+    // return ;
     const sendRoleData = {
-      user_role_id: userData?.roleData?.user_lsp_id,
+      user_role_id: userRoleData?.user_role_id,
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      role: 'Admin',
+      role: userData?.updateTo,
       is_active: true
     };
-    console.log(sendRoleData, 'role data');
+
+    let isError = false;
+    const res = await updateRole({ variables: sendRoleData }).catch((err) => {
+      isError = !!err;
+    });
+
+    // console.log(res,'update role data');
+    if (isError) return isError;
+    return res?.data?.updateUserRole;
   }
 
   async function updateAboutUser(userData = null) {

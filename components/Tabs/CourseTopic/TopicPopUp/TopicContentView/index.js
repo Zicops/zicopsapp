@@ -133,7 +133,7 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
         .transparent_button {
           background-color: transparent;
           color: #868f8f;
-          font-family: 'Open Sans';
+          font-family: 'Poppins';
           border: none;
 
           cursor: pointer;

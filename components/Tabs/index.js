@@ -47,9 +47,14 @@ export default function CourseTabs() {
     let _status = fullCourse.status || STATUS.display[0];
     if (fullCourse?.qa_required) _status = COURSE_STATUS.freeze;
     if (fullCourse?.status === COURSE_STATUS.publish) _status = COURSE_STATUS.publish;
+    if (fullCourse?.status === COURSE_STATUS.reject) _status = 'EXPIRED';
 
     setCourseStatus(_status);
   }, [fullCourse?.status, isCourseSaved]);
+
+  useEffect(() => {
+    if (!fullCourse?.qa_required) setCourseStatus(fullCourse?.status);
+  }, [fullCourse?.qa_required]);
 
   useEffect(() => {
     if (isCourseSaved) {
@@ -133,7 +138,7 @@ export default function CourseTabs() {
       : '';
 
   function getSubmitBtnText() {
-    if (courseStatus === COURSE_STATUS.publish) return 'Published';
+    if ([COURSE_STATUS.publish, 'EXPIRED'].includes(courseStatus)) return 'Published';
     if (courseStatus === COURSE_STATUS.freeze) return 'Publish';
     if (fullCourse?.id) return 'Update';
 
@@ -157,14 +162,16 @@ export default function CourseTabs() {
             isCourseUploading
           ) : (
             <>
-              {courseStatus}{' '}
+              {courseStatus || STATUS.display[0]}{' '}
               <span style={{ fontSize: '12px', fontWeight: '400' }}>
                 {isCourseUploading ? '' : displayTime}
               </span>
             </>
           ),
           submitDisplay: getSubmitBtnText(),
-          disableSubmit: !!isCourseUploading || courseStatus === COURSE_STATUS.publish,
+          disableSubmit:
+            !!isCourseUploading ||
+            [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(courseStatus),
           handleSubmit: () =>
             saveCourseData(false, null, true, courseStatus === COURSE_STATUS.freeze),
           cancelDisplay: 'Cancel',

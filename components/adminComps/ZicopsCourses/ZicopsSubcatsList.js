@@ -1,5 +1,3 @@
-import { DELETE_SUB_CAT_MAIN } from '@/api/Mutations';
-import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
@@ -9,28 +7,18 @@ import { ApolloProvider } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { queryClient } from '../../../API/Queries';
-import { isWordIncluded, TableResponsiveRows } from '../../../helper/utils.helper';
+import { getPageSizeBasedOnScreen, isWordIncluded } from '../../../helper/utils.helper';
 import ZicopsTable from '../../common/ZicopsTable';
 import CourseHead from '../../CourseHead';
 import AddCatSubCat from './AddCatSubCat';
 
 function ZicopsSubCategoryList() {
-  const [pageSize, setPageSize] = useState(6);
+  const [isLoading, setIsLoading] = useState(null);
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCol, setFilterCol] = useState('SubCatName');
   const userOrg = useRecoilValue(UsersOrganizationAtom);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
-
-  useEffect(() => {
-    const screenWidth = window.screen.width;
-    console.log(screenWidth);
-    TableResponsiveRows.forEach((r, i) => {
-      if (r.breakpoint <= screenWidth) {
-        setPageSize(r.pageSize);
-      }
-    });
-  }, []);
 
   const { catSubCat, setRefetch } = useHandleCatSubCat();
 
@@ -40,10 +28,10 @@ function ZicopsSubCategoryList() {
   }, [popUpState]);
 
   useEffect(() => {
-    if (!catSubCat?.allSubCat?.length) return setData([]);
+    setIsLoading(true);
     const _data = [];
 
-    structuredClone(catSubCat?.allSubCat)
+    structuredClone(catSubCat?.allSubCat || [])
       ?.sort((c1, c2) => c2?.CreatedAt - c1?.CreatedAt)
       .map((val, index) =>
         _data.push({
@@ -55,6 +43,7 @@ function ZicopsSubCategoryList() {
       );
 
     setData(_data);
+    setIsLoading(false);
   }, [catSubCat]);
 
   const _lspId = userOrg?.lsp_id;
@@ -125,10 +114,10 @@ function ZicopsSubCategoryList() {
 
           return isWordIncluded(searchCol, searchQuery);
         })}
-        pageSize={pageSize}
+        pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
-        loading={data === null}
+        loading={isLoading}
         showCustomSearch={true}
         searchProps={{
           options,
