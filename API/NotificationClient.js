@@ -44,6 +44,7 @@ export const GET_ALL_NOTIFICATIONS = gql`
         body
         created_at
         user_id
+        is_read
         message_id
       }
       nextPageSnapShot
