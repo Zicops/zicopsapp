@@ -34,18 +34,18 @@ export default function MyUserPage() {
         return setToastMsg({type:'success',message:'Password resetted successfully.'})
       }
     },
-    {
-      text: 'Add to Cohort',
-      handleClick: () => {
-        console.log(selectedUser);
-      }
-    },
-    {
-      text: 'Add Courses',
-      handleClick: () => {
-        console.log(selectedUser);
-      }
-    }
+    // {
+    //   text: 'Add to Cohort',
+    //   handleClick: () => {
+    //     console.log(selectedUser);
+    //   }
+    // },
+    // {
+    //   text: 'Add Courses',
+    //   handleClick: () => {
+    //     console.log(selectedUser);
+    //   }
+    // }
   ];
 
   useEffect(() => {
