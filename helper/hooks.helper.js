@@ -655,6 +655,7 @@ export function useUpdateUserAboutData() {
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
+  const [isConfirmPopUpDisable,setIsConfirmPopUpDisable] = useState(false);
 
   useEffect(() => {
     let isPhValid = false;
@@ -788,6 +789,7 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
+      // console.log(user);
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
       if (user?.lsp_status?.toLowerCase() === USER_STATUS?.activate?.toLowerCase() || user?.lsp_status === "") {
@@ -805,9 +807,10 @@ export function useUpdateUserAboutData() {
       }
     }
     if(!isError){
-      if(!userIds?.length) return;
+      if(!userIds?.length) return !isError;
       setDisabledUserList((prev) => [...prev, ...userIds])
     }
+    // console.log(isError);
     return !isError;
   }
   async function updateMultiUserAbout() {
@@ -817,6 +820,16 @@ export function useUpdateUserAboutData() {
     }
   }
 
+  async function resetPassword(email = ""){
+    if(email === '' || !email)return false;
+    
+  }
+
+  async function resetMultiPassword(users = []){
+     const emails = users?.map((user) => user?.email);
+     console.log(emails);
+     return false;
+  }
   return {
     newUserAboutData,
     setNewUserAboutData,
@@ -827,7 +840,10 @@ export function useUpdateUserAboutData() {
     updateMultiUserAbout,
     updateUserLsp,
     updateUserRole,
-    disableMultiUser
+    disableMultiUser,
+    resetPassword,
+    isConfirmPopUpDisable,
+    resetMultiPassword
   };
 }
 

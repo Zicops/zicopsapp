@@ -1,3 +1,4 @@
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -14,24 +15,22 @@ export default function MyUserPage() {
   const [selectedUser, setSelectedUser] = useState([]);
   const [userType, setUserType] = useState('Internal');
   const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [disableAlert , setDisableAlert] = useState(false);
 
-  const { setMultiUserArr, updateMultiUserAbout , disableMultiUser } = useUpdateUserAboutData();
+  const { setMultiUserArr, updateMultiUserAbout , disableMultiUser , resetMultiPassword } = useUpdateUserAboutData();
 
   const btnData = [
     {
       text: 'Disable User',
-      handleClick: async() => {
-        // console.log(selectedUser);
-        const success = disableMultiUser(selectedUser);
-        if(!success) return setToastMsg({type:'danger',message:'Error while disabling users'});
-        return setToastMsg({type:'success',message:'Users are successfully disable.'});
-        // updateMultiUserAbout();
+      handleClick: ()=>{
+        setDisableAlert(true);
       }
     },
     {
       text: 'Reset  Password',
-      handleClick: () => {
-        console.log(selectedUser);
+      handleClick: async() => {
+        const success = await resetMultiPassword(selectedUser);
+        console.log(success,'fs');
       }
     },
     {
@@ -74,6 +73,23 @@ export default function MyUserPage() {
 
         <MainBodyBox>
           <MyUser getUser={(list) => setSelectedUser(list)} />
+          {disableAlert && (
+        <ConfirmPopUp
+          title={`Are you sure you want to disable these users?`}
+          btnObj={{
+            handleClickLeft:async()=> {
+              const success = await disableMultiUser(selectedUser);
+              // console.log(success);
+              if(!success) return setToastMsg({type:'danger',message:'Error while disabling users'});
+              setSelectedUser([]);
+              setDisableAlert(false);
+              return setToastMsg({type:'success',message:'Users are successfully disable.'});
+            },
+            handleClickRight: () => setDisableAlert(false)
+          }
+          }
+        />
+      )}
         </MainBodyBox>
       </MainBody>
     </>
