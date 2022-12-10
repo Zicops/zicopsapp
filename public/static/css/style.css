@@ -203,7 +203,6 @@ nav .buttons {
         font-size: 48px;
         line-height: 60px;
     }
-
     p {
         font-size: 24px;
         line-height: 36px;
@@ -215,6 +214,11 @@ nav .buttons {
     .logo img {
         height: 100%;
         width: 150px;
+    }
+    .hero {
+        display: flex;
+        height: calc(100vh - 90px);
+        overflow: hidden;
     }
     .desktop-menu {
         display: flex;
@@ -342,6 +346,7 @@ section{
     position: relative;
 
     /* background: linear-gradient(43.49deg, #693BBB -30.37%, #6BCFCF 82.44%); */
+    background-color:var(--primary);
     
     border: none;
     outline: none;
@@ -380,7 +385,8 @@ section{
     top: var(--y);
     width: var(--size);
     height: var(--size);
-    background-image: radial-gradient(ellipse farthest-side, #6a3bbbE0, transparent);
+    background-image: radial-gradient(ellipse farthest-side, #6a3bbb50, transparent);
+    /* -webkit-linear-gradient(111.44deg, var(--primary) 19.16%, var(--secondary) 154.55%); */
     transform: translate(-50%, -50%);
     transition: width 0.2s ease, height 0.2s ease;
 }

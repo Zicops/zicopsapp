@@ -86,19 +86,19 @@ reveal();
 // });
 
 $(document).ready(function () {
-  $('.arrow-hover').show();
-  $('.hero .learner, .hero .admin').on('mouseover', function () {
-    $(this).find('.transparent-btn').css('background-color', '#6bcfcfE6');
-    $(this).find('.transparent-btn span').css('color', '#15161C');
-    $(this).find('.arrow').hide();
-    $(this).find('.arrow-hover').show();
+  $('.arrow-hover').hide();
+  $('.hero .learner img, .hero .admin img').on('mouseover', function () {
+    $(this).parent().find('.transparent-btn').css('background-color', '#6bcfcfE6');
+    $(this).parent().find('.transparent-btn span').css('color', '#15161C');
+    $(this).parent().find('.arrow').hide();
+    $(this).parent().find('.arrow-hover').show();
     $(this).addClass('hover-on-hero-image');
   })    
-  $('.hero .learner, .hero .admin').on('mouseleave', function () {
-    $(this).find('.transparent-btn').css('background-color', '#101012E6');
-    $(this).find('.transparent-btn span').css('color', '#EAEAEA');
-    $(this).find('.arrow').show();
-    $(this).find('.arrow-hover').hide();
+  $('.hero .learner img, .hero .admin img').on('mouseleave', function () {
+    $(this).parent().find('.transparent-btn').css('background-color', '#101012E6');
+    $(this).parent().find('.transparent-btn span').css('color', '#EAEAEA');
+    $(this).parent().find('.arrow').show();
+    $(this).parent().find('.arrow-hover').hide();
     $(this).removeClass('hover-on-hero-image');
   });    
 })

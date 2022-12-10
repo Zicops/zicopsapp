@@ -101,10 +101,10 @@
     .admin{
         margin-left: -12%;
     }
-    .learner img{
+    .learner, .learner img{
         clip-path: polygon(0 0, 100% 0, 65% 100%, 0 100%);
     }
-    .admin img{
+    .admin, .admin img{
         clip-path: polygon(35% 0, 100% 0, 100% 100%, 0 100%);
     }
     .learner .transparent-btn, .admin .transparent-btn{
