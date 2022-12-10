@@ -54,7 +54,8 @@ export default function AboutCard({ isDataLoaded, fullCourse }) {
                   <div>Expected Completion Time: </div>
                 </div>
                 <div className="col_50 abstract">
-                  <div>{Math.ceil((fullCourse?.duration || 0) / 30)} days</div>
+                  <div>{fullCourse?.expected_completion || 1} day{
+                    fullCourse?.expected_completion > 1 ? 's' : ''}</div>
                 </div>
               </>
             ) : (

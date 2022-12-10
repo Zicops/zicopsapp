@@ -148,8 +148,8 @@ export default function Nav() {
             <li style={{display: 'none'}} onClick={() => {
               sendNotification(
                 {
-                  title: 'Stri ng1',
-                  body: 'This is a notification body',
+                  title: 'Testing',
+                  body: 'This is a notification 3 body',
                   user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
                 },
                 { context: { headers: { 'fcm-token': fcmToken } } }

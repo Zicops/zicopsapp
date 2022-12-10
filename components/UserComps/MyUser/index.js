@@ -5,7 +5,7 @@ import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { USER_LSP_ROLE, USER_MAP_STATUS } from '@/helper/constants.helper';
+import { USER_LSP_ROLE, USER_MAP_STATUS, USER_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen, isWordIncluded } from '@/helper/utils.helper';
@@ -191,6 +191,13 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       headerName: 'Action',
       flex: 0.4,
       renderCell: (params) => {
+        let status = ""
+        if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
+        let _lspStatus = params?.row?.lsp_status ;
+        if(status === 'disable'){
+          _lspStatus = USER_MAP_STATUS.disable;
+        }
+
         let isLearner = false;
         let isAdmin = false;
         isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
@@ -209,10 +216,11 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
           { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
           // { handleClick: () => alert(`Edit ${params.id}`) },
           {
-            text: params?.row?.lsp_status === USER_MAP_STATUS.disable ? 'Enable' : 'Disable',
+            text: _lspStatus === USER_MAP_STATUS.disable ? 'Enable' : 'Disable',
             handleClick: () => {
               // const status = params?.row?.status;
-              const lspStatus = params?.row?.lsp_status;
+              // const lspStatus = params?.row?.lsp_status;
+              const lspStatus = _lspStatus;
               const isDisabled =
                 lspStatus?.toLowerCase() === USER_MAP_STATUS.disable?.toLowerCase();
               setNewUserAboutData(
@@ -328,15 +336,15 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
           title={`Are you sure you want to make ${currentSelectedUser?.email} to ${currentSelectedUser?.updateTo}`}
           btnObj={{
             handleClickLeft: async () => {
-              console.log(currentSelectedUser);
+              // console.log(currentSelectedUser);
               const isRoleUpdate = await updateUserRole(currentSelectedUser);
-              console.log(isRoleUpdate, 'role update');
+              // console.log(isRoleUpdate, 'role update');
               if (!isRoleUpdate)
                 return setToastMsg({
                   type: 'danger',
                   message: `Error while changing role of ${currentSelectedUser?.email}`
                 });
-              console.log(isRoleUpdate);
+              // console.log(isRoleUpdate);
               // we will check updateTo and that key
               // first check if it is in the learner or admin
               // if updated to is admin check learner
@@ -352,14 +360,14 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
                 });
                 if (foundAt >= 0) {
                   const learners = structuredClone(adminLearnerList?.learners);
-                  learners?.splice(foundAt, 1);
-                  console.log('1', learners);
+                  // learners?.splice(foundAt, 1);
+                  // console.log('1', learners);
                   setAdminLearnerList((prevValue) => ({
                     admins: [...prevValue?.admins, isRoleUpdate?.user_id],
                     learners: [...learners]
                   }));
                 } else {
-                  console.log('2');
+                  // console.log('2');
                   setAdminLearnerList((prevValue) => ({
                     ...prevValue,
                     admins: [...prevValue?.admins, isRoleUpdate?.user_id]
@@ -379,19 +387,23 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
                 if (foundAt >= 0) {
                   const admins = structuredClone(adminLearnerList?.admins);
                   admins?.splice(foundAt, 1);
-                  console.log(admins, '3');
+                  // console.log(admins, '3');
                   setAdminLearnerList((prev) => ({
                     admins: [...admins],
                     learners: [...prev?.learners, isRoleUpdate?.user_id]
                   }));
                 } else {
-                  console.log('4');
+                  // console.log('4');
                   setAdminLearnerList((prev) => ({
                     ...prev,
                     learners: [...prev?.learners, isRoleUpdate?.user_id]
                   }));
                 }
               }
+              setToastMsg({
+                type: 'success',
+                message: `Changed ${currentSelectedUser?.email} role successfully.`
+              });
               setCurrentSelectedUser(null);
               return setIsMakeAdminAlert(false);
             },

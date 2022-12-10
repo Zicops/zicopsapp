@@ -21,11 +21,6 @@ export default function ListCard({ courseData, statusData, footerType, children 
           {/* title and cat subcat */}
           <section>
             <p className={`${styles.title}`}>{truncateToN(courseData?.name, 60) || ''}</p>
-
-            <p className={`${styles.catSubCat}`}>
-              {courseData?.category || 'Development'} <div className={`${styles.dot}`}></div>
-              {courseData?.sub_category || 'Java'}
-            </p>
           </section>
 
           {/* level and type */}
@@ -35,6 +30,13 @@ export default function ListCard({ courseData, statusData, footerType, children 
               {statusData ? statusData?.status : courseData?.type || 'Self Paced'}
             </span>
           </div>
+        </div>
+        <div className={`${styles.subHead}`}>
+          <p className={`${styles.catSubCat}`}>
+            {courseData?.category || 'Development'}
+            <div className={`${styles.dot}`}></div>
+            {courseData?.sub_category || 'Java'}
+          </p>
         </div>
 
         {/* footer */}
