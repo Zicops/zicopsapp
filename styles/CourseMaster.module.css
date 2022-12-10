@@ -39,7 +39,7 @@
     background-color: #202222;
     color: var(--white);
     font-size: 13px;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
   } */
 
 .drag_category_area {
@@ -377,7 +377,7 @@
     border-radius: 3px;
     color: #858f8f;
     font-size: 13px;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
     /* border: 2px solid #63c0c0;
     color: gray;
     background-color: transparent;
@@ -427,7 +427,7 @@
 .btn_add{
     background-color:#000000 ;
     color:#ffffff;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
     border: none;
     min-width: 150px;
     padding: 10px 5px;
@@ -446,7 +446,7 @@
 .btn_lightblack{
     background-color:#202222 ;
     color:#ffffff;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
     border: none;
     min-width: 150px;
     padding: 10px 5px;
@@ -462,7 +462,7 @@
 .btn_grey{
     background-color:#858f8f ;
     color:#ffffff;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
     border: none;
     min-width: 150px;
     padding: 10px 5px;

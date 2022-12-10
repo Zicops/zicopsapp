@@ -3,10 +3,11 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, DEFAULT_VALUES } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   ADD_COURSE,
   UPDATE_COURSE,
@@ -43,6 +44,7 @@ export default function useSaveCourse(courseContextData) {
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+  const userData = useRecoilValue(UserStateAtom);
 
   const router = useRouter();
 
@@ -102,8 +104,9 @@ export default function useSaveCourse(courseContextData) {
   }
 
   async function saveCourseData(isNextButton, tabIndex, showToastMsg = true, isPublishing = false) {
-    if (fullCourse?.status === COURSE_STATUS.publish) {
+    if ([COURSE_STATUS.publish, COURSE_STATUS.reject]?.includes(fullCourse?.status)) {
       if (isNextButton) setTab(tabData[tabIndex || 0].name);
+
       return;
     }
 
@@ -147,8 +150,9 @@ export default function useSaveCourse(courseContextData) {
 
       if (isNextButton && resObj.type === 'success') {
         setTab(tabData[tabIndex || 0].name);
-        router.push(router.asPath + `/${resObj?.courseId}`);
       }
+
+      router.push(router.asPath + `/${resObj?.courseId}`);
       return;
     }
 
@@ -164,14 +168,18 @@ export default function useSaveCourse(courseContextData) {
     await uploadFile(courseTileImage, uploadTileImage, 'tileImage', 'uploadCourseTileImage');
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
-    const { duration, name, status, ...fullCourseData } = fullCourse;
+    const { duration, name, status, approvers, ...fullCourseData } = fullCourse;
     console.log('var', sendData);
     const sendData = {
       ...fullCourseData,
       name: fullCourse?.name?.trim(),
-      status: isPublishing ? COURSE_STATUS.publish : status.ADD_COURSE
+      status: isPublishing ? COURSE_STATUS.publish : status.ADD_COURSE,
+      approvers: []
     };
-    if (isPublishing) sendData.publish_date = getUnixFromDate();
+    if (isPublishing) {
+      sendData.publish_date = getUnixFromDate();
+      sendData.approvers = [userData?.email];
+    }
 
     const courseUpdateResponse = await updateCourse({ variables: sendData });
 

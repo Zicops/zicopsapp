@@ -16,13 +16,16 @@ export default function AdminFooter() {
   const { fullCourse, saveCourseData, isCourseSaved, returnToMycourses } =
     useSaveCourse(courseContextData);
   // console.log(fullCourse);
-  const displayTime = `( at ${getDateTimeFromUnix(fullCourse.updated_at || fullCourse.created_at)} )`;
+  const displayTime = `( at ${getDateTimeFromUnix(
+    fullCourse.updated_at || fullCourse.created_at
+  )} )`;
 
   return (
     <div className="content-panel">
       <div className="left-text">
         <h3>
-          Status: {isCourseSaved ? `${fullCourse.status}` : isCourseSaved} <span style={{fontSize:'12px', fontWeight: '400'}}>{ displayTime }</span>
+          Status: {isCourseSaved ? `${fullCourse.status}` : isCourseSaved}{' '}
+          <span style={{ fontSize: '12px', fontWeight: '400' }}>{displayTime}</span>
         </h3>
       </div>
       <div className="right-text">
@@ -67,7 +70,7 @@ export default function AdminFooter() {
           border-radius: 50px;
           min-width: 155px;
           margin: 5px;
-          font-family: 'Open Sans';
+          font-family: 'Poppins';
           font-size: 13px;
           font-weight: 800;
           cursor: pointer;

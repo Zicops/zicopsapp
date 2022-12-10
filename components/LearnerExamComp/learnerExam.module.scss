@@ -91,11 +91,11 @@
   display: flex;
   justify-content: center;
   gap: 10%;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
   width: 100%;
   span {
     color: $primary;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
     span {
       color: $white;
     }
@@ -109,7 +109,7 @@
     font-weight: 600;
     // width: 50%;
     span {
-      font-family: 'Open Sans';
+      font-family: 'Poppins';
       font-size: medium;
       display: flex;
       align-items: center;
@@ -133,7 +133,7 @@
     // width: 50%;
 
     span {
-      font-family: 'Open Sans';
+      font-family: 'Poppins';
       display: flex;
       align-items: center;
       font-size: medium;
@@ -172,7 +172,7 @@
   background-color: $black;
   margin-top: 10px;
   padding: 20px;
-  font-family: 'Open Sans';
+  font-family: 'Poppins';
   height: 50vh;
   overflow: auto;
   span {
@@ -199,7 +199,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
     button:first-child {
       cursor: pointer;
       background-color: $primary;

@@ -20,7 +20,6 @@ export const ADD_NOTIFICATION_TO_FIRESTORE = gql`
   mutation (
     $title: String!
     $body: String!
-    $user_id: String!
     $is_read: Boolean!
     $message_id: String!
   ){
@@ -29,7 +28,6 @@ export const ADD_NOTIFICATION_TO_FIRESTORE = gql`
         { 
           title: $title, 
           body: $body, 
-          user_id: $user_id, 
           is_read: $is_read, 
           message_id: $message_id 
         }
@@ -46,6 +44,7 @@ export const GET_ALL_NOTIFICATIONS = gql`
         body
         created_at
         user_id
+        message_id
       }
       nextPageSnapShot
     }
@@ -53,8 +52,8 @@ export const GET_ALL_NOTIFICATIONS = gql`
 `;
 
 export const SEND_NOTIFICATIONS = gql`
-  mutation sendNotification($title: String!, $body: String!, $userId: [String]!) {
-    sendNotification(notification: { title: $title, body: $body, user_id: $userId }) {
+  mutation sendNotification($title: String!, $body: String!, $user_id: [String]!) {
+    sendNotification(notification: { title: $title, body: $body, user_id: $user_id }) {
       statuscode
     }
   }

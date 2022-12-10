@@ -233,7 +233,7 @@ export default function SmallCard({
           .coursename {
             margin-top: 50px;
             color: #ffffff;
-            font-family: 'Open Sans';
+            font-family: 'Poppins';
             font-size: 18px;
             font-weight: 600;
             padding: 0px 7px;
@@ -243,7 +243,7 @@ export default function SmallCard({
           .coursenamesmall {
             margin-top: 50px;
             color: #ffffff;
-            font-family: 'Open Sans';
+            font-family: 'Poppins';
             font-size: 16px;
             font-weight: 600;
             padding: 0px 7px;
