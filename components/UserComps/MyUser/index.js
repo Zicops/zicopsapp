@@ -336,15 +336,15 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
           title={`Are you sure you want to make ${currentSelectedUser?.email} to ${currentSelectedUser?.updateTo}`}
           btnObj={{
             handleClickLeft: async () => {
-              console.log(currentSelectedUser);
+              // console.log(currentSelectedUser);
               const isRoleUpdate = await updateUserRole(currentSelectedUser);
-              console.log(isRoleUpdate, 'role update');
+              // console.log(isRoleUpdate, 'role update');
               if (!isRoleUpdate)
                 return setToastMsg({
                   type: 'danger',
                   message: `Error while changing role of ${currentSelectedUser?.email}`
                 });
-              console.log(isRoleUpdate);
+              // console.log(isRoleUpdate);
               // we will check updateTo and that key
               // first check if it is in the learner or admin
               // if updated to is admin check learner
@@ -360,14 +360,14 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
                 });
                 if (foundAt >= 0) {
                   const learners = structuredClone(adminLearnerList?.learners);
-                  learners?.splice(foundAt, 1);
-                  console.log('1', learners);
+                  // learners?.splice(foundAt, 1);
+                  // console.log('1', learners);
                   setAdminLearnerList((prevValue) => ({
                     admins: [...prevValue?.admins, isRoleUpdate?.user_id],
                     learners: [...learners]
                   }));
                 } else {
-                  console.log('2');
+                  // console.log('2');
                   setAdminLearnerList((prevValue) => ({
                     ...prevValue,
                     admins: [...prevValue?.admins, isRoleUpdate?.user_id]
@@ -387,19 +387,23 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
                 if (foundAt >= 0) {
                   const admins = structuredClone(adminLearnerList?.admins);
                   admins?.splice(foundAt, 1);
-                  console.log(admins, '3');
+                  // console.log(admins, '3');
                   setAdminLearnerList((prev) => ({
                     admins: [...admins],
                     learners: [...prev?.learners, isRoleUpdate?.user_id]
                   }));
                 } else {
-                  console.log('4');
+                  // console.log('4');
                   setAdminLearnerList((prev) => ({
                     ...prev,
                     learners: [...prev?.learners, isRoleUpdate?.user_id]
                   }));
                 }
               }
+              setToastMsg({
+                type: 'success',
+                message: `Changed ${currentSelectedUser?.email} role successfully.`
+              });
               setCurrentSelectedUser(null);
               return setIsMakeAdminAlert(false);
             },
