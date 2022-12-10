@@ -9,6 +9,11 @@ export const BookmarkStartTimeAtom = atom({
   }
 });
 
+export const ShowQuizAtom = atom({
+  key: 'ShowQuiz',
+  default: false
+});
+
 export function addCallbackToEvent(element, eventCallbackArrObj, isRemoveCallback) {
   eventCallbackArrObj.forEach((callbackObj) => {
     if (isRemoveCallback)

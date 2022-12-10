@@ -3,7 +3,7 @@ import {
   UPDATE_USER_COURSE_PROGRESS,
   userClient
 } from '@/api/UserMutations';
-import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
+import { COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
 import { QuizAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -12,6 +12,7 @@ import { QuizProgressDataAtom, UserCourseDataAtom, VideoAtom } from '@/state/ato
 import { useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { ShowQuizAtom } from './customVideoPlayer.helper';
 
 // (78 * 100) / 300
 export default function useHandleScorm() {
@@ -26,6 +27,7 @@ export default function useHandleScorm() {
 
   const [timer, setTimer] = useState(0);
 
+  const [showQuiz, setShowQuiz] = useRecoilState(ShowQuizAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [videoData, updateVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -50,7 +52,7 @@ export default function useHandleScorm() {
     syncVideoProgress();
   }, [timer]);
 
-  async function syncVideoProgress(type) {
+  async function syncVideoProgress(isTopicCompleted = false) {
     if (!userCourseData?.userCourseMapping?.user_course_id) return;
 
     const userCourseMapData = structuredClone(userCourseData);
@@ -67,8 +69,10 @@ export default function useHandleScorm() {
         userCourseId: userCourseMapData?.userCourseMapping?.user_course_id,
         topicId: videoData?.topicContent?.[0]?.topicId,
         topicType: 'Content',
-        status: 'in-progress',
-        videoProgress: ((timer * 100) / videoData?.topicContent?.[0]?.duration).toString(),
+        status: isTopicCompleted ? COURSE_TOPIC_STATUS.completed : COURSE_TOPIC_STATUS.started,
+        videoProgress: isTopicCompleted
+          ? '100'
+          : ((timer * 100) / videoData?.topicContent?.[0]?.duration).toString(),
         timestamp: `${currentTime}-${duration}`
       };
 
@@ -94,7 +98,7 @@ export default function useHandleScorm() {
 
     const currentTopicProgress = userCourseMapData?.userCourseProgress[currentProgressIndex];
 
-    if (+currentTopicProgress?.video_progress >= 100) return;
+    if (!isTopicCompleted && +currentTopicProgress?.video_progress >= 100) return;
 
     const savedProgress =
       (videoData?.topicContent?.[0]?.duration * (+currentTopicProgress?.video_progress || 0)) / 100;
@@ -105,9 +109,15 @@ export default function useHandleScorm() {
     let isCompleted = currentTopicProgress?.status === 'completed';
     if (!isCompleted) isCompleted = videoProgress === 100;
 
+    if (isTopicCompleted) isCompleted = true;
     if (isCompleted) {
       isCompleted = isTopicQuizCompleted(currentTopicProgress?.topic_id, quizProgressData);
     }
+
+    // status: isCompleted ? COURSE_TOPIC_STATUS.completed : COURSE_TOPIC_STATUS.started,
+    // videoProgress: isCompleted
+    //   ? '100'
+    //   : ((timer * 100) / videoData?.topicContent?.[0]?.duration).toString(),
 
     // const { currentTime, duration } = videoElement.current;
     const currentTime = timer;
@@ -119,11 +129,13 @@ export default function useHandleScorm() {
       topicId: currentTopicProgress?.topic_id,
       topicType: 'Content',
       status: isCompleted ? 'completed' : 'in-progress',
-      videoProgress: limitValueInRange(
-        (timeSpent * 100) / videoData?.topicContent?.[0]?.duration,
-        0,
-        100
-      ).toString(),
+      videoProgress: isTopicCompleted
+        ? '100'
+        : limitValueInRange(
+            (timeSpent * 100) / videoData?.topicContent?.[0]?.duration,
+            0,
+            100
+          ).toString(),
       timestamp: `${currentTime}-${duration}`
     };
     console.log(sendData, 'update progress');
@@ -151,9 +163,14 @@ export default function useHandleScorm() {
       ?.filter((quiz) => quiz?.topicId === topicId)
       ?.some((quiz) => {
         const isAttempted = quizProgress?.find((qp) => qp?.quiz_id === quiz?.id);
+
+        console.log(isAttempted);
+        if (!isAttempted) setShowQuiz(quiz);
         return !isAttempted;
       });
 
     return isCompleted;
   }
+
+  return { syncVideoProgress };
 }
