@@ -1,6 +1,9 @@
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { useUpdateUserAboutData } from '@/helper/hooks.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -11,39 +14,42 @@ import MyUser from '../../../../components/UserComps/MyUser';
 export default function MyUserPage() {
   const [selectedUser, setSelectedUser] = useState([]);
   const [userType, setUserType] = useState('Internal');
+  const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [disableAlert , setDisableAlert] = useState(false);
 
-  const { setMultiUserArr, updateMultiUserAbout } = useUpdateUserAboutData();
+  const { setMultiUserArr, updateMultiUserAbout , disableMultiUser , resetMultiPassword } = useUpdateUserAboutData();
 
   const btnData = [
     {
       text: 'Disable User',
-      handleClick: () => {
-        console.log(selectedUser);
-        updateMultiUserAbout();
+      handleClick: ()=>{
+        setDisableAlert(true);
       }
     },
     {
       text: 'Reset  Password',
-      handleClick: () => {
-        console.log(selectedUser);
+      handleClick: async() => {
+        const success = await resetMultiPassword(selectedUser);
+        if(!success) return setToastMsg({type:'danger',message:'Error while resetting password!'});
+        return setToastMsg({type:'success',message:'Password resetted successfully.'})
       }
     },
-    {
-      text: 'Add to Cohort',
-      handleClick: () => {
-        console.log(selectedUser);
-      }
-    },
-    {
-      text: 'Add Courses',
-      handleClick: () => {
-        console.log(selectedUser);
-      }
-    }
+    // {
+    //   text: 'Add to Cohort',
+    //   handleClick: () => {
+    //     console.log(selectedUser);
+    //   }
+    // },
+    // {
+    //   text: 'Add Courses',
+    //   handleClick: () => {
+    //     console.log(selectedUser);
+    //   }
+    // }
   ];
 
   useEffect(() => {
-    console.log(selectedUser);
+    // console.log(selectedUser,'cureent users');
     setMultiUserArr(selectedUser);
   }, [selectedUser]);
 
@@ -68,6 +74,23 @@ export default function MyUserPage() {
 
         <MainBodyBox>
           <MyUser getUser={(list) => setSelectedUser(list)} />
+          {disableAlert && (
+        <ConfirmPopUp
+          title={`Are you sure you want to disable multiple users?`}
+          btnObj={{
+            handleClickLeft:async()=> {
+              const success = await disableMultiUser(selectedUser);
+              // console.log(success);
+              if(!success) return setToastMsg({type:'danger',message:'Error while disabling users'});
+              setSelectedUser([]);
+              setDisableAlert(false);
+              return setToastMsg({type:'success',message:'Users are successfully disable.'});
+            },
+            handleClickRight: () => setDisableAlert(false)
+          }
+          }
+        />
+      )}
         </MainBodyBox>
       </MainBody>
     </>

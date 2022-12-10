@@ -99,7 +99,7 @@ export default function PushNotificationLayout({ children }) {
           getNotificationObj({
             title: msg?.title,
             body: msg?.body,
-            isRead: msg?.isRead || false,
+            isRead: !!msg?.is_read,
             img: '/images/dnd1.jpg',
             link: '',
             route: '',
