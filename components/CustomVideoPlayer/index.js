@@ -2,11 +2,12 @@ import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../state/atoms/video.atom';
+import AlertBox from '../common/AlertBox';
 import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import styles from './customVideoPlayer.module.scss';
 import DraggableDiv from './DraggableDiv';
-import { ShowQuizAtom } from './Logic/customVideoPlayer.helper';
+// import { ShowQuizAtom } from './Logic/customVideoPlayer.helper';
 import useHandleNotes from './Logic/useHandleNotes';
 import useHandleScorm from './Logic/useHandleScorm';
 import useVideoPlayer from './Logic/useHandleVideo';
@@ -18,13 +19,14 @@ import VideoPlayer from './VideoPlayer';
 export default function CustomVideo({ set }) {
   const videoData = useRecoilValue(VideoAtom);
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
-  const [showQuiz, setShowQuiz] = useRecoilState(ShowQuizAtom);
+  // const [showQuiz, setShowQuiz] = useRecoilState(ShowQuizAtom);
 
   const { isPreview, topicContent, currentTopicContentIndex } = videoData;
   const [showBingeButtons, setShowBingeButtons] = useState(false);
   const [showSkipIntroButtons, setShowSkipIntroButtons] = useState(false);
   const [showSubtitles, setShowSubtitles] = useState(true);
   const [scormCompleted, setScormCompleted] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
@@ -68,15 +70,15 @@ export default function CustomVideo({ set }) {
     // return () => handleMouseMove({ target: { value: 0 } });
   }, []);
 
-  useEffect(() => {
-    if (scormCompleted === null) {
-      syncVideoProgress(true);
-    }
-  }, [scormCompleted]);
+  // useEffect(() => {
+  //   if (scormCompleted === null) {
+  //     syncVideoProgress(true);
+  //   }
+  // }, [scormCompleted]);
 
-  useEffect(() => {
-    setScormCompleted(showQuiz);
-  }, [showQuiz]);
+  // useEffect(() => {
+  //   setScormCompleted(showQuiz);
+  // }, [showQuiz]);
 
   useEffect(() => {
     setShowBingeButtons(false);
@@ -274,8 +276,10 @@ export default function CustomVideo({ set }) {
               stayBtnObj={{
                 text: 'Topic Completed',
                 classes: styles.skipIntroBtn,
-                clickHandler: () => {
-                  syncVideoProgress(true);
+                clickHandler: async () => {
+                  const isCompleted = await syncVideoProgress(true);
+                  setScormCompleted(isCompleted);
+                  setShowPopup(true);
                 }
               }}
             />
@@ -310,6 +314,16 @@ export default function CustomVideo({ set }) {
           </div>
         )}
       </div>
+      {showPopup && (
+        <AlertBox
+          title="Topic Status"
+          description={scormCompleted ? 'Your topic is now completed!!' : 'Quizzes are pending, please complete your quizzes to complete this topic.'}
+          handleClose={() => {
+            setShowPopup(false);
+            setScormCompleted(false);
+          }}
+        />
+      )}
     </div>
   );
 }

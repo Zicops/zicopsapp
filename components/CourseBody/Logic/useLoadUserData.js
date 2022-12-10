@@ -371,7 +371,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         const topic = topicDataLoaded[i];
         if (topic?.type !== 'Content') continue;
 
-        const quizProgessDataRes = loadQueryDataAsync(
+        const quizProgessDataRes = await loadQueryDataAsync(
           GET_USER_QUIZ_ATTEMPTS,
           { user_id: userData?.id, topic_id: topic?.id },
           {},
@@ -382,9 +382,12 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       }
       // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
       // console.log(allQuizProgress);
-      Promise.allSettled(allQuizProgress).then((results) => {
-        setQuizProgressData(results);
-      });
+
+      // Promise.allSettled(allQuizProgress).then((results) => {
+      //   setQuizProgressData(results);
+      // });
+
+      setQuizProgressData(allQuizProgress);
 
       // // user course progress
       // const data = { userCourseMapping: {}, userCourseProgress: [] };

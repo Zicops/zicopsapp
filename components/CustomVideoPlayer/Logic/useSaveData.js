@@ -9,7 +9,7 @@ import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userContext } from '../../../state/contexts/UserContext';
-import { BOX, ShowQuizAtom } from './customVideoPlayer.helper';
+import { BOX } from './customVideoPlayer.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 
 export default function useSaveData(videoElement, freezeState) {
@@ -22,7 +22,7 @@ export default function useSaveData(videoElement, freezeState) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
-  const [showQuiz, setShowQuiz] = useRecoilState(ShowQuizAtom);
+  const [showQuiz, setShowQuiz] = useState(null);
 
   const { fullCourse } = useContext(courseContext);
   const {

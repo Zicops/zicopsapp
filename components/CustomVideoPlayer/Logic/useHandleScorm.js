@@ -3,7 +3,7 @@ import {
   UPDATE_USER_COURSE_PROGRESS,
   userClient
 } from '@/api/UserMutations';
-import { COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
+import { SYNC_DATA_IN_SECONDS, COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
 import { QuizAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -12,7 +12,7 @@ import { QuizProgressDataAtom, UserCourseDataAtom, VideoAtom } from '@/state/ato
 import { useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { ShowQuizAtom } from './customVideoPlayer.helper';
+// import { ShowQuizAtom } from './customVideoPlayer.helper';
 
 // (78 * 100) / 300
 export default function useHandleScorm() {
@@ -27,7 +27,7 @@ export default function useHandleScorm() {
 
   const [timer, setTimer] = useState(0);
 
-  const [showQuiz, setShowQuiz] = useRecoilState(ShowQuizAtom);
+  // const [showQuiz, setShowQuiz] = useRecoilState(ShowQuizAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [videoData, updateVideoData] = useRecoilState(VideoAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -53,26 +53,34 @@ export default function useHandleScorm() {
   }, [timer]);
 
   async function syncVideoProgress(isTopicCompleted = false) {
-    if (!userCourseData?.userCourseMapping?.user_course_id) return;
+    if (!userCourseData?.userCourseMapping?.user_course_id) return false;
 
     const userCourseMapData = structuredClone(userCourseData);
     const currentProgressIndex = userCourseMapData?.userCourseProgress?.findIndex(
       (obj) => obj?.topic_id === videoData?.topicContent[0]?.topicId
     );
 
+    let isCompleted = false;
+
     if (currentProgressIndex < 0) {
       const currentTime = timer;
       const duration = videoData?.topicContent?.[0]?.duration;
+
+      const _videoProgress = ((timer * 100) / videoData?.topicContent?.[0]?.duration).toString();
+
+      isCompleted = _videoProgress === '100';
+      if (isTopicCompleted) isCompleted = true;
+      if (isCompleted) {
+        isCompleted = isTopicQuizCompleted(currentTopicProgress?.topic_id, quizProgressData);
+      }
 
       const sendData = {
         userId: userData.id,
         userCourseId: userCourseMapData?.userCourseMapping?.user_course_id,
         topicId: videoData?.topicContent?.[0]?.topicId,
         topicType: 'Content',
-        status: isTopicCompleted ? COURSE_TOPIC_STATUS.completed : COURSE_TOPIC_STATUS.started,
-        videoProgress: isTopicCompleted
-          ? '100'
-          : ((timer * 100) / videoData?.topicContent?.[0]?.duration).toString(),
+        status: isCompleted ? COURSE_TOPIC_STATUS.completed : COURSE_TOPIC_STATUS.started,
+        videoProgress: isTopicCompleted ? '100' : _videoProgress,
         timestamp: `${currentTime}-${duration}`
       };
 
@@ -80,25 +88,25 @@ export default function useHandleScorm() {
         userCourseMapData?.userCourseProgress?.filter(
           (cp) => cp?.topic_id === videoData?.topicContent[0]?.topicId
         )?.length > 0
-      )
-        return;
+      ) return false;
 
       console.log(sendData, 'add progress');
-      //   return;
+      //   return false;
 
       const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
         console.log(err);
-        return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+        setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+        return false;
       });
       const userCourseProgressData = progressRes?.data?.addUserCourseProgress[0];
       if (userCourseProgressData) userCourseMapData.userCourseProgress.push(userCourseProgressData);
       setUserCourseData({ ...userCourseData, ...userCourseMapData });
-      return;
+      return isCompleted;
     }
 
     const currentTopicProgress = userCourseMapData?.userCourseProgress[currentProgressIndex];
 
-    if (!isTopicCompleted && +currentTopicProgress?.video_progress >= 100) return;
+    if (!isTopicCompleted && +currentTopicProgress?.video_progress >= 100) return false;
 
     const savedProgress =
       (videoData?.topicContent?.[0]?.duration * (+currentTopicProgress?.video_progress || 0)) / 100;
@@ -106,7 +114,7 @@ export default function useHandleScorm() {
     const timeSpent = savedProgress + timer;
     const videoProgress = (timeSpent * 100) / videoData?.topicContent?.[0]?.duration;
 
-    let isCompleted = currentTopicProgress?.status === 'completed';
+    isCompleted = currentTopicProgress?.status === 'completed';
     if (!isCompleted) isCompleted = videoProgress === 100;
 
     if (isTopicCompleted) isCompleted = true;
@@ -142,7 +150,8 @@ export default function useHandleScorm() {
     // return;
     const progressRes = await updateUserCourseProgress({ variables: sendData }).catch((err) => {
       console.log(err);
-      return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+      setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+      return false;
     });
     const userCourseProgressData = progressRes?.data?.updateUserCourseProgress;
 
@@ -156,6 +165,8 @@ export default function useHandleScorm() {
     }
 
     setUserCourseData({ ...userCourseData, ...userCourseMapData });
+
+    return isCompleted;
   }
 
   function isTopicQuizCompleted(topicId, quizProgress) {
@@ -164,8 +175,8 @@ export default function useHandleScorm() {
       ?.some((quiz) => {
         const isAttempted = quizProgress?.find((qp) => qp?.quiz_id === quiz?.id);
 
-        console.log(isAttempted);
-        if (!isAttempted) setShowQuiz(quiz);
+        // console.log(isAttempted);
+        // if (!isAttempted) setShowQuiz(quiz);
         return !isAttempted;
       });
 
