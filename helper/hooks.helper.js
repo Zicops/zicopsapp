@@ -1,3 +1,4 @@
+import { API_LINKS } from '@/api/api.helper';
 import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
 import {
   ADD_USER_ORGANIZATION_MAP,
@@ -42,7 +43,8 @@ import {
   COMMON_LSPS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
-  LEARNING_SPACE_ID
+  LEARNING_SPACE_ID,
+  USER_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
@@ -654,6 +656,7 @@ export function useUpdateUserAboutData() {
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
+  const [isConfirmPopUpDisable, setIsConfirmPopUpDisable] = useState(false);
 
   useEffect(() => {
     let isPhValid = false;
@@ -692,6 +695,7 @@ export function useUpdateUserAboutData() {
     // if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
     // if (userData?.status?.toLowerCase() === 'disabled')
     //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
+
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
@@ -780,6 +784,39 @@ export function useUpdateUserAboutData() {
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
   }
 
+  async function disableMultiUser(users = []) {
+    if (!users?.length) return;
+    let userIds = [];
+    let isError = false;
+    for (let i = 0; i < users?.length; i++) {
+      const user = users[i];
+      // console.log(user);
+      if (disabledUserList?.includes(user?.id)) continue;
+      // console.log(disabledUserList,'fs',user?.lsp_status)
+      if (
+        user?.lsp_status?.toLowerCase() === USER_STATUS?.activate?.toLowerCase() ||
+        user?.lsp_status === ''
+      ) {
+        const userSendLspData = {
+          id: user?.id,
+          user_lsp_id: user?.user_lsp_id,
+          status: USER_STATUS?.disable
+        };
+        const isDisable = await updateUserLsp(userSendLspData);
+        if (!isDisable) {
+          isError = true;
+          break;
+        }
+        userIds?.push(user?.id);
+      }
+    }
+    if (!isError) {
+      if (!userIds?.length) return !isError;
+      setDisabledUserList((prev) => [...prev, ...userIds]);
+    }
+    // console.log(isError);
+    return !isError;
+  }
   async function updateMultiUserAbout() {
     for (let i = 0; i < multiUserArr.length; i++) {
       const user = multiUserArr[i];
@@ -787,6 +824,36 @@ export function useUpdateUserAboutData() {
     }
   }
 
+  async function resetPassword(email = '') {
+    if (email === '' || !email) return false;
+    const sendData = {
+      email: email
+    };
+
+    const data = await fetch(API_LINKS?.resetPassword, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(sendData)
+    });
+
+    // console.log(data?.status, 'status');
+    let isError = false;
+    if (!data?.status === 200) isError = true;
+    return !isError;
+  }
+
+  async function resetMultiPassword(users = []) {
+    const emails = users?.map((user) => user?.email);
+    let isError = false;
+    if(!emails?.length) return !isError;
+    for(let i = 0 ; i < emails?.length ; i++){
+      const isEmailSent = await resetPassword(emails[i]);
+      if(!isEmailSent) isError = true;
+    }
+    return !isError;
+  }
   return {
     newUserAboutData,
     setNewUserAboutData,
@@ -796,7 +863,11 @@ export function useUpdateUserAboutData() {
     updateAboutUser,
     updateMultiUserAbout,
     updateUserLsp,
-    updateUserRole
+    updateUserRole,
+    disableMultiUser,
+    resetPassword,
+    isConfirmPopUpDisable,
+    resetMultiPassword
   };
 }
 
