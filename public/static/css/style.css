@@ -192,8 +192,39 @@ nav .buttons {
     border-radius: 4px;
     padding: 15px;
 }
+.types-block .list{
+    display: none;
+}
+.mobile-hero-gradient{
+    position: absolute;
+    top: 140px;
+    width: 100%;
+}
+.home-hero {
+    background-image: url('/static/img/Mask group.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top;
+    width: 100%;
+    height: calc(100vh - 90px);
+}
 
+.hero-text {
+    /* height: 50vh; */
+    width: 100%;
+    /* background: linear-gradient(261.92deg, rgba(0, 0, 0, 0.35) 58.26%, rgba(0, 0, 0, 0) 86.87%); */
+    position: relative;
+    top: 140px;
+    /* left: 60px; */
 
+    padding: 50px;
+}
+
+.hero-text p {
+    color: var(--activeText);
+    font-size: 24px;
+    line-height: 36px;
+}
 
 
 
@@ -230,6 +261,12 @@ nav .buttons {
     .mobile-menu {
         display: none;
     }
+        .mobile-hero-gradient {
+            /* position: absolute;
+            top: 140px;
+            width: 100%; */
+            display: none;
+        }
     .login {
         font-size: 16px;
     }
@@ -255,6 +292,45 @@ nav .buttons {
     }
     .mouse-cursor-gradient-tracking-btn span::after {
         content: url('/static/img/Vector (4).png')!important;
+    }
+
+    .home-hero{
+        background-image: url('/static/img/Mask group.svg') ;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        width: 100%;
+        height: calc(100vh - 90px);
+    }
+    .hero-text{
+        height: 50vh;
+        width: 55%;
+        background: linear-gradient(261.92deg, rgba(0, 0, 0, 0.35) 58.26%, rgba(0, 0, 0, 0) 86.87%);
+        position: relative;
+        top: 60px;
+        left: 60px;
+
+        padding: 50px;
+    }
+    .hero-text p{
+        color: var(--activeText);
+        font-size: 36px;
+        line-height: 48px;
+    }
+
+    .types-block .list{
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        border: none;
+        background-color: #121318AB;
+        padding: 40px 0;
+    }
+    .types-block .list .list-item{
+        flex-direction: column;
+        padding: 30px;
+        max-width: 300px;
+        text-align: center;
+        border: none;
     }
 }
 
