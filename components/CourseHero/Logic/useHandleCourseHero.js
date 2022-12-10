@@ -37,7 +37,7 @@ export default function useHandleCourseHero(isPreview) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const userData = useRecoilValue(UserStateAtom);
-  const userOrgData = useRecoilValue(UsersOrganizationAtom); 
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: new Date(),
@@ -151,7 +151,7 @@ export default function useHandleCourseHero(isPreview) {
 
     userCourseData?.allModules?.some((mod, modIndex) => {
       mod?.topicData?.some((topic, topicIndex) => {
-        if (topic?.type !== 'Content') return false;
+        // if (topic?.type !== 'Content') return false;
         if (isTopicFound) return true;
 
         if (!fallBack) {
@@ -166,10 +166,11 @@ export default function useHandleCourseHero(isPreview) {
         const topicProgress = userCourseData?.userCourseProgress?.find(
           (obj) => obj?.topic_id === topic?.id
         );
-        // console.log(topic);
-        // console.log(topicProgress);
 
-        if (topicProgress?.status === 'not-started' && !firstNotStartedTopicData) {
+        if (
+          !topicProgress ||
+          (topicProgress?.status === 'not-started' && !firstNotStartedTopicData)
+        ) {
           firstNotStartedTopicData = {
             activeModule: { index: modIndex, id: mod?.id },
             activeTopic: { index: topicIndex, id: topic?.id },

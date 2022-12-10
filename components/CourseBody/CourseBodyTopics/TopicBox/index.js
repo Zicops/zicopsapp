@@ -105,7 +105,12 @@ export default function TopicBox({
 
   useEffect(() => {
     if (userCourseData?.triggerPlayerToStartAt === null) return;
+
+    const filteredTopic = topicData?.find((topic) => topic?.id === userCourseData?.activeTopic?.id);
+    if (filteredTopic?.type === 'Assessment') return loadTopicExam();
+
     if (!userCourseData?.activeTopicContent?.id) return;
+
     if (
       userCourseData?.activeTopicContent?.id !==
       videoData?.topicContent[videoData?.currentTopicContentIndex]?.id
