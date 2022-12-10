@@ -22,7 +22,7 @@ export default function CourseTabs() {
   const { updateCourseMaster } = courseContextData;
   const { fullCourse, saveCourseData } = useSaveCourse(courseContextData);
   const router = useRouter();
-  const [courseStatus, setCourseStatus] = useState(fullCourse?.status || STATUS.display[0]);
+  const [courseStatus, setCourseStatus] = useState(fullCourse?.status);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
@@ -162,7 +162,7 @@ export default function CourseTabs() {
             isCourseUploading
           ) : (
             <>
-              {courseStatus}{' '}
+              {courseStatus || STATUS.display[0]}{' '}
               <span style={{ fontSize: '12px', fontWeight: '400' }}>
                 {isCourseUploading ? '' : displayTime}
               </span>

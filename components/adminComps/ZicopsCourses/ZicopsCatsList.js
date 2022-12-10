@@ -16,14 +16,12 @@ import AddCatSubCat from './AddCatSubCat';
 
 function ZicopsCategoryList() {
   const [catData, setCatData] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const userOrg = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
-
-  let zicopsLspData = null;
-  let zicopsLspDataLoading = false;
 
   // if (_lspId !== zicopsLsp) {
   //   const { data, loading } = loadQueryDataAsync(GET_CATS_MAIN, { lsp_ids: [zicopsLsp] });
@@ -45,6 +43,7 @@ function ZicopsCategoryList() {
   }, [_lspId]);
 
   async function loadCategories() {
+    setIsLoading(true);
     const zicopsLsp = COMMON_LSPS.zicops;
 
     const zicopsLspData =
@@ -60,9 +59,8 @@ function ZicopsCategoryList() {
     data.allCatMain.push(...(zicopsLspData?.allCatMain || []));
 
     setCatData(data);
+    setIsLoading(false);
   }
-
-  const loading = zicopsLspDataLoading && currentLspDataLoading;
 
   useEffect(() => {
     if (popUpState) return;
@@ -128,7 +126,7 @@ function ZicopsCategoryList() {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
-        loading={loading}
+        loading={isLoading}
         showCustomSearch={true}
         searchProps={{ handleSearch: (val) => setSearchQuery(val), delayMS: 0 }}
       />
