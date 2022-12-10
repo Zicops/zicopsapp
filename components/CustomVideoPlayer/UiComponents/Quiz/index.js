@@ -224,7 +224,7 @@ export default function Quiz({
         </button>
         <button
           className={`${styles.mcqBtns}`}
-          disabled={!!isSubmitDisabled}
+          disabled={!!isSubmitDisabled || !selectedOption}
           onClick={handleSubmit}>
           Submit
         </button>

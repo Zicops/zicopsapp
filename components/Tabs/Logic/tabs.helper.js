@@ -53,11 +53,17 @@ export function getDateTimeFromUnix(unixTimestamp) {
   return `${d.toLocaleString()}`;
 }
 
-export async function getDefaultLsp(orgId = ""){
-  if(orgId === "") return false;
-  const res = await loadQueryDataAsync(GET_LEARNINGSPACES_BY_ORGID,{org_id:orgId},{},userQueryClient);
-  if(res?.error) return false;
+export async function getDefaultLsp(orgId = '') {
+  if (orgId === '') return false;
+  const res = await loadQueryDataAsync(
+    GET_LEARNINGSPACES_BY_ORGID,
+    { org_id: orgId },
+    {},
+    userQueryClient
+  );
+  if (res?.error) return false;
   // console.log(res);
-  const defaultLsp = res?.getLearningSpacesByOrgId?.filter((lsp) => lsp?.is_default) ;
-  return defaultLsp[0]?.lsp_id ;
+  const defaultLsp = res?.getLearningSpacesByOrgId?.filter((lsp) => lsp?.is_default);
+
+  return defaultLsp?.[0]?.lsp_id || false;
 }

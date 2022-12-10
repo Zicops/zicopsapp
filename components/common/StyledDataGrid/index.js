@@ -5,7 +5,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   border: 0,
   color: theme.palette.mode === 'light' ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,0.85)',
   fontFamily: [
-    'Open Sans',
+    'Poppins',
     '-apple-system',
     'BlinkMacSystemFont',
     '"Segoe UI"',

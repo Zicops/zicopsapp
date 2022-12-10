@@ -1,13 +1,33 @@
+import { UPDATE_COURSE } from '@/api/Mutations';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { COURSE_STATUS } from '@/helper/constants.helper';
-import { useContext } from 'react';
+import { getUnixFromDate } from '@/helper/utils.helper';
+import { useMutation } from '@apollo/client';
+import moment from 'moment';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useRecoilState } from 'recoil';
 import { courseContext } from '../../../state/contexts/CourseContext';
-import SwitchButton from '../../common/FormComponents/SwitchButton';
+import RadioBox from '../common/RadioBox';
+import SwitchBox from '../common/SwitchBox';
 import styles from '../courseTabs.module.scss';
+import { isCourseUploadingAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
+import CourseDetailsTable from './CourseDetailsTable';
 
 export default function CourseConfiguration() {
+  const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
+
+  const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
+
   const courseContextData = useContext(courseContext);
+  const [showConfirmBox, setShowConfirmBox] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsLoading(courseUploading ? 'UPDATING...' : null);
+  }, [courseUploading]);
   // const { publishDate, expireDate, setPublishDate, setExpireDate } =
   //   useHandleConfig(courseContextData);
 
@@ -15,7 +35,7 @@ export default function CourseConfiguration() {
 
   // const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const isCoursePublished = fullCourse?.status === COURSE_STATUS.publish;
+  const isDisabled = [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse?.status);
 
   return (
     <>
@@ -49,40 +69,144 @@ export default function CourseConfiguration() {
         </>
       </div> */}
 
-      {/* Quality Control Check */}
-      <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <label htmlFor="quality" className="w-25">
-          Freeze Course
-        </label>
+      {/* visiblity */}
+      <div>
+        <h4>Access Control</h4>
 
-        <div className="w-75">
-          <SwitchButton
-            // label="Freeze"
-            inputName="qa_required"
-            isDisabled={isCoursePublished}
-            isChecked={fullCourse?.qa_required || false}
-            handleChange={handleChange}
+        <div className={`w-100 ${styles.boxContainer}`}>
+          <RadioBox
+            labeledInputProps={{
+              label: 'Open',
+              name: 'display',
+              isDisabled: isDisabled,
+              description: 'Will be available to all users whether assigned or not',
+              isChecked: fullCourse?.is_display,
+              changeHandler: (e) => updateCourseMaster({ ...fullCourse, is_display: true })
+            }}
+          />
+          <RadioBox
+            labeledInputProps={{
+              label: 'Closed',
+              name: 'display',
+              isDisabled: isDisabled,
+              description: 'Will be available to only those assigned to the course',
+              isChecked: !fullCourse?.is_display,
+              changeHandler: (e) => updateCourseMaster({ ...fullCourse, is_display: false })
+            }}
           />
         </div>
-      </div>
 
-      {/* visiblity */}
-      <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <label htmlFor="visible" className="w-25">
-          Visibility in the Learning space
-        </label>
-
-        <div className="w-75">
+        {/* <div className="w-75">
           <SwitchButton
             // label="Display"
             inputName="is_display"
-            isDisabled={isCoursePublished}
+            isDisabled={isDisabled}
             isChecked={fullCourse?.is_display || false}
             handleChange={handleChange}
           />
-        </div>
+        </div> */}
       </div>
 
+      {/* Freeze */}
+      <div>
+        <h4>Freeze your account</h4>
+
+        <div className={`w-100 ${styles.boxContainer}`}>
+          <SwitchBox
+            labeledInputProps={{
+              label: 'Freeze',
+              description:
+                'Once a course is frozen it is no longer available and reasy for approval/Publishing',
+              name: 'qa_required',
+              isDisabled: +fullCourse?.duration === 0 ? true : isDisabled,
+              isChecked: fullCourse?.qa_required || false,
+              handleChange: (e) =>
+                updateCourseMaster({ ...fullCourse, qa_required: e.target.checked })
+            }}
+          />
+          <div className="w-50" style={{ margin: '15px' }}></div>
+        </div>
+
+        {/* <div className="w-75">
+          <SwitchButton
+            // label="Freeze"
+            inputName="qa_required"
+            isDisabled={isDisabled}
+            isChecked={fullCourse?.qa_required || false}
+            handleChange={handleChange}
+          />
+        </div> */}
+      </div>
+
+      {/* Expire */}
+      {isDisabled && (
+        <div>
+          <h4>Expire Course</h4>
+
+          <div className={`w-100 ${styles.boxContainer}`}>
+            <SwitchBox
+              labeledInputProps={{
+                label: 'Expire',
+                description: 'No one will be able to access the course after expiration',
+                name: 'expire',
+                isDisabled: fullCourse?.status === COURSE_STATUS.reject,
+                isChecked: fullCourse?.status === COURSE_STATUS.reject,
+                handleChange: () => setShowConfirmBox(true)
+              }}
+            />
+            <div className="w-50" style={{ margin: '15px' }}></div>
+          </div>
+
+          {/* <div className="w-75">
+          <SwitchButton
+            // label="Freeze"
+            inputName="qa_required"
+            isDisabled={isDisabled}
+            isChecked={fullCourse?.qa_required || false}
+            handleChange={handleChange}
+          />
+        </div> */}
+        </div>
+      )}
+
+      {/* course details */}
+      {!!fullCourse?.id && (
+        <div>
+          <h4>Details</h4>
+
+          <CourseDetailsTable
+            data={[
+              {
+                title: 'Created Date',
+                value: moment(+fullCourse?.created_at * 1000).format('lll')
+              },
+              {
+                title: 'Published on',
+                value: fullCourse?.publish_date
+                  ? moment(+fullCourse?.publish_date * 1000).format('lll')
+                  : 'N/A'
+              },
+              {
+                title: 'Live on',
+                value: fullCourse?.publish_date
+                  ? moment(+fullCourse?.publish_date * 1000).format('lll')
+                  : 'N/A'
+              },
+              { title: 'Created By', value: fullCourse?.created_by },
+              {
+                title: 'Published by',
+                value: fullCourse?.approvers?.[0] ? fullCourse?.approvers?.[0] : 'N/A'
+              },
+              {
+                title: 'Expired On',
+                value: +fullCourse?.expiry_date
+                  ? moment(+fullCourse?.expiry_date * 1000).format('lll')
+                  : 'N/A'
+              }
+            ]}
+          />
+        </div>
+      )}
       {/* disable course */}
       {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label htmlFor="visible" className="w-25">
@@ -126,26 +250,31 @@ export default function CourseConfiguration() {
           handleChange={handleChange}
         />
       </div> */}
-      {/* {showConfirmBox && (
+      {showConfirmBox && (
         <ConfirmPopUp
-          title={
-            'Are you sure about deleting this course? This will delete the course permanently!'
-          }
+          title={'Are you sure about expiring this course?'}
           btnObj={{
             handleClickLeft: async () => {
-              const isDeleted = await deleteData(DELETE_COURSE, { id: fullCourse?.id });
-              // console.log(isDeleted);
+              // updateCourseMaster({
+              //   ...fullCourse,
+              //   status: e.target.checked ? COURSE_STATUS.reject : COURSE_STATUS.publish
+              // });
+              const { duration, status, ...fullCourseData } = fullCourse;
+              console.log('var', sendData);
+              const sendData = {
+                ...fullCourseData,
+                status: COURSE_STATUS.reject,
+                expiry_date: getUnixFromDate()
+              };
+
+              await updateCourse({ variables: sendData });
               setShowConfirmBox(false);
-
-              if (!isDeleted?.deleteCourse)
-                return setToastMsg({ type: 'danger', message: 'Course Delete Error' });
-
               router.push('/admin/course/my-courses');
             },
             handleClickRight: () => setShowConfirmBox(false)
           }}
         />
-      )} */}
+      )}
     </>
   );
 }

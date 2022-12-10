@@ -102,7 +102,7 @@
 
     color: $secondaryBlack;
     font-size: inherit;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
 
     &:not(:placeholder-shown) {
       /* You need to add a placeholder to your fields. For example: <input "placeholder=" "/> */
@@ -438,7 +438,7 @@
     background-color: #202222;
     color: $secondaryBlack;
     font-size: 13px;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
 
     &:focus {
       border: 2px solid $primary;
@@ -547,4 +547,66 @@
   flex-wrap: wrap;
   flex-direction: column;
   gap: 10px;
+}
+
+.boxContainer {
+  display: flex;
+  // justify-content: space-around;
+  gap: 20px;
+  margin: 10px;
+}
+
+.switchRadioBox {
+  display: flex;
+  padding: 10px 15px;
+  margin: 15px;
+
+  border: 1px solid $darkThree;
+  border-radius: 5px;
+
+  width: 50%;
+
+  .label {
+    font-weight: bold;
+  }
+  .description {
+    color: $darkThree;
+  }
+
+  &.active {
+    border-color: $primary;
+  }
+}
+
+.radioBox {
+  flex-direction: column;
+  gap: 5px;
+
+  cursor: pointer;
+}
+
+.switchBox {
+  // flex-direction: column;
+  // gap: 5px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.courseDetailsTable {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 10px;
+
+  div {
+    border: 1px solid $darkThree;
+    padding: 10px;
+
+    .title {
+      color: $darkThree;
+    }
+  }
 }

@@ -162,16 +162,19 @@ export default function HomepageScreen() {
       let ucidArray = [];
       userCourseData?.map((uc) => ucidArray?.push(uc.id));
 
+      console.log(userCourseData);
       setOngoingCourses(
         userCourseData?.filter(
-          (course) => course?.completedPercentage > 0 && course?.completedPercentage < 100
+          // (course) => course?.completedPercentage > 0 && course?.completedPercentage < 100
+          (course) => course?.isCourseStarted && !course?.isCourseCompleted
         )
       );
       setLearningFolderCourses(
         userCourseData?.filter(
           (course) =>
             // course?.added_by.toLowerCase() === 'self' &&
-            parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100
+            // parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100
+            !course?.isCourseStarted && !course?.isCourseCompleted
         )
       );
 

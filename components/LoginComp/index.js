@@ -23,7 +23,7 @@ const LoginComp = () => {
     <div className={`${styles.bgContainer}`}>
       <div className={`${styles.header}`}>
         <div className={`${styles.ZicopsLogo}`}>
-          <img src="./images/zicops-header-logo.png" alt="not found" />
+          <img src="/images/brand/zicops-new-logo.svg" alt="zicops logo" />
         </div>
         <div className={`${styles.progress_container}`}>
           <div className={`${styles.progress_circle_selected}`} />

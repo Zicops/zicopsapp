@@ -96,12 +96,15 @@ const LearningSpaces = () => {
     }).catch((err) => {
       console.error(err);
     });
-    setLspsDetails(res?.data?.getLearningSpaceDetails);
+    const lsps = res?.data?.getLearningSpaceDetails?.filter((lspData) => !lspData?.is_default);
+    if(!lsps?.length) return;
+    setLspsDetails([...lsps]);
     const _orgArr = [];
-    res?.data?.getLearningSpaceDetails?.map((data) => {
-      if (data.is_default) return;
-      _orgArr.push(data.org_id);
-    });
+    // res?.data?.getLearningSpaceDetails?.map((data) => {
+    //   if (data.is_default) return;
+    //   _orgArr.push(data.org_id);
+    // });
+    lsps?.forEach((lsp) => _orgArr.push(lsp?.org_id));
     setOrgIds(_orgArr);
     console.log(res?.data?.getLearningSpaceDetails);
   };
@@ -118,24 +121,26 @@ const LearningSpaces = () => {
 
   useEffect(() => {
     setUserGlobalData((prevValue) => ({ ...prevValue, isPrefAdded: false, isOrgAdded: false }));
-    if (!domainArr.includes(URL)) return;
+    // if (!domainArr.includes(URL)) return;
     UserLsp();
   }, []);
 
   useEffect(() => {
-    if (!domainArr.includes(URL)) return;
-    if (!lspIds.length) return;
+    // if (!domainArr.includes(URL)) return;
+    if (!lspIds?.length) return;
     LspDetails();
   }, [lspIds]);
 
   useEffect(() => {
-    if (!orgIds.length) return;
+    if (!orgIds?.length) return;
     OrgDetails();
   }, [orgIds]);
 
   useEffect(() => {
-    if (!orgDetails.length) return;
-    const _newArr = orgDetails?.map((item, i) => Object.assign({}, item, lspsDetails[i]));
+    if (!orgDetails?.length) return;
+    const _newArr = orgDetails?.map((item, i) =>
+      Object.assign({}, item, { org_logo_url: item.logo_url }, lspsDetails[i])
+    );
     setOrglspData(_newArr);
   }, [orgDetails]);
 
@@ -176,6 +181,7 @@ const LearningSpaces = () => {
               lspId={data.lsp_id}
               lspName={data.name}
               orgId={data.org_id}
+              logo={data.org_logo_url}
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
               userLspRole={userRoles?.[index]?.role}

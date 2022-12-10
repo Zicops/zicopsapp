@@ -19,14 +19,13 @@ import Accordian from '../../../components/UserProfile/Accordian';
 
 // import AssignedCourses from '../../AssignedCourses';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { COURSE_STATUS } from '@/helper/constants.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
+import moment from 'moment';
 import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
-import _styles from '../userProfile.module.scss';
-import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
-import { UserDataAtom } from '@/state/atoms/global.atom';
 import CurrentCourses from './CurrentCourses';
-import moment from 'moment';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -264,9 +263,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       console.log(err);
       return setToastMsg({ type: 'danger', message: `${err}` });
     });
-    const courseData = res?.data?.latestCourses?.courses?.filter(
-      (c) => c?.is_active && c?.is_display
-    );
+    const courseData =
+      res?.data?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) || [];
 
     setDataCourse([...courseData]);
     // console.log(dataCourse);
@@ -352,6 +350,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       let added_by =
         parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 
+      if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
       allAssignedCourses.push({
         ...courseRes?.getCourse,
         ...assignedCoursesToUser[i],

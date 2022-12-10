@@ -1,4 +1,5 @@
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
+import NoAccess from '@/components/NoAccess';
 import { useRecoilState } from 'recoil';
 import AddQuestionBank from '../../../../components/AdminExamComps/QuestionBanks/AddQuestionBank';
 import QuestionBankTable from '../../../../components/AdminExamComps/QuestionBanks/QuestionBankTable';
@@ -24,9 +25,10 @@ export default function ZicopsQuestionBanks() {
           handleClickForPlus={() => udpatePopUpState(true)}
           tooltipTitle={ADMIN_EXAMS.zicopsQuestionBanks.addBtn}
         />
-        <MainBodyBox>
+        {/* <MainBodyBox>
           <QuestionBankTable />
-        </MainBodyBox>
+        </MainBodyBox> */}
+        <NoAccess />
       </MainBody>
     </>
   );

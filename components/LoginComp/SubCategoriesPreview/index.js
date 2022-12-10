@@ -1,4 +1,6 @@
 import useHandleUserUpdate from '@/components/LearnerUserProfile/Logic/useHandleUserUpdate';
+import { sendNotification } from '@/helper/api.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Button, Chip, Grid } from '@mui/material';
@@ -29,7 +31,7 @@ const SubCategoriesPreview = ({
 
   const [userAccountData, setUserAccountData] = useRecoilState(UsersOrganizationAtom);
   const [userBasicData, setUserBasicData] = useRecoilState(UserStateAtom);
-
+  const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const vidRef = useRef(null);
@@ -48,7 +50,14 @@ const SubCategoriesPreview = ({
     if (isError) return;
 
     setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
-
+    sendNotification(
+      {
+        title: 'Welcome to Learning Space',
+        body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userAccountData?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
+        user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
     router.prefetch('/');
     setVidIsOpen(true);
     vidRef?.current?.play();
