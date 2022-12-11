@@ -486,21 +486,24 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     if (!moduleData?.length) return;
     if (!userCourseData?.userCourseMapping?.user_course_id) return;
     if (!userCourseData?.isCourseAssigned) return;
-    if (userCourseData?.userCourseProgress?.length || userCourseData?.allModules?.length) return;
 
-    // user course progress
-    //in order to not load course progress of self-unassigned course
-    const progressRes = await loadUserCourseProgress({
-      variables: {
-        userId: userData?.id,
-        userCourseId: [userCourseData?.userCourseMapping?.user_course_id]
-      },
-      fetchPolicy: 'no-cache'
-    }).catch((err) => {
-      if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-    });
-    const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
-    const userCourseProgress = courseProgress || [];
+    let userCourseProgress = userCourseData?.userCourseProgress || null;
+
+    if (!userCourseProgress) {
+      // user course progress
+      //in order to not load course progress of self-unassigned course
+      const progressRes = await loadUserCourseProgress({
+        variables: {
+          userId: userData?.id,
+          userCourseId: [userCourseData?.userCourseMapping?.user_course_id]
+        },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+      });
+      const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+      userCourseProgress = courseProgress || [];
+    }
 
     setUserCourseData({
       ...userCourseData,
@@ -508,7 +511,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       activeModule: { index: 0, id: moduleData[0]?.id },
       userCourseProgress: userCourseProgress || []
     });
-  }, [userCourseData, moduleData]);
+  }, [userCourseData?.userCourseMapping?.user_course_id, moduleData]);
 
   useEffect(async () => {
     if (!moduleData?.length) return;

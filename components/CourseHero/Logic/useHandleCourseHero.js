@@ -168,8 +168,8 @@ export default function useHandleCourseHero(isPreview) {
         );
 
         if (
-          !topicProgress ||
-          (topicProgress?.status === 'not-started' && !firstNotStartedTopicData)
+          (!topicProgress || topicProgress?.status === 'not-started') &&
+          !firstNotStartedTopicData
         ) {
           firstNotStartedTopicData = {
             activeModule: { index: modIndex, id: mod?.id },
