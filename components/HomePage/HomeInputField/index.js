@@ -50,7 +50,7 @@ const HomeInputField = () => {
       title: 'Corporates'
     },
     {
-      path: '/info/tour',
+      path: '../static/features.html',
       title: 'Features'
     },
     {
@@ -58,7 +58,7 @@ const HomeInputField = () => {
       title: 'Content Partners'
     },
     {
-      path: '/info/contact-us',
+      path: '../static/contact-us.html',
       title: 'Contact Us'
     }
     // {
