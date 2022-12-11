@@ -73,7 +73,7 @@ export default function useHandleUserUpdate() {
     const sendLspData = {
       user_id: userDataAbout?.id,
       user_lsp_id: userOrgData?.user_lsp_id,
-      lsp_id: userOrgData?.lsp_id || LEARNING_SPACE_ID,
+      lsp_id: userOrgData?.lsp_id,
       status: 'Active'
     };
 

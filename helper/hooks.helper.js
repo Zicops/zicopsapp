@@ -567,9 +567,10 @@ export default function useUserCourseData() {
   }
 
   async function getUsersForAdmin() {
+    if(!userOrgData?.lsp_id?.length) return;
     const resLspUser = await loadQueryDataAsync(
       GET_USER_LSP_MAP_BY_LSPID,
-      { lsp_id: LEARNING_SPACE_ID, pageCursor: '', Direction: '', pageSize: 1000 },
+      { lsp_id: userOrgData?.lsp_id, pageCursor: '', Direction: '', pageSize: 1000 },
       {},
       userQueryClient
     );
