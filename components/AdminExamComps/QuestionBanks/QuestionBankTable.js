@@ -78,6 +78,8 @@ export default function QuestionBankTable({ isEdit = false }) {
 
       if (errorQuestionBankData)
         return setToastMsg({ type: 'danger', message: 'Question Bank Refetch Error' });
+
+      setSearchQuery(`${searchQuery} `);
     }
 
     setRefetchData({
