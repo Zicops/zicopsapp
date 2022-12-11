@@ -226,6 +226,7 @@ export function useHandleCohortMaster() {
             userClient
           );
           const userLspData = res?.getUserLspByLspId;
+          // console.log(userLspData,'userkkhkh')
           const sendAddUserCohortData = {
             user_id: newManager[i]?.id,
             user_lsp_id: userLspData?.user_lsp_id,
@@ -279,7 +280,7 @@ export function useHandleCohortMaster() {
       for (let i = 0; i < cohortMasterData?.managers?.length; i++) {
         const sendLspData = {
           user_id: cohortMasterData?.managers[i]?.id,
-          lsp_id: LEARNING_SPACE_ID
+          lsp_id: lspId
         };
         let res = await loadQueryDataAsync(
           GET_USER_LEARNINGSPACES_DETAILS,
@@ -287,7 +288,7 @@ export function useHandleCohortMaster() {
           {},
           userClient
         );
-        // console.log(res?.getUserLspByLspId);
+        // console.log(res?.getUserLspByLspId,'jh');
         const userLspData = res?.getUserLspByLspId;
         const sendAddUserCohortData = {
           user_id: cohortMasterData?.managers[i]?.id,

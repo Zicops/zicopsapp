@@ -1,6 +1,6 @@
-import { GET_USER_DETAIL, GET_USER_LSP_MAP_BY_LSPID, userQueryClient } from "@/api/UserQueries";
-import { loadQueryDataAsync } from "@/helper/api.helper";
-import { LEARNING_SPACE_ID } from "@/helper/constants.helper";
+import { GET_USER_DETAIL, GET_USER_LSP_MAP_BY_LSPID, userQueryClient } from '@/api/UserQueries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 
 export async function getUsersForAdmin(isAdmin = false) {
   const lspId = sessionStorage.getItem('lsp_id');
@@ -14,14 +14,15 @@ export async function getUsersForAdmin(isAdmin = false) {
 
   // console.log(resLspUser,'lspusers');
   //removing duplicate values
-  const _userIds = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps
-  ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
-  ?.map((user) => user?.user_id);
+  const _lspUsers = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps?.filter(
+    (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
+  );
+  const _userIds = _lspUsers?.map((user) => user?.user_id);
 
-//removing null value
-const userIds = _userIds?.filter((userId) => !!userId) ;
+  //removing null value
+  const userIds = _userIds?.filter((userId) => !!userId);
 
-  const lspUsers = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps ;
+  // const lspUsers = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps ;
 
   const resUserDetails = await loadQueryDataAsync(
     GET_USER_DETAIL,
@@ -32,6 +33,8 @@ const userIds = _userIds?.filter((userId) => !!userId) ;
 
   if (resUserDetails?.error) return { error: 'Error while while loading user detail!' };
 
+  // console.log(resUserDetails?.getUserDetails,'sds');
+
   const userData = resUserDetails?.getUserDetails?.map((item) => ({
     id: item?.id,
     email: item?.email,
@@ -41,18 +44,24 @@ const userIds = _userIds?.filter((userId) => !!userId) ;
     role: item?.role,
     full_name: `${item?.first_name} ${item?.last_name}`
   }));
-  
-  const users = []; 
-  if(isAdmin){ 
-  for(let i = 0 ; i < userData?.length ; i++){
-    for(let j = 0 ; j < lspUsers?.length ; j++){
-      if(userData[i]?.id === lspUsers[j]?.user_id){
-        users.push({...userData[i], lsp_status: lspUsers[j]?.status , user_lsp_id :lspUsers[j]?.user_lsp_id , lsp_id: lspUsers[j]?.lsp_id});
+
+  const users = [];
+  if (isAdmin) {
+    for (let i = 0; i < userData?.length; i++) {
+      for (let j = 0; j < _lspUsers?.length; j++) {
+        if (userData[i]?.id === _lspUsers[j]?.user_id) {
+          users.push({
+            ...userData[i],
+            lsp_status: _lspUsers[j]?.status,
+            user_lsp_id: _lspUsers[j]?.user_lsp_id,
+            lsp_id: _lspUsers[j]?.lsp_id
+          });
+        }
       }
     }
-  }}
+  }
 
   if (!userData?.length) return { error: 'No users found!' };
-  if(isAdmin) return users ;
+  if (isAdmin) return users;
   return userData;
 }

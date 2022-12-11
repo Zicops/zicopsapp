@@ -8,7 +8,7 @@ import UserButton from '@/components/common/UserButton';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { CohortMasterData } from '@/state/atoms/users.atom';
+import { CohortMasterData, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -50,6 +50,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
   const router = useRouter();
   const [selectedCourse, setSelectedCourse] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   const { assignCourseToOldUser, removeUserCohortCourses } = assignCourseToUser();
 
@@ -74,7 +75,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
       CourseId: selectedCourse?.id,
       CohortId: router?.query?.cohortId || cohortData?.id,
       CourseType: selectedCourse?.type,
-      LspId: LEARNING_SPACE_ID,
+      LspId: userOrgData?.lsp_id,
       CohortCode: cohortData?.cohort_code,
       isMandatory: courseAssignData?.isMandatory,
       CourseStatus: selectedCourse?.status,
