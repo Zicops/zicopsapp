@@ -81,7 +81,9 @@
 .hover-on-hero-image img{
     filter: grayscale(0)!important;
 }
-
+.features{
+    padding: 20px;
+}
 @media only screen and (min-width: 768px) {
     .hero{
         display: flex;
@@ -142,36 +144,28 @@
         }
 
         .features{
-            /* background-color: #121318AB; */
+            background-color: #121318AB;
             padding: 50px 0;
             position: relative;
+            padding: 7vh 10%;
         }
-                .features:before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    height: 100%;
-                    width: 100vw;
-                    background-color: #121318AB;
-                    z-index: -1;
-                }
+
         .features h2{
             text-align: center;
         }
-        .list{
-            display: flex;
-            flex-wrap: wrap;
+        .features .list{
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
             justify-content: space-between;
             border: none;
         }
-        .list-item{
+        .features .list-item{
             flex-direction: column;
-            padding: 50px;
+            padding: 50px 30px;
             border: none;
+            text-align: center;
         }
-        .list-item p{
+        .features .list-item p{
             font-size: 16px;
         }
 }

@@ -11,9 +11,6 @@
     object-fit: cover;
     object-position: top center;
 }
-.footer {
-    padding: 0 20px;
-}
 
 .slider {
     height: 90vh;
@@ -37,15 +34,7 @@
 .content-block{
     max-width: 500px;
 }
-.footer {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 
-    background-color: #121318AB;
-}
 
 .mobile.grad1{
     position: absolute;
@@ -98,42 +87,40 @@
     .partner-section {
         padding: 0 100px;
     }
-    .footer p {
-        text-align: center;
+
+    .desktop.grad1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 190vh;
+        width: 50vw;
     }
-        .desktop.grad1 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 190vh;
-            width: 50vw;
-        }
-        .desktop.grad2 {
-            position: absolute;
-            top: 12%;
-            right: 0;
-            height: 200vh;
-            width: 60vw;
-        }
-        .desktop.grad3 {
-            position: absolute;
-            top: 40%;
-            left: 0;
-            height: 190vh;
-            width: 60vw;
-        }
-        .desktop.grad4 {
-            position: absolute;
-            top: 60%;
-            right: 0;
-            height: 190vh;
-            width: 60vw;
-        }
-        .desktop.grad5 {
-            position: absolute;
-            bottom: -100vh;
-            left: 0;
-            height: 200vh;
-            width: 60vw;
-        }
+    .desktop.grad2 {
+        position: absolute;
+        top: 12%;
+        right: 0;
+        height: 200vh;
+        width: 60vw;
+    }
+    .desktop.grad3 {
+        position: absolute;
+        top: 40%;
+        left: 0;
+        height: 190vh;
+        width: 60vw;
+    }
+    .desktop.grad4 {
+        position: absolute;
+        top: 60%;
+        right: 0;
+        height: 190vh;
+        width: 60vw;
+    }
+    .desktop.grad5 {
+        position: absolute;
+        bottom: -100vh;
+        left: 0;
+        height: 200vh;
+        width: 60vw;
+    }
 }
