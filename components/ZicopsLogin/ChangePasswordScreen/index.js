@@ -43,6 +43,7 @@ const ChangePasswordScreen = ({ setPage }) => {
       .then((data) => {
         confirmPasswordReset(auth, code, newPassword)
           .then((data) => {
+            setToastMsg({ type: 'success', message: 'Password updated successfully!' });
             router.push('/login');
           })
           .catch((error) => {

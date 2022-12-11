@@ -55,6 +55,8 @@ export default function EllipsisMenu({ buttonArr = [] }) {
               </li>
             </ToolTip>
             {btns.map((btn) => {
+              if (btn?.hideBtn) return;
+
               return (
                 <ToolTip title={`${btn?.text} user`} placement="right">
                   <li>

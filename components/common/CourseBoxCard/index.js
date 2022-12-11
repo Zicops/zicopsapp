@@ -21,7 +21,7 @@ export default function CourseBoxCard({
       }}>
       <div className={`${styles.imgContainer}`} style={{ height: `${cardWidth / 1.8125}px` }}>
         {/* course img */}
-        <img src={courseData?.tileImage || '/images/profile-card.png'} alt="" />
+        <img src={courseData?.tileImage || '/images/dnd1.jpg'} alt="" />
 
         {/* level and type */}
         <div className={`${styles.dataOverImg}`}>

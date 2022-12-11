@@ -17,7 +17,7 @@
     color: $secondaryBlack;
     font-size: 13px;
     border-radius: 0px;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
     caret-color: $white;
 
     &:not(:placeholder-shown) {
@@ -94,7 +94,7 @@
     color: var(--white);
     font-size: 13px;
     padding: 10px;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
     width: 100%;
 
     &:not(:placeholder-shown) {
@@ -235,7 +235,7 @@
 
     color: $darkThree;
     font-size: 14px;
-    font-family: 'Open Sans';
+    font-family: 'Poppins';
 
     &.isActive {
       border-color: $primary;

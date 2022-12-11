@@ -8,23 +8,47 @@ import { AdminMenu, UserMenu } from './Logic/nav.helper';
 import { useHandleNav } from './Logic/useHandleNav';
 import styles from './nav.module.scss';
 
-import { NotificationAtom } from '@/state/atoms/notification.atom';
+import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
 import { useRecoilState } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import ToolTip from '../common/ToolTip';
+import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
+import { useLazyQuery } from '@apollo/client';
+import { userClient } from '@/api/UserMutations';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import UserDisplay from './UserDisplay';
+import { sendNotification } from '@/helper/api.helper';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
-
+  const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
   const [showNotification, setShowNotification] = useState(false);
   const notificationBarRef = useRef(null);
+  const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
+  const handleClickInside = () => setShowNotification(!showNotification);
 
-  const handleClickInside = () => {
-    setShowNotification(!showNotification);
+  const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
+    client: userClient
+  });
+
+  const OrgDetails = async () => {
+    const orgId = sessionStorage.getItem('org_id');
+    if (!orgId) return;
+      const res = await getOrgDetails({
+        variables: { org_ids: orgId }
+      }).catch((err) => {
+        console.error(err);
+      });
+      setOrgData((prevValue) => ({
+        ...prevValue,
+        logo_url: res?.data?.getOrganizations[0]?.logo_url
+      }));
   };
-
+  useEffect(() => {
+    if (orgData?.logo_url?.length) return;
+    OrgDetails();
+  }, []);
   useEffect(() => {
     const handleClickOutside = (e) => {
       // console.log(e.target, notificationBarRef.current);
@@ -65,7 +89,7 @@ export default function Nav() {
               title={`${!isOnLearnerSide ? 'Go Back to Admin Home' : 'Go Back to Learner Home'}`}
               placement="bottom">
               {/* <img src="/images/zicops-header-logo.png" /> */}
-              <img src="/images/svg/asset-6.svg" />
+              <img src={orgData?.logo_url || '/images/svg/asset-6.svg'} />
             </ToolTip>
           </a>
         </Link>
@@ -120,11 +144,20 @@ export default function Nav() {
 
         <div ref={notificationBarRef} className={styles.special_menu}>
           <ul>
-            {/* {!isAdmin && searchQuery === null && (
-              <li onClick={() => activateSearch(true)}>
+            {/* {!isAdmin && searchQuery === null && ( */}
+            <li style={{display: 'none'}} onClick={() => {
+              sendNotification(
+                {
+                  title: 'Testing',
+                  body: 'This is a notification 3 body',
+                  user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+                },
+                { context: { headers: { 'fcm-token': fcmToken } } }
+              );
+              }}>
                 <img src="/images/search.png" />
               </li>
-            )} */}
+            {/* )} */}
             <ToolTip title="Show Notifications" placement="right">
               <li
                 onClick={handleClickInside}

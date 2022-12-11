@@ -1,3 +1,4 @@
+import { API_LINKS } from '@/api/api.helper';
 import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
 import {
   ADD_USER_ORGANIZATION_MAP,
@@ -6,6 +7,7 @@ import {
   UPDATE_USER_COHORT,
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
+  UPDATE_USER_ROLE,
   userClient
 } from '@/api/UserMutations';
 import {
@@ -37,7 +39,13 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
-import { COMMON_LSPS, LEARNING_SPACE_ID } from './constants.helper';
+import {
+  COMMON_LSPS,
+  COURSE_STATUS,
+  COURSE_TOPIC_STATUS,
+  LEARNING_SPACE_ID,
+  USER_STATUS
+} from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
 
@@ -67,16 +75,24 @@ export function useHandleCatSubCat(selectedCategory) {
     const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
-    const currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
-      lsp_ids: [_lspId]
-    });
+
+    let currentLspData = null;
+    if (_lspId !== zicopsLsp) {
+      currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+        lsp_ids: [_lspId]
+      });
+    }
     // zicops lsp cat subcat
-    const zicopsCats = (await zicopsLspData)?.allCatMain || [];
-    const zicopsSubCats = (await zicopsLspData)?.allSubCatMain || [];
+    const zicopsCats =
+      (await zicopsLspData)?.allCatMain?.map((c) => ({ ...c, LspId: zicopsLsp })) || [];
+    const zicopsSubCats =
+      (await zicopsLspData)?.allSubCatMain?.map((c) => ({ ...c, LspId: zicopsLsp })) || [];
 
     // current lsp cat subcat
-    const currentLspCats = (await currentLspData)?.allCatMain || [];
-    const currentLspSubCats = (await currentLspData)?.allSubCatMain || [];
+    const currentLspCats =
+      (await currentLspData)?.allCatMain?.map((c) => ({ ...c, LspId: _lspId })) || [];
+    const currentLspSubCats =
+      (await currentLspData)?.allSubCatMain?.map((c) => ({ ...c, LspId: _lspId })) || [];
 
     // merging both lsp cat subcat
     const catAndSubCatRes = { allSubCatMain: [], allCatMain: [] };
@@ -285,17 +301,19 @@ export default function useUserCourseData() {
 
     for (let i = 0; i < coursesMeta?.length; i++) {
       // if (!coursesMeta[i]?.courseProgres?.length) continue;
+      let topicsCompleted = 0;
       let topicsStarted = 0;
       let userProgressArr = coursesMeta[i]?.courseProgres;
       userProgressArr?.map((topic) => {
-        if (topic?.status !== 'not-started') ++topicsStarted;
+        if (topic?.status !== COURSE_TOPIC_STATUS.assign) ++topicsStarted;
+        if (topic?.status === COURSE_TOPIC_STATUS.completed) ++topicsCompleted;
       });
 
       const courseProgress = userProgressArr?.length
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-      console.log(userProgressArr, userProgressArr?.length, topicsStarted);
+      // console.log(userProgressArr, userProgressArr?.length, topicsStarted);
 
       const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
         course_id: coursesMeta[i]?.course_id
@@ -311,6 +329,8 @@ export default function useUserCourseData() {
       const courseDuraton = +courseRes?.getCourse?.duration / (60 * 60);
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
 
+      if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
+
       userCourseArray.push({
         ...courseRes?.getCourse,
         ...coursesMeta[i],
@@ -320,7 +340,10 @@ export default function useUserCourseData() {
         created_at: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(coursesMeta[i]?.end_date).format('DD/MM/YYYY'),
         timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
-        added_by: added_by
+        added_by: added_by,
+        isCourseCompleted:
+          topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
+        isCourseStarted: topicsStarted > 0
       });
     }
 
@@ -544,9 +567,10 @@ export default function useUserCourseData() {
   }
 
   async function getUsersForAdmin() {
+    if(!userOrgData?.lsp_id?.length) return;
     const resLspUser = await loadQueryDataAsync(
       GET_USER_LSP_MAP_BY_LSPID,
-      { lsp_id: LEARNING_SPACE_ID, pageCursor: '', Direction: '', pageSize: 1000 },
+      { lsp_id: userOrgData?.lsp_id, pageCursor: '', Direction: '', pageSize: 1000 },
       {},
       userQueryClient
     );
@@ -624,12 +648,16 @@ export function useUpdateUserAboutData() {
   const [updateLsp, { error: createLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
     client: userClient
   });
+  const [updateRole, { error: createRoleError }] = useMutation(UPDATE_USER_ROLE, {
+    client: userClient
+  });
 
   // local state
   const [multiUserArr, setMultiUserArr] = useState([]);
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
+  const [isConfirmPopUpDisable, setIsConfirmPopUpDisable] = useState(false);
 
   useEffect(() => {
     let isPhValid = false;
@@ -668,6 +696,7 @@ export function useUpdateUserAboutData() {
     // if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
     // if (userData?.status?.toLowerCase() === 'disabled')
     //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
+
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
@@ -675,7 +704,7 @@ export function useUpdateUserAboutData() {
       status: userData?.status
     };
 
-    console.log(sendLspData, 'updateUserLearningSpaceDetails');
+    // console.log(sendLspData, 'updateUserLearningSpaceDetails');
 
     let isError = false;
     const res = await updateLsp({ variables: sendLspData }).catch((err) => {
@@ -688,17 +717,29 @@ export function useUpdateUserAboutData() {
   }
 
   async function updateUserRole(userData = null) {
-    userData = userData ? userData : newUserAboutData;
+    const userRoleData = userData ? userData?.roleData : newUserAboutData;
 
-    console.log(userData, 'sifhishfi');
+    console.log(userRoleData, 'rianf');
+    if (!userData?.roleData?.user_role_id) return false;
+
+    // console.log(userData?.roleData, 'sifhishfi');
+    // return ;
     const sendRoleData = {
-      user_role_id: userData?.roleData?.user_lsp_id,
+      user_role_id: userRoleData?.user_role_id,
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      role: 'Admin',
+      role: userData?.updateTo,
       is_active: true
     };
-    console.log(sendRoleData, 'role data');
+
+    let isError = false;
+    const res = await updateRole({ variables: sendRoleData }).catch((err) => {
+      isError = !!err;
+    });
+
+    // console.log(res,'update role data');
+    if (isError) return isError;
+    return res?.data?.updateUserRole;
   }
 
   async function updateAboutUser(userData = null) {
@@ -744,6 +785,39 @@ export function useUpdateUserAboutData() {
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
   }
 
+  async function disableMultiUser(users = []) {
+    if (!users?.length) return;
+    let userIds = [];
+    let isError = false;
+    for (let i = 0; i < users?.length; i++) {
+      const user = users[i];
+      // console.log(user);
+      if (disabledUserList?.includes(user?.id)) continue;
+      // console.log(disabledUserList,'fs',user?.lsp_status)
+      if (
+        user?.lsp_status?.toLowerCase() === USER_STATUS?.activate?.toLowerCase() ||
+        user?.lsp_status === ''
+      ) {
+        const userSendLspData = {
+          id: user?.id,
+          user_lsp_id: user?.user_lsp_id,
+          status: USER_STATUS?.disable
+        };
+        const isDisable = await updateUserLsp(userSendLspData);
+        if (!isDisable) {
+          isError = true;
+          break;
+        }
+        userIds?.push(user?.id);
+      }
+    }
+    if (!isError) {
+      if (!userIds?.length) return !isError;
+      setDisabledUserList((prev) => [...prev, ...userIds]);
+    }
+    // console.log(isError);
+    return !isError;
+  }
   async function updateMultiUserAbout() {
     for (let i = 0; i < multiUserArr.length; i++) {
       const user = multiUserArr[i];
@@ -751,6 +825,36 @@ export function useUpdateUserAboutData() {
     }
   }
 
+  async function resetPassword(email = '') {
+    if (email === '' || !email) return false;
+    const sendData = {
+      email: email
+    };
+
+    const data = await fetch(API_LINKS?.resetPassword, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(sendData)
+    });
+
+    // console.log(data?.status, 'status');
+    let isError = false;
+    if (!data?.status === 200) isError = true;
+    return !isError;
+  }
+
+  async function resetMultiPassword(users = []) {
+    const emails = users?.map((user) => user?.email);
+    let isError = false;
+    if(!emails?.length) return !isError;
+    for(let i = 0 ; i < emails?.length ; i++){
+      const isEmailSent = await resetPassword(emails[i]);
+      if(!isEmailSent) isError = true;
+    }
+    return !isError;
+  }
   return {
     newUserAboutData,
     setNewUserAboutData,
@@ -760,7 +864,11 @@ export function useUpdateUserAboutData() {
     updateAboutUser,
     updateMultiUserAbout,
     updateUserLsp,
-    updateUserRole
+    updateUserRole,
+    disableMultiUser,
+    resetPassword,
+    isConfirmPopUpDisable,
+    resetMultiPassword
   };
 }
 

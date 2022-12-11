@@ -246,7 +246,7 @@ export default function FavouriteDndCourses({ isLoading }) {
                     transition: 'transform 0.2s',
                     marginBottom: '-28px'
                   }}>
-                  Drop the favorite course in folder
+                  Drop the favourite course in folder
                 </Box>
                 <Box
                   fontSize={'22px'}

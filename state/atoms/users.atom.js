@@ -20,7 +20,7 @@ export function getUserObject(data) {
     phone: data?.phone || '',
     photo_url: data?.photo_url || null,
     Photo: data?.Photo || null,
-    gender: data?.gender || null,
+    gender: data?.gender || '',
 
     //only do isVerified true when users do its basic account setup
     is_verified: data?.is_verified || false,
@@ -52,7 +52,7 @@ export function getUserOrgObject(data = {}) {
     organization_name: data?.organization_name,
     organization_unit: data?.organization_unit || '',
     learningSpace_name: data?.learningSpace_name || '',
-
+    logo_url: data?.logo_url || '',
     user_organization_id: data?.user_organization_id || '',
     organization_id: data?.organization_id || '',
     organization_role: data?.organization_role || '',
@@ -113,7 +113,7 @@ export function getCohortMasterObject(data = {}) {
     cohort_name: data?.name || '',
     cohort_code: data?.code || '',
     status: data?.status || '',
-    lsp_id: data?.lsp_id || LEARNING_SPACE_ID,
+    lsp_id: data?.lsp_id || '',
     cohort_type: data?.type || '',
     description: data?.description || '',
     cohort_image: data?.cohort_image || null,
@@ -174,4 +174,9 @@ export function getSelectedUserData(data = {}){
 export const DisabledUserAtom = atom({
   key:'disabled',
   default:[]
+})
+
+export const AdminLearnerListAtom = atom({
+  key:'adminLearnerList',
+  default: {admins:[],learners:[]}
 })
