@@ -1,0 +1,57 @@
+@import '../../../styles/base.scss';
+.discussion_container{
+    margin: 0px 200px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    background-color: $tertiaryBlack;
+    justify-content: space-between;
+    border-radius: 5px;
+}
+.discussion_form{
+ display: flex;
+ justify-content: center;
+ gap: 40px;
+ margin: 10px;
+}
+.discussion_input{
+    width: 100%;
+    padding: 20px 10px;
+    border: none;
+    font-size: 18px;
+    border-radius: 8px;
+    background-color: $bgContent;
+    color: $primary;
+}
+.discussion_button{
+    color: $primary;
+    border-radius: 8px;
+    padding: 0px 10px;
+    background-color: $black;
+}
+.chat_text{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+.chat_left , .chat_right{
+    display: flex;
+    justify-content: flex-start;
+    color: $primary;
+    margin: 10px 15px;
+    display: flex;
+    border-radius: 10px;
+}
+.chat_right{
+    display: flex;
+    justify-content: flex-end;
+}
+.left_text, .right_text{
+    width: fit-content;
+    background-color: $darkTwo;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+.right_text{
+    background-color: $secondary;
+}
