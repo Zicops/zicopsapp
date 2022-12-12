@@ -7,7 +7,7 @@ import CreatableSelect from 'react-select/creatable';
 import styles from '../home.module.scss';
 import { orgData } from '../Logic/homePage.helper';
 
-const HomeInputField = () => {
+const HomeInputField = ({ scrollFn }) => {
   const orgDataOptions = [...orgData].map((d) => ({ label: d.org, value: d.org, ...d }));
   const [options, setOptions] = useState(orgDataOptions || []);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -104,12 +104,13 @@ const HomeInputField = () => {
           <Button
             size={'large'}
             clickHandler={() => {
-              router?.push('/create-learning-space');
+              // router?.push('/create-learning-space');
+              router?.push('/static/about.html');
             }}>
-            Book A Demo
+            Know More
           </Button>
         </div>
-        <ScrollDownAnimation />
+        <ScrollDownAnimation scrollFn={scrollFn} />
       </div>
       <footer className={`${styles.HomeFooter}`}>
         <div className={`${styles.HomeFooterInner}`}>

@@ -6,6 +6,8 @@
 //   lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
 //   return res;
 // }
+
+// Button Gradient Start
 let btns = document.querySelectorAll('.mouse-cursor-gradient-tracking-btn');
 
 btns.forEach((btn) => {
@@ -19,10 +21,10 @@ btns.forEach((btn) => {
     btn.style.setProperty('--y', y + 'px');
   });
 });
+// Button Gradient End
 
-
+// Snap Section Start
 const snapSections = document.querySelectorAll('.snap-section');
-
 let observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
@@ -32,17 +34,18 @@ let observer = new IntersectionObserver(
     });
   },
   {
-    threshold: 0.1
+    threshold: 0.2
   }
 );
-
 snapSections.forEach((section) => {
   observer.observe(section);
 });
+// Snap Section End
+
 
 window.onscroll = function () {
+  if(screen.width < 400) return;
   if (document.body.scrollTop > 1 || document.documentElement.scrollTop > 1) {
-    // document.querySelector('.logo').style.padding = '20px 0';
     document.getElementById('navbar').style.height = '60px';
     const OFFSET_PIXEL = 25;
     if (document.body.offsetHeight - (window.innerHeight + window.scrollY) <= OFFSET_PIXEL) {
@@ -52,7 +55,6 @@ window.onscroll = function () {
       document.getElementById('navbar').style.backgroundColor = '#131518';
     }
   } else {
-    // document.querySelector('.logo').style.padding = '30px 0';
     document.getElementById('navbar').style.height = '90px';
     document.getElementById('navbar').style.backgroundColor = 'transparent';
   }
@@ -100,5 +102,17 @@ $(document).ready(function () {
     $(this).parent().find('.arrow').show();
     $(this).parent().find('.arrow-hover').hide();
     $(this).removeClass('hover-on-hero-image');
-  });    
+  });   
+  
+  $('.mouse-cursor-gradient-tracking-btn').on('click', function () {
+    // $('.popup').show();
+    const pageName = $(location).attr('pathname').split('/').pop();
+    let meetingLink = 'https://calendly.com/zicops/discovery';
+    if (pageName === 'content-partners.html') meetingLink = 'https://calendly.com/zicops-content-partner/meetup';
+      Calendly.initPopupWidget({
+        url: meetingLink
+        // url: 'https://calendly.com/skylinemeridian/30min?hide_gdpr_banner=0'
+      });
+    return false;
+  });
 })

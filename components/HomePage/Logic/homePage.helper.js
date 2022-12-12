@@ -15,7 +15,7 @@ export const data = [
     id: 3,
     // icon: '/images/Zicops-logo-icon2.png',
     icon: '/images/brand/zicops-icon.png',
-    text: 'Scale your Organization circle of Learning unhindered with zero cozt addition of users & Cohorts.'
+    text: 'Scale your Organization circle of Learning unhindered with zero cost addition of users & Cohorts.'
   },
   {
     id: 4,
