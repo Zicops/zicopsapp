@@ -539,7 +539,7 @@ p {
         height: calc(100vh - 90px);
     }
     .hero-text{
-        height: 50vh;
+        height: 55vh;
         width: 55%;
         background: linear-gradient(261.92deg, rgba(0, 0, 0, 0.35) 58.26%, rgba(0, 0, 0, 0) 86.87%);
         position: relative;
