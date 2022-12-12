@@ -149,6 +149,9 @@ p {
     justify-content: flex-end;
     gap: 20px;
 } */
+.buttons a{
+    text-decoration: none;
+}
 .login {
     display: flex;
     align-items: center;
@@ -420,6 +423,9 @@ p {
 
 
 @media only screen and (max-width: 400px){
+    .navbar{
+        height: 60px;
+    }
     .navbar-links {
         position: absolute;
         top: 60px;
