@@ -19,8 +19,8 @@
     outline: 0;
     border: 0;
     border-radius: 10px;
-    /* padding: 15px; */
-    height: 50px;
+    padding: 10px;
+    /* height: 50px; */
 
     position: absolute;
     z-index: 1;
@@ -68,7 +68,7 @@
     object-position: top;
 }
 
-.footer {
+/* .footer {
     padding: 0 20px;
     height: 100vh;
     display: flex;
@@ -77,7 +77,7 @@
     align-items: center;
 
     background-color: #121318AB;
-}
+} */
 .hover-on-hero-image img{
     filter: grayscale(0)!important;
 }
@@ -139,9 +139,9 @@
             padding: 0 100px;
         }
     
-        .footer p {
+        /* .footer p {
             text-align: center;
-        }
+        } */
 
         .features{
             background-color: #121318AB;
