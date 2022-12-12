@@ -3,7 +3,6 @@
     margin: 0;
     padding: 0;
     --animate-delay: 0.3s;
-    /* border: 1px solid yellow; */
 }
 :root {
     --primary: #6bcfcf;
@@ -72,74 +71,84 @@ p {
     font-weight: 700;
 }
 
+
+
+
+
 /* NAVBAR */
-nav {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    /* justify-content: space-between;
-    align-items: center; */
+.navbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
     color: #ffffff;
     padding: 0 6%;
-    height: 90px;
-    /* margin-bottom: -100px; */
-    letter-spacing: 1px;
-
-    /* position: -webkit-sticky;
-    position: sticky; */
-    top: 0;
+    /* height: 60px; */
+    /* position: relative; */
     z-index: 99;
-
-    transition: all 0.3s;
-}
-
-.logo {
-    display: flex;
-    align-items: baseline;
-    /* padding: 30px 0; */
     transition: all 0.3s;
 }
 
 .logo img {
     height: 100%;
     width: 120px;
+    margin-bottom: -7px;
 }
-
-nav ul {
-    grid-column: span 2;
+.navbar-links {
+    display: none;
+    right: 1rem;
+}
+.navbar-links.active {
     display: flex;
-    justify-content: space-between;
-    list-style: none;
+}
+.navbar-links ul {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     font-size: 14px;
 }
-
-nav ul a {
+.navbar-links li {
+    list-style: none;
+    text-align: center;
+    background-color: var(--bgColor);
+    border: 1px solid var(--lightText);
+    padding: 0.75rem 2rem;
+}
+.navbar-links li a{
     text-decoration: none;
-    color: #ffffff;
+    font-size: 16px;
+    display: block;
+    color: var(--text);
+}
+.navbar-links li:hover{
+    color: var(--activeText);
 }
 
-nav ul li {
-    opacity: 0.8;
-    padding: 2px;
-    border-bottom: 1px solid transparent;
-    transition: all 0.3s;
-    cursor: pointer;
+.hamburger-menu-btn{
+    position: absolute;
+    /* top: 0.75rem;*/
+    right: 1rem; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
 }
-
-nav ul .active {
-    opacity: 1;
-    font-weight: 700;
-    border-bottom: 1px solid #ffffff;
+.hamburger-menu-btn span{
+    height: 3px;
+    width: 100%;
+    background-color: var(--activeText);
+    border-radius: 10px;
 }
-nav ul li:hover {
-    opacity: 1;
-    /* border-bottom: 1px solid white; */
-}
-nav .buttons {
+/* nav .buttons {
     display: none;
     align-items: center;
     justify-content: flex-end;
     gap: 20px;
-}
+} */
 .login {
     display: flex;
     align-items: center;
@@ -161,6 +170,9 @@ nav .buttons {
     color: var(--darkText);
     background-color: var(--primary);
 }
+
+
+
 
 .desktop-menu{
     display: none;
@@ -377,7 +389,51 @@ nav .buttons {
 .contact-form form button:hover {
     background-color: white;
 }
+.terms-text h2{
+    font-size: 36px;
+    font-weight: 600;
+    text-decoration: underline;
+}
+.terms-text li{
+    margin-bottom: 20px;
+}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 400px){
+    .navbar-links {
+        position: absolute;
+        top: 60px;
+        z-index: 99;
+    }
+    .navbar-links li.active {
+        background: linear-gradient(261.92deg, var(--primary) 58.26%, var(--secondary) 86.87%);
+        color: #000000;
+        font-weight: 500;
+    }
+    .click-features {
+        width: 100%;
+    }
+}
 @media only screen and (min-width: 768px) {
     h2 {
         font-size: 48px;
@@ -387,12 +443,34 @@ nav .buttons {
         font-size: 24px;
         line-height: 36px;
     }
-    nav {
-        display: grid;
-        grid-template-columns: 20% 30% 30% 20%;
+    .navbar{
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 90px;
+
         position: -webkit-sticky;
         position: sticky;
+        top: 0;
     }
+    .navbar-links {
+         display: block;
+    }
+    .navbar-links ul {
+        flex-direction: row;
+        position: relative;
+        top: 0;
+    }
+    .navbar-links li {
+        background-color: transparent;
+        border: none;
+    }
+    .navbar-links li.active a{
+        border-bottom: 2px solid var(--activeText);
+    }
+   .hamburger-menu-btn {
+        display: none;
+   }
     nav .buttons{
         display: flex;
     }
@@ -511,6 +589,9 @@ nav .buttons {
         background-color: #121318AB;
         padding: 10vh;
     }
+    .single-section h2{
+        text-align: center;
+    }
     .single-section p {
         text-align: center;
         padding: 0 15%;
@@ -616,6 +697,7 @@ nav .buttons {
     }
     .footer-links ul a{
         text-decoration: none;
+        font-size: 16px;
         color: var(--activeText);
     }
     .footer p{
@@ -640,6 +722,72 @@ nav .buttons {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
 
 .animate{
     opacity: 0;

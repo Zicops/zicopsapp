@@ -41,7 +41,12 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Zicops</title>
+        <title>Zicops – Comprehensive e-learning OTT platform.</title>
+        <meta
+          name="description"
+          content="What is Zicops? Zicops is an e-learning streaming platform that 
+manages and elevates the entire learning environment."
+        />
         <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
       </Head>
 

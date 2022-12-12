@@ -105,7 +105,7 @@ const HomeInputField = ({ scrollFn }) => {
             size={'large'}
             clickHandler={() => {
               // router?.push('/create-learning-space');
-              router?.push('/static/about.html');
+              router?.push('/static/features.html');
             }}>
             Know More
           </Button>
@@ -117,15 +117,16 @@ const HomeInputField = ({ scrollFn }) => {
           {routerConfig.map((item, index) => {
             return (
               <span
-                className={`${styles.homeFooterElement} ${
-                  selected === item?.path ? styles['move_up'] : ''
-                }`}
+                // className={`${styles.homeFooterElement} ${
+                //   selected === item?.path ? styles['move_up'] : ''
+                // }`}
+                className={`${styles.homeFooterElement}`}
                 key={index}
                 onClick={() => setSelected(item?.path)}
                 onTransitionEnd={() => {
                   setIsOverLay(true);
                 }}>
-                {item?.title}
+                <a href={item?.path}>{item?.title}</a>
               </span>
             );
           })}

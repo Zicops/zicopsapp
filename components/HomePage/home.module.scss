@@ -54,7 +54,7 @@ $DELAY: calc($DURATION / 2);
   top: 50%;
   transform: translateY(-50%);
   right: 3%;
-
+  z-index: 99;
   // background-color: $darkThree;
   border: 2px solid $darkThree;
   border-radius: 10px;
