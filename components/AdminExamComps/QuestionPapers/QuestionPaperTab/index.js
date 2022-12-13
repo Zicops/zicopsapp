@@ -19,7 +19,11 @@ import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { STATUS, StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
 import Preview from '../Preview';
-import { paperTabData, QuestionPaperTabAtom } from './Logic/questionPaperTab.helper';
+import {
+  isSectionWiseAtom,
+  paperTabData,
+  QuestionPaperTabAtom
+} from './Logic/questionPaperTab.helper';
 import useHandlePaperTab from './Logic/useHandlePaperTab';
 
 export default function QuestionPaperTab() {
@@ -39,6 +43,7 @@ export default function QuestionPaperTab() {
   const [status, setStatus] = useRecoilState(StatusAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
+  const [isSectionWise, setIsSectionWise] = useRecoilState(isSectionWiseAtom);
   const [masterData, setMasterData] = useState(null);
 
   useEffect(() => {
@@ -100,6 +105,8 @@ export default function QuestionPaperTab() {
       const section = sections[i];
       if (!section.id) continue;
 
+      console.log(section.id);
+
       sectionData.push({
         id: section.id,
         qpId: section.QpId,
@@ -118,7 +125,7 @@ export default function QuestionPaperTab() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'QB Section Mapping load error' });
       });
-      if (isError) return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
+      if (isError) return setToastMsg({ type: 'danger', message: 'QB Section Map load error 11' });
 
       mappedQb = [
         ...mappedQb,
@@ -140,8 +147,8 @@ export default function QuestionPaperTab() {
 
     // reloading qb section map after add or edit
     async function refetchQBSectionMapping(sectionId) {
+      console.log('sectin 1', sectionId);
       if (!sectionId) return;
-
       // refetch question bank section mapping
       let isError = false;
       const mappingRes = await refetchMapping({
@@ -155,6 +162,7 @@ export default function QuestionPaperTab() {
         setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
         return null;
       }
+      console.log('mappingRes', mappingRes);
       let mappedQb = [...questionPaperTabData.mappedQb].filter(
         (qbMappings) => qbMappings.sectionId !== sectionId
       );
@@ -179,6 +187,7 @@ export default function QuestionPaperTab() {
       return mappedQb;
     }
 
+    setIsSectionWise(!!paperMaster?.section_wise);
     setQuestionPaperTabData({
       ...questionPaperTabData,
       paperMaster: paperMaster,
@@ -192,8 +201,8 @@ export default function QuestionPaperTab() {
   useEffect(() => {
     if (loadMetaError) return setToastMsg({ type: 'danger', message: 'Master load error' });
     if (loadSectionError) return setToastMsg({ type: 'danger', message: 'Section load error' });
-    if (loadQBSectionMapError)
-      return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
+    // if (loadQBSectionMapError)
+    //   return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
   }, [loadMetaError, loadSectionError, loadQBSectionMapError]);
 
   const { addNewQuestionPaper, updateQuestionPaper } = useHandlePaperTab();

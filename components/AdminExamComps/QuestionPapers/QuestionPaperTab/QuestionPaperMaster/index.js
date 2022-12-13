@@ -166,7 +166,7 @@ export default function QuestionPaperMaster() {
             placeholder: 'Enter duration in Minutes',
             value: questionPaperTabData.paperMaster?.suggested_duration,
             isNumericOnly: true,
-            maxLength:5
+            maxLength: 5
           }}
           changeHandler={(e) => handleInput(e)}
         />

@@ -18,7 +18,7 @@ import {
 } from '../../../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import { STATUS, StatusAtom } from '../../../../../state/atoms/utils.atoms';
-import { paperTabData, QuestionPaperTabAtom } from './questionPaperTab.helper';
+import { isSectionWiseAtom, paperTabData, QuestionPaperTabAtom } from './questionPaperTab.helper';
 
 export default function useHandlePaperTab() {
   const [addQuestionPaper, { error: addPaperError }] = useMutation(ADD_QUESTION_PAPER, {
@@ -39,6 +39,7 @@ export default function useHandlePaperTab() {
   const [status, setStatus] = useRecoilState(StatusAtom);
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [isSectionWise, setIsSectionWise] = useRecoilState(isSectionWiseAtom);
 
   // reset state if add question paper form
   useEffect(() => {
@@ -181,10 +182,10 @@ export default function useHandlePaperTab() {
 
     if (!isError) setToastMsg({ type: 'success', message: 'New Question Paper Added' });
     if (!isNaN(+tabIndex)) {
-      router.push(`${router.asPath}/${paperMaster.id}`);
       setTab(paperTabData[tabIndex].name);
     }
 
+    router.push(`${router.asPath}/${paperMaster.id}`);
     setStatus(STATUS.flow[0]);
   }
 
@@ -248,7 +249,7 @@ export default function useHandlePaperTab() {
 
       isUpdated: null
     };
-
+    setIsSectionWise(!!paperMaster?.section_wise);
     setQuestionPaperTabData({
       ...questionPaperTabData,
       paperMaster: paperMaster
