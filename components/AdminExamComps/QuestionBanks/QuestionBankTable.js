@@ -47,10 +47,13 @@ export default function QuestionBankTable({ isEdit = false }) {
     if (searchQuery) queryVariables.searchText = searchQuery?.trim();
 
     const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
-    if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
+    if (qbRes?.error) {
+      setLoading(false);
+      return setToastMsg({ type: 'danger', message: 'question bank load error' });
+    }
 
     const questionBankData = structuredClone(qbRes?.getLatestQuestionBank?.questionBanks) || [];
-    if (!questionBankData.length) return;
+    if (!questionBankData.length) return setLoading(false);
 
     for (let i = 0; i < questionBankData.length; i++) {
       const qb = questionBankData[i];
