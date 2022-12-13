@@ -7,7 +7,7 @@ import CreatableSelect from 'react-select/creatable';
 import styles from '../home.module.scss';
 import { orgData } from '../Logic/homePage.helper';
 
-const HomeInputField = () => {
+const HomeInputField = ({ scrollFn }) => {
   const orgDataOptions = [...orgData].map((d) => ({ label: d.org, value: d.org, ...d }));
   const [options, setOptions] = useState(orgDataOptions || []);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -50,7 +50,7 @@ const HomeInputField = () => {
       title: 'Corporates'
     },
     {
-      path: '/info/tour',
+      path: '../static/features.html',
       title: 'Features'
     },
     {
@@ -58,7 +58,7 @@ const HomeInputField = () => {
       title: 'Content Partners'
     },
     {
-      path: '/info/contact-us',
+      path: '../static/contact-us.html',
       title: 'Contact Us'
     }
     // {
@@ -104,27 +104,29 @@ const HomeInputField = () => {
           <Button
             size={'large'}
             clickHandler={() => {
-              router?.push('/create-learning-space');
+              // router?.push('/create-learning-space');
+              router?.push('/static/features.html');
             }}>
-            Book A Demo
+            Know More
           </Button>
         </div>
-        <ScrollDownAnimation />
+        <ScrollDownAnimation scrollFn={scrollFn} />
       </div>
       <footer className={`${styles.HomeFooter}`}>
         <div className={`${styles.HomeFooterInner}`}>
           {routerConfig.map((item, index) => {
             return (
               <span
-                className={`${styles.homeFooterElement} ${
-                  selected === item?.path ? styles['move_up'] : ''
-                }`}
+                // className={`${styles.homeFooterElement} ${
+                //   selected === item?.path ? styles['move_up'] : ''
+                // }`}
+                className={`${styles.homeFooterElement}`}
                 key={index}
                 onClick={() => setSelected(item?.path)}
                 onTransitionEnd={() => {
                   setIsOverLay(true);
                 }}>
-                {item?.title}
+                <a href={item?.path}>{item?.title}</a>
               </span>
             );
           })}
