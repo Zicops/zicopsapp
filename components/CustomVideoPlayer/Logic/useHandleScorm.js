@@ -3,13 +3,14 @@ import {
   UPDATE_USER_COURSE_PROGRESS,
   userClient
 } from '@/api/UserMutations';
-import { SYNC_DATA_IN_SECONDS, COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
+import { COURSE_TOPIC_STATUS, SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
 import { QuizAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { QuizProgressDataAtom, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 // import { ShowQuizAtom } from './customVideoPlayer.helper';
@@ -25,6 +26,9 @@ export default function useHandleScorm() {
     { client: userClient }
   );
 
+  const router = useRouter();
+  const isPreview = router.asPath?.includes('preview');
+
   const [timer, setTimer] = useState(0);
 
   // const [showQuiz, setShowQuiz] = useRecoilState(ShowQuizAtom);
@@ -36,6 +40,10 @@ export default function useHandleScorm() {
   const quizProgressData = useRecoilValue(QuizProgressDataAtom);
 
   useEffect(() => {
+    if (isPreview) return;
+    if (videoData?.isPreview) return;
+    if (videoData?.type !== 'SCORM') return;
+
     const interval = setInterval(() => {
       setTimer((prev) => {
         if (isNaN(prev)) return 0;
@@ -45,9 +53,13 @@ export default function useHandleScorm() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [videoData?.type, videoData?.isPreview, isPreview]);
 
   useEffect(() => {
+    if (isPreview) return;
+    if (videoData?.isPreview) return;
+    if (videoData?.type !== 'SCORM') return;
+
     if (timer % SYNC_DATA_IN_SECONDS !== 0) return;
     syncVideoProgress();
   }, [timer]);
@@ -88,7 +100,8 @@ export default function useHandleScorm() {
         userCourseMapData?.userCourseProgress?.filter(
           (cp) => cp?.topic_id === videoData?.topicContent[0]?.topicId
         )?.length > 0
-      ) return false;
+      )
+        return false;
 
       console.log(sendData, 'add progress');
       //   return false;
