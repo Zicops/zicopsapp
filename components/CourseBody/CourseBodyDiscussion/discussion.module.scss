@@ -1,6 +1,6 @@
 @import '../../../styles/base.scss';
 .discussion_container{
-    margin: 0px 200px;
+    margin: 20px 200px;
     height: 500px;
     display: flex;
     flex-direction: column;
@@ -28,6 +28,7 @@
     border-radius: 8px;
     padding: 0px 10px;
     background-color: $black;
+    cursor: pointer;
 }
 .chat_text{
     display: flex;
@@ -54,4 +55,8 @@
 }
 .right_text{
     background-color: $secondary;
+}
+.chat_text_container{
+    overflow-y: auto;
+
 }
