@@ -1,11 +1,10 @@
-import style from './discussion.module.scss';
 import { useState } from 'react';
-import ChatReplyRight from './ChatReplyRight';
-const ChatBoxRight = ({ message }) => {
+import style from './discussion.module.scss';
+const ChatReplyRight = ({ replyMessage }) => {
   const [showInput, setShowInput] = useState(false);
   const [hideReply, setHideReply] = useState(false);
   const [reply, setReply] = useState("");
-  const [showReplyMassage, setShowReplyMassage] = useState(false)
+  const [showReplyMassage , setShowReplyMassage] = useState(false)
   const onReplyHandler = () => {
     setShowInput(true);
     setHideReply(true);
@@ -13,23 +12,22 @@ const ChatBoxRight = ({ message }) => {
   const onSendReplyHandler = () => {
     setShowInput(false);
     setHideReply(false);
-    setShowReplyMassage(true);
+    setShowReplyMassage(true)
   };
  
   return (
-    <>
-    <div className={`${style.chat_right}`}>
-      <div className={`${style.right_text_container}`}>
+         <div className={`${style.chat_right}`}>
+      <div className={`${style.right_reply_container}`}>
         <div className={`${style.right_chat_Details}`}>
           <div className={`${style.right_user_name_time}`}>
-            <p className={`${style.right_user_name}`}>Anupam</p>
-            <p className={`${style.right_chat_time}`}>11:25 AM</p>
+            <p className={`${style.right_user_name}`}>Zicops Admin</p>
+            <p className={`${style.right_chat_time}`}>11:35 AM</p>
           </div>
           <div className={`${style.right_image}`}>
-            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="" />
+            <img src="https://cdn.pixabay.com/photo/2017/01/31/21/23/avatar-2027366__340.png" alt="" />
           </div>
         </div>
-        <p className={`${style.right_message}`}>{message}</p>
+        <p className={`${style.right_message}`}>{replyMessage}</p>
         {!hideReply && (
           <p className={`${style.reply_right}`} onClick={onReplyHandler}>
             Reply
@@ -45,9 +43,7 @@ const ChatBoxRight = ({ message }) => {
         </div>
       </div>
     </div>
-    {showReplyMassage && <ChatReplyRight replyMessage={reply} />}
-    </>
-  );
-};
+  )
+}
 
-export default ChatBoxRight;
+export default ChatReplyRight;

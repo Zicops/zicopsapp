@@ -1,7 +1,7 @@
 @import '../../../styles/base.scss';
 .discussion_container{
     margin: 20px 200px;
-    height: 500px;
+    height: 800px;
     display: flex;
     flex-direction: column;
     background-color: $tertiaryBlack;
@@ -9,20 +9,24 @@
     border-radius: 5px;
 }
 .discussion_form{
- display: flex;
- justify-content: center;
- gap: 40px;
- margin: 10px;
+position: relative;
+ margin: 10px 20px;
 }
-.discussion_input{
+.discussion{
     width: 100%;
-    padding: 20px 10px;
-    border: none;
-    font-size: 18px;
-    border-radius: 8px;
-    background-color: $bgContent;
-    color: $primary;
 }
+.send_image{
+    position: absolute;
+    right: 2%;
+    bottom: 10%;
+    cursor: pointer;
+}
+// .discussion_input{
+//     font-size: 18px;
+//         // border-radius: 8px;
+//         // background-color: $bgContent;
+//         color: $primary;
+// }
 .discussion_button{
     color: $primary;
     border-radius: 8px;
@@ -35,28 +39,97 @@
     flex-direction: column;
     gap:10px;
 }
-.chat_left , .chat_right{
+.chat_left , .chat_right , .chat_reply_left{
     display: flex;
     justify-content: flex-start;
     color: $primary;
     margin: 10px 15px;
     display: flex;
-    border-radius: 10px;
 }
 .chat_right{
     display: flex;
     justify-content: flex-end;
 }
-.left_text, .right_text{
+
+.left_text_container, .right_text_container  ,.left_reply_container ,.right_reply_container{
     width: fit-content;
     background-color: $darkTwo;
     padding: 5px 10px;
     border-radius: 10px;
 }
+.left_reply_container{
+    margin-left: 40px;
+}
+.right_reply_container{
+    margin-right: 40px;
+}
 .right_text{
     background-color: $secondary;
 }
+.right_message{
+    display: flex;
+    justify-content: flex-end;
+}
 .chat_text_container{
     overflow-y: auto;
-
+}
+.right_chat_Details, .left_chat_Details{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap:10px
+}
+.left_chat_Details{
+    justify-content: flex-start;
+}
+.right_user_name_time , .left_user_name_time{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    // justify-content: center;
+}
+.left_user_name_time{
+align-items: flex-start;
+}
+.right_chat_time ,.left_chat_time{
+    color: $white;
+    font-size: 12px;
+}
+.right_image , .left_image{
+    width: 35px;
+    height: 35px;
+   
+    img{
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+    }
+}
+.reply , .reply_right{
+    color: $white;
+    font-size: 12px;
+    cursor: pointer;
+}
+.reply_right{
+    display: flex;
+    justify-content: flex-end;
+}
+.reply_container{
+    position: relative;
+}
+.reply_input{
+ border-radius: 4px;
+height: 30px;
+width: 100%;
+border: none;
+background-color: $bgContent;
+color: $white;
+padding-right: 30px;
+padding-left: 5px;
+}
+.send_reply{
+    position: absolute;
+    right: 1%;
+    top: 15%;
+    cursor: pointer;
 }
