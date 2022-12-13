@@ -113,7 +113,7 @@ export function getCohortMasterObject(data = {}) {
     cohort_name: data?.name || '',
     cohort_code: data?.code || '',
     status: data?.status || '',
-    lsp_id: data?.lsp_id || LEARNING_SPACE_ID,
+    lsp_id: data?.lsp_id || '',
     cohort_type: data?.type || '',
     description: data?.description || '',
     cohort_image: data?.cohort_image || null,

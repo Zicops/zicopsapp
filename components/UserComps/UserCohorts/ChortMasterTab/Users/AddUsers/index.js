@@ -8,7 +8,7 @@ import useHandleCohortTab from '@/components/LearnerUserProfile/Logic/useHandleC
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { CohortMasterData } from '@/state/atoms/users.atom';
+import { CohortMasterData, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -29,6 +29,7 @@ const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onU
   const { addUserToCohort } = useHandleCohortTab();
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [updateCohortMain, { error: updateCohortError }] = useMutation(UPDATE_COHORT_MAIN, {
     client: userClient
   });
@@ -96,7 +97,7 @@ const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onU
       cohort_id: cohortData?.id,
       name: cohortData?.cohort_name,
       description: cohortData?.description,
-      lsp_id: LEARNING_SPACE_ID || lspData?.lsp_id,
+      lsp_id: userOrgData?.lsp_id,
       code: cohortData?.cohort_code,
       status: 'SAVED',
       type: cohortData?.cohort_type,

@@ -54,7 +54,7 @@ $DELAY: calc($DURATION / 2);
   top: 50%;
   transform: translateY(-50%);
   right: 3%;
-
+  z-index: 99;
   // background-color: $darkThree;
   border: 2px solid $darkThree;
   border-radius: 10px;
@@ -422,6 +422,8 @@ $DELAY: calc($DURATION / 2);
 
 .homeFooterElement {
   transition: 1s linear;
+  margin: auto;
+  cursor: pointer;
 }
 
 .move_up {
@@ -464,6 +466,28 @@ $DELAY: calc($DURATION / 2);
   100% {
     opacity: 1;
     z-index: 10;
+  }
+}
+@media only screen and (max-width: 450px) {
+  .HomeHeader{
+    display: none;
+  }
+  .zicopsLogo {
+    width: 200px;
+  }
+  .HomeBody .scrollContainer .scrollItems .text {
+    width: 80vw;
+  }
+  .formContainerWrapper{
+    bottom: 15%;
+  }
+  .HomeFooter {
+    .HomeFooterInner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 100%;
+      font-size: 14px;
+    }
   }
 }
 @media screen and (max-width:1920px) {
