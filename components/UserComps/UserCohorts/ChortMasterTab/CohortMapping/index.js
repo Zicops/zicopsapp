@@ -5,7 +5,6 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import PopUp from '@/components/common/PopUp';
 import UserButton from '@/components/common/UserButton';
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData, UsersOrganizationAtom } from '@/state/atoms/users.atom';
