@@ -14,6 +14,11 @@
     --activeText: #EAEAEA;
     --text: 24px;
     --heading: 48px;
+
+
+    /* responsive sizes less than value */
+    --mobile: 500px;
+    --tablet: 1200px;
 }
 html {
     scroll-behavior: smooth;
@@ -70,6 +75,24 @@ p {
 .bold-700 {
     font-weight: 700;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -422,7 +445,16 @@ p {
 
 
 
-@media only screen and (max-width: 400px){
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: var(--mobile)){
     .navbar{
         height: 60px;
     }
