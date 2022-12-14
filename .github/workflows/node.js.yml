@@ -5,13 +5,14 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ dev ]
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: zicops-one    # TODO: update to cluster name
-  GKE_ZONE: asia-southeast1-a   # TODO: update to cluster zone
+  GKE_CLUSTER: zicops-production-cost-one
+  GKE_ZONE: asia-south1-a
+  NAMESPACE: staging
   SERVICE_NAME: zicops-app
 jobs:
   build:
@@ -32,39 +33,34 @@ jobs:
         cache: 'npm'
     - run: npm ci
     
-# Build docker image
+    - name: Auth GCP service account
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
+ # Build docker image
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+
     - name: Build the Docker image
       run: |-
         docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest .
-        
-        
-#     - name: Auth GCP service account
-#       uses: 'google-github-actions/auth@v0'
-#       with:
-#         credentials_json: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
-
-#     - name: 'Set up Cloud SDK'
-#       uses: 'google-github-actions/setup-gcloud@v0'
-
-#     - name: 'Use gcloud CLI'
-#       run: 'gcloud info'
-
-#     - run: |
-#         gcloud auth configure-docker -q
-#     - name: Push image to GCP
-#       if: ${{ github.ref == 'refs/heads/main' }}
-#       run: |
-#            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
-#            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
-#     - name: replace environment variable in values.yaml
-#       run:  envsubst '${GITHUB_SHA}' < k8s/zicops-app/values.template.yaml >  k8s/zicops-app/values.yaml
-#     - name: Install Helm
-#       run: |
-#         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-#     - name: Deploy to zicops-one
-#       if: ${{ github.ref == 'refs/heads/main' }}
-#       run: |
-#         gcloud container clusters get-credentials $GKE_CLUSTER \
-#           --zone $GKE_ZONE \
-#           --project $PROJECT_ID
-#         helm upgrade zicops-app k8s/zicops-app --install --wait --atomic
+    - run: |
+        gcloud auth configure-docker -q
+    - name: Push image to GCP
+      run: |
+           docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+           docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+    - name: replace environment variable in values.yaml
+      run:  envsubst '${GITHUB_SHA}' < k8s/zicops-app/values.template.yaml >  k8s/zicops-app/values.yaml
+    - name: Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+    - name: Deploy to zicops-one
+      run: |
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE \
+          --project $PROJECT_ID
+        helm upgrade -n $NAMESPACE zicops-app k8s/zicops-app --install --wait --atomic

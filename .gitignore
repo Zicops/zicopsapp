@@ -40,3 +40,4 @@ yarn-error.log*
 
 #.github actions workflows
 .github
+.github/workflows/node.js.yml
