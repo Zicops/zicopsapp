@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import ChatReplyLeft from './ChatReplyLeft';
 import style from './discussion.module.scss';
-const ChatBoxLeft = ({ message }) => {
+const ChatBoxLeft = ({ message , userName, time , replyArr}) => {
   const [showInput, setShowInput] = useState(false);
   const [hideReply, setHideReply] = useState(false);
+  const [replys, setReplys] = useState(replyArr)
   const [reply, setReply] = useState("");
   const [showReplyMassage , setShowReplyMassage] = useState(false)
   const onReplyHandler = () => {
@@ -14,6 +15,8 @@ const ChatBoxLeft = ({ message }) => {
     setShowInput(false);
     setHideReply(false);
     setShowReplyMassage(true)
+    setReplys([...replys, reply])
+    setReply("")
   };
   return (
     <>
@@ -24,8 +27,8 @@ const ChatBoxLeft = ({ message }) => {
               <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="" />
             </div>
             <div className={`${style.left_user_name_time}`}>
-              <p className={`${style.left_user_name}`}>Zicops HR</p>
-              <p className={`${style.left_chat_time}`}>11:20 AM</p>
+              <p className={`${style.left_user_name}`}>{userName}</p>
+              <p className={`${style.left_chat_time}`}>{time}</p>
             </div>
           </div>
           <p>{message}</p>
@@ -44,7 +47,10 @@ const ChatBoxLeft = ({ message }) => {
           </div>
         </div>
       </div>
-    { showReplyMassage && <ChatReplyLeft replyMessage={reply} /> }
+      {showReplyMassage && replys.map((data) => (
+        <ChatReplyLeft replyMessage={data} /> 
+      
+    ))}
   </>
   );
 };

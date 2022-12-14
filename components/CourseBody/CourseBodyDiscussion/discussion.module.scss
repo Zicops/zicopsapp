@@ -27,13 +27,13 @@ position: relative;
 //         // background-color: $bgContent;
 //         color: $primary;
 // }
-.discussion_button{
-    color: $primary;
-    border-radius: 8px;
-    padding: 0px 10px;
-    background-color: $black;
-    cursor: pointer;
-}
+// .discussion_button{
+//     color: $primary;
+//     border-radius: 8px;
+//     padding: 0px 10px;
+//     background-color: $black;
+//     cursor: pointer;
+// }
 .chat_text{
     display: flex;
     flex-direction: column;
@@ -43,7 +43,7 @@ position: relative;
     display: flex;
     justify-content: flex-start;
     color: $primary;
-    margin: 10px 15px;
+    margin: 15px 20px;
     display: flex;
 }
 .chat_right{
@@ -54,7 +54,7 @@ position: relative;
 .left_text_container, .right_text_container  ,.left_reply_container ,.right_reply_container{
     width: fit-content;
     background-color: $darkTwo;
-    padding: 5px 10px;
+    padding: 10px 15px;
     border-radius: 10px;
 }
 .left_reply_container{
@@ -72,6 +72,7 @@ position: relative;
 }
 .chat_text_container{
     overflow-y: auto;
+    // padding: 20px;
 }
 .right_chat_Details, .left_chat_Details{
     display: flex;
@@ -117,7 +118,7 @@ align-items: flex-start;
 .reply_container{
     position: relative;
 }
-.reply_input{
+.reply_input, .send_input{
  border-radius: 4px;
 height: 30px;
 width: 100%;
@@ -126,6 +127,13 @@ background-color: $bgContent;
 color: $white;
 padding-right: 30px;
 padding-left: 5px;
+}
+.send_input{
+    height: 80px;
+    padding-right: 60px;
+    padding-left: 10px;
+    font-size: 16px;
+    color: $primary;
 }
 .send_reply{
     position: absolute;

@@ -28,11 +28,11 @@ const ChatReplyRight = ({ replyMessage }) => {
           </div>
         </div>
         <p className={`${style.right_message}`}>{replyMessage}</p>
-        {!hideReply && (
+        {/* {!hideReply && (
           <p className={`${style.reply_right}`} onClick={onReplyHandler}>
             Reply
           </p>
-        )}
+        )} */}
         <div className={`${style.reply_container}`}>
           {showInput && <input className={`${style.reply_input}`} placeholder="Reply" value={reply} onChange={(e)=>setReply(e.target.value)}/>}
           {showInput && (

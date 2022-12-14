@@ -4,6 +4,7 @@ import ChatReplyRight from './ChatReplyRight';
 const ChatBoxRight = ({ message }) => {
   const [showInput, setShowInput] = useState(false);
   const [hideReply, setHideReply] = useState(false);
+   const [replys, setReplys] = useState([])
   const [reply, setReply] = useState("");
   const [showReplyMassage, setShowReplyMassage] = useState(false)
   const onReplyHandler = () => {
@@ -14,6 +15,8 @@ const ChatBoxRight = ({ message }) => {
     setShowInput(false);
     setHideReply(false);
     setShowReplyMassage(true);
+    setReplys([...replys, reply])
+    setReply("")
   };
  
   return (
@@ -45,7 +48,10 @@ const ChatBoxRight = ({ message }) => {
         </div>
       </div>
     </div>
-    {showReplyMassage && <ChatReplyRight replyMessage={reply} />}
+    {showReplyMassage && replys.map((data) => (
+        <ChatReplyRight replyMessage={data} /> 
+      
+    ))}
     </>
   );
 };

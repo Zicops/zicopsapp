@@ -3,7 +3,6 @@ import style from './discussion.module.scss';
 const ChatReplyLeft = ({ replyMessage }) => {
   const [showInput, setShowInput] = useState(false);
   const [hideReply, setHideReply] = useState(false);
-  const [reply, setReply] = useState("");
   const [showReplyMassage , setShowReplyMassage] = useState(false)
   const onReplyHandler = () => {
     setShowInput(true);
@@ -13,6 +12,7 @@ const ChatReplyLeft = ({ replyMessage }) => {
     setShowInput(false);
     setHideReply(false);
     setShowReplyMassage(true)
+
   };
  
   return (
@@ -28,11 +28,11 @@ const ChatReplyLeft = ({ replyMessage }) => {
             </div>
           </div>
           <p>{replyMessage}</p>
-          {!hideReply && (
+          {/* {!hideReply && (
             <p className={`${style.reply}`} onClick={onReplyHandler}>
               Reply
             </p>
-          )}
+          )} */}
           <div className={`${style.reply_container}`}>
             {showInput && <input className={`${style.reply_input}`} placeholder="Reply" />}
             {showInput && (

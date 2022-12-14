@@ -1,0 +1,25 @@
+{
+  "messsages": [
+    {
+      "id": "1001",
+      "user_name": "Zicops HR",
+      "time":"12:10 AM",
+      "content": "Hello",
+      "reply": []
+    },
+    {
+      "id": "1002",
+      "user_name": "Zicops Manager",
+      "time":"12:30 AM",
+      "content": "How are You",
+      "reply": []
+    },
+    {
+      "id": "1003",
+      "user_name": "Zicops Employee",
+      "time":"12:45 AM",
+      "content": "I am also fine . Zicops Learning Technology Private Limited is a Private incorporated on 27 June 2022. It is classified as Non-govt company and is registered at Registrar of Companies, Bangalore. Its authorized share capital is Rs. 100,000 and its paid up capital is Rs. 100,000. It is inolved in Higher education [Includes post-secondary/senior secondary sub-degree level education that leads to university degree or equivalent ",
+      "reply": []
+    }
+  ]
+}
