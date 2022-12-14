@@ -4,7 +4,6 @@ import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { isWordIncluded } from '@/helper/utils.helper';
 import { useRouter } from 'next/router';
