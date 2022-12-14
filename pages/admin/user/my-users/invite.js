@@ -16,7 +16,7 @@ import { userSideBarData } from '../../../../components/common/Sidebar/Logic/sid
 import TabContainer from '../../../../components/common/TabContainer';
 import BulkUpload from '../../../../components/UserComps/BulkUpload';
 import InviteUser from '../../../../components/UserComps/InviteUser';
-import { CUSTOM_ERROR_MESSAGE, LEARNING_SPACE_ID } from '../../../../helper/constants.helper';
+import { CUSTOM_ERROR_MESSAGE } from '../../../../helper/constants.helper';
 
 export default function MyUserPage() {
   const [inviteUsers, { data, loading }] = useMutation(INVITE_USERS, {
