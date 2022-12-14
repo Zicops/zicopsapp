@@ -41,7 +41,7 @@ const LearningSpaces = () => {
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
-  // const [userDetails, setUserDetails] = useState({});
+
   const [orgDetails, setOrgDetails] = useState([]);
   const [orgIds, setOrgIds] = useState([]);
   const [orglspData, setOrglspData] = useState([]);
@@ -184,7 +184,7 @@ const LearningSpaces = () => {
               logo={data.org_logo_url}
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
-              userId={userData?.id}
+              userId={userDetails?.id}
             />
           ))}
           <>

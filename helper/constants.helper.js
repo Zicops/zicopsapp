@@ -56,8 +56,8 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
 
-// export const LEARNING_SPACE_ID = 'Zicops learning Spaces';
-export const LEARNING_SPACE_ID = 'd8685567-cdae-4ee0-a80e-c187848a760e';
+// Default LSP is staging.zocops.com for demo and staging domains
+export const LEARNING_SPACE_ID = '93f3693c-d111-51aa-86ca-b883c6dfe647';
 
 export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS',
