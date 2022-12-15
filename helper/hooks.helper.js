@@ -39,12 +39,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
-import {
-  COMMON_LSPS,
-  COURSE_STATUS,
-  COURSE_TOPIC_STATUS,
-  USER_STATUS
-} from './constants.helper';
+import { COMMON_LSPS, COURSE_STATUS, COURSE_TOPIC_STATUS, USER_STATUS } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { parseJson } from './utils.helper';
 
@@ -335,14 +330,23 @@ export default function useUserCourseData() {
         ...coursesMeta[i],
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
-        completedPercentage: progressPercent,
         created_at: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(coursesMeta[i]?.end_date).format('DD/MM/YYYY'),
         timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
         added_by: added_by,
         isCourseCompleted:
           topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
-        isCourseStarted: topicsStarted > 0
+        isCourseStarted: topicsStarted > 0,
+        // remove this value or below value
+        completedPercentage: progressPercent,
+        // course completed percentage replace this with above value
+        topicsCompletedPercentage: userProgressArr?.length
+          ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
+          : 0,
+        // topic started percentage (used for home page for now)
+        topicsStartedPercentage: userProgressArr?.length
+          ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+          : 0
       });
     }
 
@@ -566,7 +570,7 @@ export default function useUserCourseData() {
   }
 
   async function getUsersForAdmin() {
-    if(!userOrgData?.lsp_id?.length) return;
+    if (!userOrgData?.lsp_id?.length) return;
     const resLspUser = await loadQueryDataAsync(
       GET_USER_LSP_MAP_BY_LSPID,
       { lsp_id: userOrgData?.lsp_id, pageCursor: '', Direction: '', pageSize: 1000 },
@@ -847,10 +851,10 @@ export function useUpdateUserAboutData() {
   async function resetMultiPassword(users = []) {
     const emails = users?.map((user) => user?.email);
     let isError = false;
-    if(!emails?.length) return !isError;
-    for(let i = 0 ; i < emails?.length ; i++){
+    if (!emails?.length) return !isError;
+    for (let i = 0; i < emails?.length; i++) {
       const isEmailSent = await resetPassword(emails[i]);
-      if(!isEmailSent) isError = true;
+      if (!isEmailSent) isError = true;
     }
     return !isError;
   }
