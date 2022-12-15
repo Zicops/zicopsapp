@@ -445,7 +445,9 @@ export default function useUserCourseData() {
     );
 
     if (!resPref?.getUserPreferences?.length) return [];
-    const catAndSubCatRes = await loadAndCacheDataAsync(GET_CATS_AND_SUB_CAT_MAIN);
+    const catAndSubCatRes = await loadAndCacheDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      lsp_ids: [lspId]
+    });
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
       return { ...subCat, value: subCat?.Name, label: subCat?.Name };
