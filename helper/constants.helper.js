@@ -82,9 +82,9 @@ export const DEFAULT_VALUES = {
   previewVideo: 'default-video.mp4'
 };
 
-// ztlp pune lsp
+// Default LSP is staging.zicops.com for demo and staging domains
 export const COMMON_LSPS = {
-  zicops: '6bc01264-07c2-518e-9b1e-a6fd54249132'
+  zicops: '93f3693c-d111-51aa-86ca-b883c6dfe647'
 };
 
 export const COURSE_STATUS = {

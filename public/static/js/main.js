@@ -130,3 +130,30 @@ $(document).ready(function () {
     $('.navbar-links').removeClass('active');
   });
 })
+
+
+
+  // window.onload = function () {
+  //   let animations = document.querySelectorAll(".animation-wrapper");
+  //   for (let i = 0; i < animations.length; ++i) {
+  //     animations[i].classList.add("animate");
+  //   }
+  // };
+let animations = document.querySelectorAll('.animation-wrapper');
+
+let animationsObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate');
+      } 
+    });
+  },
+  {
+    threshold: 0.5
+  }
+);
+
+animations.forEach((animation) => {
+  animationsObserver.observe(animation);
+});
