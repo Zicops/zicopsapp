@@ -17,11 +17,20 @@ export default function HomePage() {
 
   const DURATION = 1000;
   const maxSlideCount = data.length || 0;
-
+  var touchPosition;
+  function setCurrentYposition(e) {
+    touchPosition = e.changedTouches[0].clientY;
+  }
   function showSlidesOnScroll(e) {
     if (isAnimationOngoing) return;
     seIsAnimationOngoing(1);
-    const isScrollUp = e.deltaY > 0;
+    let isScrollUp = true;
+    if (e.changedTouches && e.target.parentNode.id !== 'animatedDownArrow') {
+      isScrollUp = e.changedTouches[0].clientY < touchPosition;
+    } else if (e.deltaY) {
+      isScrollUp = e.deltaY > 0;
+    }
+
     let index = slideIndex + (isScrollUp ? 1 : -1);
     if (index < 0) index = 0;
     if (index > maxSlideCount - 1) index = maxSlideCount - 1;
@@ -73,8 +82,13 @@ export default function HomePage() {
     );
   }
   return (
-    <div className={`${styles.container}`} onWheel={showSlidesOnScroll}>
-      <HomeHeader showLogo ={false} />
+    <div
+      className={`${styles.container}`}
+      onWheel={showSlidesOnScroll}
+      onTouchStart={setCurrentYposition}
+      onTouchEnd={showSlidesOnScroll}
+    >
+      <HomeHeader showLogo={false} />
 
       <SlideIndicator
         count={maxSlideCount}
@@ -121,7 +135,7 @@ export default function HomePage() {
         );
       })}
         
-      <HomeInputField />
+        <HomeInputField scrollFn={showSlidesOnScroll} />
       </div>
     </div>
   );

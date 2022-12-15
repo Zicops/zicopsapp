@@ -1,6 +1,5 @@
 import { GET_USER_DETAIL, GET_USER_LSP_MAP_BY_LSPID, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 
 export async function getUsersForAdmin(isAdmin = false) {
   const lspId = sessionStorage.getItem('lsp_id');

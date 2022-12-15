@@ -3,10 +3,10 @@ const LoginFooter = () => {
   return (
     <div className={`${styles.login_Footer}`}>
       <div className={`${styles.foot_text}`}>
-        <a>Privacy Terms</a>
+        <a href="/static/terms.html">Terms of Use</a>
       </div>
       <div className={`${styles.foot_text}`}>
-        <a>Contact Us</a>
+        <a href="/static/privacy.html">Privacy Policy</a>
       </div>
     </div>
   );

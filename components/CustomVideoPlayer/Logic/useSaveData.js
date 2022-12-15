@@ -2,7 +2,7 @@ import { ADD_USER_BOOKMARK, userClient } from '@/api/UserMutations';
 import { QuizAtom } from '@/state/atoms/module.atoms';
 import { THUMBNAIL_GAP } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
@@ -18,6 +18,7 @@ export default function useSaveData(videoElement, freezeState) {
   });
 
   const userDataGlobal = useRecoilValue(UserDataAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
@@ -259,7 +260,7 @@ export default function useSaveData(videoElement, freezeState) {
 
     const sendBookMarkData = {
       user_id: userData?.id,
-      user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id,
+      user_lsp_id: userOrgData?.user_lsp_id,
       user_course_id: userCourseData?.userCourseMapping?.user_course_id,
       course_id: fullCourse?.id,
       topic_id: videoData?.topicContent[0]?.topicId,

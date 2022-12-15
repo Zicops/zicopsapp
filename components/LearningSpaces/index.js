@@ -41,7 +41,7 @@ const LearningSpaces = () => {
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
-  // const [userDetails, setUserDetails] = useState({});
+
   const [orgDetails, setOrgDetails] = useState([]);
   const [orgIds, setOrgIds] = useState([]);
   const [orglspData, setOrglspData] = useState([]);
@@ -79,15 +79,15 @@ const LearningSpaces = () => {
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
     setUserLspIds(_userLspIds);
-    if (!_userLspIds?.length) return;
-    const resRole = await loadQueryDataAsync(
-      GET_USER_LSP_ROLES,
-      { user_id: userData?.id, user_lsp_ids: _userLspIds },
-      {},
-      userQueryClient
-    );
-    setUserRoles([...resRole?.getUserLspRoles]);
-    console.log(resRole, 'roles');
+    // if (!_userLspIds?.length) return;
+    // const resRole = await loadQueryDataAsync(
+    //   GET_USER_LSP_ROLES,
+    //   { user_id: userData?.id, user_lsp_ids: _userLspIds },
+    //   {},
+    //   userQueryClient
+    // );
+    // setUserRoles([...resRole?.getUserLspRoles]);
+    // console.log(resRole, 'roles');
   };
 
   const LspDetails = async () => {
@@ -184,7 +184,7 @@ const LearningSpaces = () => {
               logo={data.org_logo_url}
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
-              userLspRole={userRoles?.[index]?.role}
+              userId={userDetails?.id}
             />
           ))}
           <>

@@ -43,7 +43,6 @@ import {
   COMMON_LSPS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
-  LEARNING_SPACE_ID,
   USER_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';

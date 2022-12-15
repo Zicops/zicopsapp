@@ -28,7 +28,7 @@ const ForgotPassword = ({ setPage }) => {
     const sendData = {
       email: sendEmail
     };
-    // const res = fetch('https://demo.zicops.com/um/reset-password' , sendData)
+    // const res = fetch('https://staging.zicops.com/um/reset-password' , sendData)
 
     setLoading(true);
 

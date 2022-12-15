@@ -6,7 +6,6 @@ import {
 } from '@/api/UserMutations';
 import { GET_USER_LEARNINGSPACES_DETAILS } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData, UsersOrganizationAtom } from '@/state/atoms/users.atom';
