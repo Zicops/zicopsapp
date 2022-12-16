@@ -55,10 +55,10 @@ const HomeSlider = () => {
             customDot={<CustomDot />}
             itemClass="carousel-item-padding-40-px"
         >
-        <div className="zicops-slider"><img src="images/banner-image-1.jpg" alt=""/></div>
-        <div className="zicops-slider"><img src="images/banner-image-2.png" alt=""/></div>
-        <div className="zicops-slider"><img src="images/IMG-20220113-WA0020.jpg" alt=""/></div>
-        <div className="zicops-slider"><img src="images/IMG-20220113-WA0018.jpg" alt=""/></div>
+        <div className="zicops-slider"><img src="images/homePageBanner/Frame_1.png" alt=""/></div>
+        <div className="zicops-slider"><img src="images/homePageBanner/Frame_2.png" alt=""/></div>
+        <div className="zicops-slider"><img src="images/homePageBanner/Frame_3.png" alt=""/></div>
+        <div className="zicops-slider"><img src="images/homePageBanner/Frame_4.png" alt=""/></div>
         </Carousel>
         </div>
         <div className="dropup" style={{
