@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import style from './discussion.module.scss';
-import ChatBoxLeft from './ChatBoxLeft';
-import ChatBoxRight from './ChatBoxRight';
-import Data from './Data.json';
+import { useRecoilValue } from 'recoil';
+import { discussionData } from './discussion.helper';
+import MessageBlock from './MessageBlock';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [messageArr, setMessageArr] = useState([]);
   const [sendMessage, setSendMessage] = useState(false);
-  console.log(Data);
+  const userDetails = useRecoilValue(UserStateAtom);
 
   const sendMessageHandler = () => {
     setSendMessage(true);
@@ -31,15 +32,27 @@ const CourseBodyDiscussion = () => {
   return (
     <div className={`${style.discussion_container}`}>
       <div className={`${style.chat_text_container}`}>
-        {Data.messages.map((msg) => (
-          <ChatBoxLeft message={msg} dataArr={Data.messages} />
-        ))}
-        {sendMessage && messageArr.map((msg) => <ChatBoxRight message={msg.content} />)}
+        {discussionData?.messages?.map((data) => {
+          let isRight = data?.user?.id === userDetails?.id;
+          let replyId = data?.reply_id;
+          let messageData = discussionData?.messages?.filter((d) => d.reply_id);
+          let replyData = discussionData?.messages?.filter((d) => d.id === replyId);
+          console.log(messageData);
+          return (
+            <>
+              <MessageBlock message={data} isLeft={!isRight} />
+              {replyData.length ? (
+                <MessageBlock message={replyData[0]} isLeft={!isRight} isReply={true} />
+              ) : (
+                ''
+              )}
+            </>
+          );
+        })}
       </div>
       <div>
         <div className={`${style.discussion_form}`}>
           <div className={`${style.discussion}`}>
-            {/* <RTE placeholder="Message" value={message} changeHandler={onMessageHandler} /> */}
             <input
               className={`${style.send_input}`}
               placeholder="Message"
