@@ -557,7 +557,7 @@
 
     :global(.ql-editor.ql-blank::before) {
       color: $darkThree !important;
-      
+
       // :global(.ql-container.ql-snow),
       // :global(.ql-toolbar.ql-snow) {
       //   @include inputStylesFor('hasValue');
@@ -578,8 +578,7 @@
     :global(.ql-editor) {
       min-height: 100px !important;
     }
-  }
-  
+  }  
   // &.hasValue {
   //   :global(.ql-container.ql-snow),
   //   :global(.ql-toolbar.ql-snow) {
