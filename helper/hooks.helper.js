@@ -282,7 +282,7 @@ export default function useUserCourseData() {
     courseProgressRes?.getUserCourseProgressByMapId?.map((cpByMapId) => {});
 
     const coursesMeta = [];
-    assignedCoursesToUser.forEach((courseMap, i) => {
+    assignedCoursesToUser?.forEach((courseMap, i) => {
       const data = courseProgressRes?.getUserCourseProgressByMapId?.filter(
         (cpByMapId) => cpByMapId?.user_course_id === courseMap?.user_course_id
       );
@@ -320,8 +320,11 @@ export default function useUserCourseData() {
       let added_by = parseJson(coursesMeta[i]?.added_by)?.role || coursesMeta[i]?.added_by;
 
       // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      const courseDuraton = +courseRes?.getCourse?.duration / (60 * 60);
+      const courseDuraton = +courseRes?.getCourse?.duration;
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
+      const completedPercent = userProgressArr?.length
+        ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
+        : 0;
 
       if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
 
@@ -332,14 +335,12 @@ export default function useUserCourseData() {
         addedOn: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
         created_at: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(coursesMeta[i]?.end_date).format('DD/MM/YYYY'),
-        timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
+        timeLeft: courseDuraton - (courseDuraton * (+completedPercent || 0)) / 100,
         added_by: added_by,
         isCourseCompleted:
           topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
         isCourseStarted: topicsStarted > 0,
-        completedPercentage: userProgressArr?.length
-          ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
-          : 0,
+        completedPercentage: completedPercent,
         topicsStartedPercentage: progressPercent
         // remove this value or below value
         // completedPercentage: progressPercent,

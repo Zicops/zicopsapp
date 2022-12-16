@@ -351,6 +351,11 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       let added_by =
         parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 
+      const courseDuraton = +courseRes?.getCourse?.duration;
+      const completedPercent = userProgressArr?.length
+        ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
+        : 0;
+
       if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
       allAssignedCourses.push({
         ...courseRes?.getCourse,
@@ -360,12 +365,11 @@ const CoursesAccordian = ({ currentUserData = null }) => {
         addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
         created_at: assignedCoursesToUser[i]?.created_at,
+        timeLeft: courseDuraton - (courseDuraton * (+completedPercent || 0)) / 100,
         isCourseCompleted:
           topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
         isCourseStarted: topicsStarted > 0,
-        completedPercentage: userProgressArr?.length
-          ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
-          : 0,
+        completedPercentage: completedPercent,
         topicsStartedPercentage: userProgressArr?.length
           ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
           : 0
