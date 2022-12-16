@@ -82,3 +82,20 @@ export function getCurrentEpochTime() {
   const currentTime = new Date().getTime();
   return Math.floor(currentTime / 1000);
 }
+
+//
+export function getNotificationMsg(type = '', msgObj = {}) {
+  if (type === '') {
+    return false;
+  }
+  const notificationObj = {
+    courseAssign: function (msg) {
+      return `A new course ${msg.courseName} has been assigned to you. The end date for completing this course is ${msg.endDate}. Check the course`;
+    },
+    courseUnassign: function(msg){
+      return `The ${msg.courseName} course has been unassigned by your admin from your learning space. However the course is now available in your personal learning space, so continue learning in your own capacity.`
+    }
+  };
+
+  return notificationObj?.[type](msgObj);
+}

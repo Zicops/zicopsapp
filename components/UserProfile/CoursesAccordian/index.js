@@ -7,7 +7,7 @@ import InputDatePicker from '@/components/common/InputDatePicker';
 import PopUp from '@/components/common/PopUp';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -26,6 +26,8 @@ import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
 import CurrentCourses from './CurrentCourses';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
+import { getNotificationMsg } from '@/helper/common.helper';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseAssignData, setCourseAssignData] = useState({
@@ -48,6 +50,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   const router = useRouter();
   const currentUserId = router?.query?.userId;
+  const fcmToken = useRecoilValue(FcmTokenAtom);
   const [assignedCourses, setAssignedCourses] = useState([]);
   const [currentCourses, setCurrentCourses] = useState([]);
   const [userCourseData, setUserCourseData] = useState(null);
@@ -74,9 +77,26 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   async function handleRemove() {
     setLoading(true);
     const checkUpdate = await updateCourse(userCourseData, currentUserId, 'self');
-    // console.log(checkUpdate);
+    if (!checkUpdate) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
+    // console.log('clicjk');
     await loadAssignedCourseData();
     setToastMsg({ type: 'success', message: 'Course Removed Succesfully' });
+
+    const notificationBody = getNotificationMsg('courseUnassign', {
+      courseName: userCourseData?.name
+    });
+
+    await sendNotification(
+      {
+        title: 'Course Unassigned',
+        body: notificationBody,
+        user_id: [currentUserId]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    // console.log(userCourseData,'sd')
+    setDataCourse((prevValue) => [...prevValue, { ...userCourseData, added_by: 'self' }]);
+
     setLoading(false);
     return setShowConfirmBox(false);
   }
@@ -89,16 +109,35 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     setIsPopUpDataPresent(false);
     const { id } = getUserData();
 
+    const notificationBody = getNotificationMsg('courseAssign', {
+      courseName: userCourseData?.name,
+      endDate: courseAssignData?.endDate
+    });
+
     const checkCourse = await updateCourse(userCourseData, currentUserId, 'admin', id);
     // console.log(checkCourse,'hi')
     if (checkCourse) {
+      
       const courseArray = dataCourse.filter((item) => item.id !== userCourseData?.id);
       setDataCourse([...courseArray]);
-      setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+      setCourseAssignData({
+        ...courseAssignData,
+        isCourseAssigned: true,
+        endDate: new Date(),
+        isMandatory: false
+      });
 
       setLoading(false);
       setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
+      await sendNotification(
+        {
+          title: 'Course Assigned',
+          body: notificationBody,
+          user_id: [currentUserId]
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
       return setIsAssignPopUpOpen(false);
     }
 
@@ -131,6 +170,14 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       isMandatory: false
     });
     await loadAssignedCourseData();
+    await sendNotification(
+      {
+        title: 'Course Assigned',
+        body: notificationBody,
+        user_id: [currentUserId]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
     setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
     setIsAssignPopUpOpen(false);
     return setLoading(false);
@@ -365,7 +412,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     const _userCourses = allAssignedCourses?.filter((course) => course?.name?.length);
     if (_userCourses?.length) {
       const adminAssignedCourses = _userCourses?.filter(
-        (course) => course?.addedby?.role.toLowerCase() !== 'self'
+        (course) => course?.added_by?.toLowerCase() !== 'self'
       );
 
       setCurrentCourses(_userCourses, setCourseLoading(false));
