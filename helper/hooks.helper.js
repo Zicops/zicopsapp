@@ -480,6 +480,7 @@ export default function useUserCourseData() {
       const pref = prefData[i];
       const subCatData = allSubCat?.find((s) => s?.Name === pref?.sub_category);
 
+      if(!_subCatGrp?.[subCatData?.CatId]?.cat) continue;
       prefArr.push({
         ...pref,
         subCatData,
