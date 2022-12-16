@@ -18,17 +18,19 @@ import {
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_LSP_MAP_BY_LSPID,
   GET_USER_PREFERENCES,
+  GET_USER_PREFERENCES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
+  InviteUserAtom,
   IsUpdatedAtom,
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -43,6 +45,7 @@ import {
   COMMON_LSPS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
+  USER_MAP_STATUS,
   USER_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
@@ -665,7 +668,9 @@ export function useUpdateUserAboutData() {
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
+  const [invitedUsers , setInvitedUsers] = useRecoilState(InviteUserAtom);
   const [isConfirmPopUpDisable, setIsConfirmPopUpDisable] = useState(false);
+  const [getPrefData,{loading,error,data}] = useLazyQuery(GET_USER_PREFERENCES_DETAILS,{client:userQueryClient})
 
   useEffect(() => {
     let isPhValid = false;
@@ -705,6 +710,13 @@ export function useUpdateUserAboutData() {
     // if (userData?.status?.toLowerCase() === 'disabled')
     //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
 
+
+    if(userData?.status?.toLowerCase() === USER_MAP_STATUS?.activate?.toLowerCase()){
+
+     const res = await getPrefData({variables:{user_id:userData?.id,user_lsp_id:userData?.user_lsp_id}})?.catch((err)=>console.log(err));
+     if(!res?.data?.getUserPreferenceForLsp) userData.status = " ";
+    }
+
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
@@ -712,15 +724,17 @@ export function useUpdateUserAboutData() {
       status: userData?.status
     };
 
-    // console.log(sendLspData, 'updateUserLearningSpaceDetails');
-
+    
     let isError = false;
     const res = await updateLsp({ variables: sendLspData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
     });
-    console.log(res);
+    // console.log(res);
+    if(sendLspData?.status === ""){
+     setInvitedUsers((prev) => [...prev,userData?.user_id]);
+    }
     return !isError;
   }
 

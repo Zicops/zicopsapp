@@ -10,7 +10,7 @@ import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen, isWordIncluded } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { AdminLearnerListAtom, DisabledUserAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { AdminLearnerListAtom, DisabledUserAtom, InviteUserAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -26,6 +26,8 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
   const userData = useRecoilValue(UserStateAtom);
   const [currentDisabledUser, setCurrentDisabledUser] = useState(null);
   const [currentSelectedUser, setCurrentSelectedUser] = useState(null);
+  const [invitedUsers , setInvitedUsers] = useRecoilState(InviteUserAtom);
+
 
   const {
     newUserAboutData,
@@ -179,13 +181,15 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       flex: 0.5,
       renderCell: (params) => {
         let status = '';
-        if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
-        const lspStatus = params?.row?.lsp_status?.toLowerCase();
+        // let lspStatus = '';
+        if (disabledUserList?.includes(params?.row?.id)) status = USER_MAP_STATUS?.disable;
+        if (invitedUsers?.includes(params?.row?.id)) status = 'invited';
+
+        let lspStatus = !status?.length ? params?.row?.lsp_status : status;
+
         return (
           <span style={{ textTransform: 'capitalize' }}>
-            {lspStatus === 'disabled' || lspStatus === 'disable' || status === 'disable'
-              ? 'Disabled'
-              : params?.row?.lsp_status || 'Invited'}
+            {lspStatus?.trim()?.length ? lspStatus : 'Invited'}
           </span>
         );
       }

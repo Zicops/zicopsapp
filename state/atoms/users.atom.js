@@ -180,3 +180,8 @@ export const AdminLearnerListAtom = atom({
   key:'adminLearnerList',
   default: {admins:[],learners:[]}
 })
+
+export const InviteUserAtom = atom({
+  key:'invited',
+  default:[]
+})
