@@ -19,7 +19,7 @@ import Accordian from '../../../components/UserProfile/Accordian';
 
 // import AssignedCourses from '../../AssignedCourses';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { COURSE_STATUS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import moment from 'moment';
 import AssignCourses from './AssignCourses';
@@ -88,7 +88,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
     await sendNotification(
       {
-        title: 'Course Unassigned',
+        title: NOTIFICATION_TITLES?.courseUnssigned,
         body: notificationBody,
         user_id: [currentUserId]
       },
@@ -132,7 +132,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       await loadAssignedCourseData();
       await sendNotification(
         {
-          title: 'Course Assigned',
+          title: NOTIFICATION_TITLES?.courseAssign,
           body: notificationBody,
           user_id: [currentUserId]
         },
@@ -172,7 +172,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     await loadAssignedCourseData();
     await sendNotification(
       {
-        title: 'Course Assigned',
+        title: NOTIFICATION_TITLES?.courseAssign,
         body: notificationBody,
         user_id: [currentUserId]
       },

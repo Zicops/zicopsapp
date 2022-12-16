@@ -103,3 +103,10 @@ export const COURSE_TOPIC_STATUS = {
 
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
+
+
+export const NOTIFICATION_TITLES = {
+  cohortAssign: 'Your Cohorts',
+  courseAssign: 'New Course Assigned',
+  courseUnssigned: 'Course Unassigned'
+}
