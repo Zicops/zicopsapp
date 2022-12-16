@@ -26,9 +26,21 @@ export const footerLinks = [
 ];
 
 export const socialImage = [
-  { path: '/images/Twitter.png' },
-  { path: '/images/FB.png' },
-  { path: '/images/Insta.png' },
-  { path: '/images/LinkedIn.png' }
+  { id:1,
+    path: '/images/Twitter.png',
+  socialLink:'https://twitter.com/zicopslearning' 
+  },
+  { id:2,
+    path: '/images/FB.png' ,
+  socialLink:'https://www.facebook.com/profile.php?id=100088569042439'
+  },
+  { id:3,
+    path: '/images/Insta.png' ,
+  socialLink:'https://www.instagram.com/zicops_learning/'
+  },
+  { id:4,
+    path: '/images/LinkedIn.png',
+  socialLink:'https://www.linkedin.com/company/zicops' 
+  }
 ];
   
