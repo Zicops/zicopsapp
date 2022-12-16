@@ -337,16 +337,17 @@ export default function useUserCourseData() {
         isCourseCompleted:
           topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
         isCourseStarted: topicsStarted > 0,
-        // remove this value or below value
-        completedPercentage: progressPercent,
-        // course completed percentage replace this with above value
-        topicsCompletedPercentage: userProgressArr?.length
+        completedPercentage: userProgressArr?.length
           ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
           : 0,
+        topicsStartedPercentage: progressPercent
+        // remove this value or below value
+        // completedPercentage: progressPercent,
+        // course completed percentage replace this with above value
         // topic started percentage (used for home page for now)
-        topicsStartedPercentage: userProgressArr?.length
-          ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
-          : 0
+        // userProgressArr?.length
+        //   ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+        //   : 0
       });
     }
 
