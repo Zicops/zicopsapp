@@ -94,8 +94,17 @@ export function getNotificationMsg(type = '', msgObj = {}) {
     },
     courseUnassign: function(msg){
       return `The ${msg.courseName} course has been unassigned by your admin from your learning space. However the course is now available in your personal learning space, so continue learning in your own capacity.`
+    },
+    cohortAssign: function (msg){
+      return ` 
+      You have been mapped to Cohort ${msg?.cohortName}. Check out the cohort and its members and courses to be completed.`
+    },
+    cohortUnassign: function (msg){
+      return `Note: You are no longer member of Cohort ${msg?.cohortName}. However streaming of learning to you, continues`
     }
   };
+
+  if(!notificationObj?.[type]) return false;
 
   return notificationObj?.[type](msgObj);
 }

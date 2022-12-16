@@ -106,7 +106,8 @@ export const PRODUCT_TOUR_PATHS = ['exams'];
 
 
 export const NOTIFICATION_TITLES = {
-  cohortAssign: 'Your Cohorts',
+  cohortAssign: 'New Cohort Mapped',
+  cohortUnassign: 'Cohort Unmapped',
   courseAssign: 'New Course Assigned',
   courseUnssigned: 'Course Unassigned'
 }

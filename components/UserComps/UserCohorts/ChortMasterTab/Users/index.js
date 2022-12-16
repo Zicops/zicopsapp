@@ -5,12 +5,15 @@ import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { getNotificationMsg } from '@/helper/common.helper';
+import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../userComps.module.scss';
 import addUserData from '../Logic/addUserData';
 import { getUsersForCohort } from '../Logic/cohortMaster.helper';
@@ -19,6 +22,8 @@ import useCohortUserData from '../Logic/useCohortUserData';
 import AddUsers from './AddUsers';
 
 const Users = ({ isEdit = false , isReadOnly = false }) => {
+  const fcmToken = useRecoilValue(FcmTokenAtom);
+  
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState([]);
   const [cohortUserData, setCohortUserData] = useState(null);
@@ -100,6 +105,16 @@ const Users = ({ isEdit = false , isReadOnly = false }) => {
     // console.log(a,'adds');
     if(!isRemoved) return setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
     setToastMsg({type:'success',message:"User removed succesfully!"})
+    const notificationBody = getNotificationMsg('cohortUnassign',{cohortName:cohortData?.cohort_name})
+    if(!notificationBody) setToastMsg({type:'danger',message:'Error while sending notification'});
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.cohortUnassign,
+        body: notificationBody,
+        user_id: [userData?.user_id]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
     setLoading(false)
     setRefetch(true);
     setShowConfirmBox(false);

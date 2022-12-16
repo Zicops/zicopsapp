@@ -122,7 +122,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
       console.log(err);
     });
     // if(res?.deleteCourseCohort) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
-    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId, selectedCourse?.id);
+    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId, selectedCourse?.id,selectedCourse?.name);
     if (!isRemoved)
       return setToastMsg({ type: 'danger', message: 'Error while removing course from user!' });
     setToastMsg({ type: 'success', message: 'Course removed from cohort!' });

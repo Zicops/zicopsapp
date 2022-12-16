@@ -5,19 +5,23 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import UserButton from '@/components/common/UserButton';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import useHandleCohortTab from '@/components/LearnerUserProfile/Logic/useHandleCohortTab';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { getNotificationMsg } from '@/helper/common.helper';
+import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../../userComps.module.scss';
 import addUserData from '../../Logic/addUserData';
 import useCohortUserData from '../../Logic/useCohortUserData';
 
 const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onUserAdd = () => {} }) => {
   // const { addUserToCohort } = addUserData();
+  const fcmToken = useRecoilValue(FcmTokenAtom);
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
   const selectedUsers = `${userId?.length}/${usersData?.length}`;
   const [userId, setUserId] = useState([]);
@@ -119,6 +123,17 @@ const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onU
 
     setToastMsg({ type: 'success', message: 'Added users successfully!' });
     popUpSetState(false);
+    const notificationBody = getNotificationMsg('cohortAssign',{cohortName:cohortData?.cohort_name})
+    if(!notificationBody) setToastMsg({ type: 'danger', message: 'Error while sending notificaiton.' });
+
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.cohortAssign,
+        body: notificationBody,
+        user_id: data
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
     onUserAdd();
     setIsBtnDisabled(false);
   }
