@@ -16,7 +16,8 @@ const LabeledRadioCheckbox = ({
   changeHandler = function () {}
 }) => {
   return (
-    <label className={labeledRadioCheckboxWrapper}>
+    <div className={labeledRadioCheckboxWrapper}>
+    <label >  
       <input
         type={type}
         onChange={changeHandler}
@@ -30,7 +31,8 @@ const LabeledRadioCheckbox = ({
           isError ? 'error' : ''
         }`}></span>
       {label}
-    </label>
+      </label>
+      </div>
   );
 };
 
