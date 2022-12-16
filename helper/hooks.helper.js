@@ -444,10 +444,17 @@ export default function useUserCourseData() {
       userQueryClient
     );
 
+    const zicopsLsp = COMMON_LSPS.zicops;
+    const zicopsCatSubCatData =
+      zicopsLsp !== lspId ? await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, { lsp_ids: [zicopsLsp] }) : {allCatMain:[],allSubCatMain:[]};
+    const currentCatSubCatData = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, { lsp_ids: [lspId] });
+
+    const catAndSubCatRes = { allCatMain: [...zicopsCatSubCatData?.allCatMain , ...currentCatSubCatData?.allCatMain], allSubCatMain: [...zicopsCatSubCatData?.allSubCatMain, ...currentCatSubCatData?.allSubCatMain] };
+
+
     if (!resPref?.getUserPreferences?.length) return [];
-    const catAndSubCatRes = await loadAndCacheDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
-      lsp_ids: [lspId]
-    });
+    
+
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
       return { ...subCat, value: subCat?.Name, label: subCat?.Name };
@@ -474,7 +481,6 @@ export default function useUserCourseData() {
       return (item?.user_lsp_id === user_lsp_id && item?.is_active);
     });
 
-    // console.log(prefData);
     const prefArr = [];
     for (let i = 0; i < prefData?.length; i++) {
 
