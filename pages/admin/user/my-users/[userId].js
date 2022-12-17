@@ -1,8 +1,10 @@
 import { userClient } from '@/api/UserMutations';
 import {
+  GET_ORGANIZATIONS_DETAILS,
   GET_USER_DETAIL,
   GET_USER_LEARNINGSPACES,
   GET_USER_LEARNINGSPACES_DETAILS,
+  GET_USER_LSP_ROLES,
   GET_USER_ORGANIZATION_DETAIL,
   GET_USER_PREFERENCES,
   GET_USER_PREFERENCES_DETAILS,
@@ -67,6 +69,10 @@ export default function UserProfilePage() {
     
     setCurrentUserData((prev) => ({ ...prev, userLspId:  user_lsp_id })) ;
 
+    const userRole = await loadQueryDataAsync(GET_USER_LSP_ROLES,{user_id:currentUserId , user_lsp_ids:[user_lsp_id]},{},userQueryClient);
+
+    setCurrentUserData((prev) => ({ ...prev, role:  userRole?.getUserLspRoles?.[0]?.role })) ;
+
     const detailOrg = await loadQueryDataAsync(
       GET_USER_ORGANIZATION_DETAIL,
       { user_id: currentUserId, user_lsp_id: user_lsp_id },
@@ -75,8 +81,6 @@ export default function UserProfilePage() {
     );
     if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
     const userOrg = detailOrg?.getUserOrgDetails;
-
-    // console.log(userOrg,'userOrg')
 
     if(!userOrg) return ;
 
