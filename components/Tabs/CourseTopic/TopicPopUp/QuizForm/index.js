@@ -75,7 +75,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
       {isQuizFormVisible && (
         <>
           <div className={`${styles.popUpFormContainer}`}>
-            <div className={`center-element-with-flex`}>
+            {/* <div className={`center-element-with-flex`}>
               <LabeledRadioCheckbox
                 type="checkbox"
                 label="is Mandatory"
@@ -83,7 +83,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                 isChecked={newQuiz?.isMandatory}
                 changeHandler={handleQuizInput}
               />
-            </div>
+            </div> */}
 
             <div className={`${styles.quizInput}`}>
               <LabeledInput
