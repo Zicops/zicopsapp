@@ -116,13 +116,14 @@
 .labeledRadioCheckboxWrapper {
   position: relative;
   padding-left: 35px;
-  cursor: pointer;
   font-size: 14px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
+  label{
+    cursor: pointer;
+  }
   input {
     position: absolute;
     opacity: 0;
