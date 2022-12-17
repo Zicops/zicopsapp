@@ -23,6 +23,7 @@ import {
   filterTopicContent,
   sortArrByKeyInOrder
 } from '@/helper/data.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import {
   ChapterAtom,
   isLoadingAtom,
@@ -327,116 +328,116 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     updateTopicData(topicDataLoaded || []);
     updateTopicContent(topicContentDataLoaded || []);
 
-    if (!isPreview) {
-      // user notes
-      loadQueryDataAsync(
-        GET_USER_NOTES_BOOKMARKS,
-        {
-          user_id: userData?.id,
-          publish_time: Date.now(),
-          pageCursor: '',
-          pageSize: 9999999999999,
-          course_id: fullCourse?.id
-        },
-        {},
-        userClient
-      ).then((notesBookmarkDataRes) => {
-        setFloatingNotes(
-          notesBookmarkDataRes?.getUserNotes?.notes
-            ?.filter((notes) => notes?.is_active)
-            ?.map((noteObj) => getNoteCardObj(noteObj)) || []
-        );
-        setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
-      });
+    // if (!isPreview) {
+    //   // user notes
+    //   loadQueryDataAsync(
+    //     GET_USER_NOTES_BOOKMARKS,
+    //     {
+    //       user_id: userData?.id,
+    //       publish_time: Date.now(),
+    //       pageCursor: '',
+    //       pageSize: 9999999999999,
+    //       course_id: fullCourse?.id
+    //     },
+    //     {},
+    //     userClient
+    //   ).then((notesBookmarkDataRes) => {
+    //     setFloatingNotes(
+    //       notesBookmarkDataRes?.getUserNotes?.notes
+    //         ?.filter((notes) => notes?.is_active)
+    //         ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+    //     );
+    //     setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+    //   });
 
-      // user bookmarks
-      // const bookmarkDataRes = await loadQueryDataAsync(
-      //   GET_USER_BOOKMARKS,
-      //   {
-      //     user_id: userData?.id,
-      //     publish_time: Date.now(),
-      //     pageCursor: '',
-      //     pageSize: 9999999999999,
-      //     course_id: fullCourse?.id
-      //   },
-      //   {},
-      //   userClient
-      // );
-      // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
-      // setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+    //   // user bookmarks
+    //   // const bookmarkDataRes = await loadQueryDataAsync(
+    //   //   GET_USER_BOOKMARKS,
+    //   //   {
+    //   //     user_id: userData?.id,
+    //   //     publish_time: Date.now(),
+    //   //     pageCursor: '',
+    //   //     pageSize: 9999999999999,
+    //   //     course_id: fullCourse?.id
+    //   //   },
+    //   //   {},
+    //   //   userClient
+    //   // );
+    //   // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
+    //   // setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
 
-      // topic quiz
-      const allQuizProgress = [];
-      for (let i = 0; i < topicDataLoaded.length; i++) {
-        const topic = topicDataLoaded[i];
-        if (topic?.type !== 'Content') continue;
+    //   // topic quiz
+    //   const allQuizProgress = [];
+    //   for (let i = 0; i < topicDataLoaded.length; i++) {
+    //     const topic = topicDataLoaded[i];
+    //     if (topic?.type !== 'Content') continue;
 
-        const quizProgessDataRes = await loadQueryDataAsync(
-          GET_USER_QUIZ_ATTEMPTS,
-          { user_id: userData?.id, topic_id: topic?.id },
-          {},
-          userClient
-        );
-        if (quizProgessDataRes?.getUserQuizAttempts?.length)
-          allQuizProgress.push(...quizProgessDataRes?.getUserQuizAttempts);
-      }
-      // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
-      // console.log(allQuizProgress);
+    //     const quizProgessDataRes = await loadQueryDataAsync(
+    //       GET_USER_QUIZ_ATTEMPTS,
+    //       { user_id: userData?.id, topic_id: topic?.id },
+    //       {},
+    //       userClient
+    //     );
+    //     if (quizProgessDataRes?.getUserQuizAttempts?.length)
+    //       allQuizProgress.push(...quizProgessDataRes?.getUserQuizAttempts);
+    //   }
+    //   // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
+    //   // console.log(allQuizProgress);
 
-      // Promise.allSettled(allQuizProgress).then((results) => {
-      //   setQuizProgressData(results);
-      // });
+    //   // Promise.allSettled(allQuizProgress).then((results) => {
+    //   //   setQuizProgressData(results);
+    //   // });
 
-      setQuizProgressData(allQuizProgress);
+    //   setQuizProgressData(allQuizProgress);
 
-      // // user course progress
-      // const data = { userCourseMapping: {}, userCourseProgress: [] };
-      // if (!userCourseData?.userCourseMapping?.user_course_id && userCourseData?.isCourseAssigned) {
-      //   const mapRes = await loadUserCourseMaps({
-      //     variables: { userId: userData?.id, courseId: fullCourse?.id },
-      //     fetchPolicy: 'no-cache'
-      //   }).catch((err) => {
-      //     if (err?.message?.includes('no user course found')) return;
-      //     if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
-      //   });
-      //   // console.log(mapRes);
-      //   if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
-      //     return setToastMsg({ type: 'danger', message: 'user course maps load error' });
-      //   data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
-      // }
+    //   // // user course progress
+    //   // const data = { userCourseMapping: {}, userCourseProgress: [] };
+    //   // if (!userCourseData?.userCourseMapping?.user_course_id && userCourseData?.isCourseAssigned) {
+    //   //   const mapRes = await loadUserCourseMaps({
+    //   //     variables: { userId: userData?.id, courseId: fullCourse?.id },
+    //   //     fetchPolicy: 'no-cache'
+    //   //   }).catch((err) => {
+    //   //     if (err?.message?.includes('no user course found')) return;
+    //   //     if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+    //   //   });
+    //   //   // console.log(mapRes);
+    //   //   if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
+    //   //     return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+    //   //   data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
+    //   // }
 
-      // //in order to not load course progress of self-unassigned course
+    //   // //in order to not load course progress of self-unassigned course
 
-      // const course_status = parseJson(data?.userCourseMapping);
+    //   // const course_status = parseJson(data?.userCourseMapping);
 
-      // let showCourseProgress = true;
+    //   // let showCourseProgress = true;
 
-      // if (course_status?.toLowerCase() === 'disabled') {
-      //   showCourseProgress = false;
-      // }
+    //   // if (course_status?.toLowerCase() === 'disabled') {
+    //   //   showCourseProgress = false;
+    //   // }
 
-      // if (data?.userCourseMapping?.user_course_id && showCourseProgress) {
-      //   const progressRes = await loadUserCourseProgress({
-      //     variables: {
-      //       userId: userData?.id,
-      //       userCourseId: [data?.userCourseMapping?.user_course_id]
-      //     },
-      //     fetchPolicy: 'no-cache'
-      //   }).catch((err) => {
-      //     if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-      //   });
-      //   const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
-      //   if (courseProgress?.length) data.userCourseProgress = courseProgress;
-      // }
+    //   // if (data?.userCourseMapping?.user_course_id && showCourseProgress) {
+    //   //   const progressRes = await loadUserCourseProgress({
+    //   //     variables: {
+    //   //       userId: userData?.id,
+    //   //       userCourseId: [data?.userCourseMapping?.user_course_id]
+    //   //     },
+    //   //     fetchPolicy: 'no-cache'
+    //   //   }).catch((err) => {
+    //   //     if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+    //   //   });
+    //   //   const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+    //   //   if (courseProgress?.length) data.userCourseProgress = courseProgress;
+    //   // }
 
-      // console.log(userCourseData?.userCourseMapping);
-      // setUserCourseData({
-      //   ...userCourseData,
-      //   allModules: moduleDataLoaded,
-      //   activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
-      //   userCourseProgress: data?.userCourseProgress || []
-      // });
-    }
+    //   // console.log(userCourseData?.userCourseMapping);
+    //   // setUserCourseData({
+    //   //   ...userCourseData,
+    //   //   allModules: moduleDataLoaded,
+    //   //   activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
+    //   //   userCourseProgress: data?.userCourseProgress || []
+    //   // });
+    // }
     // loadModuleData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
     //   ({ data }) => {
     //     if (errorModuleData) alert('Module Load Error');
@@ -483,6 +484,64 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
   useEffect(async () => {
     if (isPreview) return;
+    if (!userData?.id) return;
+    if (!fullCourse?.id) return;
+    if (!topicData?.length) return;
+    if (!userCourseData?.isCourseAssigned) {
+      setBookmarkData([]);
+      setFloatingNotes([]);
+      setQuizProgressData([]);
+      return;
+    }
+    if (!userCourseData?.userCourseMapping?.user_course_id) return;
+
+    // user notes and bookmarks
+    loadQueryDataAsync(
+      GET_USER_NOTES_BOOKMARKS,
+      {
+        user_id: userData?.id,
+        publish_time: getUnixFromDate(),
+        pageCursor: '',
+        pageSize: 9999999999999,
+        course_id: fullCourse?.id
+      },
+      {},
+      userClient
+    ).then((notesBookmarkDataRes) => {
+      setFloatingNotes(
+        notesBookmarkDataRes?.getUserNotes?.notes
+          ?.filter((notes) => notes?.is_active)
+          ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+      );
+      setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+    });
+
+    // topic quiz
+    const allQuizProgress = [];
+    for (let i = 0; i < topicData.length; i++) {
+      const topic = topicData[i];
+      if (topic?.type !== 'Content') continue;
+
+      const quizProgessDataRes = await loadQueryDataAsync(
+        GET_USER_QUIZ_ATTEMPTS,
+        { user_id: userData?.id, topic_id: topic?.id },
+        {},
+        userClient
+      );
+      if (quizProgessDataRes?.getUserQuizAttempts?.length)
+        allQuizProgress.push(...quizProgessDataRes?.getUserQuizAttempts);
+    }
+    setQuizProgressData(allQuizProgress);
+  }, [
+    userData?.id,
+    fullCourse?.id,
+    topicData?.length,
+    userCourseData?.userCourseMapping?.user_course_id,
+    userCourseData?.isCourseAssigned
+  ]);
+
+  useEffect(async () => {
+    if (isPreview) return;
     if (!moduleData?.length) return;
     if (!userCourseData?.userCourseMapping?.user_course_id) return;
     if (!userCourseData?.isCourseAssigned) return;
@@ -511,7 +570,11 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       activeModule: { index: 0, id: moduleData[0]?.id },
       userCourseProgress: userCourseProgress || []
     });
-  }, [userCourseData?.userCourseMapping?.user_course_id, moduleData]);
+  }, [
+    userCourseData?.userCourseMapping?.user_course_id,
+    moduleData,
+    userCourseData?.isCourseAssigned
+  ]);
 
   useEffect(async () => {
     if (!moduleData?.length) return;

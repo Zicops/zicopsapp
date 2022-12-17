@@ -8,7 +8,12 @@ import { getUnixFromDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
-import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
+import {
+  getUserCourseDataObj,
+  getVideoObject,
+  UserCourseDataAtom,
+  VideoAtom
+} from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -29,7 +34,6 @@ export default function useHandleCourseHero(isPreview) {
 
   const { updateCourseMaster, isDataLoaded, setIsDataLoaded, fullCourse } =
     useContext(courseContext);
-
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
 
   const userDataGlobal = useRecoilValue(UserDataAtom);
@@ -293,7 +297,7 @@ export default function useHandleCourseHero(isPreview) {
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
-    setUserCourseData((prev) => ({ ...prev, userCourseMapping: res?.data?.updateUserCourse }));
+    setUserCourseData(getUserCourseDataObj());
     setToastMsg({ type: 'success', message: 'Course Removed Successfully!' });
     return;
   }
