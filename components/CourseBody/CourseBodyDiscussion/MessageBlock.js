@@ -4,7 +4,6 @@ import { discussionData } from './discussion.helper';
 import style from './discussion.module.scss';
 import { useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { ContactlessOutlined } from '@mui/icons-material';
 const MessageBlock = ({ isReply, isLeft, message }) => {
   const [showInput, setShowInput] = useState(false);
   const [hideReply, setHideReply] = useState(false);
