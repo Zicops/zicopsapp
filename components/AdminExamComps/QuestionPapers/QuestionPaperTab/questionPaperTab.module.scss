@@ -29,10 +29,15 @@
 
 .inputField {
   margin-bottom: 30px;
+  align-items: center;
+  .withTooltip button{
+    float: none;
+  }
 }
 
 .footer {
   display: flex;
+  justify-content: space-between;
   margin: auto;
   margin-right: 0%;
   width: 75%;
