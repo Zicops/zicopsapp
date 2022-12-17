@@ -6,7 +6,7 @@ import MessageBlock from './MessageBlock';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
-  const [messageArr, setMessageArr] = useState([]);
+  const [messageArr, setMessageArr] = useState(discussionData?.messages);
   const [sendMessage, setSendMessage] = useState(false);
   const userDetails = useRecoilValue(UserStateAtom);
 
@@ -16,7 +16,11 @@ const CourseBodyDiscussion = () => {
       ...messageArr,
       {
         id: Math.random() * 1000,
-        content: message
+        content: message,
+        time: Math.floor(Date.now() / 1000),
+        user: {
+          id: "YW51cGFtcm95NTc1QGdtYWlsLmNvbQ==",
+        }
       }
     ]);
     setMessage('');
@@ -29,23 +33,57 @@ const CourseBodyDiscussion = () => {
       sendMessageHandler();
     }
   };
+ 
+ function getReplies(data) {
+  const replies = {};
+  for (let i = 0; i < data?.length; i++) {
+    const message = data[i];
+    if (message.reply_id) {
+      const parent = data?.find(m => m.id === message.reply_id);
+      if (parent) {
+        if (!replies[parent.id]) {
+          replies[parent.id] = {
+            parent: parent,
+            replies: []
+          };
+        }
+        replies[parent.id].replies.push(message);
+      }
+    } else {
+      if (!replies[message.id]) {
+        replies[message.id] = {
+          parent: message,
+          replies: []
+        };
+      }
+    }
+  }
+  return Object.values(replies).map(r => ({
+    parent: r.parent,
+    replies: r.replies.sort((a, b) => a.time - b.time)
+  }));
+}
+
+const replies = getReplies(messageArr);
+console.log("replies" ,replies );
+
+
+
+  // let firstMessageData = discussionData?.messages?.sort((a, b) => a.time - b.time).filter((data) => !data.reply_id);
+  // console.log(firstMessageData);
+  // let replyMessageData = discussionData?.messages?.sort((a, b) => a.time-b.time ).filter((data) => data.reply_id);
+  // console.log(replyMessageData);
   return (
     <div className={`${style.discussion_container}`}>
       <div className={`${style.chat_text_container}`}>
-        {discussionData?.messages?.map((data) => {
-          let isRight = data?.user?.id === userDetails?.id;
-          let replyId = data?.reply_id;
-          let messageData = discussionData?.messages?.filter((d) => d.reply_id);
-          let replyData = discussionData?.messages?.filter((d) => d.id === replyId);
-          console.log(messageData);
+        {replies?.map((data) => {
+          let isRight = data?.parent?.user?.id === userDetails?.id;
           return (
             <>
-              <MessageBlock message={data} isLeft={!isRight} />
-              {replyData.length ? (
-                <MessageBlock message={replyData[0]} isLeft={!isRight} isReply={true} />
-              ) : (
-                ''
-              )}
+              <MessageBlock message={data?.parent} isLeft={!isRight} />
+              {data?.replies && data?.replies?.map((reply) => (
+                <MessageBlock message={reply} isLeft={!isRight} isReply={true} />
+              ))}
             </>
           );
         })}

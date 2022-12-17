@@ -65,12 +65,14 @@ position: relative;
 .right_text {
     background-color: $secondary;
 }
-.message{
+.message , .left_message{
+    padding-top: 3px;
     display: flex;
     justify-content: flex-end;
+    font-family: "Lucida Console", "Courier New", monospace;
+    line-height: 20px;
 }
 .left_message{
-    display: flex;
     justify-content: flex-start;
 }
 .chat_text_container{
