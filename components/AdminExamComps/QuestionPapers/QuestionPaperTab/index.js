@@ -105,8 +105,6 @@ export default function QuestionPaperTab() {
       const section = sections[i];
       if (!section.id) continue;
 
-      console.log(section.id);
-
       sectionData.push({
         id: section.id,
         qpId: section.QpId,
@@ -125,7 +123,7 @@ export default function QuestionPaperTab() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'QB Section Mapping load error' });
       });
-      if (isError) return setToastMsg({ type: 'danger', message: 'QB Section Map load error 11' });
+      if (isError) return setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
 
       mappedQb = [
         ...mappedQb,
@@ -147,7 +145,6 @@ export default function QuestionPaperTab() {
 
     // reloading qb section map after add or edit
     async function refetchQBSectionMapping(sectionId) {
-      console.log('sectin 1', sectionId);
       if (!sectionId) return;
       // refetch question bank section mapping
       let isError = false;
@@ -162,7 +159,7 @@ export default function QuestionPaperTab() {
         setToastMsg({ type: 'danger', message: 'QB Section Map load error' });
         return null;
       }
-      console.log('mappingRes', mappingRes);
+      // console.log('mappingRes', mappingRes);
       let mappedQb = [...questionPaperTabData.mappedQb].filter(
         (qbMappings) => qbMappings.sectionId !== sectionId
       );
