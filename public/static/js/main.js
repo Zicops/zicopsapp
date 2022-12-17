@@ -47,7 +47,7 @@ snapSections.forEach((section) => {
 // }
 window.onscroll = function () {
   if (screen.width < 400) return;
-  
+
   if (document.body.scrollTop > 1 || document.documentElement.scrollTop > 1) {
     document.getElementById('navbar').style.height = '60px';
     const OFFSET_PIXEL = 25;
@@ -98,15 +98,15 @@ $(document).ready(function () {
     $(this).find('.arrow').hide();
     $(this).find('.arrow-hover').show();
     $(this).addClass('hover-on-hero-image');
-  })    
+  });
   $('.hero .learner, .hero .admin').on('mouseleave', function () {
     $(this).find('.transparent-btn').css('background-color', '#101012E6');
     $(this).find('.transparent-btn span').css('color', '#EAEAEA');
     $(this).find('.arrow').show();
     $(this).find('.arrow-hover').hide();
     $(this).removeClass('hover-on-hero-image');
-  });   
-  
+  });
+
   $('.mouse-cursor-gradient-tracking-btn')
     .not('.goto-features')
     .on('click', function () {
@@ -121,7 +121,7 @@ $(document).ready(function () {
       });
       return false;
     });
-  
+
   $('.hamburger-menu-btn').on('click', function (e) {
     e.stopPropagation();
     $('.navbar-links').toggleClass('active');
@@ -129,16 +129,14 @@ $(document).ready(function () {
   $('body').on('click', function () {
     $('.navbar-links').removeClass('active');
   });
-})
+});
 
-
-
-  // window.onload = function () {
-  //   let animations = document.querySelectorAll(".animation-wrapper");
-  //   for (let i = 0; i < animations.length; ++i) {
-  //     animations[i].classList.add("animate");
-  //   }
-  // };
+// window.onload = function () {
+//   let animations = document.querySelectorAll(".animation-wrapper");
+//   for (let i = 0; i < animations.length; ++i) {
+//     animations[i].classList.add("animate");
+//   }
+// };
 let animations = document.querySelectorAll('.animation-wrapper');
 
 let animationsObserver = new IntersectionObserver(
@@ -146,7 +144,7 @@ let animationsObserver = new IntersectionObserver(
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('animate');
-      } 
+      }
     });
   },
   {
