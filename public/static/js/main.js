@@ -47,7 +47,7 @@ snapSections.forEach((section) => {
 // }
 window.onscroll = function () {
   if (screen.width < 400) return;
-  
+
   if (document.body.scrollTop > 1 || document.documentElement.scrollTop > 1) {
     document.getElementById('navbar').style.height = '60px';
     const OFFSET_PIXEL = 25;
@@ -98,15 +98,15 @@ $(document).ready(function () {
     $(this).find('.arrow').hide();
     $(this).find('.arrow-hover').show();
     $(this).addClass('hover-on-hero-image');
-  })    
+  });
   $('.hero .learner, .hero .admin').on('mouseleave', function () {
     $(this).find('.transparent-btn').css('background-color', '#101012E6');
     $(this).find('.transparent-btn span').css('color', '#EAEAEA');
     $(this).find('.arrow').show();
     $(this).find('.arrow-hover').hide();
     $(this).removeClass('hover-on-hero-image');
-  });   
-  
+  });
+
   $('.mouse-cursor-gradient-tracking-btn')
     .not('.goto-features')
     .on('click', function () {
@@ -121,7 +121,7 @@ $(document).ready(function () {
       });
       return false;
     });
-  
+
   $('.hamburger-menu-btn').on('click', function (e) {
     e.stopPropagation();
     $('.navbar-links').toggleClass('active');
@@ -129,4 +129,88 @@ $(document).ready(function () {
   $('body').on('click', function () {
     $('.navbar-links').removeClass('active');
   });
-})
+
+  $('#goto-learning-lxp').click(function () {
+    $(document).scrollTop($('#learning-lxp').offset().top - 90);
+  });
+  $('#goto-admin-lxp').click(function () {
+    $(document).scrollTop($('#admin-lxp').offset().top - 90);
+  });
+
+  $('#contact-form').submit(function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var actionUrl = '/api/sendEmail';
+
+    let name = $('#name').val();
+    let org = $('#org').val();
+    let email = $('#email').val();
+    let contact = $('#contact').val();
+
+    if (name === '' || org === '' || email === '' || contact === '') {
+      return showResponse('Please fill all fields before submitting.', 'error')
+    }
+
+    function showResponse(text, status) {
+      let color = '#dedede';
+      if (status === 'error') color = '#F53315'
+      $('#form-response').html(
+        `<small style="color: ${color}">${text}</small>`
+      );
+      setTimeout(() => {
+        $('#form-response').empty();
+      }, 5000);
+    }
+
+    let req = {
+      recipient: 'enquiries@zicops.com',
+      subject: 'Zicops Contact Form',
+      message: `Hello,\n\rSomeone just contacted zicops, here's their details:\n\rName: ${name}\n\rOrganization: ${org}\n\rEmail: ${email}\n\rContact: ${contact}`
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: actionUrl,
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify(req),
+      success: function (data) {
+        console.log('success', data)
+        showResponse('Thank you for contacting Zicops. We will get back to you soon.');
+      },
+      error: function (err) {
+        console.log('error', err);
+        if (err.responseText == 'Email Send Successfully') {
+          showResponse('Thank you for contacting Zicops. We will get back to you soon.');
+        } else {
+          showResponse('Form could not be submitted at the moment, please try again later.', 'error');
+        }
+      }
+    });
+  });
+});
+
+// window.onload = function () {
+//   let animations = document.querySelectorAll(".animation-wrapper");
+//   for (let i = 0; i < animations.length; ++i) {
+//     animations[i].classList.add("animate");
+//   }
+// };
+let animations = document.querySelectorAll('.animation-wrapper');
+
+let animationsObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate');
+      }
+    });
+  },
+  {
+    threshold: 0.5
+  }
+);
+
+animations.forEach((animation) => {
+  animationsObserver.observe(animation);
+});

@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import styles from './learningSpaces.module.scss';
 import { useRecoilState } from 'recoil';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { GET_USER_LSP_ROLES, userQueryClient } from '@/api/UserQueries';
 const LspCard = ({
   image,
   website,
@@ -15,13 +17,26 @@ const LspCard = ({
   path,
   isDisabled = false,
   userLspId,
-  userLspRole
+  userId
 }) => {
   const router = useRouter();
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
-  const onHandleLsp = () => {
+  const onHandleLsp = async () => {
     console.log(logo);
     if (isDisabled) return;
+
+    if (!userLspId && !userId) return;
+    const lspRoleArr = await loadQueryDataAsync(
+      GET_USER_LSP_ROLES,
+      { user_id: userId, user_lsp_ids: [userLspId] },
+      {},
+      userQueryClient
+    );
+
+    const userLspRole = lspRoleArr?.getUserLspRoles.reduce(function (prev, current) {
+      return prev.updated_at > current.updated_at ? prev.role : current.role;
+    }, 'learner');
+
     sessionStorage.setItem('lsp_id', lspId);
     setUserOrgData((prevValue) => ({ ...prevValue, lsp_id: lspId, logo_url: logo }));
     sessionStorage.setItem('lsp_name', lspName);
