@@ -66,7 +66,7 @@ zicopsapp (root directory)
 
 ## Module classes
 
-Module Classname should be add like this
+Module Classname should be add like this 
 `` classname={`${styles.ComponentClass} globalClassName`} ``
 
 classname should be in camelCase
