@@ -64,7 +64,8 @@ export const LEARNING_SPACE_ID = '93f3693c-d111-51aa-86ca-b883c6dfe647';
 export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS',
   phoneError: 'PHONE_NUMBER_EXISTS',
-  nothingToUpdate: 'nothing to update'
+  nothingToUpdate: 'nothing to update',
+  shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT'
 };
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
