@@ -163,7 +163,7 @@ $(document).ready(function () {
     }
 
     let req = {
-      recipient: 'jtas.sarkar@gmail.com',
+      recipient: 'enquiries@zicops.com',
       subject: 'Zicops Contact Form',
       message: `Hello,\n\rSomeone just contacted zicops, here's their details:\n\rName: ${name}\n\rOrganization: ${org}\n\rEmail: ${email}\n\rContact: ${contact}`
     };
