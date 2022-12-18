@@ -251,14 +251,15 @@ export function useHandleCohortMaster() {
         isError = !!err;
       });
 
-      // console.log(res);
       if (isError)
         return setToastMsg({ type: 'danger', message: 'Error occured while updating cohort!' });
 
       setIsSubmitDisable(false);
 
+      setCohortData((prevValue) => ({...prevValue , image_url: res?.data?.updateCohortMain?.imageUrl}))
       return setToastMsg({ type: 'success', message: 'Updated cohort successfully!' });;
     }
+
 
     // console.log(sendCohortData, 'add cohortmaster');
     if (!cohortMasterData?.id) {
