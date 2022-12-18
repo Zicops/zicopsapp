@@ -741,7 +741,6 @@ export function useUpdateUserAboutData() {
   async function updateUserRole(userData = null) {
     const userRoleData = userData ? userData?.roleData : newUserAboutData;
 
-    console.log(userRoleData, 'rianf');
     if (!userData?.roleData?.user_role_id) return false;
 
     // console.log(userData?.roleData, 'sifhishfi');

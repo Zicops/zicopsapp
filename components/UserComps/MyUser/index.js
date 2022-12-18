@@ -360,56 +360,27 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
               // first check if it is in the learner or admin
               // if updated to is admin check learner
               if (currentSelectedUser?.updateTo?.toLowerCase() === USER_LSP_ROLE?.admin) {
-                let foundAt = -1;
-                //checking if user is in learner atom or not, if he is in this then remove him from this and add them to admin
-                const _updatedLearners = adminLearnerList?.learners?.filter((userId, index) => {
-                  if (userId === isRoleUpdate?.user_id) {
-                    foundAt = index;
-                    return true;
-                  }
-                  return false;
-                });
-                if (foundAt >= 0) {
-                  const learners = structuredClone(adminLearnerList?.learners);
-                  // learners?.splice(foundAt, 1);
-                  // console.log('1', learners);
+           
+                const _updatedList = adminLearnerList?.learners?.filter((userId) => {
+                  return userId !== isRoleUpdate?.user_id
+                })
+
                   setAdminLearnerList((prevValue) => ({
                     admins: [...prevValue?.admins, isRoleUpdate?.user_id],
-                    learners: [...learners]
-                  }));
-                } else {
-                  // console.log('2');
-                  setAdminLearnerList((prevValue) => ({
-                    ...prevValue,
-                    admins: [...prevValue?.admins, isRoleUpdate?.user_id]
-                  }));
-                }
-              }
+                    learners: [..._updatedList]
+                  })); }
+      
               // same thing for learner also
               if (currentSelectedUser?.updateTo?.toLowerCase() === USER_LSP_ROLE?.learner) {
-                let foundAt = -1;
-                const adminUsers = adminLearnerList?.admins?.filter((userId, index) => {
-                  if (userId === isRoleUpdate?.user_id) {
-                    foundAt = index;
-                    return true;
-                  }
-                  return false;
-                });
-                if (foundAt >= 0) {
-                  const admins = structuredClone(adminLearnerList?.admins);
-                  admins?.splice(foundAt, 1);
-                  // console.log(admins, '3');
-                  setAdminLearnerList((prev) => ({
-                    admins: [...admins],
-                    learners: [...prev?.learners, isRoleUpdate?.user_id]
-                  }));
-                } else {
-                  // console.log('4');
-                  setAdminLearnerList((prev) => ({
-                    ...prev,
-                    learners: [...prev?.learners, isRoleUpdate?.user_id]
-                  }));
-                }
+        
+                const _updatedList = adminLearnerList?.admins?.filter((userId) => {
+                  return userId !== isRoleUpdate?.user_id
+                })
+                setAdminLearnerList((prevValue) => ({
+                  admins: [..._updatedList],
+                  learners: [...prevValue?.learners, isRoleUpdate?.user_id]
+                })); 
+
               }
               setToastMsg({
                 type: 'success',
