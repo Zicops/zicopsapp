@@ -1,5 +1,5 @@
 import { COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
-import { displayUnixDate, parseJson } from '@/helper/utils.helper';
+import { displayUnixDate, getMinCourseAssignDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
@@ -40,6 +40,7 @@ export default function CourseHero({ isPreview = false }) {
   const [isUnAssignPopUpOpen, setIsUnAssignPopUpOpen] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const minDate = getMinCourseAssignDate();
 
   const router = useRouter();
   const { fullCourse } = useContext(courseContext);
@@ -248,7 +249,7 @@ export default function CourseHero({ isPreview = false }) {
           <section>
             <p htmlFor="endDate">Expected Completion date:</p>
             <InputDatePicker
-              minDate={new Date()}
+              minDate={minDate}
               selectedDate={courseAssignData?.endDate}
               changeHandler={(date) => {
                 setIsPopUpDataPresent(true);

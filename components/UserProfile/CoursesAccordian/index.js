@@ -9,7 +9,7 @@ import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper'
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
 import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
+import { getMinCourseAssignDate, getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -30,8 +30,10 @@ import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { getNotificationMsg } from '@/helper/common.helper';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
+
+  const minDate = getMinCourseAssignDate() ;
   const [courseAssignData, setCourseAssignData] = useState({
-    endDate: new Date(),
+    endDate: minDate,
     isMandatory: false,
     isCourseAssigned: false
   });
@@ -123,7 +125,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       setCourseAssignData({
         ...courseAssignData,
         isCourseAssigned: true,
-        endDate: new Date(),
+        endDate: minDate,
         isMandatory: false
       });
 
@@ -166,7 +168,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     setCourseAssignData({
       ...courseAssignData,
       isCourseAssigned: true,
-      endDate: new Date(),
+      endDate: minDate,
       isMandatory: false
     });
     await loadAssignedCourseData();
@@ -518,7 +520,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
             <section>
               <p htmlFor="endDate">Expected Completion date:</p>
               <InputDatePicker
-                minDate={new Date()}
+                minDate={minDate}
                 selectedDate={courseAssignData?.endDate}
                 changeHandler={(date) => {
                   setIsPopUpDataPresent(true);
