@@ -12,8 +12,8 @@ const ClassRoomBanner = ({ data }) => {
         <img src={`${data.bgImage}`} alt="" />
       </div>
       <div className={`${styles.classroomText}`}>
-        <div className={`${styles.classroomLogo}`}>
-          <img src={`${data.logo}`} alt="" />
+        <div className={`${styles.level}`}>
+         <span>Pearson presents</span>
         </div>
         <div className={`${styles.classroomTitle}`}>
        {data.title}</div>
