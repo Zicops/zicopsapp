@@ -20,7 +20,7 @@ import CohortAssignedCourses from './CohortAssignedCourses';
 
 const CohortMapping = ({ isReadOnly = false }) => {
   const [courseAssignData, setCourseAssignData] = useState({
-    expectedCompletionDays: null,
+    expectedCompletionDays: 1,
     isMandatory: false,
     isCourseAssigned: false
   });
@@ -290,7 +290,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
             }
           />
           <section>
-            <p htmlFor="endDate">Expected Duration of Completion:</p>
+            <p htmlFor="endDate">Expected Duration of Completion in days:</p>
             <LabeledInput
               inputOptions={{
                 inputName: 'expectedCompletionDays',
