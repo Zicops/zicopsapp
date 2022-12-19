@@ -129,6 +129,65 @@ $(document).ready(function () {
   $('body').on('click', function () {
     $('.navbar-links').removeClass('active');
   });
+
+  $('#goto-learning-lxp').click(function () {
+    $(document).scrollTop($('#learning-lxp').offset().top - 90);
+  });
+  $('#goto-admin-lxp').click(function () {
+    $(document).scrollTop($('#admin-lxp').offset().top - 90);
+  });
+
+  $('#contact-form').submit(function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var actionUrl = '/api/sendEmail';
+
+    let name = $('#name').val();
+    let org = $('#org').val();
+    let email = $('#email').val();
+    let contact = $('#contact').val();
+
+    if (name === '' || org === '' || email === '' || contact === '') {
+      return showResponse('Please fill all fields before submitting.', 'error')
+    }
+
+    function showResponse(text, status) {
+      let color = '#dedede';
+      if (status === 'error') color = '#F53315'
+      $('#form-response').html(
+        `<small style="color: ${color}">${text}</small>`
+      );
+      setTimeout(() => {
+        $('#form-response').empty();
+      }, 5000);
+    }
+
+    let req = {
+      recipient: 'enquiries@zicops.com',
+      subject: 'Zicops Contact Form',
+      message: `Hello,\n\rSomeone just contacted zicops, here's their details:\n\rName: ${name}\n\rOrganization: ${org}\n\rEmail: ${email}\n\rContact: ${contact}`
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: actionUrl,
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify(req),
+      success: function (data) {
+        console.log('success', data)
+        showResponse('Thank you for contacting Zicops. We will get back to you soon.');
+      },
+      error: function (err) {
+        console.log('error', err);
+        if (err.responseText == 'Email Send Successfully') {
+          showResponse('Thank you for contacting Zicops. We will get back to you soon.');
+        } else {
+          showResponse('Form could not be submitted at the moment, please try again later.', 'error');
+        }
+      }
+    });
+  });
 });
 
 // window.onload = function () {
