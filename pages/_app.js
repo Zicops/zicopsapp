@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Zicops - Comprehensive e-learning OTT platform.</title>
+        <title>Zicops - Comprehensive e-learning platform.</title>
         <meta
           name="description"
           content="What is Zicops? Zicops is an e-learning streaming platform that 

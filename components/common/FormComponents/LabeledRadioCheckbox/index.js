@@ -16,7 +16,7 @@ const LabeledRadioCheckbox = ({
   changeHandler = function () {}
 }) => {
   return (
-    <div className={labeledRadioCheckboxWrapper}>
+    <span className={labeledRadioCheckboxWrapper}>
     <label >  
       <input
         type={type}
@@ -32,7 +32,7 @@ const LabeledRadioCheckbox = ({
         }`}></span>
       {label}
       </label>
-      </div>
+      </span>
   );
 };
 
