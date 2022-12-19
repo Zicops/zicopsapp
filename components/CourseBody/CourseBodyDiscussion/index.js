@@ -1,21 +1,20 @@
 import { useState } from 'react';
 import style from './discussion.module.scss';
-import { useRecoilValue } from 'recoil';
-import { discussionData } from './discussion.helper';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import MessageBlock from './MessageBlock';
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { DiscussionAtom } from '@/state/atoms/discussion.atoms';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
-  const [messageArr, setMessageArr] = useState(discussionData?.messages);
+  const [messageArr, setMessageArr] = useRecoilState(DiscussionAtom);
   const [sendMessage, setSendMessage] = useState(false);
   const userDetails = useRecoilValue(UserStateAtom);
-
   const sendMessageHandler = () => {
     setSendMessage(true);
     setMessageArr([
       ...messageArr,
       {
-        id: Math.random() * 1000,
+        id: Math.floor(Date.now() / 1000 + 1),
         content: message,
         time: Math.floor(Date.now() / 1000),
         user: {
