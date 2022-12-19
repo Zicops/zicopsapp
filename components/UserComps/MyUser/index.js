@@ -238,7 +238,6 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
 
         const buttonArr = [
           { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
-          // { handleClick: () => alert(`Edit ${params.id}`) },
           {
             text: _lspStatus === USER_MAP_STATUS.disable ? 'Enable' : 'Disable',
             handleClick: () => {
