@@ -162,7 +162,6 @@ const CoursesAccordian = ({ currentUserData = null }) => {
         isMandatory: false
       });
 
-      setLoading(false);
       setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
       await sendNotification(
@@ -172,10 +171,11 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           user_id: [currentUserId]
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-      );
-      await sendEmail(sendMailData, {
-        context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
-      });
+        );
+        await sendEmail(sendMailData, {
+          context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+        });
+        setLoading(false);
       return setIsAssignPopUpOpen(false);
     }
 
