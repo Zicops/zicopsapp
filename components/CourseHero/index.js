@@ -1,4 +1,7 @@
+import { COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
 import { displayUnixDate, parseJson } from '@/helper/utils.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { Skeleton } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -35,6 +38,8 @@ export default function CourseHero({ isPreview = false }) {
   const isLoading = useRecoilValue(isLoadingAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [isUnAssignPopUpOpen, setIsUnAssignPopUpOpen] = useState(false);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const router = useRouter();
   const { fullCourse } = useContext(courseContext);
@@ -101,7 +106,11 @@ export default function CourseHero({ isPreview = false }) {
             isCourseAssigned={courseAssignData?.isCourseAssigned}
             isCourseUnassign={isCourseUnassign}
             handleUnAssign={() => setIsUnAssignPopUpOpen(true)}
-            handleAssign={() => setIsAssignPopUpOpen(true)}
+            handleAssign={() => {
+              if(userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT){
+                return setToastMsg({ type: 'info', message: 'You have reached your self course assign limit!' });
+              }
+              setIsAssignPopUpOpen(true)}}
           />
 
           <div className={`${style.summary}`}>

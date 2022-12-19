@@ -115,3 +115,5 @@ export const NOTIFICATION_TITLES = {
   courseAssign: 'New Course Assigned',
   courseUnssigned: 'Course Unassigned'
 }
+
+export const COURSE_SELF_ASSIGN_LIMIT = 30;

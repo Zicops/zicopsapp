@@ -1,7 +1,7 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
+import { COURSE_SELF_ASSIGN_LIMIT, COURSE_STATUS, LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -184,7 +184,7 @@ export default function FavouriteDndCourses({ isLoading }) {
   };
 
   const handleDragEnd = (result) => {
-    if(userOrgData?.self_course_count > 29){
+    if(userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT){
       setIsDrag(false);
       return setToastMsg({ type: 'info', message: 'You have reached your self course assign limit!' });
       

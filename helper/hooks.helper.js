@@ -263,6 +263,8 @@ export default function useUserCourseData() {
 
     const userCourseId = [];
 
+    let totalSelfCourseCount = 0;
+
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
       const courseMap = assignedCoursesToUser[i];
@@ -326,6 +328,9 @@ export default function useUserCourseData() {
       }
 
       let added_by = parseJson(coursesMeta[i]?.added_by)?.role || coursesMeta[i]?.added_by;
+
+      if(added_by?.toLowerCase() === 'self') ++totalSelfCourseCount;
+      
 
       // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
       const courseDuraton = +courseRes?.getCourse?.duration / (60 * 60);
@@ -395,7 +400,8 @@ export default function useUserCourseData() {
     const userCourses = _userCourses.filter(
       (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
     );
-    console.log(userCourseArray, userCourses);
+
+    setUserOrgData((prevValue) => ({...prevValue , self_course_count: totalSelfCourseCount}))
     if (!userCourses?.length)
       return setToastMsg({ type: 'info', message: 'No courses in your learning folder' });
 
