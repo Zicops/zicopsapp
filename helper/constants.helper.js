@@ -117,3 +117,13 @@ export const NOTIFICATION_TITLES = {
 }
 
 export const COURSE_SELF_ASSIGN_LIMIT = 30;
+
+export const EMAIL_TEMPLATE_IDS = {
+  courseAssignMandatory:'d-bf691d7c93794afca36c326cd032ccbf',
+  courseAssignNotMandatory:'d-2f834ed850ba43aab5e55e622f0725c1',
+  courseUnassign:'d-1d43080c8386430ca24d5050130d5c69',
+  cohortAssign:'d-1c44165b36034b839d9b7e7a1035f19b',
+  cohortUnassign:'d-3801f540f2a948729db6019981ace2c2',
+  cohortManagerAssign:'d-c9382610d3bb46f28291bca9f5d97cd4',
+  cohortManagerUnassign:'d-8b97231c38a44b6facb05172f39cc714'
+}
