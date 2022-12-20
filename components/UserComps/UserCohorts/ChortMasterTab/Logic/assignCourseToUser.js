@@ -2,12 +2,13 @@ import { queryClient } from '@/api/Queries';
 import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
+  GET_USER_DETAIL,
   GET_USER_LEARNINGSPACES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
 import { getCurrentEpochTime, getNotificationMsg } from '@/helper/common.helper';
-import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -35,7 +36,7 @@ export default function assignCourseToUser() {
     if (!user_id) return setToastMsg({ type: 'danger', message: 'Need user_id to add course!' });
     const resLsp = await loadQueryDataAsync(
       GET_USER_LEARNINGSPACES_DETAILS,
-      { user_id: user_id, lsp_id: lspId  },
+      { user_id: user_id, lsp_id: lspId },
       {},
       userQueryClient
     );
@@ -88,7 +89,7 @@ export default function assignCourseToUser() {
     return res?.getUserCourseMapByCourseID;
   }
 
-  async function assignCourseToOldUser(cohort_id = null, course_data = null) {
+  async function assignCourseToOldUser(cohort_id = null, course_data = null, cohortData = null) {
     if (!cohort_id) return;
     if (!course_data?.id) return;
     const cohortUsers = await getCohortUser(cohort_id);
@@ -96,20 +97,20 @@ export default function assignCourseToUser() {
     if (!cohortUsers?.length)
       return setToastMsg({ type: 'info', message: 'No Cohort User found!' });
 
-      const userIds = cohortUsers?.map((user)=> user?.id);
-    let isError = false ;
+    const userIds = cohortUsers?.map((user) => user?.id);
+    let isError = false;
     for (let i = 0; i < cohortUsers?.length; i++) {
       const checkCourse = await isCourseAssigned(course_data?.id, cohortUsers[i]?.id);
       if (!checkCourse) {
         // console.log('assign course');
         const isAssigned = await assignCourseToUser(course_data, cohortUsers[i]?.id);
-        if (!isAssigned)
-          {
-            isError = true;
-            return setToastMsg({
+        if (!isAssigned) {
+          isError = true;
+          return setToastMsg({
             type: 'info',
             message: `Error while assiging course to user ${cohortUsers[i]?.id}`
-          });}
+          });
+        }
         continue;
       } else {
         // console.log('check if it is assigned to admin or not',checkCourse)
@@ -118,7 +119,7 @@ export default function assignCourseToUser() {
         const sendData = await getUserCourseData(course_data, cohortUsers[i]?.id);
         sendData.userCourseId = checkCourse[0]?.user_course_id;
         const res = await updateUserCouse({ variables: sendData }).catch((err) => {
-            isError = true ;
+          isError = true;
           if (err) return setToastMsg({ type: 'danger', message: 'User Course Maps update Error' });
         });
       }
@@ -134,10 +135,49 @@ export default function assignCourseToUser() {
     //     { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     //   );
     // }
+
+    if (!isError) {
+      const resUserDetails = await loadQueryDataAsync(
+        GET_USER_DETAIL,
+        { user_id: userIds },
+        {},
+        userQueryClient
+      );
+      const cohortUserEmail = [];
+      const cohortUserName = []
+      resUserDetails?.getUserDetails?.forEach((user) => {cohortUserEmail.push(user?.email)
+        const uName = user?.is_verified ? user?.first_name : '';
+        cohortUserName.push(uName);
+      });
+
+      const bodyData = {
+        lsp_name: sessionStorage?.getItem('lsp_name') ,
+        course_name: course_data?.name,
+        end_date: course_data?.endDate
+      };
+      const sendEmailBody = {
+        to: cohortUserEmail,
+        sender_name: sessionStorage?.getItem('lsp_name'),
+        user_name: cohortUserName,
+        body: JSON.stringify(bodyData),
+        template_id: course_data?.isMandatory
+          ? EMAIL_TEMPLATE_IDS?.courseAssignMandatory
+          : EMAIL_TEMPLATE_IDS?.courseAssignNotMandatory
+      };
+
+      await sendEmail(sendEmailBody, {
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+      });
+    }
     return !isError;
   }
 
-  async function removeUserCohortCourses(cohortId = null, courseId = null , courseName = '') {
+  async function removeUserCohortCourses(
+    cohortId = null,
+    courseId = null,
+    courseName = '',
+    cohortData = null
+  ) {
     if (!courseId) return false;
     if (!cohortId) return false;
     const { id } = getUserData();
@@ -179,6 +219,37 @@ export default function assignCourseToUser() {
     //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     // );
     // }
+
+    if (!isError) {
+      const resUserDetails = await loadQueryDataAsync(
+        GET_USER_DETAIL,
+        { user_id: userIds },
+        {},
+        userQueryClient
+      );
+      const cohortUserEmail = [];
+      const cohortUserName = []
+      resUserDetails?.getUserDetails?.forEach((user) => {cohortUserEmail.push(user?.email)
+        const uName = user?.is_verified ? user?.first_name : '';
+        cohortUserName.push(uName);
+      });
+
+      const bodyData = {
+        lsp_name: sessionStorage?.getItem('lsp_name') ,
+        course_name: courseName,
+      };
+      const sendEmailBody = {
+        to: cohortUserEmail,
+        sender_name: sessionStorage?.getItem('lsp_name'),
+        user_name: cohortUserName,
+        body: JSON.stringify(bodyData),
+        template_id:EMAIL_TEMPLATE_IDS?.courseUnassign
+      };
+
+      await sendEmail(sendEmailBody, {
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+      });
+    }
 
     return !isError;
   }
