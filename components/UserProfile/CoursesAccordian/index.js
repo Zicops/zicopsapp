@@ -88,14 +88,14 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       courseName: userCourseData?.name
     });
 
-    await sendNotification(
-      {
-        title: NOTIFICATION_TITLES?.courseUnssigned,
-        body: notificationBody,
-        user_id: [currentUserId]
-      },
-      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    );
+    // await sendNotification(
+    //   {
+    //     title: NOTIFICATION_TITLES?.courseUnssigned,
+    //     body: notificationBody,
+    //     user_id: [currentUserId]
+    //   },
+    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    // );
     // console.log(userCourseData,'sd')
 
     const userName = currentUserData?.is_verified ? `${currentUserData?.first_name}` : '';
@@ -164,14 +164,14 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
       setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
-      await sendNotification(
-        {
-          title: NOTIFICATION_TITLES?.courseAssign,
-          body: notificationBody,
-          user_id: [currentUserId]
-        },
-        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-        );
+      // await sendNotification(
+      //   {
+      //     title: NOTIFICATION_TITLES?.courseAssign,
+      //     body: notificationBody,
+      //     user_id: [currentUserId]
+      //   },
+      //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      //   );
         await sendEmail(sendMailData, {
           context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
         });
@@ -208,14 +208,14 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       isMandatory: false
     });
     await loadAssignedCourseData();
-    await sendNotification(
-      {
-        title: NOTIFICATION_TITLES?.courseAssign,
-        body: notificationBody,
-        user_id: [currentUserId]
-      },
-      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    );
+    // await sendNotification(
+    //   {
+    //     title: NOTIFICATION_TITLES?.courseAssign,
+    //     body: notificationBody,
+    //     user_id: [currentUserId]
+    //   },
+    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    // );
     await sendEmail(sendMailData, {
       context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
     });

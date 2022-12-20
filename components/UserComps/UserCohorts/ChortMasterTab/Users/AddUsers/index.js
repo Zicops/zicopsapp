@@ -152,14 +152,14 @@ const AddUsers = ({
       template_id: EMAIL_TEMPLATE_IDS?.cohortAssign
     };
 
-    await sendNotification(
-      {
-        title: NOTIFICATION_TITLES?.cohortAssign,
-        body: notificationBody,
-        user_id: data
-      },
-      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    );
+    // await sendNotification(
+    //   {
+    //     title: NOTIFICATION_TITLES?.cohortAssign,
+    //     body: notificationBody,
+    //     user_id: data
+    //   },
+    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    // );
 
     await sendEmail(sendEmailBody, {
       context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
