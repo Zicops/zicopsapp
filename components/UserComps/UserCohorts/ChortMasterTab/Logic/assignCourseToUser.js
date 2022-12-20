@@ -15,6 +15,7 @@ import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
 import { async } from '@firebase/util';
+import moment from 'moment';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import useCohortUserData from './useCohortUserData';
 
@@ -150,10 +151,12 @@ export default function assignCourseToUser() {
         cohortUserName.push(uName);
       });
 
+      const endDate = getUnixFromDate(course_data?.endDate)*1000; 
+
       const bodyData = {
         lsp_name: sessionStorage?.getItem('lsp_name') ,
         course_name: course_data?.name,
-        end_date: course_data?.endDate
+        end_date: moment(endDate).format('MMMM Do YYYY, h:mm:ss a')
       };
       const sendEmailBody = {
         to: cohortUserEmail,
