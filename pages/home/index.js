@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import HomePage from '../../components/HomePage';
+import OrgHomepage from '@/components/OrgHomepage';
 
 const Home = () => {
   const ref = useRef();
@@ -21,8 +22,10 @@ const Home = () => {
       </Head>
 
       {mounted ? createPortal(<VrBackground />, ref.current) : null} */}
-
+      {/*
       <HomePage />
+      */}
+      <OrgHomepage />
     </>
   );
 };
