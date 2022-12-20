@@ -1,3 +1,4 @@
+import { truncateToN } from '@/helper/common.helper';
 import { useHandleCohortUsers } from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { IsUpdatedAtom, SelectedCohortDataAtom } from '@/state/atoms/users.atom';
@@ -8,12 +9,13 @@ import styles from './cohortListCard.module.scss';
 
 export default function CohortListCard({
   data,
-  isActive=true,
+  isActive = true,
   isRoundImage = false,
   children,
   handleClick = () => {},
   type = 'cohort',
-  isManager = false
+  isManager = false,
+  isSchedule = false
 }) {
   const [selectedCohort, setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -38,11 +40,11 @@ export default function CohortListCard({
 
   async function handleRemoveUser(userData = null, cohortData = null) {
     // console.log(userData)
-    if(!userData)return setToastMsg({type:'danger',message:'User Data not found!'})
-    if(!cohortData)return setToastMsg({type:'danger',message:'Cohort Data not found!'})
-    setLoading(true) ;
-    let cohortSize = selectedCohort?.cohortUsers?.length ;
-    const isRemoved = await removeCohortUser(userData,cohortData,cohortSize);
+    if (!userData) return setToastMsg({ type: 'danger', message: 'User Data not found!' });
+    if (!cohortData) return setToastMsg({ type: 'danger', message: 'Cohort Data not found!' });
+    setLoading(true);
+    let cohortSize = selectedCohort?.cohortUsers?.length;
+    const isRemoved = await removeCohortUser(userData, cohortData, cohortSize);
     // console.log(a,'adds');
     if (!isRemoved)
       return setToastMsg({ type: 'danger', message: 'Error while removing user from cohort!' });
@@ -76,27 +78,51 @@ export default function CohortListCard({
   }
 
   return (
-   <> 
-      <div className={`${styles.listCard}`} onClick={handleClick} style={isActive ? {}: {cursor: "no-drop"}}>
+    <>
+      <div
+        className={`${styles.listCard}`}
+        onClick={handleClick}
+        style={isActive ? {} : { cursor: 'no-drop' }}>
         {/* course img */}
-        <div className={isRoundImage ? `${styles.imgRoundContainer}` : `${styles.imgContainer}`}>
+        <div className={`${isRoundImage ? styles.imgRoundContainer : styles.imgContainer} ${isSchedule ? styles.scheduleBar : ''}`}>
           <img src={imageUrl || '/images/profile-card.png'} alt="" />
         </div>
-        <div className={`${styles.cardBody}`}>
-          {/* <p className={`${styles.title}`}>{cohortData?.title || 'Start with Project Management'}</p> */}
-          <p className={`${styles.title}`}>{data?.name || data?.email}</p>
-
-          {/* <p className={`${styles.desc}`}>{cohortData?.description}</p> */}
-          <p className={`${styles.desc}`}>{data?.description || 'Zicops'}</p>
-          {type === 'user' && (
-            <p className={`${styles.designation}`}>
-              {data?.role_in_organization || 'Product Manager'}
+        <div className={`${styles.cardBody} `}>
+          <div className={`${isSchedule ? styles.scheduleCardBody : ''}`}>
+            {isSchedule ? <p>22 Aug, 2022</p> : ''}
+            <p className={`${styles.title}`}>
+              {data?.name || data?.email || 'Course Title or Cohort Title'}
             </p>
+            <p className={`${styles.desc}`}>
+              {data?.description ||
+                truncateToN(
+                  'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime fugiat, dolores debitis at iusto illo in nobis atque dolorem eum! illo in nobis atque dolorem eum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime fugiat, dolores debitis at iusto illo in nobis atque dolorem eum! illo in nobis atque dolorem eum!',
+                  200
+                )}
+            </p>
+            {!isSchedule && type === 'user' && (
+              <p className={`${styles.designation}`}>
+                {data?.role_in_organization || 'Product Manager'}
+              </p>
+            )}
+          </div>
+          {isSchedule ? (
+            <div className={styles.scheduleCardBodyRight}>
+              <div className={`${styles.schedulePills} ${styles.pill1}`}>Course</div>
+              <img className="" src="/images/svg/calendar-month.svg" alt="" />
+            </div>
+          ) : (
+            ''
           )}
         </div>
 
         <div className={`${styles.footer}`}>{children}</div>
-      {isManager&&(<div className={`${styles.clossBtn}`} onClick={()=>{setShowConfirmBox(true);}}>
+        {isManager && (
+          <div
+            className={`${styles.clossBtn}`}
+            onClick={() => {
+              setShowConfirmBox(true);
+            }}>
             <svg
               width="25"
               height="25"
@@ -113,16 +139,16 @@ export default function CohortListCard({
                 />
               </g>
             </svg>
-      </div>)}
-      
+          </div>
+        )}
       </div>
       {showConfirmBox && (
         <ConfirmPopUp
           title={'Are you sure you want to remove this user from cohort?'}
           btnObj={{
             leftIsDisable: loading,
-            rightIsDisable:loading,
-            handleClickLeft: () => handleRemoveUser(data,selectedCohort?.main),
+            rightIsDisable: loading,
+            handleClickLeft: () => handleRemoveUser(data, selectedCohort?.main),
             handleClickRight: () => setShowConfirmBox(false)
           }}
         />
