@@ -164,6 +164,45 @@ export const GET_LATEST_COURSES = gql`
   }
 `;
 
+export const GET_MY_COURSES = gql`
+  query LatestCourses(
+    $publish_time: Int
+    $pageCursor: String
+    $status: Status
+    $pageSize: Int
+    $filters: CoursesFilters
+  ) {
+    latestCourses(
+      publish_time: $publish_time
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+      status: $status
+      filters: $filters
+    ) {
+      courses {
+        id
+        name
+        lspId
+        owner
+        expertise_level
+        created_at
+        updated_at
+        created_by
+        updated_by
+        status
+        is_display
+        is_active
+        category
+        sub_category
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
 export const GET_COURSE = gql`
   query GetCourse($course_id: String) {
     getCourse(course_id: $course_id) {

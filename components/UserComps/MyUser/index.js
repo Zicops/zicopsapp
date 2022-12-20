@@ -84,8 +84,10 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         roleData = lspRoleArr[0];
       }
 
+
       user.role = roleData?.role;
       user.roleData = roleData;
+
     }
     //make sure no user without role map is shown
     const usersData = _usersData?.filter((user) => !!user?.roleData);
@@ -257,7 +259,8 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
 
               if (isDisabled) setCurrentDisabledUser(params?.row?.id);
               setDisableAlert(true);
-            }
+            },
+            isDisabled: userData?.id === params.id
           },
           {
             text: isLearner ? 'Make Admin' : 'Demote Admin',
@@ -268,7 +271,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
               });
               setIsMakeAdminAlert(true);
             },
-            hideBtn: userData?.id === params.id
+            isDisabled: userData?.id === params.id
           }
         ];
 

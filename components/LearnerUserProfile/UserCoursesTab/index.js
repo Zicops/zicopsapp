@@ -1,22 +1,16 @@
-import { GET_COURSE } from '@/api/Queries';
-import { userClient } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
-import useUserCourseData from '@/helper/hooks.helper';
 
 import CardContainer from './CardContainer';
 
 const UserCoursesTab = () => {
   let course = ['', '', ''];
 
-
-  const { getUserCourseData } = useUserCourseData()
+  const { getUserCourseData } = useUserCourseData();
   const [isBoxView, setIsBoxView] = useState(true);
   const [onGoingCourses, setOnGoingCourses] = useState([]);
   const [addedCourses, setAddedCourses] = useState([]);
@@ -28,10 +22,11 @@ const UserCoursesTab = () => {
   const [userData, setUserData] = useRecoilState(UserStateAtom);
 
   const courseSections = [
-    { displayType: 'Ongoing Courses', footerType: 'onGoing', data: onGoingCourses },
-    { displayType: 'Courses Added by Me', footerType: 'added', data: addedCourses },
-    { displayType: 'Assigned Course', footerType: 'assigned', data: assignedCourses },
+    { id: 1, displayType: 'Ongoing Courses', footerType: 'onGoing', data: onGoingCourses },
+    { id: 2, displayType: 'Courses Added by Me', footerType: 'added', data: addedCourses },
+    { id: 3, displayType: 'Assigned Course', footerType: 'assigned', data: assignedCourses },
     {
+      id: 4,
       displayType: 'Completed Course',
       footerType: 'completed',
       data: completedCourses,
@@ -47,13 +42,44 @@ const UserCoursesTab = () => {
     const userCourses = await getUserCourseData(99999);
     //  console.log(userCourses,'courses');
     if (userCourses?.length) {
-      // setCourseState(userCourses,'completedPercentage', 100, setOnGoingCourses, 'not');
-      const onGCourses = userCourses?.filter((course)=> course?.completedPercentage > 0 && course?.completedPercentage < 100)
-      setOnGoingCourses([...onGCourses],setLoading(false));
-      setCourseState(userCourses, 'completedPercentage', 100, setCompletedCourses);
-      setCourseState(userCourses, 'added_by', 'self', setAddedCourses);
-      setCourseState(userCourses, 'added_by', 'self', setAssignedCourses, 'not');
+      const onGCourses = userCourses?.filter(
+        (course) => course?.isCourseStarted && !course?.isCourseCompleted
+      );
+      setOnGoingCourses([...onGCourses], setLoading(false));
 
+      const courseIdArr = [];
+      const completedCourses = userCourses?.filter((course) => {
+        const isCompleted = course?.isCourseStarted && course?.isCourseCompleted;
+        if (isCompleted) courseIdArr.push(course?.id);
+
+        return isCompleted;
+      });
+
+      const adminAdded = [];
+      const selfAdded = userCourses
+        ?.filter((course) => {
+          if (courseIdArr?.includes(course?.id)) return null;
+
+          const isSelfAdded = course?.added_by === 'self';
+          if (!isSelfAdded) adminAdded.push(course);
+
+          return isSelfAdded;
+        })
+        ?.filter((c) => c);
+      setAddedCourses(selfAdded);
+      setAssignedCourses(adminAdded);
+      setCompletedCourses(completedCourses);
+      // setCourseState(userCourses,'completedPercentage', 100, setOnGoingCourses, 'not');
+      // setCourseState(userCourses, 'completedPercentage', 100, setCompletedCourses);
+      // setOnGoingCourses(
+      //   userCourses?.filter((course) => course?.isCourseStarted && !course?.isCourseCompleted),
+      //   setLoading(false)
+      // );
+      // setCompletedCourses(
+      //   userCourses?.filter((course) => course?.isCourseStarted && course?.isCourseCompleted)
+      // );
+      // setCourseState(userCourses, 'added_by', 'self', setAddedCourses);
+      // setCourseState(userCourses, 'added_by', 'self', setAssignedCourses, 'not');
     } else setLoading(false);
   }
 
@@ -72,6 +98,7 @@ const UserCoursesTab = () => {
         {courseSections.map((section) => {
           return (
             <CardContainer
+              key={section.id}
               type={section.displayType}
               footerType={section.footerType}
               courseData={section.data}

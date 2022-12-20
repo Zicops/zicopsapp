@@ -8,7 +8,12 @@ import { getMinCourseAssignDate, getUnixFromDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
-import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
+import {
+  getUserCourseDataObj,
+  getVideoObject,
+  UserCourseDataAtom,
+  VideoAtom
+} from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -31,7 +36,6 @@ export default function useHandleCourseHero(isPreview) {
 
   const { updateCourseMaster, isDataLoaded, setIsDataLoaded, fullCourse } =
     useContext(courseContext);
-
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
 
   const userDataGlobal = useRecoilValue(UserDataAtom);
@@ -39,8 +43,10 @@ export default function useHandleCourseHero(isPreview) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const userData = useRecoilValue(UserStateAtom);
-  const userOrgData = useRecoilValue(UsersOrganizationAtom); 
- 
+
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
+
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: minDate,
     isMandatory: false,
@@ -153,7 +159,7 @@ export default function useHandleCourseHero(isPreview) {
 
     userCourseData?.allModules?.some((mod, modIndex) => {
       mod?.topicData?.some((topic, topicIndex) => {
-        if (topic?.type !== 'Content') return false;
+        // if (topic?.type !== 'Content') return false;
         if (isTopicFound) return true;
 
         if (!fallBack) {
@@ -168,10 +174,11 @@ export default function useHandleCourseHero(isPreview) {
         const topicProgress = userCourseData?.userCourseProgress?.find(
           (obj) => obj?.topic_id === topic?.id
         );
-        // console.log(topic);
-        // console.log(topicProgress);
 
-        if (topicProgress?.status === 'not-started' && !firstNotStartedTopicData) {
+        if (
+          (!topicProgress || topicProgress?.status === 'not-started') &&
+          !firstNotStartedTopicData
+        ) {
           firstNotStartedTopicData = {
             activeModule: { index: modIndex, id: mod?.id },
             activeTopic: { index: topicIndex, id: topic?.id },
@@ -294,7 +301,7 @@ export default function useHandleCourseHero(isPreview) {
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
-    setUserCourseData((prev) => ({ ...prev, userCourseMapping: res?.data?.updateUserCourse }));
+    setUserCourseData(getUserCourseDataObj());
     setToastMsg({ type: 'success', message: 'Course Removed Successfully!' });
     return;
   }

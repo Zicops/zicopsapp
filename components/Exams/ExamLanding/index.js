@@ -67,6 +67,7 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
   const [counter, setCounter] = useState(null);
 
   const router = useRouter();
+  const isPreview = router?.asPath?.includes('preview');
 
   useEffect(() => {
     setUserCourseData({
@@ -192,30 +193,11 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       is_config_active: confData?.IsActive || false
     };
 
-    const userCourseProgressId = userCourseData?.userCourseProgress?.find(
-      (cp) => cp?.topic_id === topicExamData?.topicId
-    )?.user_cp_id;
-
-    const attemptRes = await loadQueryDataAsync(
-      GET_USER_EXAM_ATTEMPTS,
-      { user_id: userData?.id, exam_id: examId },
-      {},
-      userQueryClient
-    );
-    const examAttemptData =
-      attemptRes?.getUserExamAttempts?.filter(
-        (ea) =>
-          ea?.exam_id === examId &&
-          ea?.attempt_status === 'completed' &&
-          ea?.user_cp_id === userCourseProgressId
-      ) || [];
-
     const currentTopic = topicData
       ?.filter((t) => t?.type === 'Assessment')
       ?.sort((t1, t2) => {
         t1?.sequence - t2?.sequence;
       });
-
     const index = currentTopic?.findIndex((t) => t?.id === topicExamData?.topicId);
     const topicIndex = index >= 0 ? index + 1 : 0;
 
@@ -239,15 +221,36 @@ export default function ExamLanding({ testType = 'Exam', isDisplayedInCourse = f
       }
     };
 
-    setUserExamData({
-      userAttempts: examAttemptData,
-      cpId: userCourseProgressId,
-      isBtnActive: getIsExamAccessible(examAttemptData, _examData),
-      nextTopic: getNextTopicId()
-    });
+    if (!isPreview) {
+      const userCourseProgressId = userCourseData?.userCourseProgress?.find(
+        (cp) => cp?.topic_id === topicExamData?.topicId
+      )?.user_cp_id;
+
+      const attemptRes = await loadQueryDataAsync(
+        GET_USER_EXAM_ATTEMPTS,
+        { user_id: userData?.id, exam_id: examId },
+        {},
+        userQueryClient
+      );
+      const examAttemptData =
+        attemptRes?.getUserExamAttempts?.filter(
+          (ea) =>
+            ea?.exam_id === examId &&
+            ea?.attempt_status === 'completed' &&
+            ea?.user_cp_id === userCourseProgressId
+        ) || [];
+
+      setUserExamData({
+        userAttempts: examAttemptData,
+        cpId: userCourseProgressId,
+        isBtnActive: getIsExamAccessible(examAttemptData, _examData),
+        nextTopic: getNextTopicId()
+      });
+    }
+
     setLearnerExamData(_examData);
     // console.log(switchToTopic);
-  }, [topicExamData?.examId, topicExamData?.topicId]);
+  }, [topicExamData?.examId, topicExamData?.topicId, isPreview]);
 
   useEffect(() => {
     let timer = null;

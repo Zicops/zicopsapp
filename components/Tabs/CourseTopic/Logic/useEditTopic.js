@@ -293,6 +293,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
   // save to db and update context with refetch
   async function handleEditTopicSubmit() {
     console.log('Topic and Resources upload started');
+    setUploadStatus(true);
     setIsLoading(
       addContentLoading &&
         uploadVideoLoading &&
