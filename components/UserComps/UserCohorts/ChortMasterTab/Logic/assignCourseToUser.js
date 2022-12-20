@@ -5,18 +5,21 @@ import {
   GET_USER_LEARNINGSPACES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { getCurrentEpochTime } from '@/helper/common.helper';
+import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { getCurrentEpochTime, getNotificationMsg } from '@/helper/common.helper';
+import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
 import { async } from '@firebase/util';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import useCohortUserData from './useCohortUserData';
 
 export default function assignCourseToUser() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   const { getCohortUser } = useCohortUserData();
 
@@ -93,6 +96,7 @@ export default function assignCourseToUser() {
     if (!cohortUsers?.length)
       return setToastMsg({ type: 'info', message: 'No Cohort User found!' });
 
+      const userIds = cohortUsers?.map((user)=> user?.id);
     let isError = false ;
     for (let i = 0; i < cohortUsers?.length; i++) {
       const checkCourse = await isCourseAssigned(course_data?.id, cohortUsers[i]?.id);
@@ -100,10 +104,12 @@ export default function assignCourseToUser() {
         // console.log('assign course');
         const isAssigned = await assignCourseToUser(course_data, cohortUsers[i]?.id);
         if (!isAssigned)
-          return setToastMsg({
+          {
+            isError = true;
+            return setToastMsg({
             type: 'info',
             message: `Error while assiging course to user ${cohortUsers[i]?.id}`
-          });
+          });}
         continue;
       } else {
         // console.log('check if it is assigned to admin or not',checkCourse)
@@ -117,10 +123,21 @@ export default function assignCourseToUser() {
         });
       }
     }
+    // if(!isError){
+    //   const notificaitonBody = getNotificationMsg('courseAssign',{courseName:course_data?.name,endDate:course_data?.endDate})
+    //   await sendNotification(
+    //     {
+    //       title: NOTIFICATION_TITLES?.courseAssign,
+    //       body: notificaitonBody,
+    //       user_id: userIds
+    //     },
+    //     { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    //   );
+    // }
     return !isError;
   }
 
-  async function removeUserCohortCourses(cohortId = null, courseId = null) {
+  async function removeUserCohortCourses(cohortId = null, courseId = null , courseName = '') {
     if (!courseId) return false;
     if (!cohortId) return false;
     const { id } = getUserData();
@@ -128,6 +145,7 @@ export default function assignCourseToUser() {
     const cohortUsers = await getCohortUser(cohortId);
     if (!cohortUsers?.length)
       return setToastMsg({ type: 'info', message: 'No Cohort User found!' });
+    const userIds = cohortUsers?.map((user) => user?.id);
     for (let i = 0; i < cohortUsers?.length; i++) {
       const checkCourse = await isCourseAssigned(courseId, cohortUsers[i]?.id);
       const { role } = JSON.parse(checkCourse[0]?.added_by);
@@ -149,6 +167,18 @@ export default function assignCourseToUser() {
         if (err) return setToastMsg({ type: 'danger', message: 'User Course Maps Delete Error' });
       });
     }
+
+    // if(!isError){
+    //   const notificaitonBody = getNotificationMsg('courseUnassign',{courseName:courseName});
+    // await sendNotification(
+    //   {
+    //     title: NOTIFICATION_TITLES?.courseUnssigned,
+    //     body: notificaitonBody,
+    //     user_id: userIds
+    //   },
+    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    // );
+    // }
 
     return !isError;
   }

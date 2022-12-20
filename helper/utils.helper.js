@@ -269,3 +269,8 @@ export function getUnixTimeAt(hours = 7, minutes = 0, seconds = 0) {
 export function isWordIncluded(sentence = '', word = '') {
   return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
 }
+
+export function getMinCourseAssignDate(){
+  const date = (new Date()).setDate((new Date()).getDate() + 1)
+  return date;
+}
