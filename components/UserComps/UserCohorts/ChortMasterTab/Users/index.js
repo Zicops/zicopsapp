@@ -7,7 +7,7 @@ import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
-import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData } from '@/state/atoms/users.atom';
