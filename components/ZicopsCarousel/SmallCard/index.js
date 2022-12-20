@@ -44,7 +44,8 @@ export default function SmallCard({
     // console.log(courseData?.name?.length);
     courseNameClass = 'coursenamesmall';
   }
-  const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
+  const progress =
+    courseData?.topicsStartedPercentage != null ? courseData?.topicsStartedPercentage : 0;
   return (
     <>
       <div
