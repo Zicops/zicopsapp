@@ -85,6 +85,8 @@ export default function UserProfilePage() {
     if(!userOrg) return ;
 
     setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
+  
+
     
     if(!userDetails?.is_verified) return ;
 
@@ -109,7 +111,7 @@ export default function UserProfilePage() {
       sub_category: base[0]?.sub_category
     }));
 
-    // console.log(currentUserData);
+    
 
     // const detailOrg = await loadQueryDataAsync(
     //   GET_USER_ORGANIZATION_DETAIL,
