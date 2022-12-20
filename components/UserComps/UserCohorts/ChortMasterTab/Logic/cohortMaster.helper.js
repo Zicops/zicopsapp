@@ -56,7 +56,8 @@ export async function getCohortCourses(cohortId = null) {
   //   return setToastMsg({ type: 'danger', message: `${err}` });
   // });
   if (res?.error) return { error: 'Error while loading courses!' };
-  const courseData = res?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display);
+  // const courseData = res?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display);
+  const courseData = res?.latestCourses?.courses?.filter((c) => c?.is_active);
 
   console.log(courseData);
   if (!courseData) return { error: 'Error while loading courses!v' };

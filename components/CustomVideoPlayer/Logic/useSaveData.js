@@ -23,6 +23,7 @@ export default function useSaveData(videoElement, freezeState) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
+  const [showQuiz, setShowQuiz] = useState(null);
 
   const { fullCourse } = useContext(courseContext);
   const {
@@ -33,7 +34,6 @@ export default function useSaveData(videoElement, freezeState) {
   } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
-  const [showQuiz, setShowQuiz] = useState(null);
 
   const [freezeScreen, setFreezeScreen] = freezeState;
   const [showBox, setShowBox] = useState(null);

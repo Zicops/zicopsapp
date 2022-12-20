@@ -65,7 +65,7 @@ const ChangePasswordScreen = ({ setPage }) => {
           info={
             <Tooltip
               placement="right"
-              title="Password info goes here"
+              title="It is recommended to use strong passwords that are at least 8 characters long and a combination of uppercase and lowercase letters, numbers and symbols."
               arrow
               className={`${styles.password_info}`}>
               <InfoIcon fontSize={'small'} color={'primary'} />

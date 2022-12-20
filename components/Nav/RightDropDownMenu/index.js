@@ -75,6 +75,20 @@ export default function RightDropDownMenu() {
     {
       id: 4,
       class: 'dropdown-submenu-justifycontent-right',
+      name: 'Switch LSP',
+      onClick: () => {
+        sessionStorage.removeItem('lsp_id');
+        sessionStorage.removeItem('lsp_name');
+        sessionStorage.removeItem('user_lsp_id');
+        sessionStorage.removeItem('user_lsp_role');
+        sessionStorage.removeItem('ou_id');
+        sessionStorage.removeItem('org_id');
+        router.push('/learning-spaces');;
+      }
+    },
+    {
+      id: 4,
+      class: 'dropdown-submenu-justifycontent-right',
       name: 'Logout',
       onClick: () => {
         setUserDataGlobal(getUserGlobalDataObj());

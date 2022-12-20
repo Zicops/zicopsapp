@@ -37,12 +37,11 @@ function ZicopsCategoryList() {
   const _lspId = userOrg?.lsp_id;
 
   useEffect(() => {
-    if (!_lspId) return;
-
     loadCategories();
   }, [_lspId]);
 
   async function loadCategories() {
+    if (!_lspId) return;
     setIsLoading(true);
     const zicopsLsp = COMMON_LSPS.zicops;
 

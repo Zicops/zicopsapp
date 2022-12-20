@@ -60,9 +60,9 @@ export default function useHandleSearch() {
       const userCourseData = await getUserCourseData();
 
       const _allUserCourses = userCourseData?.filter((course) => {
-        const isOngoing = course?.completedPercentage > 0 && course?.completedPercentage < 100;
-        const isAssigned =
-          parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100;
+        const isOngoing = course?.isCourseStarted && !course?.isCourseCompleted;
+        const isAssigned = course?.isCourseStarted && course?.isCourseCompleted;
+
         return userCourseObj?.isOngoing ? isOngoing : isAssigned;
       });
 

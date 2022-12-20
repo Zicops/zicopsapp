@@ -86,8 +86,8 @@ export default function Self() {
       setOnGoingCourses(
         userCourseData?.filter(
           (course) =>
-            course?.completedPercentage > 0 &&
-            course?.completedPercentage < 100 &&
+            course?.isCourseStarted &&
+            !course?.isCourseCompleted &&
             course?.course_type === COURSE_TYPES[0]
         )
       );

@@ -583,8 +583,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     });
   }
 
-  async function playNextVideo(type = null) {
-    await syncVideoProgress(type);
+  async function playNextVideo(type = null, isScorm = false) {
+    if (!isScorm) await syncVideoProgress(type);
     if (!videoData.allModuleTopic) return;
 
     const { allModuleTopic, currentTopicIndex } = videoData;

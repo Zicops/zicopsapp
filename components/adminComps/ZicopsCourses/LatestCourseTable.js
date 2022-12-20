@@ -1,6 +1,6 @@
 // components\adminComps\ZicopsCourses\LatestCourseTable.js
 
-import { GET_LATEST_COURSES, queryClient } from '@/api/Queries';
+import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 export default function LatestCourseTable({ isEditable = false, zicopsLspId = null }) {
-  const [loadMyCourses, { loading }] = useLazyQuery(GET_LATEST_COURSES, {
+  const [loadMyCourses, { loading }] = useLazyQuery(GET_MY_COURSES, {
     client: queryClient
   });
 

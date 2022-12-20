@@ -65,10 +65,10 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
 
       let currentRole = null;
       const _userRole = res?.getUserLspRoles?.reduce(function (prev, current) {
-        currentRole = current
+        currentRole = current;
         return prev?.updated_at > current?.updated_at ? prev : current;
       }, currentRole);
-  
+
       user.role = _userRole?.role;
       user.roleData = _userRole;
     }
@@ -198,10 +198,10 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       headerName: 'Action',
       flex: 0.4,
       renderCell: (params) => {
-        let status = ""
+        let status = '';
         if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
-        let _lspStatus = params?.row?.lsp_status ;
-        if(status === 'disable'){
+        let _lspStatus = params?.row?.lsp_status;
+        if (status === 'disable') {
           _lspStatus = USER_MAP_STATUS.disable;
         }
 
@@ -241,7 +241,8 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
 
               if (isDisabled) setCurrentDisabledUser(params?.row?.id);
               setDisableAlert(true);
-            }
+            },
+            isDisabled: userData?.id === params.id
           },
           {
             text: isLearner ? 'Make Admin' : 'Demote Admin',
@@ -252,7 +253,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
               });
               setIsMakeAdminAlert(true);
             },
-            hideBtn: userData?.id === params.id
+            isDisabled: userData?.id === params.id
           }
         ];
 
