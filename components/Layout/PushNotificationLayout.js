@@ -80,7 +80,7 @@ export default function PushNotificationLayout({ children }) {
             message_id: event?.data?.fcmMessageId
           };
 
-          saveNotification(firstoreData, fcmToken);
+          // saveNotification(firstoreData, fcmToken);
         }
       });
     }

@@ -103,7 +103,6 @@ export default function useHandleAddUserDetails() {
         isPhValid &&
         userOrgData?.language.length > 0 &&
         userAboutData?.gender?.length > 0
-
     );
     setIsOrganizationSetupReady(
       //   userDataAbout?.id &&
@@ -421,7 +420,11 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       const message = parseJson(errorMsg.split('body:')[1]);
       if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.phoneError) {
-        setToastMsg({ type: 'danger', message: `Phone Number already exists!` });
+        setToastMsg({ type: 'info', message: `Phone Number already exists!` });
+        return !!errorMsg;
+      }
+      if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.shortNumber) {
+        setToastMsg({ type: 'info', message: `Invalid Phone Number. Too short.` });
         return !!errorMsg;
       }
       return setToastMsg({ type: 'danger', message: `Update User about Error!` });

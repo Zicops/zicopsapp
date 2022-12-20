@@ -12,8 +12,13 @@
 .profilePicContainer {
   width: 200px;
   height: 200px;
-  border-radius: 15px;
-  object-fit: contain;
+  
+  img{
+    height: inherit;
+    border-radius: 15px;
+    // width: inherit;
+    object-fit: cover;
+  }
 }
 
 .profileDetails {

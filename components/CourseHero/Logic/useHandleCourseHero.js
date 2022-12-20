@@ -4,7 +4,7 @@ import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQu
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_STATUS } from '@/helper/constants.helper';
-import { getUnixFromDate } from '@/helper/utils.helper';
+import { getMinCourseAssignDate, getUnixFromDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -23,6 +23,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 export default function useHandleCourseHero(isPreview) {
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
+
+  const minDate = getMinCourseAssignDate();
 
   const [loadUserCourseMaps, { error: errorCourseMapsLoad, loading: loadingCourseMaps }] =
     useLazyQuery(GET_USER_COURSE_MAPS_BY_COURSE_ID, {
@@ -44,7 +46,7 @@ export default function useHandleCourseHero(isPreview) {
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   const [courseAssignData, setCourseAssignData] = useState({
-    endDate: new Date(),
+    endDate: minDate,
     isMandatory: false,
     isCourseAssigned: false
   });
