@@ -532,6 +532,7 @@
 
 .rteContainer {
   margin: 20px auto;
+  position: relative;
   // min-height: 150px;
   // max-height: 250px;
   color: $white !important;
@@ -569,7 +570,6 @@
       // }
       // :global(.ql-container.ql-snow) {
       //   border-top: 0px;
-      // }
     }
 
     :global(.ql-snow) {
@@ -578,10 +578,13 @@
 
     :global(.ql-editor) {
       min-height: 100px !important;
+      max-height: 130px !important;
+      margin-bottom: 60px;
     }
   }
 
   // &.hasValue {
+      // }
   //   :global(.ql-container.ql-snow),
   //   :global(.ql-toolbar.ql-snow) {
   //     @include inputStylesFor('hasValue');
@@ -594,4 +597,35 @@
   //     border-top: 0px;
   //   }
   // }
+}
+.rteButtons{
+  position: absolute;
+  bottom: 8%;
+  right: 1%;
+  display: flex;
+  align-items: center;
+  color: $bgBody;
+  gap: 10px;
+  .post_type{
+    display: flex;
+    gap: 15px;
+    p{
+      font-size: 16px;
+    }
+  }
+  .button1{
+    background: $primary;
+    padding: 10px 24px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  .button2{
+    color: #747474;
+    padding: 10px 16px;
+    background: transparent;
+    border-radius: 4px;
+    border: 1px solid $bgBody;
+    cursor: pointer;
+  }
 }
