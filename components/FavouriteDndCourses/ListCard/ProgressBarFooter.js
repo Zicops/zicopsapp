@@ -1,3 +1,4 @@
+import { getCourseDisplayTime } from '@/helper/utils.helper';
 import styles from './listCard.module.scss';
 
 export default function ProgressBarFooter({ courseData, isCompleted }) {
@@ -18,7 +19,7 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
               </span>
             </p>
             <p className={styles.percent}>
-              {isNaN(+courseData?.timeLeft) ? 0.0 : courseData?.timeLeft} hours of content left
+              {getCourseDisplayTime(courseData?.timeLeft)} hours of content left
             </p>
           </>
         )}

@@ -187,7 +187,7 @@ export default function useSaveCourse(courseContextData) {
     if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
     if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
     if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
-    updateCourseMaster(_course);
+    updateCourseMaster({ ..._course, status: _course?.status || sendData.status });
 
     setIsLoading(
       udpateCourseLoading && uploadImageLoading && uploadTileLoading && uploadPreviewLoading

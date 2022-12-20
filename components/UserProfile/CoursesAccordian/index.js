@@ -19,7 +19,7 @@ import Accordian from '../../../components/UserProfile/Accordian';
 
 // import AssignedCourses from '../../AssignedCourses';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { COURSE_STATUS, COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import moment from 'moment';
 import AssignCourses from './AssignCourses';
@@ -263,8 +263,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       console.log(err);
       return setToastMsg({ type: 'danger', message: `${err}` });
     });
-    const courseData =
-      res?.data?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) || [];
+    const courseData = res?.data?.latestCourses?.courses?.filter((c) => c?.is_active) || [];
 
     setDataCourse([...courseData]);
     // console.log(dataCourse);
@@ -330,14 +329,16 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       }
       const userProgressArr = courseProgressRes?.getUserCourseProgressByMapId;
 
+      let topicsCompleted = 0;
       let topicsStarted = 0;
       userProgressArr?.map((topic) => {
-        if (topic?.status !== 'not-started') ++topicsStarted;
+        // if (topic?.status !== 'not-started') ++topicsStarted;
+        if (topic?.status !== COURSE_TOPIC_STATUS.assign) ++topicsStarted;
+        if (topic?.status === COURSE_TOPIC_STATUS.completed) ++topicsCompleted;
       });
-      console.log(topicsStarted);
-      const courseProgress = userProgressArr?.length
-        ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
-        : 0;
+      // const courseProgress = userProgressArr?.length
+      //   ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+      //   : 0;
 
       const courseRes = await loadQueryDataAsync(GET_COURSE, { course_id: course_id });
       if (courseRes?.error) {
@@ -350,15 +351,28 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       let added_by =
         parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
 
+      const courseDuraton = +courseRes?.getCourse?.duration;
+      const completedPercent = userProgressArr?.length
+        ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
+        : 0;
+
       if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
       allAssignedCourses.push({
         ...courseRes?.getCourse,
         ...assignedCoursesToUser[i],
-        completedPercentage: userProgressArr?.length ? courseProgress : 0,
+        // completedPercentage: userProgressArr?.length ? courseProgress : 0,
         added_by: added_by,
         addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
-        created_at: assignedCoursesToUser[i]?.created_at
+        created_at: assignedCoursesToUser[i]?.created_at,
+        timeLeft: courseDuraton - (courseDuraton * (+completedPercent || 0)) / 100,
+        isCourseCompleted:
+          topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
+        isCourseStarted: topicsStarted > 0,
+        completedPercentage: completedPercent,
+        topicsStartedPercentage: userProgressArr?.length
+          ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+          : 0
       });
     }
 

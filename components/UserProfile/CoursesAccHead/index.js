@@ -68,12 +68,7 @@ const CoursesAccHead = ({
           dropdownOptions={{
             isSearchEnable: true,
             placeholder: 'Type',
-            options: [
-              { value: '', label: '-- Select --' },
-              ...Type,
-              { value: 'Blog', label: 'Blog' },
-              { value: 'Bookmarks', label: 'Bookmarks' }
-            ],
+            options: [{ value: '', label: '-- Select --' }, ...Type],
             value: { value: filters?.type, label: filters?.type }
           }}
           changeHandler={(e) => setFilters({ ...filters, type: e.value })}

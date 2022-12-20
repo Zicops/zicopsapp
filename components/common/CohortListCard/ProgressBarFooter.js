@@ -1,3 +1,4 @@
+import { getCourseDisplayTime } from '@/helper/utils.helper';
 import styles from './courseListCard.module.scss';
 
 export default function ProgressBarFooter({ courseData, isCompleted }) {
@@ -15,7 +16,9 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
               <div className={`${styles.dot}`}></div>
               {courseData?.isMandatory || 'Mandatory'}
             </p>
-            <p className={styles.percent}>{courseData?.timeLeft || '3'} hours of content left</p>
+            <p className={styles.percent}>
+              {getCourseDisplayTime(courseData?.timeLeft)} of content left
+            </p>
           </>
         )}
       </section>

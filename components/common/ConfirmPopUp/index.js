@@ -7,16 +7,21 @@ export default function ConfirmPopUp({ title, message, btnObj = {} }) {
     textLeft = 'Yes',
     leftIsDisable = false,
 
+    handleClose = null,
     handleClickRight = function () {},
     textRight = 'No',
-    rightIsDisable =  false
+    rightIsDisable = false
   } = btnObj;
 
   return (
     <div className={`${styles.confirmPopContainer}`}>
       <div className={`${styles.confirmPopUp}`}>
         <div className={`${styles.cross}`}>
-          <img src={'/images/svg/clear.svg'} width={35} onClick={handleClickRight} />
+          <img
+            src={'/images/svg/clear.svg'}
+            width={35}
+            onClick={!!handleClose ? handleClose : handleClickRight}
+          />
         </div>
 
         <div className={`${styles.alert_text}`}>
@@ -27,8 +32,16 @@ export default function ConfirmPopUp({ title, message, btnObj = {} }) {
         <div className={`${styles.desc}`}>{message}</div>
 
         <div className={`${styles.buttons}`}>
-          <CongratulationsScreenButton title={textLeft} handleClick={handleClickLeft} disable={leftIsDisable}/>
-          <CongratulationsScreenButton title={textRight} handleClick={handleClickRight} disable={rightIsDisable}/>
+          <CongratulationsScreenButton
+            title={textLeft}
+            handleClick={handleClickLeft}
+            disable={leftIsDisable}
+          />
+          <CongratulationsScreenButton
+            title={textRight}
+            handleClick={handleClickRight}
+            disable={rightIsDisable}
+          />
         </div>
       </div>
     </div>
