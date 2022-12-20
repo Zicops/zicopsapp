@@ -19,7 +19,7 @@ import Accordian from '../../../components/UserProfile/Accordian';
 
 // import AssignedCourses from '../../AssignedCourses';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import { COURSE_STATUS, EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import { COURSE_STATUS, COURSE_TOPIC_STATUS, EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import moment from 'moment';
 import AssignCourses from './AssignCourses';
@@ -133,12 +133,13 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       endDate: courseAssignData?.endDate
     });
 
+    const endDate = getUnixFromDate(courseAssignData?.endDate)*1000; 
     const userName = currentUserData?.is_verified ? `${currentUserData?.first_name}` : '';
     const bodyData = {
       user_name: userName,
       lsp_name: sessionStorage?.getItem('lsp_name'),
       course_name: userCourseData?.name,
-      end_date: courseAssignData?.endDate
+      end_date: moment(endDate).format('MMMM Do YYYY, h:mm:ss a')
     };
     const sendMailData = {
       to: [currentUserData?.email],
