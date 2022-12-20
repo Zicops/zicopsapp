@@ -13,13 +13,16 @@ const ClassRoomBanner = ({ data }) => {
       </div>
       <div className={`${styles.classroomText}`}>
         <div className={`${styles.level}`}>
-         <span>Pearson presents</span>
+          <span>{data.org} presents</span>
         </div>
-        <div className={`${styles.classroomTitle}`}>
-       {data.title}</div>
+        <div className={`${styles.classroomTitle}`}>{data.title}</div>
         <div className={`${styles.classroomByDesisgnation}`}>
-          <div className={`${styles.level}`}>Level: <span>{data.level}</span></div>
-          <div className={`${styles.level}`}>Duration: <span>{data.duration}</span></div>
+          <div className={`${styles.level}`}>
+            Level: <span>{data.level}</span>
+          </div>
+          <div className={`${styles.level}`}>
+            Duration: <span>{data.duration}</span>
+          </div>
         </div>
         <div className={`${styles.bannerCat}`}>
           <ul>
@@ -34,7 +37,7 @@ const ClassRoomBanner = ({ data }) => {
           </ToolTip>
           <ToolTip title={LEARNER_CLASSROOM.seeMore}>
             <button onClick={() => router.push(`${data?.link}?data=${passData}`, `${data?.link}`)}>
-            See Course
+              See Course
             </button>
           </ToolTip>
         </div>

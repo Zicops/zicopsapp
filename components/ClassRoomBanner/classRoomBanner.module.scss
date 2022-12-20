@@ -11,7 +11,7 @@
         z-index: -1;
         height: 65vh;
         width: 100%;
-        opacity: 0.5;
+        opacity: 1;
         overflow: hidden;
     }
     .classroomText{
@@ -58,11 +58,11 @@
                 background-color: transparent;
                 color: $primary;
                 padding: 10px 20px;
-                opacity: 0.8;
+                opacity: 1;
                 border: 1px solid $primary;
                 cursor: pointer;
                 &:hover{
-                opacity: 1;
+                opacity: 0.8;
                 }
             }
             .bookNowButton{
