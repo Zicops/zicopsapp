@@ -33,10 +33,6 @@ const LspCard = ({
       userQueryClient
     );
 
-    // const userLspRole = lspRoleArr?.getUserLspRoles.reduce(function (prev, current) {
-    //   return prev.updated_at > current.updated_at ? prev.role : current.role;
-    // }, 'learner');
-
     const lspRoles = lspRoleArr?.getUserLspRoles;
     let userLspRole = 'learner'
     
@@ -44,7 +40,7 @@ const LspCard = ({
       const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
     } else {
-      userLspRole = lspRoleArr[0]?.role;
+      userLspRole = lspRoles[0]?.role;
     }
     // const latestUpdatedRole = lspRoleArr?.getUserLspRoles?.sort((a,b) => a?.updated_at - b?.updated_at);
 
