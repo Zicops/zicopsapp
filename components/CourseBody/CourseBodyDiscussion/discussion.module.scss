@@ -58,6 +58,7 @@
     color: $bgBody;
     .message_Block_module{
         display: flex;
+        align-items: center;
         gap: 10px;
 
         p{
@@ -66,7 +67,7 @@
         }
     }
     .message_Content{
-        padding: 15px 0px;
+        padding: 10px 0px;
         font-size: 16px;
     }
     .reply_buttons{
