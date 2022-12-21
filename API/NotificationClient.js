@@ -59,3 +59,21 @@ export const SEND_NOTIFICATIONS = gql`
     }
   }
 `;
+
+export const SEND_EMAIL = gql`
+  mutation sendEmail(
+    $to: [String]!
+    $sender_name: String!
+    $user_name: [String]!
+    $body: String!
+    $template_id: String!
+  ) {
+    sendEmail(
+      to_: $to
+      sender_name: $sender_name
+      user_name: $user_name
+      body: $body
+      template_id: $template_id
+    )
+  }
+`;

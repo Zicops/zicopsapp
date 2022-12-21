@@ -57,7 +57,7 @@ const LearningSpaces = () => {
     res?.data?.getUserLsps?.map((data) => {
       if (data.lsp_id === 'd8685567-cdae-4ee0-a80e-c187848a760e') return;
       _lspArr.push(data.lsp_id);
-      _lspStatus.push(data.status);
+      _lspStatus.push(data?.status?.trim());
       _userLspIds.push(data?.user_lsp_id);
     });
     setLspIds(_lspArr);

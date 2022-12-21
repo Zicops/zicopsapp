@@ -18,17 +18,19 @@ import {
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_LSP_MAP_BY_LSPID,
   GET_USER_PREFERENCES,
+  GET_USER_PREFERENCES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
+  InviteUserAtom,
   IsUpdatedAtom,
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -43,6 +45,7 @@ import {
   COMMON_LSPS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
+  USER_MAP_STATUS,
   USER_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
@@ -260,6 +263,8 @@ export default function useUserCourseData() {
 
     const userCourseId = [];
 
+    let totalSelfCourseCount = 0;
+
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
       const courseMap = assignedCoursesToUser[i];
@@ -287,7 +292,7 @@ export default function useUserCourseData() {
     courseProgressRes?.getUserCourseProgressByMapId?.map((cpByMapId) => {});
 
     const coursesMeta = [];
-    assignedCoursesToUser.forEach((courseMap, i) => {
+    assignedCoursesToUser?.forEach((courseMap, i) => {
       const data = courseProgressRes?.getUserCourseProgressByMapId?.filter(
         (cpByMapId) => cpByMapId?.user_course_id === courseMap?.user_course_id
       );
@@ -324,9 +329,15 @@ export default function useUserCourseData() {
 
       let added_by = parseJson(coursesMeta[i]?.added_by)?.role || coursesMeta[i]?.added_by;
 
+      if(added_by?.toLowerCase() === 'self') ++totalSelfCourseCount;
+      
+
       // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      const courseDuraton = +courseRes?.getCourse?.duration / (60 * 60);
+      const courseDuraton = +courseRes?.getCourse?.duration;
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
+      const completedPercent = userProgressArr?.length
+        ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
+        : 0;
 
       if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
 
@@ -335,14 +346,22 @@ export default function useUserCourseData() {
         ...coursesMeta[i],
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
-        completedPercentage: progressPercent,
         created_at: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
         expected_completion: moment.unix(coursesMeta[i]?.end_date).format('DD/MM/YYYY'),
-        timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
+        timeLeft: courseDuraton - (courseDuraton * (+completedPercent || 0)) / 100,
         added_by: added_by,
         isCourseCompleted:
           topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
-        isCourseStarted: topicsStarted > 0
+        isCourseStarted: topicsStarted > 0,
+        completedPercentage: completedPercent,
+        topicsStartedPercentage: progressPercent
+        // remove this value or below value
+        // completedPercentage: progressPercent,
+        // course completed percentage replace this with above value
+        // topic started percentage (used for home page for now)
+        // userProgressArr?.length
+        //   ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+        //   : 0
       });
     }
 
@@ -392,7 +411,8 @@ export default function useUserCourseData() {
     const userCourses = _userCourses.filter(
       (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
     );
-    console.log(userCourseArray, userCourses);
+
+    setUserOrgData((prevValue) => ({...prevValue , self_course_count: totalSelfCourseCount}))
     if (!userCourses?.length)
       return setToastMsg({ type: 'info', message: 'No courses in your learning folder' });
 
@@ -575,7 +595,7 @@ export default function useUserCourseData() {
   }
 
   async function getUsersForAdmin() {
-    if(!userOrgData?.lsp_id?.length) return;
+    if (!userOrgData?.lsp_id?.length) return;
     const resLspUser = await loadQueryDataAsync(
       GET_USER_LSP_MAP_BY_LSPID,
       { lsp_id: userOrgData?.lsp_id, pageCursor: '', Direction: '', pageSize: 1000 },
@@ -665,7 +685,9 @@ export function useUpdateUserAboutData() {
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
+  const [invitedUsers , setInvitedUsers] = useRecoilState(InviteUserAtom);
   const [isConfirmPopUpDisable, setIsConfirmPopUpDisable] = useState(false);
+  const [getPrefData,{loading,error,data}] = useLazyQuery(GET_USER_PREFERENCES_DETAILS,{client:userQueryClient})
 
   useEffect(() => {
     let isPhValid = false;
@@ -705,6 +727,13 @@ export function useUpdateUserAboutData() {
     // if (userData?.status?.toLowerCase() === 'disabled')
     //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
 
+
+    if(userData?.status?.toLowerCase() === USER_MAP_STATUS?.activate?.toLowerCase()){
+
+     const res = await getPrefData({variables:{user_id:userData?.id,user_lsp_id:userData?.user_lsp_id}})?.catch((err)=>console.log(err));
+     if(!res?.data?.getUserPreferenceForLsp) userData.status = " ";
+    }
+
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
@@ -712,22 +741,23 @@ export function useUpdateUserAboutData() {
       status: userData?.status
     };
 
-    // console.log(sendLspData, 'updateUserLearningSpaceDetails');
-
+    
     let isError = false;
     const res = await updateLsp({ variables: sendLspData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
     });
-    console.log(res);
+    // console.log(res);
+    if(sendLspData?.status === ""){
+     setInvitedUsers((prev) => [...prev,userData?.user_id]);
+    }
     return !isError;
   }
 
   async function updateUserRole(userData = null) {
     const userRoleData = userData ? userData?.roleData : newUserAboutData;
 
-    console.log(userRoleData, 'rianf');
     if (!userData?.roleData?.user_role_id) return false;
 
     // console.log(userData?.roleData, 'sifhishfi');
@@ -856,10 +886,10 @@ export function useUpdateUserAboutData() {
   async function resetMultiPassword(users = []) {
     const emails = users?.map((user) => user?.email);
     let isError = false;
-    if(!emails?.length) return !isError;
-    for(let i = 0 ; i < emails?.length ; i++){
+    if (!emails?.length) return !isError;
+    for (let i = 0; i < emails?.length; i++) {
       const isEmailSent = await resetPassword(emails[i]);
-      if(!isEmailSent) isError = true;
+      if (!isEmailSent) isError = true;
     }
     return !isError;
   }

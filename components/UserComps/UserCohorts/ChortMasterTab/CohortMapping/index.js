@@ -20,7 +20,7 @@ import CohortAssignedCourses from './CohortAssignedCourses';
 
 const CohortMapping = ({ isReadOnly = false }) => {
   const [courseAssignData, setCourseAssignData] = useState({
-    expectedCompletionDays: null,
+    expectedCompletionDays: 1,
     isMandatory: false,
     isCourseAssigned: false
   });
@@ -97,7 +97,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
       ...selectedCourse,
       endDate: endDate,
       ...sendData
-    });
+    },cohortData);
     if (!isCourseAssigned)
       return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
     setToastMsg({ type: 'success', message: 'Course added succesfully!' });
@@ -122,7 +122,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
       console.log(err);
     });
     // if(res?.deleteCourseCohort) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
-    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId, selectedCourse?.id);
+    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId, selectedCourse?.id,selectedCourse?.name,cohortData);
     if (!isRemoved)
       return setToastMsg({ type: 'danger', message: 'Error while removing course from user!' });
     setToastMsg({ type: 'success', message: 'Course removed from cohort!' });
@@ -290,7 +290,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
             }
           />
           <section>
-            <p htmlFor="endDate">Expected Duration of Completion:</p>
+            <p htmlFor="endDate">Expected Duration of Completion in days:</p>
             <LabeledInput
               inputOptions={{
                 inputName: 'expectedCompletionDays',

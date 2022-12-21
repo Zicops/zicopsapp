@@ -3,15 +3,17 @@ import CohortBoxCard from '@/components/common/CohortBoxCard';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import CohortPopUp from '@/components/LearnerUserProfile/UserCohortTab/CohortPopUp';
 import addUserData from '@/components/UserComps/UserCohorts/ChortMasterTab/Logic/addUserData';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { getCurrentEpochTime } from '@/helper/common.helper';
+import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { getCurrentEpochTime, getNotificationMsg } from '@/helper/common.helper';
+import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { parseJson } from '@/helper/utils.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { SelectedCohortDataAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Accordian from '../../../components/UserProfile/Accordian';
 import styles from '../userProfile.module.scss';
 
@@ -19,6 +21,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
   const [selectedCohortData, setSelectedCohortData] = useRecoilState(SelectedCohortDataAtom);
 
   const [selectedCohort, setSelectedCohort] = useState(null);
+  const fcmToken = useRecoilValue(FcmTokenAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [cohortData, setCohortData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,18 +30,31 @@ const CohortAccordian = ({ currentUserData = null }) => {
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const {removeCohortUser} = addUserData();
 
-  useEffect(()=>{
-    console.log(cohortData,'cohortdata')
-  },[cohortData])
+  // useEffect(()=>{
+  //   console.log(cohortData,'cohortdata')
+  // },[cohortData])
 
-  async function handleRemoveUser(cohortData = null){
-    if(!cohortData)return setToastMsg({type:'danger',message:'Cohort Data not found!'})
+  async function handleRemoveUser(selectedCohortData = null){
+    if(!selectedCohortData)return setToastMsg({type:'danger',message:'Cohort Data not found!'})
     setLoading(true) ;
-    const isRemoved = await removeCohortUser(cohortData?.userCohort,cohortData?.main);
+    const isRemoved = await removeCohortUser(selectedCohortData?.userCohort,selectedCohortData?.main,selectedCohortData?.main?.size);
     // console.log(a,'adds');
     if(!isRemoved) return setToastMsg({type:'danger',message:'Error while removing user from cohort!'})
-    setToastMsg({type:'success',message:"User removed succesfully!"})
-    setLoading(false)
+    setToastMsg({type:'success',message:"User removed succesfully!"});
+    // const notificationBody = getNotificationMsg('cohortUnassign',{cohortName:selectedCohortData?.main?.name})
+    // if(!notificationBody) setToastMsg({type:'danger',message:'Error while sending notification'});
+    // await sendNotification(
+    //   {
+    //     title: NOTIFICATION_TITLES?.cohortUnassign,
+    //     body: notificationBody,
+    //     user_id: [currentUserData?.id]
+    //   },
+    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    // );
+    setLoading(false);
+
+    const updatedCohort = cohortData?.filter((cohort) => cohort?.main?.cohort_id !== selectedCohortData?.main?.cohort_id);
+    setCohortData([...updatedCohort]);
     await loadCohortData();
     setShowConfirmBox(false);
     return ;

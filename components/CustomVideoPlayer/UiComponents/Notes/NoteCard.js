@@ -17,7 +17,8 @@ export default function NoteCard({
   handlePin = null,
   handleDragEnd = () => {},
   handleDelete = () => {},
-  handleNote = () => {}
+  handleNote = () => {},
+  topicData = null
 }) {
   const userDataGlobal = useRecoilValue(UserDataAtom);
   const [addUserNotes] = useMutation(ADD_USER_NOTES, {
@@ -41,15 +42,15 @@ export default function NoteCard({
 
   async function saveNotes(noteData, isDelete) {
     // if (noteObj?.details.length === 0) return;
-    // console.log(noteObj); 
+    // console.log(noteObj);
     if (!noteData?.user_notes_id && !noteData?.details.length) return console.log('skip');
 
     const sendNotesData = {
       user_id: userData?.id,
       user_lsp_id: userOrgData?.user_lsp_id,
       course_id: fullCourse?.id,
-      topic_id: videoData?.topicContent[0]?.topicId,
-      module_id: videoData?.currentModuleId,
+      topic_id: videoData?.topicContent[0]?.topicId || topicData?.topicId,
+      module_id: videoData?.currentModuleId || topicData?.moduleId,
       details: noteData?.details,
       sequence: noteData?.sequence,
       is_active: true,

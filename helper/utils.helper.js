@@ -41,6 +41,20 @@ export function secondsToMinutes(seconds) {
   return { minute: min, second: sec };
 }
 
+export function getCourseDisplayTime(durationInSeconds = 0) {
+  const hours = Math.floor(durationInSeconds / (60 * 60));
+
+  const divisor_for_minutes = durationInSeconds % (60 * 60);
+  const minutes = Math.ceil(divisor_for_minutes / 60);
+
+  const minsWithUnits = `${minutes} min${minutes < 2 ? '' : 's'}`;
+  const hrsWithUnits = `${hours} hr${hours < 2 ? '' : 's'}`;
+
+  if (hours == 0) return `${minsWithUnits}`;
+
+  return `${hrsWithUnits} ${minsWithUnits}`;
+}
+
 export function secondsToHMS(secs, showHour = true) {
   const hours = ('0' + Math.floor(secs / (60 * 60))).substr(-2) || '00';
 
@@ -254,4 +268,9 @@ export function getUnixTimeAt(hours = 7, minutes = 0, seconds = 0) {
 
 export function isWordIncluded(sentence = '', word = '') {
   return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
+}
+
+export function getMinCourseAssignDate(){
+  const date = (new Date()).setDate((new Date()).getDate() + 1)
+  return date;
 }
