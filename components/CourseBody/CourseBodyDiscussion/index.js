@@ -5,8 +5,10 @@ import MessageBlock from './MessageBlock';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { DiscussionAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
+import SearchBar from '@/components/common/FormComponents/SearchBar';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [messageArr, setMessageArr] = useRecoilState(DiscussionAtom);
   const [showInput , setShowInput] = useState(false)
   const userDetails = useRecoilValue(UserStateAtom);
@@ -17,18 +19,29 @@ const CourseBodyDiscussion = () => {
   const canclePostHanlder = () => {
     setShowInput(false)
   }
+
   const sendMessageHandler = () => {
     setMessageArr([
       ...messageArr,
       {
         id: Math.floor(Date.now() / 1000 + 1),
-        content: message.replace(/<[^>]+>/g, ''),
+        content: {
+          text: message.replace(/<[^>]+>/g, ''),
+          image: imageUrl
+        },
         time: Math.floor(Date.now() / 1000),
         user: {
           id: userDetails?.id,
           first_name: userDetails?.first_name,
           photo_url:userDetails?.photo_url
-        }
+        },
+
+        module: {
+        name: "Module2",
+        chapter:"chapter2",
+        topic:" topic3",
+        time: "10:45"
+       }
       }
     ]);
     setMessage('');
@@ -36,6 +49,7 @@ const CourseBodyDiscussion = () => {
   };
   const onMessageHandler = (e) => {
     setMessage(e);
+    console.log(e);
   };
   // const handleKeyPress = (e) => {
   //   if (e.key === 'Enter') {
@@ -71,12 +85,13 @@ const CourseBodyDiscussion = () => {
     }
     return Object.values(replies).map((r) => ({
       parent: r?.parent,
-      replies: r?.replies?.sort((a, b) => a.time - b.time)
+      replies: r?.replies?.sort((a, b) => b.time - a.time)
     }));
   }
 
   const replies = getReplies(messageArr);
-  console.log('replies', replies);
+  const newReplies = replies.reverse()
+  console.log('replies', newReplies);
 
   return (
     <div className={`${style.discussion_container}`}>
@@ -96,7 +111,7 @@ const CourseBodyDiscussion = () => {
      {showInput && <div>
         <RTE2 placeholder="Start typing here..." value={message} changeHandler={onMessageHandler} onPostHandler={sendMessageHandler} onCancleHandler={canclePostHanlder} />
       </div>}
-      {replies?.map((data) => {
+      {newReplies?.map((data) => {
 
           return (
             <>

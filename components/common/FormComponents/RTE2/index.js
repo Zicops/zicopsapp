@@ -1,5 +1,4 @@
 // import dynamic from 'next/dynamic';
-
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.bubble.css';
 import 'react-quill/dist/quill.snow.css';
@@ -13,18 +12,24 @@ export default function RTE2({
   onPostHandler,
   onCancleHandler,
   changeHandler,
+  changeImageHandler,
   value,
   placeholder,
   customStyles = {},
   isReadOnly = false
 }) {
   const modules = {
-    toolbar: [
+    toolbar: {
+      container:[
       ['bold', 'italic', 'underline'],
       [{ header: '1' }, { header: '2' }, { header: '3' }],
       [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }, 'blockquote' , 'code-block'],
       ['link', 'image' ],
-    ]
+    ],
+    handlers: {
+         image: changeImageHandler,
+       }
+    } 
   };
   // /*
   //  * Quill editor formats
@@ -62,6 +67,7 @@ export default function RTE2({
         onChange={changeHandler}
         value={value}
       />
+      {/* <input type="file" onChange={changeImageHandler} /> */}
       <div className={`${styles.rteButtons}`}>
         <div className={`${styles.post_type}`}>
           <p>Public</p>

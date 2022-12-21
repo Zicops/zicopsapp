@@ -8,7 +8,13 @@ export const discussionData = {
         "photo_url": "https://www.w3schools.com/howto/img_avatar2.png"
       },
       "time":1671197362,
-      "content": "Welcome to Zicops Learning Technology",
+      "content": {"text":"Welcome to Zicops Learning Technology", "image": ""},
+      "module": {
+        "name": "Module1",
+        "chapter":"chapter1",
+        "topic": "topic1",
+        "time": "20:15"
+       }
 
     },
     {
@@ -19,8 +25,13 @@ export const discussionData = {
         "photo_url":"https://www.w3schools.com/howto/img_avatar.png"
       },
       "time":1671197810,
-      "content": "Zicops Learning Technology Private Limited is a Private incorporated on 27 June 2022. It is classified as Non-govt company and is registered at Registrar of Companies, Bangalore. Its authorized share capital is Rs. 100,000 and its paid up capital is Rs. 100,000. It is inolved in Higher education [Includes post-secondary/senior secondary sub-degree level education that leads to university degree or equivalent.]",
-
+      "content": {"text":"Welcome to Zicops Learning Technology", "image": ""},
+      "module": {
+        "name": "Module2",
+        "chapter":"chapter2",
+        "topic": "topic3",
+        "time": "10:45"
+       }
     },
     {
       "id":3003,
@@ -30,7 +41,7 @@ export const discussionData = {
         "photo_url":"https://cdn.pixabay.com/photo/2017/01/31/21/23/avatar-2027366__340.png"
       },
       "time":1671197818,
-      "content": "Thanks",
+      "content": {"text":"Welcome to Zicops Learning Technology", "image": ""},
        "reply_id":3001,
     },
     {
@@ -41,7 +52,7 @@ export const discussionData = {
         "photo_url":"https://cdn.pixabay.com/photo/2017/01/31/21/23/avatar-2027366__340.png"
       },
       "time":1671197820,
-      "content": "Thank you for your kind Information.",
+      "content": {"text":"Welcome to Zicops Learning Technology", "image": ""},
       "reply_id":3002
     },
     {
@@ -52,7 +63,7 @@ export const discussionData = {
         "photo_url":"https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584__340.png"
       },
       "time":1671197720,
-      "content": "Thank you HR Madam.",
+      "content": {"text":"Welcome to Zicops Learning Technology", "image": ""},
       "reply_id":3001
     },
     {
@@ -63,7 +74,7 @@ export const discussionData = {
         "photo_url":"https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584__340.png"
       },
       "time":1671197720,
-      "content": "Hello friends",
+      "content": {"text":"Welcome to Zicops Learning Technology", "image": ""},
       "reply_id":3004
     }
   ]

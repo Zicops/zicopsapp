@@ -25,7 +25,7 @@ const MessageBlock = ({ isReply,  message }) => {
       ...replyArr,
       {
         id: Math.floor(Date.now() / 1000 + 1),
-        content: reply.replace(/<[^>]+>/g, ''),
+        content: {text: reply.replace(/<[^>]+>/g, '')},
         time: Math.floor(Date.now() / 1000),
         reply_id: message?.id,
         user: {
@@ -59,14 +59,13 @@ const MessageBlock = ({ isReply,  message }) => {
           <div className={`${style.message_time}`}>{moment.unix(message?.time).format('lll')}</div>
         </div>
         <div className={`${style.message_Block_Body}`}>
-          <div className={`${style.message_Block_module}`}>
-            <p>38:14</p>
-            Module 1, Chapter 2, Topic 3
-          </div>
+         {!isReply && <div className={`${style.message_Block_module}`}>
+            <p>{message?.module?.time}</p>
+            {message?.module?.name}, {message?.module?.chapter}, {message?.module?.topic}
+          </div>}
           <div className={`${style.message_Content}`}>
-            <p>
-              { message?.content}
-            </p>
+           {message?.content?.image?.length ? <img src={message?.content?.image} alt ="" /> : ""}
+            <p>{message?.content?.text}</p>
           </div>
           <div className={`${style.reply_buttons}`}>
             <div className={`${style.react_button}`}>
