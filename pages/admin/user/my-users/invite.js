@@ -146,13 +146,7 @@ export default function MyUserPage() {
               }
             }}
           />
-          <PopUp
-            popUpState={[isOpen, setIsOpen]}
-            isFooterVisible={false}
-            onCloseWithCross={() => {
-              setIsOpen(false);
-              setEmailId(null);
-            }}>
+          <PopUp popUpState={[isOpen, setIsOpen]} isFooterVisible={false}>
             <InviteUserEmails
               closePopUp={setIsOpen}
               userEmails={
