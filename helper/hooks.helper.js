@@ -605,9 +605,10 @@ export default function useUserCourseData() {
     if (resLspUser?.error) return { error: 'Error while while loading lsp maps!' };
 
     //removing duplicate values
-    const userIds = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps
+    const users = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps
       ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
-      ?.map((user) => user?.user_id);
+
+    const userIds = users?.map((user) => user?.user_id)?.filter((id) => !!id);
 
     const resUserDetails = await loadQueryDataAsync(
       GET_USER_DETAIL,
