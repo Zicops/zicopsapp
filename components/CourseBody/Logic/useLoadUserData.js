@@ -4,6 +4,7 @@ import {
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
   GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID,
+  GET_TOPIC_QUIZ,
   GET_TOPIC_RESOURCES_BY_COURSE_ID,
   queryClient
 } from '@/api/Queries';
@@ -28,6 +29,7 @@ import {
   ChapterAtom,
   isLoadingAtom,
   ModuleAtom,
+  QuizAtom,
   ResourcesAtom,
   TopicAtom,
   TopicContentAtom
@@ -63,6 +65,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const [quizProgressData, setQuizProgressData] = useRecoilState(QuizProgressDataAtom);
+  const [quizData, setQuizData] = useRecoilState(QuizAtom);
 
   const [topicContentDataLoaded, setTopicContentDataLoaded] = useState(null);
 
@@ -472,6 +475,40 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     //     updateTopicContent(data.getTopicContentByCourseId || []);
     //   }
     // );
+
+    async function loadQuiz(topicId) {
+      const allQuiz = [];
+
+      const quizRes = await loadQueryDataAsync(
+        GET_TOPIC_QUIZ,
+        { topic_id: topicId },
+        { fetchPolicy: 'no-cache' }
+      );
+
+      if (quizRes?.getTopicQuizes) {
+        const topicQuiz = [...quizRes?.getTopicQuizes]?.sort(
+          (q1, q2) => q1?.sequence - q2?.sequence
+        );
+        // console.log([...quizData, ...topicQuiz]);
+        allQuiz.push(...topicQuiz);
+      }
+
+      return allQuiz;
+    }
+
+    for (let i = 0; i < topicDataLoaded.length; i++) {
+      const topic = topicDataLoaded[i];
+
+      loadQuiz(topic?.id).then((newQuiz) => {
+        if (newQuiz?.length)
+          setQuizData((prev) => {
+            console.log(prev, newQuiz);
+            const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
+
+            return [...prev, ...filteredQuiz];
+          });
+      });
+    }
 
     loadResourcesData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
