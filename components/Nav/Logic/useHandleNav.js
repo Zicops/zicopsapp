@@ -14,7 +14,7 @@ export function useHandleNav(isAdmin, setAdmin) {
   const searchText = pathArr?.[2] || null;
 
   useEffect(() => {
-    setSearchQuery(searchText);
+    setSearchQuery(searchText?.replace(/%20/gi, ' '));
 
     if (searchText) searchInputRef.current?.focus();
   }, [searchText]);
