@@ -2,6 +2,7 @@ import { truncateToN } from '@/helper/common.helper';
 import { useHandleCohortUsers } from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { IsUpdatedAtom, SelectedCohortDataAtom } from '@/state/atoms/users.atom';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import ConfirmPopUp from '../ConfirmPopUp';
