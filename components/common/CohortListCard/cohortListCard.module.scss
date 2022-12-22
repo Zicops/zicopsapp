@@ -28,15 +28,23 @@
     border-radius: inherit;
     }
   }
-  .scheduleBar::before{
+  .scheduleBarCourse::before , .scheduleBarExam::before{
     content: '';
     width: 5px;
-    height: 100px;
+    height: 100%;
     border-radius: 10px;
-    background-color: $primary;
+    
 
     position: absolute;
-    left: -8%;
+    left: -10%;
+  }
+
+  .scheduleBarCourse::before{
+    background-color: $white;
+  }
+
+  .scheduleBarExam::before{
+    background-color: $warning;
   }
   .imgRoundContainer{
     height: 100px;
@@ -75,9 +83,9 @@
       justify-content: space-between;
       align-items: flex-end;
       .schedulePills{
-        color: $white;
         padding: 5px 10px;
         background-color: black;
+        text-transform: capitalize;
       }
     }
   }

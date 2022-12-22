@@ -15,7 +15,8 @@ export default function CohortListCard({
   handleClick = () => {},
   type = 'cohort',
   isManager = false,
-  isSchedule = false
+  isSchedule = false,
+  scheduleData = {}
 }) {
   const [selectedCohort, setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -28,7 +29,7 @@ export default function CohortListCard({
 
   let imageUrl = '/images/profile-card.png';
 
-  if (type === 'cohort') imageUrl = data?.imageUrl;
+  if (type === 'cohort') imageUrl = isSchedule ? scheduleData?.image : data?.imageUrl;
 
   if (type === 'user') {
     const imageLink = data?.photo_url !== '' ? data?.photo_url : '/images/swagDP.jpg';
@@ -77,6 +78,24 @@ export default function CohortListCard({
     return;
   }
 
+  const scheduleCardType = {
+    course: {
+      time: moment.unix(scheduleData?.scheduleDate).format('D MMM YYYY'),
+      color: styles?.courseColor,
+      barStyle: styles?.scheduleBarCourse
+    },
+    exam: {
+      time: `${moment.unix(scheduleData?.Start).format('hh:mm a')}-${moment
+        .unix(scheduleData?.endTime)
+        .format('hh:mm a')}`,
+      color: styles?.examColor,
+      barStyle: styles?.scheduleBarExam
+    }
+  };
+
+  let waqtFormat = scheduleCardType?.[scheduleData?.dataType]?.time;
+  let pillColor = scheduleCardType?.[scheduleData?.dataType]?.color;
+  let barStyle = scheduleCardType?.[scheduleData?.dataType]?.barStyle;
   return (
     <>
       <div
@@ -84,22 +103,28 @@ export default function CohortListCard({
         onClick={handleClick}
         style={isActive ? {} : { cursor: 'no-drop' }}>
         {/* course img */}
-        <div className={`${isRoundImage ? styles.imgRoundContainer : styles.imgContainer} ${isSchedule ? styles.scheduleBar : ''}`}>
+        <div
+          className={`${isRoundImage ? styles.imgRoundContainer : styles.imgContainer} ${
+            isSchedule ? barStyle : ''
+          }`}>
           <img src={imageUrl || '/images/profile-card.png'} alt="" />
         </div>
         <div className={`${styles.cardBody} `}>
           <div className={`${isSchedule ? styles.scheduleCardBody : ''}`}>
-            {isSchedule ? <p>22 Aug, 2022</p> : ''}
+            {isSchedule ? <p>{waqtFormat || '22 Aug, 2022'}</p> : ''}
             <p className={`${styles.title}`}>
-              {data?.name || data?.email || 'Course Title or Cohort Title'}
+              {data?.name || data?.email || scheduleData?.name || 'Course Title or Cohort Title'}
             </p>
-            <p className={`${styles.desc}`}>
-              {data?.description ||
-                truncateToN(
-                  'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime fugiat, dolores debitis at iusto illo in nobis atque dolorem eum! illo in nobis atque dolorem eum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime fugiat, dolores debitis at iusto illo in nobis atque dolorem eum! illo in nobis atque dolorem eum!',
-                  200
-                )}
-            </p>
+            {!isSchedule && <p className={`${styles.desc}`}>{data?.description || ''}</p>}
+            {isSchedule && (
+              <p className={`${styles.desc}`}>
+                {truncateToN(scheduleData?.description, 150) ||
+                  truncateToN(
+                    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime fugiat, dolores debitis at iusto illo in nobis atque dolorem eum! illo in nobis atque dolorem eum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime fugiat, dolores debitis at iusto illo in nobis atque dolorem eum! illo in nobis atque dolorem eum!',
+                    200
+                  )}
+              </p>
+            )}
             {!isSchedule && type === 'user' && (
               <p className={`${styles.designation}`}>
                 {data?.role_in_organization || 'Product Manager'}
@@ -108,8 +133,10 @@ export default function CohortListCard({
           </div>
           {isSchedule ? (
             <div className={styles.scheduleCardBodyRight}>
-              <div className={`${styles.schedulePills} ${styles.pill1}`}>Course</div>
-              <img className="" src="/images/svg/calendar-month.svg" alt="" />
+              <div className={`${styles.schedulePills} ${styles.pill1} ${pillColor}`}>
+                {scheduleData?.dataType}
+              </div>
+              <img className="" src="/images/svg/event_available.svg" alt="" />
             </div>
           ) : (
             ''

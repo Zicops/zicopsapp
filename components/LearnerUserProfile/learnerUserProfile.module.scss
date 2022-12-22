@@ -205,9 +205,30 @@
   padding: 50px;
   color: $white;
   overflow-y: scroll;
+  .filterRow{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+
+    .filterRowLeft{
+      flex: 0.75;
+      display: flex;
+      gap: 10px;
+    }
+    img{
+      margin-left: 10px;
+    }
+  }
 
   hr {
     margin-bottom: 20px;
+  }
+  .scheduleBox{
+    padding: 10px 0;
+    .scheduleBoxTitle{
+      padding: 10px;
+      font-weight: bold;
+    }
   }
 }
 
