@@ -54,7 +54,7 @@ const MessageBlock = ({ isReply, message }) => {
           [newMessageId]: [
             ...newreplyData[0][newMessageId],
             {
-              reply_id: Math.floor(Date.now() / 1000 + 1),
+              id: Math.floor(Date.now() / 1000 + 1),
               content: { text: reply.replace(/<[^>]+>/g, ''), image: [] },
               time: Math.floor(Date.now() / 1000),
               replyId: message?.id,
