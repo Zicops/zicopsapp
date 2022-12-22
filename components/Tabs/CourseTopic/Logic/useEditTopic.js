@@ -640,7 +640,11 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         setToastMsg({ type: 'danger', message: 'Add Question Error' });
       });
       console.log(quizRes);
-      updateQuizData([...quizData, quizRes?.data?.addQuiz]);
+      const _quizData = structuredClone(quizData);
+      const index = _quizData?.findIndex((q) => q?.id === quizRes?.data?.addQuiz?.id);
+      if (index >= 0) _quizData[index] = quizRes?.data?.addQuiz;
+
+      updateQuizData(_quizData);
     }
 
     setUploadStatus(null);
