@@ -128,15 +128,15 @@ const UserScheduleTab = () => {
         </div>
       </div>
       {scheduleData?.map((course) => {
-        let newDate = course?.expected_completion;
+        let newDate = moment.unix(course?.scheduleDate).format('D MMM YYYY');
         let compare = newDate !== date;
         if (compare) {
-          date = course?.expected_completion;
+          date = moment.unix(course?.scheduleDate).format('D MMM YYYY');
         }
         return (
           <div key={course?.id} className={`${styles.scheduleBox}`}>
             {compare && (
-              <div className={`${styles.scheduleBoxTitle}`}>{course?.expected_completion}</div>
+              <div className={`${styles.scheduleBoxTitle}`}>{moment.unix(course?.scheduleDate).format('D MMM YYYY')}</div>
             )}
             <CohortListCard isSchedule={true} type={'cohort'} scheduleData={course} />
           </div>
