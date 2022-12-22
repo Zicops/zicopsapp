@@ -156,7 +156,7 @@ export default function assignCourseToUser() {
       const bodyData = {
         lsp_name: sessionStorage?.getItem('lsp_name') ,
         course_name: course_data?.name,
-        end_date: moment(endDate).format('MMMM Do YYYY, h:mm:ss a')
+        end_date: moment(endDate).format('D MMM YYYY')
       };
       const sendEmailBody = {
         to: cohortUserEmail,
