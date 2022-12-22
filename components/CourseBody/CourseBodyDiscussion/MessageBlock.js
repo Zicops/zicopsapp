@@ -13,8 +13,12 @@ const MessageBlock = ({ isReply, message }) => {
   const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const [reply, setReply] = useState('');
   const userDetails = useRecoilValue(UserStateAtom);
-  const onReplyHandler = () => {
+  let currentReplyId = "";
+  const onReplyHandler = (msg) => {
     setShowInput(true);
+    console.log(msg.replyId);
+    currentReplyId = msg.replyId
+    console.log(currentReplyId);
   };
   const canclePostHanlder = () => {
     setShowInput(false);
@@ -34,15 +38,21 @@ const MessageBlock = ({ isReply, message }) => {
     setIsAnnouncement(!isAnnouncement);
   };
   console.log(replyArr);
-  const onSendReplyHandler = () => {
+  const onSendReplyHandler = (msg) => {
     setShowInput(false);
-    const newreplyData = replyArr.find((rdata) => rdata[message?.id] || rdata[message?.replyId]);
+    const newreplyData = replyArr.filter((rdata) => rdata[msg?.replyId] ? rdata[msg?.replyId] : rdata[msg?.id] );
+    let newMessageId = "";
+    if (msg?.replyId) {
+      newMessageId = msg?.replyId
+    } else {
+      newMessageId = msg?.id
+    }
     {
-      message?.replyId || (message?.id && console.log(message?.id || message?.replyId));
+      newMessageId &&
       setReplyArr([
         {
-          [message?.id || message?.replyId]: [
-            ...newreplyData[message?.id || message?.replyId],
+          [newMessageId]: [
+            ...newreplyData[0][newMessageId],
             {
               reply_id: Math.floor(Date.now() / 1000 + 1),
               content: { text: reply.replace(/<[^>]+>/g, ''), image: [] },
@@ -133,7 +143,7 @@ const MessageBlock = ({ isReply, message }) => {
                 <span>{message?.unlike?.length || 0}</span>
               </div>
             </div>
-            <button className={`${style.reply_button}`} onClick={onReplyHandler}>
+            <button className={`${style.reply_button}`} onClick={()=>onReplyHandler(message)}>
               Reply
             </button>
           </div>
@@ -144,7 +154,7 @@ const MessageBlock = ({ isReply, message }) => {
                 value={reply}
                 contenteditable
                 changeHandler={onMessageHandler}
-                onPostHandler={onSendReplyHandler}
+                onPostHandler={()=>onSendReplyHandler(message)}
                 onCancleHandler={canclePostHanlder}
                 onAnonymousHandler={anonymousUserHandler}
                 checkAnonymous={isAnonymous}
