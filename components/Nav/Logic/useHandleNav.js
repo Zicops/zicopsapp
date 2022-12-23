@@ -14,10 +14,11 @@ export function useHandleNav(isAdmin, setAdmin) {
   const searchText = pathArr?.[2] || null;
 
   useEffect(() => {
+    if (!router?.pathname?.includes('/search-page/')) return;
     setSearchQuery(searchText?.replace(/%20/gi, ' '));
 
     if (searchText) searchInputRef.current?.focus();
-  }, [searchText]);
+  }, [router?.pathname, searchText]);
 
   useEffect(() => {
     // const route = router.asPath;
