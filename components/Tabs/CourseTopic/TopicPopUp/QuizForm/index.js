@@ -105,7 +105,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                       type="text"
                       name="startTimeMin"
                       className={`${styles.valuae}`}
-                      value={newQuiz.startTimeMin}
+                      value={newQuiz.startTimeMin?.toString()?.replace(/^0+/, '') || 0}
                       onChange={(e) => {
                         if (isNaN(e.target.value)) return;
                         handleQuizInput(e);
@@ -116,7 +116,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
                       type="text"
                       name="startTimeSec"
                       className={`${styles.valuae}`}
-                      value={newQuiz.startTimeSec}
+                      value={newQuiz.startTimeSec?.toString()?.replace(/^0+/, '') || 0}
                       onChange={(e) => {
                         if (isNaN(e.target.value)) return;
                         handleQuizInput(e);
