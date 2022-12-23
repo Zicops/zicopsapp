@@ -66,7 +66,7 @@ const UserScheduleTab = () => {
     setLoading(true);
     const courseData = await getUserCourseData(35);
     const examData = await getScheduleExams(courseData);
-    if (!courseData?.length || !examData?.length) return setLoading(false);
+    if (!courseData?.length && !examData?.length) return setLoading(false);
     const scheduleData = [...courseData, ...examData];
     const sortedArray = scheduleData?.sort((a, b) => {
       return a?.scheduleDate - b?.scheduleDate;
@@ -77,6 +77,7 @@ const UserScheduleTab = () => {
     const futureScheduleData = sortedArray?.filter(
       (course) => course?.scheduleDate > currentEpochTime
     );
+    console.log(futureScheduleData,'data');
     setSchduleDataAtom([...futureScheduleData], setLoading(false));
   }
 
