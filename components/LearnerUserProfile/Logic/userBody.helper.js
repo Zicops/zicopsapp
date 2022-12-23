@@ -1,5 +1,5 @@
 import UserAboutTab from '../UserAboutTab';
-import UserCalenderTab from '../UserCalenderTab';
+import UserScheduleTab from '../UserScheduleTab';
 import UserCohortTab from '../UserCohortTab';
 import CoursesTab from '../UserCohortTab/CohortPopUp/CoursesTab';
 import DetailsTab from '../UserCohortTab/CohortPopUp/DetailsTab';
@@ -14,7 +14,7 @@ export const tabs = [
   { name: 'Cohort', comp: <UserCohortTab /> },
   { name: 'Courses', comp: <UserCoursesTab /> },
   { name: 'Dashboard', comp: <UserLearningDashBoardTab /> },
-  { name: 'Calender', comp: <UserCalenderTab /> }
+  { name: 'Schedule', comp: <UserScheduleTab /> }
 ];
 
 export const courseData = [

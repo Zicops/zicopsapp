@@ -205,11 +205,57 @@
   padding: 50px;
   color: $white;
   overflow-y: scroll;
+  .filterRow{
+    position: sticky;
+    position: -webkit-sticky;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+
+
+    .datePickerContainer{
+      //just for the sake of tab header in user profile
+      z-index: 801;
+    }
+    .dropDownContainer{
+      display: flex;
+      justify-content: flex-end;
+      width: 20%;
+    }
+
+    .filterRowLeft{
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+
+      .resetFilter{
+        color: $darkThree;
+        cursor: pointer;
+      }
+      .isActive{
+        color: $white;
+      }
+    }
+    img{
+      margin-left: 10px;
+    }
+  }
 
   hr {
     margin-bottom: 20px;
   }
+  .scheduleBox{
+    padding: 10px 0;
+    .scheduleBoxTitle{
+      padding: 10px;
+      font-weight: bold;
+    }
+  }
+  
 }
+
 
 .cardContainer {
   margin: auto;
