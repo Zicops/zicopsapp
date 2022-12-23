@@ -71,7 +71,7 @@ const UserAboutTab = () => {
 
     const orgData = resOrg?.data?.getUserOrganizations?.filter((orgMap) => orgMap?.user_lsp_id === userLspId);
 
-    const orgId = orgData[0]?.organization_id ;
+    const orgId = orgData?.[0]?.organization_id ;
 
     const orgDetails = await loadQueryDataAsync(GET_ORGANIZATIONS_DETAILS,{org_ids:[orgId]},{},userQueryClient);
     // console.log(orgDetails?.getOrganizations);

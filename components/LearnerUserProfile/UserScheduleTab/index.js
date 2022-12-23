@@ -7,6 +7,7 @@ import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { ScheduleTabData } from '@/state/atoms/users.atom';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
@@ -22,12 +23,7 @@ const UserScheduleTab = () => {
     to: null
   });
 
-  // function getSortedDateObject(courseArr = []) {
-  //   while (i < courseArr?.length) {
-  //     let j = ++i;
-  //     while (j < courseArr?.length) {}
-  //   }
-  // }
+  const router = useRouter();
 
   function filterData(filterType = '') {
     if (filterType === '') return;
@@ -77,7 +73,7 @@ const UserScheduleTab = () => {
     const futureScheduleData = sortedArray?.filter(
       (course) => course?.scheduleDate > currentEpochTime
     );
-    console.log(futureScheduleData,'data');
+    console.log(futureScheduleData, 'data');
     setSchduleDataAtom([...futureScheduleData], setLoading(false));
   }
 
@@ -161,6 +157,13 @@ const UserScheduleTab = () => {
         if (compare) {
           date = moment.unix(course?.scheduleDate).format('D MMM YYYY');
         }
+        let link = {
+          course: { url: `/course/${course?.id}`, asUrl: `/course/${course?.id}` },
+          exam: {
+            url: `/course/${course?.courseId}?activateExam=${course?.examId}`,
+            asUrl: `/course/${course?.courseId}`
+          }
+        };
         return (
           <div key={course?.id} className={`${styles.scheduleBox}`}>
             {compare && (
@@ -168,7 +171,17 @@ const UserScheduleTab = () => {
                 {moment.unix(course?.scheduleDate).format('D MMM YYYY')}
               </div>
             )}
-            <CohortListCard isSchedule={true} type={'cohort'} scheduleData={course} />
+            <CohortListCard
+              isSchedule={true}
+              type={'cohort'}
+              scheduleData={course}
+              handleClick={() => {
+                router?.push(
+                  link?.[course?.dataType]?.url,
+                  link?.[course?.dataType]?.asUrl
+                );
+              }}
+            />
           </div>
         );
       })}
