@@ -121,7 +121,7 @@ export default function CohortListCard({
               <p className={`${styles.desc}`}>
                 {truncateToN(scheduleData?.description, 150) ||
                   truncateToN(
-                    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime fugiat, dolores debitis at iusto illo in nobis atque dolorem eum! illo in nobis atque dolorem eum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime fugiat, dolores debitis at iusto illo in nobis atque dolorem eum! illo in nobis atque dolorem eum!',
+                  '',
                     200
                   )}
               </p>

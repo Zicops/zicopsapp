@@ -8,6 +8,7 @@ import { getCurrentEpochTime } from '@/helper/common.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { ScheduleTabData } from '@/state/atoms/users.atom';
+import { Skeleton } from '@mui/material';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -19,8 +20,8 @@ const UserScheduleTab = () => {
   const [scheduleData, setSchduleData] = useState([]);
   const [scheduleDataAtom, setSchduleDataAtom] = useRecoilState(ScheduleTabData);
   const [filterDate, setFilterDate] = useState({
-    from: new Date(),
-    to: new Date()
+    from: null,
+    to: null
   });
 
   // function getSortedDateObject(courseArr = []) {
@@ -39,7 +40,8 @@ const UserScheduleTab = () => {
         (course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase()
       );
 
-    console.log(sData,'sda')
+    if (!filterDate?.from || !filterDate?.to) return setSchduleData(sData);
+
     const courses = sData?.filter(
       (course) =>
         course?.scheduleDate > getUnixFromDate(filterDate?.from) &&
@@ -93,55 +95,78 @@ const UserScheduleTab = () => {
           <img className="" src="/images/svg/event_available.svg" alt="" />
         </p>
         <div className={`${styles.filterRowLeft}`}>
-          <div>
+          <div className={`${styles.datePickerContainer}`}>
             From:{' '}
             <InputDatePicker
               selectedDate={filterDate?.from}
-              minDate={new Date()}
+              minDate={new Date().setHours(0, 0, 0, 0)}
               changeHandler={(date) => {
                 setSchduleData(scheduleDataAtom);
-                setFilterDate((prevValue) => ({ ...prevValue, from: date }));
+                setFilterDate((prevValue) => ({ ...prevValue, from: date.setHours(0, 0, 0, 0) }));
               }}
             />
           </div>
-          <div>
+          <div className={`${styles.datePickerContainer}`}>
             To:{' '}
             <InputDatePicker
               selectedDate={filterDate?.to}
-              minDate={filterDate?.from}
+              minDate={filterDate?.from || new Date().setHours(23, 59, 0, 0)}
               changeHandler={(date) => {
                 setSchduleData(scheduleDataAtom);
-                setFilterDate((prevValue) => ({ ...prevValue, to: date }));
+                setFilterDate((prevValue) => ({ ...prevValue, to: date.setHours(23, 59, 0, 0) }));
+              }}
+              styleClass={styles?.calenderCustom}
+            />
+          </div>
+          <div className={`${styles.dropDownContainer}`}>
+            <LabeledDropdown
+              dropdownOptions={{
+                options: filterOptions,
+                value: { value: filterType, label: filterType }
+              }}
+              changeHandler={(e) => {
+                setFilterType(e.value);
+                setSchduleData(scheduleDataAtom);
               }}
             />
           </div>
-          <LabeledDropdown
-            dropdownOptions={{
-              options: filterOptions,
-              value: { value: filterType, label: filterType }
-            }}
-            changeHandler={(e) =>
-              {setFilterType(e.value);
-              setSchduleData(scheduleDataAtom);}
-            }
-          />
+          <div
+            className={`${styles.resetFilter} ${
+              filterType?.toLowerCase() === 'all' && !filterDate?.from && !filterDate?.to
+                ? ''
+                : styles.isActive
+            }`}
+            onClick={() => {
+              if (filterType?.toLowerCase() === 'all' && !filterDate?.from && !filterDate?.to)
+                return;
+              setFilterDate({ from: null, to: null });
+              setSchduleData(scheduleDataAtom);
+            }}>
+            Reset
+          </div>
         </div>
       </div>
-      {scheduleData?.map((course) => {
-        let newDate = moment.unix(course?.scheduleDate).format('D MMM YYYY');
-        let compare = newDate !== date;
-        if (compare) {
-          date = moment.unix(course?.scheduleDate).format('D MMM YYYY');
-        }
-        return (
-          <div key={course?.id} className={`${styles.scheduleBox}`}>
-            {compare && (
-              <div className={`${styles.scheduleBoxTitle}`}>{moment.unix(course?.scheduleDate).format('D MMM YYYY')}</div>
-            )}
-            <CohortListCard isSchedule={true} type={'cohort'} scheduleData={course} />
-          </div>
-        );
-      })}
+      {!scheduleData?.length ? (
+        <Skeleton variant="rectangular" height={200} />
+      ) : (
+        scheduleData?.map((course) => {
+          let newDate = moment.unix(course?.scheduleDate).format('D MMM YYYY');
+          let compare = newDate !== date;
+          if (compare) {
+            date = moment.unix(course?.scheduleDate).format('D MMM YYYY');
+          }
+          return (
+            <div key={course?.id} className={`${styles.scheduleBox}`}>
+              {compare && (
+                <div className={`${styles.scheduleBoxTitle}`}>
+                  {moment.unix(course?.scheduleDate).format('D MMM YYYY')}
+                </div>
+              )}
+              <CohortListCard isSchedule={true} type={'cohort'} scheduleData={course} />
+            </div>
+          );
+        })
+      )}
     </div>
   );
 };
