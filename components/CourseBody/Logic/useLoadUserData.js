@@ -612,10 +612,11 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     if (!moduleData?.length) return;
     if (!userCourseData?.userCourseMapping?.user_course_id) return;
     if (!userCourseData?.isCourseAssigned) return;
+    if (!userData?.id) return;
 
     let userCourseProgress = userCourseData?.userCourseProgress || null;
 
-    if (!userCourseProgress) {
+    if (!userCourseProgress?.length) {
       // user course progress
       //in order to not load course progress of self-unassigned course
       const progressRes = await loadUserCourseProgress({
@@ -638,9 +639,10 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       userCourseProgress: userCourseProgress || []
     });
   }, [
-    userCourseData?.userCourseMapping?.user_course_id,
     moduleData,
-    userCourseData?.isCourseAssigned
+    userCourseData?.userCourseMapping?.user_course_id,
+    userCourseData?.isCourseAssigned,
+    userData?.id
   ]);
 
   useEffect(async () => {
