@@ -179,11 +179,11 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
                 });
               }
               // binge data
-              const startTimeMin = Math.floor(parseInt(content.startTime) / 60);
-              const startTimeSec = parseInt(content.startTime) - startTimeMin * 60;
+              const startTimeMin = Math.floor(parseInt(content.startTime || 0) / 60);
+              const startTimeSec = parseInt(content.startTime || 0) - startTimeMin * 60;
               const showTime = content.fromEndTime || content.nextShowTime;
-              const showTimeMin = Math.floor(parseInt(showTime) / 60);
-              const showTimeSec = parseInt(showTime) - showTimeMin * 60;
+              const showTimeMin = Math.floor(parseInt(showTime || 0) / 60);
+              const showTimeSec = parseInt(showTime || 0) - showTimeMin * 60;
 
               const bingeData = {
                 startTimeMin: startTimeMin,
@@ -305,8 +305,8 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
     console.log(topicContent);
     for (let index = 0; index < topicContent.length; index++) {
       const content = topicContent[index];
-      const startTime = parseInt(binge.startTimeMin) * 60 + parseInt(binge.startTimeSec);
-      const showTime = parseInt(binge.showTimeMin) * 60 + parseInt(binge.showTimeSec);
+      const startTime = parseInt(binge.startTimeMin || 0) * 60 + parseInt(binge.startTimeSec || 0);
+      const showTime = parseInt(binge.showTimeMin || 0) * 60 + parseInt(binge.showTimeSec || 0);
 
       const sendContentData = {
         courseId: fullCourse.id,
@@ -503,7 +503,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
           if (isError) continue;
 
-          const startTime = parseInt(quiz?.startTimeMin) * 60 + parseInt(quiz?.startTimeSec);
+          const startTime = +quiz?.startTimeMin * 60 + +quiz?.startTimeSec;
           const sendQuizData = {
             id: quiz?.id,
             name: quiz?.name || '',
