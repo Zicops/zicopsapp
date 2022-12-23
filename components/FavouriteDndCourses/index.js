@@ -1,7 +1,11 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_SELF_ASSIGN_LIMIT, COURSE_STATUS, LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
+import {
+  COURSE_SELF_ASSIGN_LIMIT,
+  COURSE_STATUS,
+  LEARNING_FOLDER_CAPACITY
+} from '@/helper/constants.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -23,6 +27,7 @@ import ListCard from './ListCard';
 import useHandleCourseAssign from './Logic/useHandleCourseAssign';
 import styles from './favouriteDndCourses.module.scss';
 import Loader from '../common/Loader';
+import moment from 'moment';
 
 export default function FavouriteDndCourses({ isLoading }) {
   const {
@@ -39,7 +44,7 @@ export default function FavouriteDndCourses({ isLoading }) {
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const userData = useRecoilValue(UserStateAtom);
-  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
@@ -118,16 +123,19 @@ export default function FavouriteDndCourses({ isLoading }) {
     //   );
 
     let totalSelfCourseCount = 0;
-    if (_userCourses?.length){
+    if (_userCourses?.length) {
       _userCourses?.forEach((course) => {
-        if( course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId){
-            userCourses?.push(course);
+        if (
+          course?.course_status?.toLowerCase() !== 'disabled' &&
+          course?.user_lsp_id === userLspId
+        ) {
+          userCourses?.push(course);
             if(parseJson(course?.added_by)?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
         }
       })
     }
 
-    setUserOrgData((prevValue) => ({...prevValue , self_course_count: totalSelfCourseCount}))
+    setUserOrgData((prevValue) => ({ ...prevValue, self_course_count: totalSelfCourseCount }));
     const userCourseMaps = userCourses || [];
     const assignedCourses = [];
     const availableCourses =
@@ -139,7 +147,12 @@ export default function FavouriteDndCourses({ isLoading }) {
             let added_by = {};
             if (map?.added_by) added_by = JSON.parse(map?.added_by);
             const isAssigned = map?.course_id === c?.id;
-            if (isAssigned) assignedCourses.push({ ...c, added_by });
+            if (isAssigned)
+              assignedCourses.push({
+                ...c,
+                added_by,
+                expected_completion: moment.unix(map?.end_date).format('DD/MM/YYYY')
+              });
             return isAssigned;
           })
         );
