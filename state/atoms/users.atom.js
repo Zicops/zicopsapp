@@ -187,3 +187,8 @@ export const InviteUserAtom = atom({
   key:'invited',
   default:[]
 })
+
+export const ScheduleTabData = atom({
+  key:'scheduleData',
+  default:[]
+})
