@@ -1,14 +1,11 @@
 import CohortListCard from '@/components/common/CohortListCard';
-import Dropdown from '@/components/common/Dropdown';
-import DatePicker from '@/components/common/FormComponents/DatePicker';
-import InputTimePicker from '@/components/common/FormComponents/InputTimePicker';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import InputDatePicker from '@/components/common/InputDatePicker';
+import ListCardLoader from '@/components/common/ListCardLoader';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { ScheduleTabData } from '@/state/atoms/users.atom';
-import { Skeleton } from '@mui/material';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -16,6 +13,7 @@ import styles from '../learnerUserProfile.module.scss';
 
 const UserScheduleTab = () => {
   const { getUserCourseData, getScheduleExams } = useUserCourseData();
+  const [loading, setLoading] = useState(false);
   const [filterType, setFilterType] = useState('All');
   const [scheduleData, setSchduleData] = useState([]);
   const [scheduleDataAtom, setSchduleDataAtom] = useRecoilState(ScheduleTabData);
@@ -65,8 +63,10 @@ const UserScheduleTab = () => {
 
   async function loadScheduleData() {
     // if(!scheduleDataAtom?.length) return ;
+    setLoading(true);
     const courseData = await getUserCourseData(35);
     const examData = await getScheduleExams(courseData);
+    if (!courseData?.length || !examData?.length) return setLoading(false);
     const scheduleData = [...courseData, ...examData];
     const sortedArray = scheduleData?.sort((a, b) => {
       return a?.scheduleDate - b?.scheduleDate;
@@ -77,7 +77,7 @@ const UserScheduleTab = () => {
     const futureScheduleData = sortedArray?.filter(
       (course) => course?.scheduleDate > currentEpochTime
     );
-    setSchduleDataAtom([...futureScheduleData]);
+    setSchduleDataAtom([...futureScheduleData], setLoading(false));
   }
 
   const filterOptions = [
@@ -146,27 +146,31 @@ const UserScheduleTab = () => {
           </div>
         </div>
       </div>
-      {!scheduleData?.length ? (
-        <Skeleton variant="rectangular" height={200} />
+
+      {loading ? (
+        <ListCardLoader heroHeight={'75vh'} />
       ) : (
-        scheduleData?.map((course) => {
-          let newDate = moment.unix(course?.scheduleDate).format('D MMM YYYY');
-          let compare = newDate !== date;
-          if (compare) {
-            date = moment.unix(course?.scheduleDate).format('D MMM YYYY');
-          }
-          return (
-            <div key={course?.id} className={`${styles.scheduleBox}`}>
-              {compare && (
-                <div className={`${styles.scheduleBoxTitle}`}>
-                  {moment.unix(course?.scheduleDate).format('D MMM YYYY')}
-                </div>
-              )}
-              <CohortListCard isSchedule={true} type={'cohort'} scheduleData={course} />
-            </div>
-          );
-        })
+        !scheduleData?.length && (
+          <strong className={`${styles.fallbackMsg}`}>No Schedules Found</strong>
+        )
       )}
+      {scheduleData?.map((course) => {
+        let newDate = moment.unix(course?.scheduleDate).format('D MMM YYYY');
+        let compare = newDate !== date;
+        if (compare) {
+          date = moment.unix(course?.scheduleDate).format('D MMM YYYY');
+        }
+        return (
+          <div key={course?.id} className={`${styles.scheduleBox}`}>
+            {compare && (
+              <div className={`${styles.scheduleBoxTitle}`}>
+                {moment.unix(course?.scheduleDate).format('D MMM YYYY')}
+              </div>
+            )}
+            <CohortListCard isSchedule={true} type={'cohort'} scheduleData={course} />
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -206,6 +206,8 @@
   color: $white;
   overflow-y: scroll;
   .filterRow{
+    position: sticky;
+    position: -webkit-sticky;
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
