@@ -58,7 +58,8 @@ export default function UiComponents({
     handleSaveBookmark,
     notes,
     handleNotesChange,
-    handleSaveNotes
+    handleSaveNotes,
+    isBookMarkDisable
   } = useSaveData(videoElement, freezeState);
 
   const { setShowQuizDropdown, showQuiz, setShowQuiz } = states;
@@ -177,6 +178,7 @@ export default function UiComponents({
           }}
           updateIsPlayingTo={updateIsPlayingTo}
           playerState={playerState}
+          submitIsDisable={isBookMarkDisable}
         />
       ),
       handleClick: () => {
