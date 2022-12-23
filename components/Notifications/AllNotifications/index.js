@@ -1,6 +1,6 @@
 import SingleNotification from '../SingleNotification';
 
-const AllNotifications = ({ style, data }) => {
+const AllNotifications = ({ style, data, isNav }) => {
   return (
     <div>
       {data?.map((element) => {
@@ -13,6 +13,7 @@ const AllNotifications = ({ style, data }) => {
             description={body}
             img={img}
             link={link}
+            isNav={isNav}
             duration={duration}
             status={isRead}
             style={style}

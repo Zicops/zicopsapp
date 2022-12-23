@@ -300,42 +300,42 @@ export default function TopicBox({
   }, [switchToTopic, examData]);
 
   // quiz
-  useEffect(() => {
-    if (topic?.type !== 'Content') return;
+  // useEffect(() => {
+  //   if (topic?.type !== 'Content') return;
 
-    const allQuiz = [];
+  //   const allQuiz = [];
 
-    setQuizData([]);
-    async function loadQuiz() {
-      let topicQuiz = allQuiz?.find((quiz) => quiz?.topicId === topic?.id);
+  //   setQuizData([]);
+  //   async function loadQuiz() {
+  //     let topicQuiz = allQuiz?.find((quiz) => quiz?.topicId === topic?.id);
 
-      if (!topicQuiz) {
-        const quizRes = await loadQueryDataAsync(
-          GET_TOPIC_QUIZ,
-          { topic_id: topic?.id },
-          { fetchPolicy: 'no-cache' }
-        );
+  //     if (!topicQuiz) {
+  //       const quizRes = await loadQueryDataAsync(
+  //         GET_TOPIC_QUIZ,
+  //         { topic_id: topic?.id },
+  //         { fetchPolicy: 'no-cache' }
+  //       );
 
-        if (quizRes?.getTopicQuizes) {
-          topicQuiz = [...quizRes?.getTopicQuizes]?.sort((q1, q2) => q1?.sequence - q2?.sequence);
-          // console.log([...quizData, ...topicQuiz]);
-          allQuiz.push(...topicQuiz);
-        }
-      }
+  //       if (quizRes?.getTopicQuizes) {
+  //         topicQuiz = [...quizRes?.getTopicQuizes]?.sort((q1, q2) => q1?.sequence - q2?.sequence);
+  //         // console.log([...quizData, ...topicQuiz]);
+  //         allQuiz.push(...topicQuiz);
+  //       }
+  //     }
 
-      return allQuiz;
-    }
+  //     return allQuiz;
+  //   }
 
-    loadQuiz().then((newQuiz) => {
-      if (newQuiz?.length)
-        setQuizData((prev) => {
-          console.log(prev, newQuiz);
-          const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
+  //   loadQuiz().then((newQuiz) => {
+  //     if (newQuiz?.length)
+  //       setQuizData((prev) => {
+  //         console.log(prev, newQuiz);
+  //         const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
 
-          return [...prev, ...filteredQuiz];
-        });
-    });
-  }, []);
+  //         return [...prev, ...filteredQuiz];
+  //       });
+  //   });
+  // }, []);
 
   // load user exam attempts data
   useEffect(() => {

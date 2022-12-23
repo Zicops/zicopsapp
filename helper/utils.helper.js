@@ -178,10 +178,10 @@ export async function generateVideoThumbnails(videoData, thumbnailsGap, duration
   for (let i = 0; i <= duration; i += thumbnailsGap) {
     fractions.push(Math.floor(i));
   }
-  fractions.map(async (time) => {
-    let oneThums = await getVideoThumbnail(videoData, time);
-    thumbnail.push(oneThums);
-  });
+  // fractions.map(async (time) => {
+  //   let oneThums = await getVideoThumbnail(videoData, time);
+  //   thumbnail.push(oneThums);
+  // });
   return thumbnail;
 }
 async function getVideoThumbnail(videoData, videoTimeInSeconds) {
@@ -270,7 +270,7 @@ export function isWordIncluded(sentence = '', word = '') {
   return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
 }
 
-export function getMinCourseAssignDate(){
-  const date = (new Date()).setDate((new Date()).getDate() + 1)
+export function getMinCourseAssignDate() {
+  const date = new Date().setDate(new Date().getDate() + 1);
   return date;
 }

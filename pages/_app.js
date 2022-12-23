@@ -53,19 +53,19 @@ manages and elevates the entire learning environment."
       <ErrorBoundary>
         <AuthUserProvider>
           <RecoilRoot>
-            <CourseContextProvider>
-              <UserContextProvider>
-                <AuthChecker>
-                  <PushNotificationLayout>
+            <PushNotificationLayout>
+              <CourseContextProvider>
+                <UserContextProvider>
+                  <AuthChecker>
                     <Layout>
                       <Component {...pageProps} />
 
                       <Toaster />
                     </Layout>
-                  </PushNotificationLayout>
-                </AuthChecker>
-              </UserContextProvider>
-            </CourseContextProvider>
+                  </AuthChecker>
+                </UserContextProvider>
+              </CourseContextProvider>
+            </PushNotificationLayout>
           </RecoilRoot>
         </AuthUserProvider>
       </ErrorBoundary>
