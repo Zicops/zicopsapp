@@ -549,7 +549,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       .then((notesDataRes) => {
         setFloatingNotes(
           notesDataRes?.getUserNotes?.notes
-            ?.filter((notes) => notes?.is_active)
+            ?.filter((notes) => notes?.is_active && notes?.status === 'Saved')
             ?.map((noteObj) => getNoteCardObj(noteObj)) || []
         );
         // setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
