@@ -619,7 +619,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         continue;
       }
 
-      const startTime = parseInt(quiz?.startTimeMin) * 60 + parseInt(quiz?.startTimeSec);
+      const startTime = +quiz?.startTimeMin * 60 + +quiz?.startTimeSec;
       const sendQuizData = {
         name: quiz?.name || '',
         category: fullCourse?.category || '',
