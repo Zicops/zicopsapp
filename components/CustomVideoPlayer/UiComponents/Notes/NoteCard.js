@@ -64,7 +64,7 @@ export default function NoteCard({
       // console.log('update note');
     }
     // TODO: delete note
-    // if (isDelete) sendNotesData.is_active = false;
+    if (isDelete) sendNotesData.status = 'Disabled';
 
     // console.log(sendNotesData, isNaN(+noteData?.user_notes_id), sendNotesData?.user_notes_id);
 

@@ -325,5 +325,5 @@ select.nav_search_dropdow:selected {
 }
 
 .activeNotificationIcon {
-  @include showRedCountAtCorner(15px, 8px, $primary, $black);
+  @include showRedCountAtCorner(15px, 8px, $primary, $primary);
 }
