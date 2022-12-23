@@ -220,13 +220,13 @@
     .dropDownContainer{
       display: flex;
       justify-content: flex-end;
-
       width: 20%;
     }
 
     .filterRowLeft{
-      flex: 0.75;
+      flex: 1;
       display: flex;
+      justify-content: flex-end;
       align-items: center;
       gap: 10px;
 
