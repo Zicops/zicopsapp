@@ -148,6 +148,11 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       _newQuiz.startTimeSec = '';
       isInValidData = true;
     }
+    if (startTimeSec > 60) {
+      _newQuiz.startTimeSec = startTimeSec % 60;
+      _newQuiz.startTimeMin = Math.floor(startTimeSec / 60);
+      isInValidData = true;
+    }
     if (startTime > videoDuration) {
       isInValidData = true;
       _newQuiz.startTimeMin = Math.floor(videoDuration / 60);
