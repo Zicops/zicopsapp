@@ -10,9 +10,10 @@ import {
 } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
 import {
+  GET_USER_BOOKMARKS,
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
   GET_USER_COURSE_PROGRESS,
-  GET_USER_NOTES_BOOKMARKS,
+  GET_USER_NOTES,
   GET_USER_QUIZ_ATTEMPTS,
   userQueryClient
 } from '@/api/UserQueries';
@@ -502,7 +503,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       loadQuiz(topic?.id).then((newQuiz) => {
         if (newQuiz?.length)
           setQuizData((prev) => {
-            console.log(prev, newQuiz);
+            // console.log(prev, newQuiz);
             const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
 
             return [...prev, ...filteredQuiz];
@@ -534,24 +535,53 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
     // user notes and bookmarks
     loadQueryDataAsync(
-      GET_USER_NOTES_BOOKMARKS,
+      GET_USER_NOTES,
       {
         user_id: userData?.id,
         publish_time: getUnixFromDate(),
         pageCursor: '',
-        pageSize: 9999999999999,
+        pageSize: 9999999,
         course_id: fullCourse?.id
       },
       {},
       userClient
-    ).then((notesBookmarkDataRes) => {
-      setFloatingNotes(
-        notesBookmarkDataRes?.getUserNotes?.notes
-          ?.filter((notes) => notes?.is_active)
-          ?.map((noteObj) => getNoteCardObj(noteObj)) || []
-      );
-      setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
-    });
+    )
+      .then((notesDataRes) => {
+        setFloatingNotes(
+          notesDataRes?.getUserNotes?.notes
+            ?.filter((notes) => notes?.is_active)
+            ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+        );
+        // setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // user bookmarks
+    loadQueryDataAsync(
+      GET_USER_BOOKMARKS,
+      {
+        user_id: userData?.id,
+        publish_time: getUnixFromDate(),
+        pageCursor: '',
+        pageSize: 9999999,
+        course_id: fullCourse?.id
+      },
+      {},
+      userClient
+    )
+      .then((bookmarkDataRes) => {
+        // setFloatingNotes(
+        //   notesBookmarkDataRes?.getUserNotes?.notes
+        //     ?.filter((notes) => notes?.is_active)
+        //     ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+        // );
+        setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     // topic quiz
     const allQuizProgress = [];
