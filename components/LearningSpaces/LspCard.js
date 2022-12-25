@@ -26,6 +26,7 @@ const LspCard = ({
     if (isDisabled) return;
 
     if (!userLspId && !userId) return;
+    setUserOrgData((prev)=>({...prev,logo_url:logo}));
     const lspRoleArr = await loadQueryDataAsync(
       GET_USER_LSP_ROLES,
       { user_id: userId, user_lsp_ids: [userLspId] },

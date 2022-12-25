@@ -42,7 +42,7 @@ export default function Nav() {
     });
     setOrgData((prevValue) => ({
       ...prevValue,
-      logo_url: res?.data?.getOrganizations[0]?.logo_url
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
     }));
   };
   useEffect(() => {
