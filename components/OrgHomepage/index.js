@@ -96,7 +96,7 @@ export default function OrgHomepage() {
   return (
     <div className={`${styles.main_cont}`}>
       <div className={`${styles.left_cont}`}>
-        <img src="/images/orgHomepageZ.png" alt="" />
+        <img src="/images/svg/orgHomepageZ.svg" alt="" />
         <div className={`${styles.left_cont_text}`}>
           <div className={`${styles.left_cont_maintext}`}>
             <p>Welcome To</p>
