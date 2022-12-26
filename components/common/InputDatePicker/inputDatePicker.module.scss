@@ -45,7 +45,7 @@
 .inlineCalender {
   background-color: $darkOne;
   border: 1px solid $darkOne;
-
+  z-index: 1000;
   :global(.react-datepicker),
   :global(.react-datepicker__triangle),
   :global(.react-datepicker__triangle::after),
