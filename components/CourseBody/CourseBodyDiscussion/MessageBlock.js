@@ -40,39 +40,25 @@ const MessageBlock = ({ isReply, message }) => {
     setShowInput(false);
     let newreplyData = replyArr?.filter((rdata) => rdata[msg?.replyId] ? rdata[msg?.replyId] : rdata[msg?.id]);
     let newReplyArr = replyArr?.filter((rdata) => rdata[msg?.replyId] ? !rdata[msg?.replyId] : !rdata[msg?.id]);
+    // let newreplyData = replyArr?.filter((rdata) => rdata[msg?.replyId] );
+    // let newReplyArr = replyArr?.filter((rdata) => !rdata[msg?.replyId]);
     let newMessageId = "";
     if (msg?.replyId) {
       newMessageId = msg?.replyId
     } else {
       newMessageId = msg?.id
     }
-    console.log(newreplyData);
-    if (newMessageId) {
-        let newArray = [...newreplyData[0][newMessageId]]
-        newArray.push(
-           {
-              id: Math.floor(Date.now() / 1000 + 1),
-              content: { text: reply.replace(/<[^>]+>/g, ''), image: [] },
-              time: Math.floor(Date.now() / 1000),
-              replyId: message?.id,
-              isAnonymous: false,
-              user: {
-                first_name: userDetails?.first_name,
-                id: userDetails?.id,
-                photo_url: 'https://www.w3schools.com/howto/img_avatar.png'
-              },
-              like: [],
-              unlike: [],
-              isPinned: false
-            }
-        )
-        let obj = {};
-        obj[`${newMessageId}`] = newArray
-        const updatedReplyArr = [...newReplyArr, obj ]
-        setReplyArr(updatedReplyArr)
-      } else {
-        setReplyArr([
-        ...newReplyArr,
+    let checkId = "";
+    console.log(newreplyData[0]);
+    if (newreplyData[0]) {
+      console.log(msg?.id);
+      checkId = Object.keys(newreplyData[0]);
+      console.log(parseInt(checkId[0]));
+    }
+    console.log(newMessageId);
+    if (!newMessageId || (parseInt(checkId[0]) !== msg?.id && !msg?.replyId)) {
+      setReplyArr([
+        ...replyArr,
         {
           [msg?.id]: [
             {
@@ -92,11 +78,35 @@ const MessageBlock = ({ isReply, message }) => {
             }
           ]
         }
-      ]);
-    }
-    setReply('');
-    setShowInput(false);
-  };
+      ])
+    } else {
+         let newArray = [...newreplyData[0][newMessageId]]
+         newArray.push(
+            {
+               id: Math.floor(Date.now() / 1000 + 1),
+               content: { text: reply.replace(/<[^>]+>/g, ''), image: [] },
+               time: Math.floor(Date.now() / 1000),
+               replyId: message?.id,
+               isAnonymous: false,
+               user: {
+                 first_name: userDetails?.first_name,
+                 id: userDetails?.id,
+                 photo_url: 'https://www.w3schools.com/howto/img_avatar.png'
+               },
+               like: [],
+               unlike: [],
+               isPinned: false
+             }
+         )
+         let obj = {};
+         obj[`${newMessageId}`] = newArray
+         const updatedReplyArr = [...newReplyArr, obj ]
+         setReplyArr(updatedReplyArr)
+       } 
+      setReply('');
+      setShowInput(false);
+}
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       onSendReplyHandler();
