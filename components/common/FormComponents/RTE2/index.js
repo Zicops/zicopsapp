@@ -86,7 +86,7 @@ export default function RTE2({
         </div>
         <div className={`${styles.button_type}`}>
         <button className={`${styles.button1}`} onClick={onPostHandler}>Post</button>
-        <button className={`${styles.button2}`} onClick={onCancleHandler}>Cancle</button>
+        <button className={`${styles.button2}`} onClick={onCancleHandler}>Cancel</button>
         </div>
         </div>
       </div>

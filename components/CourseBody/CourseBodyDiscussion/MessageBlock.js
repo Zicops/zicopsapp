@@ -17,8 +17,7 @@ const MessageBlock = ({ isReply, message }) => {
   const onReplyHandler = (msg) => {
     setShowInput(true);
     console.log(msg.replyId);
-    currentReplyId = msg.replyId
-    console.log(currentReplyId);
+    currentReplyId = msg.replyId;
   };
   const canclePostHanlder = () => {
     setShowInput(false);
@@ -37,22 +36,45 @@ const MessageBlock = ({ isReply, message }) => {
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
-  console.log(replyArr);
   const onSendReplyHandler = (msg) => {
     setShowInput(false);
-    const newreplyData = replyArr.filter((rdata) => rdata[msg?.replyId] ? rdata[msg?.replyId] : rdata[msg?.id] );
+    let newreplyData = replyArr?.filter((rdata) => rdata[msg?.replyId] ? rdata[msg?.replyId] : rdata[msg?.id]);
+    let newReplyArr = replyArr?.filter((rdata) => rdata[msg?.replyId] ? !rdata[msg?.replyId] : !rdata[msg?.id]);
     let newMessageId = "";
     if (msg?.replyId) {
       newMessageId = msg?.replyId
     } else {
       newMessageId = msg?.id
     }
-    {
-      newMessageId &&
-      setReplyArr([
+    console.log(newreplyData);
+    if (newMessageId) {
+        let newArray = [...newreplyData[0][newMessageId]]
+        newArray.push(
+           {
+              id: Math.floor(Date.now() / 1000 + 1),
+              content: { text: reply.replace(/<[^>]+>/g, ''), image: [] },
+              time: Math.floor(Date.now() / 1000),
+              replyId: message?.id,
+              isAnonymous: false,
+              user: {
+                first_name: userDetails?.first_name,
+                id: userDetails?.id,
+                photo_url: 'https://www.w3schools.com/howto/img_avatar.png'
+              },
+              like: [],
+              unlike: [],
+              isPinned: false
+            }
+        )
+        let obj = {};
+        obj[`${newMessageId}`] = newArray
+        const updatedReplyArr = [...newReplyArr, obj ]
+        setReplyArr(updatedReplyArr)
+      } else {
+        setReplyArr([
+        ...newReplyArr,
         {
-          [newMessageId]: [
-            ...newreplyData[0][newMessageId],
+          [msg?.id]: [
             {
               id: Math.floor(Date.now() / 1000 + 1),
               content: { text: reply.replace(/<[^>]+>/g, ''), image: [] },

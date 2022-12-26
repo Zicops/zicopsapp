@@ -4,7 +4,7 @@ export const discussionData = {
       id: 3001,
       isAnonymous: false,
       isAnnouncement: false,
-       replyId: "",
+      //  replyId: "",
       user: {
         id: 1001,
         first_name: 'Zicops HR',
@@ -21,13 +21,13 @@ export const discussionData = {
       like: [124, 4524, 4552, 454, 2345],
       unlike: [543, 123, 555],
       isPinned: false,
-      reply: 154
+      reply: 5
     },
     {
       id: 3002,
       isAnonymous: false,
       isAnnouncement: false,
-      replyId: "",
+      // replyId: "",
       user: {
         id: 1002,
         first_name: 'Zicops Manager',
@@ -43,13 +43,14 @@ export const discussionData = {
       },
       like: [124, 4524, 4552, 454, 2345],
       unlike: [543, 123, 555],
-      isPinned: false
+      isPinned: false,
+      reply: 4
     },
     {
       id: 3003,
       isAnonymous: false,
       isAnnouncement: true,
-      replyId: "",
+      // replyId: "",
       user: {
         id: 1003,
         first_name: 'Zicops Client',
@@ -65,13 +66,14 @@ export const discussionData = {
       },
       like: [124, 4524, 4552, 454, 2345, 587, 558, 563, 789],
       unlike: [543, 123, 555, 4785],
-      isPinned: false
+      isPinned: false,
+      reply: 0
     },
     {
       id: 3004,
       isAnonymous: false,
       isAnnouncement: false,
-      replyId: "",
+      // replyId: "",
       user: {
         id: 1004,
         first_name: 'Zicops HR',
@@ -87,13 +89,14 @@ export const discussionData = {
       },
       like: [124, 4524, 4552, 454, 2345, 1002, 5872, 4587, 3697],
       unlike: [543, 123, 555],
-      isPinned: false
+      isPinned: false,
+      reply: 0
     },
     {
       id: 3005,
       isAnonymous: false,
       isAnnouncement: true,
-      replyId: "",
+      // replyId: "",
       user: {
         id: 1005,
         first_name: 'Zicops Developer',
@@ -109,7 +112,8 @@ export const discussionData = {
       },
       like: [124, 4524, 4552, 454, 2345, 963, 458],
       unlike: [543, 123, 555],
-      isPinned: false
+      isPinned: false,
+      reply: 0
     }
   ]
 };
@@ -180,6 +184,169 @@ export const replyData = [
         id: 5005,
         isAnonymous: false,
         replyId: 3001,
+        user: {
+          id: 1005,
+          first_name: 'Zicops Developer',
+          photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345],
+        unlike: [543, 123, 555],
+        isPinned: false
+      }
+    ],
+  },
+  {
+    3002: [
+      {
+        id: 5006,
+        isAnonymous: false,
+        replyId: 3002,
+        user: {
+          id: 1004,
+          first_name: 'Zicops Client',
+          photo_url: 'https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584__340.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345, 2014, 4587],
+        unlike: [543, 123, 555],
+        isPinned: false
+      },
+      {
+        id: 5007,
+        isAnonymous: false,
+        replyId: 3002,
+        user: {
+          id: 1005,
+          first_name: 'Zicops HR',
+          photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345],
+        unlike: [543, 123, 555],
+        isPinned: false
+      },
+      {
+        id: 5008,
+        isAnonymous: false,
+        replyId: 3002,
+        user: {
+          id: 1005,
+          first_name: 'Zicops Developer',
+          photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345],
+        unlike: [543, 123, 555],
+        isPinned: false
+      },
+      {
+        id: 5009,
+        isAnonymous: false,
+        replyId: 3002,
+        user: {
+          id: 1005,
+          first_name: 'Zicops Manager',
+          photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345],
+        unlike: [543, 123, 555],
+        isPinned: false
+      }
+    ]
+  },
+  {
+    3003: [
+      {
+        id: 5006,
+        isAnonymous: false,
+        replyId: 3003,
+        user: {
+          id: 1004,
+          first_name: 'Zicops Client',
+          photo_url: 'https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584__340.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345, 2014, 4587],
+        unlike: [543, 123, 555],
+        isPinned: false
+      },
+      {
+        id: 5007,
+        isAnonymous: false,
+        replyId: 3003,
+        user: {
+          id: 1005,
+          first_name: 'Zicops HR',
+          photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345],
+        unlike: [543, 123, 555],
+        isPinned: false
+      },
+     
+      {
+        id: 5009,
+        isAnonymous: false,
+        replyId: 3003,
+        user: {
+          id: 1005,
+          first_name: 'Zicops Manager',
+          photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345],
+        unlike: [543, 123, 555],
+        isPinned: false
+      }
+    ]
+  },
+  {
+    3004: [
+      {
+        id: 5006,
+        isAnonymous: false,
+        replyId: 3004,
+        user: {
+          id: 1004,
+          first_name: 'Zicops Client',
+          photo_url: 'https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584__340.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345, 2014, 4587],
+        unlike: [543, 123, 555],
+        isPinned: false
+      },
+      {
+        id: 5007,
+        isAnonymous: false,
+        replyId: 3004,
+        user: {
+          id: 1005,
+          first_name: 'Zicops HR',
+          photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        },
+        time: 1671197362,
+        content: { text: 'Welcome to Zicops Learning Technology', image: [] },
+        like: [124, 4524, 4552, 454, 2345],
+        unlike: [543, 123, 555],
+        isPinned: false
+      },
+      {
+        id: 5008,
+        isAnonymous: false,
+        replyId: 3004,
         user: {
           id: 1005,
           first_name: 'Zicops Developer',

@@ -1,22 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import style from './discussion.module.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MessageBlock from './MessageBlock';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
+import { DiscussionReplyAtom, MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
+import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
-
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isPublic, setIsPublic] = useState(true);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
+  const [replyData, setReplyData] = useRecoilState(DiscussionReplyAtom);
   const [showInput, setShowInput] = useState(false);
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
   const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const userDetails = useRecoilValue(UserStateAtom);
-
+  const [inputText, setInputText] = useState('');
+  const [selectedType, setSelectedType] = useState('');
+  const [currentMsgId , setCurrentMsgId] = useState('')
+  const inputHandler = (e) => {
+    let lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  };
+  const handleTypeSelect = (e) => {
+    setSelectedType(e.value);
+  };
   const onShowHandler = () => {
     setShowInput(true);
   };
@@ -34,12 +44,19 @@ const CourseBodyDiscussion = () => {
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
-  const showRepliesHandler = (id) => {
+  const showRepliesHandler = (msg) => {
+    const messageReplies = replyArr?.find((rdata) => rdata[msg.id]);
+    setReplyData(messageReplies);
     setShowReplies(!showReplies);
+    setCurrentMsgId("")
   };
+  useEffect(() => {
+    if (!currentMsgId) return;
+    showRepliesHandler(currentMsgId)
+  },[replyArr])
   const sendMessageHandler = () => {
     setMessageArr([
-      ...messageArr,
+      
       {
         id: Math.floor(Date.now() / 1000 + 1),
         isAnonymous: isAnonymous,
@@ -64,15 +81,16 @@ const CourseBodyDiscussion = () => {
         },
         like: [124, 4524, 4552, 454, 2345, 963, 458],
         unlike: [543, 123, 555],
-        isPinned: false
-      }
+        isPinned: false,
+        reply: 0
+      },
+      ...messageArr
     ]);
     setMessage('');
     setShowInput(false);
   };
   const onMessageHandler = (e) => {
     setMessage(e);
-    console.log(e);
   };
   console.log('messageArr', messageArr);
   const handleKeyPress = (e) => {
@@ -86,15 +104,52 @@ const CourseBodyDiscussion = () => {
   //     replies: r?.replies?.sort((a, b) => b.time - a.time)
   //   }));
   // }
+  const options = [
+    { label: 'All', value: 'All' },
+    { label: 'Announcements', value: 'Announcements' },
+    { label: 'Discussions', value: 'Discussions' }
+  ];
+  const typeValue = options.find((option) => option.value === selectedType);
+  const filteredData = messageArr.filter((el) => {
+    if (inputText === '') {
+      return el;
+    } else {
+      return el.user?.first_name.toLowerCase().includes(inputText);
+    }
+  });
 
   return (
     <div className={`${style.discussion_container}`}>
       <div className={`${style.discussion_header}`}>
         <p>Discussion</p>
-        <div className={`${style.discussion_header_images}`}>
-          <img src="/images/search3.png" alt="" />
-          <img src="/images/expand.png" alt="" />
+      </div>
+      <div className={`${style.discussion_filter}`}>
+        <div className={`${style.discussion_search_input}`}>
+          <input
+            type="text"
+            placeholder="Search by User Name, Topics, Announcements"
+            onChange={inputHandler}
+          />
+          <div className={`${style.discussion_search_images}`}>
+            <img src="/images/search3.png" alt="" />
+          </div>
         </div>
+        <LabeledDropdown
+          dropdownOptions={{
+            inputName: 'type',
+            placeholder: 'Posted by',
+            options: [{ label: 'Name', value: 'Name' }]
+          }}
+        />
+        <LabeledDropdown
+          dropdownOptions={{
+            inputName: 'type',
+            placeholder: 'Type',
+            options: options,
+            value: { value: typeValue?.value ,  label: typeValue?.label },
+          }}
+          changeHandler={handleTypeSelect}
+        />
       </div>
       {!showInput && (
         <div className={`${style.input_container}`} onClick={onShowHandler}>
@@ -104,6 +159,13 @@ const CourseBodyDiscussion = () => {
           <input placeholder="Start new discussion..." className={`${style.input}`} />
         </div>
       )}
+      {inputText?.length ? 
+        <>
+      <div className={`${style.searchValue}`}>Showing results for "{inputText}"</div>
+       <div className={`${style.hr}`}></div>
+        </>
+        : ""
+      }
       {showInput && (
         <div>
           <RTE2
@@ -122,24 +184,26 @@ const CourseBodyDiscussion = () => {
           />
         </div>
       )}
-      {messageArr?.map((data) => {
-        console.log(replyArr);
+      {filteredData?.map((data) => {
         const newreplyData = replyArr?.find((rdata) => rdata[data.id]);
-        console.log(newreplyData);
         return (
           <>
             <MessageBlock message={data} />
             <div className={`${style.more_replies}`}>
               <div
                 className={`${style.more_replies_image}`}
-                onClick={() => showRepliesHandler(message?.id)}>
+                onClick={() => {
+                  setCurrentMsgId(data)
+                  showRepliesHandler(data)
+
+                }}>
                 <img src="/images/unfold_more.png" alt="" />
               </div>
-              <p>{newreplyData ? newreplyData[data.id].length : '0'}</p>
+              <p>{newreplyData ? newreplyData[data.id]?.length : '0'}</p>
             </div>
-            {showReplies && newreplyData && (
+            {showReplies && replyData && (
               <>
-                {newreplyData[data.id].map((repdata) => {
+                {replyData[data.id]?.map((repdata) => {
                   return <MessageBlock message={repdata} isReply={true} />;
                 })}
               </>

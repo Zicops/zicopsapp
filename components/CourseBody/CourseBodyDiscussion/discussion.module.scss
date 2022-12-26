@@ -20,6 +20,37 @@
     align-items: center;
   }
 }
+.discussion_filter{
+  display: flex;
+  gap: 10px;
+}
+.discussion_search_input{
+  width: 70%;
+  position: relative;
+  border: 1px solid $secondary;
+  padding: 5px 10px;
+  input{
+    background-color: #1e1e1e;
+    color: $white;
+    border: none;
+    margin-left: 30px;
+    height: 100%;
+    width: 90%;
+  }
+    input:focus {
+      outline: none;
+    }
+  .discussion_search_images{
+    position: absolute;
+    top: 25%;
+  }
+}
+.searchValue{
+  color: $white;
+  font-weight: 600;
+  font-size: 20px;
+  padding: 5px 0px;
+}
 .message_Block_Main {
   padding: 20px 0px 10px 10px;
 }
@@ -114,7 +145,7 @@
     }
   }
   .reply_button {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 28px;
     border-radius: 4px;
     color: $primary;
