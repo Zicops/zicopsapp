@@ -11,12 +11,17 @@ import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { useRouter } from 'next/router';
 import { GIBBERISH_VALUE_FOR_LOGIN_STATE, USER_STATUS } from '@/helper/constants.helper';
 import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { useMutation } from '@apollo/client';
+import { userClient, USER_LOGIN } from 'API/UserMutations';
 
-export default function OrgHomepage() {
+const OrgHomepage = ({ setPage }) => {
+  const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
+    client: userClient
+  });
+
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [disableBtn, setDisableBtn] = useState(false);
-  const [vidIsOpen, setVidIsOpen] = useState(false);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   // const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
@@ -48,7 +53,7 @@ export default function OrgHomepage() {
 
     const userData = await signIn(email, password);
 
-    if (userData) loginUser;
+    if (userData) loginUser();
   };
 
   async function loginUser() {
@@ -79,9 +84,8 @@ export default function OrgHomepage() {
     localStorage.setItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
 
     if (!!res?.data?.login?.is_verified) {
-      router.prefetch('/learning-spaces');
-      setVidIsOpen(true);
-      vidRef.current.play();
+      return router.push('/learning-spaces');
+
       return;
     }
 
@@ -151,4 +155,6 @@ export default function OrgHomepage() {
       </div>
     </div>
   );
-}
+};
+
+export default OrgHomepage;
