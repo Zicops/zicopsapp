@@ -2,7 +2,7 @@ import styles from '../zicopsLogin.module.scss';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useEffect, useState, useRef } from 'react';
-const LoginEmail = ({ chngeHandle, type, placeholder, tabIndex = -1 }) => {
+const LoginEmail = ({ chngeHandle, type, placeholder, tabIndex = -1, styleClass = null }) => {
   const [show, setShow] = useState(false);
   const [focus, setFocus] = useState(false);
 
@@ -33,7 +33,7 @@ const LoginEmail = ({ chngeHandle, type, placeholder, tabIndex = -1 }) => {
 
   return (
     <div
-      className={`${styles.login_email} ${focus ? styles.focusEmailContainer : ''}`}
+      className={`${styles.login_email} ${focus ? styles.focusEmailContainer : ''} ${styleClass}`}
       ref={passwordRef}>
       <input
         type={show ? 'text' : 'password'}
