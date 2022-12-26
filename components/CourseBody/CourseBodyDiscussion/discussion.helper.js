@@ -4,6 +4,7 @@ export const discussionData = {
       id: 3001,
       isAnonymous: false,
       isAnnouncement: false,
+       replyId: "",
       user: {
         id: 1001,
         first_name: 'Zicops HR',
@@ -26,6 +27,7 @@ export const discussionData = {
       id: 3002,
       isAnonymous: false,
       isAnnouncement: false,
+      replyId: "",
       user: {
         id: 1002,
         first_name: 'Zicops Manager',
@@ -47,6 +49,7 @@ export const discussionData = {
       id: 3003,
       isAnonymous: false,
       isAnnouncement: true,
+      replyId: "",
       user: {
         id: 1003,
         first_name: 'Zicops Client',
@@ -68,6 +71,7 @@ export const discussionData = {
       id: 3004,
       isAnonymous: false,
       isAnnouncement: false,
+      replyId: "",
       user: {
         id: 1004,
         first_name: 'Zicops HR',
@@ -89,6 +93,7 @@ export const discussionData = {
       id: 3005,
       isAnonymous: false,
       isAnnouncement: true,
+      replyId: "",
       user: {
         id: 1005,
         first_name: 'Zicops Developer',
