@@ -40,8 +40,6 @@ const MessageBlock = ({ isReply, message }) => {
     setShowInput(false);
     let newreplyData = replyArr?.filter((rdata) => rdata[msg?.replyId] ? rdata[msg?.replyId] : rdata[msg?.id]);
     let newReplyArr = replyArr?.filter((rdata) => rdata[msg?.replyId] ? !rdata[msg?.replyId] : !rdata[msg?.id]);
-    // let newreplyData = replyArr?.filter((rdata) => rdata[msg?.replyId] );
-    // let newReplyArr = replyArr?.filter((rdata) => !rdata[msg?.replyId]);
     let newMessageId = "";
     if (msg?.replyId) {
       newMessageId = msg?.replyId
