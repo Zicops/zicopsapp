@@ -1,10 +1,10 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
-import { getUnixFromDate } from '@/helper/utils.helper';
+import { COURSE_SELF_ASSIGN_LIMIT, COURSE_STATUS, LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
+import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
@@ -39,6 +39,7 @@ export default function FavouriteDndCourses({ isLoading }) {
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
@@ -110,11 +111,23 @@ export default function FavouriteDndCourses({ isLoading }) {
 
     const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [];
     let userCourses = [];
-    if (_userCourses?.length)
-      userCourses = _userCourses?.filter(
-        (course) =>
-          course?.course_status?.toLowerCase() !== 'disabled' || course?.user_lsp_id === userLspId
-      );
+    // if (_userCourses?.length)
+    //   userCourses = _userCourses?.filter(
+    //     (course) =>
+    //       course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId
+    //   );
+
+    let totalSelfCourseCount = 0;
+    if (_userCourses?.length){
+      _userCourses?.forEach((course) => {
+        if( course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId){
+            userCourses?.push(course);
+            if(parseJson(course?.added_by)?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
+        }
+      })
+    }
+
+    setUserOrgData((prevValue) => ({...prevValue , self_course_count: totalSelfCourseCount}))
     const userCourseMaps = userCourses || [];
     const assignedCourses = [];
     const availableCourses =
@@ -171,6 +184,11 @@ export default function FavouriteDndCourses({ isLoading }) {
   };
 
   const handleDragEnd = (result) => {
+    if(userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT){
+      setIsDrag(false);
+      return setToastMsg({ type: 'info', message: 'You have reached your self course assign limit!' });
+      
+    }
     if (result.destination && result.destination.droppableId === 'character') {
       const element = data.filter((e) => e.id === result.draggableId);
       // dropped.push(element);

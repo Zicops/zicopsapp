@@ -6,7 +6,7 @@ import ImageCropper from '../../ImageCropper';
 import styles from '../formComponents.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import ToolTip from '../../ToolTip';
-import { IMAGE_FILE_TYPES } from '@/helper/constants.helper';
+import {  PROFILE_IMAGE_TYPE } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
@@ -65,10 +65,10 @@ const UploadAndPreview = ({
   function handleImage(e) {
     const file = e.target.files[0];
     // console.log(file?.type?.split('/')?.[1],'file name')
-    if(!IMAGE_FILE_TYPES.includes(file?.type?.split('/')?.[1])) {
+    if(!PROFILE_IMAGE_TYPE.includes(file?.type?.split('/')?.[1])) {
      setImage(null);
      handleChange(null);
-     setToastMsg({type:'danger',message:`Select only images of type ${IMAGE_FILE_TYPES}`})
+     setToastMsg({type:'info',message:`Select only images of type ${PROFILE_IMAGE_TYPE}`})
      return ;
     }
     if (file) {

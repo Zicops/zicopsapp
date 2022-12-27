@@ -17,3 +17,8 @@ export const QuestionPaperTabAtom = atom({
   key: 'QuestionPaperTab',
   default: paperTabData[0].name
 });
+
+export const isSectionWiseAtom = atom({
+  key: 'isSectionWise',
+  default: false
+});

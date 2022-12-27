@@ -46,12 +46,16 @@ export default function EllipsisMenu({ buttonArr = [] }) {
           <ul>
             <ToolTip title={ADMIN_USERS.myUsers.viewBtn} placement="right">
               <li>
-                <button onClick={btn1?.handleClick}>{btn1?.text || 'View'}</button>
+                <button disabled={btn1?.isDisabled || false} onClick={btn1?.handleClick}>
+                  {btn1?.text || 'View'}
+                </button>
               </li>
             </ToolTip>
             <ToolTip title={ADMIN_USERS.myUsers.editBtn} placement="right">
               <li>
-                <button onClick={btn2?.handleClick}>{btn2?.text || 'Edit'}</button>
+                <button disabled={btn2?.isDisabled || false} onClick={btn2?.handleClick}>
+                  {btn2?.text || 'Edit'}
+                </button>
               </li>
             </ToolTip>
             {btns.map((btn) => {
@@ -60,7 +64,9 @@ export default function EllipsisMenu({ buttonArr = [] }) {
               return (
                 <ToolTip title={`${btn?.text} user`} placement="right">
                   <li>
-                    <button onClick={btn?.handleClick}>{btn?.text}</button>
+                    <button disabled={btn?.isDisabled || false} onClick={btn?.handleClick}>
+                      {btn?.text}
+                    </button>
                   </li>
                 </ToolTip>
               );

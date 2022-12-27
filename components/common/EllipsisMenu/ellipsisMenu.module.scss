@@ -79,6 +79,15 @@ $color: $secondaryBlack;
             background-color: $darkTwo;
             color: $white;
           }
+          &:disabled {
+            cursor: no-drop;
+            background-color: $darkTwo;
+
+            &:hover {
+              background-color: $darkTwo;
+              color: $darkThree;
+            }
+          }
         }
       }
     }

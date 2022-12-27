@@ -160,7 +160,7 @@ export function getExamTabDataObject(data = {}) {
 
     // instruction
     instructionId: data.instructionId || null,
-    passing_criteria: data.passing_criteria || '',
+    passing_criteria: data.passing_criteria || '0',
     passing_criteria_type: data.passing_criteria_type || 'Marks',
     is_attempts_visible: data.is_attempts_visible || false,
     no_attempts: data.no_attempts || -1,

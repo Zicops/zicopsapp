@@ -1,4 +1,5 @@
 import { ADD_NOTIFICATION_TO_FIRESTORE, notificationClient } from '@/api/NotificationClient';
+import { truncateToN } from '@/helper/common.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -15,6 +16,7 @@ const SingleNotification = ({
   style,
   route,
   title,
+  isNav,
   messageId
 }) => {
   const [saveNotificationToFirebase] = useMutation(ADD_NOTIFICATION_TO_FIRESTORE, {
@@ -49,7 +51,7 @@ const SingleNotification = ({
       </div>
       <div className={`${styles.notification_description_block}`}>
         <div className={`${styles.notification_description}`}>
-          <p>{description}</p>
+          <p>{isNav ? truncateToN(description, 75) : description}</p>
         </div>
         <div className={`${styles.notification_info}`}>
           <p className={`${styles.notification_info_duration}`}>{duration}</p>

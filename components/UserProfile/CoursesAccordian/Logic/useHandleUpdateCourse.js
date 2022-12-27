@@ -38,8 +38,7 @@ export default function useHandleUpdateCourse() {
     // console.log(sendData);
     let isError = false;
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
-    if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
-    return true;
+    return !isError;
   }
 
   return { updateCourse };

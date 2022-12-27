@@ -20,11 +20,12 @@ const ImageCropper = ({ initialImage, setCroppedImage, aspectRatio }) => {
   };
 
   useEffect(() => {
+    if(!initialImage) return;
     const reader = new FileReader();
     reader.onloadend = () => {
       setImage(reader.result);
     };
-    reader.readAsDataURL(initialImage);
+    reader?.readAsDataURL(initialImage);
   }, [initialImage]);
 
   const getCropData = () => {
