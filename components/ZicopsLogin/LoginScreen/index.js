@@ -1,17 +1,13 @@
 import { isEmail } from '@/helper/common.helper';
-import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
-import { userClient, USER_LOGIN } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
-
-import { useMutation } from '@apollo/client';
 import LoginHeadOne from '../LoginHeadOne';
 import styles from '../zicopsLogin.module.scss';
 
@@ -19,12 +15,14 @@ import { GET_USER_ORGANIZATIONS, userQueryClient } from '@/api/UserQueries';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import HomeHeader from '@/components/HomePage/HomeHeader';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { GIBBERISH_VALUE_FOR_LOGIN_STATE, USER_STATUS } from '@/helper/constants.helper';
+import { useLoginMutation } from '@/helper/useLoginMutation';
 
 const LoginScreen = ({ setPage }) => {
-  const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
-    client: userClient
-  });
+  // const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
+  //   client: userClient
+  // });
+
+  const { loginUser } = useLoginMutation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +33,7 @@ const LoginScreen = ({ setPage }) => {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [userData, setUserData] = useRecoilState(UserStateAtom);
-  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   // const [error, setError] = useState(null);
 
@@ -44,7 +42,8 @@ const LoginScreen = ({ setPage }) => {
   const { signIn, authUser, loading, errorMsg, logOut } = useAuthUserContext();
 
   useEffect(() => {
-    if (sessionStorage?.length && userData?.id && userData?.is_verified) return router.push('/learning-spaces');
+    if (sessionStorage?.length && userData?.id && userData?.is_verified)
+      return router.push('/learning-spaces');
   }, [userData?.id]);
 
   const handleEmail = (e) => {
@@ -70,63 +69,63 @@ const LoginScreen = ({ setPage }) => {
     if (userData) loginUser();
   };
 
-  async function loginUser() {
-    sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
-    let isError = false;
-    const res = await userLogin({
-      context: {
-        headers: {
-          Authorization: auth?.currentUser?.accessToken
-            ? `Bearer ${auth?.currentUser?.accessToken}`
-            : ''
-        }
-      }
-    }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      console.log(sessionStorage.getItem('tokenF'));
-      return setToastMsg({ type: 'danger', message: 'Login Error' });
-    });
+  // async function loginUser() {
+  //   sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
+  //   let isError = false;
+  //   const res = await userLogin({
+  //     context: {
+  //       headers: {
+  //         Authorization: auth?.currentUser?.accessToken
+  //           ? `Bearer ${auth?.currentUser?.accessToken}`
+  //           : ''
+  //       }
+  //     }
+  //   }).catch((err) => {
+  //     console.log(err);
+  //     isError = !!err;
+  //     console.log(sessionStorage.getItem('tokenF'));
+  //     return setToastMsg({ type: 'danger', message: 'Login Error' });
+  //   });
 
-    if (isError) return;
+  //   if (isError) return;
 
-    // TODO: udpate this later and move it according to org flow
-    // const orgRes = await loadQueryDataAsync(
-    //   GET_USER_ORGANIZATIONS,
-    //   { user_id: res?.data?.login?.id },
-    //   {},
-    //   userQueryClient
-    // );
-    // // console.log(orgRes);
-    // if(orgRes?.getUserOrganizations?.length){
-    //   setUserOrgData(orgRes?.getUserOrganizations[0]);
-    // }
-    // sessionStorage?.setItem(
-    //   'lspData',
-    //   JSON.stringify({ user_lsp_id: orgRes?.getUserOrganizations?.[0]?.user_lsp_id })
-    // );
+  //   // TODO: udpate this later and move it according to org flow
+  //   // const orgRes = await loadQueryDataAsync(
+  //   //   GET_USER_ORGANIZATIONS,
+  //   //   { user_id: res?.data?.login?.id },
+  //   //   {},
+  //   //   userQueryClient
+  //   // );
+  //   // // console.log(orgRes);
+  //   // if(orgRes?.getUserOrganizations?.length){
+  //   //   setUserOrgData(orgRes?.getUserOrganizations[0]);
+  //   // }
+  //   // sessionStorage?.setItem(
+  //   //   'lspData',
+  //   //   JSON.stringify({ user_lsp_id: orgRes?.getUserOrganizations?.[0]?.user_lsp_id })
+  //   // );
 
-    // if (isError) return;
-    if (res?.data?.login?.status === USER_STATUS.disable)
-      return setToastMsg({ type: 'danger', message: 'Login Error' });
+  //   // if (isError) return;
+  //   if (res?.data?.login?.status === USER_STATUS.disable)
+  //     return setToastMsg({ type: 'danger', message: 'Login Error' });
 
-    setUserData(getUserObject(res?.data?.login));
-    sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
-    localStorage.setItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
+  //   setUserData(getUserObject(res?.data?.login));
+  //   sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+  //   localStorage.setItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
 
-    if (!!res?.data?.login?.is_verified) {
-      // setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
-      router.prefetch('/learning-spaces');
-      setVidIsOpen(true);
-      vidRef.current.play();
-      // setTimeout(() => {
-      // }, 1500);
-      return;
-    }
+  //   if (!!res?.data?.login?.is_verified) {
+  //     // setToastMsg({ type: 'danger', message: 'Please fill your account details!' });
+  //     router.prefetch('/learning-spaces');
+  //     setVidIsOpen(true);
+  //     vidRef.current.play();
+  //     // setTimeout(() => {
+  //     // }, 1500);
+  //     return;
+  //   }
 
-    return router.push('/learning-spaces');
-    return router.push('/account-setup');
-  }
+  //   return router.push('/learning-spaces');
+  //   return router.push('/account-setup');
+  // }
 
   useEffect(() => {
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
@@ -182,7 +181,10 @@ const LoginScreen = ({ setPage }) => {
       </ZicopsLogin>
       {!!vidIsOpen && (
         <div className={`${styles.introVideoContainer}`}>
-          <video ref={vidRef} onEnded={() => router.push('/learning-spaces')} disablePictureInPicture>
+          <video
+            ref={vidRef}
+            onEnded={() => router.push('/learning-spaces')}
+            disablePictureInPicture>
             <source src="/videos/loginIntro.mp4" type="video/mp4" />
           </video>
         </div>

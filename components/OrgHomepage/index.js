@@ -5,20 +5,14 @@ import LabeledInput from '../common/FormComponents/LabeledInput';
 import LoginButton from '../ZicopsLogin/LoginButton/index.js';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { isEmail } from '@/helper/common.helper';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRecoilState } from 'recoil';
-import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { useRouter } from 'next/router';
-import { GIBBERISH_VALUE_FOR_LOGIN_STATE, USER_STATUS } from '@/helper/constants.helper';
 import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
-import { useMutation } from '@apollo/client';
-import { userClient, USER_LOGIN } from 'API/UserMutations';
+import { useLoginMutation } from '@/helper/useLoginMutation';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
 const OrgHomepage = ({ setPage }) => {
-  const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
-    client: userClient
-  });
-
+  const { loginUser } = useLoginMutation();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [disableBtn, setDisableBtn] = useState(false);
@@ -53,45 +47,45 @@ const OrgHomepage = ({ setPage }) => {
 
     const userData = await signIn(email, password);
 
-    if (userData) loginUser();
+    if (userData) loginUser(userData);
   };
 
-  async function loginUser() {
-    sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
-    let isError = false;
-    const res = await userLogin({
-      context: {
-        headers: {
-          Authorization: auth?.currentUser?.accessToken
-            ? `Bearer ${auth?.currentUser?.accessToken}`
-            : ''
-        }
-      }
-    }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      console.log(sessionStorage.getItem('tokenF'));
-      return setToastMsg({ type: 'danger', message: 'Login Error' });
-    });
+  // async function loginUser() {
+  //   sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
+  //   let isError = false;
+  //   const res = await userLogin({
+  //     context: {
+  //       headers: {
+  //         Authorization: auth?.currentUser?.accessToken
+  //           ? `Bearer ${auth?.currentUser?.accessToken}`
+  //           : ''
+  //       }
+  //     }
+  //   }).catch((err) => {
+  //     console.log(err);
+  //     isError = !!err;
+  //     console.log(sessionStorage.getItem('tokenF'));
+  //     return setToastMsg({ type: 'danger', message: 'Login Error' });
+  //   });
 
-    if (isError) return;
+  //   if (isError) return;
 
-    if (res?.data?.login?.status === USER_STATUS.disable)
-      return setToastMsg({ type: 'danger', message: 'Login Error' });
+  //   if (res?.data?.login?.status === USER_STATUS.disable)
+  //     return setToastMsg({ type: 'danger', message: 'Login Error' });
 
-    setUserOrgData(getUserObject(res?.data?.login));
-    sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
-    localStorage.setItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
+  //   setUserOrgData(getUserObject(res?.data?.login));
+  //   sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+  //   localStorage.setItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
 
-    if (!!res?.data?.login?.is_verified) {
-      return router.push('/learning-spaces');
+  //   if (!!res?.data?.login?.is_verified) {
+  //     return router.push('/learning-spaces');
 
-      return;
-    }
+  //     return;
+  //   }
 
-    return router.push('/learning-spaces');
-    return router.push('/account-setup');
-  }
+  //   return router.push('/learning-spaces');
+  //   return router.push('/account-setup');
+  // }
 
   useEffect(() => {
     if (errorMsg) return setToastMsg({ type: 'danger', message: errorMsg });
