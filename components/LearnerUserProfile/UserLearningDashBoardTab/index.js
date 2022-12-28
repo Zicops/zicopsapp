@@ -8,10 +8,10 @@ import UserDashboardCardSlider from './UserDashboardCardSlider';
 import BarGraphView from './BarGraphView';
 import LineChartView from './LineChartView';
 import VennDiagram from '@/components/DashboardComponents/VennDiagram';
-import { data } from '@/components/LearnerExamComp/Logic/exam.helper';
+import { data } from '@/components/DashboardComponents/Logic/dashboardData.helper';
+import { useEffect } from 'react';
 
 const UserLearningDashboardTab = () => {
-
   return (
     <div className={`${styles.userTabContainer}`}>
       {/* bar graph view */}
@@ -23,13 +23,13 @@ const UserLearningDashboardTab = () => {
       {/* user progress slider */}
       {/* <CardSliderBody /> */}
       {/* <Charts /> */}
-      <BarGraphView />
-      <VennDiagram levelCount = {data.levelCount} difficultyLevel={data.difficultyLevel} />
-      <UserDashboardCardSlider />
+      {/* <BarGraphView /> */}
+      <VennDiagram data={data} />
+      {/* <UserDashboardCardSlider />
       <LineChartView/>
       <CohortDashboardCardSlider />
       <UserMostEngagedSubcategories />
-      <UserProgressSlider />
+      <UserProgressSlider /> */}
     </div>
   );
 };
