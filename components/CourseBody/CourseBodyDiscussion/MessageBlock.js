@@ -61,14 +61,15 @@ const MessageBlock = ({ isReply, message }) => {
           [msg?.id]: [
             {
               id: Math.floor(Date.now() / 1000 + 1),
-              content: { text: reply.replace(/<[^>]+>/g, ''), image: [] },
+              content: { text: `${'@' + msg?.user.first_name + ' ' + reply}`, image: [] },
               time: Math.floor(Date.now() / 1000),
               replyId: message?.id,
               isAnonymous: false,
               user: {
                 first_name: userDetails?.first_name,
                 id: userDetails?.id,
-                photo_url: 'https://www.w3schools.com/howto/img_avatar.png'
+                photo_url: 'https://www.w3schools.com/howto/img_avatar.png',
+                role: userDetails?.role
               },
               like: [],
               unlike: [],
@@ -79,17 +80,18 @@ const MessageBlock = ({ isReply, message }) => {
       ])
     } else {
          let newArray = [...newreplyData[0][newMessageId]]
-         newArray.push(
+         newArray.unshift(
             {
                id: Math.floor(Date.now() / 1000 + 1),
-               content: { text: reply.replace(/<[^>]+>/g, ''), image: [] },
+               content: { text: `${'@' + msg?.user.first_name + ' ' + reply}`, image: [] },
                time: Math.floor(Date.now() / 1000),
                replyId: message?.id,
                isAnonymous: false,
                user: {
                  first_name: userDetails?.first_name,
                  id: userDetails?.id,
-                 photo_url: 'https://www.w3schools.com/howto/img_avatar.png'
+                 photo_url: 'https://www.w3schools.com/howto/img_avatar.png',
+                 role: userDetails?.role
                },
                like: [],
                unlike: [],

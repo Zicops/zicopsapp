@@ -14,6 +14,10 @@ export const DiscussionMessageAtom = atom({
   key: 'singleMessage',
   default: getMesaageObj()
 });
+export const DiscussionReplyAtom = atom({
+  key: 'singleObject',
+  default: getMesaageObj()
+});
 
 export function getMesaageObj(data = {}) {
   return {
@@ -24,7 +28,8 @@ export function getMesaageObj(data = {}) {
     user: {
       id: data?.user || '',
       first_name: data?.first_name || '',
-      photo_url: data?.photo_url || 'https://www.w3schools.com/howto/img_avatar2.png'
+      photo_url: data?.photo_url || 'https://www.w3schools.com/howto/img_avatar2.png',
+      role: data?.role || 'Learner'
     },
     time: data?.time || 1671197332,
     content: { text: data?.text || '', image: data?.image || [] },
@@ -41,7 +46,3 @@ export function getMesaageObj(data = {}) {
   };
 }
 
-export const DiscussionReplyAtom = atom({
-  key: 'singleObject',
-  default: {}
-});

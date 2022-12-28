@@ -8,7 +8,8 @@ export const discussionData = {
       user: {
         id: 1001,
         first_name: 'Zicops HR',
-        photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        photo_url: 'https://www.w3schools.com/howto/img_avatar2.png',
+        role: 'Admin'
       },
       time: 1671197332,
       content: { text: 'Welcome to Zicops Learning Technology', image: [] },
@@ -31,7 +32,8 @@ export const discussionData = {
       user: {
         id: 1002,
         first_name: 'Zicops Manager',
-        photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        photo_url: 'https://media.gettyimages.com/id/1331350817/vector/male-avatar-icon.jpg?s=1024x1024&w=gi&k=20&c=fJv7AyvhZ4DUo0KJG_54hnwIj_H3vZAUYM5wHuB8N70=',
+        role: 'Learner'
       },
       time: 1671197522,
       content: { text: 'Welcome to Zicops Learning Technology', image: [] },
@@ -54,7 +56,8 @@ export const discussionData = {
       user: {
         id: 1003,
         first_name: 'Zicops Client',
-        photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        photo_url: 'https://static.vecteezy.com/system/resources/previews/004/773/704/original/a-girl-s-face-with-a-beautiful-smile-a-female-avatar-for-a-website-and-social-network-vector.jpg',
+        role: 'Learner'
       },
       time: 1671197652,
       content: { text: 'Welcome to Zicops Learning Technology', image: [] },
@@ -77,7 +80,8 @@ export const discussionData = {
       user: {
         id: 1004,
         first_name: 'Zicops HR',
-        photo_url: 'https://www.w3schools.com/howto/img_avatar2.png'
+        photo_url: 'https://as2.ftcdn.net/v2/jpg/02/79/66/93/1000_F_279669366_Lk12QalYQKMczLEa4ySjhaLtx1M2u7e6.jpg',
+        role: 'Mentor'
       },
       time: 16711973772,
       content: { text: 'Welcome to Zicops Learning Technology', image: [] },
@@ -100,7 +104,8 @@ export const discussionData = {
       user: {
         id: 1005,
         first_name: 'Zicops Developer',
-        photo_url: 'https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584__340.png'
+        photo_url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-39zvq7wnMnTQSeehU6uW8onNH5-ef1ROHw&usqp=CAU',
+        role: 'Learner'
       },
       time: 16711973885,
       content: { text: 'Welcome to Zicops Learning Technology', image: [] },

@@ -6,27 +6,31 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { DiscussionReplyAtom, MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import LearnerUser from './LearnerUser';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isPublic, setIsPublic] = useState(true);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
-  const [replyData, setReplyData] = useRecoilState(DiscussionReplyAtom);
   const [showInput, setShowInput] = useState(false);
+  const [inputText, setInputText] = useState('');
+  const [selectedType, setSelectedType] = useState('');
+  const [currentMsgId, setCurrentMsgId] = useState('');
+  const [checkClick, setCheckClick] = useState(false);
+  const [showSelf, setShowSelf] = useState(false);
+  const [showLearners, setShowLearners] = useState(false);
+  const [fliterData, setFilterData] = useState();
+  const [learnerUser, setLearnerUser] = useState();
+  const [replyData, setReplyData] = useRecoilState(DiscussionReplyAtom);
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
   const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const userDetails = useRecoilValue(UserStateAtom);
-  const [inputText, setInputText] = useState('');
-  const [selectedType, setSelectedType] = useState('');
-  const [currentMsgId , setCurrentMsgId] = useState('')
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
   };
-  const handleTypeSelect = (e) => {
-    setSelectedType(e.value);
-  };
+
   const onShowHandler = () => {
     setShowInput(true);
   };
@@ -53,24 +57,25 @@ const CourseBodyDiscussion = () => {
   useEffect(() => {
     if (!currentMsgId) return;
     showRepliesHandler(currentMsgId)
-  },[replyArr])
+  },[replyData])
   const sendMessageHandler = () => {
     setMessageArr([
-      
+      ...messageArr,
       {
         id: Math.floor(Date.now() / 1000 + 1),
         isAnonymous: isAnonymous,
         isAnnouncement: isAnnouncement,
         replyId: null,
         content: {
-          text: message.replace(/<[^>]+>/g, ''),
+          text: message,
           image: []
         },
         time: Math.floor(Date.now() / 1000),
         user: {
           id: userDetails?.id,
           first_name: userDetails?.first_name,
-          photo_url: userDetails?.photo_url
+          photo_url: userDetails?.photo_url,
+          role: userDetails?.role
         },
 
         currentTopic: {
@@ -83,8 +88,7 @@ const CourseBodyDiscussion = () => {
         unlike: [543, 123, 555],
         isPinned: false,
         reply: 0
-      },
-      ...messageArr
+      }
     ]);
     setMessage('');
     setShowInput(false);
@@ -109,15 +113,46 @@ const CourseBodyDiscussion = () => {
     { label: 'Announcements', value: 'Announcements' },
     { label: 'Discussions', value: 'Discussions' }
   ];
+  const handleTypeSelect = (e) => {
+    const announcementData = messageArr?.filter((el) => {
+      if (e.value === 'Announcements') {
+        return el?.isAnnouncement  
+      }
+      else {
+        return el;
+      }
+    });
+    setFilterData(announcementData)
+    console.log(announcementData);
+    
+    setSelectedType(e.value);
+  };
   const typeValue = options.find((option) => option.value === selectedType);
-  const filteredData = messageArr.filter((el) => {
+  let filteredData = messageArr?.filter((el) => {
     if (inputText === '') {
       return el;
     } else {
-      return el.user?.first_name.toLowerCase().includes(inputText);
+      return el?.user?.first_name.toLowerCase().includes(inputText);
     }
   });
-
+  useEffect(() => {
+    setFilterData(filteredData);
+  },[inputText , messageArr , replyArr])
+  const onSelfHandler = () => {
+    const selfMessages = messageArr?.filter((el) => el?.user?.first_name === userDetails?.first_name);
+    setFilterData(selfMessages);
+    setCheckClick(true)
+    setShowSelf(true)
+    setShowLearners(false)
+ }
+  const onLearnerHandler = () => {
+    const othersMessages = messageArr?.filter((el) => el?.user?.first_name !== userDetails?.first_name);
+    setLearnerUser(othersMessages);
+    setFilterData(othersMessages);
+    setCheckClick(true)
+    setShowLearners(true)
+    setShowSelf(false)
+ }
   return (
     <div className={`${style.discussion_container}`}>
       <div className={`${style.discussion_header}`}>
@@ -134,13 +169,22 @@ const CourseBodyDiscussion = () => {
             <img src="/images/search3.png" alt="" />
           </div>
         </div>
-        <LabeledDropdown
-          dropdownOptions={{
-            inputName: 'type',
-            placeholder: 'Posted by',
-            options: [{ label: 'Name', value: 'Name' }]
-          }}
-        />
+        <div className={`${style.user_type} ${checkClick ? style.user_check : ""}`}>
+          <div className={`${style.user_type_self} ${checkClick && (showSelf ? style.self : style.learners)}`} onClick={onSelfHandler}>
+           {showSelf ? <img src="/images/svg/person_filled2.svg" alt="" /> : <img src="/images/svg/person_filled.svg" alt="" />}
+            <span>Me</span>
+          </div>
+        { !showSelf && !showLearners &&  <span className={`${style.dot}`}></span>}
+          <div className={`${style.user_type_learner} ${checkClick && (showLearners ? style.self : style.learners)}`} onClick={onLearnerHandler}>
+           {showLearners ?  <img src="/images/svg/group3.svg" alt="" /> : <img src="/images/svg/group2.svg" alt="" />}
+            <span>Learners</span>
+          </div>
+          {showLearners &&
+            <div className={`${style.all_users}`}>
+              <LearnerUser data={learnerUser} />
+            </div>
+          }
+        </div>
         <LabeledDropdown
           dropdownOptions={{
             inputName: 'type',
@@ -184,7 +228,7 @@ const CourseBodyDiscussion = () => {
           />
         </div>
       )}
-      {filteredData?.map((data) => {
+      {fliterData?.map((data) => {
         const newreplyData = replyArr?.find((rdata) => rdata[data.id]);
         return (
           <>

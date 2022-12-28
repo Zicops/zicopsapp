@@ -25,10 +25,12 @@
   gap: 10px;
 }
 .discussion_search_input{
-  width: 70%;
+  width: 68%;
   position: relative;
   border: 1px solid $secondary;
   padding: 5px 10px;
+  border-radius: 4px;
+  
   input{
     background-color: #1e1e1e;
     color: $white;
@@ -36,6 +38,7 @@
     margin-left: 30px;
     height: 100%;
     width: 90%;
+    font-size: 18px;
   }
     input:focus {
       outline: none;
@@ -202,5 +205,103 @@
     font-size: 18px;
     border-radius: 2px;
     border: none;
+  }
+}
+.user_type{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid $secondary;
+  border-radius: 4px;
+  background-color: #1E1E1E;
+  color: $bgBody;
+  .user_type_self, .user_type_learner{
+    padding: 5px 10px;
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+
+  }
+}
+.dot{
+  height: 6px;
+    width: 6px;
+    background-color: $bgBody;
+    border-radius: 50%;
+    display: inline-block;
+}
+.self , .learners{
+  background-color: $primary;
+  color: $black;
+  padding: 10px 15px !important;
+  border-radius: 4px;
+}
+.learners{
+  background-color: #0B0C0D;
+  color: $bgBody;
+}
+.user_check{
+ gap: 0;
+  border: none;
+}
+.all_users{
+  position: absolute;
+  z-index: 8;
+  top: 120%;
+  right: 0;
+}
+.learnerUserContainer{
+ background-color: #0A0909;
+ padding: 16px;
+ color: $white;
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+ .learner_user_details{
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  .user_image{
+    width: 36px;
+    height: 36px;
+    img{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+
+    }
+  }
+  .user_name_role{
+    color: $white;
+    font-size: 18px;
+    .user_role{
+      color: $bgBody;
+       font-size: 14px;
+    }
+  }
+ }
+}
+.learner_search_input {
+  position: relative;
+  border: 1px solid $secondary;
+  padding: 5px 10px;
+  border-radius: 4px;
+
+  input {
+    background-color: transparent;
+    color: $white;
+    border: none;
+    margin-left: 30px;
+    height: 100%;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  .learner_search_images {
+    position: absolute;
+    top: 25%;
   }
 }
