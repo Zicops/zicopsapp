@@ -7,8 +7,11 @@ import UserMostEngagedSubcategories from './UserMostEngagedSubcategories';
 import UserDashboardCardSlider from './UserDashboardCardSlider';
 import BarGraphView from './BarGraphView';
 import LineChartView from './LineChartView';
+import VennDiagram from '@/components/DashboardComponents/VennDiagram';
+import { data } from '@/components/LearnerExamComp/Logic/exam.helper';
 
 const UserLearningDashboardTab = () => {
+
   return (
     <div className={`${styles.userTabContainer}`}>
       {/* bar graph view */}
@@ -21,6 +24,7 @@ const UserLearningDashboardTab = () => {
       {/* <CardSliderBody /> */}
       {/* <Charts /> */}
       <BarGraphView />
+      <VennDiagram levelCount = {data.levelCount} difficultyLevel={data.difficultyLevel} />
       <UserDashboardCardSlider />
       <LineChartView/>
       <CohortDashboardCardSlider />
