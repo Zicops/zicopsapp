@@ -113,7 +113,8 @@ export default function CourseDetails() {
               placeholder: 'Enter Suggested Duration in days',
               maxLength: 4,
               value: fullCourse?.expected_completion,
-              isDisabled: isDisabled
+              isDisabled: isDisabled,
+              isNumericOnly: true
             }}
             changeHandler={handleChange}
           />
