@@ -11,7 +11,7 @@ import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/ato
 import { useLoginMutation } from '@/helper/useLoginMutation';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
-const OrgHomepage = ({ setPage }) => {
+const OrgHomepage = ({ data }) => {
   const { loginUser } = useLoginMutation();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -98,7 +98,7 @@ const OrgHomepage = ({ setPage }) => {
         <div className={`${styles.left_cont_text}`}>
           <div className={`${styles.left_cont_maintext}`}>
             <p>Welcome To</p>
-            <p>Amdocs</p>
+            <p>{data.name}</p>
             <p>learning space</p>
           </div>
           <div className={`${styles.left_cont_supporttext}`}>
@@ -110,8 +110,8 @@ const OrgHomepage = ({ setPage }) => {
       <div className={`${styles.right_cont}`}>
         <div className={`${styles.right_div}`}>
           <div className={`${styles.icon_logo}`}>
-            <img src="/images/svg/amdocsicon.svg" alt="" />
-            <p>Amdocs</p>
+            <img src={data.logo_url || "/images/svg/amdocsicon.svg"}  alt="" />
+            <p>{data.name || "Zicops"}</p>
           </div>
           <div className={`${styles.login_deets}`}>
             <p>Sign into your Learning space</p>
