@@ -27,13 +27,14 @@ const UserScheduleTab = () => {
 
   function filterData(filterType = '') {
     if (filterType === '') return;
+    let data = scheduleDataAtom
     let sData = [];
-    if (filterType?.toLowerCase() === 'all') sData = scheduleDataAtom;
-    else
-      sData = scheduleData?.filter(
-        (course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase()
-      );
-
+    sData =
+      filterType?.toLowerCase() === 'all'
+        ? data
+        : data?.filter(
+            (course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase()
+          );
     if (!filterDate?.from || !filterDate?.to) return setSchduleData(sData);
 
     const courses = sData?.filter(
@@ -73,8 +74,12 @@ const UserScheduleTab = () => {
     const futureScheduleData = sortedArray?.filter(
       (course) => course?.scheduleDate > currentEpochTime
     );
-    console.log(futureScheduleData, 'data');
-    setSchduleDataAtom([...futureScheduleData], setLoading(false));
+
+    // removing exams which comes from another course
+    const sData = futureScheduleData?.filter(
+      (course, i, a) => a?.findIndex((v2) => v2?.id === course?.id) === i
+    );
+    setSchduleDataAtom([...sData], setLoading(false));
   }
 
   const filterOptions = [
@@ -176,10 +181,7 @@ const UserScheduleTab = () => {
               type={'cohort'}
               scheduleData={course}
               handleClick={() => {
-                router?.push(
-                  link?.[course?.dataType]?.url,
-                  link?.[course?.dataType]?.asUrl
-                );
+                router?.push(link?.[course?.dataType]?.url, link?.[course?.dataType]?.asUrl);
               }}
             />
           </div>
