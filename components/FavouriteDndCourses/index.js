@@ -1,7 +1,12 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_SELF_ASSIGN_LIMIT, COURSE_STATUS, LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
+import {
+  COURSE_SELF_ASSIGN_LIMIT,
+  COURSE_STATUS,
+  COURSE_TYPES,
+  LEARNING_FOLDER_CAPACITY
+} from '@/helper/constants.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -10,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Popup from 'reactjs-popup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import CourseLIstCard from '../common/CourseLIstCard';
 import LabeledInput from '../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '../common/InputDatePicker';
@@ -18,11 +22,10 @@ import PopUp from '../common/PopUp';
 import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
 import UserButton from '../common/UserButton';
 import Card from './Card/Card';
+import styles from './favouriteDndCourses.module.scss';
 import Folder from './Folder/Folder';
 import ListCard from './ListCard';
 import useHandleCourseAssign from './Logic/useHandleCourseAssign';
-import styles from './favouriteDndCourses.module.scss';
-import Loader from '../common/Loader';
 
 export default function FavouriteDndCourses({ isLoading }) {
   const {
@@ -39,7 +42,7 @@ export default function FavouriteDndCourses({ isLoading }) {
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const userData = useRecoilValue(UserStateAtom);
-  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
@@ -118,21 +121,25 @@ export default function FavouriteDndCourses({ isLoading }) {
     //   );
 
     let totalSelfCourseCount = 0;
-    if (_userCourses?.length){
+    if (_userCourses?.length) {
       _userCourses?.forEach((course) => {
-        if( course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId){
-            userCourses?.push(course);
-            if(parseJson(course?.added_by)?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
+        if (
+          course?.course_status?.toLowerCase() !== 'disabled' &&
+          course?.user_lsp_id === userLspId
+        ) {
+          userCourses?.push(course);
+          if (parseJson(course?.added_by)?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
         }
-      })
+      });
     }
 
-    setUserOrgData((prevValue) => ({...prevValue , self_course_count: totalSelfCourseCount}))
+    setUserOrgData((prevValue) => ({ ...prevValue, self_course_count: totalSelfCourseCount }));
     const userCourseMaps = userCourses || [];
     const assignedCourses = [];
     const availableCourses =
       courseRes?.latestCourses?.courses?.filter((c) => {
         return (
+          c?.type === COURSE_TYPES[0] &&
           c?.is_active &&
           c?.is_display &&
           !userCourseMaps?.find((map) => {
@@ -184,10 +191,12 @@ export default function FavouriteDndCourses({ isLoading }) {
   };
 
   const handleDragEnd = (result) => {
-    if(userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT){
+    if (userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT) {
       setIsDrag(false);
-      return setToastMsg({ type: 'info', message: 'You have reached your self course assign limit!' });
-      
+      return setToastMsg({
+        type: 'info',
+        message: 'You have reached your self course assign limit!'
+      });
     }
     if (result.destination && result.destination.droppableId === 'character') {
       const element = data.filter((e) => e.id === result.draggableId);
