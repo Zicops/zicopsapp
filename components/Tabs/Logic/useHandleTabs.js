@@ -1,3 +1,4 @@
+import { ONE_MB_IN_BYTES } from '@/helper/constants.helper';
 import { courseErrorAtom, getCourseErrorData } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -228,6 +229,7 @@ export default function useHandleTabs(courseContextData) {
     }
 
     let fileDisplayValue = e.target.files[0].name;
+    let fileErrMsg = null;
     let acceptedType = [];
     if (e.target.name === 'myfile') {
       acceptedType = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
@@ -240,7 +242,8 @@ export default function useHandleTabs(courseContextData) {
         });
       } else {
         e.target.value = '';
-        fileDisplayValue = 'Only .png, .jpg, .jpeg, .gif is allowed';
+        fileErrMsg = 'Only .png, .jpg, .jpeg, .gif is allowed';
+        fileDisplayValue = '';
       }
     } else if (e.target.name === 'uploadCourseImage') {
       acceptedType = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
@@ -253,24 +256,36 @@ export default function useHandleTabs(courseContextData) {
         });
       } else {
         e.target.value = '';
-        fileDisplayValue = 'Only .png, .jpg, .jpeg, .gif is allowed';
+        fileErrMsg = 'Only .png, .jpg, .jpeg, .gif is allowed';
+        fileDisplayValue = '';
       }
     } else if (e.target.name === 'uploadCourseVideo') {
       acceptedType = ['video/mp4'];
 
-      if (acceptedType.includes(e.target.files[0].type)) {
-        setCourseVideo({
-          ...courseVideo,
-          upload: 1,
-          file: e.target.files[0]
-        });
+      let isValid = true;
+
+      const file = e.target.files?.[0];
+
+      if (!acceptedType.includes(file?.type)) {
+        fileErrMsg = 'Only .mp4 is allowed';
+        isValid = false;
+      }
+
+      if (file?.size > ONE_MB_IN_BYTES * 240) {
+        fileErrMsg = 'File Size limit is 240 mb';
+        isValid = false;
+      }
+
+      if (isValid) {
+        setCourseVideo({ ...courseVideo, upload: 1, file: file });
       } else {
+        fileDisplayValue = '';
         e.target.value = '';
-        fileDisplayValue = 'Only .mp4 is allowed';
       }
     }
 
     e.target.value = '';
+    if (fileErrMsg) setToastMsg({ type: 'danger', message: fileErrMsg });
     setFileData({
       ...fileData,
       [e.target.name]: fileDisplayValue
