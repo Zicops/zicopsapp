@@ -491,7 +491,7 @@ export default function useUserCourseData() {
     if (!currentUserId) return;
 
     const _assignedCourses = courseData;
-    
+
     let topicCourseMap = [];
 
     if (!_assignedCourses?.length) return [];
@@ -551,7 +551,6 @@ export default function useUserCourseData() {
     const examMetas = await getExamsMeta(examsIds);
 
     let scheduleExams = [];
-
 
     examMetas?.forEach((exam, index) => {
       if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
@@ -776,9 +775,10 @@ export default function useUserCourseData() {
     );
 
     //removing duplicate values
-    const userIds = userLspMaps
+    const users= userLspMaps
       ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
 
+    const userIds = users?.map((user)=> user?.user_id);
 
     const resUserDetails = await loadQueryDataAsync(
       GET_USER_DETAIL,
