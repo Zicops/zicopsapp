@@ -1,4 +1,4 @@
-import { ONE_MB_IN_BYTES } from '@/helper/constants.helper';
+import { LIMITS } from '@/helper/constants.helper';
 import { courseErrorAtom, getCourseErrorData } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -271,7 +271,7 @@ export default function useHandleTabs(courseContextData) {
         isValid = false;
       }
 
-      if (file?.size > ONE_MB_IN_BYTES * 240) {
+      if (file?.size > LIMITS.courseVideoSize) {
         fileErrMsg = 'File Size limit is 240 mb';
         isValid = false;
       }
