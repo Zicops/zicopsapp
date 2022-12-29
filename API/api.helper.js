@@ -11,7 +11,8 @@ export const API_LINKS = {
   courseCreator: `${API_BASE}/cc/api/v1/query`,
   courseQuery: `${API_BASE}/cq/api/v1/query`,
   userClient: `${API_BASE}/um/api/v1/query`,
-  resetPassword: `${API_BASE}/um/reset-password`
+  resetPassword: `${API_BASE}/um/reset-password`,
+  getOrg: `${API_BASE}/um/org`
 };
 
 export async function getLatestToken(token) {
