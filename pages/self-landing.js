@@ -5,6 +5,7 @@ import HeroSliderContainer from '@/components/HeroSliderContainer';
 import SearchSubCat from '@/components/Search/SearchSubCat';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
+import { getLatestCoursesByFilters } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -50,18 +51,18 @@ export default function Self() {
 
   const { catSubCat, setActiveCatId } = useHandleCatSubCat();
 
-  async function getLatestCoursesByFilters(filters, pageSize = 28) {
-    const _lspId = sessionStorage?.getItem('lsp_id');
-    // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
-    const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
-      publish_time: time,
-      pageSize: pageSize,
-      pageCursor: '',
-      status: COURSE_STATUS.publish,
-      filters: { LspId: _lspId, ...filters }
-    });
-    return courses;
-  }
+  // async function getLatestCoursesByFilters(filters, pageSize = 28) {
+  //   const _lspId = sessionStorage?.getItem('lsp_id');
+  //   // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
+  //   const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
+  //     publish_time: time,
+  //     pageSize: pageSize,
+  //     pageCursor: '',
+  //     status: COURSE_STATUS.publish,
+  //     filters: { LspId: _lspId, ...filters }
+  //   });
+  //   return courses;
+  // }
 
   const pageSize = 28;
   useEffect(() => {
@@ -86,16 +87,16 @@ export default function Self() {
       setOnGoingCourses(
         userCourseData?.filter(
           (course) =>
+            course?.course_type === COURSE_TYPES[0] &&
             course?.isCourseStarted &&
-            !course?.isCourseCompleted &&
-            course?.course_type === COURSE_TYPES[0]
+            !course?.isCourseCompleted
         )
       );
       setMandatoryCourses(
         userCourseData?.filter(
           (course) =>
-            (parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100) &&
             course?.course_type === COURSE_TYPES[0] &&
+            (parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100) &&
             course?.is_mandatory
         )
       );
@@ -104,10 +105,10 @@ export default function Self() {
       setLatestCourses(
         getLatestCourses?.latestCourses?.courses?.filter(
           (c) =>
+            c?.type === COURSE_TYPES[0] &&
             c?.is_active &&
             c?.is_display &&
-            !ucidArray.includes(c.id) &&
-            c?.type === COURSE_TYPES[0]
+            !ucidArray.includes(c.id)
         ) || []
       );
 
@@ -119,10 +120,10 @@ export default function Self() {
         setBaseSubcategoryCourses(
           baseSubCatCourses?.latestCourses?.courses?.filter(
             (c) =>
+              c?.type === COURSE_TYPES[0] &&
               c?.is_active &&
               c?.is_display &&
-              !ucidArray.includes(c.id) &&
-              c?.type === COURSE_TYPES[0]
+              !ucidArray.includes(c.id)
           ) || []
         );
       } else {
@@ -139,10 +140,10 @@ export default function Self() {
         setParentOfBaseSubcategoryCourses(
           baseSubCatParentCourses?.latestCourses?.courses?.filter(
             (c) =>
+              c?.type === COURSE_TYPES[0] &&
               c?.is_active &&
               c?.is_display &&
-              !ucidArray.includes(c.id) &&
-              c?.type === COURSE_TYPES[0]
+              !ucidArray.includes(c.id)
           ) || []
         );
       } else {
@@ -154,10 +155,10 @@ export default function Self() {
       setLearningSpaceCourses(
         getLSPCourses?.latestCourses?.courses?.filter(
           (c) =>
+            c?.type === COURSE_TYPES[0] &&
             c?.is_active &&
             c?.is_display &&
-            !ucidArray.includes(c.id) &&
-            c?.type === COURSE_TYPES[0]
+            !ucidArray.includes(c.id)
         ) || []
       );
     }
