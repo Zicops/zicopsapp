@@ -25,7 +25,7 @@
   gap: 10px;
 }
 .discussion_search_input{
-  width: 68%;
+  width: 72%;
   position: relative;
   border: 1px solid $secondary;
   padding: 5px 10px;
@@ -261,6 +261,7 @@
  .learner_user_details{
   display: flex;
   align-items: center;
+  cursor: pointer;
   gap: 15px;
   .user_image{
     width: 36px;

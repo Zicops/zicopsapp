@@ -10,7 +10,7 @@ import LearnerUser from './LearnerUser';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [isPublic, setIsPublic] = useState(true);
+  // const [isPublic, setIsPublic] = useState(true);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [showInput, setShowInput] = useState(false);
@@ -38,13 +38,13 @@ const CourseBodyDiscussion = () => {
     setShowInput(false);
   };
   const anonymousUserHandler = () => {
-    setIsAnonymous(true);
-    setIsPublic(false);
+    setIsAnonymous(!isAnonymous);
+    // setIsPublic(false);
   };
-  const publicUserHandler = () => {
-    setIsPublic(true);
-    setIsAnonymous(false);
-  };
+  // const publicUserHandler = () => {
+  //   setIsPublic(true);
+  //   setIsAnonymous(false);
+  // };
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
@@ -96,13 +96,11 @@ const CourseBodyDiscussion = () => {
   const onMessageHandler = (e) => {
     setMessage(e);
   };
-  console.log('messageArr', messageArr);
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       sendMessageHandler();
     }
   };
-  console.log('replyArr', replyArr);
   //   return Object.values(replies).map((r) => ({
   //     parent: r?.parent,
   //     replies: r?.replies?.sort((a, b) => b.time - a.time)
@@ -122,9 +120,7 @@ const CourseBodyDiscussion = () => {
         return el;
       }
     });
-    setFilterData(announcementData)
-    console.log(announcementData);
-    
+    setFilterData(announcementData);
     setSelectedType(e.value);
   };
   const typeValue = options.find((option) => option.value === selectedType);
@@ -177,7 +173,7 @@ const CourseBodyDiscussion = () => {
         { !showSelf && !showLearners &&  <span className={`${style.dot}`}></span>}
           <div className={`${style.user_type_learner} ${checkClick && (showLearners ? style.self : style.learners)}`} onClick={onLearnerHandler}>
            {showLearners ?  <img src="/images/svg/group3.svg" alt="" /> : <img src="/images/svg/group2.svg" alt="" />}
-            <span>Learners</span>
+            <span>All</span>
           </div>
           {showLearners &&
             <div className={`${style.all_users}`}>
@@ -220,8 +216,8 @@ const CourseBodyDiscussion = () => {
             onCancleHandler={canclePostHanlder}
             onAnonymousHandler={anonymousUserHandler}
             checkAnonymous={isAnonymous}
-            checkPublic={isPublic}
-            onPublicHandler={publicUserHandler}
+            // checkPublic={isPublic}
+            // onPublicHandler={publicUserHandler}
             onAnnouncementHandler={announcementHandler}
             checkAnnouncement={isAnnouncement}
             handleKeyPress={handleKeyPress}
@@ -239,11 +235,10 @@ const CourseBodyDiscussion = () => {
                 onClick={() => {
                   setCurrentMsgId(data)
                   showRepliesHandler(data)
-
                 }}>
                 <img src="/images/unfold_more.png" alt="" />
               </div>
-              <p>{newreplyData ? newreplyData[data.id]?.length : '0'}</p>
+              <p>{newreplyData ? newreplyData[data.id]?.length : 'No Replies'}</p>
             </div>
             {showReplies && replyData && (
               <>
