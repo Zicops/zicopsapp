@@ -3,21 +3,19 @@ import moment from 'moment';
 import style from './discussion.module.scss';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { ReplyAtom } from '@/state/atoms/discussion.atoms';
+import { MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
 const MessageBlock = ({ isReply, message }) => {
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [isPublic, setIsPublic] = useState(true);
+  // const [isPublic, setIsPublic] = useState(true);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
+  const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
   const [reply, setReply] = useState('');
   const userDetails = useRecoilValue(UserStateAtom);
-  let currentReplyId = "";
-  const onReplyHandler = (msg) => {
+  const onReplyHandler = () => {
     setShowInput(true);
-    console.log(msg.replyId);
-    currentReplyId = msg.replyId;
   };
   const canclePostHanlder = () => {
     setShowInput(false);
@@ -26,13 +24,13 @@ const MessageBlock = ({ isReply, message }) => {
     setReply(e);
   };
   const anonymousUserHandler = () => {
-    setIsAnonymous(true);
-    setIsPublic(false);
+    setIsAnonymous(!isAnonymous);
+    // setIsPublic(false);
   };
-  const publicUserHandler = () => {
-    setIsPublic(true);
-    setIsAnonymous(false);
-  };
+  // const publicUserHandler = () => {
+  //   setIsPublic(true);
+  //   setIsAnonymous(false);
+  // };
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
@@ -51,7 +49,6 @@ const MessageBlock = ({ isReply, message }) => {
     if (newreplyData[0]) {
       console.log(msg?.id);
       checkId = Object.keys(newreplyData[0]);
-      console.log(parseInt(checkId[0]));
     }
     console.log(newMessageId);
     if (!newMessageId || (parseInt(checkId[0]) !== msg?.id && !msg?.replyId)) {
@@ -63,7 +60,7 @@ const MessageBlock = ({ isReply, message }) => {
               id: Math.floor(Date.now() / 1000 + 1),
               content: { text: `${'@' + msg?.user.first_name + ' ' + reply}`, image: [] },
               time: Math.floor(Date.now() / 1000),
-              replyId: message?.id,
+              replyId: msg?.id,
               isAnonymous: false,
               user: {
                 first_name: userDetails?.first_name,
@@ -85,7 +82,7 @@ const MessageBlock = ({ isReply, message }) => {
                id: Math.floor(Date.now() / 1000 + 1),
                content: { text: `${'@' + msg?.user.first_name + ' ' + reply}`, image: [] },
                time: Math.floor(Date.now() / 1000),
-               replyId: message?.id,
+               replyId: msg?.id,
                isAnonymous: false,
                user: {
                  first_name: userDetails?.first_name,
@@ -109,7 +106,7 @@ const MessageBlock = ({ isReply, message }) => {
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      onSendReplyHandler();
+      onSendReplyHandler(message);
     }
   };
 
@@ -175,7 +172,7 @@ const MessageBlock = ({ isReply, message }) => {
                 <span>{message?.unlike?.length || 0}</span>
               </div>
             </div>
-            <button className={`${style.reply_button}`} onClick={()=>onReplyHandler(message)}>
+            <button className={`${style.reply_button}`} onClick={onReplyHandler}>
               Reply
             </button>
           </div>
@@ -190,8 +187,8 @@ const MessageBlock = ({ isReply, message }) => {
                 onCancleHandler={canclePostHanlder}
                 onAnonymousHandler={anonymousUserHandler}
                 checkAnonymous={isAnonymous}
-                checkPublic={isPublic}
-                onPublicHandler={publicUserHandler}
+                // checkPublic={isPublic}
+                // onPublicHandler={publicUserHandler}
                 onAnnouncementHandler={announcementHandler}
                 checkAnnouncement={isAnnouncement}
                 handleKeyPress={handleKeyPress}
