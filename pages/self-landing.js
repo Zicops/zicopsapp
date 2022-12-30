@@ -1,14 +1,13 @@
-import { GET_LATEST_COURSES } from '@/api/Queries';
 import ClassRoomBanner from '@/components/ClassRoomBanner';
 import { classroomData } from '@/components/ClassRoomBanner/classRoomBanner.helper';
 import HeroSliderContainer from '@/components/HeroSliderContainer';
 import SearchSubCat from '@/components/Search/SearchSubCat';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { getLatestCoursesByFilters } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import FavouriteDndCourses from '../components/FavouriteDndCourses';
@@ -22,6 +21,8 @@ let timer = null;
 export default function Self() {
   const userData = useRecoilValue(UserDataAtom);
   const { getUserCourseData, getUserPreferences } = useUserCourseData();
+
+  const router = useRouter();
 
   const userOrg = useRecoilValue(UsersOrganizationAtom);
   const [baseSubcategory, setBaseSubcategory] = useState('');
@@ -96,7 +97,9 @@ export default function Self() {
         userCourseData?.filter(
           (course) =>
             course?.course_type === COURSE_TYPES[0] &&
-            (parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100) &&
+            // (+course?.completedPercentage === 0 || course?.completedPercentage === 100)
+            !course?.isCourseStarted &&
+            !course?.isCourseCompleted &&
             course?.is_mandatory
         )
       );
@@ -184,14 +187,38 @@ export default function Self() {
       <FavouriteDndCourses isLoading={setIsLoading} />
 
       {!!mandatoryCourses?.length && (
-        <ZicopsCarousel title="Mandatory Courses" data={mandatoryCourses} />
+        <ZicopsCarousel
+          title="Mandatory Courses"
+          data={mandatoryCourses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?userCourse=${JSON.stringify({ isMandatory: true })}&isSelfPaced=true`,
+              '/search-page'
+            )
+          }
+        />
       )}
       {!!onGoingCourses?.length && (
-        <ZicopsCarousel title="Continue with your Courses" data={onGoingCourses} />
+        <ZicopsCarousel
+          title="Continue with your Courses"
+          data={onGoingCourses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?userCourse=${JSON.stringify({ isOngoing: true })}&isSelfPaced=true`,
+              '/search-page'
+            )
+          }
+        />
       )}
 
       {!!baseSubcategoryCourses?.length && (
-        <ZicopsCarousel title={`Courses in ${baseSubcategory}`} data={baseSubcategoryCourses} />
+        <ZicopsCarousel
+          title={`Courses in ${baseSubcategory}`}
+          data={baseSubcategoryCourses}
+          handleTitleClick={() =>
+            router.push(`/search-page?subCat=${baseSubcategory}&isSelfPaced=true`, '/search-page')
+          }
+        />
       )}
 
       <HeroSliderContainer>
@@ -213,13 +240,34 @@ export default function Self() {
         <ZicopsCarousel
           title={`Courses in ${parentOfBaseSubcategory}`}
           data={parentOfBaseSubcategoryCourses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?cat=${parentOfBaseSubcategory}&isSelfPaced=true`,
+              '/search-page'
+            )
+          }
         />
       )}
 
       {!!learningSpaceCourses?.length && (
-        <ZicopsCarousel title="Courses from your learning space" data={learningSpaceCourses} />
+        <ZicopsCarousel
+          title="Courses from your learning space"
+          data={learningSpaceCourses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?filter=${JSON.stringify({ LspId: userOrg?.lsp_id })}&isSelfPaced=true`,
+              '/search-page'
+            )
+          }
+        />
       )}
-      {!!latestCourses?.length && <ZicopsCarousel title="Trending Courses" data={latestCourses} />}
+      {!!latestCourses?.length && (
+        <ZicopsCarousel
+          title="Trending Courses"
+          data={latestCourses}
+          handleTitleClick={() => router.push(`/search-page?&isSelfPaced=true`, '/search-page')}
+        />
+      )}
 
       <SearchSubCat
         data={catSubCat?.subCat?.map((s) => ({
@@ -228,6 +276,7 @@ export default function Self() {
           img: s?.ImageUrl,
           handleClick: (subCat) => setFilters({ ...filters, subCategory: subCat })
         }))}
+        // handleTitleClick={() => router.push(`/search-page?cat=${}&isSelfPaced=true`, '/search-page')}
       />
 
       {!!courseFromPrefernces?.length && (
@@ -235,10 +284,19 @@ export default function Self() {
         <ZicopsCarousel
           title="Courses from your Preferred Sub-Categories"
           data={courseFromPrefernces}
+          handleTitleClick={() =>
+            router.push(`/search-page?preferredSubCat=true&isSelfPaced=true`, '/search-page')
+          }
         />
       )}
 
-      {!!latestCourses?.length && <ZicopsCarousel title="Latest Courses" data={latestCourses} />}
+      {!!latestCourses?.length && (
+        <ZicopsCarousel
+          title="Latest Courses"
+          data={latestCourses}
+          handleTitleClick={() => router.push(`/search-page?isSelfPaced=true`, '/search-page')}
+        />
+      )}
     </div>
   );
 }
