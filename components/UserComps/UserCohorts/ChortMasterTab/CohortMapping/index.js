@@ -104,7 +104,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
     setIsAssignPopUpOpen(false);
     await loadAssignCourses(false);
     setCourseAssignData({
-      expectedCompletionDays: null,
+      expectedCompletionDays: 1,
       isMandatory: false,
       isCourseAssigned: false
     });

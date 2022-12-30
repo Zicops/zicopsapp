@@ -139,7 +139,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       user_name: userName,
       lsp_name: sessionStorage?.getItem('lsp_name'),
       course_name: userCourseData?.name,
-      end_date: moment(endDate).format('MMMM Do YYYY, h:mm:ss a')
+      end_date: moment(endDate).format('D MMM YYYY')
     };
     const sendMailData = {
       to: [currentUserData?.email],

@@ -22,7 +22,7 @@
   position: relative;
   height: 100%;
   background-color: var(--header-bg);
-  border-radius: 8px;
+  border-radius: 2px;
 }
 
 .img {
@@ -30,7 +30,7 @@
   width: 100%;
   object-fit: cover;
   opacity: 1;
-  border-radius: 8px;
+  border-radius: 2px;
 }
 
 .banner {
@@ -52,11 +52,11 @@
   line-height: 1.3em;
   height: 100%;
   width: 100%;
-  background-color: rgba($black, 0.5);
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.2) 100%);
+  // background-color: rgba($black, 0.5);
+  // background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.2) 100%);
   position: absolute;
   z-index: 1;
-  border-radius: 8px;
+  border-radius: 2px;
 }
 
 .coursename {

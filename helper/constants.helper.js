@@ -76,7 +76,7 @@ export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';
 export const VIDEO_FILE_TYPES = '.mp4, .mkv';
 export const IMAGE_FILE_TYPES = '.jpg, .jpeg, .png, .svg, .gif';
 export const MIN_COURSE_LENGTH = 25;
-export const PROFILE_IMAGE_TYPE = '.jpg, .jpeg, .png, .svg'
+export const PROFILE_IMAGE_TYPE = '.jpg, .jpeg, .png, .svg';
 
 export const DEFAULT_VALUES = {
   image: 'default-image.jpg',
@@ -108,22 +108,26 @@ export const COURSE_TOPIC_STATUS = {
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
 
-
 export const NOTIFICATION_TITLES = {
   cohortAssign: 'New Cohort Mapped',
   cohortUnassign: 'Cohort Unmapped',
   courseAssign: 'New Course Assigned',
   courseUnssigned: 'Course Unassigned'
-}
+};
 
 export const COURSE_SELF_ASSIGN_LIMIT = 30;
+// https://stackoverflow.com/a/49490014/13419786
+export const ONE_MB_IN_BYTES = 1_048_576;
+export const LIMITS = {
+  courseVideoSize: ONE_MB_IN_BYTES * 240
+};
 
 export const EMAIL_TEMPLATE_IDS = {
-  courseAssignMandatory:'d-bf691d7c93794afca36c326cd032ccbf',
-  courseAssignNotMandatory:'d-2f834ed850ba43aab5e55e622f0725c1',
-  courseUnassign:'d-1d43080c8386430ca24d5050130d5c69',
-  cohortAssign:'d-1c44165b36034b839d9b7e7a1035f19b',
-  cohortUnassign:'d-3801f540f2a948729db6019981ace2c2',
-  cohortManagerAssign:'d-c9382610d3bb46f28291bca9f5d97cd4',
-  cohortManagerUnassign:'d-8b97231c38a44b6facb05172f39cc714'
-}
+  courseAssignMandatory: 'd-bf691d7c93794afca36c326cd032ccbf',
+  courseAssignNotMandatory: 'd-2f834ed850ba43aab5e55e622f0725c1',
+  courseUnassign: 'd-1d43080c8386430ca24d5050130d5c69',
+  cohortAssign: 'd-1c44165b36034b839d9b7e7a1035f19b',
+  cohortUnassign: 'd-3801f540f2a948729db6019981ace2c2',
+  cohortManagerAssign: 'd-c9382610d3bb46f28291bca9f5d97cd4',
+  cohortManagerUnassign: 'd-8b97231c38a44b6facb05172f39cc714'
+};

@@ -80,10 +80,10 @@ export default function useHandleCourseHero(isPreview) {
     //   });
     // }
 
-    if (courseData?.getCourse && !isDataLoaded) {
+    if (courseData?.getCourse && isDataLoaded !== courseId) {
       updateCourseMaster(courseData.getCourse);
 
-      setIsDataLoaded(true);
+      setIsDataLoaded(courseId);
     }
   }, [courseId]);
 
