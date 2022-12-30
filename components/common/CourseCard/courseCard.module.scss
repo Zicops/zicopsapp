@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+
+.smallCardWrapper {
+    .smallCard {
+        position: relative;
+        .banner {
+            position: absolute;
+            top: 5%;
+            right: 5%;
+            color: #EAEAEA;
+            background-color: rgba(16, 16, 18, 0.9);
+            padding: 5px 10px;
+            font-size: 12px;
+            text-transform: capitalize;
+        }
+
+        img {
+            border-radius: 2px;
+            aspect-ratio: 1.75/1;
+        }
+    }
+
+    .smallCardContent {
+        display: none;
+        // height: 0;
+        overflow: hidden;
+        padding: 10px;
+
+        background-color: #242630;
+        font-family: 'Poppins';
+
+        .firstRow {
+            display: flex;
+
+            .buttons {
+                display: flex;
+                flex: 1;
+
+                img {
+                    width: 45%;
+                }
+            }
+
+            .durlang {
+                flex: 2;
+                text-align: end;
+
+                .lang {
+                    color: #EAEAEA;
+                    font-size: 14px;
+                }
+
+                .dur {
+                    color: #EDB458;
+                    font-size: 12px;
+                }
+            }
+        }
+
+        .secondRow {
+            color: #EAEAEA;
+            padding: 10px 0;
+            font-weight: 400;
+        }
+
+        .thirdRow {
+            .pill {
+                font-size: 12px;
+                font-weight: 400;
+                color: #EAEAEA;
+                background-color: #1A1B26;
+                padding: 4px 8px;
+                width: fit-content;
+            }
+        }
+
+        .lastRow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 12px;
+            color: #EAEAEA;
+
+            .dot {
+                content: '';
+                width: 5px;
+                height: 5px;
+                background-color: #EAEAEA;
+                border-radius: 50%;
+            }
+        }
+    }
+
+    &:hover{
+        margin-top: -10%;
+        z-index: 999999;
+        .smallCardContent {
+            display: block;
+            position: absolute;
+            z-index: 999999;
+        }
+    }
+}
