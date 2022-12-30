@@ -7,7 +7,7 @@ export default function SearchSubCat({ data, handleTitleClick = null }) {
     <>
       <div
         className={`${styles.searchBookmarkTitle}`}
-        onClick={!!handleTitleClick && handleTitleClick}
+        onClick={!!handleTitleClick ? handleTitleClick : ()=>{}}
         style={!!handleTitleClick ? { cursor: 'pointer' } : {}}>
         Sub Categories
       </div>

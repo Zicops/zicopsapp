@@ -274,7 +274,8 @@ export default function Self() {
           ...s,
           name: s?.Name,
           img: s?.ImageUrl,
-          handleClick: (subCat) => setFilters({ ...filters, subCategory: subCat })
+          handleClick: (subCat) =>
+            router.push(`/search-page?subCat=${subCat}&isSelfPaced=true`, '/search-page')
         }))}
         // handleTitleClick={() => router.push(`/search-page?cat=${}&isSelfPaced=true`, '/search-page')}
       />
