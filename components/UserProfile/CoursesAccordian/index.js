@@ -31,7 +31,9 @@ import { getNotificationMsg } from '@/helper/common.helper';
 import { Email } from '@mui/icons-material';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
-  const minDate = getMinCourseAssignDate();
+  // const minDate = getMinCourseAssignDate(userCourseData?.duration);
+
+  const [minDate,setMinDate] = useState(getMinCourseAssignDate(userCourseData?.duration));
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: minDate,
     isMandatory: false,
@@ -70,6 +72,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   async function handleAssign(item, isRemove = false) {
     // const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
     setUserCourseData({ ...item });
+    const assignDate = getMinCourseAssignDate(item?.duration);
+    setMinDate(assignDate);
 
     if (!isRemove) return setIsAssignPopUpOpen(true);
 
