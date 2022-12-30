@@ -775,10 +775,10 @@ export default function useUserCourseData() {
     );
 
     //removing duplicate values
-    const users= userLspMaps
+    const users = userLspMaps
       ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
 
-    const userIds = users?.map((user)=> user?.user_id);
+    const userIds = users?.map((user) => user?.user_id);
 
     const resUserDetails = await loadQueryDataAsync(
       GET_USER_DETAIL,

@@ -28,10 +28,14 @@ export default function useHandleNotes() {
   function addNewNote(topic_id) {
     const allNotes =
       structuredClone(
-        floatingNotes?.filter((notes) => notes?.topic_id === topic_id && notes?.is_active)
+        floatingNotes?.filter(
+          (notes) =>
+            // notes?.topic_id === topic_id &&
+            notes?.is_active
+        )
       ) || [];
     // const lastNote = allNotes?.[allNotes.length - 1];
-    console.log(allNotes, floatingNotes);
+    // console.log(allNotes, floatingNotes);
 
     allNotes.push({
       ...getNoteCardObj({
@@ -41,7 +45,7 @@ export default function useHandleNotes() {
       }),
       isNew: true
     });
-    console.log(allNotes);
+    // console.log(allNotes);
     setFloatingNotes(allNotes);
   }
 
