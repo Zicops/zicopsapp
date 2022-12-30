@@ -125,17 +125,17 @@ export default function assignCourseToUser() {
         });
       }
     }
-    // if(!isError){
-    //   const notificaitonBody = getNotificationMsg('courseAssign',{courseName:course_data?.name,endDate:course_data?.endDate})
-    //   await sendNotification(
-    //     {
-    //       title: NOTIFICATION_TITLES?.courseAssign,
-    //       body: notificaitonBody,
-    //       user_id: userIds
-    //     },
-    //     { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    //   );
-    // }
+    if(!isError){
+      const notificaitonBody = getNotificationMsg('courseAssign',{courseName:course_data?.name,endDate:course_data?.endDate})
+      await sendNotification(
+        {
+          title: NOTIFICATION_TITLES?.courseAssign,
+          body: notificaitonBody,
+          user_id: userIds
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
+    }
 
     if (!isError) {
       const resUserDetails = await loadQueryDataAsync(
@@ -211,17 +211,17 @@ export default function assignCourseToUser() {
       });
     }
 
-    // if(!isError){
-    //   const notificaitonBody = getNotificationMsg('courseUnassign',{courseName:courseName});
-    // await sendNotification(
-    //   {
-    //     title: NOTIFICATION_TITLES?.courseUnssigned,
-    //     body: notificaitonBody,
-    //     user_id: userIds
-    //   },
-    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    // );
-    // }
+    if(!isError){
+      const notificaitonBody = getNotificationMsg('courseUnassign',{courseName:courseName});
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.courseUnssigned,
+        body: notificaitonBody,
+        user_id: userIds
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    }
 
     if (!isError) {
       const resUserDetails = await loadQueryDataAsync(
