@@ -11,6 +11,7 @@ import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Grid } from '@mui/material';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Popup from 'reactjs-popup';
@@ -146,7 +147,12 @@ export default function FavouriteDndCourses({ isLoading }) {
             let added_by = {};
             if (map?.added_by) added_by = JSON.parse(map?.added_by);
             const isAssigned = map?.course_id === c?.id;
-            if (isAssigned) assignedCourses.push({ ...c, added_by });
+            if (isAssigned)
+              assignedCourses.push({
+                ...c,
+                added_by,
+                expected_completion: moment.unix(map?.end_date).format('DD/MM/YYYY')
+              });
             return isAssigned;
           })
         );
