@@ -49,7 +49,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
       );
       setLatestCourse(_latestCourses);
     });
-  }, [userOrgData?.lsp_id, searchParam, courseStatus, zicopsLspId]);
+  }, [userOrgData?.lsp_id, searchParam, courseStatus, zicopsLspId, courseType]);
 
   const columns = [
     {
