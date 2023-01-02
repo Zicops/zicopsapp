@@ -56,8 +56,10 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
 
-// export const LEARNING_SPACE_ID = 'Zicops learning Spaces';
-export const LEARNING_SPACE_ID = 'd8685567-cdae-4ee0-a80e-c187848a760e';
+// Default LSP is staging.zicops.com for demo and staging domains
+// export const LEARNING_SPACE_ID = '93f3693c-d111-51aa-86ca-b883c6dfe647';
+// Default LSP is zicops.com for zicops.com production domains
+export const LEARNING_SPACE_ID = '98640aaa-a1e8-5584-bc14-2b1bfed7d65a';
 
 export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS',
@@ -80,9 +82,9 @@ export const DEFAULT_VALUES = {
   previewVideo: 'default-video.mp4'
 };
 
-// ztlp pune lsp
+// Default LSP is staging.zicops.com for demo and staging domains
 export const COMMON_LSPS = {
-  zicops: '6bc01264-07c2-518e-9b1e-a6fd54249132'
+  zicops: '98640aaa-a1e8-5584-bc14-2b1bfed7d65a'
 };
 
 export const COURSE_STATUS = {

@@ -62,8 +62,15 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         {},
         userClient
       );
-      user.role = res?.getUserLspRoles?.[0]?.role;
-      user.roleData = res?.getUserLspRoles?.[0];
+
+      let currentRole = null;
+      const _userRole = res?.getUserLspRoles?.reduce(function (prev, current) {
+        currentRole = current
+        return prev?.updated_at > current?.updated_at ? prev : current;
+      }, currentRole);
+  
+      user.role = _userRole?.role;
+      user.roleData = _userRole;
     }
     //make sure no user without role map is shown
     const usersData = _usersData?.filter((user) => !!user?.roleData);

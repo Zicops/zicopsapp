@@ -19,8 +19,8 @@
     outline: 0;
     border: 0;
     border-radius: 10px;
-    /* padding: 15px; */
-    height: 50px;
+    padding: 10px;
+    /* height: 50px; */
 
     position: absolute;
     z-index: 1;
@@ -49,17 +49,6 @@
     width: 20px;
     object-fit: contain;
 }
-/* content: url('/static/img/Vector (5).png'); */
-/* .transparent-btn span::after {
-
-    content: url('/images/bigarrowright.png');
-    height: 16px;
-    margin-left: 10px;
-    margin-bottom: -5px;
-} */
-/* .partner-images {
-    height: 400px;
-} */
 
 .partner-image {
     height: 300px;
@@ -68,23 +57,115 @@
     object-position: top;
 }
 
-.footer {
-    padding: 0 20px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 
-    background-color: #121318AB;
-}
 .hover-on-hero-image img{
     filter: grayscale(0)!important;
 }
 .features{
     padding: 20px;
 }
-@media only screen and (min-width: 768px) {
+
+
+
+
+
+
+
+
+
+
+
+/* Tablet css */
+@media only screen and (max-width: 1200px) and (min-width: 600px) {
+        .hero {
+            display: flex;
+            height: calc(100vh - 90px);
+            overflow: hidden;
+            position: relative;
+        }
+        .hero img {
+            width: 100%;
+            z-index: 0;
+            filter: grayscale(70%);
+        }
+    
+        .learner {
+            position: relative;
+            margin-right: -12%;
+        }
+    
+        .admin {
+            position: relative;
+            margin-left: -12%;
+        }
+    
+        .learner,
+        .learner img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            clip-path: polygon(0 0, 100% 0, 70% 100%, 0 100%);
+        }
+    
+        .admin,
+        .admin img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+        }
+    
+        .learner .transparent-btn,
+        .admin .transparent-btn {
+            height: 100px;
+            width: 300px;
+            position: absolute;
+        }
+    
+        .learner .transparent-btn {
+            top: 60px;
+            left: 10%;
+        }
+    
+        .admin .transparent-btn {
+            left: calc(90% - 300px);
+            bottom: 60px;
+        }
+        .transparent-btn span {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+                .features {
+                    background-color: #121318AB;
+                    padding: 50px 0;
+                    position: relative;
+                    padding: 7vh 10%;
+                }
+        
+                .features h2 {
+                    text-align: center;
+                }
+        
+                .features .list {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    justify-content: space-between;
+                    border: none;
+                }
+        
+                .features .list-item {
+                    flex-direction: column;
+                    padding: 50px 30px;
+                    border: none;
+                    text-align: center;
+                }
+        
+                .features .list-item p {
+                    font-size: 16px;
+                }
+}
+@media only screen and (min-width: 1200px) {
     .hero{
         display: flex;
         height: calc(100vh - 90px);
@@ -104,9 +185,15 @@
         margin-left: -12%;
     }
     .learner, .learner img{
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
         clip-path: polygon(0 0, 100% 0, 65% 100%, 0 100%);
     }
     .admin, .admin img{
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
         clip-path: polygon(35% 0, 100% 0, 100% 100%, 0 100%);
     }
     .learner .transparent-btn, .admin .transparent-btn{
@@ -139,9 +226,9 @@
             padding: 0 100px;
         }
     
-        .footer p {
+        /* .footer p {
             text-align: center;
-        }
+        } */
 
         .features{
             background-color: #121318AB;

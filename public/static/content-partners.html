@@ -5,12 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Zicops - Content Partners</title>
-    <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
+    <title>Partner us</title>
+    <meta
+      name="description"
+      content="For subject-matter course production houses, be part of a bigger journey to 
+grow your brand value and revenue."
+    />
+    <link rel="icon" type="image/x-icon" href="/images/zicopsFavIcon.png" />
 
     <link rel="stylesheet" href="/static/css/style.css" />
     <link rel="stylesheet" href="/static/css/partners.css" />
-    <!-- <link rel="stylesheet" href="./css/animate.min.css" /> -->
+    <link rel="stylesheet" href="/static/css/animations.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,72 +30,66 @@
       src="/static/assets/jquery.waterwheelCarousel.min.js"
       defer
     ></script>
-    <script src="/static/js/main.js" defer></script>
-    <script src="/static/js/waterWheel.js" defer></script>
 
     <!-- Calendly link widget begin -->
     <link href="/static/assets/calendly-widget.css" rel="stylesheet" />
     <script src="/static/assets/calendly-widget.js" type="text/javascript" async defer></script>
+    <script src="/static/js/main.js" defer></script>
+    <script src="/static/js/waterWheel.js" defer></script>
   </head>
 
   <body>
-    <nav id="navbar">
+    <nav class="navbar" id="navbar">
+      <!-- <div class="brand"> -->
       <a class="logo" id="logo" href="/home">
         <img src="../images/brand/zicops-new-logo.svg" alt="" />
       </a>
-      <ul class="desktop-menu">
-        <a href="/static/about.html">
-          <li>Corporates</li>
-        </a>
-        <a href="/static/features.html">
-          <li>Features</li>
-        </a>
-        <li class="active">Content Partners</li>
-        <a href="/static/contact-us.html">
-          <li>Contact Us</li>
-        </a>
-      </ul>
-      <span class="buttons" onclick="window.location.href = '/login'">
-        <span class="login bold"><span class="user-icon"></span>Login</span>
+      <!-- </div> -->
+      <a href="#" class="hamburger-menu-btn">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </a>
+      <div class="navbar-links">
+        <ul>
+          <li><a href="/static/about.html">Corporates</a></li>
+          <li><a href="/static/features.html">Features</a></li>
+          <li class="active"><a href="/static/content-partners.html">Content Partners</a></li>
+          <li><a href="/static/contact-us.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <span class="buttons desktop-menu">
+        <a href="/login"
+          ><span class="login bold"><span class="user-icon"></span>Login</span></a
+        >
       </span>
-
-      <ul class="mobile-menu">
-        <a href="/static/about.html">
-          <li>Corporates</li>
-        </a>
-        <a href="/static/features.html">
-          <li>Features</li>
-        </a>
-        <li class="active">Partners</li>
-        <!-- <li>Contact Us</li> -->
-      </ul>
     </nav>
     <div class="slider-section">
-        <div class="slider">
-          <div id="carousel">
-            <div class="slide-item" id="item-1">
-              <img src="/images/courses/design.png" />
-            </div>
-            <div class="slide-item" id="item-1">
-              <img src="/images/courses/techno.png" />
-            </div>
-            <div class="slide-item" id="item-1">
-              <img src="/images/courses/cloud2.png" />
-            </div>
-            <div class="slide-item" id="item-1">
-              <img src="/images/courses/develop2.png" />
-            </div>
-            <div class="slide-item" id="item-1">
-              <img src="/images/courses/leader2.png" />
-            </div>
-            <div class="slide-item" id="item-1">
-              <img src="/images/courses/soft2.png" />
-            </div>
-            <div class="slide-item" id="item-1">
-              <img src="/images/courses/hobby2.png" />
-            </div>
+      <div class="slider">
+        <div id="carousel">
+          <div class="slide-item" id="item-1">
+            <img src="/static/images/slider/design.png" />
+          </div>
+          <div class="slide-item" id="item-1">
+            <img src="/static/images/slider/techno.png" />
+          </div>
+          <div class="slide-item" id="item-1">
+            <img src="/static/images/slider/cloud2.png" />
+          </div>
+          <div class="slide-item" id="item-1">
+            <img src="/static/images/slider/develop2.png" />
+          </div>
+          <div class="slide-item" id="item-1">
+            <img src="/static/images/slider/leader2.png" />
+          </div>
+          <div class="slide-item" id="item-1">
+            <img src="/static/images/slider/soft2.png" />
+          </div>
+          <div class="slide-item" id="item-1">
+            <img src="/static/images/slider/hobby2.png" />
           </div>
         </div>
+      </div>
     </div>
     <div class="partner-section">
       <img class="mobile grad1" src="/static/img/Ellipse 32.png" />
@@ -105,28 +104,47 @@
       <img class="desktop grad5" src="/static/img/Ellipse 21.png" />
 
       <div class="text-center">
-        <h2 class="text-gradient bold-500 mb-10">Calling subject matter<br />content producers</h2>
+        <h2 class="text-gradient bold mb-10">Calling subject matter<br />course producers</h2>
         <p>Aggregating courses from course creators in various categories</p>
       </div>
 
       <div class="row sec flex-center mt-20 mb-20 row-reverse">
         <div class="col-6 flex-center">
-          <img src="/static/images/Partnership Frame 1.png" alt="" />
+          <!-- <img src="/static/images/Partnership Frame 1.png" alt="" /> -->
+          <div class="animation-wrapper animation-wrapper13">
+            <div class="images">
+              <img src="/static/images/image16/Group 44.1.png" class="top_circle16" />
+              <img src="/static/images/image10/Group 46.svg" class="ball16" />
+              <img src="/static/images/image16/Group 45.png" class="bottom_circle16" />
+            </div>
+          </div>
         </div>
         <div class="col-6 flex-center">
           <div class="content-block">
             <p>Empowering creators with a</p>
             <h2 class="text-gradient bold">wider reach</h2>
-            <p>for their courses and a bigger target audience within Organizations.</p>
+            <p>for their courses and an exclusive target audience within Organizations.</p>
             <button class="mouse-cursor-gradient-tracking-btn mt-20">
-              <span>Book a consultation</span>
+              <span>Reach Us</span>
             </button>
           </div>
         </div>
       </div>
       <div class="row sec flex-center mt-20 mb-20">
         <div class="col-6 flex-center">
-          <img src="/static/images/Partnership Frame 2.png" alt=""/>
+          <!-- <img src="/static/images/Partnership Frame 2.png" alt="" /> -->
+          <div class="animation-wrapper animation-wrapper14">
+            <div class="images">
+              <img src="/static/images/image14/Group 40.png" class="top_pillar14" />
+              <img src="/static/images/image14/Group 37.svg" class="main_pillar14" />
+              <img src="/static/images/image14/Group 38.png" class="right_pillar14" />
+              <img src="/static/images/image14/Group 38.png" class="right_pillarsmall14" />
+              <img src="/static/images/image14/Group 38.png" class="left_pillar14" />
+              <img src="/static/images/image14/Group 38.png" class="left_pillarsmall114" />
+              <img src="/static/images/image14/Group 38.png" class="left_pillarsmall214" />
+              <img src="/static/images/image14/Group 46.svg" class="ball14" />
+            </div>
+          </div>
         </div>
         <div class="col-6 flex-center">
           <div class="content-block">
@@ -134,36 +152,87 @@
             <h2 class="text-gradient bold">start monetizing</h2>
             <p>your courses while expanding your brand value.</p>
             <button class="mouse-cursor-gradient-tracking-btn mt-20">
-              <span>Book a consultation</span>
+              <span>Find out how</span>
             </button>
           </div>
         </div>
       </div>
       <div class="row sec flex-center mt-20 mb-20 row-reverse">
         <div class="col-6 flex-center">
-          <img src="/static/images/Partnership Frame 3.png" alt=""/>
+          <!-- <img src="/static/images/Partnership Frame 3.png" alt="" /> -->
+          <div class="animation-wrapper animation-wrapper9">
+            <div class="images">
+              <img class="pillar15" src="/static/images/image15/Group 17.png" />
+              <img class="ball15" src="/static/images/image15/Group 59.png" />
+            </div>
+          </div>
         </div>
         <div class="col-6 flex-center">
           <div class="content-block">
             <p>
-              While we offer a one-stopsolution to our customers, we letour content partners work
-              and penetrate their specific subject matter category.
+              It is our initiative to empower creators by bringing them together on a unified
+              platform and providing this wide learning ecosystem in a nutshell to organizations.
             </p>
-            <h2 class="text-gradient bold">Let's grow together!</h2>
+            <h2 class="text-gradient bold">Be part of a growth journey!</h2>
             <p></p>
             <button class="mouse-cursor-gradient-tracking-btn mt-20">
-              <span>Book a consultation</span>
+              <span>Talk to us</span>
             </button>
           </div>
         </div>
       </div>
     </div>
     <div class="single-section">
-      <p>Leave an impact behind with <br />continuous streaming of your courses!</p>
+      <p>Leave an impact behind with continuous streaming of your courses!</p>
       <h2 class="text-gradient bold">What are you waiting for?</h2>
       <button class="mouse-cursor-gradient-tracking-btn mt-20">
-        <span>Book a consultation</span>
+        <span>Consult us</span>
       </button>
     </div>
+    <div class="footer">
+      <div class="footer-left">
+        <div class="footer-links">
+          <ul>
+            <a href="/static/about.html"><li>Corporates</li></a>
+            <a href="/static/features.html"><li>Features</li></a>
+            <a href="/static/content-partners.html"><li>Content Partners</li></a>
+            <a href="/static/contact-us.html"><li>Contact Us</li></a>
+            <a href="/static/terms.html"><li>Terms of use</li></a>
+            <a href="/static/privacy.html"><li>Privacy Policy</li></a>
+          </ul>
+        </div>
+
+        <p class="desktop-menu">
+          © 2022 Zicops Learning Technology Pvt. Ltd. All Rights Reserved. Zicops and all related
+          channel and programming logos are service marks of, and all related programming visuals
+          and elemnts are the property of Zicops,Inc. All rights reserved.
+        </p>
+      </div>
+      <div class="footer-right">
+        <div class="social-links">
+          <p class="desktop-menu">Connect with us</p>
+          <a href="https://twitter.com/zicopslearning"><img src="/images/Twitter.png" alt="" /></a>
+          <a href="https://www.facebook.com/profile.php?id=100088569042439"
+            ><img src="/images/FB.png" alt=""
+          /></a>
+          <a href="https://www.instagram.com/zicops_learning/"
+            ><img src="/images/Insta.png" alt=""
+          /></a>
+          <a href="https://www.linkedin.com/company/zicops"
+            ><img src="/images/LinkedIn.png" alt=""
+          /></a>
+        </div>
+        <!-- <div className="store">
+              <p>Download App</p>
+              <img src="/images/play_store.png" alt="" />
+              <img src="/images/app_store.png" alt="" />
+          </div> -->
+      </div>
+    </div>
+    <p class="mobile-menu" style="font-size: 14px; padding: 20px">
+      © 2022 Zicops Learning Technology Pvt. Ltd. All Rights Reserved.<br /><br />
+      Zicops and all related channel and programming logos are service marks of, and all related
+      programming visuals and elemnts are the property of Zicops,Inc. All rights reserved.
+    </p>
   </body>
 </html>

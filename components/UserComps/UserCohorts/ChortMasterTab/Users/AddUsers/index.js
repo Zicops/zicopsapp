@@ -6,7 +6,6 @@ import UserButton from '@/components/common/UserButton';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import useHandleCohortTab from '@/components/LearnerUserProfile/Logic/useHandleCohortTab';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -73,7 +72,7 @@ const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onU
       return setToastMsg({ type: 'warning', message: 'Please be sure to add atleast one user' });
     }
     // for (let i = 0; i < userId?.length; i++) {
-    //   const lspData = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId[i],lsp_id:LEARNING_SPACE_ID},{},userQueryClient);
+    //   const lspData = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId[i],lsp_id:<lsp_id>},{},userQueryClient);
     //   if(lspData?.error) return  setToastMsg({ type: 'danger', message: 'Error while loading lsp data' });
     //   // console.log(lspData?.getUserLspByLspId,'lspData');
     //   const sendData = {
@@ -117,7 +116,7 @@ const AddUsers = ({ cohortUsers=[],usersData = [], popUpSetState = () => {}, onU
       setIsBtnDisabled(false);
       return setToastMsg({ type: 'danger', message: 'Cohort Data Update Error' });
     }
-    
+
     setToastMsg({ type: 'success', message: 'Added users successfully!' });
     popUpSetState(false);
     onUserAdd();

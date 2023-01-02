@@ -1,52 +1,36 @@
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 // import LoginHeadOne from '../Login/LoginHeadOne';
-import AddLsp from './AddLsp';
-import styles from './learningSpaces.module.scss';
-import LspCard from './LspCard';
-import { useLazyQuery } from '@apollo/client';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import LoginHeadOne from '../ZicopsLogin/LoginHeadOne';
+import { userClient } from '@/api/UserMutations';
 import {
   GET_LSP_DETAILS,
   GET_ORGANIZATIONS_DETAILS,
-  GET_USER_LEARNINGSPACES,
-  GET_USER_LSP_ROLES,
-  userQueryClient
+  GET_USER_LEARNINGSPACES
 } from '@/api/UserQueries';
-import { userClient } from '@/api/UserMutations';
-import { useRouter } from 'next/router';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
 import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
-import { loadQueryData, loadQueryDataAsync } from '@/helper/api.helper';
-import Link from 'next/link';
-import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
+import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
+import { useLazyQuery } from '@apollo/client';
+import Link from 'next/link';
+import { useRecoilState } from 'recoil';
+import LoginHeadOne from '../ZicopsLogin/LoginHeadOne';
+import styles from './learningSpaces.module.scss';
+import LspCard from './LspCard';
 const LearningSpaces = () => {
-  const { asPath } = useRouter();
   const { logOut } = useAuthUserContext();
 
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
-  // const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
-  const origin =
-    typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
 
-  const URL = `${origin}${asPath}`;
-  const domainArr = [
-    'http://localhost:3000/learning-spaces',
-    'https://demo.zicops.com/learning-spaces',
-    'https://zicops.com/learning-spaces'
-  ];
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
-  // const [userDetails, setUserDetails] = useState({});
+
   const [orgDetails, setOrgDetails] = useState([]);
   const [orgIds, setOrgIds] = useState([]);
   const [orglspData, setOrglspData] = useState([]);
   const [userLspIds, setUserLspIds] = useState([]);
-  const [userRoles, setUserRoles] = useState([]);
   const [userDetails, setUserDetails] = useState({});
   const [getUserLsp] = useLazyQuery(GET_USER_LEARNINGSPACES, {
     client: userClient
@@ -61,7 +45,7 @@ const LearningSpaces = () => {
   const UserLsp = async () => {
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
     setUserDetails(userData);
-    console.log(userData);
+
     const res = await getUserLsp({
       variables: { user_id: userData?.id }
     }).catch((err) => {
@@ -79,15 +63,7 @@ const LearningSpaces = () => {
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
     setUserLspIds(_userLspIds);
-    if (!_userLspIds?.length) return;
-    const resRole = await loadQueryDataAsync(
-      GET_USER_LSP_ROLES,
-      { user_id: userData?.id, user_lsp_ids: _userLspIds },
-      {},
-      userQueryClient
-    );
-    setUserRoles([...resRole?.getUserLspRoles]);
-    console.log(resRole, 'roles');
+
   };
 
   const LspDetails = async () => {
@@ -106,7 +82,7 @@ const LearningSpaces = () => {
     // });
     lsps?.forEach((lsp) => _orgArr.push(lsp?.org_id));
     setOrgIds(_orgArr);
-    console.log(res?.data?.getLearningSpaceDetails);
+    // console.log(res?.data?.getLearningSpaceDetails);
   };
 
   const OrgDetails = async () => {
@@ -184,7 +160,7 @@ const LearningSpaces = () => {
               logo={data.org_logo_url}
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
-              userLspRole={userRoles?.[index]?.role}
+              userId={userDetails?.id}
             />
           ))}
           <>

@@ -35,43 +35,56 @@ const HomeSlider = () => {
 
     return (
       <>
-        <div className="carousel">        
-        <Carousel
+        <div className="carousel">
+          <Carousel
             swipeable={false}
             draggable={false}
             showDots={true}
             responsive={responsive}
             ssr={false} // means to render carousel on server-side.
             infinite={true}
-            autoPlay= {true}
+            autoPlay={true}
             autoPlaySpeed={5000}
             keyBoardControl={true}
             customTransition="all 1s"
             transitionDuration={1000}
             containerClass="header-carousel-container"
-            removeArrowOnDeviceType={["tablet", "mobile", "desktop"]}
+            removeArrowOnDeviceType={['tablet', 'mobile', 'desktop']}
             deviceType="Laptop"
             dotListClass="custom-dot-list-style"
             customDot={<CustomDot />}
-            itemClass="carousel-item-padding-40-px"
-        >
-        <div className="zicops-slider"><img src="images/banner-image-1.jpg" alt=""/></div>
-        <div className="zicops-slider"><img src="images/banner-image-2.png" alt=""/></div>
-        <div className="zicops-slider"><img src="images/IMG-20220113-WA0020.jpg" alt=""/></div>
-        <div className="zicops-slider"><img src="images/IMG-20220113-WA0018.jpg" alt=""/></div>
-        </Carousel>
+            itemClass="carousel-item-padding-40-px">
+            <div className="zicops-slider">
+              <img src="images/homePageBanner/Frame_1.png" alt="" />
+            </div>
+            <div className="zicops-slider">
+              <img src="images/homePageBanner/Frame_2.png" alt="" />
+            </div>
+            <div className="zicops-slider">
+              <img src="images/homePageBanner/Frame_3.png" alt="" />
+            </div>
+            <div className="zicops-slider">
+              <img src="images/homePageBanner/Frame_4.png" alt="" />
+            </div>
+            <div className="zicops-slider">
+              <img src="images/homePageBanner/Frame_5.png" alt="" />
+            </div>
+          </Carousel>
         </div>
-        <div className="dropup" style={{
-          background: '#000000',
-          background: 'linear-gradient(180deg, #00000000 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.9) 100%)',
-          height: '21px',
-          padding: 0,
-          marginTop: '-45px',
-          marginBottom: '5px',
-          position: "relative",
-          zIndex: '2',
-          opacity: '0.3'
-        }}></div>
+        <div
+          className="dropup"
+          style={{
+            background: '#000000',
+            background:
+              'linear-gradient(180deg, #00000000 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.9) 100%)',
+            height: '21px',
+            padding: 0,
+            marginTop: '-45px',
+            marginBottom: '5px',
+            position: 'relative',
+            zIndex: '2',
+            opacity: '0.3'
+          }}></div>
         <style jsx>
           {`
           .zicops-slider{
@@ -91,7 +104,7 @@ const HomeSlider = () => {
           `}
         </style>
       </>
-    )
+    );
 }
 
 export default HomeSlider
