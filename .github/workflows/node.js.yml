@@ -31,7 +31,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    
+
     - name: Auth GCP service account
       uses: 'google-github-actions/auth@v0'
       with:
@@ -45,13 +45,14 @@ jobs:
 
     - name: Build the Docker image
       run: |-
-        docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest .
+        docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest -t zicopsapp/zicopsapp:latest .
     - run: |
         gcloud auth configure-docker -q
     - name: Push image to GCP
       run: |
            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+           docker push zicopsapp/zicopsapp:latest
     - name: replace environment variable in values.yaml
       run:  envsubst '${GITHUB_SHA}' < k8s/zicops-app/values.template.yaml >  k8s/zicops-app/values.yaml
     - name: Install Helm
