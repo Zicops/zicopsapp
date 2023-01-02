@@ -42,7 +42,11 @@ jobs:
 
     - name: 'Use gcloud CLI'
       run: 'gcloud info'
-
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build the Docker image
       run: |-
         docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest -t zicopsapp/zicopsapp:latest .
