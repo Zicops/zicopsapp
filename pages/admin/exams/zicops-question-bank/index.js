@@ -1,12 +1,9 @@
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
-import NoAccess from '@/components/NoAccess';
 import { useRecoilState } from 'recoil';
-import AddQuestionBank from '../../../../components/AdminExamComps/QuestionBanks/AddQuestionBank';
 import QuestionBankTable from '../../../../components/AdminExamComps/QuestionBanks/QuestionBankTable';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
-import PopUp from '../../../../components/common/PopUp';
 import Sidebar from '../../../../components/common/Sidebar';
 import { examSidebarData } from '../../../../components/common/Sidebar/Logic/sidebar.helper';
 import { PopUpStatesAtomFamily } from '../../../../state/atoms/popUp.atom';
@@ -25,10 +22,10 @@ export default function ZicopsQuestionBanks() {
           handleClickForPlus={() => udpatePopUpState(true)}
           tooltipTitle={ADMIN_EXAMS.zicopsQuestionBanks.addBtn}
         />
-        {/* <MainBodyBox>
+        <MainBodyBox>
           <QuestionBankTable />
-        </MainBodyBox> */}
-        <NoAccess />
+        </MainBodyBox>
+        {/* <NoAccess /> */}
       </MainBody>
     </>
   );
