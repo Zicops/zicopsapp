@@ -16,13 +16,13 @@ export default function CourseCard({
 
   function handleMouseEnter(e, start = 0, end = 0) {
     if (e.currentTarget.parentNode.dataset.index === start.toString()) {
-      e.currentTarget.parentNode.style.marginLeft = '60px';
-      e.currentTarget.parentNode.style.marginRight = '-60px';
+      // e.currentTarget.parentNode.style.marginLeft = '60px';
+      // e.currentTarget.parentNode.style.marginRight = '-60px';
     }
 
     if (e.currentTarget.parentNode.dataset.index === end.toString()) {
-      e.currentTarget.parentNode.style.marginLeft = '-60px';
-      e.currentTarget.parentNode.style.marginRight = '60px';
+      // e.currentTarget.parentNode.style.marginLeft = '-60px';
+      // e.currentTarget.parentNode.style.marginRight = '60px';
     }
   }
 
@@ -53,8 +53,7 @@ export default function CourseCard({
         className={`${styles.card_item} ${styleClass}`}
         onClick={!notext ? gotoCourse : () => {}}
         onMouseEnter={(e) => {
-          // e.target.parentNode?.nextSibling?.style?.padding = '10px';
-          // e.target.parentNode?.nextSibling?.style?.height = 'auto';
+          e.currentTarget.parentNode.parentNode.parentNode.style.zIndex = '990';
           handleMouseEnter(
             e,
             carouselRefData?.state?.currentSlide,
@@ -62,8 +61,7 @@ export default function CourseCard({
           );
         }}
         onMouseLeave={(e) => {
-          // e.target.parentNode?.nextSibling?.style?.padding = '0px';
-          // e.target.parentNode?.nextSibling?.style?.height = '0px';
+          e.currentTarget.parentNode.parentNode.parentNode.style.zIndex = '0';
           handleMouseLeave(e);
         }}>
         <div className={`${styles.smallCardWrapper}`}>
