@@ -33,6 +33,7 @@ import { Email } from '@mui/icons-material';
 const CoursesAccordian = ({ currentUserData = null }) => {
   // const minDate = getMinCourseAssignDate(userCourseData?.duration);
 
+  const [userCourseData, setUserCourseData] = useState(null);
   const [minDate,setMinDate] = useState(getMinCourseAssignDate(userCourseData?.duration));
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: minDate,
@@ -57,7 +58,6 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   const fcmToken = useRecoilValue(FcmTokenAtom);
   const [assignedCourses, setAssignedCourses] = useState([]);
   const [currentCourses, setCurrentCourses] = useState([]);
-  const [userCourseData, setUserCourseData] = useState(null);
   const [dataCourse, setDataCourse] = useState([]);
   const [selected, setSelected] = useState(3);
   const [selectedPage, setSelectedPage] = useState('');
