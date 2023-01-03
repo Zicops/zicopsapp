@@ -62,8 +62,8 @@ export default function PushNotificationLayout({ children }) {
                 title: event?.data?.notification?.title,
                 body: event?.data?.notification?.body,
                 isRead: false,
-                img: '/images/dnd1.jpg',
-                link: '',
+                img: `/images/${msg?.title || 'dnd1'}.jpg`,
+                link: event?.data?.notification?.link || '',
                 route: '',
                 duration: moment().fromNow()
               }),
@@ -93,15 +93,16 @@ export default function PushNotificationLayout({ children }) {
         notificationClient
       );
 
+
       const messages = allNotifications?.getAll?.messages || [];
       const allMsg =
-        messages?.map((msg) =>
+        messages?.map((msg) => 
           getNotificationObj({
             title: msg?.title,
             body: msg?.body,
             isRead: !!msg?.is_read,
-            img: '/images/dnd1.jpg',
-            link: '',
+            img: `/images/${msg?.title||'dnd1'}.jpg`,
+            link: msg?.link || '',
             route: '',
             fcmMessageId: msg?.message_id,
             duration: moment.unix(msg?.created_at).fromNow()

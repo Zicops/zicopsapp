@@ -17,7 +17,8 @@ const SingleNotification = ({
   route,
   title,
   isNav,
-  messageId
+  messageId,
+  routeObj = {}
 }) => {
   const [saveNotificationToFirebase] = useMutation(ADD_NOTIFICATION_TO_FIRESTORE, {
     client: notificationClient
@@ -51,12 +52,16 @@ const SingleNotification = ({
       </div>
       <div className={`${styles.notification_description_block}`}>
         <div className={`${styles.notification_description}`}>
-          <p>{isNav ? truncateToN(description, 75) : description}</p>
+          <p>{isNav ? truncateToN(description, 60) : description}</p>
         </div>
         <div className={`${styles.notification_info}`}>
           <p className={`${styles.notification_info_duration}`}>{duration}</p>
-          <a href={route} className={`${styles.notification_info_link}`}>
-            {link}
+          <a
+            onClick={() => {
+              router.push(routeObj?.routeUrl, routeObj?.routeAsUrl);
+            }}
+            className={`${styles.notification_info_link}`}>
+            {routeObj?.text || ''}
           </a>
         </div>
       </div>

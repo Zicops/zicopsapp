@@ -2,6 +2,7 @@ import { DELETE_EXAM } from '@/api/Mutations';
 import DeleteBtn from '@/components/common/DeleteBtn';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -19,7 +20,8 @@ import ZicopsTable from '../../common/ZicopsTable';
 
 export default function ExamsTable({ isEdit = false }) {
   const [loadExams, { error: loadExamErr }] = useLazyQuery(GET_LATEST_EXAMS, {
-    client: queryClient
+    client: queryClient,
+    context: !isEdit ? { headers: { tenant: COMMON_LSPS?.zicops } } : {}
   });
   const [loadSchedule, { error: loadScheduleErr }] = useLazyQuery(GET_EXAM_SCHEDULE, {
     client: queryClient
