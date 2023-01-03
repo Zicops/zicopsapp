@@ -1,5 +1,5 @@
 import { mutationClient } from '@/api/Mutations';
-import { notificationClient, SEND_EMAIL, SEND_NOTIFICATIONS } from '@/api/NotificationClient';
+import { notificationClient, SEND_EMAIL, SEND_NOTIFICATIONS, SEND_NOTIFICATIONS_WITH_LINK } from '@/api/NotificationClient';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -97,6 +97,18 @@ export async function deleteData(
 export async function sendNotification(variableObj = {}, options = {}) {
   const response = await notificationClient
     .mutate({ mutation: SEND_NOTIFICATIONS, variables: variableObj, ...options })
+    .catch((err) => {
+      console.error(`Send Notification error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
+export async function sendNotificationWithLink(variableObj = {}, options = {}) {
+  const response = await notificationClient
+    .mutate({ mutation: SEND_NOTIFICATIONS_WITH_LINK, variables: variableObj, ...options })
     .catch((err) => {
       console.error(`Send Notification error:`, err);
     });

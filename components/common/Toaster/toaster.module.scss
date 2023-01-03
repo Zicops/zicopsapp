@@ -28,7 +28,7 @@ $dangerImg: '/images/svg/error_outline.svg';
     margin: 20px auto;
 
     width: 20vw;
-    max-height: 100px;
+    min-height: 100px;
 
     background-color: $backgroundColor;
     border-radius: 10px;
