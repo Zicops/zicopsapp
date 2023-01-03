@@ -7,7 +7,12 @@ import InputDatePicker from '@/components/common/InputDatePicker';
 import PopUp from '@/components/common/PopUp';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
-import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
+import {
+  loadQueryDataAsync,
+  sendEmail,
+  sendNotification,
+  sendNotificationWithLink
+} from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getMinCourseAssignDate, getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -33,8 +38,12 @@ import { Email } from '@mui/icons-material';
 const CoursesAccordian = ({ currentUserData = null }) => {
   // const minDate = getMinCourseAssignDate(userCourseData?.duration);
 
+  const origin = typeof window !== 'undefined' && window.location.origin
+            ? window.location.origin
+            : '';
+
   const [userCourseData, setUserCourseData] = useState(null);
-  const [minDate,setMinDate] = useState(getMinCourseAssignDate(userCourseData?.duration));
+  const [minDate, setMinDate] = useState(getMinCourseAssignDate(userCourseData?.duration));
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: minDate,
     isMandatory: false,
@@ -143,7 +152,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       user_name: userName,
       lsp_name: sessionStorage?.getItem('lsp_name'),
       course_name: userCourseData?.name,
-      end_date: moment(endDate).format('D MMM YYYY')
+      end_date: moment(endDate).format('D MMM YYYY'),
+      link: `${origin}/self-landing`
     };
     const sendMailData = {
       to: [currentUserData?.email],
@@ -152,9 +162,9 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       body: JSON.stringify(bodyData),
       template_id: courseAssignData?.isMandatory
         ? EMAIL_TEMPLATE_IDS?.courseAssignMandatory
-        : EMAIL_TEMPLATE_IDS?.courseAssignNotMandatory
+        : EMAIL_TEMPLATE_IDS?.courseAssignNotMandatory,
     };
-    
+
     const checkCourse = await updateCourse(userCourseData, currentUserId, 'admin', id);
     // console.log(checkCourse,'hi')
     if (checkCourse) {
@@ -177,10 +187,10 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       //   },
       //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       //   );
-        await sendEmail(sendMailData, {
-          context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
-        });
-        setLoading(false);
+      await sendEmail(sendMailData, {
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+      });
+      setLoading(false);
       return setIsAssignPopUpOpen(false);
     }
 
