@@ -130,7 +130,7 @@ export default function Nav() {
               className={`${styles.nav_search} ${searchQuery ? styles.nav_search_long : ''}`}
               placeholder="Search..."
               onInput={handleSearch}
-              value={searchQuery}
+              value={searchQuery || ''}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   searchQuery && router.push(`/search-page/${searchQuery}`);

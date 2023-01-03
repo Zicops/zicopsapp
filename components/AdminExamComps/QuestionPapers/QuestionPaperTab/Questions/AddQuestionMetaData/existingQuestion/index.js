@@ -1,9 +1,8 @@
 import ToolTip from '@/components/common/ToolTip';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '../../../../../../../helper/common.helper';
-import { loadCatSubCat } from '../../../../../../../helper/data.helper';
 import { ToastMsgAtom } from '../../../../../../../state/atoms/toast.atom';
 import LabeledDropdown from '../../../../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
@@ -59,7 +58,9 @@ export default function ExistingQuestion({
             setMetaData({
               ...metaData,
               category: e.value,
-              sub_category: ''
+              sub_category: '',
+              total_questions: 0,
+              qbId: ''
             });
             // changeHandler(e, metaData, setMetaData, 'category');
           }}
@@ -76,7 +77,16 @@ export default function ExistingQuestion({
             value: { value: metaData?.sub_category, label: metaData?.sub_category },
             isSearchEnable: true
           }}
-          changeHandler={(e) => changeHandler(e, metaData, setMetaData, 'sub_category')}
+          changeHandler={
+            (e) =>
+              setMetaData({
+                ...metaData,
+                total_questions: 0,
+                qbId: '',
+                sub_category: e?.value || ''
+              })
+            //  changeHandler(e, metaData, setMetaData, 'sub_category')
+          }
           isFiftyFifty={true}
         />
       </div>
@@ -111,7 +121,15 @@ export default function ExistingQuestion({
           })[0],
           isSearchEnable: true
         }}
-        changeHandler={(e) => setMetaData({ ...metaData, total_questions: 0, qbId: e.value })}
+        changeHandler={(e) =>
+          setMetaData({
+            ...metaData,
+            total_questions: 0,
+            qbId: e.value,
+            category: e?.category || '',
+            sub_category: e?.sub_category || ''
+          })
+        }
       />
 
       <LabeledDropdown
