@@ -1,0 +1,94 @@
+@import '../../../styles/base.scss';
+.heroContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 75vh;
+    background-image: url('/images/svg/exam-hero-background.svg');
+    background-size: cover;
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    .heroBody{
+        width: fit-content;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-left: -30vw;
+        .textConatiner{
+            display: flex;
+            gap: 20px;
+            h2 {
+                    font-weight: 500;
+                    font-size: 40px;
+                    line-height: 60px;
+                    background: linear-gradient(111.44deg, #6BCFCF 19.16%, #41A9EF 154.55%);
+                    background-clip: text;
+                    color: $white;
+                    span{
+                      color: $primary;
+                    }
+                }
+        }
+            .buttonContainer{
+                display: flex;
+                    gap: 8px;
+                  
+                    button{
+                            padding: 16px 24px;
+                            background-color: transparent;
+                            border: 1px solid $primary;
+                            border-radius: 4px;
+                            font-size: 18px;
+                            font-weight: 500;
+                            color: $primary;
+                            cursor: pointer;
+                            &:hover{
+                                background: linear-gradient(111.44deg, #6BCFCF 19.16%, #41A9EF 154.55%);
+                                color: #15161C;
+                            }
+                        
+                    }
+                    .btnActive{
+                        background: linear-gradient(111.44deg, #6BCFCF 19.16%, #41A9EF 154.55%);
+                        color: #15161C;
+                    }
+            }
+    }
+}
+// :global(.popup-content){
+//     padding: 0 !important;
+// }
+
+.table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #EAEAEA;
+    thead{
+        // border: 1px solid #EAEAEA;
+        position: sticky;
+        top: -2px;
+        z-index: 80;
+    }
+    th {
+        font-size: 18px;
+        text-align: left;
+        padding: 10px;
+        color: #EAEAEA;
+        font-weight: 400;
+        background-color: #15161C;
+       
+    }
+        tr{
+        border: 1px solid #EAEAEA;
+        }
+    td{
+        font-size: 16px;
+        text-align: left;
+            padding: 10px;
+        color: #919397;
+    }
+    tr:nth-child(even) {
+        background-color: #1A1B26;
+    }
+}

@@ -9,6 +9,7 @@ import {
 import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
+import ExamHeroSection from '@/components/LearnerExamComp/ExamHeroSection';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
@@ -666,13 +667,21 @@ export default function LearnerExams() {
       }}>
       <div
         style={{
-          display: 'flex',
+          // display: 'flex',
           marginTop: '70px',
+          // padding: '5vh 4vw',
+          height: '75vh',
+          overflow: 'hidden'
+        }}>
+        <ExamHeroSection />
+        {/* <div style={{
+          display: 'flex',
           padding: '5vh 4vw',
           backgroundColor: 'var(--black)',
           height: '75vh',
           overflow: 'hidden'
         }}>
+
         <div
           className={`${showTable ? 'w-20' : 'w-65'} border_right`}
           style={{ margin: 'auto', padding: '60px 0px' }}>
@@ -680,8 +689,7 @@ export default function LearnerExams() {
             question={showTable ? '' : 'Q. Select the required Option.'}
             btnOptions={btnOptions}
           />
-        </div>
-
+        </div> */}
         {/* {showTable === 'anytimetable' && (
           <div className="w-45 border_right" style={{ background: 'var(--black)', margin: 'auto' }}>
             <SimpleTable
@@ -703,7 +711,8 @@ export default function LearnerExams() {
             />
           </div>
         )} */}
-        {examTables?.map((table) => (
+       
+        {/* {examTables?.map((table) => (
           <>
             {showTable === table?.name && (
               <div
@@ -736,12 +745,13 @@ export default function LearnerExams() {
               </div>
             )}
           </>
-        ))}
-
-        <div className="w-35 calender_box">
+        ))} */}
+       
+        {/* <div className="w-35 calender_box">
           <CommonCalendar />
         </div>
-      </div>
+      </div> */}
+        </div>
 
       <ZicopsCarousel title="Test Packages" data={sliderImages} />
       <ZicopsCarousel title="Your assessments" data={sliderImages} />
