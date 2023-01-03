@@ -491,7 +491,7 @@ export default function useUserCourseData() {
     if (!currentUserId) return;
 
     const _assignedCourses = courseData;
-    
+
     let topicCourseMap = [];
 
     if (!_assignedCourses?.length) return [];
@@ -551,7 +551,6 @@ export default function useUserCourseData() {
     const examMetas = await getExamsMeta(examsIds);
 
     let scheduleExams = [];
-
 
     examMetas?.forEach((exam, index) => {
       if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
