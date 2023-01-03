@@ -56,7 +56,6 @@ jobs:
       run: |
            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
-           docker push zicopsapp/zicopsapp:latest
     - name: replace environment variable in values.yaml
       run:  envsubst '${GITHUB_SHA}' < k8s/zicops-app/values.template.yaml >  k8s/zicops-app/values.yaml
     - name: Install Helm
@@ -68,3 +67,21 @@ jobs:
           --zone $GKE_ZONE \
           --project $PROJECT_ID
         helm upgrade -n $NAMESPACE zicops-app k8s/zicops-app --install --wait --atomic
+    - name: configure amplify
+      uses: ambientlight/amplify-cli-action@0.3.0
+      with:
+        amplify_command: configure
+        amplify_env: prod
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ap-south-1
+    - name: deploy to amplify
+      uses: ambientlight/amplify-cli-action@0.3.0
+      with:
+        amplify_command: publish
+        amplify_env: prod
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ap-south-1
