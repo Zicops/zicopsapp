@@ -10,7 +10,7 @@ import {
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
 import { loadAndCacheDataAsync } from './api.helper';
-import { COURSE_STATUS, DEFAULT_VALUES } from './constants.helper';
+import { COMMON_LSPS, COURSE_STATUS, DEFAULT_VALUES } from './constants.helper';
 import { getUnixTimeAt } from './utils.helper';
 
 export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
@@ -230,7 +230,7 @@ export function loadCatSubCat(state, setState, category = null) {
 }
 
 export async function getLatestCoursesByFilters(filters = {}, pageSize = 28) {
-  const _lspId = sessionStorage?.getItem('lsp_id');
+  const _lspId = COMMON_LSPS.zicops;
 
   // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
   const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {

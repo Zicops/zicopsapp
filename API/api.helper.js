@@ -47,9 +47,9 @@ export const authLink = setContext(async (_, { headers }) => {
   const lspId = sessionStorage.getItem('lsp_id');
   return {
     headers: {
-      ...headers,
       Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : '',
-      tenant: lspId
+      tenant: lspId,
+      ...headers
     }
   };
 });

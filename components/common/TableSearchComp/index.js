@@ -30,7 +30,7 @@ export default function TableSearchComp({
               onChange={(e) => handleOptionChange(e?.target?.value)}>
               {options?.map((op) => {
                 return (
-                  <option value={op?.value} disabled={op?.isDisabled}>
+                  <option key={op?.label} value={op?.value} disabled={op?.isDisabled}>
                     {op?.label}
                   </option>
                 );
@@ -61,6 +61,7 @@ export default function TableSearchComp({
                 return (
                   <LabeledRadioCheckbox
                     type="radio"
+                    key={op?.label}
                     label={op?.label}
                     value={op?.value}
                     isChecked={op?.value === selectedFilter}
