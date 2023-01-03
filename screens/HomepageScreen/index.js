@@ -3,7 +3,7 @@ import HomeSlider from '@/components/HomeSlider';
 import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
+import { COMMON_LSPS, COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { getUnixTimeAt } from '@/helper/utils.helper';
@@ -95,7 +95,7 @@ export default function HomepageScreen() {
   };
 
   async function getLatestCoursesByFilters(filters = {}, pageSize = 28) {
-    const _lspId = sessionStorage?.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
 
     // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
     const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
@@ -103,7 +103,7 @@ export default function HomepageScreen() {
       pageSize: pageSize,
       pageCursor: '',
       status: COURSE_STATUS.publish,
-      filters: { LspId: _lspId, ...filters }
+      filters: { LspId: zicopsLspId, ...filters }
     });
     const _toBeSortedCourses = structuredClone(courses) || [];
 
