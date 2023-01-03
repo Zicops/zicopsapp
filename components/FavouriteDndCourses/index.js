@@ -2,11 +2,13 @@ import { GET_LATEST_COURSES } from '@/api/Queries';
 import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import {
+  COMMON_LSPS,
   COURSE_SELF_ASSIGN_LIMIT,
   COURSE_STATUS,
   COURSE_TYPES,
   LEARNING_FOLDER_CAPACITY
 } from '@/helper/constants.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -39,6 +41,8 @@ export default function FavouriteDndCourses({ isLoading }) {
   } = useHandleCourseAssign();
 
   const ASSIGNED_ROLE = ['cohort', 'admin'];
+
+  const { getUserCourseData } = useUserCourseData();
 
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -81,7 +85,8 @@ export default function FavouriteDndCourses({ isLoading }) {
 
   async function loadCourses() {
     const userLspId = sessionStorage.getItem('user_lsp_id');
-    const _lspId = sessionStorage?.getItem('lsp_id');
+    // const _lspId = sessionStorage?.getItem('lsp_id');
+    const _lspId = COMMON_LSPS.zicops;
     setLoading(true);
     const queryVariables = {
       publish_time: getUnixFromDate(),
@@ -100,36 +105,39 @@ export default function FavouriteDndCourses({ isLoading }) {
       return setToastMsg({ type: 'danger', message: 'course load error' });
     }
 
-    const mapRes = await loadQueryDataAsync(
-      GET_USER_COURSE_MAPS,
-      {
-        ...queryVariables,
-        user_id: userData?.id
-      },
-      {},
-      userQueryClient
-    ).catch((err) => {
-      if (err?.message?.includes('no user course found')) return;
-      if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
-    });
+    const userCourseData = await getUserCourseData(100);
+    // const mapRes = await loadQueryDataAsync(
+    //   GET_USER_COURSE_MAPS,
+    //   {
+    //     ...queryVariables,
+    //     user_id: userData?.id
+    //   },
+    //   {},
+    //   userQueryClient
+    // ).catch((err) => {
+    //   if (err?.message?.includes('no user course found')) return;
+    //   if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+    // });
 
-    const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [];
+    // const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [];
     let userCourses = [];
-    // if (_userCourses?.length)
-    //   userCourses = _userCourses?.filter(
-    //     (course) =>
-    //       course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId
-    //   );
+    // // if (_userCourses?.length)
+    // //   userCourses = _userCourses?.filter(
+    // //     (course) =>
+    // //       course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId
+    // //   );
 
     let totalSelfCourseCount = 0;
-    if (_userCourses?.length) {
-      _userCourses?.forEach((course) => {
+    if (userCourseData?.length) {
+      userCourseData?.forEach((course) => {
+        course.created_at = course.created_at?.replaceAll('/', '-');
+
         if (
           course?.course_status?.toLowerCase() !== 'disabled' &&
           course?.user_lsp_id === userLspId
         ) {
           userCourses?.push(course);
-          if (parseJson(course?.added_by)?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
+          if (course?.added_by?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
         }
       });
     }
@@ -145,21 +153,21 @@ export default function FavouriteDndCourses({ isLoading }) {
           c?.is_display &&
           !userCourseMaps?.find((map) => {
             let added_by = {};
-            if (map?.added_by) added_by = JSON.parse(map?.added_by);
+            if (map?.added_by) added_by = map?.added_by;
             const isAssigned = map?.course_id === c?.id;
-            if (isAssigned)
-              assignedCourses.push({
-                ...c,
-                added_by,
-                expected_completion: moment.unix(map?.end_date).format('DD/MM/YYYY')
-              });
+            // if (isAssigned)
+            //   assignedCourses.push({
+            //     ...c,
+            //     added_by,
+            //     expected_completion: moment.unix(map?.end_date).format('DD/MM/YYYY')
+            //   });
             return isAssigned;
           })
         );
       }) || [];
     updateCourseData(availableCourses);
 
-    setDropped(assignedCourses, setLoading(false));
+    setDropped(userCourses, setLoading(false));
   }
 
   useEffect(() => {
@@ -240,10 +248,9 @@ export default function FavouriteDndCourses({ isLoading }) {
 
   useEffect(() => {
     console.log(dropped, 'isbfi');
-    const myAssignedCourses = dropped?.filter((course) => course?.added_by?.role == 'self');
-    // console.log(dropped, 'added');
+    const myAssignedCourses = dropped?.filter((course) => course?.added_by == 'self');
     const adminAssignedCourses = dropped?.filter((course) =>
-      ASSIGNED_ROLE.includes(course?.added_by?.role?.toLowerCase())
+      ASSIGNED_ROLE.includes(course?.added_by?.toLowerCase())
     );
     setDroppedByMe(myAssignedCourses);
     setDroppedByAdmin(adminAssignedCourses);
@@ -436,7 +443,7 @@ export default function FavouriteDndCourses({ isLoading }) {
                 ) : (
                   <>
                     {droppedByMe?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
-                      if (course?.added_by?.role !== 'self') return;
+                      if (course?.added_by !== 'self') return;
                       if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery))
                         return;
 
