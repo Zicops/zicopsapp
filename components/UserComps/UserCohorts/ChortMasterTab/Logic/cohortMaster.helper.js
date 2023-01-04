@@ -59,12 +59,10 @@ export async function getCohortCourses(cohortId = null) {
     queryClient
   );
   sendData.filters.LspId = zicopsLspId;
-  const zicopsLspCourseRes = await loadQueryDataAsync(
-    GET_LATEST_COURSES,
-    { ...sendData },
-    {},
-    queryClient
-  );
+  const zicopsLspCourseRes =
+    zicopsLspId !== _lspId
+      ? await loadQueryDataAsync(GET_LATEST_COURSES, { ...sendData }, {}, queryClient)
+      : {};
   // const res = await loadLastestCourseData({ variables: sendData }).catch((err) => {
   //   console.log(err);
   //   return setToastMsg({ type: 'danger', message: `${err}` });
