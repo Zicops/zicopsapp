@@ -1,4 +1,5 @@
 import { truncateToN } from '@/helper/common.helper';
+import { getCourseDisplayTime } from '@/helper/utils.helper';
 import { useRouter } from 'next/router';
 import styles from './courseCard.module.scss';
 
@@ -74,13 +75,31 @@ export default function CourseCard({
           <div className={`${styles.smallCardContent}`}>
             <div className={`${styles.firstRow}`}>
               <div className={`${styles.buttons}`}>
-                <img className={`${styles.addBtn}`} src="/images/Frame 22.svg" alt="" />
-                <img className={`${styles.removeBtn}`} src="/images/Frame 23.svg" alt="" />
+                {showAssignSymbol ? (
+                  <>
+                    <img className={`${styles.addBtn}`}
+                      onClick={(e) => {
+                          e.stopPropagation();
+                          gotoAssignCourses();
+                        }} 
+                      src = "/images/svg/add-line.svg" />
+                  </>
+                ) : (
+                  <>
+                    <img className={`${styles.playBtn}`} src="/images/Frame 22.svg" alt="" />
+                    <img className={`${styles.removeBtn}`} src="/images/Frame 23.svg" alt="" />
+                  </>
+                )}
+                {/* <img className={`${styles.addBtn}`} src="/images/Frame 22.svg" alt="" />
+                <img className={`${styles.removeBtn}`} src="/images/Frame 23.svg" alt="" /> */}
               </div>
               <div className={`${styles.durlang}`}>
-                <div className={`${styles.lang}`}>English</div>
+                <div className={`${styles.lang}`}>{courseData?.language?.join(', ')}</div>
                 <div className={`${styles.dur}`}>
-                  Duration: {courseData?.duration ? courseData?.duration  + 's' : '1hr 40 mins'}
+                  Duration:{' '}
+                  {courseData?.duration
+                    ? getCourseDisplayTime(courseData?.duration)
+                    : '1hr 40 mins'}
                 </div>
               </div>
             </div>
@@ -88,12 +107,14 @@ export default function CourseCard({
               {courseData?.name || 'Free! UX/UI Course: Basics of design & fundamentals.'}
             </div>
             <div className={`${styles.thirdRow}`}>
-              <div className={`${styles.pill}`}>{courseData?.expertise_level?.split(',')?.join(', ') || 'Beginner'}</div>
+              <div className={`${styles.pill}`}>
+                {courseData?.expertise_level?.split(',')?.join(', ') || 'Beginner'}
+              </div>
             </div>
             <div className={`${styles.lastRow}`}>
-              {courseData?.category ||
-                'Design'}<span className={`${styles.dot}`}></span>{courseData?.sub_category
-                  || 'UI/UX Design'}
+              {courseData?.category || 'Design'}
+              <span className={`${styles.dot}`}></span>
+              {courseData?.sub_category || 'UI/UX Design'}
             </div>
           </div>
         </div>

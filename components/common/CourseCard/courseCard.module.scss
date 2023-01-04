@@ -7,12 +7,13 @@
         background-color: rgba(16, 16, 18, 0.9);
         .banner {
             position: absolute;
-            top: 3%;
-            right: 3%;
+            top: 0%;
+            right: 0%;
             color: #EAEAEA;
             background-color: rgba(16, 16, 18, 0.9);
-            padding: 5px 10px;
-            font-size: 12px;
+            padding: 2px 6px;
+            font-size: 10px;
+            border-radius: 0 0 0 10px;
             text-transform: capitalize;
         }
 
@@ -35,9 +36,13 @@
             .buttons {
                 display: flex;
                 flex: 1;
-
                 img {
                     width: 45%;
+                }
+                .addBtn{
+                    margin-left: 0;
+                    border: 1px solid #868686;
+                    border-radius: 50%;
                 }
             }
 
@@ -47,7 +52,7 @@
 
                 .lang {
                     color: #EAEAEA;
-                    font-size: 14px;
+                    font-size: 13px;
                 }
 
                 .dur {
@@ -80,7 +85,7 @@
             align-items: center;
             gap: 10px;
             padding: 10px 0;
-            font-size: 12px;
+            font-size: 10px;
             color: #EAEAEA;
 
             .dot {
@@ -96,6 +101,7 @@
     &:hover{
         margin-top: -25%;
         margin-bottom: 26.5%;
+        
         .smallCardContent {
             display: block;
             position: absolute;
