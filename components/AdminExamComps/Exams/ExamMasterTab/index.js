@@ -24,6 +24,7 @@ import useHandleExamTab from './Logic/useHandleExamTab';
 export default function ExamMasterTab() {
   // update id
   const router = useRouter();
+  const isPreview = router.asPath?.includes('view') || false;
   const isZicops = router.asPath?.includes('zicops') || false;
 
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
@@ -191,6 +192,7 @@ export default function ExamMasterTab() {
       tab={tab}
       setTab={setTab}
       footerObj={{
+        showFooter: !isPreview,
         status: status || STATUS.display[0],
         submitDisplay: examTabData?.id ? 'Update' : 'Save',
         handleSubmit: () => saveExamData(),
