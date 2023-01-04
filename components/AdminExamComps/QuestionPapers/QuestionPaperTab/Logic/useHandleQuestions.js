@@ -359,15 +359,16 @@ export default function useHandleQuestions(sectionId) {
       return udpateEditMetaDataPopUp(false);
     }
 
-    const allMappedQb = [];
-    questionPaperTabData?.mappedQb?.forEach((mapQb) => {
-      const isPresent = allMappedQb.find((allMapQb) => allMapQb?.id === mapQb?.id);
-      if (!isPresent) allMappedQb.push(mapQb);
-    });
+    const allMappedQb = structuredClone(questionPaperTabData?.mappedQb) || [];
+
+    // questionPaperTabData?.mappedQb?.forEach((mapQb) => {
+    //   const isPresent = allMappedQb.find((allMapQb) => allMapQb?.id === mapQb?.id);
+    //   if (!isPresent) allMappedQb.push(mapQb);
+    // });
 
     updatedMappedQb?.forEach((mapQb) => {
-      const isPresent = allMappedQb.find((allMapQb) => allMapQb?.id === mapQb?.id);
-      if (!isPresent) allMappedQb.push(mapQb);
+      const index = allMappedQb.findIndex((allMapQb) => allMapQb?.id === mapQb?.id);
+      if (index >= 0) allMappedQb[index] = mapQb;
     });
 
     setQuestionPaperTabData({

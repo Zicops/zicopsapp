@@ -5,7 +5,11 @@ import { PopUpStatesAtomFamily } from '../../../../../state/atoms/popUp.atom';
 import { ToastMsgAtom } from '../../../../../state/atoms/toast.atom';
 import IconButton from '../../../../common/IconButton';
 import PopUp from '../../../../common/PopUp';
-import { paperTabData, QuestionPaperTabAtom } from '../Logic/questionPaperTab.helper';
+import {
+  isSectionWiseAtom,
+  paperTabData,
+  QuestionPaperTabAtom
+} from '../Logic/questionPaperTab.helper';
 import styles from '../questionPaperTab.module.scss';
 import AddCustomSection from './AddCustomSection';
 import AddQuestionMetaData from './AddQuestionMetaData';
@@ -27,6 +31,7 @@ export default function Questions() {
   const [tab, setTab] = useRecoilState(QuestionPaperTabAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const questionPaperTabData = useRecoilValue(QuestionPaperTabDataAtom);
+  const isSectionWise = useRecoilValue(isSectionWiseAtom);
 
   const [selectedSectionData, setSelectedSectionData] = useState(null);
   const [editMetaData, setEditMetaData] = useState(null);
@@ -64,7 +69,7 @@ export default function Questions() {
         ))}
 
         {/* show add section button if section wise is true */}
-        {questionPaperTabData?.paperMaster?.section_wise && (
+        {isSectionWise && (
           <IconButton
             text="Add Section"
             styleClass="btnBlack"
@@ -77,16 +82,16 @@ export default function Questions() {
         )}
 
         {/* show add question if not section wise and no section added */}
-        {!questionPaperTabData.paperMaster?.section_wise && !customSection?.length && (
-              <IconButton
-                text="Add Question"
-                styleClass="btnGrey"
-                handleClick={() => {
-                  if (disableIfIdNotPresent()) return;
-                  udpateAddQuestionMetaDataPopUp(true);
-                }}
-                tooltipText="Create and add new question"
-              />
+        {!isSectionWise && !customSection?.length && (
+          <IconButton
+            text="Add Question"
+            styleClass="btnGrey"
+            handleClick={() => {
+              if (disableIfIdNotPresent()) return;
+              udpateAddQuestionMetaDataPopUp(true);
+            }}
+            tooltipText="Create and add new question"
+          />
         )}
       </div>
 

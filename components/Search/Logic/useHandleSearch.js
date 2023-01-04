@@ -1,11 +1,10 @@
 import { userClient } from '@/api/UserMutations';
 import { GET_USER_BOOKMARKS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { COMMON_LSPS, COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -23,7 +22,9 @@ export default function useHandleSearch() {
   const searchQuery = router.query?.searchQuery || '';
   const filter = router.query?.filter || null;
   const userCourse = router.query?.userCourse || null;
-  const userData = useRecoilValue(UserStateAtom);
+  const isSelfPaced = router.query?.isSelfPaced || null;
+  const preferredSubCat = router.query?.preferredSubCat || null;
+
   const userDataGlobal = useRecoilValue(UserDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -54,24 +55,54 @@ export default function useHandleSearch() {
   // load table data
   const time = Date.now();
   useEffect(async () => {
+    // return if router is not ready
+    if (!router.isReady) return;
+
+    // return if state is updated and same as query params
+    const { subCat, lang, cat, type } = router.query;
+    if (cat != null && !filters.category) return;
+    if (subCat != null && !filters.subCategory) return;
+    if (lang != null && !filters.lang) return;
+    if (type != null && !filters.type) return;
+
+    // reset query params to not affect future query calls by returning due to above condition
+    router.query.cat = null;
+    router.query.subCat = null;
+    router.query.lang = null;
+    router.query.type = null;
+
+    if (preferredSubCat && !userDataGlobal?.preferences?.length) return;
+
     if (userCourse) {
       setIsLoading(true);
       const userCourseObj = parseJson(userCourse);
       const userCourseData = await getUserCourseData();
 
-      const _allUserCourses = userCourseData?.filter((course) => {
-        const isOngoing = course?.completedPercentage > 0 && course?.completedPercentage < 100;
-        const isAssigned =
-          parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100;
-        return userCourseObj?.isOngoing ? isOngoing : isAssigned;
-      });
+      const _allUserCourses = userCourseData
+        ?.filter((course) => {
+          const isOngoing = course?.isCourseStarted && !course?.isCourseCompleted;
+          const isAssigned = course?.isCourseStarted && course?.isCourseCompleted;
+          const isMandatory = !course?.isCourseStarted && !course?.isCourseCompleted;
+
+          if (userCourseObj?.isMandatory) return isMandatory;
+          if (userCourseObj?.isOngoing) return isOngoing;
+
+          return isAssigned;
+        })
+        ?.filter((course) => {
+          if (isSelfPaced) return course?.course_type === COURSE_TYPES[0];
+
+          return true;
+        });
 
       setCourses(
         _allUserCourses?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
       );
       return;
     }
-    const _lspId = sessionStorage?.getItem('lsp_id');
+
+    // const _lspId = sessionStorage?.getItem('lsp_id');
+    const _lspId = COMMON_LSPS.zicops;
     const queryVariables = {
       publish_time: time,
       pageSize: 999,
@@ -97,11 +128,26 @@ export default function useHandleSearch() {
     const courseRes = await loadCourses({ variables: queryVariables });
     if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
 
+    const subcatArr = userDataGlobal?.preferences;
+    // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
+    const activeSubcategories = subcatArr?.filter((item) => item?.is_active && item?.sub_category);
+
     const courseData = courseRes?.data?.latestCourses;
     setPageCursor(courseData?.pageCursor || null);
     setCourses(
       courseData?.courses
         ?.filter((c) => c?.is_active && c?.is_display)
+        ?.filter((course) => {
+          if (isSelfPaced) return course?.type === COURSE_TYPES[0];
+
+          return true;
+        })
+        ?.filter((c) => {
+          if (preferredSubCat)
+            return !!activeSubcategories?.find((pref) => pref?.sub_category === c?.sub_category);
+
+          return true;
+        })
         ?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
     );
 
@@ -137,7 +183,15 @@ export default function useHandleSearch() {
             ?.filter((bm) => bm) || []
       });
     }
-  }, [filters, filter, searchQuery]);
+  }, [
+    router.isReady,
+    filters,
+    filter,
+    searchQuery,
+    userDataGlobal?.preferences,
+    isSelfPaced,
+    preferredSubCat
+  ]);
 
   useEffect(() => {
     setIsLoading(courseLoading);

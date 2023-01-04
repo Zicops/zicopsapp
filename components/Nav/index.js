@@ -35,15 +35,15 @@ export default function Nav() {
   const OrgDetails = async () => {
     const orgId = sessionStorage.getItem('org_id');
     if (!orgId) return;
-      const res = await getOrgDetails({
-        variables: { org_ids: orgId }
-      }).catch((err) => {
-        console.error(err);
-      });
-      setOrgData((prevValue) => ({
-        ...prevValue,
-        logo_url: res?.data?.getOrganizations[0]?.logo_url
-      }));
+    const res = await getOrgDetails({
+      variables: { org_ids: orgId }
+    }).catch((err) => {
+      console.error(err);
+    });
+    setOrgData((prevValue) => ({
+      ...prevValue,
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+    }));
   };
   useEffect(() => {
     if (orgData?.logo_url?.length) return;
@@ -130,6 +130,7 @@ export default function Nav() {
               className={`${styles.nav_search} ${searchQuery ? styles.nav_search_long : ''}`}
               placeholder="Search..."
               onInput={handleSearch}
+              value={searchQuery || ''}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   searchQuery && router.push(`/search-page/${searchQuery}`);
@@ -145,18 +146,20 @@ export default function Nav() {
         <div ref={notificationBarRef} className={styles.special_menu}>
           <ul>
             {/* {!isAdmin && searchQuery === null && ( */}
-            <li style={{display: 'none'}} onClick={() => {
-              sendNotification(
-                {
-                  title: 'Testing',
-                  body: 'This is a notification 3 body',
-                  user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
-                },
-                { context: { headers: { 'fcm-token': fcmToken } } }
-              );
+            <li
+              style={{ display: 'none' }}
+              onClick={() => {
+                sendNotification(
+                  {
+                    title: 'Testing',
+                    body: 'This is a notification 3 body',
+                    user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+                  },
+                  { context: { headers: { 'fcm-token': fcmToken } } }
+                );
               }}>
-                <img src="/images/search.png" />
-              </li>
+              <img src="/images/search.png" />
+            </li>
             {/* )} */}
             <ToolTip title="Show Notifications" placement="right">
               <li
@@ -218,7 +221,7 @@ export default function Nav() {
               <img src="/images/chat.png" />
             </li> */}
           </ul>
-          {showNotification && <Notifications />}
+          {showNotification && <Notifications isNav={true} />}
         </div>
 
         {/* <div className={styles.profile}>

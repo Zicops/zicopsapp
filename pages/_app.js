@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Zicops - Comprehensive e-learning OTT platform.</title>
+        <title>Zicops - Comprehensive e-learning platform.</title>
         <meta
           name="description"
           content="What is Zicops? Zicops is an e-learning streaming platform that 
@@ -53,19 +53,19 @@ manages and elevates the entire learning environment."
       <ErrorBoundary>
         <AuthUserProvider>
           <RecoilRoot>
-            <CourseContextProvider>
-              <UserContextProvider>
-                <AuthChecker>
-                  <PushNotificationLayout>
+            <PushNotificationLayout>
+              <CourseContextProvider>
+                <UserContextProvider>
+                  <AuthChecker>
                     <Layout>
                       <Component {...pageProps} />
 
                       <Toaster />
                     </Layout>
-                  </PushNotificationLayout>
-                </AuthChecker>
-              </UserContextProvider>
-            </CourseContextProvider>
+                  </AuthChecker>
+                </UserContextProvider>
+              </CourseContextProvider>
+            </PushNotificationLayout>
           </RecoilRoot>
         </AuthUserProvider>
       </ErrorBoundary>

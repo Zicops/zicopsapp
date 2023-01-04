@@ -1,5 +1,6 @@
 import useHandleUserUpdate from '@/components/LearnerUserProfile/Logic/useHandleUserUpdate';
 import { sendNotification } from '@/helper/api.helper';
+import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -52,7 +53,7 @@ const SubCategoriesPreview = ({
     setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
     sendNotification(
       {
-        title: 'Welcome to Learning Space',
+        title: NOTIFICATION_TITLES?.lspWelcome,
         body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userAccountData?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
         user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
       },

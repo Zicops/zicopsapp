@@ -116,13 +116,14 @@
 .labeledRadioCheckboxWrapper {
   position: relative;
   padding-left: 35px;
-  cursor: pointer;
   font-size: 14px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
+  label{
+    cursor: pointer;
+  }
   input {
     position: absolute;
     opacity: 0;
@@ -531,6 +532,7 @@
 
 .rteContainer {
   margin: 20px auto;
+  position: relative;
   // min-height: 150px;
   // max-height: 250px;
   color: $white !important;
@@ -568,7 +570,6 @@
       // }
       // :global(.ql-container.ql-snow) {
       //   border-top: 0px;
-      // }
     }
 
     :global(.ql-snow) {
@@ -581,6 +582,7 @@
   }
 
   // &.hasValue {
+      // }
   //   :global(.ql-container.ql-snow),
   //   :global(.ql-toolbar.ql-snow) {
   //     @include inputStylesFor('hasValue');
@@ -593,4 +595,114 @@
   //     border-top: 0px;
   //   }
   // }
+}
+.rteContainer2 {
+  margin: 20px auto;
+  position: relative;
+  // min-height: 150px;
+  // max-height: 250px;
+  color: $white !important;
+
+  .reactQuill {
+    // min-height: 100px;
+    // max-height: 300px;
+    background-color: $secondary;
+    :global(.ql-active .ql-stroke) {
+      stroke: $white !important;
+    }
+    :global(.ql-stroke) {
+      stroke: $darkThree !important;
+    }
+
+    :global(.ql-active .ql-fill) {
+      stroke: $white !important;
+    }
+
+    :global(.ql-fill) {
+      fill: $darkThree !important;
+    }
+
+    :global(.ql-editor.ql-blank::before) {
+      color: $darkThree !important;
+
+      // :global(.ql-container.ql-snow),
+      // :global(.ql-toolbar.ql-snow) {
+      //   @include inputStylesFor('hasValue');
+      // }
+
+      // :global(.ql-toolbar.ql-snow) {
+      //   border-bottom: 2px solid $darkThree;
+      // }
+      // :global(.ql-container.ql-snow) {
+      //   border-top: 0px;
+    }
+
+    :global(.ql-snow) {
+      color: $white !important;
+    }
+
+    :global(.ql-editor) {
+      min-height: 100px !important;
+      max-height: 130px !important;
+      margin-bottom: 60px;
+      
+    }
+  }
+
+  // &.hasValue {
+  // }
+  //   :global(.ql-container.ql-snow),
+  //   :global(.ql-toolbar.ql-snow) {
+  //     @include inputStylesFor('hasValue');
+  //   }
+
+  //   :global(.ql-toolbar.ql-snow) {
+  //     border-bottom: 2px solid $darkThree;
+  //   }
+  //   :global(.ql-container.ql-snow) {
+  //     border-top: 0px;
+  //   }
+  // }
+}
+.rteButtons{
+  position: absolute;
+  bottom: 8%;
+  left: 1%;
+  right:0;
+  width: 98%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $bgBody;
+  gap: 10px;
+  .post_type{
+    display: flex;
+    gap: 15px;
+    p{
+      font-size: 16px;
+    }
+  }
+  .button_type{
+    display: flex;
+    gap: 15px;
+    .button1{
+      background: $primary;
+      padding: 10px 24px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+    .button2{
+      color: #747474;
+      padding: 10px 16px;
+      background: transparent;
+      border-radius: 4px;
+      border: 1px solid $bgBody;
+      cursor: pointer;
+    }
+  }
+    .button_divider {
+      border-left: 2px solid #5C5C5C;;
+      // height: 20px;
+    }
 }

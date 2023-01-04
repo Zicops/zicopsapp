@@ -56,13 +56,16 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
 
-// Default LSP is staging.zocops.com for demo and staging domains
+// Default LSP is staging.zicops.com for demo and staging domains
 export const LEARNING_SPACE_ID = '93f3693c-d111-51aa-86ca-b883c6dfe647';
+// Default LSP is zicops.com for zicops.com production domains
+// export const LEARNING_SPACE_ID = '98640aaa-a1e8-5584-bc14-2b1bfed7d65a';
 
 export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS',
   phoneError: 'PHONE_NUMBER_EXISTS',
-  nothingToUpdate: 'nothing to update'
+  nothingToUpdate: 'nothing to update',
+  shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT'
 };
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
@@ -73,6 +76,7 @@ export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';
 export const VIDEO_FILE_TYPES = '.mp4, .mkv';
 export const IMAGE_FILE_TYPES = '.jpg, .jpeg, .png, .svg, .gif';
 export const MIN_COURSE_LENGTH = 25;
+export const PROFILE_IMAGE_TYPE = '.jpg, .jpeg, .png, .svg';
 
 export const DEFAULT_VALUES = {
   image: 'default-image.jpg',
@@ -80,9 +84,9 @@ export const DEFAULT_VALUES = {
   previewVideo: 'default-video.mp4'
 };
 
-// ztlp pune lsp
+// Default LSP is staging.zicops.com for demo and staging domains
 export const COMMON_LSPS = {
-  zicops: '6bc01264-07c2-518e-9b1e-a6fd54249132'
+  zicops: '93f3693c-d111-51aa-86ca-b883c6dfe647'
 };
 
 export const COURSE_STATUS = {
@@ -103,3 +107,28 @@ export const COURSE_TOPIC_STATUS = {
 
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
+
+export const NOTIFICATION_TITLES = {
+  cohortAssign: 'Cohort-Mapped',
+  cohortUnassign: 'Cohort-Unmapped',
+  courseAssign: 'Course-Assigned',
+  courseUnssigned: 'Course-Unassigned',
+  lspWelcome: 'Welcome-Lsp'
+};
+
+export const COURSE_SELF_ASSIGN_LIMIT = 30;
+// https://stackoverflow.com/a/49490014/13419786
+export const ONE_MB_IN_BYTES = 1_048_576;
+export const LIMITS = {
+  courseVideoSize: ONE_MB_IN_BYTES * 240
+};
+
+export const EMAIL_TEMPLATE_IDS = {
+  courseAssignMandatory: 'd-bf691d7c93794afca36c326cd032ccbf',
+  courseAssignNotMandatory: 'd-2f834ed850ba43aab5e55e622f0725c1',
+  courseUnassign: 'd-1d43080c8386430ca24d5050130d5c69',
+  cohortAssign: 'd-1c44165b36034b839d9b7e7a1035f19b',
+  cohortUnassign: 'd-3801f540f2a948729db6019981ace2c2',
+  cohortManagerAssign: 'd-c9382610d3bb46f28291bca9f5d97cd4',
+  cohortManagerUnassign: 'd-8b97231c38a44b6facb05172f39cc714'
+};

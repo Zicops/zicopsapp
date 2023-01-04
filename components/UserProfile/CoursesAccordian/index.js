@@ -1,15 +1,14 @@
-import { GET_COURSE, GET_LATEST_COURSES, queryClient } from '@/api/Queries';
+import { GET_LATEST_COURSES, queryClient } from '@/api/Queries';
 import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS } from '@/api/UserQueries';
 import UserButton from '@/common/UserButton';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '@/components/common/InputDatePicker';
 import PopUp from '@/components/common/PopUp';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { sendEmail, sendNotification, sendNotificationWithLink } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
+import { getMinCourseAssignDate, getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -19,8 +18,16 @@ import Accordian from '../../../components/UserProfile/Accordian';
 
 // import AssignedCourses from '../../AssignedCourses';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { getNotificationMsg } from '@/helper/common.helper';
+import {
+  COMMON_LSPS,
+  COURSE_STATUS,
+  EMAIL_TEMPLATE_IDS,
+  NOTIFICATION_TITLES
+} from '@/helper/constants.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import moment from 'moment';
 import AssignCourses from './AssignCourses';
 import styles from './coursesAccordian.module.scss';
@@ -28,8 +35,15 @@ import CurrentCourses from './CurrentCourses';
 import useHandleUpdateCourse from './Logic/useHandleUpdateCourse';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
+  // const minDate = getMinCourseAssignDate(userCourseData?.duration);
+
+  const origin =
+    typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
+
+  const [userCourseData, setUserCourseData] = useState(null);
+  const [minDate, setMinDate] = useState(getMinCourseAssignDate(userCourseData?.duration));
   const [courseAssignData, setCourseAssignData] = useState({
-    endDate: new Date(),
+    endDate: minDate,
     isMandatory: false,
     isCourseAssigned: false
   });
@@ -48,9 +62,9 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   const router = useRouter();
   const currentUserId = router?.query?.userId;
+  const fcmToken = useRecoilValue(FcmTokenAtom);
   const [assignedCourses, setAssignedCourses] = useState([]);
   const [currentCourses, setCurrentCourses] = useState([]);
-  const [userCourseData, setUserCourseData] = useState(null);
   const [dataCourse, setDataCourse] = useState([]);
   const [selected, setSelected] = useState(3);
   const [selectedPage, setSelectedPage] = useState('');
@@ -61,10 +75,13 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   const [courseLoading, setCourseLoading] = useState(false);
 
   const { updateCourse } = useHandleUpdateCourse();
+  const { getUserCourseData } = useUserCourseData();
 
   async function handleAssign(item, isRemove = false) {
     // const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
     setUserCourseData({ ...item });
+    const assignDate = getMinCourseAssignDate(item?.duration);
+    setMinDate(assignDate);
 
     if (!isRemove) return setIsAssignPopUpOpen(true);
 
@@ -74,31 +91,113 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   async function handleRemove() {
     setLoading(true);
     const checkUpdate = await updateCourse(userCourseData, currentUserId, 'self');
-    // console.log(checkUpdate);
+    if (!checkUpdate) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
+    // console.log('clicjk');
     await loadAssignedCourseData();
     setToastMsg({ type: 'success', message: 'Course Removed Succesfully' });
+
+    const notificationBody = getNotificationMsg('courseUnassign', {
+      courseName: userCourseData?.name
+    });
+
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.courseUnssigned,
+        body: notificationBody,
+        user_id: [currentUserId]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    // console.log(userCourseData,'sd')
+
+    const userName = currentUserData?.is_verified ? `${currentUserData?.first_name}` : '';
+    const bodyData = {
+      user_name: userName,
+      lsp_name: sessionStorage?.getItem('lsp_name'),
+      course_name: userCourseData?.name
+    };
+    const sendMailData = {
+      to: [currentUserData?.email],
+      sender_name: sessionStorage?.getItem('lsp_name'),
+      user_name: userName,
+      body: JSON.stringify(bodyData),
+      template_id: EMAIL_TEMPLATE_IDS?.courseUnassign
+    };
+    await sendEmail(sendMailData, {
+      context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+    });
+    setDataCourse((prevValue) => [...prevValue, { ...userCourseData, added_by: 'self' }]);
+
     setLoading(false);
     return setShowConfirmBox(false);
   }
 
   async function handleSubmit() {
-    // console.log(currentUserData);
     if (!currentUserData?.userLspId)
       return setToastMsg({ type: 'danger', message: 'User lsp load error!' });
     setLoading(true);
     setIsPopUpDataPresent(false);
     const { id } = getUserData();
 
+    const notificationBody = getNotificationMsg('courseAssign', {
+      courseName: userCourseData?.name,
+      endDate: courseAssignData?.endDate
+    });
+
+    const endDate = getUnixFromDate(courseAssignData?.endDate) * 1000;
+    const userName = currentUserData?.is_verified ? `${currentUserData?.first_name}` : '';
+    const bodyData = {
+      user_name: userName,
+      lsp_name: sessionStorage?.getItem('lsp_name'),
+      course_name: userCourseData?.name,
+      end_date: moment(endDate).format('D MMM YYYY'),
+      link: `${origin}/self-landing`
+    };
+    const sendMailData = {
+      to: [currentUserData?.email],
+      sender_name: sessionStorage?.getItem('lsp_name'),
+      user_name: userName,
+      body: JSON.stringify(bodyData),
+      template_id: courseAssignData?.isMandatory
+        ? EMAIL_TEMPLATE_IDS?.courseAssignMandatory
+        : EMAIL_TEMPLATE_IDS?.courseAssignNotMandatory
+    };
+
     const checkCourse = await updateCourse(userCourseData, currentUserId, 'admin', id);
     // console.log(checkCourse,'hi')
     if (checkCourse) {
       const courseArray = dataCourse.filter((item) => item.id !== userCourseData?.id);
       setDataCourse([...courseArray]);
-      setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
+      setCourseAssignData({
+        ...courseAssignData,
+        isCourseAssigned: true,
+        endDate: minDate,
+        isMandatory: false
+      });
 
-      setLoading(false);
       setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
       await loadAssignedCourseData();
+      // await sendNotification(
+      //   {
+      //     title: NOTIFICATION_TITLES?.courseAssign,
+      //     body: notificationBody,
+      //     user_id: [currentUserId]
+      //   },
+      //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      //   );
+      await sendNotificationWithLink(
+        {
+          title: NOTIFICATION_TITLES?.courseAssign,
+          body: notificationBody,
+          user_id: [currentUserId],
+          link: `/course/${userCourseData?.id}`
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
+      await sendEmail(sendMailData, {
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+      });
+      setLoading(false);
       return setIsAssignPopUpOpen(false);
     }
 
@@ -127,10 +226,32 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     setCourseAssignData({
       ...courseAssignData,
       isCourseAssigned: true,
-      endDate: new Date(),
+      endDate: minDate,
       isMandatory: false
     });
     await loadAssignedCourseData();
+    // await sendNotification(
+    //   {
+    //     title: NOTIFICATION_TITLES?.courseAssign,
+    //     body: notificationBody,
+    //     user_id: [currentUserId]
+    //   },
+    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    // );
+
+    await sendNotificationWithLink(
+      {
+        title: NOTIFICATION_TITLES?.courseAssign,
+        body: notificationBody,
+        user_id: [currentUserId],
+        link: `/course/${userCourseData?.id}`
+        // link:`https://staging.zicops.com/course/${userCourseData?.id}`
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    await sendEmail(sendMailData, {
+      context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+    });
     setToastMsg({ type: 'success', message: 'Course Added Succesfully' });
     setIsAssignPopUpOpen(false);
     return setLoading(false);
@@ -250,21 +371,43 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   useEffect(async () => {
     const currentTime = new Date().getTime();
-    const _lspId = sessionStorage?.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
+    const currentLspId = sessionStorage?.getItem('lsp_id');
 
     const sendData = {
       publish_time: Math.floor(currentTime / 1000),
       pageCursor: '',
       pageSize: 100,
       status: COURSE_STATUS.publish,
-      filters: { LspId: _lspId }
+      filters: { LspId: currentLspId }
     };
-    const res = await loadLastestCourseData({ variables: sendData }).catch((err) => {
-      console.log(err);
-      return setToastMsg({ type: 'danger', message: `${err}` });
-    });
-    const courseData =
-      res?.data?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display) || [];
+    const currentLspCourseRes = await loadLastestCourseData({ variables: sendData }).catch(
+      (err) => {
+        console.log(err);
+        return setToastMsg({ type: 'danger', message: `${err}` });
+      }
+    );
+
+    sendData.filters.LspId = zicopsLspId;
+    const zicopsLspCourseRes =
+      zicopsLspId !== currentLspId
+        ? await loadLastestCourseData({ variables: sendData }).catch((err) => {
+            console.log(err);
+            return setToastMsg({ type: 'danger', message: `${err}` });
+          })
+        : {};
+    // const courseData = res?.data?.latestCourses?.courses?.filter((c) => c?.is_active) || [];
+    const courseData = [];
+    if (currentLspCourseRes?.data?.latestCourses?.courses?.length) {
+      courseData.push(
+        ...currentLspCourseRes?.data?.latestCourses?.courses?.filter((c) => c?.is_active)
+      );
+    }
+    if (zicopsLspCourseRes?.data?.latestCourses?.courses?.length) {
+      courseData.push(
+        ...zicopsLspCourseRes?.data?.latestCourses?.courses?.filter((c) => c?.is_active)
+      );
+    }
 
     setDataCourse([...courseData]);
     // console.log(dataCourse);
@@ -286,92 +429,128 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   }, [currentUserId, currentUserData]);
 
   async function loadAssignedCourseData() {
-    if (!currentUserId) return setCourseLoading(false);
-    if (!currentUserData?.userLspId) return setCourseLoading(false);
     setCourseLoading(true);
-    const assignedCoursesRes = await loadQueryDataAsync(
-      GET_USER_COURSE_MAPS,
-      {
-        user_id: currentUserId,
-        publish_time: Math.floor(Date.now() / 1000),
-        pageCursor: '',
-        pageSize: 999999999
-      },
-      {},
-      userClient
-    );
 
-    if (assignedCoursesRes?.error)
-      return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
-    const userLspCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter(
-      (courseMap) => courseMap?.user_lsp_id === currentUserData?.userLspId
-    );
+    const userCourses = await getUserCourseData(99999);
+    //  console.log(userCourses,'courses');
+    if (!userCourses?.length) return setCourseLoading(false);
 
-    if (!userLspCourses?.length) setCourseLoading(false);
-    const assignedCoursesToUser = userLspCourses;
-    if (!assignedCoursesToUser?.length) setCourseLoading(false);
+    // const onGCourses = userCourses?.filter(
+    //   (course) => course?.isCourseStarted && !course?.isCourseCompleted
+    // );
+    // setOnGoingCourses([...onGCourses], setLoading(false));
 
-    const allAssignedCourses = [];
-    for (let i = 0; i < assignedCoursesToUser?.length; i++) {
-      const courseMap = assignedCoursesToUser[i];
-      const mapId = courseMap?.user_course_id;
-      const course_id = courseMap?.course_id;
+    const adminAdded = userCourses
+      ?.filter((c) => c?.name)
+      ?.filter((course) => course?.added_by !== 'self');
 
-      const courseProgressRes = await loadQueryDataAsync(
-        GET_USER_COURSE_PROGRESS,
-        { userId: currentUserId, userCourseId: [mapId] },
-        {},
-        userClient
-      );
-
-      if (courseProgressRes?.error) {
-        setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-        continue;
-      }
-      const userProgressArr = courseProgressRes?.getUserCourseProgressByMapId;
-
-      let topicsStarted = 0;
-      userProgressArr?.map((topic) => {
-        if (topic?.status !== 'not-started') ++topicsStarted;
-      });
-      console.log(topicsStarted);
-      const courseProgress = userProgressArr?.length
-        ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
-        : 0;
-
-      const courseRes = await loadQueryDataAsync(GET_COURSE, { course_id: course_id });
-      if (courseRes?.error) {
-        setToastMsg({ type: 'danger', message: 'Course Load Error' });
-        continue;
-      }
-
-      // console.log(assignedCoursesToUser[i],'assinged courses to user')
-
-      let added_by =
-        parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
-
-      if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
-      allAssignedCourses.push({
-        ...courseRes?.getCourse,
-        ...assignedCoursesToUser[i],
-        completedPercentage: userProgressArr?.length ? courseProgress : 0,
-        added_by: added_by,
-        addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
-        expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
-        created_at: assignedCoursesToUser[i]?.created_at
-      });
-    }
-
-    const _userCourses = allAssignedCourses?.filter((course) => course?.name?.length);
-    if (_userCourses?.length) {
-      const adminAssignedCourses = _userCourses?.filter(
-        (course) => course?.addedby?.role.toLowerCase() !== 'self'
-      );
-
-      setCurrentCourses(_userCourses, setCourseLoading(false));
-      setAssignedCourses(adminAssignedCourses);
-    }
+    setCurrentCourses(userCourses);
+    setAssignedCourses(adminAdded);
+    setCourseLoading(true);
   }
+
+  // async function loadAssignedCourseData() {
+  //   if (!currentUserId) return setCourseLoading(false);
+  //   if (!currentUserData?.userLspId) return setCourseLoading(false);
+  //   setCourseLoading(true);
+  //   const assignedCoursesRes = await loadQueryDataAsync(
+  //     GET_USER_COURSE_MAPS,
+  //     {
+  //       user_id: currentUserId,
+  //       publish_time: Math.floor(Date.now() / 1000),
+  //       pageCursor: '',
+  //       pageSize: 999999999
+  //     },
+  //     {},
+  //     userClient
+  //   );
+
+  //   if (assignedCoursesRes?.error)
+  //     return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
+  //   const userLspCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter(
+  //     (courseMap) => courseMap?.user_lsp_id === currentUserData?.userLspId
+  //   );
+
+  //   if (!userLspCourses?.length) setCourseLoading(false);
+  //   const assignedCoursesToUser = userLspCourses;
+  //   if (!assignedCoursesToUser?.length) setCourseLoading(false);
+
+  //   const allAssignedCourses = [];
+  //   for (let i = 0; i < assignedCoursesToUser?.length; i++) {
+  //     const courseMap = assignedCoursesToUser[i];
+  //     const mapId = courseMap?.user_course_id;
+  //     const course_id = courseMap?.course_id;
+
+  //     const courseProgressRes = await loadQueryDataAsync(
+  //       GET_USER_COURSE_PROGRESS,
+  //       { userId: currentUserId, userCourseId: [mapId] },
+  //       {},
+  //       userClient
+  //     );
+
+  //     if (courseProgressRes?.error) {
+  //       setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+  //       continue;
+  //     }
+  //     const userProgressArr = courseProgressRes?.getUserCourseProgressByMapId;
+
+  //     let topicsCompleted = 0;
+  //     let topicsStarted = 0;
+  //     userProgressArr?.map((topic) => {
+  //       // if (topic?.status !== 'not-started') ++topicsStarted;
+  //       if (topic?.status !== COURSE_TOPIC_STATUS.assign) ++topicsStarted;
+  //       if (topic?.status === COURSE_TOPIC_STATUS.completed) ++topicsCompleted;
+  //     });
+  //     // const courseProgress = userProgressArr?.length
+  //     //   ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+  //     //   : 0;
+
+  //     const courseRes = await loadQueryDataAsync(GET_COURSE, { course_id: course_id });
+  //     if (courseRes?.error) {
+  //       setToastMsg({ type: 'danger', message: 'Course Load Error' });
+  //       continue;
+  //     }
+
+  //     // console.log(assignedCoursesToUser[i],'assinged courses to user')
+
+  //     let added_by =
+  //       parseJson(assignedCoursesToUser[i]?.added_by)?.role || assignedCoursesToUser[i]?.added_by;
+
+  //     const courseDuraton = +courseRes?.getCourse?.duration;
+  //     const completedPercent = userProgressArr?.length
+  //       ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
+  //       : 0;
+
+  //     if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
+  //     allAssignedCourses.push({
+  //       ...courseRes?.getCourse,
+  //       ...assignedCoursesToUser[i],
+  //       // completedPercentage: userProgressArr?.length ? courseProgress : 0,
+  //       added_by: added_by,
+  //       addedOn: moment.unix(assignedCoursesToUser[i]?.created_at).format('DD/MM/YYYY'),
+  //       expected_completion: moment.unix(assignedCoursesToUser[i]?.end_date).format('DD/MM/YYYY'),
+  //       created_at: assignedCoursesToUser[i]?.created_at,
+  //       timeLeft: courseDuraton - (courseDuraton * (+completedPercent || 0)) / 100,
+  //       isCourseCompleted:
+  //         topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
+  //       isCourseStarted: topicsStarted > 0,
+  //       completedPercentage: completedPercent,
+  //       topicsStartedPercentage: userProgressArr?.length
+  //         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+  //         : 0
+  //     });
+  //   }
+
+  //   const _userCourses = allAssignedCourses?.filter((course) => course?.name?.length);
+  //   if (_userCourses?.length) {
+  //     const adminAssignedCourses = _userCourses?.filter(
+  //       (course) => course?.added_by?.toLowerCase() !== 'self'
+  //     );
+
+  //     setCurrentCourses(_userCourses, setCourseLoading(false));
+  //     setAssignedCourses(adminAssignedCourses);
+  //   }
+  // }
 
   return (
     <>
@@ -471,7 +650,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
             <section>
               <p htmlFor="endDate">Expected Completion date:</p>
               <InputDatePicker
-                minDate={new Date()}
+                minDate={minDate}
                 selectedDate={courseAssignData?.endDate}
                 changeHandler={(date) => {
                   setIsPopUpDataPresent(true);

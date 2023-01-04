@@ -1,5 +1,5 @@
 import { mutationClient } from '@/api/Mutations';
-import { notificationClient, SEND_NOTIFICATIONS } from '@/api/NotificationClient';
+import { notificationClient, SEND_EMAIL, SEND_NOTIFICATIONS, SEND_NOTIFICATIONS_WITH_LINK } from '@/api/NotificationClient';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -106,6 +106,18 @@ export async function sendNotification(variableObj = {}, options = {}) {
   return response?.data || {};
 }
 
+export async function sendNotificationWithLink(variableObj = {}, options = {}) {
+  const response = await notificationClient
+    .mutate({ mutation: SEND_NOTIFICATIONS_WITH_LINK, variables: variableObj, ...options })
+    .catch((err) => {
+      console.error(`Send Notification error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
 // ============ How to use =============
 // sendNotification(
 //   {
@@ -115,3 +127,66 @@ export async function sendNotification(variableObj = {}, options = {}) {
 //   },
 //   { context: { headers: { 'fcm-token': fcmToken } } }
 // );
+
+
+export async function sendEmail(variableObj = {}, options = {}) {
+  const response = await notificationClient
+    .mutate({ mutation: SEND_EMAIL, variables: variableObj, ...options })
+    .catch((err) => {
+      console.error(`Send Email error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
+
+export async function sendNotificationAndEmail(
+  notificationVariableObj = {},
+  emailVariableObj = {},
+  options = {}
+) {
+  const resNotification = await notificationClient
+    .mutate({ mutation: SEND_NOTIFICATIONS, variables: notificationVariableObj, ...options })
+    .catch((err) => {
+      console.error(`Send Notification error:`, err);
+    });
+
+  if (resNotification?.error) return resNotification;
+
+  const resEmail = await notificationClient
+    .mutate({ mutation: SEND_EMAIL, variables: emailVariableObj, ...options })
+    .catch((err) => {
+      console.error(`Send Email error:`, err);
+    });
+
+  if (resEmail?.error) return resEmail;
+
+  const response = { mail: resEmail?.data, notification: resNotification?.data };
+
+  console.log(resEmail,'emails res')
+
+  if (!response?.mail || !resNotification?.notification) {
+    return {};
+  } else {
+    return response;
+  }
+}
+
+// ============ How to use =============
+// sendNotificationAndEmail(
+//   {
+//     title: 'Stri ng1',
+//     body: 'This is a notification body',
+//     user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+//   },
+//   {
+//     to: ["userEmailListArray@mail.com"],
+//     sender_name: "lsp_name",
+//     user_name: ["userNameList"],
+//     body: "{\"lsp_name\": \"XYZ-LSP\", \"course_name\": \"Blockchain\", \"end_date\":\"18/12/22\"}",
+//     template_id: "d-bf691d7c93794afca36c326cd032ccbf"},
+//   { context: { headers: { 'fcm-token': fcmToken } } }
+// );
+// body should be stringyfy JSON obj

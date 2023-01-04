@@ -26,6 +26,7 @@ const LspCard = ({
     if (isDisabled) return;
 
     if (!userLspId && !userId) return;
+    setUserOrgData((prev)=>({...prev,logo_url:logo}));
     const lspRoleArr = await loadQueryDataAsync(
       GET_USER_LSP_ROLES,
       { user_id: userId, user_lsp_ids: [userLspId] },
@@ -33,9 +34,18 @@ const LspCard = ({
       userQueryClient
     );
 
-    const userLspRole = lspRoleArr?.getUserLspRoles.reduce(function (prev, current) {
-      return prev.updated_at > current.updated_at ? prev.role : current.role;
-    }, 'learner');
+    const lspRoles = lspRoleArr?.getUserLspRoles;
+    let userLspRole = 'learner'
+    
+    if (lspRoleArr?.length > 1) {
+      const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
+      userLspRole = latestUpdatedRole?.pop()?.role;
+    } else {
+      userLspRole = lspRoles[0]?.role;
+    }
+    // const latestUpdatedRole = lspRoleArr?.getUserLspRoles?.sort((a,b) => a?.updated_at - b?.updated_at);
+
+    // const userLspRole = latestUpdatedRole?.pop()?.role ? latestUpdatedRole?.pop()?.role : 'learner';
 
     sessionStorage.setItem('lsp_id', lspId);
     setUserOrgData((prevValue) => ({ ...prevValue, lsp_id: lspId, logo_url: logo }));

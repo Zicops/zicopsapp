@@ -9,9 +9,13 @@ export default function RightFooter() {
         <p className={`${styles.heading}`}>Connect with us</p>
 
         {socialImage.map((img) => (
-          <span key={img.path}>
+        
+          <span key={img.id}>
+              <a href={img.socialLink} target={'_bank'}>
             <Image height={30} width={30} src={img.path} alt="" />
+            </a>
           </span>
+         
         ))}
       </div>
 
