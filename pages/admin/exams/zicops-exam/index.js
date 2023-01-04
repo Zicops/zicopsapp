@@ -17,10 +17,10 @@ const ZicopsExam = () => {
           pageRoute="/admin/exams/my-exams/add"
           tooltipTitle="Create new Exam"
         />
-        {/* <MainBodyBox>
+        <MainBodyBox>
           <ExamsTable />
-        </MainBodyBox> */}
-        <NoAccess />
+        </MainBodyBox>
+        {/* <NoAccess /> */}
       </MainBody>
     </>
   );

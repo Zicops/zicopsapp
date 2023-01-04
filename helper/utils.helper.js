@@ -258,9 +258,9 @@ export function parseJson(stringifiedJson) {
 export function getUnixTimeAt(hours = 7, minutes = 0, seconds = 0) {
   const now = new Date();
 
-  now.setHours(hours);
-  now.setMinutes(minutes);
-  now.setSeconds(seconds);
+  // now.setHours(hours);
+  // now.setMinutes(minutes);
+  // now.setSeconds(seconds);
 
   const unixTimestamp = Math.floor(now / 1000);
   return unixTimestamp;

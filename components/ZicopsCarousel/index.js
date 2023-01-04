@@ -9,6 +9,7 @@ import SquareCard from './SquareCard';
 import CircleCard from './CircleCard';
 import styles from './zicopsCarousel.module.scss';
 import { MIN_COURSE_LENGTH } from '@/helper/constants.helper';
+import CourseCard from '../common/CourseCard';
 
 const CardSlider = ({
   deviceType,
@@ -142,7 +143,17 @@ const CardSlider = ({
             if (!d?.name) return;
             if (type === 'small')
               return (
-                <SmallCard
+                // <SmallCard
+                //   showAssignSymbol={!isAssigned}
+                //   key={index}
+                //   styleClass={index === 0 ? 'card_ietms_start' : ''}
+                //   carouselRefData={carouselRef.current}
+                //   image={d.img}
+                //   courseData={d}
+                //   notext={notext}
+                //   isShowProgress={title === 'Continue with your Courses'}
+                // />
+                <CourseCard
                   showAssignSymbol={!isAssigned}
                   key={index}
                   styleClass={index === 0 ? 'card_ietms_start' : ''}
