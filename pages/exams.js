@@ -11,9 +11,12 @@ import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/L
 import ZicopsTable from '@/components/common/ZicopsTable';
 import ExamHeroSection from '@/components/LearnerExamComp/ExamHeroSection';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COURSE_TYPES } from '@/helper/constants.helper';
+import { getLatestCoursesByFilters } from '@/helper/data.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -28,19 +31,34 @@ import ZicopsCarousel from '../components/ZicopsCarousel';
 
 export default function LearnerExams() {
   const router = useRouter();
-  const [userGlobalData , setUserGlobalData] = useRecoilState(UserDataAtom);
+  const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
+  const userData = useRecoilValue(UserStateAtom);
+  const userOrg = useRecoilValue(UsersOrganizationAtom);
+
   const [takeAnyTimeExamsData, setTakeAnyTimeExamsData] = useState([]);
   const [scheduleExamsData, setScheduleExamsData] = useState([]);
+  const [activeSubcatArr, setActiveSubcatArr] = useState([]);
   const [examResultTableData, setExamResultTableData] = useState([]);
-
   const [examAttempts, setExamAttempts] = useState([]);
   const [examResults, setExamResults] = useState([]);
   const [examCourseMapping, setExamCourseMapping] = useState({ scheduleExam: [], takeAnyTime: [] });
 
+
+  const [latestCourses, setLatestCourses] = useState([]);
+  const [learningSpaceCourses, setLearningSpaceCourses] = useState([]);
+  const [subCategory0Courses, setSubCategory0Courses] = useState([]);
+  const [subCategory1Courses, setSubCategory1Courses] = useState([]);
+  const [subCategory2Courses, setSubCategory2Courses] = useState([]);
+  const [subCategory3Courses, setSubCategory3Courses] = useState([]);
+  const [subCategory4Courses, setSubCategory4Courses] = useState([]);
+ 
+  const [onGoingExam, setOnGoingExam] = useState([])
+  const [examOngoingData , setOnOgingData] = useState([])
   // const userGlobalData = useRecoilValue(UserDataAtom);
 
   const [loading, setLoading] = useState(false);
   const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false);
+
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -70,7 +88,135 @@ export default function LearnerExams() {
   const buttonObj = {
     style: { margin: '0px 10px', padding: '2px 10px', border: '1px solid var(--primary)' }
   };
+  const pageSize = 28;
   const { getUserCourseData } = useUserCourseData();
+    useEffect(() => {
+    // setLoading(true);
+
+    async function loadAndSetHomePageRows() {
+      // setLoading(true);
+      const subcatArr = userGlobalData?.preferences;
+      // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
+      const activeSubcategories = subcatArr?.filter(
+        (item) => item?.is_active && item?.sub_category
+      );
+      const baseSubcategoryObj = subcatArr?.filter((item) => item?.is_base)[0];
+      // if (baseSubcategoryObj?.sub_category) setBaseSubcategory(baseSubcategoryObj?.sub_category);
+
+      setActiveSubcatArr(activeSubcategories);
+
+      // const userCourseData = await getUserCourseData(28);
+      let ucidArray = [];
+      // userCourseData?.map((uc) => ucidArray?.push(uc.id));
+
+      // setOnGoingCourses(
+      //   userCourseData?.filter(
+      //     (course) =>
+      //       course?.course_type === COURSE_TYPES[0] &&
+      //       course?.isCourseStarted &&
+      //       !course?.isCourseCompleted
+      //   )
+      // );
+      // setMandatoryCourses(
+      //   userCourseData?.filter(
+      //     (course) =>
+      //       course?.course_type === COURSE_TYPES[0] &&
+      //       // (+course?.completedPercentage === 0 || course?.completedPercentage === 100)
+      //       !course?.isCourseStarted &&
+      //       !course?.isCourseCompleted &&
+      //       course?.is_mandatory
+      //   )
+      // );
+
+      const getLatestCourses = await getLatestCoursesByFilters({Type: COURSE_TYPES[3]}, pageSize);
+      setLatestCourses(
+        getLatestCourses?.latestCourses?.courses?.filter(
+          (c) =>
+            c?.is_active &&
+            c?.is_display &&
+            !ucidArray.includes(c.id)
+        ) || []
+      );
+
+      // if (baseSubcategoryObj?.sub_category) {
+      //   let baseSubCatCourses = await getLatestCoursesByFilters(
+      //     { SubCategory: baseSubcategory },
+      //     pageSize
+      //   );
+      //   setBaseSubcategoryCourses(
+      //     baseSubCatCourses?.latestCourses?.courses?.filter(
+      //       (c) =>
+      //         c?.type === COURSE_TYPES[0] &&
+      //         c?.is_active &&
+      //         c?.is_display &&
+      //         !ucidArray.includes(c.id)
+      //     ) || []
+      //   );
+      // } else {
+      //   setBaseSubcategoryCourses([]);
+      // }
+
+      // const parentOfBase = baseSubcategoryObj?.catData?.Name;
+      // if (!!parentOfBase) {
+      //   setParentOfBaseSubcategory(parentOfBase);
+      //   let baseSubCatParentCourses = await getLatestCoursesByFilters(
+      //     { Category: parentOfBase },
+      //     pageSize
+      //   );
+      //   setParentOfBaseSubcategoryCourses(
+      //     baseSubCatParentCourses?.latestCourses?.courses?.filter(
+      //       (c) =>
+      //         c?.type === COURSE_TYPES[0] &&
+      //         c?.is_active &&
+      //         c?.is_display &&
+      //         !ucidArray.includes(c.id)
+      //     ) || []
+      //   );
+      // } else {
+      //   setParentOfBaseSubcategory(null);
+      //   setParentOfBaseSubcategoryCourses([]);
+      // }
+
+      const getLSPCourses = await getLatestCoursesByFilters({ LspId: userOrg?.lsp_id , Type: COURSE_TYPES[3] }, pageSize);
+      setLearningSpaceCourses(
+        getLSPCourses?.latestCourses?.courses?.filter(
+          (c) =>
+            c?.is_active &&
+            c?.is_display &&
+            !ucidArray.includes(c.id)
+        ) || []
+      );
+
+   
+
+      // const subcatArr = userGlobalData?.preferences;
+      // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
+      let prefIndex = 0;
+      const courseData = [];
+      for (let i = 0; i < activeSubcategories?.length; ++i) {
+        if (prefIndex === 5) break;
+
+        const subCategory = activeSubcategories?.[i]?.sub_category;
+        if (!subCategory) continue;
+
+        let subCatCourses = await getLatestCoursesByFilters({ SubCategory: subCategory , Type: COURSE_TYPES[3]}, pageSize);
+        ++prefIndex;
+        courseData.push(
+          subCatCourses?.latestCourses?.courses?.filter(
+            (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+          ) || []
+        );
+      }
+
+      setSubCategory0Courses(courseData?.[0]);
+      setSubCategory1Courses(courseData?.[1]);
+      setSubCategory2Courses(courseData?.[2]);
+      setSubCategory3Courses(courseData?.[3]);
+      setSubCategory4Courses(courseData?.[4]);
+    }
+
+    loadAndSetHomePageRows();
+  }, [userGlobalData?.preferences]);
 
   useEffect(() => {
     // console.log(screen.width);
@@ -78,22 +224,39 @@ export default function LearnerExams() {
     loadUserAttemptsAndResults();
     loadExamData();
   }, []);
+   const courseFromPrefernces = latestCourses?.filter(
+    (c) => !!activeSubcatArr?.find((pref) => pref?.sub_category === c?.sub_category)
+  );
 
   useEffect(() => {
     // console.log(examResults, 'examreso');
     if (!examResults?.length) return;
-    if (!examCourseMapping?.scheduleExam?.length) return;
+    
+    
     //loop to finally add results and course name
     const examFinalResult = [];
 
     for (let i = 0; i < examResults?.length; i++) {
+      if (!examCourseMapping?.scheduleExam?.length) return;
       // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
+      console.log(examCourseMapping);
       for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
         if (examResults[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
           examFinalResult.push({ ...examResults[i], ...examCourseMapping?.scheduleExam[j] });
         }
       }
     }
+    for (let i = 0; i < examResults?.length; i++) {
+      if (!examCourseMapping?.takeAnyTime?.length) return;
+      // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
+      console.log(examCourseMapping);
+      for (let j = 0; j < examCourseMapping?.takeAnyTime?.length; j++) {
+        if (examResults[i]?.exam_id === examCourseMapping?.takeAnyTime[j]?.examId) {
+          examFinalResult.push({ ...examResults[i], ...examCourseMapping?.takeAnyTime[j] });
+        }
+      }
+    }
+    console.log(examFinalResult);
     // console.log(examFinalResult, 'final reult');
     //formating exam result table data
     const examsResult = examFinalResult?.map((exam) => ({
@@ -104,13 +267,65 @@ export default function LearnerExams() {
       examAttempt: exam?.attempt_no,
       examStatus: exam?.attempt_status?.toUpperCase(),
       examScore: exam?.score,
-      totalMarks: parseJson(exam?.result_status)?.totalMarks
+      totalMarks: exam?.total
     }));
-
+ console.log(examsResult);
     if (!examsResult?.length) return;
     setExamResultTableData([...examsResult]);
     return;
-  }, [examResults, examCourseMapping?.scheduleExam]);
+  }, [examResults, examCourseMapping?.scheduleExam , examCourseMapping?.takeAnyTime]);
+
+
+
+   useEffect(() => {
+    // console.log(examResults, 'examreso');
+    if (!onGoingExam?.length) return;
+    
+    
+    //loop to finally add results and course name
+    const examOngoing = [];
+
+    for (let i = 0; i < onGoingExam?.length; i++) {
+      if (!examCourseMapping?.scheduleExam?.length) return;
+      // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
+      console.log(examCourseMapping);
+      for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
+        if (onGoingExam[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
+          examOngoing.push({ ...examResults[i], ...examCourseMapping?.scheduleExam[j] });
+        }
+      }
+    }
+    for (let i = 0; i < onGoingExam?.length; i++) {
+      if (!examCourseMapping?.takeAnyTime?.length) return;
+      // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
+      console.log(examCourseMapping);
+      for (let j = 0; j < examCourseMapping?.takeAnyTime?.length; j++) {
+        if (onGoingExam[i]?.exam_id === examCourseMapping?.takeAnyTime[j]?.examId) {
+          examOngoing.push({ ...examResults[i], ...examCourseMapping?.takeAnyTime[j] });
+        }
+      }
+    }
+    console.log("examOngoing" , examOngoing);
+    // console.log(examFinalResult, 'final reult');
+    //formating exam result table data
+    // const examsResult = examOngoing?.map((exam) => ({
+    //   id: exam?.user_ea_id,
+    //   courseName: exam?.courseName,
+    //   examName: exam?.Name,
+    //   examDate: moment.unix(exam?.created_at).format('DD/MM/YYYY'),
+    //   examAttempt: exam?.attempt_no,
+    //   examStatus: exam?.attempt_status?.toUpperCase(),
+    //   examScore: exam?.score,
+    //   totalMarks: parseJson(exam?.result_status)?.totalMarks
+    // }));
+    if (!examOngoing?.length) return;
+     setOnOgingData([...examOngoing]);
+     console.log(examOngoingData);
+    return;
+  }, [onGoingExam, examCourseMapping?.scheduleExam , examCourseMapping?.takeAnyTime]);
+
+
+
 
 
   useEffect(() => {
@@ -142,16 +357,19 @@ export default function LearnerExams() {
     ]);
   }, [examCourseMapping?.takeAnyTime]);
 
-  async function loadUserAttemptsAndResults() {
-    if (!userGlobalData?.userDetails?.user_lsp_id?.length) return;
-    setIsAttemptsLoaded(false);
-    const { user_lsp_id, id } = userGlobalData?.userDetails;
+  async function loadUserAttemptsAndResults(examId = null) {
+    // if (!userGlobalData?.userDetails?.user_lsp_id?.length) return;
+    // setIsAttemptsLoaded(false);
+     if (!examId) return [];
+    const  id  = userData?.id;
+    console.log(id);
     const resAttempts = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS,
-      { user_id: id, user_lsp_id: user_lsp_id },
+      { user_id: id, exam_id: examId },
       {},
       userQueryClient
     );
+    console.log(resAttempts);
     if (resAttempts?.error)
       return setToastMsg({ type: 'danger', message: 'Error while loading user attempts' });
 
@@ -166,26 +384,37 @@ export default function LearnerExams() {
 
     setExamAttempts([...attempts], setIsAttemptsLoaded(true));
 
-    for (let i = 0; i < attempts?.length; i++) {
-      const results = await loadQueryDataAsync(
-        GET_USER_EXAM_RESULTS,
-        { user_id: id, user_ea_id: attempts[i]?.user_ea_id },
-        {},
-        userQueryClient
-      );
-      // console.log(results, 'results');
-      if (results?.getUserExamResults) {
-        attempts[i] = {
-          ...attempts[i],
-          result_status: results?.getUserExamResults?.result_status,
-          score: results?.getUserExamResults?.user_score
-        };
-      }
-    }
+    const onGoingAttempts = attempts?.filter(
+      (attemp) => attemp?.attempt_status?.toLowerCase() !== 'completed'
+    );
+    
+   setOnGoingExam([...onGoingAttempts])
+   console.log(onGoingAttempts)
+
     const completedAttempts = attempts?.filter(
       (attemp) => attemp?.attempt_status?.toLowerCase() === 'completed'
     );
-    if (completedAttempts?.length) return setExamResults([...attempts]);
+    console.log(completedAttempts)
+    for (let i = 0; i < attempts?.length; i++) {
+      const results = await loadQueryDataAsync(
+        GET_USER_EXAM_RESULTS,
+        {user_ea_details:[{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }]},
+        {},
+        userQueryClient
+      );
+      console.log(results, 'results');
+      if (results?.getUserExamResults) {
+        completedAttempts[i] = {
+          ...attempts[i],
+          result_status: results?.getUserExamResults?.result_status,
+          total:results?.getUserExamResults[0]?.results[0]?.result_status?.totalMarks, 
+          score: results?.getUserExamResults[0]?.results[0]?.user_score
+        };
+      }
+    }
+
+    console.log(completedAttempts);
+    if (completedAttempts?.length) return setExamResults([...completedAttempts]);
   }
 
   async function getTopics(courseId = null) {
@@ -334,6 +563,15 @@ export default function LearnerExams() {
         noAttempts: examInstruction[0]?.NoAttempts
       };
     }
+     for (let i = 0; i < examMetas?.length; i++){
+        const examAttempt = await loadUserAttemptsAndResults(examMetas[i]?.id);
+        // console.log(examAttempt);
+        // if (examAttempt) {
+        //   completedExam = examAttempt;
+          
+        // }
+        if (!examAttempt?.length) continue;
+     }
 
     let scheduleExams = [];
     let takeAnyTimeExams = [];
@@ -444,11 +682,6 @@ export default function LearnerExams() {
       handleClick: () => {
         setShowTable('');
         const y = simpleTableRef.current.offsetTop - 100;
-        // console.log(y);
-        // simpleTableRef?.current?.scrollIntoView({
-        //   top: y,
-        //   behavior: 'smooth'
-        // });
         window?.scrollTo({ top: y, behavior: 'smooth' });
       }
     }
@@ -673,7 +906,7 @@ export default function LearnerExams() {
           height: '75vh',
           overflow: 'hidden'
         }}>
-        <ExamHeroSection />
+        <ExamHeroSection simpleTableRef={simpleTableRef} />
         {/* <div style={{
           display: 'flex',
           padding: '5vh 4vw',
@@ -753,11 +986,109 @@ export default function LearnerExams() {
       </div> */}
         </div>
 
-      <ZicopsCarousel title="Test Packages" data={sliderImages} />
-      <ZicopsCarousel title="Your assessments" data={sliderImages} />
-      <ZicopsCarousel title="Quesiton Banks" data={sliderImages} />
-      <ZicopsCarousel data={sliderImages} />
-      <BigCardSlider title="X-Athons" data={bigImages} slide={realSquare} />
+      {/* <ZicopsCarousel title="Test Packages" data={sliderImages} /> */}
+      {/* <ZicopsCarousel title="Your assessments" data={sliderImages} /> */}
+       {!!examOngoingData?.length && (
+        <ZicopsCarousel
+          title="Continue with your exam"
+          data={examOngoingData}
+          handleTitleClick={() =>
+            router?.push(
+                            `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
+                            `/course/${exam?.courseId}`
+                          )
+          }
+        />
+      )}
+       {!!learningSpaceCourses?.length && (
+        <ZicopsCarousel
+          title="Test Series from your learning space"
+          data={learningSpaceCourses}
+          handleTitleClick={() =>
+            router.push(`/search-page?filter=${JSON.stringify({ LspId: lspId })}`, '/search-page')
+          }
+        />
+      )}
+      {!!latestCourses?.length && (
+        <ZicopsCarousel
+          title="Latest Test Series"
+          data={latestCourses}
+          // handleTitleClick={() => router.push(`/search-page?&isSelfPaced=true`, '/search-page')}
+        />
+      )}
+      {!!subCategory0Courses?.length && (
+        <ZicopsCarousel
+          title={`Courses in ${activeSubcatArr[0]?.sub_category}`}
+          data={subCategory0Courses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[0]?.sub_category)}`,
+              '/search-page'
+            )
+          }
+        />
+      )}
+      {!!subCategory1Courses?.length && (
+        <ZicopsCarousel
+          title={`Courses in ${activeSubcatArr[1]?.sub_category}`}
+          data={subCategory1Courses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[1]?.sub_category)}`,
+              '/search-page'
+            )
+          }
+        />
+      )}
+      {!!subCategory2Courses?.length && (
+        <ZicopsCarousel
+          title={`Courses in ${activeSubcatArr[2]?.sub_category}`}
+          data={subCategory2Courses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[2]?.sub_category)}`,
+              '/search-page'
+            )
+          }
+        />
+      )}
+      {!!subCategory3Courses?.length && (
+        <ZicopsCarousel
+          title={`Courses in ${activeSubcatArr[3]?.sub_category}`}
+          data={subCategory3Courses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[3]?.sub_category)}`,
+              '/search-page'
+            )
+          }
+        />
+      )}
+      {!!subCategory4Courses?.length && (
+        <ZicopsCarousel
+          title={`Courses in ${activeSubcatArr[4]?.sub_category}`}
+          data={subCategory4Courses}
+          handleTitleClick={() =>
+            router.push(
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[4]?.sub_category)}`,
+              '/search-page'
+            )
+          }
+        />
+      )}
+       {!!courseFromPrefernces?.length && (
+        // <ZicopsCarousel title="Latest Courses" data={latestCourses} />
+        <ZicopsCarousel
+          title="Other Test Series"
+          data={courseFromPrefernces}
+          handleTitleClick={() =>
+            router.push(`/search-page?preferredSubCat=true&isSelfPaced=true`, '/search-page')
+          }
+        />
+      )}
+      {/* <ZicopsCarousel title="Quesiton Banks" data={sliderImages} /> */}
+      {/* <ZicopsCarousel data={sliderImages} /> */}
+      {/* <BigCardSlider title="X-Athons" data={bigImages} slide={realSquare} /> */}
       {/* <div ref={simpleTableRef} style={{marginBottom:'20px'}}></div> */}
       <div ref={simpleTableRef}>
         <div className="resultContainer">

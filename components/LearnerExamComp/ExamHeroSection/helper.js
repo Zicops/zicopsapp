@@ -1,14 +1,20 @@
 import { GET_COURSE_TOPICS, GET_EXAM_INSTRUCTION, GET_EXAM_META, GET_EXAM_SCHEDULE, GET_TOPIC_EXAMS, queryClient } from '@/api/Queries';
+import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { UserDataAtom } from '@/state/atoms/global.atom';
 import moment from 'moment';
-import React from 'react'
+import React, { useState } from 'react'
+import { useRecoilState } from 'recoil';
 
 export const useExamData = () => {
-    const { getUserCourseData } = useUserCourseData();
-    
+  const { getUserCourseData } = useUserCourseData();
+  const [userGlobalData , setUserGlobalData] = useRecoilState(UserDataAtom);
+  const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false); 
+  const [examAttempts, setExamAttempts] = useState([]);
+  const [examResults, setExamResults] = useState([]);
   async function getTopics(courseId = null) {
     //return an empty array in case of error
 
@@ -74,6 +80,56 @@ export const useExamData = () => {
     if (!examInstruction?.getExamInstruction?.length) return [];
     return [...examInstruction?.getExamInstruction];
   }
+
+  // async function loadUserAttemptsAndResults(examId = null) {
+  //    console.log(examId);
+  //   if (!examId) return [];
+  //   const { id } = userGlobalData?.userDetails;
+  //   console.log(id);
+  //   const resAttempts = await loadQueryDataAsync(
+  //     GET_USER_EXAM_ATTEMPTS,
+  //     { user_id: id, exam_id: examId },
+  //     {},
+  //     userQueryClient
+  //    );
+  //    console.log(resAttempts?.getUserExamAttempts);
+  //   if (resAttempts?.error)
+  //     return setToastMsg({ type: 'danger', message: 'Error while loading user attempts' });
+
+  //   // if no attempts are there there wont be any results as well
+  //   if (!resAttempts?.getUserExamAttempts?.length)
+  //     return ;
+
+  //   const examAttemptIds = resAttempts?.getUserExamAttempts?.map((attempt) => attempt?.user_ea_id);
+    
+  //   const attempts = resAttempts?.getUserExamAttempts;
+  //   const completedAttempts = attempts?.filter(
+  //     (attemp) => attemp?.attempt_status?.toLowerCase() === 'completed'
+  //   );
+  //   // return;
+  //   console.log(attempts);
+  //   setExamAttempts([...completedAttempts], setIsAttemptsLoaded(true));
+    
+  //   for (let i = 0; i < completedAttempts?.length; i++) {
+  //     const results = await loadQueryDataAsync(
+  //       GET_USER_EXAM_RESULTS,
+  //       {user_ea_details:[{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }]},
+  //       {},
+  //       userQueryClient
+  //     );
+  //     console.log(results?.getUserExamResults, 'results');
+  //       setExamResults(results?.getUserExamResults)
+  //     if (results?.getUserExamResults) {
+  //       attempts[i] = {
+  //         ...attempts[i],
+  //         result_status: results?.getUserExamResults?.result_status,
+  //         score: results?.getUserExamResults?.user_score
+  //       };
+  //     }
+  //   }
+
+  //    return examResults;
+  // }
     async function loadExamData() {
     const topicCourseMap = [];
     const courseData = await getUserCourseData(30);
@@ -147,7 +203,17 @@ export const useExamData = () => {
         noAttempts: examInstruction[0]?.NoAttempts
       };
     }
-
+ // to load exam 
+    //   let completedExam;
+    //   for (let i = 0; i < examMetas?.length; i++){
+    //     const examAttempt = await loadUserAttemptsAndResults(examMetas[i]?.id);
+    //     console.log(examAttempt);
+    //     if (examAttempt) {
+    //       completedExam = examAttempt;
+          
+    //     }
+    //     if (!examAttempt?.length) continue;
+    //  }
     let scheduleExams = [];
     let takeAnyTimeExams = [];
 
@@ -189,12 +255,11 @@ export const useExamData = () => {
         return {
             scheduleExams: scheduleExamData,
             takeAnyTimeExams: takeAnyTimeExams,
-
+            // completedAttempts: completedExam
         }
   }
     return {
-        loadExamData
-
+        loadExamData,
     }
  
 }

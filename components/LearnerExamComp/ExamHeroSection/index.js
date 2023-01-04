@@ -3,11 +3,9 @@ import styles from './examHeroSecion.module.scss';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import ExamPopUp from './ExamPopUp';
-import { useLazyQuery } from '@apollo/client';
-import { GET_LATEST_EXAMS, queryClient } from '@/api/Queries';
 import { useExamData } from "./helper";
 import { useRouter } from 'next/router';
-const ExamHeroSection = () => {
+const ExamHeroSection = ({simpleTableRef}) => {
   const router = useRouter()
   const [isScheduleActive, setIsScheduleActive] = useState(false);
   const [isAnytimeActive, setIsAnytimeActive] = useState(false);
@@ -18,7 +16,7 @@ const ExamHeroSection = () => {
   const [scheduleExamData, setScheduleExamData] = useState([])
   const [antTimeExamData, setAntTimeExamData] = useState([])
   const [completedExamData, setCompletedExamData] = useState([])
-  const {loadExamData} = useExamData()
+  const { loadExamData } = useExamData()
   const onClosePopUpScheduled = () => {
   setModalScheduled(false);
  }
@@ -44,39 +42,16 @@ const ExamHeroSection = () => {
     setIsScheduleActive(false);
     setIsAnytimeActive(false);
     setIsCompletedActive(true);
-    setModalCompleted(true);
+    const y = simpleTableRef.current.offsetTop - 100;
+    window?.scrollTo({ top: y, behavior: 'smooth' });
   };
-  const [loadExams, { error: loadExamErr }] = useLazyQuery(GET_LATEST_EXAMS, {
-    client: queryClient
-  });
-  useEffect(async() => {
-  // const queryVariables = {
-  //     publish_time: Date.now(),
-  //     pageSize: 9999999,
-  //     pageCursor: '',
-  //   };
 
-//     const res = await loadExams({ variables: queryVariables });
-//     if (loadExamErr) return setToastMsg({ type: 'danger', message: 'exams load error' });
-//     if (!res.data?.getLatestExams?.exams) return;
 
-//     const loadedExams = res.data.getLatestExams.exams || [];
-//     console.log("loadedExams", loadedExams);
-//     const scheduleExam = loadedExams?.filter((exam) => exam?.ScheduleType === 'scheduled')
-//     console.log(scheduleExam);
-//     setScheduleExamData(scheduleExam)
-//     const anyTimeExam = loadedExams?.filter((exam) => exam?.ScheduleType === 'anytime')
-//     setAntTimeExamData(anyTimeExam)
-//     const completedExam = loadedExams?.filter((exam) => exam?.ScheduleType === 'completed')
-//     setCompletedExamData(completedExam)
-//  console.log("scheduleExamData",scheduleExamData);
-//  console.log("antTimeExamData",antTimeExamData);
-//  console.log("completedExamData",completedExamData);
-  }, [])
   useEffect(async () => {
     const examData = await loadExamData();
     setScheduleExamData(examData?.scheduleExams)
     setAntTimeExamData(examData?.takeAnyTimeExams)
+    setCompletedExamData(examData?.completedAttempts)
     console.log(examData);
   },[])
   
@@ -131,7 +106,7 @@ const ExamHeroSection = () => {
             }}>
                 <td>{exam?.examName}</td>
                 <td>{exam?.courseName}</td>
-                <td>{exam?.examDate} mins</td>
+                <td>{exam?.examDate}</td>
             </tr>
             ))}
 
@@ -144,9 +119,9 @@ const ExamHeroSection = () => {
           <table className={`${styles.table}`}>
              <thead>
             <tr className={`${styles.tableHeader}`} >
-              <th>Exam Name</th>
-              <th>Course Name</th>
-              <th>Duration</th>
+                <th>Exam Name</th>
+                <th>Course Name</th>
+                <th>Duration</th>
             </tr>
             </thead>
             <tbody>
@@ -159,7 +134,7 @@ const ExamHeroSection = () => {
             }}>
                 <td>{exam?.Name}</td>
                 <td>{exam?.courseName}</td>
-                <td>{exam?.Duration} mins</td>
+                <td>{exam?.Duration/60} mins</td>
             </tr>
             ))}
 
@@ -174,11 +149,16 @@ const ExamHeroSection = () => {
             <thead>
             <tr className={`${styles.tableHeader}`}>
               <th>Exam Name</th>
-              <th>Course Name</th>
-              <th>Duration</th>
+                <th>Course Name</th>
+                <th>Exam Date</th>
+                <th>Attemp</th>
+                <th>Status</th>
+                <th>Score</th>
+                <th>Total Marks</th>
+              
             </tr>
             </thead>
-              {completedExamData?.map((exam , index) => (
+              {completedExamData?.results?.map((exam , index) => (
             <tr key={index}>
                 <td>{exam?.Name}</td>
                 <td>{exam?.Category}</td>
