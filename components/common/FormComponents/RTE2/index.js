@@ -15,7 +15,6 @@ export default function RTE2({
   changeHandler,
   changeImageHandler,
   onAnonymousHandler,
-  onPublicHandler,
   onAnnouncementHandler,
   checkAnonymous,
   checkPublic,
@@ -79,10 +78,10 @@ export default function RTE2({
       {/* <input type="file" onChange={changeImageHandler} /> */}
       <div className={`${styles.rteButtons}`}>
         <div className={`${styles.post_type}`}>
-          <LabeledRadioCheckbox label="Public" type="radio" name="public" isChecked={checkPublic}  changeHandler ={onPublicHandler} />
-          <LabeledRadioCheckbox label="Anonymous" type="radio" name="anonymous" isChecked={checkAnonymous}  changeHandler ={onAnonymousHandler} />
+          {/* <LabeledRadioCheckbox label="Public" type="radio" name="public" isChecked={checkPublic}  changeHandler ={onPublicHandler} /> */}
+          <LabeledRadioCheckbox label="Post this anonymously" type="checkbox" name="anonymous" isChecked={checkAnonymous}  changeHandler ={onAnonymousHandler} />
            <div className={`${styles.button_divider}`}></div>
-          <LabeledRadioCheckbox label="Announcement" type="checkbox" name="announcement" isChecked={checkAnnouncement} changeHandler={onAnnouncementHandler} />
+          <LabeledRadioCheckbox label="Post this as an announcement" type="checkbox" name="announcement" isChecked={checkAnnouncement} changeHandler={onAnnouncementHandler} />
         </div>
         <div className={`${styles.button_type}`}>
         <button className={`${styles.button1}`} onClick={onPostHandler}>Post</button>

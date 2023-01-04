@@ -123,14 +123,14 @@ const Users = ({ isEdit = false, isReadOnly = false }) => {
       body: JSON.stringify(bodyData),
       template_id: EMAIL_TEMPLATE_IDS?.cohortUnassign
     };
-    // await sendNotification(
-    //   {
-    //     title: NOTIFICATION_TITLES?.cohortUnassign,
-    //     body: notificationBody,
-    //     user_id: [userData?.user_id]
-    //   },
-    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    // );
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.cohortUnassign,
+        body: notificationBody,
+        user_id: [userData?.user_id]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
     await sendEmail(sendEmailBody, {
       context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
     });
