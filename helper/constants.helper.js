@@ -57,7 +57,8 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
 
 // Default LSP is staging.zicops.com for demo and staging domains
-export const LEARNING_SPACE_ID = '93f3693c-d111-51aa-86ca-b883c6dfe647';
+export const LEARNING_SPACE_ID = '8ca0d540-aebc-5cb9-b7e0-a2f400b0e0c1';
+// export const LEARNING_SPACE_ID = '93f3693c-d111-51aa-86ca-b883c6dfe647';
 // Default LSP is zicops.com for zicops.com production domains
 // export const LEARNING_SPACE_ID = '98640aaa-a1e8-5584-bc14-2b1bfed7d65a';
 
@@ -86,7 +87,8 @@ export const DEFAULT_VALUES = {
 
 // Default LSP is staging.zicops.com for demo and staging domains
 export const COMMON_LSPS = {
-  zicops: '93f3693c-d111-51aa-86ca-b883c6dfe647'
+  zicops: '8ca0d540-aebc-5cb9-b7e0-a2f400b0e0c1'
+  // zicops: '93f3693c-d111-51aa-86ca-b883c6dfe647'
 };
 
 export const COURSE_STATUS = {
