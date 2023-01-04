@@ -16,13 +16,13 @@ export default function CourseCard({
 
   function handleMouseEnter(e, start = 0, end = 0) {
     if (e.currentTarget.parentNode.dataset.index === start.toString()) {
-      // e.currentTarget.parentNode.style.marginLeft = '60px';
-      // e.currentTarget.parentNode.style.marginRight = '-60px';
+      e.currentTarget.parentNode.style.marginLeft = '15px';
+      e.currentTarget.parentNode.style.marginRight = '-15px';
     }
 
     if (e.currentTarget.parentNode.dataset.index === end.toString()) {
-      // e.currentTarget.parentNode.style.marginLeft = '-60px';
-      // e.currentTarget.parentNode.style.marginRight = '60px';
+      e.currentTarget.parentNode.style.marginLeft = '-15px';
+      e.currentTarget.parentNode.style.marginRight = '15px';
     }
   }
 
@@ -80,7 +80,7 @@ export default function CourseCard({
               <div className={`${styles.durlang}`}>
                 <div className={`${styles.lang}`}>English</div>
                 <div className={`${styles.dur}`}>
-                  Duration: {courseData?.duration + 's' || '1hr 40 mins'}
+                  Duration: {courseData?.duration ? courseData?.duration  + 's' : '1hr 40 mins'}
                 </div>
               </div>
             </div>
@@ -88,7 +88,7 @@ export default function CourseCard({
               {courseData?.name || 'Free! UX/UI Course: Basics of design & fundamentals.'}
             </div>
             <div className={`${styles.thirdRow}`}>
-              <div className={`${styles.pill}`}>{courseData?.expertise_level || 'Beginner'}</div>
+              <div className={`${styles.pill}`}>{courseData?.expertise_level?.split(',')?.join(', ') || 'Beginner'}</div>
             </div>
             <div className={`${styles.lastRow}`}>
               {courseData?.category ||

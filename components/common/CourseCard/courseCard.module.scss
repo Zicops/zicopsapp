@@ -7,8 +7,8 @@
         background-color: rgba(16, 16, 18, 0.9);
         .banner {
             position: absolute;
-            top: 5%;
-            right: 5%;
+            top: 3%;
+            right: 3%;
             color: #EAEAEA;
             background-color: rgba(16, 16, 18, 0.9);
             padding: 5px 10px;
@@ -24,12 +24,11 @@
 
     .smallCardContent {
         display: none;
-        overflow: hidden;
         padding: 10px;
-
         background-color: #242630;
         font-family: 'Poppins';
 
+        // height: 200px;
         .firstRow {
             display: flex;
 
@@ -61,6 +60,7 @@
         .secondRow {
             color: #EAEAEA;
             padding: 10px 0;
+            font-size: 14px;
             font-weight: 400;
         }
 
@@ -95,6 +95,7 @@
 
     &:hover{
         margin-top: -25%;
+        margin-bottom: 26.5%;
         .smallCardContent {
             display: block;
             position: absolute;
