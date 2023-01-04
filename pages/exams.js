@@ -229,7 +229,7 @@ export default function LearnerExams() {
   );
 
   useEffect(() => {
-    // console.log(examResults, 'examreso');
+    console.log(examResults, 'examreso');
     if (!examResults?.length) return;
     
     
@@ -308,18 +308,19 @@ export default function LearnerExams() {
     console.log("examOngoing" , examOngoing);
     // console.log(examFinalResult, 'final reult');
     //formating exam result table data
-    // const examsResult = examOngoing?.map((exam) => ({
-    //   id: exam?.user_ea_id,
-    //   courseName: exam?.courseName,
-    //   examName: exam?.Name,
-    //   examDate: moment.unix(exam?.created_at).format('DD/MM/YYYY'),
-    //   examAttempt: exam?.attempt_no,
-    //   examStatus: exam?.attempt_status?.toUpperCase(),
-    //   examScore: exam?.score,
-    //   totalMarks: parseJson(exam?.result_status)?.totalMarks
-    // }));
-    if (!examOngoing?.length) return;
-     setOnOgingData([...examOngoing]);
+    const examsResult = examOngoing?.map((exam) => ({
+      id: exam?.id,
+      name: exam?.courseName,
+      description: exam?.Description,
+      category: exam?.Category,
+      sub_category: exam?.SubCategory,
+      type: exam?.Type,
+      duration: exam?.Duration
+
+    }));
+     
+    if (!examsResult?.length) return;
+     setOnOgingData(examsResult);
      console.log(examOngoingData);
     return;
   }, [onGoingExam, examCourseMapping?.scheduleExam , examCourseMapping?.takeAnyTime]);
@@ -402,12 +403,12 @@ export default function LearnerExams() {
         {},
         userQueryClient
       );
-      console.log(results, 'results');
       if (results?.getUserExamResults) {
+        console.log(JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status).totalMarks, 'results');
         completedAttempts[i] = {
           ...attempts[i],
           result_status: results?.getUserExamResults?.result_status,
-          total:results?.getUserExamResults[0]?.results[0]?.result_status?.totalMarks, 
+          total:JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status).totalMarks, 
           score: results?.getUserExamResults[0]?.results[0]?.user_score
         };
       }
@@ -992,12 +993,7 @@ export default function LearnerExams() {
         <ZicopsCarousel
           title="Continue with your exam"
           data={examOngoingData}
-          handleTitleClick={() =>
-            router?.push(
-                            `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
-                            `/course/${exam?.courseId}`
-                          )
-          }
+
         />
       )}
        {!!learningSpaceCourses?.length && (
