@@ -112,7 +112,8 @@ export const NOTIFICATION_TITLES = {
   cohortAssign: 'Cohort-Mapped',
   cohortUnassign: 'Cohort-Unmapped',
   courseAssign: 'Course-Assigned',
-  courseUnssigned: 'Course-Unassigned'
+  courseUnssigned: 'Course-Unassigned',
+  lspWelcome: 'Welcome-Lsp'
 };
 
 export const COURSE_SELF_ASSIGN_LIMIT = 30;

@@ -62,6 +62,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       setLoading(false);
       return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
     }
+    setData(sortArrByKeyInOrder([..._usersData], 'created_at', false),setLoading(false));
     for (let i = 0; i < _usersData.length; i++) {
       const user = _usersData[i];
       const res = await loadQueryDataAsync(
@@ -97,7 +98,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
     } else {
       users = [...usersData];
     }
-    setLoading(false);
+    // setLoading(false);
     setData(sortArrByKeyInOrder([...users], 'created_at', false));
     return;
   }, []);
