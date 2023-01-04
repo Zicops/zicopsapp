@@ -19,7 +19,12 @@ import Accordian from '../../../components/UserProfile/Accordian';
 // import AssignedCourses from '../../AssignedCourses';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { getNotificationMsg } from '@/helper/common.helper';
-import { COURSE_STATUS, EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import {
+  COMMON_LSPS,
+  COURSE_STATUS,
+  EMAIL_TEMPLATE_IDS,
+  NOTIFICATION_TITLES
+} from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -366,20 +371,40 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   useEffect(async () => {
     const currentTime = new Date().getTime();
-    const _lspId = sessionStorage?.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
+    const currentLspId = sessionStorage?.getItem('lsp_id');
 
     const sendData = {
       publish_time: Math.floor(currentTime / 1000),
       pageCursor: '',
       pageSize: 100,
       status: COURSE_STATUS.publish,
-      filters: { LspId: _lspId }
+      filters: { LspId: currentLspId }
     };
-    const res = await loadLastestCourseData({ variables: sendData }).catch((err) => {
+    const currentLspCourseRes = await loadLastestCourseData({ variables: sendData }).catch(
+      (err) => {
+        console.log(err);
+        return setToastMsg({ type: 'danger', message: `${err}` });
+      }
+    );
+
+    sendData.filters.LspId = zicopsLspId;
+    const zicopsLspCourseRes = await loadLastestCourseData({ variables: sendData }).catch((err) => {
       console.log(err);
       return setToastMsg({ type: 'danger', message: `${err}` });
     });
-    const courseData = res?.data?.latestCourses?.courses?.filter((c) => c?.is_active) || [];
+    // const courseData = res?.data?.latestCourses?.courses?.filter((c) => c?.is_active) || [];
+    const courseData = [];
+    if (currentLspCourseRes?.data?.latestCourses?.courses?.length) {
+      courseData.push(
+        ...currentLspCourseRes?.data?.latestCourses?.courses?.filter((c) => c?.is_active)
+      );
+    }
+    if (zicopsLspCourseRes?.data?.latestCourses?.courses?.length) {
+      courseData.push(
+        ...zicopsLspCourseRes?.data?.latestCourses?.courses?.filter((c) => c?.is_active)
+      );
+    }
 
     setDataCourse([...courseData]);
     // console.log(dataCourse);
@@ -416,7 +441,6 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       ?.filter((c) => c?.name)
       ?.filter((course) => course?.added_by !== 'self');
 
-    console.log(userCourses);
     setCurrentCourses(userCourses);
     setAssignedCourses(adminAdded);
     setCourseLoading(true);
