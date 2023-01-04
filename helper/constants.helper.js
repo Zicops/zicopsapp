@@ -109,10 +109,10 @@ export const COURSE_TOPIC_STATUS = {
 export const PRODUCT_TOUR_PATHS = ['exams'];
 
 export const NOTIFICATION_TITLES = {
-  cohortAssign: 'New Cohort Mapped',
-  cohortUnassign: 'Cohort Unmapped',
-  courseAssign: 'New Course Assigned',
-  courseUnssigned: 'Course Unassigned'
+  cohortAssign: 'Cohort-Mapped',
+  cohortUnassign: 'Cohort-Unmapped',
+  courseAssign: 'Course-Assigned',
+  courseUnssigned: 'Course-Unassigned'
 };
 
 export const COURSE_SELF_ASSIGN_LIMIT = 30;

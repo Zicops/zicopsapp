@@ -44,8 +44,9 @@ export const GET_ALL_NOTIFICATIONS = gql`
         body
         created_at
         user_id
-        is_read
         message_id
+        is_read
+        link
       }
       nextPageSnapShot
     }
@@ -55,6 +56,14 @@ export const GET_ALL_NOTIFICATIONS = gql`
 export const SEND_NOTIFICATIONS = gql`
   mutation sendNotification($title: String!, $body: String!, $user_id: [String]!) {
     sendNotification(notification: { title: $title, body: $body, user_id: $user_id }) {
+      statuscode
+    }
+  }
+`;
+
+export const SEND_NOTIFICATIONS_WITH_LINK = gql`
+  mutation sendNotificationWithLink($title: String!, $body: String!, $user_id: [String]! , $link:String!) {
+    sendNotificationWithLink(notification: { title: $title, body: $body, user_id: $user_id } ,link:$link) {
       statuscode
     }
   }

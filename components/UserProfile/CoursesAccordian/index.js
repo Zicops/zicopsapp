@@ -7,7 +7,12 @@ import InputDatePicker from '@/components/common/InputDatePicker';
 import PopUp from '@/components/common/PopUp';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
-import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
+import {
+  loadQueryDataAsync,
+  sendEmail,
+  sendNotification,
+  sendNotificationWithLink
+} from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getMinCourseAssignDate, getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -31,7 +36,14 @@ import { getNotificationMsg } from '@/helper/common.helper';
 import { Email } from '@mui/icons-material';
 
 const CoursesAccordian = ({ currentUserData = null }) => {
-  const minDate = getMinCourseAssignDate();
+  // const minDate = getMinCourseAssignDate(userCourseData?.duration);
+
+  const origin = typeof window !== 'undefined' && window.location.origin
+            ? window.location.origin
+            : '';
+
+  const [userCourseData, setUserCourseData] = useState(null);
+  const [minDate, setMinDate] = useState(getMinCourseAssignDate(userCourseData?.duration));
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: minDate,
     isMandatory: false,
@@ -55,7 +67,6 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   const fcmToken = useRecoilValue(FcmTokenAtom);
   const [assignedCourses, setAssignedCourses] = useState([]);
   const [currentCourses, setCurrentCourses] = useState([]);
-  const [userCourseData, setUserCourseData] = useState(null);
   const [dataCourse, setDataCourse] = useState([]);
   const [selected, setSelected] = useState(3);
   const [selectedPage, setSelectedPage] = useState('');
@@ -70,6 +81,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   async function handleAssign(item, isRemove = false) {
     // const { user_lsp_id } = JSON.parse(sessionStorage.getItem('lspData'));
     setUserCourseData({ ...item });
+    const assignDate = getMinCourseAssignDate(item?.duration);
+    setMinDate(assignDate);
 
     if (!isRemove) return setIsAssignPopUpOpen(true);
 
@@ -88,14 +101,14 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       courseName: userCourseData?.name
     });
 
-    // await sendNotification(
-    //   {
-    //     title: NOTIFICATION_TITLES?.courseUnssigned,
-    //     body: notificationBody,
-    //     user_id: [currentUserId]
-    //   },
-    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    // );
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.courseUnssigned,
+        body: notificationBody,
+        user_id: [currentUserId]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
     // console.log(userCourseData,'sd')
 
     const userName = currentUserData?.is_verified ? `${currentUserData?.first_name}` : '';
@@ -139,7 +152,8 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       user_name: userName,
       lsp_name: sessionStorage?.getItem('lsp_name'),
       course_name: userCourseData?.name,
-      end_date: moment(endDate).format('D MMM YYYY')
+      end_date: moment(endDate).format('D MMM YYYY'),
+      link: `${origin}/self-landing`
     };
     const sendMailData = {
       to: [currentUserData?.email],
@@ -148,9 +162,9 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       body: JSON.stringify(bodyData),
       template_id: courseAssignData?.isMandatory
         ? EMAIL_TEMPLATE_IDS?.courseAssignMandatory
-        : EMAIL_TEMPLATE_IDS?.courseAssignNotMandatory
+        : EMAIL_TEMPLATE_IDS?.courseAssignNotMandatory,
     };
-    
+
     const checkCourse = await updateCourse(userCourseData, currentUserId, 'admin', id);
     // console.log(checkCourse,'hi')
     if (checkCourse) {
@@ -173,10 +187,19 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       //   },
       //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       //   );
-        await sendEmail(sendMailData, {
-          context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
-        });
-        setLoading(false);
+        await sendNotificationWithLink(
+        {
+          title: NOTIFICATION_TITLES?.courseAssign,
+          body: notificationBody,
+          user_id: [currentUserId],
+          link: `/course/${userCourseData?.id}`
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+        );
+      await sendEmail(sendMailData, {
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+      });
+      setLoading(false);
       return setIsAssignPopUpOpen(false);
     }
 
@@ -217,6 +240,17 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     //   },
     //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     // );
+
+    await sendNotificationWithLink(
+      {
+        title: NOTIFICATION_TITLES?.courseAssign,
+        body: notificationBody,
+        user_id: [currentUserId],
+        link: `/course/${userCourseData?.id}`
+        // link:`https://staging.zicops.com/course/${userCourseData?.id}`
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
     await sendEmail(sendMailData, {
       context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
     });
