@@ -60,7 +60,7 @@ export async function getCohortCourses(cohortId = null) {
   );
   sendData.filters.LspId = zicopsLspId;
   const zicopsLspCourseRes =
-    zicopsLspId !== _lspId
+    zicopsLspId !== currentLspId
       ? await loadQueryDataAsync(GET_LATEST_COURSES, { ...sendData }, {}, queryClient)
       : {};
   // const res = await loadLastestCourseData({ variables: sendData }).catch((err) => {
