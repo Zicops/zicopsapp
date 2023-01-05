@@ -1,7 +1,7 @@
-import ClassRoomBanner from '@/components/ClassRoomBanner';
-import { classroomData } from '@/components/ClassRoomBanner/classRoomBanner.helper';
 import HeroSliderContainer from '@/components/HeroSliderContainer';
 import SearchSubCat from '@/components/Search/SearchSubCat';
+import SelfPageBanner from '@/components/SelfPageBanner';
+import { selfPageData } from '@/components/SelfPageBanner/selfPageBanner.helper';
 import { COURSE_TYPES } from '@/helper/constants.helper';
 import { getLatestCoursesByFilters } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
@@ -222,8 +222,8 @@ export default function Self() {
       )}
 
       <HeroSliderContainer>
-        {classroomData.map((item) => (
-          <ClassRoomBanner data={item} />
+        {selfPageData.map((item) => (
+          <SelfPageBanner data={item} />
         ))}
       </HeroSliderContainer>
       {/* <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
