@@ -259,7 +259,16 @@ export default function LearnerExams() {
     console.log(examFinalResult);
     // console.log(examFinalResult, 'final reult');
     //formating exam result table data
-    const examsResult = examFinalResult?.map((exam) => ({
+    const uniqueArray = examFinalResult.reduce((acc, curr) => {
+  if (!acc[curr.user_ea_id]) {
+    acc[curr.user_ea_id] = curr;
+  }
+  return acc;
+}, {});
+
+const uniqueResult = Object.values(uniqueArray);
+
+    const examsResult = uniqueResult?.map((exam) => ({
       id: exam?.user_ea_id,
       courseName: exam?.courseName,
       examName: exam?.Name,
@@ -269,7 +278,7 @@ export default function LearnerExams() {
       examScore: exam?.score,
       totalMarks: exam?.total
     }));
- console.log(examsResult);
+    console.log(examsResult);
     if (!examsResult?.length) return;
     setExamResultTableData([...examsResult]);
     return;
@@ -308,7 +317,15 @@ export default function LearnerExams() {
     console.log("examOngoing" , examOngoing);
     // console.log(examFinalResult, 'final reult');
     //formating exam result table data
-    const examsResult = examOngoing?.map((exam) => ({
+         const uniqueArray = examOngoing.reduce((acc, curr) => {
+  if (!acc[curr.user_ea_id]) {
+    acc[curr.user_ea_id] = curr;
+  }
+  return acc;
+}, {});
+
+const uniqueResult = Object.values(uniqueArray);
+    const examsResult = uniqueResult?.map((exam) => ({
       examId: exam?.id,
       courseId: exam?.courseId,
       name: exam?.courseName,
@@ -585,7 +602,7 @@ export default function LearnerExams() {
       setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
 
     const onGoingAttempts = allAttempts?.filter(
-      (attemp) => attemp?.attempt_status?.toLowerCase() !== 'completed'
+      (attemp) => attemp?.attempt_status?.toLowerCase() === 'started'
     );
     
    setOnGoingExam([...onGoingAttempts])
@@ -618,13 +635,23 @@ export default function LearnerExams() {
                  total:JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status).totalMarks, 
                  score: results?.getUserExamResults[0]?.results[0]?.user_score})
         }
-        })
-        }
+      })
+    }
+  
+   
         console.log("newCompleteAttempts", newCompleteAttempts)
     }
+    const UniqueCompleteAttempts = newCompleteAttempts.reduce((acc, curr) => {
+  if (!acc[curr.user_ea_id]) {
+    acc[curr.user_ea_id] = curr;
+  }
+  return acc;
+}, {});
 
+    const uniquAttemps = Object.values(UniqueCompleteAttempts);
+     console.log("uniquAttemps", uniquAttemps)
     if (newCompleteAttempts?.length) {
-       setExamResults([...newCompleteAttempts]);
+       setExamResults([...uniquAttemps]);
      } 
 
     let scheduleExams = [];
