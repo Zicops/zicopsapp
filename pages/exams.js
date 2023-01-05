@@ -229,9 +229,9 @@ export default function LearnerExams() {
   );
 
   useEffect(() => {
-    console.log(examResults, 'examreso');
+    console.log(examResults, 'examresult');
     if (!examResults?.length) return;
-    
+    console.log(examCourseMapping);
     
     //loop to finally add results and course name
     const examFinalResult = [];
@@ -239,7 +239,7 @@ export default function LearnerExams() {
     for (let i = 0; i < examResults?.length; i++) {
       if (!examCourseMapping?.scheduleExam?.length) return;
       // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
-      console.log(examCourseMapping);
+      
       for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
         if (examResults[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
           examFinalResult.push({ ...examResults[i], ...examCourseMapping?.scheduleExam[j] });
@@ -278,7 +278,7 @@ export default function LearnerExams() {
 
 
    useEffect(() => {
-    // console.log(examResults, 'examreso');
+    console.log(onGoingExam, 'examreso');
     if (!onGoingExam?.length) return;
     
     
@@ -291,7 +291,7 @@ export default function LearnerExams() {
       console.log(examCourseMapping);
       for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
         if (onGoingExam[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
-          examOngoing.push({ ...examResults[i], ...examCourseMapping?.scheduleExam[j] });
+          examOngoing.push({ ...onGoingExam[i], ...examCourseMapping?.scheduleExam[j] });
         }
       }
     }
@@ -301,7 +301,7 @@ export default function LearnerExams() {
       console.log(examCourseMapping);
       for (let j = 0; j < examCourseMapping?.takeAnyTime?.length; j++) {
         if (onGoingExam[i]?.exam_id === examCourseMapping?.takeAnyTime[j]?.examId) {
-          examOngoing.push({ ...examResults[i], ...examCourseMapping?.takeAnyTime[j] });
+          examOngoing.push({ ...onGoingExam[i], ...examCourseMapping?.takeAnyTime[j] });
         }
       }
     }
@@ -309,14 +309,14 @@ export default function LearnerExams() {
     // console.log(examFinalResult, 'final reult');
     //formating exam result table data
     const examsResult = examOngoing?.map((exam) => ({
-      id: exam?.id,
+      examId: exam?.id,
+      courseId: exam?.courseId,
       name: exam?.courseName,
       description: exam?.Description,
       category: exam?.Category,
       sub_category: exam?.SubCategory,
       type: exam?.Type,
       duration: exam?.Duration
-
     }));
      
     if (!examsResult?.length) return;
@@ -383,39 +383,48 @@ export default function LearnerExams() {
     const attempts = resAttempts?.getUserExamAttempts;
     // return;
 
-    setExamAttempts([...attempts], setIsAttemptsLoaded(true));
+  //   setExamAttempts([...attempts], setIsAttemptsLoaded(true));
 
-    const onGoingAttempts = attempts?.filter(
-      (attemp) => attemp?.attempt_status?.toLowerCase() !== 'completed'
-    );
+  //   const onGoingAttempts = attempts?.filter(
+  //     (attemp) => attemp?.attempt_status?.toLowerCase() !== 'completed'
+  //   );
     
-   setOnGoingExam([...onGoingAttempts])
-   console.log(onGoingAttempts)
+  //  setOnGoingExam([...onGoingAttempts])
+  //  console.log("onGoingAttempts",onGoingAttempts )
+  //  console.log("attempts", attempts)
+  //   const completedAttempts = attempts?.filter(
+  //     (attemp) => {
+  //       console.log(attemp?.attempt_status?.toLowerCase(), attemp?.attempt_status?.toLowerCase() === 'completed');
+  //       return attemp?.attempt_status?.toLowerCase() === 'completed'
+  //     }
+  //   );
+  //   console.log("completedAttempts", completedAttempts)
+  //   let newCompleteAttempts;
+  //   for (let i = 0; i < attempts?.length; i++) {
+  //     const results = await loadQueryDataAsync(
+  //       GET_USER_EXAM_RESULTS,
+  //       {user_ea_details:[{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }]},
+  //       {},
+  //       userQueryClient
+  //     );
+  //     if (results?.getUserExamResults) {
+  //       console.log(JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status).totalMarks, 'results');
+  //       newCompleteAttempts = completedAttempts?.map((r) => {
+  //         return (
+  //           {
+  //             ...r,
+  //              total:JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status).totalMarks, 
+  //              score: results?.getUserExamResults[0]?.results[0]?.user_score
+  //           }
+  //         ) 
+  //       })
+  //       }
+  //       console.log("newCompleteAttempts", newCompleteAttempts)
+  //   }
 
-    const completedAttempts = attempts?.filter(
-      (attemp) => attemp?.attempt_status?.toLowerCase() === 'completed'
-    );
-    console.log(completedAttempts)
-    for (let i = 0; i < attempts?.length; i++) {
-      const results = await loadQueryDataAsync(
-        GET_USER_EXAM_RESULTS,
-        {user_ea_details:[{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }]},
-        {},
-        userQueryClient
-      );
-      if (results?.getUserExamResults) {
-        console.log(JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status).totalMarks, 'results');
-        completedAttempts[i] = {
-          ...attempts[i],
-          result_status: results?.getUserExamResults?.result_status,
-          total:JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status).totalMarks, 
-          score: results?.getUserExamResults[0]?.results[0]?.user_score
-        };
-      }
-    }
 
-    console.log(completedAttempts);
-    if (completedAttempts?.length) return setExamResults([...completedAttempts]);
+    // if (newCompleteAttempts?.length) return setExamResults([...newCompleteAttempts]);
+    return  resAttempts?.getUserExamAttempts;
   }
 
   async function getTopics(courseId = null) {
@@ -564,15 +573,59 @@ export default function LearnerExams() {
         noAttempts: examInstruction[0]?.NoAttempts
       };
     }
+    const allAttempts = [];
      for (let i = 0; i < examMetas?.length; i++){
-        const examAttempt = await loadUserAttemptsAndResults(examMetas[i]?.id);
-        // console.log(examAttempt);
-        // if (examAttempt) {
-        //   completedExam = examAttempt;
-          
-        // }
-        if (!examAttempt?.length) continue;
+       const examAttempt = await loadUserAttemptsAndResults(examMetas[i]?.id);
+       console.log("examAttempt", examAttempt);
+       if (!examAttempt?.length) continue;
+       allAttempts.push(...examAttempt)
+        console.log("allAttempts",allAttempts );
      }
+     
+      setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
+
+    const onGoingAttempts = allAttempts?.filter(
+      (attemp) => attemp?.attempt_status?.toLowerCase() !== 'completed'
+    );
+    
+   setOnGoingExam([...onGoingAttempts])
+   console.log("onGoingAttempts",onGoingAttempts )
+    const completedAttempts = allAttempts?.filter(
+      (attemp) => {
+        console.log(attemp?.attempt_status?.toLowerCase(), attemp?.attempt_status?.toLowerCase() === 'completed');
+        return attemp?.attempt_status?.toLowerCase() === 'completed'
+      }
+    );
+    console.log("completedAttempts", completedAttempts)
+    let newCompleteAttempts = [];
+     const  id  = userData?.id;
+    for (let i = 0; i < allAttempts?.length; i++) {
+      const results = await loadQueryDataAsync(
+        GET_USER_EXAM_RESULTS,
+        {user_ea_details:[{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }]},
+        {},
+        userQueryClient
+      );
+      if (results?.getUserExamResults) {
+        console.log("results?.getUserExamResults", results?.getUserExamResults);
+        console.log("completedAttempts", completedAttempts)
+       completedAttempts?.map((r) => {
+
+          if (results?.getUserExamResults[0]?.user_ea_id === r?.user_ea_id) {
+          
+            console.log("index", results?.getUserExamResults[0]?.results[0]?.user_score);
+            newCompleteAttempts.push({...r,
+                 total:JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status).totalMarks, 
+                 score: results?.getUserExamResults[0]?.results[0]?.user_score})
+        }
+        })
+        }
+        console.log("newCompleteAttempts", newCompleteAttempts)
+    }
+
+    if (newCompleteAttempts?.length) {
+       setExamResults([...newCompleteAttempts]);
+     } 
 
     let scheduleExams = [];
     let takeAnyTimeExams = [];
@@ -587,6 +640,7 @@ export default function LearnerExams() {
       takeAnyTimeExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
       return;
     });
+    
     // scheduleExam:[],takeAnyTime:[]
     setExamCourseMapping({ scheduleExam: [...scheduleExams], takeAnyTime: [...takeAnyTimeExams] });
 
@@ -1014,7 +1068,7 @@ export default function LearnerExams() {
       )}
       {!!subCategory0Courses?.length && (
         <ZicopsCarousel
-          title={`Courses in ${activeSubcatArr[0]?.sub_category}`}
+          title={`Test Series ${activeSubcatArr[0]?.sub_category}`}
           data={subCategory0Courses}
           handleTitleClick={() =>
             router.push(
@@ -1026,7 +1080,7 @@ export default function LearnerExams() {
       )}
       {!!subCategory1Courses?.length && (
         <ZicopsCarousel
-          title={`Courses in ${activeSubcatArr[1]?.sub_category}`}
+          title={`Test Series ${activeSubcatArr[1]?.sub_category}`}
           data={subCategory1Courses}
           handleTitleClick={() =>
             router.push(
@@ -1038,7 +1092,7 @@ export default function LearnerExams() {
       )}
       {!!subCategory2Courses?.length && (
         <ZicopsCarousel
-          title={`Courses in ${activeSubcatArr[2]?.sub_category}`}
+          title={`Test Series ${activeSubcatArr[2]?.sub_category}`}
           data={subCategory2Courses}
           handleTitleClick={() =>
             router.push(
@@ -1050,7 +1104,7 @@ export default function LearnerExams() {
       )}
       {!!subCategory3Courses?.length && (
         <ZicopsCarousel
-          title={`Courses in ${activeSubcatArr[3]?.sub_category}`}
+          title={`Test Series ${activeSubcatArr[3]?.sub_category}`}
           data={subCategory3Courses}
           handleTitleClick={() =>
             router.push(
@@ -1062,7 +1116,7 @@ export default function LearnerExams() {
       )}
       {!!subCategory4Courses?.length && (
         <ZicopsCarousel
-          title={`Courses in ${activeSubcatArr[4]?.sub_category}`}
+          title={`Test Series ${activeSubcatArr[4]?.sub_category}`}
           data={subCategory4Courses}
           handleTitleClick={() =>
             router.push(

@@ -15,6 +15,7 @@ export const useExamData = () => {
   const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false); 
   const [examAttempts, setExamAttempts] = useState([]);
   const [examResults, setExamResults] = useState([]);
+   const [loading, setLoading] = useState(false);
   async function getTopics(courseId = null) {
     //return an empty array in case of error
 
@@ -133,7 +134,7 @@ export const useExamData = () => {
     async function loadExamData() {
     const topicCourseMap = [];
     const courseData = await getUserCourseData(30);
-    if (!courseData?.length) return [];
+    if (!courseData?.length) return setLoading(false);
     //filtering course data if id doesnt exist
     const _courseData = courseData?.filter((course) => !!course?.id);
     // let courseId = []

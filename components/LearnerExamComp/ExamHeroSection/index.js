@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './examHeroSecion.module.scss';
 import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
 import ExamPopUp from './ExamPopUp';
 import { useExamData } from "./helper";
 import { useRouter } from 'next/router';
@@ -12,10 +11,11 @@ const ExamHeroSection = ({simpleTableRef}) => {
   const [isCompletedActive, setIsCompletedActive] = useState(false);
   const [openModalScheduled, setModalScheduled] = useState(false);
   const [openModalAnyTime, setModalAnyTime] = useState(false);
-  const [openModalCompleted, setModalCompleted] = useState(false);
+  // const [openModalCompleted, setModalCompleted] = useState(false);
   const [scheduleExamData, setScheduleExamData] = useState([])
   const [antTimeExamData, setAntTimeExamData] = useState([])
-  const [completedExamData, setCompletedExamData] = useState([])
+  // const [completedExamData, setCompletedExamData] = useState([])
+ const [loading, setLoading] = useState(false);
   const { loadExamData } = useExamData()
   const onClosePopUpScheduled = () => {
   setModalScheduled(false);
@@ -23,9 +23,9 @@ const ExamHeroSection = ({simpleTableRef}) => {
   const onClosePopUpAnyTime = () => {
    setModalAnyTime(false);
  }
-  const onClosePopUpCompleted = () => {
-   setModalCompleted(false);
- }
+//   const onClosePopUpCompleted = () => {
+//    setModalCompleted(false);
+//  }
   const onScheduledHandler = () => {
     setIsScheduleActive(true);
     setIsAnytimeActive(false);
@@ -48,10 +48,10 @@ const ExamHeroSection = ({simpleTableRef}) => {
 
 
   useEffect(async () => {
+    setLoading(true)
     const examData = await loadExamData();
     setScheduleExamData(examData?.scheduleExams)
     setAntTimeExamData(examData?.takeAnyTimeExams)
-    setCompletedExamData(examData?.completedAttempts)
     console.log(examData);
   },[])
   
@@ -143,7 +143,7 @@ const ExamHeroSection = ({simpleTableRef}) => {
           </table>
         </ExamPopUp>
       </Popup>
-      <Popup open={openModalCompleted} closeOnDocumentClick={false} closeOnEscape={false}>
+      {/* <Popup open={openModalCompleted} closeOnDocumentClick={false} closeOnEscape={false}>
         <ExamPopUp title="Completed Exams" closePopUp={onClosePopUpCompleted}>
           <table className={`${styles.table}`}>
             <thead>
@@ -167,7 +167,7 @@ const ExamHeroSection = ({simpleTableRef}) => {
             ))}
           </table>
         </ExamPopUp>
-      </Popup>
+      </Popup> */}
     </div>
   );
 };
