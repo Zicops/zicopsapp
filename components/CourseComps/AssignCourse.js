@@ -18,7 +18,9 @@ export default function AssignCourse({
   courseId = null,
   courseType = null,
   popUpProps = {},
-  onCourseAssign = () => {}
+  onCourseAssign = () => {},
+  courseName = null,
+  userDetails = {}
 }) {
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
@@ -29,7 +31,9 @@ export default function AssignCourse({
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     onCourseAssign,
-    suggestedCompletionDays
+    suggestedCompletionDays,
+    courseName,
+    ...userDetails
   };
 
   const { courseAssignData, setCourseAssignData, assignCourseToUser, isSaveDisabled } =

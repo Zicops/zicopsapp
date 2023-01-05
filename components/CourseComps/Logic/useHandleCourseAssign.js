@@ -9,12 +9,21 @@ import {
 } from '@/api/UserMutations';
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
-import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import {
+  loadAndCacheDataAsync,
+  loadQueryDataAsync,
+  sendEmail,
+  sendNotificationWithLink
+} from '@/helper/api.helper';
+import { getNotificationMsg } from '@/helper/common.helper';
+import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { useMutation } from '@apollo/client';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getCourseAssignDataObj, getMinCourseAssignDate } from './courseComps.helper';
@@ -25,7 +34,12 @@ export default function useHandleCourseAssign({
   suggestedCompletionDays = 1,
   setIsAssignPopUpOpen = () => {},
   assignBy = 'self',
-  onCourseAssign = () => {}
+  onCourseAssign = () => {},
+  userId = null,
+  userLspId = null,
+  userName = null,
+  userEmail = null,
+  courseName = null
 }) {
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
@@ -37,8 +51,12 @@ export default function useHandleCourseAssign({
 
   const userData = useRecoilValue(UserStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   const endDate = getMinCourseAssignDate(suggestedCompletionDays);
+
+  const currentUserId = userData?.id;
+  const userIdForCourseAssign = userId || currentUserId;
 
   const [isSaveDisabled, setisSaveDisabled] = useState(false);
   const [courseAssignData, setCourseAssignData] = useState(
@@ -56,11 +74,11 @@ export default function useHandleCourseAssign({
   }
 
   async function assignCourseToUser() {
-    const userLspId = userOrgData?.user_lsp_id || sessionStorage?.getItem('user_lsp_id');
+    const _userLspId =
+      userLspId || userOrgData?.user_lsp_id || sessionStorage?.getItem('user_lsp_id');
 
-    if (!userLspId || !courseAssignData?.courseId || !courseAssignData?.courseType) {
+    if (!_userLspId || !courseAssignData?.courseId || !courseAssignData?.courseType) {
       closePopUp();
-      console.log(userLspId, courseAssignData);
       return setToastMsg({ type: 'danger', message: 'Something Went Wrong! Please Try Again.' });
     }
 
@@ -68,40 +86,28 @@ export default function useHandleCourseAssign({
     setIsPopUpDataPresent(false);
 
     const sendData = {
-      userId: userData?.id,
-      userLspId: userLspId,
+      userId: userIdForCourseAssign,
+      userLspId: _userLspId,
       courseId: courseAssignData?.courseId,
-      addedBy: JSON.stringify({ userId: userData.id, role: assignBy }),
+      addedBy: JSON.stringify({ userId: currentUserId, role: assignBy }),
       courseType: courseAssignData?.courseType,
       isMandatory: courseAssignData?.isMandatory,
       courseStatus: 'open',
       endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
 
-    let isUpdateCourseMap = false;
     let isError = false;
 
     // load course map for current course for updating if map is already created
-    const userCourse = await loadQueryDataAsync(
-      GET_USER_COURSE_MAPS_BY_COURSE_ID,
-      { userId: userData?.id, courseId: courseAssignData?.courseId },
-      {},
-      userClient
-    );
-    if (userCourse?.error) {
-      closePopUp();
-      return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
-    }
-
-    const data = userCourse?.getUserCourseMapByCourseID?.[0];
-    if (userCourse?.getUserCourseMapByCourseID?.length) isUpdateCourseMap = true;
+    const data = await getAssignCourseData(userIdForCourseAssign, courseAssignData?.courseId);
 
     let userCourseMapping = {};
     let userCourseProgress = userCourseData?.userCourseProgress;
 
     // update user course map
-    if (isUpdateCourseMap) {
+    if (data) {
       sendData.userCourseId = data?.user_course_id;
+      sendData.courseStatus = data?.course_status;
       const userCourseMapRes = await updateUserCouse({ variables: sendData }).catch(
         (err) => (isError = !!err)
       );
@@ -122,7 +128,10 @@ export default function useHandleCourseAssign({
         return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
       }
       userCourseMapping = userCourseMapRes?.data?.addUserCourse?.[0];
-      userCourseProgress = await createUserTopicProgress(userCourseMapping?.user_course_id);
+      userCourseProgress = await createUserTopicProgress(
+        userCourseMapping?.user_course_id,
+        userIdForCourseAssign
+      );
     }
 
     setUserCourseData({
@@ -133,9 +142,76 @@ export default function useHandleCourseAssign({
     onCourseAssign({ userCourseMapping, userCourseProgress });
     closePopUp();
     setToastMsg({ type: 'success', message: 'Course Assigned Successfully.' });
+
+    if (assignBy !== 'self') sendCourseAssignNotificationAndEmail();
   }
 
-  async function createUserTopicProgress(userCourseId) {
+  async function sendCourseAssignNotificationAndEmail() {
+    if (!userIdForCourseAssign || !userEmail) {
+      return setToastMsg({
+        type: 'danger',
+        message: 'Something went wrong while sending user Notification.'
+      });
+    }
+
+    const notificationBody = getNotificationMsg('courseAssign', {
+      courseName: courseName || '',
+      endDate: courseAssignData?.endDate
+    });
+
+    const origin = window?.location?.origin || '';
+
+    const bodyData = {
+      user_name: userName || '',
+      lsp_name: sessionStorage?.getItem('lsp_name'),
+      course_name: courseName || '',
+      end_date: moment(courseAssignData?.endDate?.valueOf()).format('D MMM YYYY'),
+      link: `${origin}/self-landing`
+    };
+
+    const sendMailData = {
+      to: [userEmail],
+      sender_name: sessionStorage?.getItem('lsp_name'),
+      user_name: userName || '',
+      body: JSON.stringify(bodyData),
+      template_id: courseAssignData?.isMandatory
+        ? EMAIL_TEMPLATE_IDS?.courseAssignMandatory
+        : EMAIL_TEMPLATE_IDS?.courseAssignNotMandatory
+    };
+
+    const apiContextObj = {
+      context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+    };
+
+    await sendNotificationWithLink(
+      {
+        title: NOTIFICATION_TITLES?.courseAssign,
+        body: notificationBody,
+        user_id: [userIdForCourseAssign],
+        link: `/course/${courseAssignData?.courseId}`
+      },
+      apiContextObj
+    );
+    await sendEmail(sendMailData, apiContextObj);
+  }
+
+  async function getAssignCourseData(userId, courseId) {
+    // load course map for current course for updating if map is already created
+    const userCourse = await loadQueryDataAsync(
+      GET_USER_COURSE_MAPS_BY_COURSE_ID,
+      { userId, courseId },
+      {},
+      userClient
+    );
+    if (userCourse?.error) {
+      closePopUp();
+      return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
+    }
+
+    return userCourse?.getUserCourseMapByCourseID?.[0] || null;
+  }
+
+  async function createUserTopicProgress(userCourseId, userId) {
     const userCourseProgressArr = [];
     const courseTopicRes = await loadAndCacheDataAsync(GET_ALL_COURSE_TOPICS_ID, {
       course_id: courseAssignData?.courseId
@@ -148,8 +224,8 @@ export default function useHandleCourseAssign({
       const topic = allTopics[i];
 
       const sendData = {
+        userId,
         userCourseId,
-        userId: userData.id,
         topicId: topic?.id,
         topicType: topic?.type,
         status: 'not-started',
