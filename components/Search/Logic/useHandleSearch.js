@@ -1,7 +1,7 @@
 import { userClient } from '@/api/UserMutations';
 import { GET_USER_BOOKMARKS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
+import { COMMON_LSPS, COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
@@ -55,6 +55,22 @@ export default function useHandleSearch() {
   // load table data
   const time = Date.now();
   useEffect(async () => {
+    // return if router is not ready
+    if (!router.isReady) return;
+
+    // return if state is updated and same as query params
+    const { subCat, lang, cat, type } = router.query;
+    if (cat != null && !filters.category) return;
+    if (subCat != null && !filters.subCategory) return;
+    if (lang != null && !filters.lang) return;
+    if (type != null && !filters.type) return;
+
+    // reset query params to not affect future query calls by returning due to above condition
+    router.query.cat = null;
+    router.query.subCat = null;
+    router.query.lang = null;
+    router.query.type = null;
+
     if (preferredSubCat && !userDataGlobal?.preferences?.length) return;
 
     if (userCourse) {
@@ -84,7 +100,9 @@ export default function useHandleSearch() {
       );
       return;
     }
-    const _lspId = sessionStorage?.getItem('lsp_id');
+
+    // const _lspId = sessionStorage?.getItem('lsp_id');
+    const _lspId = COMMON_LSPS.zicops;
     const queryVariables = {
       publish_time: time,
       pageSize: 999,
@@ -113,7 +131,7 @@ export default function useHandleSearch() {
     const subcatArr = userDataGlobal?.preferences;
     // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
     const activeSubcategories = subcatArr?.filter((item) => item?.is_active && item?.sub_category);
-    console.log(activeSubcategories);
+
     const courseData = courseRes?.data?.latestCourses;
     setPageCursor(courseData?.pageCursor || null);
     setCourses(
@@ -165,7 +183,15 @@ export default function useHandleSearch() {
             ?.filter((bm) => bm) || []
       });
     }
-  }, [filters, filter, searchQuery, userDataGlobal?.preferences, isSelfPaced, preferredSubCat]);
+  }, [
+    router.isReady,
+    filters,
+    filter,
+    searchQuery,
+    userDataGlobal?.preferences,
+    isSelfPaced,
+    preferredSubCat
+  ]);
 
   useEffect(() => {
     setIsLoading(courseLoading);
