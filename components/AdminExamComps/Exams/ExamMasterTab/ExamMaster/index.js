@@ -45,10 +45,14 @@ export default function ExamMaster() {
     const LARGE_PAGE_SIZE = 9999;
     const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
 
+    const _lspId = sessionStorage.getItem('lsp_id');
     const currentQpRes = await loadQueryDataAsync(GET_LATEST_QUESTION_PAPERS, queryVariables);
-    const zicopsQpRes = await loadQueryDataAsync(GET_LATEST_QUESTION_PAPERS, queryVariables, {
-      context: { headers: { tenant: COMMON_LSPS?.zicops } }
-    });
+    const zicopsQpRes =
+      COMMON_LSPS?.zicops !== _lspId
+        ? await loadQueryDataAsync(GET_LATEST_QUESTION_PAPERS, queryVariables, {
+            context: { headers: { tenant: COMMON_LSPS?.zicops } }
+          })
+        : {};
 
     if (currentQpRes?.error || zicopsQpRes?.error) {
       return setToastMsg({ type: 'danger', message: 'question paper load error' });
@@ -242,8 +246,8 @@ export default function ExamMaster() {
             label: 'Exam Duration:',
             placeholder: 'Enter duration of the exam',
             value: examTabData.duration?.toString(),
-            isNumericOnly: true
-            // isDisabled: true
+            isNumericOnly: true,
+            isDisabled: isPreview
           }}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
@@ -485,6 +489,7 @@ export default function ExamMaster() {
             if (!examId && examTabData?.id) return;
             setExamTabData({ ...examTabData, instructions: e });
           }}
+          isReadOnly={isPreview}
           placeholder="Enter instructions in less than 300 characters."
           value={examTabData?.instructions}
         />

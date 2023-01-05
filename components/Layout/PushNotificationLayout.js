@@ -62,7 +62,7 @@ export default function PushNotificationLayout({ children }) {
                 title: event?.data?.notification?.title,
                 body: event?.data?.notification?.body,
                 isRead: false,
-                img: `/images/${msg?.title || 'dnd1'}.jpg`,
+                img: `/images/${msg?.title || 'details'}.png`,
                 link: event?.data?.notification?.link || '',
                 route: '',
                 duration: moment().fromNow()
@@ -101,7 +101,7 @@ export default function PushNotificationLayout({ children }) {
             title: msg?.title,
             body: msg?.body,
             isRead: !!msg?.is_read,
-            img: `/images/${msg?.title||'dnd1'}.jpg`,
+            img: `/images/${msg?.title||'details'}.png`,
             link: msg?.link || '',
             route: '',
             fcmMessageId: msg?.message_id,
