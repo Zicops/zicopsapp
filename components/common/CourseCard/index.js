@@ -31,7 +31,11 @@ export default function CourseCard({
     e.currentTarget.parentNode.style.margin = '';
   }
   const gotoCourse = () => {
-    router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
+   if (!courseData?.examId) {
+      router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
+    } else {
+        router?.push( `/course/${courseData?.courseId}?activateExam=${courseData?.examId}`,`/course/${courseData?.courseId}`);
+    }
   };
 
   const gotoAssignCourses = () => {

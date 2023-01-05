@@ -29,6 +29,7 @@ import Options from '../components/Exams/Options';
 import BigCardSlider from '../components/medium/BigCardSlider';
 import ZicopsCarousel from '../components/ZicopsCarousel';
 
+const skeletonCardCount = 5;
 export default function LearnerExams() {
   const router = useRouter();
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
@@ -44,13 +45,13 @@ export default function LearnerExams() {
   const [examCourseMapping, setExamCourseMapping] = useState({ scheduleExam: [], takeAnyTime: [] });
 
 
-  const [latestCourses, setLatestCourses] = useState([]);
-  const [learningSpaceCourses, setLearningSpaceCourses] = useState([]);
-  const [subCategory0Courses, setSubCategory0Courses] = useState([]);
-  const [subCategory1Courses, setSubCategory1Courses] = useState([]);
-  const [subCategory2Courses, setSubCategory2Courses] = useState([]);
-  const [subCategory3Courses, setSubCategory3Courses] = useState([]);
-  const [subCategory4Courses, setSubCategory4Courses] = useState([]);
+  const [latestCourses, setLatestCourses] = useState([...Array(skeletonCardCount)]);
+  const [learningSpaceCourses, setLearningSpaceCourses] = useState([...Array(skeletonCardCount)]);
+  const [subCategory0Courses, setSubCategory0Courses] = useState([...Array(skeletonCardCount)]);
+  const [subCategory1Courses, setSubCategory1Courses] = useState([...Array(skeletonCardCount)]);
+  const [subCategory2Courses, setSubCategory2Courses] = useState([...Array(skeletonCardCount)]);
+  const [subCategory3Courses, setSubCategory3Courses] = useState([...Array(skeletonCardCount)]);
+  const [subCategory4Courses, setSubCategory4Courses] = useState([...Array(skeletonCardCount)]);
  
   const [onGoingExam, setOnGoingExam] = useState([])
   const [examOngoingData , setOnOgingData] = useState([])
@@ -328,7 +329,7 @@ const uniqueResult = Object.values(uniqueArray);
     const examsResult = uniqueResult?.map((exam) => ({
       examId: exam?.id,
       courseId: exam?.courseId,
-      name: exam?.courseName,
+      name: exam?.Name,
       description: exam?.Description,
       category: exam?.Category,
       sub_category: exam?.SubCategory,
