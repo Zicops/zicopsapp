@@ -110,13 +110,15 @@ export default function useSaveCourse(courseContextData) {
       return;
     }
 
+    const currentLspId = sessionStorage.getItem('lsp_id');
+
     setIsLoading(!fullCourse.id ? 'SAVING...' : 'UPDATING...');
     // check for duplicate course name
     const queryVariables = {
       publish_time: Date.now(),
       pageSize: 1,
       pageCursor: '',
-      filters: { SearchText: fullCourse?.name?.trim() }
+      filters: { SearchText: fullCourse?.name?.trim(), LspId: currentLspId }
     };
     const publishedCourseRes = loadQueryDataAsync(GET_LATEST_COURSES, {
       ...queryVariables,
