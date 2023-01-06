@@ -83,11 +83,11 @@ export default function RightDropDownMenu() {
         sessionStorage.removeItem('user_lsp_role');
         sessionStorage.removeItem('ou_id');
         sessionStorage.removeItem('org_id');
-        router.push('/learning-spaces');;
+        router.push('/learning-spaces');
       }
     },
     {
-      id: 4,
+      id: 5,
       class: 'dropdown-submenu-justifycontent-right',
       name: 'Logout',
       onClick: () => {
