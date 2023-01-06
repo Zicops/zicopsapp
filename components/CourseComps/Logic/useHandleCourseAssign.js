@@ -153,7 +153,8 @@ export default function useHandleCourseAssign({
 
     setUserCourseData({
       ...userCourseData,
-      userCourseMapping: userCourseMapping || {}
+      userCourseMapping: userCourseMapping || {},
+      isCourseAssigned: true
       // userCourseProgress: userCourseProgress || []
     });
     onCourseAssign({
