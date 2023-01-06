@@ -14,6 +14,7 @@ export const ASSIGNED_COURSES = ['cohort', 'admin', 'chorot'];
 
 export const PUBLIC_PATHS = [
   '/login',
+  '/auth-verify',
   '/home',
   '/reset-password',
   '/forgot-password',
@@ -31,6 +32,7 @@ export const PUBLIC_PATHS = [
 ];
 export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
+  '/auth-verify',
   '/exam-live',
   '/exam-screen',
   '/course/[courseId]/topic/[topicId]/exam/[examId]',
