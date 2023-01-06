@@ -11,11 +11,8 @@ import { truncateToN } from '../../helper/common.helper';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
 import { courseContext } from '../../state/contexts/CourseContext';
 import ConfirmPopUp from '../common/ConfirmPopUp';
-import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
-import InputDatePicker from '../common/InputDatePicker';
-import PopUp from '../common/PopUp';
 import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
-import UserButton from '../common/UserButton';
+import AssignCourse from '../CourseComps/AssignCourse';
 import CourseHeader from './CourseHeader';
 import style from './courseHero.module.scss';
 import Info from './Info';
@@ -24,11 +21,9 @@ import useHandleCourseHero from './Logic/useHandleCourseHero';
 export default function CourseHero({ isPreview = false }) {
   const {
     courseAssignData,
-    setCourseAssignData,
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     activateVideoPlayer,
-    assignCourseToUser,
     showPreviewVideo,
     unassignCourseFromUser
   } = useHandleCourseHero(isPreview);
@@ -36,11 +31,9 @@ export default function CourseHero({ isPreview = false }) {
   const [isCourseUnassign, setIsCourseUnassign] = useState(false);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
   const isLoading = useRecoilValue(isLoadingAtom);
-  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [isUnAssignPopUpOpen, setIsUnAssignPopUpOpen] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const minDate = getMinCourseAssignDate();
 
   const router = useRouter();
   const { fullCourse } = useContext(courseContext);
@@ -108,10 +101,14 @@ export default function CourseHero({ isPreview = false }) {
             isCourseUnassign={isCourseUnassign}
             handleUnAssign={() => setIsUnAssignPopUpOpen(true)}
             handleAssign={() => {
-              if(userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT){
-                return setToastMsg({ type: 'info', message: 'You have reached your self course assign limit!' });
+              if (userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT) {
+                return setToastMsg({
+                  type: 'info',
+                  message: 'You have reached your self course assign limit!'
+                });
               }
-              setIsAssignPopUpOpen(true)}}
+              setIsAssignPopUpOpen(true);
+            }}
           />
 
           <div className={`${style.summary}`}>
@@ -198,86 +195,14 @@ export default function CourseHero({ isPreview = false }) {
         )}
       </div>
 
-      {/* <PopUp
-        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-        size="small"
-        title="Assign Course To Yourself"
-        positionLeft="50%"
-        submitBtn={{ handleClick: assignCourseToUser }}>
-        <div className={`${style.assignCoursePopUp}`}>
-          <section>
-            <label htmlFor="endDate">Course End Date:</label>
-            <InputDatePicker
-              selectedDate={courseAssignData?.endDate}
-              changeHandler={(date) => {
-                setIsPopUpDataPresent(true);
-                setCourseAssignData({ ...courseAssignData, endDate: date });
-              }}
-            />
-          </section>
+      <AssignCourse
+        isAssignPopUpOpen={isAssignPopUpOpen}
+        setIsAssignPopUpOpen={setIsAssignPopUpOpen}
+        courseId={fullCourse?.id}
+        courseType={fullCourse?.type}
+        suggestedCompletionDays={fullCourse?.expected_completion}
+      />
 
-          <LabeledRadioCheckbox
-            type="checkbox"
-            label="Is Mandatory"
-            name="isMandatory"
-            isChecked={courseAssignData?.isMandatory}
-            changeHandler={(e) =>
-              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
-            }
-          />
-        </div>
-      </PopUp> */}
-      <PopUp
-        // title="Course Mapping Configuration"
-        // submitBtn={{ handleClick: handleSubmit }}
-        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-        // size="smaller"
-        customStyles={{ width: '400px' }}
-        isFooterVisible={false}
-        positionLeft="50%">
-        <div className={`${style.assignCoursePopUp}`}>
-          <p className={`${style.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
-          <LabeledRadioCheckbox
-            type="checkbox"
-            label="Course Mandatory"
-            name="isMandatory"
-            isChecked={courseAssignData?.isMandatory}
-            changeHandler={(e) =>
-              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
-            }
-          />
-          <section>
-            <p htmlFor="endDate">Expected Completion date:</p>
-            <InputDatePicker
-              minDate={minDate}
-              selectedDate={courseAssignData?.endDate}
-              changeHandler={(date) => {
-                setIsPopUpDataPresent(true);
-                setCourseAssignData({ ...courseAssignData, endDate: date });
-              }}
-              styleClass={style.dataPickerStyle}
-            />
-          </section>
-          <div className={`${style.assignCourseButtonContainer}`}>
-            <UserButton
-              text={'Cancel'}
-              isPrimary={false}
-              type={'button'}
-              clickHandler={() => {
-                setIsAssignPopUpOpen(false);
-                setCourseAssignData({ ...courseAssignData, endDate: new Date() });
-              }}
-            />
-            <UserButton
-              text={'Save'}
-              type={'button'}
-              clickHandler={() => {
-                assignCourseToUser();
-              }}
-            />
-          </div>
-        </div>
-      </PopUp>
       {isUnAssignPopUpOpen && (
         <ConfirmPopUp
           title={'Are you sure you want to remove this course?'}
