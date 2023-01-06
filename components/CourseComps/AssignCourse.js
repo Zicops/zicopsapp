@@ -31,7 +31,7 @@ export default function AssignCourse({
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     onCourseAssign,
-    suggestedCompletionDays,
+    suggestedCompletionDays: suggestedCompletionDays || null,
     courseName,
     ...userDetails
   };

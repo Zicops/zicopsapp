@@ -102,7 +102,7 @@ export default function useHandleCourseAssign({
     const data = await getAssignCourseData(userIdForCourseAssign, courseAssignData?.courseId);
 
     let userCourseMapping = {};
-    let userCourseProgress = userCourseData?.userCourseProgress;
+    // let userCourseProgress = userCourseData?.userCourseProgress;
 
     // update user course map
     if (data) {
@@ -128,18 +128,21 @@ export default function useHandleCourseAssign({
         return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
       }
       userCourseMapping = userCourseMapRes?.data?.addUserCourse?.[0];
-      userCourseProgress = await createUserTopicProgress(
-        userCourseMapping?.user_course_id,
-        userIdForCourseAssign
-      );
+      // userCourseProgress = await createUserTopicProgress(
+      //   userCourseMapping?.user_course_id,
+      //   userIdForCourseAssign
+      // );
     }
 
     setUserCourseData({
       ...userCourseData,
-      userCourseMapping: userCourseMapping || {},
-      userCourseProgress: userCourseProgress || []
+      userCourseMapping: userCourseMapping || {}
+      // userCourseProgress: userCourseProgress || []
     });
-    onCourseAssign({ userCourseMapping, userCourseProgress });
+    onCourseAssign({
+      userCourseMapping
+      // userCourseProgress
+    });
     closePopUp();
     setToastMsg({ type: 'success', message: 'Course Assigned Successfully.' });
 
