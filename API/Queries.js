@@ -347,6 +347,15 @@ export const GET_COURSE_TOPICS = gql`
   }
 `;
 
+export const GET_ALL_COURSE_TOPICS_ID = gql`
+  query getTopics($course_id: String) {
+    getTopics(course_id: $course_id) {
+      id
+      type
+    }
+  }
+`;
+
 export const GET_COURSE_TOPICS_CONTENT = gql`
   query getTopicContent($topic_id: String) {
     getTopicContent(topic_id: $topic_id) {
