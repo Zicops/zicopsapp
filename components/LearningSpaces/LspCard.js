@@ -59,7 +59,7 @@ const LspCard = ({
     if (userData?.email === 'vajresh@zicops.com') {
       const token = sessionStorage.getItem('tokenF');
 
-      window.location.href = `${website}/auth-verify/?role=${userLspRole}&lspId=${lspId}&userLspId=${userLspId}&token=${token}`;
+      window.location.href = `https://${website}/auth-verify/?role=${userLspRole}&lspId=${lspId}&userLspId=${userLspId}&token=${token}`;
       return;
     }
 
