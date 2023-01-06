@@ -40,9 +40,10 @@ export async function getLatestToken(token) {
 }
 
 export const authLink = setContext(async (_, { headers }) => {
-  const initialToken = sessionStorage.getItem('tokenF')
-    ? sessionStorage.getItem('tokenF')
-    : auth?.currentUser?.accessToken;
+  let initialToken = sessionStorage.getItem('tokenF');
+  if (!initialToken) initialToken = auth?.currentUser?.accessToken;
+  if (!initialToken) initialToken = headers?.Authorization;
+
   const fireBaseToken = await getLatestToken(initialToken);
   const lspId = sessionStorage.getItem('lsp_id');
   return {
