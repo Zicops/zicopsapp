@@ -304,7 +304,7 @@ const uniqueResult = Object.values(uniqueArray);
           examOngoing.push({ ...onGoingExam[i], ...examCourseMapping?.scheduleExam[j] });
         }
       }
-    }
+     }
     for (let i = 0; i < onGoingExam?.length; i++) {
       if (!examCourseMapping?.takeAnyTime?.length) return;
       // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
@@ -315,7 +315,6 @@ const uniqueResult = Object.values(uniqueArray);
         }
       }
     }
-    console.log("examOngoing" , examOngoing);
     // console.log(examFinalResult, 'final reult');
     //formating exam result table data
          const uniqueArray = examOngoing.reduce((acc, curr) => {
@@ -334,12 +333,13 @@ const uniqueResult = Object.values(uniqueArray);
       category: exam?.Category,
       sub_category: exam?.SubCategory,
       type: exam?.Type,
+      tileImage: '/images/dnd1.jpg',
       duration: exam?.Duration
     }));
+    console.log("examsResult",examsResult);
      
     if (!examsResult?.length) return;
      setOnOgingData(examsResult);
-     console.log(examOngoingData);
     return;
   }, [onGoingExam, examCourseMapping?.scheduleExam , examCourseMapping?.takeAnyTime]);
 
@@ -617,7 +617,8 @@ const uniqueResult = Object.values(uniqueArray);
     console.log("completedAttempts", completedAttempts)
     let newCompleteAttempts = [];
      const  id  = userData?.id;
-    for (let i = 0; i < allAttempts?.length; i++) {
+    for (let i = 0; i < completedAttempts?.length; i++) {
+      // if (!completedAttempts[i]?.user_ea_id) return;
       const results = await loadQueryDataAsync(
         GET_USER_EXAM_RESULTS,
         {user_ea_details:[{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }]},

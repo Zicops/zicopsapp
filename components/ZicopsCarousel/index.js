@@ -20,7 +20,7 @@ const CardSlider = ({
   handleTitleClick = () => {}
 }) => {
   const carouselRef = useRef(0);
-  const COURSES_ASSIGNED_TITLE = ['continue with your courses', 'courses in your learning folder'];
+  const COURSES_ASSIGNED_TITLE = ['continue with your courses', 'courses in your learning folder', 'continue with your exam'];
   // type=sqaure cardShape changes /circle/ . Have to override hover from global scss
 
   let isAssigned = false;
