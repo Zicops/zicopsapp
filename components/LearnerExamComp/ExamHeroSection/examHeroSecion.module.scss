@@ -60,15 +60,14 @@
 }
 
 .table {
-    font-family: arial, sans-serif;
     border-collapse: collapse;
-    border-spacing: 0;
     width: 100%;
-    overflow: hidden;
-    border-radius: 4px;
+    border-radius: 5px;
     thead{
+        outline: 1px solid $secondary;
         position: sticky;
-        top: -2px;
+        position: -webkit-sticky;
+        top: 1px;
         z-index: 80;
     }
     th {
@@ -78,19 +77,17 @@
         color: #EAEAEA;
         font-weight: 400;
         background-color: #15161C;
-       
+        cursor: initial;
     }
-        tr{
-        border: 1px solid #EAEAEA;
-        }
-    td{
-        font-size: 16px;
-        text-align: left;
-        padding: 16px;
-        color: #919397;
+    tr{
+        border: 1px solid $secondary;
         cursor: pointer;
+        &:nth-child(odd) {
+            background-color: #1a1b26;
+        }
     }
-    tr:nth-child(even) {
-        background-color: #1A1B26;
+    td{
+        padding: 16px;
+        color: $darkThree;
     }
 }
