@@ -74,9 +74,14 @@ export async function loadMultipleLspDataWithMultipleQueries(
 ) {
   const response = [];
 
-  const _lspIds = [null, ...lspIds];
+  const _lspIds = [0, ...lspIds];
   for (let i = 0; i < _lspIds.length; i++) {
     const lspId = _lspIds[i];
+
+    // aviod query from same lsp
+    const currentLsp = sessionStorage.getItem('lsp_id');
+    if (currentLsp === lspId) continue;
+
     const tenantObj = !!lspId ? { context: { headers: { tenant: lspId } } } : {};
     const data = await loadQueryDataAsync(QUERY, variableObj, { ...tenantObj, ...options }, client);
 
