@@ -8,16 +8,16 @@ import { AdminMenu, UserMenu } from './Logic/nav.helper';
 import { useHandleNav } from './Logic/useHandleNav';
 import styles from './nav.module.scss';
 
+import { userClient } from '@/api/UserMutations';
+import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
+import { sendNotification } from '@/helper/api.helper';
 import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
 import { useRecoilState } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import ToolTip from '../common/ToolTip';
-import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
-import { useLazyQuery } from '@apollo/client';
-import { userClient } from '@/api/UserMutations';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import UserDisplay from './UserDisplay';
-import { sendNotification } from '@/helper/api.helper';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -133,6 +133,10 @@ export default function Nav() {
               value={searchQuery || ''}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
+                  if (router?.pathname?.includes('search') && !searchQuery) {
+                    router.push(`/search-page`);
+                  }
+
                   searchQuery && router.push(`/search-page/${searchQuery}`);
                 }
               }}

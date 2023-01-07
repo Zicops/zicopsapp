@@ -1,5 +1,4 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
-import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import {
   COMMON_LSPS,
@@ -9,45 +8,32 @@ import {
   LEARNING_FOLDER_CAPACITY
 } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
-import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Grid } from '@mui/material';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Popup from 'reactjs-popup';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import LabeledInput from '../common/FormComponents/LabeledInput';
-import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
-import InputDatePicker from '../common/InputDatePicker';
-import PopUp from '../common/PopUp';
-import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
-import UserButton from '../common/UserButton';
+import AssignCourse from '../CourseComps/AssignCourse';
 import Card from './Card/Card';
 import styles from './favouriteDndCourses.module.scss';
 import Folder from './Folder/Folder';
 import ListCard from './ListCard';
-import useHandleCourseAssign from './Logic/useHandleCourseAssign';
 
 export default function FavouriteDndCourses({ isLoading }) {
-  const {
-    courseAssignData,
-    setCourseAssignData,
-    isAssignPopUpOpen,
-    setIsAssignPopUpOpen,
-    assignCourseToUser,
-    isSaveDisabled
-  } = useHandleCourseAssign();
-
   const ASSIGNED_ROLE = ['cohort', 'admin'];
 
   const { getUserCourseData } = useUserCourseData();
 
-  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const userData = useRecoilValue(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+
+  const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
@@ -171,19 +157,6 @@ export default function FavouriteDndCourses({ isLoading }) {
   }
 
   useEffect(() => {
-    if (courseAssignData?.isCourseAssigned) {
-      setDropped([...dropped, courseAssignData?.fullCourse]);
-      setCourseAssignData({
-        ...courseAssignData,
-        fullCourse: {},
-        isCourseAssigned: false,
-        endDate: new Date(),
-        isMandatory: false
-      });
-    }
-  }, [courseAssignData?.isCourseAssigned]);
-
-  useEffect(() => {
     if (!isShowAll) setIsShowAll(!!searchQuery);
     if (!isShowAllAdmin) setIsShowAllAdmin(!!searchQuery);
   }, [searchQuery]);
@@ -215,8 +188,8 @@ export default function FavouriteDndCourses({ isLoading }) {
     if (result.destination && result.destination.droppableId === 'character') {
       const element = data.filter((e) => e.id === result.draggableId);
       // dropped.push(element);
-      setCourseAssignData({ ...courseAssignData, fullCourse: element[0] });
-      setIsAssignPopUpOpen(element[0]);
+      setSelectedCourse(element[0]);
+      setIsAssignPopUpOpen(true);
       // setDropped([...dropped, { ...element[0], added_by: { role: 'self' } }]);
       updateCourseData(data.filter((each) => each.id !== result.draggableId));
       // setTotal(total + 1);
@@ -489,65 +462,22 @@ export default function FavouriteDndCourses({ isLoading }) {
         </Popup>
       )}
 
-      <PopUp
-        // title="Course Mapping Configuration"
-        // submitBtn={{ handleClick: handleSubmit }}
-        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-        // size="smaller"
-        customStyles={{ width: '400px' }}
-        isFooterVisible={false}
-        onCloseWithCross={() => updateCourseData([...data, isAssignPopUpOpen])}
-        positionLeft="50%">
-        <div className={`${styles.assignCoursePopUp}`}>
-          <p className={`${styles.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
-          <LabeledRadioCheckbox
-            type="checkbox"
-            label="Course Mandatory"
-            name="isMandatory"
-            isChecked={courseAssignData?.isMandatory}
-            changeHandler={(e) =>
-              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
-            }
-          />
-          <section>
-            <p htmlFor="endDate">Expected Completion date:</p>
-            <InputDatePicker
-              minDate={new Date()}
-              selectedDate={courseAssignData?.endDate}
-              changeHandler={(date) => {
-                setIsPopUpDataPresent(true);
-                setCourseAssignData({ ...courseAssignData, endDate: date });
-              }}
-              styleClass={styles.dataPickerStyle}
-            />
-          </section>
-          <div className={`${styles.assignCourseButtonContainer}`}>
-            <UserButton
-              text={'Cancel'}
-              isPrimary={false}
-              type={'button'}
-              clickHandler={() => {
-                updateCourseData([...data, isAssignPopUpOpen]);
-                setIsAssignPopUpOpen(false);
-                setCourseAssignData({
-                  ...courseAssignData,
-                  endDate: new Date(),
-                  isMandatory: false
-                });
-              }}
-            />
-            <UserButton
-              text={'Save'}
-              type={'button'}
-              isDisabled={isSaveDisabled}
-              clickHandler={async () => {
-                await assignCourseToUser();
-                setIsUpdated(true);
-              }}
-            />
-          </div>
-        </div>
-      </PopUp>
+      <AssignCourse
+        isAssignPopUpOpen={isAssignPopUpOpen}
+        setIsAssignPopUpOpen={setIsAssignPopUpOpen}
+        courseId={selectedCourse?.id}
+        courseType={selectedCourse?.type}
+        suggestedCompletionDays={selectedCourse?.expected_completion}
+        popUpProps={{
+          onClose: () => {
+            if (selectedCourse) updateCourseData([...data, selectedCourse]);
+          }
+        }}
+        onCourseAssign={() => {
+          setDropped([...dropped, { ...selectedCourse, added_by: 'self' }]);
+          setSelectedCourse(null);
+        }}
+      />
     </>
   );
 }

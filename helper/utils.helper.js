@@ -272,8 +272,20 @@ export function isWordIncluded(sentence = '', word = '') {
 
 export function getMinCourseAssignDate(durationInSec = null) {
   let date = new Date().setDate(new Date().getDate() + 1);
-  console.log(date,'sdsd');
+  console.log(date, 'sdsd');
   if (!durationInSec) return date;
   date = new Date(new Date().getTime() + durationInSec * 1000).setDate(new Date().getDate() + 1);
   return date;
+}
+
+export function isDatesSame(date1 = new Date(), date2 = new Date()) {
+  if (date1?.getDate() !== date2?.getDate()) return false;
+  if (date1?.getMonth() !== date2?.getMonth()) return false;
+  if (date1?.getFullYear() !== date2?.getFullYear()) return false;
+
+  return true;
+}
+
+export function getCurrentOrigin() {
+  return process.browser && window?.location?.origin ? window.location.origin : '';
 }

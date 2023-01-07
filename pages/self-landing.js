@@ -268,7 +268,8 @@ export default function Self() {
           handleTitleClick={() => router.push(`/search-page?&isSelfPaced=true`, '/search-page')}
         />
       )}
-
+      <br />
+      <br />
       <SearchSubCat
         data={catSubCat?.subCat?.map((s) => ({
           ...s,
@@ -279,7 +280,8 @@ export default function Self() {
         }))}
         // handleTitleClick={() => router.push(`/search-page?cat=${}&isSelfPaced=true`, '/search-page')}
       />
-
+      <br />
+      <br />
       {!!courseFromPrefernces?.length && (
         // <ZicopsCarousel title="Latest Courses" data={latestCourses} />
         <ZicopsCarousel

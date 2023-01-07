@@ -636,8 +636,14 @@ export default function useUserCourseData() {
     });
 
     const catAndSubCatRes = {
-      allCatMain: [...zicopsCatSubCatData?.allCatMain, ...currentCatSubCatData?.allCatMain],
-      allSubCatMain: [...zicopsCatSubCatData?.allSubCatMain, ...currentCatSubCatData?.allSubCatMain]
+      allCatMain: [
+        ...(zicopsCatSubCatData?.allCatMain || []),
+        ...(currentCatSubCatData?.allCatMain || [])
+      ],
+      allSubCatMain: [
+        ...(zicopsCatSubCatData?.allSubCatMain || []),
+        ...(currentCatSubCatData?.allSubCatMain || [])
+      ]
     };
 
     if (!resPref?.getUserPreferences?.length) return [];
@@ -775,8 +781,9 @@ export default function useUserCourseData() {
     );
 
     //removing duplicate values
-    const users = userLspMaps
-      ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
+    const users = userLspMaps?.filter(
+      (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
+    );
 
     const userIds = users?.map((user) => user?.user_id);
 
