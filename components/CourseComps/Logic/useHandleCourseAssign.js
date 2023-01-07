@@ -7,7 +7,7 @@ import {
   UPDATE_USER_COURSE,
   userClient
 } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS_BY_COURSE_ID } from '@/api/UserQueries';
+import { GET_USER_COURSE_MAPS_BY_COURSE_ID, GET_USER_COURSE_PROGRESS_ID } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import {
   loadAndCacheDataAsync,
@@ -16,7 +16,11 @@ import {
   sendNotificationWithLink
 } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
-import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import {
+  COURSE_MAP_STATUS,
+  EMAIL_TEMPLATE_IDS,
+  NOTIFICATION_TITLES
+} from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -92,7 +96,7 @@ export default function useHandleCourseAssign({
       addedBy: JSON.stringify({ userId: currentUserId, role: assignBy }),
       courseType: courseAssignData?.courseType,
       isMandatory: courseAssignData?.isMandatory,
-      courseStatus: 'open',
+      courseStatus: COURSE_MAP_STATUS.assign,
       endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
 
@@ -106,8 +110,21 @@ export default function useHandleCourseAssign({
 
     // update user course map
     if (data) {
+      const progressRes = await loadQueryDataAsync(
+        GET_USER_COURSE_PROGRESS_ID,
+        {
+          userId: userData?.id,
+          userCourseId: [data?.user_course_id]
+        },
+        {},
+        userClient
+      );
+      const isCourseStarted = progressRes?.getUserCourseProgressByMapId?.length > 0;
+
       sendData.userCourseId = data?.user_course_id;
-      sendData.courseStatus = data?.course_status;
+      sendData.courseStatus = isCourseStarted
+        ? COURSE_MAP_STATUS.started
+        : COURSE_MAP_STATUS.assign;
       const userCourseMapRes = await updateUserCouse({ variables: sendData }).catch(
         (err) => (isError = !!err)
       );
@@ -136,7 +153,8 @@ export default function useHandleCourseAssign({
 
     setUserCourseData({
       ...userCourseData,
-      userCourseMapping: userCourseMapping || {}
+      userCourseMapping: userCourseMapping || {},
+      isCourseAssigned: true
       // userCourseProgress: userCourseProgress || []
     });
     onCourseAssign({

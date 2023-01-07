@@ -1,4 +1,4 @@
-import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
+import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { MenuList, Paper } from '@mui/material';
@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import '@reach/menu-button/styles.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { support, userProfile } from '../Logic/subMenu.helper.js';
@@ -21,6 +21,8 @@ export default function RightDropDownMenu() {
   const { logOut } = useAuthUserContext();
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
+
+  const featureFlags = useRecoilValue(FeatureFlagsAtom);
 
   const menuItemList = [
     {
@@ -84,7 +86,8 @@ export default function RightDropDownMenu() {
         sessionStorage.removeItem('ou_id');
         sessionStorage.removeItem('org_id');
         router.push('/learning-spaces');
-      }
+      },
+      isHidden: !featureFlags?.isUserMappedToMultipleLsps
     },
     {
       id: 5,
@@ -132,6 +135,8 @@ export default function RightDropDownMenu() {
             onMouseLeave={handleClose}
             onKeyDown={handleClick}>
             {menuItemList.map((item) => {
+              if (item?.isHidden) return;
+
               return (
                 <MenuItem
                   key={item.id}
