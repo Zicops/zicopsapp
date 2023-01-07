@@ -1,6 +1,8 @@
 import { DELETE_QUESTION_PAPER_SECTION, DELETE_SECTION_TO_BANK } from '@/api/Mutations';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
+import { loadMultipleLspDataWithMultipleQueries } from '@/helper/api.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
@@ -43,17 +45,27 @@ export default function SectionBox({ section, setSectionData, setEditMetaData })
     if (!allQuestionBankIds.length) return;
 
     // load qb names
-    let isError = false;
-    const metaRes = await loadBankMeta({
-      variables: { question_bank_id: allQuestionBankIds }
-    }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'QB load error' });
-    });
-    if (isError) return;
+    // let isError = false;
+    // const metaRes = await loadBankMeta({
+    //   variables: { question_bank_id: allQuestionBankIds }
+    // }).catch((err) => {
+    //   console.log(err);
+    //   isError = !!err;
+    //   return setToastMsg({ type: 'danger', message: 'QB load error' });
+    // });
+    // if (isError) return;
 
-    setQbData(metaRes?.data?.getQBMeta || []);
+    const qbDataResArr = await loadMultipleLspDataWithMultipleQueries(
+      GET_QUESTION_BANK_NAME,
+      { question_bank_id: allQuestionBankIds },
+      {},
+      queryClient,
+      [COMMON_LSPS.zicops]
+    );
+    const qbNameArr = [];
+    qbDataResArr?.forEach((res) => qbNameArr.push(...(res?.getQBMeta || [])));
+
+    setQbData(qbNameArr);
   }
   // return if no section present
   if (!questionPaperTabData?.sectionData?.length) return null;
