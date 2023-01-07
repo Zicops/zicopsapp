@@ -14,26 +14,28 @@ import MyUser from '../../../../components/UserComps/MyUser';
 export default function MyUserPage() {
   const [selectedUser, setSelectedUser] = useState([]);
   const [userType, setUserType] = useState('Internal');
-  const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
-  const [disableAlert , setDisableAlert] = useState(false);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [disableAlert, setDisableAlert] = useState(false);
 
-  const { setMultiUserArr, updateMultiUserAbout , disableMultiUser , resetMultiPassword } = useUpdateUserAboutData();
+  const { setMultiUserArr, updateMultiUserAbout, disableMultiUser, resetMultiPassword } =
+    useUpdateUserAboutData();
 
   const btnData = [
     {
       text: 'Disable User',
-      handleClick: ()=>{
+      handleClick: () => {
         setDisableAlert(true);
       }
     },
     {
       text: 'Reset  Password',
-      handleClick: async() => {
+      handleClick: async () => {
         const success = await resetMultiPassword(selectedUser);
-        if(!success) return setToastMsg({type:'danger',message:'Error while resetting password!'});
-        return setToastMsg({type:'success',message:'Password resetted successfully.'})
+        if (!success)
+          return setToastMsg({ type: 'danger', message: 'Error while resetting password!' });
+        return setToastMsg({ type: 'success', message: 'Password resetted successfully.' });
       }
-    },
+    }
     // {
     //   text: 'Add to Cohort',
     //   handleClick: () => {
@@ -75,22 +77,27 @@ export default function MyUserPage() {
         <MainBodyBox>
           <MyUser getUser={(list) => setSelectedUser(list)} />
           {disableAlert && (
-        <ConfirmPopUp
-          title={`Are you sure you want to disable multiple users?`}
-          btnObj={{
-            handleClickLeft:async()=> {
-              const success = await disableMultiUser(selectedUser);
-              // console.log(success);
-              if(!success) return setToastMsg({type:'danger',message:'Error while disabling users'});
-              setSelectedUser([]);
-              setDisableAlert(false);
-              return setToastMsg({type:'success',message:'Users are successfully disable.'});
-            },
-            handleClickRight: () => setDisableAlert(false)
-          }
-          }
-        />
-      )}
+            <ConfirmPopUp
+              title={`Are you sure you want to disable ${
+                selectedUser?.length > 1 ? 'multiple users' : 'selected user'
+              }?`}
+              btnObj={{
+                handleClickLeft: async () => {
+                  const success = await disableMultiUser(selectedUser);
+                  // console.log(success);
+                  if (!success)
+                    return setToastMsg({ type: 'danger', message: 'Error while disabling users' });
+                  setSelectedUser([]);
+                  setDisableAlert(false);
+                  return setToastMsg({
+                    type: 'success',
+                    message: 'Users are successfully disable.'
+                  });
+                },
+                handleClickRight: () => setDisableAlert(false)
+              }}
+            />
+          )}
         </MainBodyBox>
       </MainBody>
     </>
