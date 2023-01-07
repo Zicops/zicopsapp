@@ -54,7 +54,7 @@ export default function LearnerExams() {
   const [subCategory4Courses, setSubCategory4Courses] = useState([...Array(skeletonCardCount)]);
  
   const [onGoingExam, setOnGoingExam] = useState([])
-  const [examOngoingData , setOnOgingData] = useState([])
+  const [examOngoingData , setOnOgingData] = useState([...Array(skeletonCardCount)])
   // const userGlobalData = useRecoilValue(UserDataAtom);
 
   const [loading, setLoading] = useState(false);
@@ -219,17 +219,7 @@ export default function LearnerExams() {
     loadAndSetHomePageRows();
   }, [userGlobalData?.preferences]);
 
-  useEffect(() => {
-    // console.log(screen.width);
-    setLoading(true);
-    loadUserAttemptsAndResults();
-    loadExamData();
-  }, []);
-   const courseFromPrefernces = latestCourses?.filter(
-    (c) => !!activeSubcatArr?.find((pref) => pref?.sub_category === c?.sub_category)
-  );
-
-  useEffect(() => {
+   useEffect(() => {
     console.log(examResults, 'examresult');
     if (!examResults?.length) return;
     console.log(examCourseMapping);
@@ -285,6 +275,17 @@ const uniqueResult = Object.values(uniqueArray);
     return;
   }, [examResults, examCourseMapping?.scheduleExam , examCourseMapping?.takeAnyTime]);
 
+  useEffect(() => {
+    // console.log(screen.width);
+    setLoading(true);
+    loadUserAttemptsAndResults();
+    loadExamData();
+  }, []);
+   const courseFromPrefernces = latestCourses?.filter(
+    (c) => !!activeSubcatArr?.find((pref) => pref?.sub_category === c?.sub_category)
+  );
+
+ 
 
 
    useEffect(() => {
@@ -315,7 +316,7 @@ const uniqueResult = Object.values(uniqueArray);
         }
       }
     }
-    // console.log(examFinalResult, 'final reult');
+    console.log(examOngoing, 'final reult');
     //formating exam result table data
          const uniqueArray = examOngoing.reduce((acc, curr) => {
   if (!acc[curr.user_ea_id]) {
@@ -332,8 +333,9 @@ const uniqueResult = Object.values(uniqueArray);
       description: exam?.Description,
       category: exam?.Category,
       sub_category: exam?.SubCategory,
-      type: exam?.Type,
-      tileImage: '/images/dnd1.jpg',
+      type: exam?.type,
+      language: ["English"],
+      tileImage: exam?.tileImage,
       duration: exam?.Duration
     }));
     console.log("examsResult",examsResult);
@@ -379,7 +381,8 @@ const uniqueResult = Object.values(uniqueArray);
   async function loadUserAttemptsAndResults(examId = null) {
     // if (!userGlobalData?.userDetails?.user_lsp_id?.length) return;
     // setIsAttemptsLoaded(false);
-     if (!examId) return [];
+    if (!examId) return [];
+     if (!userData?.id) return [];
     const  id  = userData?.id;
     console.log(id);
     const resAttempts = await loadQueryDataAsync(
@@ -524,6 +527,7 @@ const uniqueResult = Object.values(uniqueArray);
     if (!courseData?.length) return setLoading(false);
     //filtering course data if id doesnt exist
     const _courseData = courseData?.filter((course) => !!course?.id);
+    console.log("_courseData", _courseData)
     // let courseId = []
     // const courseIds = _courseData?.map((course) => course?.id);
 
@@ -544,6 +548,8 @@ const uniqueResult = Object.values(uniqueArray);
         topicCourseMap.push({
           [`${filteredTopics[j]?.id}`]: {
             courseName: _courseData[i]?.name,
+            tileImage: _courseData[i]?.tileImage,
+            type:_courseData[i]?.type,
             topicId: filteredTopics[j]?.id,
             courseId: _courseData[i]?.id
           }
@@ -564,6 +570,8 @@ const uniqueResult = Object.values(uniqueArray);
       examCourseMap.push({
         [`${topicExams[0]?.examId}`]: {
           courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
+          tileImage: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.tileImage,
+          type: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.type,
           examId: topicExams[0]?.examId,
           topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
           courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId
@@ -571,7 +579,7 @@ const uniqueResult = Object.values(uniqueArray);
       });
       exams = exams.concat(topicExams);
     }
-
+    console.log("examCourseMap", examCourseMap)
     //loop to take exam related data in one piece
 
     if (!exams?.length) return setLoading(false);
@@ -616,6 +624,7 @@ const uniqueResult = Object.values(uniqueArray);
     );
     console.log("completedAttempts", completedAttempts)
     let newCompleteAttempts = [];
+    if (!userData?.id) return [];
      const  id  = userData?.id;
     for (let i = 0; i < completedAttempts?.length; i++) {
       // if (!completedAttempts[i]?.user_ea_id) return;
