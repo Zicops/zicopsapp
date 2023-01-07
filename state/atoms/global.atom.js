@@ -8,7 +8,6 @@ export const FeatureFlagsAtom = atom({
 export function getFeatureFlagsDataObj(data = {}) {
   return {
     isUserMappedToMultipleLsps: data?.isUserMappedToMultipleLsps || false,
-    displayConsoleLogs: data?.displayConsoleLogs || false,
     isZicopsProVersion: data?.isZicopsProVersion || false
   };
 }

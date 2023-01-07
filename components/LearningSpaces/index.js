@@ -44,7 +44,7 @@ const LearningSpaces = () => {
   });
 
   if (orglspData.length > 1 && !featureFlags.isUserMappedToMultipleLsps) {
-    setFeatureFlags((prev) => ({ prev, isUserMappedToMultipleLsps: true }));
+    setFeatureFlags((prev) => ({ ...prev, isUserMappedToMultipleLsps: true }));
   }
 
   const UserLsp = async () => {
