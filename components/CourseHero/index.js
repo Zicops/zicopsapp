@@ -1,4 +1,4 @@
-import { COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
+import { COURSE_MAP_STATUS, COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
 import { displayUnixDate, getMinCourseAssignDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -130,7 +130,7 @@ export default function CourseHero({ isPreview = false }) {
               <button
                 onClick={activateVideoPlayer}
                 disabled={userCourseData?.allModules?.length === 0}>
-                {userCourseData?.userCourseMapping?.course_status === 'started'
+                {userCourseData?.userCourseMapping?.course_status === COURSE_MAP_STATUS.started
                   ? 'Continue'
                   : 'Start'}{' '}
                 the course

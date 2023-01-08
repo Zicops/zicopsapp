@@ -1,0 +1,32 @@
+@import '../../styles/base.scss';
+
+.heroContainer {
+    margin-top: 70px;
+    padding: 5vh 4vw;
+    height: 75vh;
+    background-color: $black;
+}
+.eventGrid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.gridItem{
+    width: 100%;
+    aspect-ratio: 16/9;
+    // background-color: rgb(84, 199, 49);
+    margin: auto;
+    img{
+        width: 100%;
+        aspect-ratio: 16/9;
+    }
+    &:nth-child(1){
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+    &:nth-child(6) {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+}

@@ -8,7 +8,7 @@ import {
   GET_USER_LEARNINGSPACES
 } from '@/api/UserQueries';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
-import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
+import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { useLazyQuery } from '@apollo/client';
@@ -22,6 +22,7 @@ const LearningSpaces = () => {
 
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const [featureFlags, setFeatureFlags] = useRecoilState(FeatureFlagsAtom);
 
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
@@ -41,6 +42,10 @@ const LearningSpaces = () => {
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
+
+  if (orglspData.length > 1 && !featureFlags.isUserMappedToMultipleLsps) {
+    setFeatureFlags((prev) => ({ ...prev, isUserMappedToMultipleLsps: true }));
+  }
 
   const UserLsp = async () => {
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
@@ -63,7 +68,6 @@ const LearningSpaces = () => {
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
     setUserLspIds(_userLspIds);
-
   };
 
   const LspDetails = async () => {
@@ -73,7 +77,7 @@ const LearningSpaces = () => {
       console.error(err);
     });
     const lsps = res?.data?.getLearningSpaceDetails?.filter((lspData) => !lspData?.is_default);
-    if(!lsps?.length) return;
+    if (!lsps?.length) return;
     setLspsDetails([...lsps]);
     const _orgArr = [];
     // res?.data?.getLearningSpaceDetails?.map((data) => {

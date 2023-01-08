@@ -285,3 +285,7 @@ export function isDatesSame(date1 = new Date(), date2 = new Date()) {
 
   return true;
 }
+
+export function getCurrentOrigin() {
+  return process.browser && window?.location?.origin ? window.location.origin : '';
+}
