@@ -57,7 +57,8 @@ const LspCard = ({
     sessionStorage.setItem('user_lsp_id', userLspId);
     sessionStorage.setItem('user_lsp_role', userLspRole);
 
-    if (getCurrentOrigin() !== website) {
+    const currentOrigin = getCurrentOrigin();
+    if (currentOrigin !== 'demo.zicops.com' && currentOrigin !== website) {
       const token = sessionStorage.getItem('tokenF');
 
       window.location.href = `https://${website}/auth-verify/?role=${userLspRole}&lspId=${lspId}&userLspId=${userLspId}&token=${token}`;
