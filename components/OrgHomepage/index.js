@@ -110,8 +110,8 @@ const OrgHomepage = ({ data }) => {
       <div className={`${styles.right_cont}`}>
         <div className={`${styles.right_div}`}>
           <div className={`${styles.icon_logo}`}>
-            <img src={data.logo_url || "/images/svg/amdocsicon.svg"}  alt="" />
-            <p>{data.name || "Zicops"}</p>
+            <img src={data.logo_url || '/images/svg/amdocsicon.svg'} alt="" />
+            {/*<p>{data.name || 'Zicops'}</p>*/}
           </div>
           <div className={`${styles.login_deets}`}>
             <p>Sign into your Learning space</p>
