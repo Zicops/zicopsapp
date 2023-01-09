@@ -228,17 +228,19 @@ const CourseBodyDiscussion = () => {
         const newreplyData = replyArr?.find((rdata) => rdata[data.id]);
         return (
           <>
-            <MessageBlock message={data} />
-            <div className={`${style.more_replies}`}>
-              <div
-                className={`${style.more_replies_image}`}
-                onClick={() => {
+            <div className={`${style.massage_block}`}>
+              <MessageBlock message={data} />
+            <div className={`${style.more_replies}`} onClick={() => {
                   setCurrentMsgId(data)
                   showRepliesHandler(data)
                 }}>
+              <div
+                className={`${style.more_replies_image}`}
+                >
                 <img src="/images/unfold_more.png" alt="" />
               </div>
               <p>{newreplyData ? newreplyData[data.id]?.length : 'No Replies'}</p>
+            </div>
             </div>
             {showReplies && replyData && (
               <>

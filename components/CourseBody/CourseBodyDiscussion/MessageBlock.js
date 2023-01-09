@@ -5,7 +5,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
-const MessageBlock = ({ isReply, message }) => {
+const MessageBlock = ({ isReply, message  }) => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   // const [isPublic, setIsPublic] = useState(true);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
@@ -13,7 +13,9 @@ const MessageBlock = ({ isReply, message }) => {
   const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
   const [reply, setReply] = useState('');
+  const[isPinned , setIsPinned] = useState(false)
   const userDetails = useRecoilValue(UserStateAtom);
+
   const onReplyHandler = () => {
     setShowInput(true);
   };
@@ -34,6 +36,12 @@ const MessageBlock = ({ isReply, message }) => {
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
+ 
+  const onPinnedHandler = (data) => {
+    console.log("data" , data);
+    setIsPinned(true)
+  }
+
   const onSendReplyHandler = (msg) => {
     setShowInput(false);
     let newreplyData = replyArr?.filter((rdata) => rdata[msg?.replyId] ? rdata[msg?.replyId] : rdata[msg?.id]);
@@ -70,7 +78,7 @@ const MessageBlock = ({ isReply, message }) => {
               },
               like: [],
               unlike: [],
-              isPinned: false
+              isPinned: isPinned
             }
           ]
         }
@@ -153,8 +161,13 @@ const MessageBlock = ({ isReply, message }) => {
             </div>
           )}
           <div className={`${style.message_Content}`}>
+            <div className={`${style.message_Content_pinned}`} onClick={()=>onPinnedHandler(message)}>
+            <img src="/images/svg/pined.svg" alt="" />
+            </div>
+            <div>
             {message?.content?.image?.length ? <img src={message?.content?.image} alt="" /> : ''}
             <p>{message?.content?.text}</p>
+            </div>
           </div>
           <div className={`${style.reply_buttons}`}>
             <div className={`${style.react_button}`}>
