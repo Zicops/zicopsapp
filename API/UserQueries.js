@@ -771,6 +771,14 @@ export const GET_LEARNINGSPACES_BY_ORGID = gql`
     }
   }
 `;
+export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
+  query GetLearningSpacesByOrgId($org_id: String!) {
+    getLearningSpacesByOrgId(org_id: $org_id) {
+      lsp_id
+      is_default
+    }
+  }
+`;
 // combined queries
 
 // export const GET_USER_META = gql`
