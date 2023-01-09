@@ -4,6 +4,7 @@ import Popup from 'reactjs-popup';
 import ExamPopUp from './ExamPopUp';
 import { useExamData } from "./helper";
 import { useRouter } from 'next/router';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 const ExamHeroSection = ({simpleTableRef}) => {
   const router = useRouter()
   const [isScheduleActive, setIsScheduleActive] = useState(false);
@@ -88,70 +89,74 @@ const ExamHeroSection = ({simpleTableRef}) => {
       </div>
       <Popup open={openModalScheduled} closeOnDocumentClick={false} closeOnEscape={false}>
         <ExamPopUp title="Scheduled Exams" closePopUp={onClosePopUpScheduled}>
-          <table className={`${styles.table}`}>
-             <thead>
-            <tr className={`${styles.tableHeader}`}>
-              <th>Exam Name</th>
-              <th>Course Name</th>
-              <th>Exam Date</th>
-            </tr>
-            </thead>
+          {loading ? <LoadingSpinner /> :
+            <table className={`${styles.table}`}>
+              <thead>
+                <tr className={`${styles.tableHeader}`}>
+                  <th>Exam Name</th>
+                  <th>Course Name</th>
+                  <th>Exam Date</th>
+                </tr>
+              </thead>
               {scheduleExamData?.length ?
-           ( <tbody>
-               { scheduleExamData?.map((exam, index) => (
-              <tr key={index} onClick={() => {
-                router?.push(
-                            `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
-                            `/course/${exam?.courseId}`
-                          );
-            }}>
-                <td>{exam?.examName}</td>
-                <td>{exam?.courseName}</td>
-                <td>{exam?.examDate}</td>
-            </tr>
-            ))}
-            </tbody>)
-              : 
-              <tbody>
-                <td></td>
-                <td> No Exams Found</td>
-              </tbody>
+                (<tbody>
+                  {scheduleExamData?.map((exam, index) => (
+                    <tr key={index} onClick={() => {
+                      router?.push(
+                        `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
+                        `/course/${exam?.courseId}`
+                      );
+                    }}>
+                      <td>{exam?.examName}</td>
+                      <td>{exam?.courseName}</td>
+                      <td>{exam?.examDate}</td>
+                    </tr>
+                  ))}
+                </tbody>)
+                :
+                <tbody>
+                  <td></td>
+                  <td> No Exams Found</td>
+                </tbody>
+              }
+            </table>
           }
-          </table>
         </ExamPopUp>
       </Popup>
       <Popup open={openModalAnyTime} closeOnDocumentClick={false} closeOnEscape={false}>
         <ExamPopUp title="Take Anytime Exams" closePopUp={onClosePopUpAnyTime} >
-          <table className={`${styles.table}`}>
-             <thead>
-            <tr className={`${styles.tableHeader}`} >
+          {loading ? <LoadingSpinner /> :
+            <table className={`${styles.table}`}>
+            <thead>
+              <tr className={`${styles.tableHeader}`} >
                 <th>Exam Name</th>
                 <th>Course Name</th>
                 <th>Duration</th>
-            </tr>
+              </tr>
             </thead>
-              {antTimeExamData?.length ?
-            <tbody>
+            {antTimeExamData?.length ?
+              <tbody>
                 {antTimeExamData?.map((exam, index) => (
-            <tr key={index} onClick={() => {
-                router?.push(
-                            `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
-                            `/course/${exam?.courseId}`
-                          );
-            }}>
-                <td>{exam?.Name}</td>
-                <td>{exam?.courseName}</td>
-                <td>{exam?.Duration/60} mins</td>
-            </tr>
-           ))}
-            </tbody>
-                :
-                <tbody>
+                  <tr key={index} onClick={() => {
+                    router?.push(
+                      `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
+                      `/course/${exam?.courseId}`
+                    );
+                  }}>
+                    <td>{exam?.Name}</td>
+                    <td>{exam?.courseName}</td>
+                    <td>{exam?.Duration / 60} mins</td>
+                  </tr>
+                ))}
+              </tbody>
+              :
+              <tbody>
                 <td></td>
                 <td>No Exams Found</td>
               </tbody>
-          }
+            }
           </table>
+          }
         </ExamPopUp>
       </Popup>
     </div>
