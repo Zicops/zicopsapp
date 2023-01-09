@@ -48,11 +48,11 @@ const ExamHeroSection = ({simpleTableRef}) => {
 
 
   useEffect(async () => {
-    setLoading(true)
+     setLoading(true)
     const examData = await loadExamData();
     setScheduleExamData(examData?.scheduleExams)
     setAntTimeExamData(examData?.takeAnyTimeExams)
-    console.log(examData);
+    setLoading(false)
   },[])
   
   return (
@@ -96,8 +96,9 @@ const ExamHeroSection = ({simpleTableRef}) => {
               <th>Exam Date</th>
             </tr>
             </thead>
-            <tbody>
-            {scheduleExamData?.map((exam , index) => (
+              {scheduleExamData?.length ?
+           ( <tbody>
+               { scheduleExamData?.map((exam, index) => (
               <tr key={index} onClick={() => {
                 router?.push(
                             `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
@@ -109,8 +110,13 @@ const ExamHeroSection = ({simpleTableRef}) => {
                 <td>{exam?.examDate}</td>
             </tr>
             ))}
-
-            </tbody>
+            </tbody>)
+              : 
+              <tbody>
+                <td></td>
+                <td> No Exams Found</td>
+              </tbody>
+          }
           </table>
         </ExamPopUp>
       </Popup>
@@ -124,8 +130,9 @@ const ExamHeroSection = ({simpleTableRef}) => {
                 <th>Duration</th>
             </tr>
             </thead>
+              {antTimeExamData?.length ?
             <tbody>
-           {antTimeExamData?.map((exam , index) => (
+                {antTimeExamData?.map((exam, index) => (
             <tr key={index} onClick={() => {
                 router?.push(
                             `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
@@ -136,38 +143,17 @@ const ExamHeroSection = ({simpleTableRef}) => {
                 <td>{exam?.courseName}</td>
                 <td>{exam?.Duration/60} mins</td>
             </tr>
-            ))}
-
+           ))}
             </tbody>
-           
+                :
+                <tbody>
+                <td></td>
+                <td>No Exams Found</td>
+              </tbody>
+          }
           </table>
         </ExamPopUp>
       </Popup>
-      {/* <Popup open={openModalCompleted} closeOnDocumentClick={false} closeOnEscape={false}>
-        <ExamPopUp title="Completed Exams" closePopUp={onClosePopUpCompleted}>
-          <table className={`${styles.table}`}>
-            <thead>
-            <tr className={`${styles.tableHeader}`}>
-              <th>Exam Name</th>
-                <th>Course Name</th>
-                <th>Exam Date</th>
-                <th>Attemp</th>
-                <th>Status</th>
-                <th>Score</th>
-                <th>Total Marks</th>
-              
-            </tr>
-            </thead>
-              {completedExamData?.results?.map((exam , index) => (
-            <tr key={index}>
-                <td>{exam?.Name}</td>
-                <td>{exam?.Category}</td>
-                <td>{exam?.Duration} mins</td>
-            </tr>
-            ))}
-          </table>
-        </ExamPopUp>
-      </Popup> */}
     </div>
   );
 };
