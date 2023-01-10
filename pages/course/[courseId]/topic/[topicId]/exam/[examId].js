@@ -274,7 +274,7 @@ const ExamScreen = () => {
         userData.id,
         data?.userCourseProgress
       );
-      if (userCPData) data.userCourseProgress.push(userCPData);
+      if (userCPData) data.userCourseProgress.push(...(userCPData || []));
 
       // const sendData = {
       //   userId: userData.id,
@@ -865,11 +865,14 @@ const ExamScreen = () => {
 
     let isError = false;
     if (userCourseData?.userCourseMapping?.course_status === 'open') {
+      const userLspId =
+        _courseData?.userCourseMapping?.user_lsp_id || sessionStorage.getItem('user_lsp_id');
+
       const sendUserCourseData = {
         courseStatus: 'started',
         userCourseId: _courseData?.userCourseMapping?.user_course_id,
         userId: _courseData?.userCourseMapping?.user_id,
-        userLspId: _courseData?.userCourseMapping?.user_lsp_id,
+        userLspId: userLspId,
         courseId: _courseData?.userCourseMapping?.course_id,
         addedBy: _courseData?.userCourseMapping?.added_by,
         courseType: _courseData?.userCourseMapping?.course_type,
@@ -900,9 +903,14 @@ const ExamScreen = () => {
     if (!user_cp_id)
       return setToastMsg({ type: 'danger', message: 'Course Progress Id not found' });
 
+    const userLspId =
+      userOrgData?.user_lsp_id ||
+      userDataGlobal?.userDetails?.user_lsp_id ||
+      sessionStorage.getItem('user_lsp_id');
+
     const sendAttemptData = {
       user_id: userData?.id,
-      user_lsp_id: userOrgData?.user_lsp_id || userDataGlobal?.userDetails?.user_lsp_id,
+      user_lsp_id: userLspId,
       user_cp_id: user_cp_id,
       user_course_id: _courseData?.userCourseMapping?.user_course_id,
       exam_id: learnerData?.examData?.id,
@@ -960,10 +968,15 @@ const ExamScreen = () => {
     console.log(learnerData);
     learnerData?.sectionData?.forEach((section, sectionIndex) => {
       section?.questions?.forEach((qId, qIndex) => {
+        const userLspId =
+          userOrgData?.user_lsp_id ||
+          userDataGlobal?.userDetails?.user_lsp_id ||
+          sessionStorage.getItem('user_lsp_id');
+
         const progressData = {
           user_id: userData?.id,
           user_ea_id: examAttemptData?.user_ea_id,
-          user_lsp_id: userOrgData?.user_lsp_id || userDataGlobal?.userDetails?.user_lsp_id,
+          user_lsp_id: userLspId,
           user_cp_id: sendAttemptData?.user_cp_id,
           // user_course_id: userCourseMapData?.userCourseMapping?.user_course_id,
 
