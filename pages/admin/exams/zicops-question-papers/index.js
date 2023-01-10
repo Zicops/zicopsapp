@@ -21,10 +21,10 @@ const ZicopsQuestionPapers = () => {
         {/* <div style={{ padding: '50px' }}>
             <QuizOptionInput />
           </div> */}
-        {/* <MainBodyBox>
+        <MainBodyBox>
           <QuestionPaperTable />
-        </MainBodyBox> */}
-        <NoAccess />
+        </MainBodyBox>
+        {/* <NoAccess /> */}
       </MainBody>
     </>
   );

@@ -104,7 +104,7 @@ export function useHandleCohortMaster() {
       size: cohortMasterData?.managers?.length || 1
     };
 
-    if (cohortMasterData?.cohort_image) sendCohortData.image = cohortMasterData?.cohort_image;
+    sendCohortData.image = cohortMasterData?.cohort_image ? cohortMasterData?.cohort_image : null;
     let isError = false;
     if (cohortMasterData?.id) {
       sendCohortData.cohort_id = cohortMasterData?.id;
@@ -245,20 +245,21 @@ export function useHandleCohortMaster() {
       const activeUsers = cohortUsers?.filter((item) => item?.membership_status?.toLowerCase() !== 'disable') ;
 
     if (activeUsers?.length) sendCohortData.size = activeUsers?.length;
-      // console.log(sendCohortData);
+      console.log(sendCohortData);
       const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
         // console.log(err);
         isError = !!err;
       });
 
-      // console.log(res);
       if (isError)
         return setToastMsg({ type: 'danger', message: 'Error occured while updating cohort!' });
 
       setIsSubmitDisable(false);
 
+      setCohortData((prevValue) => ({...prevValue , image_url: res?.data?.updateCohortMain?.imageUrl}))
       return setToastMsg({ type: 'success', message: 'Updated cohort successfully!' });;
     }
+
 
     // console.log(sendCohortData, 'add cohortmaster');
     if (!cohortMasterData?.id) {

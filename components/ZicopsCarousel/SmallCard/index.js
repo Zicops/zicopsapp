@@ -29,7 +29,14 @@ export default function SmallCard({
     e.currentTarget.parentNode.style.margin = '';
   }
   const gotoCourse = () => {
-    router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
+    if (!courseData?.examId) {
+      router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
+    } else {
+        router?.push(
+                            `/course/${courseData?.courseId}?activateExam=${courseData?.examId}`,
+                            `/course/${courseData?.courseId}`
+                          );
+    }
   };
 
   const gotoAssignCourses = () => {
@@ -44,7 +51,8 @@ export default function SmallCard({
     // console.log(courseData?.name?.length);
     courseNameClass = 'coursenamesmall';
   }
-  const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
+  const progress =
+    courseData?.topicsStartedPercentage != null ? courseData?.topicsStartedPercentage : 0;
   return (
     <>
       <div

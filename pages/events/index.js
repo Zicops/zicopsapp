@@ -8,6 +8,7 @@ import HeroSliderContainer from '../../components/HeroSliderContainer';
 import FavouriteDndCourses from '../../components/FavouriteDndCourses';
 import BigCardSlider from '../../components/medium/BigCardSlider';
 import ZicopsCarousel from '../../components/ZicopsCarousel';
+import EventGrid from '@/components/EventGrid';
 
 const Events = () => {
   const router = useRouter();
@@ -139,22 +140,23 @@ const Events = () => {
         margin: 0,
         padding: '0 0 0 0'
       }}>
-      <HeroSliderContainer>
-        {imageLink.map((item) => (
+      {/* <HeroSliderContainer> */}
+        <EventGrid />
+        {/* {imageLink.map((item) => (
           <img src={item} alt="" />
-        ))}
-      </HeroSliderContainer>
+        ))} */}
+      {/* </HeroSliderContainer> */}
       <ZicopsCarousel title="Subscribed Classroom Courses" data={sliderImages} />
       <ZicopsCarousel title="Recomended For You" data={sliderImages} />
 
-      <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
+      {/* <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
         <div className="w-60 border_right">
           <SimpleTable tableData={tableData} tableHeight="70vh" tableHeading="Mandatory Courses" />
         </div>
         <div className="w-40 calender_box">
           <CommonCalendar />
         </div>
-      </div>
+      </div> */}
       {/* <SelfPacedMiddle /> */}
 
       <ZicopsCarousel title="Trending" data={sliderImages} />

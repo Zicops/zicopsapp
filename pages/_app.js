@@ -1,4 +1,5 @@
 import AuthChecker from '@/components/AuthChecker';
+import FeatureFlagsLayout from '@/components/Layout/FeatureFlagsLayout';
 import PushNotificationLayout from '@/components/Layout/PushNotificationLayout';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
 import Head from 'next/head';
@@ -53,19 +54,21 @@ manages and elevates the entire learning environment."
       <ErrorBoundary>
         <AuthUserProvider>
           <RecoilRoot>
-            <CourseContextProvider>
-              <UserContextProvider>
-                <AuthChecker>
-                  <PushNotificationLayout>
-                    <Layout>
-                      <Component {...pageProps} />
+            <FeatureFlagsLayout>
+              <PushNotificationLayout>
+                <CourseContextProvider>
+                  <UserContextProvider>
+                    <AuthChecker>
+                      <Layout>
+                        <Component {...pageProps} />
 
-                      <Toaster />
-                    </Layout>
-                  </PushNotificationLayout>
-                </AuthChecker>
-              </UserContextProvider>
-            </CourseContextProvider>
+                        <Toaster />
+                      </Layout>
+                    </AuthChecker>
+                  </UserContextProvider>
+                </CourseContextProvider>
+              </PushNotificationLayout>
+            </FeatureFlagsLayout>
           </RecoilRoot>
         </AuthUserProvider>
       </ErrorBoundary>

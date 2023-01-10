@@ -25,9 +25,10 @@ import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import Loader from '@/components/common/Loader';
 
-const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
+const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
   const { getCohortManager } = useCohortUserData();
   const [cohortData, setCohortData] = useRecoilState(CohortMasterData);
+
   const router = useRouter();
   const cohortId = router?.query?.cohortId || null;
 
@@ -36,7 +37,16 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
 
   const [image, setImage] = useState(null);
   useEffect(() => {
-    setCohortData((prevValue) => ({ ...prevValue, cohort_image: image }));
+    if (!image) return setCohortData((prev) => ({ ...prev, cohort_image: null }));
+
+    const _cohortData = structuredClone(cohortData);
+
+    const isUrlPresent = cohortData?.image_url;
+    _cohortData.cohort_image = isUrlPresent ? image : null;
+    if (!isUrlPresent) {
+      setImage(null);
+    }
+    setCohortData(_cohortData);
   }, [image]);
 
   const difficultyOptions = [
@@ -94,7 +104,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
     // console.log(managerList,'fs');
     if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
     const managerList = formatUsers(userList);
-    
+
     setCohortManager([...managerList]);
 
     const cohortDetail = resCohort?.getCohortDetails;
@@ -124,7 +134,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
     isSearchEnable: true,
     isMulti: true,
     menuPlacement: 'top',
-    isDisabled:isReadOnly
+    isDisabled: isReadOnly
   };
 
   function handleMulti(e, state, setState, inputName = null) {
@@ -146,9 +156,8 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
           placeholder: 'Enter Cohort Name (Upto 20 characters)',
           value: cohortData?.cohort_name,
           maxLength: 20,
-          isDisabled:isReadOnly
-        }
-      }
+          isDisabled: isReadOnly
+        }}
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);
         }}
@@ -163,7 +172,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
           placeholder: 'Enter Cohort Code (Upto 10 characters)',
           value: cohortData?.cohort_code,
           maxLength: 10,
-          isDisabled:isReadOnly
+          isDisabled: isReadOnly
         }}
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);
@@ -177,7 +186,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
           label: 'Type:',
           placeholder: 'Select Cohort Type(Open/Close)',
           options: difficultyOptions,
-          isDisabled:isReadOnly,
+          isDisabled: isReadOnly,
           value: {
             value: cohortData?.cohort_type,
             label: cohortData?.cohort_type
@@ -197,7 +206,7 @@ const CohortMaster = ({ isEdit = false , isReadOnly = false}) => {
           placeholder: 'Enter Description (Upto 160 characters)',
           value: cohortData?.description,
           maxLength: 160,
-          isDisabled:isReadOnly
+          isDisabled: isReadOnly
         }}
         changeHandler={(e) => {
           changeHandler(e, cohortData, setCohortData);

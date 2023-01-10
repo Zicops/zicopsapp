@@ -10,13 +10,18 @@ import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen, isWordIncluded } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { AdminLearnerListAtom, DisabledUserAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import {
+  AdminLearnerListAtom,
+  DisabledUserAtom,
+  InviteUserAtom,
+  UserStateAtom
+} from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
-export default function MyUser({ getUser, isAdministration = false, customStyle = {} }) {
+const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {} }, ref) => {
   const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
@@ -26,6 +31,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
   const userData = useRecoilValue(UserStateAtom);
   const [currentDisabledUser, setCurrentDisabledUser] = useState(null);
   const [currentSelectedUser, setCurrentSelectedUser] = useState(null);
+  const [invitedUsers, setInvitedUsers] = useRecoilState(InviteUserAtom);
 
   const {
     newUserAboutData,
@@ -43,6 +49,18 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
 
+  // function exposed to parent
+  useImperativeHandle(ref, () => ({
+    clearSelection() {
+      setSelectedUser([]);
+    }
+  }));
+
+  async function sortArray(arr, param) {
+    const sortedArr = await arr?.sort((a, b) => a?.[`${param}`] - b?.[`${param}`]);
+    return sortedArr;
+  }
+
   useEffect(async () => {
     setLoading(true);
 
@@ -51,6 +69,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       setLoading(false);
       return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
     }
+    setData(sortArrByKeyInOrder([..._usersData], 'created_at', false), setLoading(false));
     for (let i = 0; i < _usersData.length; i++) {
       const user = _usersData[i];
       const res = await loadQueryDataAsync(
@@ -62,15 +81,18 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         {},
         userClient
       );
+      const lspRoleArr = res?.getUserLspRoles;
 
-      let currentRole = null;
-      const _userRole = res?.getUserLspRoles?.reduce(function (prev, current) {
-        currentRole = current
-        return prev?.updated_at > current?.updated_at ? prev : current;
-      }, currentRole);
-  
-      user.role = _userRole?.role;
-      user.roleData = _userRole;
+      let roleData = {};
+      if (lspRoleArr?.length > 1) {
+        const latestUpdatedRole = await sortArray(lspRoleArr, 'updated_at');
+        roleData = latestUpdatedRole?.pop();
+      } else {
+        roleData = lspRoleArr[0];
+      }
+
+      user.role = roleData?.role;
+      user.roleData = roleData;
     }
     //make sure no user without role map is shown
     const usersData = _usersData?.filter((user) => !!user?.roleData);
@@ -82,7 +104,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
     } else {
       users = [...usersData];
     }
-    setLoading(false);
+    // setLoading(false);
     setData(sortArrByKeyInOrder([...users], 'created_at', false));
     return;
   }, []);
@@ -179,13 +201,15 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       flex: 0.5,
       renderCell: (params) => {
         let status = '';
-        if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
-        const lspStatus = params?.row?.lsp_status?.toLowerCase();
+        // let lspStatus = '';
+        if (disabledUserList?.includes(params?.row?.id)) status = USER_MAP_STATUS?.disable;
+        if (invitedUsers?.includes(params?.row?.id)) status = 'invited';
+
+        let lspStatus = !status?.length ? params?.row?.lsp_status : status;
+
         return (
           <span style={{ textTransform: 'capitalize' }}>
-            {lspStatus === 'disabled' || lspStatus === 'disable' || status === 'disable'
-              ? 'Disabled'
-              : params?.row?.lsp_status || 'Invited'}
+            {lspStatus?.trim()?.length ? lspStatus : 'Invited'}
           </span>
         );
       }
@@ -198,10 +222,10 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       headerName: 'Action',
       flex: 0.4,
       renderCell: (params) => {
-        let status = ""
+        let status = '';
         if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
-        let _lspStatus = params?.row?.lsp_status ;
-        if(status === 'disable'){
+        let _lspStatus = params?.row?.lsp_status;
+        if (status === 'disable') {
           _lspStatus = USER_MAP_STATUS.disable;
         }
 
@@ -221,7 +245,6 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
 
         const buttonArr = [
           { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
-          // { handleClick: () => alert(`Edit ${params.id}`) },
           {
             text: _lspStatus === USER_MAP_STATUS.disable ? 'Enable' : 'Disable',
             handleClick: () => {
@@ -241,7 +264,8 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
 
               if (isDisabled) setCurrentDisabledUser(params?.row?.id);
               setDisableAlert(true);
-            }
+            },
+            isDisabled: userData?.id === params.id
           },
           {
             text: isLearner ? 'Make Admin' : 'Demote Admin',
@@ -252,7 +276,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
               });
               setIsMakeAdminAlert(true);
             },
-            hideBtn: userData?.id === params.id
+            isDisabled: userData?.id === params.id
           }
         ];
 
@@ -356,56 +380,25 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
               // first check if it is in the learner or admin
               // if updated to is admin check learner
               if (currentSelectedUser?.updateTo?.toLowerCase() === USER_LSP_ROLE?.admin) {
-                let foundAt = -1;
-                //checking if user is in learner atom or not, if he is in this then remove him from this and add them to admin
-                const _updatedLearners = adminLearnerList?.learners?.filter((userId, index) => {
-                  if (userId === isRoleUpdate?.user_id) {
-                    foundAt = index;
-                    return true;
-                  }
-                  return false;
+                const _updatedList = adminLearnerList?.learners?.filter((userId) => {
+                  return userId !== isRoleUpdate?.user_id;
                 });
-                if (foundAt >= 0) {
-                  const learners = structuredClone(adminLearnerList?.learners);
-                  // learners?.splice(foundAt, 1);
-                  // console.log('1', learners);
-                  setAdminLearnerList((prevValue) => ({
-                    admins: [...prevValue?.admins, isRoleUpdate?.user_id],
-                    learners: [...learners]
-                  }));
-                } else {
-                  // console.log('2');
-                  setAdminLearnerList((prevValue) => ({
-                    ...prevValue,
-                    admins: [...prevValue?.admins, isRoleUpdate?.user_id]
-                  }));
-                }
+
+                setAdminLearnerList((prevValue) => ({
+                  admins: [...prevValue?.admins, isRoleUpdate?.user_id],
+                  learners: [..._updatedList]
+                }));
               }
+
               // same thing for learner also
               if (currentSelectedUser?.updateTo?.toLowerCase() === USER_LSP_ROLE?.learner) {
-                let foundAt = -1;
-                const adminUsers = adminLearnerList?.admins?.filter((userId, index) => {
-                  if (userId === isRoleUpdate?.user_id) {
-                    foundAt = index;
-                    return true;
-                  }
-                  return false;
+                const _updatedList = adminLearnerList?.admins?.filter((userId) => {
+                  return userId !== isRoleUpdate?.user_id;
                 });
-                if (foundAt >= 0) {
-                  const admins = structuredClone(adminLearnerList?.admins);
-                  admins?.splice(foundAt, 1);
-                  // console.log(admins, '3');
-                  setAdminLearnerList((prev) => ({
-                    admins: [...admins],
-                    learners: [...prev?.learners, isRoleUpdate?.user_id]
-                  }));
-                } else {
-                  // console.log('4');
-                  setAdminLearnerList((prev) => ({
-                    ...prev,
-                    learners: [...prev?.learners, isRoleUpdate?.user_id]
-                  }));
-                }
+                setAdminLearnerList((prevValue) => ({
+                  admins: [..._updatedList],
+                  learners: [...prevValue?.learners, isRoleUpdate?.user_id]
+                }));
               }
               setToastMsg({
                 type: 'success',
@@ -420,4 +413,6 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       )}
     </>
   );
-}
+});
+
+export default MyUser;

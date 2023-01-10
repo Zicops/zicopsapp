@@ -26,6 +26,7 @@ $bgFooter: #001111;
 // $bgHeader: #222529;
 $bgHeader: #0b0c0d;
 $popupBgColor: #323232;
+$warning: #F6AC3C;
 
 $headerHeight: 70px;
 $footerHeight: 100px;
@@ -159,4 +160,13 @@ $courseTitleSmall: 18px;
     right: 0;
     transform: translate(50%, -50%);
   }
+}
+
+
+.courseColor{
+  color: $white;
+}
+
+.examColor{
+  color: $warning;
 }

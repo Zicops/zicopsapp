@@ -18,8 +18,8 @@ const ZicopsCourses = () => {
           tooltipTitle={ADMIN_COURSES.zicopsCourses.addBtn}
         />
 
-        <NoAccess />
-        {/* <ZicopsCourseList /> */}
+        {/* <NoAccess /> */}
+        <ZicopsCourseList />
         {/* <ZicopsCourseTable /> */}
       </div>
     </div>

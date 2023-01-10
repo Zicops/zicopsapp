@@ -44,8 +44,9 @@ export const GET_ALL_NOTIFICATIONS = gql`
         body
         created_at
         user_id
-        is_read
         message_id
+        is_read
+        link
       }
       nextPageSnapShot
     }
@@ -57,5 +58,31 @@ export const SEND_NOTIFICATIONS = gql`
     sendNotification(notification: { title: $title, body: $body, user_id: $user_id }) {
       statuscode
     }
+  }
+`;
+
+export const SEND_NOTIFICATIONS_WITH_LINK = gql`
+  mutation sendNotificationWithLink($title: String!, $body: String!, $user_id: [String]! , $link:String!) {
+    sendNotificationWithLink(notification: { title: $title, body: $body, user_id: $user_id } ,link:$link) {
+      statuscode
+    }
+  }
+`;
+
+export const SEND_EMAIL = gql`
+  mutation sendEmail(
+    $to: [String]!
+    $sender_name: String!
+    $user_name: [String]!
+    $body: String!
+    $template_id: String!
+  ) {
+    sendEmail(
+      to_: $to
+      sender_name: $sender_name
+      user_name: $user_name
+      body: $body
+      template_id: $template_id
+    )
   }
 `;

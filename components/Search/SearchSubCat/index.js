@@ -2,10 +2,15 @@ import TwoRowCarousel from '../../common/TwoRowCarousel';
 import styles from '../search.module.scss';
 import SubCatCard from './SubCatCard';
 
-export default function SearchSubCat({ data }) {
+export default function SearchSubCat({ data, handleTitleClick = null }) {
   return (
     <>
-      <div className={`${styles.searchBookmarkTitle}`}>Sub Categories</div>
+      <div
+        className={`${styles.searchBookmarkTitle}`}
+        onClick={!!handleTitleClick ? handleTitleClick : ()=>{}}
+        style={!!handleTitleClick ? { cursor: 'pointer' } : {}}>
+        Sub Categories
+      </div>
       {data?.length ? (
         <TwoRowCarousel
           itemsArr={data}

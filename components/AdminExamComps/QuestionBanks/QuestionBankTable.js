@@ -5,6 +5,7 @@ import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper'
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -48,11 +49,18 @@ export default function QuestionBankTable({ isEdit = false }) {
   useEffect(async () => {
     if (searchQuery) queryVariables.searchText = searchQuery?.trim();
 
-    const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
-    if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
+    const qbRes = await loadQueryDataAsync(
+      GET_LATEST_QUESTION_BANK,
+      queryVariables,
+      !isEdit ? { context: { headers: { tenant: COMMON_LSPS?.zicops } } } : {}
+    );
+    if (qbRes?.error) {
+      setLoading(false);
+      return setToastMsg({ type: 'danger', message: 'question bank load error' });
+    }
 
     const questionBankData = structuredClone(qbRes?.getLatestQuestionBank?.questionBanks) || [];
-    if (!questionBankData.length) return;
+    if (!questionBankData.length) return setLoading(false);
 
     for (let i = 0; i < questionBankData.length; i++) {
       const qb = questionBankData[i];
@@ -80,6 +88,8 @@ export default function QuestionBankTable({ isEdit = false }) {
 
       if (errorQuestionBankData)
         return setToastMsg({ type: 'danger', message: 'Question Bank Refetch Error' });
+
+      setSearchQuery(`${searchQuery} `);
     }
 
     setRefetchData({
