@@ -1,3 +1,6 @@
+import { userClient } from '@/api/UserMutations';
+import { GET_LEARNINGSPACES_ID_BY_ORGID } from '@/api/UserQueries';
+import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
@@ -7,7 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import '@reach/menu-button/styles.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
 import { support, userProfile } from '../Logic/subMenu.helper.js';
@@ -22,7 +26,21 @@ export default function RightDropDownMenu() {
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
 
-  const featureFlags = useRecoilValue(FeatureFlagsAtom);
+  const [featureFlags, setFeatureFlags] = useRecoilState(FeatureFlagsAtom);
+
+  useEffect(() => {
+    if (featureFlags?.isUserMappedToMultipleLsps) return;
+
+    const org_id = sessionStorage.getItem('org_id');
+    if (!org_id) return;
+
+    loadAndCacheDataAsync(GET_LEARNINGSPACES_ID_BY_ORGID, { org_id }, {}, userClient).then(
+      (res) => {
+        const allLsps = res?.getLearningSpacesByOrgId?.filter((lsp) => !lsp?.is_default) || [];
+        setFeatureFlags((prev) => ({ ...prev, isUserMappedToMultipleLsps: allLsps?.length > 1 }));
+      }
+    );
+  }, []);
 
   const menuItemList = [
     {
@@ -87,7 +105,7 @@ export default function RightDropDownMenu() {
         sessionStorage.removeItem('org_id');
         router.push('/learning-spaces');
       },
-      isHidden: !featureFlags?.isUserMappedToMultipleLsps
+      isDisabled: !featureFlags?.isUserMappedToMultipleLsps
     },
     {
       id: 5,
@@ -139,7 +157,7 @@ export default function RightDropDownMenu() {
 
               return (
                 <MenuItem
-                  key={item.id}
+                  key={item?.id}
                   sx={{
                     '&.MuiMenuItem-root': {
                       border: '1px solid var(--primary)',
@@ -152,6 +170,7 @@ export default function RightDropDownMenu() {
                   }}
                   onClick={item?.onClick ? item.onClick : () => {}}
                   style={item.styles ? item.styles : {}}
+                  disabled={item?.isDisabled || false}
                   className={`${item.class} ${styles[`dropdown_item_${item.id}`]}`}>
                   {item.name ? item.name : item.comp}
                 </MenuItem>
