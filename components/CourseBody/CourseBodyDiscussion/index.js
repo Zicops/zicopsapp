@@ -39,12 +39,7 @@ const CourseBodyDiscussion = () => {
   };
   const anonymousUserHandler = () => {
     setIsAnonymous(!isAnonymous);
-    // setIsPublic(false);
   };
-  // const publicUserHandler = () => {
-  //   setIsPublic(true);
-  //   setIsAnonymous(false);
-  // };
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
@@ -59,8 +54,12 @@ const CourseBodyDiscussion = () => {
     showRepliesHandler(currentMsgId)
   },[replyData])
   const sendMessageHandler = () => {
+    const pinnedData = messageArr?.filter((data)=> data?.isPinned)
+    const nonPinnedData = messageArr?.filter((data) => !data?.isPinned)
+    console.log("pinnedData", pinnedData);
+    console.log("nonPinnedData", nonPinnedData)
     setMessageArr([
-      ...messageArr,
+      ...pinnedData,
       {
         id: Math.floor(Date.now() / 1000 + 1),
         isAnonymous: isAnonymous,
@@ -88,7 +87,8 @@ const CourseBodyDiscussion = () => {
         unlike: [543, 123, 555],
         isPinned: false,
         reply: 0
-      }
+      },
+      ...nonPinnedData
     ]);
     setMessage('');
     setShowInput(false);
@@ -216,8 +216,6 @@ const CourseBodyDiscussion = () => {
             onCancleHandler={canclePostHanlder}
             onAnonymousHandler={anonymousUserHandler}
             checkAnonymous={isAnonymous}
-            // checkPublic={isPublic}
-            // onPublicHandler={publicUserHandler}
             onAnnouncementHandler={announcementHandler}
             checkAnnouncement={isAnnouncement}
             handleKeyPress={handleKeyPress}
@@ -228,8 +226,8 @@ const CourseBodyDiscussion = () => {
         const newreplyData = replyArr?.find((rdata) => rdata[data.id]);
         return (
           <>
-            <div className={`${style.massage_block}`}>
-              <MessageBlock message={data} />
+            <div className={`${data?.isPinned ? style.massage_pinned : style.massage_block }`}>
+              <MessageBlock message={data} setFilterData={setFilterData} />
             <div className={`${style.more_replies}`} onClick={() => {
                   setCurrentMsgId(data)
                   showRepliesHandler(data)

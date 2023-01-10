@@ -5,7 +5,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
-const MessageBlock = ({ isReply, message  }) => {
+const MessageBlock = ({ isReply, message , setFilterData  }) => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   // const [isPublic, setIsPublic] = useState(true);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
@@ -38,8 +38,17 @@ const MessageBlock = ({ isReply, message  }) => {
   };
  
   const onPinnedHandler = (data) => {
-    console.log("data" , data);
-    setIsPinned(true)
+    const nonPinedMessages = messageArr?.filter((m) => m?.id !== data?.id);
+    setMessageArr([{ ...data, isPinned: true }, ...nonPinedMessages ])
+    setFilterData([...messageArr])
+  }
+
+  const onUnpinHandler = (data) => {
+     const filterMessages = messageArr?.filter((m)=> m?.id !== data?.id)
+    console.log("data", filterMessages);
+    console.log("ispinned",{...data, isPinned: false});
+    setMessageArr([...filterMessages,{ ...data, isPinned: false }])
+    setFilterData([...messageArr])
   }
 
   const onSendReplyHandler = (msg) => {
@@ -78,7 +87,7 @@ const MessageBlock = ({ isReply, message  }) => {
               },
               like: [],
               unlike: [],
-              isPinned: isPinned
+              isPinned: false
             }
           ]
         }
@@ -119,7 +128,13 @@ const MessageBlock = ({ isReply, message  }) => {
   };
 
   return (
-    <>
+    <div className={`${style.message_Block_container}`}>
+      {message?.isPinned && 
+      <div className={`${style.message_Block_Pinned}`} onClick={()=>onUnpinHandler(message)}>
+      <img src="/images/svg/pinned2.svg" alt=""/>
+        <p>Pinned by {userDetails?.first_name}</p>
+      </div>
+      }
       <div
         className={`${style.message_Block_Main} ${isReply ? style.message_Block_Main_Reply : ''}`}>
         <div className={`${style.message_Block_Head}`}>
@@ -152,7 +167,7 @@ const MessageBlock = ({ isReply, message  }) => {
             )}
           </div>
         </div>
-        <div className={`${style.message_Block_Body}`}>
+        <div className={`${style.message_Block_Body} ${message?.isPinned ? style.message_Block_Body_pinned : style.message_Block_Body_unpinned}`}>
           {!isReply && !message?.isAnnouncement && (
             <div className={`${style.message_Block_module}`}>
               <p>{message?.currentTopic?.time}</p>
@@ -161,9 +176,11 @@ const MessageBlock = ({ isReply, message  }) => {
             </div>
           )}
           <div className={`${style.message_Content}`}>
+            {!message?.isPinned && 
             <div className={`${style.message_Content_pinned}`} onClick={()=>onPinnedHandler(message)}>
             <img src="/images/svg/pined.svg" alt="" />
             </div>
+            }
             <div>
             {message?.content?.image?.length ? <img src={message?.content?.image} alt="" /> : ''}
             <p>{message?.content?.text}</p>
@@ -210,7 +227,7 @@ const MessageBlock = ({ isReply, message  }) => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
