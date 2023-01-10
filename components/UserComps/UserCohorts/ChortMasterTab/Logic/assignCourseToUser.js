@@ -142,10 +142,11 @@ export default function assignCourseToUser() {
     //   );
     // }
 
+    const endDate = getUnixFromDate(course_data?.endDate) * 1000;
     if (!isError) {
       const notificaitonBody = getNotificationMsg('courseAssign', {
         courseName: course_data?.name,
-        endDate: course_data?.endDate
+        endDate: moment(endDate).format('D MMM YYYY')
       });
       await sendNotificationWithLink(
         {
