@@ -166,6 +166,9 @@ export default function RightDropDownMenu() {
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
                       padding: '0px'
+                    },
+                    '&.Mui-disabled': {
+                      cursor: 'no-drop'
                     }
                   }}
                   onClick={item?.onClick ? item.onClick : () => {}}
