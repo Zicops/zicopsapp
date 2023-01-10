@@ -107,6 +107,10 @@ export default function CourseBodyNotes() {
                         handleNote={handleNote}
                         noteObj={noteObj}
                         isDraggable={false}
+                        topicData={{
+                          topicId: isNotesVisible.split('|:|')[0],
+                          moduleId: selectedModule?.value
+                        }}
                       />
                     );
                   })

@@ -153,20 +153,20 @@ export default function QuestionPaperMaster() {
           inputOptions={{
             inputName: 'suggested_duration',
             label: (
-              <>
-                Suggested Duration:
+              <div className={styles.withTooltip}>
+                Suggested Duration <br/><small>(in Minutes)</small>:
                 <CustomTooltip
                   info={
                     ADMIN_EXAMS.myQuestionPapers.addQuestionPapers.questionPaperMasterTab
                       .suggestedDuration
                   }
                 />
-              </>
+              </div>
             ),
             placeholder: 'Enter duration in Minutes',
             value: questionPaperTabData.paperMaster?.suggested_duration,
             isNumericOnly: true,
-            maxLength:5
+            maxLength: 5
           }}
           changeHandler={(e) => handleInput(e)}
         />

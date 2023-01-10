@@ -122,10 +122,11 @@ const AuthChecker = ({ children }) => {
 
     const _lspId = sessionStorage?.getItem('lsp_id');
     const _userLspId = sessionStorage?.getItem('user_lsp_id');
+    const _orgId = sessionStorage?.getItem('org_id');
 
     if (!_lspId) return router.push('/learning-spaces');
 
-    return setUserOrg((prevValue) => ({ ...prevValue, lsp_id: _lspId, user_lsp_id: _userLspId }));
+    return setUserOrg((prevValue) => ({ ...prevValue, lsp_id: _lspId, user_lsp_id: _userLspId ,organization_id: _orgId}));
   }
 
   function authCheck(url) {

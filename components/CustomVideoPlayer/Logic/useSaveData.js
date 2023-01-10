@@ -2,7 +2,7 @@ import { ADD_USER_BOOKMARK, userClient } from '@/api/UserMutations';
 import { QuizAtom } from '@/state/atoms/module.atoms';
 import { THUMBNAIL_GAP } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
@@ -18,10 +18,12 @@ export default function useSaveData(videoElement, freezeState) {
   });
 
   const userDataGlobal = useRecoilValue(UserDataAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
+  const [showQuiz, setShowQuiz] = useState(null);
 
   const { fullCourse } = useContext(courseContext);
   const {
@@ -32,10 +34,10 @@ export default function useSaveData(videoElement, freezeState) {
   } = useContext(userContext);
 
   const [showQuizDropdown, setShowQuizDropdown] = useState(false);
-  const [showQuiz, setShowQuiz] = useState(null);
 
   const [freezeScreen, setFreezeScreen] = freezeState;
   const [showBox, setShowBox] = useState(null);
+  const [isBookMarkDisable, setIsBookMarkDisable] = useState(false);
 
   const [bookmarkData, setBookmarkData] = useState({
     time_stamp: '',
@@ -252,14 +254,16 @@ export default function useSaveData(videoElement, freezeState) {
     // const image = captureImageOfVideo();
     // setBookmarkData({ ...bookmarkData });
 
-    if (!bookmarkData?.name)
-      return setToastMsg({ type: 'danger', message: 'BookMark title cannot be empty!' });
+    setIsBookMarkDisable(true);
 
-    console.log(bookmarkData);
+    if (!bookmarkData?.name) {
+      setIsBookMarkDisable(false);
+      return setToastMsg({ type: 'danger', message: 'BookMark title cannot be empty!' });
+    }
 
     const sendBookMarkData = {
       user_id: userData?.id,
-      user_lsp_id: userDataGlobal?.userDetails?.user_lsp_id,
+      user_lsp_id: userOrgData?.user_lsp_id,
       user_course_id: userCourseData?.userCourseMapping?.user_course_id,
       course_id: fullCourse?.id,
       topic_id: videoData?.topicContent[0]?.topicId,
@@ -269,7 +273,6 @@ export default function useSaveData(videoElement, freezeState) {
       is_active: true
     };
 
-    console.log(sendBookMarkData);
     // return;
     const res = await addUserBookMark({ variables: sendBookMarkData }).catch((err) => {
       console.log(err);
@@ -278,12 +281,14 @@ export default function useSaveData(videoElement, freezeState) {
     console.log(res);
     //   save to context
     if (!res?.data?.addUserBookmark?.[0])
-      return setToastMsg({ type: 'danger', message: 'Bookmark add error' });
+     { setIsBookMarkDisable(false); 
+      return setToastMsg({ type: 'danger', message: 'Bookmark add error' });}
     addBookmarkData(res?.data?.addUserBookmark?.[0]);
 
     setBookmarkData({ time_stamp: '', name: '', topic_id: '' });
     // console.log(res?.data?.addUserBookmark[0]);
     setToastMsg({ type: 'success', message: 'Bookmark added' });
+    setIsBookMarkDisable(false);
     // console.log(bookmarkData, sendBookMarkData);
     return true;
   }
@@ -304,7 +309,8 @@ export default function useSaveData(videoElement, freezeState) {
     handleBookmarkChange,
     bookmarkData,
     setBookmarkData,
-    handleSaveBookmark
+    handleSaveBookmark,
+    isBookMarkDisable
     // notes,
     // handleNotesChange,
     // handleSaveNotes

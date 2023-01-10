@@ -1,9 +1,11 @@
 // import Image from 'next/image';
-import React, { useState } from 'react';
+import { GET_USER_LSP_ROLES, userQueryClient } from '@/api/UserQueries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { getCurrentOrigin } from '@/helper/utils.helper';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './learningSpaces.module.scss';
-import { useRecoilState } from 'recoil';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 const LspCard = ({
   image,
   website,
@@ -15,13 +17,38 @@ const LspCard = ({
   path,
   isDisabled = false,
   userLspId,
-  userLspRole
+  userId
 }) => {
   const router = useRouter();
+  const userData = useRecoilValue(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
-  const onHandleLsp = () => {
+
+  const onHandleLsp = async () => {
     console.log(logo);
     if (isDisabled) return;
+
+    if (!userLspId && !userId) return;
+    setUserOrgData((prev) => ({ ...prev, logo_url: logo }));
+    const lspRoleArr = await loadQueryDataAsync(
+      GET_USER_LSP_ROLES,
+      { user_id: userId, user_lsp_ids: [userLspId] },
+      {},
+      userQueryClient
+    );
+
+    const lspRoles = lspRoleArr?.getUserLspRoles;
+    let userLspRole = 'learner';
+
+    if (lspRoleArr?.length > 1) {
+      const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
+      userLspRole = latestUpdatedRole?.pop()?.role;
+    } else {
+      userLspRole = lspRoles[0]?.role;
+    }
+    // const latestUpdatedRole = lspRoleArr?.getUserLspRoles?.sort((a,b) => a?.updated_at - b?.updated_at);
+
+    // const userLspRole = latestUpdatedRole?.pop()?.role ? latestUpdatedRole?.pop()?.role : 'learner';
+
     sessionStorage.setItem('lsp_id', lspId);
     setUserOrgData((prevValue) => ({ ...prevValue, lsp_id: lspId, logo_url: logo }));
     sessionStorage.setItem('lsp_name', lspName);
@@ -29,6 +56,15 @@ const LspCard = ({
     sessionStorage.setItem('ou_id', ouId);
     sessionStorage.setItem('user_lsp_id', userLspId);
     sessionStorage.setItem('user_lsp_role', userLspRole);
+
+    const currentOrigin = getCurrentOrigin();
+    if (currentOrigin !== 'demo.zicops.com' && currentOrigin !== website) {
+      const token = sessionStorage.getItem('tokenF');
+
+      window.location.href = `https://${website}/auth-verify/?role=${userLspRole}&lspId=${lspId}&userLspId=${userLspId}&token=${token}`;
+      return;
+    }
+
     router.push(path);
   };
   return (

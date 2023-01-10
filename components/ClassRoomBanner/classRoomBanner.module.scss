@@ -1,11 +1,11 @@
 @import '../../styles/base.scss';
 
-.classroomBanner{
+.classroomBanner {
     width: 100%;
     height: 65vh;
     overflow: hidden;
-    
-    .imgContainer{
+
+    .imgContainer {
         position: absolute;
         z-index: -1;
         height: 65vh;
@@ -14,18 +14,21 @@
         overflow: hidden;
         border-radius: 20px;
     }
-    .classroomText{
+
+    .classroomText {
         width: 50%;
         display: flex;
         flex-direction: column;
         gap: 10px;
         padding: 50px;
         color: $white;
-        .classroomLogo{
+
+        .classroomLogo {
             width: 200px;
             height: 100px;
             display: flex;
             justify-content: flex-start;
+
             img {
                 width: 100%;
                 height: 100%;
@@ -33,38 +36,47 @@
                 object-position: left center;
             }
         }
-        .classroomTitle{
+
+        .classroomTitle {
             font-size: 30px;
             line-height: 1.2em;
             font-weight: bold;
         }
-        .classroomBy{
+
+        .classroomBy {
             font-size: 18px;
-            span{
+
+            span {
                 margin-top: 20px;
                 font-size: 20px;
                 font-weight: bold;
             }
         }
-        .classroomByDesisgnation{
+
+        .classroomByDesisgnation {
             font-size: 16px;
             margin-top: -10px;
         }
-        .classroomIcon{
+
+        .classroomIcon {
             width: 15px;
-            img{
+
+            img {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
             }
         }
-        .classroomPrice{
+
+        .classroomPrice {
             display: flex;
             gap: 10px;
             font-size: 18px;
             font-weight: bold;
+
             .classroomIcon {
                 width: 22px;
+
                 img {
                     width: 100%;
                     height: 100%;
@@ -72,20 +84,25 @@
                 }
             }
         }
-        .classroomSchedule{
+
+        .classroomSchedule {
             display: flex;
             gap: 10px;
-            .classroomScheduleDate{
+
+            .classroomScheduleDate {
                 display: flex;
                 gap: 10px;
                 padding-right: 10px;
                 border-right: 1px solid $primary;
             }
-            .classroomScheduleTime{
+
+            .classroomScheduleTime {
                 display: flex;
                 gap: 10px;
+
                 .classroomIcon {
                     width: 18px;
+
                     img {
                         width: 100%;
                         height: 100%;
@@ -94,10 +111,12 @@
                 }
             }
         }
-        .classroomBannerButtons{
+
+        .classroomBannerButtons {
             display: flex;
             gap: 20px;
-            button{
+
+            button {
                 font-size: 16px;
                 // font-weight: bold;
                 background-color: $darkTwo;
@@ -107,11 +126,13 @@
                 opacity: 0.8;
                 border: none;
                 cursor: pointer;
-                &:hover{
-                opacity: 1;
+
+                &:hover {
+                    opacity: 1;
                 }
             }
-            .bookNowButton{
+
+            .bookNowButton {
                 background-color: $primary;
                 color: $black;
                 font-weight: bold;
@@ -120,4 +141,3 @@
         }
     }
 }
-

@@ -28,9 +28,9 @@ export default function TileCard({
     <div className={`${styles.main} ${customClass}`} onClick={handleClick}>
       <div className={styles.tileCard}>
         <div className={styles.tileCardWrapper}>
-          <div className={styles.banner}>{type}</div>
+          {/* <div className={styles.banner}>{type}</div>
           <div className={courseClass}>{courseName}</div>
-          <div className={styles.courseowner}>{ownerName}</div>
+          <div className={styles.courseowner}>{ownerName}</div> */}
         </div>
         <Image
           src={tileImg || '/images/courses/workplace design.png'}

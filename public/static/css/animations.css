@@ -1,0 +1,1019 @@
+.animation-wrapper4 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.images {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.top_circle {
+  position: absolute;
+  width: 45%;
+  z-index: 4;
+  top: 28%;
+  left: 23%;
+  opacity: 0;
+}
+
+.middle_circle {
+  position: absolute;
+  width: 68%;
+  z-index: 3;
+  top: 20%;
+  left: 13%;
+  opacity: 0;
+}
+
+.bottom_circle {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+  top: 10%;
+  left: 0%;
+  opacity: 0;
+}
+
+.ball {
+  position: absolute;
+  width: 35%;
+  top: 31%;
+  left: 28%;
+  z-index: 3;
+  opacity: 0;
+}
+
+.animate .bottom_circle {
+  bottom: 0%;
+  right: 0%;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.animate .middle_circle {
+  top: 15%;
+  left: 10%;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.animate .top_circle {
+  top: 19%;
+  left: 15%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.animate .ball {
+  top: 26%;
+  left: 25%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper3 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.triangle {
+  position: absolute;
+  z-index: 4;
+  width: 50%;
+  top: 14%;
+  left: 10%;
+  opacity: 0;
+}
+
+.ball1 {
+  position: absolute;
+  z-index: 5;
+  width: 10%;
+  top: -35%;
+  left: 12%;
+  opacity: 0;
+}
+
+.circle {
+  position: absolute;
+  z-index: 2;
+  width: 90%;
+  bottom: 50%;
+  right: 50%;
+  opacity: 0;
+}
+
+.big_pillar {
+  position: absolute;
+  z-index: 5;
+  width: 25%;
+  top: 60%;
+  left: 53%;
+  opacity: 0;
+}
+
+.small_pillar {
+  position: absolute;
+  z-index: 5;
+  width: 22%;
+  top: 60%;
+  left: 70%;
+  opacity: 0;
+}
+
+.animate .triangle {
+  width: 50%;
+  top: 14%;
+  left: 10%;
+  transition: all 1s;
+  opacity: 1;
+  z-index: 4;
+}
+
+.animate .ball1 {
+  width: 37%;
+  top: -15%;
+  left: 12%;
+  transition: all 1s;
+  opacity: 1;
+  z-index: 2;
+}
+
+.animate .circle {
+  width: 90%;
+  bottom: 0%;
+  right: 0%;
+  transition: all 1s;
+  opacity: 1;
+  z-index: 2;
+}
+
+.animate .big_pillar {
+  width: 25%;
+  top: 13%;
+  left: 53%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.animate .small_pillar {
+  width: 22%;
+  top: 60%;
+  left: 35%;
+  transition: all 1s;
+  transition-timing-function: ease-in-out;
+  opacity: 1;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper5 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.main_pillar {
+  position: absolute;
+  top: 50%;
+  width: 80%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.left_pillar {
+  position: absolute;
+  width: 40%;
+  top: 70%;
+  left: -25%;
+  z-index: 2;
+  opacity: 0;
+}
+
+.right_pillar {
+  position: absolute;
+  width: 40%;
+  top: 70%;
+  right: -25%;
+  z-index: 2;
+  opacity: 0;
+}
+
+.top_pillar {
+  position: absolute;
+  width: 27%;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 2;
+  opacity: 0;
+}
+
+.animate .main_pillar {
+  top: 20%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.animate .right_pillar {
+  top: 55%;
+  right: 0%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.animate .left_pillar {
+  top: 50%;
+  left: 0%;
+  transition: all 1.5s;
+  opacity: 1;
+}
+
+.animate .top_pillar {
+  top: 5%;
+  transition: all 1.5s;
+  transition-delay: 0.5s;
+  opacity: 1;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper11 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.pillar11 {
+  position: absolute;
+  width: 80%;
+  top: 50%;
+  opacity: 0;
+}
+
+.top_pillar11 {
+  position: absolute;
+  width: 0%;
+  height: 0%;
+  top: 1%;
+  opacity: 0;
+}
+
+.animate .pillar11 {
+  top: 30%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.animate .top_pillar11 {
+  width: 40%;
+  height: 40%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper6 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.top_circle6 {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  opacity: 0;
+}
+
+.middle_circle6 {
+  position: absolute;
+  width: 70%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  opacity: 0;
+}
+
+.bottom_circle6 {
+  position: absolute;
+  width: 45%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  opacity: 0;
+}
+
+.ball6 {
+  position: absolute;
+  width: 65%;
+  top: -50%;
+  z-index: 4;
+  opacity: 0;
+}
+
+.animate .bottom_circle6 {
+  top: 81%;
+  opacity: 1;
+  transition: all 1s ease-in-out 0.5s;
+}
+
+.animate .middle_circle6 {
+  top: 66%;
+  opacity: 1;
+  transition: all 1s ease-in-out 0.5s;
+}
+
+.animate .top_circle6 {
+  top: 50%;
+  opacity: 1;
+  transition: all 1s ease-in-out 0.5s;
+}
+
+.animate .ball6 {
+  top: 10%;
+  opacity: 1;
+  transition: all 1s ease-in-out;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper1 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+.images {
+  display: flex;
+  justify-content: center;
+}
+
+.ball8 {
+  position: absolute;
+  top: -15%;
+  width: 30%;
+  z-index: 2;
+  opacity: 0;
+}
+
+.ball8_1 {
+  position: absolute;
+  top: -25%;
+  width: 60%;
+  z-index: 2;
+  opacity: 0;
+}
+
+.pillar8 {
+  position: absolute;
+  top: 40%;
+  width: 60%;
+  z-index: 1;
+  opacity: 0;
+}
+.center,
+.left,
+.right {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  z-index: 3;
+}
+.left {
+  top: 40%;
+  left: -5%;
+}
+.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%);
+}
+.right {
+  top: 40%;
+  right: 0%;
+  z-index: 2;
+}
+.animate .ball8 {
+  top: 5%;
+  opacity: 1;
+  transition: all 1s;
+  transition-delay: 0.5s;
+}
+
+.animate .ball8_1 {
+  top: -17%;
+  opacity: 1;
+  transition: all 1s;
+  transition-delay: 0.5s;
+}
+
+.animate .pillar8 {
+  top: 20%;
+  opacity: 1;
+  transition: top 1s;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper15 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  /* margin-right: 20%; */
+  /* border: 1px solid yellow; */
+}
+
+.plank {
+  position: absolute;
+  width: 100%;
+  top: 30%;
+  left: 15%;
+  transform: translate(-15%);
+  transform: rotate(-30deg);
+  opacity: 0;
+}
+
+.center_ball {
+  position: absolute;
+  width: 30%;
+  left: 67%;
+  transform: translate(-63%);
+  top: 35%;
+  opacity: 0;
+}
+
+.left_ball {
+  position: absolute;
+  width: 10%;
+  left: 30%;
+  transform: translate(-35%);
+  top: 40%;
+  opacity: 0;
+}
+
+.right_ball {
+  position: absolute;
+  width: 10%;
+  left: 95%;
+  transform: translate(-85%);
+  top: 46%;
+  opacity: 0;
+}
+
+.animate .plank {
+  transform: rotate(0deg);
+  transition: all 1s;
+  top: 30%;
+  left: 60%;
+  transform: translate(-60%);
+  opacity: 1;
+}
+
+.animate .center_ball {
+  opacity: 1;
+  transition: opacity 1s ease-in;
+}
+
+.animate .left_ball {
+  opacity: 1;
+  top: 35%;
+  transition: top 1s;
+}
+
+.animate .right_ball {
+  opacity: 1;
+  top: 69%;
+  transition: top 1s;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper12 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.top_triangle {
+  position: absolute;
+  width: 60%;
+  top: -30%;
+  left: 50%;
+  opacity: 0;
+}
+
+.ball10 {
+  position: absolute;
+  width: 60%;
+  top: 15%;
+  opacity: 0;
+}
+
+.bottom_triangle {
+  position: absolute;
+  transform: rotate(180deg);
+  width: 60%;
+  top: 65%;
+  left: -20%;
+  opacity: 0;
+}
+
+.animate .ball10 {
+  width: 60%;
+  transition: all 1s ease-in-out;
+  opacity: 1;
+}
+
+.animate .top_triangle {
+  top: -10%;
+  left: 38%;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.animate .bottom_triangle {
+  top: 42%;
+  left: 3%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper7 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.triangle11 {
+  position: absolute;
+  width: 70%;
+  height: 0%;
+  bottom: 0%;
+  left: 16%;
+  opacity: 0;
+}
+
+.circle11 {
+  position: absolute;
+  width: 96%;
+  left: 0%;
+  top: 50%;
+  opacity: 1;
+}
+
+.ball11 {
+  position: absolute;
+  width: 37%;
+  left: 28%;
+  top: -20%;
+  opacity: 0;
+}
+
+.animate .circle11 {
+  top: 15%;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.animate .triangle11 {
+  bottom: 0%;
+  height: 65%;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.animate .ball11 {
+  top: 5%;
+  opacity: 1;
+  transition: all 1s ease-in-out 0.5s;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper8 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.small_pillar12 {
+  position: absolute;
+  width: 60%;
+  left: 50%;
+  transform: translate(-50%);
+  top: 30%;
+}
+
+.big_pillar12 {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 30%;
+  width: 60%;
+}
+
+.animate .big_pillar12 {
+  left: 50%;
+  transform: translate(-50%);
+  transition: top 1s, width 1s;
+  top: 15%;
+  width: 85%;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper16 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.cylinder {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.top_ball13 {
+  position: absolute;
+  width: 60%;
+  top: 10%;
+  transform: translateY(-50%);
+  opacity: 1;
+}
+
+.middle_ball13 {
+  position: absolute;
+  width: 60%;
+  top: -20%;
+  opacity: 0;
+}
+
+.bottom_ball13 {
+  position: absolute;
+  width: 60%;
+  top: 20%;
+  opacity: 0;
+}
+
+.animate .cylinder {
+  width: 100%;
+  transition: all 0.75s ease-in;
+}
+.animate .middle_ball13 {
+  opacity: 1;
+  transition: all 0.75s ease-in;
+  top: 20%;
+}
+
+.animate .bottom_ball13 {
+  top: 57%;
+  transition: all 0.75s ease-in 0.75s;
+  opacity: 1;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper10 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.triangle5 {
+  position: absolute;
+  width: 70%;
+  top: 50%;
+  opacity: 0;
+  left: 0%;
+  z-index: 2;
+}
+
+.ball5 {
+  position: absolute;
+  width: 60%;
+  left: 0%;
+  top: -35%;
+  opacity: 0;
+  z-index: 2;
+}
+
+.vector5 {
+  position: absolute;
+  width: 70%;
+  top: 15%;
+  left: 30%;
+  z-index: 1;
+  opacity: 0;
+}
+
+.animate .triangle5 {
+  top: 28%;
+  transition: top 1s ease-out;
+  opacity: 1;
+}
+
+.animate .ball5 {
+  width: 60%;
+  top: -17%;
+  left: 0%;
+  opacity: 1;
+  transition: all 1s ease-out;
+}
+
+.animate .vector5 {
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper14 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.top_pillar14 {
+  position: absolute;
+  width: 20%;
+  top: 30%;
+  z-index: 3;
+  opacity: 0;
+}
+
+.main_pillar14 {
+  position: absolute;
+  width: 60%;
+  top: 40%;
+  opacity: 0;
+}
+
+.ball14 {
+  position: absolute;
+  width: 30%;
+  z-index: 3;
+  opacity: 0;
+}
+
+.left_pillar14 {
+  position: absolute;
+  width: 30%;
+  left: 15%;
+  top: 60%;
+  opacity: 0;
+}
+
+.right_pillar14 {
+  position: absolute;
+  width: 30%;
+  right: 12%;
+  top: 65%;
+  opacity: 0;
+}
+
+.right_pillarsmall14 {
+  position: absolute;
+  width: 20%;
+  right: 4%;
+  top: 80%;
+  opacity: 0;
+}
+
+.left_pillarsmall114 {
+  position: absolute;
+  width: 20%;
+  left: 33%;
+  top: 80%;
+  opacity: 0;
+}
+
+.left_pillarsmall214 {
+  position: absolute;
+  width: 20%;
+  left: 10%;
+  top: 90%;
+  opacity: 0;
+}
+
+.animate .top_pillar14 {
+  opacity: 1;
+  top: 9%;
+  transition: all 1s;
+}
+
+.animate .main_pillar14 {
+  opacity: 1;
+  top: 20%;
+  transition: all 1s;
+}
+
+.animate .left_pillar14 {
+  opacity: 1;
+  top: 40%;
+  transition: all 1s ease-in-out 0.2s;
+}
+
+.animate .right_pillar14 {
+  top: 44%;
+  opacity: 1;
+  transition: all 1s ease-in-out 0.2s;
+}
+
+.animate .left_pillarsmall114 {
+  top: 67%;
+  opacity: 1;
+  transition: all 1s ease-in-out 0.4s;
+}
+
+.animate .left_pillarsmall214 {
+  top: 80%;
+  opacity: 1;
+  transition: all 1s ease-in-out 0.5s;
+}
+
+.animate .right_pillarsmall14 {
+  top: 60%;
+  transition: all 1s ease-in-out 0.4s;
+  opacity: 1;
+}
+
+.animate .ball14 {
+  top: 5%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper9 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.pillar15 {
+  position: absolute;
+  width: 60%;
+  left: 50%;
+  transform: translate(-50%);
+  top: 40%;
+  opacity: 0;
+}
+
+.ball15 {
+  position: absolute;
+  width: 0%;
+  left: 50%;
+  transform: translate(-50%);
+  top: 30%;
+  opacity: 0;
+}
+
+.animate .pillar15 {
+  top: 30%;
+  transition: top 1s;
+  opacity: 1;
+}
+
+.animate .ball15 {
+  width: 50%;
+  top: 0%;
+  opacity: 1;
+  transition: top 1s, width 1s;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper13 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+.top_circle16 {
+  position: absolute;
+  width: 90%;
+  top: 35%;
+  left: 70%;
+  opacity: 0;
+}
+
+.ball16 {
+  position: absolute;
+  width: 100%;
+  top: -20%;
+  left: -30%;
+  opacity: 0;
+}
+
+.bottom_circle16 {
+  position: absolute;
+  width: 50%;
+  top: 45%;
+  left: 80%;
+  opacity: 0;
+}
+
+.animate .top_circle16 {
+  top: 0%;
+  left: 0%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.animate .bottom_circle16 {
+  top: 43%;
+  left: 53%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.animate .ball16 {
+  top: -10%;
+  left: -20%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.animation-wrapper2 {
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+/* .vector29 {
+  position: absolute;
+  width: 60%;
+  z-index: 0;
+} */
+
+.platform_ball {
+  position: absolute;
+  width: 0%;
+  z-index: 3;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%);
+  opacity: 0;
+}
+
+.rect_platform {
+  position: absolute;
+  width: 90%;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 2;
+}
+
+.center2,
+.up,
+.down {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.up {
+  top: -0;
+  opacity: 0;
+}
+
+.down {
+  top: 0;
+  opacity: 0;
+}
+
+.animate .up {
+  top: -40%;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.animate .down {
+  top: 40%;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.animate .platform_ball {
+  opacity: 1;
+  width: 50%;
+  transition: all 1s ease-in-out 0.3s;
+}

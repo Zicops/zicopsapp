@@ -4,6 +4,10 @@
   display: flex;
   gap: 25px;
   width: 100%;
+<<<<<<< HEAD
+=======
+  // height: 15vh;
+>>>>>>> 55a07c3f95959c1b939252bb82b0dace930b78b1
   background-color: $black;
   color: $darkThree;
   padding: 10px;
@@ -22,9 +26,9 @@
 
     img {
       width: 100%;
+      height: 100%;
       object-fit: cover;
       border-radius: inherit;
-      height: 100%;
     }
   }
 
@@ -59,11 +63,21 @@
         }
       }
 
-      .catSubCat {
-        display: flex;
-        align-items: center;
-      }
+      // .catSubCat {
+      //   display: flex;
+      //   align-items: center;
+      // }
     }
+        .catSubCat {
+          display: flex;
+          align-items: center;
+          margin: 5px 0;
+        }
+    // .subHead {
+    //   display: flex;
+    //   justify-content: space-between;
+    //   width: 100%;
+    // }
   }
 
   .dot {
@@ -83,7 +97,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-
+    gap: 20px;
     .imgIcon {
       width: 20px;
     }

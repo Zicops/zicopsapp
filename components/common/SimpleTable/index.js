@@ -43,28 +43,35 @@ export default function SimpleTable({
               <div className={`${styles.noDataFound}`}>No data found!</div>
             ) : (
               <>
-                {rowData?.map((rows, rowIndex) => (
-                  <div className={`${styles.row}`} key={rowIndex}>
-                    {/* table cell */}
-                    {rows?.examData?.map((cell, cellIndex) => (
-                      <span
-                        onClick={() => {
-                          console.log(rows, 'cell', cellIndex);
-                          router?.push(
-                            `/course/${rows?.courseId}?activateExam=${rows?.examId}`,
-                            `/course/${rows?.courseId}`
-                          );
-                        }}
-                        className={`w-25 ${
-                          cellIndex + 1 === rows.length && lastCellObj && styles.scheduleBtnHover
-                        }`}
-                        key={cellIndex + cell}
-                        style={cellIndex + 1 === rows.length ? lastCellObj?.style : {}}>
-                        {cell}
-                      </span>
-                    ))}
-                  </div>
-                ))}
+                    {rowData?.map((rows, rowIndex) => {
+                      let finalRowsData = rows?.examData ? rows.examData : rows;
+                      return (
+                        <div className={`${styles.row}`} key={rowIndex}>
+                          {/* table cell */}
+                          {finalRowsData?.map((cell, cellIndex) => (
+                            <span
+                              onClick={() => {
+                                console.log(finalRowsData, 'cell', cellIndex);
+                                router?.push(
+                                  `/course/${finalRowsData?.courseId}?activateExam=${finalRowsData?.examId}`,
+                                  `/course/${finalRowsData?.courseId}`
+                                );
+                              }}
+                              className={`w-25 ${
+                                cellIndex + 1 === finalRowsData.length &&
+                                lastCellObj &&
+                                styles.scheduleBtnHover
+                              }`}
+                              key={cellIndex + cell}
+                              style={
+                                cellIndex + 1 === finalRowsData.length ? lastCellObj?.style : {}
+                              }>
+                              {cell}
+                            </span>
+                          ))}
+                        </div>
+                      );
+                })}
               </>
             )}
             {/* table row */}

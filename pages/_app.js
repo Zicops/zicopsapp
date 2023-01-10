@@ -1,4 +1,5 @@
 import AuthChecker from '@/components/AuthChecker';
+import FeatureFlagsLayout from '@/components/Layout/FeatureFlagsLayout';
 import PushNotificationLayout from '@/components/Layout/PushNotificationLayout';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
 import Head from 'next/head';
@@ -41,26 +42,33 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Zicops</title>
-        <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
+        <title>Zicops - Comprehensive e-learning platform.</title>
+        <meta
+          name="description"
+          content="What is Zicops? Zicops is an e-learning streaming platform that 
+manages and elevates the entire learning environment."
+        />
+        <link rel="icon" type="image/x-icon" href="/images/zicopsFavIcon.png" />
       </Head>
 
       <ErrorBoundary>
         <AuthUserProvider>
           <RecoilRoot>
-            <CourseContextProvider>
-              <UserContextProvider>
-                <AuthChecker>
-                  <PushNotificationLayout>
-                    <Layout>
-                      <Component {...pageProps} />
+            <FeatureFlagsLayout>
+              <PushNotificationLayout>
+                <CourseContextProvider>
+                  <UserContextProvider>
+                    <AuthChecker>
+                      <Layout>
+                        <Component {...pageProps} />
 
-                      <Toaster />
-                    </Layout>
-                  </PushNotificationLayout>
-                </AuthChecker>
-              </UserContextProvider>
-            </CourseContextProvider>
+                        <Toaster />
+                      </Layout>
+                    </AuthChecker>
+                  </UserContextProvider>
+                </CourseContextProvider>
+              </PushNotificationLayout>
+            </FeatureFlagsLayout>
           </RecoilRoot>
         </AuthUserProvider>
       </ErrorBoundary>

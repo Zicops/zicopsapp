@@ -1,148 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>About Zicops</title>
-    <link rel="icon" type="image/x-icon" href="/images/zicops-favicon.png" />
+    <title>Corporates</title>
+    <meta
+      name="description"
+      content="Still, stuck with LMSs? Explore Zicops to tap into and leverage 
+continuous learning and upskilling for your workforce..."
+    />
+    <link rel="icon" type="image/x-icon" href="/images/zicopsFavIcon.png" />
 
     <link rel="stylesheet" href="/static/css/style.css" />
-    <link rel="stylesheet" href="/static/css/animate.min.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/animations.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Calendly link widget begin -->
+    <link href="/static/assets/calendly-widget.css" rel="stylesheet" />
+    <script src="/static/assets/calendly-widget.js" type="text/javascript" async defer></script>
     <script src="/static/assets/jquery-3.6.1.min.js" defer></script>
     <script src="/static/js/main.js" defer></script>
-</head>
-<body>
-    <nav id="navbar">
+  </head>
+
+  <body>
+    <nav class="navbar" id="navbar">
+      <!-- <div class="brand"> -->
       <a class="logo" id="logo" href="/home">
         <img src="../images/brand/zicops-new-logo.svg" alt="" />
       </a>
-      <ul class="desktop-menu">
-        <li class="active">Corporates</li>
-        <li>Features</li>
-        <a href="/static/content-partners.html"><li>Content Partners</li></a>
-        <li>Contact Us</li>
-      </ul>
-      <span class="buttons">
-        <span class="login bold"><span class="user-icon"></span>Login</span>
+      <!-- </div> -->
+      <a href="#" class="hamburger-menu-btn">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </a>
+      <div class="navbar-links">
+        <ul>
+          <li class="active"><a href="/static/about.html">Corporates</a></li>
+          <li><a href="/static/features.html">Features</a></li>
+          <li><a href="/static/content-partners.html">Content Partners</a></li>
+          <li><a href="/static/contact-us.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <span class="buttons desktop-menu">
+        <a href="/login"
+          ><span class="login bold"><span class="user-icon"></span>Login</span></a
+        >
       </span>
-      
-      <ul class="mobile-menu">
-        <li class="active">Corporates</li>
-        <li>Features</li>
-        <a href="/static/content-partners.html"><li>Partners</li></a>
-      </ul>
     </nav>
-    <section class="section-1">
-        <div class="left">
-            <div class="heading animate ">Confused how to</div>
-            <div class="heading1 animate  animate__delay-1s">manage the entire </div>
-            <div class="heading2 animate  animate__delay-2s"><span>learning environment</span></div>
-            <div class="heading3 animate  animate__delay-3s">of your <b>organization?</b></div>
-            <div class="subheading animate  animate__delay-5s">A learning super-app for all your learning needs.</div>
-            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
-        </div>
-        <div class="right animate  animate__delay-4s">
-            <img class="main-image" src="/static/img/Group 1.png" alt="">
-        </div>
-    </section>
-    <div class="course-types">
-        <div class="self animate  animate__delay-1s">
-            <img src="/static/img/local_library.svg" alt="">
-            <div>Self paced</div>
-        </div>
-        <div class="border"></div>
-        <div class="self animate  animate__delay-2s">
-            <img src="/static/img/emoji_flags.svg" alt="">
-            <div>Instructor led<br>live trainings</div>
-        </div>
-        <div class="border"></div>
-        <div class="self animate  animate__delay-3s">
-            <img src="/static/img/science.svg" alt="">
-            <div>Labs</div>
-        </div>
-        <div class="border"></div>
-        <div class="self animate  animate__delay-4s">
-            <img src="/static/img/analytics.svg" alt="">
-            <div>Assesments</div>
-        </div>
+    <div class="home-hero">
+      <img src="/static/img/Mask group.svg" alt="" class="mobile-hero-gradient" />
+      <!-- <img src="/static/img/Rectangle 13.png" alt="" class="mobile-hero-gradient" /> -->
+      <div class="hero-text">
+        <p>
+          A comprehensive learning platform to manage an <b>organization's</b> end-to-end learning
+          environment.
+        </p>
+        <button class="mouse-cursor-gradient-tracking-btn mt-20">
+          <span>Book a consultation</span>
+        </button>
+      </div>
     </div>
-    <section class="section-1">
-        <div class="right animate  animate__delay-5s">
-            <img src="/static/img/Group 2.png" alt="">
-        </div>
-        <div class="left">
-            <div class="heading animate ">Unable to trace or</div>
-            <div class="heading1 animate  animate__delay-1s">achieve the <b>Return on</b></div>
-            <div class="heading2 animate  animate__delay-2s"><b>Investment</b> on your</div>
-            <div class="heading3 animate  animate__delay-3s">organization's learning.</b></div>
-            <div class="subheading animate  animate__delay-5s">A LearnOps platform that brings all  your learning operations in a single platform.</div>
-            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
-        </div>
-    </section>
-    <section class="section-2">
-        <div class="left">
-            <div class="heading animate ">Losing breath to find</div>
-            <div class="heading1 animate  animate__delay-1s">the <b>right courses</b> and</div>
-            <div class="heading2 animate  animate__delay-2s"><span>right trainers</span> for your</div>
-            <div class="heading3 animate  animate__delay-3s">diverse learning needs?</div>
-            <div class="subheading animate  animate__delay-5s">With library of Zicops offerings just plug and begin your learning. On the top you can also build and customize as per own needs.</div>
-            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
-        </div>
-        <div class="right animate  animate__delay-5s">
-            <img src="/static/img/Frame.png" alt="">
-        </div>
-    </section>
-    <div class="partner-types">
-        <div class="partner animate  animate__delay-1s">
-            <img src="/static/img/Component 1.png" alt="">
-        </div>
-        <div class="partner animate  animate__delay-1s">
-            <img src="/static/img/Component 2.png" alt="">
-        </div>
-    </div>
-    <section class="section-1">
-        <div class="right animate  animate__delay-5s">
-            <img src="/static/img/Frame (1).png" alt="">
-        </div>
-        <div class="left">
-            <div class="heading animate ">Failing to engage</div>
-            <div class="heading1 animate  animate__delay-1s">and <b>empower your</b></div>
-            <div class="heading2 animate  animate__delay-2s"><b>employees</b> internally</div>
-            <div class="subheading animate  animate__delay-5s">A private learning space balancing administrative and personal learning goals.</div>
-            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
-        </div>
-    </section>
-    <section id="snap-start" class="section-2">
-        <div class="left">
-            <div class="heading animate ">Need a <b>single source</b></div>
-            <div class="heading1 animate  animate__delay-1s"><b>of truth</b> to know your</div>
-            <div class="heading2 animate  animate__delay-2s">organizations <br> skill matrix </div>
-            <!-- <div class="heading3 animate  animate__delay-3s"></div> -->
-            <div class="subheading animate  animate__delay-5s">Find a clarity on your strength and skill gaps in your organization with this Enterprise Learning platform.</div>
-            <button class="animate animate__delay-5s mouse-cursor-gradient-tracking-btn"><span>Find Out How</span></button>
-        </div>
-        <div class="right animate  animate__delay-5s">
-            <img src="/static/img/Frame (2).png" alt="">
-        </div>
-    </section>
-
-    <div id="snap-body">
-        <div class="snap-parent">
-            <div class="snap-section snap-section1">Superb experience</div>
-            <div class="snap-section snap-section2">Super-app</div>
-            <div class="snap-section snap-section3">Cost-effective</div>
-            <div class="snap-section snap-section4">
-                <div class="content">
-                    <b>Stop</b> running behind<br><b>multiple apps</b> to cater to<br>your <b>learning needs</b>.
-                    <p>Adopt Zicops and cater to your entire<br>Workspace Learning and development.</p>
-                </div>
+    <div class="main-section first-gradient">
+      <div class="container">
+        <div class="row section flex-center mt-20 mb-20 row-reverse">
+          <div class="col-6 flex-center">
+            <!-- <img src="/static/images/About Frame 1.png" alt="" /> -->
+            <div class="animation-wrapper animation-wrapper4">
+              <div class="images">
+                <img src="/static/images/image1/Group 44.svg" class="top_circle" />
+                <img src="/static/images/image1/Group 43.svg" class="middle_circle" />
+                <img src="/static/images/image1/Group 42.svg" class="bottom_circle" />
+                <img src="/static/images/image1/Group 59.png" class="ball" />
+              </div>
             </div>
+          </div>
+          <div class="col-6">
+            <div class="content-block">
+              <h2 class="text-gradient bold mb-20">Build the Learning Culture</h2>
+              <p>
+                Keep your learners at all points in your private learning space and reinforce
+                collaborative learning.
+                <br />Zicops is an all-purpose learning app for all your learning needs.
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</body>
+    <div class="types-block">
+      <div class="list">
+        <div class="list-item">
+          <img src="/static/img/local_library.svg" />
+          <p>Self paced</p>
+        </div>
+        <div class="list-item">
+          <img src="/static/img/google-classroom.svg" />
+          <p>Instructor led live trainings</p>
+        </div>
+        <div class="list-item">
+          <img src="/static/img/flag.svg" />
+          <p>Events</p>
+        </div>
+        <div class="list-item">
+          <img src="/static/img/quiz.svg" />
+          <p>Exams</p>
+        </div>
+        <div class="list-item">
+          <img src="/static/img/science1.svg" />
+          <p>Labs</p>
+        </div>
+      </div>
+    </div>
+    <div class="main-section second-gradient">
+      <div class="container">
+        <div class="row section flex-center mt-20 mb-20">
+          <div class="col-6 flex-center">
+            <!-- <img src="/static/images/About Frame 2.png" alt="" class="" /> -->
+            <div class="animation-wrapper animation-wrapper3">
+              <div class="images">
+                <img src="/static/images/image2/Group 86.png" class="triangle" />
+                <img src="/static/images/image2/Group 25.png" class="ball1" />
+                <img src="/static/images/image2/Group 42.png" class="circle" />
+                <img src="/static/images/image2/Group 12.svg" class="big_pillar" />
+                <img src="/static/images/image2/Group 90.png" class="small_pillar" />
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="content-block">
+              <h2 class="text-gradient bold mb-20">Empower your Assets</h2>
+              <p>
+                A force that prepares in peacetime, ends up winning its wars! Invest in your team's
+                upskilling and learning to build an empowered and engaged workforce.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row section flex-center mt-20 mb-20 row-reverse">
+          <div class="col-6 flex-center">
+            <!-- <img src="/static/images/About Frame 3.png" alt="" class="" /> -->
+            <div class="animation-wrapper animation-wrapper5">
+              <div class="images">
+                <img class="main_pillar" src="/static/images/image3/Group 37.png" />
+                <img class="left_pillar" src="/static/images/image3/Group 39.png" />
+                <img class="right_pillar" src="/static/images/image3/Group 38.png" />
+                <img class="top_pillar" src="/static/images/image3/Group 40.svg" />
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="content-block">
+              <h2 class="text-gradient bold mb-20">Flexible to be tailor-fit</h2>
+              <p>
+                With a comprehensive amalgamation of learning methodologies, Zicops caters
+                horizontally to all industries. Zicops further adopts itself to the ecosystem of the
+                organization, both administratively and learner choice basis.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="not-just-lms-mobile text-center">
+      <div class="list">
+        <div class="list-item">
+          <img src="/static/img/cloud_queue.svg" alt="" class="" />
+          <p>Cloud Based</p>
+        </div>
+        <div class="list-item">
+          <img src="/static/img/all_inclusive.svg" alt="" class="" />
+          <p>One Stop</p>
+        </div>
+        <div class="list-item">
+          <img src="/static/img/Pay-per-use.svg" alt="" class="" />
+          <p>Pay per use</p>
+        </div>
+      </div>
+      <h2 class="text-gradient bold mb-10">Not just an LMS.</h2>
+      <h2 class="text-gradient bold mb-20">We are much MORE!</h2>
+      <!-- <a href="/static/features.html"> -->
+      <button class="mouse-cursor-gradient-tracking-btn mt-20">
+        <span>Discover more</span>
+      </button>
+      <!-- </a> -->
+    </div>
+
+    <div class="not-just-lms-laptop text-center">
+      <div class="flex-center container">
+        <div class="img-text-block-big">
+          <img src="/static/img/cloud_queue.svg" alt="" class="" />
+          <p>Cloud Based</p>
+        </div>
+        <div class="img-text-block-big">
+          <img src="/static/img/all_inclusive.svg" alt="" class="" />
+          <p>One Stop</p>
+        </div>
+        <div class="img-text-block-big">
+          <img src="/static/img/Pay-per-use.svg" alt="" class="" />
+          <p>Pay per use</p>
+        </div>
+      </div>
+      <h2 class="text-gradient bold mb-10">Not just an LMS.</h2>
+      <h2 class="text-gradient bold mb-20">We are much MORE!</h2>
+      <!-- <a href="/static/features.html"> -->
+      <button class="mouse-cursor-gradient-tracking-btn mt-20">
+        <span>Discover more</span>
+      </button>
+      <!-- </a> -->
+    </div>
+
+    <div class="main-section  third-gradient">
+      <div class="container">
+      <div class="row section flex-center mt-20 mb-20">
+        <div class="col-6 flex-center">
+          <!-- <img src="/static/img/Group 71.png" alt="" class="" /> -->
+          <div class="animation-wrapper animation-wrapper2">
+            <div class="center2">
+              <div class="images">
+                <img src="/static/images/image4/Group 69.png" class="platform_ball" />
+                <img src="/static/images/image4/Group 67.png" class="rect_platform" />
+                <!-- <img src="/static/images/image4/Vector 29.svg" class="vector29" /> -->
+              </div>
+            </div>
+            <div class="up">
+              <div class="images">
+                <img src="/static/images/image4/Group 69.png" class="platform_ball" />
+                <img src="/static/images/image4/Group 67.png" class="rect_platform" />
+              </div>
+            </div>
+            <div class="down">
+              <div class="images">
+                <img src="/static/images/image4/Group 69.png" class="platform_ball" />
+                <img src="/static/images/image4/Group 67.png" class="rect_platform" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="content-block">
+            <h2 class="text-gradient bold mb-20">Get your private Learning Space.</h2>
+            <p>
+              All your content and data remain secured as we provide private spaces to each learning
+              site.
+            </p>
+            <p>
+              Manage multiple learning sites within your organization as per your org-unit reporting
+              structure.
+            </p>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <div class="single-section fifth-gradient">
+      <h2 class="text-gradient bold mb-20">
+        Steer your learning environment to<br />achieve your goals.
+      </h2>
+      <!-- <h2 class="text-gradient bold heading"> </h2> -->
+      <p class="mb-20">
+        Growth needs nutrition. Provide the due nutrition to your organization to meet your growth
+        and demand. With Zicops, create a monolithic learning culture as a support system for your
+        entire organization to stand strong.
+      </p>
+      <a class="click-features" href="/static/features.html">
+        <button class="mouse-cursor-gradient-tracking-btn mt-20 goto-features">
+          <span>Check out features</span>
+        </button>
+      </a>
+    </div>
+
+    <div class="footer">
+      <div class="footer-left">
+        <div class="footer-links">
+          <ul>
+            <a href="/static/about.html"><li>Corporates</li></a>
+            <a href="/static/features.html"><li>Features</li></a>
+            <a href="/static/content-partners.html"><li>Content Partners</li></a>
+            <a href="/static/contact-us.html"><li>Contact Us</li></a>
+            <a href="/static/terms.html"><li>Terms of use</li></a>
+            <a href="/static/privacy.html"><li>Privacy Policy</li></a>
+          </ul>
+        </div>
+
+        <p class="desktop-menu">
+          © 2022 Zicops Learning Technology Pvt. Ltd. All Rights Reserved. Zicops and all related
+          channel and programming logos are service marks of, and all related programming visuals
+          and elemnts are the property of Zicops,Inc. All rights reserved.
+        </p>
+      </div>
+      <div class="footer-right">
+        <div class="social-links">
+          <p class="desktop-menu">Connect with us</p>
+          <a href="https://twitter.com/zicopslearning"><img src="/images/Twitter.png" alt="" /></a>
+          <a href="https://www.facebook.com/profile.php?id=100088569042439"
+            ><img src="/images/FB.png" alt=""
+          /></a>
+          <a href="https://www.instagram.com/zicops_learning/"
+            ><img src="/images/Insta.png" alt=""
+          /></a>
+          <a href="https://www.linkedin.com/company/zicops"
+            ><img src="/images/LinkedIn.png" alt=""
+          /></a>
+        </div>
+        <!-- <div className="store">
+              <p>Download App</p>
+              <img src="/images/play_store.png" alt="" />
+              <img src="/images/app_store.png" alt="" />
+          </div> -->
+      </div>
+    </div>
+    <p class="mobile-menu" style="font-size: 14px; padding: 20px">
+      © 2022 Zicops Learning Technology Pvt. Ltd. All Rights Reserved.<br /><br />
+      Zicops and all related channel and programming logos are service marks of, and all related
+      programming visuals and elemnts are the property of Zicops,Inc. All rights reserved.
+    </p>
+  </body>
 </html>

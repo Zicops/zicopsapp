@@ -55,13 +55,14 @@ $(document).ready(function () {
   //   return false;
   // });
 
-  $('.mouse-cursor-gradient-tracking-btn').on('click', function () {
-    // $('.popup').show();
-    Calendly.initPopupWidget({
-      url: 'https://calendly.com/skylinemeridian/30min?hide_gdpr_banner=0'
-    });
-    return false;
-  });
+  // $('.mouse-cursor-gradient-tracking-btn').on('click', function () {
+  //   // $('.popup').show();
+  //   Calendly.initPopupWidget({
+  //     url: 'https://calendly.com/zicops-content-partner/meetup'
+  //     // url: 'https://calendly.com/skylinemeridian/30min?hide_gdpr_banner=0'
+  //   });
+  //   return false;
+  // });
 
   // $('.close-popup').on('click', function () {
   //   $('.popup').hide();

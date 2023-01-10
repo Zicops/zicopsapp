@@ -4,7 +4,8 @@ import Loader from '@/components/common/Loader';
 import NextButton from '@/components/common/NextButton';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
-import { MAX_ATTEMPT_COUNT } from '@/helper/constants.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COMMON_LSPS, MAX_ATTEMPT_COUNT } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -40,29 +41,69 @@ export default function ExamMaster() {
   const { getTotalMarks, saveExamData } = useHandleExamTab();
 
   // load question paper data
-  useEffect(() => {
-    const LARGE_PAGE_SIZE = 999999999999;
+  useEffect(async () => {
+    const LARGE_PAGE_SIZE = 9999;
     const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
 
-    loadQuestionPaper({ variables: queryVariables }).then(({ data }) => {
-      if (errorQuestionPaperData)
-        return setToastMsg({ type: 'danger', message: 'question paper load error' });
-
-      const paperData = data?.getLatestQuestionPapers?.questionPapers;
-
-      const options = [];
-      if (paperData)
-        paperData.forEach((paper) =>
-          options.push({
-            value: paper.id,
-            label: paper.name,
-            ...paper,
-            SuggestedDuration: +paper?.SuggestedDuration / 60
+    const _lspId = sessionStorage.getItem('lsp_id');
+    const currentQpRes = await loadQueryDataAsync(GET_LATEST_QUESTION_PAPERS, queryVariables);
+    const zicopsQpRes =
+      COMMON_LSPS?.zicops !== _lspId
+        ? await loadQueryDataAsync(GET_LATEST_QUESTION_PAPERS, queryVariables, {
+            context: { headers: { tenant: COMMON_LSPS?.zicops } }
           })
-        );
+        : {};
 
-      setQuestionPaperOptions(options);
-    });
+    if (currentQpRes?.error || zicopsQpRes?.error) {
+      return setToastMsg({ type: 'danger', message: 'question paper load error' });
+    }
+
+    const currentPaperData = currentQpRes?.getLatestQuestionPapers?.questionPapers;
+    const zicopsPaperData = zicopsQpRes?.getLatestQuestionPapers?.questionPapers;
+
+    const options = [];
+
+    currentPaperData?.forEach((paper) =>
+      options.push({
+        value: paper.id,
+        label: paper.name,
+        ...paper,
+        SuggestedDuration: +paper?.SuggestedDuration / 60
+      })
+    );
+    zicopsPaperData?.forEach((paper) =>
+      options.push({
+        value: paper.id,
+        label: paper.name,
+        ...paper,
+        SuggestedDuration: +paper?.SuggestedDuration / 60
+      })
+    );
+
+    setQuestionPaperOptions(options);
+
+    // loadQuestionPaper({
+    //   variables: queryVariables,
+    //   context: { headers: { tenant: COMMON_LSPS?.zicops } }
+    // }).then(({ data }) => {
+    //   if (errorQuestionPaperData)
+    //     return setToastMsg({ type: 'danger', message: 'question paper load error' });
+
+    //   const paperData = data?.getLatestQuestionPapers?.questionPapers;
+
+    //   const options = [];
+    //   if (paperData)
+    //     paperData.forEach((paper) =>
+    //       options.push({
+    //         value: paper.id,
+    //         label: paper.name,
+    //         ...paper,
+    //         SuggestedDuration: +paper?.SuggestedDuration / 60
+    //       })
+    //     );
+
+    //   setQuestionPaperOptions(options);
+    // });
   }, []);
 
   useEffect(async () => {
@@ -205,8 +246,8 @@ export default function ExamMaster() {
             label: 'Exam Duration:',
             placeholder: 'Enter duration of the exam',
             value: examTabData.duration?.toString(),
-            isNumericOnly: true
-            // isDisabled: true
+            isNumericOnly: true,
+            isDisabled: isPreview
           }}
           changeHandler={(e) => changeHandler(e, examTabData, setExamTabData)}
         />
@@ -448,6 +489,7 @@ export default function ExamMaster() {
             if (!examId && examTabData?.id) return;
             setExamTabData({ ...examTabData, instructions: e });
           }}
+          isReadOnly={isPreview}
           placeholder="Enter instructions in less than 300 characters."
           value={examTabData?.instructions}
         />

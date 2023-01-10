@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 export function useHandleNav(isAdmin, setAdmin) {
   const userData = useRecoilValue(UserStateAtom);
@@ -10,14 +10,24 @@ export function useHandleNav(isAdmin, setAdmin) {
   const router = useRouter();
   const searchInputRef = useRef(null);
 
+  const pathArr = router.asPath.split('/');
+  const searchText = pathArr?.[2] || null;
+
+  useEffect(() => {
+    if (!router?.pathname?.includes('/search-page/')) return;
+    setSearchQuery(searchText?.replace(/%20/gi, ' '));
+
+    if (searchText) searchInputRef.current?.focus();
+  }, [router?.pathname, searchText]);
+
   useEffect(() => {
     // const route = router.asPath;
     // window.localStorage.setItem('isAdmin', route.includes('admin') ? 1 : 0);
 
     // setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
     const role = sessionStorage?.getItem('user_lsp_role');
-    if(!role) return ;
-    console.log(role,'role')
+    if (!role) return;
+    console.log(role, 'role');
     setAdmin(role.toLowerCase() === 'admin');
   }, [userData?.id]);
 
@@ -41,7 +51,7 @@ export function useHandleNav(isAdmin, setAdmin) {
   }
 
   function activateSearch() {
-    setSearchQuery('');
+    // setSearchQuery('');
     searchInputRef.current?.focus();
   }
 
@@ -49,7 +59,7 @@ export function useHandleNav(isAdmin, setAdmin) {
     if (searchQuery?.length > 0) return;
     if (e.relatedTarget?.className.includes('nav')) return;
 
-    setSearchQuery(null);
+    // setSearchQuery(null);
   }
 
   function handleSearch(e) {

@@ -1,0 +1,8 @@
+@import '../../../screens/HomepageScreen/homepageScreen.module.scss';
+
+.listContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}

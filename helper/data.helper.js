@@ -1,10 +1,17 @@
 import { useLazyQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { GET_CATS_N_SUB_CATS, GET_SUB_CATS_BY_CAT, queryClient } from '../API/Queries';
+import {
+  GET_CATS_N_SUB_CATS,
+  GET_LATEST_COURSES,
+  GET_SUB_CATS_BY_CAT,
+  queryClient
+} from '../API/Queries';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
-import { DEFAULT_VALUES } from './constants.helper';
+import { loadAndCacheDataAsync } from './api.helper';
+import { COMMON_LSPS, COURSE_STATUS, DEFAULT_VALUES } from './constants.helper';
+import { getUnixTimeAt } from './utils.helper';
 
 export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
@@ -220,4 +227,25 @@ export function loadCatSubCat(state, setState, category = null) {
     if (loadCatErr) return setToastMsg({ type: 'danger', message: 'category load error' });
     if (loadSubCatErr) return setToastMsg({ type: 'danger', message: 'sub category load  error' });
   }, [loadCatErr, loadSubCatErr]);
+}
+
+export async function getLatestCoursesByFilters(filters = {}, pageSize = 28) {
+  const _lspId = COMMON_LSPS.zicops;
+
+  // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
+  const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
+    publish_time: getUnixTimeAt(),
+    pageSize: pageSize,
+    pageCursor: '',
+    status: COURSE_STATUS.publish,
+    filters: { LspId: _lspId, ...filters }
+  });
+  const _toBeSortedCourses = structuredClone(courses) || [];
+
+  _toBeSortedCourses.latestCourses.courses = sortArrByKeyInOrder(
+    [..._toBeSortedCourses?.latestCourses?.courses],
+    'updated_at',
+    false
+  );
+  return _toBeSortedCourses;
 }

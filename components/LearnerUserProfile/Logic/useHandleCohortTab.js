@@ -3,7 +3,6 @@ import { ADD_USER_COHORT, ADD_USER_COURSE, UPDATE_COHORT_MAIN, UPDATE_USER_COHOR
 import { GET_USER_COURSE_MAPS, GET_USER_LATEST_COHORTS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATION_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData, SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -161,89 +160,100 @@ export default function useHandleCohortTab() {
   }
 
   async function addUserToCohort(userIds = [] , cohortId = null){
+    // if(!userOrgData?.lsp_id && !<lsp_id>) return ;
+    const lspId = sessionStorage.getItem('lsp_id');
+    if (!userOrgData?.lsp_id) setUserOrgData((prev) => ({ ...prev, lsp_id: lspId }));
 
-      // if(!userOrgData?.lsp_id && !LEARNING_SPACE_ID) return ;
-      const lspId = sessionStorage.getItem('lsp_id');
-      if(!userOrgData?.lsp_id) setUserOrgData((prev) => ({...prev , lsp_id: lspId}));
+    if (!userIds?.length) return setToastMsg({ type: 'info', message: 'Make sure to add users!' });
 
-      if(!userIds?.length) return setToastMsg({type:'info',message:'Make sure to add users!'});
+    const { id, role } = getUserData();
 
-      const {id,role} = getUserData();
+    for (let i = 0; i < userIds?.length; i++) {
+      const userLspData = await getUserLspData(userIds[i], lspId);
+      if (!userLspData)
+        return setToastMsg({ type: 'danger', message: 'Error occured while loading user lsp id' });
 
-      for(let i = 0 ; i < userIds?.length ; i++){
+      //checking if user is already added to cohort  or not because he may have been disabled and again added
+      const sendData = {
+        user_id: userIds[i],
+        user_lsp_id: userLspData?.user_lsp_id,
+        publish_time: getCurrentEpochTime(),
+        pageCursor: '',
+        pageSize: 10
+      };
 
-        const userLspData = await getUserLspData(userIds[i],lspId);
-        if(!userLspData) return setToastMsg({ type: 'danger', message: 'Error occured while loading user lsp id' });
-
-        //checking if user is already added to cohort  or not because he may have been disabled and again added
-        const sendData = {
-          user_id:userIds[i],
-          user_lsp_id:userLspData?.user_lsp_id,
-          publish_time:getCurrentEpochTime(),
-          pageCursor:"",
-          pageSize:10
-        }
-
-        const resCohorts = await loadQueryDataAsync(GET_USER_LATEST_COHORTS,{...sendData},{},userQueryClient);
-        // console.log(resCohorts?.getLatestCohorts?.cohorts);
-      
-        const cohorts = resCohorts?.getLatestCohorts?.cohorts;
-      
-        const userCohorts = cohorts?.filter((cohort) => cohort?.cohort_id === cohortId) ;
-        // console.log(userCohorts,'userCohorts');
-
-        if(userCohorts?.length){
-          const sendData = {
-            user_cohort_id: userCohorts[0]?.user_cohort_id,
-            user_id: userCohorts[0]?.user_id,
-            user_lsp_id: userCohorts[0]?.user_lsp_id,
-            cohort_id: userCohorts[0]?.cohort_id,
-            added_by: JSON.stringify({ user_id: id, role: 'Cohort' }),
-            membership_status: 'Active',
-            role: 'Learner'
-          };
-          // console.log(sendData,'cohort send item');
-          let isError = false;
-          const res = await updateUserCohort({ variables: sendData }).catch((err) => {
-            isError = true;
-          });
-
-          if(isError) return setToastMsg({ type: 'danger', message: 'Error occured while updating user cohort mapping' });
-        }
-
-      if(!userCohorts?.length)
-      {  const sendCohortData = {
-          user_id:userIds[i],
-          user_lsp_id: userLspData?.user_lsp_id,
-          cohort_id: cohortId,
-          added_by: JSON.stringify({user_id: id, role:role}),
-          membership_status:'Active',
-          role: 'Learner'
-        }
-
-      let isError = false;
-      const resCohort = await addToCohort({ variables: { userCohort: sendCohortData } }).catch(
-        (err) => {
-          console.log(err);
-          isError = !!err;
-        }
+      const resCohorts = await loadQueryDataAsync(
+        GET_USER_LATEST_COHORTS,
+        { ...sendData },
+        {},
+        userQueryClient
       );
-      if (isError)
-       return setToastMsg({ type: 'danger', message: 'Error occured while adding user cohort mapping' });
+      // console.log(resCohorts?.getLatestCohorts?.cohorts);
 
+      const cohorts = resCohorts?.getLatestCohorts?.cohorts;
+
+      const userCohorts = cohorts?.filter((cohort) => cohort?.cohort_id === cohortId);
+      // console.log(userCohorts,'userCohorts');
+
+      if (userCohorts?.length) {
+        const sendData = {
+          user_cohort_id: userCohorts[0]?.user_cohort_id,
+          user_id: userCohorts[0]?.user_id,
+          user_lsp_id: userCohorts[0]?.user_lsp_id,
+          cohort_id: userCohorts[0]?.cohort_id,
+          added_by: JSON.stringify({ user_id: id, role: 'Cohort' }),
+          membership_status: 'Active',
+          role: 'Learner'
+        };
+        // console.log(sendData,'cohort send item');
+        let isError = false;
+        const res = await updateUserCohort({ variables: sendData }).catch((err) => {
+          isError = true;
+        });
+
+        if (isError)
+          return setToastMsg({
+            type: 'danger',
+            message: 'Error occured while updating user cohort mapping'
+          });
       }
 
+      if (!userCohorts?.length) {
+        const sendCohortData = {
+          user_id: userIds[i],
+          user_lsp_id: userLspData?.user_lsp_id,
+          cohort_id: cohortId,
+          added_by: JSON.stringify({ user_id: id, role: role }),
+          membership_status: 'Active',
+          role: 'Learner'
+        };
 
-       // check if user have cohort courses
-     const assignCourse = await assignCourseToUser(userIds[i],userLspData?.user_lsp_id,cohortId);
+        let isError = false;
+        const resCohort = await addToCohort({ variables: { userCohort: sendCohortData } }).catch(
+          (err) => {
+            console.log(err);
+            isError = !!err;
+          }
+        );
+        if (isError)
+          return setToastMsg({
+            type: 'danger',
+            message: 'Error occured while adding user cohort mapping'
+          });
+      }
 
-     if(!assignCourse) return setToastMsg({ type: 'danger', message: 'Error occured while assigning courses to user' });   
-      
-}
+      // check if user have cohort courses
+      const assignCourse = await assignCourseToUser(userIds[i], userLspData?.user_lsp_id, cohortId);
 
-      return userIds;
-
+      if (!assignCourse)
+        return setToastMsg({
+          type: 'danger',
+          message: 'Error occured while assigning courses to user'
+        });
     }
+
+    return userIds;
+  }
 
   async function getUsersOrgDetails(userData = []) {
     if (!userOrgData?.lsp_id) return false;

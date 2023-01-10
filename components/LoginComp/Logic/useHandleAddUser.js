@@ -15,7 +15,7 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { CUSTOM_ERROR_MESSAGE, LEARNING_SPACE_ID, USER_STATUS } from '@/helper/constants.helper';
+import { CUSTOM_ERROR_MESSAGE, USER_STATUS } from '@/helper/constants.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
@@ -101,7 +101,8 @@ export default function useHandleAddUserDetails() {
       userAboutData?.first_name.length > 0 &&
         userAboutData?.last_name.length > 0 &&
         isPhValid &&
-        userOrgData?.language.length > 0
+        userOrgData?.language.length > 0 &&
+        userAboutData?.gender?.length > 0
     );
     setIsOrganizationSetupReady(
       //   userDataAbout?.id &&
@@ -419,7 +420,11 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       const message = parseJson(errorMsg.split('body:')[1]);
       if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.phoneError) {
-        setToastMsg({ type: 'danger', message: `Phone Number already exists!` });
+        setToastMsg({ type: 'info', message: `Phone Number already exists!` });
+        return !!errorMsg;
+      }
+      if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.shortNumber) {
+        setToastMsg({ type: 'info', message: `Invalid Phone Number. Too short.` });
         return !!errorMsg;
       }
       return setToastMsg({ type: 'danger', message: `Update User about Error!` });

@@ -110,16 +110,16 @@ const Classroom = () => {
   const tableData = {
     columnHeader: ['Course Name', 'End Date', 'Sub Category', 'Completion'],
     rowData: [
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%'],
-      ['Leom Ipsum Dolor', '21-3-2022', 'Java', '54%']
+      ['Basics of Powerpoint', '21-3-2023', 'CDAC', '74%'],
+      ['Git and GitHub Bootcamp', '04-4-2023', 'DevOps', '23%'],
+      ['CSS Introduction', '13-4-2023', 'HTML', '43%'],
+      ['Networking Fundamentals', '22-4-2023', 'Java', '54%'],
+      ['Intro to AI', '17-5-2023', 'Python', '67%'],
+      ['Artificaial Intelligence', '15-6-2023', 'Python', '11%'],
+      ['Machine Learning 101', '15-6-2023', 'Machine Learning', '0%'],
+      ['Java For Testers', '30-7-2023', 'Java', '0%'],
+      ['AWS Certified Solution Architect', '29-8-2023', 'AWS', '0%'],
+      ['Technology of Large Scale Systems', '20-8-2023', 'Java', '4%']
     ]
   };
 

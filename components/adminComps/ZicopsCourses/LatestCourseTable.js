@@ -1,6 +1,6 @@
 // components\adminComps\ZicopsCourses\LatestCourseTable.js
 
-import { GET_LATEST_COURSES, queryClient } from '@/api/Queries';
+import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 export default function LatestCourseTable({ isEditable = false, zicopsLspId = null }) {
-  const [loadMyCourses, { loading }] = useLazyQuery(GET_LATEST_COURSES, {
+  const [loadMyCourses, { loading }] = useLazyQuery(GET_MY_COURSES, {
     client: queryClient
   });
 
@@ -49,7 +49,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
       );
       setLatestCourse(_latestCourses);
     });
-  }, [userOrgData?.lsp_id, searchParam, courseStatus, zicopsLspId]);
+  }, [userOrgData?.lsp_id, searchParam, courseStatus, zicopsLspId, courseType]);
 
   const columns = [
     {
@@ -106,19 +106,20 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
               </button>
             ) : (
-              <button
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  outline: '0',
-                  border: '0'
-                }}>
-                <Switch
-                  inputProps={{ 'aria-label': 'Switch demo' }}
-                  defaultChecked
-                  color="success"
-                />
-              </button>
+              <></>
+              // <button
+              //   style={{
+              //     cursor: 'pointer',
+              //     backgroundColor: 'transparent',
+              //     outline: '0',
+              //     border: '0'
+              //   }}>
+              //   <Switch
+              //     inputProps={{ 'aria-label': 'Switch demo' }}
+              //     defaultChecked
+              //     color="success"
+              //   />
+              // </button>
             )}
           </>
         );

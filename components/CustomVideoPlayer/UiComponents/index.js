@@ -1,6 +1,7 @@
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { userContext } from '@/state/contexts/UserContext';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
@@ -8,6 +9,7 @@ import { filterModule } from '../../../helper/data.helper';
 import { ModuleAtom, QuizAtom } from '../../../state/atoms/module.atoms';
 import { QuizProgressDataAtom, VideoAtom } from '../../../state/atoms/video.atom';
 import { courseContext } from '../../../state/contexts/CourseContext';
+import styles from '../customVideoPlayer.module.scss';
 import DraggableDiv from '../DraggableDiv';
 import { BOX } from '../Logic/customVideoPlayer.helper';
 import useSaveData from '../Logic/useSaveData';
@@ -17,7 +19,6 @@ import Notes from './Notes';
 import Quiz from './Quiz';
 import ResourcesList from './ResourcesList';
 import SubtitleBox from './SubtitleBox';
-import styles from '../customVideoPlayer.module.scss';
 
 export default function UiComponents({
   refs,
@@ -30,6 +31,9 @@ export default function UiComponents({
   subtitleState,
   freezeState
 }) {
+  const router = useRouter();
+  const isPreview = router?.asPath?.includes('preview');
+
   const { videoElement, videoContainer } = refs;
   const { bookmarkData: allBookmarks } = useContext(userContext);
   const videoData = useRecoilValue(VideoAtom);
@@ -54,7 +58,8 @@ export default function UiComponents({
     handleSaveBookmark,
     notes,
     handleNotesChange,
-    handleSaveNotes
+    handleSaveNotes,
+    isBookMarkDisable
   } = useSaveData(videoElement, freezeState);
 
   const { setShowQuizDropdown, showQuiz, setShowQuiz } = states;
@@ -153,6 +158,7 @@ export default function UiComponents({
     {
       id: 3,
       isHidden: videoData?.type !== 'mp4',
+      isDisabled: isPreview,
       btnComp: (
         <div
           className={`${styles.videoBookmark}`}
@@ -172,6 +178,7 @@ export default function UiComponents({
           }}
           updateIsPlayingTo={updateIsPlayingTo}
           playerState={playerState}
+          submitIsDisable={isBookMarkDisable}
         />
       ),
       handleClick: () => {
@@ -183,6 +190,7 @@ export default function UiComponents({
       id: 4,
       btnImg: '/images/svg/app_registration.svg',
       boxComponent: <Notes />,
+      isDisabled: isPreview,
       handleClick: () => {
         const isBoxClosed = showBox === BOX[4];
         if (isBoxClosed) {
@@ -375,6 +383,7 @@ export default function UiComponents({
                         key={item.id}
                         btnImg={item.btnImg}
                         btnComp={item.btnComp}
+                        isDisabled={item?.isDisabled || false}
                         handleClick={item.handleClick}
                         isBoxActive={showBox === BOX[item.id]}
                         boxComponent={item.boxComponent}

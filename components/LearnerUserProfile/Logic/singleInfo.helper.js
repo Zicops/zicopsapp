@@ -16,5 +16,5 @@ export const isDisabledArr = [
   'Learning Space Role',
   'Base Sub-category',
   'Base Language',
-  'Gender'
+  // 'Gender'
 ];
