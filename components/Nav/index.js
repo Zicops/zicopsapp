@@ -97,14 +97,14 @@ export default function Nav() {
         <div className={styles.menu}>
           <ul>
             {(!isOnLearnerSide ? AdminMenu : UserMenu).map((val, key) => {
+              let isActive = router?.route?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
+              if (!isOnLearnerSide) {
+                const currentRoute = router?.route?.split('/')?.[2];
+                isActive = currentRoute?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
+              }
               return (
                 <Link href={val.link} key={key}>
-                  <li
-                    className={
-                      router.route.toLowerCase().includes(`${val.title.toLowerCase()}`)
-                        ? styles.active
-                        : ''
-                    }>
+                  <li className={isActive ? styles.active : ''}>
                     <span>{val.title}</span>
                   </li>
                 </Link>
