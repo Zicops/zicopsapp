@@ -1,4 +1,6 @@
 import { COURSE_STATUS } from '@/helper/constants.helper';
+import { FullCourseDataAtom } from '@/state/atoms/course.atoms';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -21,10 +23,12 @@ export default function CourseTopic() {
   const { refetchDataAndUpdateRecoil } = useHandleCourseTopic();
 
   // recoil state
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [addModulePopUp, setAddModulePopUp] = useRecoilState(PopUpStatesAtomFamily('addModule'));
   const [addChapterPopUp, setAddChapterPopUp] = useRecoilState(PopUpStatesAtomFamily('addChapter'));
   const [addTopicPopUp, setAddTopicPopUp] = useRecoilState(PopUpStatesAtomFamily('addTopic'));
 
+  const fullCourseData = useRecoilValue(FullCourseDataAtom);
   const moduleData = useRecoilValue(ModuleAtom);
 
   // add module
@@ -87,6 +91,13 @@ export default function CourseTopic() {
   let isDisabled = !!fullCourse?.qa_required;
   if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
 
+  function handleModuleClick() {
+    if (fullCourseData?.expertise_level.split(',')?.filter((l) => l)?.length === 0)
+      return setToastMsg({ type: 'danger', message: 'Please select at least one expertise level' });
+
+    setAddModulePopUp(true);
+  }
+
   return (
     <>
       {/* module */}
@@ -113,7 +124,7 @@ export default function CourseTopic() {
           text="Add Module"
           isDisabled={isDisabled}
           styleClass="btnBlack"
-          handleClick={() => setAddModulePopUp(true)}
+          handleClick={handleModuleClick}
         />
       </div>
 

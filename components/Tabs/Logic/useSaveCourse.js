@@ -2,6 +2,7 @@ import { GET_LATEST_COURSES } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, DEFAULT_VALUES } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -39,6 +40,7 @@ export default function useSaveCourse(courseContextData) {
   const [updateCourse, { loading: udpateCourseLoading }] = useMutation(UPDATE_COURSE);
 
   // recoil state
+  const [fullCourseData, setFullCourseData] = useRecoilState(FullCourseDataAtom);
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
   const [tab, setTab] = useRecoilState(CourseTabAtom);
@@ -78,6 +80,7 @@ export default function useSaveCourse(courseContextData) {
       isValid =
         !!fullCourse?.sub_categories?.length &&
         !!fullCourse?.expertise_level?.length &&
+        !!+fullCourse?.expected_completion > 0 &&
         !!(courseVideo?.file || fullCourse.previewVideo) &&
         !!(courseTileImage?.file || fullCourse.tileImage) &&
         !!(courseImage?.file || fullCourse.image) &&
@@ -183,13 +186,21 @@ export default function useSaveCourse(courseContextData) {
       sendData.approvers = [userData?.email];
     }
 
-    const courseUpdateResponse = await updateCourse({ variables: sendData });
+    const courseUpdateResponse = await updateCourse({ variables: sendData })?.catch((err) => {
+      console.log(err);
+      showToastMsg = false;
+      setToastMsg({ type: 'danger', message: 'Course Update Error' });
+    });
 
-    const _course = structuredClone(courseUpdateResponse.data.updateCourse);
+    const _course = structuredClone(courseUpdateResponse?.data?.updateCourse || {});
     if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
     if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
     if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
-    updateCourseMaster({ ..._course, status: _course?.status || sendData.status });
+    if (_course) {
+      updateCourseMaster({ ..._course, status: _course?.status || sendData.status });
+      // set recoil state for course data
+      setFullCourseData(getFullCourseDataObj({ ...fullCourseData, ..._course }));
+    }
 
     setIsLoading(
       udpateCourseLoading && uploadImageLoading && uploadTileLoading && uploadPreviewLoading
@@ -198,7 +209,7 @@ export default function useSaveCourse(courseContextData) {
     );
 
     if (showToastMsg) setToastMsg({ type: 'success', message: 'Course Updated' });
-    console.log('course updated', fullCourse, courseUpdateResponse.data.updateCourse);
+    console.log('course updated', fullCourse, _course);
 
     setIsCourseSaved(true);
     if (isNextButton) setTab(tabData[tabIndex || 0].name);

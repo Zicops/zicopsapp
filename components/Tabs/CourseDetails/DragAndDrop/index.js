@@ -108,7 +108,7 @@ const DragDrop = ({ data, contextData, isError = false, isFreezed = false }) => 
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}>
-                            <div className="Sr_no">{rank + 1}</div>
+                            <div className="Sr_no">{(rank || index) + 1}</div>
                             <div className="inner_drop_ele">
                               {name}
                               {!isFreezed && (

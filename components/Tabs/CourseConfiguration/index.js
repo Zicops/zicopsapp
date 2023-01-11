@@ -1,7 +1,9 @@
 import { UPDATE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -11,10 +13,11 @@ import { useRecoilState } from 'recoil';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import RadioBox from '../common/RadioBox';
 import SwitchBox from '../common/SwitchBox';
-import styles from '../courseTabs.module.scss';
 import { isCourseUploadingAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 import CourseDetailsTable from './CourseDetailsTable';
+import FreezeConfirmation from './FreezeConfirmation';
+import styles from '../courseTabs.module.scss';
 
 export default function CourseConfiguration() {
   const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
@@ -22,6 +25,7 @@ export default function CourseConfiguration() {
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
 
   const courseContextData = useContext(courseContext);
+  const [freezeConfirmBox, setFreezeConfirmBox] = useState(null);
   const [showConfirmBox, setShowConfirmBox] = useState(null);
   const router = useRouter();
 
@@ -120,8 +124,13 @@ export default function CourseConfiguration() {
               name: 'qa_required',
               isDisabled: +fullCourse?.duration === 0 ? true : isDisabled,
               isChecked: fullCourse?.qa_required || false,
-              handleChange: (e) =>
-                updateCourseMaster({ ...fullCourse, qa_required: e.target.checked })
+              handleChange: (e) => {
+                const isFreeze = e.target.checked;
+                if (isFreeze) return setFreezeConfirmBox(true);
+
+                updateCourseMaster({ ...fullCourse, qa_required: isFreeze });
+              }
+              // handleChange: () => setFreezeConfirmBox(true)
             }}
           />
           <div className="w-50" style={{ margin: '15px' }}></div>
@@ -250,6 +259,8 @@ export default function CourseConfiguration() {
           handleChange={handleChange}
         />
       </div> */}
+      {!!freezeConfirmBox && <FreezeConfirmation closePopUp={() => setFreezeConfirmBox(false)} />}
+
       {showConfirmBox && (
         <ConfirmPopUp
           title={'Are you sure about expiring this course?'}
@@ -259,10 +270,10 @@ export default function CourseConfiguration() {
               //   ...fullCourse,
               //   status: e.target.checked ? COURSE_STATUS.reject : COURSE_STATUS.publish
               // });
-              const { duration, status, ...fullCourseData } = fullCourse;
+              const { duration, status, ..._fullCourse } = fullCourse;
               console.log('var', sendData);
               const sendData = {
-                ...fullCourseData,
+                ..._fullCourse,
                 status: COURSE_STATUS.reject,
                 expiry_date: getUnixFromDate()
               };

@@ -104,9 +104,7 @@ export default function CourseDetails() {
           <LabeledInput
             // styleClass={`${styles.marginBottom}`}
             isFiftyFifty={true}
-            inputClass={
-              !fullCourse?.expected_completion?.length && courseError?.details ? 'error' : ''
-            }
+            inputClass={!fullCourse?.expected_completion > 0 && courseError?.details ? 'error' : ''}
             inputOptions={{
               inputName: 'expected_completion',
               label: 'Suggested Duration: ',

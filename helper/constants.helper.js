@@ -80,6 +80,7 @@ export const CUSTOM_ERROR_MESSAGE = {
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
 
 export const LANGUAGES = ['English', 'Hindi', 'Arabic'];
+export const SUBTITLE_LANGUAGES = ['English', 'Hindi', 'Arabic', 'Telgu', 'Tamil', 'Marathi'];
 
 export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';
 export const VIDEO_FILE_TYPES = '.mp4, .mkv';
@@ -141,4 +142,11 @@ export const EMAIL_TEMPLATE_IDS = {
   cohortUnassign: 'd-3801f540f2a948729db6019981ace2c2',
   cohortManagerAssign: 'd-c9382610d3bb46f28291bca9f5d97cd4',
   cohortManagerUnassign: 'd-8b97231c38a44b6facb05172f39cc714'
+};
+
+export const COURSE_TOPIC_TYPES = {
+  content: 'Content',
+  assessment: 'Assessment',
+  lab: 'Lab',
+  classroom: 'Classroom'
 };
