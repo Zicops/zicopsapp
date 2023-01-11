@@ -25,8 +25,10 @@ import ZicopsTable from '../../common/ZicopsTable';
 import AddQuestionBank from './AddQuestionBank';
 
 export default function QuestionBankTable({ isEdit = false }) {
-  const [loadQuestionBank, { loading: loadRefetch, error: errorQuestionBankData, refetch }] =
-    useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
+  const [
+    loadQuestionBank,
+    { loading: loadRefetch, error: errorQuestionBankData, refetch }
+  ] = useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -175,7 +177,7 @@ export default function QuestionBankTable({ isEdit = false }) {
                     setEditPopUp(true);
                   }}>
                   <ToolTip title={ADMIN_EXAMS.myQuestionBanks.editBtn} placement="bottom">
-                    <img src="/images/edit-icon.png" width={20}></img>
+                    <img src="/images/svg/edit-box-line.svg" width={20}></img>
                   </ToolTip>
                 </button>
 
