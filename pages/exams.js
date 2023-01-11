@@ -290,7 +290,7 @@ const uniqueResult = Object.values(uniqueArray);
 
    useEffect(() => {
     console.log(onGoingExam, 'examreso');
-    if (!onGoingExam?.length) return;
+    if (!onGoingExam?.length) return setOnOgingData([]);
     
     
     //loop to finally add results and course name
@@ -340,7 +340,7 @@ const uniqueResult = Object.values(uniqueArray);
     }));
     console.log("examsResult",examsResult);
      
-    if (!examsResult?.length) return;
+    if (!examsResult?.length) return setOnOgingData([]) ;
      setOnOgingData(examsResult);
     return;
   }, [onGoingExam, examCourseMapping?.scheduleExam , examCourseMapping?.takeAnyTime]);
