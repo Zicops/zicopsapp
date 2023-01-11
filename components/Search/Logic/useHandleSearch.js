@@ -58,19 +58,6 @@ export default function useHandleSearch() {
     // return if router is not ready
     if (!router.isReady) return;
     if (isLoading) return;
-    console.log(
-      'data',
-      router.isReady,
-      filters.category,
-      filters.subCategory,
-      filters.lang,
-      filters.type,
-      filter,
-      searchQuery,
-      userDataGlobal?.preferences?.length,
-      isSelfPaced,
-      preferredSubCat
-    );
     setIsLoading(true);
 
     // return if state is updated and same as query params
