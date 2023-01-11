@@ -923,7 +923,7 @@ export function useUpdateUserAboutData() {
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      lsp_id: userOrgData?.lsp_id,
+      lsp_id: userOrgData?.lsp_id || sessionStorage.getItem('lsp_id'),
       status: userData?.status
     };
 
@@ -1014,17 +1014,14 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
-      // console.log(user);
+      console.log(user);
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
-      if (
-        user?.lsp_status?.toLowerCase() === USER_STATUS?.activate?.toLowerCase() ||
-        user?.lsp_status === ''
-      ) {
+      if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {
         const userSendLspData = {
           id: user?.id,
           user_lsp_id: user?.user_lsp_id,
-          status: USER_STATUS?.disable
+          status: USER_MAP_STATUS?.disable
         };
         const isDisable = await updateUserLsp(userSendLspData);
         if (!isDisable) {

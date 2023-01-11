@@ -2,7 +2,7 @@ import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
@@ -12,6 +12,8 @@ import { userSideBarData } from '../../../../components/common/Sidebar/Logic/sid
 import MyUser from '../../../../components/UserComps/MyUser';
 
 export default function MyUserPage() {
+  const myUsersRef = useRef();
+
   const [selectedUser, setSelectedUser] = useState([]);
   const [userType, setUserType] = useState('Internal');
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -33,7 +35,9 @@ export default function MyUserPage() {
         const success = await resetMultiPassword(selectedUser);
         if (!success)
           return setToastMsg({ type: 'danger', message: 'Error while resetting password!' });
-        return setToastMsg({ type: 'success', message: 'Password resetted successfully.' });
+
+        return setToastMsg({ type: 'success', message: 'Reset password link sent successfully.' });
+
       }
     }
     // {
@@ -75,7 +79,8 @@ export default function MyUserPage() {
         />
 
         <MainBodyBox>
-          <MyUser getUser={(list) => setSelectedUser(list)} />
+          <MyUser ref={myUsersRef} getUser={(list) => setSelectedUser(list)} />
+
           {disableAlert && (
             <ConfirmPopUp
               title={`Are you sure you want to disable ${
@@ -88,6 +93,7 @@ export default function MyUserPage() {
                   if (!success)
                     return setToastMsg({ type: 'danger', message: 'Error while disabling users' });
                   setSelectedUser([]);
+                  myUsersRef?.current?.clearSelection();
                   setDisableAlert(false);
                   return setToastMsg({
                     type: 'success',

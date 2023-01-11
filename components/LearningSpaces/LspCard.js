@@ -1,7 +1,7 @@
 // import Image from 'next/image';
 import { GET_USER_LSP_ROLES, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { getCurrentOrigin } from '@/helper/utils.helper';
+import { getCurrentHost } from '@/helper/utils.helper';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -57,8 +57,8 @@ const LspCard = ({
     sessionStorage.setItem('user_lsp_id', userLspId);
     sessionStorage.setItem('user_lsp_role', userLspRole);
 
-    const currentOrigin = getCurrentOrigin();
-    if (currentOrigin !== 'demo.zicops.com' && currentOrigin !== website) {
+    const currentHost = getCurrentHost();
+    if (currentHost !== 'demo.zicops.com' && currentHost !== website) {
       const token = sessionStorage.getItem('tokenF');
 
       window.location.href = `https://${website}/auth-verify/?role=${userLspRole}&lspId=${lspId}&userLspId=${userLspId}&token=${token}`;
