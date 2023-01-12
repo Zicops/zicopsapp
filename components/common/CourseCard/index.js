@@ -48,6 +48,16 @@ export default function CourseCard({
     );
   };
 
+  function gotoCoursePage(e, queryParams = '') {
+    e.stopPropagation();
+
+    if (!courseData?.id) return router.push('/courses');
+
+    let coursePath = `/course/${courseData.id}`;
+    if (!!queryParams) coursePath += `?${queryParams}`;
+    router.push(coursePath, `/course/${courseData.id}`);
+  }
+
   let courseNameClass = 'coursename';
   if (courseData?.name?.length > 43) {
     // console.log(courseData?.name?.length);
@@ -95,8 +105,18 @@ export default function CourseCard({
                   </>
                 ) : (
                   <>
-                    <img className={`${styles.playBtn}`} src="/images/Frame 22.svg" alt="" />
-                    <img className={`${styles.removeBtn}`} src="/images/Frame 23.svg" alt="" />
+                    <img
+                      className={`${styles.playBtn}`}
+                      src="/images/Frame 22.svg"
+                      alt=""
+                      onClick={(e) => gotoCoursePage(e, 'startCourse=true')}
+                    />
+                    <img
+                      className={`${styles.removeBtn}`}
+                      src="/images/Frame 23.svg"
+                      alt=""
+                      onClick={(e) => gotoCoursePage(e, 'isUnAssign=true')}
+                    />
                   </>
                 )}
                 {/* <img className={`${styles.addBtn}`} src="/images/Frame 22.svg" alt="" />
