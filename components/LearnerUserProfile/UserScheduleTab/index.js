@@ -127,6 +127,7 @@ const UserScheduleTab = () => {
                 value: { value: filterType, label: filterType }
               }}
               changeHandler={(e) => {
+                if(e.value?.toLowerCase() === filterType?.toLowerCase()) return;
                 setFilterType(e.value);
                 setSchduleData(scheduleDataAtom);
               }}
