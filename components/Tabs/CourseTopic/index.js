@@ -1,5 +1,6 @@
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { FullCourseDataAtom } from '@/state/atoms/course.atoms';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useContext } from 'react';
@@ -30,6 +31,7 @@ export default function CourseTopic() {
 
   const fullCourseData = useRecoilValue(FullCourseDataAtom);
   const moduleData = useRecoilValue(ModuleAtom);
+  const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   // add module
   const { newModuleData, setNewModuleData, isAddModuleReady, addNewModule } = useAddModule(
@@ -88,8 +90,9 @@ export default function CourseTopic() {
 
   const { fullCourse } = useContext(courseContext);
 
-  let isDisabled = !!fullCourse?.qa_required;
-  if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
+  let isDisabled = fullCourse?.qa_required;
+  if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) isDisabled = true;
+  if (isPublishCourseEditable) isDisabled = false;
 
   function handleModuleClick() {
     if (fullCourseData?.expertise_level.split(',')?.filter((l) => l)?.length === 0)

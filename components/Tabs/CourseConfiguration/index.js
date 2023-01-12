@@ -9,7 +9,7 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import RadioBox from '../common/RadioBox';
 import SwitchBox from '../common/SwitchBox';
@@ -18,11 +18,13 @@ import useHandleTabs from '../Logic/useHandleTabs';
 import CourseDetailsTable from './CourseDetailsTable';
 import FreezeConfirmation from './FreezeConfirmation';
 import styles from '../courseTabs.module.scss';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 
 export default function CourseConfiguration() {
   const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
 
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
+  const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   const courseContextData = useContext(courseContext);
   const [freezeConfirmBox, setFreezeConfirmBox] = useState(null);
@@ -39,7 +41,9 @@ export default function CourseConfiguration() {
 
   // const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const isDisabled = [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse?.status);
+  let isDisabled = fullCourse?.qa_required;
+  if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) isDisabled = true;
+  if (isPublishCourseEditable) isDisabled = false;
 
   return (
     <>

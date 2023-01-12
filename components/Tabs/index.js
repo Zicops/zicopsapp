@@ -1,5 +1,5 @@
 import { COURSE_STATUS } from '@/helper/constants.helper';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { STATUS } from '@/state/atoms/utils.atoms';
 import Router, { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -26,7 +26,7 @@ export default function CourseTabs() {
   const [tab, setTab] = useRecoilState(CourseTabAtom);
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
-  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [featureFlags, setFeatureFlags] = useRecoilState(FeatureFlagsAtom);
 
   // TODO: set to first tab when new course is opened
   // useEffect(() => {
@@ -38,6 +38,18 @@ export default function CourseTabs() {
     if (router.asPath === '/admin/courses') setTab(tabData[0].name);
   }, []);
 
+  // make published course editable
+  useEffect(() => {
+    if (!fullCourse.id) return;
+
+    const isEditableData = localStorage.getItem('isPublishCourseEditable') === 'true';
+    const publishPassword = localStorage.getItem('publishPassword');
+
+    const val = isEditableData && publishPassword === fullCourse.id;
+    console.log(val);
+    setFeatureFlags((prev) => ({ ...prev, isPublishCourseEditable: !!val }));
+  }, [fullCourse.id]);
+
   useEffect(() => {
     setIsCourseSaved(false);
   }, [fullCourse]);
@@ -48,7 +60,7 @@ export default function CourseTabs() {
     if (fullCourse?.qa_required) _status = COURSE_STATUS.freeze;
     if (fullCourse?.status === COURSE_STATUS.publish) _status = COURSE_STATUS.publish;
     if (fullCourse?.status === COURSE_STATUS.reject) _status = 'EXPIRED';
-
+    console.log(_status);
     setCourseStatus(_status);
   }, [fullCourse?.status, isCourseSaved]);
 
@@ -57,7 +69,10 @@ export default function CourseTabs() {
   }, [fullCourse?.qa_required]);
 
   useEffect(() => {
-    if (isCourseSaved) {
+    if (
+      isCourseSaved ||
+      [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)
+    ) {
       window.removeEventListener('beforeunload', beforeUnloadHandler);
       Router.events.off('routeChangeStart', beforeRouteHandler);
       return;
@@ -138,6 +153,7 @@ export default function CourseTabs() {
       : '';
 
   function getSubmitBtnText() {
+    if (featureFlags.isPublishCourseEditable) return 'Published (U)';
     if ([COURSE_STATUS.publish, 'EXPIRED'].includes(courseStatus)) return 'Published';
     if (courseStatus === COURSE_STATUS.freeze) return 'Publish';
     if (fullCourse?.id) return 'Update';
@@ -169,11 +185,17 @@ export default function CourseTabs() {
             </>
           ),
           submitDisplay: getSubmitBtnText(),
-          disableSubmit:
-            !!isCourseUploading ||
-            [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(courseStatus),
+          disableSubmit: featureFlags.isPublishCourseEditable
+            ? false
+            : !!isCourseUploading ||
+              [COURSE_STATUS.publish, COURSE_STATUS.reject, 'EXPIRED'].includes(courseStatus),
           handleSubmit: () =>
-            saveCourseData(false, null, true, courseStatus === COURSE_STATUS.freeze),
+            saveCourseData(
+              false,
+              null,
+              true,
+              featureFlags.isPublishCourseEditable ? true : courseStatus === COURSE_STATUS.freeze
+            ),
           cancelDisplay: 'Cancel',
           handleCancel: () => router.push('/admin/course/my-courses')
         }}>

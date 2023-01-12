@@ -3,6 +3,7 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, DEFAULT_VALUES } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -47,6 +48,7 @@ export default function useSaveCourse(courseContextData) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   const router = useRouter();
 
@@ -107,7 +109,10 @@ export default function useSaveCourse(courseContextData) {
   }
 
   async function saveCourseData(isNextButton, tabIndex, showToastMsg = true, isPublishing = false) {
-    if ([COURSE_STATUS.publish, COURSE_STATUS.reject]?.includes(fullCourse?.status)) {
+    if (
+      !isPublishCourseEditable &&
+      [COURSE_STATUS.publish, COURSE_STATUS.reject]?.includes(fullCourse?.status)
+    ) {
       if (isNextButton) setTab(tabData[tabIndex || 0].name);
 
       return;
@@ -174,13 +179,13 @@ export default function useSaveCourse(courseContextData) {
     await uploadFile(courseVideo, uploadPreview, 'previewVideo', 'uploadCoursePreviewVideo');
 
     const { duration, name, status, approvers, ...fullCourseData } = fullCourse;
-    console.log('var', sendData);
     const sendData = {
       ...fullCourseData,
       name: fullCourse?.name?.trim(),
-      status: isPublishing ? COURSE_STATUS.publish : status.ADD_COURSE,
+      status: isPublishing ? COURSE_STATUS.publish : COURSE_STATUS.save,
       approvers: []
     };
+    console.log('var', sendData);
     if (isPublishing) {
       sendData.publish_date = getUnixFromDate();
       sendData.approvers = [userData?.email];
@@ -197,9 +202,16 @@ export default function useSaveCourse(courseContextData) {
     if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
     if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
     if (_course) {
+      console.log('s', _course?.status || sendData.status);
       updateCourseMaster({ ..._course, status: _course?.status || sendData.status });
       // set recoil state for course data
-      setFullCourseData(getFullCourseDataObj({ ...fullCourseData, ..._course }));
+      setFullCourseData(
+        getFullCourseDataObj({
+          ...fullCourseData,
+          ..._course,
+          status: _course?.status || sendData.status
+        })
+      );
     }
 
     setIsLoading(
