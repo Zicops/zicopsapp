@@ -70,7 +70,8 @@ export default function ExamResults() {
           title={'Individual Performance of Participants'}
           popUpState={[showDetailsResults, setShowDetailsResults]}
           size="large"
-          isFooterVisible={false}>
+          isFooterVisible={false}
+          isAttempted={true}>
           {examData?.userExamResult != null ? (
             <div className={styles.resultsTable}>
               <table>
