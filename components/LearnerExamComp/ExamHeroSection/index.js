@@ -19,10 +19,13 @@ const ExamHeroSection = ({simpleTableRef}) => {
  const [loading, setLoading] = useState(false);
   const { loadExamData } = useExamData()
   const onClosePopUpScheduled = () => {
-  setModalScheduled(false);
+    setModalScheduled(false);
+    setIsScheduleActive(false);
+    
  }
   const onClosePopUpAnyTime = () => {
-   setModalAnyTime(false);
+    setModalAnyTime(false);
+    setIsAnytimeActive(false);
  }
 //   const onClosePopUpCompleted = () => {
 //    setModalCompleted(false);
@@ -45,6 +48,7 @@ const ExamHeroSection = ({simpleTableRef}) => {
     setIsCompletedActive(true);
     const y = simpleTableRef.current.offsetTop - 100;
     window?.scrollTo({ top: y, behavior: 'smooth' });
+     setIsCompletedActive(false);
   };
 
 
@@ -58,10 +62,6 @@ const ExamHeroSection = ({simpleTableRef}) => {
   
   return (
     <div className={`${styles.heroContainer}`}>
-      {/* <img src="/images/svg/Group 100.svg" alt="" className={`${styles.image1}`} />
-      <img src="/images/svg/Layer_1-2.svg" alt="" className={`${styles.image3}`} />
-      <img src="/images/svg/Ellipse 23.svg" alt="" className={`${styles.image4}`} />
-      <img src="/images/svg/Ellipse 24.svg" alt="" className={`${styles.image5}`} /> */}
       <div className={`${styles.heroBody}`}>
         <div className={`${styles.textConatiner}`}>
         <h2>
