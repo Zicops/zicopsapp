@@ -27,14 +27,12 @@ const UserScheduleTab = () => {
 
   function filterData(filterType = '') {
     if (filterType === '') return;
-    let data = scheduleDataAtom
+    let data = scheduleDataAtom;
     let sData = [];
     sData =
       filterType?.toLowerCase() === 'all'
         ? data
-        : data?.filter(
-            (course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase()
-          );
+        : data?.filter((course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase());
     if (!filterDate?.from || !filterDate?.to) return setSchduleData(sData);
 
     const courses = sData?.filter(
@@ -127,7 +125,7 @@ const UserScheduleTab = () => {
                 value: { value: filterType, label: filterType }
               }}
               changeHandler={(e) => {
-                if(e.value?.toLowerCase() === filterType?.toLowerCase()) return;
+                if (e.value?.toLowerCase() === filterType?.toLowerCase()) return;
                 setFilterType(e.value);
                 setSchduleData(scheduleDataAtom);
               }}
@@ -139,11 +137,14 @@ const UserScheduleTab = () => {
                 ? ''
                 : styles.isActive
             }`}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (filterType?.toLowerCase() === 'all' && !filterDate?.from && !filterDate?.to)
                 return;
               setFilterDate({ from: null, to: null });
+              setFilterType('All');
               setSchduleData(scheduleDataAtom);
+              return;
             }}>
             Reset
           </div>
