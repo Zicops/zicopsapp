@@ -1,12 +1,13 @@
 import { userClient } from '@/api/UserMutations';
 import { GET_USER_BOOKMARKS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COMMON_LSPS, COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
+import { COMMON_LSPS, COURSE_STATUS } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
+import { OnGoingExamAtom } from 'pages/exams';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
@@ -22,11 +23,11 @@ export default function useHandleSearch() {
   const searchQuery = router.query?.searchQuery || '';
   const filter = router.query?.filter || null;
   const userCourse = router.query?.userCourse || null;
-  const isSelfPaced = router.query?.isSelfPaced || null;
   const preferredSubCat = router.query?.preferredSubCat || null;
 
   const userDataGlobal = useRecoilValue(UserDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const examOngoingData = useRecoilValue(OnGoingExamAtom);
 
   const lastItemRef = useRef(null);
 
@@ -76,6 +77,8 @@ export default function useHandleSearch() {
     if (userCourse) {
       setIsLoading(true);
       const userCourseObj = parseJson(userCourse);
+      if (userCourseObj.onGoingExam) return setCourses(onGoingExam || []);
+
       const userCourseData = await getUserCourseData();
 
       const _allUserCourses = userCourseData
@@ -90,7 +93,7 @@ export default function useHandleSearch() {
           return isAssigned;
         })
         ?.filter((course) => {
-          if (isSelfPaced) return course?.course_type === COURSE_TYPES[0];
+          if (type) return course?.course_type === type;
 
           return true;
         });
@@ -137,11 +140,6 @@ export default function useHandleSearch() {
     setCourses(
       courseData?.courses
         ?.filter((c) => c?.is_active && c?.is_display)
-        ?.filter((course) => {
-          if (isSelfPaced) return course?.type === COURSE_TYPES[0];
-
-          return true;
-        })
         ?.filter((c) => {
           if (preferredSubCat)
             return !!activeSubcategories?.find((pref) => pref?.sub_category === c?.sub_category);
@@ -183,15 +181,7 @@ export default function useHandleSearch() {
             ?.filter((bm) => bm) || []
       });
     }
-  }, [
-    router.isReady,
-    filters,
-    filter,
-    searchQuery,
-    userDataGlobal?.preferences,
-    isSelfPaced,
-    preferredSubCat
-  ]);
+  }, [router.isReady, filters, filter, searchQuery, userDataGlobal?.preferences, preferredSubCat]);
 
   useEffect(() => {
     setIsLoading(courseLoading);
