@@ -61,6 +61,12 @@ export default function LearnerExams() {
     setOnGoingExam([...Array(skeletonCardCount)]);
   }, []);
 
+  const [inputText, setInputText] = useState('');
+  const inputHandler = (e) => {
+    let lowerCase = e.target.value.toLowerCase();
+    console.log('lowerCase', lowerCase);
+    setInputText(lowerCase);
+  };
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -270,9 +276,17 @@ export default function LearnerExams() {
     }));
     console.log(examsResult);
     if (!examsResult?.length) return;
-    setExamResultTableData([...examsResult]);
+    let filteredData = examsResult?.filter((el) => {
+      if (inputText === '') {
+        return el;
+      } else {
+        return el?.examName.toLowerCase().includes(inputText);
+      }
+    });
+    setExamResultTableData([...filteredData]);
+    // setExamResultTableData([...examsResult]);
     return;
-  }, [examResults, examCourseMapping?.scheduleExam, examCourseMapping?.takeAnyTime]);
+  }, [examResults, inputText, examCourseMapping?.scheduleExam, examCourseMapping?.takeAnyTime]);
 
   useEffect(() => {
     // console.log(screen.width);
@@ -286,7 +300,7 @@ export default function LearnerExams() {
 
   useEffect(() => {
     console.log(onGoingExam, 'examreso');
-    if (!onGoingExam?.length) return;
+    if (!onGoingExam?.length) return setOnOgingData([]);
 
     //loop to finally add results and course name
     const examOngoing = [];
@@ -335,7 +349,7 @@ export default function LearnerExams() {
     }));
     console.log('examsResult', examsResult);
 
-    if (!examsResult?.length) return;
+    if (!examsResult?.length) return setOnOgingData([]);
     setOnOgingData(examsResult);
     return;
   }, [onGoingExam, examCourseMapping?.scheduleExam, examCourseMapping?.takeAnyTime]);
@@ -1200,6 +1214,7 @@ export default function LearnerExams() {
             loading={loading}
             data={examResultTableData}
             pageSize={5}
+            onHandleChange={inputHandler}
             rowsPerPageOptions={4}
             tableHeight="58vh"
             tableHeading="Your Results"

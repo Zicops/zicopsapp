@@ -27,14 +27,12 @@ const UserScheduleTab = () => {
 
   function filterData(filterType = '') {
     if (filterType === '') return;
-    let data = scheduleDataAtom
+    let data = scheduleDataAtom;
     let sData = [];
     sData =
       filterType?.toLowerCase() === 'all'
         ? data
-        : data?.filter(
-            (course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase()
-          );
+        : data?.filter((course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase());
     if (!filterDate?.from || !filterDate?.to) return setSchduleData(sData);
 
     const courses = sData?.filter(
@@ -104,7 +102,7 @@ const UserScheduleTab = () => {
               minDate={new Date().setHours(0, 0, 0, 0)}
               changeHandler={(date) => {
                 setSchduleData(scheduleDataAtom);
-                setFilterDate((prevValue) => ({ ...prevValue, from: date.setHours(0, 0, 0, 0) }));
+                setFilterDate((prevValue) => ({ ...prevValue, from: date?.setHours(0, 0, 0, 0) }));
               }}
             />
           </div>
@@ -115,7 +113,7 @@ const UserScheduleTab = () => {
               minDate={filterDate?.from || new Date().setHours(23, 59, 0, 0)}
               changeHandler={(date) => {
                 setSchduleData(scheduleDataAtom);
-                setFilterDate((prevValue) => ({ ...prevValue, to: date.setHours(23, 59, 0, 0) }));
+                setFilterDate((prevValue) => ({ ...prevValue, to: date?.setHours(23, 59, 0, 0) }));
               }}
               styleClass={styles?.calenderCustom}
             />
@@ -127,6 +125,7 @@ const UserScheduleTab = () => {
                 value: { value: filterType, label: filterType }
               }}
               changeHandler={(e) => {
+                if (e.value?.toLowerCase() === filterType?.toLowerCase()) return;
                 setFilterType(e.value);
                 setSchduleData(scheduleDataAtom);
               }}
@@ -138,11 +137,14 @@ const UserScheduleTab = () => {
                 ? ''
                 : styles.isActive
             }`}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (filterType?.toLowerCase() === 'all' && !filterDate?.from && !filterDate?.to)
                 return;
               setFilterDate({ from: null, to: null });
+              setFilterType('All');
               setSchduleData(scheduleDataAtom);
+              return;
             }}>
             Reset
           </div>

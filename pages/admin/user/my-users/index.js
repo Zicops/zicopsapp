@@ -35,7 +35,9 @@ export default function MyUserPage() {
         const success = await resetMultiPassword(selectedUser);
         if (!success)
           return setToastMsg({ type: 'danger', message: 'Error while resetting password!' });
-        return setToastMsg({ type: 'success', message: 'Reset Password Email send successfully.' });
+
+        return setToastMsg({ type: 'success', message: 'Reset password link sent successfully.' });
+
       }
     }
     // {
