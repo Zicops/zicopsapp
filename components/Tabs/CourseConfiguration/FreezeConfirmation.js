@@ -6,7 +6,8 @@ import {
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
   GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID,
-  GET_TOPIC_EXAMS
+  GET_TOPIC_EXAMS,
+  GET_TOPIC_EXAMS_BY_COURSE_ID
 } from '@/api/Queries';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
@@ -15,20 +16,31 @@ import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
 import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../courseTabs.module.scss';
+import { IsCourseSavedAtom } from '../Logic/tabs.helper';
 
+let timer = null;
 export default function FreezeConfirmation({ closePopUp = () => {} }) {
   const [updateCourse] = useMutation(UPDATE_COURSE);
 
   const { fullCourse, updateCourseMaster } = useContext(courseContext);
 
   const [fullCourseData, setFullCourseData] = useRecoilState(FullCourseDataAtom);
+  const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
 
   const [isLevelDataAdded, setIsLevelDataAdded] = useState(null);
   const [isLangDataAdded, setIsLangDataAdded] = useState(null);
   const [isModuleDataValid, setIsModuleDataValid] = useState(null);
+  const [fakeLoaderForUx, setFakeLoaderForUx] = useState(null);
+
+  useEffect(() => {
+    clearTimeout(timer);
+    timer = setTimeout(() => setFakeLoaderForUx(false), 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const courseMasterValidation =
     !!fullCourseData?.name &&
@@ -62,9 +74,12 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
 
   async function loadAndValidateTopicData() {
     const moduleRes = loadQueryDataAsync(GET_COURSE_MODULES, { course_id: fullCourse?.id });
-    const chapterRes = loadQueryDataAsync(GET_COURSE_CHAPTERS, { course_id: fullCourse?.id });
+    // const chapterRes = loadQueryDataAsync(GET_COURSE_CHAPTERS, { course_id: fullCourse?.id });
     const topicRes = loadQueryDataAsync(GET_COURSE_TOPICS, { course_id: fullCourse?.id });
     const topicContentRes = loadQueryDataAsync(GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID, {
+      course_id: fullCourse?.id
+    });
+    const topicExamRes = loadQueryDataAsync(GET_TOPIC_EXAMS_BY_COURSE_ID, {
       course_id: fullCourse?.id
     });
 
@@ -72,7 +87,12 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
     const expertiseLevel = structuredClone(fullCourseData?.expertise_level?.split(',') || []);
 
     const allModules = structuredClone((await moduleRes)?.getCourseModules || []);
-    if (!allModules?.length) return;
+    if (!allModules?.length) {
+      setIsLangDataAdded(false);
+      setIsLevelDataAdded(false);
+      setIsModuleDataValid(false);
+      return;
+    }
 
     // check for all module added for selected levels
     allModules?.some((mod) => {
@@ -83,19 +103,23 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
     });
     setIsLevelDataAdded(!expertiseLevel?.length);
 
-    const allChapters = structuredClone((await chapterRes)?.getCourseChapters || []);
+    // const allChapters = structuredClone((await chapterRes)?.getCourseChapters || []);
     const allTopics = structuredClone((await topicRes)?.getTopics || []);
-    if (!allTopics?.length) return;
+    if (!allTopics?.length) {
+      setIsLangDataAdded(false);
+      setIsModuleDataValid(false);
+      return;
+    }
 
     const allTopicContent = structuredClone(
       (await topicContentRes)?.getTopicContentByCourseId || []
     );
-    if (!allTopicContent?.length) return;
+    const allTopicExams = structuredClone((await topicExamRes)?.getTopicExamsByCourseId || []);
 
     let isModuleDataComplete = true;
     let isLangDataComplete = true;
     // loop through all topic
-    const topicData = allTopics?.map(async (topic) => {
+    const topicData = allTopics?.map((topic) => {
       const _topic = topic;
 
       // checks for topic content
@@ -122,8 +146,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
       }
 
       if (topic?.type === COURSE_TOPIC_TYPES.assessment) {
-        const topicExamRes = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic?.id });
-        const topicExam = topicExamRes?.getTopicExams;
+        const topicExam = allTopicExams?.filter((topicExam) => topicExam?.topicId === topic?.id);
 
         _topic.contentData = topicExam;
         if (!topicExam?.length) isModuleDataComplete = false;
@@ -177,6 +200,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
               label="Course Master All fields entered"
               isChecked={courseMasterValidation}
               isDisabled={true}
+              isLoading={fakeLoaderForUx === null}
             />
 
             <LabeledRadioCheckbox
@@ -184,6 +208,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
               label="Course Details All fields entered"
               isChecked={courseDetailsValidation}
               isDisabled={true}
+              isLoading={fakeLoaderForUx === null}
             />
 
             <LabeledRadioCheckbox
@@ -191,6 +216,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
               label="Course About All fields entered"
               isChecked={courseAboutValidation}
               isDisabled={true}
+              isLoading={fakeLoaderForUx === null}
             />
 
             <LabeledRadioCheckbox
@@ -198,6 +224,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
               label="Modules for each selected Expertise Level"
               isChecked={isLevelDataAdded}
               isDisabled={true}
+              isLoading={isLevelDataAdded === null}
             />
 
             <LabeledRadioCheckbox
@@ -205,6 +232,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
               label="Topic Content added for each selected Language"
               isChecked={isLangDataAdded}
               isDisabled={true}
+              isLoading={isLangDataAdded === null}
             />
 
             <LabeledRadioCheckbox
@@ -212,10 +240,12 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
               label="All Module should have complete topic data"
               isChecked={isModuleDataValid}
               isDisabled={true}
+              isLoading={isModuleDataValid === null}
             />
           </div>
         }
         btnObj={{
+          textLeft: 'Freeze',
           leftIsDisable:
             !courseMasterValidation ||
             !courseDetailsValidation ||
@@ -229,17 +259,19 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
             //   status: e.target.checked ? COURSE_STATUS.reject : COURSE_STATUS.publish
             // });
             const { duration, ..._fullCourse } = fullCourse;
-            console.log('var', sendData);
             const sendData = { ..._fullCourse, qa_required: true };
+            console.log('var', sendData);
 
             updateCourse({ variables: sendData })
               .then(() => {
-                updateCourseMaster({ ...fullCourse, qa_required: e.target.checked });
+                updateCourseMaster({ ...fullCourse, qa_required: true });
                 setFullCourseData(getFullCourseDataObj({ ...fullCourseData, qa_required: true }));
+                setIsCourseSaved(true);
                 closePopUp();
               })
               .catch((err) => console.log(err));
           },
+          textRight: 'Cancel',
           handleClickRight: closePopUp
         }}
       />

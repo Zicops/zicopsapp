@@ -24,7 +24,7 @@ $bgFooter: #001111;
 // $bgHeader: #222529;
 $bgHeader: #0b0c0d;
 $popupBgColor: #323232;
-$warning: #F6AC3C;
+$warning: #f6ac3c;
 
 $headerHeight: 70px;
 $footerHeight: 100px;
@@ -160,11 +160,30 @@ $courseTitleSmall: 18px;
   }
 }
 
+@mixin loader($size: 20px, $color: #3498db, $bgColor: transparent) {
+  background: $bgColor;
+  border: 3px solid $color; /* Light grey */
+  border-top: 3px solid transparent; /* Blue */
+  border-radius: 50%;
 
-.courseColor{
+  width: $size;
+  height: $size;
+  animation: spin 2s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.courseColor {
   color: $white;
 }
 
-.examColor{
+.examColor {
   color: $warning;
 }

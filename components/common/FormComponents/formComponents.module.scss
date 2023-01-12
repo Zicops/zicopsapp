@@ -121,7 +121,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  label{
+  label {
     cursor: pointer;
   }
   input {
@@ -145,6 +145,10 @@
     width: 20px;
     background-color: $darkTwo;
     border: 1px solid $darkThree;
+
+    &.loading {
+      @include loader();
+    }
   }
 
   /* Create the checkmark/indicator  */
@@ -169,7 +173,7 @@
   //     border: 1px solid white;
   // }
   /* Show checkmark on checked */
-  input[type='checkbox']:checked~.checkmark:after {
+  input[type='checkbox']:checked ~ .checkmark:after {
     display: block;
   }
 
@@ -189,7 +193,7 @@
   //     border: 2px solid white;
   // }
   /* Show radio selected on select */
-  input[type='radio']:checked~.radiomark {
+  input[type='radio']:checked ~ .radiomark {
     background-color: $primary;
   }
 
@@ -311,18 +315,20 @@
   height: 10px;
   border-radius: 5px;
   background: rgb(105, 255, 93);
-  background: linear-gradient(90deg,
-      rgba(105, 255, 93, 1) 0%,
-      rgba(59, 250, 56, 1) 10%,
-      rgba(71, 218, 48, 1) 20%,
-      rgba(56, 255, 0, 1) 30%,
-      rgba(251, 255, 91, 1) 40%,
-      rgba(239, 251, 35, 1) 50%,
-      rgba(249, 255, 0, 1) 60%,
-      rgba(251, 177, 0, 1) 70%,
-      rgba(255, 83, 10, 1) 80%,
-      rgba(255, 21, 21, 1) 90%,
-      rgba(255, 0, 0, 1) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(105, 255, 93, 1) 0%,
+    rgba(59, 250, 56, 1) 10%,
+    rgba(71, 218, 48, 1) 20%,
+    rgba(56, 255, 0, 1) 30%,
+    rgba(251, 255, 91, 1) 40%,
+    rgba(239, 251, 35, 1) 50%,
+    rgba(249, 255, 0, 1) 60%,
+    rgba(251, 177, 0, 1) 70%,
+    rgba(255, 83, 10, 1) 80%,
+    rgba(255, 21, 21, 1) 90%,
+    rgba(255, 0, 0, 1) 100%
+  );
   outline: none;
   opacity: 0.7;
   -webkit-transition: 0.2s;
@@ -449,7 +455,7 @@
   }
 
   :global(.mantine-RichTextEditor-toolbarInner) {
-    >div {
+    > div {
       margin: 0px;
 
       button {
@@ -582,7 +588,7 @@
   }
 
   // &.hasValue {
-      // }
+  // }
   //   :global(.ql-container.ql-snow),
   //   :global(.ql-toolbar.ql-snow) {
   //     @include inputStylesFor('hasValue');
@@ -645,7 +651,6 @@
       min-height: 100px !important;
       max-height: 130px !important;
       margin-bottom: 60px;
-      
     }
   }
 
@@ -664,35 +669,35 @@
   //   }
   // }
 }
-.rteButtons{
+.rteButtons {
   position: absolute;
   bottom: 8%;
   left: 1%;
-  right:0;
+  right: 0;
   width: 98%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: $bgBody;
   gap: 10px;
-  .post_type{
+  .post_type {
     display: flex;
     gap: 15px;
-    p{
+    p {
       font-size: 16px;
     }
   }
-  .button_type{
+  .button_type {
     display: flex;
     gap: 15px;
-    .button1{
+    .button1 {
       background: $primary;
       padding: 10px 24px;
       border-radius: 4px;
       border: none;
       cursor: pointer;
     }
-    .button2{
+    .button2 {
       color: #747474;
       padding: 10px 16px;
       background: transparent;
@@ -701,8 +706,8 @@
       cursor: pointer;
     }
   }
-    .button_divider {
-      border-left: 2px solid #5C5C5C;;
-      // height: 20px;
-    }
+  .button_divider {
+    border-left: 2px solid #5c5c5c;
+    // height: 20px;
+  }
 }

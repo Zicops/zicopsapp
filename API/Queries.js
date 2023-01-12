@@ -1005,6 +1005,20 @@ export const GET_TOPIC_EXAMS = gql`
   }
 `;
 
+export const GET_TOPIC_EXAMS_BY_COURSE_ID = gql`
+  query getTopicExamsByCourseId($course_id: String) {
+    getTopicExamsByCourseId(course_id: $course_id) {
+      id
+      topicId
+      examId
+      courseId
+      created_at
+      updated_at
+      language
+    }
+  }
+`;
+
 export const GET_COHORT_COURSES = gql`
   query GetCohortCoursesMap($cohort_id: String) {
     getCohortCourseMaps(cohort_id: $cohort_id) {

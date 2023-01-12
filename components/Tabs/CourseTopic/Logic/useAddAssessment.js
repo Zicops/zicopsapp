@@ -25,6 +25,7 @@ export default function useAddAssessment(topic, setEditTopic) {
   // local state
   const [assessmentData, setAssessmentData] = useState(getAssessmentObj());
   const [examOptions, setExamOptions] = useState([]);
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   useEffect(() => {
     if (topic?.type !== 'Assessment') return;
@@ -83,6 +84,7 @@ export default function useAddAssessment(topic, setEditTopic) {
   }, []);
 
   async function saveAssessment() {
+    setDisableSubmit(true);
     const sendData = {
       topicId: assessmentData?.topicId,
       courseId: assessmentData?.courseId,
@@ -115,5 +117,5 @@ export default function useAddAssessment(topic, setEditTopic) {
     }
   }
 
-  return { examOptions, assessmentData, setAssessmentData, saveAssessment };
+  return { examOptions, assessmentData, setAssessmentData, saveAssessment, disableSubmit };
 }
