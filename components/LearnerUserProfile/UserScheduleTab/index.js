@@ -104,7 +104,7 @@ const UserScheduleTab = () => {
               minDate={new Date().setHours(0, 0, 0, 0)}
               changeHandler={(date) => {
                 setSchduleData(scheduleDataAtom);
-                setFilterDate((prevValue) => ({ ...prevValue, from: date.setHours(0, 0, 0, 0) }));
+                setFilterDate((prevValue) => ({ ...prevValue, from: date?.setHours(0, 0, 0, 0) }));
               }}
             />
           </div>
@@ -115,7 +115,7 @@ const UserScheduleTab = () => {
               minDate={filterDate?.from || new Date().setHours(23, 59, 0, 0)}
               changeHandler={(date) => {
                 setSchduleData(scheduleDataAtom);
-                setFilterDate((prevValue) => ({ ...prevValue, to: date.setHours(23, 59, 0, 0) }));
+                setFilterDate((prevValue) => ({ ...prevValue, to: date?.setHours(23, 59, 0, 0) }));
               }}
               styleClass={styles?.calenderCustom}
             />
