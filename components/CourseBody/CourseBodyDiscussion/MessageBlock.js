@@ -44,10 +44,17 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
   }
 
   const onUnpinHandler = (data) => {
-     const filterMessages = messageArr?.filter((m)=> m?.id !== data?.id)
+    const filterMessages = messageArr?.filter((m) => m?.id !== data?.id);
+ 
     console.log("data", filterMessages);
     console.log("ispinned",{...data, isPinned: false});
-    setMessageArr([...filterMessages,{ ...data, isPinned: false }])
+    setMessageArr([...filterMessages, { ...data, isPinned: false }]);
+  //  let newArray = [...messageArr];
+  //   newArray?.sort(function(a, b) {
+  //     return b.time - a.time;
+  //   });  
+  //    console.log("sortedArr" , newArray);
+  //    console.log("messageArr" , messageArr);
     setFilterData([...messageArr])
   }
 

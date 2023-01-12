@@ -7,10 +7,12 @@ import { DiscussionReplyAtom, MessageAtom, ReplyAtom } from '@/state/atoms/discu
 import RTE2 from '@/components/common/FormComponents/RTE2';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LearnerUser from './LearnerUser';
+import { ADD_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { ChapterAtom, ModuleAtom, TopicAtom } from '@/state/atoms/module.atoms';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
-  // const [isPublic, setIsPublic] = useState(true);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [showInput, setShowInput] = useState(false);
@@ -26,6 +28,10 @@ const CourseBodyDiscussion = () => {
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
   const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const userDetails = useRecoilValue(UserStateAtom);
+   const moduleData = useRecoilValue(ModuleAtom);
+  const topicData = useRecoilValue(TopicAtom);
+  const chapterData = useRecoilValue(ChapterAtom);
+     
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
@@ -49,15 +55,51 @@ const CourseBodyDiscussion = () => {
     setShowReplies(!showReplies);
     setCurrentMsgId("")
   };
+  // useEffect( async () => {
+  //    const messagesArr = await loadQueryDataAsync(
+  //     ADD_COURSE_DISCUSSION,
+  //     { course_id: moduleData?.courseId },
+  //     {},
+  //     mutationClient
+  //   );
+  //   console.log("messagesArr", messagesArr);
+  // },[])
+  console.log("moduleData", moduleData[0].courseId);
   useEffect(() => {
     if (!currentMsgId) return;
     showRepliesHandler(currentMsgId)
   },[replyData])
-  const sendMessageHandler = () => {
-    const pinnedData = messageArr?.filter((data)=> data?.isPinned)
-    const nonPinnedData = messageArr?.filter((data) => !data?.isPinned)
+  const sendMessageHandler = async() => {
+    const pinnedData = messageArr?.filter((data) => data?.isPinned);
+    const nonPinnedData = messageArr?.filter((data) => !data?.isPinned);
     console.log("pinnedData", pinnedData);
-    console.log("nonPinnedData", nonPinnedData)
+    console.log("nonPinnedData", nonPinnedData);
+     const messagesArr = await loadQueryDataAsync(
+      ADD_COURSE_DISCUSSION,
+       {
+        CourseId: moduleData[0].courseId,
+        IsAnonymous: isAnonymous,
+        IsAnnouncement: isAnnouncement,
+        ReplyId: null,
+        Content: message,
+        Module: 'Module2',
+        Chapter: 'chapter2',
+        Topic: ' topic3',
+        Likes: [userDetails?.id],
+        Dislike: [],
+        IsPinned: false,
+         ReplyCount: 0,
+         CreatedBy: userDetails?.id,
+      CreatedAt: Math.floor(Date.now() / 1000),
+      UpdatedBy: userDetails?.id,
+      UpdatedAt: Math.floor(Date.now() / 1000),
+         Status: "Active"
+        
+       },
+      {},
+      mutationClient
+    );
+    console.log("messagesArr" , messagesArr);
     setMessageArr([
       ...pinnedData,
       {
