@@ -59,7 +59,12 @@ export default function LearnerExams() {
 
   const [loading, setLoading] = useState(false);
   const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false);
-
+   const [inputText, setInputText] = useState('');
+    const inputHandler = (e) => {
+      let lowerCase = e.target.value.toLowerCase();
+      console.log("lowerCase", lowerCase);
+    setInputText(lowerCase);
+  };
   const realSquare = {
     desktop: {
       breakpoint: { max: 3000, min: 1530 },
@@ -270,10 +275,18 @@ const uniqueResult = Object.values(uniqueArray);
       totalMarks: exam?.total
     }));
     console.log(examsResult);
-    if (!examsResult?.length) return;
-    setExamResultTableData([...examsResult]);
+     if (!examsResult?.length) return;
+        let filteredData = examsResult?.filter((el) => {
+    if (inputText === '') {
+      return el;
+    } else {
+      return el?.examName.toLowerCase().includes(inputText);
+    }
+  });
+     setExamResultTableData([...filteredData]);
+    // setExamResultTableData([...examsResult]);
     return;
-  }, [examResults, examCourseMapping?.scheduleExam , examCourseMapping?.takeAnyTime]);
+   }, [examResults,inputText, examCourseMapping?.scheduleExam, examCourseMapping?.takeAnyTime]);
 
   useEffect(() => {
     // console.log(screen.width);
@@ -1185,6 +1198,7 @@ const uniqueResult = Object.values(uniqueArray);
             loading={loading}
             data={examResultTableData}
             pageSize={5}
+            onHandleChange={inputHandler}
             rowsPerPageOptions={4}
             tableHeight="58vh"
             tableHeading="Your Results"

@@ -4,7 +4,7 @@ import Popup from 'reactjs-popup';
 import ExamPopUp from './ExamPopUp';
 import { useExamData } from "./helper";
 import { useRouter } from 'next/router';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
+import Loader from '@/components/common/Loader';
 const ExamHeroSection = ({simpleTableRef}) => {
   const router = useRouter()
   const [isScheduleActive, setIsScheduleActive] = useState(false);
@@ -89,7 +89,7 @@ const ExamHeroSection = ({simpleTableRef}) => {
       </div>
       <Popup open={openModalScheduled} closeOnDocumentClick={false} closeOnEscape={false}>
         <ExamPopUp title="Scheduled Exams" closePopUp={onClosePopUpScheduled}>
-          {loading ? <LoadingSpinner /> :
+          {loading ? <Loader customStyles={{ height: '100%', backgroundColor: 'transparent' }}/> :
             <table className={`${styles.table}`}>
               <thead>
                 <tr className={`${styles.tableHeader}`}>
@@ -125,7 +125,7 @@ const ExamHeroSection = ({simpleTableRef}) => {
       </Popup>
       <Popup open={openModalAnyTime} closeOnDocumentClick={false} closeOnEscape={false}>
         <ExamPopUp title="Take Anytime Exams" closePopUp={onClosePopUpAnyTime} >
-          {loading ? <LoadingSpinner /> :
+          {loading ? <Loader customStyles={{ height: '100%', backgroundColor: 'transparent' }}/> :
             <table className={`${styles.table}`}>
             <thead>
               <tr className={`${styles.tableHeader}`} >
