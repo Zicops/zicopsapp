@@ -509,7 +509,7 @@ export default function useUserCourseData() {
       assessmentCourses = assessmentCourses.concat(_assignedCourses[i]);
       // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
       for (let j = 0; j < filteredTopics?.length; j++) {
-        if(!_assignedCourses[i]?.id?.length) continue;
+        if (!_assignedCourses[i]?.id?.length) continue;
         topicCourseMap.push({
           [`${filteredTopics[j]?.id}`]: {
             courseName: _assignedCourses[i]?.name,
@@ -570,12 +570,14 @@ export default function useUserCourseData() {
       }
 
       const _scheduleExams = scheduleExams?.map((exam) => {
+        let end = !!parseInt(exam?.End)
+          ? exam?.End
+          : parseInt(exam?.Start) + parseInt(exam?.BufferTime) * 60;
         return {
           ...exam,
           description: exam?.topicDescription,
           name: exam?.Name,
-          endTime:
-            exam?.End !== '0' ? exam?.End : parseInt(exam?.Start) + parseInt(exam?.BufferTime * 60),
+          endTime: end,
           scheduleDate: exam?.Start,
           dataType: 'exam'
         };
