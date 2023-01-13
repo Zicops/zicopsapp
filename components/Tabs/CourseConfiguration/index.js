@@ -124,9 +124,9 @@ export default function CourseConfiguration() {
             labeledInputProps={{
               label: 'Freeze',
               description:
-                'Once a course is frozen it is no longer available and reasy for approval/Publishing',
+                'Once a course is frozen it is no longer available and ready for approval/Publishing',
               name: 'qa_required',
-              isDisabled: +fullCourse?.duration === 0 ? true : isDisabled,
+              isDisabled: isDisabled,
               isChecked: fullCourse?.qa_required || false,
               handleChange: (e) => {
                 const isFreeze = e.target.checked;

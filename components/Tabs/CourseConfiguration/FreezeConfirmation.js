@@ -248,7 +248,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
           textLeft: 'Freeze',
           leftIsDisable:
             !courseMasterValidation ||
-            !courseDetailsValidation ||
+            // !courseDetailsValidation ||
             !courseAboutValidation ||
             !isLangDataAdded ||
             !isLevelDataAdded ||
