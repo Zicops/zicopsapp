@@ -502,6 +502,8 @@ export default function HomepageScreen() {
           }
         />
       )}
+
+      <div style={{height:'20px'}}></div>
     </div>
   );
 }
