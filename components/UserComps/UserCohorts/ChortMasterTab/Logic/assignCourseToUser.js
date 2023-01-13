@@ -60,7 +60,8 @@ export default function assignCourseToUser() {
       courseType: course_data?.type,
       isMandatory: course_data?.isMandatory,
       courseStatus: 'open',
-      endDate: getUnixFromDate(course_data?.endDate)?.toString()
+      endDate: getUnixFromDate(course_data?.endDate)?.toString(),
+      lspId: course_data?.lspId
     };
     return sendData;
   }
@@ -202,7 +203,8 @@ export default function assignCourseToUser() {
     cohortId = null,
     courseId = null,
     courseName = '',
-    cohortData = null
+    cohortData = null,
+    courseData = null
   ) {
     if (!courseId) return false;
     if (!cohortId) return false;
@@ -216,7 +218,7 @@ export default function assignCourseToUser() {
       const checkCourse = await isCourseAssigned(courseId, cohortUsers[i]?.id);
       const { role } = JSON.parse(checkCourse[0]?.added_by);
       if (role.toLowerCase() === 'admin') continue;
-      const _addedBy = JSON.stringify({ userId: id, role: 'self' });
+      const _addedBy = JSON?.stringify({ userId: id, role: 'self' });
       const sendData = {
         userCourseId: checkCourse[0]?.user_course_id,
         userId: checkCourse[0]?.user_id,
@@ -226,7 +228,8 @@ export default function assignCourseToUser() {
         courseType: checkCourse[0]?.course_type,
         isMandatory: checkCourse[0]?.is_mandatory,
         courseStatus: 'open',
-        endDate: checkCourse[0]?.end_date
+        endDate: checkCourse[0]?.end_date,
+        lspId:courseData?.lspId
       };
       const res = await updateUserCouse({ variables: sendData }).catch((err) => {
         isError = !!err;
