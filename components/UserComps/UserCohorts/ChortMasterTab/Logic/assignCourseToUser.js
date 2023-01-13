@@ -60,7 +60,8 @@ export default function assignCourseToUser() {
       courseType: course_data?.type,
       isMandatory: course_data?.isMandatory,
       courseStatus: 'open',
-      endDate: getUnixFromDate(course_data?.endDate)?.toString()
+      endDate: getUnixFromDate(course_data?.endDate)?.toString(),
+      lspId: course_data?.lspId
     };
     return sendData;
   }
