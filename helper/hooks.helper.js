@@ -514,7 +514,8 @@ export default function useUserCourseData() {
             courseName: _assignedCourses[i]?.name,
             topicId: filteredTopics[j]?.id,
             courseId: _assignedCourses[i]?.id,
-            image: _assignedCourses[i]?.image
+            image: _assignedCourses[i]?.image,
+            topicDescription: filteredTopics[j]?.description
           }
         });
       }
@@ -536,7 +537,8 @@ export default function useUserCourseData() {
           examId: topicExams[0]?.examId,
           topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
           courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId,
-          image: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.image
+          image: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.image,
+          topicDescription: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicDescription
         }
       });
       exams = exams.concat(topicExams);
@@ -569,7 +571,7 @@ export default function useUserCourseData() {
       const _scheduleExams = scheduleExams?.map((exam) => {
         return {
           ...exam,
-          description: exam?.Description,
+          description: exam?.topicDescription,
           name: exam?.Name,
           endTime:
             exam?.End !== '0' ? exam?.End : parseInt(exam?.Start) + parseInt(exam?.BufferTime * 60),

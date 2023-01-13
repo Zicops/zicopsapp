@@ -4,6 +4,7 @@ import Popup from 'reactjs-popup';
 import ExamPopUp from './ExamPopUp';
 import { useExamData } from "./helper";
 import { useRouter } from 'next/router';
+import Loader from '@/components/common/Loader';
 const ExamHeroSection = ({simpleTableRef}) => {
   const router = useRouter()
   const [isScheduleActive, setIsScheduleActive] = useState(false);
@@ -18,10 +19,13 @@ const ExamHeroSection = ({simpleTableRef}) => {
  const [loading, setLoading] = useState(false);
   const { loadExamData } = useExamData()
   const onClosePopUpScheduled = () => {
-  setModalScheduled(false);
+    setModalScheduled(false);
+    setIsScheduleActive(false);
+    
  }
   const onClosePopUpAnyTime = () => {
-   setModalAnyTime(false);
+    setModalAnyTime(false);
+    setIsAnytimeActive(false);
  }
 //   const onClosePopUpCompleted = () => {
 //    setModalCompleted(false);
@@ -44,23 +48,20 @@ const ExamHeroSection = ({simpleTableRef}) => {
     setIsCompletedActive(true);
     const y = simpleTableRef.current.offsetTop - 100;
     window?.scrollTo({ top: y, behavior: 'smooth' });
+     setIsCompletedActive(false);
   };
 
 
   useEffect(async () => {
-    setLoading(true)
+     setLoading(true)
     const examData = await loadExamData();
     setScheduleExamData(examData?.scheduleExams)
     setAntTimeExamData(examData?.takeAnyTimeExams)
-    console.log(examData);
+    setLoading(false)
   },[])
   
   return (
     <div className={`${styles.heroContainer}`}>
-      {/* <img src="/images/svg/Group 100.svg" alt="" className={`${styles.image1}`} />
-      <img src="/images/svg/Layer_1-2.svg" alt="" className={`${styles.image3}`} />
-      <img src="/images/svg/Ellipse 23.svg" alt="" className={`${styles.image4}`} />
-      <img src="/images/svg/Ellipse 24.svg" alt="" className={`${styles.image5}`} /> */}
       <div className={`${styles.heroBody}`}>
         <div className={`${styles.textConatiner}`}>
         <h2>
@@ -88,86 +89,76 @@ const ExamHeroSection = ({simpleTableRef}) => {
       </div>
       <Popup open={openModalScheduled} closeOnDocumentClick={false} closeOnEscape={false}>
         <ExamPopUp title="Scheduled Exams" closePopUp={onClosePopUpScheduled}>
-          <table className={`${styles.table}`}>
-             <thead>
-            <tr className={`${styles.tableHeader}`}>
-              <th>Exam Name</th>
-              <th>Course Name</th>
-              <th>Exam Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            {scheduleExamData?.map((exam , index) => (
-              <tr key={index} onClick={() => {
-                router?.push(
-                            `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
-                            `/course/${exam?.courseId}`
-                          );
-            }}>
-                <td>{exam?.examName}</td>
-                <td>{exam?.courseName}</td>
-                <td>{exam?.examDate}</td>
-            </tr>
-            ))}
-
-            </tbody>
-          </table>
+          {loading ? <Loader customStyles={{ height: '100%', backgroundColor: 'transparent' }}/> :
+            <table className={`${styles.table}`}>
+              <thead>
+                <tr className={`${styles.tableHeader}`}>
+                  <th>Exam Name</th>
+                  <th>Course Name</th>
+                  <th>Exam Date</th>
+                </tr>
+              </thead>
+              {scheduleExamData?.length ?
+                (<tbody>
+                  {scheduleExamData?.map((exam, index) => (
+                    <tr key={index} onClick={() => {
+                      router?.push(
+                        `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
+                        `/course/${exam?.courseId}`
+                      );
+                    }}>
+                      <td>{exam?.examName}</td>
+                      <td>{exam?.courseName}</td>
+                      <td>{exam?.examDate}</td>
+                    </tr>
+                  ))}
+                </tbody>)
+                :
+                <tbody>
+                  <td></td>
+                  <td> No Exams Found</td>
+                </tbody>
+              }
+            </table>
+          }
         </ExamPopUp>
       </Popup>
       <Popup open={openModalAnyTime} closeOnDocumentClick={false} closeOnEscape={false}>
         <ExamPopUp title="Take Anytime Exams" closePopUp={onClosePopUpAnyTime} >
-          <table className={`${styles.table}`}>
-             <thead>
-            <tr className={`${styles.tableHeader}`} >
+          {loading ? <Loader customStyles={{ height: '100%', backgroundColor: 'transparent' }}/> :
+            <table className={`${styles.table}`}>
+            <thead>
+              <tr className={`${styles.tableHeader}`} >
                 <th>Exam Name</th>
                 <th>Course Name</th>
                 <th>Duration</th>
-            </tr>
+              </tr>
             </thead>
-            <tbody>
-           {antTimeExamData?.map((exam , index) => (
-            <tr key={index} onClick={() => {
-                router?.push(
-                            `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
-                            `/course/${exam?.courseId}`
-                          );
-            }}>
-                <td>{exam?.Name}</td>
-                <td>{exam?.courseName}</td>
-                <td>{exam?.Duration/60} mins</td>
-            </tr>
-            ))}
-
-            </tbody>
-           
+            {antTimeExamData?.length ?
+              <tbody>
+                {antTimeExamData?.map((exam, index) => (
+                  <tr key={index} onClick={() => {
+                    router?.push(
+                      `/course/${exam?.courseId}?activateExam=${exam?.examId}`,
+                      `/course/${exam?.courseId}`
+                    );
+                  }}>
+                    <td>{exam?.Name}</td>
+                    <td>{exam?.courseName}</td>
+                    <td>{exam?.Duration / 60} mins</td>
+                  </tr>
+                ))}
+              </tbody>
+              :
+              <tbody>
+                <td></td>
+                <td>No Exams Found</td>
+              </tbody>
+            }
           </table>
+          }
         </ExamPopUp>
       </Popup>
-      {/* <Popup open={openModalCompleted} closeOnDocumentClick={false} closeOnEscape={false}>
-        <ExamPopUp title="Completed Exams" closePopUp={onClosePopUpCompleted}>
-          <table className={`${styles.table}`}>
-            <thead>
-            <tr className={`${styles.tableHeader}`}>
-              <th>Exam Name</th>
-                <th>Course Name</th>
-                <th>Exam Date</th>
-                <th>Attemp</th>
-                <th>Status</th>
-                <th>Score</th>
-                <th>Total Marks</th>
-              
-            </tr>
-            </thead>
-              {completedExamData?.results?.map((exam , index) => (
-            <tr key={index}>
-                <td>{exam?.Name}</td>
-                <td>{exam?.Category}</td>
-                <td>{exam?.Duration} mins</td>
-            </tr>
-            ))}
-          </table>
-        </ExamPopUp>
-      </Popup> */}
     </div>
   );
 };

@@ -13,13 +13,15 @@ export default function ZicopsSimpleTable({
   rowsPerPageOptions,
   headingStyle,
   pageSize,
+  onHandleChange,
   loading = false
 }) {
+   
   return (
     <>
       <div className={`${styles.simpleTable}`}>
         {/* table heading */}
-        <input type="search" className={`${styles.searchBar}`} placeholder="Search" />
+        <input type="search" className={`${styles.searchBar}`} placeholder="Search" onChange={onHandleChange} />
         <div className={`${styles.tableHeader} ${headingStyleClass}`} style={headingStyle}>
           {tableHeading}
         </div>
