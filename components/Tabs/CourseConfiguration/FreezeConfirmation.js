@@ -54,9 +54,9 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
     !!fullCourseData?.sub_categories?.length &&
     !!fullCourseData?.expertise_level?.length &&
     +fullCourse?.expected_completion > 0 &&
-    !!fullCourseData.previewVideo &&
-    !!fullCourseData.tileImage &&
-    !!fullCourseData.image &&
+    // !!fullCourseData.previewVideo &&
+    // !!fullCourseData.tileImage &&
+    // !!fullCourseData.image &&
     !!fullCourseData?.summary?.length;
 
   const courseAboutValidation =
@@ -248,7 +248,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
           textLeft: 'Freeze',
           leftIsDisable:
             !courseMasterValidation ||
-            // !courseDetailsValidation ||
+            !courseDetailsValidation ||
             !courseAboutValidation ||
             !isLangDataAdded ||
             !isLevelDataAdded ||
