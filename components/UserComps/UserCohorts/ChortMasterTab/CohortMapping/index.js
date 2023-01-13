@@ -93,11 +93,15 @@ const CohortMapping = ({ isReadOnly = false }) => {
     if (isError)
       return setToastMsg({ type: 'danger', message: 'error while assigning course to cohort!' });
     // console.log(resCohortCourse);
-    const isCourseAssigned = await assignCourseToOldUser(router?.query?.cohortId, {
-      ...selectedCourse,
-      endDate: endDate,
-      ...sendData
-    },cohortData);
+    const isCourseAssigned = await assignCourseToOldUser(
+      router?.query?.cohortId,
+      {
+        ...selectedCourse,
+        endDate: endDate,
+        ...sendData
+      },
+      cohortData
+    );
     if (!isCourseAssigned)
       return setToastMsg({ type: 'danger', message: 'error while assigning course to users!' });
     setToastMsg({ type: 'success', message: 'Course added succesfully!' });
@@ -122,7 +126,13 @@ const CohortMapping = ({ isReadOnly = false }) => {
       console.log(err);
     });
     // if(res?.deleteCourseCohort) return setToastMsg({ type: 'danger', message: 'Error while removing courses!' });
-    const isRemoved = await removeUserCohortCourses(router?.query?.cohortId, selectedCourse?.id,selectedCourse?.name,cohortData);
+    const isRemoved = await removeUserCohortCourses(
+      router?.query?.cohortId,
+      selectedCourse?.id,
+      selectedCourse?.name,
+      cohortData,
+      selectedCourse
+    );
     if (!isRemoved)
       return setToastMsg({ type: 'danger', message: 'Error while removing course from user!' });
     setToastMsg({ type: 'success', message: 'Course removed from cohort!' });
