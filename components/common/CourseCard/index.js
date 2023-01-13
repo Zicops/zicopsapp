@@ -31,10 +31,13 @@ export default function CourseCard({
     e.currentTarget.parentNode.style.margin = '';
   }
   const gotoCourse = () => {
-   if (!courseData?.examId) {
+    if (!courseData?.examId) {
       router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
     } else {
-        router?.push( `/course/${courseData?.courseId}?activateExam=${courseData?.examId}`,`/course/${courseData?.courseId}`);
+      router?.push(
+        `/course/${courseData?.courseId}?activateExam=${courseData?.examId}`,
+        `/course/${courseData?.courseId}`
+      );
     }
   };
 
@@ -44,6 +47,16 @@ export default function CourseCard({
       `/course/${courseData.id}`
     );
   };
+
+  function gotoCoursePage(e, queryParams = '') {
+    e.stopPropagation();
+
+    if (!courseData?.id) return router.push('/courses');
+
+    let coursePath = `/course/${courseData.id}`;
+    if (!!queryParams) coursePath += `?${queryParams}`;
+    router.push(coursePath, `/course/${courseData.id}`);
+  }
 
   let courseNameClass = 'coursename';
   if (courseData?.name?.length > 43) {
@@ -74,24 +87,36 @@ export default function CourseCard({
             <div className={`${styles.banner}`}>
               {courseData.type?.split('-').join(' ') || 'Self Paced'}
             </div>
-            <img src={courseData?.tileImage || image || '/images/Rectangle 1678.png'} alt="" />
+            <img src={courseData?.tileImage || image || '/images/dnd1.jpg'} alt="" />
           </div>
           <div className={`${styles.smallCardContent}`}>
             <div className={`${styles.firstRow}`}>
               <div className={`${styles.buttons}`}>
                 {showAssignSymbol ? (
                   <>
-                    <img className={`${styles.addBtn}`}
+                    <img
+                      className={`${styles.addBtn}`}
                       onClick={(e) => {
-                          e.stopPropagation();
-                          gotoAssignCourses();
-                        }} 
-                      src = "/images/svg/add-line.svg" />
+                        e.stopPropagation();
+                        gotoAssignCourses();
+                      }}
+                      src="/images/svg/add-line.svg"
+                    />
                   </>
                 ) : (
                   <>
-                    <img className={`${styles.playBtn}`} src="/images/Frame 22.svg" alt="" />
-                    <img className={`${styles.removeBtn}`} src="/images/Frame 23.svg" alt="" />
+                    <img
+                      className={`${styles.playBtn}`}
+                      src="/images/Frame 22.svg"
+                      alt=""
+                      onClick={(e) => gotoCoursePage(e, 'startCourse=true')}
+                    />
+                    <img
+                      className={`${styles.removeBtn}`}
+                      src="/images/Frame 23.svg"
+                      alt=""
+                      onClick={(e) => gotoCoursePage(e, 'isUnAssign=true')}
+                    />
                   </>
                 )}
                 {/* <img className={`${styles.addBtn}`} src="/images/Frame 22.svg" alt="" />

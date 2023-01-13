@@ -1,5 +1,5 @@
 import { COURSE_MAP_STATUS, COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
-import { displayUnixDate, getMinCourseAssignDate, parseJson } from '@/helper/utils.helper';
+import { displayUnixDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
@@ -11,7 +11,6 @@ import { truncateToN } from '../../helper/common.helper';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
 import { courseContext } from '../../state/contexts/CourseContext';
 import ConfirmPopUp from '../common/ConfirmPopUp';
-import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
 import AssignCourse from '../CourseComps/AssignCourse';
 import CourseHeader from './CourseHeader';
 import style from './courseHero.module.scss';
@@ -36,6 +35,11 @@ export default function CourseHero({ isPreview = false }) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const router = useRouter();
+  const courseId = router?.query?.courseId || null;
+  const isAssign = router?.query?.isAssign || null;
+  const isUnAssign = router?.query?.isUnAssign || null;
+  const startCourse = router?.query?.startCourse || null;
+
   const { fullCourse } = useContext(courseContext);
   const {
     name: courseTitle,
@@ -53,13 +57,27 @@ export default function CourseHero({ isPreview = false }) {
     publisher: publishedBy
   } = fullCourse;
 
+  // useEffect(() => {
+  //   if (!router?.query?.isAssign) return;
+  //   if (!fullCourse?.id) return;
+  //   if (router?.query?.courseId !== fullCourse?.id) return;
+  //   if (courseAssignData?.isCourseAssigned) return;
+  //   return setIsAssignPopUpOpen(true);
+  // }, [fullCourse]);
+
   useEffect(() => {
-    if (!router?.query?.isAssign) return;
-    if (!fullCourse?.id) return;
-    if (router?.query?.courseId !== fullCourse?.id) return;
-    if (courseAssignData?.isCourseAssigned) return;
-    return setIsAssignPopUpOpen(true);
-  }, [fullCourse]);
+    if (!router.isReady) return;
+    if (courseId !== fullCourse?.id) return;
+
+    // open course assign popup if query params passed and course already not assigned
+    if (isAssign && !courseAssignData?.isCourseAssigned) setIsAssignPopUpOpen(true);
+
+    // course not assigned
+    if (!courseAssignData?.isCourseAssigned) return;
+
+    if (isUnAssign) setIsUnAssignPopUpOpen(true);
+    if (startCourse && userCourseData?.allModules?.length) activateVideoPlayer();
+  }, [router.isReady, fullCourse.id, userCourseData?.allModules?.length]);
 
   useEffect(() => {
     // console.log(userCourseData?.userCourseMapping)
