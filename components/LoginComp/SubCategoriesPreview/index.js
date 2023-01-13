@@ -154,7 +154,7 @@ const SubCategoriesPreview = ({
         </div>
         {!!vidIsOpen && (
           <div className={`${styles.introVideoContainer}`}>
-            <video ref={vidRef} onEnded={() => router.push('/')} disablePictureInPicture>
+            <video ref={vidRef} onEnded={() => router.push('/learning-spaces')} disablePictureInPicture>
               <source src="/videos/loginIntro.mp4" type="video/mp4" />
             </video>
           </div>
