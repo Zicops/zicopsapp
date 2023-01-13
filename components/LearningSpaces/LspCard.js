@@ -58,7 +58,7 @@ const LspCard = ({
     sessionStorage.setItem('user_lsp_role', userLspRole);
 
     const currentHost = getCurrentHost();
-    if (currentHost !== website) {
+    if (currentHost !== website && path === '/') {
       const token = sessionStorage.getItem('tokenF');
 
       window.location.href = `https://${website}/auth-verify/?role=${userLspRole}&lspId=${lspId}&userLspId=${userLspId}&token=${token}`;

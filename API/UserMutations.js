@@ -145,7 +145,7 @@ export const ADD_USER_COURSE = gql`
   mutation addUserCourse(
     $userId: String!
     $userLspId: String!
-    $lspId: String!
+    $lspId: String
     $courseId: String!
     $addedBy: String!
     $courseType: String!
@@ -191,7 +191,7 @@ export const UPDATE_USER_COURSE = gql`
     $userCourseId: ID!
     $userId: String!
     $userLspId: String!
-    $lspId: String!
+    $lspId: String
     $courseId: String!
     $addedBy: String!
     $courseType: String!
