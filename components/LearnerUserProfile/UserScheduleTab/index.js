@@ -60,18 +60,24 @@ const UserScheduleTab = () => {
     // if(!scheduleDataAtom?.length) return ;
     setLoading(true);
     const courseData = await getUserCourseData(35);
-    const examData = await getScheduleExams(courseData);
-    if (!courseData?.length && !examData?.length) return setLoading(false);
-    const scheduleData = [...courseData, ...examData];
+    const _courseData = courseData?.filter((course) => !!course?.id);
+    const examData = await getScheduleExams(_courseData);
+    if (!_courseData?.length && !examData?.length) return setLoading(false);
+    const scheduleData = [..._courseData, ...examData];
     const sortedArray = scheduleData?.sort((a, b) => {
       return a?.scheduleDate - b?.scheduleDate;
     });
 
     //tells the schedule upto five min
     const currentEpochTime = getCurrentEpochTime() + 5 * 60;
-    const futureScheduleData = sortedArray?.filter(
-      (course) => course?.scheduleDate > currentEpochTime
-    );
+    const futureScheduleData = sortedArray?.filter((course) => {
+      if (course?.dataType?.toLowerCase() === 'exam') {
+        if (course?.scheduleDate > currentEpochTime) return course;
+        if (course?.endTime > currentEpochTime) return course;
+        return false;
+      }
+      return course?.scheduleDate > currentEpochTime;
+    });
 
     // removing exams which comes from another course
     const sData = futureScheduleData?.filter(

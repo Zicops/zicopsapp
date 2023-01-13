@@ -136,3 +136,40 @@ export const administrationSideBarData = {
     // },
   ]
 };
+export const analyticsSideBarData = {
+  image: '/images/Analytics.png',
+  heading: 'Analytics',
+  data: [
+    {
+      title: 'Quam',
+      link: ''
+      // description: ADMIN_USERS.sidebarData.myUsers
+    },
+    {
+      title: 'Course Dashboard',
+      link: '/admin/analytics/course-dashboard'
+      // description: ADMIN_USERS.sidebarData.myUsers
+    },
+    {
+      title: 'Parturient Lorem',
+      link: ''
+      // description: ADMIN_USERS.sidebarData.myUsers
+    },
+
+    {
+      title: 'Parturient Lorem',
+      link: ''
+      // description: ADMIN_USERS.sidebarData.myUsers
+    },
+    {
+      title: 'Quam',
+      link: ''
+      // description: ADMIN_USERS.sidebarData.myUsers
+    }
+    // {
+    //   title: 'User Roles',
+    //   // link: '/admin/user/users-roles'
+    //   link: ''
+    // },
+  ]
+};
