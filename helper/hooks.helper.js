@@ -265,8 +265,11 @@ export default function useUserCourseData() {
       (course) => course?.course_status?.toLowerCase() !== 'disabled'
     );
 
-    const currentLspCourses = _assignedCourses?.filter(
-      (courseMap) => courseMap?.user_lsp_id === user_lsp_id
+    const currentLspId = sessionStorage.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
+
+    const currentLspCourses = _assignedCourses?.filter((courseMap) =>
+      [currentLspId, zicopsLspId]?.includes(courseMap?.lsp_id)
     );
 
     const assignedCoursesToUser = currentLspCourses;
