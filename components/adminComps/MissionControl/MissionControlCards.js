@@ -2,6 +2,7 @@ import ProductTour from '@/components/common/ProductTour';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_HOME } from '@/components/common/ToolTip/tooltip.helper';
 import { ProductTourVisible } from '@/state/atoms/productTour.atom';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
@@ -67,21 +68,32 @@ const Card = ({ image, text, width, tooltipTitle }) => {
 };
 const MissionControlCards = () => {
   const showProductTour = useRecoilValue(ProductTourVisible);
+  const { devWIP } = useRecoilValue(FeatureFlagsAtom);
+
   return (
     <>
       <div className="mission_control_body">
         <div className="contain_icons">
           <div className="new_row">
-            <Link href="/admin/analytics/course-dashboard">
-              <a>
-                <Card
-                  image="/images/Analytics.png"
-                  text="Analytics"
-                  width="70px"
-                  tooltipTitle={ADMIN_HOME.analytics}
-                />
-              </a>
-            </Link>
+            {!!devWIP ? (
+              <Link href="/admin/analytics/course-dashboard">
+                <a>
+                  <Card
+                    image="/images/Analytics.png"
+                    text="Analytics"
+                    width="70px"
+                    tooltipTitle={ADMIN_HOME.analytics}
+                  />
+                </a>
+              </Link>
+            ) : (
+              <Card
+                image="/images/Analytics.png"
+                text="Analytics"
+                width="70px"
+                tooltipTitle={ADMIN_HOME.analytics}
+              />
+            )}
             <Link href="/admin/user/my-users">
               <a>
                 <Card
