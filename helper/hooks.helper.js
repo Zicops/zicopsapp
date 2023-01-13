@@ -509,6 +509,7 @@ export default function useUserCourseData() {
       assessmentCourses = assessmentCourses.concat(_assignedCourses[i]);
       // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
       for (let j = 0; j < filteredTopics?.length; j++) {
+        if(!_assignedCourses[i]?.id?.length) continue;
         topicCourseMap.push({
           [`${filteredTopics[j]?.id}`]: {
             courseName: _assignedCourses[i]?.name,
