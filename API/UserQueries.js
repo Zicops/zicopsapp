@@ -118,6 +118,7 @@ export const GET_USER_COURSE_MAPS = gql`
         user_course_id
         user_id
         user_lsp_id
+        lsp_id
         course_id
         course_type
         added_by

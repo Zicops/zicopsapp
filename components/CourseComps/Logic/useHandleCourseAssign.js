@@ -40,6 +40,7 @@ export default function useHandleCourseAssign({
   assignBy = 'self',
   onCourseAssign = () => {},
   userId = null,
+  lspId = null,
   userLspId = null,
   userName = null,
   userEmail = null,
@@ -81,7 +82,7 @@ export default function useHandleCourseAssign({
     const _userLspId =
       userLspId || userOrgData?.user_lsp_id || sessionStorage?.getItem('user_lsp_id');
 
-    if (!_userLspId || !courseAssignData?.courseId || !courseAssignData?.courseType) {
+    if (!_userLspId || !courseAssignData?.courseId || !courseAssignData?.courseType || !lspId) {
       closePopUp();
       return setToastMsg({ type: 'danger', message: 'Something Went Wrong! Please Try Again.' });
     }
@@ -92,6 +93,7 @@ export default function useHandleCourseAssign({
     const sendData = {
       userId: userIdForCourseAssign,
       userLspId: _userLspId,
+      lspId: lspId,
       courseId: courseAssignData?.courseId,
       addedBy: JSON.stringify({ userId: currentUserId, role: assignBy }),
       courseType: courseAssignData?.courseType,
