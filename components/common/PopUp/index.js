@@ -17,7 +17,8 @@ export default function PopUp({
   customStyles = {},
   children,
   tooltipCloseBtnTitle,
-  onClose = () => {}
+  onClose = () => {},
+  isAttempted = false
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState, onClose);
 
@@ -62,7 +63,7 @@ export default function PopUp({
               </div>
             </div>
 
-            <div className={`${styles.body}`}>{children}</div>
+            <div className={`${styles.body} ${isAttempted ? styles.attempted : ""}`}>{children}</div>
 
             {isFooterVisible && (
               <div className={`${styles.footer}`}>

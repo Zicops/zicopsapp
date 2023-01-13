@@ -521,6 +521,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           courseId={userCourseData?.id}
           courseType={userCourseData?.type}
           suggestedCompletionDays={userCourseData?.expected_completion}
+          lspId={userCourseData?.lspId}
           onCourseAssign={() => {
             loadAssignedCourseData();
 

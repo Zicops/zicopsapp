@@ -468,6 +468,7 @@ export default function FavouriteDndCourses({ isLoading }) {
         courseId={selectedCourse?.id}
         courseType={selectedCourse?.type}
         suggestedCompletionDays={selectedCourse?.expected_completion}
+        lspId={selectedCourse?.lspId}
         popUpProps={{
           onClose: () => {
             if (selectedCourse) updateCourseData([...data, selectedCourse]);

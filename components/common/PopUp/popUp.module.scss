@@ -27,6 +27,11 @@
     flex: 1;
     color: $white;
   }
+
+  .attempted {
+    height: 100%;
+    overflow: auto;
+  }
 }
 
 .header {
