@@ -83,7 +83,7 @@ export const userProfile = [
     link: '/my-profile'
   },
   {
-    title: 'Calender',
+    title: 'Schedule',
     link: '/my-profile'
   }
 ];

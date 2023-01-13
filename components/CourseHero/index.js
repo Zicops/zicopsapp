@@ -218,6 +218,7 @@ export default function CourseHero({ isPreview = false }) {
         setIsAssignPopUpOpen={setIsAssignPopUpOpen}
         courseId={fullCourse?.id}
         courseType={fullCourse?.type}
+        lspId={fullCourse?.lspId}
         suggestedCompletionDays={fullCourse?.expected_completion}
       />
 

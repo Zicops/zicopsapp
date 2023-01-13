@@ -91,7 +91,7 @@ export default function TopicPopUp({
 
   if (editTopic?.type === 'Assessment') {
     submitBtnObj.handleClick = assessmentData.saveAssessment;
-    submitBtnObj.disabled = !assessmentData.assessmentData?.examId;
+    submitBtnObj.disabled = !assessmentData.assessmentData?.examId || assessmentData.disableSubmit;
   }
 
   return (
