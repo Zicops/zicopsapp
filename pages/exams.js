@@ -241,13 +241,14 @@ export default function LearnerExams() {
         }
       }
     }
-    for (let i = 0; i < examResults?.length; i++) {
-      if (!examCourseMapping?.takeAnyTime?.length) return;
-      // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
-      console.log(examCourseMapping);
-      for (let j = 0; j < examCourseMapping?.takeAnyTime?.length; j++) {
-        if (examResults[i]?.exam_id === examCourseMapping?.takeAnyTime[j]?.examId) {
-          examFinalResult.push({ ...examResults[i], ...examCourseMapping?.takeAnyTime[j] });
+    if (examCourseMapping?.takeAnyTime?.length) {
+      for (let i = 0; i < examResults?.length; i++) {
+        // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
+        console.log(examCourseMapping);
+        for (let j = 0; j < examCourseMapping?.takeAnyTime?.length; j++) {
+          if (examResults[i]?.exam_id === examCourseMapping?.takeAnyTime[j]?.examId) {
+            examFinalResult.push({ ...examResults[i], ...examCourseMapping?.takeAnyTime[j] });
+          }
         }
       }
     }
