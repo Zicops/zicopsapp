@@ -503,7 +503,7 @@ export default function HomepageScreen() {
         />
       )}
 
-      <div style={{height:'20px'}}></div>
+      <div style={{ height: '40px' }}></div>
     </div>
   );
 }

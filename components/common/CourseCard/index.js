@@ -1,4 +1,5 @@
 import { truncateToN } from '@/helper/common.helper';
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { getCourseDisplayTime } from '@/helper/utils.helper';
 import { useRouter } from 'next/router';
 import styles from './courseCard.module.scss';
@@ -15,21 +16,21 @@ export default function CourseCard({
   const router = useRouter();
   if (!courseData?.name) return null;
 
-  // function handleMouseEnter(e, start = 0, end = 0) {
-  //   if (e.currentTarget.parentNode.dataset.index === start.toString()) {
-  //     e.currentTarget.parentNode.style.marginLeft = '15px';
-  //     e.currentTarget.parentNode.style.marginRight = '-15px';
-  //   }
+  function handleMouseEnter(e, start = 0, end = 0) {
+    if (e.currentTarget.parentNode.dataset.index === start.toString()) {
+      e.currentTarget.parentNode.style.marginLeft = '15px';
+      e.currentTarget.parentNode.style.marginRight = '-15px';
+    }
 
-  //   if (e.currentTarget.parentNode.dataset.index === end.toString()) {
-  //     e.currentTarget.parentNode.style.marginLeft = '-15px';
-  //     e.currentTarget.parentNode.style.marginRight = '15px';
-  //   }
-  // }
+    if (e.currentTarget.parentNode.dataset.index === end.toString()) {
+      e.currentTarget.parentNode.style.marginLeft = '-15px';
+      e.currentTarget.parentNode.style.marginRight = '15px';
+    }
+  }
 
-  // function handleMouseLeave(e) {
-  //   e.currentTarget.parentNode.style.margin = '';
-  // }
+  function handleMouseLeave(e) {
+    e.currentTarget.parentNode.style.margin = '';
+  }
   const gotoCourse = () => {
     if (!courseData?.examId) {
       router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
@@ -64,6 +65,7 @@ export default function CourseCard({
     courseNameClass = 'coursenamesmall';
   }
   const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
+
   return (
     <>
       <div
@@ -72,18 +74,17 @@ export default function CourseCard({
         onClick={!notext ? gotoCourse : () => {}}
         onMouseEnter={(e) => {
           e.currentTarget.parentNode.parentNode.parentNode.style.zIndex = '990';
-        //   handleMouseEnter(
-        //     e,
-        //     carouselRefData?.state?.currentSlide,
-        //     carouselRefData?.state?.currentSlide + carouselRefData?.state?.slidesToShow - 1
-        //   );
+          handleMouseEnter(
+            e,
+            carouselRefData?.state?.currentSlide,
+            carouselRefData?.state?.currentSlide + carouselRefData?.state?.slidesToShow - 1
+          );
         }}
         onMouseLeave={(e) => {
           e.currentTarget.parentNode.parentNode.parentNode.style.zIndex = '0';
-        //   handleMouseLeave(e);
-      }}
-      >
-        <div className={`${styles.smallCardWrapper}`}>
+          handleMouseLeave(e);
+        }}>
+        <div className={`${styles.smallCardWrapper} ${styles[courseData.type]}`}>
           <div className={`${styles.smallCard}`}>
             <div className={`${styles.banner}`}>
               {courseData.type?.split('-').join(' ') || 'Self Paced'}
