@@ -47,7 +47,7 @@ export default function useHandleTabs(courseContextData) {
       uploadCourseVideo:
         courseVideo.file?.name || getFileNameFromUrl(fullCourse.previewVideo, 'vid')
     });
-  }, [fullCourse]);
+  }, [fullCourse?.image, fullCourse?.tileImage, fullCourse?.previewVideo]);
 
   // useEffect(() => {
   //   if (!courseError?.activeTab) return setCourseError(getCourseErrorData({ activeTab: tab }));

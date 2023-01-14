@@ -425,7 +425,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
   async function loadAssignedCourseData() {
     setCourseLoading(true);
 
-    const userCourses = await getUserCourseData(99999);
+    const userCourses = await getUserCourseData(99999, currentUserId);
     //  console.log(userCourses,'courses');
     if (!userCourses?.length) return setCourseLoading(false);
 
@@ -521,6 +521,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
           courseId={userCourseData?.id}
           courseType={userCourseData?.type}
           suggestedCompletionDays={userCourseData?.expected_completion}
+          lspId={userCourseData?.lspId}
           onCourseAssign={() => {
             loadAssignedCourseData();
 

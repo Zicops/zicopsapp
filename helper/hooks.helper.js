@@ -236,10 +236,10 @@ export default function useUserCourseData() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  async function getUserCourseData(pageSize = 999999999) {
+  async function getUserCourseData(pageSize = 999999999, userId=null) {
     const { id } = getUserData();
     const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
-    let currentUserId = id;
+    let currentUserId = !!userId ? userId: id;
     if (!currentUserId) return;
     // return setToastMsg({
     //   type: 'danger',
@@ -265,8 +265,11 @@ export default function useUserCourseData() {
       (course) => course?.course_status?.toLowerCase() !== 'disabled'
     );
 
-    const currentLspCourses = _assignedCourses?.filter(
-      (courseMap) => courseMap?.user_lsp_id === user_lsp_id
+    const currentLspId = sessionStorage.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
+
+    const currentLspCourses = _assignedCourses?.filter((courseMap) =>
+      [currentLspId, zicopsLspId]?.includes(courseMap?.lsp_id)
     );
 
     const assignedCoursesToUser = currentLspCourses;
@@ -509,6 +512,7 @@ export default function useUserCourseData() {
       assessmentCourses = assessmentCourses.concat(_assignedCourses[i]);
       // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
       for (let j = 0; j < filteredTopics?.length; j++) {
+        if (!_assignedCourses[i]?.id?.length) continue;
         topicCourseMap.push({
           [`${filteredTopics[j]?.id}`]: {
             courseName: _assignedCourses[i]?.name,
@@ -569,12 +573,14 @@ export default function useUserCourseData() {
       }
 
       const _scheduleExams = scheduleExams?.map((exam) => {
+        let end = !!parseInt(exam?.End)
+          ? exam?.End
+          : parseInt(exam?.Start) + parseInt(exam?.BufferTime) * 60;
         return {
           ...exam,
           description: exam?.topicDescription,
           name: exam?.Name,
-          endTime:
-            exam?.End !== '0' ? exam?.End : parseInt(exam?.Start) + parseInt(exam?.BufferTime * 60),
+          endTime: end,
           scheduleDate: exam?.Start,
           dataType: 'exam'
         };
