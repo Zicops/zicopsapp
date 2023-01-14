@@ -227,18 +227,17 @@ export default function LearnerExams() {
   useEffect(() => {
     console.log(examResults, 'examresult');
     if (!examResults?.length) return;
-    console.log(examCourseMapping);
 
     //loop to finally add results and course name
     const examFinalResult = [];
-
-    for (let i = 0; i < examResults?.length; i++) {
-      if (!examCourseMapping?.scheduleExam?.length) return;
-      // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
-
-      for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
-        if (examResults[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
-          examFinalResult.push({ ...examResults[i], ...examCourseMapping?.scheduleExam[j] });
+    if (examCourseMapping?.scheduleExam?.length) {
+      for (let i = 0; i < examResults?.length; i++) {
+        // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
+  
+        for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
+          if (examResults[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
+            examFinalResult.push({ ...examResults[i], ...examCourseMapping?.scheduleExam[j] });
+          }
         }
       }
     }
