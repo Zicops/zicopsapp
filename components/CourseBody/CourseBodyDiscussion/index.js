@@ -8,6 +8,7 @@ import RTE2 from '@/components/common/FormComponents/RTE2';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LearnerUser from './LearnerUser';
 import { ADD_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
+import { GET_COURSE_DISCUSSION, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '@/state/atoms/module.atoms';
 const CourseBodyDiscussion = () => {
@@ -64,7 +65,7 @@ const CourseBodyDiscussion = () => {
   //   );
   //   console.log("messagesArr", messagesArr);
   // },[])
-  console.log("moduleData", moduleData[0].courseId);
+  console.log("moduleData", moduleData[0]?.courseId);
   useEffect(() => {
     if (!currentMsgId) return;
     showRepliesHandler(currentMsgId)
@@ -74,67 +75,77 @@ const CourseBodyDiscussion = () => {
     const nonPinnedData = messageArr?.filter((data) => !data?.isPinned);
     console.log("pinnedData", pinnedData);
     console.log("nonPinnedData", nonPinnedData);
-     const messagesArr = await loadQueryDataAsync(
+     const addMessage = await loadQueryDataAsync(
       ADD_COURSE_DISCUSSION,
        {
-        CourseId: moduleData[0].courseId,
-        IsAnonymous: isAnonymous,
-        IsAnnouncement: isAnnouncement,
-        ReplyId: null,
+        CourseId: moduleData[0]?.courseId,
         Content: message,
+        ReplyId: null,
         Module: 'Module2',
         Chapter: 'chapter2',
         Topic: ' topic3',
         Likes: [userDetails?.id],
         Dislike: [],
         IsPinned: false,
-         ReplyCount: 0,
-         CreatedBy: userDetails?.id,
-      CreatedAt: Math.floor(Date.now() / 1000),
-      UpdatedBy: userDetails?.id,
-      UpdatedAt: Math.floor(Date.now() / 1000),
-         Status: "Active"
-        
+        IsAnonymous: isAnonymous,
+        IsAnnouncement: isAnnouncement,
+        ReplyCount: 0,
+        CreatedBy: userDetails?.id,
+        CreatedAt: Math.floor(Date.now() / 1000),
+        UpdatedBy: userDetails?.id,
+        UpdatedAt: Math.floor(Date.now() / 1000),
+        Status: "active"
        },
       {},
       mutationClient
     );
-    console.log("messagesArr" , messagesArr);
     setMessageArr([
       ...pinnedData,
-      {
-        id: Math.floor(Date.now() / 1000 + 1),
-        isAnonymous: isAnonymous,
-        isAnnouncement: isAnnouncement,
-        replyId: null,
-        content: {
-          text: message,
-          image: []
-        },
-        time: Math.floor(Date.now() / 1000),
+       {
+        CourseId: moduleData[0]?.courseId,
+         Content: message,
         user: {
-          id: userDetails?.id,
-          first_name: userDetails?.first_name,
-          photo_url: userDetails?.photo_url,
-          role: userDetails?.role
-        },
-
-        currentTopic: {
-          module: 'Module2',
-          chapter: 'chapter2',
-          topic: ' topic3',
-          time: '10:45'
-        },
-        like: [124, 4524, 4552, 454, 2345, 963, 458],
-        unlike: [543, 123, 555],
-        isPinned: false,
-        reply: 0
-      },
-      ...nonPinnedData
-    ]);
+            id: userDetails?.id || '',
+            first_name: userDetails?.first_name || '',
+            photo_url: userDetails?.photo_url || 'https://www.w3schools.com/howto/img_avatar2.png',
+            role: userDetails?.role || 'Learner'
+          },
+        ReplyId: null,
+        Module: 'Module2',
+        Chapter: 'chapter2',
+        Topic: ' topic3',
+        Likes: [userDetails?.id],
+        Dislike: [],
+        IsPinned: false,
+        IsAnonymous: isAnonymous,
+        IsAnnouncement: isAnnouncement,
+        ReplyCount: 0,
+        CreatedBy: userDetails?.id,
+        CreatedAt: Math.floor(Date.now() / 1000),
+        UpdatedBy: userDetails?.id,
+        UpdatedAt: Math.floor(Date.now() / 1000),
+        Status: "active"
+       },
+       ...nonPinnedData
+    ])
     setMessage('');
     setShowInput(false);
   };
+
+  useEffect( async() => {
+    const messagesArr = await loadQueryDataAsync(GET_COURSE_DISCUSSION, {
+      course_id :moduleData[0]?.courseId
+    },
+    {},
+    queryClient
+    )
+    console.log("messagesArr", messagesArr?.getCourseDiscussion);
+    setMessageArr([
+      // ...pinnedData,
+      ...messagesArr?.getCourseDiscussion,
+      //  ...nonPinnedData
+    ])
+  },[])
   const onMessageHandler = (e) => {
     setMessage(e);
   };

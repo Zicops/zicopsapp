@@ -1940,49 +1940,44 @@ export const DELETE_EXAM = gql`
 
 export const ADD_COURSE_DISCUSSION = gql`
   mutation addCourseDiscussion(
-    $courseId: String
-    $replyId: String
-    $content: String
-    $module: String
-    $chapter: String
-    $topic: String
-    $like: [String]
-    $dislike: [String]
-    $isAnonymous: Boolean
-    $isPinned: Boolean
-    $isAnnouncement: Boolean
-    $replyCount: Int
-    $created_by: String
-    $updated_by: String
-    $created_at: Int
-    $updated_at: Int
-    $status: String
+    $CourseId: String!
+    $ReplyId: String
+    $Content: String!
+    $Module: String
+    $Chapter: String
+    $Topic: String
+    $Likes: [String]!
+    $Dislike: [String]!
+    $IsAnonymous: Boolean
+    $IsPinned: Boolean
+    $IsAnnouncement: Boolean
+    $ReplyCount: Int
+    $CreatedBy: String!
+    $UpdatedBy: String!
+    $CreatedAt: Int!
+    $UpdatedAt: Int!
+    $Status: String!
   ) {
     addCourseDiscussion(
       discussionInput: {
-        CourseId: $courseId
-        ReplyId: $replyId
-        Content: $content
-        Module: $module
-        Chapter: $chapter
-        Topic: $topic
-        Likes: $like
-        Dislike: $dislike
-        IsAnonymous: $isAnonymous
-        IsPinned: $isPinned
-        IsAnnouncement: $isAnnouncement
-        ReplyCount: $replyCount
-        CreatedBy: $created_by
-        CreatedAt: $created_at
-        UpdatedBy: $updated_by
-        UpdatedAt: $updated_at
-        Status: $status
+        CourseId: $CourseId
+        ReplyId: $ReplyId
+        Content: $Content
+        Module: $Module
+        Chapter: $Chapter
+        Topic: $Topic
+        Likes: $Likes
+        Dislike: $Dislike
+        IsAnonymous: $IsAnonymous
+        IsPinned: $IsPinned
+        IsAnnouncement: $IsAnnouncement
+        ReplyCount: $ReplyCount
+        CreatedBy: $CreatedBy
+        CreatedAt: $CreatedAt
+        UpdatedBy: $UpdatedBy
+        UpdatedAt: $UpdatedAt
+        Status: $Status
       }
-    ) {
-      data:{
-        addCourseDiscussion
-  }
-      }
-    }
+    ) 
   }
 `;

@@ -1015,7 +1015,7 @@ export const GET_COHORT_COURSES = gql`
 `;
 
 export const GET_COURSE_DISCUSSION = gql`
-  query GetCourseDiscussion($course_id: String) {
+  query GetCourseDiscussion($course_id: String!) {
     getCourseDiscussion(course_id: $course_id) {
       DiscussionId
       CourseId
@@ -1041,7 +1041,7 @@ export const GET_COURSE_DISCUSSION = gql`
   }
 `;
 export const GET_DISCUSSION_REPLY = gql`
-  query GetDiscussionReply($course_id: String, $discussion_id: String) {
+  query GetDiscussionReply($course_id: String!, $discussion_id: String!) {
     getDiscussionReply(course_id: $course_id, discussion_id: $discussion_id) {
       DiscussionId
       CourseId
