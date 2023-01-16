@@ -1069,7 +1069,7 @@ export const GET_COURSE_DISCUSSION = gql`
 `;
 export const GET_DISCUSSION_REPLY = gql`
   query GetDiscussionReply($course_id: String!, $discussion_id: String!) {
-    getDiscussionReply(course_id: $course_id, discussion_id: $discussion_id) {
+    getCourseDiscussion(course_id: $course_id, discussion_id: $discussion_id) {
       DiscussionId
       CourseId
       ReplyId

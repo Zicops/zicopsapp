@@ -44,24 +44,9 @@ export default function RTE2({
   //  */
   const formats = ['header', 'bold', 'italic', 'underline', 'list', 'bullet',  'indent', 'blockquote','code-block', 'link', 'image'];
 
-  // return (
-  //   <div>
-  //     <QuillNoSSRWrapper
-  //       modules={modules}
-  //       formats={formats}
-  //       onKeyDown={changeHandler}
-  //       value={value}
-  //       placeholder={placeholder}
-  //     />
-  //   </div>
-  // );
-  // const editor = useEditor({
-  //   extensions: [StarterKit],
-  //   content: '<h1>Hello World! 🌎️</h1>'
-  // });
 
   return (
-    <div className={`${styles.rteContainer2}`}>
+    <div className={`${isReadOnly ? styles.rteReadOnly : styles.rteContainer2 }`}>
       <QuillNoSSRWrapper
         contenteditable
         readOnly={isReadOnly}
@@ -76,6 +61,7 @@ export default function RTE2({
         value={value}
       />
       {/* <input type="file" onChange={changeImageHandler} /> */}
+      {!isReadOnly ? 
       <div className={`${styles.rteButtons}`}>
         <div className={`${styles.post_type}`}>
           {/* <LabeledRadioCheckbox label="Public" type="radio" name="public" isChecked={checkPublic}  changeHandler ={onPublicHandler} /> */}
@@ -88,6 +74,8 @@ export default function RTE2({
         <button className={`${styles.button2}`} onClick={onCancleHandler}>Cancel</button>
         </div>
         </div>
+        : ""
+      }
       </div>
   );
 }

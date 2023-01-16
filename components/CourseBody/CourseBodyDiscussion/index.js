@@ -11,6 +11,7 @@ import { ADD_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
 import { GET_COURSE_DISCUSSION, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '@/state/atoms/module.atoms';
+import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -19,7 +20,7 @@ const CourseBodyDiscussion = () => {
   const [showInput, setShowInput] = useState(false);
   const [inputText, setInputText] = useState('');
   const [selectedType, setSelectedType] = useState('');
-  const [currentMsgId, setCurrentMsgId] = useState('');
+  // const [currentMsgId, setCurrentMsgId] = useState('');
   const [checkClick, setCheckClick] = useState(false);
   const [showSelf, setShowSelf] = useState(false);
   const [showLearners, setShowLearners] = useState(false);
@@ -29,10 +30,11 @@ const CourseBodyDiscussion = () => {
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
   const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const userDetails = useRecoilValue(UserStateAtom);
-   const moduleData = useRecoilValue(ModuleAtom);
-  const topicData = useRecoilValue(TopicAtom);
+  const moduleData = useRecoilValue(ModuleAtom);
   const chapterData = useRecoilValue(ChapterAtom);
-     
+  const topicData = useRecoilValue(TopicAtom);
+  const courseData = useRecoilValue(UserCourseDataAtom);
+  console.log("courseData", courseData);
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
@@ -51,28 +53,39 @@ const CourseBodyDiscussion = () => {
     setIsAnnouncement(!isAnnouncement);
   };
   const showRepliesHandler = (msg) => {
-    const messageReplies = replyArr?.find((rdata) => rdata[msg.id]);
+    console.log("msg", msg);
+    console.log("replyArr", replyArr);
+    const messageReplies = replyArr?.filter((rdata) => rdata?.ReplyId === msg?.DiscussionId);
+    console.log("messageReplies", messageReplies);
     setReplyData(messageReplies);
-    setShowReplies(!showReplies);
-    setCurrentMsgId("")
+    setShowReplies(msg?.DiscussionId);
+    // setCurrentMsgId("")
   };
-  // useEffect( async () => {
-  //    const messagesArr = await loadQueryDataAsync(
-  //     ADD_COURSE_DISCUSSION,
-  //     { course_id: moduleData?.courseId },
-  //     {},
-  //     mutationClient
-  //   );
-  //   console.log("messagesArr", messagesArr);
-  // },[])
+ 
   console.log("moduleData", moduleData[0]?.courseId);
-  useEffect(() => {
-    if (!currentMsgId) return;
-    showRepliesHandler(currentMsgId)
-  },[replyData])
+  // useEffect(() => {
+  //   if (!currentMsgId) return;
+  //   showRepliesHandler(currentMsgId)
+  // }, [replyData])
+  
+  const getCourseMessages = async() => {
+      const messagesArr = await loadQueryDataAsync(GET_COURSE_DISCUSSION, {
+      course_id :moduleData[0]?.courseId
+    },
+    {},
+    queryClient
+    )
+    return messagesArr?.getCourseDiscussion
+  }
   const sendMessageHandler = async() => {
-    const pinnedData = messageArr?.filter((data) => data?.isPinned);
-    const nonPinnedData = messageArr?.filter((data) => !data?.isPinned);
+
+    const ModuleData = moduleData?.filter((data)=> data?.id === courseData?.activeModule?.id)
+    const TopicData = topicData?.filter((data) => data?.id === courseData?.activeTopic?.id);
+    const ChapterData = chapterData?.filter((data)=> data?.id === TopicData[0]?.chapterId)
+    // const chapterName = 
+    console.log("ModuleName", ModuleData);
+    console.log("TopicName" , TopicData);
+    console.log("ChapterData" , ChapterData);
     console.log("pinnedData", pinnedData);
     console.log("nonPinnedData", nonPinnedData);
      const addMessage = await loadQueryDataAsync(
@@ -81,9 +94,9 @@ const CourseBodyDiscussion = () => {
         CourseId: moduleData[0]?.courseId,
         Content: message,
         ReplyId: null,
-        Module: 'Module2',
-        Chapter: 'chapter2',
-        Topic: ' topic3',
+        Module: ModuleData[0]?.name,
+        Chapter: ChapterData[0]?.name,
+        Topic: TopicData[0]?.name,
         Likes: [userDetails?.id],
         Dislike: [],
         IsPinned: false,
@@ -99,26 +112,28 @@ const CourseBodyDiscussion = () => {
       {},
       mutationClient
     );
-    setMessageArr([
-      ...pinnedData,
-       {
+    console.log("addMessage", addMessage?.addCourseDiscussion)
+    const messages = await getCourseMessages() || [];
+    const pinnedData = messages?.filter((data) => data?.IsPinned);
+    const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
+     console.log("messages", messages)
+       setMessageArr([
+         ...pinnedData,
+         {
+        DiscussionId: addMessage?.addCourseDiscussion,
         CourseId: moduleData[0]?.courseId,
-         Content: message,
-        user: {
-            id: userDetails?.id || '',
-            first_name: userDetails?.first_name || '',
-            photo_url: userDetails?.photo_url || 'https://www.w3schools.com/howto/img_avatar2.png',
-            role: userDetails?.role || 'Learner'
-          },
+        Content: message,
         ReplyId: null,
-        Module: 'Module2',
-        Chapter: 'chapter2',
-        Topic: ' topic3',
+        Module: ModuleData[0]?.name,
+        Chapter: ChapterData[0]?.name,
+        Topic: TopicData[0]?.name,
         Likes: [userDetails?.id],
+        time:courseData?.videoData?.timestamp,
         Dislike: [],
         IsPinned: false,
         IsAnonymous: isAnonymous,
         IsAnnouncement: isAnnouncement,
+        Time: Math.floor(Date.now() / 1000),
         ReplyCount: 0,
         CreatedBy: userDetails?.id,
         CreatedAt: Math.floor(Date.now() / 1000),
@@ -132,20 +147,9 @@ const CourseBodyDiscussion = () => {
     setShowInput(false);
   };
 
-  useEffect( async() => {
-    const messagesArr = await loadQueryDataAsync(GET_COURSE_DISCUSSION, {
-      course_id :moduleData[0]?.courseId
-    },
-    {},
-    queryClient
-    )
-    console.log("messagesArr", messagesArr?.getCourseDiscussion);
-    setMessageArr([
-      // ...pinnedData,
-      ...messagesArr?.getCourseDiscussion,
-      //  ...nonPinnedData
-    ])
-  },[])
+  useEffect( () => {
+    getCourseMessages()
+  },[messageArr , replyArr])
   const onMessageHandler = (e) => {
     setMessage(e);
   };
@@ -276,13 +280,18 @@ const CourseBodyDiscussion = () => {
         </div>
       )}
       {fliterData?.map((data) => {
-        const newreplyData = replyArr?.find((rdata) => rdata[data.id]);
+        // const newreplyData = replyArr?.find((rdata) => rdata?.DiscussionId);
+        // console.log("newreplyData", newreplyData);
         return (
           <>
-            <div className={`${data?.isPinned ? style.massage_pinned : style.massage_block }`}>
+            <div className={`${data?.IsPinned ? style.massage_pinned : style.massage_block }`}>
               <MessageBlock message={data} setFilterData={setFilterData} />
-            <div className={`${style.more_replies}`} onClick={() => {
-                  setCurrentMsgId(data)
+              <div className={`${style.more_replies}`} onClick={() => {
+                if (data?.DiscussionId === showReplies) {
+                  setReplyData([]);
+                  setShowReplies(false);
+                  return;
+                }
                   showRepliesHandler(data)
                 }}>
               <div
@@ -290,12 +299,12 @@ const CourseBodyDiscussion = () => {
                 >
                 <img src="/images/unfold_more.png" alt="" />
               </div>
-              <p>{newreplyData ? newreplyData[data.id]?.length : 'No Replies'}</p>
+              <p>{data?.ReplyCount ? data?.ReplyCount : 'No Replies'}</p>
             </div>
             </div>
-            {showReplies && replyData && (
+            {data?.DiscussionId === showReplies && !!replyData?.length && (
               <>
-                {replyData[data.id]?.map((repdata) => {
+                {replyData?.map((repdata) => {
                   return <MessageBlock message={repdata} isReply={true} />;
                 })}
               </>

@@ -6,8 +6,10 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
 import { ADD_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
+import { GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ModuleAtom } from '@/state/atoms/module.atoms';
+import { useEffect } from 'react';
 const MessageBlock = ({ isReply, message , setFilterData  }) => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
@@ -38,7 +40,7 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
     console.log("data", data)
     const nonPinedMessages = messageArr?.filter((m) => m?.DiscussionId !== data?.DiscussionId);
     console.log("nonPinedMessages", nonPinedMessages)
-    setMessageArr([{ ...data, isPinned: true }, ...nonPinedMessages])
+    setMessageArr([{ ...data, IsPinned: true }, ...nonPinedMessages])
     console.log("messageArr", messageArr)
     setFilterData([...messageArr])
   }
@@ -48,8 +50,8 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
     const filterMessages = messageArr?.filter((m) => m?.DiscussionId !== data?.DiscussionId);
  
     console.log("data", filterMessages);
-    console.log("ispinned",{...data, isPinned: false});
-    setMessageArr([...filterMessages, { ...data, isPinned: false }]);
+    console.log("ispinned",{...data, IsPinned: false});
+    setMessageArr([...filterMessages, { ...data, IsPinned: false }]);
   //  let newArray = [...messageArr];
   //   newArray?.sort(function(a, b) {
   //     return b.time - a.time;
@@ -59,102 +61,85 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
     setFilterData([...messageArr])
   }
 
+  const getReplies = async (discussionId) => {
+    console.log("message?.DiscussionId", message?.DiscussionId,discussionId );
+     const repliesArr = await loadQueryDataAsync(GET_DISCUSSION_REPLY, {
+      course_id :moduleData[0]?.courseId, discussion_id:discussionId
+    },
+    {},
+    queryClient
+    )
+    console.log("repliesArr", repliesArr?.getCourseDiscussion);
+    return repliesArr?.getCourseDiscussion;
+  }
+
   const onSendReplyHandler = async(msg) => {
     setShowInput(false);
-    let newreplyData = replyArr?.filter((rdata) => rdata[msg?.ReplyId] ? rdata[msg?.ReplyId] : rdata[msg?.DiscussionId]);
-    let newReplyArr = replyArr?.filter((rdata) => rdata[msg?.ReplyId] ? !rdata[msg?.ReplyId] : !rdata[msg?.DiscussionId]);
-    let newMessageId = "";
-    if (msg?.ReplyId) {
-      newMessageId = msg?.ReplyId
+    if (!msg?.ReplyId) {
+      const addMessage = await loadQueryDataAsync(
+     ADD_COURSE_DISCUSSION,
+      {
+       CourseId: moduleData[0]?.courseId,
+       Content: reply,
+       ReplyId: msg?.DiscussionId,
+       Likes: [userDetails?.id],
+       Dislike: [],
+       IsPinned: false,
+       IsAnonymous: isAnonymous,
+       IsAnnouncement: isAnnouncement,
+       ReplyCount: 0,
+       CreatedBy: userDetails?.id,
+       CreatedAt: Math.floor(Date.now() / 1000),
+       UpdatedBy: userDetails?.id,
+       UpdatedAt: Math.floor(Date.now() / 1000),
+       Status: "active"
+      },
+     {},
+     mutationClient
+     );
+     console.log("addMessage", addMessage?.addCourseDiscussion);
+     const replies = await getReplies(msg?.DiscussionId) || [];
+     console.log("replies", replies);
+     setReplyArr([
+       ...replies,
+     ])
     } else {
-      newMessageId = msg?.DiscussionId
-    }
-    let checkId = "";
-    console.log(newreplyData[0]);
-    if (newreplyData[0]) {
-      console.log(msg?.id);
-      checkId = Object.keys(newreplyData[0]);
-    }
-    console.log(newMessageId);
-    if (!newMessageId || (parseInt(checkId[0]) !== msg?.DiscussionId && !msg?.ReplyId)) {
-       const addMessage = await loadQueryDataAsync(
-      ADD_COURSE_DISCUSSION,
-       {
-        CourseId: moduleData[0]?.courseId,
-        Content: reply,
-        ReplyId: msg?.DiscussionId,
-        Module: 'Module2',
-        Chapter: 'chapter2',
-        Topic: ' topic3',
-        Likes: [userDetails?.id],
-        Dislike: [],
-        IsPinned: false,
-        IsAnonymous: isAnonymous,
-        IsAnnouncement: isAnnouncement,
-        ReplyCount: 0,
-        CreatedBy: userDetails?.id,
-        CreatedAt: Math.floor(Date.now() / 1000),
-        UpdatedBy: userDetails?.id,
-        UpdatedAt: Math.floor(Date.now() / 1000),
-        Status: "active"
-       },
-      {},
-      mutationClient
-      );
-      console.log("addMessage", addMessage);
+      const addMessage = await loadQueryDataAsync(
+     ADD_COURSE_DISCUSSION,
+      {
+       CourseId: moduleData[0]?.courseId,
+       Content: `${'@' + userDetails?.first_name + ' ' + reply}`,
+       ReplyId: msg?.ReplyId,
+       Likes: [userDetails?.id],
+       Dislike: [],
+       IsPinned: false,
+       IsAnonymous: isAnonymous,
+       IsAnnouncement: isAnnouncement,
+       ReplyCount: 0,
+       CreatedBy: userDetails?.id,
+       CreatedAt: Math.floor(Date.now() / 1000),
+       UpdatedBy: userDetails?.id,
+       UpdatedAt: Math.floor(Date.now() / 1000),
+       Status: "active"
+      },
+     {},
+     mutationClient
+     );
+     console.log("addMessage", addMessage);
+     const replies = await getReplies(msg?.ReplyId) || [];
+     console.log("replies", replies);
       setReplyArr([
-        ...replyArr,
-        {
-          [msg?.DiscussionId]: [
-            {
-              DiscussionId: Math.floor(Date.now() / 1000 + 1),
-              Content: reply,
-              // Content: { text: `${'@' + msg?.user.first_name + ' ' + reply}`, image: [] },
-              Time: Math.floor(Date.now() / 1000),
-              ReplyId: msg?.id,
-              IsAnonymous: false,
-              user: {
-                first_name: userDetails?.first_name,
-                id: userDetails?.id,
-                photo_url: 'https://www.w3schools.com/howto/img_avatar.png',
-                role: userDetails?.role
-              },
-              Likes: [],
-              Dislike: [],
-              IsPinned: false
-            }
-          ]
-        }
-      ])
-    } else {
-         let newArray = [...newreplyData[0][newMessageId]]
-         newArray.unshift(
-            {
-               DiscussionId: Math.floor(Date.now() / 1000 + 1),
-               Content: { text: `${'@' + msg?.user.first_name + ' ' + reply}`, image: [] },
-               Time: Math.floor(Date.now() / 1000),
-               ReplyId: msg?.id,
-               IsAnonymous: false,
-               user: {
-                 first_name: userDetails?.first_name,
-                 id: userDetails?.id,
-                 photo_url: 'https://www.w3schools.com/howto/img_avatar.png',
-                 role: userDetails?.role
-               },
-               Likes: [],
-               Dislike: [],
-               IsPinned: false
-             }
-         )
-         let obj = {};
-         obj[`${newMessageId}`] = newArray
-         const updatedReplyArr = [...newReplyArr, obj ]
-         setReplyArr(updatedReplyArr)
-       } 
+       ...replies,
+     ])
+    }
       setReply('');
       setShowInput(false);
 }
 
+//  useEffect(async() => {
+//    await getReplies()
+//   },[replyArr])
+  
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       onSendReplyHandler(message);
@@ -163,7 +148,7 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
 
   return (
     <div className={`${style.message_Block_container}`}>
-      {message?.isPinned && 
+      {message?.IsPinned && 
       <div className={`${style.message_Block_Pinned}`} onClick={()=>onUnpinHandler(message)}>
       <img src="/images/svg/pinned2.svg" alt=""/>
         <p>Pinned by {userDetails?.first_name}</p>
@@ -176,22 +161,22 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
             <div className={`${style.message_Block_Head_profile_pic}`}>
               <img
                 src={
-                  !message?.isAnonymous
-                    ? message?.user?.photo_url
+                  !message?.IsAnonymous
+                    ? userDetails?.photo_url
                     : 'https://www.w3schools.com/howto/img_avatar2.png'
                 }
                 alt=""
               />
             </div>
             <div>
-              <p>{!message?.isAnonymous ? message?.user?.first_name : 'Anonymous'}</p>
+              <p>{!message?.IsAnonymous ? userDetails?.first_name + "(You)" : 'Anonymous'}</p>
             </div>
           </div>
           <div className={`${style.message_Block_Head_right}`}>
             <div className={`${style.message_time}`}>
               {moment.unix(message?.Time).format('lll')}
             </div>
-            {message?.isAnnouncement && (
+            {message?.IsAnnouncement && (
               <div className={`${style.announcement_container}`}>
                 <div className={`${style.announcement_image}`}>
                   <img src="/images/svg/annousment.svg" alt="" />
@@ -201,8 +186,8 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
             )}
           </div>
         </div>
-        <div className={`${style.message_Block_Body} ${message?.isPinned ? style.message_Block_Body_pinned : style.message_Block_Body_unpinned}`}>
-          {!isReply && !message?.isAnnouncement && (
+        <div className={`${style.message_Block_Body} ${message?.IsPinned ? style.message_Block_Body_pinned : style.message_Block_Body_unpinned}`}>
+          {!isReply && !message?.IsAnnouncement && (
             <div className={`${style.message_Block_module}`}>
               <p>{message?.time}</p>
               {message?.Module}, {message?.Chapter},
@@ -210,14 +195,19 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
             </div>
           )}
           <div className={`${style.message_Content}`}>
-            {!message?.isPinned && 
+            {!message?.IsPinned && 
             <div className={`${style.message_Content_pinned}`} onClick={()=>onPinnedHandler(message)}>
             <img src="/images/svg/pined.svg" alt="" />
             </div>
             }
             <div>
             {message?.content?.image?.length ? <img src={message?.content?.image} alt="" /> : ''}
-            <p>{message?.Content}</p>
+              <span>
+                  <RTE2
+                value={message?.Content}
+                isReadOnly={true}
+              />
+              </span>
             </div>
           </div>
           <div className={`${style.reply_buttons}`}>

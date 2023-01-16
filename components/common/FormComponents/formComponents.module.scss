@@ -654,20 +654,60 @@
     }
   }
 
-  // &.hasValue {
-  // }
-  //   :global(.ql-container.ql-snow),
-  //   :global(.ql-toolbar.ql-snow) {
-  //     @include inputStylesFor('hasValue');
-  //   }
+  
+}
+.rteReadOnly {
+  // margin: 20px auto;
+  position: relative;
+  // min-height: 150px;
+  // max-height: 250px;
+  color: $white !important;
 
-  //   :global(.ql-toolbar.ql-snow) {
-  //     border-bottom: 2px solid $darkThree;
-  //   }
-  //   :global(.ql-container.ql-snow) {
-  //     border-top: 0px;
-  //   }
-  // }
+  .reactQuill {
+    // min-height: 100px;
+    // max-height: 300px;
+    background-color:transparent;
+
+    :global(.ql-active .ql-stroke) {
+      stroke: $white !important;
+    }
+
+    :global(.ql-stroke) {
+      stroke: $darkThree !important;
+    }
+
+    :global(.ql-active .ql-fill) {
+      stroke: $white !important;
+    }
+
+    :global(.ql-fill) {
+      fill: $darkThree !important;
+    }
+
+    :global(.ql-editor.ql-blank::before) {
+      color: $darkThree !important;
+
+      // :global(.ql-container.ql-snow),
+      // :global(.ql-toolbar.ql-snow) {
+      //   @include inputStylesFor('hasValue');
+      // }
+
+      // :global(.ql-toolbar.ql-snow) {
+      //   border-bottom: 2px solid $darkThree;
+      // }
+      // :global(.ql-container.ql-snow) {
+      //   border-top: 0px;
+    }
+
+    :global(.ql-snow) {
+      color: $white !important;
+    }
+
+    // :global(.ql-editor) {
+    // }
+  }
+
+
 }
 .rteButtons {
   position: absolute;

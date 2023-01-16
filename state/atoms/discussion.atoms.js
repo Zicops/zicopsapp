@@ -25,20 +25,12 @@ export function getMesaageObj(data = {}) {
     IsAnonymous: data?.isAnonymous || false,
     IsAnnouncement: data?.isAnnouncement || false,
     ReplyId: data?.reply || "",
-    user: {
-      id: data?.user || '',
-      first_name: data?.first_name || '',
-      photo_url: data?.photo_url || 'https://www.w3schools.com/howto/img_avatar2.png',
-      role: data?.role || 'Learner'
-    },
     Time: data?.time || 1671197332,
     Content: data?.content || '', 
-    currentTopic: {
-      Module: data?.module || '',
-      Chapter: data?.chapter || '',
-      Topic: data?.topic || '',
-      Time: data?.time || '20:15'
-    },
+    Module: data?.module || '',
+    Chapter: data?.chapter || '',
+    Topic: data?.topic || '',
+    PlayTime: data?.time || '20:15',
     Likes: data?.likes || [],
     Dislike: data?.dislike || [],
     IsPinned: data?.isPinned || false,
