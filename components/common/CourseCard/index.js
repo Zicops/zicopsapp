@@ -1,4 +1,5 @@
 import { truncateToN } from '@/helper/common.helper';
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { getCourseDisplayTime } from '@/helper/utils.helper';
 import { useRouter } from 'next/router';
 import styles from './courseCard.module.scss';
@@ -64,6 +65,7 @@ export default function CourseCard({
     courseNameClass = 'coursenamesmall';
   }
   const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
+
   return (
     <>
       <div
@@ -82,7 +84,7 @@ export default function CourseCard({
           e.currentTarget.parentNode.parentNode.parentNode.style.zIndex = '0';
           handleMouseLeave(e);
         }}>
-        <div className={`${styles.smallCardWrapper}`}>
+        <div className={`${styles.smallCardWrapper} ${styles[courseData.type]}`}>
           <div className={`${styles.smallCard}`}>
             <div className={`${styles.banner}`}>
               {courseData.type?.split('-').join(' ') || 'Self Paced'}
