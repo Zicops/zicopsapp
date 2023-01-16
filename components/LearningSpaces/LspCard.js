@@ -56,6 +56,7 @@ const LspCard = ({
     sessionStorage.setItem('ou_id', ouId);
     sessionStorage.setItem('user_lsp_id', userLspId);
     sessionStorage.setItem('user_lsp_role', userLspRole);
+    sessionStorage.setItem('org_domain',website);
 
     const currentHost = getCurrentHost();
     if (currentHost !== website && path === '/') {
