@@ -205,40 +205,39 @@
   padding: 50px;
   color: $white;
   overflow-y: scroll;
-  .filterRow{
+  .filterRow {
     position: sticky;
     position: -webkit-sticky;
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
 
-
-    .datePickerContainer{
+    .datePickerContainer {
       //just for the sake of tab header in user profile
       z-index: 801;
     }
-    .dropDownContainer{
+    .dropDownContainer {
       display: flex;
       justify-content: flex-end;
       width: 20%;
     }
 
-    .filterRowLeft{
+    .filterRowLeft {
       flex: 1;
       display: flex;
       justify-content: flex-end;
       align-items: center;
       gap: 10px;
 
-      .resetFilter{
+      .resetFilter {
         color: $darkThree;
         cursor: pointer;
       }
-      .isActive{
+      .isActive {
         color: $white;
       }
     }
-    img{
+    img {
       margin-left: 10px;
     }
   }
@@ -246,16 +245,14 @@
   hr {
     margin-bottom: 20px;
   }
-  .scheduleBox{
+  .scheduleBox {
     padding: 10px 0;
-    .scheduleBoxTitle{
+    .scheduleBoxTitle {
       padding: 10px;
       font-weight: bold;
     }
   }
-  
 }
-
 
 .cardContainer {
   margin: auto;
@@ -603,7 +600,7 @@ $popUpHeight: 75vh;
       // p {
       //   font-size: 14px;
       // }
-     
+
       .rankNumber {
         // font-size: 30px;
         font-weight: 600;
@@ -613,8 +610,8 @@ $popUpHeight: 75vh;
   }
 }
 
-
-.cohortManager , .cohortManager_date {
+.cohortManager,
+.cohortManager_date {
   border: 2px solid $primary;
   display: flex;
   align-items: center;
@@ -629,7 +626,7 @@ $popUpHeight: 75vh;
     margin-left: 10px;
   }
 }
-.cohortManager{
+.cohortManager {
   padding: 5px 15px;
 }
 
@@ -804,6 +801,11 @@ $popUpHeight: 75vh;
 
   // background-color: rgba($color: red, $alpha: 0.2);
 
+  .cohortCodeContainer {
+    display: flex;
+    gap: 20px;
+  }
+
   .lastContainer {
     // background-color: rgba($color: green, $alpha: 0.2);
     display: flex;
@@ -816,57 +818,57 @@ $popUpHeight: 75vh;
   }
 }
 @media screen and (min-width: 1200px) {
-  .cohortManager_date{
+  .cohortManager_date {
     font-size: 14px;
   }
-  .cohortManager{
+  .cohortManager {
     font-size: 14px;
   }
 
-.rankText {
+  .rankText {
     font-size: 14px;
   }
-  .rankNumber{
+  .rankNumber {
     font-size: 20px;
   }
 }
 @media screen and (min-width: 1330px) {
-.rankText {
+  .rankText {
     font-size: 15px;
   }
-  .rankNumber{
+  .rankNumber {
     font-size: 25px;
   }
 }
 @media screen and (min-width: 1440px) {
   .cohortManager_date {
-      font-size: 16px;
-    }
-  
-    .cohortManager {
-      font-size: 16px;
-    }
-  .rankText {
-      font-size: 16px;
-    }
-    .rankInside {
-      padding: 5px 5px 0px 5px;
-  .rankNumber {
-    font-size: 45px;
+    font-size: 16px;
   }
-}
+
+  .cohortManager {
+    font-size: 16px;
+  }
+  .rankText {
+    font-size: 16px;
+  }
+  .rankInside {
+    padding: 5px 5px 0px 5px;
+    .rankNumber {
+      font-size: 45px;
+    }
+  }
 }
 @media screen and (min-width: 1920px) {
   .cohortManager_date {
-      font-size: 18px;
-    }
-  
-    .cohortManager {
-      font-size: 18px;
-    }
+    font-size: 18px;
+  }
+
+  .cohortManager {
+    font-size: 18px;
+  }
   .rankText {
-      font-size: 18px;
-    }
+    font-size: 18px;
+  }
 
   .rankNumber {
     font-size: 50px;
