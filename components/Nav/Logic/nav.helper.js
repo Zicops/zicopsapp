@@ -7,7 +7,7 @@ export const AdminMenu = [
   { title: 'Course', link: '/admin/course/my-courses' },
   { title: 'Training', link: '/admin' },
   { title: 'Exams', link: '/admin/exams/my-question-bank' },
-  { title: 'Vendor', link: '/admin' },
+  { title: 'Vendor', link: '/admin/vendor/manage-vendor' },
   { title: 'Lab', link: '/admin' },
   { title: 'Analytics', link: '/admin' },
   { title: 'Administration', link: '/admin/administration/organization' }
