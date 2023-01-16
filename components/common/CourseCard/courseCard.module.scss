@@ -1,111 +1,146 @@
+@import '../../../styles/base.scss';
 @import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
+$selfPacedBorder: $primary;
+$testSeriesBorder: $warning;
 
 .smallCardWrapper {
-    .smallCard {
-        position: relative;
-        background-color: rgba(16, 16, 18, 0.9);
-        .banner {
-            position: absolute;
-            top: 0%;
-            right: 0%;
-            color: #EAEAEA;
-            background-color: rgba(16, 16, 18, 0.9);
-            padding: 2px 6px;
-            font-size: 10px;
-            border-radius: 0 0 0 10px;
-            text-transform: capitalize;
+  .smallCard {
+    position: relative;
+    background-color: rgba(16, 16, 18, 0.9);
+    display: flex;
+
+    .banner {
+      position: absolute;
+      top: 0%;
+      right: 0%;
+      color: $black;
+      background-color: $selfPacedBorder;
+      border-radius: 0 0 0 10px;
+      padding: 2px 6px;
+
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: capitalize;
+      z-index: 1;
+    }
+
+    img {
+      border-radius: 2px;
+      aspect-ratio: 1.75/1;
+      width: 100%;
+    }
+  }
+
+  &.test-series {
+    .banner {
+      background-color: $testSeriesBorder;
+    }
+  }
+
+  .smallCardContent {
+    display: none;
+    padding: 10px;
+    background-color: #242630;
+    font-family: 'Poppins';
+
+    // height: 200px;
+    .firstRow {
+      display: flex;
+
+      .buttons {
+        display: flex;
+        flex: 1;
+        img {
+          width: 45%;
+        }
+        .addBtn {
+          margin-left: 0;
+          border: 1px solid #868686;
+          border-radius: 50%;
+        }
+      }
+
+      .durlang {
+        flex: 2;
+        text-align: end;
+
+        .lang {
+          color: #eaeaea;
+          font-size: 13px;
         }
 
-        img {
-            border-radius: 2px;
-            aspect-ratio: 1.75/1;
+        .dur {
+          color: #edb458;
+          font-size: 12px;
         }
+      }
+    }
+
+    .secondRow {
+      color: #eaeaea;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .thirdRow {
+      .pill {
+        font-size: 12px;
+        font-weight: 400;
+        color: #eaeaea;
+        background-color: #1a1b26;
+        padding: 4px 8px;
+        width: fit-content;
+      }
+    }
+
+    .lastRow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      font-size: 10px;
+      color: #eaeaea;
+
+      .dot {
+        content: '';
+        width: 5px;
+        height: 5px;
+        background-color: #eaeaea;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  &:hover {
+    margin-top: -25%;
+    margin-bottom: 25%;
+    position: relative;
+    z-index: 2;
+
+    width: 105%;
+
+    .smallCard {
+      width: 100%;
+      border: 2px solid $selfPacedBorder;
+      border-bottom-width: 0px;
     }
 
     .smallCardContent {
-        display: none;
-        padding: 10px;
-        background-color: #242630;
-        font-family: 'Poppins';
+      display: block;
+      position: absolute;
+      width: 100%;
 
-        // height: 200px;
-        .firstRow {
-            display: flex;
-
-            .buttons {
-                display: flex;
-                flex: 1;
-                img {
-                    width: 45%;
-                }
-                .addBtn{
-                    margin-left: 0;
-                    border: 1px solid #868686;
-                    border-radius: 50%;
-                }
-            }
-
-            .durlang {
-                flex: 2;
-                text-align: end;
-
-                .lang {
-                    color: #EAEAEA;
-                    font-size: 13px;
-                }
-
-                .dur {
-                    color: #EDB458;
-                    font-size: 12px;
-                }
-            }
-        }
-
-        .secondRow {
-            color: #EAEAEA;
-            padding: 10px 0;
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        .thirdRow {
-            .pill {
-                font-size: 12px;
-                font-weight: 400;
-                color: #EAEAEA;
-                background-color: #1A1B26;
-                padding: 4px 8px;
-                width: fit-content;
-            }
-        }
-
-        .lastRow {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 0;
-            font-size: 10px;
-            color: #EAEAEA;
-
-            .dot {
-                content: '';
-                width: 5px;
-                height: 5px;
-                background-color: #EAEAEA;
-                border-radius: 50%;
-            }
-        }
+      border: 2px solid $selfPacedBorder;
+      border-top-width: 0px;
     }
 
-    &:hover{
-        margin-top: -25%;
-        margin-bottom: 26.5%;
-        
-        .smallCardContent {
-            display: block;
-            position: absolute;
-            width: 100%;
-        }
+    &.test-series {
+      .smallCard,
+      .smallCardContent {
+        border-color: $testSeriesBorder;
+      }
     }
+  }
 }

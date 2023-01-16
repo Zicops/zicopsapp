@@ -93,6 +93,7 @@ const Users = ({ isEdit = false, isReadOnly = false }) => {
   }, [router?.query, refetch]);
 
   async function handleRemoveUser(userData = null, cohortData = null) {
+    let origin = window?.location?.origin || '';
     if (!userData) return setToastMsg({ type: 'danger', message: 'User Data not found!' });
     if (!cohortData) return setToastMsg({ type: 'danger', message: 'Cohort Data not found!' });
     setLoading(true);
@@ -114,14 +115,15 @@ const Users = ({ isEdit = false, isReadOnly = false }) => {
     const bodyData = {
       user_name: userData?.first_name,
       lsp_name: sessionStorage?.getItem('lsp_name'),
-      cohort_name: cohortData?.cohort_name
+      cohort_name: cohortData?.cohort_name,
+      link: `${origin}/my-profile?tabName=Cohort`
     };
     const sendEmailBody = {
       to: [userData?.email],
       sender_name: sessionStorage?.getItem('lsp_name'),
       user_name: [userData?.first_name],
       body: JSON.stringify(bodyData),
-      template_id: EMAIL_TEMPLATE_IDS?.cohortUnassign
+      template_id: EMAIL_TEMPLATE_IDS?.cohortUnassign,
     };
     await sendNotification(
       {

@@ -1,4 +1,11 @@
-import { GET_COURSE_TOPICS, GET_EXAM_INSTRUCTION, GET_EXAM_META, GET_EXAM_SCHEDULE, GET_TOPIC_EXAMS, queryClient } from '@/api/Queries';
+import {
+  GET_COURSE_TOPICS,
+  GET_EXAM_INSTRUCTION,
+  GET_EXAM_META,
+  GET_EXAM_SCHEDULE,
+  GET_TOPIC_EXAMS,
+  queryClient
+} from '@/api/Queries';
 import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
@@ -6,16 +13,16 @@ import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import moment from 'moment';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 export const useExamData = () => {
   const { getUserCourseData } = useUserCourseData();
-  const [userGlobalData , setUserGlobalData] = useRecoilState(UserDataAtom);
-  const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false); 
+  const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
+  const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false);
   const [examAttempts, setExamAttempts] = useState([]);
   const [examResults, setExamResults] = useState([]);
-   const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   async function getTopics(courseId = null) {
     //return an empty array in case of error
 
@@ -29,8 +36,8 @@ export const useExamData = () => {
     if (topicRes?.error) return [];
     if (!topicRes?.getTopics?.length) return [];
     return [...topicRes?.getTopics];
-    }
-      async function getTopicExams(topicId = null) {
+  }
+  async function getTopicExams(topicId = null) {
     if (!topicId) return [];
     const examRes = await loadQueryDataAsync(
       GET_TOPIC_EXAMS,
@@ -102,7 +109,7 @@ export const useExamData = () => {
   //     return ;
 
   //   const examAttemptIds = resAttempts?.getUserExamAttempts?.map((attempt) => attempt?.user_ea_id);
-    
+
   //   const attempts = resAttempts?.getUserExamAttempts;
   //   const completedAttempts = attempts?.filter(
   //     (attemp) => attemp?.attempt_status?.toLowerCase() === 'completed'
@@ -110,7 +117,7 @@ export const useExamData = () => {
   //   // return;
   //   console.log(attempts);
   //   setExamAttempts([...completedAttempts], setIsAttemptsLoaded(true));
-    
+
   //   for (let i = 0; i < completedAttempts?.length; i++) {
   //     const results = await loadQueryDataAsync(
   //       GET_USER_EXAM_RESULTS,
@@ -131,7 +138,7 @@ export const useExamData = () => {
 
   //    return examResults;
   // }
-    async function loadExamData() {
+  async function loadExamData() {
     const topicCourseMap = [];
     const courseData = await getUserCourseData(30);
     if (!courseData?.length) return setLoading(false);
@@ -163,25 +170,23 @@ export const useExamData = () => {
         });
       }
     }
-
     // console.log(assessmentTopics,'assasas',topicDataData)
     if (!assessmentTopics?.length) return setLoading(false);
 
-    const examCourseMap = [];
+    const examCourseMap = {};
 
     // load topic exams
     let exams = [];
     for (let i = 0; i < assessmentTopics?.length; i++) {
       const topicExams = await getTopicExams(assessmentTopics[i]?.id);
+      console.log('topicExams', topicExams);
       if (!topicExams?.length) continue;
-      examCourseMap.push({
-        [`${topicExams[0]?.examId}`]: {
-          courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
-          examId: topicExams[0]?.examId,
-          topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
-          courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId
-        }
-      });
+      examCourseMap[topicExams[0]?.examId] = {
+        courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
+        examId: topicExams[0]?.examId,
+        topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
+        courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId
+      };
       exams = exams.concat(topicExams);
     }
 
@@ -204,14 +209,14 @@ export const useExamData = () => {
         noAttempts: examInstruction[0]?.NoAttempts
       };
     }
- // to load exam 
+    // to load exam
     //   let completedExam;
     //   for (let i = 0; i < examMetas?.length; i++){
     //     const examAttempt = await loadUserAttemptsAndResults(examMetas[i]?.id);
     //     console.log(examAttempt);
     //     if (examAttempt) {
     //       completedExam = examAttempt;
-          
+
     //     }
     //     if (!examAttempt?.length) continue;
     //  }
@@ -219,17 +224,17 @@ export const useExamData = () => {
     let takeAnyTimeExams = [];
 
     //adding course name to each of them
-
     examMetas?.forEach((exam, index) => {
       if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
-        scheduleExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
+        scheduleExams.push({ ...exam, ...examCourseMap?.[`${exam?.id}`] });
         return;
       }
-      takeAnyTimeExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
+      takeAnyTimeExams.push({ ...exam, ...examCourseMap?.[`${exam?.id}`] });
       return;
     });
     // scheduleExam:[],takeAnyTime:[]
     // setExamCourseMapping({ scheduleExam: [...scheduleExams], takeAnyTime: [...takeAnyTimeExams] });
+
 
     if (scheduleExams.length) {
       for (let i = 0; i < scheduleExams?.length; i++) {
@@ -244,24 +249,22 @@ export const useExamData = () => {
     let currentTime = getUnixFromDate();
 
     let sExams = scheduleExams?.filter((exam) => parseInt(exam?.Start) > currentTime);
-    
-    const scheduleExamData = sExams?.map((exam) => ({
-        examId: exam?.id,
-        courseId: exam?.courseId,
-        topicId: exam?.topicId,
-        examName: exam?.Name,
-        courseName: exam?.courseName,
-        examDate:moment.unix(exam?.Start).format('LLL')
-    }))
-        return {
-            scheduleExams: scheduleExamData,
-            takeAnyTimeExams: takeAnyTimeExams,
-            // completedAttempts: completedExam
-        }
-  }
-    return {
-        loadExamData,
-    }
- 
-}
 
+    const scheduleExamData = sExams?.map((exam) => ({
+      examId: exam?.id,
+      courseId: exam?.courseId,
+      topicId: exam?.topicId,
+      examName: exam?.Name,
+      courseName: exam?.courseName,
+      examDate: moment.unix(exam?.Start).format('LLL')
+    }));
+    return {
+      scheduleExams: scheduleExamData,
+      takeAnyTimeExams: takeAnyTimeExams
+      // completedAttempts: completedExam
+    };
+  }
+  return {
+    loadExamData
+  };
+};

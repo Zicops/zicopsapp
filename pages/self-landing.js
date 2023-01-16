@@ -192,7 +192,9 @@ export default function Self() {
           data={mandatoryCourses}
           handleTitleClick={() =>
             router.push(
-              `/search-page?userCourse=${JSON.stringify({ isMandatory: true })}&isSelfPaced=true`,
+              `/search-page?userCourse=${JSON.stringify({ isMandatory: true })}&type=${
+                COURSE_TYPES[0]
+              }`,
               '/search-page'
             )
           }
@@ -204,7 +206,9 @@ export default function Self() {
           data={onGoingCourses}
           handleTitleClick={() =>
             router.push(
-              `/search-page?userCourse=${JSON.stringify({ isOngoing: true })}&isSelfPaced=true`,
+              `/search-page?userCourse=${JSON.stringify({ isOngoing: true })}&type=${
+                COURSE_TYPES[0]
+              }`,
               '/search-page'
             )
           }
@@ -216,7 +220,10 @@ export default function Self() {
           title={`Courses in ${baseSubcategory}`}
           data={baseSubcategoryCourses}
           handleTitleClick={() =>
-            router.push(`/search-page?subCat=${baseSubcategory}&isSelfPaced=true`, '/search-page')
+            router.push(
+              `/search-page?subCat=${baseSubcategory}&type=${COURSE_TYPES[0]}`,
+              '/search-page'
+            )
           }
         />
       )}
@@ -242,7 +249,7 @@ export default function Self() {
           data={parentOfBaseSubcategoryCourses}
           handleTitleClick={() =>
             router.push(
-              `/search-page?cat=${parentOfBaseSubcategory}&isSelfPaced=true`,
+              `/search-page?cat=${parentOfBaseSubcategory}&type=${COURSE_TYPES[0]}`,
               '/search-page'
             )
           }
@@ -255,7 +262,9 @@ export default function Self() {
           data={learningSpaceCourses}
           handleTitleClick={() =>
             router.push(
-              `/search-page?filter=${JSON.stringify({ LspId: userOrg?.lsp_id })}&isSelfPaced=true`,
+              `/search-page?filter=${JSON.stringify({ LspId: userOrg?.lsp_id })}&type=${
+                COURSE_TYPES[0]
+              }`,
               '/search-page'
             )
           }
@@ -265,7 +274,9 @@ export default function Self() {
         <ZicopsCarousel
           title="Trending Courses"
           data={latestCourses}
-          handleTitleClick={() => router.push(`/search-page?&isSelfPaced=true`, '/search-page')}
+          handleTitleClick={() =>
+            router.push(`/search-page?&type=${COURSE_TYPES[0]}`, '/search-page')
+          }
         />
       )}
       <br />
@@ -276,7 +287,7 @@ export default function Self() {
           name: s?.Name,
           img: s?.ImageUrl,
           handleClick: (subCat) =>
-            router.push(`/search-page?subCat=${subCat}&isSelfPaced=true`, '/search-page')
+            router.push(`/search-page?subCat=${subCat}&type=${COURSE_TYPES[0]}`, '/search-page')
         }))}
         // handleTitleClick={() => router.push(`/search-page?cat=${}&isSelfPaced=true`, '/search-page')}
       />
@@ -288,7 +299,7 @@ export default function Self() {
           title="Courses from your Preferred Sub-Categories"
           data={courseFromPrefernces}
           handleTitleClick={() =>
-            router.push(`/search-page?preferredSubCat=true&isSelfPaced=true`, '/search-page')
+            router.push(`/search-page?preferredSubCat=true&type=${COURSE_TYPES[0]}`, '/search-page')
           }
         />
       )}
@@ -297,7 +308,9 @@ export default function Self() {
         <ZicopsCarousel
           title="Latest Courses"
           data={latestCourses}
-          handleTitleClick={() => router.push(`/search-page?isSelfPaced=true`, '/search-page')}
+          handleTitleClick={() =>
+            router.push(`/search-page?type=${COURSE_TYPES[0]}`, '/search-page')
+          }
         />
       )}
     </div>

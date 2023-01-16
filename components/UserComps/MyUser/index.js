@@ -162,13 +162,13 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
       field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'First Name',
-      flex: 1
+      flex: 0.8
     },
     {
       field: 'last_name',
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
-      flex: 1
+      flex: 0.8
     },
     {
       field: 'role',
@@ -220,7 +220,7 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
-      flex: 0.4,
+      flex: 0.5,
       renderCell: (params) => {
         let status = '';
         if (disabledUserList?.includes(params?.row?.id)) status = 'disable';

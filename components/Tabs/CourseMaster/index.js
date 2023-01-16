@@ -2,6 +2,7 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -24,6 +25,7 @@ export default function CourseMaster() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   // cat and sub cat
   // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
@@ -34,6 +36,7 @@ export default function CourseMaster() {
   let isDisabled = !!fullCourse?.qa_required;
   if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
   if (fullCourse?.status === COURSE_STATUS.reject) isDisabled = true;
+  if (isPublishCourseEditable) isDisabled = false;
 
   // const allCatOptions = [];
   // data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));

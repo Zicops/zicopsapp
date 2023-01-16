@@ -1,6 +1,6 @@
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import { LANGUAGES } from '@/helper/constants.helper';
+import { LANGUAGES, SUBTITLE_LANGUAGES } from '@/helper/constants.helper';
 import { useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
 import { TopicSubtitleAtom } from '../../../../../state/atoms/module.atoms';
@@ -24,7 +24,7 @@ export default function SubtitleForm({ courseId, topicId }) {
 
   const subtitles = useRecoilValue(TopicSubtitleAtom);
 
-  const languageOptions = LANGUAGES?.filter(
+  const languageOptions = SUBTITLE_LANGUAGES?.filter(
     (lang) => !subtitles.find((sub) => sub.language === lang)
   )?.map((lang) => ({ label: lang, value: lang }));
 

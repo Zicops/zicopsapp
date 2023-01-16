@@ -1,4 +1,5 @@
 import { truncateToN } from '@/helper/common.helper';
+import { COURSE_TYPES } from '@/helper/constants.helper';
 import { getCourseDisplayTime } from '@/helper/utils.helper';
 import { useRouter } from 'next/router';
 import styles from './courseCard.module.scss';
@@ -31,10 +32,13 @@ export default function CourseCard({
     e.currentTarget.parentNode.style.margin = '';
   }
   const gotoCourse = () => {
-   if (!courseData?.examId) {
+    if (!courseData?.examId) {
       router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
     } else {
-        router?.push( `/course/${courseData?.courseId}?activateExam=${courseData?.examId}`,`/course/${courseData?.courseId}`);
+      router?.push(
+        `/course/${courseData?.courseId}?activateExam=${courseData?.examId}`,
+        `/course/${courseData?.courseId}`
+      );
     }
   };
 
@@ -45,12 +49,23 @@ export default function CourseCard({
     );
   };
 
+  function gotoCoursePage(e, queryParams = '') {
+    e.stopPropagation();
+
+    if (!courseData?.id) return router.push('/courses');
+
+    let coursePath = `/course/${courseData.id}`;
+    if (!!queryParams) coursePath += `?${queryParams}`;
+    router.push(coursePath, `/course/${courseData.id}`);
+  }
+
   let courseNameClass = 'coursename';
   if (courseData?.name?.length > 43) {
     // console.log(courseData?.name?.length);
     courseNameClass = 'coursenamesmall';
   }
   const progress = courseData?.completedPercentage != null ? courseData?.completedPercentage : 0;
+
   return (
     <>
       <div
@@ -69,29 +84,41 @@ export default function CourseCard({
           e.currentTarget.parentNode.parentNode.parentNode.style.zIndex = '0';
           handleMouseLeave(e);
         }}>
-        <div className={`${styles.smallCardWrapper}`}>
+        <div className={`${styles.smallCardWrapper} ${styles[courseData.type]}`}>
           <div className={`${styles.smallCard}`}>
             <div className={`${styles.banner}`}>
               {courseData.type?.split('-').join(' ') || 'Self Paced'}
             </div>
-            <img src={courseData?.tileImage || image || '/images/Rectangle 1678.png'} alt="" />
+            <img src={courseData?.tileImage || image || '/images/dnd1.jpg'} alt="" />
           </div>
           <div className={`${styles.smallCardContent}`}>
             <div className={`${styles.firstRow}`}>
               <div className={`${styles.buttons}`}>
                 {showAssignSymbol ? (
                   <>
-                    <img className={`${styles.addBtn}`}
+                    <img
+                      className={`${styles.addBtn}`}
                       onClick={(e) => {
-                          e.stopPropagation();
-                          gotoAssignCourses();
-                        }} 
-                      src = "/images/svg/add-line.svg" />
+                        e.stopPropagation();
+                        gotoAssignCourses();
+                      }}
+                      src="/images/svg/add-line.svg"
+                    />
                   </>
                 ) : (
                   <>
-                    <img className={`${styles.playBtn}`} src="/images/Frame 22.svg" alt="" />
-                    <img className={`${styles.removeBtn}`} src="/images/Frame 23.svg" alt="" />
+                    <img
+                      className={`${styles.playBtn}`}
+                      src="/images/Frame 22.svg"
+                      alt=""
+                      onClick={(e) => gotoCoursePage(e, 'startCourse=true')}
+                    />
+                    <img
+                      className={`${styles.removeBtn}`}
+                      src="/images/Frame 23.svg"
+                      alt=""
+                      onClick={(e) => gotoCoursePage(e, 'isUnAssign=true')}
+                    />
                   </>
                 )}
                 {/* <img className={`${styles.addBtn}`} src="/images/Frame 22.svg" alt="" />

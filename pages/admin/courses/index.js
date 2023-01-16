@@ -22,7 +22,7 @@ export default function AddCoursePage() {
   useEffect(() => {
     const type = localStorage.getItem('courseType') || COURSE_TYPES[0];
     setCourseType(type);
-    updateCourseMaster({ type, lspId: userOrgData?.lsp_id });
+    updateCourseMaster({ type, lspId: userOrgData?.lsp_id || sessionStorage.getItem('lsp_id') });
 
     defaultLsp();
   }, []);

@@ -105,10 +105,10 @@ export default function HomepageScreen() {
       status: COURSE_STATUS.publish,
       filters: { LspId: zicopsLspId, ...filters }
     });
-    const _toBeSortedCourses = structuredClone(courses) || [];
+    const _toBeSortedCourses = structuredClone(courses || {});
 
     _toBeSortedCourses.latestCourses.courses = sortArrByKeyInOrder(
-      [..._toBeSortedCourses?.latestCourses?.courses],
+      [...(_toBeSortedCourses?.latestCourses?.courses || [])],
       'updated_at',
       false
     );
@@ -118,7 +118,7 @@ export default function HomepageScreen() {
   const pageSize = 28;
   useEffect(() => {
     setIsLoading(true);
-    if (!(userData?.preferences?.length && userData?.preferences?.[0]?.catData)) {
+    if (!userData?.preferences?.length) {
       timer = setTimeout(() => {
         setActiveSubcatArr([]);
         setOngoingCourses([]);
@@ -502,6 +502,8 @@ export default function HomepageScreen() {
           }
         />
       )}
+
+      <div style={{ height: '40px' }}></div>
     </div>
   );
 }

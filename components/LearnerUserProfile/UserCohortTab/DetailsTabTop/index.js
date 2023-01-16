@@ -31,7 +31,7 @@ const DetailsTabTop = () => {
 
       <div className={`${styles.topRight}`}>
         <p className={`${styles.bigText}`}>{cohortData?.main?.name || 'Development'}</p>
-        <p className={`${styles.cohortManager}`} style={{ border: 'none' }}>
+        <p className={`${styles.cohortManager_date}`} style={{ border: 'none' }}>
           <img src="/images/svg/calendar-month.svg" alt="" />
           Joined on:
           <span>
@@ -54,11 +54,11 @@ const DetailsTabTop = () => {
         </p>
         <div className={`${styles.rank}`}>
           <div className={`${styles.rankInside}`}>
-            <p>Your best rank achieved</p>
+            <p className={`${styles.rankText}`}>Your best rank achieved</p>
             <p className={`${styles.rankNumber}`}>03</p>
           </div>
           <div className={`${styles.rankInside}`}>
-            <p> Number of Days at top Rank</p>
+            <p className={`${styles.rankText}`}> Number of Days at top Rank</p>
             <p className={`${styles.rankNumber}`}>14</p>
           </div>
         </div>
