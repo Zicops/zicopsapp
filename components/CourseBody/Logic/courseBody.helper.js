@@ -4,6 +4,7 @@ import CourseBodyAbout from '../CourseBodyAbout';
 import CourseBodyResources from '../CourseBodyResources';
 import CourseBodyTopics from '../CourseBodyTopics';
 import { atom } from 'recoil';
+import CourseBodyDiscussion from '../CourseBodyDiscussion';
 
 export const tabs = [
   {
@@ -15,7 +16,7 @@ export const tabs = [
     comp: <CourseBodyResources />
   },
   { name: 'Notes', comp: <CourseBodyNotes /> },
-  { name: 'Discussion', comp: ' ABCD ' },
+  { name: 'Discussion', comp: <CourseBodyDiscussion /> },
   // { name: 'Mentor', comp: ' XYZ ' },
   { name: 'About', comp: <CourseBodyAbout /> }
 ];

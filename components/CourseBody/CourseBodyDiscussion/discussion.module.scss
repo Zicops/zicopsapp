@@ -1,0 +1,365 @@
+@import '../../../styles/base.scss';
+
+.discussion_container {
+  margin: 20px 80px;
+  background-color: #1e1e1e;
+}
+.discussion_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    color: $white;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 36px;
+  }
+  .discussion_header_images {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+  }
+}
+.discussion_filter{
+  display: flex;
+  gap: 10px;
+}
+.discussion_search_input{
+  width: 72%;
+  position: relative;
+  border: 1px solid $secondary;
+  padding: 5px 10px;
+  border-radius: 4px;
+  
+  input{
+    background-color: #1e1e1e;
+    color: $white;
+    border: none;
+    margin-left: 30px;
+    height: 100%;
+    width: 90%;
+    font-size: 18px;
+  }
+    input:focus {
+      outline: none;
+    }
+  .discussion_search_images{
+    position: absolute;
+    top: 25%;
+  }
+}
+.searchValue{
+  color: $white;
+  font-weight: 600;
+  font-size: 20px;
+  padding: 5px 0px;
+}
+.massage_block{
+  cursor: pointer;
+    &:hover {
+        background-color: #0B0C0D;
+      }
+    }
+    .message_Block_Pinned{
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 0px 0px 10px;
+      color: $bgBody;
+      img{
+        cursor: pointer;
+      }
+    }
+      .message_Block_Main_Reply {
+        margin-left: 40px;
+      }
+      .message_Block_Main {
+        padding: 20px 0px 10px 10px;
+      }
+  
+.message_Block_Head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+.message_Block_Head_left {
+  display: flex;
+  gap: 10px;
+  p {
+    color: $white;
+    font-weight: 600;
+    font-size: 20px;
+  }
+    .message_Block_Head_profile_pic {
+      width: 36px;
+      height: 36px;
+  
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+}
+.message_Block_Head_right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-right: 5px;
+
+.announcement_container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: $primary;
+  background: #0a0909;
+  border-radius: 4px;
+}
+
+.message_time {
+  color: $bgBody;
+}
+}
+}
+.message_Block_Body {
+  padding-left: 45px;
+  color: $bgBody;
+  .message_Block_module {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    p {
+      color: $white;
+      font-size: 18px;
+    }
+  }
+  .message_Content {
+    display: flex;
+    gap: 25px;
+    padding: 10px 0px;
+    font-size: 16px;
+    .message_Content_pinned{
+     display: none;
+    }
+  }
+   
+  .reply_buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    .react_button {
+      display: flex;
+      gap: 15px;
+    }
+    .dislike_button {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .like_button {
+      display: flex;
+      gap: 5px;
+    }
+    .like_button_image,
+    .dislike_button_image {
+      width: 21px;
+      height: 20px;
+      cursor: pointer;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+        .button_divider {
+          border-left: 2px solid $secondary;
+          // height: 20px;
+        }
+        .reply_button {
+          font-size: 16px;
+          line-height: 28px;
+          border-radius: 4px;
+          color: $primary;
+          background-color: #1e1e1e;
+          padding: 6px 10px;
+          cursor: pointer;
+          border: 1px solid $bgBody;
+        }
+  }
+
+    // &:hover {
+    //   .message_Content{
+    //     transform: translateX(-38px);
+    //   }
+    //   .message_Content_pinned {
+    //     display: flex;
+    //     align-items: center;
+    //     display: block;
+    //   }
+      
+    // }
+
+}
+.message_Block_Body_unpinned{
+  &:hover {
+      .message_Content {
+        transform: translateX(-38px);
+      }
+  
+      .message_Content_pinned {
+        display: flex;
+        align-items: center;
+        display: block;
+      }
+  
+    }
+}
+
+.more_replies {
+  padding-left: 50px;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: $white;
+  cursor: pointer;
+
+  .more_replies_image {
+    display: flex;
+    align-items: center;
+
+  }
+}
+
+.hr {
+  background-color: $secondary;
+  height: 2px;
+}
+.input_container {
+  width: 100%;
+  height: 52px;
+  margin-top: 10px;
+  position: relative;
+  .input_image {
+    position: absolute;
+    left: 1%;
+    top: 15%;
+    width: 36px;
+    height: 36px;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+  .input {
+    width: 100%;
+    height: 100%;
+    padding-left: 65px;
+    color: $bgBody;
+    background-color: $secondary;
+    font-size: 18px;
+    border-radius: 2px;
+    border: none;
+  }
+}
+.user_type{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid $secondary;
+  border-radius: 4px;
+  background-color: #1E1E1E;
+  color: $bgBody;
+  .user_type_self, .user_type_learner{
+    padding: 5px 10px;
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+
+  }
+}
+.dot{
+  height: 6px;
+    width: 6px;
+    background-color: $bgBody;
+    border-radius: 50%;
+    display: inline-block;
+}
+.self , .learners{
+  background-color: $primary;
+  color: $black;
+  padding: 10px 15px !important;
+  border-radius: 4px;
+}
+.learners{
+  background-color: #0B0C0D;
+  color: $bgBody;
+}
+.user_check{
+ gap: 0;
+  border: none;
+}
+.all_users{
+  position: absolute;
+  z-index: 8;
+  top: 120%;
+  right: 0;
+}
+.learnerUserContainer{
+ background-color: #0A0909;
+ padding: 16px;
+ color: $white;
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+ .learner_user_details{
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 15px;
+  .user_image{
+    width: 36px;
+    height: 36px;
+    img{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+
+    }
+  }
+  .user_name_role{
+    color: $white;
+    font-size: 18px;
+    .user_role{
+      color: $bgBody;
+       font-size: 14px;
+    }
+  }
+ }
+}
+.learner_search_input {
+  position: relative;
+  border: 1px solid $secondary;
+  padding: 5px 10px;
+  border-radius: 4px;
+
+  input {
+    background-color: transparent;
+    color: $white;
+    border: none;
+    margin-left: 30px;
+    height: 100%;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  .learner_search_images {
+    position: absolute;
+    top: 25%;
+  }
+}

@@ -17,11 +17,11 @@ import {
   UserStateAtom
 } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
-export default function MyUser({ getUser, isAdministration = false, customStyle = {} }) {
+const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {} }, ref) => {
   const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
@@ -49,8 +49,15 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
 
-  async function sortArray(arr,param){
-    const sortedArr = await arr?.sort((a,b) => a?.[`${param}`] - b?.[`${param}`])
+  // function exposed to parent
+  useImperativeHandle(ref, () => ({
+    clearSelection() {
+      setSelectedUser([]);
+    }
+  }));
+
+  async function sortArray(arr, param) {
+    const sortedArr = await arr?.sort((a, b) => a?.[`${param}`] - b?.[`${param}`]);
     return sortedArr;
   }
 
@@ -62,6 +69,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       setLoading(false);
       return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
     }
+    setData(sortArrByKeyInOrder([..._usersData], 'created_at', false), setLoading(false));
     for (let i = 0; i < _usersData.length; i++) {
       const user = _usersData[i];
       const res = await loadQueryDataAsync(
@@ -77,9 +85,8 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
 
       let roleData = {};
       if (lspRoleArr?.length > 1) {
-        const latestUpdatedRole = await sortArray(lspRoleArr,'updated_at');
+        const latestUpdatedRole = await sortArray(lspRoleArr, 'updated_at');
         roleData = latestUpdatedRole?.pop();
-
       } else {
         roleData = lspRoleArr[0];
       }
@@ -97,7 +104,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
     } else {
       users = [...usersData];
     }
-    setLoading(false);
+    // setLoading(false);
     setData(sortArrByKeyInOrder([...users], 'created_at', false));
     return;
   }, []);
@@ -155,13 +162,13 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'First Name',
-      flex: 1
+      flex: 0.8
     },
     {
       field: 'last_name',
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
-      flex: 1
+      flex: 0.8
     },
     {
       field: 'role',
@@ -213,7 +220,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
-      flex: 0.4,
+      flex: 0.5,
       renderCell: (params) => {
         let status = '';
         if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
@@ -406,4 +413,6 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       )}
     </>
   );
-}
+});
+
+export default MyUser;

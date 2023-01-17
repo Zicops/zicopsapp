@@ -30,7 +30,7 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
       </section>
 
       <section className={styles.progress}>
-        <span className={`w-${courseData?.completedPercentage || 90}`}></span>
+        <span className={`w-${courseData?.completedPercentage || 0}`}></span>
       </section>
     </div>
   );

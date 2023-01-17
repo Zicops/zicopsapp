@@ -133,8 +133,12 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
 
       return total;
     }, 0);
+    const alreadyUsedQuestions = !metaData?.difficulty_level
+      ? questionPaperTabData?.mappedQb?.find((qbMap) => qbMap?.qbId === metaData?.qbId)
+          ?.total_questions || 0
+      : 0;
 
-    setUsedQuestionsCount(totalQuestions);
+    setUsedQuestionsCount(totalQuestions + alreadyUsedQuestions);
 
     setQbFilteredQuestions(
       qbQuestions.filter((q) => {
