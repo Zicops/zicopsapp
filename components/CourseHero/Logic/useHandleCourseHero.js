@@ -226,58 +226,6 @@ export default function useHandleCourseHero(isPreview) {
     // });
   }
 
-  async function assignCourseToUser() {
-    setIsPopUpDataPresent(false);
-    const { userCourseMapping } = userCourseData;
-    const sendData = {
-      userId: userData?.id,
-      userLspId: userOrgData?.user_lsp_id,
-      courseId: fullCourse?.id,
-      addedBy: JSON.stringify({ userId: userData.id, role: 'self' }),
-      courseType: fullCourse?.type,
-      isMandatory: courseAssignData?.isMandatory,
-      courseStatus: 'open',
-      endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
-    };
-
-    // update course if user is reassigning this course to himself again
-    if (userCourseMapping?.user_course_id) {
-      sendData.userCourseId = userCourseMapping?.user_course_id;
-
-      let isError = false;
-      const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
-      if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
-      console.log(res?.data?.updateUserCourse, 'userCourseMap');
-
-      setUserCourseData({
-        ...userCourseData,
-        userCourseMapping: res?.data?.updateUserCourse || {},
-        isCourseAssigned: true
-      });
-      setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
-      setIsAssignPopUpOpen(false);
-      return;
-    }
-
-    let isError = false;
-    const res = await addUserCourse({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = true;
-      return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
-    });
-    // console.log(res);
-    if (isError) return;
-    if (res?.errors) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
-
-    setUserCourseData({
-      ...userCourseData,
-      userCourseMapping: res?.data?.addUserCourse[0] || {},
-      isCourseAssigned: true
-    });
-    setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
-    setIsAssignPopUpOpen(false);
-  }
-
   async function unassignCourseFromUser() {
     const { userCourseMapping } = userCourseData;
     // console.log()
@@ -310,7 +258,6 @@ export default function useHandleCourseHero(isPreview) {
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     activateVideoPlayer,
-    assignCourseToUser,
     showPreviewVideo,
     unassignCourseFromUser
   };
