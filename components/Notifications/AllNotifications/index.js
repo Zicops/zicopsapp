@@ -1,6 +1,9 @@
+import { ReadNotificationsAtom } from '@/state/atoms/notification.atom';
+import { useRecoilValue } from 'recoil';
 import SingleNotification from '../SingleNotification';
 
 const AllNotifications = ({ style, data, isNav }) => {
+  const readNotification = useRecoilValue(ReadNotificationsAtom);
   const routeObj = {
     course: {
       assigned: {
@@ -28,7 +31,13 @@ const AllNotifications = ({ style, data, isNav }) => {
   return (
     <div>
       {data?.map((element) => {
-        const { body, img, link, duration, isRead, route, title, fcmMessageId } = element;
+        const { body, img, link, duration, route, title, fcmMessageId } = element;
+        let isRead = false;
+        if(readNotification.includes(fcmMessageId)){
+         isRead = true;
+        }else{
+          isRead = element?.isRead;
+        }
         const text = title?.split('-');
         let linkAndRoute = routeObj?.[`${text?.[0]?.toLowerCase()}`]?.[`${text?.[1]?.toLowerCase()}`];
         if(!linkAndRoute) linkAndRoute = {};
