@@ -177,7 +177,7 @@ export default function Self() {
     <div
       style={{
         backgroundColor: 'var(--tile-bg)',
-        overflow: 'hidden',
+        overflowX: 'clip',
         margin: 0,
         padding: '70px 0 0 0'
       }}>
