@@ -120,6 +120,7 @@ const AddUsers = ({
 
     // console.log(cohortUsers,'users')
 
+    let origin = window?.location?.origin || '';
     if (cohortUsers?.length) sendCohortData.size = cohortUsers?.length + userId?.length;
     let isError = false;
     const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
@@ -142,7 +143,8 @@ const AddUsers = ({
     const bodyData = {
       user_name: '',
       lsp_name:sessionStorage?.getItem('lsp_name'),
-      cohort_name: cohortData?.cohort_name
+      cohort_name: cohortData?.cohort_name,
+      link: `${origin}/my-profile?tabName=Cohort`
     };
     const sendEmailBody = {
       to: mails,

@@ -962,6 +962,10 @@ transition: All 0.3s ease;
   overflow: unset!important;
   z-index: 0;
   margin-bottom: 2%;
+
+}
+.carousel_container{
+  min-height: 140px;
 }
 .card_ietms {
   z-index: 0;

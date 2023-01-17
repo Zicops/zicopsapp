@@ -134,7 +134,8 @@
 }
 
 .login_body {
-  height: 260px;
+  height: max(400px , 50vh);
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

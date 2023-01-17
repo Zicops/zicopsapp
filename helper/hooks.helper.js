@@ -236,10 +236,10 @@ export default function useUserCourseData() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  async function getUserCourseData(pageSize = 999999999) {
+  async function getUserCourseData(pageSize = 999999999, userId=null) {
     const { id } = getUserData();
     const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
-    let currentUserId = id;
+    let currentUserId = !!userId ? userId: id;
     if (!currentUserId) return;
     // return setToastMsg({
     //   type: 'danger',
