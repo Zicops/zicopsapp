@@ -1937,3 +1937,9 @@ export const DELETE_EXAM = gql`
     deleteExam(id: $id)
   }
 `;
+
+export const DELETE_SUBTITLE = gql`
+  mutation deleteTopicContentSubtitle($courseId: String!, $topicId: String!, $fileName: String!) {
+    deleteTopicContentSubtitle(courseId: $courseId, topicId: $topicId, fileName: $fileName)
+  }
+`;
