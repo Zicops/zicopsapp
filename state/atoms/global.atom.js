@@ -9,7 +9,8 @@ export function getFeatureFlagsDataObj(data = {}) {
   return {
     isUserMappedToMultipleLsps: data?.isUserMappedToMultipleLsps || false,
     isPublishCourseEditable: data?.isPublishCourseEditable || false,
-    isZicopsProVersion: data?.isZicopsProVersion || false
+    isZicopsProVersion: data?.isZicopsProVersion || false,
+    isDev: data?.isDev || false
   };
 }
 
