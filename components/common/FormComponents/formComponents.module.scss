@@ -686,7 +686,7 @@
 
     :global(.ql-editor.ql-blank::before) {
       color: $darkThree !important;
-
+     
       // :global(.ql-container.ql-snow),
       // :global(.ql-toolbar.ql-snow) {
       //   @include inputStylesFor('hasValue');
@@ -703,8 +703,9 @@
       color: $white !important;
     }
 
-    // :global(.ql-editor) {
-    // }
+    :global(.ql-editor) {
+      padding: 0 !important;
+    }
   }
 
 

@@ -8,7 +8,7 @@ import RTE2 from '@/components/common/FormComponents/RTE2';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LearnerUser from './LearnerUser';
 import { ADD_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
-import { GET_COURSE_DISCUSSION, queryClient } from '@/api/Queries';
+import { GET_COURSE_DISCUSSION, GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '@/state/atoms/module.atoms';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
@@ -20,7 +20,6 @@ const CourseBodyDiscussion = () => {
   const [showInput, setShowInput] = useState(false);
   const [inputText, setInputText] = useState('');
   const [selectedType, setSelectedType] = useState('');
-  // const [currentMsgId, setCurrentMsgId] = useState('');
   const [checkClick, setCheckClick] = useState(false);
   const [showSelf, setShowSelf] = useState(false);
   const [showLearners, setShowLearners] = useState(false);
@@ -34,7 +33,7 @@ const CourseBodyDiscussion = () => {
   const chapterData = useRecoilValue(ChapterAtom);
   const topicData = useRecoilValue(TopicAtom);
   const courseData = useRecoilValue(UserCourseDataAtom);
-  console.log("courseData", courseData);
+  console.log('courseData', courseData);
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
@@ -52,104 +51,98 @@ const CourseBodyDiscussion = () => {
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
-  const showRepliesHandler = (msg) => {
-    console.log("msg", msg);
-    console.log("replyArr", replyArr);
-    const messageReplies = replyArr?.filter((rdata) => rdata?.ReplyId === msg?.DiscussionId);
-    console.log("messageReplies", messageReplies);
-    setReplyData(messageReplies);
-    setShowReplies(msg?.DiscussionId);
-    // setCurrentMsgId("")
+  const getReplies = async (discussionId) => {
+    console.log('message?.DiscussionId', message?.DiscussionId, discussionId);
+    const repliesArr = await loadQueryDataAsync(
+      GET_DISCUSSION_REPLY,
+      {
+        course_id: moduleData[0]?.courseId,
+        discussion_id: discussionId
+      },
+      {},
+      queryClient
+    );
+    console.log('repliesArr', repliesArr?.getCourseDiscussion);
+    return repliesArr?.getCourseDiscussion;
   };
- 
-  console.log("moduleData", moduleData[0]?.courseId);
-  // useEffect(() => {
-  //   if (!currentMsgId) return;
-  //   showRepliesHandler(currentMsgId)
-  // }, [replyData])
-  
-  const getCourseMessages = async() => {
-      const messagesArr = await loadQueryDataAsync(GET_COURSE_DISCUSSION, {
-      course_id :moduleData[0]?.courseId
-    },
-    {},
-    queryClient
-    )
-    return messagesArr?.getCourseDiscussion
-  }
-  const sendMessageHandler = async() => {
+  const showRepliesHandler = async (msg) => {
+    const replies = (await getReplies(msg?.DiscussionId)) || [];
+    setReplyData([...replies]);
+    setShowReplies(msg?.DiscussionId);
+  };
 
-    const ModuleData = moduleData?.filter((data)=> data?.id === courseData?.activeModule?.id)
+  const getCourseMessages = async () => {
+    const messagesArr = await loadQueryDataAsync(
+      GET_COURSE_DISCUSSION,
+      {
+        course_id: moduleData[0]?.courseId
+      },
+      {},
+      queryClient
+    );
+    return messagesArr?.getCourseDiscussion;
+  };
+  const sendMessageHandler = async () => {
+    const ModuleData = moduleData?.filter((data) => data?.id === courseData?.activeModule?.id);
     const TopicData = topicData?.filter((data) => data?.id === courseData?.activeTopic?.id);
-    const ChapterData = chapterData?.filter((data)=> data?.id === TopicData[0]?.chapterId)
-    // const chapterName = 
-    console.log("ModuleName", ModuleData);
-    console.log("TopicName" , TopicData);
-    console.log("ChapterData" , ChapterData);
-    console.log("pinnedData", pinnedData);
-    console.log("nonPinnedData", nonPinnedData);
-     const addMessage = await loadQueryDataAsync(
+    const ChapterData = chapterData?.filter((data) => data?.id === TopicData[0]?.chapterId);
+    const addMessage = await loadQueryDataAsync(
       ADD_COURSE_DISCUSSION,
-       {
+      {
         CourseId: moduleData[0]?.courseId,
         Content: message,
+        UserId: userDetails?.id,
         ReplyId: null,
         Module: ModuleData[0]?.name,
         Chapter: ChapterData[0]?.name,
         Topic: TopicData[0]?.name,
-        Likes: [userDetails?.id],
+        Time: courseData?.videoData?.timestamp,
+        Likes: [],
         Dislike: [],
         IsPinned: false,
         IsAnonymous: isAnonymous,
         IsAnnouncement: isAnnouncement,
         ReplyCount: 0,
-        CreatedBy: userDetails?.id,
-        CreatedAt: Math.floor(Date.now() / 1000),
-        UpdatedBy: userDetails?.id,
-        UpdatedAt: Math.floor(Date.now() / 1000),
-        Status: "active"
-       },
+        Status: 'active'
+      },
       {},
       mutationClient
     );
-    console.log("addMessage", addMessage?.addCourseDiscussion)
-    const messages = await getCourseMessages() || [];
+    console.log('addMessage', addMessage?.addCourseDiscussion);
+    const messages = (await getCourseMessages()) || [];
     const pinnedData = messages?.filter((data) => data?.IsPinned);
     const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
-     console.log("messages", messages)
-       setMessageArr([
-         ...pinnedData,
-         {
-        DiscussionId: addMessage?.addCourseDiscussion,
-        CourseId: moduleData[0]?.courseId,
-        Content: message,
-        ReplyId: null,
-        Module: ModuleData[0]?.name,
-        Chapter: ChapterData[0]?.name,
-        Topic: TopicData[0]?.name,
-        Likes: [userDetails?.id],
-        time:courseData?.videoData?.timestamp,
-        Dislike: [],
-        IsPinned: false,
-        IsAnonymous: isAnonymous,
-        IsAnnouncement: isAnnouncement,
-        Time: Math.floor(Date.now() / 1000),
-        ReplyCount: 0,
-        CreatedBy: userDetails?.id,
-        CreatedAt: Math.floor(Date.now() / 1000),
-        UpdatedBy: userDetails?.id,
-        UpdatedAt: Math.floor(Date.now() / 1000),
-        Status: "active"
-       },
-       ...nonPinnedData
-    ])
+    let newArray = [...nonPinnedData];
+    newArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    console.log('messages', messages);
+    setMessageArr([...pinnedData, ...newArray]);
     setMessage('');
     setShowInput(false);
   };
 
-  useEffect( () => {
-    getCourseMessages()
-  },[messageArr , replyArr])
+  useEffect(async () => {
+    const messages = (await getCourseMessages()) || [];
+    if (!messages?.length) return;
+    const pinnedData = messages?.filter((data) => data?.IsPinned);
+    const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
+    let newArray = [...nonPinnedData];
+    newArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    setMessageArr([...pinnedData, ...newArray]);
+  }, []);
+  useEffect(async () => {
+    const messages = (await getCourseMessages()) || [];
+    const pinnedData = messages?.filter((data) => data?.IsPinned);
+    const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
+    let newArray = [...nonPinnedData];
+    newArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    setMessageArr([...pinnedData, ...newArray]);
+  }, [replyArr]);
   const onMessageHandler = (e) => {
     setMessage(e);
   };
@@ -171,9 +164,8 @@ const CourseBodyDiscussion = () => {
   const handleTypeSelect = (e) => {
     const announcementData = messageArr?.filter((el) => {
       if (e.value === 'Announcements') {
-        return el?.isAnnouncement  
-      }
-      else {
+        return el?.IsAnnouncement;
+      } else {
         return el;
       }
     });
@@ -185,27 +177,30 @@ const CourseBodyDiscussion = () => {
     if (inputText === '') {
       return el;
     } else {
-      return el?.user?.first_name.toLowerCase().includes(inputText);
+      return userDetails?.first_name.toLowerCase().includes(inputText);
     }
   });
   useEffect(() => {
     setFilterData(filteredData);
-  },[inputText , messageArr , replyArr])
+  }, [inputText, messageArr, replyArr]);
   const onSelfHandler = () => {
-    const selfMessages = messageArr?.filter((el) => el?.user?.first_name === userDetails?.first_name);
+    console.log('messageArr', messageArr);
+    const selfMessages = messageArr?.filter((el) => el?.UserId === userDetails?.id);
+    console.log(userDetails?.id);
+    console.log('selfMessages', selfMessages);
     setFilterData(selfMessages);
-    setCheckClick(true)
-    setShowSelf(true)
-    setShowLearners(false)
- }
+    setCheckClick(true);
+    setShowSelf(true);
+    setShowLearners(false);
+  };
   const onLearnerHandler = () => {
-    const othersMessages = messageArr?.filter((el) => el?.user?.first_name !== userDetails?.first_name);
+    const othersMessages = messageArr?.filter((el) => el?.UserId !== userDetails?.id);
     setLearnerUser(othersMessages);
     setFilterData(othersMessages);
-    setCheckClick(true)
-    setShowLearners(true)
-    setShowSelf(false)
- }
+    setCheckClick(true);
+    setShowLearners(true);
+    setShowSelf(false);
+  };
   return (
     <div className={`${style.discussion_container}`}>
       <div className={`${style.discussion_header}`}>
@@ -222,28 +217,44 @@ const CourseBodyDiscussion = () => {
             <img src="/images/search3.png" alt="" />
           </div>
         </div>
-        <div className={`${style.user_type} ${checkClick ? style.user_check : ""}`}>
-          <div className={`${style.user_type_self} ${checkClick && (showSelf ? style.self : style.learners)}`} onClick={onSelfHandler}>
-           {showSelf ? <img src="/images/svg/person_filled2.svg" alt="" /> : <img src="/images/svg/person_filled.svg" alt="" />}
+        <div className={`${style.user_type} ${checkClick ? style.user_check : ''}`}>
+          <div
+            className={`${style.user_type_self} ${
+              checkClick && (showSelf ? style.self : style.learners)
+            }`}
+            onClick={onSelfHandler}>
+            {showSelf ? (
+              <img src="/images/svg/person_filled2.svg" alt="" />
+            ) : (
+              <img src="/images/svg/person_filled.svg" alt="" />
+            )}
             <span>Me</span>
           </div>
-        { !showSelf && !showLearners &&  <span className={`${style.dot}`}></span>}
-          <div className={`${style.user_type_learner} ${checkClick && (showLearners ? style.self : style.learners)}`} onClick={onLearnerHandler}>
-           {showLearners ?  <img src="/images/svg/group3.svg" alt="" /> : <img src="/images/svg/group2.svg" alt="" />}
+          {!showSelf && !showLearners && <span className={`${style.dot}`}></span>}
+          <div
+            className={`${style.user_type_learner} ${
+              checkClick && (showLearners ? style.self : style.learners)
+            }`}
+            onClick={onLearnerHandler}>
+            {showLearners ? (
+              <img src="/images/svg/group3.svg" alt="" />
+            ) : (
+              <img src="/images/svg/group2.svg" alt="" />
+            )}
             <span>All</span>
           </div>
-          {showLearners &&
+          {showLearners && (
             <div className={`${style.all_users}`}>
               <LearnerUser data={learnerUser} />
             </div>
-          }
+          )}
         </div>
         <LabeledDropdown
           dropdownOptions={{
             inputName: 'type',
             placeholder: 'Type',
             options: options,
-            value: { value: typeValue?.value ,  label: typeValue?.label },
+            value: { value: typeValue?.value, label: typeValue?.label }
           }}
           changeHandler={handleTypeSelect}
         />
@@ -256,13 +267,14 @@ const CourseBodyDiscussion = () => {
           <input placeholder="Start new discussion..." className={`${style.input}`} />
         </div>
       )}
-      {inputText?.length ? 
+      {inputText?.length ? (
         <>
-      <div className={`${style.searchValue}`}>Showing results for "{inputText}"</div>
-       <div className={`${style.hr}`}></div>
+          <div className={`${style.searchValue}`}>Showing results for "{inputText}"</div>
+          <div className={`${style.hr}`}></div>
         </>
-        : ""
-      }
+      ) : (
+        ''
+      )}
       {showInput && (
         <div>
           <RTE2
@@ -280,27 +292,25 @@ const CourseBodyDiscussion = () => {
         </div>
       )}
       {fliterData?.map((data) => {
-        // const newreplyData = replyArr?.find((rdata) => rdata?.DiscussionId);
-        // console.log("newreplyData", newreplyData);
         return (
           <>
-            <div className={`${data?.IsPinned ? style.massage_pinned : style.massage_block }`}>
+            <div className={`${data?.IsPinned ? style.massage_pinned : style.massage_block}`}>
               <MessageBlock message={data} setFilterData={setFilterData} />
-              <div className={`${style.more_replies}`} onClick={() => {
-                if (data?.DiscussionId === showReplies) {
-                  setReplyData([]);
-                  setShowReplies(false);
-                  return;
-                }
-                  showRepliesHandler(data)
-                }}>
               <div
-                className={`${style.more_replies_image}`}
-                >
-                <img src="/images/unfold_more.png" alt="" />
+                className={`${style.more_replies}`}
+                onClick={() => {
+                  if (data?.DiscussionId === showReplies) {
+                    setReplyData([]);
+                    setShowReplies(false);
+                    return;
+                  }
+                  showRepliesHandler(data);
+                }}>
+                <div className={`${style.more_replies_image}`}>
+                  <img src="/images/unfold_more.png" alt="" />
+                </div>
+                <p>{data?.ReplyCount ? data?.ReplyCount + ' ' + 'Replies' : 'No Replies'}</p>
               </div>
-              <p>{data?.ReplyCount ? data?.ReplyCount : 'No Replies'}</p>
-            </div>
             </div>
             {data?.DiscussionId === showReplies && !!replyData?.length && (
               <>
