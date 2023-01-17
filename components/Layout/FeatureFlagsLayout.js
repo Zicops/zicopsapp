@@ -13,11 +13,13 @@ export default function FeatureFlagsLayout({ children }) {
   useEffect(() => {
     const isZicopsProVersion = localStorage.getItem('isZicopsProVersion') || false;
     const isUserMappedToMultipleLsps = localStorage.getItem('isUserMappedToMultipleLsps') || false;
+    const isDev = localStorage.getItem('isDev') || false;
 
     setFeatureFlags((prev) => ({
       ...prev,
       isZicopsProVersion: isZicopsProVersion === 'true',
-      isUserMappedToMultipleLsps: isUserMappedToMultipleLsps === 'true'
+      isUserMappedToMultipleLsps: isUserMappedToMultipleLsps === 'true',
+      isDev: isDev === 'true'
     }));
   }, [router.pathname]);
 
