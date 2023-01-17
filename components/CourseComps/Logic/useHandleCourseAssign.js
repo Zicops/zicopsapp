@@ -179,7 +179,7 @@ export default function useHandleCourseAssign({
 
     const notificationBody = getNotificationMsg('courseAssign', {
       courseName: courseName || '',
-      endDate: courseAssignData?.endDate
+      endDate: moment(courseAssignData?.endDate?.valueOf()).format('D MMM YYYY')
     });
 
     const origin = window?.location?.origin || '';
