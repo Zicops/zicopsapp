@@ -300,7 +300,7 @@ export default function useHandleCourseHero(isPreview) {
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
     setUserCourseData(getUserCourseDataObj());
-    setToastMsg({ type: 'success', message: 'Course Removed Successfully!' });
+    setToastMsg({ type: 'success', message: `You have removed course ${fullCourse?.name}` });
     return;
   }
 
