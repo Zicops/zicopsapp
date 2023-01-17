@@ -22,3 +22,10 @@ export function getNotificationObj(data) {
     duration: data?.duration || ''
   };
 }
+
+export const ReadNotificationsAtom = atom({
+  key: 'NotificationsRead',
+  default: []
+});
+
+
