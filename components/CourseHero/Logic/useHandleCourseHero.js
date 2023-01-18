@@ -81,7 +81,7 @@ export default function useHandleCourseHero(isPreview) {
     // }
 
     if (courseData?.getCourse && isDataLoaded !== courseId) {
-      updateCourseMaster(courseData.getCourse);
+      updateCourseMaster(courseData.getCourse?.[0]);
 
       setIsDataLoaded(courseId);
     }
