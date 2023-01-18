@@ -104,11 +104,13 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     );
     // console.log(userCourseData,'sd')
 
+    const origin = window?.location?.origin || '';
     const userName = currentUserData?.is_verified ? `${currentUserData?.first_name}` : '';
     const bodyData = {
       user_name: userName,
       lsp_name: sessionStorage?.getItem('lsp_name'),
-      course_name: userCourseData?.name
+      course_name: userCourseData?.name,
+      link: `${origin}/self-landing`
     };
     const sendMailData = {
       to: [currentUserData?.email],

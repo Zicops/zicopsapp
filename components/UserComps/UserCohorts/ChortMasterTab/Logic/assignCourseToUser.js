@@ -180,7 +180,8 @@ export default function assignCourseToUser() {
       const bodyData = {
         lsp_name: sessionStorage?.getItem('lsp_name'),
         course_name: course_data?.name,
-        end_date: moment(endDate).format('D MMM YYYY')
+        end_date: moment(endDate).format('D MMM YYYY'),
+        link: `/course/${course_data?.id}`
       };
       const sendEmailBody = {
         to: cohortUserEmail,
@@ -264,9 +265,12 @@ export default function assignCourseToUser() {
         cohortUserName.push(uName);
       });
 
+      const origin = window?.location?.origin || '';
+
       const bodyData = {
         lsp_name: sessionStorage?.getItem('lsp_name'),
-        course_name: courseName
+        course_name: courseName,
+        link: `${origin}/self-landing`
       };
       const sendEmailBody = {
         to: cohortUserEmail,
