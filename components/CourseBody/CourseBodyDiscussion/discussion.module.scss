@@ -73,9 +73,8 @@
       .message_Block_Main_Reply {
         margin-left: 40px;
       }
-      .message_Block_Main {
-        padding: 20px 0px 10px 10px;
-      }
+.message_Block_Main {
+  padding: 20px 0px 10px 10px;
   
 .message_Block_Head {
   display: flex;
@@ -100,6 +99,20 @@
         border-radius: 50%;
       }
     }
+   
+    .userName{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      .visibility_icon {
+          display: none;
+        }
+    }
+        &:hover {
+          .visibility_icon {
+            display: block;
+          }
+        }
 }
 .message_Block_Head_right {
   display: flex;
@@ -144,7 +157,6 @@
      display: none;
     }
   }
-   
   .reply_buttons {
     display: flex;
     align-items: center;
@@ -188,22 +200,11 @@
         }
   }
 
-    // &:hover {
-    //   .message_Content{
-    //     transform: translateX(-38px);
-    //   }
-    //   .message_Content_pinned {
-    //     display: flex;
-    //     align-items: center;
-    //     display: block;
-    //   }
-      
-    // }
 
 }
 .message_Block_Body_unpinned{
   &:hover {
-      .message_Content {
+      .message_content_hover {
         transform: translateX(-38px);
       }
   
@@ -214,6 +215,8 @@
       }
   
     }
+}
+     
 }
 
 .more_replies {

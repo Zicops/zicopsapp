@@ -12,6 +12,7 @@ import { GET_COURSE_DISCUSSION, GET_DISCUSSION_REPLY, queryClient } from '@/api/
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '@/state/atoms/module.atoms';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
+import Loader from '@/components/common/Loader';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -23,6 +24,7 @@ const CourseBodyDiscussion = () => {
   const [checkClick, setCheckClick] = useState(false);
   const [showSelf, setShowSelf] = useState(false);
   const [showLearners, setShowLearners] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [fliterData, setFilterData] = useState();
   const [learnerUser, setLearnerUser] = useState();
   const [replyData, setReplyData] = useRecoilState(DiscussionReplyAtom);
@@ -67,7 +69,11 @@ const CourseBodyDiscussion = () => {
   };
   const showRepliesHandler = async (msg) => {
     const replies = (await getReplies(msg?.DiscussionId)) || [];
-    setReplyData([...replies]);
+    let _replies = [...replies];
+    _replies?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    setReplyData([..._replies]);
     setShowReplies(msg?.DiscussionId);
   };
 
@@ -81,12 +87,15 @@ const CourseBodyDiscussion = () => {
       queryClient
     );
     const messages = messagesArr?.getCourseDiscussion;
+    if (!messages?.length) return ;
     const pinnedData = messages?.filter((data) => data?.IsPinned);
     const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
+    if (!nonPinnedData?.length) return [...pinnedData];
     let newArray = [...nonPinnedData];
     newArray?.sort(function (a, b) {
       return b.Created_at - a.Created_at;
     });
+    if (!pinnedData?.length) return [...newArray];
     return [...pinnedData, ...newArray]
   };
   const sendMessageHandler = async () => {
@@ -124,10 +133,12 @@ const CourseBodyDiscussion = () => {
   };
 
   useEffect(async () => {
+    setLoading(true)
     const messages = (await getCourseMessages()) || [];
     if (!messages?.length) return;
     console.log('messages', messages);
     setMessageArr(messages);
+    setLoading(false)
   }, []);
   useEffect(async () => {
     const messages = (await getCourseMessages()) || [];
@@ -276,6 +287,8 @@ const CourseBodyDiscussion = () => {
           />
         </div>
       )}
+      {loading ? <Loader customStyles={{ height: '100%', backgroundColor: 'transparent' }} /> :
+      <>
       {fliterData?.map((data) => {
         return (
           <>
@@ -309,6 +322,8 @@ const CourseBodyDiscussion = () => {
           </>
         );
       })}
+      </>
+      }
     </div>
   );
 };

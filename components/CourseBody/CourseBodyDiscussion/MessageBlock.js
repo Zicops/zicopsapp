@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import moment from 'moment';
 import style from './discussion.module.scss';
 import { useRecoilValue, useRecoilState } from 'recoil';
@@ -9,6 +9,7 @@ import { ADD_COURSE_DISCUSSION, UPDATE_COURSE_DISCUSSION, mutationClient } from 
 import { GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ModuleAtom } from '@/state/atoms/module.atoms';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 const MessageBlock = ({ isReply, message, setFilterData }) => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
@@ -17,9 +18,18 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   const [isDisLike, setIsDisLike] = useState(false);
   const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
+  const [isRole , setIsRole] = useState("")
   const [reply, setReply] = useState('');
   const userDetails = useRecoilValue(UserStateAtom);
   const moduleData = useRecoilValue(ModuleAtom);
+
+   useEffect(() => {
+    const role = sessionStorage?.getItem('user_lsp_role');
+    if (!role) return;
+    console.log(role, 'role');
+    setIsRole(role)
+   }, []);
+  
   const onReplyHandler = () => {
     setShowInput(true);
   };
@@ -60,7 +70,6 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const filterMessages = messageArr?.filter((m) => m?.DiscussionId !== data?.DiscussionId);
 
     console.log('data', filterMessages);
-    console.log('ispinned', { ...data, IsPinned: false });
     const updateMessage = await loadQueryDataAsync(
       UPDATE_COURSE_DISCUSSION,
       {
@@ -291,8 +300,9 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
                 alt=""
               />
             </div>
-            <div>
+            <div className={`${style.userName}`}>
               <p>{!message?.IsAnonymous ? userDetails?.first_name + '(You)' : 'Anonymous'}</p>
+              {message?.IsAnonymous && isRole.toLowerCase() === USER_LSP_ROLE.admin && <img src="/images/svg/visibility2.svg" alt="" className={`${style.visibility_icon}`}/>}
             </div>
           </div>
           <div className={`${style.message_Block_Head_right}`}>
@@ -319,8 +329,8 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
               {message?.Module}, {message?.Chapter},{message?.Topic}
             </div>
           )}
-          <div className={`${style.message_Content}`}>
-            {!message?.IsPinned && (
+          <div className={`${style.message_Content} ${!isReply ?  style.message_content_hover : ""}`}>
+            {!isReply && !message?.IsPinned && (
               <div
                 className={`${style.message_Content_pinned}`}
                 onClick={() => onPinnedHandler(message)}>

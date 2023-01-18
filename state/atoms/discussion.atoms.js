@@ -1,4 +1,3 @@
-import { discussionData , replyData } from '@/components/CourseBody/CourseBodyDiscussion/discussion.helper';
 import { atom } from 'recoil';
 
 export const MessageAtom = atom({
