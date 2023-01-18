@@ -345,16 +345,16 @@ export default function useUserCourseData() {
       if (added_by?.toLowerCase() === 'self') ++totalSelfCourseCount;
 
       // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      const courseDuraton = +courseRes?.getCourse?.duration;
+      const courseDuraton = +courseRes?.getCourse?.[0]?.duration;
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
       const completedPercent = userProgressArr?.length
         ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
         : 0;
 
-      if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
+      if (courseRes?.getCourse?.[0]?.status !== COURSE_STATUS.publish) continue;
 
       userCourseArray.push({
-        ...courseRes?.getCourse,
+        ...courseRes?.getCourse?.[0],
         ...coursesMeta[i],
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),

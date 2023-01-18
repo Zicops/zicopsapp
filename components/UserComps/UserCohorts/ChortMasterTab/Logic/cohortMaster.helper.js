@@ -99,7 +99,7 @@ export async function getCohortCourses(cohortId = null) {
     const data = await loadQueryDataAsync(GET_COURSE, { course_id: coursesArr[i]?.CourseId });
     if (!data?.getCourse) return { error: 'Error while loading courses!' };
     cohortCourses.push({
-      ...data?.getCourse,
+      ...data?.getCourse?.[0],
       IsActive: coursesArr[i]?.IsActive,
       cohortCourseId: coursesArr[i]?.id
     });
