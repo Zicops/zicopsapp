@@ -80,7 +80,14 @@ const CourseBodyDiscussion = () => {
       {},
       queryClient
     );
-    return messagesArr?.getCourseDiscussion;
+    const messages = messagesArr?.getCourseDiscussion;
+    const pinnedData = messages?.filter((data) => data?.IsPinned);
+    const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
+    let newArray = [...nonPinnedData];
+    newArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    return [...pinnedData, ...newArray]
   };
   const sendMessageHandler = async () => {
     const ModuleData = moduleData?.filter((data) => data?.id === courseData?.activeModule?.id);
@@ -110,14 +117,8 @@ const CourseBodyDiscussion = () => {
     );
     console.log('addMessage', addMessage?.addCourseDiscussion);
     const messages = (await getCourseMessages()) || [];
-    const pinnedData = messages?.filter((data) => data?.IsPinned);
-    const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
-    let newArray = [...nonPinnedData];
-    newArray?.sort(function (a, b) {
-      return b.Created_at - a.Created_at;
-    });
     console.log('messages', messages);
-    setMessageArr([...pinnedData, ...newArray]);
+    setMessageArr(messages);
     setMessage('');
     setShowInput(false);
   };
@@ -125,23 +126,12 @@ const CourseBodyDiscussion = () => {
   useEffect(async () => {
     const messages = (await getCourseMessages()) || [];
     if (!messages?.length) return;
-    const pinnedData = messages?.filter((data) => data?.IsPinned);
-    const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
-    let newArray = [...nonPinnedData];
-    newArray?.sort(function (a, b) {
-      return b.Created_at - a.Created_at;
-    });
-    setMessageArr([...pinnedData, ...newArray]);
+    console.log('messages', messages);
+    setMessageArr(messages);
   }, []);
   useEffect(async () => {
     const messages = (await getCourseMessages()) || [];
-    const pinnedData = messages?.filter((data) => data?.IsPinned);
-    const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
-    let newArray = [...nonPinnedData];
-    newArray?.sort(function (a, b) {
-      return b.Created_at - a.Created_at;
-    });
-    setMessageArr([...pinnedData, ...newArray]);
+    setMessageArr(messages);
   }, [replyArr]);
   const onMessageHandler = (e) => {
     setMessage(e);
@@ -151,11 +141,6 @@ const CourseBodyDiscussion = () => {
       sendMessageHandler();
     }
   };
-  //   return Object.values(replies).map((r) => ({
-  //     parent: r?.parent,
-  //     replies: r?.replies?.sort((a, b) => b.time - a.time)
-  //   }));
-  // }
   const options = [
     { label: 'All', value: 'All' },
     { label: 'Announcements', value: 'Announcements' },

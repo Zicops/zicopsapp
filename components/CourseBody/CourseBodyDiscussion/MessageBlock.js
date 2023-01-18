@@ -71,14 +71,15 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       {},
       mutationClient
     );
-    setMessageArr([...filterMessages, updateMessage?.updateCourseDiscussion]);
-    //  let newArray = [...messageArr];
-    //   newArray?.sort(function(a, b) {
-    //     return b.time - a.time;
-    //   });
-    //    console.log("sortedArr" , newArray);
-    //    console.log("messageArr" , messageArr);
-    setFilterData([...filterMessages, updateMessage?.updateCourseDiscussion]);
+    const newUpdateMsgArr = [...filterMessages, updateMessage?.updateCourseDiscussion]
+    const pinnedData = newUpdateMsgArr?.filter((data) => data?.IsPinned);
+    const nonPinnedData = newUpdateMsgArr?.filter((data) => !data?.IsPinned);
+    let newArray = [...nonPinnedData];
+    newArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    setMessageArr([...pinnedData, ...newArray]);
+    setFilterData([...pinnedData, ...newArray]);
   };
 
   const onLikeHandler = async (data) => {
