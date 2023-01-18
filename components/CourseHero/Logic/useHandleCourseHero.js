@@ -68,7 +68,7 @@ export default function useHandleCourseHero(isPreview) {
 
     const loadFullCourseData = isPreview ? loadQueryDataAsync : loadAndCacheDataAsync;
     const courseData = await loadFullCourseData(GET_COURSE, {
-      course_id: courseId
+      course_id: [courseId]
     });
     // if (!isPreview) {
     // courseData = await loadAndCacheDataAsync(GET_COURSE, {
@@ -81,7 +81,7 @@ export default function useHandleCourseHero(isPreview) {
     // }
 
     if (courseData?.getCourse && isDataLoaded !== courseId) {
-      updateCourseMaster(courseData.getCourse);
+      updateCourseMaster(courseData.getCourse?.[0]);
 
       setIsDataLoaded(courseId);
     }
