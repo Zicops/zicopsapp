@@ -9,6 +9,7 @@ import SquareCard from './SquareCard';
 import CircleCard from './CircleCard';
 import styles from './zicopsCarousel.module.scss';
 import { MIN_COURSE_LENGTH } from '@/helper/constants.helper';
+import CourseCard from '../common/CourseCard';
 
 const CardSlider = ({
   deviceType,
@@ -19,7 +20,7 @@ const CardSlider = ({
   handleTitleClick = () => {}
 }) => {
   const carouselRef = useRef(0);
-  const COURSES_ASSIGNED_TITLE = ['continue with your courses', 'courses in your learning folder'];
+  const COURSES_ASSIGNED_TITLE = ['continue with your courses', 'courses in your learning folder', 'continue with your exam'];
   // type=sqaure cardShape changes /circle/ . Have to override hover from global scss
 
   let isAssigned = false;
@@ -127,40 +128,50 @@ const CardSlider = ({
           // removeArrowOnDeviceType={["tablet", "mobile"]}
           customLeftArrow={<CustomLeftArrow />}
           customRightArrow={<CustomRightArrow />}>
-          {data?.map((d, index) => {
-            if (!d)
-              return (
-                <Skeleton
-                  key={index}
-                  sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
-                  variant="rectangular"
-                  width={220}
-                  height={120}
-                />
-              );
+            {data?.map((d, index) => {
+              if (!d)
+                return (
+                  <Skeleton
+                    key={index}
+                    sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
+                    variant="rectangular"
+                    width={220}
+                    height={120}
+                  />
+                );
 
-            if (!d?.name) return;
-            if (type === 'small')
-              return (
-                <SmallCard
-                  showAssignSymbol={!isAssigned}
-                  key={index}
-                  styleClass={index === 0 ? 'card_ietms_start' : ''}
-                  carouselRefData={carouselRef.current}
-                  image={d.img}
-                  courseData={d}
-                  notext={notext}
-                  isShowProgress={title === 'Continue with your Courses'}
-                />
-              );
-            if (type === 'square') return <SquareCard key={index} image={d.img} />;
-            if (type === 'circle') return <CircleCard key={index} image={d.img} />;
-          })}
-          {data?.length > MIN_COURSE_LENGTH && data?.every((d) => d) ? (
-            <div className={`${styles.last_text} ${itemCount.shape}`}>See All</div>
-          ) : (
-            <></>
-          )}
+              if (!d?.name) return;
+              if (type === 'small')
+                return (
+                  // <SmallCard
+                  //   showAssignSymbol={!isAssigned}
+                  //   key={index}
+                  //   styleClass={index === 0 ? 'card_ietms_start' : ''}
+                  //   carouselRefData={carouselRef.current}
+                  //   image={d.img}
+                  //   courseData={d}
+                  //   notext={notext}
+                  //   isShowProgress={title === 'Continue with your Courses'}
+                  // />
+                  <CourseCard
+                    showAssignSymbol={!isAssigned}
+                    key={index}
+                    styleClass={index === 0 ? 'card_ietms_start' : ''}
+                    carouselRefData={carouselRef.current}
+                    image={d.img}
+                    courseData={d}
+                    notext={notext}
+                    isShowProgress={title === 'Continue with your Courses'}
+                  />
+                );
+              if (type === 'square') return <SquareCard key={index} image={d.img} />;
+              if (type === 'circle') return <CircleCard key={index} image={d.img} />;
+            })}
+            {/* {data?.length > MIN_COURSE_LENGTH && data?.every((d) => d) ? (
+              <div className={`${styles.last_text} ${itemCount.shape}`}>See All</div>
+            ) : (
+              <div className={`${styles.last_text} ${itemCount.shape}`}>See None</div>
+            )} */}
         </Carousel>
 
         {/* move to .scss */}

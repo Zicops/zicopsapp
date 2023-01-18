@@ -258,9 +258,9 @@ export function parseJson(stringifiedJson) {
 export function getUnixTimeAt(hours = 7, minutes = 0, seconds = 0) {
   const now = new Date();
 
-  now.setHours(hours);
-  now.setMinutes(minutes);
-  now.setSeconds(seconds);
+  // now.setHours(hours);
+  // now.setMinutes(minutes);
+  // now.setSeconds(seconds);
 
   const unixTimestamp = Math.floor(now / 1000);
   return unixTimestamp;
@@ -270,7 +270,22 @@ export function isWordIncluded(sentence = '', word = '') {
   return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
 }
 
-export function getMinCourseAssignDate() {
-  const date = new Date().setDate(new Date().getDate() + 1);
+export function getMinCourseAssignDate(durationInSec = null) {
+  let date = new Date().setDate(new Date().getDate() + 1);
+  console.log(date, 'sdsd');
+  if (!durationInSec) return date;
+  date = new Date(new Date().getTime() + durationInSec * 1000).setDate(new Date().getDate() + 1);
   return date;
+}
+
+export function isDatesSame(date1 = new Date(), date2 = new Date()) {
+  if (date1?.getDate() !== date2?.getDate()) return false;
+  if (date1?.getMonth() !== date2?.getMonth()) return false;
+  if (date1?.getFullYear() !== date2?.getFullYear()) return false;
+
+  return true;
+}
+
+export function getCurrentHost() {
+  return process.browser && window?.location?.host ? window.location.host : 'zicops.com';
 }

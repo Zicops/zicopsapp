@@ -8,16 +8,16 @@ import { AdminMenu, UserMenu } from './Logic/nav.helper';
 import { useHandleNav } from './Logic/useHandleNav';
 import styles from './nav.module.scss';
 
+import { userClient } from '@/api/UserMutations';
+import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
+import { sendNotification } from '@/helper/api.helper';
 import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
 import { useRecoilState } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import ToolTip from '../common/ToolTip';
-import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
-import { useLazyQuery } from '@apollo/client';
-import { userClient } from '@/api/UserMutations';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import UserDisplay from './UserDisplay';
-import { sendNotification } from '@/helper/api.helper';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -42,7 +42,7 @@ export default function Nav() {
     });
     setOrgData((prevValue) => ({
       ...prevValue,
-      logo_url: res?.data?.getOrganizations[0]?.logo_url
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
     }));
   };
   useEffect(() => {
@@ -97,14 +97,14 @@ export default function Nav() {
         <div className={styles.menu}>
           <ul>
             {(!isOnLearnerSide ? AdminMenu : UserMenu).map((val, key) => {
+              let isActive = router?.route?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
+              if (!isOnLearnerSide) {
+                const currentRoute = router?.route?.split('/')?.[2];
+                isActive = currentRoute?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
+              }
               return (
                 <Link href={val.link} key={key}>
-                  <li
-                    className={
-                      router.route.toLowerCase().includes(`${val.title.toLowerCase()}`)
-                        ? styles.active
-                        : ''
-                    }>
+                  <li className={isActive ? styles.active : ''}>
                     <span>{val.title}</span>
                   </li>
                 </Link>
@@ -130,9 +130,13 @@ export default function Nav() {
               className={`${styles.nav_search} ${searchQuery ? styles.nav_search_long : ''}`}
               placeholder="Search..."
               onInput={handleSearch}
-              value={searchQuery}
+              value={searchQuery || ''}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
+                  if (router?.pathname?.includes('search') && !searchQuery) {
+                    router.push(`/search-page`);
+                  }
+
                   searchQuery && router.push(`/search-page/${searchQuery}`);
                 }
               }}

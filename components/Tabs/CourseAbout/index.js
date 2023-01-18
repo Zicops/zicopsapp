@@ -6,15 +6,20 @@ import NextButton from '../common/NextButton';
 import useHandleTabs from '../Logic/useHandleTabs';
 import styles from '../courseTabs.module.scss';
 import LabeledTextarea from '../../common/FormComponents/LabeledTextarea';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { COURSE_STATUS } from '@/helper/constants.helper';
 
 export default function CourseAbout() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, handleChange, updateCourseMaster } = useHandleTabs(courseContextData);
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
+  const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
-  const isFreezed = fullCourse?.qa_required;
+  let isFreezed = fullCourse?.qa_required;
+  if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) isFreezed = true;
+  if (isPublishCourseEditable) isFreezed = false;
 
   return (
     <div>

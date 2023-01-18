@@ -43,6 +43,8 @@ export default function ExamScreenPage({
         )
       );
     });
+
+    return ()=> toggleFullScreen(document.body)
   }, []);
 
   function backToCourse() {
@@ -95,7 +97,7 @@ export default function ExamScreenPage({
             marginLeft: '40px'
           }}>
           <div
-            onClick={() => setIsFullScreen(toggleFullScreen(refFullscreen.current))}
+            onClick={() => setIsFullScreen(toggleFullScreen(document.body))}
             style={{ cursor: 'pointer' }}>
             {isFullScreen ? (
               <Image src="/images/svg/fullscreen_exit.svg" height={30} width={30} />

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { IsDataPresentAtom } from './popUp.helper';
 
-export default function useHandlePopUp(popUpState = []) {
+export default function useHandlePopUp(popUpState = [], onClose = () => {}) {
   const [popUpParentState = false, setPopUpParentState = function () {}] = popUpState;
   const [isOpen, setIsOpen] = useState(popUpParentState);
   const [confirmMsg, setConfirmMsg] = useState(null);
@@ -35,12 +35,14 @@ export default function useHandlePopUp(popUpState = []) {
 
       return null;
     });
+    if (isConfirmed) onClose();
   }, [confirmMsg]);
 
   function closePopUp() {
     if (!isPopUpDataPresent) {
       setIsOpen(false);
       setPopUpParentState((prev) => (typeof prev === 'boolean' ? false : null));
+      onClose();
       return;
     }
 

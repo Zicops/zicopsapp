@@ -1,3 +1,4 @@
+import { LIMITS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
@@ -17,9 +18,9 @@ export default function AddTopicContentForm({
   addNewTopicContent,
   isAddTopicContentReady,
   topicContent,
-  handleCancel = ()=>{}
+  handleCancel = () => {}
 }) {
-  const { fullCourse , updateCourseMaster } = useContext(courseContext);
+  const { fullCourse, updateCourseMaster } = useContext(courseContext);
   const { newTopicContent, newTopicVideo, setNewTopicVideo } = data;
   const { handleTopicContentInput, handleTopicVideoInput } = inputHandlers;
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -30,21 +31,15 @@ export default function AddTopicContentForm({
       ...newTopicContent,
       is_default: !topicContent?.length,
       type: topicContent?.[0]?.type || null,
-      language:null , 
+      language: null
     });
 
-    setNewTopicVideo({ ...newTopicVideo, file: null })
+    setNewTopicVideo({ ...newTopicVideo, file: null });
   }, []);
 
+  let selectedLanguages = topicContent?.map((content) => content?.language);
+  const lanuages = [...fullCourse?.language]?.filter((lang) => !selectedLanguages?.includes(lang));
 
-  
-  let selectedLanguages = topicContent?.map((content) => content?.language) ;
-  const lanuages = [...fullCourse?.language]?.filter((lang) => 
-     !selectedLanguages?.includes(lang)
-  );
-
-
-  
   const languageOptions = [];
   lanuages?.map((lang) => languageOptions.push({ value: lang, label: lang }));
 
@@ -103,9 +98,14 @@ export default function AddTopicContentForm({
             <div className={`w-35`}>
               <BrowseAndUpload
                 handleFileUpload={(e) => {
+                  const file = e.target.files?.[0];
+
+                  if (file?.size > LIMITS.courseVideoSize)
+                    return setToastMsg({ type: 'danger', message: 'File Size limit is 240 mb' });
+
                   if (newTopicContent?.type === types[3]) handleTopicVideoInput(e);
 
-                  setNewTopicVideo({ ...newTopicVideo, file: e.target.files[0] });
+                  setNewTopicVideo({ ...newTopicVideo, file: file });
                 }}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
@@ -164,12 +164,16 @@ export default function AddTopicContentForm({
       )}
 
       <div className="center-element-with-flex">
-      {!!topicContent?.length &&<Button
-          text="Cancel"
-          styleClass={`${styles.topicContentSmallBtn}`}
-          // isDisabled={!isAddTopicContentReady}
-          clickHandler={()=>{handleCancel();}}
-        />}
+        {!!topicContent?.length && (
+          <Button
+            text="Cancel"
+            styleClass={`${styles.topicContentSmallBtn}`}
+            // isDisabled={!isAddTopicContentReady}
+            clickHandler={() => {
+              handleCancel();
+            }}
+          />
+        )}
         <Button
           text="Add"
           styleClass={`${styles.topicContentSmallBtn} ${

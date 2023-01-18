@@ -1,0 +1,93 @@
+@import '../../../styles/base.scss';
+.heroContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 75vh;
+    background-image: url('/images/svg/exam-hero-background.svg');
+    background-size: cover;
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    .heroBody{
+        width: fit-content;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-left: -30vw;
+        .textConatiner{
+            display: flex;
+            gap: 40px;
+            h2 {
+                    font-weight: 500;
+                    font-size: 40px;
+                    line-height: 60px;
+                    background: linear-gradient(111.44deg, #6BCFCF 19.16%, #41A9EF 154.55%);
+                    background-clip: text;
+                    color: $white;
+                    span{
+                      color: $primary;
+                    }
+                }
+                .paperPlane{
+                    margin-top: -10%;
+                }
+        }
+            .buttonContainer{
+                display: flex;
+                    gap: 8px;
+                  
+                    button{
+                            padding: 16px 24px;
+                            background-color: transparent;
+                            border: 1px solid $primary;
+                            border-radius: 4px;
+                            font-size: 18px;
+                            font-weight: 500;
+                            color: $primary;
+                            cursor: pointer;
+                            &:hover{
+                                background: linear-gradient(111.44deg, #6BCFCF 19.16%, #41A9EF 154.55%);
+                                color: #15161C;
+                            }
+                        
+                    }
+                    .btnActive{
+                        background: linear-gradient(111.44deg, #6BCFCF 19.16%, #41A9EF 154.55%);
+                        color: #15161C;
+                    }
+            }
+    }
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 5px;
+    thead{
+        outline: 1px solid $secondary;
+        position: sticky;
+        position: -webkit-sticky;
+        top: 1px;
+        z-index: 80;
+    }
+    th {
+        font-size: 18px;
+        text-align: left;
+        padding: 16px;
+        color: #EAEAEA;
+        font-weight: 400;
+        background-color: #15161C;
+        cursor: initial;
+    }
+    tr{
+        border: 1px solid $secondary;
+        cursor: pointer;
+        &:nth-child(odd) {
+            background-color: #1a1b26;
+        }
+    }
+    td{
+        padding: 16px;
+        color: $darkThree;
+    }
+}

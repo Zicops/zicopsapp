@@ -12,7 +12,8 @@ export default function Bookmark({
   updateIsPlayingTo,
   playerState,
   bookmarkState,
-  freezeState = []
+  freezeState = [],
+  submitIsDisable
 }) {
   const videoData = useRecoilValue(VideoAtom);
 
@@ -84,6 +85,7 @@ export default function Bookmark({
 
             <button
               className={`${styles.bookmarksBtn}`}
+              disabled={submitIsDisable}
               type="submit"
               onClick={async () => {
                 const isSaved = await handleSave();

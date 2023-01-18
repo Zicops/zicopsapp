@@ -73,6 +73,7 @@ export default function CreateQuestionForm({ data, isEdit }) {
           return (
             <div className={styles.container}>
               <Accordion
+                hideTitleLine={true}
                 title={d.question.description}
                 tooltipTitleOpen={
                   ADMIN_EXAMS.myQuestionBanks.viewQuestionsDetails.questionMasterTab

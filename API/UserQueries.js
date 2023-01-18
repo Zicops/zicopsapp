@@ -118,6 +118,7 @@ export const GET_USER_COURSE_MAPS = gql`
         user_course_id
         user_id
         user_lsp_id
+        lsp_id
         course_id
         course_type
         added_by
@@ -171,6 +172,14 @@ export const GET_USER_COURSE_PROGRESS = gql`
       updated_by
       created_at
       updated_at
+    }
+  }
+`;
+
+export const GET_USER_COURSE_PROGRESS_ID = gql`
+  query getUserCourseProgressByMapId($userId: String!, $userCourseId: [ID!]) {
+    getUserCourseProgressByMapId(user_id: $userId, user_course_id: $userCourseId) {
+      user_cp_id
     }
   }
 `;
@@ -760,6 +769,14 @@ export const GET_LEARNINGSPACES_BY_ORGID = gql`
       updated_at
       created_by
       updated_by
+    }
+  }
+`;
+export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
+  query GetLearningSpacesByOrgId($org_id: String!) {
+    getLearningSpacesByOrgId(org_id: $org_id) {
+      lsp_id
+      is_default
     }
   }
 `;

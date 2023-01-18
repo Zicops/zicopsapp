@@ -347,6 +347,15 @@ export const GET_COURSE_TOPICS = gql`
   }
 `;
 
+export const GET_ALL_COURSE_TOPICS_ID = gql`
+  query getTopics($course_id: String) {
+    getTopics(course_id: $course_id) {
+      id
+      type
+    }
+  }
+`;
+
 export const GET_COURSE_TOPICS_CONTENT = gql`
   query getTopicContent($topic_id: String) {
     getTopicContent(topic_id: $topic_id) {
@@ -392,6 +401,19 @@ export const GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID = gql`
         language
       }
       is_default
+    }
+  }
+`;
+
+export const GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID = gql`
+  query getTopicContent($course_id: String) {
+    getTopicContentByCourseId(course_id: $course_id) {
+      id
+      language
+      topicId
+      courseId
+      duration
+      type
     }
   }
 `;
@@ -972,6 +994,20 @@ export const GET_QUESTION_MARKS_FROM_MAPPING_BY_SECTION = gql`
 export const GET_TOPIC_EXAMS = gql`
   query getTopicExams($topic_id: String) {
     getTopicExams(topic_id: $topic_id) {
+      id
+      topicId
+      examId
+      courseId
+      created_at
+      updated_at
+      language
+    }
+  }
+`;
+
+export const GET_TOPIC_EXAMS_BY_COURSE_ID = gql`
+  query getTopicExamsByCourseId($course_id: String) {
+    getTopicExamsByCourseId(course_id: $course_id) {
       id
       topicId
       examId

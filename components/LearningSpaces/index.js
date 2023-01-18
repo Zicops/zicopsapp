@@ -63,7 +63,6 @@ const LearningSpaces = () => {
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
     setUserLspIds(_userLspIds);
-
   };
 
   const LspDetails = async () => {
@@ -73,7 +72,7 @@ const LearningSpaces = () => {
       console.error(err);
     });
     const lsps = res?.data?.getLearningSpaceDetails?.filter((lspData) => !lspData?.is_default);
-    if(!lsps?.length) return;
+    if (!lsps?.length) return;
     setLspsDetails([...lsps]);
     const _orgArr = [];
     // res?.data?.getLearningSpaceDetails?.map((data) => {

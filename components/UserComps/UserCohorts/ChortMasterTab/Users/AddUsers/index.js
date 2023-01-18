@@ -9,7 +9,7 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import UserButton from '@/components/common/UserButton';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import useHandleCohortTab from '@/components/LearnerUserProfile/Logic/useHandleCohortTab';
-import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendEmail, sendNotification, sendNotificationWithLink } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -120,6 +120,7 @@ const AddUsers = ({
 
     // console.log(cohortUsers,'users')
 
+    let origin = window?.location?.origin || '';
     if (cohortUsers?.length) sendCohortData.size = cohortUsers?.length + userId?.length;
     let isError = false;
     const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
@@ -142,7 +143,8 @@ const AddUsers = ({
     const bodyData = {
       user_name: '',
       lsp_name:sessionStorage?.getItem('lsp_name'),
-      cohort_name: cohortData?.cohort_name
+      cohort_name: cohortData?.cohort_name,
+      link: `${origin}/my-profile?tabName=Cohort`
     };
     const sendEmailBody = {
       to: mails,
@@ -152,11 +154,21 @@ const AddUsers = ({
       template_id: EMAIL_TEMPLATE_IDS?.cohortAssign
     };
 
-    // await sendNotification(
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.cohortAssign,
+        body: notificationBody,
+        user_id: data
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+
+    //  await sendNotificationWithLink(
     //   {
     //     title: NOTIFICATION_TITLES?.cohortAssign,
     //     body: notificationBody,
-    //     user_id: data
+    //     user_id: data,
+    //     link: '/my-profile'
     //   },
     //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     // );

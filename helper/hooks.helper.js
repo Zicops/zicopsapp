@@ -236,10 +236,10 @@ export default function useUserCourseData() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  async function getUserCourseData(pageSize = 999999999) {
+  async function getUserCourseData(pageSize = 999999999, userId=null) {
     const { id } = getUserData();
     const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
-    let currentUserId = id;
+    let currentUserId = !!userId ? userId: id;
     if (!currentUserId) return;
     // return setToastMsg({
     //   type: 'danger',
@@ -265,8 +265,11 @@ export default function useUserCourseData() {
       (course) => course?.course_status?.toLowerCase() !== 'disabled'
     );
 
-    const currentLspCourses = _assignedCourses?.filter(
-      (courseMap) => courseMap?.user_lsp_id === user_lsp_id
+    const currentLspId = sessionStorage.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
+
+    const currentLspCourses = _assignedCourses?.filter((courseMap) =>
+      [currentLspId, zicopsLspId]?.includes(courseMap?.lsp_id)
     );
 
     const assignedCoursesToUser = currentLspCourses;
@@ -491,7 +494,7 @@ export default function useUserCourseData() {
     if (!currentUserId) return;
 
     const _assignedCourses = courseData;
-    
+
     let topicCourseMap = [];
 
     if (!_assignedCourses?.length) return [];
@@ -509,12 +512,14 @@ export default function useUserCourseData() {
       assessmentCourses = assessmentCourses.concat(_assignedCourses[i]);
       // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
       for (let j = 0; j < filteredTopics?.length; j++) {
+        if (!_assignedCourses[i]?.id?.length) continue;
         topicCourseMap.push({
           [`${filteredTopics[j]?.id}`]: {
             courseName: _assignedCourses[i]?.name,
             topicId: filteredTopics[j]?.id,
             courseId: _assignedCourses[i]?.id,
-            image: _assignedCourses[i]?.image
+            image: _assignedCourses[i]?.image,
+            topicDescription: filteredTopics[j]?.description
           }
         });
       }
@@ -536,7 +541,8 @@ export default function useUserCourseData() {
           examId: topicExams[0]?.examId,
           topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
           courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId,
-          image: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.image
+          image: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.image,
+          topicDescription: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicDescription
         }
       });
       exams = exams.concat(topicExams);
@@ -551,7 +557,6 @@ export default function useUserCourseData() {
     const examMetas = await getExamsMeta(examsIds);
 
     let scheduleExams = [];
-
 
     examMetas?.forEach((exam, index) => {
       if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
@@ -568,12 +573,14 @@ export default function useUserCourseData() {
       }
 
       const _scheduleExams = scheduleExams?.map((exam) => {
+        let end = !!parseInt(exam?.End)
+          ? exam?.End
+          : parseInt(exam?.Start) + parseInt(exam?.BufferTime) * 60;
         return {
           ...exam,
-          description: exam?.Description,
+          description: exam?.topicDescription,
           name: exam?.Name,
-          endTime:
-            exam?.End !== '0' ? exam?.End : parseInt(exam?.Start) + parseInt(exam?.BufferTime * 60),
+          endTime: end,
           scheduleDate: exam?.Start,
           dataType: 'exam'
         };
@@ -637,8 +644,14 @@ export default function useUserCourseData() {
     });
 
     const catAndSubCatRes = {
-      allCatMain: [...zicopsCatSubCatData?.allCatMain, ...currentCatSubCatData?.allCatMain],
-      allSubCatMain: [...zicopsCatSubCatData?.allSubCatMain, ...currentCatSubCatData?.allSubCatMain]
+      allCatMain: [
+        ...(zicopsCatSubCatData?.allCatMain || []),
+        ...(currentCatSubCatData?.allCatMain || [])
+      ],
+      allSubCatMain: [
+        ...(zicopsCatSubCatData?.allSubCatMain || []),
+        ...(currentCatSubCatData?.allSubCatMain || [])
+      ]
     };
 
     if (!resPref?.getUserPreferences?.length) return [];
@@ -776,9 +789,11 @@ export default function useUserCourseData() {
     );
 
     //removing duplicate values
-    const userIds = userLspMaps
-      ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
-      ?.map((user) => user?.user_id);
+    const users = userLspMaps?.filter(
+      (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
+    );
+
+    const userIds = users?.map((user) => user?.user_id);
 
     const resUserDetails = await loadQueryDataAsync(
       GET_USER_DETAIL,
@@ -916,7 +931,7 @@ export function useUpdateUserAboutData() {
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      lsp_id: userOrgData?.lsp_id,
+      lsp_id: userOrgData?.lsp_id || sessionStorage.getItem('lsp_id'),
       status: userData?.status
     };
 
@@ -1007,17 +1022,14 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
-      // console.log(user);
+      console.log(user);
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
-      if (
-        user?.lsp_status?.toLowerCase() === USER_STATUS?.activate?.toLowerCase() ||
-        user?.lsp_status === ''
-      ) {
+      if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {
         const userSendLspData = {
           id: user?.id,
           user_lsp_id: user?.user_lsp_id,
-          status: USER_STATUS?.disable
+          status: USER_MAP_STATUS?.disable
         };
         const isDisable = await updateUserLsp(userSendLspData);
         if (!isDisable) {
