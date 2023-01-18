@@ -62,5 +62,18 @@ export const badgeData =
         badgeCount:15,
         badgeText:'Courses'
     }
+export const cardHeaderData = {
+        image :'/images/svg/lan.svg',
+        text :'Site Map'
+    }
+export const availabilityCardData = {
+    language : 'Hindi',
+    Progress: 68
+}
+export const statisticsCardData = {
+    cardTitle : 'Most added/assigned',
+    cardImage: '/images/svg/trending_up.svg',
+    cardText :'Java Beginners for Enthusiasts'
+}
 
   
