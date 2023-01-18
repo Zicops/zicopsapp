@@ -35,7 +35,7 @@ const CourseBodyDiscussion = () => {
   const chapterData = useRecoilValue(ChapterAtom);
   const topicData = useRecoilValue(TopicAtom);
   const courseData = useRecoilValue(UserCourseDataAtom);
-  console.log('courseData', courseData);
+
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
@@ -44,15 +44,19 @@ const CourseBodyDiscussion = () => {
   const onShowHandler = () => {
     setShowInput(true);
   };
+
   const canclePostHanlder = () => {
     setShowInput(false);
   };
+
   const anonymousUserHandler = () => {
     setIsAnonymous(!isAnonymous);
   };
+
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
+
   const getReplies = async (discussionId) => {
     console.log('message?.DiscussionId', message?.DiscussionId, discussionId);
     const repliesArr = await loadQueryDataAsync(
@@ -67,6 +71,7 @@ const CourseBodyDiscussion = () => {
     console.log('repliesArr', repliesArr?.getCourseDiscussion);
     return repliesArr?.getCourseDiscussion;
   };
+
   const showRepliesHandler = async (msg) => {
     const replies = (await getReplies(msg?.DiscussionId)) || [];
     let _replies = [...replies];
@@ -98,6 +103,7 @@ const CourseBodyDiscussion = () => {
     if (!pinnedData?.length) return [...newArray];
     return [...pinnedData, ...newArray]
   };
+
   const sendMessageHandler = async () => {
     const ModuleData = moduleData?.filter((data) => data?.id === courseData?.activeModule?.id);
     const TopicData = topicData?.filter((data) => data?.id === courseData?.activeTopic?.id);
@@ -132,31 +138,22 @@ const CourseBodyDiscussion = () => {
     setShowInput(false);
   };
 
-  useEffect(async () => {
-    setLoading(true)
-    const messages = (await getCourseMessages()) || [];
-    if (!messages?.length) return;
-    console.log('messages', messages);
-    setMessageArr(messages);
-    setLoading(false)
-  }, []);
-  useEffect(async () => {
-    const messages = (await getCourseMessages()) || [];
-    setMessageArr(messages);
-  }, [replyArr]);
   const onMessageHandler = (e) => {
     setMessage(e);
   };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       sendMessageHandler();
     }
   };
+
   const options = [
     { label: 'All', value: 'All' },
     { label: 'Announcements', value: 'Announcements' },
     { label: 'Discussions', value: 'Discussions' }
   ];
+
   const handleTypeSelect = (e) => {
     const announcementData = messageArr?.filter((el) => {
       if (e.value === 'Announcements') {
@@ -168,7 +165,9 @@ const CourseBodyDiscussion = () => {
     setFilterData(announcementData);
     setSelectedType(e.value);
   };
+
   const typeValue = options.find((option) => option.value === selectedType);
+
   let filteredData = messageArr?.filter((el) => {
     if (inputText === '') {
       return el;
@@ -176,9 +175,7 @@ const CourseBodyDiscussion = () => {
       return userDetails?.first_name.toLowerCase().includes(inputText);
     }
   });
-  useEffect(() => {
-    setFilterData(filteredData);
-  }, [inputText, messageArr, replyArr]);
+
   const onSelfHandler = () => {
     console.log('messageArr', messageArr);
     const selfMessages = messageArr?.filter((el) => el?.UserId === userDetails?.id);
@@ -189,6 +186,7 @@ const CourseBodyDiscussion = () => {
     setShowSelf(true);
     setShowLearners(false);
   };
+
   const onLearnerHandler = () => {
     const othersMessages = messageArr?.filter((el) => el?.UserId !== userDetails?.id);
     setLearnerUser(othersMessages);
@@ -197,6 +195,25 @@ const CourseBodyDiscussion = () => {
     setShowLearners(true);
     setShowSelf(false);
   };
+
+   useEffect(() => {
+    setFilterData(filteredData);
+  }, [inputText, messageArr, replyArr]);
+  
+    useEffect(async () => {
+    setLoading(true)
+    const messages = (await getCourseMessages()) || [];
+    if (!messages?.length) return;
+    console.log('messages', messages);
+    setMessageArr(messages);
+    setLoading(false)
+  }, []);
+
+  useEffect(async () => {
+    const messages = (await getCourseMessages()) || [];
+    setMessageArr(messages);
+  }, [replyArr]);
+
   return (
     <div className={`${style.discussion_container}`}>
       <div className={`${style.discussion_header}`}>
