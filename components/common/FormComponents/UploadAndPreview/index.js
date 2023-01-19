@@ -44,7 +44,8 @@ const UploadAndPreview = ({
     setPop(true);
   }, []);
 
-  if (!imageUrl && (image !== null || preview !== '')) {
+  if (!imageUrl && !initialImage && (image !== null || preview !== '')) {
+    console.log(imageUrl, image, preview, initialImage, 'all val jieofjcae');
     setPreview('');
     setImage(null);
   }
