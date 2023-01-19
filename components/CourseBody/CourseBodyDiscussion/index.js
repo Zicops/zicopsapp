@@ -109,8 +109,7 @@ const CourseBodyDiscussion = () => {
     const TopicData = topicData?.filter((data) => data?.id === courseData?.activeTopic?.id);
     const ChapterData = chapterData?.filter((data) => data?.id === TopicData[0]?.chapterId);
     const time = courseData?.videoData?.timestamp;
-    // let timeInSeconds = (parseInt(time.split(":")[0]) * 60) + parseInt(time.split(":")[1]);
-    // console.log("timeInSeconds", timeInSeconds);
+    let timeInSeconds = (parseInt(time.split(":")[0]) * 60) + parseInt(time.split(":")[1]);
     const addMessage = await loadQueryDataAsync(
       ADD_COURSE_DISCUSSION,
       {
@@ -121,7 +120,7 @@ const CourseBodyDiscussion = () => {
         Module: ModuleData[0]?.name,
         Chapter: ChapterData[0]?.name,
         Topic: TopicData[0]?.name,
-        Time: time,
+        Time: timeInSeconds,
         Likes: [],
         Dislike: [],
         IsPinned: false,

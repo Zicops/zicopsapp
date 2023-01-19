@@ -124,9 +124,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
 
     // Update local state for likes
     const _messageArr = structuredClone(messageArr);
-    const _replyData = structuredClone(replyData);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
-    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
       _messageArr[index].Likes = messageLikes;
       _messageArr[index].Dislike = messageDisLikes;
@@ -134,7 +132,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       setIsLike(true);
       setIsDisLike(false);
       setFilterData([..._messageArr]);
-    } else if (index2 >= 0) {
+    } 
+    if (!replyData.length) return;
+    const _replyData = structuredClone(replyData);
+    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index2 >= 0) {
       _replyData[index2].Likes = messageLikes;
       _replyData[index2].Dislike = messageDisLikes;
       setIsLike(true);
@@ -158,15 +160,18 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     );
     console.log('updateMessage', updateMessage);
     const _messageArr = structuredClone(messageArr);
-    const _replyData = structuredClone(replyData);
+   
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
-    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
-    if (index >= 0) {
+     if (index >= 0) {
       _messageArr[index].Likes = removeLikes;
       setMessageArr(_messageArr);
       setIsLike(false);
       setFilterData([..._messageArr]);
-    } else if (index2 >= 0) {
+    }
+    if (!replyData.length) return;
+    const _replyData = structuredClone(replyData);
+    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index2 >= 0) {
       _replyData[index2].Likes = removeLikes;
       setIsLike(false);
       setReplyData([..._replyData]);
@@ -191,9 +196,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     );
     console.log('updateMessage', updateMessage);
     const _messageArr = structuredClone(messageArr);
-    const _replyData = structuredClone(replyData);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
-    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
       _messageArr[index].Likes = messageLikes;
       _messageArr[index].Dislike = messageDisLikes;
@@ -201,7 +204,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       setIsDisLike(true);
       setIsLike(false);
       setFilterData([..._messageArr]);
-    } else if (index2 >= 0) {
+    } 
+    if (!replyData.length) return;
+    const _replyData = structuredClone(replyData);
+    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index2 >= 0) {
       _replyData[index2].Likes = messageLikes;
       _replyData[index2].Dislike = messageDisLikes;
       setIsDisLike(true);
@@ -227,15 +234,18 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     console.log('updateMessage', updateMessage);
 
     const _messageArr = structuredClone(messageArr);
-    const _replyData = structuredClone(replyData);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
-    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
       _messageArr[index].Dislike = removeDisLikes;
       setMessageArr(_messageArr);
       setIsDisLike(false);
       setFilterData([..._messageArr]);
-    } else if (index2 >= 0) {
+    } 
+    
+    if (!replyData.length) return;
+    const _replyData = structuredClone(replyData);
+    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index2 >= 0) {
       _replyData[index2].Dislike = removeDisLikes;
       setIsDisLike(false);
       setReplyData([..._replyData]);
