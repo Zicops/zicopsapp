@@ -108,6 +108,9 @@ const CourseBodyDiscussion = () => {
     const ModuleData = moduleData?.filter((data) => data?.id === courseData?.activeModule?.id);
     const TopicData = topicData?.filter((data) => data?.id === courseData?.activeTopic?.id);
     const ChapterData = chapterData?.filter((data) => data?.id === TopicData[0]?.chapterId);
+    const time = courseData?.videoData?.timestamp;
+    // let timeInSeconds = (parseInt(time.split(":")[0]) * 60) + parseInt(time.split(":")[1]);
+    // console.log("timeInSeconds", timeInSeconds);
     const addMessage = await loadQueryDataAsync(
       ADD_COURSE_DISCUSSION,
       {
@@ -118,7 +121,7 @@ const CourseBodyDiscussion = () => {
         Module: ModuleData[0]?.name,
         Chapter: ChapterData[0]?.name,
         Topic: TopicData[0]?.name,
-        Time: courseData?.videoData?.timestamp,
+        Time: time,
         Likes: [],
         Dislike: [],
         IsPinned: false,
@@ -177,9 +180,7 @@ const CourseBodyDiscussion = () => {
   });
 
   const onSelfHandler = () => {
-    console.log('messageArr', messageArr);
     const selfMessages = messageArr?.filter((el) => el?.UserId === userDetails?.id);
-    console.log(userDetails?.id);
     console.log('selfMessages', selfMessages);
     setFilterData(selfMessages);
     setCheckClick(true);
@@ -256,11 +257,11 @@ const CourseBodyDiscussion = () => {
             )}
             <span>All</span>
           </div>
-          {showLearners && (
+          {/* {showLearners && (
             <div className={`${style.all_users}`}>
               <LearnerUser data={learnerUser} />
             </div>
-          )}
+          )} */}
         </div>
         <LabeledDropdown
           dropdownOptions={{

@@ -1947,7 +1947,7 @@ export const ADD_COURSE_DISCUSSION = gql`
     $Module: String
     $Chapter: String
     $Topic: String
-    $Time: Int
+    $Time: String
     $Likes: [String]!
     $Dislike: [String]!
     $IsAnonymous: Boolean
