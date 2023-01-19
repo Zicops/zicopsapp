@@ -109,7 +109,8 @@ const CourseBodyDiscussion = () => {
     const TopicData = topicData?.filter((data) => data?.id === courseData?.activeTopic?.id);
     const ChapterData = chapterData?.filter((data) => data?.id === TopicData[0]?.chapterId);
     const time = courseData?.videoData?.timestamp;
-    let timeInSeconds = (parseInt(time.split(":")[0]) * 60) + parseInt(time.split(":")[1]);
+    let timeInSeconds = (parseInt(time?.split(":")[0]) * 60) + parseInt(time?.split(":")[1]);
+    if (!moduleData[0]?.courseId) return;
     const addMessage = await loadQueryDataAsync(
       ADD_COURSE_DISCUSSION,
       {
@@ -134,8 +135,9 @@ const CourseBodyDiscussion = () => {
     );
     console.log('addMessage', addMessage?.addCourseDiscussion);
     const messages = (await getCourseMessages()) || [];
-    console.log('messages', messages);
+    
     setMessageArr(messages);
+    console.log('messageArr', messageArr);
     setMessage('');
     setShowInput(false);
   };
@@ -203,10 +205,14 @@ const CourseBodyDiscussion = () => {
     useEffect(async () => {
     setLoading(true)
     const messages = (await getCourseMessages()) || [];
-    if (!messages?.length) return;
+      if (!messages?.length) {
+        setLoading(false);
+        return;
+    } 
     console.log('messages', messages);
-    setMessageArr(messages);
-    setLoading(false)
+      setMessageArr(messages);
+       console.log('messageArr', messageArr);
+    setLoading(false);
   }, []);
 
   useEffect(async () => {
@@ -305,40 +311,46 @@ const CourseBodyDiscussion = () => {
         </div>
       )}
       {loading ? <Loader customStyles={{ height: '100%', backgroundColor: 'transparent' }} /> :
-      <>
-      {fliterData?.map((data) => {
-        return (
-          <>
-            <div className={`${data?.IsPinned ? style.massage_pinned : style.massage_block}`}>
-              <MessageBlock message={data} setFilterData={setFilterData} />
-              <div
-                className={`${style.more_replies}`}
-                onClick={() => {
-                  if (data?.DiscussionId === showReplies) {
-                    setReplyData([]);
-                    setShowReplies(false);
-                    return;
-                  }
-                  showRepliesHandler(data);
-                }}>
-                <div className={`${style.more_replies_image}`}>
-                  <img src="/images/unfold_more.png" alt="" />
-                </div>
-                <p>{data?.ReplyCount ? data?.ReplyCount + ' ' + 'Replies' : 'No Replies'}</p>
-              </div>
-            </div>
-            {data?.DiscussionId === showReplies && !!replyData?.length && (
-              <>
-                {replyData?.map((repdata) => {
-                  return <MessageBlock message={repdata} isReply={true} />;
-                })}
-              </>
-            )}
+        <>
+          {messageArr?.length ?
+            <>
+              {fliterData?.map((data) => {
+                return (
+                  <>
+                    <div className={`${data?.IsPinned ? style.massage_pinned : style.massage_block}`}>
+                      <MessageBlock message={data} setFilterData={setFilterData} />
+                      <div
+                        className={`${style.more_replies}`}
+                        onClick={() => {
+                          if (data?.DiscussionId === showReplies) {
+                            setReplyData([]);
+                            setShowReplies(false);
+                            return;
+                          }
+                          showRepliesHandler(data);
+                        }}>
+                        <div className={`${style.more_replies_image}`}>
+                          <img src="/images/unfold_more.png" alt="" />
+                        </div>
+                        <p>{data?.ReplyCount ? data?.ReplyCount + ' ' + 'Replies' : 'No Replies'}</p>
+                      </div>
+                    </div>
+                    {data?.DiscussionId === showReplies && !!replyData?.length && (
+                      <>
+                        {replyData?.map((repdata) => {
+                          return <MessageBlock message={repdata} isReply={true} />;
+                        })}
+                      </>
+                    )}
 
-            <div className={`${style.hr}`}></div>
-          </>
-        );
-      })}
+                    <div className={`${style.hr}`}></div>
+                  </>
+                );
+              })}
+            </>
+            :
+            <p className={`${style.no_message}`}>No Discussion Found</p>
+          }
       </>
       }
     </div>
