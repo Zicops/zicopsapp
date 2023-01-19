@@ -82,3 +82,30 @@
         justify-content: space-between;
     }
     }
+    // Switch Button
+    .switchContainer {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      outline: 0;
+      border: 0;
+      cursor: pointer;
+    }
+    
+    .text {
+      color: $white;
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: capitalize;
+      margin: auto;
+      // margin-bottom: 15px;
+      margin-left: 8px;
+      z-index: 100;
+    }
+
+    // Dropdown
+.dropdown{
+  background: #1A1B26;
+  border: 1px solid #30323F;
+  border-radius: 4px;
+}

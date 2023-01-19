@@ -16,17 +16,7 @@ export const data = [
         id:'3',
         levelCount:'10',
         difficultyLevel:'Proficient'
-    },
-    // {
-    //     id:'4',
-    //     levelCount:'160',
-    //     difficultyLevel:'Proficient'
-    // },
-    // {
-    //     id:'5',
-    //     levelCount:'120',
-    //     difficultyLevel:'Competent'
-    // }
+    }
 ] 
 export const cardData = [
     {   
@@ -75,5 +65,72 @@ export const statisticsCardData = {
     cardImage: '/images/svg/trending_up.svg',
     cardText :'Java Beginners for Enthusiasts'
 }
+export const CategoryConsumptionData = [
+    {
+      id: 1,
+      skill: 'UI/UX Design',
+      complete: 5,
+      zicopsCourse:3,
+      days: '01',
+      time1: 30
+    },
+    {
+      id: 2,
+      skill: 'Project Management',
+      complete: 8,
+      zicopsCourse:3,
+      days: '03',
+      time1: 60
+    },
+    {
+      id: 3,
+      skill: 'JAVA fundamentls',
+      complete: 6,
+      zicopsCourse:3,
+      days: '06',
+      time1: 50
+    },
+    {
+      id: 4,
+      skill: 'Product Design',
+      complete: 2,
+      zicopsCourse:3,
+      days: '09',
+      time1:75
+    },
+    {
+      id: 5,
+      skill: 'Bussiness Management',
+      complete: 5,
+      zicopsCourse:3,
+      days: '12',
+      time1: 20
+    },
+    {
+      id: 6,
+      skill: 'Finance',
+      complete: 7,
+      zicopsCourse:3,
+      days: '15',
+      time1: 45
+    },
+    {
+      id: 7,
+      skill: 'UI Developer',
+      complete: 8,
+      zicopsCourse:3,
+      days: '18',
+      time1: 50
+    },
+    {
+      id: 8,
+      skill: 'Animation',
+      complete: 3.5,
+      zicopsCourse:3,
+      days: '21',
+      time1: 60
+    }
+  ];
+  
 
   
