@@ -236,10 +236,10 @@ export default function useUserCourseData() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  async function getUserCourseData(pageSize = 999999999, userId=null) {
+  async function getUserCourseData(pageSize = 999999999, userId = null) {
     const { id } = getUserData();
     const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
-    let currentUserId = !!userId ? userId: id;
+    let currentUserId = !!userId ? userId : id;
     if (!currentUserId) return;
     // return setToastMsg({
     //   type: 'danger',
@@ -275,6 +275,7 @@ export default function useUserCourseData() {
     const assignedCoursesToUser = currentLspCourses;
 
     const userCourseId = [];
+    const courseIdArr = [];
 
     let totalSelfCourseCount = 0;
 
@@ -284,6 +285,7 @@ export default function useUserCourseData() {
       // const mapId = courseMap?.user_course_id;
       // const course_id = courseMap?.course_id;
       userCourseId.push(courseMap?.user_course_id);
+      courseIdArr.push(courseMap?.course_id);
     }
 
     // if (course_id === '') continue;
@@ -294,11 +296,18 @@ export default function useUserCourseData() {
       userClient
     );
 
-    // console.log(courseProgressRes, 'sds');
+    // load all courses details
+    const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
+      course_id: courseIdArr
+    });
+    if (courseRes?.error) {
+      setToastMsg({ type: 'danger', message: 'Course Load Error' });
+      return;
+    }
+    const allCourseDetails = courseRes?.getCourse;
 
     if (courseProgressRes?.error) {
       setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-      // continue;
       return;
     }
 
@@ -309,18 +318,19 @@ export default function useUserCourseData() {
       const data = courseProgressRes?.getUserCourseProgressByMapId?.filter(
         (cpByMapId) => cpByMapId?.user_course_id === courseMap?.user_course_id
       );
-      coursesMeta.push({ ...courseMap, courseProgres: [...data] });
+      const courseDetails = allCourseDetails?.find((c) => c?.id === courseMap?.course_id) || {};
+      coursesMeta.push({ ...courseMap, ...courseDetails, courseProgres: [...data] });
     });
-
-    // console.log(coursesMeta,'meta')
 
     let userCourseArray = [];
 
     for (let i = 0; i < coursesMeta?.length; i++) {
-      // if (!coursesMeta[i]?.courseProgres?.length) continue;
+      const _courseData = coursesMeta[i];
+
       let topicsCompleted = 0;
       let topicsStarted = 0;
-      let userProgressArr = coursesMeta[i]?.courseProgres;
+      let userProgressArr = _courseData?.courseProgres;
+      // loop through each topic and update the variable for getting the course progress status
       userProgressArr?.map((topic) => {
         if (topic?.status !== COURSE_TOPIC_STATUS.assign) ++topicsStarted;
         if (topic?.status === COURSE_TOPIC_STATUS.completed) ++topicsCompleted;
@@ -330,36 +340,24 @@ export default function useUserCourseData() {
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-      // console.log(userProgressArr, userProgressArr?.length, topicsStarted);
-
-      const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
-        course_id: coursesMeta[i]?.course_id
-      });
-      if (courseRes?.error) {
-        setToastMsg({ type: 'danger', message: 'Course Load Error' });
-        continue;
-      }
-
-      let added_by = parseJson(coursesMeta[i]?.added_by)?.role || coursesMeta[i]?.added_by;
+      let added_by = parseJson(_courseData?.added_by)?.role || _courseData?.added_by;
 
       if (added_by?.toLowerCase() === 'self') ++totalSelfCourseCount;
 
-      // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      const courseDuraton = +courseRes?.getCourse?.[0]?.duration;
+      const courseDuraton = +_courseData?.duration;
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
       const completedPercent = userProgressArr?.length
         ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
         : 0;
 
-      if (courseRes?.getCourse?.[0]?.status !== COURSE_STATUS.publish) continue;
+      if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
       userCourseArray.push({
-        ...courseRes?.getCourse?.[0],
-        ...coursesMeta[i],
+        ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
-        addedOn: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
-        created_at: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
-        expected_completion: moment.unix(coursesMeta[i]?.end_date).format('D MMM YYYY'),
+        addedOn: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
+        created_at: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
+        expected_completion: moment.unix(_courseData?.end_date).format('D MMM YYYY'),
         timeLeft: courseDuraton - (courseDuraton * (+completedPercent || 0)) / 100,
         added_by: added_by,
         isCourseCompleted:
@@ -367,7 +365,7 @@ export default function useUserCourseData() {
         isCourseStarted: topicsStarted > 0,
         completedPercentage: completedPercent,
         topicsStartedPercentage: progressPercent,
-        scheduleDate: coursesMeta[i]?.end_date,
+        scheduleDate: _courseData?.end_date,
         dataType: 'course'
         // remove this value or below value
         // completedPercentage: progressPercent,

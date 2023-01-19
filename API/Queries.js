@@ -204,8 +204,8 @@ export const GET_MY_COURSES = gql`
 `;
 
 export const GET_COURSE = gql`
-  query GetCourse($course_id: String) {
-    getCourse(course_id: [$course_id]) {
+  query GetCourse($course_id: [String]) {
+    getCourse(course_id: $course_id) {
       id
       name
       lspId

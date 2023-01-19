@@ -37,7 +37,7 @@ export default function EditCoursePage() {
     if (!editCourseId) return;
     if (shallowRoute) return;
 
-    loadCourseData({ variables: { course_id: editCourseId }, fetchPolicy: 'no-cache' }).then(
+    loadCourseData({ variables: { course_id: [editCourseId] }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
         if (errorCourseData) return setToastMsg({ type: 'danger', message: 'course load error' });
 
