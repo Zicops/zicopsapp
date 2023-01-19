@@ -2,6 +2,8 @@ export const OPTION_LABEL = ['A', 'B', 'C', 'D'];
 export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const USER_STATUS = { invite: 'Invited', activate: 'Active', disable: 'Disabled' };
 export const USER_MAP_STATUS = { invite: '', activate: 'active', disable: 'disable' };
+
+// userCourseMaps status (overall user course progress)
 export const COURSE_MAP_STATUS = {
   assign: 'open',
   started: 'started',

@@ -13,7 +13,7 @@ import {
   sendNotificationWithLink
 } from '@/helper/api.helper';
 import { getCurrentEpochTime, getNotificationMsg } from '@/helper/common.helper';
-import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import { COURSE_MAP_STATUS, EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -59,7 +59,7 @@ export default function assignCourseToUser() {
       addedBy: JSON.stringify({ userId: id, role: 'cohort' }),
       courseType: course_data?.type,
       isMandatory: course_data?.isMandatory,
-      courseStatus: 'open',
+      courseStatus: COURSE_MAP_STATUS.assign,
       endDate: getUnixFromDate(course_data?.endDate)?.toString(),
       lspId: course_data?.lspId
     };
@@ -228,7 +228,7 @@ export default function assignCourseToUser() {
         addedBy: _addedBy,
         courseType: checkCourse[0]?.course_type,
         isMandatory: checkCourse[0]?.is_mandatory,
-        courseStatus: 'open',
+        courseStatus: COURSE_MAP_STATUS.assign,
         endDate: checkCourse[0]?.end_date,
         lspId:courseData?.lspId
       };

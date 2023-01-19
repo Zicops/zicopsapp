@@ -3,9 +3,10 @@ import { ADD_USER_COHORT, ADD_USER_COURSE, UPDATE_COHORT_MAIN, UPDATE_USER_COHOR
 import { GET_USER_COURSE_MAPS, GET_USER_LATEST_COHORTS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATION_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
+import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { CohortMasterData, SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -89,7 +90,7 @@ export default function useHandleCohortTab() {
             userLspId:userLspId,
             courseId:addNewCourses[i]?.CourseId,
             courseType:addNewCourses[i]?.CourseType,
-            courseStatus:'not-started',
+            courseStatus: COURSE_MAP_STATUS.assign,
             addedBy:JSON.stringify({user_id:id , role:'Cohort'}),
             isMandatory:addNewCourses[i]?.isMandatory,
             endDate:endDate
@@ -128,7 +129,7 @@ export default function useHandleCohortTab() {
             addedBy: JSON.stringify({ userId: id, role: 'cohort' }),
             courseType: oldCourses[i]?.course_type,
             isMandatory: oldCourses[i]?.is_mandatory,
-            courseStatus: 'open',
+            courseStatus: COURSE_MAP_STATUS.assign,
             endDate: oldCourses[i]?.end_date
           }
 

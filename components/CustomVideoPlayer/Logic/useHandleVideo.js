@@ -5,7 +5,7 @@ import {
   userClient
 } from '@/api/UserMutations';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { SYNC_DATA_IN_SECONDS, THUMBNAIL_GAP } from '@/helper/constants.helper';
+import { COURSE_MAP_STATUS, SYNC_DATA_IN_SECONDS, THUMBNAIL_GAP } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -125,7 +125,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     if (userCourseData?.userCourseMapping?.course_status === 'open') {
       const sendUserCourseData = {
-        courseStatus: 'started',
+        courseStatus: COURSE_MAP_STATUS.started,
         userCourseId: userCourseMapData?.userCourseMapping?.user_course_id,
         userId: userCourseMapData?.userCourseMapping?.user_id,
         userLspId: userCourseMapData?.userCourseMapping?.user_lsp_id,
