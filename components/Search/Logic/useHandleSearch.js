@@ -172,7 +172,7 @@ export default function useHandleSearch() {
 
           return true;
         })
-        ?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
+        // ?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
     );
 
     if (searchQuery) {

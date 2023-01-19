@@ -220,6 +220,7 @@ export default function CourseHero({ isPreview = false }) {
         courseType={fullCourse?.type}
         lspId={fullCourse?.lspId}
         suggestedCompletionDays={fullCourse?.expected_completion}
+        courseName={fullCourse?.name}
       />
 
       {isUnAssignPopUpOpen && (

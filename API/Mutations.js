@@ -2022,3 +2022,10 @@ mutation updateCourseDiscussion(
     Status
   }
 }`
+
+export const DELETE_SUBTITLE = gql`
+  mutation deleteTopicContentSubtitle($courseId: String!, $topicId: String!, $fileName: String!) {
+    deleteTopicContentSubtitle(courseId: $courseId, topicId: $topicId, fileName: $fileName)
+  }
+`;
+
