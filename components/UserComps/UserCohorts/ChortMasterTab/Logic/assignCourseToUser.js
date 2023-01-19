@@ -177,11 +177,14 @@ export default function assignCourseToUser() {
 
       const endDate = getUnixFromDate(course_data?.endDate) * 1000;
 
+      const origin = window?.location?.origin || '';
+
+
       const bodyData = {
         lsp_name: sessionStorage?.getItem('lsp_name'),
         course_name: course_data?.name,
         end_date: moment(endDate).format('D MMM YYYY'),
-        link: `/course/${course_data?.id}`
+        link: `${origin}/course/${course_data?.id}`
       };
       const sendEmailBody = {
         to: cohortUserEmail,
