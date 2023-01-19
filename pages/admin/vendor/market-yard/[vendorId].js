@@ -1,19 +1,30 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
-import { myVendors } from '@/components/VendorComps/Logic/vendorComps.helper.js';
+import { myVendors, coursesVendor } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
 import { useState } from 'react';
+import AboutVendor from '@/components/VendorComps/AboutVendor';
+import { useRouter } from 'next/router';
+import CoursesVendor from '@/components/VendorComps/CoursesVendor';
+import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 
 export default function VendorInfo() {
+  const router = useRouter();
+  const vendorId = router.query.vendorId || '0'; //Change the 1 to null
+
   const tabData = [
     {
-      name: 'Course Master',
-      component: <div></div>
+      name: 'About',
+      component: <AboutVendor data={myVendors[vendorId]} />
     },
     {
-      name: 'Details',
-      component: <div></div>
+      name: 'Courses',
+      component: <CoursesVendor coursesData={coursesVendor[vendorId]} />
+    },
+    {
+      name: 'Profile',
+      component: <ProfileVendor />
     }
   ];
 
@@ -28,32 +39,10 @@ export default function VendorInfo() {
         tabData={tabData}
         tab={tab}
         setTab={setTab}
-        // footerObj={{
-        //   isActive:
-        //     fullCourse?.name &&
-        //     fullCourse?.category &&
-        //     fullCourse?.sub_category &&
-        //     fullCourse?.owner &&
-        //     fullCourse?.language?.length,
-        //   status: isCourseUploading ? (
-        //     isCourseUploading
-        //   ) : (
-        //     <>
-        //       {courseStatus || STATUS.display[0]}{' '}
-        //       <span style={{ fontSize: '12px', fontWeight: '400' }}>
-        //         {isCourseUploading ? '' : displayTime}
-        //       </span>
-        //     </>
-        //   ),
-        //   submitDisplay: getSubmitBtnText(),
-        //   disableSubmit:
-        //     !!isCourseUploading ||
-        //     [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(courseStatus),
-        //   handleSubmit: () =>
-        //     saveCourseData(false, null, true, courseStatus === COURSE_STATUS.freeze),
-        //   cancelDisplay: 'Cancel',
-        //   handleCancel: () => router.push('/admin/course/my-courses')
-        // }}
+        footerObj={{
+          showFooter: false
+        }}
+        customStyles={{ height: '100%' }}
       />
     </>
   );

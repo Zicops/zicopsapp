@@ -136,7 +136,6 @@ export const administrationSideBarData = {
     // },
   ]
 };
-<<<<<<< HEAD
 
 export const vendorSideBarData = {
   image: '/images/UserManagement.png',
@@ -156,7 +155,7 @@ export const vendorSideBarData = {
     }
   ]
 };
-=======
+
 export const analyticsSideBarData = {
   image: '/images/Analytics.png',
   heading: 'Analytics',
@@ -194,4 +193,3 @@ export const analyticsSideBarData = {
     // },
   ]
 };
->>>>>>> c410bce5dcc413b8cc6d1ee64b31cd923453e24f

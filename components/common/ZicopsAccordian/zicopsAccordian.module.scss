@@ -1,0 +1,24 @@
+@import '@/styles/base.scss';
+
+.zicopsAccordianContainer {
+  width: 100%;
+  background-color: $darkOne;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #142c2c;
+  box-shadow: 0 0 20px 0 rgba($darkOne, 0.5);
+
+  .title {
+    margin-bottom: 10px;
+    color: $white;
+    font-weight: 400;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+      height: 15px;
+    }
+  }
+}
