@@ -93,13 +93,15 @@ export async function getCohortCourses(cohortId = null) {
   const coursesArr = cohortCoursesRes?.getCohortCourseMaps;
   if (!cohortCoursesRes?.getCohortCourseMaps?.length) return { allCourses: [...courseData] };
 
+  const allCourseIdArr = coursesArr.map((c) => c?.CourseId);
+  const data = await loadQueryDataAsync(GET_COURSE, { course_id: allCourseIdArr });
+  if (!data?.getCourse) return { error: 'Error while loading courses!' };
+
   const cohortCourses = [];
   for (let i = 0; i < coursesArr?.length; i++) {
-    coursesArr[i];
-    const data = await loadQueryDataAsync(GET_COURSE, { course_id: coursesArr[i]?.CourseId });
-    if (!data?.getCourse) return { error: 'Error while loading courses!' };
+    const _courseData = data?.getCourse?.find((c) => c.id === coursesArr[i]?.CourseId) || {};
     cohortCourses.push({
-      ...data?.getCourse,
+      ..._courseData,
       IsActive: coursesArr[i]?.IsActive,
       cohortCourseId: coursesArr[i]?.id
     });
