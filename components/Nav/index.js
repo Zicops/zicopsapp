@@ -18,6 +18,7 @@ import { useRecoilState } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import ToolTip from '../common/ToolTip';
 import UserDisplay from './UserDisplay';
+import useUserCourseData from '@/helper/hooks.helper';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -27,24 +28,25 @@ export default function Nav() {
   const notificationBarRef = useRef(null);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
   const handleClickInside = () => setShowNotification(!showNotification);
+  const {OrgDetails} = useUserCourseData();
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
 
-  const OrgDetails = async () => {
-    const orgId = sessionStorage.getItem('org_id');
-    if (!orgId) return;
-    const res = await getOrgDetails({
-      variables: { org_ids: orgId }
-    }).catch((err) => {
-      console.error(err);
-    });
-    setOrgData((prevValue) => ({
-      ...prevValue,
-      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
-    }));
-  };
+  // const OrgDetails = async () => {
+  //   const orgId = sessionStorage.getItem('org_id');
+  //   if (!orgId) return;
+  //   const res = await getOrgDetails({
+  //     variables: { org_ids: orgId }
+  //   }).catch((err) => {
+  //     console.error(err);
+  //   });
+  //   setOrgData((prevValue) => ({
+  //     ...prevValue,
+  //     logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+  //   }));
+  // };
   useEffect(() => {
     if (orgData?.logo_url?.length) return;
     OrgDetails();
