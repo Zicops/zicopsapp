@@ -170,7 +170,8 @@ export default function Nav() {
                 onClick={handleClickInside}
                 data-count={notifications?.filter((n) => !n?.isRead)?.length}
                 className={`${styles.notificationIcon} ${
-                  !!notifications?.length && styles.activeNotificationIcon
+                  !!notifications?.filter((n) => !n?.isRead)?.length &&
+                  styles.activeNotificationIcon
                 }`}>
                 {showNotification ? (
                   <svg
