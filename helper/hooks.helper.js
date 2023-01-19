@@ -344,7 +344,7 @@ export default function useUserCourseData() {
 
       if (added_by?.toLowerCase() === 'self') ++totalSelfCourseCount;
 
-      const courseDuraton = +courseRes?.getCourse?.duration;
+      const courseDuraton = +_courseData?.duration;
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
       const completedPercent = userProgressArr?.length
         ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
