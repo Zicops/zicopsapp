@@ -17,6 +17,7 @@ import {
 import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
 import { CUSTOM_ERROR_MESSAGE, NOTIFICATION_MSG_LINKS, NOTIFICATION_TITLES, USER_STATUS } from '@/helper/constants.helper';
 import { parseJson } from '@/helper/utils.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   getUserObject,
@@ -32,7 +33,7 @@ import {
 } from 'libphonenumber-js';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleAddUserDetails() {
   const router = useRouter();
@@ -80,6 +81,7 @@ export default function useHandleAddUserDetails() {
   const [isAccountSetupReady, setIsAccountSetupReady] = useState(false);
   const [isSubmitDisable, setSubmitDisable] = useState(false);
   const [phCountryCode, setPhCountryCode] = useState('IN');
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   // setting up local states
   useEffect(() => {
@@ -380,6 +382,7 @@ export default function useHandleAddUserDetails() {
   }
 
   async function notficationOnFirstLogin(){
+
     await sendNotification(
       {
         title: NOTIFICATION_TITLES?.lspWelcome,
