@@ -1,0 +1,66 @@
+@import '@/styles/base.scss';
+
+.marketYardFrameContainer {
+  height: 50vh;
+  background: linear-gradient(
+    265.52deg,
+    #6bcfcf -12.05%,
+    #52b7bd -1.4%,
+    #369caa 72.51%,
+    #369caa 105.51%
+  );
+  position: relative;
+
+  .frameImage {
+    width: 80%;
+    position: absolute;
+    margin-top: 5%;
+  }
+
+  .frameText {
+    float: right;
+    margin-right: 20px;
+    width: 50%;
+
+    .vendorDropDownContainer {
+      display: flex;
+      gap: 10px;
+
+      .vendorDropDown {
+        width: 200px;
+        margin-top: 4%;
+      }
+
+      .vendorSearch {
+        width: 200px;
+        height: 40px;
+        margin-top: 4%;
+        background-color: transparent;
+        border: 2px solid $white;
+        padding-left: 35px;
+        background-image: url('/images/search3.png');
+        background-repeat: no-repeat;
+        background-position: 5% 50%;
+        outline: none;
+      }
+
+      ::placeholder {
+        color: white;
+      }
+    }
+
+    .vendorTextContainer {
+      color: $white;
+      margin-top: 10%;
+
+      .header {
+        font-weight: 700;
+        font-size: 22px;
+      }
+
+      .body {
+        color: $darkOne;
+      }
+    }
+  }
+}
