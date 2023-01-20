@@ -394,7 +394,7 @@ export default function useHandleAddUserDetails() {
     await sendNotification(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
-        body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses,
+        body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
         user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }

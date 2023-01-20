@@ -13,12 +13,14 @@ import {
   loadAndCacheDataAsync,
   loadQueryDataAsync,
   sendEmail,
+  sendNotification,
   sendNotificationWithLink
 } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import {
   COURSE_MAP_STATUS,
   EMAIL_TEMPLATE_IDS,
+  NOTIFICATION_MSG_LINKS,
   NOTIFICATION_TITLES
 } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
@@ -44,7 +46,8 @@ export default function useHandleCourseAssign({
   userLspId = null,
   userName = null,
   userEmail = null,
-  courseName = null
+  courseName = null,
+  userIsVerified = true
 }) {
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
@@ -60,7 +63,7 @@ export default function useHandleCourseAssign({
 
   const endDate = getMinCourseAssignDate(suggestedCompletionDays);
 
-  const currentUserId = userData?.id;
+  const currentUserId = userData?.id; 
   const userIdForCourseAssign = userId || currentUserId;
 
   const [isSaveDisabled, setisSaveDisabled] = useState(false);
@@ -170,7 +173,20 @@ export default function useHandleCourseAssign({
         courseAssignData?.endDate?.toDateString()
       }` });
 
-    if (assignBy !== 'self') sendCourseAssignNotificationAndEmail();
+    if (assignBy !== 'self') {
+      sendCourseAssignNotificationAndEmail();
+    if(!!userLspId && !userIsVerified){
+         await sendNotification(
+          {
+            title: NOTIFICATION_TITLES?.signIn?.course,
+            body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
+            user_id: [userIdForCourseAssign]
+          },
+          { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+         )
+    }
+    }
+    
   }
 
   async function sendCourseAssignNotificationAndEmail() {
