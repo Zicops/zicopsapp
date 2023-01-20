@@ -14,8 +14,8 @@ import {
   GET_USER_ORGANIZATIONS,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { CUSTOM_ERROR_MESSAGE, USER_STATUS } from '@/helper/constants.helper';
+import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { CUSTOM_ERROR_MESSAGE, NOTIFICATION_MSG_LINKS, NOTIFICATION_TITLES, USER_STATUS } from '@/helper/constants.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
@@ -379,6 +379,27 @@ export default function useHandleAddUserDetails() {
     // return isError;
   }
 
+  async function notficationOnFirstLogin(){
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.lspWelcome,
+        body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
+        user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    await sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.courseUnssigned,
+        body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses,
+        user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    return true;
+    
+  }
+
   async function updateAboutUser(newImage = null, isVerified = true) {
     const sendUserData = {
       id: userAboutData?.id,
@@ -432,6 +453,11 @@ export default function useHandleAddUserDetails() {
 
     const data = res?.data?.updateUser;
     const _userData = { ...userAboutData, ...data };
+
+    if(!userAboutData?.is_verified){
+      await notficationOnFirstLogin();
+    }
+    
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
     setUserDataAbout({ ..._userData, isUserUpdated: true });
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));

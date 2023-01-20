@@ -52,14 +52,21 @@ const SubCategoriesPreview = ({
     if (isError) return;
 
     setToastMsg({ type: 'success', message: 'Account Setup is completed!' });
-    sendNotification(
-      {
-        title: NOTIFICATION_TITLES?.lspWelcome,
-        body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userAccountData?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
-        user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
-      },
-      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    );
+    // sendNotification(
+    //   {sendNotification(
+    //   {
+    //     title: NOTIFICATION_TITLES?.lspWelcome,
+    //     body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userAccountData?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
+    //     user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+    //   },
+    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    // );
+    //     title: NOTIFICATION_TITLES?.lspWelcome,
+    //     body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userAccountData?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
+    //     user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+    //   },
+    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    // );
     router.prefetch('/');
     setVidIsOpen(true);
     vidRef?.current?.play();

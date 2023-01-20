@@ -7,6 +7,11 @@ const AllNotifications = ({ style, data, isNav }) => {
   const readNotification = useRecoilValue(ReadNotificationsAtom);
   const routeObj = {
     course: {
+      signinassign:{
+        text: 'Go to courses',
+        routeUrl: '/my-profile?tabName=Courses',
+        routeAsUrl: '/my-profile'
+      },
       assigned: {
         text: 'Go to course'
       },
