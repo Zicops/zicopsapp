@@ -13,6 +13,7 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ChapterAtom, ModuleAtom, TopicAtom } from '@/state/atoms/module.atoms';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import Loader from '@/components/common/Loader';
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -69,7 +70,23 @@ const CourseBodyDiscussion = () => {
       queryClient
     );
     console.log('repliesArr', repliesArr?.getCourseDiscussion);
-    return repliesArr?.getCourseDiscussion;
+    const replies = repliesArr?.getCourseDiscussion;
+    const userIds = replies?.map((data) => data?.UserId);
+    const users = await loadQueryDataAsync(
+       GET_USER_DETAIL,
+      {
+        user_id: userIds
+      },
+      {},
+      userQueryClient
+    );
+    const userDetails = users.getUserDetails
+    const mappedArray = replies?.map(item1 => {
+    const item2 = userDetails?.find(i => i.id === item1.UserId);
+    return { ...item1, ...item2};
+    });
+    console.log("mappedArray", mappedArray)
+    return mappedArray;
   };
 
   const showRepliesHandler = async (msg) => {
@@ -92,9 +109,26 @@ const CourseBodyDiscussion = () => {
       queryClient
     );
     const messages = messagesArr?.getCourseDiscussion;
-    if (!messages?.length) return ;
-    const pinnedData = messages?.filter((data) => data?.IsPinned);
-    const nonPinnedData = messages?.filter((data) => !data?.IsPinned);
+    const userIds = messages?.map((data) => data?.UserId);
+    console.log("messages", userIds);
+       const users = await loadQueryDataAsync(
+       GET_USER_DETAIL,
+      {
+        user_id: userIds
+      },
+      {},
+      userQueryClient
+    );
+    const userDetails = users.getUserDetails
+    const mappedArray = messages.map(item1 => {
+    const item2 = userDetails.find(i => i.id === item1.UserId);
+    return { ...item1, ...item2};
+    });
+    console.log("userDetails", mappedArray)
+
+    if (!mappedArray?.length) return ;
+    const pinnedData = mappedArray?.filter((data) => data?.IsPinned);
+    const nonPinnedData = mappedArray?.filter((data) => !data?.IsPinned);
     if (!nonPinnedData?.length) return [...pinnedData];
     let newArray = [...nonPinnedData];
     newArray?.sort(function (a, b) {

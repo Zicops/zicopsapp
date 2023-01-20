@@ -10,6 +10,7 @@ import { GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ModuleAtom } from '@/state/atoms/module.atoms';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 const MessageBlock = ({ isReply, message, setFilterData }) => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
@@ -264,7 +265,23 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       queryClient
     );
     console.log('repliesArr', repliesArr?.getCourseDiscussion);
-    return repliesArr?.getCourseDiscussion;
+     const replies = repliesArr?.getCourseDiscussion;
+    const userIds = replies?.map((data) => data?.UserId);
+    const users = await loadQueryDataAsync(
+       GET_USER_DETAIL,
+      {
+        user_id: userIds
+      },
+      {},
+      userQueryClient
+    );
+    const userDetails = users.getUserDetails
+    const mappedArray = replies?.map(item1 => {
+    const item2 = userDetails?.find(i => i.id === item1.UserId);
+    return { ...item1, ...item2};
+    });
+    console.log("mappedArray", mappedArray)
+    return mappedArray;
   };
 
   const onSendReplyHandler = async (msg) => {
@@ -296,7 +313,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         ADD_COURSE_DISCUSSION,
         {
           CourseId: moduleData[0]?.courseId,
-          Content: `${'@' + userDetails?.first_name + ' ' + reply}`,
+          Content: `${'@' + msg?.first_name + ' ' + reply}`,
           ReplyId: msg?.ReplyId,
           Likes: [],
           Dislike: [],
@@ -329,7 +346,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       {message?.IsPinned && (
         <div className={`${style.message_Block_Pinned}`} onClick={() => onUnpinHandler(message)}>
           <img src="/images/svg/pinned2.svg" alt="" />
-          <p>Pinned by {userDetails?.first_name}</p>
+          <p>Pinned by {message?.first_name}</p>
         </div>
       )}
       <div
@@ -340,14 +357,14 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
               <img
                 src={
                   !message?.IsAnonymous
-                    ? userDetails?.photo_url
+                    ? message?.photo_url
                     : 'https://www.w3schools.com/howto/img_avatar2.png'
                 }
                 alt=""
               />
             </div>
             <div className={`${style.userName}`}>
-              <p>{!message?.IsAnonymous ? userDetails?.first_name + '(You)' : 'Anonymous'}</p>
+              <p>{!message?.IsAnonymous && userDetails?.first_name === message?.first_name ? message?.first_name + "(You)" : !message?.IsAnonymous ?  message?.first_name  : 'Anonymous'}</p>
               {message?.IsAnonymous && isRole.toLowerCase() === USER_LSP_ROLE.admin && (
                 <img
                   src="/images/svg/visibility2.svg"
