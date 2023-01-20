@@ -1,4 +1,6 @@
-import { discussionData , replyData } from '@/components/CourseBody/CourseBodyDiscussion/discussion.helper';
+import { discussionData, replyData } from '@/components/CourseBody/CourseBodyDiscussion/discussion.helper';
+import { vendorDiscussionData } from 'pages/admin/vendor/discussion/chat.helper';
+
 import { atom } from 'recoil';
 
 export const MessageAtom = atom({
@@ -18,6 +20,11 @@ export const DiscussionReplyAtom = atom({
   key: 'singleObject',
   default: getMesaageObj()
 });
+
+export const DiscussionAtom = atom({
+  key: 'vendorDiscussion',
+  default: vendorDiscussionData.messages
+})
 
 export function getMesaageObj(data = {}) {
   return {
