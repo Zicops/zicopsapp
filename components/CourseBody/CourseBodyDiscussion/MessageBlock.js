@@ -17,7 +17,6 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   const [showInput, setShowInput] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [isDisLike, setIsDisLike] = useState(false);
-  const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
   const [replyData, setReplyData] = useRecoilState(DiscussionReplyAtom);
   const [isRole, setIsRole] = useState('');
@@ -308,7 +307,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       console.log('addMessage', addMessage?.addCourseDiscussion);
       const replies = (await getReplies(msg?.DiscussionId)) || [];
       console.log('replies', replies);
-      setReplyArr([...replies]);
+      setReplyData([...replies]);
     } else {
       const addMessage = await loadQueryDataAsync(
         ADD_COURSE_DISCUSSION,
@@ -331,7 +330,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       console.log('addMessage', addMessage);
       const replies = (await getReplies(msg?.ReplyId)) || [];
       console.log('replies', replies);
-      setReplyArr([...replies]);
+      setReplyData([...replies]);
     }
     setReply('');
     setShowInput(false);

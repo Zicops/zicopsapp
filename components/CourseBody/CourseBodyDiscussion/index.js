@@ -30,7 +30,6 @@ const CourseBodyDiscussion = () => {
   const [learnerUser, setLearnerUser] = useState();
   const [replyData, setReplyData] = useRecoilState(DiscussionReplyAtom);
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
-  const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
   const userDetails = useRecoilValue(UserStateAtom);
   const moduleData = useRecoilValue(ModuleAtom);
   const chapterData = useRecoilValue(ChapterAtom);
@@ -234,7 +233,7 @@ const CourseBodyDiscussion = () => {
 
    useEffect(() => {
     setFilterData(filteredData);
-  }, [inputText, messageArr, replyArr]);
+  }, [inputText, messageArr, replyData]);
   
     useEffect(async () => {
     setLoading(true)
@@ -252,7 +251,7 @@ const CourseBodyDiscussion = () => {
   useEffect(async () => {
     const messages = (await getCourseMessages()) || [];
     setMessageArr(messages);
-  }, [replyArr]);
+  }, [replyData]);
 
   return (
     <div className={`${style.discussion_container}`}>

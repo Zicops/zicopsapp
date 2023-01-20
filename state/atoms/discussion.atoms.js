@@ -32,6 +32,7 @@ export function getMesaageObj(data = {}) {
     Likes: data?.likes || [],
     Dislike: data?.dislike || [],
     IsPinned: data?.isPinned || false,
+    UserId: data?.userId || '',
     ReplyCount: data?.replyCount || 0
   };
 }
