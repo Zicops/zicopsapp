@@ -1943,7 +1943,7 @@ export const ADD_COURSE_DISCUSSION = gql`
     $CourseId: String!
     $ReplyId: String
     $Content: String!
-    $UserId: String
+    $UserId: String!
     $Module: String
     $Chapter: String
     $Topic: String

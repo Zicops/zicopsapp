@@ -120,8 +120,8 @@ const CourseBodyDiscussion = () => {
       userQueryClient
     );
     const userDetails = users.getUserDetails
-    const mappedArray = messages.map(item1 => {
-    const item2 = userDetails.find(i => i.id === item1.UserId);
+    const mappedArray = messages?.map(item1 => {
+    const item2 = userDetails?.find(i => i.id === item1.UserId);
     return { ...item1, ...item2};
     });
     console.log("userDetails", mappedArray)
