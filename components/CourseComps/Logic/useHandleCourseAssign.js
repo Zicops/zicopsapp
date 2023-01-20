@@ -164,7 +164,11 @@ export default function useHandleCourseAssign({
       // userCourseProgress
     });
     closePopUp();
-    setToastMsg({ type: 'success', message: 'Course Assigned Successfully.' });
+    setToastMsg({ 
+      type: 'success', 
+      message: `You have added a new course to your learning folder. End date for completing ${courseName || ''} is ${
+        courseAssignData?.endDate?.toDateString()
+      }` });
 
     if (assignBy !== 'self') sendCourseAssignNotificationAndEmail();
   }
@@ -179,7 +183,7 @@ export default function useHandleCourseAssign({
 
     const notificationBody = getNotificationMsg('courseAssign', {
       courseName: courseName || '',
-      endDate: courseAssignData?.endDate
+      endDate: moment(courseAssignData?.endDate?.valueOf()).format('D MMM YYYY')
     });
 
     const origin = window?.location?.origin || '';
