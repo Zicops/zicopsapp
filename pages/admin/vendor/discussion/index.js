@@ -99,7 +99,7 @@ const CourseBodyChat = () => {
         </div>
         <div className={`${style.discussion_input}`}>
           <div className={`${style.user_image}`}>
-            <img src="/images/svg/17.svg" alt="" />
+            <img src={userDetails?.photo_url} alt="" />
 
           </div>
             <input

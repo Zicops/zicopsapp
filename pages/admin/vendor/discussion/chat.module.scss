@@ -35,11 +35,11 @@
     margin: 15px 20px;
     display: flex;
     gap: 10px;
+    align-items: flex-end;
    
     .user_image2 {
             width: 40px;
             height: 40px;
-    
             img {
                 height: 100%;
                 width: 100%;
@@ -54,6 +54,7 @@
     color: $white;
     gap: 10px;
     margin-top: 15px;
+    align-items: flex-end;
 }
 
 .chat_container , .chat_container2{
@@ -61,7 +62,7 @@
     // background-color: $darkTwo;
     padding: 10px 15px;
     border-radius: 10px;
-    max-width: 500px;
+    max-width: 50vw;
     background-color: $secondary;
 }
 .chat_container2{
