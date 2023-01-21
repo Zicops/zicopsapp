@@ -10,12 +10,19 @@ import {
   userClient
 } from '@/api/UserMutations';
 import {
+  GET_USER_COURSE_MAPS,
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_ORGANIZATIONS,
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
-import { CUSTOM_ERROR_MESSAGE, NOTIFICATION_MSG_LINKS, NOTIFICATION_TITLES, USER_STATUS } from '@/helper/constants.helper';
+import { getCurrentEpochTime } from '@/helper/common.helper';
+import {
+  CUSTOM_ERROR_MESSAGE,
+  NOTIFICATION_MSG_LINKS,
+  NOTIFICATION_TITLES,
+  USER_STATUS
+} from '@/helper/constants.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -381,9 +388,57 @@ export default function useHandleAddUserDetails() {
     // return isError;
   }
 
-  async function notficationOnFirstLogin(){
+  async function notficationOnFirstLogin(userId = null, userLspId = null) {
+    const sendData = {
+      user_id: userId,
+      publish_time: getCurrentEpochTime(),
+      pageCursor: '',
+      pageSize: 1000
+    };
+    const userCoursesMaps = await loadQueryDataAsync(
+      GET_USER_COURSE_MAPS,
+      sendData,
+      {},
+      userQueryClient
+    );
 
-     sendNotification(
+    //filtering the courses based on user_lsp_id
+    const courses = userCoursesMaps?.getUserCourseMaps?.user_courses?.filter(
+      (item) => item?.user_lsp_id === userLspId
+    );
+    if (!!courses?.length) {
+      sendNotification(
+        {
+          title: NOTIFICATION_TITLES?.signIn?.course,
+          body: NOTIFICATION_MSG_LINKS?.firstSigin?.coursesAssigned?.msg,
+          user_id: [userId]
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
+    }
+
+    sendData.user_lsp_id = userLspId;
+    const resCohorts = await loadQueryDataAsync(
+      GET_USER_LATEST_COHORTS,
+      { ...sendData },
+      {},
+      userQueryClient
+    );
+    // console.log(resCohorts?.getLatestCohorts?.cohorts);
+
+    const cohorts = resCohorts?.getLatestCohorts?.cohorts;
+
+    if (!!cohorts?.length) {
+      sendNotification(
+        {
+          title: NOTIFICATION_TITLES?.cohortAssign,
+          body: NOTIFICATION_MSG_LINKS?.firstSigin?.cohortAssigned?.msg,
+          user_id: [userId]
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
+    }
+    sendNotification(
       {
         title: NOTIFICATION_TITLES?.lspWelcome,
         body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
@@ -391,7 +446,7 @@ export default function useHandleAddUserDetails() {
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
-     sendNotification(
+    sendNotification(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
@@ -400,7 +455,6 @@ export default function useHandleAddUserDetails() {
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
     return true;
-    
   }
 
   async function updateAboutUser(newImage = null, isVerified = true) {
@@ -457,10 +511,10 @@ export default function useHandleAddUserDetails() {
     const data = res?.data?.updateUser;
     const _userData = { ...userAboutData, ...data };
 
-    if(!userAboutData?.is_verified){
+    if (!userAboutData?.is_verified) {
       await notficationOnFirstLogin();
     }
-    
+
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
     setUserDataAbout({ ..._userData, isUserUpdated: true });
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
