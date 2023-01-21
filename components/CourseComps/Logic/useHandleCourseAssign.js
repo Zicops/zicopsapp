@@ -175,16 +175,16 @@ export default function useHandleCourseAssign({
 
     if (assignBy !== 'self') {
       sendCourseAssignNotificationAndEmail();
-    if(!!userLspId && !userIsVerified){
-         await sendNotification(
-          {
-            title: NOTIFICATION_TITLES?.signIn?.course,
-            body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
-            user_id: [userIdForCourseAssign]
-          },
-          { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-         )
-    }
+    // if(!!userLspId && !userIsVerified){
+    //      await sendNotification(
+    //       {
+    //         title: NOTIFICATION_TITLES?.signIn?.course,
+    //         body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
+    //         user_id: [userIdForCourseAssign]
+    //       },
+    //       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    //      )
+    // }
     }
     
   }
