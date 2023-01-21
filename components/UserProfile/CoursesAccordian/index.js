@@ -18,6 +18,7 @@ import AssignCourse from '@/components/CourseComps/AssignCourse';
 import { getNotificationMsg } from '@/helper/common.helper';
 import {
   COMMON_LSPS,
+  COURSE_MAP_STATUS,
   COURSE_STATUS,
   EMAIL_TEMPLATE_IDS,
   NOTIFICATION_TITLES
@@ -205,7 +206,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       addedBy: JSON.stringify({ userId: id, role: 'admin' }),
       courseType: userCourseData.type,
       isMandatory: courseAssignData?.isMandatory,
-      courseStatus: 'open',
+      courseStatus: COURSE_MAP_STATUS.assign,
       endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
 

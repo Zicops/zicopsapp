@@ -1,140 +1,365 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import moment from 'moment';
 import style from './discussion.module.scss';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
+import { DiscussionReplyAtom, MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
-const MessageBlock = ({ isReply, message , setFilterData  }) => {
+import { ADD_COURSE_DISCUSSION, UPDATE_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
+import { GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { ModuleAtom } from '@/state/atoms/module.atoms';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
+const MessageBlock = ({ isReply, message, setFilterData }) => {
   const [isAnonymous, setIsAnonymous] = useState(false);
-  // const [isPublic, setIsPublic] = useState(true);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [showInput, setShowInput] = useState(false);
-  const [replyArr, setReplyArr] = useRecoilState(ReplyAtom);
+  const [isLike, setIsLike] = useState(false);
+  const [isDisLike, setIsDisLike] = useState(false);
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
+  const [replyData, setReplyData] = useRecoilState(DiscussionReplyAtom);
+  const [isRole, setIsRole] = useState('');
   const [reply, setReply] = useState('');
-  const[isPinned , setIsPinned] = useState(false)
   const userDetails = useRecoilValue(UserStateAtom);
+  const moduleData = useRecoilValue(ModuleAtom);
+
+  useEffect(() => {
+    const role = sessionStorage?.getItem('user_lsp_role');
+    if (!role) return;
+    setIsRole(role);
+  }, []);
+
+  useEffect(() => {
+    if (message?.Likes?.includes(userDetails?.id)) {
+      setIsLike(true);
+    }
+    else if (message?.Dislike?.includes(userDetails?.id)) {
+      setIsDisLike(true);
+    }
+  }, [messageArr]);
 
   const onReplyHandler = () => {
     setShowInput(true);
   };
+
   const canclePostHanlder = () => {
     setShowInput(false);
   };
+
   const onMessageHandler = (e) => {
     setReply(e);
   };
+
   const anonymousUserHandler = () => {
     setIsAnonymous(!isAnonymous);
-    // setIsPublic(false);
   };
-  // const publicUserHandler = () => {
-  //   setIsPublic(true);
-  //   setIsAnonymous(false);
-  // };
+
   const announcementHandler = () => {
     setIsAnnouncement(!isAnnouncement);
   };
- 
-  const onPinnedHandler = (data) => {
-    const nonPinedMessages = messageArr?.filter((m) => m?.id !== data?.id);
-    setMessageArr([{ ...data, isPinned: true }, ...nonPinedMessages ])
-    setFilterData([...messageArr])
-  }
 
-  const onUnpinHandler = (data) => {
-     const filterMessages = messageArr?.filter((m)=> m?.id !== data?.id)
-    console.log("data", filterMessages);
-    console.log("ispinned",{...data, isPinned: false});
-    setMessageArr([...filterMessages,{ ...data, isPinned: false }])
-    setFilterData([...messageArr])
-  }
+  const onPinnedHandler = async (data) => {
+    console.log('data', data);
+    const nonPinedMessages = messageArr?.filter((m) => m?.DiscussionId !== data?.DiscussionId);
+    const updateMessage = await loadQueryDataAsync(
+      UPDATE_COURSE_DISCUSSION,
+      {
+        courseId: moduleData[0]?.courseId,
+        discussionId: data?.DiscussionId,
+        IsPinned: true
+      },
+      {},
+      mutationClient
+    );
+    console.log('updateMessage', updateMessage);
+    setMessageArr([{...data, IsPinned: true}, ...nonPinedMessages]);
+    console.log('messageArr', messageArr);
+    setFilterData([{...data, IsPinned: true}, ...nonPinedMessages]);
+  };
 
-  const onSendReplyHandler = (msg) => {
-    setShowInput(false);
-    let newreplyData = replyArr?.filter((rdata) => rdata[msg?.replyId] ? rdata[msg?.replyId] : rdata[msg?.id]);
-    let newReplyArr = replyArr?.filter((rdata) => rdata[msg?.replyId] ? !rdata[msg?.replyId] : !rdata[msg?.id]);
-    let newMessageId = "";
-    if (msg?.replyId) {
-      newMessageId = msg?.replyId
-    } else {
-      newMessageId = msg?.id
+  const onUnpinHandler = async (data) => {
+    console.log('data', data);
+    const filterMessages = messageArr?.filter((m) => m?.DiscussionId !== data?.DiscussionId);
+    console.log('data', filterMessages);
+    const updateMessage = await loadQueryDataAsync(
+      UPDATE_COURSE_DISCUSSION,
+      {
+        courseId: moduleData[0]?.courseId,
+        discussionId: data?.DiscussionId,
+        IsPinned: false
+      },
+      {},
+      mutationClient
+    );
+    const newUpdateMsgArr = [...filterMessages, {...data, IsPinned: false}];
+    const pinnedData = newUpdateMsgArr?.filter((data) => data?.IsPinned);
+    const nonPinnedData = newUpdateMsgArr?.filter((data) => !data?.IsPinned);
+    let newArray = [...nonPinnedData];
+    newArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    setMessageArr([...pinnedData, ...newArray]);
+    setFilterData([...pinnedData, ...newArray]);
+  };
+
+  const onLikeHandler = async (data) => {
+    console.log(data);
+    const filterMessages = data?.Dislike?.filter((id) => id !== userDetails?.id);
+    console.log('filterMessages', filterMessages);
+    const messageLikes = [...(data?.Likes || []), userDetails?.id];
+    const messageDisLikes = filterMessages || [];
+    const updateMessage = await loadQueryDataAsync(
+      UPDATE_COURSE_DISCUSSION,
+      {
+        courseId: moduleData[0]?.courseId,
+        discussionId: data?.DiscussionId,
+        likes: messageLikes,
+        dislikes: messageDisLikes
+      },
+      {},
+      mutationClient
+    );
+    console.log('updateMessage', updateMessage);
+
+    // Update local state for likes
+    const _messageArr = structuredClone(messageArr);
+    const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index >= 0) {
+      _messageArr[index].Likes = messageLikes;
+      _messageArr[index].Dislike = messageDisLikes;
+      setMessageArr(_messageArr);
+      setIsLike(true);
+      setIsDisLike(false);
+      setFilterData([..._messageArr]);
+    } 
+    if (!replyData.length) return;
+    const _replyData = structuredClone(replyData);
+    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index2 >= 0) {
+      _replyData[index2].Likes = messageLikes;
+      _replyData[index2].Dislike = messageDisLikes;
+      setIsLike(true);
+      setIsDisLike(false);
+      setReplyData([..._replyData]);
     }
-    let checkId = "";
-    console.log(newreplyData[0]);
-    if (newreplyData[0]) {
-      console.log(msg?.id);
-      checkId = Object.keys(newreplyData[0]);
+  };
+  
+  const onRemoveLikeHandler = async (data) => {
+    const filterLikes = data?.Likes?.filter((id) => id !== userDetails?.id);
+    const removeLikes = filterLikes || [];
+    const updateMessage = await loadQueryDataAsync(
+      UPDATE_COURSE_DISCUSSION,
+      {
+        courseId: moduleData[0]?.courseId,
+        discussionId: data?.DiscussionId,
+        likes: removeLikes
+      },
+      {},
+      mutationClient
+    );
+    console.log('updateMessage', updateMessage);
+    const _messageArr = structuredClone(messageArr);
+   
+    const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+     if (index >= 0) {
+      _messageArr[index].Likes = removeLikes;
+      setMessageArr(_messageArr);
+      setIsLike(false);
+      setFilterData([..._messageArr]);
     }
-    console.log(newMessageId);
-    if (!newMessageId || (parseInt(checkId[0]) !== msg?.id && !msg?.replyId)) {
-      setReplyArr([
-        ...replyArr,
-        {
-          [msg?.id]: [
-            {
-              id: Math.floor(Date.now() / 1000 + 1),
-              content: { text: `${'@' + msg?.user.first_name + ' ' + reply}`, image: [] },
-              time: Math.floor(Date.now() / 1000),
-              replyId: msg?.id,
-              isAnonymous: false,
-              user: {
-                first_name: userDetails?.first_name,
-                id: userDetails?.id,
-                photo_url: 'https://www.w3schools.com/howto/img_avatar.png',
-                role: userDetails?.role
-              },
-              like: [],
-              unlike: [],
-              isPinned: false
-            }
-          ]
-        }
-      ])
-    } else {
-         let newArray = [...newreplyData[0][newMessageId]]
-         newArray.unshift(
-            {
-               id: Math.floor(Date.now() / 1000 + 1),
-               content: { text: `${'@' + msg?.user.first_name + ' ' + reply}`, image: [] },
-               time: Math.floor(Date.now() / 1000),
-               replyId: msg?.id,
-               isAnonymous: false,
-               user: {
-                 first_name: userDetails?.first_name,
-                 id: userDetails?.id,
-                 photo_url: 'https://www.w3schools.com/howto/img_avatar.png',
-                 role: userDetails?.role
-               },
-               like: [],
-               unlike: [],
-               isPinned: false
-             }
-         )
-         let obj = {};
-         obj[`${newMessageId}`] = newArray
-         const updatedReplyArr = [...newReplyArr, obj ]
-         setReplyArr(updatedReplyArr)
-       } 
-      setReply('');
-      setShowInput(false);
-}
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      onSendReplyHandler(message);
+    if (!replyData.length) return;
+    const _replyData = structuredClone(replyData);
+    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index2 >= 0) {
+      _replyData[index2].Likes = removeLikes;
+      setIsLike(false);
+      setReplyData([..._replyData]);
     }
   };
 
+  const onDisLikeHandler = async (data) => {
+    const filterMessages = data?.Likes?.filter((id) => id !== userDetails?.id);
+    console.log('filterMessages', filterMessages);
+    const messageDisLikes = [...(data?.Dislike || []), userDetails?.id];
+    const messageLikes = filterMessages || [];
+    const updateMessage = await loadQueryDataAsync(
+      UPDATE_COURSE_DISCUSSION,
+      {
+        courseId: moduleData[0]?.courseId,
+        discussionId: data?.DiscussionId,
+        dislikes: messageDisLikes,
+        likes: messageLikes
+      },
+      {},
+      mutationClient
+    );
+    console.log('updateMessage', updateMessage);
+    const _messageArr = structuredClone(messageArr);
+    const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index >= 0) {
+      _messageArr[index].Likes = messageLikes;
+      _messageArr[index].Dislike = messageDisLikes;
+      setMessageArr(_messageArr);
+      setIsDisLike(true);
+      setIsLike(false);
+      setFilterData([..._messageArr]);
+    } 
+    if (!replyData.length) return;
+    const _replyData = structuredClone(replyData);
+    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index2 >= 0) {
+      _replyData[index2].Likes = messageLikes;
+      _replyData[index2].Dislike = messageDisLikes;
+      setIsDisLike(true);
+      setIsLike(false);
+      setReplyData([..._replyData]);
+    }
+  };
+
+  const onRemoveDisLikeHandler = async (data) => {
+    const filterMessages = data?.Dislike?.filter((id) => id !== userDetails?.id);
+    console.log('filterMessages', filterMessages);
+    const removeDisLikes = filterMessages || [];
+    const updateMessage = await loadQueryDataAsync(
+      UPDATE_COURSE_DISCUSSION,
+      {
+        courseId: moduleData[0]?.courseId,
+        discussionId: data?.DiscussionId,
+        dislikes: removeDisLikes
+      },
+      {},
+      mutationClient
+    );
+    console.log('updateMessage', updateMessage);
+
+    const _messageArr = structuredClone(messageArr);
+    const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index >= 0) {
+      _messageArr[index].Dislike = removeDisLikes;
+      setMessageArr(_messageArr);
+      setIsDisLike(false);
+      setFilterData([..._messageArr]);
+    } 
+    
+    if (!replyData.length) return;
+    const _replyData = structuredClone(replyData);
+    const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
+    if (index2 >= 0) {
+      _replyData[index2].Dislike = removeDisLikes;
+      setIsDisLike(false);
+      setReplyData([..._replyData]);
+    }
+  };
+
+  const getReplies = async (discussionId) => {
+    console.log('message?.DiscussionId', message?.DiscussionId, discussionId);
+    const repliesArr = await loadQueryDataAsync(
+      GET_DISCUSSION_REPLY,
+      {
+        course_id: moduleData[0]?.courseId,
+        discussion_id: discussionId
+      },
+      {},
+      queryClient
+    );
+    console.log('repliesArr', repliesArr?.getCourseDiscussion);
+     const replies = repliesArr?.getCourseDiscussion;
+    const userIds = replies?.map((data) => data?.UserId);
+    const users = await loadQueryDataAsync(
+       GET_USER_DETAIL,
+      {
+        user_id: userIds
+      },
+      {},
+      userQueryClient
+    );
+    const userDetails = users.getUserDetails;
+    const mappedArray = replies?.map(item1 => {
+    const item2 = userDetails?.find(i => i.id === item1.UserId);
+    return { ...item1, ...item2};
+    });
+    console.log("mappedArray", mappedArray)
+    let newArray = [...mappedArray];
+    newArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    return [...newArray];
+  };
+
+  const onSendReplyHandler = async (msg) => {
+    setShowInput(false);
+    if (!msg?.ReplyId) {
+      const addMessage = await loadQueryDataAsync(
+        ADD_COURSE_DISCUSSION,
+        {
+          CourseId: moduleData[0]?.courseId,
+          Content: reply,
+          ReplyId: msg?.DiscussionId,
+          UserId: userDetails?.id,
+          Likes: [],
+          Dislike: [],
+          IsPinned: false,
+          IsAnonymous: isAnonymous,
+          IsAnnouncement: isAnnouncement,
+          ReplyCount: 0,
+          Status: 'active'
+        },
+        {},
+        mutationClient
+      );
+      console.log('addMessage', addMessage?.addCourseDiscussion);
+      const replies = (await getReplies(msg?.DiscussionId)) || [];
+      console.log('replies', replies);
+      setReplyData([...replies]);
+    } else {
+      const addMessage = await loadQueryDataAsync(
+        ADD_COURSE_DISCUSSION,
+        {
+          CourseId: moduleData[0]?.courseId,
+          Content: `${'@' + `${!msg?.IsAnonymous ? msg?.first_name : "Anonymous"}` + ' ' + reply}`,
+          ReplyId: msg?.ReplyId,
+          UserId: userDetails?.id,
+          Likes: [],
+          Dislike: [],
+          IsPinned: false,
+          IsAnonymous: isAnonymous,
+          IsAnnouncement: isAnnouncement,
+          ReplyCount: 0,
+          Status: 'active'
+        },
+        {},
+        mutationClient
+      );
+      console.log('addMessage', addMessage);
+      const replies = (await getReplies(msg?.ReplyId)) || [];
+      console.log('replies', replies);
+      setReplyData([...replies]);
+    }
+    setReply('');
+    setShowInput(false);
+    setIsAnonymous(false);
+    setIsAnnouncement(false);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      onSendReplyHandler(message);
+    }
+  };
+  let displayCourseData = "";
+  // {message?.Module}, {message?.Chapter},{message?.Topic}
+  if (message?.Module) displayCourseData += message?.Module;
+  if (message?.Chapter) displayCourseData += `, ${message?.Chapter}`;
+  if (message?.Topic) displayCourseData += `, ${message?.Topic}`;
   return (
     <div className={`${style.message_Block_container}`}>
-      {message?.isPinned && 
-      <div className={`${style.message_Block_Pinned}`} onClick={()=>onUnpinHandler(message)}>
-      <img src="/images/svg/pinned2.svg" alt=""/>
-        <p>Pinned by {userDetails?.first_name}</p>
-      </div>
-      }
+      {message?.IsPinned && (
+        <div className={`${style.message_Block_Pinned}`} onClick={() => onUnpinHandler(message)}>
+          <img src="/images/svg/pinned2.svg" alt="" />
+          <p>Pinned by {message?.first_name}</p>
+        </div>
+      )}
       <div
         className={`${style.message_Block_Main} ${isReply ? style.message_Block_Main_Reply : ''}`}>
         <div className={`${style.message_Block_Head}`}>
@@ -142,22 +367,29 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
             <div className={`${style.message_Block_Head_profile_pic}`}>
               <img
                 src={
-                  !message?.isAnonymous
-                    ? message?.user?.photo_url
+                  !message?.IsAnonymous
+                    ? message?.photo_url
                     : 'https://www.w3schools.com/howto/img_avatar2.png'
                 }
                 alt=""
               />
             </div>
-            <div>
-              <p>{!message?.isAnonymous ? message?.user?.first_name : 'Anonymous'}</p>
+            <div className={`${style.userName}`}>
+              <p>{!message?.IsAnonymous && userDetails?.first_name === message?.first_name ? message?.first_name + "(You)" : !message?.IsAnonymous ?  message?.first_name  : 'Anonymous'}</p>
+              {message?.IsAnonymous && isRole.toLowerCase() === USER_LSP_ROLE.admin && (
+                <img
+                  src="/images/svg/visibility2.svg"
+                  alt=""
+                  className={`${style.visibility_icon}`}
+                />
+              )}
             </div>
           </div>
           <div className={`${style.message_Block_Head_right}`}>
             <div className={`${style.message_time}`}>
-              {moment.unix(message?.time).format('lll')}
+              {moment.unix(message?.Created_at).format('lll')}
             </div>
-            {message?.isAnnouncement && (
+            {message?.IsAnnouncement && (
               <div className={`${style.announcement_container}`}>
                 <div className={`${style.announcement_image}`}>
                   <img src="/images/svg/annousment.svg" alt="" />
@@ -167,39 +399,66 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
             )}
           </div>
         </div>
-        <div className={`${style.message_Block_Body} ${message?.isPinned ? style.message_Block_Body_pinned : style.message_Block_Body_unpinned}`}>
-          {!isReply && !message?.isAnnouncement && (
+        <div
+          className={`${style.message_Block_Body} ${
+            message?.IsPinned ? style.message_Block_Body_pinned : style.message_Block_Body_unpinned
+          }`}>
+          {!isReply && !message?.IsAnnouncement && !!displayCourseData?.length && (
             <div className={`${style.message_Block_module}`}>
-              <p>{message?.currentTopic?.time}</p>
-              {message?.currentTopic?.module}, {message?.currentTopic?.chapter},
-              {message?.currentTopic?.topic}
+              <p>{message?.Time}</p>
+              {displayCourseData}
             </div>
           )}
-          <div className={`${style.message_Content}`}>
-            {!message?.isPinned && 
-            <div className={`${style.message_Content_pinned}`} onClick={()=>onPinnedHandler(message)}>
-            <img src="/images/svg/pined.svg" alt="" />
-            </div>
-            }
+          <div
+            className={`${style.message_Content} ${!isReply ? style.message_content_hover : ''}`}>
+            {!isReply && !message?.IsPinned && (
+              <div
+                className={`${style.message_Content_pinned}`}
+                onClick={() => onPinnedHandler(message)}>
+                <img src="/images/svg/pined.svg" alt="" />
+              </div>
+            )}
             <div>
-            {message?.content?.image?.length ? <img src={message?.content?.image} alt="" /> : ''}
-            <p>{message?.content?.text}</p>
+              {message?.content?.image?.length ? <img src={message?.content?.image} alt="" /> : ''}
+              <span>
+                <RTE2 value={message?.Content} isReadOnly={true} />
+              </span>
             </div>
           </div>
           <div className={`${style.reply_buttons}`}>
             <div className={`${style.react_button}`}>
               <div className={`${style.like_button}`}>
-                <div className={`${style.like_button_image}`}>
-                  <img src="/images/thumb_up.png" alt="" />
-                </div>
-                <span>{message?.like?.length || 0} </span>
+                {isLike ? (
+                  <div
+                    className={`${style.like_button_image}`}
+                    onClick={() => onRemoveLikeHandler(message)}>
+                    <img src="/images/svg/thumb_up.svg" alt="" />
+                  </div>
+                ) : (
+                  <div
+                    className={`${style.like_button_image}`}
+                    onClick={() => onLikeHandler(message)}>
+                    <img src="/images/thumb_up.png" alt="" />
+                  </div>
+                )}
+                <span>{message?.Likes?.length || '00'} </span>
               </div>
               <div className={`${style.button_divider}`}></div>
               <div className={`${style.dislike_button}`}>
-                <div className={`${style.dislike_button_image}`}>
-                  <img src="/images/thumb_down_off.png" alt="" />
-                </div>
-                <span>{message?.unlike?.length || 0}</span>
+                {isDisLike ? (
+                  <div
+                    className={`${style.dislike_button_image}`}
+                    onClick={() => onRemoveDisLikeHandler(message)}>
+                    <img src="/images/svg/thumb_down_off.svg" alt="" />
+                  </div>
+                ) : (
+                  <div
+                    className={`${style.dislike_button_image}`}
+                    onClick={() => onDisLikeHandler(message)}>
+                    <img src="/images/thumb_down_off.png" alt="" />
+                  </div>
+                )}
+                <span>{message?.Dislike?.length || '00'}</span>
               </div>
             </div>
             <button className={`${style.reply_button}`} onClick={onReplyHandler}>
@@ -213,12 +472,10 @@ const MessageBlock = ({ isReply, message , setFilterData  }) => {
                 value={reply}
                 contenteditable
                 changeHandler={onMessageHandler}
-                onPostHandler={()=>onSendReplyHandler(message)}
+                onPostHandler={() => onSendReplyHandler(message)}
                 onCancleHandler={canclePostHanlder}
                 onAnonymousHandler={anonymousUserHandler}
                 checkAnonymous={isAnonymous}
-                // checkPublic={isPublic}
-                // onPublicHandler={publicUserHandler}
                 onAnnouncementHandler={announcementHandler}
                 checkAnnouncement={isAnnouncement}
                 handleKeyPress={handleKeyPress}
