@@ -16,7 +16,7 @@ import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import { COMMON_LSPS, COURSE_MAP_STATUS, COURSE_STATUS, DEFAULT_VALUES } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
-import { getUnixTimeAt } from './utils.helper';
+import { getUnixTimeAt, parseJson } from './utils.helper';
 
 export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
@@ -255,7 +255,7 @@ export async function getLatestCoursesByFilters(filters = {}, pageSize = 28) {
   return _toBeSortedCourses;
 }
 
-export async function getUserAssignCourses(isOngoing = false, pageSize = 28) {
+export async function getUserAssignCourses(filters = {}, pageSize = 28) {
   const { id: currentUserId } = getUserData();
 
   const currentLspId = sessionStorage.getItem('lsp_id');
@@ -275,7 +275,7 @@ export async function getUserAssignCourses(isOngoing = false, pageSize = 28) {
         pageCursor: '',
         pageSize: pageSize,
         filters: {
-          status: isOngoing ? COURSE_MAP_STATUS.started : COURSE_MAP_STATUS.assign,
+          ...filters,
           lsp_id: [lspId]
         }
       },
@@ -300,7 +300,9 @@ export async function getUserAssignCourses(isOngoing = false, pageSize = 28) {
     const coursesMeta = [];
     _assignedCourses?.forEach((courseMap) => {
       const courseDetails = allCourseDetails?.find((c) => c?.id === courseMap?.course_id) || {};
-      coursesMeta.push({ ...courseDetails, ...courseMap });
+      const added_by = parseJson(courseMap?.added_by)?.role || courseMap?.added_by;
+
+      coursesMeta.push({ ...courseDetails, ...courseMap, added_by });
     });
 
     allUserCourses.push(...coursesMeta);

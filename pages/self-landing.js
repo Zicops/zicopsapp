@@ -2,8 +2,8 @@ import HeroSliderContainer from '@/components/HeroSliderContainer';
 import SearchSubCat from '@/components/Search/SearchSubCat';
 import SelfPageBanner from '@/components/SelfPageBanner';
 import { selfPageData } from '@/components/SelfPageBanner/selfPageBanner.helper';
-import { COURSE_TYPES } from '@/helper/constants.helper';
-import { getLatestCoursesByFilters } from '@/helper/data.helper';
+import { COURSE_MAP_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
+import { getLatestCoursesByFilters, getUserAssignCourses } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -81,28 +81,39 @@ export default function Self() {
 
       setActiveSubcatArr(activeSubcategories);
 
-      const userCourseData = await getUserCourseData(28);
-      let ucidArray = [];
-      userCourseData?.map((uc) => ucidArray?.push(uc.id));
+      // const userCourseData = await getUserCourseData(28);
 
-      setOnGoingCourses(
-        userCourseData?.filter(
-          (course) =>
-            course?.course_type === COURSE_TYPES[0] &&
-            course?.isCourseStarted &&
-            !course?.isCourseCompleted
-        )
-      );
-      setMandatoryCourses(
-        userCourseData?.filter(
-          (course) =>
-            course?.course_type === COURSE_TYPES[0] &&
-            // (+course?.completedPercentage === 0 || course?.completedPercentage === 100)
-            !course?.isCourseStarted &&
-            !course?.isCourseCompleted &&
-            course?.is_mandatory
-        )
-      );
+      const filters = { status: COURSE_MAP_STATUS.started, type: COURSE_TYPES[0] };
+      const _onGoingCourses = await getUserAssignCourses(filters);
+
+      delete filters.status;
+      filters.is_mandatory = true;
+      const _mandatoryCourses = await getUserAssignCourses(filters);
+
+      let ucidArray = [];
+      _mandatoryCourses?.forEach((uc) => ucidArray?.push(uc.id));
+      _onGoingCourses?.forEach((uc) => ucidArray?.push(uc.id));
+
+      setOnGoingCourses(_onGoingCourses);
+      setMandatoryCourses(_mandatoryCourses);
+      // setOnGoingCourses(
+      //   userCourseData?.filter(
+      //     (course) =>
+      //       course?.course_type === COURSE_TYPES[0] &&
+      //       course?.isCourseStarted &&
+      //       !course?.isCourseCompleted
+      //   )
+      // );
+      // setMandatoryCourses(
+      //   userCourseData?.filter(
+      //     (course) =>
+      //       course?.course_type === COURSE_TYPES[0] &&
+      //       // (+course?.completedPercentage === 0 || course?.completedPercentage === 100)
+      //       !course?.isCourseStarted &&
+      //       !course?.isCourseCompleted &&
+      //       course?.is_mandatory
+      //   )
+      // );
 
       const getLatestCourses = await getLatestCoursesByFilters({}, pageSize);
       setLatestCourses(

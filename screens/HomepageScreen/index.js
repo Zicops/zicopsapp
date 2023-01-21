@@ -3,7 +3,12 @@ import HomeSlider from '@/components/HomeSlider';
 import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COMMON_LSPS, COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
+import {
+  COMMON_LSPS,
+  COURSE_MAP_STATUS,
+  COURSE_STATUS,
+  LANGUAGES
+} from '@/helper/constants.helper';
 import { getUserAssignCourses, sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { getUnixTimeAt } from '@/helper/utils.helper';
@@ -159,14 +164,16 @@ export default function HomepageScreen() {
       setActiveSubcatArr(activeSubcategories);
 
       // const userCourseData = await getUserCourseData(28);
-      const _coursesInFolder = await getUserAssignCourses();
-      const _onGoingCourses = await getUserAssignCourses(true);
-      console.log(_coursesInFolder, _onGoingCourses);
+      const filters = { status: COURSE_MAP_STATUS.started };
+      const _onGoingCourses = await getUserAssignCourses(filters);
+
+      filters.status = COURSE_MAP_STATUS.assign;
+      const _coursesInFolder = await getUserAssignCourses(filters);
+
       let ucidArray = [];
       _coursesInFolder?.forEach((uc) => ucidArray?.push(uc.id));
       _onGoingCourses?.forEach((uc) => ucidArray?.push(uc.id));
 
-      console.log(ucidArray);
       setOngoingCourses(_onGoingCourses);
       setLearningFolderCourses(_coursesInFolder);
       // setOngoingCourses(
