@@ -731,12 +731,15 @@
   .button_type {
     display: flex;
     gap: 15px;
-    .button1 {
+    .button1 , .buttonDisable {
       background: $primary;
       padding: 10px 24px;
       border-radius: 4px;
       border: none;
       cursor: pointer;
+    }
+    .buttonDisable{
+      cursor: no-drop;
     }
     .button2 {
       color: #747474;

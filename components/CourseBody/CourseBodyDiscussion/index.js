@@ -10,10 +10,12 @@ import LearnerUser from './LearnerUser';
 import { ADD_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
 import { GET_COURSE_DISCUSSION, GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { ChapterAtom, ModuleAtom, TopicAtom } from '@/state/atoms/module.atoms';
+import { ChapterAtom, ModuleAtom, TopicAtom, TopicExamAtom } from '@/state/atoms/module.atoms';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
 import Loader from '@/components/common/Loader';
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
+import { isWordIncluded } from '@/helper/utils.helper';
+import { SelectedModuleDataAtom } from '../Logic/courseBody.helper';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -35,6 +37,8 @@ const CourseBodyDiscussion = () => {
   const chapterData = useRecoilValue(ChapterAtom);
   const topicData = useRecoilValue(TopicAtom);
   const courseData = useRecoilValue(UserCourseDataAtom);
+  const selectedModuleData = useRecoilValue(SelectedModuleDataAtom);
+  const topicExamData = useRecoilValue(TopicExamAtom)
 
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
@@ -109,7 +113,7 @@ const CourseBodyDiscussion = () => {
     );
     const messages = messagesArr?.getCourseDiscussion;
     const userIds = messages?.map((data) => data?.UserId);
-    console.log("messages", userIds);
+
        const users = await loadQueryDataAsync(
        GET_USER_DETAIL,
       {
@@ -123,24 +127,31 @@ const CourseBodyDiscussion = () => {
     const item2 = userDetails?.find(i => i.id === item1.UserId);
     return { ...item1, ...item2};
     });
-    console.log("userDetails", mappedArray)
+   
 
     if (!mappedArray?.length) return ;
     const pinnedData = mappedArray?.filter((data) => data?.IsPinned);
     const nonPinnedData = mappedArray?.filter((data) => !data?.IsPinned);
-    if (!nonPinnedData?.length) return [...pinnedData];
-    let newArray = [...nonPinnedData];
-    newArray?.sort(function (a, b) {
+    let sortPinnedArray = [...pinnedData];
+    sortPinnedArray?.sort(function (a, b) {
       return b.Created_at - a.Created_at;
     });
-    if (!pinnedData?.length) return [...newArray];
-    return [...pinnedData, ...newArray]
+    if (!nonPinnedData?.length) return [...sortPinnedArray];
+    let sortNonPinnedArray = [...nonPinnedData];
+    sortNonPinnedArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    if (!pinnedData?.length) return [...sortNonPinnedArray];
+    return [...sortPinnedArray, ...sortNonPinnedArray]
   };
 
   const sendMessageHandler = async () => {
-    const ModuleData = moduleData?.filter((data) => data?.id === courseData?.activeModule?.id);
-    const TopicData = topicData?.filter((data) => data?.id === courseData?.activeTopic?.id);
+    const ModuleData = moduleData?.filter((data) => data?.id === selectedModuleData?.value);
+    let activeTopic = courseData?.activeTopic?.id;
+    if (topicExamData?.currentTopic?.id) activeTopic = topicExamData?.currentTopic?.id;
+    const TopicData = topicData?.filter((data) => data?.id === activeTopic);
     const ChapterData = chapterData?.filter((data) => data?.id === TopicData[0]?.chapterId);
+    const isVideoPlay = courseData?.videoData?.videoSrc;
     const time = courseData?.videoData?.timestamp;
     let timeInSeconds = (parseInt(time?.split(":")[0]) * 60) + parseInt(time?.split(":")[1]);
     if (!moduleData[0]?.courseId) return;
@@ -151,10 +162,10 @@ const CourseBodyDiscussion = () => {
         Content: message,
         UserId: userDetails?.id,
         ReplyId: null,
-        Module: ModuleData[0]?.name,
-        Chapter: ChapterData[0]?.name,
-        Topic: TopicData[0]?.name,
-        Time: timeInSeconds,
+        Module: isVideoPlay ? ModuleData[0]?.name || "" : "",
+        Chapter: isVideoPlay ? ChapterData[0]?.name || "" : "",
+        Topic: isVideoPlay ? TopicData[0]?.name || "" : "",
+        Time: isVideoPlay ? timeInSeconds : 0 ,
         Likes: [],
         Dislike: [],
         IsPinned: false,
@@ -173,6 +184,8 @@ const CourseBodyDiscussion = () => {
     console.log('messageArr', messageArr);
     setMessage('');
     setShowInput(false);
+    setIsAnonymous(false);
+    setIsAnnouncement(false)
   };
 
   const onMessageHandler = (e) => {
@@ -180,7 +193,7 @@ const CourseBodyDiscussion = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       sendMessageHandler();
     }
   };
@@ -195,8 +208,8 @@ const CourseBodyDiscussion = () => {
     const announcementData = messageArr?.filter((el) => {
       if (e.value === 'Announcements') {
         return el?.IsAnnouncement;
-      } else {
-        return el;
+      } else if(e.value !== 'Announcements') {
+        return !el?.IsAnnouncement;
       }
     });
     setFilterData(announcementData);
@@ -206,11 +219,17 @@ const CourseBodyDiscussion = () => {
   const typeValue = options.find((option) => option.value === selectedType);
 
   let filteredData = messageArr?.filter((el) => {
-    if (inputText === '') {
-      return el;
-    } else {
-      return userDetails?.first_name.toLowerCase().includes(inputText);
-    }
+ 
+    if (!inputText?.trim()) return el;
+    let first_name = el?.first_name?.toLowerCase() || "";
+    if(el?.IsAnonymous) first_name = 'anonymous'
+    let isDataFiltered = first_name?.includes(inputText);
+    if (!isDataFiltered) isDataFiltered = isWordIncluded(el?.Module, inputText);
+    if (!isDataFiltered) isDataFiltered = isWordIncluded(el?.Topic, inputText);
+    if (!isDataFiltered) isDataFiltered = isWordIncluded(el?.Chapter, inputText);
+    if (!isDataFiltered) isDataFiltered = isWordIncluded(el?.Content, inputText);
+    
+    return isDataFiltered;
   });
 
   const onSelfHandler = () => {
@@ -343,7 +362,7 @@ const CourseBodyDiscussion = () => {
           />
         </div>
       )}
-      {loading ? <Loader customStyles={{ height: '100%', backgroundColor: 'transparent' }} /> :
+      {loading ? <Loader customStyles={{ height: '100px', backgroundColor: 'transparent' }} /> :
         <>
           {messageArr?.length ?
             <>

@@ -73,9 +73,9 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       mutationClient
     );
     console.log('updateMessage', updateMessage);
-    setMessageArr([updateMessage?.updateCourseDiscussion, ...nonPinedMessages]);
+    setMessageArr([{...data, IsPinned: true}, ...nonPinedMessages]);
     console.log('messageArr', messageArr);
-    setFilterData([updateMessage?.updateCourseDiscussion, ...nonPinedMessages]);
+    setFilterData([{...data, IsPinned: true}, ...nonPinedMessages]);
   };
 
   const onUnpinHandler = async (data) => {
@@ -92,7 +92,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       {},
       mutationClient
     );
-    const newUpdateMsgArr = [...filterMessages, updateMessage?.updateCourseDiscussion];
+    const newUpdateMsgArr = [...filterMessages, {...data, IsPinned: false}];
     const pinnedData = newUpdateMsgArr?.filter((data) => data?.IsPinned);
     const nonPinnedData = newUpdateMsgArr?.filter((data) => !data?.IsPinned);
     let newArray = [...nonPinnedData];
@@ -108,7 +108,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const filterMessages = data?.Dislike?.filter((id) => id !== userDetails?.id);
     console.log('filterMessages', filterMessages);
     const messageLikes = [...(data?.Likes || []), userDetails?.id];
-    const messageDisLikes = filterMessages?.Dislike || [];
+    const messageDisLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
       UPDATE_COURSE_DISCUSSION,
       {
@@ -147,7 +147,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   
   const onRemoveLikeHandler = async (data) => {
     const filterLikes = data?.Likes?.filter((id) => id !== userDetails?.id);
-    const removeLikes = filterLikes?.Likes || [];
+    const removeLikes = filterLikes || [];
     const updateMessage = await loadQueryDataAsync(
       UPDATE_COURSE_DISCUSSION,
       {
@@ -182,7 +182,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const filterMessages = data?.Likes?.filter((id) => id !== userDetails?.id);
     console.log('filterMessages', filterMessages);
     const messageDisLikes = [...(data?.Dislike || []), userDetails?.id];
-    const messageLikes = filterMessages?.Likes || [];
+    const messageLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
       UPDATE_COURSE_DISCUSSION,
       {
@@ -220,7 +220,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   const onRemoveDisLikeHandler = async (data) => {
     const filterMessages = data?.Dislike?.filter((id) => id !== userDetails?.id);
     console.log('filterMessages', filterMessages);
-    const removeDisLikes = filterMessages?.Dislike || [];
+    const removeDisLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
       UPDATE_COURSE_DISCUSSION,
       {
@@ -274,13 +274,17 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       {},
       userQueryClient
     );
-    const userDetails = users.getUserDetails
+    const userDetails = users.getUserDetails;
     const mappedArray = replies?.map(item1 => {
     const item2 = userDetails?.find(i => i.id === item1.UserId);
     return { ...item1, ...item2};
     });
     console.log("mappedArray", mappedArray)
-    return mappedArray;
+    let newArray = [...mappedArray];
+    newArray?.sort(function (a, b) {
+      return b.Created_at - a.Created_at;
+    });
+    return [...newArray];
   };
 
   const onSendReplyHandler = async (msg) => {
@@ -313,7 +317,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         ADD_COURSE_DISCUSSION,
         {
           CourseId: moduleData[0]?.courseId,
-          Content: `${'@' + msg?.first_name + ' ' + reply}`,
+          Content: `${'@' + `${!msg?.IsAnonymous ? msg?.first_name : "Anonymous"}` + ' ' + reply}`,
           ReplyId: msg?.ReplyId,
           UserId: userDetails?.id,
           Likes: [],
@@ -334,14 +338,20 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     }
     setReply('');
     setShowInput(false);
+    setIsAnonymous(false);
+    setIsAnnouncement(false);
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       onSendReplyHandler(message);
     }
   };
-
+  let displayCourseData = "";
+  // {message?.Module}, {message?.Chapter},{message?.Topic}
+  if (message?.Module) displayCourseData += message?.Module;
+  if (message?.Chapter) displayCourseData += `, ${message?.Chapter}`;
+  if (message?.Topic) displayCourseData += `, ${message?.Topic}`;
   return (
     <div className={`${style.message_Block_container}`}>
       {message?.IsPinned && (
@@ -393,10 +403,10 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
           className={`${style.message_Block_Body} ${
             message?.IsPinned ? style.message_Block_Body_pinned : style.message_Block_Body_unpinned
           }`}>
-          {!isReply && !message?.IsAnnouncement && (
+          {!isReply && !message?.IsAnnouncement && !!displayCourseData?.length && (
             <div className={`${style.message_Block_module}`}>
               <p>{message?.Time}</p>
-              {message?.Module}, {message?.Chapter},{message?.Topic}
+              {displayCourseData}
             </div>
           )}
           <div

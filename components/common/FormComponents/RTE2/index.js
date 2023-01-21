@@ -44,7 +44,6 @@ export default function RTE2({
   //  */
   const formats = ['header', 'bold', 'italic', 'underline', 'list', 'bullet',  'indent', 'blockquote','code-block', 'link', 'image'];
 
-
   return (
     <div className={`${isReadOnly ? styles.rteReadOnly : styles.rteContainer2 }`}>
       <QuillNoSSRWrapper
@@ -69,8 +68,9 @@ export default function RTE2({
            <div className={`${styles.button_divider}`}></div>
           <LabeledRadioCheckbox label="Post this as an announcement" type="checkbox" name="announcement" isChecked={checkAnnouncement} changeHandler={onAnnouncementHandler} />
         </div>
-        <div className={`${styles.button_type}`}>
-        <button className={`${styles.button1}`} onClick={onPostHandler}>Post</button>
+          <div className={`${styles.button_type}`}>
+            
+        <button className={`${value ? styles.button1 : styles.buttonDisable }`} onClick={onPostHandler}>Post</button>
         <button className={`${styles.button2}`} onClick={onCancleHandler}>Cancel</button>
         </div>
         </div>
