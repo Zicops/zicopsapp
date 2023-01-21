@@ -11,6 +11,7 @@ import {
 } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS,
+  GET_USER_LATEST_COHORTS,
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_ORGANIZATIONS,
   userQueryClient
