@@ -1040,3 +1040,56 @@ export const GET_COHORT_COURSES = gql`
     }
   }
 `;
+
+export const GET_COURSE_DISCUSSION = gql`
+  query GetCourseDiscussion($course_id: String!) {
+    getCourseDiscussion(course_id: $course_id) {
+      DiscussionId
+      CourseId
+      ReplyId
+      UserId
+      Time
+      Content
+      Module
+      Chapter
+      Topic
+      Likes
+      Dislike
+      IsAnonymous
+      IsPinned
+      IsAnnouncement
+      ReplyCount
+      CreatedBy
+      Created_at
+      Updated_by
+      Updated_at
+      Status
+    }
+  }
+`;
+export const GET_DISCUSSION_REPLY = gql`
+  query GetDiscussionReply($course_id: String!, $discussion_id: String!) {
+    getCourseDiscussion(course_id: $course_id, discussion_id: $discussion_id) {
+      DiscussionId
+      CourseId
+      ReplyId
+      UserId
+      Time
+      Content
+      Module
+      Chapter
+      Topic
+      Likes
+      Dislike
+      IsAnonymous
+      IsPinned
+      IsAnnouncement
+      ReplyCount
+      CreatedBy
+      Created_at
+      Updated_by
+      Updated_at
+      Status
+    }
+  }
+`;

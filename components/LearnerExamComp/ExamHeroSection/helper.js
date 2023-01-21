@@ -191,7 +191,6 @@ export const useExamData = () => {
     }
 
     //loop to take exam related data in one piece
-
     if (!exams?.length) return setLoading(false);
 
     // to get exam metas
@@ -243,7 +242,7 @@ export const useExamData = () => {
         scheduleExams[i] = { ...scheduleExams[i], ...schedule[0] };
       }
     }
-    // console.log(takeAnyTimeExams, scheduleExams);
+    console.log("takeAnyTimeExams", takeAnyTimeExams);
     // if (!examAttempts?.length) return setTakeAnyTimeExams([...takeAnyTimeExams]);
 
     let currentTime = getUnixFromDate();
