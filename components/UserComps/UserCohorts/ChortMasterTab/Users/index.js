@@ -125,7 +125,7 @@ const Users = ({ isEdit = false, isReadOnly = false }) => {
       body: JSON.stringify(bodyData),
       template_id: EMAIL_TEMPLATE_IDS?.cohortUnassign,
     };
-    await sendNotification(
+     sendNotification(
       {
         title: NOTIFICATION_TITLES?.cohortUnassign,
         body: notificationBody,
@@ -133,7 +133,7 @@ const Users = ({ isEdit = false, isReadOnly = false }) => {
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
-    await sendEmail(sendEmailBody, {
+    sendEmail(sendEmailBody, {
       context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
     });
     setLoading(false);

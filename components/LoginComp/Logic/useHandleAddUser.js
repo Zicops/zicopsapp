@@ -383,7 +383,7 @@ export default function useHandleAddUserDetails() {
 
   async function notficationOnFirstLogin(){
 
-    await sendNotification(
+     sendNotification(
       {
         title: NOTIFICATION_TITLES?.lspWelcome,
         body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
@@ -391,7 +391,7 @@ export default function useHandleAddUserDetails() {
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
-    await sendNotification(
+     sendNotification(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
