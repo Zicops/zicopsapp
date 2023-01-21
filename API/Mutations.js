@@ -1938,8 +1938,94 @@ export const DELETE_EXAM = gql`
   }
 `;
 
+export const ADD_COURSE_DISCUSSION = gql`
+  mutation addCourseDiscussion(
+    $CourseId: String!
+    $ReplyId: String
+    $Content: String!
+    $UserId: String!
+    $Module: String
+    $Chapter: String
+    $Topic: String
+    $Time: Int
+    $Likes: [String]!
+    $Dislike: [String]!
+    $IsAnonymous: Boolean
+    $IsPinned: Boolean
+    $IsAnnouncement: Boolean
+    $ReplyCount: Int
+    $Status: String!
+  ) {
+    addCourseDiscussion(
+      discussionInput: {
+        CourseId: $CourseId
+        ReplyId: $ReplyId
+        UserId: $UserId
+        Content: $Content
+        Module: $Module
+        Chapter: $Chapter
+        Topic: $Topic
+        Time: $Time
+        Likes: $Likes
+        Dislike: $Dislike
+        IsAnonymous: $IsAnonymous
+        IsPinned: $IsPinned
+        IsAnnouncement: $IsAnnouncement
+        ReplyCount: $ReplyCount
+        Status: $Status
+      }
+    ) 
+  }
+`;
+export const UPDATE_COURSE_DISCUSSION = gql`
+mutation updateCourseDiscussion(
+  $discussionId:String!
+  $courseId:String!
+  $Content:String
+  $likes:[String]
+  $dislikes:[String]
+  $isAnonymous:Boolean
+  $IsPinned:Boolean
+  $IsAnnouncement:Boolean
+  $status:String
+){
+  updateCourseDiscussion(
+    discussionId: $discussionId
+    courseId: $courseId
+    Content: $Content
+    likes: $likes
+    dislikes: $dislikes
+    isAnonymous: $isAnonymous
+    IsPinned: $IsPinned
+    IsAnnouncement: $IsAnnouncement
+    status: $status
+  ) {
+    DiscussionId
+    CourseId
+    ReplyId
+    UserId
+    Time
+    Content
+    Module
+    Chapter
+    Topic
+    Likes
+    Dislike
+    IsAnonymous
+    IsPinned
+    IsAnnouncement
+    ReplyCount
+    CreatedBy
+    Created_at
+    Updated_by
+    Updated_at
+    Status
+  }
+}`
+
 export const DELETE_SUBTITLE = gql`
   mutation deleteTopicContentSubtitle($courseId: String!, $topicId: String!, $fileName: String!) {
     deleteTopicContentSubtitle(courseId: $courseId, topicId: $topicId, fileName: $fileName)
   }
 `;
+

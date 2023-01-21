@@ -188,6 +188,7 @@ export const GET_USER_COURSE_PROGRESS_ID = gql`
   query getUserCourseProgressByMapId($userId: String!, $userCourseId: [ID!]) {
     getUserCourseProgressByMapId(user_id: $userId, user_course_id: $userCourseId) {
       user_cp_id
+      status
     }
   }
 `;
