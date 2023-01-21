@@ -414,6 +414,7 @@ export const GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID = gql`
       courseId
       duration
       type
+      contentUrl
     }
   }
 `;
