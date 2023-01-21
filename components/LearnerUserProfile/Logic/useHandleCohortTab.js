@@ -1,8 +1,9 @@
 import { GET_COHORT_COURSES, queryClient } from '@/api/Queries';
 import { ADD_USER_COHORT, ADD_USER_COURSE, UPDATE_COHORT_MAIN, UPDATE_USER_COHORT, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS, GET_USER_LATEST_COHORTS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATION_DETAIL, userQueryClient } from '@/api/UserQueries';
+import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS_ID, GET_USER_LATEST_COHORTS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATION_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
+import { COURSE_MAP_STATUS, COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CohortMasterData, SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -120,6 +121,32 @@ export default function useHandleCohortTab() {
           }
           // console.log(addedBy,'added by')
           if(addedBy?.role?.toLowerCase() === 'self' ){
+            const progressRes = await loadQueryDataAsync(
+              GET_USER_COURSE_PROGRESS_ID,
+              {
+                userId: oldCourses[i]?.user_id,
+                userCourseId: [oldCourses[i]?.user_course_id]
+              },
+              {},
+              userClient
+            );
+            const isCourseStarted = progressRes?.getUserCourseProgressByMapId?.length > 0;
+      
+            let isCompleted = false;
+      
+            let courseStatus = COURSE_MAP_STATUS?.assign;
+      
+            if (!!isCourseStarted) {
+              let cpLength = 0;
+              progressRes?.getUserCourseProgressByMapId?.forEach((courseProgress) => {
+                if (courseProgress?.status === COURSE_PROGRESS_STATUS[2]) {
+                  cpLength++;
+                }
+              });
+              isCompleted = cpLength === progressRes?.getUserCourseProgressByMapId?.length ? true : false;
+              if(isCompleted) courseStatus = COURSE_MAP_STATUS?.completed;
+              else courseStatus = COURSE_MAP_STATUS?.started;
+            }
           const sendData ={
             userCourseId: oldCourses[i]?.user_course_id,
             userId: oldCourses[i]?.user_id,
@@ -128,11 +155,12 @@ export default function useHandleCohortTab() {
             addedBy: JSON.stringify({ userId: id, role: 'cohort' }),
             courseType: oldCourses[i]?.course_type,
             isMandatory: oldCourses[i]?.is_mandatory,
-            courseStatus: 'open',
             endDate: oldCourses[i]?.end_date
           }
 
-          // console.log(sendData,'updateCourse send data');
+          sendData.courseStatus = courseStatus ; 
+
+          console.log(sendData,'updateCourse send data');
           const res = await updateUserCourse({variables:sendData}).catch((err)=>{
             isError = !!err;
           })
