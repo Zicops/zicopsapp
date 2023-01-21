@@ -95,7 +95,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       courseName: userCourseData?.name
     });
 
-    await sendNotification(
+     sendNotification(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: notificationBody,
@@ -236,7 +236,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     // );
 
-    await sendNotificationWithLink(
+     sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseAssign,
         body: notificationBody,

@@ -154,7 +154,7 @@ const AddUsers = ({
       template_id: EMAIL_TEMPLATE_IDS?.cohortAssign
     };
 
-    await sendNotification(
+     sendNotification(
       {
         title: NOTIFICATION_TITLES?.cohortAssign,
         body: notificationBody,
@@ -173,7 +173,7 @@ const AddUsers = ({
     //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     // );
 
-    await sendEmail(sendEmailBody, {
+     sendEmail(sendEmailBody, {
       context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
     });
     onUserAdd();
