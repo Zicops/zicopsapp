@@ -11,6 +11,7 @@ import {
 } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS,
+  GET_USER_LATEST_COHORTS,
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_ORGANIZATIONS,
   userQueryClient
@@ -441,7 +442,7 @@ export default function useHandleAddUserDetails() {
     sendNotification(
       {
         title: NOTIFICATION_TITLES?.lspWelcome,
-        body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
+        body: `Hey ${userAboutData?.first_name} ${userAboutData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
         user_id: [userId]
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
