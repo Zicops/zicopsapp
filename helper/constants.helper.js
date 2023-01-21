@@ -135,7 +135,25 @@ export const NOTIFICATION_TITLES = {
   cohortUnassign: 'Cohort-Unmapped',
   courseAssign: 'Course-Assigned',
   courseUnssigned: 'Course-Unassigned',
-  lspWelcome: 'Welcome-Lsp'
+  lspWelcome: 'Welcome-Lsp',
+  signIn: {course:'Course-signInAssign'}
+};
+
+export const NOTIFICATION_MSG_LINKS = {
+  firstSigin: {
+    addCourses: {
+      msg: 'Get started by adding courses to your learning folder',
+      link: '/self-landing'
+    },
+    coursesAssigned: {
+      msg: 'You have courses assigned to you by your admin. Lets check them out',
+      link: 'my-profile?tabName=Courses'
+    },
+    cohortAssigned: {
+      msg: 'You are mapped to cohorts. Learn together in cohorts. Lets check them out',
+      link: 'my-profile?tabName=Cohort'
+    }
+  }
 };
 
 export const COURSE_SELF_ASSIGN_LIMIT = 30;

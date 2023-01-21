@@ -51,9 +51,14 @@ const ChangePasswordScreen = ({ setPage }) => {
             setToastMsg({ type: 'danger', message: err });
           });
       })
-      .catch((error) =>
-        setToastMsg({ type: 'danger', message: 'Reset password link is expired.' })
-      );
+      .catch((error) => {
+        router.push('/forgot-password');
+        setToastMsg({
+          type: 'info',
+          message:
+            'Reset password link has expired. Please enter your email for latest reset password link.'
+        });
+      });
   }
 
   return (
