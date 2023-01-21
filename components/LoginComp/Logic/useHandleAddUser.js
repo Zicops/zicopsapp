@@ -442,7 +442,7 @@ export default function useHandleAddUserDetails() {
       {
         title: NOTIFICATION_TITLES?.lspWelcome,
         body: `Hey ${userBasicData?.first_name} ${userBasicData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
-        user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+        user_id: [userId]
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
@@ -450,7 +450,7 @@ export default function useHandleAddUserDetails() {
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
-        user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+        user_id: [userId]
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
@@ -458,6 +458,7 @@ export default function useHandleAddUserDetails() {
   }
 
   async function updateAboutUser(newImage = null, isVerified = true) {
+    let userLspId = sessionStorage.getItem('user_lsp_id');
     const sendUserData = {
       id: userAboutData?.id,
       first_name: userAboutData?.first_name,
@@ -512,7 +513,7 @@ export default function useHandleAddUserDetails() {
     const _userData = { ...userAboutData, ...data };
 
     if (!userAboutData?.is_verified) {
-      await notficationOnFirstLogin();
+      await notficationOnFirstLogin(userAboutData?.id,userLspId);
     }
 
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
