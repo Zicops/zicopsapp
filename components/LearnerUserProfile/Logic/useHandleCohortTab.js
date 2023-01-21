@@ -6,7 +6,7 @@ import { getCurrentEpochTime } from '@/helper/common.helper';
 import { COURSE_MAP_STATUS, COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { CohortMasterData, SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -90,7 +90,7 @@ export default function useHandleCohortTab() {
             userLspId:userLspId,
             courseId:addNewCourses[i]?.CourseId,
             courseType:addNewCourses[i]?.CourseType,
-            courseStatus:'not-started',
+            courseStatus: COURSE_MAP_STATUS.assign,
             addedBy:JSON.stringify({user_id:id , role:'Cohort'}),
             isMandatory:addNewCourses[i]?.isMandatory,
             endDate:endDate
