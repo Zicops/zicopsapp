@@ -41,7 +41,7 @@ import {
 import ExamScreenPage from '@/components/LearnerExamComp/ExamScreenPage';
 import { getEndTime, getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
+import { COURSE_MAP_STATUS, COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { DIFFICULTY, getUnixFromDate } from '@/helper/utils.helper';
 import { getResultsObj, LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
@@ -869,7 +869,7 @@ const ExamScreen = () => {
         _courseData?.userCourseMapping?.user_lsp_id || sessionStorage.getItem('user_lsp_id');
 
       const sendUserCourseData = {
-        courseStatus: 'started',
+        courseStatus: COURSE_MAP_STATUS.started,
         userCourseId: _courseData?.userCourseMapping?.user_course_id,
         userId: _courseData?.userCourseMapping?.user_id,
         userLspId: userLspId,

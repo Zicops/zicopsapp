@@ -1,13 +1,12 @@
-import { discussionData , replyData } from '@/components/CourseBody/CourseBodyDiscussion/discussion.helper';
 import { atom } from 'recoil';
 
 export const MessageAtom = atom({
   key: 'message',
-  default: discussionData?.messages
+  default: []
 });
 export const ReplyAtom = atom({
   key: 'reply',
-  default: replyData
+  default: []
 });
 
 export const DiscussionMessageAtom = atom({
@@ -21,28 +20,20 @@ export const DiscussionReplyAtom = atom({
 
 export function getMesaageObj(data = {}) {
   return {
-    id: data?.id || '',
-    isAnonymous: data?.isAnonymous || false,
-    isAnnouncement: data?.isAnnouncement || false,
-    replyId: data?.reply || "",
-    user: {
-      id: data?.user || '',
-      first_name: data?.first_name || '',
-      photo_url: data?.photo_url || 'https://www.w3schools.com/howto/img_avatar2.png',
-      role: data?.role || 'Learner'
-    },
-    time: data?.time || 1671197332,
-    content: { text: data?.text || '', image: data?.image || [] },
-    currentTopic: {
-      module: data?.module || '',
-      chapter: data?.chapter || '',
-      topic: data?.topic || '',
-      time: data?.time || '20:15'
-    },
-    like: data?.like || [],
-    unlike: data?.unlike || [],
-    isPinned: data?.isPinned || false,
-    reply: data?.reply || 0
+    CourseId: data?.id || '',
+    IsAnonymous: data?.isAnonymous || false,
+    IsAnnouncement: data?.isAnnouncement || false,
+    ReplyId: data?.reply || "",
+    Time: data?.time || '20:15',
+    Content: data?.content || '', 
+    Module: data?.module || '',
+    Chapter: data?.chapter || '',
+    Topic: data?.topic || '',
+    Likes: data?.likes || [],
+    Dislike: data?.dislike || [],
+    IsPinned: data?.isPinned || false,
+    UserId: data?.userId || '',
+    ReplyCount: data?.replyCount || 0
   };
 }
 

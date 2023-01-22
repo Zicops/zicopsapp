@@ -3,8 +3,13 @@ import HomeSlider from '@/components/HomeSlider';
 import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COMMON_LSPS, COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
-import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import {
+  COMMON_LSPS,
+  COURSE_MAP_STATUS,
+  COURSE_STATUS,
+  LANGUAGES
+} from '@/helper/constants.helper';
+import { getUserAssignCourses, sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { getUnixTimeAt } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
@@ -158,25 +163,33 @@ export default function HomepageScreen() {
       // setParentOfBaseSubcategory(catSubCat?.subCatGrp?.[catId]?.cat?.Name);
       setActiveSubcatArr(activeSubcategories);
 
-      const userCourseData = await getUserCourseData(28);
-      let ucidArray = [];
-      userCourseData?.map((uc) => ucidArray?.push(uc.id));
+      // const userCourseData = await getUserCourseData(28);
+      const filters = { status: COURSE_MAP_STATUS.started };
+      const _onGoingCourses = await getUserAssignCourses(filters);
 
-      console.log(userCourseData);
-      setOngoingCourses(
-        userCourseData?.filter(
-          // (course) => course?.completedPercentage > 0 && course?.completedPercentage < 100
-          (course) => course?.isCourseStarted && !course?.isCourseCompleted
-        )
-      );
-      setLearningFolderCourses(
-        userCourseData?.filter(
-          (course) =>
-            // course?.added_by.toLowerCase() === 'self' &&
-            // parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100
-            !course?.isCourseStarted && !course?.isCourseCompleted
-        )
-      );
+      filters.status = COURSE_MAP_STATUS.assign;
+      const _coursesInFolder = await getUserAssignCourses(filters);
+
+      let ucidArray = [];
+      _coursesInFolder?.forEach((uc) => ucidArray?.push(uc.id));
+      _onGoingCourses?.forEach((uc) => ucidArray?.push(uc.id));
+
+      setOngoingCourses(_onGoingCourses);
+      setLearningFolderCourses(_coursesInFolder);
+      // setOngoingCourses(
+      //   userCourseData?.filter(
+      //     // (course) => course?.completedPercentage > 0 && course?.completedPercentage < 100
+      //     (course) => course?.isCourseStarted && !course?.isCourseCompleted
+      //   )
+      // );
+      // setLearningFolderCourses(
+      //   userCourseData?.filter(
+      //     (course) =>
+      //       // course?.added_by.toLowerCase() === 'self' &&
+      //       // parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100
+      //       !course?.isCourseStarted && !course?.isCourseCompleted
+      //   )
+      // );
 
       const getLatestCourses = await getLatestCoursesByFilters({}, pageSize);
       setLatestCourses(

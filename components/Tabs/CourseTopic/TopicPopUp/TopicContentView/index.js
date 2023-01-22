@@ -39,14 +39,23 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                 <div
                   className="content_bar"
                   style={{
-                    background: `linear-gradient(90deg, #86D386 ${
-                      uploadStatus ? uploadStatus[content.language] * 100 : 0
-                    }%, #868686 0%, #868686 100%)`
+                    background:
+                      !!content?.id && !content?.contentUrl
+                        ? '#cf3e3e'
+                        : `linear-gradient(90deg, #86D386 ${
+                            uploadStatus ? uploadStatus[content.language] * 100 : 0
+                          }%, #868686 0%, #868686 100%)`
                   }}>
                   <div className="language">{content.language}</div>
                   <div className="text">
-                    Content Added {isSubtitleAdded ? 'With Subtitle' : ''}{' '}
-                    {content.is_default ? `(default)` : ''}
+                    {!!content?.id && !content?.contentUrl ? (
+                      'No Content URL Found'
+                    ) : (
+                      <>
+                        Content Added {isSubtitleAdded ? 'With Subtitle' : ''}{' '}
+                        {content.is_default ? `(default)` : ''}
+                      </>
+                    )}
                   </div>
 
                   <DeleteBtn
