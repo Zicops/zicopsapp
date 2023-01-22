@@ -2,7 +2,7 @@
 
 .homebody {
   background-color: $bgTile;
-  overflow: hidden;
+  overflow-x: clip;
   margin: 0;
   padding: 0;
 }

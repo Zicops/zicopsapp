@@ -1,5 +1,19 @@
 import { atom } from 'recoil';
 
+export const FeatureFlagsAtom = atom({
+  key: 'FeatureFlags',
+  default: getFeatureFlagsDataObj()
+});
+
+export function getFeatureFlagsDataObj(data = {}) {
+  return {
+    isUserMappedToMultipleLsps: data?.isUserMappedToMultipleLsps || false,
+    isPublishCourseEditable: data?.isPublishCourseEditable || false,
+    isZicopsProVersion: data?.isZicopsProVersion || false,
+    isDev: data?.isDev || false
+  };
+}
+
 export const CatSubCatAtom = atom({
   key: 'CatSubCat',
   default: getCatSubCatDataObj()

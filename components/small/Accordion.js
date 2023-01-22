@@ -8,7 +8,8 @@ const Accordion = ({
   onClose = function () {},
   isDisabled = false,
   tooltipTitleOpen,
-  tooltipTitleClose
+  tooltipTitleClose,
+  hideTitleLine = false
 }) => {
   const [isActive, setIsActive] = useState(false);
 
@@ -80,14 +81,14 @@ const Accordion = ({
           height: 1px;
           margin-top: 12px;
           background-color: #808080;
-          width: 80%;
+          width: ${hideTitleLine ? '0%' : '80%'};
         }
         .accordion-title-active:after {
           content: '';
           height: 1px;
           margin-top: 12px;
           background-color: #ffffff;
-          width: 80%;
+          width: ${hideTitleLine ? '0%' : '80%'};
         }
         .accordion-title:hover,
         .accordion-title-active:hover {
@@ -100,7 +101,7 @@ const Accordion = ({
         }
         .accordion-title .accordion-title-text,
         .accordion-title-active .accordion-title-text {
-          width: 20%;
+          width: ${hideTitleLine ? '100%' : '20%'};
         }
         .accordion-title,
         .accordion-title-active,

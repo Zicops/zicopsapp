@@ -1,6 +1,6 @@
 import CourseBoxCard from '@/components/common/CourseBoxCard';
 import CourseLIstCard from '@/components/common/CourseLIstCard';
-import moment from 'moment';
+import { getCourseDisplayTime } from '@/helper/utils.helper';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../learnerUserProfile.module.scss';
 
@@ -37,7 +37,7 @@ export default function CardContainer({
     // const screenWidth = window.screen.width; //////
     const screenWidth = cardContainerRef.current?.offsetWidth;
     window.c = cardContainerRef.current;
-    console.log(screenWidth);
+
     let cardCount = cardSizeData.cardCount;
 
     if (screenWidth > 1600) cardCount = 6;
@@ -54,7 +54,9 @@ export default function CardContainer({
       {!hideTopBar && (
         <>
           <div className={`${styles.courseTabHeader}`}>
-            <p className={`${styles.text}`} style={customStyles}>{type}</p>
+            <p className={`${styles.text}`} style={customStyles}>
+              {type}
+            </p>
 
             <div className={`${styles.imageContainer}`}>
               <img
@@ -92,13 +94,12 @@ export default function CardContainer({
               return (
                 <CourseBoxCard
                   isAdmin={isAdmin}
-                  courseData={{...course, duration: (course?.duration / (60))?.toFixed(2)}}
+                  courseData={{ ...course, duration: (course?.duration / 60)?.toFixed(2) }}
                   footerType={footerType}
                   cardWidth={cardSizeData.cardWidth}>
                   {footerType === 'added' && (
                     <div className={`${styles.leftAlign}`}>
-
-                     <p>Duration: {(course?.duration / (60))?.toFixed(2) || 240} mins</p>
+                      <p>Duration: {getCourseDisplayTime(course?.duration)}</p>
 
                       <p>Added on {course?.addedOn || '22-06-2022'}</p>
                     </div>
@@ -123,9 +124,10 @@ export default function CardContainer({
             ?.slice(0, isShowAll ? courseData?.length : cardSizeData.cardCount)
             ?.map((course) => (
               <CourseLIstCard
-                courseData={{...course, duration: (course?.duration / (60*60))?.toFixed(2)}}
+                courseData={{ ...course, duration: (course?.duration / 60)?.toFixed(2) }}
                 statusData={statusData}
-                footerType={footerType} isAdmin={isAdmin}></CourseLIstCard>
+                footerType={footerType}
+                isAdmin={isAdmin}></CourseLIstCard>
             ))}
         </div>
       )}

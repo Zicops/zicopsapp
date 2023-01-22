@@ -1,5 +1,13 @@
 import { API_LINKS } from '@/api/api.helper';
-import { GET_CATS_AND_SUB_CAT_MAIN, GET_COURSE } from '@/api/Queries';
+import {
+  GET_CATS_AND_SUB_CAT_MAIN,
+  GET_COURSE,
+  GET_COURSE_TOPICS,
+  GET_EXAM_META,
+  GET_EXAM_SCHEDULE,
+  GET_TOPIC_EXAMS,
+  queryClient
+} from '@/api/Queries';
 import {
   ADD_USER_ORGANIZATION_MAP,
   UPDATE_COHORT_MAIN,
@@ -12,23 +20,28 @@ import {
 } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
+  GET_ORGANIZATIONS_DETAILS,
   GET_USER_COURSE_MAPS,
   GET_USER_COURSE_PROGRESS,
   GET_USER_DETAIL,
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_LSP_MAP_BY_LSPID,
   GET_USER_PREFERENCES,
+  GET_USER_PREFERENCES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
+import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
+import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
+  InviteUserAtom,
   IsUpdatedAtom,
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -43,6 +56,7 @@ import {
   COMMON_LSPS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
+  USER_MAP_STATUS,
   USER_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
@@ -223,10 +237,10 @@ export default function useUserCourseData() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  async function getUserCourseData(pageSize = 999999999) {
+  async function getUserCourseData(pageSize = 999999999, userId = null) {
     const { id } = getUserData();
     const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
-    let currentUserId = id;
+    let currentUserId = !!userId ? userId : id;
     if (!currentUserId) return;
     // return setToastMsg({
     //   type: 'danger',
@@ -252,13 +266,19 @@ export default function useUserCourseData() {
       (course) => course?.course_status?.toLowerCase() !== 'disabled'
     );
 
-    const currentLspCourses = _assignedCourses?.filter(
-      (courseMap) => courseMap?.user_lsp_id === user_lsp_id
+    const currentLspId = sessionStorage.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
+
+    const currentLspCourses = _assignedCourses?.filter((courseMap) =>
+      [currentLspId, zicopsLspId]?.includes(courseMap?.lsp_id)
     );
 
     const assignedCoursesToUser = currentLspCourses;
 
     const userCourseId = [];
+    const courseIdArr = [];
+
+    let totalSelfCourseCount = 0;
 
     const allAssignedCourses = [];
     for (let i = 0; i < assignedCoursesToUser?.length; i++) {
@@ -266,6 +286,7 @@ export default function useUserCourseData() {
       // const mapId = courseMap?.user_course_id;
       // const course_id = courseMap?.course_id;
       userCourseId.push(courseMap?.user_course_id);
+      courseIdArr.push(courseMap?.course_id);
     }
 
     // if (course_id === '') continue;
@@ -276,33 +297,41 @@ export default function useUserCourseData() {
       userClient
     );
 
-    // console.log(courseProgressRes, 'sds');
+    // load all courses details
+    const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
+      course_id: courseIdArr
+    });
+    if (courseRes?.error) {
+      setToastMsg({ type: 'danger', message: 'Course Load Error' });
+      return;
+    }
+    const allCourseDetails = courseRes?.getCourse;
 
     if (courseProgressRes?.error) {
       setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-      // continue;
       return;
     }
 
     courseProgressRes?.getUserCourseProgressByMapId?.map((cpByMapId) => {});
 
     const coursesMeta = [];
-    assignedCoursesToUser.forEach((courseMap, i) => {
+    assignedCoursesToUser?.forEach((courseMap, i) => {
       const data = courseProgressRes?.getUserCourseProgressByMapId?.filter(
         (cpByMapId) => cpByMapId?.user_course_id === courseMap?.user_course_id
       );
-      coursesMeta.push({ ...courseMap, courseProgres: [...data] });
+      const courseDetails = allCourseDetails?.find((c) => c?.id === courseMap?.course_id) || {};
+      coursesMeta.push({ ...courseMap, ...courseDetails, courseProgres: [...data] });
     });
-
-    // console.log(coursesMeta,'meta')
 
     let userCourseArray = [];
 
     for (let i = 0; i < coursesMeta?.length; i++) {
-      // if (!coursesMeta[i]?.courseProgres?.length) continue;
+      const _courseData = coursesMeta[i];
+
       let topicsCompleted = 0;
       let topicsStarted = 0;
-      let userProgressArr = coursesMeta[i]?.courseProgres;
+      let userProgressArr = _courseData?.courseProgres;
+      // loop through each topic and update the variable for getting the course progress status
       userProgressArr?.map((topic) => {
         if (topic?.status !== COURSE_TOPIC_STATUS.assign) ++topicsStarted;
         if (topic?.status === COURSE_TOPIC_STATUS.completed) ++topicsCompleted;
@@ -312,37 +341,40 @@ export default function useUserCourseData() {
         ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
         : 0;
 
-      // console.log(userProgressArr, userProgressArr?.length, topicsStarted);
+      let added_by = parseJson(_courseData?.added_by)?.role || _courseData?.added_by;
 
-      const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
-        course_id: coursesMeta[i]?.course_id
-      });
-      if (courseRes?.error) {
-        setToastMsg({ type: 'danger', message: 'Course Load Error' });
-        continue;
-      }
+      if (added_by?.toLowerCase() === 'self') ++totalSelfCourseCount;
 
-      let added_by = parseJson(coursesMeta[i]?.added_by)?.role || coursesMeta[i]?.added_by;
-
-      // const added_by = JSON.parse(assignedCoursesToUser[i]?.added_by);
-      const courseDuraton = +courseRes?.getCourse?.duration / (60 * 60);
+      const courseDuraton = +_courseData?.duration;
       const progressPercent = userProgressArr?.length ? courseProgress : '0';
+      const completedPercent = userProgressArr?.length
+        ? Math.floor((topicsCompleted * 100) / userProgressArr?.length)
+        : 0;
 
-      if (courseRes?.getCourse?.status !== COURSE_STATUS.publish) continue;
+      if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
       userCourseArray.push({
-        ...courseRes?.getCourse,
-        ...coursesMeta[i],
+        ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
-        addedOn: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
-        completedPercentage: progressPercent,
-        created_at: moment.unix(coursesMeta[i]?.created_at).format('DD/MM/YYYY'),
-        expected_completion: moment.unix(coursesMeta[i]?.end_date).format('DD/MM/YYYY'),
-        timeLeft: (courseDuraton - (courseDuraton * (+progressPercent || 0)) / 100).toFixed(2),
+        addedOn: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
+        created_at: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
+        expected_completion: moment.unix(_courseData?.end_date).format('D MMM YYYY'),
+        timeLeft: courseDuraton - (courseDuraton * (+completedPercent || 0)) / 100,
         added_by: added_by,
         isCourseCompleted:
           topicsCompleted === 0 ? false : topicsCompleted === userProgressArr?.length,
-        isCourseStarted: topicsStarted > 0
+        isCourseStarted: topicsStarted > 0,
+        completedPercentage: completedPercent,
+        topicsStartedPercentage: progressPercent,
+        scheduleDate: _courseData?.end_date,
+        dataType: 'course'
+        // remove this value or below value
+        // completedPercentage: progressPercent,
+        // course completed percentage replace this with above value
+        // topic started percentage (used for home page for now)
+        // userProgressArr?.length
+        //   ? Math.floor((topicsStarted * 100) / userProgressArr?.length)
+        //   : 0
       });
     }
 
@@ -392,11 +424,168 @@ export default function useUserCourseData() {
     const userCourses = _userCourses.filter(
       (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
     );
-    console.log(userCourseArray, userCourses);
+
+    setUserOrgData((prevValue) => ({ ...prevValue, self_course_count: totalSelfCourseCount }));
     if (!userCourses?.length)
       return setToastMsg({ type: 'info', message: 'No courses in your learning folder' });
 
     return userCourses;
+  }
+
+  async function getTopics(courseId = null) {
+    //return an empty array in case of error
+
+    if (!courseId) return [];
+    const topicRes = await loadQueryDataAsync(
+      GET_COURSE_TOPICS,
+      { course_id: courseId },
+      {},
+      queryClient
+    );
+    if (topicRes?.error) return [];
+    if (!topicRes?.getTopics?.length) return [];
+    return [...topicRes?.getTopics];
+  }
+
+  async function getTopicExams(topicId = null) {
+    if (!topicId) return [];
+    const examRes = await loadQueryDataAsync(
+      GET_TOPIC_EXAMS,
+      { topic_id: topicId },
+      {},
+      queryClient
+    );
+    if (examRes?.error) return [];
+    if (!examRes?.getTopicExams?.length) return [];
+    return [...examRes?.getTopicExams];
+  }
+
+  async function getExamsMeta(examIds = []) {
+    if (!examIds?.length) return;
+    const examMetaRes = await loadQueryDataAsync(
+      GET_EXAM_META,
+      { exam_ids: examIds },
+      {},
+      queryClient
+    );
+    if (examMetaRes?.error) return [];
+    if (!examMetaRes?.getExamsMeta?.length) return [];
+    return [...examMetaRes?.getExamsMeta];
+  }
+
+  async function getExamSchedule(examId = null) {
+    if (!examId) return [];
+    const examSchedule = await loadQueryDataAsync(
+      GET_EXAM_SCHEDULE,
+      { exam_id: examId },
+      {},
+      queryClient
+    );
+    if (examSchedule?.error) return [];
+    if (!examSchedule?.getExamSchedule?.length) return [];
+    return [...examSchedule?.getExamSchedule];
+  }
+
+  async function getScheduleExams(courseData = []) {
+    const { id } = getUserData();
+    const user_lsp_id = sessionStorage?.getItem('user_lsp_id');
+    let currentUserId = id;
+    if (!currentUserId) return;
+
+    const _assignedCourses = courseData;
+
+    let topicCourseMap = [];
+
+    if (!_assignedCourses?.length) return [];
+    let assessmentTopics = [];
+    // need later for courses down exam
+    let assessmentCourses = [];
+    for (let i = 0; i < _assignedCourses?.length; i++) {
+      const courseTopics = await getTopics(_assignedCourses[i]?.id);
+      if (!courseTopics?.length) continue;
+      const filteredTopics = courseTopics?.filter(
+        (topic) => topic?.type?.toLowerCase() === 'assessment'
+      );
+      if (!filteredTopics?.length) continue;
+      assessmentTopics = assessmentTopics.concat(filteredTopics);
+      assessmentCourses = assessmentCourses.concat(_assignedCourses[i]);
+      // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
+      for (let j = 0; j < filteredTopics?.length; j++) {
+        if (!_assignedCourses[i]?.id?.length) continue;
+        topicCourseMap.push({
+          [`${filteredTopics[j]?.id}`]: {
+            courseName: _assignedCourses[i]?.name,
+            topicId: filteredTopics[j]?.id,
+            courseId: _assignedCourses[i]?.id,
+            image: _assignedCourses[i]?.image,
+            topicDescription: filteredTopics[j]?.description
+          }
+        });
+      }
+    }
+
+    // console.log(assessmentTopics,'assasas',topicDataData)
+    if (!assessmentTopics?.length) return setLoading(false);
+
+    const examCourseMap = [];
+
+    // load topic exams
+    let exams = [];
+    for (let i = 0; i < assessmentTopics?.length; i++) {
+      const topicExams = await getTopicExams(assessmentTopics[i]?.id);
+      if (!topicExams?.length) continue;
+      examCourseMap.push({
+        [`${topicExams[0]?.examId}`]: {
+          courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
+          examId: topicExams[0]?.examId,
+          topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
+          courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId,
+          image: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.image,
+          topicDescription: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicDescription
+        }
+      });
+      exams = exams.concat(topicExams);
+    }
+
+    //loop to take exam related data in one piece
+
+    if (!exams?.length) return setLoading(false);
+
+    // to get exam metas
+    const examsIds = exams?.map((exam) => exam?.examId);
+    const examMetas = await getExamsMeta(examsIds);
+
+    let scheduleExams = [];
+
+    examMetas?.forEach((exam, index) => {
+      if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
+        scheduleExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
+        return;
+      }
+    });
+
+    if (scheduleExams.length) {
+      for (let i = 0; i < scheduleExams?.length; i++) {
+        const schedule = await getExamSchedule(scheduleExams[i]?.id);
+        if (!schedule?.length) continue;
+        scheduleExams[i] = { ...scheduleExams[i], ...schedule[0] };
+      }
+
+      const _scheduleExams = scheduleExams?.map((exam) => {
+        let end = !!parseInt(exam?.End)
+          ? exam?.End
+          : parseInt(exam?.Start) + parseInt(exam?.BufferTime) * 60;
+        return {
+          ...exam,
+          description: exam?.topicDescription,
+          name: exam?.Name,
+          endTime: end,
+          scheduleDate: exam?.Start,
+          dataType: 'exam'
+        };
+      });
+      return _scheduleExams;
+    } else return [];
   }
 
   async function getUserPreferences() {
@@ -446,14 +635,25 @@ export default function useUserCourseData() {
 
     const zicopsLsp = COMMON_LSPS.zicops;
     const zicopsCatSubCatData =
-      zicopsLsp !== lspId ? await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, { lsp_ids: [zicopsLsp] }) : {allCatMain:[],allSubCatMain:[]};
-    const currentCatSubCatData = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, { lsp_ids: [lspId] });
+      zicopsLsp !== lspId
+        ? await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, { lsp_ids: [zicopsLsp] })
+        : { allCatMain: [], allSubCatMain: [] };
+    const currentCatSubCatData = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      lsp_ids: [lspId]
+    });
 
-    const catAndSubCatRes = { allCatMain: [...zicopsCatSubCatData?.allCatMain , ...currentCatSubCatData?.allCatMain], allSubCatMain: [...zicopsCatSubCatData?.allSubCatMain, ...currentCatSubCatData?.allSubCatMain] };
-
+    const catAndSubCatRes = {
+      allCatMain: [
+        ...(zicopsCatSubCatData?.allCatMain || []),
+        ...(currentCatSubCatData?.allCatMain || [])
+      ],
+      allSubCatMain: [
+        ...(zicopsCatSubCatData?.allSubCatMain || []),
+        ...(currentCatSubCatData?.allSubCatMain || [])
+      ]
+    };
 
     if (!resPref?.getUserPreferences?.length) return [];
-    
 
     const _subCatGrp = {};
     const allSubCat = catAndSubCatRes?.allSubCatMain?.map((subCat) => {
@@ -478,12 +678,11 @@ export default function useUserCourseData() {
     // console.log(user_lsp_id, uLspId);
     // console.log(data);
     const prefData = data?.filter((item) => {
-      return (item?.user_lsp_id === user_lsp_id && item?.is_active);
+      return item?.user_lsp_id === user_lsp_id && item?.is_active;
     });
 
     const prefArr = [];
     for (let i = 0; i < prefData?.length; i++) {
-
       const pref = prefData[i];
       const subCatData = allSubCat?.find((s) => s?.Name === pref?.sub_category);
 
@@ -575,7 +774,7 @@ export default function useUserCourseData() {
   }
 
   async function getUsersForAdmin() {
-    if(!userOrgData?.lsp_id?.length) return;
+    if (!userOrgData?.lsp_id?.length) return;
     const resLspUser = await loadQueryDataAsync(
       GET_USER_LSP_MAP_BY_LSPID,
       { lsp_id: userOrgData?.lsp_id, pageCursor: '', Direction: '', pageSize: 1000 },
@@ -584,10 +783,16 @@ export default function useUserCourseData() {
     );
     if (resLspUser?.error) return { error: 'Error while while loading lsp maps!' };
 
+    const userLspMaps = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps?.filter(
+      (user) => !!user?.user_id
+    );
+
     //removing duplicate values
-    const userIds = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps
-      ?.filter((v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i)
-      ?.map((user) => user?.user_id);
+    const users = userLspMaps?.filter(
+      (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
+    );
+
+    const userIds = users?.map((user) => user?.user_id);
 
     const resUserDetails = await loadQueryDataAsync(
       GET_USER_DETAIL,
@@ -611,8 +816,33 @@ export default function useUserCourseData() {
     if (!userData?.length) return { error: 'No users found!' };
     return userData;
   }
+  
+  const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
+    client: userClient
+  });
 
-  return { getUserCourseData, getUserPreferences, getCohortUserData, getUsersForAdmin };
+  const OrgDetails = async () => {
+    const orgId = sessionStorage.getItem('org_id');
+    if (!orgId) return;
+    const res = await getOrgDetails({
+      variables: { org_ids: orgId }
+    }).catch((err) => {
+      console.error(err);
+    });
+    setUserOrgData((prevValue) => ({
+      ...prevValue,
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+    }));
+  };
+
+  return {
+    getUserCourseData,
+    getUserPreferences,
+    getCohortUserData,
+    getUsersForAdmin,
+    getScheduleExams,
+    OrgDetails
+  };
 }
 
 export function getUserAboutObject(data = {}) {
@@ -665,7 +895,11 @@ export function useUpdateUserAboutData() {
   const [newUserAboutData, setNewUserAboutData] = useState(getUserAboutObject({ is_active: true }));
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
+  const [invitedUsers, setInvitedUsers] = useRecoilState(InviteUserAtom);
   const [isConfirmPopUpDisable, setIsConfirmPopUpDisable] = useState(false);
+  const [getPrefData, { loading, error, data }] = useLazyQuery(GET_USER_PREFERENCES_DETAILS, {
+    client: userQueryClient
+  });
 
   useEffect(() => {
     let isPhValid = false;
@@ -705,14 +939,19 @@ export function useUpdateUserAboutData() {
     // if (userData?.status?.toLowerCase() === 'disabled')
     //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
 
+    if (userData?.status?.toLowerCase() === USER_MAP_STATUS?.activate?.toLowerCase()) {
+      const res = await getPrefData({
+        variables: { user_id: userData?.id, user_lsp_id: userData?.user_lsp_id }
+      })?.catch((err) => console.log(err));
+      if (!res?.data?.getUserPreferenceForLsp) userData.status = ' ';
+    }
+
     const sendLspData = {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
-      lsp_id: userOrgData?.lsp_id,
+      lsp_id: userOrgData?.lsp_id || sessionStorage.getItem('lsp_id'),
       status: userData?.status
     };
-
-    // console.log(sendLspData, 'updateUserLearningSpaceDetails');
 
     let isError = false;
     const res = await updateLsp({ variables: sendLspData }).catch((err) => {
@@ -720,14 +959,16 @@ export function useUpdateUserAboutData() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
     });
-    console.log(res);
+    // console.log(res);
+    if (sendLspData?.status === '') {
+      setInvitedUsers((prev) => [...prev, userData?.user_id]);
+    }
     return !isError;
   }
 
   async function updateUserRole(userData = null) {
     const userRoleData = userData ? userData?.roleData : newUserAboutData;
 
-    console.log(userRoleData, 'rianf');
     if (!userData?.roleData?.user_role_id) return false;
 
     // console.log(userData?.roleData, 'sifhishfi');
@@ -799,17 +1040,14 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
-      // console.log(user);
+      console.log(user);
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
-      if (
-        user?.lsp_status?.toLowerCase() === USER_STATUS?.activate?.toLowerCase() ||
-        user?.lsp_status === ''
-      ) {
+      if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {
         const userSendLspData = {
           id: user?.id,
           user_lsp_id: user?.user_lsp_id,
-          status: USER_STATUS?.disable
+          status: USER_MAP_STATUS?.disable
         };
         const isDisable = await updateUserLsp(userSendLspData);
         if (!isDisable) {
@@ -856,10 +1094,10 @@ export function useUpdateUserAboutData() {
   async function resetMultiPassword(users = []) {
     const emails = users?.map((user) => user?.email);
     let isError = false;
-    if(!emails?.length) return !isError;
-    for(let i = 0 ; i < emails?.length ; i++){
+    if (!emails?.length) return !isError;
+    for (let i = 0; i < emails?.length; i++) {
       const isEmailSent = await resetPassword(emails[i]);
-      if(!isEmailSent) isError = true;
+      if (!isEmailSent) isError = true;
     }
     return !isError;
   }

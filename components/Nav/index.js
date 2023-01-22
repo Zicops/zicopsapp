@@ -8,16 +8,17 @@ import { AdminMenu, UserMenu } from './Logic/nav.helper';
 import { useHandleNav } from './Logic/useHandleNav';
 import styles from './nav.module.scss';
 
+import { userClient } from '@/api/UserMutations';
+import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
+import { sendNotification } from '@/helper/api.helper';
 import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
 import { useRecoilState } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import ToolTip from '../common/ToolTip';
-import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
-import { useLazyQuery } from '@apollo/client';
-import { userClient } from '@/api/UserMutations';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import UserDisplay from './UserDisplay';
-import { sendNotification } from '@/helper/api.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -27,24 +28,25 @@ export default function Nav() {
   const notificationBarRef = useRef(null);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
   const handleClickInside = () => setShowNotification(!showNotification);
+  const {OrgDetails} = useUserCourseData();
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
 
-  const OrgDetails = async () => {
-    const orgId = sessionStorage.getItem('org_id');
-    if (!orgId) return;
-      const res = await getOrgDetails({
-        variables: { org_ids: orgId }
-      }).catch((err) => {
-        console.error(err);
-      });
-      setOrgData((prevValue) => ({
-        ...prevValue,
-        logo_url: res?.data?.getOrganizations[0]?.logo_url
-      }));
-  };
+  // const OrgDetails = async () => {
+  //   const orgId = sessionStorage.getItem('org_id');
+  //   if (!orgId) return;
+  //   const res = await getOrgDetails({
+  //     variables: { org_ids: orgId }
+  //   }).catch((err) => {
+  //     console.error(err);
+  //   });
+  //   setOrgData((prevValue) => ({
+  //     ...prevValue,
+  //     logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+  //   }));
+  // };
   useEffect(() => {
     if (orgData?.logo_url?.length) return;
     OrgDetails();
@@ -97,14 +99,14 @@ export default function Nav() {
         <div className={styles.menu}>
           <ul>
             {(!isOnLearnerSide ? AdminMenu : UserMenu).map((val, key) => {
+              let isActive = router?.route?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
+              if (!isOnLearnerSide) {
+                const currentRoute = router?.route?.split('/')?.[2];
+                isActive = currentRoute?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
+              }
               return (
                 <Link href={val.link} key={key}>
-                  <li
-                    className={
-                      router.route.toLowerCase().includes(`${val.title.toLowerCase()}`)
-                        ? styles.active
-                        : ''
-                    }>
+                  <li className={isActive ? styles.active : ''}>
                     <span>{val.title}</span>
                   </li>
                 </Link>
@@ -130,8 +132,13 @@ export default function Nav() {
               className={`${styles.nav_search} ${searchQuery ? styles.nav_search_long : ''}`}
               placeholder="Search..."
               onInput={handleSearch}
+              value={searchQuery || ''}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
+                  if (router?.pathname?.includes('search') && !searchQuery) {
+                    router.push(`/search-page`);
+                  }
+
                   searchQuery && router.push(`/search-page/${searchQuery}`);
                 }
               }}
@@ -145,25 +152,28 @@ export default function Nav() {
         <div ref={notificationBarRef} className={styles.special_menu}>
           <ul>
             {/* {!isAdmin && searchQuery === null && ( */}
-            <li style={{display: 'none'}} onClick={() => {
-              sendNotification(
-                {
-                  title: 'Testing',
-                  body: 'This is a notification 3 body',
-                  user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
-                },
-                { context: { headers: { 'fcm-token': fcmToken } } }
-              );
+            <li
+              style={{ display: 'none' }}
+              onClick={() => {
+                sendNotification(
+                  {
+                    title: 'Testing',
+                    body: 'This is a notification 3 body',
+                    user_id: [JSON.parse(sessionStorage.getItem('loggedUser'))?.id]
+                  },
+                  { context: { headers: { 'fcm-token': fcmToken } } }
+                );
               }}>
-                <img src="/images/search.png" />
-              </li>
+              <img src="/images/search.png" />
+            </li>
             {/* )} */}
             <ToolTip title="Show Notifications" placement="right">
               <li
                 onClick={handleClickInside}
                 data-count={notifications?.filter((n) => !n?.isRead)?.length}
                 className={`${styles.notificationIcon} ${
-                  !!notifications?.length && styles.activeNotificationIcon
+                  !!notifications?.filter((n) => !n?.isRead)?.length &&
+                  styles.activeNotificationIcon
                 }`}>
                 {showNotification ? (
                   <svg
@@ -218,7 +228,7 @@ export default function Nav() {
               <img src="/images/chat.png" />
             </li> */}
           </ul>
-          {showNotification && <Notifications />}
+          {showNotification && <Notifications isNav={true} />}
         </div>
 
         {/* <div className={styles.profile}>

@@ -12,12 +12,13 @@ const AssignCourses = ({
   buttonText = '',
   type = null,
   assignedCourses = [],
-  loading=null
+  loading = null
 }) => {
   const [filters, setFilters] = useState({ searchQuery: '', cat: '', subCat: '', type: '' });
   let courseData = section.data;
   if (type === 'currentCourses')
-    courseData = courseData.filter((courses) => courses.completedPercentage);
+    // courseData = courseData.filter((courses) => courses.completedPercentage);
+    courseData = courseData.filter((course) => course?.isCourseStarted);
 
   // if (type === 'assignedCourses')
   //   courseData = courseData.filter((courses) => !courses.completedPercentage );

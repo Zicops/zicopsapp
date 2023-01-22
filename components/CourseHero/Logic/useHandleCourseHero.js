@@ -3,12 +3,17 @@ import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutat
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { USER_STATUS } from '@/helper/constants.helper';
-import { getUnixFromDate } from '@/helper/utils.helper';
+import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
+import { getMinCourseAssignDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
-import { getVideoObject, UserCourseDataAtom, VideoAtom } from '@/state/atoms/video.atom';
+import {
+  getUserCourseDataObj,
+  getVideoObject,
+  UserCourseDataAtom,
+  VideoAtom
+} from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -18,6 +23,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 export default function useHandleCourseHero(isPreview) {
   const [addUserCourse] = useMutation(ADD_USER_COURSE, { client: userClient });
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
+
+  const minDate = getMinCourseAssignDate();
 
   const [loadUserCourseMaps, { error: errorCourseMapsLoad, loading: loadingCourseMaps }] =
     useLazyQuery(GET_USER_COURSE_MAPS_BY_COURSE_ID, {
@@ -29,7 +36,6 @@ export default function useHandleCourseHero(isPreview) {
 
   const { updateCourseMaster, isDataLoaded, setIsDataLoaded, fullCourse } =
     useContext(courseContext);
-
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
 
   const userDataGlobal = useRecoilValue(UserDataAtom);
@@ -37,10 +43,10 @@ export default function useHandleCourseHero(isPreview) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const userData = useRecoilValue(UserStateAtom);
-  const userOrgData = useRecoilValue(UsersOrganizationAtom); 
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   const [courseAssignData, setCourseAssignData] = useState({
-    endDate: new Date(),
+    endDate: minDate,
     isMandatory: false,
     isCourseAssigned: false
   });
@@ -62,7 +68,7 @@ export default function useHandleCourseHero(isPreview) {
 
     const loadFullCourseData = isPreview ? loadQueryDataAsync : loadAndCacheDataAsync;
     const courseData = await loadFullCourseData(GET_COURSE, {
-      course_id: courseId
+      course_id: [courseId]
     });
     // if (!isPreview) {
     // courseData = await loadAndCacheDataAsync(GET_COURSE, {
@@ -74,10 +80,10 @@ export default function useHandleCourseHero(isPreview) {
     //   });
     // }
 
-    if (courseData?.getCourse && !isDataLoaded) {
-      updateCourseMaster(courseData.getCourse);
+    if (courseData?.getCourse && isDataLoaded !== courseId) {
+      updateCourseMaster(courseData.getCourse?.[0]);
 
-      setIsDataLoaded(true);
+      setIsDataLoaded(courseId);
     }
   }, [courseId]);
 
@@ -151,7 +157,7 @@ export default function useHandleCourseHero(isPreview) {
 
     userCourseData?.allModules?.some((mod, modIndex) => {
       mod?.topicData?.some((topic, topicIndex) => {
-        if (topic?.type !== 'Content') return false;
+        // if (topic?.type !== 'Content') return false;
         if (isTopicFound) return true;
 
         if (!fallBack) {
@@ -166,10 +172,11 @@ export default function useHandleCourseHero(isPreview) {
         const topicProgress = userCourseData?.userCourseProgress?.find(
           (obj) => obj?.topic_id === topic?.id
         );
-        // console.log(topic);
-        // console.log(topicProgress);
 
-        if (topicProgress?.status === 'not-started' && !firstNotStartedTopicData) {
+        if (
+          (!topicProgress || topicProgress?.status === 'not-started') &&
+          !firstNotStartedTopicData
+        ) {
           firstNotStartedTopicData = {
             activeModule: { index: modIndex, id: mod?.id },
             activeTopic: { index: topicIndex, id: topic?.id },
@@ -219,61 +226,9 @@ export default function useHandleCourseHero(isPreview) {
     // });
   }
 
-  async function assignCourseToUser() {
-    setIsPopUpDataPresent(false);
-    const { userCourseMapping } = userCourseData;
-    const sendData = {
-      userId: userData?.id,
-      userLspId: userOrgData?.user_lsp_id,
-      courseId: fullCourse?.id,
-      addedBy: JSON.stringify({ userId: userData.id, role: 'self' }),
-      courseType: fullCourse?.type,
-      isMandatory: courseAssignData?.isMandatory,
-      courseStatus: 'open',
-      endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
-    };
-
-    // update course if user is reassigning this course to himself again
-    if (userCourseMapping?.user_course_id) {
-      sendData.userCourseId = userCourseMapping?.user_course_id;
-
-      let isError = false;
-      const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
-      if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
-      console.log(res?.data?.updateUserCourse, 'userCourseMap');
-
-      setUserCourseData({
-        ...userCourseData,
-        userCourseMapping: res?.data?.updateUserCourse || {},
-        isCourseAssigned: true
-      });
-      setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
-      setIsAssignPopUpOpen(false);
-      return;
-    }
-
-    let isError = false;
-    const res = await addUserCourse({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = true;
-      return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
-    });
-    // console.log(res);
-    if (isError) return;
-    if (res?.errors) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
-
-    setUserCourseData({
-      ...userCourseData,
-      userCourseMapping: res?.data?.addUserCourse[0] || {},
-      isCourseAssigned: true
-    });
-    setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
-    setIsAssignPopUpOpen(false);
-  }
-
   async function unassignCourseFromUser() {
     const { userCourseMapping } = userCourseData;
-    // console.log()
+
     if (!userCourseMapping) return;
     const sendData = {
       userCourseId: userCourseMapping?.user_course_id,
@@ -283,7 +238,7 @@ export default function useHandleCourseHero(isPreview) {
       addedBy: JSON.stringify({ userId: userData?.id, role: 'self' }),
       courseType: userCourseMapping?.course_type,
       isMandatory: userCourseMapping?.is_mandatory,
-      courseStatus: USER_STATUS?.disable,
+      courseStatus: COURSE_MAP_STATUS?.disable,
       endDate: userCourseMapping?.end_date
     };
 
@@ -292,8 +247,8 @@ export default function useHandleCourseHero(isPreview) {
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
-    setUserCourseData((prev) => ({ ...prev, userCourseMapping: res?.data?.updateUserCourse }));
-    setToastMsg({ type: 'success', message: 'Course Removed Successfully!' });
+    setUserCourseData(getUserCourseDataObj());
+    setToastMsg({ type: 'success', message: `You have removed course ${fullCourse?.name}` });
     return;
   }
 
@@ -303,7 +258,6 @@ export default function useHandleCourseHero(isPreview) {
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     activateVideoPlayer,
-    assignCourseToUser,
     showPreviewVideo,
     unassignCourseFromUser
   };

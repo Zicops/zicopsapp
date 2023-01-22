@@ -82,3 +82,35 @@ export function getCurrentEpochTime() {
   const currentTime = new Date().getTime();
   return Math.floor(currentTime / 1000);
 }
+
+//
+export function getNotificationMsg(type = '', msgObj = {}) {
+  if (type === '') {
+    return false;
+  }
+  const notificationObj = {
+    courseAssign: function (msg) {
+      return `A new course ${msg.courseName} has been assigned to you. The end date for completing this course is ${msg.endDate}. Check the course`;
+    },
+    courseUnassign: function (msg) {
+      return `The ${msg.courseName} course has been unassigned by your admin from your learning space. However the course is now available in your personal learning space, so continue learning in your own capacity.`;
+    },
+    cohortAssign: function (msg) {
+      return ` 
+      You have been mapped to Cohort ${msg?.cohortName}. Check out the cohort and its members and courses to be completed.`;
+    },
+    cohortUnassign: function (msg) {
+      return `Note: You are no longer member of Cohort ${msg?.cohortName}. However streaming of learning to you, continues`;
+    },
+    promotedManager: function (msg) {
+      return `Your have been designated as Cohort Manager for ${msg?.cohortName} cohort. Check out the cohort and manage the same.`;
+    },
+    demotedManager: function (msg) {
+      return `Note: You are no longer Manager of Cohort ${msg?.cohortName}. Please continue your learning as a member.`;
+    }
+  };
+
+  if (!notificationObj?.[type]) return false;
+
+  return notificationObj?.[type](msgObj);
+}

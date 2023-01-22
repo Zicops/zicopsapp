@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import AllNotifications from './AllNotifications';
 import styles from './notification.module.scss';
 
-const Notifications = () => {
+const Notifications = ({ isNav = false }) => {
   const router = useRouter();
   const [notification, setNotifications] = useRecoilState(NotificationAtom);
 
@@ -14,7 +14,11 @@ const Notifications = () => {
         <p>Notifications</p>
       </div>
 
-      <AllNotifications data={notification?.slice(0, 4)} />
+      {notification?.length ? (
+        <AllNotifications isNav={isNav} data={notification?.slice(0, 4)} />
+      ) : (
+        <strong className={`${styles.fallbackMsg}`}>No new notifications</strong>
+      )}
 
       <div className={`${styles.notification_footer}`}>
         <button onClick={() => router.push('/notification-center')}>

@@ -65,6 +65,7 @@ export default function useHandleExamTab() {
   );
 
   const router = useRouter();
+  const isPreview = router.query?.isPreview || router.asPath?.includes('view') || false;
 
   // recoil state
   const [examTabData, setExamTabData] = useRecoilState(ExamTabDataAtom);
@@ -150,7 +151,7 @@ export default function useHandleExamTab() {
     const sectionRes = await loadSectionId({ variables: { question_paper_id: qpId } }).catch(
       (err) => {
         console.log(err);
-        
+
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Section Id load error' });
       }
@@ -166,7 +167,7 @@ export default function useHandleExamTab() {
       const mapRes = await loadMappingData({ variables: { section_id: sectionId } }).catch(
         (err) => {
           console.log(err);
-        
+
           isError = !!err;
           return setToastMsg({ type: 'danger', message: 'Mapping load error' });
         }
@@ -229,7 +230,6 @@ export default function useHandleExamTab() {
 
     // add new exam
     response = await addExam({ variables: sendData }).catch((err) => {
-      
       console.log(err);
       return setToastMsg({ type: 'danger', message: 'Add Exam Error' });
     });
@@ -349,6 +349,15 @@ export default function useHandleExamTab() {
   }
 
   async function saveExamData(index = null) {
+    if (isPreview) {
+      if (index) {
+        let tabIndex = index;
+        if (examTabData.schedule_type !== SCHEDULE_TYPE[0]) ++tabIndex;
+        setTab(getTabData()[tabIndex].name);
+      }
+      return;
+    }
+
     console.log(examTabData);
     setStatus('UPDATING');
     if (!validateInput()) return;

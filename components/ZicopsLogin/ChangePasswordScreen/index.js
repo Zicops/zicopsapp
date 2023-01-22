@@ -51,9 +51,14 @@ const ChangePasswordScreen = ({ setPage }) => {
             setToastMsg({ type: 'danger', message: err });
           });
       })
-      .catch((error) =>
-        setToastMsg({ type: 'danger', message: 'Reset password link is expired.' })
-      );
+      .catch((error) => {
+        router.push('/forgot-password');
+        setToastMsg({
+          type: 'info',
+          message:
+            'Reset password link has expired. Please enter your email for latest reset password link.'
+        });
+      });
   }
 
   return (
@@ -65,7 +70,7 @@ const ChangePasswordScreen = ({ setPage }) => {
           info={
             <Tooltip
               placement="right"
-              title="Password info goes here"
+              title="It is recommended to use strong passwords that are at least 8 characters long and a combination of uppercase and lowercase letters, numbers and symbols."
               arrow
               className={`${styles.password_info}`}>
               <InfoIcon fontSize={'small'} color={'primary'} />

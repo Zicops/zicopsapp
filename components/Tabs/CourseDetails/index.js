@@ -1,9 +1,10 @@
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { COURSE_STATUS, VIDEO_FILE_TYPES } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useContext } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import BrowseAndUpload from '../../common/FormComponents/BrowseAndUpload';
@@ -29,10 +30,13 @@ export default function CourseDetails() {
   const { courseVideo, courseImage, courseTileImage } = courseContextData;
 
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
+  const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
+
   const subCatObject = { value: fullCourse.sub_category, label: fullCourse.sub_category };
 
   let isDisabled = !!fullCourse?.qa_required;
-  if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
+  if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) isDisabled = true;
+  if (isPublishCourseEditable) isDisabled = false;
 
   return (
     <>
@@ -104,16 +108,15 @@ export default function CourseDetails() {
           <LabeledInput
             // styleClass={`${styles.marginBottom}`}
             isFiftyFifty={true}
-            inputClass={
-              !fullCourse?.expected_completion?.length && courseError?.details ? 'error' : ''
-            }
+            inputClass={!fullCourse?.expected_completion > 0 && courseError?.details ? 'error' : ''}
             inputOptions={{
               inputName: 'expected_completion',
               label: 'Suggested Duration: ',
               placeholder: 'Enter Suggested Duration in days',
               maxLength: 4,
               value: fullCourse?.expected_completion,
-              isDisabled: isDisabled
+              isDisabled: isDisabled,
+              isNumericOnly: true
             }}
             changeHandler={handleChange}
           />

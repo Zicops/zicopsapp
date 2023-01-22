@@ -83,7 +83,9 @@ export function getUserOrgObject(data = {}) {
     sub_categories: data?.sub_categories || [],
 
     created_by: data?.created_by || 'Zicops',
-    updated_by: data?.updated_by || 'Zicops'
+    updated_by: data?.updated_by || 'Zicops',
+
+    self_course_count: data?.self_course_count || 0
   };
 }
 
@@ -179,4 +181,14 @@ export const DisabledUserAtom = atom({
 export const AdminLearnerListAtom = atom({
   key:'adminLearnerList',
   default: {admins:[],learners:[]}
+})
+
+export const InviteUserAtom = atom({
+  key:'invited',
+  default:[]
+})
+
+export const ScheduleTabData = atom({
+  key:'scheduleData',
+  default:[]
 })

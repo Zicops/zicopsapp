@@ -1,6 +1,7 @@
 import { UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
 import { useState } from 'react';
@@ -31,15 +32,14 @@ export default function useHandleUpdateCourse() {
       addedBy: JSON.stringify({ userId: id, role: role }),
       courseType: data?.course_type,
       isMandatory: data?.is_mandatory,
-      courseStatus: 'open',
+      courseStatus: COURSE_MAP_STATUS.assign,
       endDate: data?.end_date
     };
 
     // console.log(sendData);
     let isError = false;
     const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
-    if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
-    return true;
+    return !isError;
   }
 
   return { updateCourse };

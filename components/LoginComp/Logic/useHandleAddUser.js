@@ -10,13 +10,22 @@ import {
   userClient
 } from '@/api/UserMutations';
 import {
+  GET_USER_COURSE_MAPS,
+  GET_USER_LATEST_COHORTS,
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_ORGANIZATIONS,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { CUSTOM_ERROR_MESSAGE, USER_STATUS } from '@/helper/constants.helper';
+import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { getCurrentEpochTime } from '@/helper/common.helper';
+import {
+  CUSTOM_ERROR_MESSAGE,
+  NOTIFICATION_MSG_LINKS,
+  NOTIFICATION_TITLES,
+  USER_STATUS
+} from '@/helper/constants.helper';
 import { parseJson } from '@/helper/utils.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   getUserObject,
@@ -32,7 +41,7 @@ import {
 } from 'libphonenumber-js';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleAddUserDetails() {
   const router = useRouter();
@@ -80,6 +89,7 @@ export default function useHandleAddUserDetails() {
   const [isAccountSetupReady, setIsAccountSetupReady] = useState(false);
   const [isSubmitDisable, setSubmitDisable] = useState(false);
   const [phCountryCode, setPhCountryCode] = useState('IN');
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   // setting up local states
   useEffect(() => {
@@ -103,7 +113,6 @@ export default function useHandleAddUserDetails() {
         isPhValid &&
         userOrgData?.language.length > 0 &&
         userAboutData?.gender?.length > 0
-
     );
     setIsOrganizationSetupReady(
       //   userDataAbout?.id &&
@@ -380,7 +389,77 @@ export default function useHandleAddUserDetails() {
     // return isError;
   }
 
+  async function notficationOnFirstLogin(userId = null, userLspId = null) {
+    const sendData = {
+      user_id: userId,
+      publish_time: getCurrentEpochTime(),
+      pageCursor: '',
+      pageSize: 1000
+    };
+    const userCoursesMaps = await loadQueryDataAsync(
+      GET_USER_COURSE_MAPS,
+      sendData,
+      {},
+      userQueryClient
+    );
+
+    //filtering the courses based on user_lsp_id
+    const courses = userCoursesMaps?.getUserCourseMaps?.user_courses?.filter(
+      (item) => item?.user_lsp_id === userLspId
+    );
+    if (!!courses?.length) {
+      sendNotification(
+        {
+          title: NOTIFICATION_TITLES?.signIn?.course,
+          body: NOTIFICATION_MSG_LINKS?.firstSigin?.coursesAssigned?.msg,
+          user_id: [userId]
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
+    }
+
+    sendData.user_lsp_id = userLspId;
+    const resCohorts = await loadQueryDataAsync(
+      GET_USER_LATEST_COHORTS,
+      { ...sendData },
+      {},
+      userQueryClient
+    );
+    // console.log(resCohorts?.getLatestCohorts?.cohorts);
+
+    const cohorts = resCohorts?.getLatestCohorts?.cohorts;
+
+    if (!!cohorts?.length) {
+      sendNotification(
+        {
+          title: NOTIFICATION_TITLES?.cohortAssign,
+          body: NOTIFICATION_MSG_LINKS?.firstSigin?.cohortAssigned?.msg,
+          user_id: [userId]
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
+    }
+    sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.lspWelcome,
+        body: `Hey ${userAboutData?.first_name} ${userAboutData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
+        user_id: [userId]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    sendNotification(
+      {
+        title: NOTIFICATION_TITLES?.courseUnssigned,
+        body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
+        user_id: [userId]
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    return true;
+  }
+
   async function updateAboutUser(newImage = null, isVerified = true) {
+    let userLspId = sessionStorage.getItem('user_lsp_id');
     const sendUserData = {
       id: userAboutData?.id,
       first_name: userAboutData?.first_name,
@@ -421,7 +500,11 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       const message = parseJson(errorMsg.split('body:')[1]);
       if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.phoneError) {
-        setToastMsg({ type: 'danger', message: `Phone Number already exists!` });
+        setToastMsg({ type: 'info', message: `Phone Number already exists!` });
+        return !!errorMsg;
+      }
+      if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.shortNumber) {
+        setToastMsg({ type: 'info', message: `Invalid Phone Number. Too short.` });
         return !!errorMsg;
       }
       return setToastMsg({ type: 'danger', message: `Update User about Error!` });
@@ -429,6 +512,11 @@ export default function useHandleAddUserDetails() {
 
     const data = res?.data?.updateUser;
     const _userData = { ...userAboutData, ...data };
+
+    if (!userAboutData?.is_verified) {
+      await notficationOnFirstLogin(userAboutData?.id,userLspId);
+    }
+
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
     setUserDataAbout({ ..._userData, isUserUpdated: true });
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));

@@ -15,7 +15,7 @@ export default function LeftFooter() {
 
       <p className={`${styles.text}`}>
         © 2021 Zicops. All Rights Reserved. Zicops and all related channel and programming logos are
-        service marks of, and all related programming visuals and elemnts are the property of
+        service marks of, and all related programming visuals and elements are the property of
         Zicops,Inc. All rights reserved.
       </p>
     </div>

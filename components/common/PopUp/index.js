@@ -16,9 +16,11 @@ export default function PopUp({
   size = 'medium',
   customStyles = {},
   children,
-  tooltipCloseBtnTitle
+  tooltipCloseBtnTitle,
+  onClose = () => {},
+  isAttempted = false
 }) {
-  const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState);
+  const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState, onClose);
 
   // modify popup styles based on props
   const propStyles = { width: '800px', ...customStyles };
@@ -39,7 +41,11 @@ export default function PopUp({
 
   return (
     <>
-      <Popup open={isOpen} closeOnDocumentClick={false} closeOnEscape={false}>
+      <Popup
+        open={isOpen}
+        overlayStyle={{ backdropFilter: `blur(2px)`, backgroundColor: ' #00000080' }}
+        closeOnDocumentClick={false}
+        closeOnEscape={false}>
         <div className={`${styles.popUpContainer}`} style={propStyles}>
           <div className={`${styles.popUp}`}>
             <div className={`${styles.header}`}>
@@ -57,7 +63,7 @@ export default function PopUp({
               </div>
             </div>
 
-            <div className={`${styles.body}`}>{children}</div>
+            <div className={`${styles.body} ${isAttempted ? styles.attempted : ""}`}>{children}</div>
 
             {isFooterVisible && (
               <div className={`${styles.footer}`}>

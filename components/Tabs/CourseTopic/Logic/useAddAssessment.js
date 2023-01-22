@@ -1,3 +1,5 @@
+import { loadMultipleLspDataWithMultipleQueries } from '@/helper/api.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -25,6 +27,7 @@ export default function useAddAssessment(topic, setEditTopic) {
   // local state
   const [assessmentData, setAssessmentData] = useState(getAssessmentObj());
   const [examOptions, setExamOptions] = useState([]);
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   useEffect(() => {
     if (topic?.type !== 'Assessment') return;
@@ -40,24 +43,41 @@ export default function useAddAssessment(topic, setEditTopic) {
     const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
     let examData = null;
 
-    await loadExams({ variables: queryVariables }).then(({ data }) => {
-      if (errorLoadExam) return setToastMsg({ type: 'danger', message: 'exam load error' });
+    const examDataResArr = await loadMultipleLspDataWithMultipleQueries(
+      GET_LATEST_EXAMS,
+      queryVariables,
+      {},
+      queryClient,
+      [COMMON_LSPS.zicops]
+    );
+    const allExams = [];
+    examDataResArr?.forEach((res) => allExams.push(...(res?.getLatestExams?.exams || [])));
+    const options = allExams.map((e) => ({
+      value: e.id,
+      label: e.Name,
+      ...e,
+      duration: +e?.duration / 60 || 0
+    }));
+    setExamOptions(options);
 
-      examData = data?.getLatestExams?.exams;
+    // await loadExams({ variables: queryVariables }).then(({ data }) => {
+    //   if (errorLoadExam) return setToastMsg({ type: 'danger', message: 'exam load error' });
 
-      const options = [];
-      if (examData)
-        examData.forEach((exam) =>
-          options.push({
-            value: exam.id,
-            label: exam.Name,
-            ...exam,
-            duration: +exam?.duration / 60
-          })
-        );
+    //   examData = data?.getLatestExams?.exams;
 
-      setExamOptions(options);
-    });
+    // const options = [];
+    //   if (examData)
+    //     examData.forEach((exam) =>
+    //       options.push({
+    //         value: exam.id,
+    //         label: exam.Name,
+    //         ...exam,
+    //         duration: +exam?.duration / 60
+    //       })
+    //     );
+
+    //   setExamOptions(options);
+    // });
 
     // topic exam
     if (topic?.id) {
@@ -83,6 +103,7 @@ export default function useAddAssessment(topic, setEditTopic) {
   }, []);
 
   async function saveAssessment() {
+    setDisableSubmit(true);
     const sendData = {
       topicId: assessmentData?.topicId,
       courseId: assessmentData?.courseId,
@@ -115,5 +136,5 @@ export default function useAddAssessment(topic, setEditTopic) {
     }
   }
 
-  return { examOptions, assessmentData, setAssessmentData, saveAssessment };
+  return { examOptions, assessmentData, setAssessmentData, saveAssessment, disableSubmit };
 }

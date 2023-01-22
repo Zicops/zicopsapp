@@ -3,8 +3,13 @@ import HomeSlider from '@/components/HomeSlider';
 import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
-import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import {
+  COMMON_LSPS,
+  COURSE_MAP_STATUS,
+  COURSE_STATUS,
+  LANGUAGES
+} from '@/helper/constants.helper';
+import { getUserAssignCourses, sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { getUnixTimeAt } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
@@ -95,7 +100,7 @@ export default function HomepageScreen() {
   };
 
   async function getLatestCoursesByFilters(filters = {}, pageSize = 28) {
-    const _lspId = sessionStorage?.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
 
     // Filter options are : LspId String; Category String; SubCategory String; Language String; DurationMin Int; DurationMax Int; DurationMin Int; Type String;
     const courses = await loadAndCacheDataAsync(GET_LATEST_COURSES, {
@@ -103,12 +108,12 @@ export default function HomepageScreen() {
       pageSize: pageSize,
       pageCursor: '',
       status: COURSE_STATUS.publish,
-      filters: { LspId: _lspId, ...filters }
+      filters: { LspId: zicopsLspId, ...filters }
     });
-    const _toBeSortedCourses = structuredClone(courses) || [];
+    const _toBeSortedCourses = structuredClone(courses || {});
 
     _toBeSortedCourses.latestCourses.courses = sortArrByKeyInOrder(
-      [..._toBeSortedCourses?.latestCourses?.courses],
+      [...(_toBeSortedCourses?.latestCourses?.courses || [])],
       'updated_at',
       false
     );
@@ -118,7 +123,7 @@ export default function HomepageScreen() {
   const pageSize = 28;
   useEffect(() => {
     setIsLoading(true);
-    if (!(userData?.preferences?.length && userData?.preferences?.[0]?.catData)) {
+    if (!userData?.preferences?.length) {
       timer = setTimeout(() => {
         setActiveSubcatArr([]);
         setOngoingCourses([]);
@@ -158,25 +163,33 @@ export default function HomepageScreen() {
       // setParentOfBaseSubcategory(catSubCat?.subCatGrp?.[catId]?.cat?.Name);
       setActiveSubcatArr(activeSubcategories);
 
-      const userCourseData = await getUserCourseData(28);
-      let ucidArray = [];
-      userCourseData?.map((uc) => ucidArray?.push(uc.id));
+      // const userCourseData = await getUserCourseData(28);
+      const filters = { status: COURSE_MAP_STATUS.started };
+      const _onGoingCourses = await getUserAssignCourses(filters);
 
-      console.log(userCourseData);
-      setOngoingCourses(
-        userCourseData?.filter(
-          // (course) => course?.completedPercentage > 0 && course?.completedPercentage < 100
-          (course) => course?.isCourseStarted && !course?.isCourseCompleted
-        )
-      );
-      setLearningFolderCourses(
-        userCourseData?.filter(
-          (course) =>
-            // course?.added_by.toLowerCase() === 'self' &&
-            // parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100
-            !course?.isCourseStarted && !course?.isCourseCompleted
-        )
-      );
+      filters.status = COURSE_MAP_STATUS.assign;
+      const _coursesInFolder = await getUserAssignCourses(filters);
+
+      let ucidArray = [];
+      _coursesInFolder?.forEach((uc) => ucidArray?.push(uc.id));
+      _onGoingCourses?.forEach((uc) => ucidArray?.push(uc.id));
+
+      setOngoingCourses(_onGoingCourses);
+      setLearningFolderCourses(_coursesInFolder);
+      // setOngoingCourses(
+      //   userCourseData?.filter(
+      //     // (course) => course?.completedPercentage > 0 && course?.completedPercentage < 100
+      //     (course) => course?.isCourseStarted && !course?.isCourseCompleted
+      //   )
+      // );
+      // setLearningFolderCourses(
+      //   userCourseData?.filter(
+      //     (course) =>
+      //       // course?.added_by.toLowerCase() === 'self' &&
+      //       // parseInt(course?.completedPercentage) === 0 || course?.completedPercentage === 100
+      //       !course?.isCourseStarted && !course?.isCourseCompleted
+      //   )
+      // );
 
       const getLatestCourses = await getLatestCoursesByFilters({}, pageSize);
       setLatestCourses(
@@ -343,8 +356,8 @@ export default function HomepageScreen() {
           data={ongoingCourses}
           handleTitleClick={() =>
             router.push(
-              `search-page?userCourse=${JSON.stringify({ isOngoing: true })}`,
-              'search-page'
+              `/search-page?userCourse=${JSON.stringify({ isOngoing: true })}`,
+              '/search-page'
             )
           }
         />
@@ -355,8 +368,8 @@ export default function HomepageScreen() {
           data={learningFolderCourses}
           handleTitleClick={() =>
             router.push(
-              `search-page?userCourse=${JSON.stringify({ isOngoing: false })}`,
-              'search-page'
+              `/search-page?userCourse=${JSON.stringify({ isOngoing: false })}`,
+              '/search-page'
             )
           }
         />
@@ -366,7 +379,7 @@ export default function HomepageScreen() {
         <ZicopsCarousel
           title="Latest Courses"
           data={latestCourses}
-          handleTitleClick={() => router.push('search-page')}
+          handleTitleClick={() => router.push('/search-page')}
         />
       )}
 
@@ -375,7 +388,7 @@ export default function HomepageScreen() {
           title="Courses from your learning space"
           data={learningSpaceCourses}
           handleTitleClick={() =>
-            router.push(`search-page?filter=${JSON.stringify({ LspId: lspId })}`, 'search-page')
+            router.push(`/search-page?filter=${JSON.stringify({ LspId: lspId })}`, '/search-page')
           }
         />
       )}
@@ -384,7 +397,7 @@ export default function HomepageScreen() {
           title={`Courses in ${baseSubcategory}`}
           data={baseSubcategoryCourses}
           handleTitleClick={() =>
-            router.push(`search-page?subCat=${baseSubcategory}`, 'search-page')
+            router.push(`/search-page?subCat=${baseSubcategory}`, '/search-page')
           }
         />
       )}
@@ -394,7 +407,7 @@ export default function HomepageScreen() {
         data={LANGUAGES}
         slide={realSquare}
         bigBox={true}
-        handleTitleClick={() => router.push('search-page')}
+        handleTitleClick={() => router.push('/search-page')}
       />
       {!!parentOfBaseSubcategoryCourses?.length && !!parentOfBaseSubcategory && (
         <ZicopsCarousel
@@ -402,8 +415,8 @@ export default function HomepageScreen() {
           data={parentOfBaseSubcategoryCourses}
           handleTitleClick={() =>
             router.push(
-              `search-page?cat=${encodeURIComponent(parentOfBaseSubcategory)}`,
-              'search-page'
+              `/search-page?cat=${encodeURIComponent(parentOfBaseSubcategory)}`,
+              '/search-page'
             )
           }
         />
@@ -414,8 +427,8 @@ export default function HomepageScreen() {
           data={quickCourses}
           handleTitleClick={() =>
             router.push(
-              `search-page?filter=${JSON.stringify({ DurationMax: 60 * 60 })}`,
-              'search-page'
+              `/search-page?filter=${JSON.stringify({ DurationMax: 60 * 60 })}`,
+              '/search-page'
             )
           }
         />
@@ -426,8 +439,8 @@ export default function HomepageScreen() {
           data={subCategory0Courses}
           handleTitleClick={() =>
             router.push(
-              `search-page?subCat=${encodeURIComponent(activeSubcatArr[0]?.sub_category)}`,
-              'search-page'
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[0]?.sub_category)}`,
+              '/search-page'
             )
           }
         />
@@ -438,8 +451,8 @@ export default function HomepageScreen() {
           data={subCategory1Courses}
           handleTitleClick={() =>
             router.push(
-              `search-page?subCat=${encodeURIComponent(activeSubcatArr[1]?.sub_category)}`,
-              'search-page'
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[1]?.sub_category)}`,
+              '/search-page'
             )
           }
         />
@@ -450,8 +463,8 @@ export default function HomepageScreen() {
           data={subCategory2Courses}
           handleTitleClick={() =>
             router.push(
-              `search-page?subCat=${encodeURIComponent(activeSubcatArr[2]?.sub_category)}`,
-              'search-page'
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[2]?.sub_category)}`,
+              '/search-page'
             )
           }
         />
@@ -462,8 +475,8 @@ export default function HomepageScreen() {
           data={subCategory3Courses}
           handleTitleClick={() =>
             router.push(
-              `search-page?subCat=${encodeURIComponent(activeSubcatArr[3]?.sub_category)}`,
-              'search-page'
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[3]?.sub_category)}`,
+              '/search-page'
             )
           }
         />
@@ -474,8 +487,8 @@ export default function HomepageScreen() {
           data={subCategory4Courses}
           handleTitleClick={() =>
             router.push(
-              `search-page?subCat=${encodeURIComponent(activeSubcatArr[4]?.sub_category)}`,
-              'search-page'
+              `/search-page?subCat=${encodeURIComponent(activeSubcatArr[4]?.sub_category)}`,
+              '/search-page'
             )
           }
         />
@@ -486,7 +499,7 @@ export default function HomepageScreen() {
           title="Categories"
           data={catSubCat?.cat}
           slide={bigSquare}
-          handleTitleClick={() => router.push('search-page')}
+          handleTitleClick={() => router.push('/search-page')}
         />
       )}
 
@@ -496,12 +509,14 @@ export default function HomepageScreen() {
           data={slowCourses}
           handleTitleClick={() =>
             router.push(
-              `search-page?filter=${JSON.stringify({ DurationMin: 360 * 60 })}`,
-              'search-page'
+              `/search-page?filter=${JSON.stringify({ DurationMin: 360 * 60 })}`,
+              '/search-page'
             )
           }
         />
       )}
+
+      <div style={{ height: '40px' }}></div>
     </div>
   );
 }

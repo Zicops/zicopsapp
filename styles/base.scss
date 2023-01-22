@@ -7,6 +7,7 @@ $bgContent: #081111;
 $error: #cf3e3e;
 $white: #ffffff;
 $secondaryWhite: #484848;
+$tertiaryWhite: #30323f;
 
 $black: #040404;
 $secondaryBlack: #737373;
@@ -17,6 +18,7 @@ $header: #b5b5b5;
 $darkOne: #1a1a1a;
 $darkTwo: #202222;
 $darkThree: #868f8f;
+$darkFour: #15161c;
 
 $bgTile: #1a1d21;
 $bgBody: #acacac;
@@ -24,6 +26,7 @@ $bgFooter: #001111;
 // $bgHeader: #222529;
 $bgHeader: #0b0c0d;
 $popupBgColor: #323232;
+$warning: #f6ac3c;
 
 $headerHeight: 70px;
 $footerHeight: 100px;
@@ -157,4 +160,32 @@ $courseTitleSmall: 18px;
     right: 0;
     transform: translate(50%, -50%);
   }
+}
+
+@mixin loader($size: 20px, $color: #3498db, $bgColor: transparent) {
+  background: $bgColor;
+  border: 3px solid $color; /* Light grey */
+  border-top: 3px solid transparent; /* Blue */
+  border-radius: 50%;
+
+  width: $size;
+  height: $size;
+  animation: spin 2s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.courseColor {
+  color: $white;
+}
+
+.examColor {
+  color: $warning;
 }

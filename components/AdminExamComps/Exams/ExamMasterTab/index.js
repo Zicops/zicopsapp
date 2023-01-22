@@ -1,3 +1,4 @@
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -21,8 +22,14 @@ import {
 import useHandleExamTab from './Logic/useHandleExamTab';
 
 export default function ExamMasterTab() {
+  // update id
+  const router = useRouter();
+  const isPreview = router.asPath?.includes('view') || false;
+  const isZicops = router.asPath?.includes('zicops') || false;
+
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
-    client: queryClient
+    client: queryClient,
+    context: isZicops ? { headers: { tenant: COMMON_LSPS?.zicops } } : {}
   });
   const [loadInstructions, { error: loadInsError }] = useLazyQuery(GET_EXAM_INSTRUCTION, {
     client: queryClient
@@ -42,9 +49,6 @@ export default function ExamMasterTab() {
   const examMasterTabData = useRecoilValue(ExamMasterTabDataSelector);
 
   const { saveExamData, getTotalMarks } = useHandleExamTab();
-
-  // update id
-  const router = useRouter();
 
   useEffect(async () => {
     const examId = router.query?.examId || null;
@@ -188,6 +192,7 @@ export default function ExamMasterTab() {
       tab={tab}
       setTab={setTab}
       footerObj={{
+        showFooter: !isPreview,
         status: status || STATUS.display[0],
         submitDisplay: examTabData?.id ? 'Update' : 'Save',
         handleSubmit: () => saveExamData(),

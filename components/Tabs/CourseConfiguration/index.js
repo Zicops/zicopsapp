@@ -1,27 +1,33 @@
 import { UPDATE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import RadioBox from '../common/RadioBox';
 import SwitchBox from '../common/SwitchBox';
-import styles from '../courseTabs.module.scss';
 import { isCourseUploadingAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 import CourseDetailsTable from './CourseDetailsTable';
+import FreezeConfirmation from './FreezeConfirmation';
+import styles from '../courseTabs.module.scss';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 
 export default function CourseConfiguration() {
   const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
 
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
+  const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   const courseContextData = useContext(courseContext);
+  const [freezeConfirmBox, setFreezeConfirmBox] = useState(null);
   const [showConfirmBox, setShowConfirmBox] = useState(null);
   const router = useRouter();
 
@@ -35,7 +41,9 @@ export default function CourseConfiguration() {
 
   // const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const isDisabled = [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse?.status);
+  let isDisabled = fullCourse?.qa_required;
+  if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) isDisabled = true;
+  if (isPublishCourseEditable) isDisabled = false;
 
   return (
     <>
@@ -116,12 +124,17 @@ export default function CourseConfiguration() {
             labeledInputProps={{
               label: 'Freeze',
               description:
-                'Once a course is frozen it is no longer available and reasy for approval/Publishing',
+                'Once a course is frozen it is no longer available and ready for approval/Publishing',
               name: 'qa_required',
-              isDisabled: +fullCourse?.duration === 0 ? true : isDisabled,
+              isDisabled: isDisabled,
               isChecked: fullCourse?.qa_required || false,
-              handleChange: (e) =>
-                updateCourseMaster({ ...fullCourse, qa_required: e.target.checked })
+              handleChange: (e) => {
+                const isFreeze = e.target.checked;
+                if (isFreeze) return setFreezeConfirmBox(true);
+
+                updateCourseMaster({ ...fullCourse, qa_required: isFreeze });
+              }
+              // handleChange: () => setFreezeConfirmBox(true)
             }}
           />
           <div className="w-50" style={{ margin: '15px' }}></div>
@@ -250,6 +263,8 @@ export default function CourseConfiguration() {
           handleChange={handleChange}
         />
       </div> */}
+      {!!freezeConfirmBox && <FreezeConfirmation closePopUp={() => setFreezeConfirmBox(false)} />}
+
       {showConfirmBox && (
         <ConfirmPopUp
           title={'Are you sure about expiring this course?'}
@@ -259,10 +274,10 @@ export default function CourseConfiguration() {
               //   ...fullCourse,
               //   status: e.target.checked ? COURSE_STATUS.reject : COURSE_STATUS.publish
               // });
-              const { duration, status, ...fullCourseData } = fullCourse;
+              const { duration, status, ..._fullCourse } = fullCourse;
               console.log('var', sendData);
               const sendData = {
-                ...fullCourseData,
+                ..._fullCourse,
                 status: COURSE_STATUS.reject,
                 expiry_date: getUnixFromDate()
               };

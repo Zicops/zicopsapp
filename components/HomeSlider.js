@@ -53,6 +53,7 @@ const HomeSlider = () => {
             deviceType="Laptop"
             dotListClass="custom-dot-list-style"
             customDot={<CustomDot />}
+
             itemClass="carousel-item-padding-40-px">
             <div className="zicops-slider">
               <img src="images/homePageBanner/Frame_1.png" alt="" />
@@ -70,6 +71,7 @@ const HomeSlider = () => {
               <img src="images/homePageBanner/Frame_5.png" alt="" />
             </div>
           </Carousel>
+
         </div>
         <div
           className="dropup"

@@ -1,4 +1,7 @@
-import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
+import { userClient } from '@/api/UserMutations';
+import { GET_LEARNINGSPACES_ID_BY_ORGID } from '@/api/UserQueries';
+import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { MenuList, Paper } from '@mui/material';
@@ -7,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import '@reach/menu-button/styles.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import LeftArrow from '../../../public/images/bigarrowleft.png';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
@@ -21,6 +25,22 @@ export default function RightDropDownMenu() {
   const { logOut } = useAuthUserContext();
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
+
+  const [featureFlags, setFeatureFlags] = useRecoilState(FeatureFlagsAtom);
+
+  useEffect(() => {
+    if (featureFlags?.isUserMappedToMultipleLsps) return;
+
+    const org_id = sessionStorage.getItem('org_id');
+    if (!org_id) return;
+
+    loadAndCacheDataAsync(GET_LEARNINGSPACES_ID_BY_ORGID, { org_id }, {}, userClient).then(
+      (res) => {
+        const allLsps = res?.getLearningSpacesByOrgId?.filter((lsp) => !lsp?.is_default) || [];
+        setFeatureFlags((prev) => ({ ...prev, isUserMappedToMultipleLsps: allLsps?.length > 1 }));
+      }
+    );
+  }, []);
 
   const menuItemList = [
     {
@@ -75,6 +95,21 @@ export default function RightDropDownMenu() {
     {
       id: 4,
       class: 'dropdown-submenu-justifycontent-right',
+      name: 'Switch LSP',
+      onClick: () => {
+        sessionStorage.removeItem('lsp_id');
+        sessionStorage.removeItem('lsp_name');
+        sessionStorage.removeItem('user_lsp_id');
+        sessionStorage.removeItem('user_lsp_role');
+        sessionStorage.removeItem('ou_id');
+        sessionStorage.removeItem('org_id');
+        router.push('/learning-spaces');
+      },
+      isDisabled: !featureFlags?.isUserMappedToMultipleLsps
+    },
+    {
+      id: 5,
+      class: 'dropdown-submenu-justifycontent-right',
       name: 'Logout',
       onClick: () => {
         setUserDataGlobal(getUserGlobalDataObj());
@@ -118,9 +153,11 @@ export default function RightDropDownMenu() {
             onMouseLeave={handleClose}
             onKeyDown={handleClick}>
             {menuItemList.map((item) => {
+              if (item?.isHidden) return;
+
               return (
                 <MenuItem
-                  key={item.id}
+                  key={item?.id}
                   sx={{
                     '&.MuiMenuItem-root': {
                       border: '1px solid var(--primary)',
@@ -129,10 +166,14 @@ export default function RightDropDownMenu() {
                       backgroundColor: 'var(--header-bg)',
                       justifyContent: 'flex-end',
                       padding: '0px'
+                    },
+                    '&.Mui-disabled': {
+                      cursor: 'no-drop'
                     }
                   }}
                   onClick={item?.onClick ? item.onClick : () => {}}
                   style={item.styles ? item.styles : {}}
+                  disabled={item?.isDisabled || false}
                   className={`${item.class} ${styles[`dropdown_item_${item.id}`]}`}>
                   {item.name ? item.name : item.comp}
                 </MenuItem>

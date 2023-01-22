@@ -4,14 +4,16 @@ import {
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
   GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID,
+  GET_TOPIC_QUIZ,
   GET_TOPIC_RESOURCES_BY_COURSE_ID,
   queryClient
 } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
 import {
+  GET_USER_BOOKMARKS,
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
   GET_USER_COURSE_PROGRESS,
-  GET_USER_NOTES_BOOKMARKS,
+  GET_USER_NOTES,
   GET_USER_QUIZ_ATTEMPTS,
   userQueryClient
 } from '@/api/UserQueries';
@@ -23,10 +25,12 @@ import {
   filterTopicContent,
   sortArrByKeyInOrder
 } from '@/helper/data.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import {
   ChapterAtom,
   isLoadingAtom,
   ModuleAtom,
+  QuizAtom,
   ResourcesAtom,
   TopicAtom,
   TopicContentAtom
@@ -62,6 +66,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
   const [isLoading, setIsLoading] = useRecoilState(isLoadingAtom);
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const [quizProgressData, setQuizProgressData] = useRecoilState(QuizProgressDataAtom);
+  const [quizData, setQuizData] = useRecoilState(QuizAtom);
 
   const [topicContentDataLoaded, setTopicContentDataLoaded] = useState(null);
 
@@ -114,13 +119,15 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
   // load module, chapter, topic data and set in recoil
   useEffect(async () => {
-    if (!fullCourse.id) return;
-    if (!userData.id) return;
-    console.log('data de', moduleData);
     updateModuleData([]);
     updateChapterData([]);
     updateTopicData([]);
     updateTopicContent([]);
+    if (!router.isReady) return;
+    if (!fullCourse.id) return;
+    if (!userData.id) return;
+    if (fullCourse.id !== courseId) return;
+    console.log('data de', moduleData);
 
     // setIsLoading(
     //   loadingModuleData &&
@@ -327,115 +334,116 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     updateTopicData(topicDataLoaded || []);
     updateTopicContent(topicContentDataLoaded || []);
 
-    if (!isPreview) {
-      // user notes
-      loadQueryDataAsync(
-        GET_USER_NOTES_BOOKMARKS,
-        {
-          user_id: userData?.id,
-          publish_time: Date.now(),
-          pageCursor: '',
-          pageSize: 9999999999999,
-          course_id: fullCourse?.id
-        },
-        {},
-        userClient
-      ).then((notesBookmarkDataRes) => {
-        setFloatingNotes(
-          notesBookmarkDataRes?.getUserNotes?.notes
-            ?.filter((notes) => notes?.is_active)
-            ?.map((noteObj) => getNoteCardObj(noteObj)) || []
-        );
-        setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
-      });
+    // if (!isPreview) {
+    //   // user notes
+    //   loadQueryDataAsync(
+    //     GET_USER_NOTES_BOOKMARKS,
+    //     {
+    //       user_id: userData?.id,
+    //       publish_time: Date.now(),
+    //       pageCursor: '',
+    //       pageSize: 9999999999999,
+    //       course_id: fullCourse?.id
+    //     },
+    //     {},
+    //     userClient
+    //   ).then((notesBookmarkDataRes) => {
+    //     setFloatingNotes(
+    //       notesBookmarkDataRes?.getUserNotes?.notes
+    //         ?.filter((notes) => notes?.is_active)
+    //         ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+    //     );
+    //     setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+    //   });
 
-      // user bookmarks
-      // const bookmarkDataRes = await loadQueryDataAsync(
-      //   GET_USER_BOOKMARKS,
-      //   {
-      //     user_id: userData?.id,
-      //     publish_time: Date.now(),
-      //     pageCursor: '',
-      //     pageSize: 9999999999999,
-      //     course_id: fullCourse?.id
-      //   },
-      //   {},
-      //   userClient
-      // );
-      // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
-      // setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+    //   // user bookmarks
+    //   // const bookmarkDataRes = await loadQueryDataAsync(
+    //   //   GET_USER_BOOKMARKS,
+    //   //   {
+    //   //     user_id: userData?.id,
+    //   //     publish_time: Date.now(),
+    //   //     pageCursor: '',
+    //   //     pageSize: 9999999999999,
+    //   //     course_id: fullCourse?.id
+    //   //   },
+    //   //   {},
+    //   //   userClient
+    //   // );
+    //   // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
+    //   // setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
 
-      // topic quiz
-      const allQuizProgress = [];
-      for (let i = 0; i < topicDataLoaded.length; i++) {
-        const topic = topicDataLoaded[i];
-        if (topic?.type !== 'Content') continue;
+    //   // topic quiz
+    //   const allQuizProgress = [];
+    //   for (let i = 0; i < topicDataLoaded.length; i++) {
+    //     const topic = topicDataLoaded[i];
+    //     if (topic?.type !== 'Content') continue;
 
-        const quizProgessDataRes = await loadQueryDataAsync(
-          GET_USER_QUIZ_ATTEMPTS,
-          { user_id: userData?.id, topic_id: topic?.id },
-          {},
-          userClient
-        );
-        if (quizProgessDataRes?.getUserQuizAttempts?.length)
-          allQuizProgress.push(...quizProgessDataRes?.getUserQuizAttempts);
-      }
-      // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
-      // console.log(allQuizProgress);
-      // Promise.allSettled(allQuizProgress).then((results) => {
-      //   setQuizProgressData(results);
-      // });
-      
-      setQuizProgressData(allQuizProgress);
+    //     const quizProgessDataRes = await loadQueryDataAsync(
+    //       GET_USER_QUIZ_ATTEMPTS,
+    //       { user_id: userData?.id, topic_id: topic?.id },
+    //       {},
+    //       userClient
+    //     );
+    //     if (quizProgessDataRes?.getUserQuizAttempts?.length)
+    //       allQuizProgress.push(...quizProgessDataRes?.getUserQuizAttempts);
+    //   }
+    //   // console.log(bookmarkDataRes?.getUserBookmarks?.bookmarks)
+    //   // console.log(allQuizProgress);
 
-      // // user course progress
-      // const data = { userCourseMapping: {}, userCourseProgress: [] };
-      // if (!userCourseData?.userCourseMapping?.user_course_id && userCourseData?.isCourseAssigned) {
-      //   const mapRes = await loadUserCourseMaps({
-      //     variables: { userId: userData?.id, courseId: fullCourse?.id },
-      //     fetchPolicy: 'no-cache'
-      //   }).catch((err) => {
-      //     if (err?.message?.includes('no user course found')) return;
-      //     if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
-      //   });
-      //   // console.log(mapRes);
-      //   if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
-      //     return setToastMsg({ type: 'danger', message: 'user course maps load error' });
-      //   data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
-      // }
+    //   // Promise.allSettled(allQuizProgress).then((results) => {
+    //   //   setQuizProgressData(results);
+    //   // });
 
-      // //in order to not load course progress of self-unassigned course
+    //   setQuizProgressData(allQuizProgress);
 
-      // const course_status = parseJson(data?.userCourseMapping);
+    //   // // user course progress
+    //   // const data = { userCourseMapping: {}, userCourseProgress: [] };
+    //   // if (!userCourseData?.userCourseMapping?.user_course_id && userCourseData?.isCourseAssigned) {
+    //   //   const mapRes = await loadUserCourseMaps({
+    //   //     variables: { userId: userData?.id, courseId: fullCourse?.id },
+    //   //     fetchPolicy: 'no-cache'
+    //   //   }).catch((err) => {
+    //   //     if (err?.message?.includes('no user course found')) return;
+    //   //     if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+    //   //   });
+    //   //   // console.log(mapRes);
+    //   //   if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
+    //   //     return setToastMsg({ type: 'danger', message: 'user course maps load error' });
+    //   //   data.userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID[0] || {};
+    //   // }
 
-      // let showCourseProgress = true;
+    //   // //in order to not load course progress of self-unassigned course
 
-      // if (course_status?.toLowerCase() === 'disabled') {
-      //   showCourseProgress = false;
-      // }
+    //   // const course_status = parseJson(data?.userCourseMapping);
 
-      // if (data?.userCourseMapping?.user_course_id && showCourseProgress) {
-      //   const progressRes = await loadUserCourseProgress({
-      //     variables: {
-      //       userId: userData?.id,
-      //       userCourseId: [data?.userCourseMapping?.user_course_id]
-      //     },
-      //     fetchPolicy: 'no-cache'
-      //   }).catch((err) => {
-      //     if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-      //   });
-      //   const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
-      //   if (courseProgress?.length) data.userCourseProgress = courseProgress;
-      // }
+    //   // let showCourseProgress = true;
 
-      // console.log(userCourseData?.userCourseMapping);
-      // setUserCourseData({
-      //   ...userCourseData,
-      //   allModules: moduleDataLoaded,
-      //   activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
-      //   userCourseProgress: data?.userCourseProgress || []
-      // });
-    }
+    //   // if (course_status?.toLowerCase() === 'disabled') {
+    //   //   showCourseProgress = false;
+    //   // }
+
+    //   // if (data?.userCourseMapping?.user_course_id && showCourseProgress) {
+    //   //   const progressRes = await loadUserCourseProgress({
+    //   //     variables: {
+    //   //       userId: userData?.id,
+    //   //       userCourseId: [data?.userCourseMapping?.user_course_id]
+    //   //     },
+    //   //     fetchPolicy: 'no-cache'
+    //   //   }).catch((err) => {
+    //   //     if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+    //   //   });
+    //   //   const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+    //   //   if (courseProgress?.length) data.userCourseProgress = courseProgress;
+    //   // }
+
+    //   // console.log(userCourseData?.userCourseMapping);
+    //   // setUserCourseData({
+    //   //   ...userCourseData,
+    //   //   allModules: moduleDataLoaded,
+    //   //   activeModule: { index: 0, id: moduleDataLoaded[0]?.id },
+    //   //   userCourseProgress: data?.userCourseProgress || []
+    //   // });
+    // }
     // loadModuleData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
     //   ({ data }) => {
     //     if (errorModuleData) alert('Module Load Error');
@@ -471,6 +479,40 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     //   }
     // );
 
+    async function loadQuiz(topicId) {
+      const allQuiz = [];
+
+      const quizRes = await loadQueryDataAsync(
+        GET_TOPIC_QUIZ,
+        { topic_id: topicId },
+        { fetchPolicy: 'no-cache' }
+      );
+
+      if (quizRes?.getTopicQuizes) {
+        const topicQuiz = [...quizRes?.getTopicQuizes]?.sort(
+          (q1, q2) => q1?.sequence - q2?.sequence
+        );
+        // console.log([...quizData, ...topicQuiz]);
+        allQuiz.push(...topicQuiz);
+      }
+
+      return allQuiz;
+    }
+
+    for (let i = 0; i < topicDataLoaded.length; i++) {
+      const topic = topicDataLoaded[i];
+
+      loadQuiz(topic?.id).then((newQuiz) => {
+        if (newQuiz?.length)
+          setQuizData((prev) => {
+            // console.log(prev, newQuiz);
+            const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
+
+            return [...prev, ...filteredQuiz];
+          });
+      });
+    }
+
     loadResourcesData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
         if (errorResourcesData) setToastMsg({ type: 'danger', message: 'Resources Load Error' });
@@ -478,28 +520,119 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         updateResources(data.getResourcesByCourseId || []);
       }
     );
-  }, [fullCourse?.id, userData?.id]);
+  }, [router.isReady, fullCourse?.id, userData?.id]);
+
+  useEffect(async () => {
+    if (isPreview) return;
+    if (!userData?.id) return;
+    if (!fullCourse?.id) return;
+    if (!topicData?.length) return;
+    if (!userCourseData?.isCourseAssigned) {
+      setBookmarkData([]);
+      setFloatingNotes([]);
+      setQuizProgressData([]);
+      return;
+    }
+    if (!userCourseData?.userCourseMapping?.user_course_id) return;
+
+    // user notes and bookmarks
+    loadQueryDataAsync(
+      GET_USER_NOTES,
+      {
+        user_id: userData?.id,
+        publish_time: getUnixFromDate(),
+        pageCursor: '',
+        pageSize: 9999999,
+        course_id: fullCourse?.id
+      },
+      {},
+      userClient
+    )
+      .then((notesDataRes) => {
+        setFloatingNotes(
+          notesDataRes?.getUserNotes?.notes
+            ?.filter((notes) => notes?.is_active && notes?.status === 'Saved')
+            ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+        );
+        // setBookmarkData(notesBookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // user bookmarks
+    loadQueryDataAsync(
+      GET_USER_BOOKMARKS,
+      {
+        user_id: userData?.id,
+        publish_time: getUnixFromDate(),
+        pageCursor: '',
+        pageSize: 9999999,
+        course_id: fullCourse?.id
+      },
+      {},
+      userClient
+    )
+      .then((bookmarkDataRes) => {
+        // setFloatingNotes(
+        //   notesBookmarkDataRes?.getUserNotes?.notes
+        //     ?.filter((notes) => notes?.is_active)
+        //     ?.map((noteObj) => getNoteCardObj(noteObj)) || []
+        // );
+        setBookmarkData(bookmarkDataRes?.getUserBookmarks?.bookmarks || []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // topic quiz
+    const allQuizProgress = [];
+    for (let i = 0; i < topicData.length; i++) {
+      const topic = topicData[i];
+      if (topic?.type !== 'Content') continue;
+
+      const quizProgessDataRes = await loadQueryDataAsync(
+        GET_USER_QUIZ_ATTEMPTS,
+        { user_id: userData?.id, topic_id: topic?.id },
+        {},
+        userClient
+      );
+      if (quizProgessDataRes?.getUserQuizAttempts?.length)
+        allQuizProgress.push(...quizProgessDataRes?.getUserQuizAttempts);
+    }
+    setQuizProgressData(allQuizProgress);
+  }, [
+    userData?.id,
+    fullCourse?.id,
+    topicData?.length,
+    userCourseData?.userCourseMapping?.user_course_id,
+    userCourseData?.isCourseAssigned
+  ]);
 
   useEffect(async () => {
     if (isPreview) return;
     if (!moduleData?.length) return;
     if (!userCourseData?.userCourseMapping?.user_course_id) return;
     if (!userCourseData?.isCourseAssigned) return;
-    if (userCourseData?.userCourseProgress?.length || userCourseData?.allModules?.length) return;
+    if (!userData?.id) return;
 
-    // user course progress
-    //in order to not load course progress of self-unassigned course
-    const progressRes = await loadUserCourseProgress({
-      variables: {
-        userId: userData?.id,
-        userCourseId: [userCourseData?.userCourseMapping?.user_course_id]
-      },
-      fetchPolicy: 'no-cache'
-    }).catch((err) => {
-      if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
-    });
-    const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
-    const userCourseProgress = courseProgress || [];
+    let userCourseProgress = userCourseData?.userCourseProgress || null;
+
+    if (!userCourseProgress?.length) {
+      // user course progress
+      //in order to not load course progress of self-unassigned course
+      const progressRes = await loadUserCourseProgress({
+        variables: {
+          userId: userData?.id,
+          userCourseId: [userCourseData?.userCourseMapping?.user_course_id]
+        },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        if (err) setToastMsg({ type: 'danger', message: 'Course Progress Load Error' });
+      });
+      const courseProgress = progressRes?.data?.getUserCourseProgressByMapId;
+      userCourseProgress = courseProgress || [];
+    }
 
     setUserCourseData({
       ...userCourseData,
@@ -507,7 +640,12 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       activeModule: { index: 0, id: moduleData[0]?.id },
       userCourseProgress: userCourseProgress || []
     });
-  }, [userCourseData, moduleData]);
+  }, [
+    moduleData,
+    userCourseData?.userCourseMapping?.user_course_id,
+    userCourseData?.isCourseAssigned,
+    userData?.id
+  ]);
 
   useEffect(async () => {
     if (!moduleData?.length) return;
