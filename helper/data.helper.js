@@ -1,17 +1,22 @@
+import { userClient } from '@/api/UserMutations';
+import { GET_USER_COURSE_MAPS } from '@/api/UserQueries';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   GET_CATS_N_SUB_CATS,
+  GET_COURSE,
   GET_LATEST_COURSES,
   GET_SUB_CATS_BY_CAT,
   queryClient
 } from '../API/Queries';
 import { tabData } from '../components/Tabs/Logic/tabs.helper';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
-import { loadAndCacheDataAsync } from './api.helper';
-import { COMMON_LSPS, COURSE_STATUS, DEFAULT_VALUES } from './constants.helper';
-import { getUnixTimeAt } from './utils.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
+import { getCurrentEpochTime } from './common.helper';
+import { COMMON_LSPS, COURSE_MAP_STATUS, COURSE_STATUS, DEFAULT_VALUES } from './constants.helper';
+import { getUserData } from './loggeduser.helper';
+import { getUnixTimeAt, parseJson } from './utils.helper';
 
 export async function createCourseAndUpdateContext(courseContextData, createCourse, showToaster) {
   const {
@@ -248,4 +253,63 @@ export async function getLatestCoursesByFilters(filters = {}, pageSize = 28) {
     false
   );
   return _toBeSortedCourses;
+}
+
+export async function getUserAssignCourses(filters = {}, pageSize = 28) {
+  const { id: currentUserId } = getUserData();
+
+  const currentLspId = sessionStorage.getItem('lsp_id');
+  const zicopsLspId = COMMON_LSPS.zicops;
+
+  const allLspIds = [...new Set([currentLspId, zicopsLspId])];
+
+  const allUserCourses = [];
+  for (let i = 0; i < allLspIds.length; i++) {
+    const lspId = allLspIds[i];
+
+    const assignedCoursesRes = await loadQueryDataAsync(
+      GET_USER_COURSE_MAPS,
+      {
+        user_id: currentUserId,
+        publish_time: getCurrentEpochTime(),
+        pageCursor: '',
+        pageSize: pageSize,
+        filters: {
+          ...filters,
+          lsp_id: [lspId]
+        }
+      },
+      {},
+      userClient
+    );
+    if (assignedCoursesRes?.error) {
+      console.error('Course Maps Load Error');
+      continue;
+    }
+    const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses || [];
+
+    // load all courses details
+    const courseIdArr = _assignedCourses?.map((map) => map?.course_id);
+    const courseRes = await loadAndCacheDataAsync(GET_COURSE, { course_id: courseIdArr });
+    if (courseRes?.error) {
+      console.error('Course Load Error');
+      continue;
+    }
+    const allCourseDetails = courseRes?.getCourse || {};
+
+    const coursesMeta = [];
+    _assignedCourses?.forEach((courseMap) => {
+      const courseDetails = allCourseDetails?.find((c) => c?.id === courseMap?.course_id) || {};
+      const added_by = parseJson(courseMap?.added_by)?.role || courseMap?.added_by;
+
+      coursesMeta.push({ ...courseDetails, ...courseMap, added_by });
+    });
+
+    allUserCourses.push(...coursesMeta);
+  }
+
+  const _sortedCourses =
+    sortArrByKeyInOrder(structuredClone(allUserCourses || []), 'updated_at', false) || [];
+
+  return _sortedCourses;
 }

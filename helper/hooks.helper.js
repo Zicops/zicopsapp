@@ -20,6 +20,7 @@ import {
 } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
+  GET_ORGANIZATIONS_DETAILS,
   GET_USER_COURSE_MAPS,
   GET_USER_COURSE_PROGRESS,
   GET_USER_DETAIL,
@@ -815,13 +816,32 @@ export default function useUserCourseData() {
     if (!userData?.length) return { error: 'No users found!' };
     return userData;
   }
+  
+  const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
+    client: userClient
+  });
+
+  const OrgDetails = async () => {
+    const orgId = sessionStorage.getItem('org_id');
+    if (!orgId) return;
+    const res = await getOrgDetails({
+      variables: { org_ids: orgId }
+    }).catch((err) => {
+      console.error(err);
+    });
+    setUserOrgData((prevValue) => ({
+      ...prevValue,
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+    }));
+  };
 
   return {
     getUserCourseData,
     getUserPreferences,
     getCohortUserData,
     getUsersForAdmin,
-    getScheduleExams
+    getScheduleExams,
+    OrgDetails
   };
 }
 

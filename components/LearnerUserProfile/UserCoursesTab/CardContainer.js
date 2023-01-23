@@ -37,7 +37,7 @@ export default function CardContainer({
     // const screenWidth = window.screen.width; //////
     const screenWidth = cardContainerRef.current?.offsetWidth;
     window.c = cardContainerRef.current;
-    console.log(screenWidth);
+
     let cardCount = cardSizeData.cardCount;
 
     if (screenWidth > 1600) cardCount = 6;

@@ -1,5 +1,8 @@
+import useUserCourseData from '@/helper/hooks.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { Container } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import AccountSetupOrg from './AccountSetupOrg';
 import AccountSetupUser from './AccountSetupUser';
 import styles from './login.module.scss';
@@ -11,6 +14,9 @@ const LoginComp = () => {
 
   const [selected, setSelected] = useState([]);
 
+  const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
+  const { OrgDetails } = useUserCourseData();
+
   const getHeader = () => {
     if (currentComponent === 0) return 'Personal Details';
     if (currentComponent === 1) return 'Organization Details';
@@ -18,12 +24,22 @@ const LoginComp = () => {
     if (currentComponent === 3) return 'Profile Preferences';
   };
 
+  useEffect(() => {
+    if (orgData?.logo_url?.length) return;
+    OrgDetails();
+  }, []);
+
   return (
     // <div style={{width: '100%', height: '100vh', position: 'relative'}}>
     <div className={`${styles.bgContainer}`}>
       <div className={`${styles.header}`}>
         <div className={`${styles.ZicopsLogo}`}>
-          <img src="/images/brand/zicops-new-logo.svg" alt="zicops logo" />
+          <img
+            src={
+              orgData?.logo_url?.length ? orgData?.logo_url : ''
+            }
+            alt="zicops logo"
+          />
         </div>
         <div className={`${styles.progress_container}`}>
           <div className={`${styles.progress_circle_selected}`} />

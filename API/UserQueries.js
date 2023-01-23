@@ -100,12 +100,19 @@ export const GET_USER_LSP_MAP_BY_LSPID = gql`
   }
 `;
 
+// input CourseMapFilters {
+//   lsp_id: [String]
+//   is_mandatory: Boolean
+//   status: String
+//   type: String
+// }
 export const GET_USER_COURSE_MAPS = gql`
   query GetUserCourseMaps(
     $user_id: String!
     $publish_time: Int
     $pageCursor: String
     $pageSize: Int
+    $filters: CourseMapFilters
   ) {
     getUserCourseMaps(
       user_id: $user_id
@@ -113,6 +120,7 @@ export const GET_USER_COURSE_MAPS = gql`
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      filters: $filters
     ) {
       user_courses {
         user_course_id
@@ -180,6 +188,7 @@ export const GET_USER_COURSE_PROGRESS_ID = gql`
   query getUserCourseProgressByMapId($userId: String!, $userCourseId: [ID!]) {
     getUserCourseProgressByMapId(user_id: $userId, user_course_id: $userCourseId) {
       user_cp_id
+      status
     }
   }
 `;

@@ -3,8 +3,8 @@ import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutat
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { USER_STATUS } from '@/helper/constants.helper';
-import { getMinCourseAssignDate, getUnixFromDate } from '@/helper/utils.helper';
+import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
+import { getMinCourseAssignDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -228,7 +228,7 @@ export default function useHandleCourseHero(isPreview) {
 
   async function unassignCourseFromUser() {
     const { userCourseMapping } = userCourseData;
-    // console.log()
+
     if (!userCourseMapping) return;
     const sendData = {
       userCourseId: userCourseMapping?.user_course_id,
@@ -238,7 +238,7 @@ export default function useHandleCourseHero(isPreview) {
       addedBy: JSON.stringify({ userId: userData?.id, role: 'self' }),
       courseType: userCourseMapping?.course_type,
       isMandatory: userCourseMapping?.is_mandatory,
-      courseStatus: USER_STATUS?.disable,
+      courseStatus: COURSE_MAP_STATUS?.disable,
       endDate: userCourseMapping?.end_date
     };
 
