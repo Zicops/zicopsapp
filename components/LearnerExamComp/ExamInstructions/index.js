@@ -2,7 +2,13 @@ import AttempHistory from '@/components/AttemptHistory';
 import InstructionLayout from './InstructionLayout';
 import InstructionPage from './InstructionPage';
 
-const ExamInstructions = ({ handleStart, isFullScreen, isTestExam = false, handleBackBtn }) => {
+const ExamInstructions = ({
+  handleStart,
+  isFullScreen,
+  isSampleTest = false,
+  isTestExam = false,
+  handleBackBtn
+}) => {
   return (
     <InstructionLayout>
       <InstructionPage
@@ -10,6 +16,7 @@ const ExamInstructions = ({ handleStart, isFullScreen, isTestExam = false, handl
         handleStart={handleStart}
         isFullScreen={isFullScreen}
         handleBackBtn={handleBackBtn}
+        isSampleTest={isSampleTest}
       />
     </InstructionLayout>
   );
