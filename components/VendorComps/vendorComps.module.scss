@@ -242,3 +242,126 @@
     }
   }
 }
+
+.vendorMasterContainer {
+  color: $white;
+
+  ::placeholder {
+    color: #747474;
+    opacity: 1;
+  }
+
+  .input1 label {
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .input1 input {
+    width: 100%;
+    height: 48px;
+    margin-top: 8px;
+    border: 1px solid #747474;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+    padding-left: 16px;
+    color: $white;
+    font-size: 18px;
+  }
+
+  .addressImageDiv {
+    display: flex;
+    margin-top: 15px;
+    gap: 25px;
+
+    .input2 {
+      width: 50%;
+
+      label {
+        font-size: 18px;
+        font-weight: 400;
+      }
+
+      input {
+        width: 100%;
+        height: 144px;
+        margin-top: 8px;
+
+        border: 1px solid #747474;
+        border-radius: 5px;
+        background: transparent;
+        outline: none;
+        padding-left: 16px;
+        color: $white;
+        font-size: 18px;
+      }
+
+      .uploadImage {
+        border: 1px dashed #747474;
+      }
+    }
+  }
+
+  .websiteSocialDiv {
+    display: flex;
+    margin-top: 15px;
+    gap: 25px;
+
+    .input3 {
+      width: 50%;
+
+      label {
+        font-size: 18px;
+        font-weight: 400;
+      }
+
+      input {
+        width: 100%;
+        height: 46px;
+        margin-top: 8px;
+
+        border: 1px solid #747474;
+        border-radius: 5px;
+        background: transparent;
+        outline: none;
+        padding-left: 16px;
+        color: $white;
+        font-size: 18px;
+      }
+
+      .icons {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      img {
+        border: 1px solid #747474;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .input4 {
+    margin-top: 15px;
+
+    label {
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    textarea {
+      width: 100%;
+      height: 96px;
+      margin-top: 8px;
+      border: 1px solid #747474;
+      border-radius: 5px;
+      background: transparent;
+      outline: none;
+      padding-left: 16px;
+      padding-top: 5px;
+      color: $white;
+      font-size: 18px;
+    }
+  }
+}
