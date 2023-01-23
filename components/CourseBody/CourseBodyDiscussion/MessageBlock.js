@@ -37,7 +37,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     else if (message?.Dislike?.includes(userDetails?.id)) {
       setIsDisLike(true);
     }
-  }, [messageArr]);
+  }, []);
 
   const onReplyHandler = () => {
     setShowInput(true);
@@ -369,7 +369,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
                 src={
                   !message?.IsAnonymous
                     ? message?.photo_url
-                    : 'https://www.w3schools.com/howto/img_avatar2.png'
+                    : '/images/svg/17.svg'
                 }
                 alt=""
               />
@@ -479,6 +479,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
                 onAnnouncementHandler={announcementHandler}
                 checkAnnouncement={isAnnouncement}
                 handleKeyPress={handleKeyPress}
+                isMessage = {false}
               />
             </div>
           )}

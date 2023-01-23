@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import style from './discussion.module.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MessageBlock from './MessageBlock';
@@ -16,6 +16,7 @@ import Loader from '@/components/common/Loader';
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { isWordIncluded } from '@/helper/utils.helper';
 import { SelectedModuleDataAtom } from '../Logic/courseBody.helper';
+import { courseContext } from '@/state/contexts/CourseContext';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -23,10 +24,10 @@ const CourseBodyDiscussion = () => {
   const [showReplies, setShowReplies] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [inputText, setInputText] = useState('');
-  const [selectedType, setSelectedType] = useState('');
-  const [checkClick, setCheckClick] = useState(false);
+  const [selectedType, setSelectedType] = useState('All');
+  const [checkClick, setCheckClick] = useState(true);
   const [showSelf, setShowSelf] = useState(false);
-  const [showLearners, setShowLearners] = useState(false);
+  const [showLearners, setShowLearners] = useState(true);
   const [loading, setLoading] = useState(false);
   const [fliterData, setFilterData] = useState();
   const [learnerUser, setLearnerUser] = useState();
@@ -39,7 +40,7 @@ const CourseBodyDiscussion = () => {
   const courseData = useRecoilValue(UserCourseDataAtom);
   const selectedModuleData = useRecoilValue(SelectedModuleDataAtom);
   const topicExamData = useRecoilValue(TopicExamAtom)
-
+  const { fullCourse } = useContext(courseContext);
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
@@ -106,7 +107,7 @@ const CourseBodyDiscussion = () => {
     const messagesArr = await loadQueryDataAsync(
       GET_COURSE_DISCUSSION,
       {
-        course_id: moduleData[0]?.courseId
+        course_id: fullCourse?.id
       },
       {},
       queryClient
@@ -208,8 +209,10 @@ const CourseBodyDiscussion = () => {
     const announcementData = messageArr?.filter((el) => {
       if (e.value === 'Announcements') {
         return el?.IsAnnouncement;
-      } else if(e.value !== 'Announcements') {
+      } else if(e.value === 'Discussions') {
         return !el?.IsAnnouncement;
+      } else {
+        return el;
       }
     });
     setFilterData(announcementData);
@@ -233,7 +236,7 @@ const CourseBodyDiscussion = () => {
   });
 
   const onSelfHandler = () => {
-    const selfMessages = messageArr?.filter((el) => el?.UserId === userDetails?.id);
+    const selfMessages = messageArr?.filter((el) => el?.UserId === userDetails?.id );
     console.log('selfMessages', selfMessages);
     setFilterData(selfMessages);
     setCheckClick(true);
@@ -242,9 +245,9 @@ const CourseBodyDiscussion = () => {
   };
 
   const onLearnerHandler = () => {
-    const othersMessages = messageArr?.filter((el) => el?.UserId !== userDetails?.id);
-    setLearnerUser(othersMessages);
-    setFilterData(othersMessages);
+    // const othersMessages = messageArr?.filter((el) => el?.UserId !== userDetails?.id);
+    setLearnerUser(messageArr);
+    setFilterData(messageArr);
     setCheckClick(true);
     setShowLearners(true);
     setShowSelf(false);
@@ -254,7 +257,8 @@ const CourseBodyDiscussion = () => {
     setFilterData(filteredData);
   }, [inputText, messageArr, replyData]);
   
-    useEffect(async () => {
+  useEffect(async () => {
+    if (!fullCourse?.id) return;
     setLoading(true)
     const messages = (await getCourseMessages()) || [];
       if (!messages?.length) {
@@ -265,7 +269,7 @@ const CourseBodyDiscussion = () => {
       setMessageArr(messages);
        console.log('messageArr', messageArr);
     setLoading(false);
-  }, []);
+  }, [fullCourse?.id]);
 
   useEffect(async () => {
     const messages = (await getCourseMessages()) || [];

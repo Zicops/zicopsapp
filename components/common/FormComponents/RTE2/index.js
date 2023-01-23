@@ -23,7 +23,8 @@ export default function RTE2({
   value,
   placeholder,
   customStyles = {},
-  isReadOnly = false
+  isReadOnly = false,
+  isMessage=true
 }) {
   const modules = {
     toolbar: {
@@ -65,8 +66,12 @@ export default function RTE2({
         <div className={`${styles.post_type}`}>
           {/* <LabeledRadioCheckbox label="Public" type="radio" name="public" isChecked={checkPublic}  changeHandler ={onPublicHandler} /> */}
           <LabeledRadioCheckbox label="Post this anonymously" type="checkbox" name="anonymous" isChecked={checkAnonymous}  changeHandler ={onAnonymousHandler} />
-           <div className={`${styles.button_divider}`}></div>
-          <LabeledRadioCheckbox label="Post this as an announcement" type="checkbox" name="announcement" isChecked={checkAnnouncement} changeHandler={onAnnouncementHandler} />
+            {isMessage &&
+              <>
+                <div className={`${styles.button_divider}`}></div>
+                <LabeledRadioCheckbox label="Post this as an announcement" type="checkbox" name="announcement" isChecked={checkAnnouncement} changeHandler={onAnnouncementHandler} />
+              </>
+            }
         </div>
           <div className={`${styles.button_type}`}>
             
