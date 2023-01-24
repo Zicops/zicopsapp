@@ -12,7 +12,13 @@ import styles from '../../learnerExam.module.scss';
 import { data, getIsExamAccessible } from '../../Logic/exam.helper';
 import { passingCriteriaSymbol } from '../Logic/examInstruction.helper';
 
-const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn = () => {} }) => {
+const InstructionPage = ({
+  handleStart,
+  isFullScreen,
+  isSampleTest = false,
+  isTestExam,
+  handleBackBtn = () => {}
+}) => {
   let learnerExamData = useRecoilValue(LearnerExamAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
 
@@ -169,9 +175,9 @@ const InstructionPage = ({ handleStart, isFullScreen, isTestExam, handleBackBtn 
           </span>
         </div>
       </div>
-      <div className={`${styles.viewHistory}`}>
+      <div className={`${styles.viewHistory} ${isSampleTest ? styles.disabled : ''}`}>
         <ToolTip title="Check previous attempts" placement="right">
-          <a onClick={() => setIsAttempyHistoryOpen(true)}>View Attempt History</a>
+          <a onClick={() => !isSampleTest && setIsAttempyHistoryOpen(true)}>View Attempt History</a>
         </ToolTip>
       </div>
       <div
