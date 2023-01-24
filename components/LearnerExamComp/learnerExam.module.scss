@@ -65,7 +65,8 @@
   }
 }
 
-.examInstContainer, .fsContainer {
+.examInstContainer,
+.fsContainer {
   margin: 10px 40px;
   background-color: $darkOne;
   // position: relative;
@@ -157,6 +158,11 @@
   text-decoration: underline;
   text-align: center;
   margin-top: 20px;
+
+  &.disabled {
+    color: $darkThree;
+  }
+
   a {
     cursor: pointer;
     font-size: 13px;
@@ -186,7 +192,6 @@
     font-size: medium;
     font-weight: 600;
   }
-
 }
 .instructionFooter {
   display: flex;
@@ -231,21 +236,21 @@
       border-radius: 2px;
     }
   }
-  .agreeText{
+  .agreeText {
     color: $white;
   }
-  .fsBtn{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      padding-top: 3px;
-      background-color: $black;
-      width: 100px;
+  .fsBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding-top: 3px;
+    background-color: $black;
+    width: 100px;
     button {
       background-color: transparent;
       border: 0;
       padding: 0;
     }
-}
+  }
 }

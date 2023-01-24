@@ -367,7 +367,8 @@ export const questionData = [
     id: 13,
     question: {
       description: 'What will be the output of following code snippet?',
-      image: '/images/ExamQuestions/question_13.png'
+      attachment: '/images/ExamQuestions/question_13.png',
+      attachmentType: 'image'
     },
     options: [
       {
@@ -393,7 +394,7 @@ export const questionData = [
     id: 14,
     question: {
       description: 'Answer the following question',
-      attachment: 'https://www.youtube.com/shorts/SEf79EwT8Sk',
+      attachment: '/videos/sample_test_question_14.mp4',
       attachmentType: 'video'
     },
     options: [
