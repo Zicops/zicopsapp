@@ -18,7 +18,7 @@ import {
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { STATUS, StatusAtom } from '../../../../state/atoms/utils.atoms';
 import TabContainer from '../../../common/TabContainer';
-import Preview from '../Preview';
+import PreviewPaper from '../../common/PreviewPaper';
 import {
   isSectionWiseAtom,
   paperTabData,
@@ -233,7 +233,7 @@ export default function QuestionPaperTab() {
           title={masterData?.name}
           popUpState={[!!masterData, setMasterData]}
           isFooterVisible={false}>
-          <Preview masterData={masterData || {}} />
+          <PreviewPaper masterData={masterData || {}} />
         </PopUp>
       )}
     </>
