@@ -148,6 +148,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           const topicSubtitleArray = [];
 
           topicContentData.toggleTopicContentForm(data.getTopicContent.length === 0);
+
           data.getTopicContent.forEach((content, index) => {
             const contentData = {
               topicId: content.topicId,
@@ -155,6 +156,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
               language: content.language,
               type: content.type,
               duration: content.duration,
+              contentUrl: content.contentUrl,
               is_default: content.is_default
             };
             const topicVideoData = {
