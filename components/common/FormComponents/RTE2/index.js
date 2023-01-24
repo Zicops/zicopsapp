@@ -24,7 +24,8 @@ export default function RTE2({
   placeholder,
   customStyles = {},
   isReadOnly = false,
-  isMessage=true
+  isMessage = true,
+  isAdmin = false
 }) {
   const modules = {
     toolbar: {
@@ -44,7 +45,7 @@ export default function RTE2({
   //  * See https://quilljs.com/docs/formats/
   //  */
   const formats = ['header', 'bold', 'italic', 'underline', 'list', 'bullet',  'indent', 'blockquote','code-block', 'link', 'image'];
-
+  const text = value.replace(/<\/?[^>]+(>|$)/g, "");
   return (
     <div className={`${isReadOnly ? styles.rteReadOnly : styles.rteContainer2 }`}>
       <QuillNoSSRWrapper
@@ -66,7 +67,7 @@ export default function RTE2({
         <div className={`${styles.post_type}`}>
           {/* <LabeledRadioCheckbox label="Public" type="radio" name="public" isChecked={checkPublic}  changeHandler ={onPublicHandler} /> */}
           <LabeledRadioCheckbox label="Post this anonymously" type="checkbox" name="anonymous" isChecked={checkAnonymous}  changeHandler ={onAnonymousHandler} />
-            {isMessage &&
+            {isMessage && isAdmin &&
               <>
                 <div className={`${styles.button_divider}`}></div>
                 <LabeledRadioCheckbox label="Post this as an announcement" type="checkbox" name="announcement" isChecked={checkAnnouncement} changeHandler={onAnnouncementHandler} />
@@ -75,7 +76,7 @@ export default function RTE2({
         </div>
           <div className={`${styles.button_type}`}>
             
-        <button className={`${value ? styles.button1 : styles.buttonDisable }`} onClick={onPostHandler}>Post</button>
+        <button disabled={!text} className={`${text ? styles.button1 : styles.buttonDisable }`} onClick={onPostHandler}>Post</button>
         <button className={`${styles.button2}`} onClick={onCancleHandler}>Cancel</button>
         </div>
         </div>

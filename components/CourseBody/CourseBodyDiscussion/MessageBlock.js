@@ -5,7 +5,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { DiscussionReplyAtom, MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
-import { ADD_COURSE_DISCUSSION, UPDATE_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
+import { ADD_COURSE_DISCUSSION, UPDATE_COURSE_DISCUSSION, UPDATE_LIKE_DISLIKE, mutationClient } from '@/api/Mutations';
 import { GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ModuleAtom } from '@/state/atoms/module.atoms';
@@ -31,13 +31,9 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   }, []);
 
   useEffect(() => {
-    if (message?.Likes?.includes(userDetails?.id)) {
-      setIsLike(true);
-    }
-    else if (message?.Dislike?.includes(userDetails?.id)) {
-      setIsDisLike(true);
-    }
-  }, []);
+      setIsLike(message?.Likes?.includes(userDetails?.id));
+      setIsDisLike(message?.Dislike?.includes(userDetails?.id));
+  }, [message?.Likes , message?.Dislike]);
 
   const onReplyHandler = () => {
     setShowInput(true);
@@ -110,12 +106,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const messageLikes = [...(data?.Likes || []), userDetails?.id];
     const messageDisLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
-      UPDATE_COURSE_DISCUSSION,
+      UPDATE_LIKE_DISLIKE,
       {
-        courseId: moduleData[0]?.courseId,
         discussionId: data?.DiscussionId,
-        likes: messageLikes,
-        dislikes: messageDisLikes
+        input: "likes",
+        UserId: userDetails?.id
       },
       {},
       mutationClient
@@ -149,11 +144,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const filterLikes = data?.Likes?.filter((id) => id !== userDetails?.id);
     const removeLikes = filterLikes || [];
     const updateMessage = await loadQueryDataAsync(
-      UPDATE_COURSE_DISCUSSION,
+      UPDATE_LIKE_DISLIKE,
       {
-        courseId: moduleData[0]?.courseId,
         discussionId: data?.DiscussionId,
-        likes: removeLikes
+        input: "likes",
+        UserId: userDetails?.id
       },
       {},
       mutationClient
@@ -184,12 +179,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const messageDisLikes = [...(data?.Dislike || []), userDetails?.id];
     const messageLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
-      UPDATE_COURSE_DISCUSSION,
+     UPDATE_LIKE_DISLIKE,
       {
-        courseId: moduleData[0]?.courseId,
         discussionId: data?.DiscussionId,
-        dislikes: messageDisLikes,
-        likes: messageLikes
+        input: "dislikes",
+        UserId: userDetails?.id
       },
       {},
       mutationClient
@@ -222,11 +216,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     console.log('filterMessages', filterMessages);
     const removeDisLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
-      UPDATE_COURSE_DISCUSSION,
+     UPDATE_LIKE_DISLIKE,
       {
-        courseId: moduleData[0]?.courseId,
         discussionId: data?.DiscussionId,
-        dislikes: removeDisLikes
+        input: "dislikes",
+        UserId: userDetails?.id
       },
       {},
       mutationClient
@@ -343,6 +337,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   };
 
   const handleKeyPress = (e) => {
+     if (!reply.replace(/<\/?[^>]+(>|$)/g, "").length) return;
     if (e.key === 'Enter' && !e.shiftKey) {
       onSendReplyHandler(message);
     }
