@@ -1,25 +1,26 @@
-import { sortArrByKeyInOrder } from '@/helper/data.helper';
-import { DIFFICULTY } from '@/helper/utils.helper';
-import { useLazyQuery } from '@apollo/client';
-import { Box, CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
 import {
+  GET_EXAM_META,
   GET_FIXED_QUESTION,
   GET_QB_SECTION_MAPPING_BY_SECTION,
   GET_QUESTION_BANK_QUESTIONS,
-  GET_QUESTION_OPTIONS,
   GET_QUESTION_PAPER_META,
   GET_QUESTION_PAPER_SECTION,
   queryClient
-} from '../../../../API/Queries';
-import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
+} from '@/api/Queries';
+import Loader from '@/components/common/Loader';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { DIFFICULTY } from '@/helper/utils.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useLazyQuery } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { questionList } from './Logic/QuestionPaperPreview.helper';
 import styles from './preview.module.scss';
 import QuestionPaperTop from './QuestionPaperTop';
 import QuestionSection from './QuestionSection';
 
-export default function Preview({ masterData }) {
+export default function PreviewPaper({ masterData, examId = null }) {
+  const [loadMaster] = useLazyQuery(GET_EXAM_META, { client: queryClient });
   const [loadPaperMeta, { error: loadMetaError }] = useLazyQuery(GET_QUESTION_PAPER_META, {
     client: queryClient
   });
@@ -30,34 +31,68 @@ export default function Preview({ masterData }) {
     GET_QB_SECTION_MAPPING_BY_SECTION,
     { client: queryClient }
   );
-  const [loadFixedQuestions, { error: errorFixedQuestionsData }] = useLazyQuery(
-    GET_FIXED_QUESTION,
-    { client: queryClient }
-  );
-  const [loadQBQuestions, { error: errorQBQuestionsData, refetch }] = useLazyQuery(
-    GET_QUESTION_BANK_QUESTIONS,
-    { client: queryClient }
-  );
-  const [loadOptions, { error: errorOptionsData }] = useLazyQuery(GET_QUESTION_OPTIONS, {
-    client: queryClient
-  });
+  const [loadFixedQuestions] = useLazyQuery(GET_FIXED_QUESTION, { client: queryClient });
+  const [loadQBQuestions] = useLazyQuery(GET_QUESTION_BANK_QUESTIONS, { client: queryClient });
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [data, setData] = useState({ ...masterData });
 
-  const questionPaperId = masterData.id;
+  const questionPaperId = masterData?.id || null;
 
   // load section data and qb mappings
   useEffect(async () => {
+    if (!questionPaperId && !examId) return;
+    let paperId = questionPaperId;
+    let metaData = {};
     const sectionData = [];
     let mappedQb = [];
     let totalQuestions = 0;
     let totalMarks = 0;
+    let isError = false;
+
+    if (examId && !paperId) {
+      // load master data
+      let isError = false;
+      const masterRes = await loadMaster({
+        variables: { exam_ids: [examId] },
+        fetchPolicy: 'no-cache'
+      }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Exam Master load error' });
+      });
+      if (isError) return;
+      const masterData = masterRes?.data?.getExamsMeta?.[0];
+      if (!masterData) return;
+      paperId = masterData.QpId;
+    }
+
+    // load paper meta data if not passed via props
+    if (!masterData?.name) {
+      const metaRes = await loadPaperMeta({
+        variables: { question_paper_id: paperId }
+      }).catch((err) => {
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
+      });
+      if (isError) return;
+      const paperMasterData = metaRes?.data?.getQPMeta?.[0] || {};
+
+      metaData = {
+        name: paperMasterData?.name,
+        category: paperMasterData?.Category,
+        subCategory: paperMasterData?.SubCategory,
+        description: paperMasterData?.Description,
+        section_wise: paperMasterData?.SectionWise,
+        difficultyLevel: paperMasterData?.DifficultyLevel,
+        suggested_duration: +paperMasterData?.SuggestedDuration / 60,
+        status: paperMasterData?.Status
+      };
+    }
 
     // load sections
-    let isError = false;
     const sectionRes = await loadPaperSection({
-      variables: { question_paper_id: questionPaperId },
+      variables: { question_paper_id: paperId },
       fetchPolicy: 'no-cache'
     }).catch((err) => {
       console.log(err);
@@ -277,8 +312,8 @@ export default function Preview({ masterData }) {
     }
 
     console.log(data, sectionData, mappedQb, totalQuestions, totalMarks);
-    setData({ ...data, sections: sectionData, totalQuestions, totalMarks });
-  }, [questionPaperId]);
+    setData({ ...data, ...metaData, sections: sectionData, totalQuestions, totalMarks });
+  }, [questionPaperId, examId]);
 
   // error notification
   useEffect(() => {
@@ -298,18 +333,23 @@ export default function Preview({ masterData }) {
       : (quesSection[secKey] = [item]);
   });
 
+  // loading state
+  if (!data.sections?.length) {
+    return (
+      <Loader
+        customStyles={{
+          minHeight: '250px',
+          height: '100%',
+          backgroundColor: 'transparent'
+        }}
+      />
+    );
+  }
+
   return (
-    <>
-      {data?.sections ? (
-        <div className={`${styles.paperContainer}`}>
-          <QuestionPaperTop data={data} />
-          <QuestionSection quesSection={quesSection} data={data} />
-        </div>
-      ) : (
-        <Box sx={{ display: 'flex' }} className="center-element-with-flex">
-          <CircularProgress />
-        </Box>
-      )}
-    </>
+    <div className={`${styles.paperContainer}`}>
+      <QuestionPaperTop data={data} />
+      <QuestionSection quesSection={quesSection} data={data} />
+    </div>
   );
 }

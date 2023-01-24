@@ -14,7 +14,7 @@ import { QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
-import Preview from './Preview';
+import PreviewPaper from '../common/PreviewPaper';
 
 export default function QuestionPaperTable({ isEdit = false }) {
   const [loadQuestionPaper, { loading, error: errorQuestionPaperData }] = useLazyQuery(
@@ -177,7 +177,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
           title={masterData?.name}
           popUpState={[!!masterData, setMasterData]}
           isFooterVisible={false}>
-          <Preview masterData={masterData || {}} />
+          <PreviewPaper masterData={masterData || {}} />
         </PopUp>
       )}
     </>

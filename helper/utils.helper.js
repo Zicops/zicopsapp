@@ -272,7 +272,6 @@ export function isWordIncluded(sentence = '', word = '') {
 
 export function getMinCourseAssignDate(durationInSec = null) {
   let date = new Date().setDate(new Date().getDate() + 1);
-  console.log(date, 'sdsd');
   if (!durationInSec) return date;
   date = new Date(new Date().getTime() + durationInSec * 1000).setDate(new Date().getDate() + 1);
   return date;
