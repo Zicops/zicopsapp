@@ -53,7 +53,8 @@ const Home = () => {
       </Head>
 
       {mounted ? createPortal(<VrBackground />, ref.current) : null} */}
-      {org ? <OrgHomepage data={org} /> : <HomePage />}
+      {/* {org ? <OrgHomepage data={org} /> : <HomePage />} */}
+      {org && org?.subdomain !== 'zicops.com' ? <OrgHomepage data={org} /> : <HomePage />}
     </>
   );
 };
