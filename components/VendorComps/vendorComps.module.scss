@@ -382,4 +382,137 @@
 
 .addServiceContainer {
   color: $white;
+  width: 100%;
+
+  .serviceDescriptionExpertise {
+    display: flex;
+    margin-top: 15px;
+    gap: 25px;
+
+    .serviceDescription {
+      width: 50%;
+      height: 144px;
+
+      textarea {
+        margin-top: 10px;
+        border: 1px solid $secondaryWhite;
+        border-radius: 4px;
+      }
+    }
+
+    .addExpertise {
+      width: 50%;
+
+      button {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 15px;
+        align-items: center;
+        gap: 15px;
+        color: white;
+        background-color: $secondary;
+        border: none;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .addLanguageOPFormat {
+    display: flex;
+    gap: 25px;
+
+    .addLanguages {
+      width: 50%;
+
+      button {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 15px;
+        align-items: center;
+        gap: 15px;
+        color: white;
+        background-color: $secondary;
+        border: none;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+    }
+
+    .addOPFormat {
+      width: 50%;
+      button {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 15px;
+        align-items: center;
+        gap: 15px;
+        color: white;
+        background-color: $secondary;
+        border: none;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .addSampleFilesProfiles {
+    display: flex;
+    gap: 25px;
+    margin-top: 15px;
+
+    .addSampleFiles {
+      width: 50%;
+
+      button {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 15px;
+        align-items: center;
+        gap: 15px;
+        color: white;
+        background-color: $secondary;
+        border: none;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+    }
+
+    .addProfiles {
+      width: 50%;
+
+      button {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 15px;
+        align-items: center;
+        gap: 15px;
+        color: white;
+        background-color: $secondary;
+        border: none;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+    }
+  }
 }
