@@ -1,7 +1,7 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
-import { myVendors, coursesVendor } from '@/components/VendorComps/Logic/vendorComps.helper.js';
+import { myVendors, coursesVendor , vendorProfiles } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
 import { useState } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
@@ -11,8 +11,9 @@ import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 
 export default function VendorInfo() {
   const router = useRouter();
-  const vendorId = router.query.vendorId || '0'; //Change the 0 to null
-
+  const vendorId = router.query.vendorId || '0'; //Change the 1 to null
+    console.log("vendorId", vendorId);
+   const vendorProfileData =  vendorProfiles?.filter((data)=> data?.vendorId === vendorId)
   const tabData = [
     {
       name: 'About',
@@ -24,7 +25,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Profile',
-      component: <ProfileVendor />
+        component: <ProfileVendor profileData={vendorProfileData} />
     }
   ];
 

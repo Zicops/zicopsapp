@@ -203,10 +203,20 @@
     align-items: center;
     justify-content: center;
     gap: 35px;
+    .arrowImage{
+      margin-right: 20px;
+      cursor: pointer;
+    }
   }
 
-  .profileImage img {
+  .profileImage {
     height: 150px;
+    width: 150px;
+    img{
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+    }
   }
 
   .profileName {
@@ -223,13 +233,15 @@
   }
 
   .servicesPillContainer {
-    width: 420px;
-    height: 150px;
-    background-color: red;
-
     .servicesPill {
-      width: 100%;
-      display: flex;
+    display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      p{
+        background-color: transparent;
+        border: 1px solid $secondaryBlack;
+        color: $bgBody;
+      }
     }
 
     p {
@@ -380,6 +392,105 @@
   }
 }
 
+
+.viewProfilesContainer{
+  .viewProfileTop{
+    display: flex;
+    gap: 60px;
+    align-items: flex-end;
+    padding-bottom: 20px;
+    .viewProfileImage{
+      width: 240px;
+      height: 240px;
+      img{
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+    .profileDetails{
+      .profileName{
+        color: $primary;
+        font-size: 24px;
+        font-weight: 600;
+      }
+      span{
+        color: $white;
+        font-size: 18px;
+      }
+      .profileEmail , .profileWebsite{
+        display: flex;
+        gap: 10px;
+        padding-bottom: 5px;
+        p{
+          color: $bgBody;
+          font-size: 18px;
+        }
+
+      }
+      .hr1{
+        background-color: #292F2F;
+        height: 1px;
+        margin: 10px 50% 10px 0px;
+      }
+    }
+        button{
+          margin-top: 15px;
+          color: $primary;
+          font-size: 18px;
+          background-color: transparent;
+          border: 1px solid $primary;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+        }
+  }
+    .hr {
+      background-color: #292F2F;
+      height: 1px;
+    }
+    .viewProfileButtom{
+      display: flex;
+      padding-top: 20px;
+      justify-content: space-between;
+      .vendorAddress , .vendorType, .vendorSocialMedia{
+        padding-bottom: 20px;
+        p{
+          color: $bgBody;
+          font-size: 18px;
+        }
+        span{
+          color: $white;
+          font-size: 20px;
+        }
+        .socialMediaImage{
+          display: flex;
+          gap: 16px;
+          padding-top: 10px;
+        }
+      }
+      .vendorExpertiseContainer{
+        width: 50%;
+        color: $bgBody;
+          font-size: 18px;
+          p{
+            padding-bottom: 10px;
+          }
+          .vendorExpertiseMain{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            .vendorExpertise{
+              // width: fit-content;
+              padding: 8px 16px;
+              background: #292F2F;
+              border-radius: 3px;
+              color: $white;
+            }
+          }
+      }
+    }
+}
 .addServiceContainer {
   color: $white;
   width: 100%;
@@ -516,3 +627,4 @@
     }
   }
 }
+

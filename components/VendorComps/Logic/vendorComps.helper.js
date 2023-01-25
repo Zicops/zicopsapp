@@ -246,16 +246,25 @@ export const vendorProfiles = [
     expertise: ['SME', 'Trainer', 'Speaker'],
     experience: '10',
     services: ['Motion Design', 'Machine Learning', 'UI/UX Design Fundamentals'],
-    image: '/images/profile-sample-pictue/png'
+    image: '/images/svg/11.svg',
+    email: "abc_learning_technology@abc.com",
+    website: "http://abc_learning.com",
+    address: "ABC Learning Pvt. Ltd",
+    type: "Organisation",
+
   },
   {
     id: '1',
     vendorId: '0',
-    name: 'Ritika Gupta',
+    name: 'Abhishek Ghosh',
     expertise: ['SME', 'Trainer', 'Speaker'],
     experience: '10',
     services: ['Motion Design', 'Machine Learning', 'UI/UX Design Fundamentals'],
-    image: '/images/profile-sample-pictue/png'
+    image: '/images/svg/17.svg',
+    email: "abc_learning_technology@abc.com",
+    website: "http://abc_learning.com",
+    address: "ABC Learning Pvt. Ltd",
+    type: "Organisation",
   },
   {
     id: '2',
@@ -264,16 +273,24 @@ export const vendorProfiles = [
     expertise: ['SME', 'Trainer', 'Speaker'],
     experience: '10',
     services: ['Motion Design', 'Machine Learning', 'UI/UX Design Fundamentals'],
-    image: '/images/profile-sample-pictue/png'
+    image: '/images/svg/11.svg',
+    email: "abc_learning_technology@abc.com",
+    website: "http://abc_learning.com",
+    address: "ABC Learning Pvt. Ltd",
+    type: "Organisation",
   },
   {
     id: '3',
     vendorId: '1',
-    name: 'Ritika Gupta',
+    name: 'Abhishek Ghosh',
     expertise: ['SME', 'Trainer', 'Speaker'],
     experience: '10',
     services: ['Motion Design', 'Machine Learning', 'UI/UX Design Fundamentals'],
-    image: '/images/profile-sample-pictue/png'
+    image: '/images/svg/17.svg',
+    email: "abc_learning_technology@abc.com",
+    website: "http://abc_learning.com",
+    address: "ABC Learning Pvt. Ltd",
+    type: "Organisation",
   },
   {
     id: '4',
@@ -282,15 +299,23 @@ export const vendorProfiles = [
     expertise: ['SME', 'Trainer', 'Speaker'],
     experience: '10',
     services: ['Motion Design', 'Machine Learning', 'UI/UX Design Fundamentals'],
-    image: '/images/profile-sample-pictue/png'
+    image: '/images/svg/11.svg',
+    email: "abc_learning_technology@abc.com",
+    website: "http://abc_learning.com",
+    address: "ABC Learning Pvt. Ltd",
+    type: "Organisation",
   },
   {
     id: '5',
     vendorId: '1',
-    name: 'Ritika Gupta',
+    name: 'Abhishek Ghosh',
     expertise: ['SME', 'Trainer', 'Speaker'],
     experience: '10',
     services: ['Motion Design', 'Machine Learning', 'UI/UX Design Fundamentals'],
-    image: '/images/profile-sample-pictue/png'
+    image: '/images/svg/17.svg',
+    email: "abc_learning_technology@abc.com",
+    website: "http://abc_learning.com",
+    address: "ABC Learning Pvt. Ltd",
+    type: "Organisation",
   }
 ];
