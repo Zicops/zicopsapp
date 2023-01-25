@@ -17,7 +17,6 @@ export default function RTE2({
   onAnonymousHandler,
   onAnnouncementHandler,
   checkAnonymous,
-  checkPublic,
   checkAnnouncement,
   handleKeyPress,
   value,

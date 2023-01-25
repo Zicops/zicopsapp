@@ -188,7 +188,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       {},
       mutationClient
     );
-    console.log('updateMessage', updateMessage);
+  
     const _messageArr = structuredClone(messageArr);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
@@ -225,8 +225,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       {},
       mutationClient
     );
-    console.log('updateMessage', updateMessage);
-
+   
     const _messageArr = structuredClone(messageArr);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
@@ -273,7 +272,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const item2 = userDetails?.find(i => i.id === item1.UserId);
     return { ...item1, ...item2};
     });
-    console.log("mappedArray", mappedArray)
+   
     let newArray = [...mappedArray];
     newArray?.sort(function (a, b) {
       return b.Created_at - a.Created_at;
@@ -302,7 +301,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         {},
         mutationClient
       );
-      console.log('addMessage', addMessage?.addCourseDiscussion);
+     
       const replies = (await getReplies(msg?.DiscussionId)) || [];
       console.log('replies', replies);
       setReplyData([...replies]);
@@ -325,9 +324,8 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         {},
         mutationClient
       );
-      console.log('addMessage', addMessage);
+     
       const replies = (await getReplies(msg?.ReplyId)) || [];
-      console.log('replies', replies);
       setReplyData([...replies]);
     }
     setReply('');
@@ -342,11 +340,12 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       onSendReplyHandler(message);
     }
   };
+
   let displayCourseData = "";
-  // {message?.Module}, {message?.Chapter},{message?.Topic}
   if (message?.Module) displayCourseData += message?.Module;
   if (message?.Chapter) displayCourseData += `, ${message?.Chapter}`;
   if (message?.Topic) displayCourseData += `, ${message?.Topic}`;
+
   return (
     <div className={`${style.message_Block_container}`}>
       {message?.IsPinned && (

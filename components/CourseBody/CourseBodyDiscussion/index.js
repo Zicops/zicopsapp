@@ -43,6 +43,7 @@ const CourseBodyDiscussion = () => {
   const selectedModuleData = useRecoilValue(SelectedModuleDataAtom);
   const topicExamData = useRecoilValue(TopicExamAtom)
   const { fullCourse } = useContext(courseContext);
+  
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
