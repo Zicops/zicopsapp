@@ -28,6 +28,43 @@ export const VendorServicesAtom = atom({
 
 export function getVendorServicesObject(data) {
   return {
-    isApplicable: data?.isApplicable || true
+    isApplicable: data?.isApplicable || true,
+    serviceDescription: data?.serviceDescription || ''
+  };
+}
+
+export const SmeServicesAtom = atom({
+  key: 'smeServicesState',
+  default: getSMEServicesObject()
+});
+
+export function getSMEServicesObject(data) {
+  return {
+    isApplicable: data?.isApplicable || true,
+    serviceDescription: data?.serviceDescription || ''
+  };
+}
+
+export const CtServicesAtom = atom({
+  key: 'ctServicesState',
+  default: getCTServicesObject()
+});
+
+export function getCTServicesObject(data) {
+  return {
+    isApplicable: data?.isApplicable || true,
+    serviceDescription: data?.serviceDescription || ''
+  };
+}
+
+export const CdServicesAtom = atom({
+  key: 'cdServicesState',
+  default: getCDServicesObject()
+});
+
+export function getCDServicesObject(data) {
+  return {
+    isApplicable: data?.isApplicable || true,
+    serviceDescription: data?.serviceDescription || ''
   };
 }
