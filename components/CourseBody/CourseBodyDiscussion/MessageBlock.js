@@ -5,7 +5,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { DiscussionReplyAtom, MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
-import { ADD_COURSE_DISCUSSION, UPDATE_COURSE_DISCUSSION, mutationClient } from '@/api/Mutations';
+import { ADD_COURSE_DISCUSSION, UPDATE_COURSE_DISCUSSION, UPDATE_LIKE_DISLIKE, mutationClient } from '@/api/Mutations';
 import { GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ModuleAtom } from '@/state/atoms/module.atoms';
@@ -31,13 +31,9 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   }, []);
 
   useEffect(() => {
-    if (message?.Likes?.includes(userDetails?.id)) {
-      setIsLike(true);
-    }
-    else if (message?.Dislike?.includes(userDetails?.id)) {
-      setIsDisLike(true);
-    }
-  }, [messageArr]);
+      setIsLike(message?.Likes?.includes(userDetails?.id));
+      setIsDisLike(message?.Dislike?.includes(userDetails?.id));
+  }, [message?.Likes , message?.Dislike]);
 
   const onReplyHandler = () => {
     setShowInput(true);
@@ -110,12 +106,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const messageLikes = [...(data?.Likes || []), userDetails?.id];
     const messageDisLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
-      UPDATE_COURSE_DISCUSSION,
+      UPDATE_LIKE_DISLIKE,
       {
-        courseId: moduleData[0]?.courseId,
         discussionId: data?.DiscussionId,
-        likes: messageLikes,
-        dislikes: messageDisLikes
+        input: "likes",
+        UserId: userDetails?.id
       },
       {},
       mutationClient
@@ -149,11 +144,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const filterLikes = data?.Likes?.filter((id) => id !== userDetails?.id);
     const removeLikes = filterLikes || [];
     const updateMessage = await loadQueryDataAsync(
-      UPDATE_COURSE_DISCUSSION,
+      UPDATE_LIKE_DISLIKE,
       {
-        courseId: moduleData[0]?.courseId,
         discussionId: data?.DiscussionId,
-        likes: removeLikes
+        input: "likes",
+        UserId: userDetails?.id
       },
       {},
       mutationClient
@@ -184,17 +179,16 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const messageDisLikes = [...(data?.Dislike || []), userDetails?.id];
     const messageLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
-      UPDATE_COURSE_DISCUSSION,
+     UPDATE_LIKE_DISLIKE,
       {
-        courseId: moduleData[0]?.courseId,
         discussionId: data?.DiscussionId,
-        dislikes: messageDisLikes,
-        likes: messageLikes
+        input: "dislikes",
+        UserId: userDetails?.id
       },
       {},
       mutationClient
     );
-    console.log('updateMessage', updateMessage);
+  
     const _messageArr = structuredClone(messageArr);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
@@ -222,17 +216,16 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     console.log('filterMessages', filterMessages);
     const removeDisLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
-      UPDATE_COURSE_DISCUSSION,
+     UPDATE_LIKE_DISLIKE,
       {
-        courseId: moduleData[0]?.courseId,
         discussionId: data?.DiscussionId,
-        dislikes: removeDisLikes
+        input: "dislikes",
+        UserId: userDetails?.id
       },
       {},
       mutationClient
     );
-    console.log('updateMessage', updateMessage);
-
+   
     const _messageArr = structuredClone(messageArr);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
@@ -279,7 +272,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const item2 = userDetails?.find(i => i.id === item1.UserId);
     return { ...item1, ...item2};
     });
-    console.log("mappedArray", mappedArray)
+   
     let newArray = [...mappedArray];
     newArray?.sort(function (a, b) {
       return b.Created_at - a.Created_at;
@@ -308,7 +301,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         {},
         mutationClient
       );
-      console.log('addMessage', addMessage?.addCourseDiscussion);
+     
       const replies = (await getReplies(msg?.DiscussionId)) || [];
       console.log('replies', replies);
       setReplyData([...replies]);
@@ -331,9 +324,8 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         {},
         mutationClient
       );
-      console.log('addMessage', addMessage);
+     
       const replies = (await getReplies(msg?.ReplyId)) || [];
-      console.log('replies', replies);
       setReplyData([...replies]);
     }
     setReply('');
@@ -343,15 +335,17 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   };
 
   const handleKeyPress = (e) => {
+     if (!reply.replace(/<\/?[^>]+(>|$)/g, "").length) return;
     if (e.key === 'Enter' && !e.shiftKey) {
       onSendReplyHandler(message);
     }
   };
+
   let displayCourseData = "";
-  // {message?.Module}, {message?.Chapter},{message?.Topic}
   if (message?.Module) displayCourseData += message?.Module;
   if (message?.Chapter) displayCourseData += `, ${message?.Chapter}`;
   if (message?.Topic) displayCourseData += `, ${message?.Topic}`;
+
   return (
     <div className={`${style.message_Block_container}`}>
       {message?.IsPinned && (
@@ -369,7 +363,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
                 src={
                   !message?.IsAnonymous
                     ? message?.photo_url
-                    : 'https://www.w3schools.com/howto/img_avatar2.png'
+                    : '/images/svg/17.svg'
                 }
                 alt=""
               />
@@ -479,6 +473,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
                 onAnnouncementHandler={announcementHandler}
                 checkAnnouncement={isAnnouncement}
                 handleKeyPress={handleKeyPress}
+                isMessage = {false}
               />
             </div>
           )}
