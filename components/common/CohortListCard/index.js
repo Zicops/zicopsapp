@@ -145,7 +145,7 @@ export default function CohortListCard({
         </div>
 
         <div className={`${styles.footer}`}>{children}</div>
-        {isManager && (
+        {(isManager && selectedCohort?.userCohort?.user_id !== data?.user_id) && (
           <div
             className={`${styles.clossBtn}`}
             onClick={() => {

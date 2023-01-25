@@ -59,7 +59,7 @@ const UserScheduleTab = () => {
   async function loadScheduleData() {
     // if(!scheduleDataAtom?.length) return ;
     setLoading(true);
-    const courseData = await getUserCourseData(35);
+    const courseData = await getUserCourseData(50);
     const _courseData = courseData?.filter((course) => !!course?.id);
     const examData = await getScheduleExams(_courseData);
     if (!_courseData?.length && !examData?.length) return setLoading(false);

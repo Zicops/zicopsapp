@@ -246,8 +246,7 @@ export const useExamData = () => {
     // if (!examAttempts?.length) return setTakeAnyTimeExams([...takeAnyTimeExams]);
 
     let currentTime = getUnixFromDate();
-
-    let sExams = scheduleExams?.filter((exam) => parseInt(exam?.Start) > currentTime);
+    let sExams = scheduleExams?.filter((exam) =>  parseInt(exam?.Start) + exam?.Duration + parseInt(exam?.BufferTime) > currentTime);
 
     const scheduleExamData = sExams?.map((exam) => ({
       examId: exam?.id,

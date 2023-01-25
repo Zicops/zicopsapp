@@ -43,7 +43,7 @@ const CohortAccordian = ({ currentUserData = null }) => {
     setToastMsg({type:'success',message:"User removed succesfully!"});
     const notificationBody = getNotificationMsg('cohortUnassign',{cohortName:selectedCohortData?.main?.name})
     // if(!notificationBody) setToastMsg({type:'danger',message:'Error while sending notification'});
-    await sendNotification(
+     sendNotification(
       {
         title: NOTIFICATION_TITLES?.cohortUnassign,
         body: notificationBody,

@@ -125,7 +125,8 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
       // checks for topic content
       if (topic?.type === COURSE_TOPIC_TYPES.content && isLangDataComplete) {
         // get all topic content of the current topic
-        const _topicContent = allTopicContent?.filter((tc) => tc?.topicId === topic?.id) || [];
+        const _topicContent =
+          allTopicContent?.filter((tc) => tc?.topicId === topic?.id && !!tc.contentUrl) || [];
         _topic.contentData = _topicContent;
 
         // data is not complete if there is no topic content

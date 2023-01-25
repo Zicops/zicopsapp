@@ -3,6 +3,7 @@ import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutat
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { getQueryData, loadQueryDataAsync } from '@/helper/api.helper';
+import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -48,7 +49,7 @@ export default function useHandleCourseAssign() {
       addedBy: JSON.stringify({ userId: userData.id, role: 'self' }),
       courseType: courseAssignData?.fullCourse?.type,
       isMandatory: courseAssignData?.isMandatory,
-      courseStatus: 'open',
+      courseStatus: COURSE_MAP_STATUS.assign,
       endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
 

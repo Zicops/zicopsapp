@@ -47,7 +47,8 @@ export default function InviteTab() {
 
   useEffect(async () => {
     if (selectedCohortData?.userCohort?.role?.toLowerCase() !== 'manager') return;
-    if (selectedCohortData?.inviteUser?.length)
+  
+    if (selectedCohortData?.inviteUser?.length && !selectedCohortData?.isUpdated)
       return setUsersForCohort([...selectedCohortData?.inviteUser], setLoading(false));
     setLoading(true);
     let cohortUser = [];
@@ -86,7 +87,7 @@ export default function InviteTab() {
     // console.log(inviteUserList);
 
     if (!inviteUserList?.length) return;
-    setSelectedCohortData((prevValue) => ({ ...prevValue, inviteUser: [...inviteUserList] }));
+    setSelectedCohortData((prevValue) => ({ ...prevValue, inviteUser: [...inviteUserList] , isUpdated: false}));
     return setUsersForCohort([...inviteUserList], setLoading(false));
   }, [selectedCohortData]);
 
