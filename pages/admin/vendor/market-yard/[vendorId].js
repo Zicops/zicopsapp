@@ -11,7 +11,7 @@ import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 
 export default function VendorInfo() {
   const router = useRouter();
-  const vendorId = router.query.vendorId || '0'; //Change the 1 to null
+  const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
   const tabData = [
     {
