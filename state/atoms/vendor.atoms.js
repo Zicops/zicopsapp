@@ -21,17 +21,17 @@ export function getVendorObject(data) {
   };
 }
 
-export const VendorServicesAtom = atom({
-  key: 'vendorServicesState',
-  default: getVendorServicesObject()
-});
+// export const VendorServicesAtom = atom({
+//   key: 'vendorServicesState',
+//   default: getVendorServicesObject()
+// });
 
-export function getVendorServicesObject(data) {
-  return {
-    isApplicable: data?.isApplicable || true,
-    serviceDescription: data?.serviceDescription || ''
-  };
-}
+// export function getVendorServicesObject(data) {
+//   return {
+//     isApplicable: data?.isApplicable || true,
+//     serviceDescription: data?.serviceDescription || ''
+//   };
+// }
 
 export const SmeServicesAtom = atom({
   key: 'smeServicesState',
@@ -40,7 +40,7 @@ export const SmeServicesAtom = atom({
 
 export function getSMEServicesObject(data) {
   return {
-    isApplicable: data?.isApplicable || true,
+    isApplicableSME: data?.isApplicableSME || false,
     serviceDescription: data?.serviceDescription || ''
   };
 }
@@ -52,7 +52,7 @@ export const CtServicesAtom = atom({
 
 export function getCTServicesObject(data) {
   return {
-    isApplicable: data?.isApplicable || true,
+    isApplicableCT: data?.isApplicableCT || false,
     serviceDescription: data?.serviceDescription || ''
   };
 }
@@ -64,7 +64,7 @@ export const CdServicesAtom = atom({
 
 export function getCDServicesObject(data) {
   return {
-    isApplicable: data?.isApplicable || true,
+    isApplicableCD: data?.isApplicableCD || false,
     serviceDescription: data?.serviceDescription || ''
   };
 }

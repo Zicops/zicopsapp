@@ -8,18 +8,16 @@ import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea'
 import IconBtn from '@/components/common/IconBtn';
 import IconButton from '@/components/common/IconButton';
 
-export default function AddServices({ data }) {
-  const [vendorData, setVendorData] = useRecoilState(VendorServicesAtom);
-  console.log(data);
+export default function AddServices({ data, setData = () => {}, inputName }) {
   return (
     <div className={`${styles.addServiceContainer}`}>
       <div>
         <LabeledRadioCheckbox
           label="Applicable"
           type="checkbox"
-          name="isApplicable"
-          isChecked={`${vendorData.isApplicable}`}
-          changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+          name={inputName}
+          isChecked={data[`${inputName}`]}
+          changeHandler={(e) => changeHandler(e, data, setData)}
         />
       </div>
       <div className={`${styles.serviceDescriptionExpertise}`}>
@@ -29,34 +27,54 @@ export default function AddServices({ data }) {
             inputOptions={{
               inputName: 'serviceDescription',
               placeholder: 'Describe your service in 160 characters',
-              value: vendorData.serviceDescription
+              value: data.serviceDescription
             }}
-            changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, data, setData)}
           />
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Add Expertise: </label>
-          <IconButton text="Add Expetise" styleClass={`${styles.button}`} />
+          <IconButton
+            text="Add Expetise"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+          />
         </div>
       </div>
       <div className={`${styles.addLanguageOPFormat}`}>
         <div className={`${styles.addLanguages}`}>
           <label for="serviceDescription">Language: </label>
-          <IconButton text="Add language" styleClass={`${styles.button}`} />
+          <IconButton
+            text="Add language"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+          />
         </div>
         <div className={`${styles.addOPFormat}`}>
           <label for="serviceDescription">O/P deliverable formats: </label>
-          <IconButton text="Add O/P deliverable formats" styleClass={`${styles.button}`} />
+          <IconButton
+            text="Add O/P deliverable formats"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+          />
         </div>
       </div>
       <div className={`${styles.addSampleFilesProfiles}`}>
         <div className={`${styles.addSampleFiles}`}>
           <label for="sampleFiles">Sample Files: </label>
-          <IconButton text="Add sample files" styleClass={`${styles.button}`} />
+          <IconButton
+            text="Add sample files"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+          />
         </div>
         <div className={`${styles.addProfiles}`}>
           <label for="profiles">O/P deliverable formats: </label>
-          <IconButton text="Add profiles" styleClass={`${styles.button}`} />
+          <IconButton
+            text="Add profiles"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+          />
         </div>
       </div>
     </div>
