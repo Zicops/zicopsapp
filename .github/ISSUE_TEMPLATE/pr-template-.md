@@ -1,12 +1,3 @@
----
-name: 'PR Template '
-about: Describe this issue template's purpose here.
-title: ''
-labels: ''
-assignees: ''
-
----
-
 # Goal
 The goal of this PR is <!-- insert goal here -->
 
