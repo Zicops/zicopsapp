@@ -17,7 +17,8 @@ export default function VendorPopUp({
   children,
   tooltipCloseBtnTitle,
   onClose = () => {},
-  isAttempted = false
+  isAttempted = false,
+  isMarketYard = false
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState, onClose);
 
@@ -46,7 +47,7 @@ export default function VendorPopUp({
         closeOnDocumentClick={false}
         closeOnEscape={false}>
         <div className={`${styles.popUpContainer}`} style={propStyles}>
-          <div className={`${styles.popUp}`}>
+          <div className={`${styles.popUp}  ${isMarketYard ? styles.popMarket : styles.popManage }`}>
             <div className={`${styles.header}`}>
               <div className={`${styles.title}`}>{title} </div>
               <div
@@ -57,11 +58,11 @@ export default function VendorPopUp({
                   onCloseWithCross();
                 }}>
                 <ToolTip title={tooltipCloseBtnTitle}>
-                  <img src="/images/svg/cross.svg" alt="" />
+                {!isMarketYard ?  <img src="/images/svg/cross.svg" alt="" /> :<img src="/images/svg/close-icon.svg" alt="" />}
                 </ToolTip>
                           </div>
             </div>
-                <div className={`${styles.hr}`}></div>
+              {!isMarketYard &&  <div className={`${styles.hr}`}></div>}
 
             <div className={`${styles.body} ${isAttempted ? styles.attempted : ""}`}>{children}</div>
 
@@ -77,7 +78,7 @@ export default function VendorPopUp({
                     type="button"
                     value="cancel"
                     className={`${
-                      closeBtn.disabled ? styles.btn_cancel_add_disabled : styles.btn_cancel_add
+                      closeBtn.disabled ? styles.btn_cancel_add_disabled : !isMarketYard ? styles.btn_cancel_add  : styles.btn_cancel_add2
                     }`}
                     disabled={closeBtn.disabled}
                     onClick={closePopUp}>
@@ -86,8 +87,8 @@ export default function VendorPopUp({
                   <button
                     type="button"
                     value="add"
-                    className={`${submitBtn.disabled ? '' : styles.add_btn} ${
-                      submitBtn.disabled ? styles.btn_cancel_add_disabled : styles.btn_cancel_add
+                    className={`${submitBtn.disabled ? '' : !isMarketYard ?  styles.add_btn : styles.add_btn2} ${
+                      submitBtn.disabled ? styles.btn_cancel_add_disabled :  !isMarketYard ? styles.btn_cancel_add  : styles.btn_cancel_add2
                     }`}
                     disabled={submitBtn.disabled}
                     onClick={submitBtn.handleClick}>

@@ -46,8 +46,6 @@ export default function ManageVendor() {
             closeBtn = {{name: "Cancel"}}
             submitBtn={{ name: 'Next', handleClick: handleClick }}
           isFooterVisible={true}>
-            <VendorAdd title="Vendor type?" label1="Company" lable2="Individual/Freelancer" value1="company" value2="individual" name1="vendorType" changeHandler1={(e) => setIsVendorType(e.target.value)} changeHandler2={(e) => setIsVendorType(e.target.value)} vendor={isVendorType} checked1={isVendorType == "company"} checked2={isVendorType == "individual"} />
-           <VendorAdd title ="At what level do you want to add the vendor?" label1="Organization" lable2="Learning space Level" value1="organization" value2="lsp" name1="vendorLevel" changeHandler1 ={(e)=>setIsVendorLevel(e.target.value)}  changeHandler2 ={(e)=>setIsVendorLevel(e.target.value)} vendor={isVendorLevel} checked1={isVendorType == "organization"} checked2={isVendorType == "lsp"} />
             <VendorAdd
               title="Vendor type?"
               label1="Company"
