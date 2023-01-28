@@ -10,3 +10,7 @@ Closes <!-- issue # -->
 - [ ] Tests added
 - [ ] Developer test pass 
 - [ ] is a breaking change
+
+Notes for QA:
+- [ ] 
+- [ ]
