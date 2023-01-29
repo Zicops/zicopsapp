@@ -153,8 +153,11 @@
     gap: 25px;
     padding: 10px 0px;
     font-size: 16px;
+    position: relative;
     .message_Content_pinned{
      display: none;
+     position: absolute;
+     left: -35px;
     }
   }
   .reply_buttons {
@@ -204,10 +207,7 @@
 }
 .message_Block_Body_unpinned{
   &:hover {
-      .message_content_hover {
-        transform: translateX(-38px);
-      }
-  
+    
       .message_Content_pinned {
         display: flex;
         align-items: center;
