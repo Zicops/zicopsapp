@@ -26,8 +26,9 @@ export default function VendorInfo() {
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
   const [addTax, setAddTax] = useState(false);
-  const [confirmTax , setConfirmTax] = useState(false)
- const [completeOrder , setCompleteOrder ] = useState(false)
+  const [confirmTax, setConfirmTax] = useState(false);
+  const [completeOrder, setCompleteOrder] = useState(false);
+  const router = useRouter();
   const onOpenPopup = () => {
     setShowPopup(true);
   };
@@ -35,7 +36,6 @@ export default function VendorInfo() {
   const handleClick = () => {
     setAddOrder(true);
     setShowPopup(false);
-    // router.push('/admin/vendor/manage-vendor/addVendor');
   };
 
   const addOrderHandler = () => {
@@ -43,20 +43,47 @@ export default function VendorInfo() {
     setAddOrder(false);
   };
 
-  const addRateHandler = () => {
-    setAddTax(true)
-    setAddRate(false);
-  }
-  const confirmTaxHandler = () => {
-    setConfirmTax(true);
-    setAddTax(false)
-  }
+  const backFirstPopUpHandler = () => {
+    setAddOrder(false);
+    setShowPopup(true);
+  };
 
-  const onOrderCompleteHandler = () => {
+  const addRateHandler = () => {
+    setAddTax(true);
+    setAddRate(false);
+  };
+
+  const backAddOrderHandler = () => {
+    setAddRate(false);
+    setAddOrder(true);
+  };
+  const addTaxHandler = () => {
+    setConfirmTax(true);
+    setAddTax(false);
+  };
+
+  const backAddRateHandler = () => {
+    setAddTax(false);
+    setAddRate(true);
+  };
+
+  const onConfirmTaxHandler = () => {
     setCompleteOrder(true);
-    setConfirmTax(false)
-  }
-  const router = useRouter();
+    setConfirmTax(false);
+  };
+
+  const backAddTaxHandler = () => {
+    setConfirmTax(false);
+    setAddTax(true);
+  };
+  const onOrderCompleteHandler = () => {
+    router.push('/admin/vendor/manage-vendor');
+  };
+
+  const backMarketYardHandler = () => {
+    router.push('/admin/vendor/market-yard');
+  };
+
   const vendorId = router.query.vendorId || '0'; //Change the 1 to null
   console.log('vendorId', vendorId);
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendorId === vendorId);
@@ -110,7 +137,7 @@ export default function VendorInfo() {
         popUpState={[addOrder, setAddOrder]}
         size="small"
         isMarketYard={true}
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Back', handleClick: backFirstPopUpHandler }}
         submitBtn={{ name: 'Next', handleClick: addOrderHandler }}>
         <p>Choose Service Type</p>
         <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" />
@@ -128,7 +155,7 @@ export default function VendorInfo() {
         title="Add Order"
         size="large"
         isMarketYard={true}
-        closeBtn={{ name: 'Back' }}
+        closeBtn={{ name: 'Back', handleClick: backAddOrderHandler }}
         submitBtn={{ name: 'Next', handleClick: addRateHandler }}>
         <p className={`${styles.addLineText}`}>Add Line Item</p>
         <div className={`${styles.hr}`}></div>
@@ -141,8 +168,8 @@ export default function VendorInfo() {
         title="Add Order"
         size="small"
         isMarketYard={true}
-        closeBtn={{ name: 'Back' }}
-        submitBtn={{ name: 'Next', handleClick: confirmTaxHandler }}>
+        closeBtn={{ name: 'Back', handleClick: backAddRateHandler }}
+        submitBtn={{ name: 'Next', handleClick: addTaxHandler }}>
         <p className={`${styles.addLineText}`}>Review and Add Tax</p>
         <div className={`${styles.hr}`}></div>
         <ReviewOrderTop isConfirm={false} />
@@ -156,22 +183,22 @@ export default function VendorInfo() {
         title="Add Order"
         size="small"
         isMarketYard={true}
-        closeBtn={{ name: 'Back' }}
-        submitBtn={{ name: 'Confirm', handleClick: onOrderCompleteHandler }}>
+        closeBtn={{ name: 'Back', handleClick: backAddTaxHandler }}
+        submitBtn={{ name: 'Confirm', handleClick: onConfirmTaxHandler }}>
         <p className={`${styles.addLineText}`}>Confirm</p>
         <div className={`${styles.hr}`}></div>
         <ReviewOrderTop isConfirm={true} />
         <div className={`${styles.hr}`}></div>
-        <ReviewOrderBottom isTax={false}/>
-         <div className={`${styles.hr}`}></div>
+        <ReviewOrderBottom isTax={false} />
+        <div className={`${styles.hr}`}></div>
       </VendorPopUp>
       <VendorPopUp
         open={completeOrder}
         popUpState={[completeOrder, setCompleteOrder]}
         size="small"
         isMarketYard={true}
-        closeBtn={{ name: 'Back to Market Yard' }}
-        submitBtn={{ name: 'Go to Marketplace', handleClick: handleClick }}>
+        closeBtn={{ name: 'Back to Market Yard', handleClick: backMarketYardHandler }}
+        submitBtn={{ name: 'Go to Marketplace', handleClick: onOrderCompleteHandler }}>
         <CompleteOrder />
         <div className={`${styles.hr}`}></div>
       </VendorPopUp>

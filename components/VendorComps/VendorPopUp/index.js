@@ -47,7 +47,7 @@ export default function VendorPopUp({
         closeOnDocumentClick={false}
         closeOnEscape={false}>
         <div className={`${styles.popUpContainer}`} style={propStyles}>
-          <div className={`${styles.popUp}  ${isMarketYard ? styles.popMarket : styles.popManage }`}>
+          <div className={`${styles.popUp}  ${isMarketYard ? styles.popMarket : styles.popManage}`}>
             <div className={`${styles.header}`}>
               <div className={`${styles.title}`}>{title} </div>
               <div
@@ -58,13 +58,19 @@ export default function VendorPopUp({
                   onCloseWithCross();
                 }}>
                 <ToolTip title={tooltipCloseBtnTitle}>
-                {!isMarketYard ?  <img src="/images/svg/cross.svg" alt="" /> :<img src="/images/svg/close-icon.svg" alt="" />}
+                  {!isMarketYard ? (
+                    <img src="/images/svg/cross.svg" alt="" />
+                  ) : (
+                    <img src="/images/svg/close-icon.svg" alt="" />
+                  )}
                 </ToolTip>
-                          </div>
+              </div>
             </div>
-              {!isMarketYard &&  <div className={`${styles.hr}`}></div>}
+            {!isMarketYard && <div className={`${styles.hr}`}></div>}
 
-            <div className={`${styles.body} ${isAttempted ? styles.attempted : ""}`}>{children}</div>
+            <div className={`${styles.body} ${isAttempted ? styles.attempted : ''}`}>
+              {children}
+            </div>
 
             {isFooterVisible && (
               <div className={`${styles.footer}`}>
@@ -78,17 +84,27 @@ export default function VendorPopUp({
                     type="button"
                     value="cancel"
                     className={`${
-                      closeBtn.disabled ? styles.btn_cancel_add_disabled : !isMarketYard ? styles.btn_cancel_add  : styles.btn_cancel_add2
+                      closeBtn.disabled
+                        ? styles.btn_cancel_add_disabled
+                        : !isMarketYard
+                        ? styles.btn_cancel_add
+                        : styles.btn_cancel_add2
                     }`}
                     disabled={closeBtn.disabled}
-                    onClick={closePopUp}>
+                    onClick={closeBtn.handleClick || closePopUp}>
                     {closeBtn.name || 'Cancel'}
                   </button>
                   <button
                     type="button"
                     value="add"
-                    className={`${submitBtn.disabled ? '' : !isMarketYard ?  styles.add_btn : styles.add_btn2} ${
-                      submitBtn.disabled ? styles.btn_cancel_add_disabled :  !isMarketYard ? styles.btn_cancel_add  : styles.btn_cancel_add2
+                    className={`${
+                      submitBtn.disabled ? '' : !isMarketYard ? styles.add_btn : styles.add_btn2
+                    } ${
+                      submitBtn.disabled
+                        ? styles.btn_cancel_add_disabled
+                        : !isMarketYard
+                        ? styles.btn_cancel_add
+                        : styles.btn_cancel_add2
                     }`}
                     disabled={submitBtn.disabled}
                     onClick={submitBtn.handleClick}>
@@ -113,4 +129,3 @@ export default function VendorPopUp({
     </>
   );
 }
-
