@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import VendorMaster from '@/components/VendorComps/AddVendor/VendorMaster';
 import AddVendorServices from '@/components/VendorComps/AddVendor/AddVendorServices';
 import AddVendorCourses from '@/components/VendorComps/AddVendor/AddVendorCourses';
+import AddVendorProfile from '@/components/VendorComps/AddVendorProfile';
 
 export default function VendorInfo() {
   const router = useRouter();

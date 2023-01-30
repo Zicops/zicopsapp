@@ -833,3 +833,83 @@
     padding-left: 10px;
   }
 }
+.inputContainer {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+
+  label {
+    margin-bottom: 8px;
+  }
+
+  .uploadImage {
+    height: 120px;
+    // border: 1px dashed #747474;
+
+
+    .btn {
+      height: 110px;
+      border: 1px dashed #747474 !important;
+    }
+  }
+
+  .addExpertise {
+    width: 50%;
+
+    button {
+      display: flex;
+      flex-direction: row-reverse;
+      font-size: 15px;
+      align-items: center;
+      gap: 15px;
+      color: white;
+      background-color: $secondary;
+      border: none;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 15px;
+      padding-right: 15px;
+      border-radius: 5px;
+    }
+  }
+}
+
+.addProfileContainer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+
+  .addProfile {
+    // width: 50%;
+
+    button {
+      display: flex;
+      flex-direction: row-reverse;
+      font-size: 15px;
+      align-items: center;
+      gap: 15px;
+      color: white;
+      background-color: #1A1D21;
+      border: none;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 15px;
+      padding-right: 15px;
+      border-radius: 5px;
+    }
+  }
+}
+
+.inputTitle {
+  margin-bottom: 10px;
+}
+
+.checkBoxRole {
+  margin: 20px 0px;
+}
+
+.inputContainer2 {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}

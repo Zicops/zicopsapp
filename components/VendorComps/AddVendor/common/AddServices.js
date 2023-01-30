@@ -7,7 +7,6 @@ import styles from '../../vendorComps.module.scss';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import IconBtn from '@/components/common/IconBtn';
 import IconButton from '@/components/common/IconButton';
-import AddVendorPopUp from './AddVendorPopUp';
 import { useState } from 'react';
 import VendorPopUp from '../../VendorPopUp';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
@@ -117,9 +116,8 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
           return (
             <div>
               <h3>{data.Name}</h3>
-              {subCat.filter((value, index) => {
-                value.CatId === data.id;
-                return <p>{value.Name}</p>;
+              {subCat.map((value, index) => {
+                if (value.CatId === data.id) return <p>{value.Name}</p>;
               })}
             </div>
           );
