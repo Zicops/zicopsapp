@@ -14,7 +14,6 @@ export default function VennDiagram({ data }) {
   // total = data.reduce((a, b) => parseInt(a.levelCount) + parseInt(b.levelCount), 0);
   return (
     <>
-      <h1>Venn Diagram</h1>
       <div className={`${styles.wrapperContainer}`}>
         {data.map((cd, i) => {
           let cdclass;

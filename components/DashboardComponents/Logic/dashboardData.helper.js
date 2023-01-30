@@ -47,6 +47,35 @@ export const cardData = [
         cardText:'32 assigned courses'
     }
 ]
+export const myCoursesAvailabilityData = [
+  {   
+    id:1,
+    cardTitle:'Published',
+    cardImage:'/images/svg/publish.svg',
+    cardCount:23,
+    cardText:'Published courses'
+},
+{   id:2,
+    cardTitle:'Ready for publishing',
+    cardImage:'/images/svg/done.svg',
+    cardCount:38,
+    cardText:'Ready to be published'
+},
+{
+    id:3,
+    cardTitle:'Saved',
+    cardImage:'/images/svg/save.svg',
+    cardCount:58,
+    cardText:'Saved courses'
+},
+{   
+    id:4,
+    cardTitle:'Expired',
+    cardImage:'/images/svg/timer.svg',
+    cardCount:43,
+    cardText:'Expired courses'
+}
+]
 export const badgeData =
     {  
         badgeCount:15,
@@ -56,15 +85,27 @@ export const cardHeaderData = {
         image :'/images/svg/lan.svg',
         text :'Site Map'
     }
-export const availabilityCardData = {
+export const availabilityCardData = [
+  {
     language : 'Hindi',
+    Progress: 32
+  },
+  {
+    language : 'English',
     Progress: 68
-}
-export const statisticsCardData = {
+  }]
+export const statisticsCardData = [{
+    id:1,
     cardTitle : 'Most added/assigned',
     cardImage: '/images/svg/trending_up.svg',
     cardText :'Java Beginners for Enthusiasts'
-}
+  },
+  {
+    id:2,
+    cardTitle : 'Least added/assigned',
+    cardImage: '/images/svg/trending_up.svg',
+    cardText :'Complete Java Programming-Beginner to Advance'
+  }]
 export const CategoryConsumptionData = [
     {
       id: 1,
