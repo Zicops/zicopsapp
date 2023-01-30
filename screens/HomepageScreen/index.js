@@ -388,7 +388,10 @@ export default function HomepageScreen() {
           title="Courses from your learning space"
           data={learningSpaceCourses}
           handleTitleClick={() =>
-            router.push(`/search-page?filter=${JSON.stringify({ LspId: lspId })}`, '/search-page')
+            router.push(
+              `/search-page?filter=${JSON.stringify({ LspId: sessionStorage?.getItem('lsp_id') })}`,
+              '/search-page'
+            )
           }
         />
       )}

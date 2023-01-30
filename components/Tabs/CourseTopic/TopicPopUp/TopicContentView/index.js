@@ -13,7 +13,6 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
   const topicSubtitle = useRecoilValue(TopicSubtitleAtom);
   const uploadStatus = useRecoilValue(uploadStatusAtom);
   const quizzes = useRecoilValue(QuizAtom);
-  const subtitles = useRecoilValue(TopicSubtitleAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [topicContentArr, setTopicContentArr] = useRecoilState(TopicContentAtom);
@@ -24,6 +23,8 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
         <>
           {topicContent.map((content, index) => {
             const isSubtitleAdded = topicSubtitle[index]?.file || topicSubtitle[index]?.subtitleUrl;
+            const isContentUrlPresent = (!!content?.id && !content?.contentUrl) || false;
+
             return (
               <div className="content_added" key={content.language}>
                 <div className="content_details">
@@ -39,16 +40,15 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                 <div
                   className="content_bar"
                   style={{
-                    background:
-                      !!content?.id && !content?.contentUrl
-                        ? '#cf3e3e'
-                        : `linear-gradient(90deg, #86D386 ${
-                            uploadStatus ? uploadStatus[content.language] * 100 : 0
-                          }%, #868686 0%, #868686 100%)`
+                    background: isContentUrlPresent
+                      ? '#cf3e3e'
+                      : `linear-gradient(90deg, #86D386 ${
+                          uploadStatus ? uploadStatus[content.language] * 100 : 0
+                        }%, #868686 0%, #868686 100%)`
                   }}>
                   <div className="language">{content.language}</div>
                   <div className="text">
-                    {!!content?.id && !content?.contentUrl ? (
+                    {isContentUrlPresent ? (
                       'No Content URL Found'
                     ) : (
                       <>

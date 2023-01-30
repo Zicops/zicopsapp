@@ -2023,6 +2023,22 @@ mutation updateCourseDiscussion(
   }
 }`
 
+export const UPDATE_LIKE_DISLIKE = gql`
+mutation updateLikesDislikes(
+    $discussionId: String!, 
+    $input: String!, 
+    $UserId: String!
+    )
+    {
+    updateLikesDislikes(
+    discussionId:$discussionId
+    input:$input
+    UserId:$UserId
+  )
+  
+}
+`
+
 export const DELETE_SUBTITLE = gql`
   mutation deleteTopicContentSubtitle($courseId: String!, $topicId: String!, $fileName: String!) {
     deleteTopicContentSubtitle(courseId: $courseId, topicId: $topicId, fileName: $fileName)

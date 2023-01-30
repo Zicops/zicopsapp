@@ -117,14 +117,14 @@ export default function CourseConfiguration() {
 
       {/* Freeze */}
       <div>
-        <h4>Freeze your account</h4>
+        <h4>Course Freeze</h4>
 
         <div className={`w-100 ${styles.boxContainer}`}>
           <SwitchBox
             labeledInputProps={{
               label: 'Freeze',
               description:
-                'Once a course is frozen it is no longer available and ready for approval/Publishing',
+                'Once a course is frozen it is no longer editable and ready for approval/publishing',
               name: 'qa_required',
               isDisabled: isDisabled,
               isChecked: fullCourse?.qa_required || false,

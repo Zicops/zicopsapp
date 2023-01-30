@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import style from './discussion.module.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MessageBlock from './MessageBlock';
@@ -16,6 +16,8 @@ import Loader from '@/components/common/Loader';
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { isWordIncluded } from '@/helper/utils.helper';
 import { SelectedModuleDataAtom } from '../Logic/courseBody.helper';
+import { courseContext } from '@/state/contexts/CourseContext';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 const CourseBodyDiscussion = () => {
   const [message, setMessage] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -23,15 +25,16 @@ const CourseBodyDiscussion = () => {
   const [showReplies, setShowReplies] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [inputText, setInputText] = useState('');
-  const [selectedType, setSelectedType] = useState('');
-  const [checkClick, setCheckClick] = useState(false);
+  const [selectedType, setSelectedType] = useState('All');
+  const [checkClick, setCheckClick] = useState(true);
   const [showSelf, setShowSelf] = useState(false);
-  const [showLearners, setShowLearners] = useState(false);
+  const [showLearners, setShowLearners] = useState(true);
   const [loading, setLoading] = useState(false);
   const [fliterData, setFilterData] = useState();
   const [learnerUser, setLearnerUser] = useState();
   const [replyData, setReplyData] = useRecoilState(DiscussionReplyAtom);
   const [messageArr, setMessageArr] = useRecoilState(MessageAtom);
+  const [isRole, setIsRole] = useState('');
   const userDetails = useRecoilValue(UserStateAtom);
   const moduleData = useRecoilValue(ModuleAtom);
   const chapterData = useRecoilValue(ChapterAtom);
@@ -39,7 +42,8 @@ const CourseBodyDiscussion = () => {
   const courseData = useRecoilValue(UserCourseDataAtom);
   const selectedModuleData = useRecoilValue(SelectedModuleDataAtom);
   const topicExamData = useRecoilValue(TopicExamAtom)
-
+  const { fullCourse } = useContext(courseContext);
+  
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
@@ -106,7 +110,7 @@ const CourseBodyDiscussion = () => {
     const messagesArr = await loadQueryDataAsync(
       GET_COURSE_DISCUSSION,
       {
-        course_id: moduleData[0]?.courseId
+        course_id: fullCourse?.id
       },
       {},
       queryClient
@@ -193,6 +197,7 @@ const CourseBodyDiscussion = () => {
   };
 
   const handleKeyPress = (e) => {
+    if (!message.replace(/<\/?[^>]+(>|$)/g, "").length) return;
     if (e.key === 'Enter' && !e.shiftKey) {
       sendMessageHandler();
     }
@@ -205,15 +210,32 @@ const CourseBodyDiscussion = () => {
   ];
 
   const handleTypeSelect = (e) => {
-    const announcementData = messageArr?.filter((el) => {
-      if (e.value === 'Announcements') {
-        return el?.IsAnnouncement;
-      } else if(e.value !== 'Announcements') {
-        return !el?.IsAnnouncement;
-      }
-    });
-    setFilterData(announcementData);
-    setSelectedType(e.value);
+    if (showLearners) {
+      const announcementData = messageArr?.filter((el) => {
+        if (e.value === 'Announcements') {
+          return el?.IsAnnouncement;
+        } else if(e.value === 'Discussions') {
+          return !el?.IsAnnouncement;
+        } else {
+          return el;
+        }
+      });
+      setFilterData(announcementData);
+      setSelectedType(e.value);
+    } else if(showSelf) {
+      const selfMessages = messageArr?.filter((el) => el?.UserId === userDetails?.id ) 
+      const announcementData = selfMessages?.filter((el) => {
+          if (e.value === 'Announcements') {
+            return el?.IsAnnouncement;
+          } else if (e.value === 'Discussions') {
+            return !el?.IsAnnouncement;
+          } else {
+            return el;
+          }
+      });
+      setFilterData(announcementData);
+      setSelectedType(e.value);
+    }
   };
 
   const typeValue = options.find((option) => option.value === selectedType);
@@ -234,15 +256,32 @@ const CourseBodyDiscussion = () => {
 
   const onSelfHandler = () => {
     const selfMessages = messageArr?.filter((el) => el?.UserId === userDetails?.id);
-    console.log('selfMessages', selfMessages);
-    setFilterData(selfMessages);
+    const onSelfData = selfMessages?.filter((el) => {
+        if (selectedType === 'Announcements') {
+          return el?.IsAnnouncement;
+        } else if(selectedType === 'Discussions') {
+          return !el?.IsAnnouncement;
+        } else {
+          return el;
+        }
+      }); 
+    console.log('selfMessages', onSelfData);
+    setFilterData(onSelfData);
     setCheckClick(true);
     setShowSelf(true);
     setShowLearners(false);
   };
 
   const onLearnerHandler = () => {
-    const othersMessages = messageArr?.filter((el) => el?.UserId !== userDetails?.id);
+    const othersMessages = messageArr?.filter((el) => {
+       if (selectedType === 'Announcements') {
+          return el?.IsAnnouncement;
+        } else if(selectedType === 'Discussions') {
+          return !el?.IsAnnouncement;
+        } else {
+          return el;
+        }
+    });
     setLearnerUser(othersMessages);
     setFilterData(othersMessages);
     setCheckClick(true);
@@ -254,23 +293,28 @@ const CourseBodyDiscussion = () => {
     setFilterData(filteredData);
   }, [inputText, messageArr, replyData]);
   
-    useEffect(async () => {
+  useEffect(async () => {
+    if (!fullCourse?.id) return;
     setLoading(true)
     const messages = (await getCourseMessages()) || [];
       if (!messages?.length) {
         setLoading(false);
         return;
     } 
-    console.log('messages', messages);
-      setMessageArr(messages);
-       console.log('messageArr', messageArr);
+    setMessageArr(messages);
     setLoading(false);
-  }, []);
+  }, [fullCourse?.id]);
 
   useEffect(async () => {
     const messages = (await getCourseMessages()) || [];
     setMessageArr(messages);
   }, [replyData]);
+
+    useEffect(() => {
+    const role = sessionStorage?.getItem('user_lsp_role');
+    if (!role) return;
+    setIsRole(role);
+  }, []);
 
   return (
     <div className={`${style.discussion_container}`}>
@@ -359,6 +403,7 @@ const CourseBodyDiscussion = () => {
             onAnnouncementHandler={announcementHandler}
             checkAnnouncement={isAnnouncement}
             handleKeyPress={handleKeyPress}
+            isAdmin= {isRole.toLowerCase() === USER_LSP_ROLE.admin ? true : false}
           />
         </div>
       )}

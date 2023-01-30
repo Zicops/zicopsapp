@@ -44,7 +44,7 @@ export default function ExamScreenPage({
       );
     });
 
-    return ()=> toggleFullScreen(document.body)
+    return () => isFullScreen && toggleFullScreen(document.body);
   }, []);
 
   function backToCourse() {
@@ -85,6 +85,7 @@ export default function ExamScreenPage({
             isFullScreen={isFullScreen}
             setIsFullScreen={setIsFullScreen}
             handleBackBtn={backToCourse}
+            isSampleTest={isSampleTest}
           />
         )}
 
