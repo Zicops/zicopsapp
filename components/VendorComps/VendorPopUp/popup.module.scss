@@ -59,7 +59,7 @@
 .footer {
     display: flex;
     justify-content: flex-end;
-    // padding-top: 30px;
+    padding-top: 10px;
 }
 .button_container{
     display: flex;
@@ -68,9 +68,9 @@
 
 .btn_cancel_add {
     background-color: transparent;
-    border: 2px solid #484848;
+    border: 2px solid $secondaryWhite;
     padding: 10px 32px;
-    color: #ACACAC;
+    color: $bgBody;
     cursor: pointer;
     text-transform: capitalize;
     font-size: 15px;
@@ -78,7 +78,7 @@
 }
 .btn_cancel_add2{
     background-color: transparent;
-    border: 1px solid #292F2F;
+    border: 1px solid $secondary;
         padding: 10px 65px;
         color: $primary;
         cursor: pointer;

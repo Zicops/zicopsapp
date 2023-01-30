@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import VendorMaster from '@/components/VendorComps/AddVendor/VendorMaster';
 import AddVendorServices from '@/components/VendorComps/AddVendor/AddVendorServices';
+import AddVendorProfile from '@/components/VendorComps/AddVendorProfile';
 
 export default function VendorInfo() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Profiles',
-      component: <div></div>
+      component: <AddVendorProfile />
     },
     {
       name: 'Courses',
