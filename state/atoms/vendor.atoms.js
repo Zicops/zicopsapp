@@ -17,7 +17,8 @@ export function getVendorObject(data) {
     linkedinURL: data?.linkedinURL || '',
     twitterURL: data?.twitterURL || '',
     saySomething: data?.saySomething || '',
-    addUser: data?.addUser || []
+    addUser: data?.addUser || [],
+    vendorId: data?.vendorId || ''
   };
 }
 

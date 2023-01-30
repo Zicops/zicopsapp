@@ -4,6 +4,8 @@ import styles from '../vendorComps.module.scss';
 import { useRecoilState } from 'recoil';
 import { SmeServicesAtom, CtServicesAtom, CdServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useEffect } from 'react';
+import VendorPopUp from '../VendorPopUp';
+import { useState } from 'react';
 
 export default function AddVendorServices() {
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
