@@ -24,7 +24,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Profiles',
-      component: <div></div>
+      component: <AddVendorProfile />
     },
     {
       name: 'Courses',
