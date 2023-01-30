@@ -2,11 +2,13 @@ import { GET_LATEST_COURSES } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import {
   COMMON_LSPS,
+  COURSE_MAP_STATUS,
   COURSE_SELF_ASSIGN_LIMIT,
   COURSE_STATUS,
   COURSE_TYPES,
   LEARNING_FOLDER_CAPACITY
 } from '@/helper/constants.helper';
+import { getUserAssignCourses } from '@/helper/data.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -91,7 +93,10 @@ export default function FavouriteDndCourses({ isLoading }) {
       return setToastMsg({ type: 'danger', message: 'course load error' });
     }
 
-    const userCourseData = await getUserCourseData(100);
+    const filters = { type: COURSE_TYPES[0] };
+    const userCourseData = await getUserAssignCourses(filters);
+
+    // const userCourseData = await getUserCourseData(100);
     // const mapRes = await loadQueryDataAsync(
     //   GET_USER_COURSE_MAPS,
     //   {
@@ -118,13 +123,8 @@ export default function FavouriteDndCourses({ isLoading }) {
       userCourseData?.forEach((course) => {
         course.created_at = course.created_at?.replaceAll('/', '-');
 
-        if (
-          course?.course_status?.toLowerCase() !== 'disabled' &&
-          course?.user_lsp_id === userLspId
-        ) {
-          userCourses?.push(course);
-          if (course?.added_by?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
-        }
+        userCourses?.push(course);
+        if (course?.added_by?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
       });
     }
 

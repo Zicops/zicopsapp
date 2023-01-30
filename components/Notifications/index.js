@@ -14,7 +14,11 @@ const Notifications = ({ isNav = false }) => {
         <p>Notifications</p>
       </div>
 
-      <AllNotifications isNav={isNav} data={notification?.slice(0, 4)} />
+      {notification?.length ? (
+        <AllNotifications isNav={isNav} data={notification?.slice(0, 4)} />
+      ) : (
+        <strong className={`${styles.fallbackMsg}`}>No new notifications</strong>
+      )}
 
       <div className={`${styles.notification_footer}`}>
         <button onClick={() => router.push('/notification-center')}>

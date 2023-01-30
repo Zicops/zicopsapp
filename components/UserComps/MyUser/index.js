@@ -304,7 +304,7 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
         data={data?.filter((user) => isWordIncluded(user?.[filterCol], searchQuery))}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
-        tableHeight="75vh"
+        tableHeight="70vh"
         loading={isLoading}
         showCustomSearch={true}
         searchProps={{

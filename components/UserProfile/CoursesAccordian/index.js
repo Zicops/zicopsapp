@@ -18,6 +18,7 @@ import AssignCourse from '@/components/CourseComps/AssignCourse';
 import { getNotificationMsg } from '@/helper/common.helper';
 import {
   COMMON_LSPS,
+  COURSE_MAP_STATUS,
   COURSE_STATUS,
   EMAIL_TEMPLATE_IDS,
   NOTIFICATION_TITLES
@@ -94,7 +95,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       courseName: userCourseData?.name
     });
 
-    await sendNotification(
+     sendNotification(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: notificationBody,
@@ -104,11 +105,13 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     );
     // console.log(userCourseData,'sd')
 
+    const origin = window?.location?.origin || '';
     const userName = currentUserData?.is_verified ? `${currentUserData?.first_name}` : '';
     const bodyData = {
       user_name: userName,
       lsp_name: sessionStorage?.getItem('lsp_name'),
-      course_name: userCourseData?.name
+      course_name: userCourseData?.name,
+      link: `${origin}/self-landing`
     };
     const sendMailData = {
       to: [currentUserData?.email],
@@ -203,7 +206,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       addedBy: JSON.stringify({ userId: id, role: 'admin' }),
       courseType: userCourseData.type,
       isMandatory: courseAssignData?.isMandatory,
-      courseStatus: 'open',
+      courseStatus: COURSE_MAP_STATUS.assign,
       endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
     };
 
@@ -233,7 +236,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     // );
 
-    await sendNotificationWithLink(
+     sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseAssign,
         body: notificationBody,

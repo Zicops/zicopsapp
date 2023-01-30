@@ -3,8 +3,8 @@ import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutat
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { USER_STATUS } from '@/helper/constants.helper';
-import { getMinCourseAssignDate, getUnixFromDate } from '@/helper/utils.helper';
+import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
+import { getMinCourseAssignDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -68,7 +68,7 @@ export default function useHandleCourseHero(isPreview) {
 
     const loadFullCourseData = isPreview ? loadQueryDataAsync : loadAndCacheDataAsync;
     const courseData = await loadFullCourseData(GET_COURSE, {
-      course_id: courseId
+      course_id: [courseId]
     });
     // if (!isPreview) {
     // courseData = await loadAndCacheDataAsync(GET_COURSE, {
@@ -81,7 +81,7 @@ export default function useHandleCourseHero(isPreview) {
     // }
 
     if (courseData?.getCourse && isDataLoaded !== courseId) {
-      updateCourseMaster(courseData.getCourse);
+      updateCourseMaster(courseData.getCourse?.[0]);
 
       setIsDataLoaded(courseId);
     }
@@ -226,61 +226,9 @@ export default function useHandleCourseHero(isPreview) {
     // });
   }
 
-  async function assignCourseToUser() {
-    setIsPopUpDataPresent(false);
-    const { userCourseMapping } = userCourseData;
-    const sendData = {
-      userId: userData?.id,
-      userLspId: userOrgData?.user_lsp_id,
-      courseId: fullCourse?.id,
-      addedBy: JSON.stringify({ userId: userData.id, role: 'self' }),
-      courseType: fullCourse?.type,
-      isMandatory: courseAssignData?.isMandatory,
-      courseStatus: 'open',
-      endDate: getUnixFromDate(courseAssignData?.endDate)?.toString()
-    };
-
-    // update course if user is reassigning this course to himself again
-    if (userCourseMapping?.user_course_id) {
-      sendData.userCourseId = userCourseMapping?.user_course_id;
-
-      let isError = false;
-      const res = await updateUserCouse({ variables: sendData }).catch((err) => (isError = !!err));
-      if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
-      console.log(res?.data?.updateUserCourse, 'userCourseMap');
-
-      setUserCourseData({
-        ...userCourseData,
-        userCourseMapping: res?.data?.updateUserCourse || {},
-        isCourseAssigned: true
-      });
-      setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
-      setIsAssignPopUpOpen(false);
-      return;
-    }
-
-    let isError = false;
-    const res = await addUserCourse({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = true;
-      return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
-    });
-    // console.log(res);
-    if (isError) return;
-    if (res?.errors) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
-
-    setUserCourseData({
-      ...userCourseData,
-      userCourseMapping: res?.data?.addUserCourse[0] || {},
-      isCourseAssigned: true
-    });
-    setCourseAssignData({ ...courseAssignData, isCourseAssigned: true });
-    setIsAssignPopUpOpen(false);
-  }
-
   async function unassignCourseFromUser() {
     const { userCourseMapping } = userCourseData;
-    // console.log()
+
     if (!userCourseMapping) return;
     const sendData = {
       userCourseId: userCourseMapping?.user_course_id,
@@ -290,7 +238,7 @@ export default function useHandleCourseHero(isPreview) {
       addedBy: JSON.stringify({ userId: userData?.id, role: 'self' }),
       courseType: userCourseMapping?.course_type,
       isMandatory: userCourseMapping?.is_mandatory,
-      courseStatus: USER_STATUS?.disable,
+      courseStatus: COURSE_MAP_STATUS?.disable,
       endDate: userCourseMapping?.end_date
     };
 
@@ -300,7 +248,7 @@ export default function useHandleCourseHero(isPreview) {
     if (isError) return setToastMsg({ type: 'danger', message: 'Course Maps update Error' });
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
     setUserCourseData(getUserCourseDataObj());
-    setToastMsg({ type: 'success', message: 'Course Removed Successfully!' });
+    setToastMsg({ type: 'success', message: `You have removed course ${fullCourse?.name}` });
     return;
   }
 
@@ -310,7 +258,6 @@ export default function useHandleCourseHero(isPreview) {
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     activateVideoPlayer,
-    assignCourseToUser,
     showPreviewVideo,
     unassignCourseFromUser
   };

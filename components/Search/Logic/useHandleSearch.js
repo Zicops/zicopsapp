@@ -139,7 +139,9 @@ export default function useHandleSearch() {
     // replace lsp id with zicops lsp id
     queryVariables.filters.LspId = zicopsLspId;
     const zicopsCourseRes =
-      queryVariables.filters.LspId === zicopsLspId && zicopsLspId !== currentLspId
+      !filterObj.LspId &&
+      queryVariables.filters.LspId === zicopsLspId &&
+      zicopsLspId !== currentLspId
         ? await loadCourses({ variables: queryVariables })?.catch((err) => console.error(err))
         : {};
     if (loadCoursesError) {
@@ -172,7 +174,7 @@ export default function useHandleSearch() {
 
           return true;
         })
-        ?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
+      // ?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
     );
 
     if (searchQuery) {

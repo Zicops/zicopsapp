@@ -204,7 +204,7 @@ export const GET_MY_COURSES = gql`
 `;
 
 export const GET_COURSE = gql`
-  query GetCourse($course_id: String) {
+  query GetCourse($course_id: [String]) {
     getCourse(course_id: $course_id) {
       id
       name
@@ -414,6 +414,7 @@ export const GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID = gql`
       courseId
       duration
       type
+      contentUrl
     }
   }
 `;
@@ -1037,6 +1038,59 @@ export const GET_COHORT_COURSES = gql`
       UpdatedBy
       IsActive
       ExpectedCompletion
+    }
+  }
+`;
+
+export const GET_COURSE_DISCUSSION = gql`
+  query GetCourseDiscussion($course_id: String!) {
+    getCourseDiscussion(course_id: $course_id) {
+      DiscussionId
+      CourseId
+      ReplyId
+      UserId
+      Time
+      Content
+      Module
+      Chapter
+      Topic
+      Likes
+      Dislike
+      IsAnonymous
+      IsPinned
+      IsAnnouncement
+      ReplyCount
+      CreatedBy
+      Created_at
+      Updated_by
+      Updated_at
+      Status
+    }
+  }
+`;
+export const GET_DISCUSSION_REPLY = gql`
+  query GetDiscussionReply($course_id: String!, $discussion_id: String!) {
+    getCourseDiscussion(course_id: $course_id, discussion_id: $discussion_id) {
+      DiscussionId
+      CourseId
+      ReplyId
+      UserId
+      Time
+      Content
+      Module
+      Chapter
+      Topic
+      Likes
+      Dislike
+      IsAnonymous
+      IsPinned
+      IsAnnouncement
+      ReplyCount
+      CreatedBy
+      Created_at
+      Updated_by
+      Updated_at
+      Status
     }
   }
 `;

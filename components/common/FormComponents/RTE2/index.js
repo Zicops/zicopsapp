@@ -17,13 +17,14 @@ export default function RTE2({
   onAnonymousHandler,
   onAnnouncementHandler,
   checkAnonymous,
-  checkPublic,
   checkAnnouncement,
   handleKeyPress,
   value,
   placeholder,
   customStyles = {},
-  isReadOnly = false
+  isReadOnly = false,
+  isMessage = true,
+  isAdmin = false
 }) {
   const modules = {
     toolbar: {
@@ -43,25 +44,9 @@ export default function RTE2({
   //  * See https://quilljs.com/docs/formats/
   //  */
   const formats = ['header', 'bold', 'italic', 'underline', 'list', 'bullet',  'indent', 'blockquote','code-block', 'link', 'image'];
-
-  // return (
-  //   <div>
-  //     <QuillNoSSRWrapper
-  //       modules={modules}
-  //       formats={formats}
-  //       onKeyDown={changeHandler}
-  //       value={value}
-  //       placeholder={placeholder}
-  //     />
-  //   </div>
-  // );
-  // const editor = useEditor({
-  //   extensions: [StarterKit],
-  //   content: '<h1>Hello World! 🌎️</h1>'
-  // });
-
+  const text = value.replace(/<\/?[^>]+(>|$)/g, "");
   return (
-    <div className={`${styles.rteContainer2}`}>
+    <div className={`${isReadOnly ? styles.rteReadOnly : styles.rteContainer2 }`}>
       <QuillNoSSRWrapper
         contenteditable
         readOnly={isReadOnly}
@@ -76,18 +61,26 @@ export default function RTE2({
         value={value}
       />
       {/* <input type="file" onChange={changeImageHandler} /> */}
+      {!isReadOnly ? 
       <div className={`${styles.rteButtons}`}>
         <div className={`${styles.post_type}`}>
           {/* <LabeledRadioCheckbox label="Public" type="radio" name="public" isChecked={checkPublic}  changeHandler ={onPublicHandler} /> */}
           <LabeledRadioCheckbox label="Post this anonymously" type="checkbox" name="anonymous" isChecked={checkAnonymous}  changeHandler ={onAnonymousHandler} />
-           <div className={`${styles.button_divider}`}></div>
-          <LabeledRadioCheckbox label="Post this as an announcement" type="checkbox" name="announcement" isChecked={checkAnnouncement} changeHandler={onAnnouncementHandler} />
+            {isMessage && isAdmin &&
+              <>
+                <div className={`${styles.button_divider}`}></div>
+                <LabeledRadioCheckbox label="Post this as an announcement" type="checkbox" name="announcement" isChecked={checkAnnouncement} changeHandler={onAnnouncementHandler} />
+              </>
+            }
         </div>
-        <div className={`${styles.button_type}`}>
-        <button className={`${styles.button1}`} onClick={onPostHandler}>Post</button>
+          <div className={`${styles.button_type}`}>
+            
+        <button disabled={!text} className={`${text ? styles.button1 : styles.buttonDisable }`} onClick={onPostHandler}>Post</button>
         <button className={`${styles.button2}`} onClick={onCancleHandler}>Cancel</button>
         </div>
         </div>
+        : ""
+      }
       </div>
   );
 }
