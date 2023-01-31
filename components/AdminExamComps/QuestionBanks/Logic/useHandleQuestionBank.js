@@ -106,10 +106,8 @@ export default function useHandleQuestionBank() {
       return setToastMsg({ type: 'danger', message: 'Question Bank Create Error' });
     });
 
-    if (!isError) {
-      setToastMsg({ type: 'success', message: 'New Question Bank Created' });
-      refetchData.questionBank();
-    }
+    if (!isError) setToastMsg({ type: 'success', message: 'New Question Bank Created' });
+
     setIsPopUpDataPresent(false);
     setAddPopUp(false);
     setIsAddQuestionBankReady(true);
@@ -157,8 +155,8 @@ export default function useHandleQuestionBank() {
     });
 
     if (!isError) {
-      setToastMsg({ type: 'success', message: 'New Question Bank Updated' });
-      refetchData.questionBank();
+      setToastMsg({ type: 'success', message: 'Question Bank Updated' });
+      refetchData.questionBank(res?.data?.updateQuestionBank);
     }
     setIsPopUpDataPresent(false);
     setEditPopUp(false);

@@ -1,5 +1,10 @@
 import { userClient } from '@/api/UserMutations';
-import { GET_USER_LSP_ROLES } from '@/api/UserQueries';
+import {
+  GET_USER_DETAIL,
+  GET_USER_LSP_MAP_BY_LSPID,
+  GET_USER_LSP_ROLES,
+  userQueryClient
+} from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
@@ -45,6 +50,7 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
   const [isLoading, setLoading] = useState(true);
   const [filterCol, setFilterCol] = useState('email');
   const [searchQuery, setSearchQuery] = useState('');
+  const [pageCursor, setPageCursor] = useState(null);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
@@ -62,56 +68,89 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
   }
 
   useEffect(async () => {
-    setLoading(true);
+    loadUserData();
+    // const _usersData = await getUsersForAdmin(true);
+    // if (_usersData?.error) {
+    //   setLoading(false);
+    //   return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
+    // }
+    // setData(sortArrByKeyInOrder([..._usersData], 'created_at', false), setLoading(false));
+    // for (let i = 0; i < _usersData.length; i++) {
+    //   const user = _usersData[i];
+    //   const res = await loadQueryDataAsync(
+    //     GET_USER_LSP_ROLES,
+    //     {
+    //       user_id: user?.id,
+    //       user_lsp_ids: [user?.user_lsp_id]
+    //     },
+    //     {},
+    //     userClient
+    //   );
+    //   const lspRoleArr = res?.getUserLspRoles;
 
-    const _usersData = await getUsersForAdmin(true);
-    if (_usersData?.error) {
-      setLoading(false);
-      return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
-    }
-    setData(sortArrByKeyInOrder([..._usersData], 'created_at', false), setLoading(false));
-    for (let i = 0; i < _usersData.length; i++) {
-      const user = _usersData[i];
-      const res = await loadQueryDataAsync(
-        GET_USER_LSP_ROLES,
-        {
-          user_id: user?.id,
-          user_lsp_ids: [user?.user_lsp_id]
-        },
-        {},
-        userClient
-      );
-      const lspRoleArr = res?.getUserLspRoles;
+    //   let roleData = {};
+    //   if (lspRoleArr?.length > 1) {
+    //     const latestUpdatedRole = await sortArray(lspRoleArr, 'updated_at');
+    //     roleData = latestUpdatedRole?.pop();
+    //   } else {
+    //     roleData = lspRoleArr[0];
+    //   }
 
-      let roleData = {};
-      if (lspRoleArr?.length > 1) {
-        const latestUpdatedRole = await sortArray(lspRoleArr, 'updated_at');
-        roleData = latestUpdatedRole?.pop();
-      } else {
-        roleData = lspRoleArr[0];
-      }
+    //   user.role = roleData?.role;
+    //   user.roleData = roleData;
+    // }
+    // //make sure no user without role map is shown
+    // const usersData = _usersData?.filter((user) => !!user?.roleData);
+    // let users = [];
 
-      user.role = roleData?.role;
-      user.roleData = roleData;
-    }
-    //make sure no user without role map is shown
-    const usersData = _usersData?.filter((user) => !!user?.roleData);
-    let users = [];
-
-    if (isAdministration) {
-      users = usersData?.filter((user) => user?.role?.toLowerCase() === 'admin');
-      // console.log(users,'users')
-    } else {
-      users = [...usersData];
-    }
-    // setLoading(false);
-    setData(sortArrByKeyInOrder([...users], 'created_at', false));
-    return;
+    // if (isAdministration) {
+    //   users = usersData?.filter((user) => user?.role?.toLowerCase() === 'admin');
+    //   // console.log(users,'users')
+    // } else {
+    //   users = [...usersData];
+    // }
+    // // setLoading(false);
+    // setData(sortArrByKeyInOrder([...users], 'created_at', false));
+    // return;
   }, []);
 
   useEffect(() => {
     getUser(selectedUser);
   }, [selectedUser]);
+
+  async function loadUserData() {
+    setLoading(true);
+
+    const lspId = sessionStorage.getItem('lsp_id');
+    const queryVariables = { lsp_id: lspId, pageCursor: '', Direction: '', pageSize: 30 };
+    if (pageCursor) queryVariables.pageCursor = pageCursor;
+
+    loadQueryDataAsync(GET_USER_LSP_MAP_BY_LSPID, queryVariables, {}, userQueryClient).then(
+      async (lspMapRes) => {
+        if (lspMapRes?.error) return { error: 'Error while while loading lsp maps!' };
+
+        const lspMapData = lspMapRes?.getUserLspMapsByLspId;
+        if (lspMapData?.pageCursor) setPageCursor(lspMapData?.pageCursor);
+
+        //removing duplicate values
+        const _lspUsers = lspMapData?.user_lsp_maps?.filter(
+          (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
+        );
+        const _userIds = _lspUsers?.map((user) => user?.user_id)?.filter((userId) => !!userId);
+
+        const userDetailsRes = await loadQueryDataAsync(
+          GET_USER_DETAIL,
+          { user_id: _userIds },
+          {},
+          userQueryClient
+        );
+
+        if (userDetailsRes?.error) return { error: 'Error while while loading user detail!' };
+      }
+    );
+
+    setLoading(false);
+  }
 
   const columns = [
     {

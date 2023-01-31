@@ -6,6 +6,7 @@ import {
   CustomDescendingIcon,
   CustomPagination
 } from './Logic/zicopsTable.helper';
+import styles from './zicopsTable.module.scss';
 
 // https://stackoverflow.com/questions/66514102/how-can-you-disable-specific-material-ui-datagrid-column-menu-options
 const CustomColumnMenu = (props) => {
@@ -31,7 +32,9 @@ const ZicopsTable = ({
   loading = false,
   hideFooterPagination = false,
   showCustomSearch = false,
-  searchProps = {}
+  searchProps = {},
+  onPageChange = () => {},
+  currentPage = null
 }) => {
   return (
     <>
@@ -52,12 +55,16 @@ const ZicopsTable = ({
           }}
           autoHeight={false}
           // disableColumnMenu={true}
+          onPageChange={onPageChange}
           disableSelectionOnClick
           components={{
             Pagination: CustomPagination,
             ColumnSortedDescendingIcon: CustomDescendingIcon,
             ColumnSortedAscendingIcon: CustomAscendingIcon,
             ColumnMenu: CustomColumnMenu
+          }}
+          componentsProps={{
+            pagination: { background: 'red', currentPage }
           }}
           pageSize={pageSize}
           rowsPerPageOptions={rowsPerPageOptions}

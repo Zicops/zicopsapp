@@ -7,12 +7,12 @@ import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { GET_LATEST_QUESTION_BANK, GET_QUESTIONS_NAMES, queryClient } from '../../../API/Queries';
-import { getPageSizeBasedOnScreen } from '../../../helper/utils.helper';
 import {
   getQuestionBankObject,
   RefetchDataAtom,
@@ -25,10 +25,7 @@ import ZicopsTable from '../../common/ZicopsTable';
 import AddQuestionBank from './AddQuestionBank';
 
 export default function QuestionBankTable({ isEdit = false }) {
-  const [
-    loadQuestionBank,
-    { loading: loadRefetch, error: errorQuestionBankData, refetch }
-  ] = useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
+  const [loadQuestionBank] = useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -43,12 +40,45 @@ export default function QuestionBankTable({ isEdit = false }) {
 
   // state for storing table data
   const [questionBank, setQuestionBank] = useState([]);
+  const [pageCursor, setPageCursor] = useState(null);
 
   // load table data
-  const queryVariables = { publish_time: Date.now(), pageSize: 99999, pageCursor: '' };
   useEffect(async () => {
-    if (searchQuery) queryVariables.searchText = searchQuery?.trim();
+    loadQbData();
+  }, [searchQuery]);
 
+  // set refetch query in recoil
+  useEffect(() => {
+    function refetchBankData(data) {
+      const _questionBank = structuredClone(questionBank);
+
+      let updatedQb;
+      const index = questionBank?.findIndex((qb) => {
+        const isCurrentQb = qb?.id === data?.id;
+        if (isCurrentQb) updatedQb = qb;
+
+        return isCurrentQb;
+      });
+
+      if (index >= 0) _questionBank?.splice(index, 1, updatedQb);
+
+      setQuestionBank(_questionBank);
+    }
+
+    setRefetchData({ ...refetchData, questionBank: refetchBankData });
+  }, []);
+
+  useEffect(() => {
+    if (addPopUp && !isPopUpDataPresent) setSelectedQB(getQuestionBankObject());
+  }, [addPopUp]);
+
+  async function loadQbData() {
+    const queryVariables = { publish_time: Date.now(), pageSize: 30, pageCursor: '' };
+
+    if (searchQuery) queryVariables.searchText = searchQuery?.trim();
+    if (pageCursor) queryVariables.pageCursor = pageCursor;
+
+    const _questionBanks = structuredClone(questionBank || []);
     const qbRes = await loadQueryDataAsync(
       GET_LATEST_QUESTION_BANK,
       queryVariables,
@@ -59,6 +89,7 @@ export default function QuestionBankTable({ isEdit = false }) {
       return setToastMsg({ type: 'danger', message: 'question bank load error' });
     }
 
+    setPageCursor(qbRes?.getLatestQuestionBank?.pageCursor || null);
     const questionBankData = structuredClone(qbRes?.getLatestQuestionBank?.questionBanks) || [];
     if (!questionBankData.length) return setLoading(false);
 
@@ -74,40 +105,10 @@ export default function QuestionBankTable({ isEdit = false }) {
 
     if (!questionBankData?.length) return setLoading(false);
     setQuestionBank(
-      sortArrByKeyInOrder([...questionBankData], 'created_at', false),
+      sortArrByKeyInOrder([..._questionBanks, ...questionBankData], 'created_at', false),
       setLoading(false)
     );
-  }, [searchQuery]);
-
-  // set refetch query in recoil
-  useEffect(() => {
-    function refetchBankData() {
-      refetch(queryVariables).then(({ data: { getLatestQuestionBank } }) => {
-        setQuestionBank(getLatestQuestionBank?.questionBanks);
-      });
-
-      if (errorQuestionBankData)
-        return setToastMsg({ type: 'danger', message: 'Question Bank Refetch Error' });
-
-      setSearchQuery(`${searchQuery} `);
-    }
-
-    setRefetchData({
-      ...refetchData,
-      questionBank: refetchBankData
-    });
-  }, []);
-
-  // //useEffect to setLoading false if there is not any data
-  // useEffect(() => {
-  //   if (loadRefetch) return setLoading(true);
-  //   if (!loadRefetch || !questionBank?.length) return setLoading(false);
-  //   // if (!questionBank?.length) return setLoading(false);
-  // }, [loadRefetch]);
-
-  useEffect(() => {
-    if (addPopUp && !isPopUpDataPresent) setSelectedQB(getQuestionBankObject());
-  }, [addPopUp]);
+  }
 
   const columns = [
     {
@@ -207,6 +208,11 @@ export default function QuestionBankTable({ isEdit = false }) {
         loading={loading}
         showCustomSearch={true}
         searchProps={{ handleSearch: (val) => setSearchQuery(val) }}
+        onPageChange={(currentPage) => {
+          if (questionBank?.length / 3 - currentPage < 3 && pageCursor) {
+            loadQbData();
+          }
+        }}
       />
 
       {/* add question bank pop up */}
