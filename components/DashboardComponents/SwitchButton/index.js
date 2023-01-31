@@ -8,21 +8,23 @@ const SwitchButton = ({
   inputName,
   isChecked,
   changeHandler = function () {},
-  isDisabled = false
+  isDisabled = false,
+  isTextLeft = false
 }) => {
   return (
     <>
       <button className={styles.switchContainer}>
+        {isTextLeft ? <span className={`${styles.text}`}>{text} </span> : <></>}
         <Switch
           {...label}
           defaultChecked
           checked={isChecked}
           disabled={isDisabled}
-          color = 'info'
+          color="info"
           name={inputName}
           onChange={changeHandler}
         />
-        <span className={`${styles.text}`}>{text} </span>
+        {!isTextLeft ? <span className={`${styles.text}`}>{text} </span> : <></>}
       </button>
       <style>{`
       
