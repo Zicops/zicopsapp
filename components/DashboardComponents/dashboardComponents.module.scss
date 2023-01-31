@@ -1,0 +1,112 @@
+@import '../../styles/base.scss';
+// Pill 
+.badge_wrapper{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    min-width: 150px;
+    padding: 8px 16px;
+    background: #1A1B26;
+    border: 1px solid #30323F;
+    border-radius: 50px;
+    .badge_count, .badge_text{
+        font-size: 18px;
+        font-weight: 400;
+        color: #eaeaea;
+    }
+}
+// Progress Bar
+.progressBarFooter {
+    div {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      .percent {
+        color: $primary;
+      }
+    }
+
+    .progress {
+      height: 10px;
+      background-color: $darkTwo;
+      margin-top: 10px;
+
+      span {
+        height: 100%;
+        background-color: $primary;
+      }
+    }
+  }
+
+//   StatisticsCard
+  .card_wrapper{
+    background-color: #242630;
+    width: 100%;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    border: 1px solid #30323F;
+    .card_head{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .card_title{
+            font-weight: 300;
+            font-size: 18px;
+            color: #EAEAEA;
+        }
+        .card_img img{
+            background: #2B2D36;
+            border: 1px solid #30323F;
+            border-radius: 4px;
+            padding: 14px;
+        }
+    }
+    .card_count{
+        font-weight: 500;
+        font-size: 1.5rem;
+        color: #EAEAEA;
+    }
+    .card_text{
+        font-weight: 400;
+        font-size: 16px;
+        color: #919397;
+    }
+    .pill_wrapper{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    }
+    // Switch Button
+    .switchContainer {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      outline: 0;
+      border: 0;
+      cursor: pointer;
+    }
+    
+    .text {
+      color: $white;
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: capitalize;
+      margin: auto;
+      // margin-bottom: 15px;
+      margin-left: 8px;
+      z-index: 100;
+    }
+
+    // Dropdown
+.dropdown{
+  background: #1A1B26;
+  border: 1px solid #30323F;
+  border-radius: 4px;
+}
