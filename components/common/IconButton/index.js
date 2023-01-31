@@ -9,13 +9,14 @@ export default function IconButton({
   tooltipText,
   tooltipPlacement,
   isDisabled = false,
-  imgUrl
+  imgUrl,
+  styleClasses
 }) {
   return (
     <ToolTip title={tooltipText} placement={tooltipPlacement}>
       <button
         disabled={isDisabled}
-        className={`${styles.iconBtn} ${styles[styleClass]}`}
+        className={`${styles.iconBtn} ${styles[styleClass]} ${styleClasses}`}
         onClick={handleClick}>
         <span>
           <img src={imgUrl ? imgUrl : '/images/plus.png'} alt="" />
