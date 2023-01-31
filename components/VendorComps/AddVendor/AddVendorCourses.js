@@ -5,7 +5,7 @@ export default function AddVendorCourses() {
   return (
     <div>
       <ZicopsCarousel
-        title="My Vendors"
+        title="Live Courses"
         type="vendor"
         data={coursesVendor}
         //   handleTitleClick={() =>

@@ -8,11 +8,16 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import IconButton from '@/components/common/IconButton';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import AddExpriences from '../AddExpriences';
+import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import SearchBar from '@/components/common/FormComponents/SearchBar';
+import { cat, subCat } from '../Logic/vendorComps.helper';
 const AddVendorProfile = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isOpenExpriences, setIsOpenExpriences] = useState(false);
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
   const [isOpenExpertise, setOpenExpertise] = useState(false);
+  const [expertiseSearch, setExpertiseSearch] = useState('');
+
   const showExperienceHandler = () => {
     setIsOpenExpriences(true);
     // setIsOpen(false);
@@ -169,8 +174,35 @@ const AddVendorProfile = () => {
         popUpState={[isOpenExpertise, setOpenExpertise]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done', handleClick: handleClick }}
-        isFooterVisible={true}></VendorPopUp>
+        submitBtn={{ name: 'Add', handleClick: handleClick }}
+        isFooterVisible={true}>
+        <SearchBar
+          inputDataObj={{
+            inputOptions: {
+              inputName: 'filter',
+              placeholder: 'Search...',
+              value: expertiseSearch
+            },
+            changeHandler: (e) => setExpertiseSearch(e.target.value)
+          }}
+          styleClass={`${styles.expertiseSearchBar}`}
+        />
+        {cat.map((data, index) => {
+          return (
+            <div className={`${styles.expertise1}`}>
+              <h3>{data.Name}</h3>
+              {subCat.map((value, index) => {
+                if (value.CatId === data.id)
+                  return (
+                    <div className={`${styles.expertiseCheckbox}`}>
+                      <LabeledRadioCheckbox type="checkbox" label={value.Name} />
+                    </div>
+                  );
+              })}
+            </div>
+          );
+        })}
+      </VendorPopUp>
       <VendorPopUp
         open={isOpenLanguage}
         title="Add language"
@@ -179,41 +211,14 @@ const AddVendorProfile = () => {
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add', handleClick: handleClick }}
         isFooterVisible={true}>
-        <LabeledRadioCheckbox
-          label="is speaker"
-          type="checkbox"
-          name="speaker"
-          //   isChecked={data[`${inputName}`]}
-          //   changeHandler={(e) => changeHandler(e, data, setData)}
-        />
-        <LabeledRadioCheckbox
-          label="is speaker"
-          type="checkbox"
-          name="speaker"
-          //   isChecked={data[`${inputName}`]}
-          //   changeHandler={(e) => changeHandler(e, data, setData)}
-        />
-        <LabeledRadioCheckbox
-          label="is speaker"
-          type="checkbox"
-          name="speaker"
-          //   isChecked={data[`${inputName}`]}
-          //   changeHandler={(e) => changeHandler(e, data, setData)}
-        />
-        <LabeledRadioCheckbox
-          label="is speaker"
-          type="checkbox"
-          name="speaker"
-          //   isChecked={data[`${inputName}`]}
-          //   changeHandler={(e) => changeHandler(e, data, setData)}
-        />
-        <LabeledRadioCheckbox
-          label="is speaker"
-          type="checkbox"
-          name="speaker"
-          //   isChecked={data[`${inputName}`]}
-          //   changeHandler={(e) => changeHandler(e, data, setData)}
-        />
+        <p>Add Language/s</p>
+        {VENDOR_LANGUAGES.map((data, index) => {
+          return (
+            <div className={`${styles.expertiseCheckbox}`}>
+              <LabeledRadioCheckbox type="checkbox" label={data} />
+            </div>
+          );
+        })}
       </VendorPopUp>
     </div>
   );
