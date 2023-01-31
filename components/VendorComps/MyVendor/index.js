@@ -1,40 +1,39 @@
-import EllipsisMenu from "@/components/common/EllipsisMenu";
-import ZicopsTable from "@/components/common/ZicopsTable";
+import EllipsisMenu from '@/components/common/EllipsisMenu';
+import ZicopsTable from '@/components/common/ZicopsTable';
+import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 
 const data = [
-    { id: "1001", vendor_name: "TCS ", vendor_type: "Company", services: "SME, Content development" },
-    { id: "1002", vendor_name: "TCS ", vendor_type: "Company", services: "SME, Content development" },
-    { id: "1003", vendor_name: "TCS ", vendor_type: "Company", services: "SME, Content development" },
-    { id: "1004", vendor_name: "TCS ", vendor_type: "Company", services: "SME, Content development" },
-    { id: "1005", vendor_name: "TCS ", vendor_type: "Company", services: "SME, Content development" },
-    { id: "1006", vendor_name: "TCS ", vendor_type: "Company", services: "SME, Content development" },
-    { id: "1007", vendor_name: "TCS ", vendor_type: "Company", services: "SME, Content development" },
-    { id: "1008", vendor_name: "TCS ", vendor_type: "Company", services: "SME, Content development" }
-]
+  { id: '1001', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
+  { id: '1002', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
+  { id: '1003', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
+  { id: '1004', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
+  { id: '1005', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
+  { id: '1006', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
+  { id: '1007', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
+  { id: '1008', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' }
+];
 
 const MyVendor = () => {
-
-    const columns = [
-        {
-            field: 'vendor_name',
-            headerClassName: 'course-list-header',
-            headerName: 'Vendor Name',
-            flex: 1
-        },
-        {
-            field: 'vendor_type',
-            headerClassName: 'course-list-header',
-            headerName: 'Vendor type',
-            flex: 0.6
-        },
-        {
-            field: 'services',
-            headerClassName: 'course-list-header',
-            headerName: 'Services',
-            flex: 1
-        },
-         {
-    
+  const columns = [
+    {
+      field: 'vendor_name',
+      headerClassName: 'course-list-header',
+      headerName: 'Vendor Name',
+      flex: 1
+    },
+    {
+      field: 'vendor_type',
+      headerClassName: 'course-list-header',
+      headerName: 'Vendor type',
+      flex: 1
+    },
+    {
+      field: 'services',
+      headerClassName: 'course-list-header',
+      headerName: 'Services',
+      flex: 1
+    },
+    {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
@@ -62,12 +61,12 @@ const MyVendor = () => {
         // }
 
         const buttonArr = [
-          { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
+          { handleClick: () => {} },
           {
-            text:  'Edit' 
+            text: 'Edit'
           },
           {
-            text:'Disable',
+            text: 'Disable'
           }
         ];
 
@@ -80,27 +79,25 @@ const MyVendor = () => {
           </>
         );
       }
-    
-  }
-    ];
-    
+    }
+  ];
 
- 
-    const options = [
-        { label: 'Email', value: 'email' },
-        { label: 'First Name', value: 'first_name' },
-        { label: 'Last Name', value: 'last_name' }
-    ];
+  const options = [
+    { label: 'Email', value: 'email' },
+    { label: 'First Name', value: 'first_name' },
+    { label: 'Last Name', value: 'last_name' }
+  ];
 
-    return (
-        <>
-            <ZicopsTable
-                columns={columns}
-                tableHeight="70vh"
-                showCustomSearch={true}
-                data={data}
-            />
-        </>
-    );
-}
+  return (
+    <>
+      <ZicopsTable
+        data={data}
+        columns={columns}
+        pageSize={getPageSizeBasedOnScreen()}
+        rowsPerPageOptions={[3]}
+        tableHeight="70vh"
+      />
+    </>
+  );
+};
 export default MyVendor;

@@ -8,7 +8,7 @@ import {
 
 const LabeledRadioCheckbox = ({
   label,
-  type,
+  type = 'radio',
   name,
   value,
   isChecked,
@@ -17,6 +17,7 @@ const LabeledRadioCheckbox = ({
   isLoading = false,
   changeHandler = function () {}
 }) => {
+  console.log(changeHandler);
   return (
     <span className={labeledRadioCheckboxWrapper}>
       <label>

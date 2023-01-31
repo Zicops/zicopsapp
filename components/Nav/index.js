@@ -14,26 +14,30 @@ import { sendNotification } from '@/helper/api.helper';
 import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import ToolTip from '../common/ToolTip';
 import UserDisplay from './UserDisplay';
 import useUserCourseData from '@/helper/hooks.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 
 export default function Nav() {
+  const notificationBarRef = useRef(null);
   const { isAdmin, makeAdmin } = useContext(userContext);
+
   const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
-  const [showNotification, setShowNotification] = useState(false);
-  const notificationBarRef = useRef(null);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
-  const handleClickInside = () => setShowNotification(!showNotification);
-  const {OrgDetails} = useUserCourseData();
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
+  const [showNotification, setShowNotification] = useState(false);
+  const { OrgDetails } = useUserCourseData();
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
 
+  const handleClickInside = () => setShowNotification(!showNotification);
   // const OrgDetails = async () => {
   //   const orgId = sessionStorage.getItem('org_id');
   //   if (!orgId) return;
@@ -104,8 +108,12 @@ export default function Nav() {
                 const currentRoute = router?.route?.split('/')?.[2];
                 isActive = currentRoute?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
               }
+
+              let pageRoute = val?.link;
+              if (val?.isDev && isDev) pageRoute = '';
+
               return (
-                <Link href={val.link} key={key}>
+                <Link href={pageRoute} key={key}>
                   <li className={isActive ? styles.active : ''}>
                     <span>{val.title}</span>
                   </li>
