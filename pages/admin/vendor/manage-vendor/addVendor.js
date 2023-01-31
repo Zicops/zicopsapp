@@ -11,7 +11,7 @@ import AddVendorCourses from '@/components/VendorComps/AddVendor/AddVendorCourse
 import AddVendorProfile from '@/components/VendorComps/AddVendorProfile';
 import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
 import VendorOrders from '@/components/VendorComps/VendorOrders';
-
+import styles from './manageVendor.module.scss';
 export default function VendorInfo() {
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
@@ -49,15 +49,22 @@ export default function VendorInfo() {
           Add Vendor . Organisation
         </p>
       </div>
-      <TabContainer
-        tabData={tabData}
-        tab={tab}
-        setTab={setTab}
-        footerObj={{
-          showFooter: false
-        }}
-        customStyles={{ height: '100%' }}
-      />
+      <div className={`${styles.manageVendorBody}`}>
+        <TabContainer
+          tabData={tabData}
+          tab={tab}
+          setTab={setTab}
+          footerObj={{
+            showFooter: false
+          }}
+          customStyles={{ height: '100%' }}
+        />
+        <div className={`${styles.manageVendorButton}`}>
+          <button>View Page</button>
+          <button>Update Vendor</button>
+          <button className={`${styles.cancelButton}`}>Cancel</button>
+        </div>
+      </div>
     </>
   );
 }

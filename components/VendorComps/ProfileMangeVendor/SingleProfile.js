@@ -14,9 +14,9 @@ const SingleProfile = ({ data }) => {
           </div>
           <div className={`${styles.profileExpertEdit}`}>
             <div className={`${styles.profileExpert}`}>
-              {data?.expertise.map((expert, index) => (
+              {data?.expertise?.map((expert, index) => (
                 <p>
-                  {expert} {index + 1 !== data?.expertise?.length ? ', ' : ''}{' '}
+                  {expert} {index + 1 !== data?.expertise?.length ? ' , ' : ''}
                 </p>
               ))}
             </div>

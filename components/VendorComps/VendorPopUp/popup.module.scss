@@ -5,8 +5,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-
-    // overflow: auto;
+    max-height: 95vh;
+    overflow: auto;
 }
 .popMarket{
     background-color:#202222;
