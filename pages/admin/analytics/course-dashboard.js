@@ -1,13 +1,13 @@
+import CategoryAndExpertiseAvailability from "@/components/AdminAnalyticsDashboardComp/CategoryAndExpertiseAvailability";
 import AdminHeader from "@/components/common/AdminHeader";
 import MainBody from "@/components/common/MainBody";
 import MainBodyBox from "@/components/common/MainBodyBox";
 import Sidebar from "@/components/common/Sidebar";
 import { analyticsSideBarData } from "@/components/common/Sidebar/Logic/sidebar.helper";
-import CategoryAndExpertiseAvailability from "./CategoryAndExpertiseAvailability";
-import CategoryConsumption from "./CategoryConsumption";
-import CourseStatisticsAndCourseViewAnalytics from "./CourseStatisticsAndCourseViewAnalytics";
+import CategoryConsumption from "@/components/AdminAnalyticsDashboardComp/CategoryConsumption";
+import CourseStatisticsAndCourseViewAnalytics from "@/components/AdminAnalyticsDashboardComp/CourseStatisticsAndCourseViewAnalytics";
 import FirstFourCards from "./FirstFourCards";
-import MultilingualAndMyCourseAvailability from "./MultilingualAndMyCourseAvailability";
+import MultilingualAndMyCourseAvailability from "@/components/AdminAnalyticsDashboardComp/MultilingualAndMyCourseAvailability";
 
 const CourseDashboard = () => {
   return (
@@ -17,7 +17,7 @@ const CourseDashboard = () => {
         <AdminHeader title={'Course Dashboard'} pageRoute="/admin/analytics/course-dashboard" />
           <MainBodyBox>
             <div style={{display:'flex', flexDirection:'column',gap:'1rem'}}>
-              <FirstFourCards/>
+              <FirstFourCards />
               <CategoryAndExpertiseAvailability/>
               <MultilingualAndMyCourseAvailability/>
               {/* <CategoryConsumption/> */}

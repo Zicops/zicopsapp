@@ -1,29 +1,21 @@
-import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
+import LabeledDropdown from "@/components/common/FormComponents/LabeledDropdown";
 import styles from '../dashboardComponents.module.scss'
 
-const categoryDropdownOptions = {
- 
-  inputName: 'category',
-  label: 'Course Category',
-  placeholder: 'Select the category of the course',
-  options:['All categories','Development'],
-  // value: fullCourse?.category
-  //   ? { value: fullCourse?.category, label: fullCourse?.category }
-  //   : null,
-  isSearchEnable: true,
-  isDisabled: false
-};
 export default function Dropdown() {
+     const options = ['Development','Design']?.map((lang) => ({ label: lang, value: lang }));
+
   return (
     <div>
-        <LabeledDropdown
+      <LabeledDropdown
         styleClass={styles.dropdown}
-        // isError={!fullCourse?.sub_category?.length && courseError?.master}
-        // dropdownOptions={subcategoryDropdownOptions}
-        // changeHandler={(e) =>
-        //   changeHandler(e, fullCourse, updateCourseMaster, subcategoryDropdownOptions.inputName)
-        // }
+        dropdownOptions={{
+          isSearchEnable: true,
+          placeholder: 'Category',
+          options:  options ,
+          value:  options[0],
+          isSearchEnable: true,
+        }}
       />
     </div>
-  )
+  );
 }
