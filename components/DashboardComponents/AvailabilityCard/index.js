@@ -1,7 +1,7 @@
 import React from 'react'
 import Pill from '../Pill'
 import ProgressBar from '../ProgressBar'
-import styles from './availabilityCard.module.scss'
+import styles from '../dashboardComponents.module.scss'
 
 
 export default function AvailabilityCard({props}) {

@@ -29,7 +29,7 @@ export const cardData = [
     {   id:2,
         cardTitle:'Sub-categories',
         cardImage:'/images/svg/workspaces.svg',
-        cardCount:28,
+        cardCount:36,
         cardText:'Sub-categories'
     },
     {
@@ -103,7 +103,7 @@ export const statisticsCardData = [{
   {
     id:2,
     cardTitle : 'Least added/assigned',
-    cardImage: '/images/svg/trending_up.svg',
+    cardImage: '/images/svg/trending_down.svg',
     cardText :'Complete Java Programming-Beginner to Advance'
   }]
 export const CategoryConsumptionData = [

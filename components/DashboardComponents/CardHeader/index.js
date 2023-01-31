@@ -1,5 +1,6 @@
 import React from 'react'
-import styles from './cardHeader.module.scss';
+import styles from '../dashboardComponents.module.scss';
+
 
 export default function CardHeader({props}) {
   return (

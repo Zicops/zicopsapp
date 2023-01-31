@@ -1,5 +1,6 @@
 import React from 'react'
-import styles from './badge.module.scss';
+import styles from '../dashboardComponents.module.scss';
+
 
 export default function Badge({props}) {
     console.log(props);
