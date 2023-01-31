@@ -1,5 +1,6 @@
 // components\Layout\FeatureFlagsLayout.js
 
+import { logger } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -24,7 +25,6 @@ export default function FeatureFlagsLayout({ children }) {
 
     // callback function on localstorage value change
     const localStorageSetHandler = function (e) {
-      console.log('localStorage.set("' + e.key + '", "' + e.value + '") was called');
       const _featureFlags = structuredClone(featureFlags || {});
       if (_featureFlags.hasOwnProperty(e.key)) {
         _featureFlags[e.key] = e.value;
@@ -35,9 +35,24 @@ export default function FeatureFlagsLayout({ children }) {
 
     // listen for localstorage change
     document.addEventListener('itemInserted', localStorageSetHandler, false);
+    window.enableDevMode = enableDevMode;
 
     return () => document.removeEventListener('itemInserted', localStorageSetHandler);
   }, []);
+
+  function enableDevMode(isEnable = true) {
+    // enable dev mode for Zicops
+    // this will enable console logs
+
+    localStorage.setItem('isDev', isEnable);
+
+    if (isEnable) logger()?.enableLogger();
+    // https://www.telerik.com/blogs/how-to-style-console-log-contents-in-chrome-devtools
+    console.log(
+      '%c Dev Mode Enabled',
+      'font-weight: bold; font-size: 50px;color: red; text-shadow: 3px 3px 0 rgb(217,31,38) , 6px 6px 0 rgb(226,91,14) , 9px 9px 0 rgb(245,221,8) , 12px 12px 0 rgb(5,148,68) , 15px 15px 0 rgb(2,135,206) , 18px 18px 0 rgb(4,77,145) , 21px 21px 0 rgb(42,21,113)'
+    );
+  }
 
   return <>{children}</>;
 }
