@@ -6,13 +6,13 @@ import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import MyVendor from '@/components/VendorComps/MyVendor';
 import VendorPopUp from '@/components/VendorComps/VendorPopUp';
-import VendorAdd from '@/components/VendorComps/AddVendor';
+import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 
 export default function ManageVendor() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVendorType, setIsVendorType] = useState('');
-  const [isVendorLevel, setIsVendorLevel] = useState('');
+  const [vendorType, setVendorType] = useState(null);
+  const [vendorLevel, setVendorLevel] = useState(null);
 
   const onPlusHandler = () => {
     console.log('hello');
@@ -42,35 +42,43 @@ export default function ManageVendor() {
             title="Create Vendor"
             popUpState={[isOpen, setIsOpen]}
             size="small"
-
-            closeBtn = {{name: "Cancel"}}
+            closeBtn={{ name: 'Cancel' }}
             submitBtn={{ name: 'Next', handleClick: handleClick }}
-          isFooterVisible={true}>
-            <VendorAdd
-              title="Vendor type?"
-              label1="Company"
-              lable2="Individual/Freelancer"
-              value1="company"
-              value2="individual"
-              name1="vendorType"
-              changeHandler1={(e) => setIsVendorType(e.target.value)}
-              changeHandler2={(e) => setIsVendorType(e.target.value)}
-              vendor={isVendorType}
-              checked1={isVendorType == 'company'}
-              checked2={isVendorType == 'individual'}
+            isFooterVisible={true}>
+            <AddVendor
+              title="Vendor type ?"
+              inputName="vendorType"
+              checkboxProps1={{
+                label: 'Individual/Freelancer',
+                value: 'individual',
+                isChecked: vendorType === 'individual',
+                changeHandler: (e) => setVendorType(e.target.value)
+              }}
+              checkboxProps2={{
+                label: 'Company',
+                value: 'company',
+                isChecked: vendorType === 'company',
+                changeHandler: (e) => setVendorType(e.target.value)
+              }}
             />
-            <VendorAdd
+            <AddVendor
               title="At what level do you want to add the vendor?"
-              label1="Organization"
-              lable2="Learning space Level"
-              value1="organization"
-              value2="lsp"
-              name1="vendorLevel"
-              changeHandler1={(e) => setIsVendorLevel(e.target.value)}
-              changeHandler2={(e) => setIsVendorLevel(e.target.value)}
-              vendor={isVendorLevel}
-              checked1={isVendorType == 'organization'}
-              checked2={isVendorType == 'lsp'}
+              checkboxProps1={{
+                label: 'Organization',
+                value: 'organization',
+                isChecked: vendorLevel === 'organization',
+                changeHandler: (e) => {
+                  console.log(e);
+                  setVendorLevel(e.target.value);
+                }
+              }}
+              checkboxProps2={{
+                label: 'Learning space Level',
+                value: 'lsp',
+                isChecked: vendorLevel === 'lsp',
+                changeHandler: (e) => setVendorLevel(e.target.value)
+              }}
+              inputName="vendorLevel"
             />
           </VendorPopUp>
         </MainBodyBox>

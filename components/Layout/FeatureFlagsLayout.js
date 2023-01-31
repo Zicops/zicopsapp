@@ -11,17 +11,32 @@ export default function FeatureFlagsLayout({ children }) {
 
   // update feature flags based on localstorage
   useEffect(() => {
-    const isZicopsProVersion = localStorage.getItem('isZicopsProVersion') || false;
-    const isUserMappedToMultipleLsps = localStorage.getItem('isUserMappedToMultipleLsps') || false;
-    const isDev = localStorage.getItem('isDev') || false;
+    // override default setItem method of localstorage
+    const originalSetItem = localStorage.setItem;
+    localStorage.setItem = function (key, value) {
+      const event = new Event('itemInserted');
+      event.value = value;
+      event.key = key;
 
-    setFeatureFlags((prev) => ({
-      ...prev,
-      isZicopsProVersion: isZicopsProVersion === 'true',
-      isUserMappedToMultipleLsps: isUserMappedToMultipleLsps === 'true',
-      isDev: isDev === 'true'
-    }));
-  }, [router.pathname]);
+      document.dispatchEvent(event);
+      originalSetItem.apply(this, arguments);
+    };
+
+    // callback function on localstorage value change
+    const localStorageSetHandler = function (e) {
+      const _featureFlags = structuredClone(featureFlags || {});
+      if (_featureFlags.hasOwnProperty(e.key)) {
+        _featureFlags[e.key] = e.value;
+      }
+
+      setFeatureFlags((prev) => ({ ...prev, ..._featureFlags }));
+    };
+
+    // listen for localstorage change
+    document.addEventListener('itemInserted', localStorageSetHandler, false);
+
+    return () => document.removeEventListener('itemInserted', localStorageSetHandler);
+  }, []);
 
   return <>{children}</>;
 }

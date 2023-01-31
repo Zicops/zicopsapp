@@ -1,6 +1,7 @@
 import ProductTour from '@/components/common/ProductTour';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_HOME } from '@/components/common/ToolTip/tooltip.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -67,12 +68,13 @@ const Card = ({ image, text, width, tooltipTitle }) => {
 };
 const MissionControlCards = () => {
   const showProductTour = useRecoilValue(ProductTourVisible);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
   return (
     <>
       <div className="mission_control_body">
         <div className="contain_icons">
           <div className="new_row">
-            <Link href="/admin/analytics/course-dashboard">
+            <Link href={isDev ? '/admin/analytics/course-dashboard' : ''}>
               <a>
                 <Card
                   image="/images/Analytics.png"
@@ -130,7 +132,7 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Link href="/admin/vendor/manage-vendor">
+            <Link href={isDev ? '/admin/vendor/manage-vendor' : ''}>
               <a>
                 <Card
                   image="/images/VendorManagement.png"
