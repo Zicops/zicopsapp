@@ -138,7 +138,7 @@ export const NOTIFICATION_TITLES = {
   courseAssign: 'Course-Assigned',
   courseUnssigned: 'Course-Unassigned',
   lspWelcome: 'Welcome-Lsp',
-  signIn: {course:'Course-signInAssign'}
+  signIn: { course: 'Course-signInAssign' }
 };
 
 export const NOTIFICATION_MSG_LINKS = {
@@ -181,3 +181,22 @@ export const COURSE_TOPIC_TYPES = {
   lab: 'Lab',
   classroom: 'Classroom'
 };
+
+//Vendor Constant Start
+
+export const VENDOR_LANGUAGES = [
+  'English',
+  'Arabic',
+  'Hindi',
+  'Marathi',
+  'Telugu',
+  'Kannada',
+  'Tamil',
+  'Malayalam',
+  'Bengali',
+  'Gujarati'
+];
+
+export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
+
+//Vendor Constant End
