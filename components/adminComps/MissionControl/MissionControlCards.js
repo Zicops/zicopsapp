@@ -132,7 +132,7 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Link href="/admin/vendor/manage-vendor">
+            <Link href={isDev ? '/admin/vendor/manage-vendor' : ''}>
               <a>
                 <Card
                   image="/images/VendorManagement.png"

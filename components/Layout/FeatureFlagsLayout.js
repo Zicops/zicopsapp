@@ -24,7 +24,6 @@ export default function FeatureFlagsLayout({ children }) {
 
     // callback function on localstorage value change
     const localStorageSetHandler = function (e) {
-      console.log('localStorage.set("' + e.key + '", "' + e.value + '") was called');
       const _featureFlags = structuredClone(featureFlags || {});
       if (_featureFlags.hasOwnProperty(e.key)) {
         _featureFlags[e.key] = e.value;
