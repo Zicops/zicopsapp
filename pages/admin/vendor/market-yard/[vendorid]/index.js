@@ -4,7 +4,8 @@ import ZicopsCarousel from '@/components/ZicopsCarousel';
 import {
   myVendors,
   coursesVendor,
-  vendorProfiles
+  vendorProfiles,
+  serviceType
 } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
 import { useState } from 'react';
@@ -16,11 +17,13 @@ import MarketYardHero from '@/components/VendorComps/MarketYardHero';
 import MainBody from '@/components/common/MainBody';
 import VendorPopUp from '@/components/VendorComps/VendorPopUp';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import styles from '../marketYard.module.scss';
+// import styles from '../marketYard.module.scss';
 import AddLineItem from '@/components/VendorComps/AddLineItem';
 import CompleteOrder from '@/components/VendorComps/CompleteOrder';
 import ReviewOrderTop from '@/components/VendorComps/ReviewOrderTop';
 import ReviewOrderBottom from '@/components/VendorComps/ReviewOrderBottom';
+import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import styles from '../../../../../components/VendorComps/vendorComps.module.scss';
 export default function VendorInfo() {
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
@@ -140,14 +143,13 @@ export default function VendorInfo() {
         closeBtn={{ name: 'Back', handleClick: backFirstPopUpHandler }}
         submitBtn={{ name: 'Next', handleClick: addOrderHandler }}>
         <p>Choose Service Type</p>
-        <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" />
-        <div>
-          <LabeledRadioCheckbox label={'Training'} type="checkbox" />
-        </div>
-        <div>
-          <LabeledRadioCheckbox label={'Content Development'} type="checkbox" />
-        </div>
-        <LabeledRadioCheckbox label={'Speakers'} type="checkbox" />
+        {serviceType?.map((data, index) => {
+          return (
+            <div className={`${styles.expertiseCheckbox1}`}>
+              <LabeledRadioCheckbox type="checkbox" label={data} />
+            </div>
+          );
+        })}
       </VendorPopUp>
       <VendorPopUp
         open={addRate}

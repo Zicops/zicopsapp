@@ -654,3 +654,9 @@ export const addVendorCourse = [
     name: 'a1'
   }
 ];
+export const serviceType = [
+  'Subject Matter Expertise',
+  'Training',
+  'Content Development',
+  'Speakers'
+];

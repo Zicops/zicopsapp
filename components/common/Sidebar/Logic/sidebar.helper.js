@@ -152,6 +152,10 @@ export const vendorSideBarData = {
     {
       title: 'Dashboard',
       link: '/admin'
+    },
+    {
+      title: 'Orders',
+      link: '/admin/vendor/orders'
     }
   ]
 };
