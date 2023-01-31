@@ -12,14 +12,23 @@ import VendorPopUp from '../../VendorPopUp';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
 import Search from '@/components/Search';
 import { cat, subCat } from '../../Logic/vendorComps.helper';
+import AddVendorProfile from '../../AddVendorProfile';
+import ProfileManageVendor from '../../ProfileMangeVendor';
 
 export default function AddServices({ data, setData = () => {}, inputName }) {
   const [popupState, setPopupState] = useState(false);
-
+  const [isOpenProflie, setIsOpenProfile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
-
+  const [showCompleteProfile, setCompleteProfile] = useState(false);
   const clickHandler = () => {
     setPopupState(true);
+  };
+
+  const addProfileHandler = () => {
+    setIsOpenProfile(true);
+  };
+  const completeProfileHandler = () => {
+    setCompleteProfile(true);
   };
 
   return (
@@ -90,6 +99,7 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
               text="Add profiles"
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
+              handleClick={addProfileHandler}
             />
           </div>
         </div>
@@ -122,6 +132,27 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
             </div>
           );
         })}
+      </VendorPopUp>
+      <VendorPopUp
+        open={isOpenProflie}
+        title="Add profile"
+        popUpState={[isOpenProflie, setIsOpenProfile]}
+        size="large"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Done', handleClick: completeProfileHandler }}
+        isFooterVisible={true}>
+        <AddVendorProfile />
+      </VendorPopUp>
+
+      <VendorPopUp
+        open={showCompleteProfile}
+        title="Add sample"
+        popUpState={[showCompleteProfile, setCompleteProfile]}
+        size="large"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Done' }}
+        isFooterVisible={true}>
+        <ProfileManageVendor />
       </VendorPopUp>
     </>
   );

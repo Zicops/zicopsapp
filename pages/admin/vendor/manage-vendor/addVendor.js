@@ -9,6 +9,8 @@ import VendorMaster from '@/components/VendorComps/AddVendor/VendorMaster';
 import AddVendorServices from '@/components/VendorComps/AddVendor/AddVendorServices';
 import AddVendorCourses from '@/components/VendorComps/AddVendor/AddVendorCourses';
 import AddVendorProfile from '@/components/VendorComps/AddVendorProfile';
+import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
+import VendorOrders from '@/components/VendorComps/VendorOrders';
 
 export default function VendorInfo() {
   const router = useRouter();
@@ -25,7 +27,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Profiles',
-      component: <AddVendorProfile />
+      component: <ProfileManageVendor />
     },
     {
       name: 'Courses',
@@ -33,7 +35,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Orders',
-      component: <div></div>
+      component: <VendorOrders />
     }
   ];
 

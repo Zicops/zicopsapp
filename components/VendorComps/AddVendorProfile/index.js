@@ -12,7 +12,7 @@ const AddVendorProfile = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isOpenExpriences, setIsOpenExpriences] = useState(false);
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
-  const handleClick = () => {};
+  const [isOpenExpertise, setOpenExpertise] = useState(false);
   const showExperienceHandler = () => {
     setIsOpenExpriences(true);
     // setIsOpen(false);
@@ -20,136 +20,138 @@ const AddVendorProfile = () => {
   const showLanguageHandler = () => {
     setIsOpenLanguage(true);
   };
-  return (
-    <>
-      <VendorPopUp
-        open={isOpen}
-        title="Add profile"
-        popUpState={[isOpen, setIsOpen]}
-        size="large"
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done', handleClick: handleClick }}
-        isFooterVisible={true}>
-        <div className={`${styles.inputContainer}`}>
-          <div className={`${styles.input1}`}>
-            <label for="vendorName">First name: </label>
-            <LabeledInput
-              inputOptions={{
-                inputName: 'vendorName',
-                placeholder: 'Enter First Name'
-                // value: vendorData.vendorName
-              }}
-              //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
-            />
-          </div>
-          <div className={`${styles.input1}`}>
-            <label for="vendorName">Last name: </label>
-            {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
-            <LabeledInput
-              inputOptions={{
-                inputName: 'vendorAddress',
-                placeholder: 'Enter Last Name'
-                // value: vendorData.vendorAddress
-              }}
-              //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
-            />
-          </div>
-          <div>
-            <label for="vendorName">Email id: </label>
-            <LabeledInput
-              inputOptions={{
-                inputName: 'vendorName',
-                placeholder: 'Enter email address'
-                // value: vendorData.vendorName
-              }}
-              //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
-            />
-          </div>
-          <div className={`${styles.input1}`}>
-            <label for="vendorName">Contact number: </label>
-            {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
-            <LabeledInput
-              inputOptions={{
-                inputName: 'vendorAddress',
-                placeholder: 'Enter contact number'
-                // value: vendorData.vendorAddress
-              }}
-              //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
-            />
-          </div>
-          <div className={`${styles.input1}`}>
-            <label for="vendorName">Description: </label>
-            {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
-            <LabeledTextarea
-              inputOptions={{
-                inputName: 'vendorAddress',
-                placeholder: 'Describe your service on 160 characters',
-                rows: 5,
-                maxLength: 160
-                //   value: vendorData.vendorAddress
-              }}
-              // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
-            />
-          </div>
-          <div className={`${styles.input2}`}>
-            <label for="vendorName">Upload photo: </label>
-            <BrowseAndUpload styleClass={`${styles.uploadImage}`} />
-          </div>
-          <div className={`${styles.input1}`}>
-            <label for="vendorName">Years of experience: </label>
-            <LabeledDropdown
-              dropdownOptions={{
-                inputName: 'year',
-                placeholder: 'Select Years'
-              }}
-            />
-          </div>
-          <div className={`${styles.addExpertise}`}>
-            <label for="serviceDescription">Experience: </label>
-            <IconButton
-              text="Add experiences"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={showExperienceHandler}
-            />
-          </div>
-          <div className={`${styles.addExpertise}`}>
-            <label for="serviceDescription">Language: </label>
-            <IconButton
-              text="Add language"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={showLanguageHandler}
-            />
-          </div>
-          <div className={`${styles.addExpertise}`}>
-            <label for="serviceDescription">Subject matter expertise:</label>
-            <IconButton
-              text="Add subject matter expertise"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-            />
-          </div>
-        </div>
-        <div className={`${styles.addProfileContainer}`}>
-          <LabeledRadioCheckbox
-            label="is speaker"
-            type="checkbox"
-            name="speaker"
-            //   isChecked={data[`${inputName}`]}
-            //   changeHandler={(e) => changeHandler(e, data, setData)}
-          />
-          <div className={`${styles.addProfile}`}>
-            <IconButton
-              text="Add the profile"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-            />
-          </div>
-        </div>
 
-        <div className={`${styles.hr}`}></div>
-      </VendorPopUp>
+  const showExpertiseHandler = () => {
+    setOpenExpertise(true);
+  };
+  const handleClick = () => {};
+
+  return (
+    <div className={`${styles.inputMain}`}>
+      <div className={`${styles.inputContainer}`}>
+        <div className={`${styles.input1}`}>
+          <label for="vendorName">First name: </label>
+          <LabeledInput
+            inputOptions={{
+              inputName: 'vendorName',
+              placeholder: 'Enter First Name'
+              // value: vendorData.vendorName
+            }}
+            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+          />
+        </div>
+        <div className={`${styles.input1}`}>
+          <label for="vendorName">Last name: </label>
+          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+          <LabeledInput
+            inputOptions={{
+              inputName: 'vendorAddress',
+              placeholder: 'Enter Last Name'
+              // value: vendorData.vendorAddress
+            }}
+            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+          />
+        </div>
+        <div className={`${styles.input1}`}>
+          <label for="vendorName">Email id: </label>
+          <LabeledInput
+            inputOptions={{
+              inputName: 'vendorName',
+              placeholder: 'Enter email address'
+              // value: vendorData.vendorName
+            }}
+            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+          />
+        </div>
+        <div className={`${styles.input1}`}>
+          <label for="vendorName">Contact number: </label>
+          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+          <LabeledInput
+            inputOptions={{
+              inputName: 'vendorAddress',
+              placeholder: 'Enter contact number'
+              // value: vendorData.vendorAddress
+            }}
+            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+          />
+        </div>
+        <div className={`${styles.input1}`}>
+          <label for="vendorName">Description: </label>
+          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+          <LabeledTextarea
+            inputOptions={{
+              inputName: 'vendorAddress',
+              placeholder: 'Describe your service on 160 characters',
+              rows: 5,
+              maxLength: 160
+              //   value: vendorData.vendorAddress
+            }}
+            // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+          />
+        </div>
+        <div className={`${styles.input2}`}>
+          <label for="vendorName">Upload photo: </label>
+          <BrowseAndUpload
+            styleClass={`${styles.uploadImage}`}
+            styleClassBtn={`${styles.uploadButton}`}
+            title="Drag and drop"
+          />
+        </div>
+        <div className={`${styles.input1}`}>
+          <label for="vendorName">Years of experience: </label>
+          <LabeledDropdown
+            dropdownOptions={{
+              inputName: 'year',
+              placeholder: 'Select Years'
+            }}
+            styleClass={styles.dropDownMain}
+          />
+        </div>
+        <div className={`${styles.addExpertise}`}>
+          <label for="serviceDescription">Experience: </label>
+          <IconButton
+            text="Add experiences"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+            handleClick={showExperienceHandler}
+          />
+        </div>
+        <div className={`${styles.addExpertise}`}>
+          <label for="serviceDescription">Language: </label>
+          <IconButton
+            text="Add language"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+            handleClick={showLanguageHandler}
+          />
+        </div>
+        <div className={`${styles.addExpertise}`}>
+          <label for="serviceDescription">Subject matter expertise:</label>
+          <IconButton
+            text="Add subject matter expertise"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+            handleClick={showExpertiseHandler}
+          />
+        </div>
+      </div>
+      <div className={`${styles.addProfileContainer}`}>
+        <LabeledRadioCheckbox
+          label="is speaker"
+          type="checkbox"
+          name="speaker"
+          //   isChecked={data[`${inputName}`]}
+          //   changeHandler={(e) => changeHandler(e, data, setData)}
+        />
+        <div className={`${styles.addProfile}`}>
+          <IconButton
+            text="Add the profile"
+            styleClass={`${styles.button}`}
+            imgUrl="/images/svg/add_circle.svg"
+          />
+        </div>
+      </div>
+      <div className={`${styles.hr}`}></div>
       <VendorPopUp
         open={isOpenExpriences}
         title="Add experience"
@@ -160,6 +162,15 @@ const AddVendorProfile = () => {
         isFooterVisible={true}>
         <AddExpriences />
       </VendorPopUp>
+      <div className={`${styles.hr}`}></div>
+      <VendorPopUp
+        open={isOpenExpertise}
+        title="Add Subject matter expertise"
+        popUpState={[isOpenExpertise, setOpenExpertise]}
+        size="large"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Done', handleClick: handleClick }}
+        isFooterVisible={true}></VendorPopUp>
       <VendorPopUp
         open={isOpenLanguage}
         title="Add language"
@@ -204,7 +215,7 @@ const AddVendorProfile = () => {
           //   changeHandler={(e) => changeHandler(e, data, setData)}
         />
       </VendorPopUp>
-    </>
+    </div>
   );
 };
 

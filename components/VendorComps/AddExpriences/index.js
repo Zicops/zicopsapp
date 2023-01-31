@@ -5,8 +5,8 @@ import React from 'react';
 import styles from '../vendorComps.module.scss';
 const AddExpriences = () => {
   return (
-    <div>
-      <div className={`${styles.inputTitle}`}>
+    <div className={`${styles.addExpriencesForm}`}>
+      <div className={`${styles.title}`}>
         <label for="vendorName">Title: </label>
         <LabeledInput
           inputOptions={{
@@ -36,6 +36,7 @@ const AddExpriences = () => {
               inputName: 'year',
               placeholder: 'Select employment type'
             }}
+            styleClass={styles.dropDownMain}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -56,6 +57,7 @@ const AddExpriences = () => {
               inputName: 'year',
               placeholder: 'Select location type'
             }}
+            styleClass={styles.dropDownMain}
           />
         </div>
       </div>
@@ -76,15 +78,17 @@ const AddExpriences = () => {
               inputName: 'Month',
               placeholder: 'Month'
             }}
+            styleClass={styles.dropDownMain}
           />
           <LabeledDropdown
             dropdownOptions={{
               inputName: 'year',
               placeholder: 'year'
             }}
+            styleClass={styles.dropDownMain}
           />
         </div>
-        <div>
+        <div className={`${styles.dropDownMain}`}>
           <label for="vendorName">End date: </label>
           <div className={`${styles.inputContainer2}`}>
             <LabeledDropdown
@@ -92,12 +96,14 @@ const AddExpriences = () => {
                 inputName: 'Month',
                 placeholder: 'Month'
               }}
+              styleClass={styles.dropDownMain}
             />
             <LabeledDropdown
               dropdownOptions={{
                 inputName: 'year',
                 placeholder: 'year'
               }}
+              styleClass={styles.dropDownMain}
             />
           </div>
         </div>

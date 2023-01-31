@@ -21,7 +21,9 @@ export default function BrowseAndUpload({
   hideRemoveBtn = false,
   isDisabled = false,
   shouldShowPreview = true,
-  styleClass
+  styleClass,
+  title,
+  styleClassBtn
 }) {
   const inputRef = useRef();
   const [showPreview, setShowPreview] = useState(false);
@@ -39,9 +41,9 @@ export default function BrowseAndUpload({
         <button
           className={`w-100 ${styles.btn} ${isActive ? styles.isActive : ''} ${
             isError ? 'error' : ''
-          }`}>
+          } ${styleClassBtn}`}>
           <img src="/images/upload.png" alt="" />
-          Browse & upload
+          {title || 'Browse & upload'}
         </button>
 
         <input
