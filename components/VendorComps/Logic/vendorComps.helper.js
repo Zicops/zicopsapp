@@ -631,3 +631,5 @@ export const subCat = [
     __typename: 'SubCatMain'
   }
 ];
+
+export const serviceType = ['Subject Matter Expertise', 'Training', 'Content Development', 'Speakers'];
