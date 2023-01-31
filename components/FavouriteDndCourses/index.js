@@ -81,7 +81,7 @@ export default function FavouriteDndCourses({ isLoading }) {
       pageSize: 9999999,
       pageCursor: '',
       status: COURSE_STATUS.publish,
-      filters: { LspId: _lspId }
+      filters: { LspId: _lspId, Type: COURSE_TYPES[0] }
     };
     let isError = false;
     const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables).catch((err) => {
@@ -134,7 +134,7 @@ export default function FavouriteDndCourses({ isLoading }) {
     const availableCourses =
       courseRes?.latestCourses?.courses?.filter((c) => {
         return (
-          c?.type === COURSE_TYPES[0] &&
+          // c?.type === COURSE_TYPES[0] &&
           c?.is_active &&
           c?.is_display &&
           !userCourseMaps?.find((map) => {
