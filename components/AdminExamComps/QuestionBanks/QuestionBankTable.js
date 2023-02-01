@@ -8,10 +8,11 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_LATEST_QUESTION_BANK, GET_QUESTIONS_NAMES, queryClient } from '../../../API/Queries';
 import {
   getQuestionBankObject,
@@ -37,6 +38,7 @@ export default function QuestionBankTable({ isEdit = false }) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [refetchData, setRefetchData] = useRecoilState(RefetchDataAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   // state for storing table data
   const [questionBank, setQuestionBank] = useState([]);
@@ -74,6 +76,7 @@ export default function QuestionBankTable({ isEdit = false }) {
 
   async function loadQbData() {
     const queryVariables = { publish_time: Date.now(), pageSize: 30, pageCursor: '' };
+    if (!isDev) queryVariables.pageSize = 1000;
 
     if (searchQuery) queryVariables.searchText = searchQuery?.trim();
     if (pageCursor) queryVariables.pageCursor = pageCursor;
