@@ -27,14 +27,14 @@ export function CustomPagination({ currentPage = null }) {
       siblingCount={1}
       boundaryCount={0}
       renderItem={(props2) => {
-        if (props2?.type?.includes('ellipsis')) return null;
+        // if (props2?.type?.includes('ellipsis')) return null;
 
-        if (page <= 1 && props2?.page === 4 && props2?.type !== 'next') return null;
-        if (page === 2 && props2?.page === 1 && props2?.type !== 'previous') return null;
-        if (page === pageCount - 3 && props2?.page === pageCount && props2?.type !== 'next')
-          return null;
-        if (page >= pageCount - 2 && props2?.page === pageCount - 3 && props2?.type !== 'previous')
-          return null;
+        // if (page <= 1 && props2?.page === 4 && props2?.type !== 'next') return null;
+        // if (page === 2 && props2?.page === 1 && props2?.type !== 'previous') return null;
+        // if (page === pageCount - 3 && props2?.page === pageCount && props2?.type !== 'next')
+        //   return null;
+        // if (page >= pageCount - 2 && props2?.page === pageCount - 3 && props2?.type !== 'previous')
+        //   return null;
 
         return (
           <>
