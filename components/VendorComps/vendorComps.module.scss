@@ -423,7 +423,7 @@
         }
       }
       .hr1 {
-        background-color: #292f2f;
+        background-color: $secondary;
         height: 1px;
         margin: 10px 50% 10px 0px;
       }
@@ -440,7 +440,7 @@
     }
   }
   .hr {
-    background-color: #292f2f;
+    background-color: $secondary;
     height: 1px;
   }
   .viewProfileButtom {
@@ -478,7 +478,7 @@
         .vendorExpertise {
           // width: fit-content;
           padding: 8px 16px;
-          background: #292f2f;
+          background: $secondary;
           border-radius: 3px;
           color: $white;
         }
@@ -843,16 +843,22 @@
     margin-bottom: 8px;
   }
   .input2 {
-    .uploadImage {
-      // height: 120px;
-      // border: 1px dashed #747474;
-      margin-top: 8px;
+    margin-bottom: 5px;
+    .uploadButton {
+      display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        align-items: center;
+        gap: 15px;
+        color: $white;
+        background-color: $secondary;
+        border: 1px dashed $secondaryWhite;
+        padding-top: 10px;
+        padding: 25px 15px;
+        margin-top: 8px;
 
-      .uploadButton {
-        height: 120px;
-        border: none;
-        border: 1px dashed #747474 !important;
-      }
     }
   }
 
@@ -964,7 +970,7 @@
   max-height: 146px;
   padding: 16px;
   background: #1a1a1a;
-  border: 1px solid #292f2f;
+  border: 1px solid $secondary;
   border-radius: 4px;
   .singleProfileMain {
     display: flex;
@@ -1012,7 +1018,7 @@
   // width: 442px;
   height: 146px;
   background: #1a1a1a;
-  border: 1px solid #292f2f;
+  border: 1px solid $secondary;
   border-radius: 4px;
   display: flex;
   justify-content: center;
@@ -1024,7 +1030,7 @@
     align-items: center;
     gap: 15px;
     color: white;
-    background-color: #292f2f;
+    background-color: $secondary;
     border: none;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -1191,3 +1197,8 @@
     }
   }
 }
+ .hr {
+   background-color: $secondary;
+   height: 1px;
+   margin: 10px 0px;
+ }
