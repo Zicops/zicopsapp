@@ -23,13 +23,13 @@ const UserLearningDashboardTab = () => {
       {/* user progress slider */}
       {/* <CardSliderBody /> */}
       {/* <Charts /> */}
-      {/* <BarGraphView /> */}
-      <VennDiagram data={data} />
-      {/* <UserDashboardCardSlider />
+      <BarGraphView />
+      {/* <VennDiagram data={data} />/ */}
+      <UserDashboardCardSlider />
       <LineChartView/>
       <CohortDashboardCardSlider />
       <UserMostEngagedSubcategories />
-      <UserProgressSlider /> */}
+      <UserProgressSlider />
     </div>
   );
 };

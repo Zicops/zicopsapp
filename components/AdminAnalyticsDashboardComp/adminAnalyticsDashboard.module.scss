@@ -2,12 +2,13 @@
 
 .firstFourCards {
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
 }
 
 .wrapper {
-    background-color: #242630;
+    background-color: #202222;
+    // background-color: #242630;
     width: 100%;
     padding: 20px;
     border-radius: 5px;
@@ -36,6 +37,6 @@
 
 .categoryAndExpertiseAvailability {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: repeat(2, 1fr);;
     gap: 1rem;
 }

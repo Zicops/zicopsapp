@@ -1,13 +1,15 @@
 @import '../../styles/base.scss';
 // availabilityCard
 .availabilityCard {
-  background-color: #242630;
+  background-color: $darkOne;
+  // background-color: #242630;
   width: 100%;
   padding: 20px;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  border: 1px solid #30323f;
+  // border: 1px solid #30323f;
+  border: 1px solid $darkOne;
   gap: 10px;
   justify-content: center;
 
@@ -47,7 +49,8 @@
     .card_text {
       font-weight: 400;
       font-size: 16px;
-      color: #919397;
+      // color: #919397;
+      color: $darkThree;
     }
   }
 }
@@ -61,32 +64,33 @@
   padding: 8px 16px;
   background: #1A1B26;
   border: 1px solid #30323F;
+  // border: 1px solid $darkThree;
   border-radius: 50px;
 
   .badge_count,
   .badge_text {
     font-size: 18px;
-    font-weight: 400;
+    // font-weight: 400;
     color: #eaeaea;
   }
 }
 // Pill 
-.badge_wrapper{
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    justify-content: center;
-    min-width: 150px;
-    padding: 8px 16px;
-    background: #1A1B26;
-    border: 1px solid #30323F;
-    border-radius: 50px;
-    .badge_count, .badge_text{
-        font-size: 18px;
-        font-weight: 400;
-        color: #eaeaea;
-    }
-}
+// .badge_wrapper{
+//     display: flex;
+//     align-items: center;
+//     gap: 5px;
+//     justify-content: center;
+//     min-width: 150px;
+//     padding: 8px 16px;
+//     // background: #1A1B26;
+//     border: 1px solid #30323F;
+//     border-radius: 50px;
+//     .badge_count, .badge_text{
+//         font-size: 18px;
+//         font-weight: 400;
+//         color: #eaeaea;
+//     }
+// }
 // Progress Bar
 .progressBarFooter {
     div {
@@ -131,7 +135,8 @@
 }
 //   StatisticsCard
   .card_wrapper{
-    background-color: #242630;
+    // background-color: #242630;
+    background-color: $darkTwo;
     width: 100%;
     padding: 20px;
     border-radius: 5px;
@@ -139,7 +144,8 @@
     flex-direction: column;
     gap: 10px;
     justify-content: center;
-    border: 1px solid #30323F;
+    // border: 1px solid #30323F;
+    border: 1px solid $darkThree;
     .card_head{
         display: flex;
         justify-content: space-between;
@@ -193,10 +199,10 @@
       z-index: 100;
     }
 
-    // Dropdown
-.dropdown{
-  background: #1A1B26;
-  border: 1px solid #EAEAEA;
+// Dropdown
+.dropdown > div > div:first-of-type{
+  // background: #1A1B26;
+  border: 1px solid #f4f4f4;
   border-radius: 4px;
   outline: none;
 }
