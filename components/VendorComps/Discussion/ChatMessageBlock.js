@@ -1,9 +1,6 @@
-import { useState } from 'react';
-import moment from 'moment';
-import style from './chat.module.scss';
-import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { DiscussionAtom } from '@/state/atoms/discussion.atoms';
+import { useRecoilValue } from 'recoil';
+import style from './chat.module.scss';
 const ChatMessageBlock = ({ isReply, isLeft, message }) => {
   // const [showInput, setShowInput] = useState(false);
   // const [hideReply, setHideReply] = useState(false);
@@ -44,10 +41,13 @@ const ChatMessageBlock = ({ isReply, isLeft, message }) => {
   return (
     <>
       <div className={`${isLeft ? style.chat_Main_left : style.chat_Main}`}>
-         <div className={`${style.user_image2}`}>
-        {!isLeft ? <img src={userDetails?.photo_url} alt="" /> : <img src="/images/svg/11.svg" alt="" />}
-                
-              </div>
+        <div className={`${style.user_image2}`}>
+          {!isLeft ? (
+            <img src={userDetails?.photo_url} alt="" />
+          ) : (
+            <img src="/images/svg/11.svg" alt="" />
+          )}
+        </div>
         <div
           className={`${isLeft ? style.chat_container : style.chat_container2} ${
             isReply ? (isLeft ? style.left_reply_container : style.right_reply_container) : ''
