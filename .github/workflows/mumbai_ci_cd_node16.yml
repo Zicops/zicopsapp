@@ -43,13 +43,13 @@ jobs:
     steps:
     - name: Get Approvals for Staging Deployment
       uses: trstringer/manual-approval@v1.8.0
+      timeout-minutes: 5
       with:
          secret: ${{ github.TOKEN }}
          approvers: jtas01,saraswatpuneet
          minimum-approvals: 1
          issue-title: "Deploying ZicopsApp to staging after a fresh build"
          exclude-workflow-initiator-as-approver: false
-         timeout-minutes: 5
   build_push_image:
     needs: approval_staging
     runs-on: ubuntu-latest
@@ -116,13 +116,13 @@ jobs:
     steps:
     - name: Get Approvals for Zicops One Production Deployment
       uses: trstringer/manual-approval@v1.8.0
+      timeout-minutes: 5
       with:
          secret: ${{ github.TOKEN }}
          approvers: jtas01,saraswatpuneet
          minimum-approvals: 1
          issue-title: "Deploying to zicops one production cluster"
          exclude-workflow-initiator-as-approver: false
-         timeout-minutes: 5
 
   deploy_production:
     needs: approval_production
