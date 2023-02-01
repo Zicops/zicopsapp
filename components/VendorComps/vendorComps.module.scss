@@ -270,13 +270,11 @@
   }
 
   .input1 {
-    font-size: 18px;
     font-weight: 400;
     margin-top: 8px;
   }
   .input1 input {
     width: 100%;
-    height: 48px;
     margin-top: 8px;
     border: 1px solid #747474;
     border-radius: 5px;
@@ -284,7 +282,6 @@
     outline: none;
     padding-left: 16px;
     color: $white;
-    font-size: 18px;
   }
 
   .addressImageDiv {
@@ -296,13 +293,11 @@
       width: 50%;
 
       label {
-        font-size: 18px;
         font-weight: 400;
       }
 
       textarea {
         width: 100%;
-        height: 144px;
         margin-top: 8px;
 
         border: 1px solid #747474;
@@ -311,38 +306,40 @@
         outline: none;
         padding-left: 16px;
         color: $white;
-        font-size: 18px;
       }
 
-      .uploadImage {
-        height: 144px;
-        // border: 1px dashed #747474;
+      .button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        align-items: center;
+        gap: 15px;
+        color: white;
+        background-color: $secondary;
+        border: 1px dashed $secondaryWhite;
+        padding-top: 10px;
+        padding: 15px;
         margin-top: 8px;
-
-        button {
-          height: 144px;
-          // border: none;
-        }
       }
     }
   }
 
   .websiteSocialDiv {
     display: flex;
-    margin-top: 35px;
+    margin-top: 20px;
     gap: 25px;
 
     .input3 {
       width: 50%;
 
       label {
-        font-size: 18px;
         font-weight: 400;
       }
 
       input {
         width: 100%;
-        height: 46px;
         margin-top: 8px;
 
         border: 1px solid #747474;
@@ -351,19 +348,19 @@
         outline: none;
         padding-left: 16px;
         color: $white;
-        font-size: 18px;
       }
 
       .icons {
         display: flex;
         gap: 10px;
         margin-top: 8px;
-      }
 
-      img {
-        border: 1px solid #747474;
-        border-radius: 5px;
-        cursor: pointer;
+        img {
+          border: 1px solid #747474;
+          border-radius: 5px;
+          cursor: pointer;
+          width: 10%;
+        }
       }
     }
   }
@@ -372,13 +369,11 @@
     margin-top: 15px;
 
     label {
-      font-size: 18px;
       font-weight: 400;
     }
 
     textarea {
       width: 100%;
-      height: 96px;
       margin-top: 8px;
       border: 1px solid #747474;
       border-radius: 5px;
@@ -387,7 +382,6 @@
       padding-left: 16px;
       padding-top: 5px;
       color: $white;
-      font-size: 18px;
     }
   }
 }

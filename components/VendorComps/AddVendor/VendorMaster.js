@@ -39,7 +39,7 @@ export default function VendorMaster() {
         </div>
         <div className={`${styles.input2}`}>
           <label for="vendorName">Update vendor profile image: </label>
-          <BrowseAndUpload styleClass={`${styles.uploadImage}`} />
+          <BrowseAndUpload styleClassBtn={`${styles.button}`} title="Drag & Drop" />
         </div>
       </div>
       <div className={`${styles.websiteSocialDiv}`}>
@@ -57,10 +57,10 @@ export default function VendorMaster() {
         <div className={`${styles.input3}`}>
           <label for="vendorName">Add URL of social media pages: </label>
           <div className={`${styles.icons}`}>
-            <img src="/images/FB.png" />
-            <img src="/images/insta.png" />
-            <img src="/images/twitter.png" />
-            <img src="/images/linkedin.png" />
+            <img src="/images/Facebook1.png" />
+            <img src="/images/Instagram1.png" />
+            <img src="/images/Twitter1.png" />
+            <img src="/images/Linkedin1.png" />
           </div>
         </div>
       </div>
