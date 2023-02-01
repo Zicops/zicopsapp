@@ -11,8 +11,8 @@ import { useRouter } from 'next/router';
 
 export default function ManageVendor() {
   const [isOpen, setIsOpen] = useState(false);
-  const [vendorType, setVendorType] = useState(null);
-  const [vendorLevel, setVendorLevel] = useState(null);
+  const [vendorType, setVendorType] = useState('company');
+  const [vendorLevel, setVendorLevel] = useState('lsp');
 
   const onPlusHandler = () => {
     console.log('hello');
