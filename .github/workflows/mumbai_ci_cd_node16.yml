@@ -11,7 +11,7 @@ on:
 
 env:
   PROJECT_ID: zicops-one
-  SERVICE_NAME: zicops-app
+  SERVICE_NAME: zicopsapp
 
 jobs:
   setup:
@@ -45,7 +45,7 @@ jobs:
       uses: trstringer/manual-approval@v1.8.0
       with:
          secret: ${{ github.TOKEN }}
-         approvers: jtas01
+         approvers: jtas01,saraswatpuneet
          minimum-approvals: 1
          issue-title: "Deploying ZicopsApp to staging after a fresh build"
          exclude-workflow-initiator-as-approver: false
@@ -101,13 +101,13 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
     - name: replace environment variable in values.yaml
-      run:  envsubst '${GITHUB_SHA}' < k8s/zicops-app/values.template.yaml > k8s/zicops-app/values.yaml
+      run:  envsubst '${GITHUB_SHA}' < k8s/zicopsapp/values.template.yaml > k8s/zicopsapp/values.yaml
     - name: Deploy to zicops-prod-cost-one
       run: |
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE \
           --project $PROJECT_ID
-        helm upgrade -n staging zicops-app k8s/zicops-app --install --wait --atomic
+        helm upgrade -n staging zicopsapp k8s/zicopsapp --install --wait --atomic
 
   approval_production:
     needs: deploy_staging
@@ -146,10 +146,10 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
     - name: replace environment variable in values.yaml
-      run:  envsubst '${GITHUB_SHA}' < k8s/zicops-app/values.template.yaml > k8s/zicops-app/values.yaml
+      run:  envsubst '${GITHUB_SHA}' < k8s/zicopsapp/values.template.yaml > k8s/zicopsapp/values.yaml
     - name: Deploy to zicops-prod-cost-one
       run: |
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE \
           --project $PROJECT_ID
-        helm upgrade -n production zicops-app k8s/zicops-app --install --wait --atomic
+        helm upgrade -n production zicopsapp k8s/zicopsapp --install --wait --atomic
