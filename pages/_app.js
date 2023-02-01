@@ -1,6 +1,7 @@
 import AuthChecker from '@/components/AuthChecker';
 import FeatureFlagsLayout from '@/components/Layout/FeatureFlagsLayout';
 import PushNotificationLayout from '@/components/Layout/PushNotificationLayout';
+import { logger } from '@/helper/utils.helper';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
 import Head from 'next/head';
 import { useEffect } from 'react';
@@ -15,7 +16,7 @@ import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   // for disabling log at all places
-  console.log = () => {};
+  logger()?.disableLogger();
 
   // toggle scrollbar opacity when scroll
   useEffect(() => {

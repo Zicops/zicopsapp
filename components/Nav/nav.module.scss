@@ -17,6 +17,27 @@
   position: fixed;
   top: 0;
   z-index: 999;
+
+  .devMode {
+    position: absolute;
+    top: 70px;
+    width: 100%;
+    height: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+
+    background-color: rgb(216, 216, 0);
+
+    > span {
+      font-size: smaller;
+      background-color: inherit;
+
+      padding-right: 15px;
+      clip-path: polygon(0 0, 100% 0, 92% 88%, 8% 88%);
+    }
+  }
 }
 
 .left,
