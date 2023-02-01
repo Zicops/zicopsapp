@@ -7,7 +7,7 @@ import AdminHeader from '@/components/common/AdminHeader';
 import MainBody from '@/components/common/MainBody';
 import Sidebar from '@/components/common/Sidebar';
 import { analyticsSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import useHandleFirstFourCard from './Logic/useHandleFirstFourCard';
+import useHandleFirstFourCard from '../../../components/AdminAnalyticsDashboardComp/Logic/useHandleFirstFourCard';
 
 const CourseDashboard = () => {
   const cardData = useHandleFirstFourCard();
