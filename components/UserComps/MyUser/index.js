@@ -68,50 +68,50 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
   }
 
   useEffect(async () => {
-    loadUserData();
-    // const _usersData = await getUsersForAdmin(true);
-    // if (_usersData?.error) {
-    //   setLoading(false);
-    //   return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
-    // }
-    // setData(sortArrByKeyInOrder([..._usersData], 'created_at', false), setLoading(false));
-    // for (let i = 0; i < _usersData.length; i++) {
-    //   const user = _usersData[i];
-    //   const res = await loadQueryDataAsync(
-    //     GET_USER_LSP_ROLES,
-    //     {
-    //       user_id: user?.id,
-    //       user_lsp_ids: [user?.user_lsp_id]
-    //     },
-    //     {},
-    //     userClient
-    //   );
-    //   const lspRoleArr = res?.getUserLspRoles;
+    // loadUserData();
+    const _usersData = await getUsersForAdmin(true);
+    if (_usersData?.error) {
+      setLoading(false);
+      return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
+    }
+    setData(sortArrByKeyInOrder([..._usersData], 'created_at', false), setLoading(false));
+    for (let i = 0; i < _usersData.length; i++) {
+      const user = _usersData[i];
+      const res = await loadQueryDataAsync(
+        GET_USER_LSP_ROLES,
+        {
+          user_id: user?.id,
+          user_lsp_ids: [user?.user_lsp_id]
+        },
+        {},
+        userClient
+      );
+      const lspRoleArr = res?.getUserLspRoles;
 
-    //   let roleData = {};
-    //   if (lspRoleArr?.length > 1) {
-    //     const latestUpdatedRole = await sortArray(lspRoleArr, 'updated_at');
-    //     roleData = latestUpdatedRole?.pop();
-    //   } else {
-    //     roleData = lspRoleArr[0];
-    //   }
+      let roleData = {};
+      if (lspRoleArr?.length > 1) {
+        const latestUpdatedRole = await sortArray(lspRoleArr, 'updated_at');
+        roleData = latestUpdatedRole?.pop();
+      } else {
+        roleData = lspRoleArr[0];
+      }
 
-    //   user.role = roleData?.role;
-    //   user.roleData = roleData;
-    // }
-    // //make sure no user without role map is shown
-    // const usersData = _usersData?.filter((user) => !!user?.roleData);
-    // let users = [];
+      user.role = roleData?.role;
+      user.roleData = roleData;
+    }
+    //make sure no user without role map is shown
+    const usersData = _usersData?.filter((user) => !!user?.roleData);
+    let users = [];
 
-    // if (isAdministration) {
-    //   users = usersData?.filter((user) => user?.role?.toLowerCase() === 'admin');
-    //   // console.log(users,'users')
-    // } else {
-    //   users = [...usersData];
-    // }
-    // // setLoading(false);
-    // setData(sortArrByKeyInOrder([...users], 'created_at', false));
-    // return;
+    if (isAdministration) {
+      users = usersData?.filter((user) => user?.role?.toLowerCase() === 'admin');
+      // console.log(users,'users')
+    } else {
+      users = [...usersData];
+    }
+    // setLoading(false);
+    setData(sortArrByKeyInOrder([...users], 'created_at', false));
+    return;
   }, []);
 
   useEffect(() => {
