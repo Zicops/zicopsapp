@@ -11,14 +11,18 @@ import styles from './nav.module.scss';
 import { userClient } from '@/api/UserMutations';
 import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
 import { sendNotification } from '@/helper/api.helper';
+import useUserCourseData from '@/helper/hooks.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import HamburgerMenuIcon from '../../public/images/menu.png';
 import ToolTip from '../common/ToolTip';
+import SwitchBox from '../Tabs/common/SwitchBox';
 import UserDisplay from './UserDisplay';
-import useUserCourseData from '@/helper/hooks.helper';
+import SwitchButton from '../common/FormComponents/SwitchButton';
+import { getCurrentHost } from '@/helper/utils.helper';
 
 export default function Nav() {
   const { isAdmin, makeAdmin } = useContext(userContext);
@@ -28,7 +32,9 @@ export default function Nav() {
   const notificationBarRef = useRef(null);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
   const handleClickInside = () => setShowNotification(!showNotification);
-  const {OrgDetails} = useUserCourseData();
+  const { OrgDetails } = useUserCourseData();
+
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
@@ -76,8 +82,24 @@ export default function Nav() {
 
   const router = useRouter();
 
+  let displayDevMode = !!isDev;
+  if (getCurrentHost()?.includes('localhost')) displayDevMode = true;
+
   return (
     <div className={styles.navbar} id="navbar">
+      {!!displayDevMode && (
+        <div className={styles.devMode}>
+          <span>
+            <SwitchButton
+              label="Dev Mode Enabled"
+              inputName="devMode"
+              isChecked={isDev}
+              handleChange={(e) => window?.enableDevMode(e.target.checked)}
+            />
+          </span>
+        </div>
+      )}
+
       <div className={styles.left}>
         <LeftMenuDropdown
           isOnLearnerSide={isOnLearnerSide}
