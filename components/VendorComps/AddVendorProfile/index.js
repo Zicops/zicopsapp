@@ -11,12 +11,25 @@ import AddExpriences from '../AddExpriences';
 import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
 import { cat, subCat } from '../Logic/vendorComps.helper';
+import { useRecoilState } from 'recoil';
+import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
+import { changeHandler } from '@/helper/common.helper';
+
+const optionYearArray = [
+  { value: '1', label: '1' },
+  { value: '1+', label: '1+' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+  { value: '3+', label: '3+' }
+];
+
 const AddVendorProfile = () => {
-  const [isOpen, setIsOpen] = useState(true);
   const [isOpenExpriences, setIsOpenExpriences] = useState(false);
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
   const [isOpenExpertise, setOpenExpertise] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
+  const [experienceYear, setExpericeYear] = useState(null);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
   const showExperienceHandler = () => {
     setIsOpenExpriences(true);
@@ -38,11 +51,11 @@ const AddVendorProfile = () => {
           <label for="vendorName">First name: </label>
           <LabeledInput
             inputOptions={{
-              inputName: 'vendorName',
-              placeholder: 'Enter First Name'
-              // value: vendorData.vendorName
+              inputName: 'firstName',
+              placeholder: 'Enter First Name',
+              value: profileData.firstName
             }}
-            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -50,22 +63,23 @@ const AddVendorProfile = () => {
           {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
           <LabeledInput
             inputOptions={{
-              inputName: 'vendorAddress',
-              placeholder: 'Enter Last Name'
-              // value: vendorData.vendorAddress
+              inputName: 'lastName',
+              placeholder: 'Enter Last Name',
+              value: profileData.lastName
             }}
-            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Email id: </label>
           <LabeledInput
             inputOptions={{
-              inputName: 'vendorName',
-              placeholder: 'Enter email address'
-              // value: vendorData.vendorName
+              inputName: 'email',
+              placeholder: 'Enter email address',
+              type: 'email',
+              value: profileData.email
             }}
-            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -73,11 +87,11 @@ const AddVendorProfile = () => {
           {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
           <LabeledInput
             inputOptions={{
-              inputName: 'vendorAddress',
-              placeholder: 'Enter contact number'
-              // value: vendorData.vendorAddress
+              inputName: 'contactNumber',
+              placeholder: 'Enter contact number',
+              value: profileData.contactNumber
             }}
-            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -85,13 +99,13 @@ const AddVendorProfile = () => {
           {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
           <LabeledTextarea
             inputOptions={{
-              inputName: 'vendorAddress',
+              inputName: 'description',
               placeholder: 'Describe your service on 160 characters',
               rows: 5,
-              maxLength: 160
-              //   value: vendorData.vendorAddress
+              maxLength: 160,
+              value: profileData.description
             }}
-            // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input2}`}>
@@ -100,6 +114,7 @@ const AddVendorProfile = () => {
             styleClass={`${styles.uploadImage}`}
             styleClassBtn={`${styles.uploadButton}`}
             title="Drag and drop"
+            handleFileUpload={() => {}}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -107,8 +122,11 @@ const AddVendorProfile = () => {
           <LabeledDropdown
             dropdownOptions={{
               inputName: 'year',
-              placeholder: 'Select Years'
+              placeholder: 'Select Years',
+              value: experienceYear,
+              options: optionYearArray
             }}
+            changeHandler={(val) => setExpericeYear(val)}
             styleClass={styles.dropDownMain}
           />
         </div>
@@ -144,9 +162,9 @@ const AddVendorProfile = () => {
         <LabeledRadioCheckbox
           label="is speaker"
           type="checkbox"
-          name="speaker"
-          //   isChecked={data[`${inputName}`]}
-          //   changeHandler={(e) => changeHandler(e, data, setData)}
+          name="isSpeaker"
+          isChecked={profileData?.isSpeaker}
+          changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
         />
         <div className={`${styles.addProfile}`}>
           <IconButton
@@ -156,7 +174,7 @@ const AddVendorProfile = () => {
           />
         </div>
       </div>
-      <div className={`${styles.hr}`}></div>
+      {/* <div className={`${styles.hr}`}></div> */}
       <VendorPopUp
         open={isOpenExpriences}
         title="Add experience"

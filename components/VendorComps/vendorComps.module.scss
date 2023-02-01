@@ -270,6 +270,7 @@
   }
 
   .input1 {
+    // font-size: 18px;
     font-weight: 400;
     margin-top: 8px;
   }
@@ -282,6 +283,7 @@
     outline: none;
     padding-left: 16px;
     color: $white;
+    // font-size: 18px;
   }
 
   .addressImageDiv {
@@ -408,7 +410,6 @@
       }
       span {
         color: $white;
-        font-size: 18px;
       }
       .profileEmail,
       .profileWebsite {
@@ -417,11 +418,11 @@
         padding-bottom: 5px;
         p {
           color: $bgBody;
-          font-size: 18px;
+          // font-size: 18px;
         }
       }
       .hr1 {
-        background-color: #292f2f;
+        background-color: $secondary;
         height: 1px;
         margin: 10px 50% 10px 0px;
       }
@@ -438,7 +439,7 @@
     }
   }
   .hr {
-    background-color: #292f2f;
+    background-color: $secondary;
     height: 1px;
   }
   .viewProfileButtom {
@@ -451,11 +452,11 @@
       padding-bottom: 20px;
       p {
         color: $bgBody;
-        font-size: 18px;
+        // font-size: 18px;
       }
       span {
         color: $white;
-        font-size: 20px;
+        font-size: 18px;
       }
       .socialMediaImage {
         display: flex;
@@ -466,7 +467,6 @@
     .vendorExpertiseContainer {
       width: 50%;
       color: $bgBody;
-      font-size: 18px;
       p {
         padding-bottom: 10px;
       }
@@ -477,7 +477,7 @@
         .vendorExpertise {
           // width: fit-content;
           padding: 8px 16px;
-          background: #292f2f;
+          background: $secondary;
           border-radius: 3px;
           color: $white;
         }
@@ -522,6 +522,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
   }
@@ -548,6 +549,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
 
@@ -568,6 +570,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
   }
@@ -595,6 +598,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
 
@@ -616,6 +620,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
   }
@@ -669,15 +674,15 @@
 }
 .lineContainer {
   display: flex;
-  gap: 10px;
-  .heading {
+  justify-content: space-between;
+   .heading {
     padding: 10px 0px;
   }
   .quantity {
     display: flex;
     justify-content: center;
     gap: 8px;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 4px;
     background: transparent;
     border: 1px solid $secondaryWhite;
@@ -692,6 +697,9 @@
     padding: 8px 16px;
     background: $secondaryWhite;
     border-radius: 4px;
+  }
+  .lineInput{
+    padding: 8px;
   }
 }
 .addAnotherItem {
@@ -809,8 +817,8 @@
     border: 1px solid #747474;
     border-radius: 4px;
     text-align: center;
-    width: 48px;
-    margin-top: 20px;
+    padding: 7px 0px;
+    margin-top: 10px;
   }
 }
 
@@ -834,16 +842,22 @@
     margin-bottom: 8px;
   }
   .input2 {
-    .uploadImage {
-      // height: 120px;
-      // border: 1px dashed #747474;
-      margin-top: 8px;
+    margin-bottom: 5px;
+    .uploadButton {
+      display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        align-items: center;
+        gap: 15px;
+        color: $white;
+        background-color: $secondary;
+        border: 1px dashed $secondaryWhite;
+        padding-top: 10px;
+        padding: 25px 15px;
+        margin-top: 8px;
 
-      .uploadButton {
-        height: 120px;
-        border: none;
-        border: 1px dashed #747474 !important;
-      }
     }
   }
 
@@ -865,6 +879,7 @@
       padding-right: 15px;
       border-radius: 5px;
       margin-top: 8px;
+      cursor: pointer;
     }
   }
 }
@@ -891,6 +906,7 @@
       padding-left: 15px;
       padding-right: 15px;
       border-radius: 5px;
+      cursor: pointer;
     }
   }
 }
@@ -921,7 +937,7 @@
     outline: none;
     padding-left: 16px;
     color: $white;
-    font-size: 18px;
+    // font-size: 18px;
   }
   textarea {
     height: auto;
@@ -939,7 +955,7 @@
     outline: none;
     padding-left: 16px;
     color: $white;
-    font-size: 18px;
+    // font-size: 18px;
   }
   .title {
     margin-bottom: 10px;
@@ -950,10 +966,10 @@
   margin-top: 8px;
 }
 .singleProfileContainer {
-  // width: 442px;;
+  max-height: 146px;
   padding: 16px;
   background: #1a1a1a;
-  border: 1px solid #292f2f;
+  border: 1px solid $secondary;
   border-radius: 4px;
   .singleProfileMain {
     display: flex;
@@ -1001,7 +1017,7 @@
   // width: 442px;
   height: 146px;
   background: #1a1a1a;
-  border: 1px solid #292f2f;
+  border: 1px solid $secondary;
   border-radius: 4px;
   display: flex;
   justify-content: center;
@@ -1013,13 +1029,14 @@
     align-items: center;
     gap: 15px;
     color: white;
-    background-color: #292f2f;
+    background-color: $secondary;
     border: none;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 15px;
     padding-right: 15px;
     border-radius: 5px;
+    cursor: pointer;
   }
 }
 
@@ -1197,3 +1214,8 @@
     }
   }
 }
+ .hr {
+   background-color: $secondary;
+   height: 1px;
+   margin: 10px 0px;
+ }

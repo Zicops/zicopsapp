@@ -45,6 +45,7 @@ const AddLineItem = () => {
               inputName: 'rate',
               placeholder: '5000'
             }}
+            inputClass={`${styles.lineInput}`}
           />
         </div>
         <div>

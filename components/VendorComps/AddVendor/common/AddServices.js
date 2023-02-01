@@ -211,9 +211,9 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         open={languagePopupState}
         popUpState={[languagePopupState, setLanguagePopupState]}
         size="small"
+        title="Add language"
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add' }}>
-        <p>Add Language/s</p>
         {VENDOR_LANGUAGES.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
@@ -226,9 +226,9 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         open={opdeliverablePopupState}
         popUpState={[opdeliverablePopupState, setOPDeliverablePopupState]}
         size="medium"
+        title="Add O/P deliverable formats"
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add' }}>
-        <h2>Add O/P deliverable formats</h2>
         <h4>Select Format</h4>
         {VENDOR_FILE_FORMATS.map((data, index) => {
           return (

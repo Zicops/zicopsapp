@@ -21,6 +21,24 @@ export function getVendorObject(data) {
     vendorId: data?.vendorId || ''
   };
 }
+export const VendorProfileAtom = atom({
+  key: 'vendorProfile',
+  default: getProfileObject()
+});
+
+export function getProfileObject(data) {
+  return {
+    profileId: data?.profileId || '',
+    firstName: data?.firstName || '',
+    lastName: data?.lastName || '',
+    email: data?.email || '',
+    contactNumber: data?.contactNumber || '',
+    description: data?.description || '',
+    profileImage: data?.profileImage || null,
+    experienceYear: data?.experienceYear || null,
+    isSpeaker: data?.isSpeaker || false
+  };
+}
 
 // export const VendorServicesAtom = atom({
 //   key: 'vendorServicesState',

@@ -1,9 +1,45 @@
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import React from 'react';
+import { changeHandler } from '@/helper/common.helper';
+import React, { useState } from 'react';
 import styles from '../vendorComps.module.scss';
+
+const optionEmploymentTypeArray = [
+  { value: 'Full-time', label: 'Full-time' },
+  { value: 'Part-time', label: 'Part-time' },
+  { value: 'Self employed', label: 'Self employed' },
+  { value: 'Freelance', label: 'Freelance' },
+  { value: 'Internship', label: 'Internship' },
+  { value: 'Trainee', label: 'Trainee' }
+];
+const optionLocationTypeArray = [
+  { value: 'Hybrid', label: 'Hybrid' },
+  { value: 'Remote', label: 'Remote' },
+  { value: 'On-site', label: 'On-site' }
+];
+
+const optionMonthArray = [
+  { value: 'January', label: 'January' },
+  { value: 'February', label: 'February' },
+  { value: 'March', label: 'March' },
+  { value: 'April', label: 'April' },
+  { value: 'May', label: 'May' },
+  { value: 'July', label: 'July' },
+  { value: 'August', label: 'August' },
+  { value: 'September', label: 'September' },
+  { value: 'October', label: 'October' },
+  { value: 'November', label: 'November' },
+  { value: 12, label: 'December' }
+];
 const AddExpriences = () => {
+  const [employmentType, setEmploymentType] = useState(null);
+  const [locationType, setLocationType] = useState(null);
+  const [startMonth, setStartMonth] = useState(null);
+  const [endMonth, setEndMonth] = useState(null);
+  const [title, setTitle] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [location, setLocation] = useState('');
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>
@@ -11,10 +47,10 @@ const AddExpriences = () => {
         <LabeledInput
           inputOptions={{
             inputName: 'vendorAddress',
-            placeholder: 'Enter title'
-            // value: vendorData.vendorAddress
+            placeholder: 'Enter title',
+            value: title
           }}
-          //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+          changeHandler={(e) => setTitle(e.target.value)}
         />
       </div>
       <div className={`${styles.inputContainer}`}>
@@ -23,19 +59,22 @@ const AddExpriences = () => {
           <LabeledInput
             inputOptions={{
               inputName: 'vendorAddress',
-              placeholder: 'Enter company name'
-              // value: vendorData.vendorAddress
+              placeholder: 'Enter company name',
+              value: companyName
             }}
-            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => setCompanyName(e.target.value)}
           />
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Employment type: </label>
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'year',
-              placeholder: 'Select employment type'
+              inputName: 'employment type',
+              placeholder: 'Select employment type',
+              value: employmentType,
+              options: optionEmploymentTypeArray
             }}
+            changeHandler={(val) => setEmploymentType(val)}
             styleClass={styles.dropDownMain}
           />
         </div>
@@ -44,10 +83,10 @@ const AddExpriences = () => {
           <LabeledInput
             inputOptions={{
               inputName: 'vendorAddress',
-              placeholder: 'Enter title'
-              // value: vendorData.vendorAddress
+              placeholder: 'Ex. Pune, Maharashtra',
+              value: location
             }}
-            //   changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => setLocation(e.target.value)}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -55,8 +94,11 @@ const AddExpriences = () => {
           <LabeledDropdown
             dropdownOptions={{
               inputName: 'year',
-              placeholder: 'Select location type'
+              placeholder: 'Select location type',
+              value: locationType,
+              options: optionLocationTypeArray
             }}
+            changeHandler={(val) => setLocationType(val)}
             styleClass={styles.dropDownMain}
           />
         </div>
@@ -76,8 +118,11 @@ const AddExpriences = () => {
           <LabeledDropdown
             dropdownOptions={{
               inputName: 'Month',
-              placeholder: 'Month'
+              placeholder: 'Month',
+              value: startMonth,
+              options: optionMonthArray
             }}
+            changeHandler={(val) => setStartMonth(val)}
             styleClass={styles.dropDownMain}
           />
           <LabeledDropdown
@@ -94,8 +139,11 @@ const AddExpriences = () => {
             <LabeledDropdown
               dropdownOptions={{
                 inputName: 'Month',
-                placeholder: 'Month'
+                placeholder: 'Month',
+                value: endMonth,
+                options: optionMonthArray
               }}
+              changeHandler={(val) => setEndMonth(val)}
               styleClass={styles.dropDownMain}
             />
             <LabeledDropdown
