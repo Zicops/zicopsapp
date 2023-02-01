@@ -40,7 +40,6 @@ jobs:
   approval_staging:
     needs: docker_build_check
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
     - name: Get Approvals for Staging Deployment
       uses: trstringer/manual-approval@v1.8.0
