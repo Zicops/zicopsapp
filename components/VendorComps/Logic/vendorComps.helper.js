@@ -4,56 +4,64 @@ export const myVendors = [
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '1',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '2',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '3',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '4',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '5',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '6',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '7',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   }
 ];
 
@@ -632,4 +640,23 @@ export const subCat = [
   }
 ];
 
-export const serviceType = ['Subject Matter Expertise', 'Training', 'Content Development', 'Speakers'];
+export const addVendorCourse = [
+  {
+    img: '/images/sample-vendor-course.png',
+    name: 'a1'
+  },
+  {
+    img: '/images/sample-vendor-course.png',
+    name: 'a1'
+  },
+  {
+    img: '/images/sample-vendor-course.png',
+    name: 'a1'
+  }
+];
+export const serviceType = [
+  'Subject Matter Expertise',
+  'Training',
+  'Content Development',
+  'Speakers'
+];

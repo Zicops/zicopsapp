@@ -22,7 +22,7 @@ export default function ManageVendor() {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/admin/vendor/manage-vendor/addVendor');
+    router.push('/admin/vendor/manage-vendor/add-vendor');
   };
 
   return (

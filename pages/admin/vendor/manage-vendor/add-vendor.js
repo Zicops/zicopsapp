@@ -12,6 +12,11 @@ import AddVendorProfile from '@/components/VendorComps/AddVendorProfile';
 import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
 import VendorOrders from '@/components/VendorComps/VendorOrders';
 import styles from './manageVendor.module.scss';
+import AdminHeader from '@/components/common/AdminHeader';
+import MainBodyBox from '@/components/common/MainBodyBox';
+import MainBody from '@/components/common/MainBody';
+import Button from '@/common/Button';
+
 export default function VendorInfo() {
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
@@ -44,27 +49,29 @@ export default function VendorInfo() {
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
-      <div style={{ height: '10vh', marginTop: '70px' }}>
-        <p style={{ color: 'white', marginTop: '70px', fontSize: '30px' }}>
-          Add Vendor . Organisation
-        </p>
-      </div>
-      <div className={`${styles.manageVendorBody}`}>
-        <TabContainer
-          tabData={tabData}
-          tab={tab}
-          setTab={setTab}
-          footerObj={{
-            showFooter: false
-          }}
-          customStyles={{ height: '100%' }}
-        />
-        <div className={`${styles.manageVendorButton}`}>
-          <button>View Page</button>
-          <button>Update Vendor</button>
-          <button className={`${styles.cancelButton}`}>Cancel</button>
-        </div>
-      </div>
+      <MainBody>
+        <AdminHeader title="Add Vendor" />
+
+        <MainBodyBox>
+          <TabContainer
+            tabData={tabData}
+            tab={tab}
+            setTab={setTab}
+            footerObj={{
+              showFooter: true
+            }}>
+            <div className={`${styles.previewButtonContainer}`}>
+              <Button
+                clickHandler={async () => {
+                  await saveCourseData(false, 0, false);
+                  router.push(`/preview?courseId=${fullCourse.id}`);
+                }}
+                text="View Page"
+              />
+            </div>
+          </TabContainer>
+        </MainBodyBox>
+      </MainBody>
     </>
   );
 }
