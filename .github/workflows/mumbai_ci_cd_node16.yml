@@ -49,6 +49,7 @@ jobs:
          minimum-approvals: 1
          issue-title: "Deploying ZicopsApp to staging after a fresh build"
          exclude-workflow-initiator-as-approver: false
+         timeout-minutes: 5
   build_push_image:
     needs: approval_staging
     runs-on: ubuntu-latest
@@ -121,6 +122,7 @@ jobs:
          minimum-approvals: 1
          issue-title: "Deploying to zicops one production cluster"
          exclude-workflow-initiator-as-approver: false
+         timeout-minutes: 5
 
   deploy_production:
     needs: approval_production
