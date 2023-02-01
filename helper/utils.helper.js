@@ -288,3 +288,20 @@ export function isDatesSame(date1 = new Date(), date2 = new Date()) {
 export function getCurrentHost() {
   return process.browser && window?.location?.host ? window.location.host : 'zicops.com';
 }
+
+export function logger() {
+  const pub = {};
+  if (!process.browser) return null;
+  if (!window?.consoleLog) window.consoleLog = console.log;
+
+  pub.enableLogger = function enableLogger() {
+    console.log = window?.consoleLog;
+  };
+
+  pub.disableLogger = function disableLogger() {
+    if (!window?.consoleLog) window.consoleLog = console.log;
+    console.log = function () {};
+  };
+
+  return pub;
+}
