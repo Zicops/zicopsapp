@@ -29,10 +29,12 @@ export default function Nav() {
   const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
+
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [showNotification, setShowNotification] = useState(false);
   const { OrgDetails } = useUserCourseData();
+
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
