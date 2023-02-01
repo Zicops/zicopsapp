@@ -28,25 +28,32 @@ export default function FeatureFlagsLayout({ children }) {
       const _featureFlags = structuredClone(featureFlags || {});
       if (_featureFlags.hasOwnProperty(e.key)) {
         _featureFlags[e.key] = e.value;
+        setFeatureFlags((prev) => ({ ...prev, ..._featureFlags }));
       }
-
-      setFeatureFlags((prev) => ({ ...prev, ..._featureFlags }));
     };
 
     // listen for localstorage change
     document.addEventListener('itemInserted', localStorageSetHandler, false);
     window.enableDevMode = enableDevMode;
 
+    const isDev = localStorage.getItem('isDev') === 'true';
+    enableDevMode(isDev);
+
     return () => document.removeEventListener('itemInserted', localStorageSetHandler);
   }, []);
 
   function enableDevMode(isEnable = true) {
     // enable dev mode for Zicops
-    // this will enable console logs
+    // in dev mode all the console logs will be visible
+    // intended to test features and its functionality after deployed
+    if (!isEnable) {
+      setFeatureFlags((prev) => ({ ...prev, isDev: false }));
+      return localStorage.removeItem('isDev');
+    }
 
     localStorage.setItem('isDev', isEnable);
+    logger()?.enableLogger();
 
-    if (isEnable) logger()?.enableLogger();
     // https://www.telerik.com/blogs/how-to-style-console-log-contents-in-chrome-devtools
     console.log(
       '%c Dev Mode Enabled',
