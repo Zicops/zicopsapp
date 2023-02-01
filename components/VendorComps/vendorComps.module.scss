@@ -319,7 +319,6 @@
         color: white;
         background-color: $secondary;
         border: 1px dashed $secondaryWhite;
-        padding-top: 10px;
         padding: 15px;
         margin-top: 8px;
       }
@@ -1054,6 +1053,14 @@
   float: right;
 }
 
+.sampleName {
+  margin-top: 15px;
+
+  input {
+    margin-top: 10px;
+  }
+}
+
 .descriptionSample {
   display: flex;
   gap: 15px;
@@ -1072,17 +1079,27 @@
   .sample {
     width: 50%;
 
-    .uploadSampleFile {
-      margin-top: 10px;
-      height: 144px;
+    .button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      background-color: $secondary;
+      border: 1px dashed $secondaryWhite;
+      padding: 25px;
+      margin-top: 8px;
     }
   }
 }
 
-.fileFormatDropDown {
-  width: 25%;
-  margin-top: 10px;
-  border-radius: 5px;
+.file {
+  margin-top: 15px;
+  .fileFormatDropDown {
+    width: 25%;
+    margin-top: 10px;
+    border-radius: 5px;
+  }
 }
 
 .rateCurrencyUnit {

@@ -264,7 +264,7 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add' }}>
         <h1>Add Sample</h1>
-        <div>
+        <div className={`${styles.sampleName}`}>
           <label>Sample name:</label>
           <LabeledInput inputOptions={{ inputName: 'sampleName' }} />
         </div>
@@ -275,10 +275,10 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
           </div>
           <div className={`${styles.sample}`}>
             <label>Add sample file: </label>
-            <BrowseAndUpload styleClass={`${styles.uploadSampleFile}`} />
+            <BrowseAndUpload styleClassBtn={`${styles.button}`} title="Drag & Drop" />
           </div>
         </div>
-        <div>
+        <div className={`${styles.file}`}>
           <label>File type:</label>
           <LabeledDropdown
             dropdownOptions={{
