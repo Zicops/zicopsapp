@@ -1,5 +1,6 @@
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
+import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import React from 'react';
 const data = [
   {
@@ -155,7 +156,12 @@ const VendorOrders = () => {
   ];
   return (
     <>
-      <ZicopsTable columns={columns} tableHeight="70vh" showCustomSearch={true} data={data} />
+      <ZicopsTable
+        columns={columns}
+        tableHeight="70vh"
+        pageSize={getPageSizeBasedOnScreen()}
+        data={data}
+      />
     </>
   );
 };
