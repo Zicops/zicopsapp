@@ -78,7 +78,7 @@ jobs:
         docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
 
   deploy_staging:
-    needs: approval_staging
+    needs: build_push_image
     runs-on: ubuntu-latest
     env:
       GKE_CLUSTER: zicops-production-cost-one
