@@ -270,7 +270,7 @@
   }
 
   .input1 {
-    font-size: 18px;
+    // font-size: 18px;
     font-weight: 400;
     margin-top: 8px;
   }
@@ -284,7 +284,7 @@
     outline: none;
     padding-left: 16px;
     color: $white;
-    font-size: 18px;
+    // font-size: 18px;
   }
 
   .addressImageDiv {
@@ -415,7 +415,6 @@
       }
       span {
         color: $white;
-        font-size: 18px;
       }
       .profileEmail,
       .profileWebsite {
@@ -424,7 +423,7 @@
         padding-bottom: 5px;
         p {
           color: $bgBody;
-          font-size: 18px;
+          // font-size: 18px;
         }
       }
       .hr1 {
@@ -458,11 +457,11 @@
       padding-bottom: 20px;
       p {
         color: $bgBody;
-        font-size: 18px;
+        // font-size: 18px;
       }
       span {
         color: $white;
-        font-size: 20px;
+        font-size: 18px;
       }
       .socialMediaImage {
         display: flex;
@@ -473,7 +472,6 @@
     .vendorExpertiseContainer {
       width: 50%;
       color: $bgBody;
-      font-size: 18px;
       p {
         padding-bottom: 10px;
       }
@@ -530,6 +528,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
   }
@@ -556,6 +555,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
 
@@ -576,6 +576,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
   }
@@ -603,6 +604,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
 
@@ -624,6 +626,7 @@
         padding-right: 15px;
         border-radius: 5px;
         margin-top: 10px;
+        cursor: pointer;
       }
     }
   }
@@ -677,7 +680,7 @@
 }
 .lineContainer {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
    .heading {
     padding: 10px 0px;
   }
@@ -685,7 +688,7 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 4px;
     background: transparent;
     border: 1px solid $secondaryWhite;
@@ -700,6 +703,9 @@
     padding: 8px 16px;
     background: $secondaryWhite;
     border-radius: 4px;
+  }
+  .lineInput{
+    padding: 8px;
   }
 }
 .addAnotherItem {
@@ -817,8 +823,8 @@
     border: 1px solid #747474;
     border-radius: 4px;
     text-align: center;
-    width: 48px;
-    margin-top: 20px;
+    padding: 7px 0px;
+    margin-top: 10px;
   }
 }
 
@@ -873,6 +879,7 @@
       padding-right: 15px;
       border-radius: 5px;
       margin-top: 8px;
+      cursor: pointer;
     }
   }
 }
@@ -899,6 +906,7 @@
       padding-left: 15px;
       padding-right: 15px;
       border-radius: 5px;
+      cursor: pointer;
     }
   }
 }
@@ -929,7 +937,7 @@
     outline: none;
     padding-left: 16px;
     color: $white;
-    font-size: 18px;
+    // font-size: 18px;
   }
   textarea {
     height: auto;
@@ -947,7 +955,7 @@
     outline: none;
     padding-left: 16px;
     color: $white;
-    font-size: 18px;
+    // font-size: 18px;
   }
   .title {
     margin-bottom: 10px;
@@ -958,7 +966,7 @@
   margin-top: 8px;
 }
 .singleProfileContainer {
-  // width: 442px;;
+  max-height: 146px;
   padding: 16px;
   background: #1a1a1a;
   border: 1px solid #292f2f;
@@ -1028,6 +1036,7 @@
     padding-left: 15px;
     padding-right: 15px;
     border-radius: 5px;
+    cursor: pointer;
   }
 }
 
