@@ -40,6 +40,25 @@ export function getProfileObject(data) {
   };
 }
 
+export const VendorExpriencesAtom = atom({
+  key: 'vendorExpriences',
+  default: getExpriencesObject()
+});
+
+export function getExpriencesObject(data) {
+  return {
+    id: data?.id || '',
+    title: data?.title || '',
+    companyName: data?.companyName || '',
+    location: data?.location || '',
+    isWorking: data?.isWorking || false,
+    employeeType: data?.employeeType || '',
+    locationType: data?.locationType || '',
+    startMonth: data?.startMonth || '',
+    endMonth: data?.endMonth || ''
+  };
+}
+
 // export const VendorServicesAtom = atom({
 //   key: 'vendorServicesState',
 //   default: getVendorServicesObject()
