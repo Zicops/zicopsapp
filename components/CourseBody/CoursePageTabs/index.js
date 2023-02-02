@@ -9,9 +9,15 @@ const CoursePageTabs = forwardRef(
             <ul>
               {tabData.map((tab) => (
                 <li
-                  className={activeCourseTab == tab.name ? 'active' : ''}
+                  className={`${activeCourseTab == tab.name ? 'active' : ''} ${
+                    tab?.isDisabled ? 'disabled' : ''
+                  }`}
                   key={tab.name}
-                  onClick={() => setActiveTab(tab.name)}>
+                  onClick={() => {
+                    if (tab?.isDisabled) return;
+
+                    setActiveTab(tab.name);
+                  }}>
                   {tab.name}
                 </li>
               ))}
@@ -22,6 +28,9 @@ const CoursePageTabs = forwardRef(
         {/* move to .scss */}
         <style jsx>
           {`
+            .middle_tab .tabs li.disabled {
+              cursor: no-drop;
+            }
             .middle_tab {
               position: sticky;
               top: 70px;

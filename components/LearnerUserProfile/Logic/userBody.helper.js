@@ -13,7 +13,7 @@ export const tabs = [
   { name: 'About', comp: <UserAboutTab /> },
   { name: 'Cohort', comp: <UserCohortTab /> },
   { name: 'Courses', comp: <UserCoursesTab /> },
-  { name: 'Dashboard', comp: <UserLearningDashBoardTab /> },
+  { name: 'Dashboard', comp: <UserLearningDashBoardTab />, isDisabled: true },
   { name: 'Schedule', comp: <UserScheduleTab /> }
 ];
 
@@ -199,44 +199,43 @@ export const inviteTabData = [
     id: 1,
     firstName: 'Joy',
     lastName: 'Joy',
-    emailId:'abc@gmail.com'
+    emailId: 'abc@gmail.com'
   },
   {
     id: 2,
     firstName: 'Abhishek',
     lastName: 'Ghosh',
-    emailId:'xyz@gmail.com'
+    emailId: 'xyz@gmail.com'
   },
   {
     id: 3,
     firstName: 'Ankit',
     lastName: 'Joy',
-    emailId:'pqr@gmail.com'
-},
+    emailId: 'pqr@gmail.com'
+  },
   {
     id: 4,
     firstName: 'Sonali',
     lastName: 'Sonali',
-    emailId:'stu@gmail.com'
-},
+    emailId: 'stu@gmail.com'
+  },
   {
     id: 5,
     firstName: 'Lorem',
     lastName: 'Ipsum',
-    emailId:'efg@gmail.com'
+    emailId: 'efg@gmail.com'
   },
 
   {
     id: 6,
     firstName: 'Demo',
     lastName: 'Zicops',
-    emailId:'hij@gmail.com'
+    emailId: 'hij@gmail.com'
   },
   {
     id: 7,
     firstName: 'Vajresh',
     lastName: 'Joy',
-    emailId:'lmn@gmail.com'
+    emailId: 'lmn@gmail.com'
   }
-
-]
+];
