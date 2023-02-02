@@ -98,7 +98,8 @@ export function useHandleCohortMaster() {
     const bodyData = {
       user_name: '',
       lsp_name: sessionStorage?.getItem('lsp_name'),
-      cohort_name: cohortMasterData?.cohort_name
+      cohort_name: cohortMasterData?.cohort_name,
+      link: `${origin}/my-profile?tabName=Cohort`
     };
     const sendEmailBody = {
       to: emails,
