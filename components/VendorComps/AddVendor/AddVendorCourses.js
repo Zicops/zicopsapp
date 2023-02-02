@@ -1,9 +1,5 @@
+import { addVendorCourse } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
-import {
-  myVendors,
-  coursesVendor,
-  addVendorCourse
-} from '@/components/VendorComps/Logic/vendorComps.helper.js';
 
 export default function AddVendorCourses() {
   console.log(addVendorCourse);
