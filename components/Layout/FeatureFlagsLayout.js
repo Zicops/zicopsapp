@@ -52,11 +52,7 @@ export default function FeatureFlagsLayout({ children }) {
   }, []);
 
   useEffect(() => {
-    if (!featureFlags.isDemo)
-      return console.info(
-        '%c Demo Mode Disabled',
-        'font-weight: bold; font-size: 30px; color: red;'
-      );
+    if (!featureFlags.isDemo) return;
 
     console.info(
       '%c Demo Instance Activated',
@@ -92,6 +88,10 @@ export default function FeatureFlagsLayout({ children }) {
 
   function enableDemoInstance(isEnable = true) {
     console.clear();
+
+    if (!isEnable)
+      console.info('%c Demo Mode Disabled', 'font-weight: bold; font-size: 30px; color: red;');
+
     setFeatureFlags((prev) => ({ ...prev, isDev: false, isDemo: isEnable }));
   }
 
