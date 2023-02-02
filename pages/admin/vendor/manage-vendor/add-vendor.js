@@ -60,7 +60,8 @@ export default function VendorInfo() {
             footerObj={{
               showFooter: true,
               status: 'DRAFT'
-            }}>
+            }}
+            customStyles={['Courses', 'Orders'].includes(tab) ? { padding: '0px' } : {}}>
             <div className={`${styles.previewButtonContainer}`}>
               <Button
                 clickHandler={async () => {
