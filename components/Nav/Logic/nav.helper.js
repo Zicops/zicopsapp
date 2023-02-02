@@ -19,5 +19,5 @@ export const UserMenu = [
   { title: 'Events', link: '/events' },
   { title: 'Labs', link: '/labs' },
   { title: 'Exams', link: '/exams' },
-  { title: 'Community', link: '' }
+  { title: 'Community', link: '', isDisabled: true }
 ];

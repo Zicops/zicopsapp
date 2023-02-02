@@ -126,6 +126,15 @@ export default function Nav() {
                 const currentRoute = router?.route?.split('/')?.[2];
                 isActive = currentRoute?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
               }
+
+              // disabled links
+              if (val?.isDisabled)
+                return (
+                  <li className={styles.disabled}>
+                    <span>{val.title}</span>
+                  </li>
+                );
+
               return (
                 <Link href={val.link} key={key}>
                   <li className={isActive ? styles.active : ''}>
