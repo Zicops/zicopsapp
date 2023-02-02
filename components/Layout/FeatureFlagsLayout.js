@@ -1,6 +1,6 @@
 // components\Layout\FeatureFlagsLayout.js
 
-import { logger } from '@/helper/utils.helper';
+import { getCurrentHost, logger } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -28,7 +28,16 @@ export default function FeatureFlagsLayout({ children }) {
       const _featureFlags = structuredClone(featureFlags || {});
       if (_featureFlags.hasOwnProperty(e.key)) {
         _featureFlags[e.key] = e.value;
-        setFeatureFlags((prev) => ({ ...prev, ..._featureFlags }));
+        setFeatureFlags((prev) => {
+          if (
+            !prev?.isDemo &&
+            ['demo.zicops.com', 'staging.zicops.com', 'localhost:3000'].includes(getCurrentHost())
+          ) {
+            _featureFlags.isDemo = true;
+          }
+
+          return { ...prev, ..._featureFlags };
+        });
       }
     };
 
@@ -43,10 +52,13 @@ export default function FeatureFlagsLayout({ children }) {
   }, []);
 
   function enableDevMode(isEnable = true) {
+    console.clear();
     // enable dev mode for Zicops
     // in dev mode all the console logs will be visible
     // intended to test features and its functionality after deployed
+
     if (!isEnable) {
+      console.info('%c Dev Mode Disabled', 'font-weight: bold; font-size: 30px; color: red;');
       setFeatureFlags((prev) => ({ ...prev, isDev: false }));
       return localStorage.removeItem('isDev');
     }
