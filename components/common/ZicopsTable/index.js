@@ -1,4 +1,5 @@
 import { GridColumnMenuContainer, GridFilterMenuItem, SortGridMenuItems } from '@mui/x-data-grid';
+import { useRef } from 'react';
 import StyledDataGrid from '../../common/StyledDataGrid';
 import TableSearchComp from '../TableSearchComp';
 import {
@@ -36,12 +37,25 @@ const ZicopsTable = ({
   onPageChange = () => {},
   currentPage = null
 }) => {
+  const tableContainerRef = useRef(null);
+
+  const customProps = {};
+
+  const tableBody = process.browser
+    ? document.getElementsByClassName('MuiDataGrid-virtualScroller')?.[0]
+    : null;
+  const height = tableBody?.offsetHeight || null;
+
+  if (data?.length >= pageSize && height) customProps.rowHeight = height / pageSize;
+
   return (
     <>
       {!!showCustomSearch && <TableSearchComp {...searchProps} />}
 
       <div style={{ height: tableHeight }}>
         <StyledDataGrid
+          {...customProps}
+          ref={tableContainerRef}
           rows={data || []}
           columns={columns}
           style={customStyles}

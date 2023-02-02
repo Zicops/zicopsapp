@@ -3,10 +3,11 @@ import DeleteBtn from '@/components/common/DeleteBtn';
 import QuestionOptionView from '@/components/common/QuestionOptionView';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_QUESTION_BANK_QUESTIONS, queryClient } from '../../../API/Queries';
 import { getPageSizeBasedOnScreen, isWordIncluded } from '../../../helper/utils.helper';
 import { PopUpStatesAtomFamily } from '../../../state/atoms/popUp.atom';
@@ -27,6 +28,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
 
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('viewQuestions'));
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [qbQuestions, setQbQuestions] = useState([]);
@@ -151,7 +153,7 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
           </>
         );
       },
-      flex: 0.6
+      flex: isDev ? 0.7 : 0.6
     }
   ];
 
@@ -160,9 +162,9 @@ export default function QuestionsTable({ openEditQuestionMasterTab, isEdit }) {
       <ZicopsTable
         columns={columns}
         data={qbQuestions?.filter((question) => isWordIncluded(question?.Description, searchQuery))}
-        pageSize={getPageSizeBasedOnScreen()}
+        pageSize={isDev ? 5 : getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
-        tableHeight="60vh"
+        tableHeight={isDev ? '53vh' : '60vh'}
         loading={loading}
         showCustomSearch={true}
         searchProps={{ handleSearch: (val) => setSearchQuery(val), delayMS: 0 }}
