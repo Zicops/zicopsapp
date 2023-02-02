@@ -766,6 +766,12 @@
     color: $bgBody;
   }
 }
+.checkBoxLabel{
+  label{
+    font-size: 18px;
+
+  }
+}
 
 .OrderDetails {
   display: flex;
@@ -773,6 +779,7 @@
   padding-top: 10px;
   .contentName {
     color: $bgBody;
+    padding-left: 35px;
   }
   .OrderValue {
     display: flex;

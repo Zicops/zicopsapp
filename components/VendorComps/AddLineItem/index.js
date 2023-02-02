@@ -6,7 +6,9 @@ import styles from '../vendorComps.module.scss';
 const AddLineItem = () => {
   return (
     <div>
-      <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" />
+      <div className={`${styles.checkBoxLabel}`}>
+        <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" />
+      </div>
       <div className={`${styles.lineContainer}`}>
         <div>
           <p className={`${styles.heading}`}>Description</p>

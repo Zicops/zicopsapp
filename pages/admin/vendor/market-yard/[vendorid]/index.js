@@ -200,7 +200,7 @@ export default function VendorInfo() {
         size="small"
         isMarketYard={true}
         closeBtn={{ name: 'Back to Market Yard', handleClick: backMarketYardHandler }}
-        submitBtn={{ name: 'Go to Marketplace', handleClick: onOrderCompleteHandler }}>
+        submitBtn={{ name: 'Go to My Vendors', handleClick: onOrderCompleteHandler }}>
         <CompleteOrder />
         <div className={`${styles.hr}`}></div>
       </VendorPopUp>
