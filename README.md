@@ -77,7 +77,7 @@ compoennts/ pageComponent/subcompoent1/subcomp2
 
 ## Global classes
 
-class name should be in kebab case (class-name)
+Class name should be in kebab case (class-name)
 
 ## Check HTML box model
 
