@@ -10,6 +10,10 @@ export default function FeatureFlagsLayout({ children }) {
   const [featureFlags, setFeatureFlags] = useRecoilState(FeatureFlagsAtom);
   const router = useRouter();
 
+  const isDemoInstance = ['demo.zicops.com', 'staging.zicops.com', 'localhost:3000'].includes(
+    getCurrentHost()
+  );
+
   // update feature flags based on localstorage
   useEffect(() => {
     // override default setItem method of localstorage
@@ -29,12 +33,7 @@ export default function FeatureFlagsLayout({ children }) {
       if (_featureFlags.hasOwnProperty(e.key)) {
         _featureFlags[e.key] = e.value;
         setFeatureFlags((prev) => {
-          if (
-            !prev?.isDemo &&
-            ['demo.zicops.com', 'staging.zicops.com', 'localhost:3000'].includes(getCurrentHost())
-          ) {
-            _featureFlags.isDemo = true;
-          }
+          if (!prev?.isDemo && isDemoInstance) _featureFlags.isDemo = true;
 
           return { ...prev, ..._featureFlags };
         });
@@ -44,12 +43,26 @@ export default function FeatureFlagsLayout({ children }) {
     // listen for localstorage change
     document.addEventListener('itemInserted', localStorageSetHandler, false);
     window.enableDevMode = enableDevMode;
+    window.enableDemoInstance = enableDemoInstance;
 
     const isDev = localStorage.getItem('isDev') === 'true';
     enableDevMode(isDev);
 
     return () => document.removeEventListener('itemInserted', localStorageSetHandler);
   }, []);
+
+  useEffect(() => {
+    if (!featureFlags.isDemo)
+      return console.info(
+        '%c Demo Mode Disabled',
+        'font-weight: bold; font-size: 30px; color: red;'
+      );
+
+    console.info(
+      '%c Demo Instance Activated',
+      'font-weight: bold; font-size: 30px; color: #6bcfcf;'
+    );
+  }, [featureFlags.isDemo]);
 
   function enableDevMode(isEnable = true) {
     console.clear();
@@ -58,8 +71,12 @@ export default function FeatureFlagsLayout({ children }) {
     // intended to test features and its functionality after deployed
 
     if (!isEnable) {
-      console.info('%c Dev Mode Disabled', 'font-weight: bold; font-size: 30px; color: red;');
-      setFeatureFlags((prev) => ({ ...prev, isDev: false }));
+      setFeatureFlags((prev) => {
+        if (prev.isDev)
+          console.info('%c Dev Mode Disabled', 'font-weight: bold; font-size: 30px; color: red;');
+
+        return { ...prev, isDev: false, isDemo: isDemoInstance };
+      });
       return localStorage.removeItem('isDev');
     }
 
@@ -71,6 +88,11 @@ export default function FeatureFlagsLayout({ children }) {
       '%c Dev Mode Enabled',
       'font-weight: bold; font-size: 50px;color: red; text-shadow: 3px 3px 0 rgb(217,31,38) , 6px 6px 0 rgb(226,91,14) , 9px 9px 0 rgb(245,221,8) , 12px 12px 0 rgb(5,148,68) , 15px 15px 0 rgb(2,135,206) , 18px 18px 0 rgb(4,77,145) , 21px 21px 0 rgb(42,21,113)'
     );
+  }
+
+  function enableDemoInstance(isEnable = true) {
+    console.clear();
+    setFeatureFlags((prev) => ({ ...prev, isDev: false, isDemo: isEnable }));
   }
 
   return <>{children}</>;
