@@ -1,11 +1,10 @@
-import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import PopUp from '@/components/common/PopUp';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
-import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
+import { sendEmail, sendNotification } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -16,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../userComps.module.scss';
 import addUserData from '../Logic/addUserData';
-import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 import useCohortUserData from '../Logic/useCohortUserData';
 
 import AddUsers from './AddUsers';
