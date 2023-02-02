@@ -1,4 +1,4 @@
-import { vendorDiscussionData } from 'pages/admin/vendor/discussion/chat.helper';
+import { vendorDiscussionData } from '@/components/VendorComps/discussion/chat.helper';
 
 
 import { atom } from 'recoil';

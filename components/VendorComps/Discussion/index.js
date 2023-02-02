@@ -5,7 +5,8 @@ import ChatMessageBlock from './ChatMessageBlock';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { DiscussionAtom } from '@/state/atoms/discussion.atoms';
 import ChatHead from './ChatHead';
-const CourseBodyChat = () => {
+
+export default function Discussion() {
   const [message, setMessage] = useState('');
   const [messageArr, setMessageArr] = useRecoilState(DiscussionAtom);
   const [sendMessage, setSendMessage] = useState(false);
@@ -73,26 +74,31 @@ const CourseBodyChat = () => {
   // console.log(replyMessageData);
   return (
     <div className={`${style.discussion}`}>
-    <div className={`${style.discussion_container}`}>
-      <ChatHead company_logo = {"/images/svg/unsplash.svg"} company_name= {"ABC Learning Pvt. Ltd."} company_type={"SME"} company_training_type={"Classroom Training"} company_work={"Content Development"} />
-     
-      <div className={`${style.chat_text_container}`}>
-        {replies?.map((data) => {
-          let isRight = data?.parent?.user?.id === userDetails?.id;
-          return (
-            <>
-              <ChatMessageBlock message={data?.parent} isLeft={!isRight} />
-              {/* {data?.replies &&
+      <div className={`${style.discussion_container}`}>
+        <ChatHead
+          company_logo={'/images/svg/unsplash.svg'}
+          company_name={'ABC Learning Pvt. Ltd.'}
+          company_type={'SME'}
+          company_training_type={'Classroom Training'}
+          company_work={'Content Development'}
+        />
+
+        <div className={`${style.chat_text_container}`}>
+          {replies?.map((data) => {
+            let isRight = data?.parent?.user?.id === userDetails?.id;
+            return (
+              <>
+                <ChatMessageBlock message={data?.parent} isLeft={!isRight} />
+                {/* {data?.replies &&
                 data?.replies?.map((reply) => (
                   <ChatMessageBlock message={reply} isLeft={!isRight} isReply={true} />
                 ))} */}
-            </>
-          );
-        })}
+              </>
+            );
+          })}
+        </div>
+        <div></div>
       </div>
-      <div>
-      </div>
-    </div>
       <div className={`${style.discussion_form}`}>
         <div className={`${style.file_image}`}>
           <img src="/images/svg/file.svg" alt="" />
@@ -100,25 +106,22 @@ const CourseBodyChat = () => {
         <div className={`${style.discussion_input}`}>
           <div className={`${style.user_image}`}>
             <img src={userDetails?.photo_url} alt="" />
-
           </div>
-            <input
-              className={`${style.send_input}`}
-              placeholder="Type a message ..."
-              value={message}
-              onChange={onMessageHandler}
-              onKeyDown={handleKeyPress}
-            />
-          </div>
-          <button className={`${style.discussion_button}`}>
-            <div className={`${style.send_image}`} onClick={sendMessageHandler}>
+          <input
+            className={`${style.send_input}`}
+            placeholder="Type a message ..."
+            value={message}
+            onChange={onMessageHandler}
+            onKeyDown={handleKeyPress}
+          />
+        </div>
+        <button className={`${style.discussion_button}`}>
+          <div className={`${style.send_image}`} onClick={sendMessageHandler}>
             <img src="/images/svg/send.svg" alt="" />
-            </div>
-            <span>Send</span>
-          </button>
+          </div>
+          <span>Send</span>
+        </button>
       </div>
-      </div>
+    </div>
   );
-};
-
-export default CourseBodyChat;
+}

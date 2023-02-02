@@ -1,22 +1,18 @@
-import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import { useRecoilState } from 'recoil';
-import { VendorServicesAtom } from '@/state/atoms/vendor.atoms';
-import { changeHandler } from '@/helper/common.helper';
-import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-import styles from '../../vendorComps.module.scss';
-import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
-import IconBtn from '@/components/common/IconBtn';
-import IconButton from '@/components/common/IconButton';
-import { useState } from 'react';
-import VendorPopUp from '../../VendorPopUp';
-import SearchBar from '@/components/common/FormComponents/SearchBar';
-import Search from '@/components/Search';
-import { cat, subCat } from '../../Logic/vendorComps.helper';
-import AddVendorProfile from '../../AddVendorProfile';
-import ProfileManageVendor from '../../ProfileMangeVendor';
-import { VENDOR_LANGUAGES, VENDOR_FILE_FORMATS } from '@/helper/constants.helper';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
+import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
+import SearchBar from '@/components/common/FormComponents/SearchBar';
+import IconButton from '@/components/common/IconButton';
+import { changeHandler } from '@/helper/common.helper';
+import { VENDOR_FILE_FORMATS, VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import { useState } from 'react';
+import AddVendorProfile from '../../AddVendorProfile';
+import { cat, subCat } from '../../Logic/vendorComps.helper';
+import ProfileManageVendor from '../../ProfileMangeVendor';
+import styles from '../../vendorComps.module.scss';
+import VendorPopUp from '../../VendorPopUp';
 // export default function AddServices({ data, setData = () => {}, inputName }) {
 //   const [popupState, setPopupState] = useState(false);
 //   const [isOpenProflie, setIsOpenProfile] = useState(false);
@@ -264,7 +260,7 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add' }}>
         <h1>Add Sample</h1>
-        <div>
+        <div className={`${styles.sampleName}`}>
           <label>Sample name:</label>
           <LabeledInput inputOptions={{ inputName: 'sampleName' }} />
         </div>
@@ -275,10 +271,10 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
           </div>
           <div className={`${styles.sample}`}>
             <label>Add sample file: </label>
-            <BrowseAndUpload styleClass={`${styles.uploadSampleFile}`} />
+            <BrowseAndUpload styleClassBtn={`${styles.button}`} title="Drag & Drop" />
           </div>
         </div>
-        <div>
+        <div className={`${styles.file}`}>
           <label>File type:</label>
           <LabeledDropdown
             dropdownOptions={{

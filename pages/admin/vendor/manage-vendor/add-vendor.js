@@ -58,7 +58,8 @@ export default function VendorInfo() {
             tab={tab}
             setTab={setTab}
             footerObj={{
-              showFooter: true
+              showFooter: true,
+              status: 'DRAFT'
             }}>
             <div className={`${styles.previewButtonContainer}`}>
               <Button

@@ -120,7 +120,7 @@ export default function VendorInfo() {
           footerObj={{
             showFooter: false
           }}
-          customStyles={{ height: '100%' }}
+          customStyles={{ height: '100%', overflow: 'unset' }}
         />
       </MainBody>
       <VendorPopUp
