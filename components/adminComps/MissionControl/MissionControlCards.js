@@ -44,7 +44,6 @@ const Card = ({ image, text, width, tooltipTitle, isDisabled = false }) => {
             align-items: center;
             border-radius: 20px;
             box-shadow: 5px -5px 10px 0 #86868640, -5px 5px 10px 0 #00000080;
-            margin: 20px;
             cursor: pointer;
           }
           .card.disabled {
