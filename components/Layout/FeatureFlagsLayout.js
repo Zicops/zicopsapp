@@ -92,7 +92,7 @@ export default function FeatureFlagsLayout({ children }) {
     if (!isEnable)
       console.info('%c Demo Mode Disabled', 'font-weight: bold; font-size: 30px; color: red;');
 
-    setFeatureFlags((prev) => ({ ...prev, isDev: false, isDemo: isEnable }));
+    setFeatureFlags((prev) => ({ ...prev, isDemo: isEnable }));
   }
 
   return <>{children}</>;
