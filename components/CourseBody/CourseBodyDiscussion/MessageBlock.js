@@ -5,7 +5,12 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { DiscussionReplyAtom, MessageAtom, ReplyAtom } from '@/state/atoms/discussion.atoms';
 import RTE2 from '@/components/common/FormComponents/RTE2';
-import { ADD_COURSE_DISCUSSION, UPDATE_COURSE_DISCUSSION, UPDATE_LIKE_DISLIKE, mutationClient } from '@/api/Mutations';
+import {
+  ADD_COURSE_DISCUSSION,
+  UPDATE_COURSE_DISCUSSION,
+  UPDATE_LIKE_DISLIKE,
+  mutationClient
+} from '@/api/Mutations';
 import { GET_DISCUSSION_REPLY, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { ModuleAtom } from '@/state/atoms/module.atoms';
@@ -31,9 +36,9 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   }, []);
 
   useEffect(() => {
-      setIsLike(message?.Likes?.includes(userDetails?.id));
-      setIsDisLike(message?.Dislike?.includes(userDetails?.id));
-  }, [message?.Likes , message?.Dislike]);
+    setIsLike(message?.Likes?.includes(userDetails?.id));
+    setIsDisLike(message?.Dislike?.includes(userDetails?.id));
+  }, [message?.Likes, message?.Dislike]);
 
   const onReplyHandler = () => {
     setShowInput(true);
@@ -69,9 +74,9 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       mutationClient
     );
     console.log('updateMessage', updateMessage);
-    setMessageArr([{...data, IsPinned: true}, ...nonPinedMessages]);
+    setMessageArr([{ ...data, IsPinned: true }, ...nonPinedMessages]);
     console.log('messageArr', messageArr);
-    setFilterData([{...data, IsPinned: true}, ...nonPinedMessages]);
+    setFilterData([{ ...data, IsPinned: true }, ...nonPinedMessages]);
   };
 
   const onUnpinHandler = async (data) => {
@@ -88,7 +93,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       {},
       mutationClient
     );
-    const newUpdateMsgArr = [...filterMessages, {...data, IsPinned: false}];
+    const newUpdateMsgArr = [...filterMessages, { ...data, IsPinned: false }];
     const pinnedData = newUpdateMsgArr?.filter((data) => data?.IsPinned);
     const nonPinnedData = newUpdateMsgArr?.filter((data) => !data?.IsPinned);
     let newArray = [...nonPinnedData];
@@ -109,7 +114,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       UPDATE_LIKE_DISLIKE,
       {
         discussionId: data?.DiscussionId,
-        input: "likes",
+        input: 'likes',
         UserId: userDetails?.id
       },
       {},
@@ -127,7 +132,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       setIsLike(true);
       setIsDisLike(false);
       setFilterData([..._messageArr]);
-    } 
+    }
     if (!replyData.length) return;
     const _replyData = structuredClone(replyData);
     const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
@@ -139,7 +144,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       setReplyData([..._replyData]);
     }
   };
-  
+
   const onRemoveLikeHandler = async (data) => {
     const filterLikes = data?.Likes?.filter((id) => id !== userDetails?.id);
     const removeLikes = filterLikes || [];
@@ -147,7 +152,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       UPDATE_LIKE_DISLIKE,
       {
         discussionId: data?.DiscussionId,
-        input: "likes",
+        input: 'likes',
         UserId: userDetails?.id
       },
       {},
@@ -155,9 +160,9 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     );
     console.log('updateMessage', updateMessage);
     const _messageArr = structuredClone(messageArr);
-   
+
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
-     if (index >= 0) {
+    if (index >= 0) {
       _messageArr[index].Likes = removeLikes;
       setMessageArr(_messageArr);
       setIsLike(false);
@@ -179,16 +184,16 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     const messageDisLikes = [...(data?.Dislike || []), userDetails?.id];
     const messageLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
-     UPDATE_LIKE_DISLIKE,
+      UPDATE_LIKE_DISLIKE,
       {
         discussionId: data?.DiscussionId,
-        input: "dislikes",
+        input: 'dislikes',
         UserId: userDetails?.id
       },
       {},
       mutationClient
     );
-  
+
     const _messageArr = structuredClone(messageArr);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
@@ -198,7 +203,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       setIsDisLike(true);
       setIsLike(false);
       setFilterData([..._messageArr]);
-    } 
+    }
     if (!replyData.length) return;
     const _replyData = structuredClone(replyData);
     const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
@@ -216,16 +221,16 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
     console.log('filterMessages', filterMessages);
     const removeDisLikes = filterMessages || [];
     const updateMessage = await loadQueryDataAsync(
-     UPDATE_LIKE_DISLIKE,
+      UPDATE_LIKE_DISLIKE,
       {
         discussionId: data?.DiscussionId,
-        input: "dislikes",
+        input: 'dislikes',
         UserId: userDetails?.id
       },
       {},
       mutationClient
     );
-   
+
     const _messageArr = structuredClone(messageArr);
     const index = messageArr?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
     if (index >= 0) {
@@ -233,8 +238,8 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       setMessageArr(_messageArr);
       setIsDisLike(false);
       setFilterData([..._messageArr]);
-    } 
-    
+    }
+
     if (!replyData.length) return;
     const _replyData = structuredClone(replyData);
     const index2 = replyData?.findIndex((m) => m?.DiscussionId === data?.DiscussionId);
@@ -257,10 +262,10 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       queryClient
     );
     console.log('repliesArr', repliesArr?.getCourseDiscussion);
-     const replies = repliesArr?.getCourseDiscussion;
+    const replies = repliesArr?.getCourseDiscussion;
     const userIds = replies?.map((data) => data?.UserId);
     const users = await loadQueryDataAsync(
-       GET_USER_DETAIL,
+      GET_USER_DETAIL,
       {
         user_id: userIds
       },
@@ -268,11 +273,11 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
       userQueryClient
     );
     const userDetails = users.getUserDetails;
-    const mappedArray = replies?.map(item1 => {
-    const item2 = userDetails?.find(i => i.id === item1.UserId);
-    return { ...item1, ...item2};
+    const mappedArray = replies?.map((item1) => {
+      const item2 = userDetails?.find((i) => i.id === item1.UserId);
+      return { ...item1, ...item2 };
     });
-   
+
     let newArray = [...mappedArray];
     newArray?.sort(function (a, b) {
       return b.Created_at - a.Created_at;
@@ -301,7 +306,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         {},
         mutationClient
       );
-     
+
       const replies = (await getReplies(msg?.DiscussionId)) || [];
       console.log('replies', replies);
       setReplyData([...replies]);
@@ -310,7 +315,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         ADD_COURSE_DISCUSSION,
         {
           CourseId: moduleData[0]?.courseId,
-          Content: `${'@' + `${!msg?.IsAnonymous ? msg?.first_name : "Anonymous"}` + ' ' + reply}`,
+          Content: `${'@' + `${!msg?.IsAnonymous ? msg?.first_name : 'Anonymous'}` + ' ' + reply}`,
           ReplyId: msg?.ReplyId,
           UserId: userDetails?.id,
           Likes: [],
@@ -324,7 +329,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
         {},
         mutationClient
       );
-     
+
       const replies = (await getReplies(msg?.ReplyId)) || [];
       setReplyData([...replies]);
     }
@@ -335,13 +340,13 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
   };
 
   const handleKeyPress = (e) => {
-     if (!reply.replace(/<\/?[^>]+(>|$)/g, "").length) return;
+    if (!reply.replace(/<\/?[^>]+(>|$)/g, '').length) return;
     if (e.key === 'Enter' && !e.shiftKey) {
       onSendReplyHandler(message);
     }
   };
 
-  let displayCourseData = "";
+  let displayCourseData = '';
   if (message?.Module) displayCourseData += message?.Module;
   if (message?.Chapter) displayCourseData += `, ${message?.Chapter}`;
   if (message?.Topic) displayCourseData += `, ${message?.Topic}`;
@@ -362,14 +367,20 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
               <img
                 src={
                   !message?.IsAnonymous
-                    ? message?.photo_url
+                    ? message?.photo_url || '/images/svg/11.svg'
                     : '/images/svg/17.svg'
                 }
                 alt=""
               />
             </div>
             <div className={`${style.userName}`}>
-              <p>{!message?.IsAnonymous && userDetails?.first_name === message?.first_name ? message?.first_name + "(You)" : !message?.IsAnonymous ?  message?.first_name  : 'Anonymous'}</p>
+              <p>
+                {!message?.IsAnonymous && userDetails?.first_name === message?.first_name
+                  ? message?.first_name + '(You)'
+                  : !message?.IsAnonymous
+                  ? message?.first_name
+                  : 'Anonymous'}
+              </p>
               {message?.IsAnonymous && isRole.toLowerCase() === USER_LSP_ROLE.admin && (
                 <img
                   src="/images/svg/visibility2.svg"
@@ -473,7 +484,7 @@ const MessageBlock = ({ isReply, message, setFilterData }) => {
                 onAnnouncementHandler={announcementHandler}
                 checkAnnouncement={isAnnouncement}
                 handleKeyPress={handleKeyPress}
-                isMessage = {false}
+                isMessage={false}
               />
             </div>
           )}
