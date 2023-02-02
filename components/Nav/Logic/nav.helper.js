@@ -15,9 +15,9 @@ export const AdminMenu = [
 
 export const UserMenu = [
   { title: 'Self', link: '/self-landing' },
-  { title: 'Classroom', link: '/classroom' },
-  { title: 'Events', link: '/events' },
-  { title: 'Labs', link: '/labs' },
+  { title: 'Classroom', link: '/classroom', isDisabled: true },
+  { title: 'Events', link: '/events', isDisabled: true },
+  { title: 'Labs', link: '/labs', isDisabled: true },
   { title: 'Exams', link: '/exams' },
   { title: 'Community', link: '', isDisabled: true }
 ];
