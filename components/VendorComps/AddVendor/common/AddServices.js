@@ -199,7 +199,7 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
 
       <VendorPopUp
         open={showCompleteProfile}
-        title="Add sample"
+        title="Add Profile"
         popUpState={[showCompleteProfile, setCompleteProfile]}
         size="large"
         closeBtn={{ name: 'Cancel' }}

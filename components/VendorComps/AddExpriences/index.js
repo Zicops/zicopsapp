@@ -40,6 +40,7 @@ const AddExpriences = () => {
   const [title, setTitle] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [location, setLocation] = useState('');
+  const [isWorking, setIsWorking] = useState(false);
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>
@@ -107,9 +108,9 @@ const AddExpriences = () => {
         <LabeledRadioCheckbox
           label="Curranty working in this role"
           type="checkbox"
-          name="speaker"
-          //   isChecked={data[`${inputName}`]}
-          //   changeHandler={(e) => changeHandler(e, data, setData)}
+          name="isWorking"
+          isChecked={isWorking}
+          changeHandler={(e) => setIsWorking(e.target.isWorking)}
         />
       </div>
       <div>

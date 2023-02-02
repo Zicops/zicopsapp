@@ -23,7 +23,7 @@ const optionYearArray = [
   { value: '3+', label: '3+' }
 ];
 
-const AddVendorProfile = () => {
+const AddVendorProfile = ({ data = {} }) => {
   const [isOpenExpriences, setIsOpenExpriences] = useState(false);
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
   const [isOpenExpertise, setOpenExpertise] = useState(false);
@@ -53,7 +53,7 @@ const AddVendorProfile = () => {
             inputOptions={{
               inputName: 'firstName',
               placeholder: 'Enter First Name',
-              value: profileData.firstName
+              value: data?.firstName || profileData.firstName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -65,7 +65,7 @@ const AddVendorProfile = () => {
             inputOptions={{
               inputName: 'lastName',
               placeholder: 'Enter Last Name',
-              value: profileData.lastName
+              value: data?.lastName || profileData.lastName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -77,7 +77,7 @@ const AddVendorProfile = () => {
               inputName: 'email',
               placeholder: 'Enter email address',
               type: 'email',
-              value: profileData.email
+              value: data?.email || profileData.email
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -89,7 +89,7 @@ const AddVendorProfile = () => {
             inputOptions={{
               inputName: 'contactNumber',
               placeholder: 'Enter contact number',
-              value: profileData.contactNumber
+              value: data?.contact || profileData.contactNumber
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -103,7 +103,7 @@ const AddVendorProfile = () => {
               placeholder: 'Describe your service on 160 characters',
               rows: 5,
               maxLength: 160,
-              value: profileData.description
+              value: data?.description || profileData.description
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -123,7 +123,7 @@ const AddVendorProfile = () => {
             dropdownOptions={{
               inputName: 'year',
               placeholder: 'Select Years',
-              value: experienceYear,
+              value: data?.experience || experienceYear,
               options: optionYearArray
             }}
             changeHandler={(val) => setExpericeYear(val)}
@@ -160,7 +160,7 @@ const AddVendorProfile = () => {
       </div>
       <div className={`${styles.addProfileContainer}`}>
         <LabeledRadioCheckbox
-          label="is speaker"
+          label="is Speaker"
           type="checkbox"
           name="isSpeaker"
           isChecked={profileData?.isSpeaker}
