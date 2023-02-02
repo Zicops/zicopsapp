@@ -53,6 +53,7 @@ jobs:
   build_push_image:
     needs: approval_staging
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v3
     - name: Auth GCP service account
