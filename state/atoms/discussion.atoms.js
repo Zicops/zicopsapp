@@ -1,5 +1,4 @@
-import { vendorDiscussionData } from '@/components/VendorComps/discussion/chat.helper';
-
+import { vendorDiscussionData } from '@/components/VendorComps/Discussion/chat.helper';
 
 import { atom } from 'recoil';
 
@@ -24,16 +23,16 @@ export const DiscussionReplyAtom = atom({
 export const DiscussionAtom = atom({
   key: 'vendorDiscussion',
   default: vendorDiscussionData.messages
-})
+});
 
 export function getMesaageObj(data = {}) {
   return {
     CourseId: data?.id || '',
     IsAnonymous: data?.isAnonymous || false,
     IsAnnouncement: data?.isAnnouncement || false,
-    ReplyId: data?.reply || "",
+    ReplyId: data?.reply || '',
     Time: data?.time || '20:15',
-    Content: data?.content || '', 
+    Content: data?.content || '',
     Module: data?.module || '',
     Chapter: data?.chapter || '',
     Topic: data?.topic || '',
@@ -44,4 +43,3 @@ export function getMesaageObj(data = {}) {
     ReplyCount: data?.replyCount || 0
   };
 }
-
