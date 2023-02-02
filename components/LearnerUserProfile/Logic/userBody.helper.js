@@ -13,7 +13,7 @@ export const tabs = [
   { name: 'About', comp: <UserAboutTab /> },
   { name: 'Cohort', comp: <UserCohortTab /> },
   { name: 'Courses', comp: <UserCoursesTab /> },
-  { name: 'Dashboard', comp: <UserLearningDashBoardTab />, isDisabled: true },
+  { name: 'Dashboard', comp: <UserLearningDashBoardTab />, isDemo: true },
   { name: 'Schedule', comp: <UserScheduleTab /> }
 ];
 
