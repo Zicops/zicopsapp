@@ -2,15 +2,19 @@ import VendorDropdown from './common/VendorDropdown';
 import { useState } from 'react';
 import styles from './vendorComps.module.scss';
 
-const optionVendorArray = [
-  { value: 'Organisation', label: 'Organisation' },
-  { value: 'Individual/Freelancer', label: 'Individual/Freelancer' }
-];
+const optionVendorArray = ['Organisation', 'Individual/Freelancer'].map((val) => ({
+  label: val,
+  value: val
+}));
+
 const optionServiceArray = [
-  { value: 'Subject Matter Expertise', label: 'Subject Matter Expertise' },
-  { value: 'Classroom Training', label: 'Classroom Training' },
-  { value: 'Content Development', label: 'Content Development' }
-];
+  'Subject Matter Expertise',
+  'Classroom Training',
+  'Content Development'
+].map((val) => ({
+  label: val,
+  value: val
+}));
 
 export default function MarketYardHeroSection() {
   const [vendorType, setVendorType] = useState(null);

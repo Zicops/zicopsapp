@@ -8,32 +8,39 @@ import { useRecoilState } from 'recoil';
 import styles from './vendorComps.module.scss';
 
 const optionEmploymentTypeArray = [
-  { value: 'Full-time', label: 'Full-time' },
-  { value: 'Part-time', label: 'Part-time' },
-  { value: 'Self employed', label: 'Self employed' },
-  { value: 'Freelance', label: 'Freelance' },
-  { value: 'Internship', label: 'Internship' },
-  { value: 'Trainee', label: 'Trainee' }
-];
-const optionLocationTypeArray = [
-  { value: 'Hybrid', label: 'Hybrid' },
-  { value: 'Remote', label: 'Remote' },
-  { value: 'On-site', label: 'On-site' }
-];
+  'Full-time',
+  'Part-time',
+  'Self employed',
+  'Freelance',
+  'Internship',
+  'Trainee'
+].map((val) => ({
+  label: val,
+  value: val
+}));
+
+const optionLocationTypeArray = ['Hybrid', 'Remote', 'On-site'].map((val) => ({
+  label: val,
+  value: val
+}));
 
 const optionMonthArray = [
-  { value: 'January', label: 'January' },
-  { value: 'February', label: 'February' },
-  { value: 'March', label: 'March' },
-  { value: 'April', label: 'April' },
-  { value: 'May', label: 'May' },
-  { value: 'July', label: 'July' },
-  { value: 'August', label: 'August' },
-  { value: 'September', label: 'September' },
-  { value: 'October', label: 'October' },
-  { value: 'November', label: 'November' },
-  { value: 12, label: 'December' }
-];
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+].map((val) => ({
+  label: val,
+  value: val
+}));
+
 const AddExpriences = () => {
   const [employmentType, setEmploymentType] = useState(null);
   const [locationType, setLocationType] = useState(null);
