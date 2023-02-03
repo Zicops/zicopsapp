@@ -6,6 +6,8 @@ import styles from '../nav.module.scss';
 import { useRouter } from 'next/router';
 
 import { useDropDownSubmenuHandle } from '../Logic/useDropDownSubmenuHandle';
+import { useRecoilValue } from 'recoil';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 
 export default function DropDownSubMenu({
   subData,
@@ -16,6 +18,8 @@ export default function DropDownSubMenu({
 }) {
   const { ref, menuProps, toggleMenu, goToRoute } = useDropDownSubmenuHandle();
   const router = useRouter();
+  const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
+
   return (
     <>
       <div style={{ width: '100%' }}>
@@ -55,21 +59,32 @@ export default function DropDownSubMenu({
             if (elements.customStyle) {
               customStyles = { ...customStyles, ...elements.customStyle };
             }
+
+            let pageRoute = link;
+            if (elements?.isDisabled || elements?.isDemo || elements?.isDev) pageRoute = null;
+            if (isDemo && elements?.isDemo) pageRoute = link;
+            if (isDev && elements?.isDev) pageRoute = link;
+
             return (
               <MenuItem
                 key={title}
-                className={`${styles.subMenuItem} ${
+                className={`${styles.subMenuItem} ${!pageRoute ? styles.disabled : ''} ${
                   elements.customStyle ? elements.customClass : styles[`dropdown_item_${index + 1}`]
                 } ${title?.length > 16 ? styles.fontSizeSmall : ''}`}
                 style={customStyles}
                 onClick={(e) => {
                   // e.stopPropagation();
                   e?.syntheticEvent?.stopPropagation();
-                  if(!elements?.isPreferenceCentre){
-                  const route = arrowpositon === 'right'? `search-page?subCat=${link}&isPref=true` : `${link}?tabName=${title}`
-                  const maskUrl = elements?.asUrl ? elements?.asUrl : link;
-                  router.push(route,maskUrl);}
-                  else router.push(link, asUrl);
+                  if (!pageRoute) return;
+
+                  if (!elements?.isPreferenceCentre) {
+                    const route =
+                      arrowpositon === 'right'
+                        ? `search-page?subCat=${link}&isPref=true`
+                        : `${link}?tabName=${title}`;
+                    const maskUrl = elements?.asUrl ? elements?.asUrl : link;
+                    router.push(route, maskUrl);
+                  } else router.push(link, asUrl);
                 }}>
                 {title}
               </MenuItem>

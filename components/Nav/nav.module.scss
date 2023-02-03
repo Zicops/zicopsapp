@@ -86,6 +86,9 @@
   margin: 0 15px;
   border-bottom: 1px solid transparent;
 }
+.disabled {
+  cursor: no-drop !important;
+}
 .menu ul li.active {
   font-size: 14px;
   font-weight: 600;
