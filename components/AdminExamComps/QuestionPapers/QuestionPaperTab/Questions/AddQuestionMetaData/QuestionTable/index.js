@@ -1,10 +1,11 @@
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { QuestionPaperTabDataAtom } from '@/state/atoms/exams.atoms';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { GET_FIXED_QUESTION } from 'API/Queries';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { DIFFICULTY, getPageSizeBasedOnScreen } from '../../../../../../../helper/utils.helper';
-import LabeledInput from '../../../../../../common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '../../../../../../common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '../../../../../../common/ZicopsTable';
 import { acceptedFileTypes } from '../../../../../QuestionBanks/Logic/questionBank.helper';
@@ -19,6 +20,7 @@ export default function QuestionTable({
   setSelectedQuestionIds
 }) {
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [searchQuery, setSearchQuery] = useState(null);
   const [allQb, setAllQb] = useState(qbQuestions);
@@ -97,35 +99,46 @@ export default function QuestionTable({
       field: 'Type',
       headerClassName: 'course-list-header',
       headerName: 'Type',
-      flex: 0.5
+      flex: 0.7
     }
   ];
 
   return (
     <>
-      <div className={styles.topbarTable}>
-        <p className="w-100">{selectedQb?.name}</p>
+      {isDev ? (
+        <></>
+      ) : (
+        <div className={styles.topbarTable}>
+          <p className="w-100">{selectedQb?.name}</p>
 
-        <div className={styles.searchInputContainer}>
-          <img src="/images/magnifier.png" height={20} alt="" />
+          <div className={styles.searchInputContainer}>
+            <img src="/images/magnifier.png" height={20} alt="" />
 
-          <LabeledInput
-            inputOptions={{
-              inputName: 'qbFilter',
-              placeholder: 'Search Questions',
-              value: searchQuery || ''
-            }}
-            changeHandler={({ target: { value } }) => setSearchQuery(value)}
-            isFiftyFifty={true}
-          />
+            <LabeledInput
+              inputOptions={{
+                inputName: 'qbFilter',
+                placeholder: 'Search Questions',
+                value: searchQuery || ''
+              }}
+              changeHandler={({ target: { value } }) => setSearchQuery(value)}
+              isFiftyFifty={true}
+            />
+          </div>
         </div>
-      </div>
+      )}
+
       <ZicopsTable
         columns={columns}
         data={filteredQb}
-        pageSize={getPageSizeBasedOnScreen()}
+        pageSize={isDev ? 5 : getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="50vh"
+        showCustomSearch={isDev}
+        searchProps={{
+          handleSearch: (val) => setSearchQuery(val),
+          delayMS: 0,
+          customElement: <p className={`w-100 ${styles.qbName}`}>{selectedQb?.name}</p>
+        }}
       />
     </>
   );

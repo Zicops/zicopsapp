@@ -84,7 +84,7 @@ export function displayMinToHMS(mins) {
 export const TableResponsiveRows = [
   {
     breakpoint: 1200,
-    pageSize: 5
+    pageSize: 7
   },
   {
     breakpoint: 1500,
@@ -92,15 +92,16 @@ export const TableResponsiveRows = [
   },
   {
     breakpoint: 1900,
-    pageSize: 12
+    pageSize: 7
   }
 ];
 
 export function getPageSizeBasedOnScreen() {
-  if (!process.browser) return 6;
+  const defaultPageSize = 7;
+  if (!process.browser) return defaultPageSize;
 
   const screenWidth = window.screen.width;
-  let pageSize = 6;
+  let pageSize = defaultPageSize;
 
   TableResponsiveRows.forEach((r) => {
     if (r.breakpoint <= screenWidth) pageSize = r.pageSize;
@@ -287,4 +288,21 @@ export function isDatesSame(date1 = new Date(), date2 = new Date()) {
 
 export function getCurrentHost() {
   return process.browser && window?.location?.host ? window.location.host : 'zicops.com';
+}
+
+export function logger() {
+  const pub = {};
+  if (!process.browser) return null;
+  if (!window?.consoleLog) window.consoleLog = console.log;
+
+  pub.enableLogger = function enableLogger() {
+    console.log = window?.consoleLog;
+  };
+
+  pub.disableLogger = function disableLogger() {
+    if (!window?.consoleLog) window.consoleLog = console.log;
+    console.log = function () {};
+  };
+
+  return pub;
 }
