@@ -2,7 +2,7 @@ import { GET_LATEST_COURSES, queryClient } from '@/api/Queries';
 import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { courseData } from '@/components/LearnerUserProfile/Logic/userBody.helper';
-import { sendEmail, sendNotification, sendNotificationWithLink } from '@/helper/api.helper';
+import { sendEmail, sendNotificationWithLink } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getMinCourseAssignDate, getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -95,11 +95,12 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       courseName: userCourseData?.name
     });
 
-     sendNotification(
+     sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: notificationBody,
-        user_id: [currentUserId]
+        user_id: [currentUserId],
+        link:''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );

@@ -109,6 +109,8 @@ const UserDisplay = () => {
   }, [userProfileData]);
 
   //update value in sessionStorage
+  let userGender = userProfileData?.gender?.toLowerCase();
+
 
   return (
     <>
@@ -121,7 +123,9 @@ const UserDisplay = () => {
           <div className={styles.profilepic}>
             <img
               src={`${
-                userProfileData?.photo_url ? userProfileData?.photo_url : '/images/swagDP.jpg'
+                userProfileData?.photo_url
+                  ? userProfileData?.photo_url
+                  : `/images/Avatars/${userGender}Profile.png`
               }`}
             />
           </div>

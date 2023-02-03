@@ -7,15 +7,17 @@ const ProfilePersonelDetail = ({ currentUserData }) => {
     contact: currentUserData?.phone
   };
 
+  let imageUrl = '/images/svg/assignment_ind.svg';
+  const userGender = currentUserData?.gender?.toLowerCase();
+  if (!!userGender?.length) {
+    imageUrl = `/images/Avatars/${userGender}Profile.png`;
+  }
+
   return (
     <>
       <div className={`${styles.profileDetailsContainer}`}>
         <div className={`${styles.profilePicContainer}`}>
-          <img
-            src={currentUserData?.photo_url || '/images/profile_picture.png'}
-            alt="not found"
-            width={200}
-          />
+          <img src={currentUserData?.photo_url || imageUrl} alt="not found" width={200} />
         </div>
         <div className={`${styles.profileDetails}`}>
           {Object.keys(userProfileDetailsData).map((item, i) => (
