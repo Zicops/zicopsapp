@@ -2,7 +2,7 @@ import styles from '../userProfile.module.scss';
 
 const ProfilePersonelDetail = ({ currentUserData }) => {
   const userProfileDetailsData = {
-    name: `${currentUserData?.first_name} ${currentUserData?.last_name}`,
+    name: `${currentUserData?.first_name || ''} ${currentUserData?.last_name || ''}`,
     email: currentUserData?.email,
     contact: currentUserData?.phone
   };
