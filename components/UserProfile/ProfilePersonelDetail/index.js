@@ -7,11 +7,9 @@ const ProfilePersonelDetail = ({ currentUserData }) => {
     contact: currentUserData?.phone
   };
 
-  let imageUrl = '/images/svg/assignment_ind.svg';
   const userGender = currentUserData?.gender?.toLowerCase();
-  if (!!userGender?.length) {
-    imageUrl = `/images/Avatars/${userGender}Profile.png`;
-  }
+  let imageUrl = `/images/Avatars/${userGender}Profile.png`;
+  
 
   return (
     <>
