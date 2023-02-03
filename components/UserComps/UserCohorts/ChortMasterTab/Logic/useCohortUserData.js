@@ -1,9 +1,9 @@
-import { getCurrentEpochTime } from '@/helper/common.helper';
-import { loadQueryDataAsync } from '@/helper/api.helper';
 import { GET_COHORT_USERS, GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { getCurrentEpochTime } from '@/helper/common.helper';
 
 export default function useCohortUserData() {
-  async function getCohortUser(cohortId = '', cohortDetails = false) {
+  async function getCohortUser(cohortId = '', cohortDetails = false, isNotDisable = true) {
     if (cohortId === '') return;
     const sendData = {
       cohort_id: cohortId,
@@ -20,7 +20,13 @@ export default function useCohortUserData() {
     if (!resUsers?.getCohortUsers?.cohorts?.length) return;
     const _cohortUsers = resUsers?.getCohortUsers?.cohorts;
     if (cohortDetails) return _cohortUsers;
-    const cohortUsers = _cohortUsers?.filter((user) => user?.membership_status?.toLowerCase() === 'active');
+    let cohortUsers = [..._cohortUsers];
+    if (isNotDisable) {
+      cohortUsers = _cohortUsers?.filter(
+        (user) => user?.membership_status?.toLowerCase() === 'active'
+      );
+    }
+
     const cohortUserIds = cohortUsers?.map((item) => item?.user_id);
     const cohortUserData = [];
 
