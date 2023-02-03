@@ -4,6 +4,15 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import styles from './vendorComps.module.scss';
 const AddLineItem = () => {
+  const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
+    label: val,
+    value: val
+  }));
+
+  const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
+    label: val,
+    value: val
+  }));
   return (
     <div>
       <div className={`${styles.checkBoxLabel}`}>
@@ -27,7 +36,8 @@ const AddLineItem = () => {
           <LabeledDropdown
             dropdownOptions={{
               inputName: 'unit',
-              placeholder: '/hour'
+              placeholder: '/hour',
+              options: unit
             }}
           />
         </div>
@@ -36,7 +46,8 @@ const AddLineItem = () => {
           <LabeledDropdown
             dropdownOptions={{
               inputName: 'unit',
-              placeholder: 'INR'
+              placeholder: 'INR',
+              options: currency
             }}
           />
         </div>
