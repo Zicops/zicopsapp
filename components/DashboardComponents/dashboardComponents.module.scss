@@ -1,7 +1,7 @@
 @import '../../styles/base.scss';
 // availabilityCard
 .availabilityCard {
-  background-color: $darkOne;
+  // background-color: $darkOne;
   // background-color: #242630;
   width: 100%;
   padding: 20px;
@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   // border: 1px solid #30323f;
-  border: 1px solid $darkOne;
+  border: 1px solid $darkThree;
   gap: 10px;
   justify-content: center;
 
@@ -62,9 +62,9 @@
   justify-content: center;
   min-width: 150px;
   padding: 8px 16px;
-  background: #1A1B26;
-  border: 1px solid #30323F;
-  // border: 1px solid $darkThree;
+  background-color: $secondary;
+  // background-color: #1A1B26;
+  // border: 1px solid #30323F;
   border-radius: 50px;
 
   .badge_count,
@@ -105,7 +105,7 @@
 
     .progress {
       height: 10px;
-      background-color: $darkTwo;
+      background-color: $secondary;
       margin-top: 10px;
 
       span {
@@ -156,7 +156,8 @@
             color: #EAEAEA;
         }
         .card_img img{
-            background: #2B2D36;
+            background-color: $secondary;
+            // background-color: #2B2D36;
             border: 1px solid #30323F;
             border-radius: 4px;
             padding: 14px;
