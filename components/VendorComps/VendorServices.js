@@ -2,9 +2,9 @@ import styles from './vendorComps.module.scss';
 import { ExpertiseIcon } from '/components/common/ZicopsIcons/index.js';
 import { LanguagesIcon } from '/components/common/ZicopsIcons/index.js';
 import { ContentFormatIcon } from '/components/common/ZicopsIcons/index.js';
-import VendorPopUp from '../VendorPopUp';
 import { useState } from 'react';
-import { sampleFiles } from '../Logic/vendorComps.helper';
+import { sampleFiles } from './Logic/vendorComps.helper';
+import VendorPopUp from './common/VendorPopUp';
 
 export default function VendorServices({ data }) {
   const [samplePopup, setSamplePopup] = useState(false);
