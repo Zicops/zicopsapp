@@ -31,17 +31,6 @@ const AddVendorProfile = ({ data = {} }) => {
   const [experienceYear, setExpericeYear] = useState(null);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
-  const showExperienceHandler = () => {
-    setIsOpenExpriences(true);
-    // setIsOpen(false);
-  };
-  const showLanguageHandler = () => {
-    setIsOpenLanguage(true);
-  };
-
-  const showExpertiseHandler = () => {
-    setOpenExpertise(true);
-  };
   const handleClick = () => {};
 
   return (
@@ -60,7 +49,7 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Last name: </label>
-          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+
           <LabeledInput
             inputOptions={{
               inputName: 'lastName',
@@ -84,7 +73,7 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Contact number: </label>
-          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+
           <LabeledInput
             inputOptions={{
               inputName: 'contactNumber',
@@ -96,7 +85,7 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Description: </label>
-          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+
           <LabeledTextarea
             inputOptions={{
               inputName: 'description',
@@ -136,7 +125,7 @@ const AddVendorProfile = ({ data = {} }) => {
             text="Add experiences"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            handleClick={showExperienceHandler}
+            handleClick={() => setIsOpenExpriences(true)}
           />
         </div>
         <div className={`${styles.addExpertise}`}>
@@ -145,7 +134,7 @@ const AddVendorProfile = ({ data = {} }) => {
             text="Add language"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            handleClick={showLanguageHandler}
+            handleClick={() => setIsOpenLanguage(true)}
           />
         </div>
         <div className={`${styles.addExpertise}`}>
@@ -154,7 +143,7 @@ const AddVendorProfile = ({ data = {} }) => {
             text="Add subject matter expertise"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            handleClick={showExpertiseHandler}
+            handleClick={() => setOpenExpertise(true)}
           />
         </div>
       </div>
@@ -174,7 +163,7 @@ const AddVendorProfile = ({ data = {} }) => {
           />
         </div>
       </div>
-      {/* <div className={`${styles.hr}`}></div> */}
+
       <VendorPopUp
         open={isOpenExpriences}
         title="Add experience"

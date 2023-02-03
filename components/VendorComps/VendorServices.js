@@ -23,7 +23,7 @@ export default function VendorServices({ data }) {
           <span>Languages</span>
         </div>
         <div className={`${styles.languagesPill}`}>
-          {data.languages.map((value, key) => {
+          {data?.languages?.map((value, key) => {
             return <p>{value}</p>;
           })}
         </div>
@@ -34,7 +34,7 @@ export default function VendorServices({ data }) {
           <span>Content Format</span>
         </div>
         <div className={`${styles.contentFormatPill}`}>
-          {data.contentFormat.map((value, key) => {
+          {data?.contentFormat?.map((value, key) => {
             return <p>{value}</p>;
           })}
         </div>

@@ -77,16 +77,10 @@ export default function VendorInfo() {
     setConfirmTax(false);
     setAddTax(true);
   };
-  const onOrderCompleteHandler = () => {
-    router.push('/admin/vendor/manage-vendor');
-  };
-
-  const backMarketYardHandler = () => {
-    router.push('/admin/vendor/market-yard');
-  };
+  const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
+  const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
   const vendorId = router.query.vendorId || '0'; //Change the 1 to null
-  console.log('vendorId', vendorId);
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendorId === vendorId);
   const tabData = [
     {
@@ -108,7 +102,6 @@ export default function VendorInfo() {
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
-      {/* <div style={{ height: '30vh', marginTop: '70px' }}> */}
       <MainBody customStyles={{ padding: '0px' }}>
         <MarketYardHero showPopup={isShowPopup} onHandlePopup={onOpenPopup} />
         <TabContainer
