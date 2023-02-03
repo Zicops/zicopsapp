@@ -28,7 +28,8 @@ export const courseSidebarData = {
     {
       title: 'Dashboard',
       link: '/admin',
-      description: ADMIN_COURSES.sidebarData.dashboard
+      description: ADMIN_COURSES.sidebarData.dashboard,
+      isHidden: true
     }
   ]
 };
@@ -112,22 +113,26 @@ export const administrationSideBarData = {
     {
       title: 'Subscription & Billing',
       link: '',
-      description: ADMIN_USERS.sidebarData.myUsers
+      description: ADMIN_USERS.sidebarData.myUsers,
+      isHidden: true
     },
     {
       title: 'Notifications Manager',
       link: '',
-      description: ADMIN_USERS.sidebarData.myUsers
+      description: ADMIN_USERS.sidebarData.myUsers,
+      isHidden: true
     },
     {
       title: 'Settings',
       link: '',
-      description: ADMIN_USERS.sidebarData.myUsers
+      description: ADMIN_USERS.sidebarData.myUsers,
+      isHidden: true
     },
     {
       title: 'App Integration',
       link: '',
-      description: ADMIN_USERS.sidebarData.myUsers
+      description: ADMIN_USERS.sidebarData.myUsers,
+      isHidden: true
     }
     // {
     //   title: 'User Roles',
