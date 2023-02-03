@@ -29,25 +29,20 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
   const [showCompleteProfile, setCompleteProfile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
 
-  const fileFormatArray = [
-    { value: 'PDF', label: 'PDF' },
-    { value: 'PPT', label: 'PPT' },
-    { value: 'Consultancy', label: 'Consultancy' }
-  ];
+  const fileFormatArray = ['PDF', 'PPT', 'Consultancy'].map((val) => ({
+    label: val,
+    value: val
+  }));
 
-  const currency = [
-    { value: 'INR', label: 'INR' },
-    { value: 'USD', label: 'USD' },
-    { value: 'Euros', label: 'Euros' },
-    { value: 'Pound', label: 'Pound' }
-  ];
+  const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
+    label: val,
+    value: val
+  }));
 
-  const unit = [
-    { value: 'Per hour', label: 'Per hour' },
-    { value: 'Per day', label: 'Per day' },
-    { value: 'Per month', label: 'Per month' },
-    { value: 'Per module', label: 'Per module' }
-  ];
+  const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
+    label: val,
+    value: val
+  }));
 
   const clickHandler = () => {
     setPopupState(true);
