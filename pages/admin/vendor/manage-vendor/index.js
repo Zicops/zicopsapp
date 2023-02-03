@@ -5,7 +5,7 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import MyVendor from '@/components/VendorComps/MyVendor';
-import VendorPopUp from '@/components/VendorComps/VendorPopUp';
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 

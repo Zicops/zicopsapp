@@ -3,8 +3,6 @@ import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.hel
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { myVendors } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import MainBody from '@/components/common/MainBody';
-import styles from './marketYard.module.scss';
-import VendorDropdown from '@/components/VendorComps/common/VendorDropdown';
 import MarketYardHeroSection from '@/components/VendorComps/MarketYardHeroSection';
 
 export default function MarketYard() {

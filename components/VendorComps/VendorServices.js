@@ -1,8 +1,7 @@
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 import { ExpertiseIcon } from '/components/common/ZicopsIcons/index.js';
 import { LanguagesIcon } from '/components/common/ZicopsIcons/index.js';
 import { ContentFormatIcon } from '/components/common/ZicopsIcons/index.js';
-import VendorPill from '../common/VendorPill';
 import VendorPopUp from '../VendorPopUp';
 import { useState } from 'react';
 import { sampleFiles } from '../Logic/vendorComps.helper';
@@ -31,7 +30,7 @@ export default function VendorServices({ data }) {
           <span>Languages</span>
         </div>
         <div className={`${styles.languagesPill}`}>
-          {data.languages.map((value, key) => {
+          {data?.languages?.map((value, key) => {
             return <p>{value}</p>;
           })}
         </div>
@@ -42,7 +41,7 @@ export default function VendorServices({ data }) {
           <span>Content Format</span>
         </div>
         <div className={`${styles.contentFormatPill}`}>
-          {data.contentFormat.map((value, key) => {
+          {data?.contentFormat?.map((value, key) => {
             return <p>{value}</p>;
           })}
         </div>

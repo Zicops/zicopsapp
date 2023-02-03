@@ -1,12 +1,12 @@
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 import ZicopsAccordian from '@/common/ZicopsAccordian';
-import VendorServices from '../VendorServices';
-import VendorDetails from '../VendorDetails';
+import VendorServices from './VendorServices';
+import VendorDetails from './VendorDetails';
 import {
   subjectMatterExpertise,
   classroomTraining,
   contentDevelopment
-} from '../Logic/vendorComps.helper';
+} from './Logic/vendorComps.helper';
 
 export default function AboutVendor({ data }) {
   const smeData = subjectMatterExpertise.find(({ vendorId }) => vendorId === data.id);

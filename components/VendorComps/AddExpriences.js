@@ -2,8 +2,10 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { changeHandler } from '@/helper/common.helper';
+import { VendorExpriencesAtom } from '@/state/atoms/vendor.atoms';
 import React, { useState } from 'react';
-import styles from '../vendorComps.module.scss';
+import { useRecoilState } from 'recoil';
+import styles from './vendorComps.module.scss';
 
 const optionEmploymentTypeArray = [
   { value: 'Full-time', label: 'Full-time' },
@@ -37,20 +39,18 @@ const AddExpriences = () => {
   const [locationType, setLocationType] = useState(null);
   const [startMonth, setStartMonth] = useState(null);
   const [endMonth, setEndMonth] = useState(null);
-  const [title, setTitle] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [location, setLocation] = useState('');
+  const [expriencesData, setExpriencesData] = useRecoilState(VendorExpriencesAtom);
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>
         <label for="vendorName">Title: </label>
         <LabeledInput
           inputOptions={{
-            inputName: 'vendorAddress',
+            inputName: 'title',
             placeholder: 'Enter title',
-            value: title
+            value: expriencesData?.title
           }}
-          changeHandler={(e) => setTitle(e.target.value)}
+          changeHandler={(e) => changeHandler(e, expriencesData, setExpriencesData)}
         />
       </div>
       <div className={`${styles.inputContainer}`}>
@@ -58,11 +58,11 @@ const AddExpriences = () => {
           <label for="vendorName">Company name: </label>
           <LabeledInput
             inputOptions={{
-              inputName: 'vendorAddress',
+              inputName: 'companyName',
               placeholder: 'Enter company name',
-              value: companyName
+              value: expriencesData?.companyName
             }}
-            changeHandler={(e) => setCompanyName(e.target.value)}
+            changeHandler={(e) => changeHandler(e, expriencesData, setExpriencesData)}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -82,11 +82,11 @@ const AddExpriences = () => {
           <label for="vendorName">Location: </label>
           <LabeledInput
             inputOptions={{
-              inputName: 'vendorAddress',
+              inputName: 'location',
               placeholder: 'Ex. Pune, Maharashtra',
-              value: location
+              value: expriencesData?.location
             }}
-            changeHandler={(e) => setLocation(e.target.value)}
+            changeHandler={(e) => changeHandler(e, expriencesData, setExpriencesData)}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -107,9 +107,9 @@ const AddExpriences = () => {
         <LabeledRadioCheckbox
           label="Curranty working in this role"
           type="checkbox"
-          name="speaker"
-          //   isChecked={data[`${inputName}`]}
-          //   changeHandler={(e) => changeHandler(e, data, setData)}
+          name="isWorking"
+          isChecked={expriencesData?.isWorking}
+          changeHandler={(e) => changeHandler(e, expriencesData, setExpriencesData)}
         />
       </div>
       <div>

@@ -756,7 +756,7 @@
   .text2 {
     font-size: 18px;
     color: $bgBody;
-    padding: 30px 72px;
+    padding: 30px 60px;
     text-align: center;
   }
   .newVendorAdd {
@@ -794,6 +794,12 @@
     color: $bgBody;
   }
 }
+.checkBoxLabel{
+  label{
+    font-size: 18px;
+
+  }
+}
 
 .OrderDetails {
   display: flex;
@@ -801,6 +807,7 @@
   padding-top: 10px;
   .contentName {
     color: $bgBody;
+    padding-left: 35px;
   }
   .OrderValue {
     display: flex;
@@ -1035,6 +1042,9 @@
       }
     }
   }
+  .editIcon{
+    cursor: pointer;
+  }
 }
 .manageVendorProfileMain {
   display: grid;
@@ -1242,8 +1252,42 @@
     }
   }
 }
-.hr {
-  background-color: $secondary;
-  height: 1px;
-  margin: 10px 0px;
-}
+ .hr {
+   background-color: $secondary;
+   height: 1px;
+   margin: 10px 0px;
+ }
+ .manageVendorBody {
+   margin: 0px 40px 0px 300px;
+   padding-bottom: 5px;
+   //  border: 2px solid $bgBody;
+   border-radius: 8px;
+   box-shadow: -2px 2px 10px 0 #040404, 2px -2px 5px 0 #868f8f;
+
+   .manageVendorButton {
+     display: flex;
+     justify-content: flex-end;
+     gap: 8px;
+     margin: 10px 20px;
+
+     button {
+       padding: 10px 32px;
+       border: 2px solid $primary;
+       border-radius: 50px;
+       background-color: transparent;
+       color: $primary;
+       cursor: pointer;
+     }
+
+     .cancelButton {
+       border: 2px solid #484848;
+       color: $bgBody;
+     }
+   }
+ }
+
+ .previewButtonContainer {
+   display: flex;
+   justify-content: flex-end;
+   flex: 1;
+ }

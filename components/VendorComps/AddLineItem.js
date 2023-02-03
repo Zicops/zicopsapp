@@ -2,11 +2,13 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 const AddLineItem = () => {
   return (
     <div>
-      <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" />
+      <div className={`${styles.checkBoxLabel}`}>
+        <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" />
+      </div>
       <div className={`${styles.lineContainer}`}>
         <div>
           <p className={`${styles.heading}`}>Description</p>

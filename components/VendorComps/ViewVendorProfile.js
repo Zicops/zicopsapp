@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 const ViewVendorProfile = ({ data }) => {
   return (
     <div className={`${styles.viewProfilesContainer}`}>
@@ -14,7 +14,7 @@ const ViewVendorProfile = ({ data }) => {
               {expert} {index + 1 !== data[0]?.expertise?.length ? ' | ' : ''}
             </span>
           ))}
-          {/* <span>{data[0]?.expertise[1]}</span> <span>|</span> <span>{data[0]?.expertise[1]}</span> */}
+
           <div className={`${styles.hr1}`}></div>
           <div className={`${styles.profileEmail}`}>
             <img src="/images/svg/mark_email_read.svg" alt="" />

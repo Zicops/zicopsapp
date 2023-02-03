@@ -1,19 +1,19 @@
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import React, { useState } from 'react';
-import VendorPopUp from '../VendorPopUp';
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import IconButton from '@/components/common/IconButton';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import AddExpriences from '../AddExpriences';
+import AddExpriences from './AddExpriences';
 import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
-import { cat, subCat } from '../Logic/vendorComps.helper';
+import { cat, subCat } from './Logic/vendorComps.helper';
 import { useRecoilState } from 'recoil';
 import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
 import { changeHandler } from '@/helper/common.helper';
+import VendorPopUp from './common/VendorPopUp';
 
 const optionYearArray = [
   { value: '1', label: '1' },
@@ -23,7 +23,7 @@ const optionYearArray = [
   { value: '3+', label: '3+' }
 ];
 
-const AddVendorProfile = () => {
+const AddVendorProfile = ({ data = {} }) => {
   const [isOpenExpriences, setIsOpenExpriences] = useState(false);
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
   const [isOpenExpertise, setOpenExpertise] = useState(false);
@@ -31,17 +31,6 @@ const AddVendorProfile = () => {
   const [experienceYear, setExpericeYear] = useState(null);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
-  const showExperienceHandler = () => {
-    setIsOpenExpriences(true);
-    // setIsOpen(false);
-  };
-  const showLanguageHandler = () => {
-    setIsOpenLanguage(true);
-  };
-
-  const showExpertiseHandler = () => {
-    setOpenExpertise(true);
-  };
   const handleClick = () => {};
 
   return (
@@ -53,19 +42,19 @@ const AddVendorProfile = () => {
             inputOptions={{
               inputName: 'firstName',
               placeholder: 'Enter First Name',
-              value: profileData.firstName
+              value: data?.firstName || profileData.firstName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Last name: </label>
-          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+
           <LabeledInput
             inputOptions={{
               inputName: 'lastName',
               placeholder: 'Enter Last Name',
-              value: profileData.lastName
+              value: data?.lastName || profileData.lastName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -77,33 +66,33 @@ const AddVendorProfile = () => {
               inputName: 'email',
               placeholder: 'Enter email address',
               type: 'email',
-              value: profileData.email
+              value: data?.email || profileData.email
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Contact number: </label>
-          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+
           <LabeledInput
             inputOptions={{
               inputName: 'contactNumber',
               placeholder: 'Enter contact number',
-              value: profileData.contactNumber
+              value: data?.contact || profileData.contactNumber
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Description: </label>
-          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
+
           <LabeledTextarea
             inputOptions={{
               inputName: 'description',
               placeholder: 'Describe your service on 160 characters',
               rows: 5,
               maxLength: 160,
-              value: profileData.description
+              value: data?.description || profileData.description
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -123,7 +112,7 @@ const AddVendorProfile = () => {
             dropdownOptions={{
               inputName: 'year',
               placeholder: 'Select Years',
-              value: experienceYear,
+              value: data?.experience || experienceYear,
               options: optionYearArray
             }}
             changeHandler={(val) => setExpericeYear(val)}
@@ -136,7 +125,7 @@ const AddVendorProfile = () => {
             text="Add experiences"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            handleClick={showExperienceHandler}
+            handleClick={() => setIsOpenExpriences(true)}
           />
         </div>
         <div className={`${styles.addExpertise}`}>
@@ -145,7 +134,7 @@ const AddVendorProfile = () => {
             text="Add language"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            handleClick={showLanguageHandler}
+            handleClick={() => setIsOpenLanguage(true)}
           />
         </div>
         <div className={`${styles.addExpertise}`}>
@@ -154,13 +143,13 @@ const AddVendorProfile = () => {
             text="Add subject matter expertise"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            handleClick={showExpertiseHandler}
+            handleClick={() => setOpenExpertise(true)}
           />
         </div>
       </div>
       <div className={`${styles.addProfileContainer}`}>
         <LabeledRadioCheckbox
-          label="is speaker"
+          label="is Speaker"
           type="checkbox"
           name="isSpeaker"
           isChecked={profileData?.isSpeaker}
@@ -174,7 +163,7 @@ const AddVendorProfile = () => {
           />
         </div>
       </div>
-      {/* <div className={`${styles.hr}`}></div> */}
+
       <VendorPopUp
         open={isOpenExpriences}
         title="Add experience"

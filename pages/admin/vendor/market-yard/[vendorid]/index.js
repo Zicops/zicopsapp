@@ -1,6 +1,5 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import ZicopsCarousel from '@/components/ZicopsCarousel';
 import {
   myVendors,
   coursesVendor,
@@ -12,18 +11,17 @@ import { useState } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
 import { useRouter } from 'next/router';
 import CoursesVendor from '@/components/VendorComps/CoursesVendor';
-import ProfileVendor from '@/components/VendorComps/ProfileVendor';
+
 import MarketYardHero from '@/components/VendorComps/MarketYardHero';
 import MainBody from '@/components/common/MainBody';
-import VendorPopUp from '@/components/VendorComps/VendorPopUp';
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-// import styles from '../marketYard.module.scss';
 import AddLineItem from '@/components/VendorComps/AddLineItem';
 import CompleteOrder from '@/components/VendorComps/CompleteOrder';
 import ReviewOrderTop from '@/components/VendorComps/ReviewOrderTop';
 import ReviewOrderBottom from '@/components/VendorComps/ReviewOrderBottom';
-import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
 import styles from '../../../../../components/VendorComps/vendorComps.module.scss';
+import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 export default function VendorInfo() {
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
@@ -79,16 +77,10 @@ export default function VendorInfo() {
     setConfirmTax(false);
     setAddTax(true);
   };
-  const onOrderCompleteHandler = () => {
-    router.push('/admin/vendor/manage-vendor');
-  };
-
-  const backMarketYardHandler = () => {
-    router.push('/admin/vendor/market-yard');
-  };
+  const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
+  const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
   const vendorId = router.query.vendorId || '0'; //Change the 1 to null
-  console.log('vendorId', vendorId);
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendorId === vendorId);
   const tabData = [
     {
@@ -110,7 +102,6 @@ export default function VendorInfo() {
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
-      {/* <div style={{ height: '30vh', marginTop: '70px' }}> */}
       <MainBody customStyles={{ padding: '0px' }}>
         <MarketYardHero showPopup={isShowPopup} onHandlePopup={onOpenPopup} />
         <TabContainer
@@ -200,7 +191,7 @@ export default function VendorInfo() {
         size="small"
         isMarketYard={true}
         closeBtn={{ name: 'Back to Market Yard', handleClick: backMarketYardHandler }}
-        submitBtn={{ name: 'Go to Marketplace', handleClick: onOrderCompleteHandler }}>
+        submitBtn={{ name: 'Go to My Vendors', handleClick: onOrderCompleteHandler }}>
         <CompleteOrder />
         <div className={`${styles.hr}`}></div>
       </VendorPopUp>

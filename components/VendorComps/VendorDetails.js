@@ -1,4 +1,4 @@
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 
 export default function VendorDetails() {
   return (

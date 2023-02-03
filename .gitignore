@@ -38,5 +38,3 @@ yarn-error.log*
 # video files
 # /public/videos
 
-#.github actions workflows
-.github
