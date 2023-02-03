@@ -1,29 +1,20 @@
+import { userClient } from '@/api/UserMutations';
+import { GET_COHORT_DETAILS } from '@/api/UserQueries';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-import { useRef, useState, useEffect } from 'react';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
-import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
-import { CohortMasterData, getCohortMasterObject } from '@/state/atoms/users.atom';
-import { useRecoilState } from 'recoil';
-import { changeHandler, getCurrentEpochTime } from '@/helper/common.helper';
-import { Item } from '@radix-ui/react-navigation-menu';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { useRouter } from 'next/router';
-import { useHandleCohortMaster } from '../../Logic/useHandleCohortMaster.helper';
-import styles from '../../../userComps.module.scss';
-import {
-  GET_COHORT_DETAILS,
-  GET_COHORT_USERS,
-  GET_USERS_FOR_ADMIN,
-  GET_USER_DETAIL,
-  userQueryClient
-} from '@/api/UserQueries';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { userClient } from '@/api/UserMutations';
-import useCohortUserData from '../Logic/useCohortUserData';
-import { getUsersForCohort } from '../Logic/cohortMaster.helper';
-import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import Loader from '@/components/common/Loader';
+import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
+import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { changeHandler } from '@/helper/common.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { CohortMasterData, getCohortMasterObject } from '@/state/atoms/users.atom';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import styles from '../../../userComps.module.scss';
+import useCohortUserData from '../Logic/useCohortUserData';
 
 const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
   const { getCohortManager } = useCohortUserData();
@@ -76,7 +67,9 @@ const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
         return {
           value: item?.full_name,
           label: item?.full_name,
-          id: item?.id
+          id: item?.id,
+          user_lsp_id: item?.user_lsp_id,
+          email: item?.email
         };
       });
     return data;
@@ -84,7 +77,7 @@ const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
 
   useEffect(async () => {
     if (!isEdit) {
-      const userList = await getUsersForAdmin();
+      const userList = await getUsersForAdmin(true);
       // console.log(userList,'list')
       if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
       const managerList = formatUsers(userList);
@@ -100,7 +93,7 @@ const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
       userClient
     );
 
-    const userList = await getUsersForAdmin();
+    const userList = await getUsersForAdmin(true);
     // console.log(managerList,'fs');
     if (userList?.error) return setToastMsg({ type: 'danger', message: userList?.error });
     const managerList = formatUsers(userList);
@@ -111,18 +104,31 @@ const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
     if (!cohortDetail) return;
     setCohortData(getCohortMasterObject(cohortDetail));
 
-    const data = await getCohortManager(cohortId);
+    const data = await getCohortManager(cohortId, true);
     const cohortManager =
       data?.map((item) => ({
         value: item?.name,
         label: item?.name,
-        id: item?.id
+        id: item?.id,
+        name: item?.name,
+        user_lsp_id: item?.user_lsp_id,
+        email: item?.email
       })) || [];
     setCohortData((prevValue) => ({ ...prevValue, managers: [...cohortManager] }));
   }, [router?.query]);
 
+  useEffect(() => {
+    console.log(cohortData?.managers);
+  }, [cohortData?.managers]);
   cohortData?.managers?.map((item) => {
-    selectedManagers.push({ value: item?.value, label: item?.value, id: item?.id });
+    selectedManagers.push({
+      value: item?.value,
+      label: item?.value,
+      id: item?.id,
+      email: item?.email,
+      name: item?.name,
+      user_lsp_id: item?.user_lsp_id
+    });
   });
 
   const chorotDropdownOptions = {
@@ -140,7 +146,13 @@ const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
   function handleMulti(e, state, setState, inputName = null) {
     setState({
       ...state,
-      [inputName]: e.map((el) => ({ value: el.value, id: el.id }))
+      [inputName]: e.map((el) => ({
+        value: el.value,
+        id: el.id,
+        email: el.email,
+        name: el.value,
+        user_lsp_id: el?.user_lsp_id
+      }))
     });
   }
 
