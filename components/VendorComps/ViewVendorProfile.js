@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 const ViewVendorProfile = ({ data }) => {
   return (
     <div className={`${styles.viewProfilesContainer}`}>

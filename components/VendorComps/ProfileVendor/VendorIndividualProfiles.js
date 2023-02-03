@@ -1,4 +1,4 @@
-import styles from '../../vendorComps.module.scss';
+import styles from '../vendorComps.module.scss';
 import { DownArrowIcon } from '@/components/common/ZicopsIcons';
 import { useRouter } from 'next/router';
 export default function VendorIndividualProfiles({ data }) {

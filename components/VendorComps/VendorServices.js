@@ -1,8 +1,7 @@
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 import { ExpertiseIcon } from '/components/common/ZicopsIcons/index.js';
 import { LanguagesIcon } from '/components/common/ZicopsIcons/index.js';
 import { ContentFormatIcon } from '/components/common/ZicopsIcons/index.js';
-import VendorPill from '../common/VendorPill';
 
 export default function VendorServices({ data }) {
   return (

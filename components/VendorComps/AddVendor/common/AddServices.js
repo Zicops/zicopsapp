@@ -12,7 +12,7 @@ import AddVendorProfile from '../../AddVendorProfile';
 import { cat, subCat } from '../../Logic/vendorComps.helper';
 import ProfileManageVendor from '../../ProfileMangeVendor';
 import styles from '../../vendorComps.module.scss';
-import VendorPopUp from '../../VendorPopUp';
+import VendorPopUp from '../../common/VendorPopUp';
 // export default function AddServices({ data, setData = () => {}, inputName }) {
 //   const [popupState, setPopupState] = useState(false);
 //   const [isOpenProflie, setIsOpenProfile] = useState(false);

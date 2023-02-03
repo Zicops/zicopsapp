@@ -1,19 +1,19 @@
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import React, { useState } from 'react';
-import VendorPopUp from '../VendorPopUp';
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import IconButton from '@/components/common/IconButton';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import AddExpriences from '../AddExpriences';
+import AddExpriences from './AddExpriences';
 import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
-import { cat, subCat } from '../Logic/vendorComps.helper';
+import { cat, subCat } from './Logic/vendorComps.helper';
 import { useRecoilState } from 'recoil';
 import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
 import { changeHandler } from '@/helper/common.helper';
+import VendorPopUp from './common/VendorPopUp';
 
 const optionYearArray = [
   { value: '1', label: '1' },

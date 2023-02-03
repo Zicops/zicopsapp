@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AddVendorProfile from '../AddVendorProfile';
 import { manageVendorProfiles } from '../Logic/vendorComps.helper';
 import styles from '../vendorComps.module.scss';
-import VendorPopUp from '../VendorPopUp';
+import VendorPopUp from '../common/VendorPopUp';
 const SingleProfile = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
   const editProfileData = manageVendorProfiles?.filter((e) => e?.id === data?.id);

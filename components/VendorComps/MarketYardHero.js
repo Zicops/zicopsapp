@@ -1,6 +1,5 @@
-import styles from '../vendorComps.module.scss';
-const MarketYardHero = ({onHandlePopup}) => {
- 
+import styles from './vendorComps.module.scss';
+const MarketYardHero = ({ onHandlePopup }) => {
   return (
     <div className={`${styles.marketHeroContainer}`}>
       <div className={`${styles.marketHeroDetails}`}>

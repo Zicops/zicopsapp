@@ -3,7 +3,7 @@ import styles from '../vendorComps.module.scss';
 import SingleProfile from './SingleProfile';
 import { manageVendorProfiles } from '../Logic/vendorComps.helper';
 import { useState } from 'react';
-import VendorPopUp from '../VendorPopUp';
+import VendorPopUp from '../common/VendorPopUp';
 import AddVendorProfile from '../AddVendorProfile';
 const ProfileManageVendor = () => {
   const [isOpenProfile, setIsOpenProfile] = useState(false);

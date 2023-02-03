@@ -5,7 +5,7 @@ import { changeHandler } from '@/helper/common.helper';
 import { VendorExpriencesAtom } from '@/state/atoms/vendor.atoms';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 
 const optionEmploymentTypeArray = [
   { value: 'Full-time', label: 'Full-time' },

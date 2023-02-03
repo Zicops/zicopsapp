@@ -1,5 +1,5 @@
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import styles from '../vendorComps.module.scss';
+import styles from './vendorComps.module.scss';
 const ReviewOrderTop = ({ isConfirm }) => {
   return (
     <div>

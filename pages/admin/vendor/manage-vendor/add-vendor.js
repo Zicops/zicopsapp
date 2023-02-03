@@ -1,17 +1,14 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import ZicopsCarousel from '@/components/ZicopsCarousel';
-import { myVendors, coursesVendor } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import VendorMaster from '@/components/VendorComps/AddVendor/VendorMaster';
 import AddVendorServices from '@/components/VendorComps/AddVendor/AddVendorServices';
 import AddVendorCourses from '@/components/VendorComps/AddVendor/AddVendorCourses';
-import AddVendorProfile from '@/components/VendorComps/AddVendorProfile';
 import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
 import VendorOrders from '@/components/VendorComps/VendorOrders';
-import styles from './manageVendor.module.scss';
+import styles from '../../../../components/VendorComps/vendorComps.module.scss';
 import AdminHeader from '@/components/common/AdminHeader';
 import MainBodyBox from '@/components/common/MainBodyBox';
 import MainBody from '@/components/common/MainBody';
