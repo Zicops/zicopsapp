@@ -1,20 +1,37 @@
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { forwardRef } from 'react';
+import { useRecoilValue } from 'recoil';
 
 const CoursePageTabs = forwardRef(
   ({ tabData, setActiveTab, activeCourseTab, customStyles }, ref) => {
+    const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
+
     return (
       <>
         <div className="middle_tab" ref={ref} style={customStyles}>
           <div className="tabs">
             <ul>
-              {tabData.map((tab) => (
-                <li
-                  className={activeCourseTab == tab.name ? 'active' : ''}
-                  key={tab.name}
-                  onClick={() => setActiveTab(tab.name)}>
-                  {tab.name}
-                </li>
-              ))}
+              {tabData.map((tab) => {
+                let isDisabled = false;
+                if (tab?.isDisabled || tab?.isDemo || tab?.isDev) isDisabled = true;
+                if (isDemo && tab?.isDemo) isDisabled = false;
+                if (isDev && tab?.isDev) isDisabled = false;
+
+                return (
+                  <li
+                    className={`${activeCourseTab == tab.name ? 'active' : ''} ${
+                      isDisabled ? 'disabled' : ''
+                    }`}
+                    key={tab.name}
+                    onClick={() => {
+                      if (isDisabled) return;
+
+                      setActiveTab(tab.name);
+                    }}>
+                    {tab.name}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -22,6 +39,9 @@ const CoursePageTabs = forwardRef(
         {/* move to .scss */}
         <style jsx>
           {`
+            .middle_tab .tabs li.disabled {
+              cursor: no-drop;
+            }
             .middle_tab {
               position: sticky;
               top: 70px;
