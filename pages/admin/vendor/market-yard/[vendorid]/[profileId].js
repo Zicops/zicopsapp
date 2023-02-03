@@ -13,7 +13,7 @@ const ViewProfile = () => {
     <div>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
       <MainBody>
-        <ViewVendorProfile data={viewProfileData} />
+        <ViewVendorProfile data={viewProfileData[0]} />
       </MainBody>
     </div>
   );

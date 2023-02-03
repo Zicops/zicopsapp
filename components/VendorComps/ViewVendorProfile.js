@@ -5,24 +5,24 @@ const ViewVendorProfile = ({ data }) => {
     <div className={`${styles.viewProfilesContainer}`}>
       <div className={`${styles.viewProfileTop}`}>
         <div className={`${styles.viewProfileImage}`}>
-          <img src={data[0]?.image} alt="" />
+          <img src={data?.image} alt="" />
         </div>
         <div className={`${styles.profileDetails}`}>
-          <p className={`${styles.profileName}`}>{data[0]?.name}</p>
-          {data[0]?.expertise?.map((expert, index) => (
+          <p className={`${styles.profileName}`}>{data?.name}</p>
+          {data?.expertise?.map((expert, index) => (
             <span>
-              {expert} {index + 1 !== data[0]?.expertise?.length ? ' | ' : ''}
+              {expert} {index + 1 !== data?.expertise?.length ? ' | ' : ''}
             </span>
           ))}
 
           <div className={`${styles.hr1}`}></div>
           <div className={`${styles.profileEmail}`}>
             <img src="/images/svg/mark_email_read.svg" alt="" />
-            <p>{data[0]?.email}</p>
+            <p>{data?.email}</p>
           </div>
           <div className={`${styles.profileWebsite}`}>
             <img src="/images/svg/open_in_new.svg" alt="" />
-            <p>{data[0]?.website}</p>
+            <p>{data?.website}</p>
           </div>
           <button>Add to my Vendors</button>
         </div>
@@ -32,11 +32,11 @@ const ViewVendorProfile = ({ data }) => {
         <div className={`${styles.vendorAddressType}`}>
           <div className={`${styles.vendorAddress}`}>
             <p>Vendor Address</p>
-            <span>{data[0]?.address}</span>
+            <span>{data?.address}</span>
           </div>
           <div className={`${styles.vendorType}`}>
             <p>Vendor Type</p>
-            <span>{data[0]?.type}</span>
+            <span>{data?.type}</span>
           </div>
           <div className={`${styles.vendorSocialMedia}`}>
             <p>Social Media</p>
@@ -51,7 +51,7 @@ const ViewVendorProfile = ({ data }) => {
         <div className={`${styles.vendorExpertiseContainer}`}>
           <p>Expertise :</p>
           <div className={`${styles.vendorExpertiseMain}`}>
-            {data[0]?.services?.map((expert) => (
+            {data?.services?.map((expert) => (
               <span className={`${styles.vendorExpertise}`}>{expert}</span>
             ))}
           </div>
