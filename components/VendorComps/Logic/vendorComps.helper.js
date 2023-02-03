@@ -660,3 +660,42 @@ export const serviceType = [
   'Content Development',
   'Speakers'
 ];
+
+export const sampleFiles = [
+  {
+    id: '0',
+    title: 'File_management_python_1.0.pdf',
+    image: '/images/Cohort-Mapped.jpg',
+    description: 'Subject matter expertise in Python and content for the same',
+    size: '12 MB',
+    rate: '3000 INR per page',
+    previewImage: '/images/discord_logo.png'
+  },
+  {
+    id: '1',
+    title: 'File_management_python_1.0.pdf',
+    image: '/images/Cohort-Mapped.jpg',
+    description: 'Subject matter expertise in Python and content for the same',
+    size: '10 MB',
+    rate: '3000 INR per page',
+    previewImage: '/images/discord_logo.png'
+  },
+  {
+    id: '2',
+    title: 'File_management_python_1.0.pdf',
+    image: '/images/Cohort-Mapped.jpg',
+    description: 'Subject matter expertise in Python and content for the same',
+    size: '30 MB',
+    rate: '5000 INR per page',
+    previewImage: '/images/discord_logo.png'
+  },
+  {
+    id: '3',
+    title: 'File_management_python_1.0.pdf',
+    image: '/images/Cohort-Mapped.jpg',
+    description: 'Subject matter expertise in Python and content for the same',
+    size: '2 MB',
+    rate: '1000 INR per page',
+    previewImage: '/images/discord_logo.png'
+  }
+];

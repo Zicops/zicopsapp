@@ -3,8 +3,15 @@ import { ExpertiseIcon } from '/components/common/ZicopsIcons/index.js';
 import { LanguagesIcon } from '/components/common/ZicopsIcons/index.js';
 import { ContentFormatIcon } from '/components/common/ZicopsIcons/index.js';
 import VendorPill from '../common/VendorPill';
+import VendorPopUp from '../VendorPopUp';
+import { useState } from 'react';
+import { sampleFiles } from '../Logic/vendorComps.helper';
 
 export default function VendorServices({ data }) {
+  const [samplePopup, setSamplePopup] = useState(false);
+
+  const handleClick = () => setSamplePopup(true);
+
   return (
     <div className={`${styles.vendorTypeContainer}`}>
       <div className={`${styles.expertise}`}>
@@ -45,12 +52,35 @@ export default function VendorServices({ data }) {
           <span>Sample</span>
         </div>
         <div className={`${styles.sampleFiles}`}>
-          <img src="/images/discord_logo.png" />
-          <img src="/images/discord_logo.png" />
-          <img src="/images/discord_logo.png" />
-          <img src="/images/discord_logo.png" />
+          {sampleFiles.map((data, index) => {
+            return <img src={data.previewImage} onClick={handleClick} />;
+          })}
         </div>
       </div>
+
+      <VendorPopUp
+        open={samplePopup}
+        popUpState={[samplePopup, setSamplePopup]}
+        size="large"
+        title={sampleFiles[0].title}
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Add' }}>
+        <div className={`${styles.samplePopupContainer}`}>
+          <div className={`${styles.sampleFilePreview}`}>
+            <img src="/images/Cohort-Mapped.jpg" />
+          </div>
+          <div className={`${styles.sampleFileDetails}`}>
+            <h3>Details</h3>
+            <label>File Name</label>
+            <p>Python_management 1.0</p>
+            <label>File Description</label>
+            <p>{sampleFiles[0].description}</p>
+            <label>File Size</label>
+            <p>{sampleFiles[0].size}</p>
+            <p> {sampleFiles[0].rate}</p>
+          </div>
+        </div>
+      </VendorPopUp>
     </div>
   );
 }

@@ -102,16 +102,45 @@
 
   .sampleFiles {
     width: 100%;
-    height: 100px;
     display: flex;
     gap: 15px;
-  }
-
-  .sampleFiles img {
-    width: 10%;
+    img {
+      width: 20%;
+    }
   }
 }
+.samplePopupContainer {
+  display: flex;
+  height: 60vh;
+  overflow: auto;
 
+  .sampleFilePreview {
+    width: 75%;
+
+    img {
+      width: 100%;
+      height: 65vh;
+    }
+  }
+
+  .sampleFileDetails {
+    width: 25%;
+    padding-left: 15px;
+
+    h3 {
+      margin-bottom: 30px;
+    }
+
+    label {
+      color: $bgBody;
+    }
+
+    p {
+      margin-bottom: 30px;
+      width: 100%;
+    }
+  }
+}
 .vendorDetailsContainer {
   width: 100%;
   height: 400px;
@@ -675,7 +704,7 @@
 .lineContainer {
   display: flex;
   justify-content: space-between;
-   .heading {
+  .heading {
     padding: 10px 0px;
   }
   .quantity {
@@ -698,7 +727,7 @@
     background: $secondaryWhite;
     border-radius: 4px;
   }
-  .lineInput{
+  .lineInput {
     padding: 8px;
   }
 }
@@ -845,19 +874,18 @@
     margin-bottom: 5px;
     .uploadButton {
       display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 15px;
-        align-items: center;
-        gap: 15px;
-        color: $white;
-        background-color: $secondary;
-        border: 1px dashed $secondaryWhite;
-        padding-top: 10px;
-        padding: 25px 15px;
-        margin-top: 8px;
-
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      align-items: center;
+      gap: 15px;
+      color: $white;
+      background-color: $secondary;
+      border: 1px dashed $secondaryWhite;
+      padding-top: 10px;
+      padding: 25px 15px;
+      margin-top: 8px;
     }
   }
 
@@ -1214,8 +1242,8 @@
     }
   }
 }
- .hr {
-   background-color: $secondary;
-   height: 1px;
-   margin: 10px 0px;
- }
+.hr {
+  background-color: $secondary;
+  height: 1px;
+  margin: 10px 0px;
+}
