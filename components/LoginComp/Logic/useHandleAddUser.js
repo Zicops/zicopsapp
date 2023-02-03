@@ -16,7 +16,7 @@ import {
   GET_USER_ORGANIZATIONS,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendNotificationWithLink } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import {
   CUSTOM_ERROR_MESSAGE,
@@ -408,11 +408,12 @@ export default function useHandleAddUserDetails() {
       (item) => item?.user_lsp_id === userLspId
     );
     if (!!courses?.length) {
-      sendNotification(
+      sendNotificationWithLink(
         {
           title: NOTIFICATION_TITLES?.signIn?.course,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.coursesAssigned?.msg,
-          user_id: [userId]
+          user_id: [userId],
+          link:''
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       );
@@ -425,33 +426,36 @@ export default function useHandleAddUserDetails() {
       {},
       userQueryClient
     );
-    // console.log(resCohorts?.getLatestCohorts?.cohorts);
-
+    
     const cohorts = resCohorts?.getLatestCohorts?.cohorts;
+    console.log(cohorts);
 
     if (!!cohorts?.length) {
-      sendNotification(
+      sendNotificationWithLink(
         {
           title: NOTIFICATION_TITLES?.cohortAssign,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.cohortAssigned?.msg,
-          user_id: [userId]
+          user_id: [userId],
+          link:""
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       );
     }
-    sendNotification(
+    sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.lspWelcome,
         body: `Hey ${userAboutData?.first_name} ${userAboutData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
-        user_id: [userId]
+        user_id: [userId],
+        link:''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
-    sendNotification(
+    sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
-        user_id: [userId]
+        user_id: [userId],
+        link:''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );

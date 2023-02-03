@@ -17,7 +17,6 @@ import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import notificationData from '../Notifications/data';
 
 export default function PushNotificationLayout({ children }) {
   const [sendFcmToken] = useMutation(GET_FCM_TOKEN, { client: notificationClient });
@@ -62,7 +61,7 @@ export default function PushNotificationLayout({ children }) {
                 title: event?.data?.notification?.title,
                 body: event?.data?.notification?.body,
                 isRead: false,
-                img: `/images/${msg?.title || 'details'}.png`,
+                img: `/images/${event?.data?.notification?.title || 'details'}.png`,
                 link: event?.data?.notification?.link || '',
                 route: '',
                 duration: moment().fromNow()
@@ -136,7 +135,6 @@ export default function PushNotificationLayout({ children }) {
       try {
         const token = await getFCMToken();
         if (!token) return null;
-        console.log('token', token);
         sessionStorage.setItem('fcm-token', token);
         setFcmToken(token);
         sendFcmToken({ context: { headers: { 'fcm-token': token } } }).catch((err) =>

@@ -5,7 +5,7 @@ import {
   userClient
 } from '@/api/UserMutations';
 import { GET_USER_LEARNINGSPACES_DETAILS } from '@/api/UserQueries';
-import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendEmail, sendNotificationWithLink } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
@@ -110,11 +110,12 @@ export function useHandleCohortMaster() {
         ? EMAIL_TEMPLATE_IDS?.cohortManagerUnassign
         : EMAIL_TEMPLATE_IDS?.cohortManagerAssign
     };
-    sendNotification(
+    sendNotificationWithLink(
       {
         body: notificationBody,
         title: NOTIFICATION_TITLES?.cohortAssign,
-        user_id: userIds
+        user_id: userIds,
+        link:''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
