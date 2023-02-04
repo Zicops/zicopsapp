@@ -24,7 +24,6 @@ export default function MarketYardHeroSection() {
     <>
       <div className={`${styles.marketYardFrameContainer}`}>
         <img src="/images/marketyardFrame.png" className={`${styles.frameImage}`} />
-
         <div className={`${styles.frameText}`}>
           <div className={`${styles.vendorDropDownContainer}`}>
             <VendorDropdown
@@ -47,7 +46,6 @@ export default function MarketYardHeroSection() {
               changeHandler={(val) => setVendorService(val)}
               styleClass={`${styles.vendorDropDown}`}
             />
-
             <input type="text" placeholder="Search" className={`${styles.vendorSearch}`} />
           </div>
 
