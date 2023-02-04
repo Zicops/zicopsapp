@@ -1,4 +1,5 @@
 import styles from './vendorComps.module.scss';
+import { myVendors } from './Logic/vendorComps.helper';
 const CompleteOrder = () => {
   return (
     <div className={`${styles.CompleteItemContainer}`}>
@@ -14,11 +15,11 @@ const CompleteOrder = () => {
         <span>New Vendor added to your Vendor list</span>
         <div className={`${styles.comapanyLogoName}`}>
           <div className={`${styles.logo}`}>
-            <img src="/images/discord_logo.png" alt="" />
+            <img src={myVendors[0]?.image} alt="" />
           </div>
           <div className={`${styles.comapanyName}`}>
-            <p>ABC Learning Technology Pvt. LTd.</p>
-            <span>Organisation</span>
+            <p>{myVendors[0]?.name}</p>
+            <span>{myVendors[0]?.type}</span>
           </div>
         </div>
       </div>

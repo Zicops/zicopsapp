@@ -1,14 +1,14 @@
 export const myVendors = [
   {
     id: '0',
-    name: 'ABC Pvt Ltd.',
+    name: 'ABCD Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
     desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '1',
-    name: 'ABC Pvt Ltd.',
+    name: 'ABCD Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
     desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'

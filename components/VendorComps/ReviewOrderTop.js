@@ -10,7 +10,7 @@ const ReviewOrderTop = ({ isConfirm }) => {
         </div>
       )}
       <div className={`${styles.checkBoxLabel}`}>
-        <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" />
+        <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" isChecked={true} />
       </div>
       <div className={`${styles.OrderDetails}`}>
         <div>
