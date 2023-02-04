@@ -2,8 +2,15 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
+import { useState } from 'react';
 import styles from './vendorComps.module.scss';
 const AddLineItem = () => {
+  const [lineUnit, setLineUnit] = useState(null);
+  const [lineCurrency, setLineCurrency] = useState(null);
+  const [lineDescription, setLineDescription] = useState('');
+  const [rate, setRate] = useState('');
+  const [count, setCount] = useState(0);
+  const [isExpertise, setIsExpertise] = useState(true);
   const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
     label: val,
     value: val
@@ -13,10 +20,23 @@ const AddLineItem = () => {
     label: val,
     value: val
   }));
+
+  const decrementHandler = () => {
+    if (count > 0) {
+      setCount(count - 1);
+    }
+  };
+
+  const addAnotherItemHandler = () => {};
+
   return (
     <div>
       <div className={`${styles.checkBoxLabel}`}>
-        <LabeledRadioCheckbox label={'Subject Matter Expertise'} type="checkbox" />
+        <LabeledRadioCheckbox
+          label={'Subject Matter Expertise'}
+          type="checkbox"
+          isChecked={isExpertise}
+        />
       </div>
       <div className={`${styles.lineContainer}`}>
         <div>
@@ -27,8 +47,10 @@ const AddLineItem = () => {
               inputName: 'summary',
               placeholder: 'Line item description (in 60 chars)',
               rows: 3,
-              maxLength: 60
+              maxLength: 60,
+              value: lineDescription
             }}
+            changeHandler={(e) => setLineDescription(e.target.value)}
           />
         </div>
         <div>
@@ -37,8 +59,10 @@ const AddLineItem = () => {
             dropdownOptions={{
               inputName: 'unit',
               placeholder: '/hour',
+              value: lineUnit,
               options: unit
             }}
+            changeHandler={(val) => setLineUnit(val)}
           />
         </div>
         <div>
@@ -47,8 +71,10 @@ const AddLineItem = () => {
             dropdownOptions={{
               inputName: 'unit',
               placeholder: 'INR',
+              value: lineCurrency,
               options: currency
             }}
+            changeHandler={(val) => setLineCurrency(val)}
           />
         </div>
         <div>
@@ -56,17 +82,19 @@ const AddLineItem = () => {
           <LabeledInput
             inputOptions={{
               inputName: 'rate',
-              placeholder: '5000'
+              placeholder: '5000',
+              value: rate
             }}
             inputClass={`${styles.lineInput}`}
+            changeHandler={(e) => setRate(e.target.value)}
           />
         </div>
         <div>
           <p className={`${styles.heading}`}>Quantity</p>
           <div className={`${styles.quantity}`}>
-            <span>-</span>
-            <p>01</p>
-            <span>+</span>
+            <span onClick={decrementHandler}>-</span>
+            <p>{count}</p>
+            <span onClick={() => setCount(count + 1)}>+</span>
           </div>
         </div>
         <div>
@@ -77,7 +105,7 @@ const AddLineItem = () => {
         </div>
       </div>
       <div className={`${styles.addAnotherItem}`}>
-        <p>+</p>
+        <p onClick={addAnotherItemHandler}>+</p>
         <span>Add another line item</span>
       </div>
     </div>

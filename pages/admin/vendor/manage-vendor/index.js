@@ -15,15 +15,12 @@ export default function ManageVendor() {
   const [vendorLevel, setVendorLevel] = useState('lsp');
 
   const onPlusHandler = () => {
-    console.log('hello');
     setIsOpen(true);
   };
 
   const router = useRouter();
 
-  const handleClick = () => {
-    router.push('/admin/vendor/manage-vendor/add-vendor');
-  };
+  const handleClick = () => router.push('/admin/vendor/manage-vendor/add-vendor');
 
   return (
     <>
@@ -68,7 +65,6 @@ export default function ManageVendor() {
                 value: 'organization',
                 isChecked: vendorLevel === 'organization',
                 changeHandler: (e) => {
-                  console.log(e);
                   setVendorLevel(e.target.value);
                 }
               }}
