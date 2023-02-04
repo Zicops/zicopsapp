@@ -90,7 +90,7 @@ export function useHandleCohortMaster() {
     userIds = [],
     isDemote = false
   ) {
-    let msgType = isDemote ? 'demoteManager' : 'promotedManager';
+    let msgType = isDemote ? 'demotedManager' : 'promotedManager';
     const notificationBody = getNotificationMsg(msgType, {
       cohortName: cohortMasterData?.cohort_name
     });

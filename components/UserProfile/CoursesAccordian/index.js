@@ -95,12 +95,12 @@ const CoursesAccordian = ({ currentUserData = null }) => {
       courseName: userCourseData?.name
     });
 
-     sendNotificationWithLink(
+    sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: notificationBody,
         user_id: [currentUserId],
-        link:''
+        link: ''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
@@ -237,7 +237,7 @@ const CoursesAccordian = ({ currentUserData = null }) => {
     //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     // );
 
-     sendNotificationWithLink(
+    sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseAssign,
         body: notificationBody,
@@ -423,8 +423,11 @@ const CoursesAccordian = ({ currentUserData = null }) => {
 
   // load assigned courses
   useEffect(() => {
+    if (!router.isReady) return;
+    if (!currentUserId) return;
+
     loadAssignedCourseData();
-  }, [currentUserId, currentUserData]);
+  }, [currentUserId, router.isReady]);
 
   async function loadAssignedCourseData() {
     setCourseLoading(true);
