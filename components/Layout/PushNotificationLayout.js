@@ -12,7 +12,7 @@ import {
   NotificationAtom
 } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -28,6 +28,7 @@ export default function PushNotificationLayout({ children }) {
   const [notification, setNotifications] = useRecoilState(NotificationAtom);
   const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [isListnerAdded, setIsListnerAdded] = useState(false);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   useEffect(() => {
     if (!userAboutData?.id) return;
@@ -164,7 +165,7 @@ export default function PushNotificationLayout({ children }) {
         return null;
       }
     }
-  }, [userAboutData?.id]);
+  }, [userAboutData?.id,userOrgData?.lsp_id]);
 
   return <>{children}</>;
 }
