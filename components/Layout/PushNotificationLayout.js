@@ -31,8 +31,10 @@ export default function PushNotificationLayout({ children }) {
 
   useEffect(() => {
     if (!userAboutData?.id) return;
+    let lspId = sessionStorage.getItem('lsp_id');
+    if(!lspId) return;
 
-    setToken().then((token) => {
+    setToken().then((token) => {  
       if (!token) return;
       loadAllNotifications(token);
     });
