@@ -186,7 +186,7 @@ export default function useHandleCourseAssign({
     closePopUp();
     setToastMsg({
       type: 'success',
-      message: `You have added a new course to your learning folder. End date for completing ${courseName || ''} is ${
+      message: `Course ${courseName || ''} added successfully. It's end date is ${
         courseAssignData?.endDate?.toDateString()
       }` });
 
