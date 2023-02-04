@@ -26,6 +26,7 @@ import {
   GET_USER_DETAIL,
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_LSP_MAP_BY_LSPID,
+  GET_USER_LSP_ROLES,
   GET_USER_PREFERENCES,
   GET_USER_PREFERENCES_DETAILS,
   userQueryClient
@@ -842,13 +843,39 @@ export default function useUserCourseData() {
     }
   };
 
+  async function getUserLspRoleLatest(userId=null,userLspId = null){
+
+    if(!userLspId || !userId) return ;
+    console.log('called');
+    //this function gets users lsp role and return the latest one
+    const lspRoleArr = await loadQueryDataAsync(
+      GET_USER_LSP_ROLES,
+      { user_id: userId, user_lsp_ids: [userLspId] },
+      {},
+      userQueryClient
+    );
+
+    const lspRoles = lspRoleArr?.getUserLspRoles;
+    let userLspRole = 'learner';
+
+    if (lspRoleArr?.length > 1) {
+      const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
+      userLspRole = latestUpdatedRole?.pop()?.role;
+    } else {
+      userLspRole = lspRoles[0]?.role;
+    }
+
+    return userLspRole ;
+  }
+
   return {
     getUserCourseData,
     getUserPreferences,
     getCohortUserData,
     getUsersForAdmin,
     getScheduleExams,
-    OrgDetails
+    OrgDetails,
+    getUserLspRoleLatest
   };
 }
 
