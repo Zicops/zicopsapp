@@ -17,7 +17,8 @@ const LspCard = ({
   path,
   isDisabled = false,
   userLspId,
-  userId
+  userId,
+  lspLogo
 }) => {
   const router = useRouter();
   const userData = useRecoilValue(UserStateAtom);
@@ -50,13 +51,18 @@ const LspCard = ({
     // const userLspRole = latestUpdatedRole?.pop()?.role ? latestUpdatedRole?.pop()?.role : 'learner';
 
     sessionStorage.setItem('lsp_id', lspId);
-    setUserOrgData((prevValue) => ({ ...prevValue, lsp_id: lspId, logo_url: logo }));
+    setUserOrgData((prevValue) => ({
+      ...prevValue,
+      lsp_id: lspId,
+      logo_url: logo,
+      lsp_logo_url: lspLogo
+    }));
     sessionStorage.setItem('lsp_name', lspName);
     sessionStorage.setItem('org_id', orgId);
     sessionStorage.setItem('ou_id', ouId);
     sessionStorage.setItem('user_lsp_id', userLspId);
     sessionStorage.setItem('user_lsp_role', userLspRole);
-    sessionStorage.setItem('org_domain',website);
+    sessionStorage.setItem('org_domain', website);
 
     const currentHost = getCurrentHost();
     if (currentHost !== website && path === '/') {

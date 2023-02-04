@@ -31,7 +31,6 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
-import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
@@ -41,7 +40,7 @@ import {
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -56,10 +55,10 @@ import {
   COMMON_LSPS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
-  USER_MAP_STATUS,
-  USER_STATUS
+  USER_MAP_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
+import { getLspDetails } from './orgdata.helper';
 import { parseJson } from './utils.helper';
 
 export function useHandleCatSubCat(selectedCategory) {
@@ -816,13 +815,14 @@ export default function useUserCourseData() {
     if (!userData?.length) return { error: 'No users found!' };
     return userData;
   }
-  
+
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
 
-  const OrgDetails = async () => {
+  const OrgDetails = async (loadLsp = false) => {
     const orgId = sessionStorage.getItem('org_id');
+    const lspId = sessionStorage.getItem('lsp_id');
     if (!orgId) return;
     const res = await getOrgDetails({
       variables: { org_ids: orgId }
@@ -833,6 +833,13 @@ export default function useUserCourseData() {
       ...prevValue,
       logo_url: res?.data?.getOrganizations?.[0]?.logo_url
     }));
+    if (loadLsp) {
+      const lspData = await getLspDetails([lspId]).catch((err) => console.error(err));
+      setUserOrgData((prev) => ({
+        ...prev,
+        lsp_logo_url: lspData?.data?.getLearningSpaceDetails?.[0]?.logo_url
+      }));
+    }
   };
 
   return {
