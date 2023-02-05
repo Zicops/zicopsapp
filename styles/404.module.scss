@@ -1,0 +1,26 @@
+.custom404Container {
+  color: $darkThree;
+
+  padding: 70px;
+  margin: 120px auto auto;
+  width: min-content;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+
+  border: 2px dashed $darkThree;
+
+  .btn {
+    background-color: $primary;
+    color: $black;
+
+    width: fit-content;
+    padding: 10px 40px;
+
+    border-width: 0px;
+    border-radius: 1px;
+  }
+}
