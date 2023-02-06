@@ -6,8 +6,15 @@ import { useRecoilState } from 'recoil';
 import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import PreviewImageVideo from '@/components/common/FormComponents/BrowseAndUpload/PreviewImageVideo';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
+import { useState } from 'react';
+import VendorPopUp from '../common/VendorPopUp';
+import AddUrl from './common/AddUrl';
 
 export default function VendorMaster() {
+  const [isFacebook, setIsFacebook] = useState(false);
+  const [isInstagram, setIsInstagram] = useState(false);
+  const [isTwitter, setIsTwitter] = useState(false);
+  const [isLinkdin, setIsLinkdin] = useState(false);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
 
   return (
@@ -57,10 +64,10 @@ export default function VendorMaster() {
         <div className={`${styles.input3}`}>
           <label for="vendorName">Add URL of social media pages: </label>
           <div className={`${styles.icons}`}>
-            <img src="/images/Facebook1.png" />
-            <img src="/images/Instagram1.png" />
-            <img src="/images/Twitter1.png" />
-            <img src="/images/Linkedin1.png" />
+            <img src="/images/Facebook1.png" onClick={() => setIsFacebook(true)} />
+            <img src="/images/Instagram1.png" onClick={() => setIsInstagram(true)} />
+            <img src="/images/Twitter1.png" onClick={() => setIsTwitter(true)} />
+            <img src="/images/Linkedin1.png" onClick={() => setIsLinkdin(true)} />
           </div>
         </div>
       </div>
@@ -88,6 +95,66 @@ export default function VendorMaster() {
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
       </div>
+      <VendorPopUp
+        open={isFacebook}
+        title="Facebook"
+        popUpState={[isFacebook, setIsFacebook]}
+        size="small"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Done' }}
+        isFooterVisible={true}>
+        <AddUrl
+          inputName="facebookURL"
+          urlData={vendorData}
+          setUrlData={setVendorData}
+          Value={vendorData.facebookURL}
+        />
+      </VendorPopUp>
+      <VendorPopUp
+        open={isInstagram}
+        title="Instagram"
+        popUpState={[isInstagram, setIsInstagram]}
+        size="small"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Done' }}
+        isFooterVisible={true}>
+        <AddUrl
+          inputName="instagramURL"
+          urlData={vendorData}
+          setUrlData={setVendorData}
+          Value={vendorData.instagramURL}
+        />
+      </VendorPopUp>
+      <VendorPopUp
+        open={isTwitter}
+        title="Twitter"
+        popUpState={[isTwitter, setIsTwitter]}
+        size="small"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Done' }}
+        isFooterVisible={true}>
+        <AddUrl
+          inputName="twitterURL"
+          urlData={vendorData}
+          setUrlData={setVendorData}
+          Value={vendorData.twitterURL}
+        />
+      </VendorPopUp>
+      <VendorPopUp
+        open={isLinkdin}
+        title="Linkdin"
+        popUpState={[isLinkdin, setIsLinkdin]}
+        size="small"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Done' }}
+        isFooterVisible={true}>
+        <AddUrl
+          inputName="linkedinURL"
+          urlData={vendorData}
+          setUrlData={setVendorData}
+          Value={vendorData.linkedinURL}
+        />
+      </VendorPopUp>
     </div>
   );
 }
