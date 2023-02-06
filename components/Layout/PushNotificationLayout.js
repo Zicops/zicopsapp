@@ -104,7 +104,7 @@ export default function PushNotificationLayout({ children }) {
 
       messages = [..._unreadMessage];
       // messages = structuredClone(_message);
-      if (_message?.length < 5) {
+      if (_unreadMessage?.length < 5) {
         queryVariables.isRead = true;
         const allNotifications = await loadQueryDataAsync(
           GET_ALL_NOTIFICATIONS,

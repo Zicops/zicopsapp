@@ -1,6 +1,4 @@
 import useHandleUserUpdate from '@/components/LearnerUserProfile/Logic/useHandleUserUpdate';
-import { sendNotification } from '@/helper/api.helper';
-import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getCurrentHost } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -47,7 +45,7 @@ const SubCategoriesPreview = ({
     let isError = false;
     isError = await addUserLearningSpaceDetails(sub_categories, primary);
     if (isError) return;
-    isError = await updateAboutUser();
+    isError = await updateAboutUser(null,true,true);
 
     if (isError) return;
 

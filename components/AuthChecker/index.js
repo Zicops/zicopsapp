@@ -116,7 +116,7 @@ const AuthChecker = ({ children }) => {
 
   useEffect(() => {
     if (!router.asPath?.includes('admin')) return;
-    if(!!userOrg?.user_lsp_role?.length) return ;
+    if (!!userOrg?.user_lsp_role?.length) return;
     const _userLspRole = sessionStorage?.getItem('user_lsp_role');
     if (!_userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
   }, [router?.asPath]);
@@ -128,8 +128,10 @@ const AuthChecker = ({ children }) => {
     const _lspId = sessionStorage?.getItem('lsp_id');
     const _userLspId = sessionStorage?.getItem('user_lsp_id');
     const _orgId = sessionStorage?.getItem('org_id');
-    let userLspRole = sessionStorage?.getItem('user_lsp_role') ?? '';
+    let userLspRole = sessionStorage?.getItem('user_lsp_role') ?? 'learner';
     userLspRole = await getUserLspRoleLatest(user?.id, _userLspId);
+
+    if (!userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
 
     sessionStorage?.setItem('user_lsp_role', userLspRole);
 
