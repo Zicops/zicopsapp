@@ -1,7 +1,7 @@
 // import Image from 'next/image';
-import { GET_USER_LSP_ROLES, userQueryClient } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { getCurrentHost } from '@/helper/utils.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -17,46 +17,60 @@ const LspCard = ({
   path,
   isDisabled = false,
   userLspId,
-  userId
+  userId,
+  lspLogo
 }) => {
   const router = useRouter();
   const userData = useRecoilValue(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const { getUserLspRoleLatest } = useUserCourseData();
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const onHandleLsp = async () => {
-    console.log(logo);
     if (isDisabled) return;
 
     if (!userLspId && !userId) return;
     setUserOrgData((prev) => ({ ...prev, logo_url: logo }));
-    const lspRoleArr = await loadQueryDataAsync(
-      GET_USER_LSP_ROLES,
-      { user_id: userId, user_lsp_ids: [userLspId] },
-      {},
-      userQueryClient
-    );
+    // const lspRoleArr = await loadQueryDataAsync(
+    //   GET_USER_LSP_ROLES,
+    //   { user_id: userId, user_lsp_ids: [userLspId] },
+    //   {},
+    //   userQueryClient
+    // );
 
-    const lspRoles = lspRoleArr?.getUserLspRoles;
+    // const lspRoles = lspRoleArr?.getUserLspRoles;
     let userLspRole = 'learner';
 
-    if (lspRoleArr?.length > 1) {
-      const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
-      userLspRole = latestUpdatedRole?.pop()?.role;
-    } else {
-      userLspRole = lspRoles[0]?.role;
-    }
+    // if (lspRoleArr?.length > 1) {
+    //   const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
+    //   userLspRole = latestUpdatedRole?.pop()?.role;
+    // } else {
+    //   userLspRole = lspRoles[0]?.role;
+    // }
+
+    // console.log(userLspRole, 'role');
+
+    // if (isDev) {
+    userLspRole = await getUserLspRoleLatest(userId, userLspId);
+    // }
     // const latestUpdatedRole = lspRoleArr?.getUserLspRoles?.sort((a,b) => a?.updated_at - b?.updated_at);
 
     // const userLspRole = latestUpdatedRole?.pop()?.role ? latestUpdatedRole?.pop()?.role : 'learner';
 
     sessionStorage.setItem('lsp_id', lspId);
-    setUserOrgData((prevValue) => ({ ...prevValue, lsp_id: lspId, logo_url: logo }));
+    setUserOrgData((prevValue) => ({
+      ...prevValue,
+      lsp_id: lspId,
+      logo_url: logo,
+      lsp_logo_url: lspLogo,
+      user_lsp_role: userLspRole
+    }));
     sessionStorage.setItem('lsp_name', lspName);
     sessionStorage.setItem('org_id', orgId);
     sessionStorage.setItem('ou_id', ouId);
     sessionStorage.setItem('user_lsp_id', userLspId);
     sessionStorage.setItem('user_lsp_role', userLspRole);
-    sessionStorage.setItem('org_domain',website);
+    sessionStorage.setItem('org_domain', website);
 
     const currentHost = getCurrentHost();
     if (currentHost !== website && path === '/') {

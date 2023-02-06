@@ -1,11 +1,10 @@
-import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import PopUp from '@/components/common/PopUp';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
-import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
+import { sendEmail, sendNotificationWithLink } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -16,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../userComps.module.scss';
 import addUserData from '../Logic/addUserData';
-import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 import useCohortUserData from '../Logic/useCohortUserData';
 
 import AddUsers from './AddUsers';
@@ -125,11 +123,12 @@ const Users = ({ isEdit = false, isReadOnly = false }) => {
       body: JSON.stringify(bodyData),
       template_id: EMAIL_TEMPLATE_IDS?.cohortUnassign,
     };
-     sendNotification(
+     sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.cohortUnassign,
         body: notificationBody,
-        user_id: [userData?.user_id]
+        user_id: [userData?.user_id],
+        link:''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );

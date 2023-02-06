@@ -17,7 +17,6 @@ import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import notificationData from '../Notifications/data';
 
 export default function PushNotificationLayout({ children }) {
   const [sendFcmToken] = useMutation(GET_FCM_TOKEN, { client: notificationClient });
@@ -44,6 +43,7 @@ export default function PushNotificationLayout({ children }) {
 
       navigator.serviceWorker.addEventListener('message', (event) => {
         console.log('event for the service worker', event);
+        // loadAllNotifications(fcmToken)
 
         if (event?.data?.notification?.body) {
           setToastMsg({ type: 'info', message: event?.data?.notification?.body });
@@ -62,7 +62,7 @@ export default function PushNotificationLayout({ children }) {
                 title: event?.data?.notification?.title,
                 body: event?.data?.notification?.body,
                 isRead: false,
-                img: `/images/${msg?.title || 'details'}.png`,
+                img: `/images/${event?.data?.notification?.title || 'details'}.png`,
                 link: event?.data?.notification?.link || '',
                 route: '',
                 duration: moment().fromNow()
@@ -86,22 +86,37 @@ export default function PushNotificationLayout({ children }) {
     }
 
     async function loadAllNotifications(token) {
+      let queryVariables = { prevPageSnapShot: '', pageSize: 10, isRead: false };
+      let messages = [];
       const allNotifications = await loadQueryDataAsync(
         GET_ALL_NOTIFICATIONS,
-        { prevPageSnapShot: '', pageSize: 10 },
+        queryVariables,
         { context: { headers: { 'fcm-token': token } } },
         notificationClient
       );
 
+      const _message = allNotifications?.getAll?.messages || [];
 
-      const messages = allNotifications?.getAll?.messages || [];
+      messages = [..._message];
+      if (_message?.length < 5) {
+        queryVariables.isRead = true;
+        const allNotifications = await loadQueryDataAsync(
+          GET_ALL_NOTIFICATIONS,
+          queryVariables,
+          contextObj,
+          notificationClient
+        );
+
+        messages = [...messages, ...allNotifications?.getAll?.messages];
+      }
+      
       const allMsg =
-        messages?.map((msg) => 
+        messages?.map((msg) =>
           getNotificationObj({
             title: msg?.title,
             body: msg?.body,
             isRead: !!msg?.is_read,
-            img: `/images/${msg?.title||'details'}.png`,
+            img: `/images/${msg?.title || 'details'}.png`,
             link: msg?.link || '',
             route: '',
             fcmMessageId: msg?.message_id,
@@ -136,7 +151,6 @@ export default function PushNotificationLayout({ children }) {
       try {
         const token = await getFCMToken();
         if (!token) return null;
-        console.log('token', token);
         sessionStorage.setItem('fcm-token', token);
         setFcmToken(token);
         sendFcmToken({ context: { headers: { 'fcm-token': token } } }).catch((err) =>

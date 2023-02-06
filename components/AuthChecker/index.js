@@ -1,16 +1,20 @@
 import { GIBBERISH_VALUE_FOR_LOGIN_STATE, PUBLIC_PATHS } from '@/helper/constants.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
-import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
+import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 const AuthChecker = ({ children }) => {
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [userOrg, setUserOrg] = useRecoilState(UsersOrganizationAtom);
+
+  const { getUserLspRoleLatest } = useUserCourseData();
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const router = useRouter();
   const [authorized, setAuthorized] = useState(true);
@@ -112,24 +116,35 @@ const AuthChecker = ({ children }) => {
 
   useEffect(() => {
     if (!router.asPath?.includes('admin')) return;
-
+    if(!!userOrg?.user_lsp_role?.length) return ;
     const _userLspRole = sessionStorage?.getItem('user_lsp_role');
     if (!_userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
   }, [router?.asPath]);
 
-  function lspCheck() {
+  async function lspCheck() {
     if (userOrg?.lsp_id) return;
 
+    const user = parseJson(sessionStorage?.getItem('loggedUser'));
     const _lspId = sessionStorage?.getItem('lsp_id');
     const _userLspId = sessionStorage?.getItem('user_lsp_id');
     const _orgId = sessionStorage?.getItem('org_id');
+    let userLspRole = sessionStorage?.getItem('user_lsp_role') ?? '';
+    userLspRole = await getUserLspRoleLatest(user?.id, _userLspId);
+
+    sessionStorage?.setItem('user_lsp_role', userLspRole);
 
     if (!_lspId) return router.push('/learning-spaces');
 
-    return setUserOrg((prevValue) => ({ ...prevValue, lsp_id: _lspId, user_lsp_id: _userLspId ,organization_id: _orgId}));
+    return setUserOrg((prevValue) => ({
+      ...prevValue,
+      lsp_id: _lspId,
+      user_lsp_id: _userLspId,
+      organization_id: _orgId,
+      user_lsp_role: userLspRole
+    }));
   }
 
-  function authCheck(url) {
+  async function authCheck(url) {
     // redirect to login page if accessing a private page and not logged in
     const path = url.split('?')[0];
     // console.log(path);
@@ -140,7 +155,7 @@ const AuthChecker = ({ children }) => {
 
     if (!!localStorage.getItem(GIBBERISH_VALUE_FOR_LOGIN_STATE) && userData) {
       if (['/learning-spaces'].includes(path)) return setAuthorized(true);
-      lspCheck();
+      await lspCheck();
       return setAuthorized(true);
     }
 

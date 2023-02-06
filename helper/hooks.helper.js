@@ -26,12 +26,12 @@ import {
   GET_USER_DETAIL,
   GET_USER_LEARNINGSPACES_DETAILS,
   GET_USER_LSP_MAP_BY_LSPID,
+  GET_USER_LSP_ROLES,
   GET_USER_PREFERENCES,
   GET_USER_PREFERENCES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
-import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
@@ -41,7 +41,7 @@ import {
   UsersOrganizationAtom,
   UserStateAtom
 } from '@/state/atoms/users.atom';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
@@ -56,10 +56,10 @@ import {
   COMMON_LSPS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
-  USER_MAP_STATUS,
-  USER_STATUS
+  USER_MAP_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
+import { getLspDetails } from './orgdata.helper';
 import { parseJson } from './utils.helper';
 
 export function useHandleCatSubCat(selectedCategory) {
@@ -816,13 +816,14 @@ export default function useUserCourseData() {
     if (!userData?.length) return { error: 'No users found!' };
     return userData;
   }
-  
+
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
 
-  const OrgDetails = async () => {
+  const OrgDetails = async (loadLsp = false) => {
     const orgId = sessionStorage.getItem('org_id');
+    const lspId = sessionStorage.getItem('lsp_id');
     if (!orgId) return;
     const res = await getOrgDetails({
       variables: { org_ids: orgId }
@@ -833,7 +834,39 @@ export default function useUserCourseData() {
       ...prevValue,
       logo_url: res?.data?.getOrganizations?.[0]?.logo_url
     }));
+    if (loadLsp) {
+      const lspData = await getLspDetails([lspId]).catch((err) => console.error(err));
+      setUserOrgData((prev) => ({
+        ...prev,
+        lsp_logo_url: lspData?.data?.getLearningSpaceDetails?.[0]?.logo_url
+      }));
+    }
   };
+
+  async function getUserLspRoleLatest(userId=null,userLspId = null){
+
+    if(!userLspId || !userId) return ;
+    console.log('called');
+    //this function gets users lsp role and return the latest one
+    const lspRoleArr = await loadQueryDataAsync(
+      GET_USER_LSP_ROLES,
+      { user_id: userId, user_lsp_ids: [userLspId] },
+      {},
+      userQueryClient
+    );
+
+    const lspRoles = lspRoleArr?.getUserLspRoles;
+    let userLspRole = 'learner';
+
+    if (lspRoleArr?.length > 1) {
+      const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
+      userLspRole = latestUpdatedRole?.pop()?.role;
+    } else {
+      userLspRole = lspRoles[0]?.role;
+    }
+
+    return userLspRole ;
+  }
 
   return {
     getUserCourseData,
@@ -841,7 +874,8 @@ export default function useUserCourseData() {
     getCohortUserData,
     getUsersForAdmin,
     getScheduleExams,
-    OrgDetails
+    OrgDetails,
+    getUserLspRoleLatest
   };
 }
 
