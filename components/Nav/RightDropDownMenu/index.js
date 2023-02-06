@@ -91,7 +91,7 @@ export default function RightDropDownMenu() {
           submenurowdirection={true}
         />
       ),
-      isDisabled: !featureFlags?.isDemo
+      isHidden: !featureFlags?.isDemo
     },
     {
       id: 4,
@@ -106,8 +106,8 @@ export default function RightDropDownMenu() {
         sessionStorage.removeItem('org_id');
         router.push('/learning-spaces');
       },
-      // isDisabled: !featureFlags?.isUserMappedToMultipleLsps
-      isDisabled: !featureFlags?.isDemo
+      isDisabled: !featureFlags?.isUserMappedToMultipleLsps,
+      isHidden: !featureFlags?.isDemo
     },
     {
       id: 5,
