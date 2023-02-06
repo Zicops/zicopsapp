@@ -91,7 +91,7 @@ export default function Nav() {
         <div className={styles.devMode}>
           <span>
             <SwitchButton
-              label="Dev Mode Enabled"
+              label="God Mode Enabled"
               inputName="devMode"
               isChecked={isDev}
               handleChange={(e) => window?.enableDevMode(e.target.checked)}
