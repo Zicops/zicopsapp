@@ -39,6 +39,9 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     whiteSpace: 'break-spaces !important'
     // color: '#868686'
   },
+  '& .MuiDataGrid-virtualScroller': {
+    overflowY: 'overlay'
+  },
   // '& .MuiDataGrid-cell:hover': {
   //   color: 'var(--primary)'
   // },

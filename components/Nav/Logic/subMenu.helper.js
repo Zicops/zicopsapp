@@ -80,7 +80,8 @@ export const userProfile = [
   },
   {
     title: 'Dashboard',
-    link: '/my-profile'
+    link: '/my-profile',
+    isDemo: true
   },
   {
     title: 'Schedule',

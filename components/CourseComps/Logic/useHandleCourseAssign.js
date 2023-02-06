@@ -194,7 +194,7 @@ export default function useHandleCourseAssign({
         courseAssignData?.endDate?.toDateString()
       }` });
 
-    if (assignBy !== 'self') {
+    // if (assignBy !== 'self') {
       sendCourseAssignNotificationAndEmail();
     // if(!!userLspId && !userIsVerified){
     //      await sendNotification(
@@ -206,17 +206,17 @@ export default function useHandleCourseAssign({
     //       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     //      )
     // }
-    }
+    // }
     
   }
 
   async function sendCourseAssignNotificationAndEmail() {
-    if (!userIdForCourseAssign || !userEmail) {
-      return setToastMsg({
-        type: 'danger',
-        message: 'Something went wrong while sending user Notification.'
-      });
-    }
+    // if (!userIdForCourseAssign || !userEmail ) {
+    //   return setToastMsg({
+    //     type: 'danger',
+    //     message: 'Something went wrong while sending user Notification.'
+    //   });
+    // }
 
     const notificationBody = getNotificationMsg('courseAssign', {
       courseName: courseName || '',
@@ -309,5 +309,5 @@ export default function useHandleCourseAssign({
     return userCourseProgressArr;
   }
 
-  return { courseAssignData, setCourseAssignData, assignCourseToUser, isSaveDisabled };
+  return { courseAssignData, setCourseAssignData, assignCourseToUser, isSaveDisabled ,  };
 }
