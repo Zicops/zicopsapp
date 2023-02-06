@@ -131,7 +131,7 @@ const AuthChecker = ({ children }) => {
     let userLspRole = sessionStorage?.getItem('user_lsp_role') ?? 'learner';
     userLspRole = await getUserLspRoleLatest(user?.id, _userLspId);
 
-    if (!userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
+    // if (!userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
 
     sessionStorage?.setItem('user_lsp_role', userLspRole);
 
