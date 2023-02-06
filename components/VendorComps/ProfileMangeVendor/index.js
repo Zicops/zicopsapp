@@ -32,6 +32,8 @@ const ProfileManageVendor = () => {
           />
         </div>
       </div>
+
+      {}
       <VendorPopUp
         open={isOpenProfile}
         title="Add profile"
