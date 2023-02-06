@@ -91,10 +91,11 @@ export default function PushNotificationLayout({ children }) {
     async function loadAllNotifications(token) {
       let queryVariables = { prevPageSnapShot: '', pageSize: 10, isRead: false };
       let messages = [];
+      const contextObj = { context: { headers: { 'fcm-token': token } } };
       const allNotifications = await loadQueryDataAsync(
         GET_ALL_NOTIFICATIONS,
         queryVariables,
-        { context: { headers: { 'fcm-token': token } } },
+        contextObj,
         notificationClient
       );
 
