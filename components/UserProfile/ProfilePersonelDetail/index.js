@@ -2,16 +2,14 @@ import styles from '../userProfile.module.scss';
 
 const ProfilePersonelDetail = ({ currentUserData }) => {
   const userProfileDetailsData = {
-    name: `${currentUserData?.first_name} ${currentUserData?.last_name}`,
+    name: `${currentUserData?.first_name || ''} ${currentUserData?.last_name || ''}`,
     email: currentUserData?.email,
     contact: currentUserData?.phone
   };
 
-  let imageUrl = '/images/svg/assignment_ind.svg';
-  const userGender = currentUserData?.gender?.toLowerCase();
-  if (!!userGender?.length) {
-    imageUrl = `/images/Avatars/${userGender}Profile.png`;
-  }
+  const userGender = currentUserData?.gender?.toLowerCase() || '';
+  let imageUrl = `/images/Avatars/${userGender}Profile.png`;
+  
 
   return (
     <>
