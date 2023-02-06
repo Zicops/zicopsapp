@@ -12,7 +12,7 @@ import {
   NotificationAtom
 } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -28,11 +28,14 @@ export default function PushNotificationLayout({ children }) {
   const [notification, setNotifications] = useRecoilState(NotificationAtom);
   const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [isListnerAdded, setIsListnerAdded] = useState(false);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   useEffect(() => {
     if (!userAboutData?.id) return;
+    let lspId = sessionStorage.getItem('lsp_id');
+    if(!lspId) return;
 
-    setToken().then((token) => {
+    setToken().then((token) => {  
       if (!token) return;
       loadAllNotifications(token);
     });
@@ -86,12 +89,14 @@ export default function PushNotificationLayout({ children }) {
     }
 
     async function loadAllNotifications(token) {
+      //context obj added
       let queryVariables = { prevPageSnapShot: '', pageSize: 10, isRead: false };
       let messages = [];
+      const contextObj = { context: { headers: { 'fcm-token': token } } };
       const allNotifications = await loadQueryDataAsync(
         GET_ALL_NOTIFICATIONS,
         queryVariables,
-        { context: { headers: { 'fcm-token': token } } },
+        contextObj,
         notificationClient
       );
 
@@ -162,7 +167,7 @@ export default function PushNotificationLayout({ children }) {
         return null;
       }
     }
-  }, [userAboutData?.id]);
+  }, [userAboutData?.id,userOrgData?.lsp_id]);
 
   return <>{children}</>;
 }
