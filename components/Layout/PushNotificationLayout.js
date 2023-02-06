@@ -89,6 +89,7 @@ export default function PushNotificationLayout({ children }) {
     }
 
     async function loadAllNotifications(token) {
+      //context obj added
       let queryVariables = { prevPageSnapShot: '', pageSize: 10, isRead: false };
       let messages = [];
       const contextObj = { context: { headers: { 'fcm-token': token } } };
