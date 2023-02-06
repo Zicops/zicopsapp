@@ -160,6 +160,7 @@ const LearningSpaces = () => {
               ouId={data.ou_id}
               userLspId={userLspIds?.[index]}
               userId={userDetails?.id}
+              lspLogo={data?.logo_url}
             />
           ))}
           <>

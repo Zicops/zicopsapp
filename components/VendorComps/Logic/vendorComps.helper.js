@@ -703,3 +703,8 @@ export const sampleFiles = [
     previewImage: '/images/discord_logo.png'
   }
 ];
+
+export const MarketYardHeroData = {
+  companyName: 'ABC Learning Technology Pvt. Ltd.',
+  expart: ['SME', 'Classroom Training', 'Content Development']
+};

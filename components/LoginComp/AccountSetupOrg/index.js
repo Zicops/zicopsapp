@@ -1,22 +1,15 @@
+import { userClient } from '@/api/UserMutations';
+import { GET_LSP_DETAILS, GET_ORGANIZATIONS_DETAILS, GET_USER_LSP_ROLES } from '@/api/UserQueries';
+import { changeHandler } from '@/helper/common.helper';
+import { parseJson } from '@/helper/utils.helper';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
 import { Box, Button } from '@mui/material';
-import LabeledInput from '../../common/FormComponents/LabeledInput';
-import styles from './setupOrg.module.scss';
-import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
-import { roleList } from '../ProfilePreferences/Logic/profilePreferencesHelper';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
-import { changeHandler } from '@/helper/common.helper';
+import LabeledInput from '../../common/FormComponents/LabeledInput';
 import useHandleAddUserDetails from '../Logic/useHandleAddUser';
-import { useLazyQuery } from '@apollo/client';
-import {
-  GET_LSP_DETAILS,
-  GET_ORGANIZATIONS_DETAILS,
-  GET_ORG_UNITS_DETAILS,
-  GET_USER_LSP_ROLES
-} from '@/api/UserQueries';
-import { userClient } from '@/api/UserMutations';
-import { parseJson } from '@/helper/utils.helper';
+import styles from './setupOrg.module.scss';
 
 const AccountSetupOrg = ({ setCurrentComponent }) => {
   const [role, setRole] = useState();
@@ -42,7 +35,7 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
     const name = res?.data?.getOrganizations[0]?.name;
     // let orgName = name?.length ? name : '';
     // console.log(name,'orgnkgfk')
-    setUserOrgLsp((prev) => ({ ...prev, organization_name: name, organization_id:orgIds[0] }));
+    setUserOrgLsp((prev) => ({ ...prev, organization_name: name, organization_id: orgIds[0] }));
   };
 
   //load lsp details
@@ -62,13 +55,15 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
   };
 
   //load users lsp role details
-  const loadUserLspRole = async (userLspIds = [],userId = "") => {
+  const loadUserLspRole = async (userLspIds = [], userId = '') => {
     if (!userLspIds?.length) return;
     const res = await getUserRoleDetails({
       variables: { user_id: userId, user_lsp_ids: userLspIds }
     }).catch((err) => console.log(err));
-    console.log(res,'role')
-    setUserOrgLsp((prev) => ({ ...prev, user_lsp_role: res?.data?.getUserLspRoles[0]?.role }));
+    let lspRole = res?.data?.getUserLspRoles?.[0]?.role
+      ? res?.data?.getUserLspRoles?.[0]?.role
+      : 'learner';
+    setUserOrgLsp((prev) => ({ ...prev, user_lsp_role: lspRole }));
   };
 
   //initialize user_id after login
@@ -84,15 +79,15 @@ const AccountSetupOrg = ({ setCurrentComponent }) => {
     const userLspId = sessionStorage?.getItem('user_lsp_id');
     if (!orgId) return;
     //  console.log(orgId)
-    const {id} = parseJson(sessionStorage?.getItem('loggedUser'));
+    const { id } = parseJson(sessionStorage?.getItem('loggedUser'));
     loadOrgDetails([orgId]);
     loadLspDetails([lspId]);
-    loadUserLspRole([userLspId],id);
+    loadUserLspRole([userLspId], id);
   }, []);
 
-  useEffect(()=>{
-    console.log(userOrgLsp?.organization_name,'lsp')
-  },[userOrgLsp])
+  useEffect(() => {
+    console.log(userOrgLsp?.organization_name, 'lsp');
+  }, [userOrgLsp]);
   return (
     <>
       <div className={`${styles.container}`}>

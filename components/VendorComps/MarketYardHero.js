@@ -1,4 +1,5 @@
 import styles from './vendorComps.module.scss';
+import { MarketYardHeroData } from './Logic/vendorComps.helper';
 const MarketYardHero = ({ onHandlePopup }) => {
   return (
     <div className={`${styles.marketHeroContainer}`}>
@@ -6,20 +7,14 @@ const MarketYardHero = ({ onHandlePopup }) => {
         <div className={`${styles.courseImage}`}>
           <img src="/images/discord_logo.png" alt="" />
         </div>
-        <p className={`${styles.companyName}`}>ABC Learning Technology Pvt. Ltd.</p>
+        <p className={`${styles.companyName}`}>{MarketYardHeroData?.companyName}</p>
         <div className={`${styles.expartContainer}`}>
-          <div className={`${styles.expart}`}>
-            <img src="/images/svg/rightIcon.svg" alt="" />
-            <p>SME</p>
-          </div>
-          <div className={`${styles.expart}`}>
-            <img src="/images/svg/rightIcon.svg" alt="" />
-            <p>Classroom Training</p>
-          </div>
-          <div className={`${styles.expart}`}>
-            <img src="/images/svg/rightIcon.svg" alt="" />
-            <p>Content Development</p>
-          </div>
+          {MarketYardHeroData?.expart?.map((data, index) => (
+            <div className={`${styles.expart}`} key={index}>
+              <img src="/images/svg/rightIcon.svg" alt="" />
+              <p>{data}</p>
+            </div>
+          ))}
         </div>
         <button onClick={onHandlePopup}>Add to my Vendors</button>
       </div>

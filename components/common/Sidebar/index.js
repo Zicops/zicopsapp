@@ -1,4 +1,5 @@
 import { PRODUCT_TOUR_PATHS } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
   ActiveTourAtom,
   ProductTourIndex,
@@ -15,6 +16,7 @@ import styles from './sidebar.module.scss';
 // move the styles in sidebar.module.scss in this folder
 export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductTooltipData }) {
   const activeTour = useRecoilValue(ActiveTourAtom);
+  const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
   const [index, setIndex] = useRecoilState(ProductTourIndex);
   const [showProductTour, setShowProductTour] = useRecoilState(ProductTourVisible);
   const router = useRouter();
@@ -68,6 +70,8 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
               const pathUrl = val.link.split('/');
               let isActive = currentUrl === pathUrl[pathUrl.length - 1];
               const tourData = activeTour?.id === val?.tourId ? activeTour : null;
+
+              if (val?.isHidden && !isDemo && !isDev) return null;
 
               // temp fix: Change page route for edit course later
               if (

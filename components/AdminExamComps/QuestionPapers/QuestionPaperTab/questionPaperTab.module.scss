@@ -30,7 +30,7 @@
 .inputField {
   margin-bottom: 30px;
   align-items: center;
-  .withTooltip button{
+  .withTooltip button {
     float: none;
   }
 }
@@ -134,4 +134,9 @@
   input {
     padding-left: 30px;
   }
+}
+
+.qbName {
+  font-weight: bold;
+  color: $primary;
 }

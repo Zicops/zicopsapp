@@ -30,11 +30,10 @@ export default function Nav() {
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
 
-  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+  const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const [showNotification, setShowNotification] = useState(false);
   const { OrgDetails } = useUserCourseData();
-
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
@@ -129,7 +128,17 @@ export default function Nav() {
               }
 
               let pageRoute = val?.link;
-              if (val?.isDev && isDev) pageRoute = '';
+              if (val?.isDisabled || val?.isDemo || val?.isDev) pageRoute = null;
+              if (isDemo && val?.isDemo) pageRoute = val?.link;
+              if (isDev && val?.isDev) pageRoute = val?.link;
+
+              // disabled links
+              if (!pageRoute)
+                return (
+                  <li className={styles.disabled}>
+                    <span>{val.title}</span>
+                  </li>
+                );
 
               return (
                 <Link href={pageRoute} key={key}>

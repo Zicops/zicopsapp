@@ -16,6 +16,7 @@
 
 body {
   background-color: $darkOne;
+  // overflow-y: overlay;
 }
 
 .adminContent {
@@ -292,7 +293,6 @@ body::-webkit-scrollbar-thumb {
 .error {
   @include inputStylesFor('error');
 }
-
 
 .center-element-with-flex {
   display: flex;

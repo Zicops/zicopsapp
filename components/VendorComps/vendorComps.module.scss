@@ -284,35 +284,36 @@
   }
 }
 
+.input5 {
+  flex-direction: column;
+  box-shadow: none;
+  outline: none;
+}
+
+.input1 {
+  // font-size: 18px;
+  font-weight: 400;
+  margin-top: 8px;
+}
+
+.input1 input {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid #747474;
+  border-radius: 5px;
+  background: transparent;
+  outline: none;
+  padding-left: 16px;
+  color: $white;
+  // font-size: 18px;
+}
+
 .vendorMasterContainer {
   color: $white;
 
   ::placeholder {
     color: #747474;
     opacity: 1;
-  }
-
-  .input5 {
-    flex-direction: column;
-    box-shadow: none;
-    outline: none;
-  }
-
-  .input1 {
-    // font-size: 18px;
-    font-weight: 400;
-    margin-top: 8px;
-  }
-  .input1 input {
-    width: 100%;
-    margin-top: 8px;
-    border: 1px solid #747474;
-    border-radius: 5px;
-    background: transparent;
-    outline: none;
-    padding-left: 16px;
-    color: $white;
-    // font-size: 18px;
   }
 
   .addressImageDiv {

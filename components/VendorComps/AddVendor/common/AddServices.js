@@ -3,21 +3,15 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
-import SearchBar from '@/components/common/FormComponents/SearchBar';
 import IconButton from '@/components/common/IconButton';
 import { changeHandler } from '@/helper/common.helper';
 import { VENDOR_FILE_FORMATS, VENDOR_LANGUAGES } from '@/helper/constants.helper';
 import { useState } from 'react';
 import AddVendorProfile from '../../AddVendorProfile';
-import { cat, subCat } from '../../Logic/vendorComps.helper';
 import ProfileManageVendor from '../../ProfileMangeVendor';
 import styles from '../../vendorComps.module.scss';
 import VendorPopUp from '../../common/VendorPopUp';
-// export default function AddServices({ data, setData = () => {}, inputName }) {
-//   const [popupState, setPopupState] = useState(false);
-//   const [isOpenProflie, setIsOpenProfile] = useState(false);
-//   const [expertiseSearch, setExpertiseSearch] = useState('');
-//   const [showCompleteProfile, setCompleteProfile] = useState(false);
+import AddExpertise from './AddExpertise';
 
 export default function AddServices({ data, setData = () => {}, inputName }) {
   const [popupState, setPopupState] = useState(false);
@@ -151,35 +145,10 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         open={expertisePopupState}
         popUpState={[expertisePopupState, setExpertisePopupState]}
         size="large"
+        title="Add expertise"
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add' }}>
-        <p>Add expertise/s</p>
-        <SearchBar
-          inputDataObj={{
-            inputOptions: {
-              inputName: 'filter',
-              placeholder: 'Search...',
-              value: expertiseSearch
-            },
-            changeHandler: (e) => setExpertiseSearch(e.target.value)
-          }}
-          styleClass={`${styles.expertiseSearchBar}`}
-        />
-        {cat.map((data, index) => {
-          return (
-            <div className={`${styles.expertise1}`}>
-              <h3>{data.Name}</h3>
-              {subCat.map((value, index) => {
-                if (value.CatId === data.id)
-                  return (
-                    <div className={`${styles.expertiseCheckbox}`}>
-                      <LabeledRadioCheckbox type="checkbox" label={value.Name} />
-                    </div>
-                  );
-              })}
-            </div>
-          );
-        })}
+        <AddExpertise expertiseValue={expertiseSearch} setExpertise={setExpertiseSearch} />
       </VendorPopUp>
       <VendorPopUp
         open={isOpenProflie}

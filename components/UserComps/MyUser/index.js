@@ -1,5 +1,10 @@
 import { userClient } from '@/api/UserMutations';
-import { GET_USER_LSP_ROLES } from '@/api/UserQueries';
+import {
+  GET_USER_DETAIL,
+  GET_USER_LSP_MAP_BY_LSPID,
+  GET_USER_LSP_ROLES,
+  userQueryClient
+} from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
@@ -45,6 +50,7 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
   const [isLoading, setLoading] = useState(true);
   const [filterCol, setFilterCol] = useState('email');
   const [searchQuery, setSearchQuery] = useState('');
+  const [pageCursor, setPageCursor] = useState(null);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
@@ -62,8 +68,7 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
   }
 
   useEffect(async () => {
-    setLoading(true);
-
+    // loadUserData();
     const _usersData = await getUsersForAdmin(true);
     if (_usersData?.error) {
       setLoading(false);
@@ -112,6 +117,40 @@ const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {}
   useEffect(() => {
     getUser(selectedUser);
   }, [selectedUser]);
+
+  async function loadUserData() {
+    setLoading(true);
+
+    const lspId = sessionStorage.getItem('lsp_id');
+    const queryVariables = { lsp_id: lspId, pageCursor: '', Direction: '', pageSize: 30 };
+    if (pageCursor) queryVariables.pageCursor = pageCursor;
+
+    loadQueryDataAsync(GET_USER_LSP_MAP_BY_LSPID, queryVariables, {}, userQueryClient).then(
+      async (lspMapRes) => {
+        if (lspMapRes?.error) return { error: 'Error while while loading lsp maps!' };
+
+        const lspMapData = lspMapRes?.getUserLspMapsByLspId;
+        if (lspMapData?.pageCursor) setPageCursor(lspMapData?.pageCursor);
+
+        //removing duplicate values
+        const _lspUsers = lspMapData?.user_lsp_maps?.filter(
+          (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
+        );
+        const _userIds = _lspUsers?.map((user) => user?.user_id)?.filter((userId) => !!userId);
+
+        const userDetailsRes = await loadQueryDataAsync(
+          GET_USER_DETAIL,
+          { user_id: _userIds },
+          {},
+          userQueryClient
+        );
+
+        if (userDetailsRes?.error) return { error: 'Error while while loading user detail!' };
+      }
+    );
+
+    setLoading(false);
+  }
 
   const columns = [
     {
