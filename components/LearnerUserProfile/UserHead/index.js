@@ -56,8 +56,13 @@ const UserHead = () => {
     }
   }, []);
 
+  let userGender = userProfileData?.gender?.toLowerCase();
   useEffect(() => {
-    setImage(userProfileData?.photo_url ? userProfileData?.photo_url : '/images/swagDP.jpg');
+    setImage(
+      userProfileData?.photo_url
+        ? userProfileData?.photo_url
+        : `/images/Avatars/${userGender}Profile.png`
+    );
   }, [userProfileData?.photo_url]);
 
   return (
@@ -69,7 +74,9 @@ const UserHead = () => {
         <div className={`${styles.userImage}`}>
           <img
             src={`${
-              userProfileData?.photo_url ? userProfileData?.photo_url : '/images/swagDP.jpg'
+              userProfileData?.photo_url
+                ? userProfileData?.photo_url
+                : `/images/Avatars/${userGender}Profile.png`
             }`}
           />
         </div>

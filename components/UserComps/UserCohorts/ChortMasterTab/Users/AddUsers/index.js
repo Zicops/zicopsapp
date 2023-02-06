@@ -1,15 +1,10 @@
-import { UPDATE_COHORT_MAIN, UPDATE_USER_COHORT, userClient } from '@/api/UserMutations';
-import {
-  GET_COHORT_USERS,
-  GET_USER_LEARNINGSPACES_DETAILS,
-  userQueryClient
-} from '@/api/UserQueries';
+import { UPDATE_COHORT_MAIN, userClient } from '@/api/UserMutations';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import UserButton from '@/components/common/UserButton';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import useHandleCohortTab from '@/components/LearnerUserProfile/Logic/useHandleCohortTab';
-import { loadQueryDataAsync, sendEmail, sendNotification, sendNotificationWithLink } from '@/helper/api.helper';
+import { sendEmail, sendNotificationWithLink } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -20,7 +15,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../../userComps.module.scss';
-import addUserData from '../../Logic/addUserData';
 import useCohortUserData from '../../Logic/useCohortUserData';
 
 const AddUsers = ({
@@ -154,11 +148,12 @@ const AddUsers = ({
       template_id: EMAIL_TEMPLATE_IDS?.cohortAssign
     };
 
-     sendNotification(
+     sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.cohortAssign,
         body: notificationBody,
-        user_id: data
+        user_id: data,
+        link:''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );

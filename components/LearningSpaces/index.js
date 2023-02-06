@@ -147,7 +147,7 @@ const LearningSpaces = () => {
           sub_heading={'Select your Learning space'}
         />
         <div className={`${styles.login_body}`}>
-          {isDev ? (
+          {!isDev ? (
             <>
               {orglspData?.map((data, index) => {
                 return (
@@ -168,6 +168,7 @@ const LearningSpaces = () => {
                     ouId={data?.ou_id}
                     userLspId={userLspIds?.[index]}
                     userId={userDetails?.id}
+                    lspLogo={data?.logo_url}
                   />
                 );
               })}
@@ -206,13 +207,13 @@ const LearningSpaces = () => {
                       ouId={data?.ou_id}
                       userLspId={userLspIds?.[index]}
                       userId={userDetails?.id}
+                      lspLogo={data?.logo_url}
                     />
                   );
                 })
               )}
             </>
           )}
-
           <>
             {/* only for owners to request for creating new lsp */}
             {/* {userDetails?.role === "Admin" && <AddLsp />} */}

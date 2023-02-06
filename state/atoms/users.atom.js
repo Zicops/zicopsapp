@@ -63,6 +63,7 @@ export function getUserOrgObject(data = {}) {
     user_lsp_id: data?.user_lsp_id || null,
     lsp_id: data?.lsp_id || null,
     status: data?.status || 'Active',
+    lsp_logo_url: data?.lsp_logo_url || '',
 
     // user role data
     user_role_id: data?.user_role_id || null,
