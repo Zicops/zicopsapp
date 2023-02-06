@@ -100,9 +100,10 @@ export default function PushNotificationLayout({ children }) {
         notificationClient
       );
 
-      const _message = allNotifications?.getAll?.messages || [];
+      const _unreadMessage = allNotifications?.getAll?.messages || [];
 
-      messages = [..._message];
+      messages = [..._unreadMessage];
+      // messages = structuredClone(_message);
       if (_message?.length < 5) {
         queryVariables.isRead = true;
         const allNotifications = await loadQueryDataAsync(
@@ -112,7 +113,9 @@ export default function PushNotificationLayout({ children }) {
           notificationClient
         );
 
-        messages = [...messages, ...allNotifications?.getAll?.messages];
+        const _readMessages = allNotifications?.getAll?.messages || [] ; 
+
+        messages = [..._unreadMessage, ..._readMessages];
       }
       
       const allMsg =
