@@ -125,8 +125,39 @@ jobs:
          issue-title: "Deploying to zicops one production cluster"
          exclude-workflow-initiator-as-approver: false
 
-  deploy_production:
+  build_production_docker:
     needs: approval_production
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Auth GCP service account
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
+    - name: 'Set up Cloud SDK' 
+      uses: 'google-github-actions/setup-gcloud@v0'
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+    - name: sed file ./helper/constants.helper.js to replace lsp with zicops
+      run: |-
+        sed -i 's/zicops:.*/zicops: `98640aaa-a1e8-5584-bc14-2b1bfed7d65a`/'  ./helper/constants.helper.js
+    - name: Build the Docker image
+      run: |-
+        docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:${GITHUB_SHA} --build-arg GO_MODULES_TOKEN=${{secrets.GO_MODULES_TOKEN}} .
+    - name: add latest tag
+      run: |-
+        docker tag gcr.io/$PROJECT_ID/$SERVICE_NAME:${GITHUB_SHA} gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+    - run: |
+        gcloud auth configure-docker -q
+    - run: |
+        gcloud components install gke-gcloud-auth-plugin
+    - name: Push the Docker image
+      run: |-
+        docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:${GITHUB_SHA}
+        docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:production
+
+  deploy_production:
+    needs: build_production_docker
     runs-on: ubuntu-latest
     env:
       GKE_CLUSTER: zicops-dot-com-1
