@@ -37,8 +37,8 @@ export const ADD_NOTIFICATION_TO_FIRESTORE = gql`
 `;
 
 export const GET_ALL_NOTIFICATIONS = gql`
-  query getAll($prevPageSnapShot: String!, $pageSize: Int!) {
-    getAll(prevPageSnapShot: $prevPageSnapShot, pageSize: $pageSize) {
+  query getAll($prevPageSnapShot: String!, $pageSize: Int!, $isRead: Boolean) {
+    getAll(prevPageSnapShot: $prevPageSnapShot, pageSize: $pageSize, is_read: $isRead) {
       messages {
         title
         body
