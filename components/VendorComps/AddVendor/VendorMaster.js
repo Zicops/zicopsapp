@@ -14,8 +14,39 @@ export default function VendorMaster() {
   const [isFacebook, setIsFacebook] = useState(false);
   const [isInstagram, setIsInstagram] = useState(false);
   const [isTwitter, setIsTwitter] = useState(false);
-  const [isLinkdin, setIsLinkdin] = useState(false);
+  const [isLinkedin, setIsLinkedin] = useState(false);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+
+  const socialMediaPopup = [
+    {
+      title: 'Facebook',
+      normalState: isFacebook,
+      updatedState: setIsFacebook,
+      inputName: 'facebookURL',
+      value: vendorData.facebookURL
+    },
+    {
+      title: 'Instagram',
+      normalState: isInstagram,
+      updatedState: setIsInstagram,
+      inputName: 'instagramURL',
+      value: vendorData.instagramURL
+    },
+    {
+      title: 'Twitter',
+      normalState: isTwitter,
+      updatedState: setIsTwitter,
+      inputName: 'twitterURL',
+      value: vendorData.twitterURL
+    },
+    {
+      title: 'LinkedIn',
+      normalState: isLinkedin,
+      updatedState: setIsLinkedin,
+      inputName: 'linkedinURL',
+      value: vendorData.linkedinURL
+    }
+  ];
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>
@@ -67,7 +98,7 @@ export default function VendorMaster() {
             <img src="/images/Facebook1.png" onClick={() => setIsFacebook(true)} />
             <img src="/images/Instagram1.png" onClick={() => setIsInstagram(true)} />
             <img src="/images/Twitter1.png" onClick={() => setIsTwitter(true)} />
-            <img src="/images/Linkedin1.png" onClick={() => setIsLinkdin(true)} />
+            <img src="/images/Linkedin1.png" onClick={() => setIsLinkedin(true)} />
           </div>
         </div>
       </div>
@@ -95,66 +126,26 @@ export default function VendorMaster() {
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
       </div>
-      <VendorPopUp
-        open={isFacebook}
-        title="Facebook"
-        popUpState={[isFacebook, setIsFacebook]}
-        size="small"
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done' }}
-        isFooterVisible={true}>
-        <AddUrl
-          inputName="facebookURL"
-          urlData={vendorData}
-          setUrlData={setVendorData}
-          Value={vendorData.facebookURL}
-        />
-      </VendorPopUp>
-      <VendorPopUp
-        open={isInstagram}
-        title="Instagram"
-        popUpState={[isInstagram, setIsInstagram]}
-        size="small"
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done' }}
-        isFooterVisible={true}>
-        <AddUrl
-          inputName="instagramURL"
-          urlData={vendorData}
-          setUrlData={setVendorData}
-          Value={vendorData.instagramURL}
-        />
-      </VendorPopUp>
-      <VendorPopUp
-        open={isTwitter}
-        title="Twitter"
-        popUpState={[isTwitter, setIsTwitter]}
-        size="small"
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done' }}
-        isFooterVisible={true}>
-        <AddUrl
-          inputName="twitterURL"
-          urlData={vendorData}
-          setUrlData={setVendorData}
-          Value={vendorData.twitterURL}
-        />
-      </VendorPopUp>
-      <VendorPopUp
-        open={isLinkdin}
-        title="Linkdin"
-        popUpState={[isLinkdin, setIsLinkdin]}
-        size="small"
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done' }}
-        isFooterVisible={true}>
-        <AddUrl
-          inputName="linkedinURL"
-          urlData={vendorData}
-          setUrlData={setVendorData}
-          Value={vendorData.linkedinURL}
-        />
-      </VendorPopUp>
+
+      {socialMediaPopup.map((popupData, index) => {
+        return (
+          <VendorPopUp
+            open={popupData.normalState}
+            title={popupData.title}
+            popUpState={[popupData.normalState, popupData.updatedState]}
+            size="small"
+            closeBtn={{ name: 'Cancel' }}
+            submitBtn={{ name: 'Done' }}
+            isFooterVisible={true}>
+            <AddUrl
+              inputName={popupData.inputName}
+              urlData={vendorData}
+              setUrlData={setVendorData}
+              Value={popupData.value}
+            />
+          </VendorPopUp>
+        );
+      })}
     </div>
   );
 }
