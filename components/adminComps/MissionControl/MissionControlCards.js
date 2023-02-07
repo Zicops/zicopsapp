@@ -7,22 +7,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 
-const Card = ({ image, text, width, tooltipTitle }) => {
+const Card = ({ image, text, width, tooltipTitle, isDisabled = false }) => {
   return (
     <>
       <ToolTip title={tooltipTitle}>
         <div
-          className="card"
-        // onClick={() => {
-        //   sendNotification(
-        //     {
-        //       title: 'Card Clicked',
-        //       body: 'Hopefully Clicked on Labs',
-        //       emails: ['vajresh@zicops.com', 'joy@zicops.com']
-        //     },
-        //     { context: { headers: { 'fcm-token': fcmToken } } }
-        //   );
-        // }}
+          className={`card ${isDisabled ? 'disabled' : ''}`}
+          // onClick={() => {
+          //   sendNotification(
+          //     {
+          //       title: 'Card Clicked',
+          //       body: 'Hopefully Clicked on Labs',
+          //       emails: ['vajresh@zicops.com', 'joy@zicops.com']
+          //     },
+          //     { context: { headers: { 'fcm-token': fcmToken } } }
+          //   );
+          // }}
         >
           <div className="card_icon">
             <Image src={image} alt="" width={width} height={'70px'} />
@@ -44,8 +44,10 @@ const Card = ({ image, text, width, tooltipTitle }) => {
             align-items: center;
             border-radius: 20px;
             box-shadow: 5px -5px 10px 0 #86868640, -5px 5px 10px 0 #00000080;
-            margin: 20px;
             cursor: pointer;
+          }
+          .card.disabled {
+            cursor: no-drop;
           }
           .card:hover {
             background-color: var(--tile-bg);
@@ -69,17 +71,19 @@ const Card = ({ image, text, width, tooltipTitle }) => {
 const MissionControlCards = () => {
   const showProductTour = useRecoilValue(ProductTourVisible);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
   return (
     <>
       <div className="mission_control_body">
         <div className="contain_icons">
-          <div className="new_row">
+          <div className={`new_row`}>
             <Link href={isDev ? '/admin/analytics/course-dashboard' : ''}>
               <a>
                 <Card
                   image="/images/Analytics.png"
                   text="Analytics"
                   width="70px"
+                  isDisabled={!isDev}
                   tooltipTitle={ADMIN_HOME.analytics}
                 />
               </a>
@@ -109,6 +113,7 @@ const MissionControlCards = () => {
                 <Card
                   image="/images/TrainingManagement.png"
                   text="Training Management "
+                  isDisabled={!isDev}
                   width="70px"
                   tooltipTitle={ADMIN_HOME.trainingManagement}
                 />
@@ -141,12 +146,14 @@ const MissionControlCards = () => {
               image="/images/VendorManagement.png"
               text="Vendor Management"
               width="80px"
+              isDisabled={!isDev}
               tooltipTitle={ADMIN_HOME.vendorManagement}
             />
             <Card
               image="/images/LabManagement.png"
               text="Lab Management"
               width="80px"
+              isDisabled={true}
               tooltipTitle={ADMIN_HOME.labManagement}
             />
           </div>
@@ -169,6 +176,8 @@ const MissionControlCards = () => {
           }
           .new_row {
             display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
           }
         `}
       </style>

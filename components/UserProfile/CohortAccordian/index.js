@@ -3,10 +3,9 @@ import CohortBoxCard from '@/components/common/CohortBoxCard';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import CohortPopUp from '@/components/LearnerUserProfile/UserCohortTab/CohortPopUp';
 import addUserData from '@/components/UserComps/UserCohorts/ChortMasterTab/Logic/addUserData';
-import { loadQueryDataAsync, sendNotification } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendNotificationWithLink } from '@/helper/api.helper';
 import { getCurrentEpochTime, getNotificationMsg } from '@/helper/common.helper';
 import { NOTIFICATION_TITLES } from '@/helper/constants.helper';
-import { parseJson } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { SelectedCohortDataAtom } from '@/state/atoms/users.atom';
@@ -43,11 +42,12 @@ const CohortAccordian = ({ currentUserData = null }) => {
     setToastMsg({type:'success',message:"User removed succesfully!"});
     const notificationBody = getNotificationMsg('cohortUnassign',{cohortName:selectedCohortData?.main?.name})
     // if(!notificationBody) setToastMsg({type:'danger',message:'Error while sending notification'});
-     sendNotification(
+     sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.cohortUnassign,
         body: notificationBody,
-        user_id: [currentUserData?.id]
+        user_id: [currentUserData?.id],
+        link:''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );

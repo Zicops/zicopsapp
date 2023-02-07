@@ -34,7 +34,7 @@ export default function Nav() {
   const handleClickInside = () => setShowNotification(!showNotification);
   const { OrgDetails } = useUserCourseData();
 
-  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+  const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
@@ -91,7 +91,7 @@ export default function Nav() {
         <div className={styles.devMode}>
           <span>
             <SwitchButton
-              label="Dev Mode Enabled"
+              label="God Mode Enabled"
               inputName="devMode"
               isChecked={isDev}
               handleChange={(e) => window?.enableDevMode(e.target.checked)}
@@ -126,8 +126,22 @@ export default function Nav() {
                 const currentRoute = router?.route?.split('/')?.[2];
                 isActive = currentRoute?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
               }
+
+              let pageRoute = val?.link;
+              if (val?.isDisabled || val?.isDemo || val?.isDev) pageRoute = null;
+              if (isDemo && val?.isDemo) pageRoute = val?.link;
+              if (isDev && val?.isDev) pageRoute = val?.link;
+
+              // disabled links
+              if (!pageRoute)
+                return (
+                  <li className={styles.disabled}>
+                    <span>{val.title}</span>
+                  </li>
+                );
+
               return (
-                <Link href={val.link} key={key}>
+                <Link href={pageRoute} key={key}>
                   <li className={isActive ? styles.active : ''}>
                     <span>{val.title}</span>
                   </li>
