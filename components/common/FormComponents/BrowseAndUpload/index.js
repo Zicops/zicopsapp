@@ -21,9 +21,9 @@ export default function BrowseAndUpload({
   hideRemoveBtn = false,
   isDisabled = false,
   shouldShowPreview = true,
-  styleClass,
-  title,
-  styleClassBtn
+  styleClass = '',
+  title = null,
+  styleClassBtn = ''
 }) {
   const inputRef = useRef();
   const [showPreview, setShowPreview] = useState(false);
