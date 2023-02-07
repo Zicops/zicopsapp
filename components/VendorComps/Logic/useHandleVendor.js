@@ -3,6 +3,7 @@ import { GET_VENDORS_BY_LSP_FOR_TABLE, userQueryClient } from '@/api/UserQueries
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useMutation } from '@apollo/client';
 import { ADD_VENDOR, userClient } from '@/api/UserMutations';
+
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, {
     client: userClient
@@ -32,7 +33,7 @@ export default function useHandleVendor() {
       // IsActive: catSubCatData?.IsActive || true,
       // LspId: catSubCatData?.LspId
     };
-    const res = await addNewVendor({ variables: sendData });
+    // const res = await addNewVendor({ variables: sendData });
   };
   return {
     vendorData
