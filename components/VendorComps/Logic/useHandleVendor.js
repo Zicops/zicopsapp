@@ -96,7 +96,6 @@ export default function useHandleVendor() {
       description: vendorData.description.trim(),
       status: VENDOR_MASTER_STATUS.active
     };
-<<<<<<< HEAD
 
     let isError = false;
 
@@ -123,10 +122,6 @@ export default function useHandleVendor() {
     return res;
   }
 
-=======
-    // const res = await addNewVendor({ variables: sendData });
-  };
->>>>>>> 408e0c98a0d20898fc65e883a6bbb289096e77bc
   return {
     vendorDetails,
     vendorData,
