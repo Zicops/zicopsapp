@@ -19,6 +19,7 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
+// https://firebase.google.com/docs/cloud-messaging/js/receive
 onBackgroundMessage(messaging, (payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
 });
