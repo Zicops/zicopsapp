@@ -7,14 +7,17 @@ import { useState } from 'react';
 import VendorPopUp from '../common/VendorPopUp';
 import AddUrl from './common/AddUrl';
 import useHandleVendor from '../Logic/useHandleVendor';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
+import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 
 export default function VendorMaster() {
   const [isFacebook, setIsFacebook] = useState(false);
   const [isInstagram, setIsInstagram] = useState(false);
   const [isTwitter, setIsTwitter] = useState(false);
   const [isLinkedin, setIsLinkedin] = useState(false);
-
-  const { vendorData, setVendorData, handlePhotoInput } = useHandleVendor();
+  const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const { handlePhotoInput } = useHandleVendor();
 
   const socialMediaPopup = [
     {
@@ -115,7 +118,7 @@ export default function VendorMaster() {
       </div>
 
       <div className={`${styles.input4}`}>
-        <label for="description">Say something: </label>
+        <label for="description">Description: </label>
         <LabeledTextarea
           inputOptions={{
             inputName: 'description',
@@ -127,7 +130,11 @@ export default function VendorMaster() {
       </div>
       <div className={`${styles.input1}`}>
         <label for="users">Add User: </label>
-        <LabeledInput
+        <MultiEmailInput
+          items={vendorData.users}
+          setItems={(users) => setVendorData({ ...vendorData, users })}
+        />
+        {/* <LabeledInput
           inputOptions={{
             inputName: 'users',
             placeholder: 'Add Users',
@@ -135,7 +142,7 @@ export default function VendorMaster() {
           }}
           styleClass={`${styles.input5}`}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
-        />
+        /> */}
       </div>
 
       {socialMediaPopup.map((popupData, index) => {
