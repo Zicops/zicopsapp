@@ -789,6 +789,40 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
     }
   }
 `;
+
+export const GET_VENDORS_BY_LSP = gql`
+  query getVendors($lsp_id: String) {
+    getVendors(lsp_id: $lsp_id) {
+      vendorId
+      type
+      level
+      name
+      photo_url
+      address
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
+  query getVendors($lsp_id: String) {
+    getVendors(lsp_id: $lsp_id) {
+      vendorId
+      type
+      name
+    }
+  }
+`;
+
 // combined queries
 
 // export const GET_USER_META = gql`

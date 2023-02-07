@@ -8,11 +8,10 @@ import MyVendor from '@/components/VendorComps/MyVendor';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
-
+import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 export default function ManageVendor() {
+  const { vendorLevel, vendorType, setVendorType, setVendorLevel } = useHandleVendor();
   const [isOpen, setIsOpen] = useState(false);
-  const [vendorType, setVendorType] = useState('company');
-  const [vendorLevel, setVendorLevel] = useState('lsp');
 
   const onPlusHandler = () => {
     setIsOpen(true);

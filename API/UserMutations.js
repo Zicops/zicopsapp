@@ -1330,3 +1330,113 @@ export const UPDATE_ORGAINIZATION_UNIT_DETAILS = gql`
     }
   }
 `;
+export const ADD_VENDOR = gql`
+  mutation addVendor(
+    $lsp_id: String
+    $name: String
+    $level: String
+    $vendorId: String
+    $type: String
+    $photo: Upload
+    $address: String
+    $website: String
+    $facebook_url: String
+    $instagram_url: String
+    $twitter_url: String
+    $linkedin_url: String
+    $users: [String]
+    $description: String
+    $status: String
+  ) {
+    addVendor(
+      input: {
+        lsp_id: $lsp_id
+        name: $name
+        level: $level
+        vendor_id: $vendorId
+        type: $type
+        photo: $photo
+        address: $address
+        website: $website
+        facebook_url: $facebook_url
+        instagram_url: $instagram_url
+        twitter_url: $twitter_url
+        linkedin_url: $linkedin_url
+        users: $users
+        description: $description
+        status: $status
+      }
+    ) {
+      vendorId
+      type
+      level
+      name
+      description
+      photo_url
+      address
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+export const UPDATE_VENDOR = gql`
+  mutation updateVendor(
+    $vendorId: String
+    $level: String
+    $type: String
+    $photo: Upload
+    $address: String
+    $website: String
+    $facebook_url: String
+    $instagram_url: String
+    $twitter_url: String
+    $linkedin_url: String
+    $users: [String]
+    $description: String
+    $status: String
+  ) {
+    updateVendor(
+      input: {
+        vendor_id: $vendorId
+        level: $level
+        type: $type
+        photo: $photo
+        address: $address
+        website: $website
+        facebook_url: $facebook_url
+        instagram_url: $instagram_url
+        twitter_url: $twitter_url
+        linkedin_url: $linkedin_url
+        users: $users
+        description: $description
+        status: $status
+      }
+    ) {
+      vendorId
+      level
+      type
+      photo
+      address
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      users
+      description
+      created_at
+      reated_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
