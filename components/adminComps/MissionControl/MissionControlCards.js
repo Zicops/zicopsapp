@@ -13,16 +13,16 @@ const Card = ({ image, text, width, tooltipTitle }) => {
       <ToolTip title={tooltipTitle}>
         <div
           className="card"
-          // onClick={() => {
-          //   sendNotification(
-          //     {
-          //       title: 'Card Clicked',
-          //       body: 'Hopefully Clicked on Labs',
-          //       emails: ['vajresh@zicops.com', 'joy@zicops.com']
-          //     },
-          //     { context: { headers: { 'fcm-token': fcmToken } } }
-          //   );
-          // }}
+        // onClick={() => {
+        //   sendNotification(
+        //     {
+        //       title: 'Card Clicked',
+        //       body: 'Hopefully Clicked on Labs',
+        //       emails: ['vajresh@zicops.com', 'joy@zicops.com']
+        //     },
+        //     { context: { headers: { 'fcm-token': fcmToken } } }
+        //   );
+        // }}
         >
           <div className="card_icon">
             <Image src={image} alt="" width={width} height={'70px'} />
@@ -104,12 +104,17 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Card
-              image="/images/TrainingManagement.png"
-              text="Training Management "
-              width="70px"
-              tooltipTitle={ADMIN_HOME.trainingManagement}
-            />
+            <Link href={isDev ? '/admin/vctool' : ''}>
+              <a>
+                <Card
+                  image="/images/TrainingManagement.png"
+                  text="Training Management "
+                  width="70px"
+                  tooltipTitle={ADMIN_HOME.trainingManagement}
+                />
+              </a>
+            </Link>
+
           </div>
           <div className="new_row">
             <Link href="/admin/administration/organization">
