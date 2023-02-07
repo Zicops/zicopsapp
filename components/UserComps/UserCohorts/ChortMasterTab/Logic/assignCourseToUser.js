@@ -1,4 +1,3 @@
-import { queryClient } from '@/api/Queries';
 import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
@@ -8,18 +7,15 @@ import {
 } from '@/api/UserQueries';
 import {
   loadQueryDataAsync,
-  sendEmail,
-  sendNotification,
-  sendNotificationWithLink
+  sendEmail, sendNotificationWithLink
 } from '@/helper/api.helper';
-import { getCurrentEpochTime, getNotificationMsg } from '@/helper/common.helper';
+import { getNotificationMsg } from '@/helper/common.helper';
 import { COURSE_MAP_STATUS, EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
-import { async } from '@firebase/util';
 import moment from 'moment';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import useCohortUserData from './useCohortUserData';
@@ -284,11 +280,12 @@ export default function assignCourseToUser() {
       };
 
         const notificaitonBody = getNotificationMsg('courseUnassign',{courseName:courseName});
-    await sendNotification(
+    await sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: notificaitonBody,
-        user_id: userIds
+        user_id: userIds,
+        link:''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
