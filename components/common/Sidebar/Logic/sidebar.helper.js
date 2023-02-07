@@ -141,6 +141,30 @@ export const administrationSideBarData = {
     // },
   ]
 };
+
+export const vendorSideBarData = {
+  image: '/images/UserManagement.png',
+  heading: 'Vendor Management',
+  data: [
+    {
+      title: 'Market Yard',
+      link: '/admin/vendor/market-yard'
+    },
+    {
+      title: 'Manage Vendor',
+      link: '/admin/vendor/manage-vendor'
+    },
+    {
+      title: 'Dashboard',
+      link: '/admin'
+    },
+    {
+      title: 'Orders',
+      link: '/admin/vendor/orders'
+    }
+  ]
+};
+
 export const analyticsSideBarData = {
   image: '/images/Analytics.png',
   heading: 'Analytics',

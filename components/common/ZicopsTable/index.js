@@ -28,7 +28,7 @@ const ZicopsTable = ({
   data,
   pageSize,
   rowsPerPageOptions,
-  tableHeight,
+  tableHeight = '70vh',
   customStyles = {},
   loading = false,
   hideFooterPagination = false,
