@@ -1,12 +1,19 @@
 import CoursePageTabs from '@/components/CourseBody/CoursePageTabs';
 import AllNotifications from '@/components/Notifications/AllNotifications';
-import { NotificationAtom } from '@/state/atoms/notification.atom';
-import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import useHandleNotifications from '@/components/Notifications/Logic/useHandleNotifications';
+import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './notification.module.scss';
 
 const NotificationCenter = () => {
   const [notification, setNotifications] = useRecoilState(NotificationAtom);
+  const fcmToken = useRecoilValue(FcmTokenAtom);
+  const loadMoreBtnRef = useRef();
+
+  const { notifications, pageCursor, loadAllNotifications } =
+    useHandleNotifications(loadMoreBtnRef);
+
   const style = {
     borderBottom: 'none',
     marginTop: '15px',
@@ -61,7 +68,18 @@ const NotificationCenter = () => {
         activeCourseTab={activeCourseTab}
         setActiveTab={setActiveCourseTab}
       />
-      <div className={`${styles.notificationTabBody}`}>{showActiveTab(activeCourseTab)}</div>
+      <div className={`${styles.notificationTabBody}`}>
+        {showActiveTab(activeCourseTab)}
+
+        {!!pageCursor && (
+          <button
+            className={`${styles.loadMore}`}
+            ref={loadMoreBtnRef}
+            onClick={() => loadAllNotifications(fcmToken)}>
+            Load More
+          </button>
+        )}
+      </div>
     </div>
   );
 };

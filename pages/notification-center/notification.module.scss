@@ -1,18 +1,35 @@
 @import '../../styles/base.scss';
 
-.notificationPage{
-    margin-top: $headerHeight;
+.notificationPage {
+  margin-top: $headerHeight;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: $bgTile;
+
+  .notificationHeader {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 50px 0;
+    color: $white;
+  }
+  .notificationTabBody {
+    min-height: 60vh;
+
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background-color: #1a1d21;
-    .notificationHeader {
-        font-size: 28px;
-        font-weight: 700;
-        margin: 50px 0;
-        color: white;
-    }
-    .notificationTabBody{
-        min-height: 60vh;
-    }
+    justify-content: center;
+  }
+
+  .loadMore {
+    background-color: $primary;
+    padding: 5px 10px;
+
+    border: 0px;
+    border-radius: 5px;
+
+    margin: 10px auto;
+  }
 }
