@@ -462,7 +462,7 @@ export default function useHandleAddUserDetails() {
     return true;
   }
 
-  async function updateAboutUser(newImage = null, isVerified = true) {
+  async function updateAboutUser(newImage = null, isVerified = true,isFirst = false) {
     let userLspId = sessionStorage.getItem('user_lsp_id');
     const sendUserData = {
       id: userAboutData?.id,
@@ -517,7 +517,7 @@ export default function useHandleAddUserDetails() {
     const data = res?.data?.updateUser;
     const _userData = { ...userAboutData, ...data };
 
-    if (!userAboutData?.is_verified) {
+    if (isVerified && isFirst) {
       await notficationOnFirstLogin(userAboutData?.id,userLspId);
     }
 
