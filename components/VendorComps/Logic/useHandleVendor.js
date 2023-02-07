@@ -7,7 +7,7 @@ import {
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useMutation } from '@apollo/client';
 import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
@@ -25,7 +25,6 @@ export default function useHandleVendor() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [vendorDetails, setVendorDetails] = useState([]);
-  const [editVendorDetails, setEditVendorDetails] = useState([]);
   const [vendorType, setVendorType] = useState('company');
   const [vendorLevel, setVendorLevel] = useState('lsp');
 
@@ -36,9 +35,10 @@ export default function useHandleVendor() {
     if (!vendorDetails?.length) getAllVendors();
   }, []);
 
-  // useEffect(() => {
-  //   if (!router.isReady) return;
-  // }, [router.isReady]);
+  useEffect(() => {
+    if (!router.isReady) return;
+    setVendorData(getVendorObject());
+  }, [router.isReady]);
 
   function handlePhotoInput(e) {
     const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
@@ -75,7 +75,7 @@ export default function useHandleVendor() {
     const currentVendorInfo = vendorList?.getVendors?.find(
       (vendor) => vendor?.vendorId === vendorId
     );
-    setEditVendorDetails(currentVendorInfo);
+    setVendorData(currentVendorInfo);
   }
 
   async function addVendor() {
@@ -92,32 +92,32 @@ export default function useHandleVendor() {
       instagram_url: vendorData.instagramURL,
       twitter_url: vendorData.twitterURL,
       linkedin_url: vendorData.linkedinURL,
-      users: vendorData.addUser,
-      description: vendorData.saySomething.trim(),
+      users: vendorData.users,
+      description: vendorData.description.trim(),
       status: VENDOR_MASTER_STATUS.active
     };
 
     let isError = false;
 
-    // if (popUpState?.id) {
-    //   sendData.id = popUpState?.id;
-    //   console.log(sendData);
+    if (vendorData?.vendorId) {
+      sendData.vendorId = vendorData?.vendorId;
+      console.log(sendData);
 
-    //   await updateVendor({ variables: { variables: sendData } }).catch((err) => {
-    //     console.log(err);
-    //     isError = !!err;
-    //     return setToastMsg({ type: 'danger', message: 'Update Category Error' });
-    //   });
-    //   if (isError) return;
-    //   setToastMsg({ type: 'success', message: 'Category Updated' });
-    //   return;
-    // }
+      await updateVendor({ variables: { variables: sendData } }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
+      });
+      if (isError) return;
+      setToastMsg({ type: 'success', message: 'Vendor Updated' });
+      return;
+    }
 
-    // const res = await addNewVendor({ variables: sendData }).catch((err) => {
-    //   console.log(err);
-    //   isError = !!err;
-    //   return setToastMsg({ type: 'danger', message: 'Add Category Error' });
-    // });
+    const res = await addNewVendor({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
+    });
     if (isError) return;
     return res;
   }
@@ -132,7 +132,6 @@ export default function useHandleVendor() {
     setVendorLevel,
     addVendor,
     getEditVendors,
-    editVendorDetails,
     handlePhotoInput
   };
 }

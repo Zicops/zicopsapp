@@ -1,4 +1,3 @@
-import { LEARNING_SPACE_ID } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 
 export const VendorStateAtom = atom({
@@ -28,7 +27,7 @@ export const VendorProfileAtom = atom({
 
 export function getProfileObject(data) {
   return {
-    profileId: data?.profileId || '',
+    profileId: data?.profileId || null,
     firstName: data?.firstName || '',
     lastName: data?.lastName || '',
     email: data?.email || '',
