@@ -21,7 +21,7 @@ const CourseDashboard = () => {
           <FirstFourCards cardData={cardData} />
           <CategoryAndExpertiseAvailability />
           <MultilingualAndMyCourseAvailability />
-          {/* <CategoryConsumption /> */}
+          <CategoryConsumption />
           <CourseStatisticsAndCourseViewAnalytics />
         </div>
         {/* </MainBodyBox> */}
