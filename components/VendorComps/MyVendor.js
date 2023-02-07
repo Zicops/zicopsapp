@@ -1,28 +1,19 @@
+import { GET_VENDORS_BY_LSP_FOR_TABLE, userQueryClient } from '@/api/UserQueries';
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
-
-const data = [
-  { id: '1001', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
-  { id: '1002', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
-  { id: '1003', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
-  { id: '1004', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
-  { id: '1005', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
-  { id: '1006', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
-  { id: '1007', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' },
-  { id: '1008', vendor_name: 'TCS ', vendor_type: 'Company', services: 'SME, Content development' }
-];
-
+import useHandleVendor from './Logic/useHandleVendor.js';
 const MyVendor = () => {
+  const { vendorData } = useHandleVendor();
   const columns = [
     {
-      field: 'vendor_name',
+      field: 'name',
       headerClassName: 'course-list-header',
       headerName: 'Vendor Name',
       flex: 1
     },
     {
-      field: 'vendor_type',
+      field: 'type',
       headerClassName: 'course-list-header',
       headerName: 'Vendor type',
       flex: 1
@@ -91,11 +82,12 @@ const MyVendor = () => {
   return (
     <>
       <ZicopsTable
-        data={data}
+        data={vendorData}
         columns={columns}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         tableHeight="70vh"
+        customId="vendorId"
       />
     </>
   );

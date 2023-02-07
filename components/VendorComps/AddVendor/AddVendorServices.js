@@ -1,11 +1,9 @@
 import ZicopsAccordian from '@/common/ZicopsAccordian';
-import AddServices from './common/AddServices';
-import styles from '../vendorComps.module.scss';
-import { useRecoilState } from 'recoil';
-import { SmeServicesAtom, CtServicesAtom, CdServicesAtom } from '@/state/atoms/vendor.atoms';
+import { CdServicesAtom, CtServicesAtom, SmeServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useEffect } from 'react';
-import VendorPopUp from '../common/VendorPopUp';
-import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import styles from '../vendorComps.module.scss';
+import AddServices from './common/AddServices';
 
 export default function AddVendorServices() {
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
