@@ -2,20 +2,19 @@ import styles from '../vendorComps.module.scss';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import { changeHandler } from '@/helper/common.helper';
-import { useRecoilState } from 'recoil';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
-import PreviewImageVideo from '@/components/common/FormComponents/BrowseAndUpload/PreviewImageVideo';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import { useState } from 'react';
 import VendorPopUp from '../common/VendorPopUp';
 import AddUrl from './common/AddUrl';
+import useHandleVendor from '../Logic/useHandleVendor';
 
 export default function VendorMaster() {
   const [isFacebook, setIsFacebook] = useState(false);
   const [isInstagram, setIsInstagram] = useState(false);
   const [isTwitter, setIsTwitter] = useState(false);
   const [isLinkedin, setIsLinkedin] = useState(false);
-  const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+
+  const { vendorData, setVendorData, handlePhotoInput } = useHandleVendor();
 
   const socialMediaPopup = [
     {
@@ -77,7 +76,19 @@ export default function VendorMaster() {
         </div>
         <div className={`${styles.input2}`}>
           <label for="vendorName">Update vendor profile image: </label>
-          <BrowseAndUpload styleClassBtn={`${styles.button}`} title="Drag & Drop" />
+          <BrowseAndUpload
+            styleClassBtn={`${styles.button}`}
+            title="Drag & Drop"
+            handleFileUpload={handlePhotoInput}
+            handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
+            previewData={{
+              fileName: vendorData?.vendorProfileImage?.name,
+              filePath: vendorData?.vendorProfileImage
+            }}
+            inputName="image"
+            // hideRemoveBtn={true}
+            isActive={vendorData?.vendorProfileImage}
+          />
         </div>
       </div>
       <div className={`${styles.websiteSocialDiv}`}>
@@ -104,23 +115,23 @@ export default function VendorMaster() {
       </div>
 
       <div className={`${styles.input4}`}>
-        <label for="saysomething">Say something: </label>
+        <label for="description">Say something: </label>
         <LabeledTextarea
           inputOptions={{
-            inputName: 'saySomething',
+            inputName: 'description',
             placeholder: 'Say Something...',
-            value: vendorData.saySomething
+            value: vendorData.description
           }}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
       </div>
       <div className={`${styles.input1}`}>
-        <label for="addUser">Add User: </label>
+        <label for="users">Add User: </label>
         <LabeledInput
           inputOptions={{
-            inputName: 'addUser',
+            inputName: 'users',
             placeholder: 'Add Users',
-            value: vendorData.addUser
+            value: vendorData.users
           }}
           styleClass={`${styles.input5}`}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}

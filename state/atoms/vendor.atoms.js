@@ -8,6 +8,7 @@ export const VendorStateAtom = atom({
 
 export function getVendorObject(data) {
   return {
+    vendorId: data?.vendorId || null,
     vendorName: data?.vendorName || '',
     vendorAddress: data?.vendorAddress || '',
     vendorProfileImage: data?.vendorProfileImage || null,
@@ -16,9 +17,8 @@ export function getVendorObject(data) {
     instagramURL: data?.instagramURL || '',
     linkedinURL: data?.linkedinURL || '',
     twitterURL: data?.twitterURL || '',
-    saySomething: data?.saySomething || '',
-    addUser: data?.addUser || [],
-    vendorId: data?.vendorId || ''
+    description: data?.description || '',
+    users: data?.users || []
   };
 }
 export const VendorProfileAtom = atom({

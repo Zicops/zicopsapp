@@ -1331,7 +1331,7 @@ export const UPDATE_ORGAINIZATION_UNIT_DETAILS = gql`
   }
 `;
 export const ADD_VENDOR = gql`
-  mutation addvendorInput(
+  mutation addVendor(
     $lsp_id: String
     $name: String
     $level: String
@@ -1346,13 +1346,9 @@ export const ADD_VENDOR = gql`
     $linkedin_url: String
     $users: [String]
     $description: String
-    $created_at: String
-    $reated_by: String
-    $updated_at: String
-    $updated_by: String
     $status: String
   ) {
-    addvendorInput(
+    addVendor(
       input: {
         lsp_id: $lsp_id
         name: $name
@@ -1368,17 +1364,31 @@ export const ADD_VENDOR = gql`
         linkedin_url: $linkedin_url
         users: $users
         description: $description
-        created_at: $created_at
-        reated_by: $reated_by
-        updated_at: $updated_at
-        updated_by: $updated_by
         status: $status
       }
-    )
+    ) {
+      vendorId
+      type
+      level
+      name
+      description
+      photo_url
+      address
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
   }
 `;
 export const UPDATE_VENDOR = gql`
-  mutation updatevendor(
+  mutation updateVendor(
     $vendorId: String
     $level: String
     $type: String
@@ -1391,13 +1401,9 @@ export const UPDATE_VENDOR = gql`
     $linkedin_url: String
     $users: [String]
     $description: String
-    $created_at: String
-    $reated_by: String
-    $updated_at: String
-    $updated_by: String
     $status: String
   ) {
-    updatevendor(
+    updateVendor(
       input: {
         vendor_id: $vendorId
         level: $level
@@ -1411,10 +1417,6 @@ export const UPDATE_VENDOR = gql`
         linkedin_url: $linkedin_url
         users: $users
         description: $description
-        created_at: $created_at
-        reated_by: $reated_by
-        updated_at: $updated_at
-        updated_by: $updated_by
         status: $status
       }
     ) {
