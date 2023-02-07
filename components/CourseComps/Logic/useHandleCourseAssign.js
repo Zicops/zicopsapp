@@ -217,7 +217,7 @@ export default function useHandleCourseAssign({
     const user = parseJson(sessionStorage?.getItem('loggedUser'));
 
     let email = !!userEmail ? userEmail : user?.email;
-    let name = !!userName ? userName : user?.first_name;
+    let name = !!userName ? userName : userData?.first_name;
 
     const notificationBody = getNotificationMsg('courseAssign', {
       courseName: courseName || '',

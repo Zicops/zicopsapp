@@ -8,12 +8,13 @@ import {
   GET_USER_LEARNINGSPACES
 } from '@/api/UserQueries';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
-import { getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
+import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { useLazyQuery } from '@apollo/client';
+import { Skeleton } from '@mui/material';
 import Link from 'next/link';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import LoginHeadOne from '../ZicopsLogin/LoginHeadOne';
 import styles from './learningSpaces.module.scss';
 import LspCard from './LspCard';
@@ -22,6 +23,8 @@ const LearningSpaces = () => {
 
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+  const skeletonCardCount = isDev ? 1 : 0;
 
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
@@ -29,7 +32,7 @@ const LearningSpaces = () => {
 
   const [orgDetails, setOrgDetails] = useState([]);
   const [orgIds, setOrgIds] = useState([]);
-  const [orglspData, setOrglspData] = useState([]);
+  const [orglspData, setOrglspData] = useState([...Array(skeletonCardCount)]);
   const [userLspIds, setUserLspIds] = useState([]);
   const [userDetails, setUserDetails] = useState({});
   const [getUserLsp] = useLazyQuery(GET_USER_LEARNINGSPACES, {
@@ -102,17 +105,17 @@ const LearningSpaces = () => {
 
   useEffect(() => {
     // if (!domainArr.includes(URL)) return;
-    if (!lspIds?.length) return;
+    if (!lspIds?.length) return setOrglspData([]);
     LspDetails();
   }, [lspIds]);
 
   useEffect(() => {
-    if (!orgIds?.length) return;
+    if (!orgIds?.length) return setOrglspData([]);
     OrgDetails();
   }, [orgIds]);
 
   useEffect(() => {
-    if (!orgDetails?.length) return;
+    if (!orgDetails?.length) return setOrglspData([]);
     const _newArr = orgDetails?.map((item, i) =>
       Object.assign({}, item, { org_logo_url: item.logo_url }, lspsDetails[i])
     );
@@ -144,25 +147,73 @@ const LearningSpaces = () => {
           sub_heading={'Select your Learning space'}
         />
         <div className={`${styles.login_body}`}>
-          {orglspData?.map((data, index) => (
-            <LspCard
-              image={data.profile_url || '/images/zicopsIcon.png'}
-              path={
-                lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.invite ? '/account-setup' : '/'
-              }
-              website={data.subdomain}
-              status={data.status}
-              isDisabled={lspStatus?.[index].toLowerCase() === USER_MAP_STATUS.disable}
-              lspId={data.lsp_id}
-              lspName={data.name}
-              orgId={data.org_id}
-              logo={data.org_logo_url}
-              ouId={data.ou_id}
-              userLspId={userLspIds?.[index]}
-              userId={userDetails?.id}
-              lspLogo={data?.logo_url}
-            />
-          ))}
+          {!isDev ? (
+            <>
+              {orglspData?.map((data, index) => {
+                return (
+                  <LspCard
+                    image={data?.profile_url || '/images/zicopsIcon.png'}
+                    path={
+                      lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS.invite
+                        ? '/account-setup'
+                        : '/'
+                    }
+                    website={data?.subdomain}
+                    status={data?.status}
+                    isDisabled={lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS?.disable}
+                    lspId={data?.lsp_id}
+                    lspName={data?.name}
+                    orgId={data?.org_id}
+                    logo={data?.org_logo_url}
+                    ouId={data?.ou_id}
+                    userLspId={userLspIds?.[index]}
+                    userId={userDetails?.id}
+                    lspLogo={data?.logo_url}
+                  />
+                );
+              })}
+            </>
+          ) : (
+            <>
+              {!orglspData?.length ? (
+                <span>No LSP Found</span>
+              ) : (
+                orglspData?.map((data, index) => {
+                  if (!data)
+                    return (
+                      <Skeleton
+                        key={index}
+                        sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
+                        variant="rectangular"
+                        width={250}
+                        height={200}
+                      />
+                    );
+                  return (
+                    <LspCard
+                      image={data?.profile_url || '/images/zicopsIcon.png'}
+                      path={
+                        lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS.invite
+                          ? '/account-setup'
+                          : '/'
+                      }
+                      website={data?.subdomain}
+                      status={data?.status}
+                      isDisabled={lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS?.disable}
+                      lspId={data?.lsp_id}
+                      lspName={data?.name}
+                      orgId={data?.org_id}
+                      logo={data?.org_logo_url}
+                      ouId={data?.ou_id}
+                      userLspId={userLspIds?.[index]}
+                      userId={userDetails?.id}
+                      lspLogo={data?.logo_url}
+                    />
+                  );
+                })
+              )}
+            </>
+          )}
           <>
             {/* only for owners to request for creating new lsp */}
             {/* {userDetails?.role === "Admin" && <AddLsp />} */}
