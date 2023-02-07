@@ -846,7 +846,6 @@ export default function useUserCourseData() {
   async function getUserLspRoleLatest(userId=null,userLspId = null){
 
     if(!userLspId || !userId) return ;
-    console.log('called');
     //this function gets users lsp role and return the latest one
     const lspRoleArr = await loadQueryDataAsync(
       GET_USER_LSP_ROLES,
@@ -862,7 +861,7 @@ export default function useUserCourseData() {
       const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
     } else {
-      userLspRole = lspRoles[0]?.role;
+      userLspRole = lspRoles?.[0]?.role;
     }
 
     return userLspRole ;
