@@ -28,14 +28,15 @@ const ZicopsTable = ({
   data,
   pageSize,
   rowsPerPageOptions,
-  tableHeight,
+  tableHeight = '70vh',
   customStyles = {},
   loading = false,
   hideFooterPagination = false,
   showCustomSearch = false,
   searchProps = {},
   onPageChange = () => {},
-  currentPage = null
+  currentPage = null,
+  customId = null
 }) => {
   const tableContainerRef = useRef(null);
 
@@ -47,6 +48,7 @@ const ZicopsTable = ({
   const height = tableBody?.offsetHeight || null;
 
   if (data?.length >= pageSize && height) customProps.rowHeight = height / pageSize;
+  if (!!customId) customProps.getRowId = (row) => row?.[customId];
 
   return (
     <>
