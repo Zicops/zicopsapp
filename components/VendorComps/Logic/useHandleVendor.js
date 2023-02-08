@@ -11,9 +11,6 @@ import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
-import { GET_VENDORS_BY_LSP_FOR_TABLE, userQueryClient } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { useMutation } from '@apollo/client';
 import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
 
 export default function useHandleVendor() {
@@ -30,10 +27,6 @@ export default function useHandleVendor() {
   const [vendorDetails, setVendorDetails] = useState([]);
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
-
-  useEffect(() => {
-    if (!vendorDetails?.length) getAllVendors();
-  }, []);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -74,22 +67,22 @@ export default function useHandleVendor() {
     setVendorData(vendorInfo?.getVendorDetails);
   }
 
-  async function addVendor() {
+  async function addUpdateVendor() {
     const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
       lsp_id: lspId,
-      name: vendorData?.vendorName.trim(),
-      level: vendorData?.vendorLevel,
-      type: vendorData?.vendorType,
-      photo: vendorData?.vendorProfileImage,
-      address: vendorData?.vendorAddress.trim(),
-      website: vendorData?.vendorWebsiteURL,
-      facebook_url: vendorData.facebookURL,
-      instagram_url: vendorData.instagramURL,
-      twitter_url: vendorData.twitterURL,
-      linkedin_url: vendorData.linkedinURL,
-      users: vendorData.users,
-      description: vendorData.description.trim(),
+      name: vendorData?.name?.trim() || '',
+      level: vendorData?.vendorLevel?.trim() || '',
+      type: vendorData?.vendorType?.trim() || '',
+      photo: vendorData?.vendorProfileImage || null,
+      address: vendorData?.address?.trim() || '',
+      website: vendorData?.website?.trim() || '',
+      facebook_url: vendorData?.facebookURL?.trim() || '',
+      instagram_url: vendorData?.instagramURL?.trim() || '',
+      twitter_url: vendorData?.twitterURL?.trim() || '',
+      linkedin_url: vendorData?.linkedinURL?.trim() || '',
+      users: vendorData?.users || [],
+      description: vendorData?.description?.trim() || '',
       status: VENDOR_MASTER_STATUS.active
     };
 
@@ -120,10 +113,9 @@ export default function useHandleVendor() {
 
   return {
     vendorDetails,
-    vendorData,
-    setVendorData,
-    addVendor,
+    addUpdateVendor,
     getSingleVendorInfo,
-    handlePhotoInput
+    handlePhotoInput,
+    getAllVendors
   };
 }

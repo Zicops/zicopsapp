@@ -1392,6 +1392,7 @@ export const UPDATE_VENDOR = gql`
     $vendorId: String
     $level: String
     $type: String
+    $name: String
     $photo: Upload
     $address: String
     $website: String
@@ -1408,6 +1409,7 @@ export const UPDATE_VENDOR = gql`
         vendor_id: $vendorId
         level: $level
         type: $type
+        name: $name
         photo: $photo
         address: $address
         website: $website
@@ -1423,17 +1425,17 @@ export const UPDATE_VENDOR = gql`
       vendorId
       level
       type
-      photo
+      name
+      photo_url
       address
       website
       facebook_url
       instagram_url
       twitter_url
       linkedin_url
-      users
       description
       created_at
-      reated_by
+      created_by
       updated_at
       updated_by
       status

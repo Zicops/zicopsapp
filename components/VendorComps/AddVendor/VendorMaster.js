@@ -3,7 +3,7 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import { changeHandler } from '@/helper/common.helper';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import VendorPopUp from '../common/VendorPopUp';
 import AddUrl from './common/AddUrl';
 import useHandleVendor from '../Logic/useHandleVendor';
@@ -11,42 +11,36 @@ import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 
-export default function VendorMaster({ data }) {
-  const [isFacebook, setIsFacebook] = useState(false);
-  const [isInstagram, setIsInstagram] = useState(false);
-  const [isTwitter, setIsTwitter] = useState(false);
-  const [isLinkedin, setIsLinkedin] = useState(false);
+export default function VendorMaster() {
+  const [openSocialMedia, setOpenSocialMedia] = useState(null);
+  const [emails, setEmails] = useState([]);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const { handlePhotoInput } = useHandleVendor();
+
+  useEffect(() => {
+    setVendorData((prev) => ({ ...prev, users: emails.map((item) => item?.props?.children[0]) }));
+  }, [emails]);
 
   const socialMediaPopup = [
     {
       title: 'Facebook',
-      normalState: isFacebook,
-      updatedState: setIsFacebook,
       inputName: 'facebookURL',
-      value: data?.facebook_url || vendorData.facebookURL
+      value: vendorData?.facebookURL
     },
     {
       title: 'Instagram',
-      normalState: isInstagram,
-      updatedState: setIsInstagram,
       inputName: 'instagramURL',
-      value: data?.instagram_url || vendorData.instagramURL
+      value: vendorData?.instagramURL
     },
     {
       title: 'Twitter',
-      normalState: isTwitter,
-      updatedState: setIsTwitter,
       inputName: 'twitterURL',
-      value: data?.twitter_url || vendorData.twitterURL
+      value: vendorData?.twitterURL
     },
     {
       title: 'LinkedIn',
-      normalState: isLinkedin,
-      updatedState: setIsLinkedin,
       inputName: 'linkedinURL',
-      value: data?.linkedin_url || vendorData.linkedinURL
+      value: vendorData?.linkedinURL
     }
   ];
 
@@ -55,10 +49,10 @@ export default function VendorMaster({ data }) {
       <div className={`${styles.input1}`}>
         <LabeledInput
           inputOptions={{
-            inputName: 'vendorName',
+            inputName: 'name',
             label: 'Vendor Name',
             placeholder: 'Enter Vendor Name',
-            value: data?.name || vendorData.vendorName
+            value: vendorData?.name
           }}
           styleClass={`${styles.input5}`}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -70,9 +64,9 @@ export default function VendorMaster({ data }) {
           {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
           <LabeledTextarea
             inputOptions={{
-              inputName: 'vendorAddress',
+              inputName: 'address',
               placeholder: 'Enter Vendor Address',
-              value: data?.address || vendorData.vendorAddress
+              value: vendorData?.address
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
@@ -85,10 +79,10 @@ export default function VendorMaster({ data }) {
             handleFileUpload={handlePhotoInput}
             handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
             previewData={{
-              fileName: data?.photo_url?.name || vendorData?.vendorProfileImage?.name,
-              filePath: data?.photo_url || vendorData?.vendorProfileImage
+              fileName: vendorData?.vendorProfileImage?.name,
+              filePath: vendorData?.vendorProfileImage
             }}
-            inputName="image"
+            inputName="vendorProfileImage"
             // hideRemoveBtn={true}
             isActive={vendorData?.vendorProfileImage}
           />
@@ -96,12 +90,12 @@ export default function VendorMaster({ data }) {
       </div>
       <div className={`${styles.websiteSocialDiv}`}>
         <div className={`${styles.input3}`}>
-          <label for="vendorWebsite">Add website URL: </label>
+          <label for="website">Add website URL: </label>
           <LabeledInput
             inputOptions={{
-              inputName: 'vendorWebsiteURL',
+              inputName: 'website',
               placeholder: 'https://website_abc.com',
-              value: data?.website || vendorData.vendorWebsiteURL
+              value: vendorData?.website
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
@@ -109,10 +103,10 @@ export default function VendorMaster({ data }) {
         <div className={`${styles.input3}`}>
           <label for="vendorName">Add URL of social media pages: </label>
           <div className={`${styles.icons}`}>
-            <img src="/images/Facebook1.png" onClick={() => setIsFacebook(true)} />
-            <img src="/images/Instagram1.png" onClick={() => setIsInstagram(true)} />
-            <img src="/images/Twitter1.png" onClick={() => setIsTwitter(true)} />
-            <img src="/images/Linkedin1.png" onClick={() => setIsLinkedin(true)} />
+            <img src="/images/Facebook1.png" onClick={() => setOpenSocialMedia(0)} />
+            <img src="/images/Instagram1.png" onClick={() => setOpenSocialMedia(1)} />
+            <img src="/images/Twitter1.png" onClick={() => setOpenSocialMedia(2)} />
+            <img src="/images/Linkedin1.png" onClick={() => setOpenSocialMedia(3)} />
           </div>
         </div>
       </div>
@@ -123,47 +117,42 @@ export default function VendorMaster({ data }) {
           inputOptions={{
             inputName: 'description',
             placeholder: 'Say Something...',
-            value: data?.description || vendorData.description
+            value: vendorData?.description
           }}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
       </div>
       <div className={`${styles.input1}`}>
         <label for="users">Add User: </label>
-        <MultiEmailInput
-          items={vendorData.users}
-          setItems={(users) => setVendorData({ ...vendorData, users })}
-        />
-        {/* <LabeledInput
-          inputOptions={{
-            inputName: 'users',
-            placeholder: 'Add Users',
-            value: vendorData.users
-          }}
-          styleClass={`${styles.input5}`}
-          changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
-        /> */}
+        <MultiEmailInput items={emails} setItems={setEmails} />
       </div>
 
-      {socialMediaPopup.map((popupData, index) => {
-        return (
-          <VendorPopUp
-            open={popupData.normalState}
-            title={popupData.title}
-            popUpState={[popupData.normalState, popupData.updatedState]}
-            size="small"
-            closeBtn={{ name: 'Cancel' }}
-            submitBtn={{ name: 'Done' }}
-            isFooterVisible={true}>
-            <AddUrl
-              inputName={popupData.inputName}
-              urlData={vendorData}
-              setUrlData={setVendorData}
-              Value={popupData.value}
-            />
-          </VendorPopUp>
-        );
-      })}
+      {!!socialMediaPopup?.[openSocialMedia]?.title && (
+        <VendorPopUp
+          title={socialMediaPopup[openSocialMedia].title}
+          popUpState={[openSocialMedia + 1, setOpenSocialMedia]}
+          size="small"
+          closeBtn={{
+            name: 'Cancel',
+            handleClick: () => {
+              setVendorData({ ...vendorData, [socialMediaPopup[openSocialMedia].inputName]: '' });
+              setOpenSocialMedia(null);
+            }
+          }}
+          submitBtn={{ name: 'Done', handleClick: () => setOpenSocialMedia(null) }}
+          onCloseWithCross={() => {
+            setVendorData({ ...vendorData, [socialMediaPopup[openSocialMedia].inputName]: '' });
+            setOpenSocialMedia(null);
+          }}
+          isFooterVisible={true}>
+          <AddUrl
+            inputName={socialMediaPopup[openSocialMedia].inputName}
+            urlData={vendorData}
+            setUrlData={setVendorData}
+            Value={socialMediaPopup[openSocialMedia].value}
+          />
+        </VendorPopUp>
+      )}
     </div>
   );
 }

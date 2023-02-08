@@ -8,12 +8,12 @@ export const VendorStateAtom = atom({
 export function getVendorObject(data) {
   return {
     vendorId: data?.vendorId || null,
-    vendorName: data?.vendorName || '',
+    name: data?.name || '',
     vendorType: data?.vendorType || 'company',
     vendorLevel: data?.vendorLevel || 'lsp',
-    vendorAddress: data?.vendorAddress || '',
+    address: data?.address || '',
     vendorProfileImage: data?.vendorProfileImage || null,
-    vendorWebsiteURL: data?.vendorWebsiteURL || '',
+    website: data?.website || '',
     facebookURL: data?.facebookURL || '',
     instagramURL: data?.instagramURL || '',
     linkedinURL: data?.linkedinURL || '',
