@@ -9,17 +9,15 @@ import AdminHeader from '@/components/common/AdminHeader';
 import MainBody from '@/components/common/MainBody';
 import Sidebar from '@/components/common/Sidebar';
 import { analyticsSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import useHandleFirstFourCard from '../../../components/AdminAnalyticsDashboardComp/Logic/useHandleFirstFourCard';
 
 const CourseDashboard = () => {
-  const cardData = useHandleFirstFourCard();
   return (
     <>
       <Sidebar sidebarItemsArr={analyticsSideBarData} />
       <MainBody>
         <AdminHeader title={'Course Dashboard'} pageRoute="/admin/analytics/course-dashboard" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '50px 0' }}>
-          <FirstFourCards cardData={cardData} />
+          <FirstFourCards />
           <CategoryAndExpertiseAvailability />
           <TopCourseTable />
           <MultilingualAndMyCourseAvailability />
