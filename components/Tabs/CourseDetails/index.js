@@ -117,6 +117,7 @@ export default function CourseDetails() {
               value: fullCourse?.expected_completion,
               isDisabled: isDisabled,
               isNumericOnly: true
+
             }}
             changeHandler={handleChange}
           />
