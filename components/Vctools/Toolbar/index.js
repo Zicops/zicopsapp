@@ -1,9 +1,10 @@
 import next from "next";
 import { useEffect, useState } from "react";
 import styles from "../VctoolMain.module.scss"
-const MainToolbar = ({ audiotoggle, videotoggle,setaudio,setvideo,endMeetng,shareScreen }) => {
+const MainToolbar = ({ audiotoggle, videotoggle,setaudio,setvideo,endMeetng,shareScreen,handRiseFun }) => {
     const[fade1,setfade1]=useState(true)
     const[fade2,setfade2]=useState(true)
+    const [hand,sethand]=useState(true)
     return (
         <div className={`${styles.toolbar}`} >
             <div className={`${styles.toolbar_nav }`}
@@ -71,7 +72,19 @@ const MainToolbar = ({ audiotoggle, videotoggle,setaudio,setvideo,endMeetng,shar
                     {
                         shareScreen()
                     }}><img src="/images/svg/vctool/present_to_all.svg" /></button>
-                    <button><img src="/images/svg/vctool/back_hand.svg" /></button>
+
+                    <button style={hand ?{backgroundColor:"#202222"} : {backgroundColor :"white"}} onClick={()=>
+                    {
+                        sethand(!hand)
+                        handRiseFun()
+                    }} >
+                    {
+                        hand ?
+                        <img src="/images/svg/vctool/back_hand.svg" />
+                        :
+                        <img src="/images/svg/vctool/back_hand_on.svg" />
+                    }
+                    </button>
                 </div>
                 <div className={`${styles.footer_right}`}>
                     <button><img src="/images/svg/vctool/help.svg" /> </button>
