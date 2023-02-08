@@ -9,8 +9,9 @@ import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
+import { changeHandler } from '@/helper/common.helper';
 export default function ManageVendor() {
-  const { vendorLevel, vendorType, setVendorType, setVendorLevel } = useHandleVendor();
+  const { vendorData, setVendorData } = useHandleVendor();
   const [isOpen, setIsOpen] = useState(false);
 
   const onPlusHandler = () => {
@@ -47,14 +48,14 @@ export default function ManageVendor() {
               checkboxProps1={{
                 label: 'Individual/Freelancer',
                 value: 'individual',
-                isChecked: vendorType === 'individual',
-                changeHandler: (e) => setVendorType(e.target.value)
+                isChecked: vendorData?.vendorType === 'individual',
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Company',
                 value: 'company',
-                isChecked: vendorType === 'company',
-                changeHandler: (e) => setVendorType(e.target.value)
+                isChecked: vendorData?.vendorType === 'company',
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
             />
             <AddVendor
@@ -62,16 +63,14 @@ export default function ManageVendor() {
               checkboxProps1={{
                 label: 'Organization',
                 value: 'organization',
-                isChecked: vendorLevel === 'organization',
-                changeHandler: (e) => {
-                  setVendorLevel(e.target.value);
-                }
+                isChecked: vendorData?.vendorLevel === 'organization',
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Learning space Level',
                 value: 'lsp',
-                isChecked: vendorLevel === 'lsp',
-                changeHandler: (e) => setVendorLevel(e.target.value)
+                isChecked: vendorData?.vendorLevel === 'lsp',
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               inputName="vendorLevel"
             />

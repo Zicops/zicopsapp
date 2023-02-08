@@ -9,6 +9,8 @@ export function getVendorObject(data) {
   return {
     vendorId: data?.vendorId || null,
     vendorName: data?.vendorName || '',
+    vendorType: data?.vendorType || 'company',
+    vendorLevel: data?.vendorLevel || 'lsp',
     vendorAddress: data?.vendorAddress || '',
     vendorProfileImage: data?.vendorProfileImage || null,
     vendorWebsiteURL: data?.vendorWebsiteURL || '',

@@ -11,7 +11,7 @@ import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 
-export default function VendorMaster() {
+export default function VendorMaster({ data }) {
   const [isFacebook, setIsFacebook] = useState(false);
   const [isInstagram, setIsInstagram] = useState(false);
   const [isTwitter, setIsTwitter] = useState(false);
@@ -25,28 +25,28 @@ export default function VendorMaster() {
       normalState: isFacebook,
       updatedState: setIsFacebook,
       inputName: 'facebookURL',
-      value: vendorData.facebookURL
+      value: data?.facebook_url || vendorData.facebookURL
     },
     {
       title: 'Instagram',
       normalState: isInstagram,
       updatedState: setIsInstagram,
       inputName: 'instagramURL',
-      value: vendorData.instagramURL
+      value: data?.instagram_url || vendorData.instagramURL
     },
     {
       title: 'Twitter',
       normalState: isTwitter,
       updatedState: setIsTwitter,
       inputName: 'twitterURL',
-      value: vendorData.twitterURL
+      value: data?.twitter_url || vendorData.twitterURL
     },
     {
       title: 'LinkedIn',
       normalState: isLinkedin,
       updatedState: setIsLinkedin,
       inputName: 'linkedinURL',
-      value: vendorData.linkedinURL
+      value: data?.linkedin_url || vendorData.linkedinURL
     }
   ];
 
@@ -58,7 +58,7 @@ export default function VendorMaster() {
             inputName: 'vendorName',
             label: 'Vendor Name',
             placeholder: 'Enter Vendor Name',
-            value: vendorData.vendorName
+            value: data?.name || vendorData.vendorName
           }}
           styleClass={`${styles.input5}`}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -72,7 +72,7 @@ export default function VendorMaster() {
             inputOptions={{
               inputName: 'vendorAddress',
               placeholder: 'Enter Vendor Address',
-              value: vendorData.vendorAddress
+              value: data?.address || vendorData.vendorAddress
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
@@ -85,8 +85,8 @@ export default function VendorMaster() {
             handleFileUpload={handlePhotoInput}
             handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
             previewData={{
-              fileName: vendorData?.vendorProfileImage?.name,
-              filePath: vendorData?.vendorProfileImage
+              fileName: data?.photo_url?.name || vendorData?.vendorProfileImage?.name,
+              filePath: data?.photo_url || vendorData?.vendorProfileImage
             }}
             inputName="image"
             // hideRemoveBtn={true}
@@ -101,7 +101,7 @@ export default function VendorMaster() {
             inputOptions={{
               inputName: 'vendorWebsiteURL',
               placeholder: 'https://website_abc.com',
-              value: vendorData.vendorWebsiteURL
+              value: data?.website || vendorData.vendorWebsiteURL
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
@@ -123,7 +123,7 @@ export default function VendorMaster() {
           inputOptions={{
             inputName: 'description',
             placeholder: 'Say Something...',
-            value: vendorData.description
+            value: data?.description || vendorData.description
           }}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />

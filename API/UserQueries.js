@@ -823,6 +823,52 @@ export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
   }
 `;
 
+export const GET_VENDOR_ADMINS = gql`
+  query getVendorAdmins($vendor_id: String) {
+    getVendorAdmins(vendor_id: $vendor_id) {
+      id
+      first_name
+      last_name
+      status
+      role
+      is_verified
+      is_active
+      gender
+      created_by
+      updated_by
+      created_at
+      updated_at
+      email
+      phone
+      photo_url
+    }
+  }
+`;
+
+export const GET_VENDOR_DETAILS = gql`
+  query getVendorDetails($vendor_id: String!) {
+    getVendorDetails(vendor_id: $vendor_id) {
+      vendorId
+      type
+      level
+      name
+      description
+      photo_url
+      address
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
 // combined queries
 
 // export const GET_USER_META = gql`

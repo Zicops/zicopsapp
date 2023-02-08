@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   GET_VENDORS_BY_LSP,
   GET_VENDORS_BY_LSP_FOR_TABLE,
+  GET_VENDOR_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
@@ -25,9 +26,6 @@ export default function useHandleVendor() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [vendorDetails, setVendorDetails] = useState([]);
-  const [vendorType, setVendorType] = useState('company');
-  const [vendorLevel, setVendorLevel] = useState('lsp');
-
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -64,18 +62,14 @@ export default function useHandleVendor() {
     setVendorDetails(vendorList?.getVendors);
   }
 
-  async function getEditVendors() {
-    const lspId = sessionStorage?.getItem('lsp_id');
-    const vendorList = await loadQueryDataAsync(
-      GET_VENDORS_BY_LSP,
-      { lsp_id: lspId },
+  async function getSingleVendorInfo() {
+    const vendorInfo = await loadQueryDataAsync(
+      GET_VENDOR_DETAILS,
+      { vendor_id: vendorId },
       {},
       userQueryClient
     );
-    const currentVendorInfo = vendorList?.getVendors?.find(
-      (vendor) => vendor?.vendorId === vendorId
-    );
-    setVendorData(currentVendorInfo);
+    setVendorData(vendorInfo?.getVendorDetails);
   }
 
   async function addVendor() {
@@ -83,8 +77,8 @@ export default function useHandleVendor() {
     const sendData = {
       lsp_id: lspId,
       name: vendorData?.vendorName.trim(),
-      level: vendorLevel,
-      type: vendorType,
+      level: vendorData?.vendorLevel,
+      type: vendorData?.vendorType,
       photo: vendorData?.vendorProfileImage,
       address: vendorData?.vendorAddress.trim(),
       website: vendorData?.vendorWebsiteURL,
@@ -125,13 +119,9 @@ export default function useHandleVendor() {
   return {
     vendorDetails,
     vendorData,
-    vendorLevel,
-    vendorType,
     setVendorData,
-    setVendorType,
-    setVendorLevel,
     addVendor,
-    getEditVendors,
+    getSingleVendorInfo,
     handlePhotoInput
   };
 }
