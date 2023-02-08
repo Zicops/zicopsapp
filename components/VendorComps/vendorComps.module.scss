@@ -106,6 +106,7 @@
     gap: 15px;
     img {
       width: 20%;
+      cursor: pointer;
     }
   }
 }
@@ -795,10 +796,9 @@
     color: $bgBody;
   }
 }
-.checkBoxLabel{
-  label{
+.checkBoxLabel {
+  label {
     font-size: 18px;
-
   }
 }
 
@@ -1043,7 +1043,7 @@
       }
     }
   }
-  .editIcon{
+  .editIcon {
     cursor: pointer;
   }
 }
@@ -1253,42 +1253,42 @@
     }
   }
 }
- .hr {
-   background-color: $secondary;
-   height: 1px;
-   margin: 10px 0px;
- }
- .manageVendorBody {
-   margin: 0px 40px 0px 300px;
-   padding-bottom: 5px;
-   //  border: 2px solid $bgBody;
-   border-radius: 8px;
-   box-shadow: -2px 2px 10px 0 #040404, 2px -2px 5px 0 #868f8f;
+.hr {
+  background-color: $secondary;
+  height: 1px;
+  margin: 10px 0px;
+}
+.manageVendorBody {
+  margin: 0px 40px 0px 300px;
+  padding-bottom: 5px;
+  //  border: 2px solid $bgBody;
+  border-radius: 8px;
+  box-shadow: -2px 2px 10px 0 #040404, 2px -2px 5px 0 #868f8f;
 
-   .manageVendorButton {
-     display: flex;
-     justify-content: flex-end;
-     gap: 8px;
-     margin: 10px 20px;
+  .manageVendorButton {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin: 10px 20px;
 
-     button {
-       padding: 10px 32px;
-       border: 2px solid $primary;
-       border-radius: 50px;
-       background-color: transparent;
-       color: $primary;
-       cursor: pointer;
-     }
+    button {
+      padding: 10px 32px;
+      border: 2px solid $primary;
+      border-radius: 50px;
+      background-color: transparent;
+      color: $primary;
+      cursor: pointer;
+    }
 
-     .cancelButton {
-       border: 2px solid #484848;
-       color: $bgBody;
-     }
-   }
- }
+    .cancelButton {
+      border: 2px solid #484848;
+      color: $bgBody;
+    }
+  }
+}
 
- .previewButtonContainer {
-   display: flex;
-   justify-content: flex-end;
-   flex: 1;
- }
+.previewButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
