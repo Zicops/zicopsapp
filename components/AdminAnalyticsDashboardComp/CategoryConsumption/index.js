@@ -10,13 +10,12 @@ export default function CategoryConsumption() {
       {
         label: ['Courses'],
         data: CategoryConsumptionData.map((data) => data.complete),
-        backgroundColor: ['rgba(32,161,161,1)'],
+        backgroundColor: [styles.primary],
         borderRadius: ['1'],
         barThickness: 20,
         minBarLength: 2,
         barPercentage: 0.2,
         height: 500,
-        borderColor: '#20A1A1',
         fill: true,
         category: ''
       }
