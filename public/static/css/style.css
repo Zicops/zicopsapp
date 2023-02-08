@@ -388,6 +388,7 @@ p {
 .contact-form form button:hover {
   background-color: white;
 }
+
 .terms-text h2 {
   font-size: 30px;
   font-weight: 600;
@@ -400,7 +401,6 @@ p {
 .terms-text li a{
   color: var(--lightText);
 }
-
 
 
 

@@ -1,0 +1,19 @@
+@import '../../../styles/base.scss';
+
+.badge_wrapper{
+    display: flex;
+    // flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    min-width: 150px;
+    padding: 8px 16px;
+    background: #1A1B26;
+    border: 1px solid #30323F;
+    border-radius: 50px;
+    .badge_count, .badge_text{
+        font-size: 18px;
+        font-weight: 400;
+        color: #eaeaea;
+    }
+}
