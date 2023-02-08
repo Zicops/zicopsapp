@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 import {
-  GET_VENDORS_BY_LSP,
   GET_VENDORS_BY_LSP_FOR_TABLE,
   GET_VENDOR_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useMutation } from '@apollo/client';
-import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
 import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
+import { GET_VENDORS_BY_LSP_FOR_TABLE, userQueryClient } from '@/api/UserQueries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { useMutation } from '@apollo/client';
+import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
 
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, {

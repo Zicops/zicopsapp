@@ -17,7 +17,6 @@ const LabeledRadioCheckbox = ({
   isLoading = false,
   changeHandler = function () {}
 }) => {
-  console.log(changeHandler);
   return (
     <span className={labeledRadioCheckboxWrapper}>
       <label>
