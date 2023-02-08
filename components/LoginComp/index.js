@@ -25,8 +25,8 @@ const LoginComp = () => {
   };
 
   useEffect(() => {
-    if (orgData?.lsp_logo_url?.length) return;
-    OrgDetails(true);
+    if (orgData?.logo_url?.length) return;
+    OrgDetails();
   }, []);
 
   return (
@@ -36,7 +36,7 @@ const LoginComp = () => {
         <div className={`${styles.ZicopsLogo}`}>
           <img
             src={
-              orgData?.lsp_logo_url?.length ? orgData?.lsp_logo_url : "/images/svg/asset-6.svg"
+              orgData?.logo_url?.length ? orgData?.logo_url : "/images/svg/asset-6.svg"
             }
             alt="zicops logo"
           />
