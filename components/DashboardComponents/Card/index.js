@@ -9,7 +9,7 @@ export default function Card({ title = '', image = '', count = '', description =
           <img src={image} alt={title} />
         </div>
       </div>
-      <div className={`${styles.card_count}`}>{count === null ? 'X' : count}</div>
+      <div className={`${styles.card_count}`}>{count == null ? 'X' : count}</div>
       <div className={`${styles.card_text}`}>{description}</div>
     </div>
   );
