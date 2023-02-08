@@ -23,8 +23,8 @@ const VcMaintool = () => {
     const domain = 'live.zicops.com';
     const options = {
       roomName: givenName,
-      width: 1535,
-      height: 744,
+      // width: "100%",
+      // height: "100%",
       parentNode: ContainerRef.current,
       userInfo: {
         email: 'email@jitsiexamplemail.com',
@@ -61,7 +61,9 @@ const VcMaintool = () => {
   };
   return (
     <>
-      <div id="meet" className={`${styles.meet}`} ref={ContainerRef}></div>
+      <div id="meet" className={`${styles.meet}`} ref={ContainerRef}>
+        
+      </div>
       {toolbar && (
         <MainToolbar
           SetAudio={() => {
