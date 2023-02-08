@@ -12,13 +12,32 @@ export async function getAllCourseCountInLsp(
 
   const queryVariables = { lsp_id: lspId, course_type: type, languages };
   if (status) queryVariables.course_status = status;
-  const myCourseStats = loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
+  const courseStats = loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
     input: queryVariables
   });
 
-  let totalMyCourses = 0;
-  (await myCourseStats)?.getBasicCourseStats?.languages?.forEach((lang) => {
-    if (lang?.count) totalMyCourses += lang?.count;
+  let totalCount = 0;
+  (await courseStats)?.getBasicCourseStats?.languages?.forEach((lang) => {
+    if (lang?.count) totalCount += lang?.count;
   });
-  return totalMyCourses;
+  return totalCount;
+}
+
+export async function getAllCourseCountBasedOnExpertises(
+  lspId = null,
+  type = COURSE_TYPES[0],
+  expertises = []
+) {
+  if (!lspId) return null;
+
+  const queryVariables = { lsp_id: lspId, course_type: type, expertise_level: expertises };
+  const courseStats = loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
+    input: queryVariables
+  });
+
+  let totalCount = 0;
+  (await courseStats)?.getBasicCourseStats?.expertise_level?.forEach((expertise) => {
+    if (expertise?.count) totalCount += expertise?.count;
+  });
+  return totalCount;
 }

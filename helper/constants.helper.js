@@ -132,6 +132,8 @@ export const COURSE_TOPIC_STATUS = {
   completed: 'completed'
 };
 
+export const COURSE_EXPERTISES = ['Beginner', 'Competent', 'Proficient'];
+
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
 
