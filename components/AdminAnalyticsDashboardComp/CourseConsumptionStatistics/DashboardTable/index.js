@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
 import ZicopsTable from '@/components/common/ZicopsTable';
 
 const columns = [
@@ -7,7 +5,8 @@ const columns = [
     field: 'courseName',
     headerName: 'Course name',
     headerClassName: 'course-list-header',
-    flex: 1
+    // flex: 1
+    width: 300
   },
   {
     field: 'activeLearners',
@@ -16,48 +15,55 @@ const columns = [
     headerClassName: 'course-list-header',
     headerAlign: 'center',
     align: 'center',
-    flex: 1
+    // flex: 1
+    width: 180
   },
   {
     field: 'completedBy',
     headerName: 'Completed by',
     type: 'number',
     headerClassName: 'course-list-header',
-    flex: 1
+    // flex: 1
+    width: 180
   },
   {
     field: 'averageCompletionTime',
     headerName: 'Average completion time',
     type: 'number',
     headerClassName: 'course-list-header',
-    flex: 1
+    // flex: 1
+    width: 250
   },
   {
     field: 'averageCompliance',
     headerName: 'Average compliance %',
     type: 'number',
     headerClassName: 'course-list-header',
-    flex: 1
+    // flex: 1
+    width: 250
   },
   {
     field: 'publishedOn',
     headerName: 'Published on',
     type: 'number',
     headerClassName: 'course-list-header',
-    flex: 1
+    // flex: 1
+    width: 180
   },
   {
     field: 'ownedBy',
     headerName: 'Owned by',
     headerClassName: 'course-list-header',
-    flex: 1
+    // flex: 1
+    width: 130
   },
   {
     field: 'duration',
     headerName: 'Duration',
     type: 'number',
     headerClassName: 'course-list-header',
-    flex: 1
+    // flex: 1
+    width: 100
   }
 ];
 
@@ -165,13 +171,13 @@ const data = [
 
 export default function DashboardTable() {
   return (
-     <div>
-         <ZicopsTable
+    <div>
+      <ZicopsTable
         columns={columns}
         data={data}
         pageSize={5}
         rowsPerPageOptions={[3]}
-        tableHeight="53.1vh"
+        tableHeight="55vh"
       />
     </div>
   );
