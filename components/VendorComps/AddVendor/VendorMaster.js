@@ -10,12 +10,17 @@ import useHandleVendor from '../Logic/useHandleVendor';
 import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
+import Loader from '@/components/common/Loader';
+import { useRouter } from 'next/router';
 
 export default function VendorMaster() {
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [emails, setEmails] = useState([]);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const { handlePhotoInput } = useHandleVendor();
+
+  const router = useRouter();
+  const vendorId = router.query.vendorId || null;
 
   useEffect(() => {
     setVendorData((prev) => ({ ...prev, users: emails.map((item) => item?.props?.children[0]) }));
@@ -43,6 +48,9 @@ export default function VendorMaster() {
       value: vendorData?.linkedinURL
     }
   ];
+
+  if (vendorId && vendorData?.vendorId !== vendorId)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>

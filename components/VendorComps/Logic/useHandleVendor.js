@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
+import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
 import {
   GET_VENDORS_BY_LSP_FOR_TABLE,
   GET_VENDOR_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { useMutation } from '@apollo/client';
-import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilState } from 'recoil';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, {
@@ -29,7 +26,7 @@ export default function useHandleVendor() {
 
   const [vendorDetails, setVendorDetails] = useState([]);
   const router = useRouter();
-  const vendorId = router.query.vendorId || '0';
+  const vendorId = router.query.vendorId || null;
 
   useEffect(() => {
     if (!router.isReady) return;

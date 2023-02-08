@@ -14,8 +14,12 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import MainBody from '@/components/common/MainBody';
 import Button from '@/common/Button';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
+import { useRecoilValue } from 'recoil';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 
 export default function EditVendor() {
+  const vendorData = useRecoilValue(VendorStateAtom);
+
   const { addUpdateVendor, getSingleVendorInfo } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
@@ -53,7 +57,13 @@ export default function EditVendor() {
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
       <MainBody>
-        <AdminHeader title="Add Vendor" />
+        <AdminHeader
+          title={
+            <>
+              {vendorData?.name || 'Edit Vendor'} <p className={`${styles.subHeader}`}>ayush</p>
+            </>
+          }
+        />
 
         <MainBodyBox>
           <TabContainer
