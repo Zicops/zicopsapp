@@ -16,18 +16,18 @@ import Button from '@/common/Button';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 
 export default function EditVendor() {
-  const { addVendor, getEditVendors, editVendorDetails } = useHandleVendor();
+  const { addVendor, getSingleVendorInfo, vendorData } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
   useEffect(() => {
-    getEditVendors();
+    getSingleVendorInfo();
   }, []);
 
   const tabData = [
     {
       name: 'Master',
-      component: <VendorMaster />
+      component: <VendorMaster data={vendorData} />
     },
     {
       name: 'Services',

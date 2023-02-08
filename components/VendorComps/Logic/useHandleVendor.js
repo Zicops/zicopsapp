@@ -2,6 +2,7 @@ import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
 import {
   GET_VENDORS_BY_LSP,
   GET_VENDORS_BY_LSP_FOR_TABLE,
+  GET_VENDOR_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
@@ -25,9 +26,6 @@ export default function useHandleVendor() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [vendorDetails, setVendorDetails] = useState([]);
-  const [vendorType, setVendorType] = useState('company');
-  const [vendorLevel, setVendorLevel] = useState('lsp');
-
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -54,21 +52,43 @@ export default function useHandleVendor() {
   }
 
   async function getAllVendors() {
-    useEffect(() => {
-      if (vendorData?.length) return;
+    const lspId = sessionStorage?.getItem('lsp_id');
+    const vendorList = await loadQueryDataAsync(
+      GET_VENDORS_BY_LSP_FOR_TABLE,
+      { lsp_id: lspId },
+      {},
+      userQueryClient
+    );
+    setVendorDetails(vendorList?.getVendors);
+  }
 
-      getVendors();
-    }, []);
+  async function getSingleVendorInfo() {
+    const vendorInfo = await loadQueryDataAsync(
+      GET_VENDOR_DETAILS,
+      { vendor_id: vendorId },
+      {},
+      userQueryClient
+    );
+    setVendorData(vendorInfo?.getVendorDetails);
+  }
 
-    const getVendors = async () => {
-      const lspId = sessionStorage?.getItem('lsp_id');
-      const vendorList = await loadQueryDataAsync(
-        GET_VENDORS_BY_LSP_FOR_TABLE,
-        { lsp_id: lspId },
-        {},
-        userQueryClient
-      );
-      setVendorDetails(vendorList?.getVendors);
+  async function addVendor() {
+    const lspId = sessionStorage?.getItem('lsp_id');
+    const sendData = {
+      lsp_id: lspId,
+      name: vendorData?.vendorName.trim(),
+      level: vendorData?.vendorLevel,
+      type: vendorData?.vendorType,
+      photo: vendorData?.vendorProfileImage,
+      address: vendorData?.vendorAddress.trim(),
+      website: vendorData?.vendorWebsiteURL,
+      facebook_url: vendorData.facebookURL,
+      instagram_url: vendorData.instagramURL,
+      twitter_url: vendorData.twitterURL,
+      linkedin_url: vendorData.linkedinURL,
+      users: vendorData.users,
+      description: vendorData.description.trim(),
+      status: VENDOR_MASTER_STATUS.active
     };
 
     async function getEditVendors() {
@@ -142,4 +162,13 @@ export default function useHandleVendor() {
       handlePhotoInput
     };
   }
+
+  return {
+    vendorDetails,
+    vendorData,
+    setVendorData,
+    addVendor,
+    getSingleVendorInfo,
+    handlePhotoInput
+  };
 }
