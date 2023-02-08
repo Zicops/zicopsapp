@@ -61,9 +61,7 @@ const VcMaintool = () => {
   };
   return (
     <>
-      <div id="meet" className={`${styles.meet}`} ref={ContainerRef}>
-        
-      </div>
+      <div id="meet"  className={toolbar? `${styles.meet}`:""} ref={ContainerRef}></div>
       {toolbar && (
         <MainToolbar
           SetAudio={() => {
