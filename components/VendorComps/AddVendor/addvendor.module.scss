@@ -1,10 +1,11 @@
 @import '@/styles/base.scss';
-.addVendorContainer{
-    font-size: 18px;
-    margin: 20px 0px;
-    .radioButton{
-        display: flex;
-        gap: 20px;
-        padding: 20px 0px;
-    }
+
+.addVendorContainer {
+  font-size: 18px;
+  margin: 20px 0px;
+  .radioButton {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0px;
+  }
 }

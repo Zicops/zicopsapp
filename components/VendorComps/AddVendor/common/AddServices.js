@@ -201,7 +201,9 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
             </div>
           );
         })}
-        <h3 style={{ display: 'flex', justifyContent: 'center' }}>Or </h3>
+        <h3 className={`${styles.separation}`}>
+          Or
+        </h3>
         <label>Other:</label>
         <LabeledInput
           inputOptions={{
