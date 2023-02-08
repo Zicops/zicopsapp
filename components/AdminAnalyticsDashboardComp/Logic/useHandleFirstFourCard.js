@@ -1,10 +1,10 @@
-import { GET_BASIC_COURSES_STATS } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
 import { GET_COURSE_CONSUMPTION_STATS } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COMMON_LSPS, LANGUAGES } from '@/helper/constants.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useEffect, useState } from 'react';
+import { getAllCourseCountInLsp } from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleFirstFourCard() {
   const { catSubCat } = useHandleCatSubCat();
@@ -71,9 +71,7 @@ export default function useHandleFirstFourCard() {
       let totalAssignedCourses = 0;
       if (!lspId) return { totalAssignedCourses, totalMyCourses };
 
-      const myCourseStats = loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
-        input: { lsp_id: lspId, languages: LANGUAGES }
-      });
+      const totalCourseCountRes = getAllCourseCountInLsp(lspId);
       const myCourseConsumptionStats = loadQueryDataAsync(
         GET_COURSE_CONSUMPTION_STATS,
         { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
@@ -81,10 +79,7 @@ export default function useHandleFirstFourCard() {
         userClient
       );
 
-      (await myCourseStats)?.getBasicCourseStats?.languages?.forEach((lang) => {
-        if (lang?.count) totalMyCourses += lang?.count;
-      });
-      return { totalAssignedCourses, totalMyCourses };
+      return { totalAssignedCourses, totalMyCourses: await totalCourseCountRes };
     }
   }, []);
 

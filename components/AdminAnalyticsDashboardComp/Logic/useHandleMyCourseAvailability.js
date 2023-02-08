@@ -1,8 +1,7 @@
 // import { FullCourseDataAtom } from '@/state/atoms/course.atoms';
-import { GET_BASIC_COURSES_STATS } from '@/api/Queries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COURSE_STATUS } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { getAllCourseCountInLsp } from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleMyCourseAvailability() {
   const [publishCard, setPublishCard] = useState({
@@ -35,31 +34,20 @@ export default function useHandleMyCourseAvailability() {
   });
   useEffect(() => {
     const _lspId = sessionStorage.getItem('lsp_id');
-    loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
-      input: {
-        lsp_id: _lspId,
-        course_status: 'PUBLISHED'
-        //  course_type: 'self-paced',
-        //  languages: ['English']
-      }
-    }).then((data) => {
-      console.info(data);
-    });
-    setPublishCard((previousData) => {
-      let course_status = 'PUBLISHED';
-      const myPublishCourses = course_status;
-      return { ...previousData, count: myPublishCourses?.length };
-    });
-    setSavedCard((previousData) => {
-      let course_status = 'SAVED';
-      const mySavedCourses = course_status;
-      return { ...previousData, count: mySavedCourses?.length };
-    });
-    setExpiredCard((previousData) => {
-      let course_status = 'REJECTED';
-      const myExpiredCourses = course_status;
-      return { ...previousData, count: myExpiredCourses?.length };
-    });
+
+    loadAndSetMyCourseAvailability();
+
+    async function loadAndSetMyCourseAvailability() {
+      const publishedCourseCount = getAllCourseCountInLsp(_lspId, COURSE_STATUS.publish);
+      const savedCourseCount = getAllCourseCountInLsp(_lspId, COURSE_STATUS.save);
+      const expiredCourseCount = getAllCourseCountInLsp(_lspId, COURSE_STATUS.reject);
+      const readyCourseCount = getAllCourseCountInLsp(_lspId, COURSE_STATUS.approvalPending);
+
+      setPublishCard({ ...publishCard, count: await publishedCourseCount });
+      setSavedCard({ ...savedCard, count: await savedCourseCount });
+      setExpiredCard({ ...expiredCard, count: await expiredCourseCount });
+      setReadyCard({ ...readyCard, count: await readyCourseCount });
+    }
   }, []);
   return [publishCard, readyCard, savedCard, expiredCard];
 }
