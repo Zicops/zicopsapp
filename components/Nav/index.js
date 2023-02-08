@@ -1,45 +1,45 @@
+import { userClient } from '@/api/UserMutations';
+import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
+import { sendNotification } from '@/helper/api.helper';
+import useUserCourseData from '@/helper/hooks.helper';
+import { getCurrentHost } from '@/helper/utils.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import HamburgerMenuIcon from '../../public/images/menu.png';
 import { userContext } from '../../state/contexts/UserContext';
+import SwitchButton from '../common/FormComponents/SwitchButton';
+import ToolTip from '../common/ToolTip';
 import Notifications from '../Notifications';
 import LeftMenuDropdown from './LeftMenuDropdown';
 import { AdminMenu, UserMenu } from './Logic/nav.helper';
 import { useHandleNav } from './Logic/useHandleNav';
 import styles from './nav.module.scss';
-
-import { userClient } from '@/api/UserMutations';
-import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
-import { sendNotification } from '@/helper/api.helper';
-import useUserCourseData from '@/helper/hooks.helper';
-import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
-import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { useLazyQuery } from '@apollo/client';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import HamburgerMenuIcon from '../../public/images/menu.png';
-import ToolTip from '../common/ToolTip';
-import SwitchBox from '../Tabs/common/SwitchBox';
 import UserDisplay from './UserDisplay';
-import SwitchButton from '../common/FormComponents/SwitchButton';
-import { getCurrentHost } from '@/helper/utils.helper';
 
 export default function Nav() {
+  const notificationBarRef = useRef(null);
   const { isAdmin, makeAdmin } = useContext(userContext);
+
   const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
-  const [showNotification, setShowNotification] = useState(false);
-  const notificationBarRef = useRef(null);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
-  const handleClickInside = () => setShowNotification(!showNotification);
-  const { OrgDetails } = useUserCourseData();
 
   const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
+
+  const [showNotification, setShowNotification] = useState(false);
+  const { OrgDetails } = useUserCourseData();
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
 
+  const handleClickInside = () => setShowNotification(!showNotification);
   // const OrgDetails = async () => {
   //   const orgId = sessionStorage.getItem('org_id');
   //   if (!orgId) return;
