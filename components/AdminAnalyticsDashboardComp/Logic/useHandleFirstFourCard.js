@@ -1,9 +1,7 @@
 import { GET_BASIC_COURSES_STATS } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
-import { CatSubCatAtom } from '@/state/atoms/global.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
 
 export default function useHandleFirstFourCard() {
   const { catSubCat } = useHandleCatSubCat();
@@ -44,7 +42,7 @@ export default function useHandleFirstFourCard() {
         lsp_id: _lspId,
         course_status: 'PUBLISHED',
         course_type: 'self-paced',
-        languages: ['English']
+        languages: ['English','Marathi','Arabic']
       }
     }).then((data) => {
       console.log(data);

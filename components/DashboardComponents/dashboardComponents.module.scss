@@ -116,17 +116,16 @@
   }
 // Card header
 .cardHeader {
-  background: #242630;
-  border: 1px solid #30323F;
+  background: $darkTwo;
+  border: 1px solid $darkThree;
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px;
+  padding: 6px 15px;
   max-width: 150px;
   cursor: pointer;
-
   p {
     font-weight: 500;
     font-size: 16px;
@@ -205,4 +204,13 @@
   border: 1px solid #f4f4f4;
   border-radius: 4px;
   outline: none;
+  width: 200px;
 }
+// Dashboard Table
+// .table_container{
+//   background-color:$darkTwo;
+//   width: 100%;
+//   padding: 20px;
+//   border-radius: 5px;
+//   text-align: left !important;
+// }

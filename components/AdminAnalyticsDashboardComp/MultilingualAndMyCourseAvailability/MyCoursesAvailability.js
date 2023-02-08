@@ -1,13 +1,11 @@
 import React from 'react';
 import styles from '../adminAnalyticsDashboard.module.scss';
-import { myCoursesAvailabilityData } from '@/components/DashboardComponents/Logic/dashboardData.helper'
 import Card from '@/components/DashboardComponents/Card';
-// import useHandleMyCourseAvailability from 'pages/admin/analytics/Logic/useHandleMyCourseAvailability';
+import useHandleMyCourseAvailability from '../Logic/useHandleMyCourseAvailability';
 
 
 export default function MyCoursesAvailability() {
-  // const cardData = useHandleMyCourseAvailability();
-  const cardData = myCoursesAvailabilityData;
+  const cardData = useHandleMyCourseAvailability();
   return (
     <div className={`${styles.wrapper}`}>
       <div className={`${styles.wrapperHeading}`}>My courses availability</div>
