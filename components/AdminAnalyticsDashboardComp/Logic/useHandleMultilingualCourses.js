@@ -1,7 +1,11 @@
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { getAllCourseCountInLsp } from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleMultilingualCourses() {
+  const courseType = useRecoilValue(CourseTypeAtom);
+
   const [hindiCourses, setHindiCourses] = useState({
     language: 'Hindi',
     totalLangCourses: null,
@@ -18,11 +22,15 @@ export default function useHandleMultilingualCourses() {
 
     loadAndSetMultilingualData();
 
-    const totalLspCourseCount = getAllCourseCountInLsp(_lspId);
+    const totalLspCourseCount = getAllCourseCountInLsp(_lspId, courseType);
 
     async function loadAndSetMultilingualData() {
-      const hindiCourseCount = getAllCourseCountInLsp(_lspId, null, [hindiCourses.language]);
-      const englishCourseCount = getAllCourseCountInLsp(_lspId, null, [englishCourses.language]);
+      const hindiCourseCount = getAllCourseCountInLsp(_lspId, courseType, null, [
+        hindiCourses.language
+      ]);
+      const englishCourseCount = getAllCourseCountInLsp(_lspId, courseType, null, [
+        englishCourses.language
+      ]);
 
       setHindiCourses({
         ...hindiCourses,
@@ -41,7 +49,7 @@ export default function useHandleMultilingualCourses() {
 
       return Math.ceil((count / total) * 100);
     }
-  }, []);
+  }, [courseType]);
 
   return [hindiCourses, englishCourses];
 }

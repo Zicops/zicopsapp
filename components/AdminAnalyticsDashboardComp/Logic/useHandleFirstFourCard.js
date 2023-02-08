@@ -3,11 +3,14 @@ import { GET_COURSE_CONSUMPTION_STATS } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { getAllCourseCountInLsp } from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleFirstFourCard() {
   const { catSubCat } = useHandleCatSubCat();
+  const courseType = useRecoilValue(CourseTypeAtom);
 
   const [categoryCard, setCategoryCard] = useState({
     id: 1,
@@ -51,6 +54,8 @@ export default function useHandleFirstFourCard() {
 
   // courses count
   useEffect(() => {
+    setMyCourseCard({ ...myCourseCard, count: null });
+    setZicopsCard({ ...zicopsCard, count: null });
     const _lspId = sessionStorage.getItem('lsp_id');
     // My Courses Count
 
@@ -62,8 +67,8 @@ export default function useHandleFirstFourCard() {
 
       const myCourseData = await myCourseDataRes;
       const zicopsCourseData = await zicopsCourseDataRes;
-      setMyCourseCard({ ...myCourseCard, count: myCourseData?.totalMyCourses });
-      setZicopsCard({ ...zicopsCard, count: zicopsCourseData?.totalMyCourses });
+      setMyCourseCard({ ...myCourseCard, count: myCourseData?.totalMyCourses || 0 });
+      setZicopsCard({ ...zicopsCard, count: zicopsCourseData?.totalMyCourses || 0 });
     }
 
     async function loadCourseStats(lspId) {
@@ -71,7 +76,7 @@ export default function useHandleFirstFourCard() {
       let totalAssignedCourses = 0;
       if (!lspId) return { totalAssignedCourses, totalMyCourses };
 
-      const totalCourseCountRes = getAllCourseCountInLsp(lspId);
+      const totalCourseCountRes = getAllCourseCountInLsp(lspId, courseType);
       const myCourseConsumptionStats = loadQueryDataAsync(
         GET_COURSE_CONSUMPTION_STATS,
         { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
@@ -81,7 +86,7 @@ export default function useHandleFirstFourCard() {
 
       return { totalAssignedCourses, totalMyCourses: await totalCourseCountRes };
     }
-  }, []);
+  }, [courseType]);
 
   return [categoryCard, subCategoryCard, myCourseCard, zicopsCard];
 }

@@ -15,7 +15,11 @@ const CourseDashboard = () => {
     <>
       <Sidebar sidebarItemsArr={analyticsSideBarData} />
       <MainBody>
-        <AdminHeader title={'Course Dashboard'} pageRoute="/admin/analytics/course-dashboard" />
+        <AdminHeader
+          title={'Course Dashboard'}
+          pageRoute="/admin/analytics/course-dashboard"
+          isShowOption
+        />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '50px 0' }}>
           <FirstFourCards />
           <CategoryAndExpertiseAvailability />

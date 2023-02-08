@@ -1,0 +1,46 @@
+@import '~/styles/base.scss';
+$spinnerWidth: 3px;
+$spinnerColor: $primary;
+
+.loaderContainer {
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  text-align: center;
+
+  position: relative;
+}
+
+.fullScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+}
+
+.spinner {
+  margin: auto;
+  border: $spinnerWidth solid transparent;
+
+  display: inline-block;
+
+  position: absolute;
+  border-radius: 50%;
+  border-right: $spinnerWidth solid $spinnerColor;
+  text-align: center;
+
+  animation-name: spin;
+  animation-duration: 900ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67);
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}

@@ -1,9 +1,13 @@
 // import { FullCourseDataAtom } from '@/state/atoms/course.atoms';
 import { COURSE_STATUS } from '@/helper/constants.helper';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { getAllCourseCountInLsp } from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleMyCourseAvailability() {
+  const courseType = useRecoilValue(CourseTypeAtom);
+
   const [publishCard, setPublishCard] = useState({
     id: 1,
     title: 'Published',
@@ -38,16 +42,24 @@ export default function useHandleMyCourseAvailability() {
     loadAndSetMyCourseAvailability();
 
     async function loadAndSetMyCourseAvailability() {
-      const publishedCourseCount = getAllCourseCountInLsp(_lspId, COURSE_STATUS.publish);
-      const savedCourseCount = getAllCourseCountInLsp(_lspId, COURSE_STATUS.save);
-      const expiredCourseCount = getAllCourseCountInLsp(_lspId, COURSE_STATUS.reject);
-      const readyCourseCount = getAllCourseCountInLsp(_lspId, COURSE_STATUS.approvalPending);
+      const publishedCourseCount = getAllCourseCountInLsp(
+        _lspId,
+        courseType,
+        COURSE_STATUS.publish
+      );
+      const savedCourseCount = getAllCourseCountInLsp(_lspId, courseType, COURSE_STATUS.save);
+      const expiredCourseCount = getAllCourseCountInLsp(_lspId, courseType, COURSE_STATUS.reject);
+      const readyCourseCount = getAllCourseCountInLsp(
+        _lspId,
+        courseType,
+        COURSE_STATUS.approvalPending
+      );
 
       setPublishCard({ ...publishCard, count: await publishedCourseCount });
       setSavedCard({ ...savedCard, count: await savedCourseCount });
       setExpiredCard({ ...expiredCard, count: await expiredCourseCount });
       setReadyCard({ ...readyCard, count: await readyCourseCount });
     }
-  }, []);
+  }, [courseType]);
   return [publishCard, readyCard, savedCard, expiredCard];
 }
