@@ -144,9 +144,9 @@ jobs:
     - name: Build the Docker image
       run: |-
         docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:${GITHUB_SHA} --build-arg GO_MODULES_TOKEN=${{secrets.GO_MODULES_TOKEN}} .
-    - name: add latest tag
+    - name: add production tag
       run: |-
-        docker tag gcr.io/$PROJECT_ID/$SERVICE_NAME:${GITHUB_SHA} gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+        docker tag gcr.io/$PROJECT_ID/$SERVICE_NAME:${GITHUB_SHA} gcr.io/$PROJECT_ID/$SERVICE_NAME:production
     - run: |
         gcloud auth configure-docker -q
     - run: |
