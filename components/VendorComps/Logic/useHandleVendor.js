@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GET_VENDORS_BY_LSP_FOR_TABLE, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useMutation } from '@apollo/client';
@@ -11,6 +11,12 @@ export default function useHandleVendor() {
 
   const [vendorData, setVendorData] = useState([]);
 
+  useEffect(() => {
+    if (vendorData?.length) return;
+
+    getVendors();
+  }, []);
+
   const getVendors = async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
     const vendorList = await loadQueryDataAsync(
@@ -21,7 +27,6 @@ export default function useHandleVendor() {
     );
     setVendorData(vendorList?.getVendors);
   };
-  if (!vendorData?.length) getVendors();
 
   const addVendor = async () => {
     const sendData = {
