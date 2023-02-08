@@ -1,7 +1,7 @@
 import next from "next";
 import { useEffect, useState } from "react";
 import styles from "../VctoolMain.module.scss"
-const MainToolbar = ({ audiotoggle, videotoggle,setaudio,setvideo,endMeetng,shareScreen,handRiseFun }) => {
+const MainToolbar = ({ audiotoggle, videotoggle,SetAudio,SetVideo,EndMeetng,ShareScreen,HandRiseFun }) => {
     const[fade1,setfade1]=useState(true)
     const[fade2,setfade2]=useState(true)
     const [hand,sethand]=useState(true)
@@ -16,9 +16,9 @@ const MainToolbar = ({ audiotoggle, videotoggle,setaudio,setvideo,endMeetng,shar
             {
                 setfade1(true)
             }}>
-                <button><img src="/images/svg/vctool/folder_open.svg" /></button>
-                <button><img src="/images/svg/vctool/library_books.svg" /></button>
-                <button><img src="/images/svg/vctool/sticky_note_2.svg" /></button>
+                <button><img src="/images/svg/vctool/folder-open.svg" /></button>
+                <button><img src="/images/svg/vctool/library-books.svg" /></button>
+                <button><img src="/images/svg/vctool/sticky-note-2.svg" /></button>
                 <button><img src="/images/svg/vctool/quiz.svg" /></button>
                 <button><img src="/images/svg/vctool/dashboard.svg" /></button>
                 <button><img src="/images/svg/vctool/info.svg" /></button>
@@ -43,57 +43,57 @@ const MainToolbar = ({ audiotoggle, videotoggle,setaudio,setvideo,endMeetng,shar
                     <div>
                         <button onClick={()=>
                         {
-                            endMeetng()
+                            EndMeetng()
                         }} className={`${styles.cansel_btn}`} >
                             <img style={{ "marginRight": "10px" }} src="/images/svg/vctool/logout.svg" />
                             Leave
                         </button>
                     </div>
                     <button onClick={()=>{
-                       setaudio()
+                       SetAudio()
                     }} >
 
                         {
-                            audiotoggle ? <img  src="/images/svg/vctool/mic_on.svg" />
-                                : <img src="/images/svg/vctool/mic_off.svg" />
+                            audiotoggle ? <img  src="/images/svg/vctool/mic-on.svg" />
+                                : <img src="/images/svg/vctool/mic-off.svg" />
                         }
 
                     </button>
                     <button onClick={()=>
                     {
-                            setvideo()
+                            SetVideo()
                     }}>
                         {
-                            videotoggle ? <img src="/images/svg/vctool/videocam_on.svg" />
-                                : <img src="/images/svg/vctool/videocam_off.svg" />
+                            videotoggle ? <img src="/images/svg/vctool/videocam-on.svg" />
+                                : <img src="/images/svg/vctool/videocam-off.svg" />
                         }
                     </button>
                     <button onClick={()=>
                     {
-                        shareScreen()
-                    }}><img src="/images/svg/vctool/present_to_all.svg" /></button>
+                        ShareScreen()
+                    }}><img src="/images/svg/vctool/present-to-all.svg" /></button>
 
                     <button style={hand ?{backgroundColor:"#202222"} : {backgroundColor :"white"}} onClick={()=>
                     {
                         sethand(!hand)
-                        handRiseFun()
+                        HandRiseFun()
                     }} >
                     {
                         hand ?
-                        <img src="/images/svg/vctool/back_hand.svg" />
+                        <img src="/images/svg/vctool/back-hand.svg" />
                         :
-                        <img src="/images/svg/vctool/back_hand_on.svg" />
+                        <img src="/images/svg/vctool/back-hand-on.svg" />
                     }
                     </button>
                 </div>
                 <div className={`${styles.footer_right}`}>
                     <button><img src="/images/svg/vctool/help.svg" /> </button>
-                    <button><img src="/images/svg/vctool/chat_bubble.svg" /> </button>
-                    <button><img src="/images/svg/vctool/insert_chart.svg" /> </button>
+                    <button><img src="/images/svg/vctool/chat-bubble.svg" /> </button>
+                    <button><img src="/images/svg/vctool/insert-chart.svg" /> </button>
                     <button><img src="/images/svg/vctool/group.svg" /> </button>
-                    <button><img src="/images/svg/vctool/account_tree.svg" /> </button>
+                    <button><img src="/images/svg/vctool/account-tree.svg" /> </button>
                     <button><img src="/images/svg/vctool/settings.svg" /> </button>
-                    <button><img src="/images/svg/vctool/fullscreen_exit.svg" /> </button>
+                    <button><img src="/images/svg/vctool/fullscreen-exit.svg" /> </button>
                 </div>
 
             </div>

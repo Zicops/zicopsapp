@@ -1,9 +1,9 @@
 import { useEffect, useState,useRef } from 'react';
 import { stream } from 'xlsx';
 import styles from '../VctoolMain.module.scss'
-const MeetingCard = ({ StartMeeting, Startmeeting_Audioenable, startmeeting_Videoenable, StartAudioenableFun, StartVideoenableFun }) => {
+const MeetingCard = ({ StartMeeting, StartmeetingAudioenable, StartmeetingVideoenable, StartAudioenableFun, StartVideoenableFun }) => {
     const videoref=useRef(null);
-    const Onvideo=()=>
+    const OnVideo=()=>
     {
         videoref.current.style.borderRadius="50%"
         navigator.mediaDevices
@@ -21,7 +21,7 @@ const MeetingCard = ({ StartMeeting, Startmeeting_Audioenable, startmeeting_Vide
             console.log(err)
         })
     }
-    const stopVideo=  ()=>
+    const StopVideo=  ()=>
     {
         try
         {
@@ -44,16 +44,14 @@ const MeetingCard = ({ StartMeeting, Startmeeting_Audioenable, startmeeting_Vide
 
     useEffect(()=>
     {
-        if(startmeeting_Videoenable)
+        if(StartmeetingVideoenable)
         {
-            Onvideo()
+            OnVideo()
         }
         else
         {
-            stopVideo()
+            StopVideo()
         }
-
-        
     })
     return (
         <div className={`${styles.Vccard}`}>
@@ -65,25 +63,25 @@ const MeetingCard = ({ StartMeeting, Startmeeting_Audioenable, startmeeting_Vide
             <div className={`${styles.btns}`}>
                 <button onClick={() => {
                     StartAudioenableFun()
-                }} style={Startmeeting_Audioenable ? { backgroundColor: "#202222" } : { backgroundColor: "#F53D41" }}>
+                }} style={StartmeetingAudioenable ? { backgroundColor: "#202222" } : { backgroundColor: "#F53D41" }}>
                     {
 
-                        Startmeeting_Audioenable ?
-                            <img src="/images/svg/vctool/mic_on.svg" />
+                        StartmeetingAudioenable ?
+                            <img src="/images/svg/vctool/mic-on.svg" />
                             :
-                            <img src="/images/svg/vctool/mic_off.svg" />
+                            <img src="/images/svg/vctool/mic-off.svg" />
                     }
                 </button>
 
                 <button onClick={() => {
                     StartVideoenableFun()
-                }} style={startmeeting_Videoenable ? { backgroundColor: "#202222" } : { backgroundColor: "#F53D41" }}>
+                }} style={StartmeetingVideoenable ? { backgroundColor: "#202222" } : { backgroundColor: "#F53D41" }}>
                     {
 
-                        startmeeting_Videoenable ?
-                            <img src="/images/svg/vctool/videocam_on.svg" />
+                        StartmeetingVideoenable ?
+                            <img src="/images/svg/vctool/videocam-on.svg" />
                             :
-                            <img src="/images/svg/vctool/videocam_off.svg" />
+                            <img src="/images/svg/vctool/videocam-off.svg" />
                     }
                 </button>
 
