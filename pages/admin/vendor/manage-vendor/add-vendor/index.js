@@ -14,7 +14,7 @@ import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useState } from 'react';
 
 export default function VendorInfo() {
-  const { addVendor } = useHandleVendor();
+  const { addUpdateVendor } = useHandleVendor();
   const tabData = [
     {
       name: 'Master',
@@ -54,7 +54,7 @@ export default function VendorInfo() {
             footerObj={{
               showFooter: true,
               handleSubmit: async () => {
-                await addVendor();
+                await addUpdateVendor();
               },
               status: VENDOR_MASTER_STATUS.draft.toUpperCase()
             }}

@@ -16,7 +16,7 @@ import Button from '@/common/Button';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 
 export default function EditVendor() {
-  const { addVendor, getSingleVendorInfo, vendorData } = useHandleVendor();
+  const { addUpdateVendor, getSingleVendorInfo } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
@@ -27,7 +27,7 @@ export default function EditVendor() {
   const tabData = [
     {
       name: 'Master',
-      component: <VendorMaster data={vendorData} />
+      component: <VendorMaster />
     },
     {
       name: 'Services',
@@ -63,7 +63,7 @@ export default function EditVendor() {
             footerObj={{
               showFooter: true,
               handleSubmit: async () => {
-                await addVendor();
+                await addUpdateVendor();
               },
               status: 'DRAFT'
             }}

@@ -10,17 +10,12 @@ import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { changeHandler } from '@/helper/common.helper';
+import { useRecoilState } from 'recoil';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 export default function ManageVendor() {
-  const { vendorData, setVendorData } = useHandleVendor();
+  const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [isOpen, setIsOpen] = useState(false);
-
-  const onPlusHandler = () => {
-    setIsOpen(true);
-  };
-
   const router = useRouter();
-
-  const handleClick = () => router.push('/admin/vendor/manage-vendor/add-vendor');
 
   return (
     <>
@@ -29,7 +24,7 @@ export default function ManageVendor() {
         <AdminHeader
           title="Vendor List"
           isAddShown={true}
-          handleClickForPlus={onPlusHandler}
+          handleClickForPlus={() => setIsOpen(true)}
           isProductTooltip={false}
         />
         <MainBodyBox>
@@ -40,7 +35,10 @@ export default function ManageVendor() {
             popUpState={[isOpen, setIsOpen]}
             size="small"
             closeBtn={{ name: 'Cancel' }}
-            submitBtn={{ name: 'Next', handleClick: handleClick }}
+            submitBtn={{
+              name: 'Next',
+              handleClick: () => router.push('/admin/vendor/manage-vendor/add-vendor')
+            }}
             isFooterVisible={true}>
             <AddVendor
               title="Vendor type ?"

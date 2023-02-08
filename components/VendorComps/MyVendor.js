@@ -2,10 +2,16 @@ import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import Router from 'next/router.js';
+import { useEffect } from 'react';
 import useHandleVendor from './Logic/useHandleVendor.js';
 
 const MyVendor = () => {
-  const { vendorDetails } = useHandleVendor();
+  const { vendorDetails, getAllVendors } = useHandleVendor();
+
+  useEffect(() => {
+    if (!vendorDetails?.length) getAllVendors();
+  }, []);
+
   const columns = [
     {
       field: 'name',
