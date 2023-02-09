@@ -8,7 +8,6 @@ import MyVendor from '@/components/VendorComps/MyVendor';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
-import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { changeHandler } from '@/helper/common.helper';
 import { useRecoilState } from 'recoil';
 import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
@@ -42,17 +41,17 @@ export default function ManageVendor() {
             isFooterVisible={true}>
             <AddVendor
               title="Vendor type ?"
-              inputName="vendorType"
+              inputName="type"
               checkboxProps1={{
                 label: 'Individual/Freelancer',
                 value: 'individual',
-                isChecked: vendorData?.vendorType === 'individual',
+                isChecked: vendorData?.type === 'individual',
                 changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Company',
                 value: 'company',
-                isChecked: vendorData?.vendorType === 'company',
+                isChecked: vendorData?.type === 'company',
                 changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
             />
@@ -61,16 +60,16 @@ export default function ManageVendor() {
               checkboxProps1={{
                 label: 'Organization',
                 value: 'organization',
-                isChecked: vendorData?.vendorLevel === 'organization',
+                isChecked: vendorData?.level === 'organization',
                 changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Learning space Level',
                 value: 'lsp',
-                isChecked: vendorData?.vendorLevel === 'lsp',
+                isChecked: vendorData?.level === 'lsp',
                 changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
-              inputName="vendorLevel"
+              inputName="level"
             />
           </VendorPopUp>
         </MainBodyBox>
