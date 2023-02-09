@@ -155,6 +155,10 @@ export function toggleFullScreen(elem) {
 }
 
 export function getUnixFromDate(dateObj = new Date()) {
+  //implemented for unix timestamp
+  if(!(dateObj instanceof Date)) return dateObj;
+    
+  
   const newDate = new Date(dateObj);
 
   return Math.floor(newDate.getTime() / 1000) || 0;

@@ -861,7 +861,7 @@ export default function useUserCourseData() {
       const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
     } else {
-      userLspRole = lspRoles?.[0]?.role;
+      userLspRole = lspRoles?.[0]?.role ?? 'learner';
     }
 
     return userLspRole ;
