@@ -8,6 +8,7 @@ import {
   GET_USER_LEARNINGSPACES
 } from '@/api/UserQueries';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
@@ -30,6 +31,7 @@ const LearningSpaces = () => {
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
 
+  const { getOrgByDomain } = useUserCourseData();
   const [orgDetails, setOrgDetails] = useState([]);
   const [orgIds, setOrgIds] = useState([]);
   const [orglspData, setOrglspData] = useState([...Array(skeletonCardCount)]);
@@ -44,6 +46,8 @@ const LearningSpaces = () => {
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
+
+  let orgData = getOrgByDomain();
 
   const UserLsp = async () => {
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
@@ -127,7 +131,17 @@ const LearningSpaces = () => {
       <div className={`${styles.ZicopsLogo}`}>
         <div>
           <Link href="/home">
-            <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} objectFit={'contain'}/>
+            <Image
+              src={
+                orgData?.data?.logo_url?.length
+                  ? orgData?.data?.logo_url
+                  : '/images/svg/asset-6.svg'
+              }
+              alt="zicops logo"
+              width={180}
+              height={40}
+              objectFit={'contain'}
+            />
           </Link>
         </div>
         <div
@@ -143,8 +157,8 @@ const LearningSpaces = () => {
       <div className={`${styles.zicops_login}`}>
         <LoginHeadOne
           showImage={false}
-          heading={'Welcome to Zicops'}
-          sub_heading={'Select your Learning space'}
+          heading={'Welcome to your Learning spaces'}
+          // sub_heading={'Select your Learning space'}
         />
         <div className={`${styles.login_body}`}>
           {!isDev ? (
