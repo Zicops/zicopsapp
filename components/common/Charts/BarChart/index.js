@@ -1,7 +1,9 @@
-import React from 'react';
+// https://stackoverflow.com/a/74943769/13419786
+import 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
 import styles from '../charts.module.scss';
-const BarChart = ({ chartData }) => {
+
+export default function BarChart({ chartData }) {
   const options = {
     layout: {
       padding: {
@@ -28,6 +30,4 @@ const BarChart = ({ chartData }) => {
       </div>
     </>
   );
-};
-
-export default BarChart;
+}

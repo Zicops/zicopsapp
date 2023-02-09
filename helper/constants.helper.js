@@ -187,3 +187,22 @@ export const ORG_DOMAINS = [
   'https://zicops.com',
   'https://myspace.zicops.com'
 ];
+
+//Vendor Constant Start
+
+export const VENDOR_LANGUAGES = [
+  'English',
+  'Arabic',
+  'Hindi',
+  'Marathi',
+  'Telugu',
+  'Kannada',
+  'Tamil',
+  'Malayalam',
+  'Bengali',
+  'Gujarati'
+];
+
+export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
+
+//Vendor Constant End
