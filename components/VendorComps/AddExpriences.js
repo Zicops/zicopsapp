@@ -6,6 +6,7 @@ import { VendorExpriencesAtom } from '@/state/atoms/vendor.atoms';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './vendorComps.module.scss';
+import { months } from '@/helper/utils.helper';
 
 const optionEmploymentTypeArray = [
   'Full-time',
@@ -24,19 +25,7 @@ const optionLocationTypeArray = ['Hybrid', 'Remote', 'On-site'].map((val) => ({
   value: val
 }));
 
-const optionMonthArray = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-].map((val) => ({
+const optionMonthArray = months.map((val) => ({
   label: val,
   value: val
 }));

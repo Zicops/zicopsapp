@@ -89,7 +89,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Courses',
-      component: <CoursesVendor coursesData={coursesVendor[vendorId]} />
+      component: <CoursesVendor courseImage={coursesVendor[vendorId]?.courseImage} />
     },
     {
       name: 'Profile',

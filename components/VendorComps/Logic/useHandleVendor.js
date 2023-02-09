@@ -5,13 +5,13 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { useMutation } from '@apollo/client';
-import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilState } from 'recoil';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
+import { useRecoilState } from 'recoil';
 
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, {
@@ -27,7 +27,7 @@ export default function useHandleVendor() {
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const vendorId = router.query.vendorId || '0';
+  const vendorId = router.query.vendorId || null;
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -91,27 +91,76 @@ export default function useHandleVendor() {
 
     let isError = false;
 
-    if (vendorData?.vendorId) {
-      sendData.vendorId = vendorData?.vendorId;
-      console.log(sendData);
-
-      await updateVendor({ variables: { variables: sendData } }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
-      });
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Vendor Updated' });
-      return;
+    async function getEditVendors() {
+      const lspId = sessionStorage?.getItem('lsp_id');
+      const vendorList = await loadQueryDataAsync(
+        GET_VENDORS_BY_LSP,
+        { lsp_id: lspId },
+        {},
+        userQueryClient
+      );
+      const currentVendorInfo = vendorList?.getVendors?.find(
+        (vendor) => vendor?.vendorId === vendorId
+      );
+      setVendorData(currentVendorInfo);
     }
 
-    const res = await addNewVendor({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
-    });
-    if (isError) return;
-    return res;
+    async function addVendor() {
+      const lspId = sessionStorage?.getItem('lsp_id');
+      const sendData = {
+        lsp_id: lspId,
+        name: vendorData?.vendorName.trim(),
+        level: vendorLevel,
+        type: vendorType,
+        photo: vendorData?.vendorProfileImage,
+        address: vendorData?.vendorAddress.trim(),
+        website: vendorData?.vendorWebsiteURL,
+        facebook_url: vendorData.facebookURL,
+        instagram_url: vendorData.instagramURL,
+        twitter_url: vendorData.twitterURL,
+        linkedin_url: vendorData.linkedinURL,
+        users: vendorData.users,
+        description: vendorData.description.trim(),
+        status: VENDOR_MASTER_STATUS.active
+      };
+
+      let isError = false;
+
+      if (vendorData?.vendorId) {
+        sendData.vendorId = vendorData?.vendorId;
+        console.log(sendData);
+
+        await updateVendor({ variables: { variables: sendData } }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
+        });
+        if (isError) return;
+        setToastMsg({ type: 'success', message: 'Vendor Updated' });
+        return;
+      }
+
+      const res = await addNewVendor({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
+      });
+      if (isError) return;
+      return res;
+    }
+
+    return {
+      vendorDetails,
+      vendorData,
+      vendorLevel,
+      vendorType,
+      setVendorData,
+      setVendorType,
+      setVendorLevel,
+      addVendor,
+      getEditVendors,
+      handlePhotoInput
+    };
   }
 
   return {

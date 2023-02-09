@@ -1096,6 +1096,11 @@
   display: block;
 }
 
+.separation {
+  display: flex;
+  justify-content: center;
+}
+
 .opdInput {
   border-radius: 5px;
   margin-top: 10px;
