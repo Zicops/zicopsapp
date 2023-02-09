@@ -25,6 +25,7 @@ export default function useHandleVendor() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [vendorDetails, setVendorDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -47,6 +48,7 @@ export default function useHandleVendor() {
   }
 
   async function getAllVendors() {
+    setLoading(true);
     const lspId = sessionStorage?.getItem('lsp_id');
     const vendorList = await loadQueryDataAsync(
       GET_VENDORS_BY_LSP_FOR_TABLE,
@@ -55,6 +57,7 @@ export default function useHandleVendor() {
       userQueryClient
     );
     setVendorDetails(vendorList?.getVendors);
+    setLoading(false);
   }
 
   async function getSingleVendorInfo() {
@@ -116,6 +119,8 @@ export default function useHandleVendor() {
     addUpdateVendor,
     getSingleVendorInfo,
     handlePhotoInput,
-    getAllVendors
+    getAllVendors,
+    loading,
+    setLoading
   };
 }

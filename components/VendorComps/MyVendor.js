@@ -2,14 +2,17 @@ import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import Router from 'next/router.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useHandleVendor from './Logic/useHandleVendor.js';
 
 const MyVendor = () => {
-  const { vendorDetails, getAllVendors } = useHandleVendor();
-
+  const { vendorDetails, getAllVendors, loading, setLoading } = useHandleVendor();
   useEffect(() => {
-    if (!vendorDetails?.length) getAllVendors();
+    setLoading(true);
+    if (!vendorDetails?.length) {
+      getAllVendors();
+      setLoading(false);
+    }
   }, []);
 
   const columns = [
@@ -73,6 +76,7 @@ const MyVendor = () => {
         columns={columns}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
+        loading={loading}
         tableHeight="70vh"
         customId="vendorId"
       />
