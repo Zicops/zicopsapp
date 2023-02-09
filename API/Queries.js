@@ -1094,3 +1094,44 @@ export const GET_DISCUSSION_REPLY = gql`
     }
   }
 `;
+
+// BasicCourseStatsInput {
+//   lsp_id: String!
+//   course_status: String
+//   duration: Int
+//   owner: String
+//   created_by: String
+//   course_type: String
+//   categories: [String]
+//   sub_categories: [String]
+//   languages: [String]
+//   expertise_level: [String]
+// }
+export const GET_BASIC_COURSES_STATS = gql`
+  query getBasicCourseStats($input: BasicCourseStatsInput) {
+    getBasicCourseStats(input: $input) {
+      lsp_id
+      course_status
+      duration
+      owner
+      created_by
+      course_type
+      categories {
+        name
+        count
+      }
+      sub_categories {
+        name
+        count
+      }
+      languages {
+        name
+        count
+      }
+      expertise_level {
+        name
+        count
+      }
+    }
+  }
+`;

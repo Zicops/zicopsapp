@@ -127,7 +127,7 @@ const LearningSpaces = () => {
       <div className={`${styles.ZicopsLogo}`}>
         <div>
           <Link href="/home">
-            <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} />
+            <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} objectFit={'contain'}/>
           </Link>
         </div>
         <div

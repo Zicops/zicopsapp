@@ -40,7 +40,11 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     // color: '#868686'
   },
   '& .MuiDataGrid-virtualScroller': {
-    overflowY: 'overlay'
+    overflowY: 'overlay',
+    '::-webkit-scrollbar': {
+      height: '5px',
+      width: '5px'
+    }
   },
   // '& .MuiDataGrid-cell:hover': {
   //   color: 'var(--primary)'

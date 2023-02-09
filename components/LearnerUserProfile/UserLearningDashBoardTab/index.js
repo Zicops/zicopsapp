@@ -7,6 +7,9 @@ import UserMostEngagedSubcategories from './UserMostEngagedSubcategories';
 import UserDashboardCardSlider from './UserDashboardCardSlider';
 import BarGraphView from './BarGraphView';
 import LineChartView from './LineChartView';
+import VennDiagram from '@/components/DashboardComponents/VennDiagram';
+import { data } from '@/components/DashboardComponents/Logic/dashboardData.helper';
+import { useEffect } from 'react';
 
 const UserLearningDashboardTab = () => {
   return (
@@ -21,6 +24,7 @@ const UserLearningDashboardTab = () => {
       {/* <CardSliderBody /> */}
       {/* <Charts /> */}
       <BarGraphView />
+      {/* <VennDiagram data={data} />/ */}
       <UserDashboardCardSlider />
       <LineChartView/>
       <CohortDashboardCardSlider />
