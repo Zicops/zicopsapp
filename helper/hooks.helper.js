@@ -861,10 +861,16 @@ export default function useUserCourseData() {
       const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
     } else {
-      userLspRole = lspRoles?.[0]?.role;
+      userLspRole = lspRoles?.[0]?.role ?? 'learner';
     }
 
     return userLspRole ;
+  }
+
+  async function getOrgByDomain() {
+    if(!API_LINKS?.getOrg?.split('/')?.[0]) return {};
+    const data = await fetch(API_LINKS?.getOrg);
+    return await data.json();
   }
 
   return {
@@ -874,7 +880,8 @@ export default function useUserCourseData() {
     getUsersForAdmin,
     getScheduleExams,
     OrgDetails,
-    getUserLspRoleLatest
+    getUserLspRoleLatest,
+    getOrgByDomain
   };
 }
 
