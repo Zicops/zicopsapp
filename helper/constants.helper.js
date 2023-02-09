@@ -138,7 +138,7 @@ export const NOTIFICATION_TITLES = {
   courseAssign: 'Course-Assigned',
   courseUnssigned: 'Course-Unassigned',
   lspWelcome: 'Welcome-Lsp',
-  signIn: {course:'Course-signInAssign'}
+  signIn: { course: 'Course-signInAssign' }
 };
 
 export const NOTIFICATION_MSG_LINKS = {
@@ -181,3 +181,9 @@ export const COURSE_TOPIC_TYPES = {
   lab: 'Lab',
   classroom: 'Classroom'
 };
+
+export const ORG_DOMAINS = [
+  'https://demo.zicops.com',
+  'https://zicops.com',
+  'https://myspace.zicops.com'
+];

@@ -867,6 +867,11 @@ export default function useUserCourseData() {
     return userLspRole ;
   }
 
+  async function getOrgByDomain() {
+    const data = await fetch(API_LINKS?.getOrg);
+    return await data.json();
+  }
+
   return {
     getUserCourseData,
     getUserPreferences,
@@ -874,7 +879,8 @@ export default function useUserCourseData() {
     getUsersForAdmin,
     getScheduleExams,
     OrgDetails,
-    getUserLspRoleLatest
+    getUserLspRoleLatest,
+    getOrgByDomain
   };
 }
 

@@ -98,8 +98,8 @@ const OrgHomepage = ({ data }) => {
         <div className={`${styles.left_cont_text}`}>
           <div className={`${styles.left_cont_maintext}`}>
             <p>Welcome To</p>
-            <p>{data.name}</p>
-            <p>learning space</p>
+            <p>{data?.name}</p>
+            <p>learning pod</p>
           </div>
           <div className={`${styles.left_cont_supporttext}`}>
             <p>Comprehensive Learning for sustainable growth</p>
@@ -110,7 +110,7 @@ const OrgHomepage = ({ data }) => {
       <div className={`${styles.right_cont}`}>
         <div className={`${styles.right_div}`}>
           <div className={`${styles.icon_logo}`}>
-            <img src={data.logo_url || '/images/svg/asset-6.svg'} alt="" />
+            <img src={data?.logo_url || '/images/svg/asset-6.svg'} alt="" />
             {/*<p>{data.name || 'Zicops'}</p>*/}
           </div>
           <div className={`${styles.login_deets}`}>
