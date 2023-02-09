@@ -1,7 +1,8 @@
 import LineChart from '@/components/common/Charts/LineChart';
-import LineChartView from '@/components/LearnerUserProfile/UserLearningDashBoardTab/LineChartView';
+import Dropdown from '@/components/DashboardComponents/Dropdown';
 import { useState } from 'react';
 import styles from '../adminAnalyticsDashboard.module.scss';
+import useHandleCourseViews from '../Logic/useHandleCourseViews';
 export const UserData = [
   {
     id: 1,
@@ -76,30 +77,41 @@ export const UserData = [
 ];
 
 export default function CourseViewAnalytics() {
-     const [userEngageData, setUserEngageData] = useState({
-       labels: ['01', '03', '06', '09', '12', '15', '18', '21', '27', '30'],
+  const [filterBy, setFilterBy] = useState('Month');
+  useHandleCourseViews();
+  const [userEngageData, setUserEngageData] = useState({
+    labels: ['01', '03', '06', '09', '12', '15', '18', '21', '27', '30'],
 
-       datasets: [
-         {
-           label: 'User Skills',
-           data: UserData.map((data) => data.time1),
-           fill: true,
-           tension: 0.2,
-           backgroundColor: (context) => {
-             const ctx = context.chart.ctx;
-             const gradient = ctx.createLinearGradient(0, 0, 0, 500);
-             gradient.addColorStop(0, 'rgba(32, 162, 162, 0.3)');
-             gradient.addColorStop(1, 'rgba(4, 4, 4, 1) ');
-             return gradient;
-           },
-           borderColor: '#20A1A1'
-         }
-       ]
-     });
+    datasets: [
+      {
+        label: 'User Skills',
+        data: UserData.map((data) => data.time1),
+        fill: true,
+        tension: 0.2,
+        backgroundColor: (context) => {
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, 0, 0, 500);
+          gradient.addColorStop(0, 'rgba(32, 162, 162, 0.3)');
+          gradient.addColorStop(1, 'rgba(4, 4, 4, 1) ');
+          return gradient;
+        },
+        borderColor: '#20A1A1'
+      }
+    ]
+  });
   return (
     <div className={`${styles.wrapper}`}>
       <div className={`${styles.wrapperHeading}`}>Course view analytics</div>
-      <div className={`${styles.wrapperSubHeading}`}>Overall course views last week</div>
+      <div className={`${styles.wrapperSubHeading}`}>
+        Overall course views last week
+        <Dropdown
+          placeholder={'Sub-category'}
+          options={['Month', 'Week'].map((d) => ({ value: d, label: d }))}
+          value={{ value: filterBy, label: filterBy }}
+          changeHandler={(e) => setFilterBy(e.value)}
+        />
+      </div>
+
       <LineChart chartData={userEngageData} />
     </div>
   );
