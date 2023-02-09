@@ -61,3 +61,35 @@
     color: $primary;
   }
 }
+
+.sortBtn {
+  color: $darkThree;
+  font-size: 13px;
+
+  display: flex;
+  gap: 5px;
+
+  cursor: pointer;
+
+  span {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+
+    svg {
+      max-width: 10px;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
+
+.barGraphContainer {
+  height: 380px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -5,7 +5,7 @@ import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-export default function useHandleCatConsumption() {
+export default function useHandleCatConsumption(isCategory = false) {
   const courseType = useRecoilValue(CourseTypeAtom);
   const { catSubCat } = useHandleCatSubCat();
 
@@ -15,9 +15,27 @@ export default function useHandleCatConsumption() {
     if (!catSubCat?.subCat?.length) return;
     const _lspId = sessionStorage.getItem('lsp_id');
 
-    loadAndSetData();
+    isCategory ? loadAndSetCatData() : loadAndSetSubCatData();
 
-    async function loadAndSetData() {
+    async function loadAndSetCatData() {
+      const queryVariables = {
+        lsp_id: _lspId,
+        course_type: courseType,
+        categories: catSubCat?.cat?.map((s) => s?.Name)
+      };
+      const courseStats = loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
+        input: queryVariables
+      });
+
+      const categoryData = (await courseStats)?.getBasicCourseStats?.categories?.map((data) => {
+        const cat = catSubCat?.subCat?.find((s) => s?.Name === data?.name);
+        return { ...data, ...cat };
+      });
+
+      setSubCatData(categoryData);
+    }
+
+    async function loadAndSetSubCatData() {
       const queryVariables = {
         lsp_id: _lspId,
         course_type: courseType,
@@ -37,7 +55,7 @@ export default function useHandleCatConsumption() {
 
       setSubCatData(subCategoryData);
     }
-  }, [courseType, catSubCat?.subCat]);
+  }, [courseType, catSubCat?.subCat?.length, isCategory]);
 
   return { subCatData };
 }

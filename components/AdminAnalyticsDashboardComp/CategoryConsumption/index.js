@@ -29,8 +29,7 @@ export default function CategoryConsumption() {
         minBarLength: 2,
         barPercentage: 0.2,
         height: 500,
-        fill: true,
-        category: ''
+        fill: true
       }
     ]
   };

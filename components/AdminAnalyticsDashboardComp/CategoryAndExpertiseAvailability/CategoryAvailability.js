@@ -1,4 +1,6 @@
 import BarChart from '@/components/common/Charts/BarChart';
+import Spinner from '@/components/common/Spinner';
+import { DownSortTriangleIcon } from '@/components/common/ZicopsIcons';
 import Dropdown from '@/components/DashboardComponents/Dropdown';
 import SwitchButton from '@/components/DashboardComponents/SwitchButton';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
@@ -7,10 +9,12 @@ import styles from '../adminAnalyticsDashboard.module.scss';
 import useHandleCatConsumption from '../Logic/useHandleCatConsumption';
 
 export default function CategoryAvailability() {
-  const [filters, setFilters] = useState({ category: null, subCategory: null });
-  const { catSubCat, setActiveCatId } = useHandleCatSubCat();
-  const { subCatData } = useHandleCatConsumption(catSubCat);
+  const [filters, setFilters] = useState({ category: null, subCategory: null, isCategory: false });
+  const [sortIndex, setSortIndex] = useState(0);
+  const { catSubCat } = useHandleCatSubCat();
+  const { subCatData } = useHandleCatConsumption(filters?.isCategory);
 
+  const sort = ['none', 'up', 'down'];
   const dataArr = subCatData?.filter((subCat) => {
     let isFiltered = true;
     if (filters?.category) isFiltered = subCat?.cat?.Name === filters?.category;
@@ -20,12 +24,8 @@ export default function CategoryAvailability() {
   });
   const options = {
     indexAxis: 'y',
-    elements: {
-      bar: {
-        // borderWidth: 2
-      }
-    },
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false
@@ -33,7 +33,15 @@ export default function CategoryAvailability() {
     }
   };
 
-  const labels = dataArr?.map((data) => data.name);
+  const labels = dataArr
+    ?.map((data) => data.name)
+    ?.sort((l1, l2) => {
+      const compare = l1.localeCompare(l2);
+      if (sortIndex === 1) return compare;
+      if (sortIndex === 2) return compare * -1;
+
+      return -1;
+    });
 
   const data = {
     labels,
@@ -42,7 +50,13 @@ export default function CategoryAvailability() {
         label: 'Courses',
         data: dataArr?.map((data) => data.count),
         // borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: styles.primary
+        backgroundColor: styles.primary,
+        borderRadius: ['1'],
+        barThickness: 20,
+        minBarLength: 2,
+        barPercentage: 0.2,
+        height: 500,
+        fill: true
       }
     ]
   };
@@ -52,20 +66,60 @@ export default function CategoryAvailability() {
       <div className={`${styles.wrapperHeading}`}>Category availability</div>
       <div className={`${styles.wrapperSubHeading}`}>
         Showing data for:
-        <SwitchButton text={'Sub-categories'} isTextLeft={true} />
-      </div>
-
-      <div className={`${styles.wrapperSubHeading}`}>
-        Sub-categories of:
-        <Dropdown
-          placeholder={'Sub-category'}
-          options={[{ value: '', label: '-- Select --' }, ...catSubCat?.subCat]}
-          value={{ value: filters.subCategory, label: filters.subCategory }}
-          changeHandler={(e) => setFilters({ ...filters, subCategory: e.value })}
+        <SwitchButton
+          text={'Sub-categories'}
+          isTextLeft={true}
+          isChecked={!filters?.isCategory}
+          changeHandler={(e, isChecked) => setFilters({ ...filters, isCategory: !isChecked })}
         />
       </div>
 
-      <BarChart options={options} chartData={data} />
+      <div className={`${styles.wrapperSubHeading}`}>
+        {filters?.isCategory ? (
+          <span style={{ padding: '5px' }}>All Categories</span>
+        ) : (
+          <>
+            Sub-categories of:
+            <Dropdown
+              placeholder={'Category'}
+              options={[{ value: '', label: '-- Select --' }, ...catSubCat?.cat]}
+              value={{ value: filters.category, label: filters.category }}
+              changeHandler={(e) => setFilters({ ...filters, category: e.value })}
+            />
+          </>
+        )}
+      </div>
+
+      <div
+        className={`${styles.sortBtn}`}
+        onClick={() =>
+          setSortIndex((prev) => {
+            const index = prev + 1;
+            if (index === sort?.length) return 0;
+            return index;
+          })
+        }>
+        <span>
+          <DownSortTriangleIcon
+            color={sortIndex === 1 ? styles.primary : styles.darkThree}
+            turns="0.5"
+          />
+          <DownSortTriangleIcon color={sortIndex === 2 ? styles.primary : styles.darkThree} />
+        </span>
+        {filters?.isCategory ? 'Categories' : 'Sub-Categories'}
+      </div>
+
+      <div className={`${styles.barGraphContainer}`}>
+        {labels?.length ? (
+          <BarChart
+            options={options}
+            chartData={data}
+            containerStyles={{ height: `${labels?.length < 8 ? '340' : labels?.length * 30}px` }}
+          />
+        ) : (
+          <Spinner />
+        )}
+      </div>
     </div>
   );
 }

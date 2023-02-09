@@ -38,7 +38,7 @@ export default function BarChart({ chartData, options = null, containerStyles = 
   // https://stackoverflow.com/questions/39473991/how-to-make-a-chart-js-bar-chart-scrollable
   return (
     <>
-      <div className={`${styles.userInfoWraper}`}>
+      <div className={`${styles.userInfoWraper}`} dir="rtl">
         <div className={`${styles.chartAreaWrapper}`} style={containerStyles}>
           <Bar data={chartData} options={options || _options} />
         </div>
