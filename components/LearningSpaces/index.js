@@ -22,6 +22,8 @@ import LspCard from './LspCard';
 const LearningSpaces = () => {
   const { logOut } = useAuthUserContext();
 
+  const [orgData , setOrgData] = useState(null);
+
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
@@ -47,7 +49,7 @@ const LearningSpaces = () => {
     client: userClient
   });
 
-  let orgData = getOrgByDomain();
+  
 
   const UserLsp = async () => {
     const userData = JSON.parse(sessionStorage.getItem('loggedUser'));
@@ -104,6 +106,8 @@ const LearningSpaces = () => {
   useEffect(() => {
     setUserGlobalData((prevValue) => ({ ...prevValue, isPrefAdded: false, isOrgAdded: false }));
     // if (!domainArr.includes(URL)) return;
+    let orgData = getOrgByDomain();
+    setOrgData(orgData);
     UserLsp();
   }, []);
 
