@@ -11,7 +11,11 @@ export default function Card({ title = '', image = '', count = '', description =
         </div>
       </div>
       <div className={`${styles.card_count}`}>
-        {count == null ? <Spinner size="30px" customStyles={{ display: 'flex' }} /> : count}
+        {count == null ? (
+          <Spinner size="30px" customStyles={{ justifyContent: 'flex-start' }} />
+        ) : (
+          count
+        )}
       </div>
       <div className={`${styles.card_text}`}>{description}</div>
     </div>
