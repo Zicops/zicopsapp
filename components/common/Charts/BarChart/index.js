@@ -3,8 +3,8 @@ import 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
 import styles from '../charts.module.scss';
 
-export default function BarChart({ chartData }) {
-  const options = {
+export default function BarChart({ chartData, options = null, containerStyles = {} }) {
+  const _options = {
     layout: {
       padding: {
         top: 5
@@ -12,21 +12,36 @@ export default function BarChart({ chartData }) {
     },
     responsive: true,
     maintainAspectRatio: false,
-    legend: {
-      display: true,
-      position: 'right',
-      maxWidth: 100,
-      onClick: null
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          footer: (tooltipItems) => {
+            let sum = 0;
+
+            tooltipItems.forEach(function (tooltipItem) {
+              sum += tooltipItem.parsed.y;
+            });
+            return 'Sum: ' + sum;
+          }
+        }
+      }
     },
     animation: {
       animateScale: true,
       animateRotate: true
     }
   };
+
+  // https://stackoverflow.com/questions/39473991/how-to-make-a-chart-js-bar-chart-scrollable
   return (
     <>
       <div className={`${styles.userInfoWraper}`}>
-        <Bar data={chartData} options={options} />
+        <div className={`${styles.chartAreaWrapper}`} style={containerStyles}>
+          <Bar data={chartData} options={options || _options} />
+        </div>
       </div>
     </>
   );

@@ -27,7 +27,10 @@ export default function CategoryConsumption() {
       <div className={`${styles.wrapperHeading}`}>Category consumption</div>
       <div className={`${styles.wrapperSubHeading}`}>All categories</div>
 
-      <BarChart chartData={categoryConsumptionData} />
+      <BarChart
+        chartData={categoryConsumptionData}
+        containerStyles={{ width: '1500px', height: '300px' }}
+      />
     </div>
   );
 }

@@ -2,7 +2,6 @@ import Button from '@/components/common/Button';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import Dropdown from '@/components/DashboardComponents/Dropdown';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
-import { useState } from 'react';
 import styles from '../adminAnalyticsDashboard.module.scss';
 import useHandleCourseConsumption from '../Logic/useHandleCourseConsumption';
 
@@ -81,6 +80,13 @@ export default function CourseConsumptionStatistics() {
     }
   ];
 
+  function getDisplayHeading() {
+    if (filters?.subCategory) return `${filters?.subCategory} courses`;
+    if (filters?.category) return `${filters?.category} categories courses`;
+
+    return 'All category courses';
+  }
+
   return (
     <div className={`${styles.wrapper}`}>
       <div className={`${styles.wrapperHeading}`}>
@@ -109,7 +115,7 @@ export default function CourseConsumptionStatistics() {
       </div>
 
       <div className={`${styles.wrapperSubHeading}`}>
-        All category courses
+        {getDisplayHeading()}
         <Dropdown
           placeholder={'Sub-category'}
           options={[{ value: '', label: '-- Select --' }, ...catSubCat?.subCat]}
