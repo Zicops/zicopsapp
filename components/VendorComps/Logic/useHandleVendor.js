@@ -111,7 +111,6 @@ export default function useHandleVendor() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
     });
-
     if (isError) return;
     return res;
   }

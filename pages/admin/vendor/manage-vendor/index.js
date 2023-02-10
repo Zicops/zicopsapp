@@ -8,7 +8,6 @@ import MyVendor from '@/components/VendorComps/MyVendor';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
-import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { changeHandler } from '@/helper/common.helper';
 import { useRecoilState } from 'recoil';
 import { VendorStateAtom } from '@/state/atoms/vendor.atoms';

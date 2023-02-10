@@ -111,10 +111,28 @@ export default function VendorMaster() {
         <div className={`${styles.input3}`}>
           <label for="vendorName">Add URL of social media pages: </label>
           <div className={`${styles.icons}`}>
-            <img src="/images/Facebook1.png" onClick={() => setOpenSocialMedia(0)} />
-            <img src="/images/Instagram1.png" onClick={() => setOpenSocialMedia(1)} />
-            <img src="/images/Twitter1.png" onClick={() => setOpenSocialMedia(2)} />
-            <img src="/images/Linkedin1.png" onClick={() => setOpenSocialMedia(3)} />
+            <img
+              src={`${
+                vendorData?.facebookURL ? '/images/svg/Facebook.svg' : '/images/Facebook1.png'
+              }`}
+              onClick={() => setOpenSocialMedia(0)}
+            />
+            <img
+              src={`${
+                vendorData?.instagramURL ? '/images/svg/Instagram.svg' : '/images/Instagram1.png'
+              }`}
+              onClick={() => setOpenSocialMedia(1)}
+            />
+            <img
+              src={`${vendorData?.twitterURL ? '/images/svg/Twitter.svg' : '/images/Twitter1.png'}`}
+              onClick={() => setOpenSocialMedia(2)}
+            />
+            <img
+              src={`${
+                vendorData?.linkedinURL ? '/images/svg/Linkedin.svg' : '/images/Linkedin1.png'
+              }`}
+              onClick={() => setOpenSocialMedia(3)}
+            />
           </div>
         </div>
       </div>

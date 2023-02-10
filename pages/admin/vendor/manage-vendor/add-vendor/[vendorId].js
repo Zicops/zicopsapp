@@ -25,6 +25,7 @@ export default function EditVendor() {
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
   useEffect(() => {
+    console.log('vendorData', vendorData);
     getSingleVendorInfo();
   }, []);
 
@@ -61,7 +62,7 @@ export default function EditVendor() {
           title={
             <>
               {vendorData?.name || 'Edit Vendor'}{' '}
-              <p className={`${styles.subHeader}`}>{vendorData.type}</p>
+              <p className={`${styles.subHeader}`}>{vendorData?.type}</p>
             </>
           }
         />
