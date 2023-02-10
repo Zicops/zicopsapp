@@ -5,29 +5,24 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
+import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
 import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
-import { useRecoilState } from 'recoil';
 
 export default function useHandleVendor() {
-  const [addNewVendor] = useMutation(ADD_VENDOR, {
-    client: userClient
-  });
-  const [updateVendor] = useMutation(UPDATE_VENDOR, {
-    client: userClient
-  });
+  const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
+  const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const vendorId = router.query.vendorId || null;
+  const vendorId = router.query.vendorId || '0';
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -36,14 +31,12 @@ export default function useHandleVendor() {
 
   function handlePhotoInput(e) {
     const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
-
     if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
       setVendorData({
         ...vendorData,
         vendorProfileImage: e.target.files[0]
       });
     }
-
     e.target.value = '';
   }
 
@@ -67,7 +60,15 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    setVendorData(vendorInfo?.getVendorDetails);
+    const singleData = {
+      ...vendorInfo?.getVendorDetails,
+      facebookURL: vendorInfo?.getVendorDetails?.facebook_url,
+      instagramURL: vendorInfo?.getVendorDetails?.instagram_url,
+      twitterURL: vendorInfo?.getVendorDetails?.twitter_url,
+      linkedinURL: vendorInfo?.getVendorDetails?.linkedin_url,
+      vendorProfileImage: vendorInfo?.getVendorDetails?.photo_url
+    };
+    setVendorData(getVendorObject(singleData));
   }
 
   async function addUpdateVendor() {
@@ -75,8 +76,8 @@ export default function useHandleVendor() {
     const sendData = {
       lsp_id: lspId,
       name: vendorData?.name?.trim() || '',
-      level: vendorData?.vendorLevel?.trim() || '',
-      type: vendorData?.vendorType?.trim() || '',
+      level: vendorData?.level?.trim() || '',
+      type: vendorData?.type?.trim() || '',
       photo: vendorData?.vendorProfileImage || null,
       address: vendorData?.address?.trim() || '',
       website: vendorData?.website?.trim() || '',
@@ -91,76 +92,28 @@ export default function useHandleVendor() {
 
     let isError = false;
 
-    async function getEditVendors() {
-      const lspId = sessionStorage?.getItem('lsp_id');
-      const vendorList = await loadQueryDataAsync(
-        GET_VENDORS_BY_LSP,
-        { lsp_id: lspId },
-        {},
-        userQueryClient
-      );
-      const currentVendorInfo = vendorList?.getVendors?.find(
-        (vendor) => vendor?.vendorId === vendorId
-      );
-      setVendorData(currentVendorInfo);
-    }
+    if (vendorData?.vendorId) {
+      sendData.vendorId = vendorData?.vendorId;
 
-    async function addVendor() {
-      const lspId = sessionStorage?.getItem('lsp_id');
-      const sendData = {
-        lsp_id: lspId,
-        name: vendorData?.vendorName.trim(),
-        level: vendorLevel,
-        type: vendorType,
-        photo: vendorData?.vendorProfileImage,
-        address: vendorData?.vendorAddress.trim(),
-        website: vendorData?.vendorWebsiteURL,
-        facebook_url: vendorData.facebookURL,
-        instagram_url: vendorData.instagramURL,
-        twitter_url: vendorData.twitterURL,
-        linkedin_url: vendorData.linkedinURL,
-        users: vendorData.users,
-        description: vendorData.description.trim(),
-        status: VENDOR_MASTER_STATUS.active
-      };
-
-      let isError = false;
-
-      if (vendorData?.vendorId) {
-        sendData.vendorId = vendorData?.vendorId;
-        console.log(sendData);
-
-        await updateVendor({ variables: { variables: sendData } }).catch((err) => {
-          console.log(err);
-          isError = !!err;
-          return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
-        });
-        if (isError) return;
-        setToastMsg({ type: 'success', message: 'Vendor Updated' });
-        return;
-      }
-
-      const res = await addNewVendor({ variables: sendData }).catch((err) => {
+      await updateVendor({ variables: { variables: sendData } }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
+        return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
       });
+
       if (isError) return;
-      return res;
+      setToastMsg({ type: 'success', message: 'Vendor Updated' });
+      return;
     }
 
-    return {
-      vendorDetails,
-      vendorData,
-      vendorLevel,
-      vendorType,
-      setVendorData,
-      setVendorType,
-      setVendorLevel,
-      addVendor,
-      getEditVendors,
-      handlePhotoInput
-    };
+    const res = await addNewVendor({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
+    });
+
+    if (isError) return;
+    return res;
   }
 
   return {

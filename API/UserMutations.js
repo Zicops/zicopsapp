@@ -1375,6 +1375,7 @@ export const ADD_VENDOR = gql`
       photo_url
       address
       website
+      users
       facebook_url
       instagram_url
       twitter_url

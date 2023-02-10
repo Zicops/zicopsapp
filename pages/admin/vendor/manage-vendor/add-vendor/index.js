@@ -53,8 +53,8 @@ export default function VendorInfo() {
             setTab={setTab}
             footerObj={{
               showFooter: true,
-              handleSubmit: async () => {
-                await addUpdateVendor();
+              handleSubmit: () => {
+                addUpdateVendor();
               },
               status: VENDOR_MASTER_STATUS.draft.toUpperCase()
             }}
