@@ -14,16 +14,11 @@ import { useRouter } from 'next/router';
 import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
 
 export default function useHandleVendor() {
-  const [addNewVendor] = useMutation(ADD_VENDOR, {
-    client: userClient
-  });
-  const [updateVendor] = useMutation(UPDATE_VENDOR, {
-    client: userClient
-  });
+  const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
+  const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -36,14 +31,12 @@ export default function useHandleVendor() {
 
   function handlePhotoInput(e) {
     const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
-
     if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
       setVendorData({
         ...vendorData,
         vendorProfileImage: e.target.files[0]
       });
     }
-
     e.target.value = '';
   }
 
@@ -67,7 +60,15 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    setVendorData(vendorInfo?.getVendorDetails);
+    const singleData = {
+      ...vendorInfo?.getVendorDetails,
+      facebookURL: vendorInfo?.getVendorDetails?.facebook_url,
+      instagramURL: vendorInfo?.getVendorDetails?.instagram_url,
+      twitterURL: vendorInfo?.getVendorDetails?.twitter_url,
+      linkedinURL: vendorInfo?.getVendorDetails?.linkedin_url,
+      vendorProfileImage: vendorInfo?.getVendorDetails?.photo_url
+    };
+    setVendorData(getVendorObject(singleData));
   }
 
   async function addUpdateVendor() {
@@ -99,6 +100,7 @@ export default function useHandleVendor() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
       });
+
       if (isError) return;
       setToastMsg({ type: 'success', message: 'Vendor Updated' });
       return;
