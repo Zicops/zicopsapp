@@ -1351,9 +1351,9 @@ export const ADD_VENDOR = gql`
     addVendor(
       input: {
         lsp_id: $lsp_id
+        vendor_id: $vendorId
         name: $name
         level: $level
-        vendor_id: $vendorId
         type: $type
         photo: $photo
         address: $address
@@ -1428,12 +1428,13 @@ export const UPDATE_VENDOR = gql`
       name
       photo_url
       address
+      users
       website
+      description
       facebook_url
       instagram_url
       twitter_url
       linkedin_url
-      description
       created_at
       created_by
       updated_at
