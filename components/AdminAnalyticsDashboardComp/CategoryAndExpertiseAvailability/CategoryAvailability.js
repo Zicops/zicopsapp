@@ -6,6 +6,7 @@ import SwitchButton from '@/components/DashboardComponents/SwitchButton';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useState } from 'react';
 import styles from '../adminAnalyticsDashboard.module.scss';
+import SectionTitle from '../common/SectionTitle';
 import useHandleCatConsumption from '../Logic/useHandleCatConsumption';
 
 export default function CategoryAvailability() {
@@ -63,8 +64,9 @@ export default function CategoryAvailability() {
 
   return (
     <div className={`${styles.wrapper}`}>
-      <div className={`${styles.wrapperHeading}`}>Category availability</div>
-      <div className={`${styles.wrapperSubHeading}`}>
+      <SectionTitle title="Category availability" />
+
+      <div className={`${styles.wrapperSubHeading} ${styles.bottomBorder}`}>
         Showing data for:
         <SwitchButton
           text={'Sub-categories'}
@@ -82,7 +84,7 @@ export default function CategoryAvailability() {
             Sub-categories of:
             <Dropdown
               placeholder={'Category'}
-              options={[{ value: '', label: '-- Select --' }, ...catSubCat?.cat]}
+              options={[{ value: '', label: 'All Categories' }, ...catSubCat?.cat]}
               value={{ value: filters.category, label: filters.category }}
               changeHandler={(e) => setFilters({ ...filters, category: e.value })}
             />

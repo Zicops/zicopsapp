@@ -22,15 +22,17 @@ export default function useHandleMultilingualCourses() {
 
     loadAndSetMultilingualData();
 
-    const totalLspCourseCount = getAllCourseCountInLsp(_lspId, courseType);
+    const totalLspCourseCount = getAllCourseCountInLsp(_lspId, { course_type: courseType });
 
     async function loadAndSetMultilingualData() {
-      const hindiCourseCount = getAllCourseCountInLsp(_lspId, courseType, null, [
-        hindiCourses.language
-      ]);
-      const englishCourseCount = getAllCourseCountInLsp(_lspId, courseType, null, [
-        englishCourses.language
-      ]);
+      const hindiCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        languages: [hindiCourses.language]
+      });
+      const englishCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        languages: [englishCourses.language]
+      });
 
       setHindiCourses({
         ...hindiCourses,

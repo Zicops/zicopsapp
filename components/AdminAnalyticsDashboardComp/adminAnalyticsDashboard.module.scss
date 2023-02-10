@@ -1,38 +1,40 @@
-@import '../../styles/base.scss';
-
 .firstFourCards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
+// wrapper for all section below first four cards
 .wrapper {
-  background-color: #202222;
-  // background-color: #242630;
-  width: 100%;
-  padding: 20px;
-  border-radius: 5px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
 
-.wrapperHeading {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #eaeaea;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  width: 100%;
+  padding: 20px;
 
-.wrapperSubHeading {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #eaeaea;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  border-radius: 5px;
+  background-color: $darkTwo;
+  // background-color: #242630;
+  color: $white;
+
+  .wrapperHeading,
+  .wrapperSubHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  .wrapperSubHeading {
+    font-size: 1.2rem;
+  }
+
+  .bottomBorder {
+    border-bottom: 1px solid $secondary;
+  }
 }
 
 .categoryAndExpertiseAvailability {

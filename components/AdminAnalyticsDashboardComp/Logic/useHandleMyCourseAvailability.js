@@ -42,18 +42,22 @@ export default function useHandleMyCourseAvailability() {
     loadAndSetMyCourseAvailability();
 
     async function loadAndSetMyCourseAvailability() {
-      const publishedCourseCount = getAllCourseCountInLsp(
-        _lspId,
-        courseType,
-        COURSE_STATUS.publish
-      );
-      const savedCourseCount = getAllCourseCountInLsp(_lspId, courseType, COURSE_STATUS.save);
-      const expiredCourseCount = getAllCourseCountInLsp(_lspId, courseType, COURSE_STATUS.reject);
-      const readyCourseCount = getAllCourseCountInLsp(
-        _lspId,
-        courseType,
-        COURSE_STATUS.approvalPending
-      );
+      const publishedCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        course_status: COURSE_STATUS.publish
+      });
+      const savedCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        course_status: COURSE_STATUS.save
+      });
+      const expiredCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        course_status: COURSE_STATUS.reject
+      });
+      const readyCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        course_status: COURSE_STATUS.approvalPending
+      });
 
       setPublishCard({ ...publishCard, count: await publishedCourseCount });
       setSavedCard({ ...savedCard, count: await savedCourseCount });

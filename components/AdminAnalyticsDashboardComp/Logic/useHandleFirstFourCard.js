@@ -76,7 +76,7 @@ export default function useHandleFirstFourCard() {
       let totalAssignedCourses = 0;
       if (!lspId) return { totalAssignedCourses, totalMyCourses };
 
-      const totalCourseCountRes = getAllCourseCountInLsp(lspId, courseType);
+      const totalCourseCountRes = getAllCourseCountInLsp(lspId, { course_type: courseType });
       const myCourseConsumptionStats = loadQueryDataAsync(
         GET_COURSE_CONSUMPTION_STATS,
         { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
