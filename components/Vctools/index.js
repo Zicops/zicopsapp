@@ -13,18 +13,19 @@ const VcMaintool = () => {
     }
     return result;
   };
-  const ContainerRef=useRef(null)
+  const ContainerRef = useRef(null)
   const [toolbar, settoobar] = useState(false);
-  const [toggleAudio, settoggleAudio] = useState(true);
-  const [toggleVideo, settoggleVideo] = useState(true);
+  const [hidecard, sethidecard] = useState(false)
+  const [toggleAudio, settoggleAudio] = useState(false);
+  const [toggleVideo, settoggleVideo] = useState(false);
   const [link, setlink] = useState(GenerateString(9).trim().toLocaleLowerCase());
   const [api, setapi] = useState(null);
   const StartMeeting = (givenName) => {
     const domain = 'live.zicops.com';
     const options = {
       roomName: givenName,
-      // width: "100%",
-      // height: "100%",
+      // width: 100+"%",
+      // height: 100+"%",
       parentNode: ContainerRef.current,
       userInfo: {
         email: 'email@jitsiexamplemail.com',
@@ -50,18 +51,15 @@ const VcMaintool = () => {
       },
       onload: function () {
         console.log('onload');
-        console.log('meeting is stared');
-        // settoobar(true)
-        setTimeout(() => {
-          settoobar(true);
-        }, 2000);
+        settoobar(true)
+
       }
     };
     setapi(new JitsiMeetExternalAPI(domain, options));
   };
   return (
-    <>
-      <div id="meet"  className={toolbar? `${styles.meet}`:""} ref={ContainerRef}></div>
+    <div>
+      <div id="meet" className={toolbar && `${styles.meet}`} ref={ContainerRef}></div>
       {toolbar && (
         <MainToolbar
           SetAudio={() => {
@@ -77,34 +75,39 @@ const VcMaintool = () => {
           EndMeetng={() => {
             api.dispose();
             settoobar(!toolbar);
+            sethidecard(!hidecard)
           }}
           ShareScreen={() => {
             api.executeCommand('toggleShareScreen');
-            // settoggleVideo(!toggleVideo);
+      
           }}
           HandRiseFun={() => {
             api.executeCommand('toggleRaiseHand');
-          }}
-        />
+          }} />
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.main_div}`}>
         {/* all components ara going to append here */}
-        <MeetingCard
-          StartMeeting={() => {
-            StartMeeting(link);
-          }}
-          StartAudioenableFun={() => {
-            settoggleAudio(!toggleAudio);
-          }}
-          StartVideoenableFun={() => {
-            settoggleVideo(!toggleVideo);
-          }}
-          StartmeetingAudioenable={toggleAudio}
-          StartmeetingVideoenable={toggleVideo}
-        />
+        {
+          hidecard ? ""
+            : <MeetingCard
+              StartMeeting={() => {
+                StartMeeting(link);
+                sethidecard(!hidecard)
+              }}
+              StartAudioenableFun={() => {
+                settoggleAudio(!toggleAudio);
+              }}
+              StartVideoenableFun={() => {
+                settoggleVideo(!toggleVideo);
+              }}
+              StartmeetingVideoenable={toggleVideo}
+              StartmeetingAudioenable={toggleAudio}
+
+            />
+        }
       </div>
-    </>
+    </div>
   );
 };
 export default VcMaintool;

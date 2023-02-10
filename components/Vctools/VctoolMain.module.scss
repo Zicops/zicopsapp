@@ -24,13 +24,14 @@
     align-items: center;
     background-color: #262626;
 }
+
 .subvideo {
     z-index: 100;
     height: 200px;
     width: 200px;
     border-radius: 50%;
     border: solid black 1px;
- 
+
 }
 
 .btns {
@@ -72,11 +73,13 @@
 
 .meet {
     z-index: 1000;
+    height: 99%;
+    width: 100%;
     position: absolute;
-    top:0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    // top:0;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
 }
 
 .disablevideo {
@@ -97,10 +100,12 @@
     width: 100%;
     height: 100vh;
     position: absolute;
+    margin: 0;
 }
 
 .toolbar_nav {
     // opacity: 0;
+
     transition: opacity 1s;
     // z-index: 1010;
     width: 100vw;
@@ -121,7 +126,7 @@
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
-    margin-left: 10px;
+    // margin-left: 10px;
     color: white;
     background-color: #202222;
     height: 48px;
@@ -147,6 +152,7 @@
     width: 100vw;
     background-color: black;
     display: flex;
+
     // justify-content: center;
     align-items: center;
 }
@@ -166,7 +172,7 @@
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
-    margin-left: 10px;
+    // margin-left: 10px;
     color: white;
     background-color: #202222;
     height: 48px;
@@ -191,7 +197,7 @@
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
-    margin-left: 10px;
+    // margin-left: 10px;
     color: white;
     background-color: #202222;
     height: 48px;
@@ -220,19 +226,299 @@
 #fadein1 {
     opacity: 0;
     transition: opacity 1s;
-  }
+}
 
-  #fadeout1{
+#fadeout1 {
     opacity: 1011;
     z-index: 1010;
-  }
+}
 
-  #fadein2{
+#fadein2 {
     opacity: 0;
     transition: opacity 1s;
-  }
+}
 
-  #fadeout2{
+#fadeout2 {
     opacity: 1011;
     z-index: 1010;
-  }
+}
+
+
+// /styling chatbar
+.chatbar {
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.chatbar_head {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.chatbar_head>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.chatbar_Screen {
+    width: 300px;
+    height: 410px;
+    overflow: scroll;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #292F2F;
+}
+
+.chatbar_Screen::-webkit-scrollbar {
+    display: none;
+}
+
+.chatbar_input {
+    margin-top: 20px;
+    height: 86px;
+    width: 300px;
+    border: 1px solid #292F2F;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 6px;
+    flex-direction: column;
+}
+
+.chatbar_input>input {
+    width: 270px;
+    font-size: 16px;
+    height: 24px;
+    color: white;
+    background-color: #1A1D21;
+    outline: none;
+    border: none;
+
+}
+
+.chatsendfile {
+    width: 276px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.chatsendfile>input {
+    color: white;
+    background-color: #1A1D21;
+    outline: none;
+    border: none;
+}
+
+.chatbar>input> ::placeholder {
+    color: #747474;
+}
+
+// styling AQ bar
+.QAbar {
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.QAbar_head {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.QAbar_head>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.QAbar_Screen {
+    width: 300px;
+    height: 410px;
+    overflow: scroll;
+    padding-bottom: 20px;
+}
+
+.QAbar_Screen::-webkit-scrollbar {
+    display: none;
+}
+
+.QAbar_input {
+    margin-top: 20px;
+    height: 86px;
+    width: 300px;
+    border: 1px solid #292F2F;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 6px;
+    flex-direction: column;
+}
+
+.QAbar_input>input {
+    width: 270px;
+    font-size: 16px;
+    height: 24px;
+    color: white;
+    background-color: #1A1D21;
+    outline: none;
+    border: none;
+
+}
+
+.QAsendfile {
+    width: 276px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.QAsendfile>input {
+    color: white;
+    background-color: #1A1D21;
+    outline: none;
+    border: none;
+}
+
+.QAbar>input> ::placeholder {
+    color: #747474;
+}
+
+.QAbtn {
+    width: 161px;
+    height: 48px;
+    background: #6BCFCF;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+// Stylling Polls
+.Pollbar {
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.Poll_head {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.Poll_head>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+// styling Participants bar
+.Participants_bar {
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.Participants_head {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.Participants_head>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.Participants_Screen {
+    height: 500px;
+    width: 296px;
+    overflow: scroll;
+
+}
+
+.Participants_Screen::-webkit-scrollbar {
+    display: none;
+}
+
+.Participants_Screen_head {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.Allinstructors {
+    width: 276px;
+    height: auto;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    color: white;
+}
