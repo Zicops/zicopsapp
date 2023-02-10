@@ -1,20 +1,26 @@
-import VrBackground from '@/components/HomePage/VrBackground';
-import Head from 'next/head';
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import HomePage from '../../components/HomePage';
-import OrgHomepage from '@/components/OrgHomepage';
 import { API_LINKS } from '@/api/api.helper';
+import OrgHomepage from '@/components/OrgHomepage';
+import { ORG_DOMAINS } from '@/helper/constants.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import HomePage from '../../components/HomePage';
 
 const Home = () => {
   const ref = useRef();
   const [mounted, setMounted] = useState(false);
-
-  const [org, setOrg] = useState('');
+  const router = useRouter();
+  const [org, setOrg] = useState(null);
+  const [origin, setOrigin] = useState('');
+  const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
 
   useEffect(async () => {
+    setOrigin(window?.location?.origin);
+    console.log(window?.location?.origin);
     ref.current = document.body;
     const _org = await getOrg();
+    let data = _org?.data;
     // const _org = {
     //   data: {
     //     org_id: 'Wmljb3BzIFN0YWdpbmcgSW5zdGFuY2V6aWNvcHMuY29tU29mdHdhcmU=',
@@ -37,15 +43,23 @@ const Home = () => {
     //   }
     // };
     setOrg(_org?.data);
+    setOrgData((prev) => ({
+      ...prev,
+      logo_url: data?.logo_url,
+      organization_name: data?.name,
+      organization_id: data?.org_id
+    }));
 
-    console.log('Get Org by api', org);
     setMounted(true);
   }, []);
 
   async function getOrg() {
+    if(!API_LINKS?.getOrg?.split('/')?.[0]) return {};
     const data = await fetch(API_LINKS?.getOrg);
     return await data.json();
   }
+
+  if (!mounted) return <></>;
   return (
     <>
       {/* <Head>
@@ -54,7 +68,12 @@ const Home = () => {
 
       {mounted ? createPortal(<VrBackground />, ref.current) : null} */}
       {/* {org ? <OrgHomepage data={org} /> : <HomePage />} */}
-      {org && org?.subdomain !== 'zicops.com' ? <OrgHomepage data={org} /> : <HomePage />}
+      {!ORG_DOMAINS?.includes(origin) ? <OrgHomepage data={org} /> : <HomePage />}
+      {/* {(org && org?.subdomain !== 'zicops.com') || !ORG_DOMAINS?.includes(origin) ? (
+        <OrgHomepage data={org} />
+      ) : (
+        <HomePage />
+      )} */}
     </>
   );
 };
