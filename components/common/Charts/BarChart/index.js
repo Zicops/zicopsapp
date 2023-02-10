@@ -3,7 +3,12 @@ import 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
 import styles from '../charts.module.scss';
 
-export default function BarChart({ chartData, options = null, containerStyles = {} }) {
+export default function BarChart({
+  chartData,
+  options = null,
+  containerStyles = {},
+  direction = 'ltr'
+}) {
   const _options = {
     layout: {
       padding: {
@@ -38,7 +43,7 @@ export default function BarChart({ chartData, options = null, containerStyles = 
   // https://stackoverflow.com/questions/39473991/how-to-make-a-chart-js-bar-chart-scrollable
   return (
     <>
-      <div className={`${styles.userInfoWraper}`} dir="rtl">
+      <div className={`${styles.userInfoWraper}`} dir={direction}>
         <div className={`${styles.chartAreaWrapper}`} style={containerStyles}>
           <Bar data={chartData} options={options || _options} />
         </div>

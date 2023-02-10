@@ -21,8 +21,8 @@ export default function useHandleCourseViews() {
     async function loadAndSetData() {
       const queryVariables = {
         lsp_id: [_lspId],
-        startTime: getUnixFromDate(startOfMonth),
-        endTime: getUnixFromDate(endOfMonth)
+        startTime: getUnixFromDate(startOfMonth)?.toString(),
+        endTime: getUnixFromDate(endOfMonth)?.toString()
       };
 
       const courseStats = loadQueryDataAsync(GET_COURSE_VIEWS, queryVariables, {}, userClient);

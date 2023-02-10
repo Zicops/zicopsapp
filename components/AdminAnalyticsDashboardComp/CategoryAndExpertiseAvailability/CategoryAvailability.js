@@ -114,6 +114,7 @@ export default function CategoryAvailability() {
           <BarChart
             options={options}
             chartData={data}
+            direction="rtl"
             containerStyles={{ height: `${labels?.length < 8 ? '340' : labels?.length * 30}px` }}
           />
         ) : (

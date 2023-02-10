@@ -8,7 +8,7 @@ import useHandleCatConsumption from '../Logic/useHandleCatConsumption';
 export default function CategoryConsumption() {
   const [filters, setFilters] = useState({ category: null, subCategory: null });
   const { catSubCat, setActiveCatId } = useHandleCatSubCat();
-  const { subCatData } = useHandleCatConsumption(catSubCat);
+  const { subCatData } = useHandleCatConsumption();
 
   const dataArr = subCatData?.filter((subCat) => {
     let isFiltered = true;
@@ -48,7 +48,7 @@ export default function CategoryConsumption() {
         <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
           <Dropdown
             placeholder={'Category'}
-            options={[{ value: '', label: '-- Select --' }, ...catSubCat?.cat]}
+            options={[{ value: '', label: 'All Categories' }, ...catSubCat?.cat]}
             value={{ value: filters.category, label: filters.category }}
             changeHandler={(e) => {
               setActiveCatId(e);
@@ -57,7 +57,7 @@ export default function CategoryConsumption() {
           />
           <Dropdown
             placeholder={'Sub-category'}
-            options={[{ value: '', label: '-- Select --' }, ...catSubCat?.subCat]}
+            options={[{ value: '', label: 'All Sub Categories' }, ...catSubCat?.subCat]}
             value={{ value: filters.subCategory, label: filters.subCategory }}
             changeHandler={(e) => setFilters({ ...filters, subCategory: e.value })}
           />
