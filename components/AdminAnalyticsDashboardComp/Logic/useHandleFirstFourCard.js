@@ -17,28 +17,28 @@ export default function useHandleFirstFourCard() {
     title: 'Categories',
     image: '/images/svg/categories.svg',
     count: null,
-    description: 'Categories'
+    caption: 'Categories'
   });
   const [subCategoryCard, setSubCategoryCard] = useState({
     id: 2,
     title: 'Sub-categories',
     image: '/images/svg/workspaces.svg',
     count: null,
-    description: 'Sub-categories'
+    caption: 'Sub-categories'
   });
   const [myCourseCard, setMyCourseCard] = useState({
     id: 3,
     title: 'My Courses',
     image: '/images/svg/local_library.svg',
     count: null,
-    description: 'X assigned courses'
+    caption: 'X assigned courses'
   });
   const [zicopsCard, setZicopsCard] = useState({
     id: 4,
     title: 'Zicops Courses',
     image: '/images/svg/Logo.svg',
     count: null,
-    description: 'X assigned courses'
+    caption: 'X assigned courses'
   });
 
   // cat sub cat count

@@ -13,28 +13,28 @@ export default function useHandleMyCourseAvailability() {
     title: 'Published',
     image: '/images/svg/publish.svg',
     count: null,
-    description: 'Published courses'
+    caption: 'Published courses'
   });
   const [readyCard, setReadyCard] = useState({
     id: 2,
     title: 'Ready for publishing',
     image: '/images/svg/done.svg',
     count: null,
-    description: 'Ready to be published'
+    caption: 'Ready to be published'
   });
   const [savedCard, setSavedCard] = useState({
     id: 3,
     title: 'Saved',
     image: '/images/svg/save.svg',
     count: null,
-    description: 'Saved courses'
+    caption: 'Saved courses'
   });
   const [expiredCard, setExpiredCard] = useState({
     id: 4,
     title: 'Expired',
     image: '/images/svg/timer.svg',
     count: null,
-    description: 'Expired courses'
+    caption: 'Expired courses'
   });
   useEffect(() => {
     const _lspId = sessionStorage.getItem('lsp_id');

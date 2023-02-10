@@ -1,4 +1,4 @@
-import Card from '@/components/DashboardComponents/Card';
+import InfoCountCard from '@/components/DashboardComponents/InfoCountCard';
 import styles from '../adminAnalyticsDashboard.module.scss';
 import useHandleMyCourseAvailability from '../Logic/useHandleMyCourseAvailability';
 
@@ -11,7 +11,7 @@ export default function MyCoursesAvailability() {
 
       <div className={`${styles.categoryAndExpertiseAvailability}`}>
         {cardData.map((data) => {
-          return <Card key={data?.id} {...data} />;
+          return <InfoCountCard key={data?.id} {...data} />;
         })}
       </div>
     </div>
