@@ -843,9 +843,8 @@ export default function useUserCourseData() {
     }
   };
 
-  async function getUserLspRoleLatest(userId=null,userLspId = null){
-
-    if(!userLspId || !userId) return ;
+  async function getUserLspRoleLatest(userId = null, userLspId = null) {
+    if (!userLspId || !userId) return;
     //this function gets users lsp role and return the latest one
     const lspRoleArr = await loadQueryDataAsync(
       GET_USER_LSP_ROLES,
@@ -864,7 +863,7 @@ export default function useUserCourseData() {
       userLspRole = lspRoles?.[0]?.role;
     }
 
-    return userLspRole ;
+    return userLspRole;
   }
 
   return {
@@ -1302,4 +1301,17 @@ export function useHandleCohortUsers() {
   }
 
   return { removeCohortUser };
+}
+
+// https://stackoverflow.com/a/60907638/13419786
+export function useAsync(asyncFn, onSuccess) {
+  useEffect(() => {
+    let isActive = true;
+    asyncFn().then((data) => {
+      if (isActive) onSuccess(data);
+    });
+    return () => {
+      isActive = false;
+    };
+  }, [asyncFn, onSuccess]);
 }
