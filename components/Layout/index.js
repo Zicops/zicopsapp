@@ -32,12 +32,12 @@ export default function Layout({ children }) {
       const orgData = await getOrgByDomain();
       setUserOrgData((prev) => ({
         ...prev,
-        logo_url: orgData?.logo_url,
+        logo_url: orgData?.logo_url || '',
         organization_id: orgData?.org_id
       }));
       return;
     }
-     await OrgDetails();
+     OrgDetails();
      return ;
   }, [router?.asPath]);
 

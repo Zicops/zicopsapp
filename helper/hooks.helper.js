@@ -832,7 +832,7 @@ export default function useUserCourseData() {
     });
     setUserOrgData((prevValue) => ({
       ...prevValue,
-      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url || ''
     }));
     if (loadLsp) {
       const lspData = await getLspDetails([lspId]);

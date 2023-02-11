@@ -1,13 +1,22 @@
-import Link from 'next/link';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRecoilValue } from 'recoil';
 import styles from '../home.module.scss';
 const HomeHeader = ({ showLogin = true, showBackBtn = false, showLogo = true }) => {
+  // /images/brand/zicops-new-logo.svg
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  
   return (
     <>
       <header className={`${styles.HomeHeader}`}>
         <Link href="/home">
           <a className={`${styles.ZicopsLogo}`}>
-            {showLogo ? <img src="/images/brand/zicops-new-logo.svg" alt="zicops logo" /> : ''}
+            {!showLogo && userOrgData?.logo_url == null ? (
+              <div></div>
+            ) : (
+              <img src={`${userOrgData?.logo_url || '/images/brand/zicops-new-logo.svg'}`} alt="zicops logo" />
+            )}
           </a>
         </Link>
 
