@@ -872,7 +872,7 @@ export default function useUserCourseData() {
     if (!API_LINKS?.getOrg?.split('/')?.[0]) return {};
     const data = await fetch(API_LINKS?.getOrg);
     const orgData = await data?.json();
-    return orgData;
+    return orgData?.data;
   }
 
   return {
