@@ -4,11 +4,10 @@ import HomeHeader from '@/components/HomePage/HomeHeader';
 import { isEmail } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
-import LoginEmail from '../LoginEmail';
 import LoginHeadOne from '../LoginHeadOne';
 import styles from '../zicopsLogin.module.scss';
 
@@ -53,6 +52,11 @@ const ForgotPassword = ({ setPage }) => {
     setLoading(false);
     return;
   }
+
+  useEffect(()=>{
+      if(!router.query?.email) return ;
+      setSendEmail(router.query?.email);
+  },[])
 
   return (
     <>
