@@ -49,6 +49,7 @@ const Home = () => {
       organization_name: data?.name,
       organization_id: data?.org_id
     }));
+    sessionStorage?.setItem('org_id',data?.org_id);
 
     setMounted(true);
   }, []);
