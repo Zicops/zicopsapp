@@ -55,8 +55,8 @@ const ChangePasswordScreen = ({ setPage }) => {
       .catch((error) => {
         setToastMsg({
           type: 'info',
-          message:
-            'Reset password link has expired. Please enter your email for latest reset password link.'
+          message:'Your current invite link has expired. Kindly trigger a new invite link.'
+            // 'Reset password link has expired. Please enter your email for latest reset password link.'
         });
         router.push('/forgot-password');
       });
@@ -71,7 +71,7 @@ const ChangePasswordScreen = ({ setPage }) => {
         setToastMsg({
           type: 'info',
           message:
-            'Reset password link has expired. Please enter your email for latest reset password link.'
+            'Your current invite link has expired. Kindly trigger a new invite link.'
         });
         router.push(`/forgot-password?email=${userMail}`, '/forgot-password');
       });
