@@ -55,6 +55,7 @@ const ForgotPassword = ({ setPage }) => {
 
   useEffect(()=>{
       if(!router.query?.email) return ;
+      if(!router.query?.email?.length) return ;
       setSendEmail(router.query?.email);
   },[])
 
@@ -79,7 +80,8 @@ const ForgotPassword = ({ setPage }) => {
             inputOptions={{
               inputName: 'email',
               placeholder: 'Email address',
-              value: sendEmail
+              value: sendEmail,
+              isDisabled: router.query?.email?.length
             }}
             changeHandler={(e) => handleEmail(e, setSendEmail)}
           />
