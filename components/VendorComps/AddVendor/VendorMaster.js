@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil';
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
 import { useRouter } from 'next/router';
+import { isDisabledArr } from '@/components/LearnerUserProfile/Logic/singleInfo.helper';
 
 export default function VendorMaster() {
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
@@ -60,7 +61,8 @@ export default function VendorMaster() {
             inputName: 'name',
             label: 'Vendor Name',
             placeholder: 'Enter Vendor Name',
-            value: vendorData?.name
+            value: vendorData?.name,
+            isDisabled: vendorData?.vendorId
           }}
           styleClass={`${styles.input5}`}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}

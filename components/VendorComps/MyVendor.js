@@ -6,12 +6,10 @@ import { useEffect, useState } from 'react';
 import useHandleVendor from './Logic/useHandleVendor.js';
 
 const MyVendor = () => {
-  const { vendorDetails, getAllVendors, loading, setLoading } = useHandleVendor();
+  const { vendorDetails, getAllVendors, loading } = useHandleVendor();
   useEffect(() => {
-    setLoading(true);
     if (!vendorDetails?.length) {
       getAllVendors();
-      setLoading(false);
     }
   }, []);
 
