@@ -17,7 +17,6 @@ const Home = () => {
 
   useEffect(async () => {
     setOrigin(window?.location?.origin);
-    console.log(window?.location?.origin);
     ref.current = document.body;
     const _org = await getOrg();
     let data = _org?.data;
@@ -45,11 +44,11 @@ const Home = () => {
     setOrg(_org?.data);
     setOrgData((prev) => ({
       ...prev,
-      logo_url: data?.logo_url,
-      organization_name: data?.name,
-      organization_id: data?.org_id
+      logo_url: _org?.data?.logo_url,
+      organization_name: _org?.data?.name,
+      organization_id: _org?.data?.org_id
     }));
-    sessionStorage?.setItem('org_id',data?.org_id);
+    sessionStorage?.setItem('org_id',_org?.data?.org_id);
 
     setMounted(true);
   }, []);
