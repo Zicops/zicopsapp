@@ -38,7 +38,6 @@ export default function Layout({ children }) {
       return;
     }
      OrgDetails();
-     return ;
   }, [router?.asPath]);
 
   //refill the  recoil values

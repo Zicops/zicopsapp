@@ -6,7 +6,7 @@ import styles from '../home.module.scss';
 const HomeHeader = ({ showLogin = true, showBackBtn = false, showLogo = true }) => {
   // /images/brand/zicops-new-logo.svg
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
-  
+
   return (
     <>
       <header className={`${styles.HomeHeader}`}>
@@ -15,7 +15,14 @@ const HomeHeader = ({ showLogin = true, showBackBtn = false, showLogo = true }) 
             {!showLogo && userOrgData?.logo_url == null ? (
               <div></div>
             ) : (
-              <img src={`${userOrgData?.logo_url || '/images/brand/zicops-new-logo.svg'}`} alt="zicops logo" />
+              <img
+                src={`${
+                  userOrgData?.logo_url?.length
+                    ? userOrgData?.logo_url
+                    : '/images/brand/zicops-new-logo.svg'
+                }`}
+                alt="zicops logo"
+              />
             )}
           </a>
         </Link>

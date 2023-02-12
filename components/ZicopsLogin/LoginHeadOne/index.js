@@ -9,7 +9,17 @@ const LoginHeadOne = ({ heading, sub_heading, info, showImage = true }) => {
     <>
       {showImage && (
         <div className={`${styles.zicops_logo}`}>
-          {userOrgData?.logo_url == null ? <div></div> : <img src={`${userOrgData?.logo_url || '/images/brand/zicops-icon.png'}`} />}
+          {userOrgData?.logo_url == null ? (
+            <div></div>
+          ) : (
+            <img
+              src={`${
+                userOrgData?.logo_url?.length
+                  ? userOrgData?.logo_url
+                  : '/images/brand/zicops-icon.png'
+              }`}
+            />
+          )}
         </div>
       )}
       <div className={`${styles.heading}`}>{heading}</div>

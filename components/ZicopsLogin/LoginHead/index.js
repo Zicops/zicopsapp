@@ -7,7 +7,11 @@ const LoginHead = ({ heading, sub_heading, text }) => {
   return (
     <>
       <div className={`${styles.zicops_logo}`}>
-        {userOrgData?.logo_url == null ? <div></div> : <img src={`${userOrgData?.logo_url || '/images/Zicops-logo-icon.png'}`} width={'90px'} />}
+        {userOrgData?.logo_url == null ? <div></div> : <img src={`${
+                userOrgData?.logo_url?.length
+                  ? userOrgData?.logo_url
+                  : '/images/Zicops-logo-icon.png'
+              }`} width={'90px'} />}
       </div>
       <div className={`${styles.heading}`}>{heading}</div>
       <div className={`${styles.sub_heading}`}>{sub_heading}</div>

@@ -16,6 +16,7 @@ const ForgotPassword = ({ setPage }) => {
   const router = useRouter();
   const [sendEmail, setSendEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  let isResetPasswordScreen = router?.query?.email?.length >= 0;
 
   function handleEmail(e, setState) {
     setState(e.target.value);
@@ -53,18 +54,18 @@ const ForgotPassword = ({ setPage }) => {
     return;
   }
 
-  useEffect(()=>{
-      if(!router.query?.email) return ;
-      if(!router.query?.email?.length) return ;
-      setSendEmail(router.query?.email);
-  },[])
+  useEffect(() => {
+    if (!router.query?.email) return;
+    if (!router.query?.email?.length) return;
+    setSendEmail(router.query?.email);
+  }, []);
 
   return (
     <>
-      <HomeHeader showLogin={false} showBackBtn={true} />
+      <HomeHeader showLogin={false} showBackBtn={!isResetPasswordScreen} />
       <ZicopsLogin>
         <LoginHeadOne
-          heading={'Reset Password'}
+          heading={isResetPasswordScreen ? 'Reset Password' : 'Forgot Password'}
           sub_heading={'Send reset email to your registered email id'}
         />
         <div className="login_body">
@@ -89,9 +90,19 @@ const ForgotPassword = ({ setPage }) => {
           <div className="change_buttons">
             <LoginButton title={'Send Email'} handleClick={handleSubmit} isDisabled={loading} />
           </div>
-          <div className={`${styles.small_text}`}>
-            Did not receive email to reset password?<p onClick={handleSubmit}>Resend</p>
-          </div>
+          {isResetPasswordScreen ? (
+            <div className={`${styles.resetPasswordMsg}`}>
+              <span>
+                Your current invite link has expired. Kindly trigger a new one.
+              </span>
+              {/* <p onClick={handleSubmit}>Resend</p> */}
+            </div>
+          ) : (
+            <div className={`${styles.small_text}`}>
+              {'Did not receive email to reset password?'}
+              <p onClick={handleSubmit}>Resend</p>
+            </div>
+          )}
         </div>
       </ZicopsLogin>
       <style jsx>{`
