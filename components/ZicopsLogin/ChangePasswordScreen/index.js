@@ -16,7 +16,7 @@ import styles from '../zicopsLogin.module.scss';
 const ChangePasswordScreen = ({ setPage }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
-  const code = router.query?.oobCode;
+  const code = router.query?.oobCode || '';
   const userMail = router.query?.email || '';
   const [newPassword, setNewPassword] = useState('');
   const [confNewPassword, setConfNewPassword] = useState('');
@@ -63,6 +63,8 @@ const ChangePasswordScreen = ({ setPage }) => {
   }
 
   useEffect(() => {
+    //added empty code check
+    if(!code?.length) return;
     verifyPasswordResetCode(auth, code)
       .then((data) => {
         return;
