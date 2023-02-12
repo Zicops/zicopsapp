@@ -1,22 +1,23 @@
+import { isPassword } from '@/helper/common.helper';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import InfoIcon from '@mui/icons-material/Info';
+import { Tooltip } from '@mui/material';
+import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
 import LoginEmail from '../LoginEmail';
 import LoginHeadOne from '../LoginHeadOne';
-import InfoIcon from '@mui/icons-material/Info';
-import { Tooltip } from '@mui/material';
 import styles from '../zicopsLogin.module.scss';
-import { useState } from 'react';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { useRecoilState } from 'recoil';
-import { useRouter } from 'next/router';
-import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
-import { auth } from '@/helper/firebaseUtil/firebaseConfig';
-import { isPassword } from '@/helper/common.helper';
 
 const ChangePasswordScreen = ({ setPage }) => {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
   const code = router.query?.oobCode;
+  const userMail = router.query?.email || '';
   const [newPassword, setNewPassword] = useState('');
   const [confNewPassword, setConfNewPassword] = useState('');
 
@@ -52,14 +53,29 @@ const ChangePasswordScreen = ({ setPage }) => {
           });
       })
       .catch((error) => {
+        setToastMsg({
+          type: 'info',
+          message:'Your current invite link has expired. Kindly trigger a new invite link.'
+            // 'Reset password link has expired. Please enter your email for latest reset password link.'
+        });
         router.push('/forgot-password');
+      });
+  }
+
+  useEffect(() => {
+    verifyPasswordResetCode(auth, code)
+      .then((data) => {
+        return;
+      })
+      .catch((error) => {
         setToastMsg({
           type: 'info',
           message:
-            'Reset password link has expired. Please enter your email for latest reset password link.'
+            'Your current invite link has expired. Kindly trigger a new invite link.'
         });
+        router.push(`/forgot-password?email=${userMail}`, '/forgot-password');
       });
-  }
+  }, []);
 
   return (
     <>

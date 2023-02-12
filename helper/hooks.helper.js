@@ -832,13 +832,14 @@ export default function useUserCourseData() {
     });
     setUserOrgData((prevValue) => ({
       ...prevValue,
-      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url || ''
     }));
     if (loadLsp) {
-      const lspData = await getLspDetails([lspId]).catch((err) => console.error(err));
+      const lspData = await getLspDetails([lspId]);
+
       setUserOrgData((prev) => ({
         ...prev,
-        lsp_logo_url: lspData?.data?.getLearningSpaceDetails?.[0]?.logo_url
+        lsp_logo_url: lspData?.getLearningSpaceDetails?.[0]?.logo_url || ''
       }));
     }
   };
@@ -857,20 +858,21 @@ export default function useUserCourseData() {
     const lspRoles = lspRoleArr?.getUserLspRoles;
     let userLspRole = 'learner';
 
-    if (lspRoleArr?.length > 1) {
+    if (lspRoles?.length > 1) {
       const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
     } else {
       userLspRole = lspRoles?.[0]?.role ?? 'learner';
     }
 
-    return userLspRole ;
+    return userLspRole;
   }
 
   async function getOrgByDomain() {
-    if(!API_LINKS?.getOrg?.split('/')?.[0]) return {};
+    if (!API_LINKS?.getOrg?.split('/')?.[0]) return {};
     const data = await fetch(API_LINKS?.getOrg);
-    return await data.json();
+    const orgData = await data?.json();
+    return orgData?.data;
   }
 
   return {
