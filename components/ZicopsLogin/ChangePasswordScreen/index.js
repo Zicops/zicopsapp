@@ -63,6 +63,7 @@ const ChangePasswordScreen = ({ setPage }) => {
   }
 
   useEffect(() => {
+    //added empty code check
     if(!code?.length) return;
     verifyPasswordResetCode(auth, code)
       .then((data) => {
