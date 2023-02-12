@@ -29,6 +29,7 @@ export default function Layout({ children }) {
   useEffect(async () => {
     if (userOrgData?.logo_url) return;
     let orgId = sessionStorage?.getItem('org_id');
+    //
     if (!orgId) {
       const orgData = await getOrgByDomain();
       setUserOrgData((prev) => ({
