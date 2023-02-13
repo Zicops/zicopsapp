@@ -69,7 +69,7 @@ export default function CourseCard({
   return (
     <>
       <div
-        style={{ maxWidth: '350px' }}
+        style={{ maxWidth: '350px', height: '100%', width: '100%' }}
         className={`${styles.card_item} ${styleClass}`}
         onClick={!notext ? gotoCourse : () => {}}
         onMouseEnter={(e) => {

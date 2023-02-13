@@ -120,7 +120,7 @@ export default function HomepageScreen() {
     return _toBeSortedCourses;
   }
 
-  const pageSize = 28;
+  const pageSize = 2118;
   useEffect(() => {
     setIsLoading(true);
     if (!userData?.preferences?.length) {
