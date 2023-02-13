@@ -11,6 +11,7 @@ import Sidebar from '@/components/common/Sidebar';
 import { analyticsSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 
 const CourseDashboard = () => {
+  const cardData = useHandleFirstFourCard();
   return (
     <>
       <Sidebar sidebarItemsArr={analyticsSideBarData} />

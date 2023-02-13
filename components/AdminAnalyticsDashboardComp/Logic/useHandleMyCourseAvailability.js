@@ -1,4 +1,3 @@
-// import { FullCourseDataAtom } from '@/state/atoms/course.atoms';
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
@@ -65,5 +64,6 @@ export default function useHandleMyCourseAvailability() {
       setReadyCard({ ...readyCard, count: await readyCourseCount });
     }
   }, [courseType]);
+
   return [publishCard, readyCard, savedCard, expiredCard];
 }

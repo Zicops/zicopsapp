@@ -10,7 +10,6 @@ export default function ExpertiseAvailability() {
     <div className={`${styles.wrapper}`}>
       <div className={`${styles.wrapperHeading}`}>Expertise availability</div>
       <div className={`${styles.wrapperSubHeading}`}>All categories</div>
-
       <VennDiagram data={data} />
     </div>
   );

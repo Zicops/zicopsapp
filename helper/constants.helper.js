@@ -187,6 +187,12 @@ export const COURSE_TOPIC_TYPES = {
   classroom: 'Classroom'
 };
 
+export const ORG_DOMAINS = [
+  'https://demo.zicops.com',
+  'https://zicops.com',
+  'https://myspace.zicops.com'
+];
+
 //Vendor Constant Start
 
 export const VENDOR_LANGUAGES = [
