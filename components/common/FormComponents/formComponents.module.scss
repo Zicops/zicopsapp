@@ -631,16 +631,6 @@
     :global(.ql-editor.ql-blank::before) {
       color: $darkThree !important;
 
-      // :global(.ql-container.ql-snow),
-      // :global(.ql-toolbar.ql-snow) {
-      //   @include inputStylesFor('hasValue');
-      // }
-
-      // :global(.ql-toolbar.ql-snow) {
-      //   border-bottom: 2px solid $darkThree;
-      // }
-      // :global(.ql-container.ql-snow) {
-      //   border-top: 0px;
     }
 
     :global(.ql-snow) {
@@ -651,6 +641,10 @@
       min-height: 100px !important;
       max-height: 130px !important;
       margin-bottom: 60px;
+    }
+    :global(.ql-editor img) {
+      max-height: 150px !important;
+      max-width: 150px !important;
     }
   }
 
@@ -686,17 +680,6 @@
 
     :global(.ql-editor.ql-blank::before) {
       color: $darkThree !important;
-     
-      // :global(.ql-container.ql-snow),
-      // :global(.ql-toolbar.ql-snow) {
-      //   @include inputStylesFor('hasValue');
-      // }
-
-      // :global(.ql-toolbar.ql-snow) {
-      //   border-bottom: 2px solid $darkThree;
-      // }
-      // :global(.ql-container.ql-snow) {
-      //   border-top: 0px;
     }
 
     :global(.ql-snow) {
@@ -706,6 +689,10 @@
     :global(.ql-editor) {
       padding: 0 !important;
     }
+    :global(.ql-editor img) {
+        max-height: 300px !important;
+        max-width: 300px !important;
+            }
   }
 
 
