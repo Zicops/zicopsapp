@@ -68,6 +68,7 @@ const LearningSpaces = () => {
       _lspStatus.push(data?.status?.trim());
       _userLspIds.push(data?.user_lsp_id);
     });
+    if (!_lspArr?.length) return setOrglspData([]);
     setLspIds(_lspArr);
     setLspStatus(_lspStatus);
     setUserLspIds(_userLspIds);
@@ -88,6 +89,7 @@ const LearningSpaces = () => {
     //   _orgArr.push(data.org_id);
     // });
     lsps?.forEach((lsp) => _orgArr.push(lsp?.org_id));
+    if (!_orgArr?.length) return setOrglspData([]);
     setOrgIds(_orgArr);
     // console.log(res?.data?.getLearningSpaceDetails);
   };
@@ -98,8 +100,8 @@ const LearningSpaces = () => {
     }).catch((err) => {
       console.error(err);
     });
+    if (!res?.data?.getOrganizations?.length) return setOrglspData([]);
     setOrgDetails(res?.data?.getOrganizations);
-    console.log(res?.data);
   };
 
   useEffect(() => {
@@ -110,17 +112,17 @@ const LearningSpaces = () => {
 
   useEffect(() => {
     // if (!domainArr.includes(URL)) return;
-    if (!lspIds?.length) return setOrglspData([]);
+    if (!lspIds?.length) return;
     LspDetails();
   }, [lspIds]);
 
   useEffect(() => {
-    if (!orgIds?.length) return setOrglspData([]);
+    if (!orgIds?.length) return;
     OrgDetails();
   }, [orgIds]);
 
   useEffect(() => {
-    if (!orgDetails?.length) return setOrglspData([]);
+    if (!orgDetails?.length) return;
     const _newArr = orgDetails?.map((item, i) =>
       Object.assign({}, item, { org_logo_url: item.logo_url }, lspsDetails[i])
     );
