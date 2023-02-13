@@ -685,7 +685,7 @@ export const sampleFiles = [
   },
   {
     id: '1',
-    title: 'File_management_python_1.0.jpg',
+    title: 'File_management_python_2.0.jpg',
     image: '/images/Cohort-Mapped.jpg',
     description: 'Subject matter expertise in Python and content for the same',
     size: '10 MB',
@@ -694,7 +694,7 @@ export const sampleFiles = [
   },
   {
     id: '2',
-    title: 'File_management_python_1.0.jpg',
+    title: 'File_management_python_3.0.jpg',
     image: '/images/Cohort-Mapped.jpg',
     description: 'Subject matter expertise in Python and content for the same',
     size: '30 MB',
@@ -703,7 +703,7 @@ export const sampleFiles = [
   },
   {
     id: '3',
-    title: 'File_management_python_1.0.jpg',
+    title: 'File_management_python_4.0.jpg',
     image: '/images/Cohort-Mapped.jpg',
     description: 'Subject matter expertise in Python and content for the same',
     size: '2 MB',
