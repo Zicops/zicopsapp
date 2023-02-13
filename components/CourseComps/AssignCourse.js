@@ -98,7 +98,7 @@ export default function AssignCourse({
             <UserButton
               text={'Save'}
               type={'button'}
-              isDisabled={isSaveDisabled}
+              isDisabled={isSaveDisabled || !courseAssignData?.endDate}
               clickHandler={() => assignCourseToUser()}
             />
           </div>

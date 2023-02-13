@@ -8,8 +8,9 @@ import {
   GET_USER_LEARNINGSPACES
 } from '@/api/UserQueries';
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
-import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
+import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { useLazyQuery } from '@apollo/client';
 import { Skeleton } from '@mui/material';
@@ -21,8 +22,11 @@ import LspCard from './LspCard';
 const LearningSpaces = () => {
   const { logOut } = useAuthUserContext();
 
+  const [orgData, setOrgData] = useState(null);
+
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const skeletonCardCount = isDev ? 1 : 0;
 
@@ -30,6 +34,7 @@ const LearningSpaces = () => {
   const [lspsDetails, setLspsDetails] = useState([]);
   const [lspStatus, setLspStatus] = useState([]);
 
+  const { getOrgByDomain } = useUserCourseData();
   const [orgDetails, setOrgDetails] = useState([]);
   const [orgIds, setOrgIds] = useState([]);
   const [orglspData, setOrglspData] = useState([...Array(skeletonCardCount)]);
@@ -127,7 +132,19 @@ const LearningSpaces = () => {
       <div className={`${styles.ZicopsLogo}`}>
         <div>
           <Link href="/home">
-            <Image src="/images/svg/asset-6.svg" alt="zicops logo" width={180} height={40} objectFit={'contain'}/>
+            {userOrgData?.logo_url == null ? (
+              <Skeleton height={80} width={120} />
+            ) : (
+              <Image
+                src={
+                  userOrgData?.logo_url?.length ? userOrgData?.logo_url : '/images/svg/asset-6.svg'
+                }
+                alt="zicops logo"
+                width={180}
+                height={40}
+                objectFit={'contain'}
+              />
+            )}
           </Link>
         </div>
         <div
@@ -143,8 +160,8 @@ const LearningSpaces = () => {
       <div className={`${styles.zicops_login}`}>
         <LoginHeadOne
           showImage={false}
-          heading={'Welcome to Zicops'}
-          sub_heading={'Select your Learning space'}
+          heading={'Welcome to your Learning spaces'}
+          // sub_heading={'Select your Learning space'}
         />
         <div className={`${styles.login_body}`}>
           {!isDev ? (
