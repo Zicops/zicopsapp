@@ -2,6 +2,7 @@ import LineChart from '@/components/common/Charts/LineChart';
 import Dropdown from '@/components/DashboardComponents/Dropdown';
 import { useState } from 'react';
 import styles from '../adminAnalyticsDashboard.module.scss';
+import SectionTitle from '../common/SectionTitle';
 import useHandleCourseViews from '../Logic/useHandleCourseViews';
 export const UserData = [
   {
@@ -101,7 +102,8 @@ export default function CourseViewAnalytics() {
   });
   return (
     <div className={`${styles.wrapper}`}>
-      <div className={`${styles.wrapperHeading}`}>Course view analytics</div>
+      <SectionTitle title="Course view analytics" />
+
       <div className={`${styles.wrapperSubHeading}`}>
         Overall course views last week
         <Dropdown
