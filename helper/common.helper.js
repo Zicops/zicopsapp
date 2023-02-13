@@ -114,3 +114,20 @@ export function getNotificationMsg(type = '', msgObj = {}) {
 
   return notificationObj?.[type](msgObj);
 }
+
+// this function is used to sanitize the sendData for any api that we are calling
+function sanitizeStr(s) {
+  return `${s}`.trim();
+}
+
+export function sanitizeFormData(_object) {
+  let object = structuredClone(_object)
+  Object.keys(object).forEach(function (k) {
+      if (object[k] && typeof object[k] === 'object') {
+        sanitizeFormData(object[k]);
+          return;
+      }
+      object[k] = sanitizeStr(object[k]);
+  })
+  return object;
+}

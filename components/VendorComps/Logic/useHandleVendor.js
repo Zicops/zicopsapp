@@ -4,7 +4,7 @@ import {
   GET_VENDOR_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useMutation } from '@apollo/client';
 import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
@@ -20,7 +20,7 @@ export default function useHandleVendor() {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -43,7 +43,7 @@ export default function useHandleVendor() {
   async function getAllVendors() {
     setLoading(true);
     const lspId = sessionStorage?.getItem('lsp_id');
-    const vendorList = await loadQueryDataAsync(
+    const vendorList = await loadAndCacheDataAsync(
       GET_VENDORS_BY_LSP_FOR_TABLE,
       { lsp_id: lspId },
       {},
@@ -74,7 +74,7 @@ export default function useHandleVendor() {
   async function addUpdateVendor() {
     const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
-      lsp_id: lspId,
+      // lsp_id: lspId,
       name: vendorData?.name?.trim() || '',
       level: vendorData?.level?.trim() || '',
       type: vendorData?.type?.trim() || '',
@@ -95,7 +95,7 @@ export default function useHandleVendor() {
     if (vendorData?.vendorId) {
       sendData.vendorId = vendorData?.vendorId;
 
-      await updateVendor({ variables: { variables: sendData } }).catch((err) => {
+      await updateVendor({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
