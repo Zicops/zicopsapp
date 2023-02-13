@@ -35,6 +35,13 @@
   .bottomBorder {
     border-bottom: 1px solid $secondary;
   }
+
+  .sectionHeaderActionBtns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 .categoryAndExpertiseAvailability {

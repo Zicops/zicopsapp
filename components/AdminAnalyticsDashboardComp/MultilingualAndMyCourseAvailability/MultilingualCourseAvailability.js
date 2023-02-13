@@ -1,5 +1,6 @@
 import AvailabilityCard from '@/components/DashboardComponents/AvailabilityCard';
 import styles from '../adminAnalyticsDashboard.module.scss';
+import SectionTitle from '../common/SectionTitle';
 import useHandleMultilingualCourses from '../Logic/useHandleMultilingualCourses';
 
 export default function MultilingualCourseAvailability() {
@@ -7,7 +8,7 @@ export default function MultilingualCourseAvailability() {
 
   return (
     <div className={`${styles.wrapper}`}>
-      <div className={`${styles.wrapperHeading}`}>Multilingual course availability</div>
+      <SectionTitle title="Multilingual course availability" />
 
       {cardData.map((data) => {
         return <AvailabilityCard key={data?.id} {...data} />;

@@ -1,5 +1,6 @@
 import InfoCountCard from '@/components/DashboardComponents/InfoCountCard';
 import styles from '../adminAnalyticsDashboard.module.scss';
+import SectionTitle from '../common/SectionTitle';
 import useHandleMyCourseAvailability from '../Logic/useHandleMyCourseAvailability';
 
 export default function MyCoursesAvailability() {
@@ -7,7 +8,7 @@ export default function MyCoursesAvailability() {
 
   return (
     <div className={`${styles.wrapper}`}>
-      <div className={`${styles.wrapperHeading}`}>My courses availability</div>
+      <SectionTitle title="My courses availability" />
 
       <div className={`${styles.categoryAndExpertiseAvailability}`}>
         {cardData.map((data) => {

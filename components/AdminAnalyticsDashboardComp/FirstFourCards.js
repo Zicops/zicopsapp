@@ -1,6 +1,6 @@
 import InfoCountCard from '@/components/DashboardComponents/InfoCountCard';
-import styles from '../adminAnalyticsDashboard.module.scss';
-import useHandleFirstFourCard from '../Logic/useHandleFirstFourCard';
+import styles from './adminAnalyticsDashboard.module.scss';
+import useHandleFirstFourCard from './Logic/useHandleFirstFourCard';
 
 export default function FirstFourCards() {
   const cardData = useHandleFirstFourCard();
