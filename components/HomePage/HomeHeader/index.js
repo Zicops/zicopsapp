@@ -12,7 +12,7 @@ const HomeHeader = ({ showLogin = true, showBackBtn = false, showLogo = true }) 
       <header className={`${styles.HomeHeader}`}>
         <Link href="/home">
           <a className={`${styles.ZicopsLogo}`}>
-            {!showLogo && userOrgData?.logo_url == null ? (
+            {!showLogo || userOrgData?.logo_url == null ? (
               <div></div>
             ) : (
               <img
