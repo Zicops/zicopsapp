@@ -347,10 +347,11 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
       console.log(`Topic Content Uploaded with language ${content.language}`);
 
       if (data.addTopicContent || content.id) {
+        const videoData = topicVideo?.find((data) => data?.language === content?.language) || null;
         const sendVideoData = {
           contentId: data.addTopicContent?.id || content.id,
-          courseId: topicVideo[index].courseId,
-          file: topicVideo[index].file
+          courseId: videoData.courseId,
+          file: videoData.file
         };
 
         if (sendContentData?.type === 'mp4' && sendVideoData?.file) {
