@@ -1,20 +1,18 @@
-import AvailabilityCard from '@/components/DashboardComponents/AvailabilityCard'
-import React from 'react'
+import AvailabilityCard from '@/components/DashboardComponents/AvailabilityCard';
 import styles from '../adminAnalyticsDashboard.module.scss';
-import { availabilityCardData } from '@/components/DashboardComponents/Logic/dashboardData.helper'
-
-
+import SectionTitle from '../common/SectionTitle';
+import useHandleMultilingualCourses from '../Logic/useHandleMultilingualCourses';
 
 export default function MultilingualCourseAvailability() {
+  const cardData = useHandleMultilingualCourses();
+
   return (
     <div className={`${styles.wrapper}`}>
-    <div className={`${styles.wrapperHeading}`}>Multilingual course availability</div>
-    {availabilityCardData.map((data) => {
-        return(
-            <AvailabilityCard key={data?.id} props = {data}/>
-        )
-    })}
-    
-  </div>
-  )
+      <SectionTitle title="Multilingual course availability" />
+
+      {cardData.map((data) => {
+        return <AvailabilityCard key={data?.id} {...data} />;
+      })}
+    </div>
+  );
 }

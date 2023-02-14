@@ -12,11 +12,10 @@ const LineChart = ({ chartData }) => {
     },
     responsive: true,
     maintainAspectRatio: false,
-    legend: {
-      display: true,
-      position: 'right',
-      maxWidth: 100,
-      onClick: null
+    plugin: {
+      legend: {
+        display: false
+      }
     },
     animation: {
       animateScale: true,
