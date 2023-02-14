@@ -37,9 +37,9 @@ const UserScheduleTab = () => {
 
     const courses = sData?.filter(
       (course) =>
-        course?.scheduleDate > getUnixFromDate(filterDate?.from) &&
-        course?.scheduleDate < getUnixFromDate(filterDate?.to)
-    );
+        course?.scheduleDate > getUnixFromDate(filterDate?.from)/1000 &&
+        course?.scheduleDate < getUnixFromDate(filterDate?.to)/1000
+    )
     setSchduleData([...courses]);
   }
 
