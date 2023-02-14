@@ -1,13 +1,11 @@
-import React from 'react'
-import styles from '../dashboardComponents.module.scss'
+import styles from '../dashboardComponents.module.scss';
 
-export default function ProgressBar() {
-    let progress = 68
+export default function ProgressBar({ progressPercent = 0 }) {
   return (
     <div className={`${styles.progressBarFooter}`}>
-       <div className={styles.progress}>
-        <span className={`w-${progress}`}></span>
+      <div className={styles.progress}>
+        <span className={`w-${progressPercent}`}></span>
       </div>
-   </div>
-  )
+    </div>
+  );
 }
