@@ -218,11 +218,6 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
     const topIndex = allSequenceSortedTopicOfMod?.findIndex((top) => top?.id === topic?.id);
     if (topIndex < 0) return null;
 
-    console.info(
-      allSequenceSortedModules?.[modIndex],
-      allSequenceSortedTopicOfMod?.[topIndex],
-      `M${modIndex + 1}T${topIndex + 1}`
-    );
     return `M${modIndex + 1}T${topIndex + 1}`;
   }
 
