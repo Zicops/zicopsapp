@@ -9,11 +9,10 @@ import { COMMON_LSPS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
-import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { GET_LATEST_QUESTION_BANK, GET_QUESTIONS_NAMES, queryClient } from '../../../API/Queries';
+import { GET_LATEST_QUESTION_BANK, GET_QUESTIONS_NAMES } from '../../../API/Queries';
 import {
   getQuestionBankObject,
   RefetchDataAtom,
@@ -26,8 +25,6 @@ import ZicopsTable from '../../common/ZicopsTable';
 import AddQuestionBank from './AddQuestionBank';
 
 export default function QuestionBankTable({ isEdit = false }) {
-  const [loadQuestionBank] = useLazyQuery(GET_LATEST_QUESTION_BANK, { client: queryClient });
-
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -51,22 +48,6 @@ export default function QuestionBankTable({ isEdit = false }) {
 
   // set refetch query in recoil
   useEffect(() => {
-    function refetchBankData(data) {
-      const _questionBank = structuredClone(questionBank);
-
-      let updatedQb;
-      const index = questionBank?.findIndex((qb) => {
-        const isCurrentQb = qb?.id === data?.id;
-        if (isCurrentQb) updatedQb = qb;
-
-        return isCurrentQb;
-      });
-
-      if (index >= 0) _questionBank?.splice(index, 1, updatedQb);
-
-      setQuestionBank(_questionBank);
-    }
-
     setRefetchData({ ...refetchData, questionBank: refetchBankData });
   }, []);
 
@@ -111,6 +92,24 @@ export default function QuestionBankTable({ isEdit = false }) {
       sortArrByKeyInOrder([..._questionBanks, ...questionBankData], 'created_at', false),
       setLoading(false)
     );
+  }
+
+  function refetchBankData(data) {
+    setQuestionBank((prev) => {
+      const _questionBank = structuredClone(prev);
+
+      let updatedQb;
+      const index = _questionBank?.findIndex((qb) => {
+        const isCurrentQb = qb?.id === data?.id;
+        if (isCurrentQb) updatedQb = qb;
+
+        return isCurrentQb;
+      });
+
+      if (index >= 0) _questionBank?.splice(index, 1, updatedQb);
+
+      return _questionBank;
+    });
   }
 
   const columns = [
