@@ -18,6 +18,20 @@ export function DownArrowIcon({ color = '#6BCFCF', turns = '0' }) {
   );
 }
 
+export function DownSortTriangleIcon({ color = '#6BCFCF', turns = '0' }) {
+  return (
+    <svg
+      width="12"
+      height="6"
+      viewBox="0 0 12 6"
+      style={{ transform: `rotate(${turns}turn)` }}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 6L0 0H12L6 6Z" fill={color} />
+    </svg>
+  );
+}
+
 export function ExpertiseIcon() {
   return (
     <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">

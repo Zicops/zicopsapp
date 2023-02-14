@@ -62,11 +62,15 @@ const ForgotPassword = ({ setPage }) => {
 
   return (
     <>
-      <HomeHeader showLogin={false} showBackBtn={!isResetPasswordScreen} />
+      <HomeHeader showLogin={false} showBackBtn={true} />
       <ZicopsLogin>
         <LoginHeadOne
-          heading={isResetPasswordScreen ? 'Reset Password' : 'Forgot Password'}
-          sub_heading={'Send reset email to your registered email id'}
+          heading={isResetPasswordScreen ? 'Link Expired!' : 'Forgot Password'}
+          sub_heading={
+            isResetPasswordScreen
+              ? 'This link has expired. Please enter your email id to generate new link'
+              : 'Send reset email to your registered email id'
+          }
         />
         <div className="login_body">
           {/* <input
@@ -90,19 +94,11 @@ const ForgotPassword = ({ setPage }) => {
           <div className="change_buttons">
             <LoginButton title={'Send Email'} handleClick={handleSubmit} isDisabled={loading} />
           </div>
-          {isResetPasswordScreen ? (
-            <div className={`${styles.resetPasswordMsg}`}>
-              <span>
-                Your current invite link has expired. Kindly trigger a new one.
-              </span>
-              {/* <p onClick={handleSubmit}>Resend</p> */}
-            </div>
-          ) : (
-            <div className={`${styles.small_text}`}>
-              {'Did not receive email to reset password?'}
-              <p onClick={handleSubmit}>Resend</p>
-            </div>
-          )}
+
+          <div className={`${styles.small_text}`}>
+            {'Did not receive email to reset password?'}
+            <p onClick={handleSubmit}>Resend</p>
+          </div>
         </div>
       </ZicopsLogin>
       <style jsx>{`

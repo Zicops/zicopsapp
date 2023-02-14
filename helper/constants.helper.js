@@ -117,10 +117,13 @@ export const COURSE_STATUS = {
   draft: 'DRAFT',
   upload: 'UPLOADING',
   update: 'UPDATING',
+
   save: 'SAVED',
   freeze: 'FREEZED',
   publish: 'PUBLISHED',
-  reject: 'REJECTED'
+  reject: 'REJECTED',
+  approvalPending: 'APPROVAL_PENDING',
+  hold: 'ON_HOLD'
 };
 
 export const COURSE_TOPIC_STATUS = {
@@ -128,6 +131,8 @@ export const COURSE_TOPIC_STATUS = {
   started: 'in-progress',
   completed: 'completed'
 };
+
+export const COURSE_EXPERTISES = ['Beginner', 'Competent', 'Proficient'];
 
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
