@@ -350,8 +350,8 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         const videoData = topicVideo?.find((data) => data?.language === content?.language) || null;
         const sendVideoData = {
           contentId: data.addTopicContent?.id || content.id,
-          courseId: videoData.courseId,
-          file: videoData.file
+          courseId: videoData?.courseId,
+          file: videoData?.file
         };
 
         if (sendContentData?.type === 'mp4' && sendVideoData?.file) {
