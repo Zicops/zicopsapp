@@ -1,0 +1,238 @@
+@import '../../styles/base.scss';
+
+.main_div {
+    width: 100vw;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.Vccard {
+    width: 480px;
+    height: 366px;
+    border: 1px solid #484848;
+    border-radius: 8px;
+}
+
+.video1 {
+    width: 100%;
+    height: 270px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #262626;
+}
+.subvideo {
+    z-index: 100;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    border: solid black 1px;
+ 
+}
+
+.btns {
+    display: flex;
+    height: 93px;
+    width: auto;
+    align-items: center;
+    // padding-left: 1rem;
+    overflow: hidden;
+    background-color: #121212;
+}
+
+.btns>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    background-color: #202222;
+    padding: 15px;
+    margin-left: 10px;
+}
+
+.join_btn {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.join_btn>button {
+    width: 81px;
+    height: 48px;
+    border-radius: 3rem;
+    background-color: #6BCFCF;
+}
+
+.meet {
+    z-index: 1000;
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.disablevideo {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+// Styling footertool
+.toolbar {
+    // opacity: 0;
+    transition: opacity 1s;
+    z-index: 1010;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+}
+
+.toolbar_nav {
+    // opacity: 0;
+    transition: opacity 1s;
+    // z-index: 1010;
+    width: 100vw;
+    height: 88px;
+    background-color: black;
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.toolbar_nav>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 10px;
+    color: white;
+    background-color: #202222;
+    height: 48px;
+    height: 48px;
+    width: 48px;
+    margin-right: 10px;
+    border-radius: 50px;
+}
+
+.screen {
+    z-index: 1010;
+    height: 100%;
+    width: 100vw;
+}
+
+.toolbar_footer {
+    // opacity: 0;
+    transition: opacity 1s;
+    position: absolute;
+    bottom: 0;
+    z-index: 1010;
+    height: 88px;
+    width: 100vw;
+    background-color: black;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+}
+
+.footer_left {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 50%;
+}
+
+.footer_left>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 10px;
+    color: white;
+    background-color: #202222;
+    height: 48px;
+    height: 48px;
+    width: 48px;
+    margin-right: 10px;
+    border-radius: 50px;
+}
+
+.footer_right {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: 50%;
+}
+
+.footer_right>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 10px;
+    color: white;
+    background-color: #202222;
+    height: 48px;
+    width: 48px;
+    margin-right: 10px;
+    border-radius: 50px;
+}
+
+.cansel_btn {
+    height: 48px;
+    width: 127px;
+    border-radius: 4rem;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 10px;
+    color: white;
+    background-color: #F53D41;
+}
+
+#fadein1 {
+    opacity: 0;
+    transition: opacity 1s;
+  }
+
+  #fadeout1{
+    opacity: 1011;
+    z-index: 1010;
+  }
+
+  #fadein2{
+    opacity: 0;
+    transition: opacity 1s;
+  }
+
+  #fadeout2{
+    opacity: 1011;
+    z-index: 1010;
+  }

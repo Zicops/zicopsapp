@@ -52,9 +52,9 @@ export function getUserOrgObject(data = {}) {
     organization_name: data?.organization_name,
     organization_unit: data?.organization_unit || '',
     learningSpace_name: data?.learningSpace_name || '',
-    logo_url: data?.logo_url || '',
+    logo_url: data?.logo_url || null,
     user_organization_id: data?.user_organization_id || '',
-    organization_id: data?.organization_id || '',
+    organization_id: data?.organization_id || null,
     organization_role: data?.organization_role || '',
     employee_id: data?.employee_id || '',
     org_is_active: data?.org_is_active || true,
@@ -63,6 +63,7 @@ export function getUserOrgObject(data = {}) {
     user_lsp_id: data?.user_lsp_id || null,
     lsp_id: data?.lsp_id || null,
     status: data?.status || 'Active',
+    lsp_logo_url: data?.lsp_logo_url || null,
 
     // user role data
     user_role_id: data?.user_role_id || null,

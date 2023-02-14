@@ -1,4 +1,3 @@
-import { queryClient } from '@/api/Queries';
 import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
@@ -6,15 +5,17 @@ import {
   GET_USER_LEARNINGSPACES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
-import { getCurrentEpochTime, getNotificationMsg } from '@/helper/common.helper';
-import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import {
+  loadQueryDataAsync,
+  sendEmail, sendNotificationWithLink
+} from '@/helper/api.helper';
+import { getNotificationMsg } from '@/helper/common.helper';
+import { COURSE_MAP_STATUS, EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
-import { async } from '@firebase/util';
 import moment from 'moment';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import useCohortUserData from './useCohortUserData';
@@ -54,8 +55,9 @@ export default function assignCourseToUser() {
       addedBy: JSON.stringify({ userId: id, role: 'cohort' }),
       courseType: course_data?.type,
       isMandatory: course_data?.isMandatory,
-      courseStatus: 'open',
-      endDate: getUnixFromDate(course_data?.endDate)?.toString()
+      courseStatus: COURSE_MAP_STATUS.assign,
+      endDate: getUnixFromDate(course_data?.endDate)?.toString(),
+      lspId: course_data?.lspId
     };
     return sendData;
   }
@@ -137,6 +139,23 @@ export default function assignCourseToUser() {
     //   );
     // }
 
+    const endDate = getUnixFromDate(course_data?.endDate) * 1000;
+    if (!isError) {
+      const notificaitonBody = getNotificationMsg('courseAssign', {
+        courseName: course_data?.name,
+        endDate: moment(endDate).format('D MMM YYYY')
+      });
+      await sendNotificationWithLink(
+        {
+          title: NOTIFICATION_TITLES?.courseAssign,
+          body: notificaitonBody,
+          user_id: userIds,
+          link: `/course/${course_data?.id}`
+        },
+        { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+      );
+    }
+
     if (!isError) {
       const resUserDetails = await loadQueryDataAsync(
         GET_USER_DETAIL,
@@ -145,18 +164,23 @@ export default function assignCourseToUser() {
         userQueryClient
       );
       const cohortUserEmail = [];
-      const cohortUserName = []
-      resUserDetails?.getUserDetails?.forEach((user) => {cohortUserEmail.push(user?.email)
+      const cohortUserName = [];
+      resUserDetails?.getUserDetails?.forEach((user) => {
+        cohortUserEmail.push(user?.email);
         const uName = user?.is_verified ? user?.first_name : '';
         cohortUserName.push(uName);
       });
 
-      const endDate = getUnixFromDate(course_data?.endDate)*1000; 
+      const endDate = getUnixFromDate(course_data?.endDate) * 1000;
+
+      const origin = window?.location?.origin || '';
+
 
       const bodyData = {
-        lsp_name: sessionStorage?.getItem('lsp_name') ,
+        lsp_name: sessionStorage?.getItem('lsp_name'),
         course_name: course_data?.name,
-        end_date: moment(endDate).format('D MMM YYYY')
+        end_date: moment(endDate).format('D MMM YYYY'),
+        link: `${origin}/course/${course_data?.id}`
       };
       const sendEmailBody = {
         to: cohortUserEmail,
@@ -179,7 +203,8 @@ export default function assignCourseToUser() {
     cohortId = null,
     courseId = null,
     courseName = '',
-    cohortData = null
+    cohortData = null,
+    courseData = null
   ) {
     if (!courseId) return false;
     if (!cohortId) return false;
@@ -193,7 +218,7 @@ export default function assignCourseToUser() {
       const checkCourse = await isCourseAssigned(courseId, cohortUsers[i]?.id);
       const { role } = JSON.parse(checkCourse[0]?.added_by);
       if (role.toLowerCase() === 'admin') continue;
-      const _addedBy = JSON.stringify({ userId: id, role: 'self' });
+      const _addedBy = JSON?.stringify({ userId: id, role: 'self' });
       const sendData = {
         userCourseId: checkCourse[0]?.user_course_id,
         userId: checkCourse[0]?.user_id,
@@ -202,8 +227,9 @@ export default function assignCourseToUser() {
         addedBy: _addedBy,
         courseType: checkCourse[0]?.course_type,
         isMandatory: checkCourse[0]?.is_mandatory,
-        courseStatus: 'open',
-        endDate: checkCourse[0]?.end_date
+        courseStatus: COURSE_MAP_STATUS.assign,
+        endDate: checkCourse[0]?.end_date,
+        lspId:courseData?.lspId
       };
       const res = await updateUserCouse({ variables: sendData }).catch((err) => {
         isError = !!err;
@@ -231,24 +257,38 @@ export default function assignCourseToUser() {
         userQueryClient
       );
       const cohortUserEmail = [];
-      const cohortUserName = []
-      resUserDetails?.getUserDetails?.forEach((user) => {cohortUserEmail.push(user?.email)
+      const cohortUserName = [];
+      resUserDetails?.getUserDetails?.forEach((user) => {
+        cohortUserEmail.push(user?.email);
         const uName = user?.is_verified ? user?.first_name : '';
         cohortUserName.push(uName);
       });
 
+      const origin = window?.location?.origin || '';
+
       const bodyData = {
-        lsp_name: sessionStorage?.getItem('lsp_name') ,
+        lsp_name: sessionStorage?.getItem('lsp_name'),
         course_name: courseName,
+        link: `${origin}/self-landing`
       };
       const sendEmailBody = {
         to: cohortUserEmail,
         sender_name: sessionStorage?.getItem('lsp_name'),
         user_name: cohortUserName,
         body: JSON.stringify(bodyData),
-        template_id:EMAIL_TEMPLATE_IDS?.courseUnassign
+        template_id: EMAIL_TEMPLATE_IDS?.courseUnassign
       };
 
+        const notificaitonBody = getNotificationMsg('courseUnassign',{courseName:courseName});
+    await sendNotificationWithLink(
+      {
+        title: NOTIFICATION_TITLES?.courseUnssigned,
+        body: notificaitonBody,
+        user_id: userIds,
+        link:''
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
       await sendEmail(sendEmailBody, {
         context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
       });

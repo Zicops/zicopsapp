@@ -60,6 +60,10 @@
     0px -7px 35px 10px #ffffff48;
 }
 
-.iconBtn:disabled {
-  cursor: no-drop;
+.iconBtn {
+  cursor: pointer;
+
+  &:disabled {
+    cursor: no-drop;
+  }
 }

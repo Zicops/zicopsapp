@@ -1,7 +1,9 @@
+import { DELETE_SUBTITLE } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import { LANGUAGES } from '@/helper/constants.helper';
-import { useRecoilValue } from 'recoil';
+import { SUBTITLE_LANGUAGES } from '@/helper/constants.helper';
+import { useRecoilState } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
 import { TopicSubtitleAtom } from '../../../../../state/atoms/module.atoms';
 import Bar from '../../../../common/Bar';
@@ -22,9 +24,9 @@ export default function SubtitleForm({ courseId, topicId }) {
     isSubtitlesReady
   } = useAddSubtitles(courseId, topicId);
 
-  const subtitles = useRecoilValue(TopicSubtitleAtom);
+  const [subtitles, setSubtitles] = useRecoilState(TopicSubtitleAtom);
 
-  const languageOptions = LANGUAGES?.filter(
+  const languageOptions = SUBTITLE_LANGUAGES?.filter(
     (lang) => !subtitles.find((sub) => sub.language === lang)
   )?.map((lang) => ({ label: lang, value: lang }));
 
@@ -32,7 +34,33 @@ export default function SubtitleForm({ courseId, topicId }) {
     <>
       {subtitles &&
         subtitles.map((res, index) => (
-          <Bar key={res.language + index} index={index + 1} text={res.language} type={'File'} />
+          <Bar
+            key={res.language + index}
+            index={index + 1}
+            text={res.language}
+            type={
+              <span style={{ display: 'flex', alignItems: 'center'}}>
+                File
+                <DeleteBtn
+                  id={/\/subtitles\/(.*?)\?/.exec(res?.subtitleUrl)?.[1] || null}
+                  resKey="deleteTopicContentSubtitle"
+                  mutation={DELETE_SUBTITLE}
+                  variableObj={{
+                    courseId: res?.courseId, 
+                    topicId: res?.topicId, 
+                    fileName: /\/subtitles\/(.*?)\?/.exec(res?.subtitleUrl)?.[1]
+                  }}
+                  onDelete={() => {
+                    const _subtitleArr = structuredClone(subtitles);
+                    const index = _subtitleArr?.findIndex((sub) => sub?.id === res?.id);
+                    if (index >= 0) _subtitleArr.splice(index, 1);
+
+                    setSubtitles(_subtitleArr);
+                  }}
+                />
+              </span>
+            }
+          />
         ))}
 
       {isSubtitlesFormVisible && (

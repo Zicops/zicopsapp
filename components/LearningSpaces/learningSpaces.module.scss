@@ -134,12 +134,21 @@
 }
 
 .login_body {
+  height: max(400px , 50vh);
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   padding: 16px;
   gap: 16px;
+  overflow-y: auto;
+  span{
+    color: $white;
+    font-size: 20px;
+    padding: 70px 50px;
+    border: 1px dashed $bgBody;
+  }
 }
 
 //LoginFooter component

@@ -2,11 +2,10 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { changeHandler } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
@@ -19,11 +18,9 @@ import useHandleTabs from '../Logic/useHandleTabs';
 export default function CourseMaster() {
   const courseContextData = useContext(courseContext);
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
-  const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const router = useRouter();
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   // cat and sub cat
   // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
@@ -34,6 +31,7 @@ export default function CourseMaster() {
   let isDisabled = !!fullCourse?.qa_required;
   if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
   if (fullCourse?.status === COURSE_STATUS.reject) isDisabled = true;
+  if (isPublishCourseEditable) isDisabled = false;
 
   // const allCatOptions = [];
   // data?.allCategories?.map((val) => allCatOptions.push({ value: val, label: val }));
@@ -133,13 +131,26 @@ export default function CourseMaster() {
       />
 
       {/* course owner */}
-      <LabeledDropdown
+      {/* <LabeledDropdown
         styleClass={styles.marginBottom}
         isError={!fullCourse?.owner?.length && courseError?.master}
         dropdownOptions={ownerDropdownOptions}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, ownerDropdownOptions.inputName)
         }
+      /> */}
+      <LabeledInput
+        styleClass={`${styles.marginBottom}`}
+        inputClass={!fullCourse?.owner?.length && courseError?.master ? 'error' : ''}
+        inputOptions={{
+          inputName: 'owner',
+          label: 'Course Owner',
+          placeholder: 'Enter the course owner (Upto 60 characters)',
+          maxLength: 60,
+          value: fullCourse?.owner,
+          isDisabled: isDisabled
+        }}
+        changeHandler={handleChange}
       />
 
       {/* course publisher */}

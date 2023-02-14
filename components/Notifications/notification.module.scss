@@ -46,3 +46,13 @@
         outline: 1px solid $white;
     }
 }
+
+.fallbackMsg {
+    margin: 50px auto;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    color: $white;
+  }

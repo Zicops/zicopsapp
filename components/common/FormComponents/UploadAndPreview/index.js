@@ -6,7 +6,7 @@ import ImageCropper from '../../ImageCropper';
 import styles from '../formComponents.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import ToolTip from '../../ToolTip';
-import {  PROFILE_IMAGE_TYPE } from '@/helper/constants.helper';
+import { PROFILE_IMAGE_TYPE } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
@@ -29,7 +29,7 @@ const UploadAndPreview = ({
   const [image, setImage] = useState(uploadedFile);
   const [preview, setPreview] = useState('');
   const [pop, setPop] = useState(false);
-  const [toastMsg , setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   useEffect(async () => {
     if (!initialImage) return;
@@ -44,15 +44,27 @@ const UploadAndPreview = ({
     setPop(true);
   }, []);
 
-  useEffect(async () => {
+  if (!imageUrl && !initialImage && (image !== null || preview !== '')) {
+    console.log(imageUrl, image, preview, initialImage, 'all val jieofjcae');
+    setPreview('');
+    setImage(null);
+  }
+
+  useEffect(() => {
     if (!imageUrl) return;
 
-    const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(imageUrl)}`);
-    // here image is url/location of image
-    const blob = await response.blob();
-    const file = new File([blob], 'image.jpg', { type: blob.type });
+    getAndSetImage();
 
-    setImage(file);
+    async function getAndSetImage() {
+      if (!imageUrl) return;
+
+      const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(imageUrl)}`);
+      // here image is url/location of image
+      const blob = await response.blob();
+      const file = new File([blob], 'image.jpg', { type: blob.type });
+
+      setImage(file);
+    }
   }, [imageUrl]);
 
   const handleRemove = () => {
@@ -65,11 +77,11 @@ const UploadAndPreview = ({
   function handleImage(e) {
     const file = e.target.files[0];
     // console.log(file?.type?.split('/')?.[1],'file name')
-    if(!PROFILE_IMAGE_TYPE.includes(file?.type?.split('/')?.[1])) {
-     setImage(null);
-     handleChange(null);
-     setToastMsg({type:'info',message:`Select only images of type ${PROFILE_IMAGE_TYPE}`})
-     return ;
+    if (!PROFILE_IMAGE_TYPE.includes(file?.type?.split('/')?.[1])) {
+      setImage(null);
+      handleChange(null);
+      setToastMsg({ type: 'info', message: `Select only images of type ${PROFILE_IMAGE_TYPE}` });
+      return;
     }
     if (file) {
       setImage(file);
@@ -107,6 +119,7 @@ const UploadAndPreview = ({
   }, [image]);
 
   useEffect(() => {
+    if (!image) return;
     const file = image;
     if (preview.length > 0) {
       const imageFile = dataURLtoFile(preview, `${file?.name}`);
@@ -148,17 +161,21 @@ const UploadAndPreview = ({
         />
         {!initialImage && (
           <>
-              <button className={`${styles.btn}`} onClick={() => imgRef?.current?.click()}>
-                Upload Photo
-              </button>
+            <button className={`${styles.btn}`} onClick={() => imgRef?.current?.click()}>
+              Upload Photo
+            </button>
             {description && <span className={`${styles.description}`}>{description}</span>}
             <button className={`${styles.btn2}`} onClick={handleClick} disabled={!image}>
               Preview
             </button>
             {isRemove && (
-              <button className={`${styles.btn2}`} onClick={handleRemove} disabled={!image || isDisabled}>
+              <button
+                className={`${styles.btn2}`}
+                onClick={handleRemove}
+                disabled={!image || isDisabled}>
                 Remove
-              </button>)}
+              </button>
+            )}
           </>
         )}
         <Dialog

@@ -1,4 +1,5 @@
-import { PRODUCT_TOUR_PATH, PRODUCT_TOUR_PATHS } from '@/helper/constants.helper';
+import { PRODUCT_TOUR_PATHS } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
   ActiveTourAtom,
   ProductTourIndex,
@@ -6,8 +7,7 @@ import {
 } from '@/state/atoms/productTour.atom';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect } from 'react';
-import { useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ProductTooltip from '../ProductTour/ProductTooltip';
 import ToolTip from '../ToolTip';
@@ -16,6 +16,7 @@ import styles from './sidebar.module.scss';
 // move the styles in sidebar.module.scss in this folder
 export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductTooltipData }) {
   const activeTour = useRecoilValue(ActiveTourAtom);
+  const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
   const [index, setIndex] = useRecoilState(ProductTourIndex);
   const [showProductTour, setShowProductTour] = useRecoilState(ProductTourVisible);
   const router = useRouter();
@@ -33,11 +34,9 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
     });
 
     if (lastItem?.current) observer.observe(lastItem?.current);
-
   }, []);
 
   const isProductTourValid = PRODUCT_TOUR_PATHS.includes(router?.asPath?.split('/')?.[2]);
-
 
   return (
     <>
@@ -55,11 +54,13 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
             alt=""
           />
           <h3>{sidebarItemsArr.heading || 'Admin Management'}</h3>
-          { isProductTourValid&&<ToolTip title="Take a tour" placement="bottom">
-            <button onClick={handleProductTour} className={styles.course_management_btn}>
-              <img src="/images/svg/hub.svg" alt="" />
-            </button>
-          </ToolTip>}
+          {isProductTourValid && (
+            <ToolTip title="Take a tour" placement="bottom">
+              <button onClick={handleProductTour} className={styles.course_management_btn}>
+                <img src="/images/svg/hub.svg" alt="" />
+              </button>
+            </ToolTip>
+          )}
         </div>
 
         <div className={styles.sidebar_menu}>
@@ -67,11 +68,20 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
             {sidebarItemsArr.data.map((val, key) => {
               const currentUrl = router.pathname.split('/')[3];
               const pathUrl = val.link.split('/');
-              const isActive = currentUrl === pathUrl[pathUrl.length - 1];
+              let isActive = currentUrl === pathUrl[pathUrl.length - 1];
               const tourData = activeTour?.id === val?.tourId ? activeTour : null;
 
+              if (val?.isHidden && !isDemo && !isDev) return null;
+
+              // temp fix: Change page route for edit course later
+              if (
+                router.pathname?.split('/')?.[2]?.includes('courses') &&
+                val.title?.toLowerCase()?.includes('my course')
+              ) {
+                isActive = true;
+              }
               return (
-                <Fragment key={val.link}>
+                <Fragment key={val.id}>
                   {isProductTooltip ? (
                     <ProductTooltip
                       title={tourData?.title}

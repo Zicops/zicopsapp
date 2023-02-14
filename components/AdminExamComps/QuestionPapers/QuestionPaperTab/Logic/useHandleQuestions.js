@@ -1,4 +1,6 @@
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadMultipleLspDataWithMultipleQueries, loadQueryDataAsync } from '@/helper/api.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -66,13 +68,37 @@ export default function useHandleQuestions(sectionId) {
 
   // load question bank data
   useEffect(async () => {
-    const LARGE_PAGE_SIZE = 999999999999;
-    const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
+    const LARGE_PAGE_SIZE = 9999;
+    const queryVariables = {
+      publish_time: getUnixFromDate(),
+      pageSize: LARGE_PAGE_SIZE,
+      pageCursor: ''
+    };
 
-    const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
-    if (qbRes?.error) return setToastMsg({ type: 'danger', message: 'question bank load error' });
+    const qbDataResArr = await loadMultipleLspDataWithMultipleQueries(
+      GET_LATEST_QUESTION_BANK,
+      queryVariables,
+      {},
+      queryClient,
+      [COMMON_LSPS.zicops]
+    );
+    const questionBankData = [];
+    qbDataResArr?.forEach((res) =>
+      questionBankData.push(...(res?.getLatestQuestionBank?.questionBanks || []))
+    );
 
-    const questionBankData = structuredClone(qbRes?.getLatestQuestionBank?.questionBanks) || [];
+    // const currentQbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
+    // const zicopsQbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables, {
+    //   context: { headers: { tenant: COMMON_LSPS.zicops } }
+    // });
+    // if (currentQbRes?.error || zicopsQbRes?.error)
+    //   return setToastMsg({ type: 'danger', message: 'question bank load error' });
+
+    // const currentQB = structuredClone(currentQbRes?.getLatestQuestionBank?.questionBanks || []);
+    // const zicopsQB = structuredClone(zicopsQbRes?.getLatestQuestionBank?.questionBanks || []);
+
+    // const questionBankData = [...currentQB, ...zicopsQB];
+    console.log(questionBankData, qbDataResArr);
     if (!questionBankData.length) return;
 
     for (let i = 0; i < questionBankData.length; i++) {
@@ -83,7 +109,10 @@ export default function useHandleQuestions(sectionId) {
 
       const questionsArr =
         questionsRes?.getQuestionBankQuestions?.filter((q) => q?.Status === 'Y') || [];
-      questionBankData[i].noOfQuestions = questionsArr.length;
+      const alreadyUsedQuestions =
+        questionPaperTabData?.mappedQb?.find((qbMap) => qbMap?.qbId === qb?.id)?.total_questions ||
+        0;
+      questionBankData[i].noOfQuestions = questionsArr.length - alreadyUsedQuestions;
     }
 
     const qbOptions = questionBankData.map((qb) => {

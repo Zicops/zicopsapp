@@ -2,6 +2,7 @@ import { DELETE_QUESTION_PAPER } from '@/api/Mutations';
 import DeleteBtn from '@/components/common/DeleteBtn';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -13,12 +14,12 @@ import { QuestionPaperTabDataAtom } from '../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import PopUp from '../../common/PopUp';
 import ZicopsTable from '../../common/ZicopsTable';
-import Preview from './Preview';
+import PreviewPaper from '../common/PreviewPaper';
 
 export default function QuestionPaperTable({ isEdit = false }) {
   const [loadQuestionPaper, { loading, error: errorQuestionPaperData }] = useLazyQuery(
     GET_LATEST_QUESTION_PAPERS,
-    { client: queryClient }
+    { client: queryClient, context: !isEdit ? { headers: { tenant: COMMON_LSPS?.zicops } } : {} }
   );
   const router = useRouter();
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -176,7 +177,7 @@ export default function QuestionPaperTable({ isEdit = false }) {
           title={masterData?.name}
           popUpState={[!!masterData, setMasterData]}
           isFooterVisible={false}>
-          <Preview masterData={masterData || {}} />
+          <PreviewPaper masterData={masterData || {}} />
         </PopUp>
       )}
     </>

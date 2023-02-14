@@ -1,5 +1,7 @@
 import { filterAndSortChapter } from '@/helper/data.helper';
 import { ChapterAtom } from '@/state/atoms/module.atoms';
+import { courseContext } from '@/state/contexts/CourseContext';
+import { useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import LabeledDropdown from '../../../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../../../common/FormComponents/LabeledInput';
@@ -16,14 +18,18 @@ export default function ModulePopUp({
   handleSubmit,
   isEdit = false
 }) {
+  const { fullCourse } = useContext(courseContext);
   const chapterData = useRecoilValue(ChapterAtom);
   const filteredAndSortedData = filterAndSortChapter(chapterData, moduleData?.id);
 
-  const expertiseOptions = [
-    { value: 'Beginner', label: 'Beginner' },
-    { value: 'Competent', label: 'Competent' },
-    { value: 'Proficient', label: 'Proficient' }
-  ];
+  // const expertiseOptions = [
+  //   { value: 'Beginner', label: 'Beginner', isDisabled: true },
+  //   { value: 'Competent', label: 'Competent' },
+  //   { value: 'Proficient', label: 'Proficient' }
+  // ];
+  const expertiseOptions =
+    fullCourse?.expertise_level.split(',')?.map((level) => ({ value: level, label: level })) || [];
+
   const submitBtnObj = {
     name: isEdit ? 'Update' : 'Save',
     handleClick: handleSubmit,

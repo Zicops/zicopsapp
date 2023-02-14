@@ -1,13 +1,13 @@
 import { userClient } from '@/api/UserMutations';
 import { GET_USER_BOOKMARKS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { COMMON_LSPS, COURSE_STATUS } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
+import { OnGoingExamAtom } from 'pages/exams';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { GET_LATEST_COURSES, queryClient } from '../../../API/Queries';
@@ -23,15 +23,17 @@ export default function useHandleSearch() {
   const searchQuery = router.query?.searchQuery || '';
   const filter = router.query?.filter || null;
   const userCourse = router.query?.userCourse || null;
-  const userData = useRecoilValue(UserStateAtom);
+  const preferredSubCat = router.query?.preferredSubCat || null;
+
   const userDataGlobal = useRecoilValue(UserDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const examOngoingData = useRecoilValue(OnGoingExamAtom);
 
   const lastItemRef = useRef(null);
 
   // state for storing courses data
   const [courses, setCourses] = useState([]);
-  const [pageCursor, setPageCursor] = useState(null);
+  const [pageCursor, setPageCursor] = useState({ zicops: null, currentLsp: null });
   const [refetchData, setRefetchData] = useState(null);
   const [bookmarkData, setBookmarkData] = useState({
     isLoading: false,
@@ -54,30 +56,66 @@ export default function useHandleSearch() {
   // load table data
   const time = Date.now();
   useEffect(async () => {
+    // return if router is not ready
+    if (!router.isReady) return;
+    if (isLoading) return;
+    setIsLoading(true);
+
+    // return if state is updated and same as query params
+    const { subCat, lang, cat, type } = router.query;
+    if (cat != null && !filters.category) return setIsLoading(false);
+    if (subCat != null && !filters.subCategory) return setIsLoading(false);
+    if (lang != null && !filters.lang) return setIsLoading(false);
+    if (type != null && !filters.type) return setIsLoading(false);
+
+    // reset query params to not affect future query calls by returning due to above condition
+    router.query.cat = null;
+    router.query.subCat = null;
+    router.query.lang = null;
+    router.query.type = null;
+
+    if (preferredSubCat && !userDataGlobal?.preferences?.length) return setIsLoading(false);
+
     if (userCourse) {
       setIsLoading(true);
       const userCourseObj = parseJson(userCourse);
+      if (userCourseObj.onGoingExam) return setCourses(onGoingExam || []);
+
       const userCourseData = await getUserCourseData();
 
-      const _allUserCourses = userCourseData?.filter((course) => {
-        const isOngoing = course?.isCourseStarted && !course?.isCourseCompleted;
-        const isAssigned = course?.isCourseStarted && course?.isCourseCompleted;
+      const _allUserCourses = userCourseData
+        ?.filter((course) => {
+          const isOngoing = course?.isCourseStarted && !course?.isCourseCompleted;
+          const isAssigned = course?.isCourseStarted && course?.isCourseCompleted;
+          const isMandatory = !course?.isCourseStarted && !course?.isCourseCompleted;
 
-        return userCourseObj?.isOngoing ? isOngoing : isAssigned;
-      });
+          if (userCourseObj?.isMandatory) return isMandatory;
+          if (userCourseObj?.isOngoing) return isOngoing;
+
+          return isAssigned;
+        })
+        ?.filter((course) => {
+          if (type) return course?.course_type === type;
+
+          return true;
+        });
 
       setCourses(
         _allUserCourses?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
       );
-      return;
+      return setIsLoading(false);
     }
-    const _lspId = sessionStorage?.getItem('lsp_id');
+
+    // const _lspId = sessionStorage?.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
+    const currentLspId = sessionStorage.getItem('lsp_id');
+
     const queryVariables = {
       publish_time: time,
-      pageSize: 999,
+      pageSize: 50,
       pageCursor: '',
       status: COURSE_STATUS.publish,
-      filters: { LspId: _lspId }
+      filters: { LspId: currentLspId }
     };
     if (searchQuery) {
       queryVariables.filters.SearchText = searchQuery;
@@ -94,15 +132,49 @@ export default function useHandleSearch() {
     if (filterObj?.DurationMax) queryVariables.filters.DurationMax = filterObj.DurationMax;
     if (filterObj?.LspId) queryVariables.filters.LspId = filterObj.LspId;
 
-    const courseRes = await loadCourses({ variables: queryVariables });
-    if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
+    const currentCourseRes = await loadCourses({ variables: queryVariables })?.catch((err) =>
+      console.error(err)
+    );
 
-    const courseData = courseRes?.data?.latestCourses;
-    setPageCursor(courseData?.pageCursor || null);
+    // replace lsp id with zicops lsp id
+    queryVariables.filters.LspId = zicopsLspId;
+    const zicopsCourseRes =
+      !filterObj.LspId &&
+      queryVariables.filters.LspId === zicopsLspId &&
+      zicopsLspId !== currentLspId
+        ? await loadCourses({ variables: queryVariables })?.catch((err) => console.error(err))
+        : {};
+    if (loadCoursesError) {
+      setToastMsg({ type: 'danger', message: 'course load error' });
+      return setIsLoading(false);
+    }
+
+    const subcatArr = userDataGlobal?.preferences;
+    // const activeSubcategories = subcatArr?.filter((item) => item?.is_active && !item?.is_base);
+    const activeSubcategories = subcatArr?.filter((item) => item?.is_active && item?.sub_category);
+
+    const zicopsCourseData = zicopsCourseRes?.data?.latestCourses || {};
+    const currentLspCourseData = currentCourseRes?.data?.latestCourses || {};
+
+    const courseData = [
+      ...(currentLspCourseData?.courses || []),
+      ...(zicopsCourseData?.courses || [])
+    ];
+    setPageCursor({
+      zicops: zicopsCourseData?.pageCursor || null,
+      currentLsp: currentLspCourseData?.pageCursor || null
+    });
+
     setCourses(
-      courseData?.courses
+      courseData
         ?.filter((c) => c?.is_active && c?.is_display)
-        ?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
+        ?.filter((c) => {
+          if (preferredSubCat)
+            return !!activeSubcategories?.find((pref) => pref?.sub_category === c?.sub_category);
+
+          return true;
+        })
+      // ?.map((c) => ({ ...c, duration: Math.floor(c?.duration / 60) })) || []
     );
 
     if (searchQuery) {
@@ -123,7 +195,7 @@ export default function useHandleSearch() {
         bookmarks:
           bookmarkDataRes?.getUserBookmarks?.bookmarks
             ?.map((bm) => {
-              const bookmarkCourse = courseData?.courses?.find((c) => c?.id === bm?.course_id);
+              const bookmarkCourse = courseData?.find((c) => c?.id === bm?.course_id);
               if (!bookmarkCourse) return null;
 
               return {
@@ -137,11 +209,18 @@ export default function useHandleSearch() {
             ?.filter((bm) => bm) || []
       });
     }
-  }, [filters, filter, searchQuery]);
-
-  useEffect(() => {
-    setIsLoading(courseLoading);
-  }, [courseLoading]);
+    setIsLoading(false);
+  }, [
+    router.isReady,
+    filters.category,
+    filters.subCategory,
+    filters.lang,
+    filters.type,
+    filter,
+    searchQuery,
+    preferredSubCat ? userDataGlobal?.preferences?.length : 0,
+    preferredSubCat
+  ]);
 
   useEffect(() => {
     // if (!courses?.length) return;
@@ -214,13 +293,33 @@ export default function useHandleSearch() {
     }
   }, [refetchData]);
 
-  function refetchNextCourses() {
-    if (!pageCursor) return;
-    refetchCourses({ pageCursor: pageCursor }).then(({ data: { latestCourses } }) => {
-      console.log('refecth', 'course length', courses.length + latestCourses?.courses?.length);
-      setPageCursor(latestCourses?.pageCursor || null);
-      setCourses([...courses, ...latestCourses?.courses]);
+  async function refetchNextCourses() {
+    if (!pageCursor?.currentLsp && !pageCursor?.zicops) return;
+
+    const currentLspId = sessionStorage.getItem('lsp_id');
+    const zicopsLspId = COMMON_LSPS.zicops;
+
+    const zicopsCourseRes =
+      !!pageCursor?.currentLsp && zicopsLspId !== currentLspId
+        ? await refetchCourses({ pageCursor: pageCursor?.zicops })
+        : {};
+    const currentCourseRes = !!pageCursor?.currentLsp
+      ? await refetchCourses({ pageCursor: pageCursor?.currentLsp })
+      : {};
+
+    const zicopsCourseData = zicopsCourseRes?.data?.latestCourses || {};
+    const currentLspCourseData = currentCourseRes?.data?.latestCourses || {};
+
+    const courseData = [...(currentLspCourseData?.courses || []), ...zicopsCourseData?.courses];
+
+    // refetchCourses({ pageCursor: pageCursor }).then(({ data: { latestCourses } }) => {
+    console.log('refecth', 'course length', courses.length + courseData?.length);
+    setPageCursor({
+      zicops: zicopsCourseData?.pageCursor || null,
+      currentLsp: currentLspCourseData?.pageCursor || null
     });
+    setCourses([...courses, ...courseData]);
+    // });
 
     if (loadCoursesError) return setToastMsg({ type: 'danger', message: 'course load error' });
   }

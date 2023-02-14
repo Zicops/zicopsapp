@@ -313,6 +313,11 @@
         cursor: pointer;
         opacity: 1;
 
+        &:disabled{
+          background-color:  $darkTwo;
+          color: $darkOne;
+        }
+
         &:hover {
           box-shadow: 0 0 10px 0 $primary;
           // background-color: $bgHeader;

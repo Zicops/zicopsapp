@@ -29,7 +29,7 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
   function handleChange(value) {
     if (!isEmail(value)) return;
     setError(null);
-    setValue(value);
+    setValue(value?.trim());
   }
 
   function isValid(email) {

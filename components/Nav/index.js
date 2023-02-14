@@ -1,50 +1,58 @@
+import { userClient } from '@/api/UserMutations';
+import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
+import { sendNotification } from '@/helper/api.helper';
+import useUserCourseData from '@/helper/hooks.helper';
+import { getCurrentHost } from '@/helper/utils.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useLazyQuery } from '@apollo/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import HamburgerMenuIcon from '../../public/images/menu.png';
 import { userContext } from '../../state/contexts/UserContext';
+import SwitchButton from '../common/FormComponents/SwitchButton';
+import ToolTip from '../common/ToolTip';
 import Notifications from '../Notifications';
 import LeftMenuDropdown from './LeftMenuDropdown';
 import { AdminMenu, UserMenu } from './Logic/nav.helper';
 import { useHandleNav } from './Logic/useHandleNav';
 import styles from './nav.module.scss';
-
-import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
-import { useRecoilState } from 'recoil';
-import HamburgerMenuIcon from '../../public/images/menu.png';
-import ToolTip from '../common/ToolTip';
-import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
-import { useLazyQuery } from '@apollo/client';
-import { userClient } from '@/api/UserMutations';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import UserDisplay from './UserDisplay';
-import { sendNotification } from '@/helper/api.helper';
 
 export default function Nav() {
+  const notificationBarRef = useRef(null);
   const { isAdmin, makeAdmin } = useContext(userContext);
+
   const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
-  const [showNotification, setShowNotification] = useState(false);
-  const notificationBarRef = useRef(null);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
-  const handleClickInside = () => setShowNotification(!showNotification);
+
+  const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
+
+  const [showNotification, setShowNotification] = useState(false);
+  const { OrgDetails } = useUserCourseData();
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
 
-  const OrgDetails = async () => {
-    const orgId = sessionStorage.getItem('org_id');
-    if (!orgId) return;
-    const res = await getOrgDetails({
-      variables: { org_ids: orgId }
-    }).catch((err) => {
-      console.error(err);
-    });
-    setOrgData((prevValue) => ({
-      ...prevValue,
-      logo_url: res?.data?.getOrganizations[0]?.logo_url
-    }));
-  };
+  const handleClickInside = () => setShowNotification(!showNotification);
+  // const OrgDetails = async () => {
+  //   const orgId = sessionStorage.getItem('org_id');
+  //   if (!orgId) return;
+  //   const res = await getOrgDetails({
+  //     variables: { org_ids: orgId }
+  //   }).catch((err) => {
+  //     console.error(err);
+  //   });
+  //   setOrgData((prevValue) => ({
+  //     ...prevValue,
+  //     logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+  //   }));
+  // };
   useEffect(() => {
     if (orgData?.logo_url?.length) return;
     OrgDetails();
@@ -74,8 +82,24 @@ export default function Nav() {
 
   const router = useRouter();
 
+  let displayDevMode = !!isDev;
+  if (getCurrentHost()?.includes('localhost')) displayDevMode = true;
+
   return (
     <div className={styles.navbar} id="navbar">
+      {!!displayDevMode && (
+        <div className={styles.devMode}>
+          <span>
+            <SwitchButton
+              label="God Mode Enabled"
+              inputName="devMode"
+              isChecked={isDev}
+              handleChange={(e) => window?.enableDevMode(e.target.checked)}
+            />
+          </span>
+        </div>
+      )}
+
       <div className={styles.left}>
         <LeftMenuDropdown
           isOnLearnerSide={isOnLearnerSide}
@@ -97,14 +121,28 @@ export default function Nav() {
         <div className={styles.menu}>
           <ul>
             {(!isOnLearnerSide ? AdminMenu : UserMenu).map((val, key) => {
+              let isActive = router?.route?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
+              if (!isOnLearnerSide) {
+                const currentRoute = router?.route?.split('/')?.[2];
+                isActive = currentRoute?.toLowerCase().includes(`${val?.title.toLowerCase()}`);
+              }
+
+              let pageRoute = val?.link;
+              if (val?.isDisabled || val?.isDemo || val?.isDev) pageRoute = null;
+              if (isDemo && val?.isDemo) pageRoute = val?.link;
+              if (isDev && val?.isDev) pageRoute = val?.link;
+
+              // disabled links
+              if (!pageRoute)
+                return (
+                  <li className={styles.disabled}>
+                    <span>{val.title}</span>
+                  </li>
+                );
+
               return (
-                <Link href={val.link} key={key}>
-                  <li
-                    className={
-                      router.route.toLowerCase().includes(`${val.title.toLowerCase()}`)
-                        ? styles.active
-                        : ''
-                    }>
+                <Link href={pageRoute} key={key}>
+                  <li className={isActive ? styles.active : ''}>
                     <span>{val.title}</span>
                   </li>
                 </Link>
@@ -130,9 +168,13 @@ export default function Nav() {
               className={`${styles.nav_search} ${searchQuery ? styles.nav_search_long : ''}`}
               placeholder="Search..."
               onInput={handleSearch}
-              value={searchQuery}
+              value={searchQuery || ''}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
+                  if (router?.pathname?.includes('search') && !searchQuery) {
+                    router.push(`/search-page`);
+                  }
+
                   searchQuery && router.push(`/search-page/${searchQuery}`);
                 }
               }}
@@ -166,7 +208,8 @@ export default function Nav() {
                 onClick={handleClickInside}
                 data-count={notifications?.filter((n) => !n?.isRead)?.length}
                 className={`${styles.notificationIcon} ${
-                  !!notifications?.length && styles.activeNotificationIcon
+                  !!notifications?.filter((n) => !n?.isRead)?.length &&
+                  styles.activeNotificationIcon
                 }`}>
                 {showNotification ? (
                   <svg

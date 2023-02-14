@@ -1,3 +1,5 @@
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { useRecoilValue } from 'recoil';
 import LabeledRadioCheckbox from '../FormComponents/LabeledRadioCheckbox';
 import styles from './tableSearchComp.module.scss';
 
@@ -9,9 +11,12 @@ export default function TableSearchComp({
   handleOptionChange = () => {},
   handleSearch = null,
   selectedFilter = null,
+  customElement = null,
   filterDisplayText = 'Filter By',
   delayMS = 1000
 }) {
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
   function startSearch(val, delay) {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
@@ -21,8 +26,9 @@ export default function TableSearchComp({
 
   return (
     <>
-      <div className={styles.searchArea}>
-        <div className={`${styles.searchComp}`}>
+      {/* elements are row reverse so put the elements last if you want them first */}
+      <div className={styles.searchArea} style={isDev ? { height: '45px' } : {}}>
+        <div className={`w-100 ${styles.searchComp}`}>
           {options?.length ? (
             <select
               className={styles.search}
@@ -30,7 +36,7 @@ export default function TableSearchComp({
               onChange={(e) => handleOptionChange(e?.target?.value)}>
               {options?.map((op) => {
                 return (
-                  <option value={op?.value} disabled={op?.isDisabled}>
+                  <option key={op?.label} value={op?.value} disabled={op?.isDisabled}>
                     {op?.label}
                   </option>
                 );
@@ -61,6 +67,7 @@ export default function TableSearchComp({
                 return (
                   <LabeledRadioCheckbox
                     type="radio"
+                    key={op?.label}
                     label={op?.label}
                     value={op?.value}
                     isChecked={op?.value === selectedFilter}
@@ -84,6 +91,8 @@ export default function TableSearchComp({
           // })}
           // </select>
         )}
+
+        {customElement}
       </div>
     </>
   );

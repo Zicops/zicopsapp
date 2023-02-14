@@ -119,13 +119,15 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
 
   // load module, chapter, topic data and set in recoil
   useEffect(async () => {
-    if (!fullCourse.id) return;
-    if (!userData.id) return;
-    console.log('data de', moduleData);
     updateModuleData([]);
     updateChapterData([]);
     updateTopicData([]);
     updateTopicContent([]);
+    if (!router.isReady) return;
+    if (!fullCourse.id) return;
+    if (!userData.id) return;
+    if (fullCourse.id !== courseId) return;
+    console.log('data de', moduleData);
 
     // setIsLoading(
     //   loadingModuleData &&
@@ -518,7 +520,7 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
         updateResources(data.getResourcesByCourseId || []);
       }
     );
-  }, [fullCourse?.id, userData?.id]);
+  }, [router.isReady, fullCourse?.id, userData?.id]);
 
   useEffect(async () => {
     if (isPreview) return;

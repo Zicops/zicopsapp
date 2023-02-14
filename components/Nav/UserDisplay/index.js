@@ -21,26 +21,30 @@ const UserDisplay = () => {
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
   const [fullName, setFullName] = useState(
-    `${userProfileData?.first_name} ${userProfileData?.last_name}`
+    `${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`
   );
   const router = useRouter();
 
-  const [lspName , setLspName] = useState("");
+  const [lspName, setLspName] = useState('');
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   useEffect(() => {
     if (!isUpdate) return;
-    setFullName(`${userProfileData?.first_name} ${userProfileData?.last_name}`);
+    setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
     setIsUpdate(false);
-    // console.log(userProfileData);
-  }, [isUpdate]);
+  }, [isUpdate, userProfileData?.first_name, userProfileData?.last_name]);
 
   useEffect(() => {
-    
     const lspName = sessionStorage?.getItem('lsp_name');
-    if(!lspName) return ;
-    if(!userProfileData?.id?.length) {setLspName(lspName); return loadAndSetUserData()}
-    if(userProfileData?.isUserUpdated) {setLspName(lspName); return loadAndSetUserData()}
+    if (!lspName) return;
+    if (!userProfileData?.id?.length) {
+      setLspName(lspName);
+      return loadAndSetUserData();
+    }
+    if (userProfileData?.isUserUpdated) {
+      setLspName(lspName);
+      return loadAndSetUserData();
+    }
 
     return setLspName(lspName);
   }, [userProfileData]);
@@ -56,7 +60,12 @@ const UserDisplay = () => {
     const basicInfo = userData?.data?.getUserDetails?.[0];
 
     setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
-    setUserProfileData((prevValue) => ({ ...prevValue, ...basicInfo , photoUrl: basicInfo?.photoUrl , isUserUpdated:false}));
+    setUserProfileData((prevValue) => ({
+      ...prevValue,
+      ...basicInfo,
+      photoUrl: basicInfo?.photoUrl,
+      isUserUpdated: false
+    }));
   }
 
   // //refill the  recoil values
@@ -100,6 +109,7 @@ const UserDisplay = () => {
   }, [userProfileData]);
 
   //update value in sessionStorage
+  let userGender = userProfileData?.gender?.toLowerCase();
 
   return (
     <>
@@ -112,7 +122,9 @@ const UserDisplay = () => {
           <div className={styles.profilepic}>
             <img
               src={`${
-                userProfileData?.photo_url ? userProfileData?.photo_url : '/images/swagDP.jpg'
+                userProfileData?.photo_url
+                  ? userProfileData?.photo_url
+                  : `/images/Avatars/${userGender}Profile.png`
               }`}
             />
           </div>

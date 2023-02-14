@@ -1,0 +1,51 @@
+$width: 360px;
+.wrapperContainer{
+    // background-color: #242630;
+    width: calc($width * 1.07);
+    height: calc($width * 1.07);
+    margin: auto;
+    position: relative;
+    .Beginner, .Competent, .Proficient{
+        border-radius: 50%;
+        position: absolute;
+        transform-origin: calc($width/2) calc($width/2);
+        cursor: pointer;
+        & div{
+            text-align: center;
+            position: absolute;
+            margin: 17%;
+            & h4{
+                font-size: 30px;
+            }
+            & p{
+                font-size: 16px;
+            }
+        }
+     }
+    .Beginner{
+        background-image: linear-gradient(111.44deg, #6BCFCF80 19.16%, #41A9EF80 154.55%);
+        z-index: 1;
+        &:hover {
+            z-index: 999;
+            background-image: linear-gradient(111.44deg, #6BCFCFBF 19.16%, #41A9EFBF 154.55%);
+        }
+     }
+    .Competent{
+        background: linear-gradient(111.44deg, #856BCF80 19.16%, #4152EF80 154.55%);
+        z-index: 2;
+        &:hover {
+            z-index: 999;
+            background: linear-gradient(111.44deg, #856BCFBF 19.16%, #4152EFBF 154.55%);
+        }
+    }
+    .Proficient{
+        background: linear-gradient(111.44deg, #6BCF7580 19.16%, #41EFD080 154.55%);
+        z-index: 3;
+        &:hover {
+            z-index: 999;
+            background: linear-gradient(111.44deg, #6BCF75BF 19.16%, #41EFD0BF 154.55%);
+        }
+    }
+}
+
+    

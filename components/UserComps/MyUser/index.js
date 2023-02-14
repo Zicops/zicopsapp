@@ -1,5 +1,10 @@
 import { userClient } from '@/api/UserMutations';
-import { GET_USER_LSP_ROLES } from '@/api/UserQueries';
+import {
+  GET_USER_DETAIL,
+  GET_USER_LSP_MAP_BY_LSPID,
+  GET_USER_LSP_ROLES,
+  userQueryClient
+} from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
@@ -17,11 +22,11 @@ import {
   UserStateAtom
 } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
-export default function MyUser({ getUser, isAdministration = false, customStyle = {} }) {
+const MyUser = forwardRef(({ getUser, isAdministration = false, customStyle = {} }, ref) => {
   const [selectedUser, setSelectedUser] = useState([]);
   const [data, setData] = useState([]);
   const [disableAlert, setDisableAlert] = useState(false);
@@ -45,23 +50,31 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
   const [isLoading, setLoading] = useState(true);
   const [filterCol, setFilterCol] = useState('email');
   const [searchQuery, setSearchQuery] = useState('');
+  const [pageCursor, setPageCursor] = useState(null);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const router = useRouter();
 
-  async function sortArray(arr,param){
-    const sortedArr = await arr?.sort((a,b) => a?.[`${param}`] - b?.[`${param}`])
+  // function exposed to parent
+  useImperativeHandle(ref, () => ({
+    clearSelection() {
+      setSelectedUser([]);
+    }
+  }));
+
+  async function sortArray(arr, param) {
+    const sortedArr = await arr?.sort((a, b) => a?.[`${param}`] - b?.[`${param}`]);
     return sortedArr;
   }
 
   useEffect(async () => {
-    setLoading(true);
-
+    // loadUserData();
     const _usersData = await getUsersForAdmin(true);
     if (_usersData?.error) {
       setLoading(false);
       return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
     }
+    setData(sortArrByKeyInOrder([..._usersData], 'created_at', false), setLoading(false));
     for (let i = 0; i < _usersData.length; i++) {
       const user = _usersData[i];
       const res = await loadQueryDataAsync(
@@ -77,9 +90,8 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
 
       let roleData = {};
       if (lspRoleArr?.length > 1) {
-        const latestUpdatedRole = await sortArray(lspRoleArr,'updated_at');
+        const latestUpdatedRole = await sortArray(lspRoleArr, 'updated_at');
         roleData = latestUpdatedRole?.pop();
-
       } else {
         roleData = lspRoleArr[0];
       }
@@ -97,7 +109,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
     } else {
       users = [...usersData];
     }
-    setLoading(false);
+    // setLoading(false);
     setData(sortArrByKeyInOrder([...users], 'created_at', false));
     return;
   }, []);
@@ -105,6 +117,40 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
   useEffect(() => {
     getUser(selectedUser);
   }, [selectedUser]);
+
+  async function loadUserData() {
+    setLoading(true);
+
+    const lspId = sessionStorage.getItem('lsp_id');
+    const queryVariables = { lsp_id: lspId, pageCursor: '', Direction: '', pageSize: 30 };
+    if (pageCursor) queryVariables.pageCursor = pageCursor;
+
+    loadQueryDataAsync(GET_USER_LSP_MAP_BY_LSPID, queryVariables, {}, userQueryClient).then(
+      async (lspMapRes) => {
+        if (lspMapRes?.error) return { error: 'Error while while loading lsp maps!' };
+
+        const lspMapData = lspMapRes?.getUserLspMapsByLspId;
+        if (lspMapData?.pageCursor) setPageCursor(lspMapData?.pageCursor);
+
+        //removing duplicate values
+        const _lspUsers = lspMapData?.user_lsp_maps?.filter(
+          (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
+        );
+        const _userIds = _lspUsers?.map((user) => user?.user_id)?.filter((userId) => !!userId);
+
+        const userDetailsRes = await loadQueryDataAsync(
+          GET_USER_DETAIL,
+          { user_id: _userIds },
+          {},
+          userQueryClient
+        );
+
+        if (userDetailsRes?.error) return { error: 'Error while while loading user detail!' };
+      }
+    );
+
+    setLoading(false);
+  }
 
   const columns = [
     {
@@ -155,13 +201,13 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'First Name',
-      flex: 1
+      flex: 0.8
     },
     {
       field: 'last_name',
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
-      flex: 1
+      flex: 0.8
     },
     {
       field: 'role',
@@ -213,7 +259,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
-      flex: 0.4,
+      flex: 0.5,
       renderCell: (params) => {
         let status = '';
         if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
@@ -297,7 +343,7 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
         data={data?.filter((user) => isWordIncluded(user?.[filterCol], searchQuery))}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
-        tableHeight="75vh"
+        tableHeight="70vh"
         loading={isLoading}
         showCustomSearch={true}
         searchProps={{
@@ -406,4 +452,6 @@ export default function MyUser({ getUser, isAdministration = false, customStyle 
       )}
     </>
   );
-}
+});
+
+export default MyUser;

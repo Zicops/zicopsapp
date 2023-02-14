@@ -17,14 +17,14 @@ export const sliderImages = [
 ];
 
 export const bigImages = [
-  { name: 'Course Name', id: 0, img: '/images/courses/51.png' },
-  { name: 'Course Name', id: 1, img: '/images/courses/tech.png' },
-  { name: 'Course Name', id: 2, img: '/images/courses/31.png' },
-  { name: 'Course Name', id: 3, img: '/images/courses/41.png' },
-  { name: 'Course Name', id: 4, img: '/images/courses/51.png' },
-  { name: 'Course Name', id: 5, img: '/images/courses/tech.png' },
-  { name: 'Course Name', id: 6, img: '/images/courses/31.png' },
-  { name: 'Course Name', id: 7, img: '/images/courses/41.png' }
+  { name: 'Web Development', id: 0, ImageUrl: '/images/courses/51.png' },
+  { name: 'Web Development', id: 1, ImageUrl: '/images/courses/tech.png' },
+  { name: 'Web Development', id: 2, ImageUrl: '/images/courses/31.png' },
+  { name: 'Web Development', id: 3, ImageUrl: '/images/courses/41.png' },
+  { name: 'Web Development', id: 4, ImageUrl: '/images/courses/51.png' },
+  { name: 'Web Development', id: 5, ImageUrl: '/images/courses/tech.png' },
+  { name: 'Web Development', id: 6, ImageUrl: '/images/courses/31.png' },
+  { name: 'Web Development', id: 7, ImageUrl: '/images/courses/41.png' }
 ];
 export const squareImages = [
   { name: 'Course Name', id: 0, img: '/images/courses/ANGULAR.png' },

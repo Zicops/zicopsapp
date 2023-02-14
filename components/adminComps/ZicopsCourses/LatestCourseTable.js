@@ -106,19 +106,20 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
               </button>
             ) : (
-              <button
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  outline: '0',
-                  border: '0'
-                }}>
-                <Switch
-                  inputProps={{ 'aria-label': 'Switch demo' }}
-                  defaultChecked
-                  color="success"
-                />
-              </button>
+              <></>
+              // <button
+              //   style={{
+              //     cursor: 'pointer',
+              //     backgroundColor: 'transparent',
+              //     outline: '0',
+              //     border: '0'
+              //   }}>
+              //   <Switch
+              //     inputProps={{ 'aria-label': 'Switch demo' }}
+              //     defaultChecked
+              //     color="success"
+              //   />
+              // </button>
             )}
           </>
         );

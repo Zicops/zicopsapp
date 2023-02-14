@@ -1,5 +1,6 @@
 import { IsCourseSavedAtom } from '@/components/Tabs/Logic/tabs.helper';
 import { DEFAULT_VALUES } from '@/helper/constants.helper';
+import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
 import { ApolloProvider, useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -16,12 +17,14 @@ import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
 import { courseContext } from '../../../state/contexts/CourseContext';
 
 export default function EditCoursePage() {
+  const [fullCourseData, setFullCourseData] = useRecoilState(FullCourseDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
 
   const [isCourseLoaded, setIsCourseLoaded] = useState(false);
 
-  const { updateCourseMaster, fullCourse } = useContext(courseContext);
+  const { updateCourseMaster, fullCourse, setCourseVideo, setCourseImage, setCourseTileImage } =
+    useContext(courseContext);
   const router = useRouter();
   const editCourseId = router.query?.courseId || null;
   const shallowRoute = router.query?.shallowRoute || null;
@@ -34,15 +37,21 @@ export default function EditCoursePage() {
     if (!editCourseId) return;
     if (shallowRoute) return;
 
-    loadCourseData({ variables: { course_id: editCourseId }, fetchPolicy: 'no-cache' }).then(
+    loadCourseData({ variables: { course_id: [editCourseId] }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
         if (errorCourseData) return setToastMsg({ type: 'danger', message: 'course load error' });
 
-        const _course = structuredClone(data?.getCourse);
+        const _course = structuredClone(data?.getCourse?.[0]);
         if (_course?.image?.includes(DEFAULT_VALUES.image)) _course.image = '';
         if (_course?.tileImage?.includes(DEFAULT_VALUES.tileImage)) _course.tileImage = '';
         if (_course?.previewVideo?.includes(DEFAULT_VALUES.previewVideo)) _course.previewVideo = '';
-        if (data?.getCourse) updateCourseMaster(_course);
+        if (data?.getCourse) {
+          updateCourseMaster(_course);
+          setFullCourseData(getFullCourseDataObj(_course));
+          setCourseImage({ upload: 0, courseId: _course?.id });
+          setCourseTileImage({ upload: 0, courseId: _course?.id });
+          setCourseVideo({ upload: 0, courseId: _course?.id });
+        }
         setIsCourseLoaded(true);
       }
     );

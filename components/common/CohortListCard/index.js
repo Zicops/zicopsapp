@@ -86,9 +86,9 @@ export default function CohortListCard({
       barStyle: styles?.scheduleBarCourse
     },
     exam: {
-      time: `${moment.unix(scheduleData?.Start).format('hh:mm a')}-${moment
+      time: `${moment.unix(scheduleData?.Start).format('D MMM hh:mm a')}-${moment
         .unix(scheduleData?.endTime)
-        .format('hh:mm a')}`,
+        .format('D MMM hh:mm a')}`,
       color: styles?.examColor,
       barStyle: styles?.scheduleBarExam
     }
@@ -145,7 +145,7 @@ export default function CohortListCard({
         </div>
 
         <div className={`${styles.footer}`}>{children}</div>
-        {isManager && (
+        {(isManager && selectedCohort?.userCohort?.user_id !== data?.user_id) && (
           <div
             className={`${styles.clossBtn}`}
             onClick={() => {

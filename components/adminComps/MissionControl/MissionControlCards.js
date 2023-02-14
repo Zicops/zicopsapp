@@ -1,17 +1,18 @@
 import ProductTour from '@/components/common/ProductTour';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_HOME } from '@/components/common/ToolTip/tooltip.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 
-const Card = ({ image, text, width, tooltipTitle }) => {
+const Card = ({ image, text, width, tooltipTitle, isDisabled = false }) => {
   return (
     <>
       <ToolTip title={tooltipTitle}>
         <div
-          className="card"
+          className={`card ${isDisabled ? 'disabled' : ''}`}
           // onClick={() => {
           //   sendNotification(
           //     {
@@ -43,8 +44,10 @@ const Card = ({ image, text, width, tooltipTitle }) => {
             align-items: center;
             border-radius: 20px;
             box-shadow: 5px -5px 10px 0 #86868640, -5px 5px 10px 0 #00000080;
-            margin: 20px;
             cursor: pointer;
+          }
+          .card.disabled {
+            cursor: no-drop;
           }
           .card:hover {
             background-color: var(--tile-bg);
@@ -67,17 +70,24 @@ const Card = ({ image, text, width, tooltipTitle }) => {
 };
 const MissionControlCards = () => {
   const showProductTour = useRecoilValue(ProductTourVisible);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
   return (
     <>
       <div className="mission_control_body">
         <div className="contain_icons">
-          <div className="new_row">
-            <Card
-              image="/images/Analytics.png"
-              text="Analytics"
-              width="70px"
-              tooltipTitle={ADMIN_HOME.analytics}
-            />
+          <div className={`new_row`}>
+            <Link href={isDev ? '/admin/analytics/course-dashboard' : ''}>
+              <a>
+                <Card
+                  image="/images/Analytics.png"
+                  text="Analytics"
+                  width="70px"
+                  isDisabled={!isDev}
+                  tooltipTitle={ADMIN_HOME.analytics}
+                />
+              </a>
+            </Link>
             <Link href="/admin/user/my-users">
               <a>
                 <Card
@@ -98,12 +108,18 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Card
-              image="/images/TrainingManagement.png"
-              text="Training Management "
-              width="70px"
-              tooltipTitle={ADMIN_HOME.trainingManagement}
-            />
+            <Link href={isDev ? '/admin/vctool' : ''}>
+              <a>
+                <Card
+                  image="/images/TrainingManagement.png"
+                  text="Training Management "
+                  isDisabled={!isDev}
+                  width="70px"
+                  tooltipTitle={ADMIN_HOME.trainingManagement}
+                />
+              </a>
+            </Link>
+
           </div>
           <div className="new_row">
             <Link href="/admin/administration/organization">
@@ -126,16 +142,22 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Card
-              image="/images/VendorManagement.png"
-              text="Vendor Management"
-              width="80px"
-              tooltipTitle={ADMIN_HOME.vendorManagement}
-            />
+            <Link href={isDev ? '/admin/vendor/manage-vendor' : ''}>
+              <a>
+                <Card
+                  image="/images/VendorManagement.png"
+                  text="Vendor Management"
+                  width="80px"
+                  isDisabled={!isDev}
+                  tooltipTitle={ADMIN_HOME.vendorManagement}
+                />
+              </a>
+            </Link>
             <Card
               image="/images/LabManagement.png"
               text="Lab Management"
               width="80px"
+              isDisabled={true}
               tooltipTitle={ADMIN_HOME.labManagement}
             />
           </div>
@@ -158,6 +180,8 @@ const MissionControlCards = () => {
           }
           .new_row {
             display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
           }
         `}
       </style>

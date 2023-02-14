@@ -37,15 +37,16 @@ export const ADD_NOTIFICATION_TO_FIRESTORE = gql`
 `;
 
 export const GET_ALL_NOTIFICATIONS = gql`
-  query getAll($prevPageSnapShot: String!, $pageSize: Int!) {
-    getAll(prevPageSnapShot: $prevPageSnapShot, pageSize: $pageSize) {
+  query getAll($prevPageSnapShot: String!, $pageSize: Int!, $isRead: Boolean) {
+    getAll(prevPageSnapShot: $prevPageSnapShot, pageSize: $pageSize, is_read: $isRead) {
       messages {
         title
         body
         created_at
         user_id
-        is_read
         message_id
+        is_read
+        link
       }
       nextPageSnapShot
     }
@@ -55,6 +56,14 @@ export const GET_ALL_NOTIFICATIONS = gql`
 export const SEND_NOTIFICATIONS = gql`
   mutation sendNotification($title: String!, $body: String!, $user_id: [String]!) {
     sendNotification(notification: { title: $title, body: $body, user_id: $user_id }) {
+      statuscode
+    }
+  }
+`;
+
+export const SEND_NOTIFICATIONS_WITH_LINK = gql`
+  mutation sendNotificationWithLink($title: String!, $body: String!, $user_id: [String]! , $link:String!) {
+    sendNotificationWithLink(notification: { title: $title, body: $body, user_id: $user_id } ,link:$link) {
       statuscode
     }
   }

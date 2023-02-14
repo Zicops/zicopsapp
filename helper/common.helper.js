@@ -92,19 +92,42 @@ export function getNotificationMsg(type = '', msgObj = {}) {
     courseAssign: function (msg) {
       return `A new course ${msg.courseName} has been assigned to you. The end date for completing this course is ${msg.endDate}. Check the course`;
     },
-    courseUnassign: function(msg){
-      return `The ${msg.courseName} course has been unassigned by your admin from your learning space. However the course is now available in your personal learning space, so continue learning in your own capacity.`
+    courseUnassign: function (msg) {
+      return `The ${msg.courseName} course has been unassigned by your admin from your learning space. However the course is now available in your personal learning space, so continue learning in your own capacity.`;
     },
-    cohortAssign: function (msg){
+    cohortAssign: function (msg) {
       return ` 
-      You have been mapped to Cohort ${msg?.cohortName}. Check out the cohort and its members and courses to be completed.`
+      You have been mapped to Cohort ${msg?.cohortName}. Check out the cohort and its members and courses to be completed.`;
     },
-    cohortUnassign: function (msg){
-      return `Note: You are no longer member of Cohort ${msg?.cohortName}. However streaming of learning to you, continues`
+    cohortUnassign: function (msg) {
+      return `Note: You are no longer member of Cohort ${msg?.cohortName}. However streaming of learning to you, continues`;
+    },
+    promotedManager: function (msg) {
+      return `Your have been designated as Cohort Manager for ${msg?.cohortName} cohort. Check out the cohort and manage the same.`;
+    },
+    demotedManager: function (msg) {
+      return `Note: You are no longer Manager of Cohort ${msg?.cohortName}. Please continue your learning as a member.`;
     }
   };
 
-  if(!notificationObj?.[type]) return false;
+  if (!notificationObj?.[type]) return false;
 
   return notificationObj?.[type](msgObj);
+}
+
+// this function is used to sanitize the sendData for any api that we are calling
+function sanitizeStr(s) {
+  return `${s}`.trim();
+}
+
+export function sanitizeFormData(_object) {
+  let object = structuredClone(_object)
+  Object.keys(object).forEach(function (k) {
+      if (object[k] && typeof object[k] === 'object') {
+        sanitizeFormData(object[k]);
+          return;
+      }
+      object[k] = sanitizeStr(object[k]);
+  })
+  return object;
 }

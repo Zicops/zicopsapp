@@ -100,12 +100,19 @@ export const GET_USER_LSP_MAP_BY_LSPID = gql`
   }
 `;
 
+// input CourseMapFilters {
+//   lsp_id: [String]
+//   is_mandatory: Boolean
+//   status: String
+//   type: String
+// }
 export const GET_USER_COURSE_MAPS = gql`
   query GetUserCourseMaps(
     $user_id: String!
     $publish_time: Int
     $pageCursor: String
     $pageSize: Int
+    $filters: CourseMapFilters
   ) {
     getUserCourseMaps(
       user_id: $user_id
@@ -113,11 +120,13 @@ export const GET_USER_COURSE_MAPS = gql`
       pageCursor: $pageCursor
       Direction: ""
       pageSize: $pageSize
+      filters: $filters
     ) {
       user_courses {
         user_course_id
         user_id
         user_lsp_id
+        lsp_id
         course_id
         course_type
         added_by
@@ -171,6 +180,15 @@ export const GET_USER_COURSE_PROGRESS = gql`
       updated_by
       created_at
       updated_at
+    }
+  }
+`;
+
+export const GET_USER_COURSE_PROGRESS_ID = gql`
+  query getUserCourseProgressByMapId($userId: String!, $userCourseId: [ID!]) {
+    getUserCourseProgressByMapId(user_id: $userId, user_course_id: $userCourseId) {
+      user_cp_id
+      status
     }
   }
 `;
@@ -763,39 +781,98 @@ export const GET_LEARNINGSPACES_BY_ORGID = gql`
     }
   }
 `;
-// combined queries
+export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
+  query GetLearningSpacesByOrgId($org_id: String!) {
+    getLearningSpacesByOrgId(org_id: $org_id) {
+      lsp_id
+      is_default
+    }
+  }
+`;
 
-// export const GET_USER_META = gql`
-// query getUserMeta($user_id:){
-//   getUserPreferences(user_id: $user_id) {
-//     user_preference_id
-//     user_id
-//     user_lsp_id
-//     sub_category
-//     is_base
-//     is_active
-//     created_by
-//     updated_by
-//     created_at
-//     updated_at
-//   }
+export const GET_VENDORS_BY_LSP = gql`
+  query getVendors($lsp_id: String) {
+    getVendors(lsp_id: $lsp_id) {
+      vendorId
+      type
+      level
+      name
+      photo_url
+      address
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
 
-//   getUserDetails(user_ids: $user_id) {
-//     id
-//     first_name
-//     last_name
-//     status
-//     role
-//     is_verified
-//     is_active
-//     gender
-//     created_by
-//     updated_by
-//     created_at
-//     updated_at
-//     email
-//     phone
-//     photo_url
-//   }
-// }
-// `
+export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
+  query getVendors($lsp_id: String) {
+    getVendors(lsp_id: $lsp_id) {
+      vendorId
+      type
+      name
+    }
+  }
+`;
+
+// DASHBOARD QUERIES START
+export const GET_COURSE_CONSUMPTION_STATS = gql`
+  query getCourseConsumptionStats(
+    $lsp_id: String!
+    $pageCursor: String
+    $direction: String
+    $pageSize: Int
+  ) {
+    getCourseConsumptionStats(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: $direction
+      pageSize: $pageSize
+    ) {
+      stats {
+        ID
+        LspId
+        CourseId
+        Category
+        SubCategory
+        Owner
+        Duration
+        TotalLearners
+        ActiveLearners
+        CompletedLearners
+        ExpectedCompletionTime
+        AverageCompletionTime
+        AverageComplianceScore
+        CreatedAt
+        UpdatedAt
+        CreatedBy
+        UpdatedBy
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_COURSE_VIEWS = gql`
+  query getCourseViews($lsp_id: [String!]!, $startTime: String, $endTime: String) {
+    getCourseViews(lsp_ids: $lsp_id, start_time: $startTime, end_time: $endTime) {
+      seconds
+      created_at
+      lsp_id
+      user_ids
+      date_string
+    }
+  }
+`;
+
+// DASHBOARD QUERIES END

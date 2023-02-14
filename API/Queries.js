@@ -204,7 +204,7 @@ export const GET_MY_COURSES = gql`
 `;
 
 export const GET_COURSE = gql`
-  query GetCourse($course_id: String) {
+  query GetCourse($course_id: [String]) {
     getCourse(course_id: $course_id) {
       id
       name
@@ -347,6 +347,15 @@ export const GET_COURSE_TOPICS = gql`
   }
 `;
 
+export const GET_ALL_COURSE_TOPICS_ID = gql`
+  query getTopics($course_id: String) {
+    getTopics(course_id: $course_id) {
+      id
+      type
+    }
+  }
+`;
+
 export const GET_COURSE_TOPICS_CONTENT = gql`
   query getTopicContent($topic_id: String) {
     getTopicContent(topic_id: $topic_id) {
@@ -392,6 +401,20 @@ export const GET_COURSE_TOPICS_CONTENT_BY_COURSE_ID = gql`
         language
       }
       is_default
+    }
+  }
+`;
+
+export const GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID = gql`
+  query getTopicContent($course_id: String) {
+    getTopicContentByCourseId(course_id: $course_id) {
+      id
+      language
+      topicId
+      courseId
+      duration
+      type
+      contentUrl
     }
   }
 `;
@@ -983,6 +1006,20 @@ export const GET_TOPIC_EXAMS = gql`
   }
 `;
 
+export const GET_TOPIC_EXAMS_BY_COURSE_ID = gql`
+  query getTopicExamsByCourseId($course_id: String) {
+    getTopicExamsByCourseId(course_id: $course_id) {
+      id
+      topicId
+      examId
+      courseId
+      created_at
+      updated_at
+      language
+    }
+  }
+`;
+
 export const GET_COHORT_COURSES = gql`
   query GetCohortCoursesMap($cohort_id: String) {
     getCohortCourseMaps(cohort_id: $cohort_id) {
@@ -1001,6 +1038,100 @@ export const GET_COHORT_COURSES = gql`
       UpdatedBy
       IsActive
       ExpectedCompletion
+    }
+  }
+`;
+
+export const GET_COURSE_DISCUSSION = gql`
+  query GetCourseDiscussion($course_id: String!) {
+    getCourseDiscussion(course_id: $course_id) {
+      DiscussionId
+      CourseId
+      ReplyId
+      UserId
+      Time
+      Content
+      Module
+      Chapter
+      Topic
+      Likes
+      Dislike
+      IsAnonymous
+      IsPinned
+      IsAnnouncement
+      ReplyCount
+      CreatedBy
+      Created_at
+      Updated_by
+      Updated_at
+      Status
+    }
+  }
+`;
+export const GET_DISCUSSION_REPLY = gql`
+  query GetDiscussionReply($course_id: String!, $discussion_id: String!) {
+    getCourseDiscussion(course_id: $course_id, discussion_id: $discussion_id) {
+      DiscussionId
+      CourseId
+      ReplyId
+      UserId
+      Time
+      Content
+      Module
+      Chapter
+      Topic
+      Likes
+      Dislike
+      IsAnonymous
+      IsPinned
+      IsAnnouncement
+      ReplyCount
+      CreatedBy
+      Created_at
+      Updated_by
+      Updated_at
+      Status
+    }
+  }
+`;
+
+// BasicCourseStatsInput {
+//   lsp_id: String!
+//   course_status: String
+//   duration: Int
+//   owner: String
+//   created_by: String
+//   course_type: String
+//   categories: [String]
+//   sub_categories: [String]
+//   languages: [String]
+//   expertise_level: [String]
+// }
+export const GET_BASIC_COURSES_STATS = gql`
+  query getBasicCourseStats($input: BasicCourseStatsInput) {
+    getBasicCourseStats(input: $input) {
+      lsp_id
+      course_status
+      duration
+      owner
+      created_by
+      course_type
+      categories {
+        name
+        count
+      }
+      sub_categories {
+        name
+        count
+      }
+      languages {
+        name
+        count
+      }
+      expertise_level {
+        name
+        count
+      }
     }
   }
 `;

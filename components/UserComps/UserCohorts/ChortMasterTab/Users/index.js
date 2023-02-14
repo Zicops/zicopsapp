@@ -1,11 +1,10 @@
-import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import PopUp from '@/components/common/PopUp';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
-import { loadQueryDataAsync, sendEmail, sendNotification } from '@/helper/api.helper';
+import { sendEmail, sendNotificationWithLink } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import { EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -16,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../userComps.module.scss';
 import addUserData from '../Logic/addUserData';
-import { getUsersForCohort } from '../Logic/cohortMaster.helper';
 import useCohortUserData from '../Logic/useCohortUserData';
 
 import AddUsers from './AddUsers';
@@ -93,6 +91,7 @@ const Users = ({ isEdit = false, isReadOnly = false }) => {
   }, [router?.query, refetch]);
 
   async function handleRemoveUser(userData = null, cohortData = null) {
+    let origin = window?.location?.origin || '';
     if (!userData) return setToastMsg({ type: 'danger', message: 'User Data not found!' });
     if (!cohortData) return setToastMsg({ type: 'danger', message: 'Cohort Data not found!' });
     setLoading(true);
@@ -114,24 +113,26 @@ const Users = ({ isEdit = false, isReadOnly = false }) => {
     const bodyData = {
       user_name: userData?.first_name,
       lsp_name: sessionStorage?.getItem('lsp_name'),
-      cohort_name: cohortData?.cohort_name
+      cohort_name: cohortData?.cohort_name,
+      link: `${origin}/my-profile?tabName=Cohort`
     };
     const sendEmailBody = {
       to: [userData?.email],
       sender_name: sessionStorage?.getItem('lsp_name'),
       user_name: [userData?.first_name],
       body: JSON.stringify(bodyData),
-      template_id: EMAIL_TEMPLATE_IDS?.cohortUnassign
+      template_id: EMAIL_TEMPLATE_IDS?.cohortUnassign,
     };
-    // await sendNotification(
-    //   {
-    //     title: NOTIFICATION_TITLES?.cohortUnassign,
-    //     body: notificationBody,
-    //     user_id: [userData?.user_id]
-    //   },
-    //   { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
-    // );
-    await sendEmail(sendEmailBody, {
+     sendNotificationWithLink(
+      {
+        title: NOTIFICATION_TITLES?.cohortUnassign,
+        body: notificationBody,
+        user_id: [userData?.user_id],
+        link:''
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    sendEmail(sendEmailBody, {
       context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
     });
     setLoading(false);

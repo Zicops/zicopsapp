@@ -1,8 +1,16 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
-import { GET_USER_COURSE_MAPS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_SELF_ASSIGN_LIMIT, COURSE_STATUS, LEARNING_FOLDER_CAPACITY } from '@/helper/constants.helper';
-import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
+import {
+  COMMON_LSPS,
+  COURSE_MAP_STATUS,
+  COURSE_SELF_ASSIGN_LIMIT,
+  COURSE_STATUS,
+  COURSE_TYPES,
+  LEARNING_FOLDER_CAPACITY
+} from '@/helper/constants.helper';
+import { getUserAssignCourses } from '@/helper/data.helper';
+import useUserCourseData from '@/helper/hooks.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Grid } from '@mui/material';
@@ -10,36 +18,24 @@ import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Popup from 'reactjs-popup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import CourseLIstCard from '../common/CourseLIstCard';
 import LabeledInput from '../common/FormComponents/LabeledInput';
-import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
-import InputDatePicker from '../common/InputDatePicker';
-import PopUp from '../common/PopUp';
-import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
-import UserButton from '../common/UserButton';
+import AssignCourse from '../CourseComps/AssignCourse';
 import Card from './Card/Card';
+import styles from './favouriteDndCourses.module.scss';
 import Folder from './Folder/Folder';
 import ListCard from './ListCard';
-import useHandleCourseAssign from './Logic/useHandleCourseAssign';
-import styles from './favouriteDndCourses.module.scss';
-import Loader from '../common/Loader';
 
 export default function FavouriteDndCourses({ isLoading }) {
-  const {
-    courseAssignData,
-    setCourseAssignData,
-    isAssignPopUpOpen,
-    setIsAssignPopUpOpen,
-    assignCourseToUser,
-    isSaveDisabled
-  } = useHandleCourseAssign();
-
   const ASSIGNED_ROLE = ['cohort', 'admin'];
 
-  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+  const { getUserCourseData } = useUserCourseData();
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const userData = useRecoilValue(UserStateAtom);
-  const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+
+  const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
   const [data, setData] = useState([]);
   const [dropped, setDropped] = useState([]);
@@ -77,14 +73,15 @@ export default function FavouriteDndCourses({ isLoading }) {
 
   async function loadCourses() {
     const userLspId = sessionStorage.getItem('user_lsp_id');
-    const _lspId = sessionStorage?.getItem('lsp_id');
+    // const _lspId = sessionStorage?.getItem('lsp_id');
+    const _lspId = COMMON_LSPS.zicops;
     setLoading(true);
     const queryVariables = {
       publish_time: getUnixFromDate(),
       pageSize: 9999999,
       pageCursor: '',
       status: COURSE_STATUS.publish,
-      filters: { LspId: _lspId }
+      filters: { LspId: _lspId, Type: COURSE_TYPES[0] }
     };
     let isError = false;
     const courseRes = await loadQueryDataAsync(GET_LATEST_COURSES, queryVariables).catch((err) => {
@@ -96,71 +93,68 @@ export default function FavouriteDndCourses({ isLoading }) {
       return setToastMsg({ type: 'danger', message: 'course load error' });
     }
 
-    const mapRes = await loadQueryDataAsync(
-      GET_USER_COURSE_MAPS,
-      {
-        ...queryVariables,
-        user_id: userData?.id
-      },
-      {},
-      userQueryClient
-    ).catch((err) => {
-      if (err?.message?.includes('no user course found')) return;
-      if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
-    });
+    const filters = { type: COURSE_TYPES[0] };
+    const userCourseData = await getUserAssignCourses(filters);
 
-    const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [];
+    // const userCourseData = await getUserCourseData(100);
+    // const mapRes = await loadQueryDataAsync(
+    //   GET_USER_COURSE_MAPS,
+    //   {
+    //     ...queryVariables,
+    //     user_id: userData?.id
+    //   },
+    //   {},
+    //   userQueryClient
+    // ).catch((err) => {
+    //   if (err?.message?.includes('no user course found')) return;
+    //   if (err) setToastMsg({ type: 'danger', message: 'Course Map Load Error' });
+    // });
+
+    // const _userCourses = mapRes?.getUserCourseMaps?.user_courses || [];
     let userCourses = [];
-    // if (_userCourses?.length)
-    //   userCourses = _userCourses?.filter(
-    //     (course) =>
-    //       course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId
-    //   );
+    // // if (_userCourses?.length)
+    // //   userCourses = _userCourses?.filter(
+    // //     (course) =>
+    // //       course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId
+    // //   );
 
     let totalSelfCourseCount = 0;
-    if (_userCourses?.length){
-      _userCourses?.forEach((course) => {
-        if( course?.course_status?.toLowerCase() !== 'disabled' && course?.user_lsp_id === userLspId){
-            userCourses?.push(course);
-            if(parseJson(course?.added_by)?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
-        }
-      })
+    if (userCourseData?.length) {
+      userCourseData?.forEach((course) => {
+        course.created_at = course.created_at?.replaceAll('/', '-');
+
+        userCourses?.push(course);
+        if (course?.added_by?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
+      });
     }
 
-    setUserOrgData((prevValue) => ({...prevValue , self_course_count: totalSelfCourseCount}))
+    setUserOrgData((prevValue) => ({ ...prevValue, self_course_count: totalSelfCourseCount }));
     const userCourseMaps = userCourses || [];
     const assignedCourses = [];
     const availableCourses =
       courseRes?.latestCourses?.courses?.filter((c) => {
         return (
+          // c?.type === COURSE_TYPES[0] &&
           c?.is_active &&
           c?.is_display &&
           !userCourseMaps?.find((map) => {
             let added_by = {};
-            if (map?.added_by) added_by = JSON.parse(map?.added_by);
+            if (map?.added_by) added_by = map?.added_by;
             const isAssigned = map?.course_id === c?.id;
-            if (isAssigned) assignedCourses.push({ ...c, added_by });
+            // if (isAssigned)
+            //   assignedCourses.push({
+            //     ...c,
+            //     added_by,
+            //     expected_completion: moment.unix(map?.end_date).format('DD/MM/YYYY')
+            //   });
             return isAssigned;
           })
         );
       }) || [];
     updateCourseData(availableCourses);
 
-    setDropped(assignedCourses, setLoading(false));
+    setDropped(userCourses, setLoading(false));
   }
-
-  useEffect(() => {
-    if (courseAssignData?.isCourseAssigned) {
-      setDropped([...dropped, courseAssignData?.fullCourse]);
-      setCourseAssignData({
-        ...courseAssignData,
-        fullCourse: {},
-        isCourseAssigned: false,
-        endDate: new Date(),
-        isMandatory: false
-      });
-    }
-  }, [courseAssignData?.isCourseAssigned]);
 
   useEffect(() => {
     if (!isShowAll) setIsShowAll(!!searchQuery);
@@ -184,16 +178,18 @@ export default function FavouriteDndCourses({ isLoading }) {
   };
 
   const handleDragEnd = (result) => {
-    if(userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT){
+    if (userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT) {
       setIsDrag(false);
-      return setToastMsg({ type: 'info', message: 'You have reached your self course assign limit!' });
-      
+      return setToastMsg({
+        type: 'info',
+        message: 'You have reached your self course assign limit!'
+      });
     }
     if (result.destination && result.destination.droppableId === 'character') {
       const element = data.filter((e) => e.id === result.draggableId);
       // dropped.push(element);
-      setCourseAssignData({ ...courseAssignData, fullCourse: element[0] });
-      setIsAssignPopUpOpen(element[0]);
+      setSelectedCourse(element[0]);
+      setIsAssignPopUpOpen(true);
       // setDropped([...dropped, { ...element[0], added_by: { role: 'self' } }]);
       updateCourseData(data.filter((each) => each.id !== result.draggableId));
       // setTotal(total + 1);
@@ -225,10 +221,9 @@ export default function FavouriteDndCourses({ isLoading }) {
 
   useEffect(() => {
     console.log(dropped, 'isbfi');
-    const myAssignedCourses = dropped?.filter((course) => course?.added_by?.role == 'self');
-    // console.log(dropped, 'added');
+    const myAssignedCourses = dropped?.filter((course) => course?.added_by == 'self');
     const adminAssignedCourses = dropped?.filter((course) =>
-      ASSIGNED_ROLE.includes(course?.added_by?.role?.toLowerCase())
+      ASSIGNED_ROLE.includes(course?.added_by?.toLowerCase())
     );
     setDroppedByMe(myAssignedCourses);
     setDroppedByAdmin(adminAssignedCourses);
@@ -421,7 +416,7 @@ export default function FavouriteDndCourses({ isLoading }) {
                 ) : (
                   <>
                     {droppedByMe?.slice(0, isShowAll ? dropped?.length : 2)?.map((course) => {
-                      if (course?.added_by?.role !== 'self') return;
+                      if (course?.added_by !== 'self') return;
                       if (searchQuery && !course?.name?.toLowerCase()?.includes(searchQuery))
                         return;
 
@@ -467,65 +462,23 @@ export default function FavouriteDndCourses({ isLoading }) {
         </Popup>
       )}
 
-      <PopUp
-        // title="Course Mapping Configuration"
-        // submitBtn={{ handleClick: handleSubmit }}
-        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-        // size="smaller"
-        customStyles={{ width: '400px' }}
-        isFooterVisible={false}
-        onCloseWithCross={() => updateCourseData([...data, isAssignPopUpOpen])}
-        positionLeft="50%">
-        <div className={`${styles.assignCoursePopUp}`}>
-          <p className={`${styles.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
-          <LabeledRadioCheckbox
-            type="checkbox"
-            label="Course Mandatory"
-            name="isMandatory"
-            isChecked={courseAssignData?.isMandatory}
-            changeHandler={(e) =>
-              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
-            }
-          />
-          <section>
-            <p htmlFor="endDate">Expected Completion date:</p>
-            <InputDatePicker
-              minDate={new Date()}
-              selectedDate={courseAssignData?.endDate}
-              changeHandler={(date) => {
-                setIsPopUpDataPresent(true);
-                setCourseAssignData({ ...courseAssignData, endDate: date });
-              }}
-              styleClass={styles.dataPickerStyle}
-            />
-          </section>
-          <div className={`${styles.assignCourseButtonContainer}`}>
-            <UserButton
-              text={'Cancel'}
-              isPrimary={false}
-              type={'button'}
-              clickHandler={() => {
-                updateCourseData([...data, isAssignPopUpOpen]);
-                setIsAssignPopUpOpen(false);
-                setCourseAssignData({
-                  ...courseAssignData,
-                  endDate: new Date(),
-                  isMandatory: false
-                });
-              }}
-            />
-            <UserButton
-              text={'Save'}
-              type={'button'}
-              isDisabled={isSaveDisabled}
-              clickHandler={async () => {
-                await assignCourseToUser();
-                setIsUpdated(true);
-              }}
-            />
-          </div>
-        </div>
-      </PopUp>
+      <AssignCourse
+        isAssignPopUpOpen={isAssignPopUpOpen}
+        setIsAssignPopUpOpen={setIsAssignPopUpOpen}
+        courseId={selectedCourse?.id}
+        courseType={selectedCourse?.type}
+        suggestedCompletionDays={selectedCourse?.expected_completion}
+        lspId={selectedCourse?.lspId}
+        popUpProps={{
+          onClose: () => {
+            if (selectedCourse) updateCourseData([...data, selectedCourse]);
+          }
+        }}
+        onCourseAssign={() => {
+          setDropped([...dropped, { ...selectedCourse, added_by: 'self' }]);
+          setSelectedCourse(null);
+        }}
+      />
     </>
   );
 }

@@ -2,6 +2,7 @@ import { GET_COHORT_COURSES, GET_COURSE, GET_LATEST_COURSES, queryClient } from 
 import { GET_USERS_FOR_ADMIN, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useLazyQuery } from '@apollo/client';
 
 export async function getUsersForCohort(isTable = false) {
@@ -42,22 +43,42 @@ export async function getCohortCourses(cohortId = null) {
   //   client: queryClient
   // });
 
-  const _lspId = sessionStorage?.getItem('lsp_id');
+  const currentLspId = sessionStorage?.getItem('lsp_id');
+  const zicopsLspId = COMMON_LSPS.zicops;
   const sendData = {
     publish_time: getCurrentEpochTime(),
     pageCursor: '',
     pageSize: 100,
-    filters: { LspId: _lspId }
+    filters: { LspId: currentLspId }
   };
 
-  const res = await loadQueryDataAsync(GET_LATEST_COURSES, { ...sendData }, {}, queryClient);
+  const currentLspCourseRes = await loadQueryDataAsync(
+    GET_LATEST_COURSES,
+    { ...sendData },
+    {},
+    queryClient
+  );
+  sendData.filters.LspId = zicopsLspId;
+  const zicopsLspCourseRes =
+    zicopsLspId !== currentLspId
+      ? await loadQueryDataAsync(GET_LATEST_COURSES, { ...sendData }, {}, queryClient)
+      : {};
   // const res = await loadLastestCourseData({ variables: sendData }).catch((err) => {
   //   console.log(err);
   //   return setToastMsg({ type: 'danger', message: `${err}` });
   // });
-  if (res?.error) return { error: 'Error while loading courses!' };
+  if (currentLspCourseRes?.error || zicopsLspCourseRes?.error)
+    return { error: 'Error while loading courses!' };
+
   // const courseData = res?.latestCourses?.courses?.filter((c) => c?.is_active && c?.is_display);
-  const courseData = res?.latestCourses?.courses?.filter((c) => c?.is_active);
+  // const courseData = res?.latestCourses?.courses?.filter((c) => c?.is_active);
+  const courseData = [];
+  if (currentLspCourseRes?.latestCourses?.courses?.length) {
+    courseData.push(...currentLspCourseRes?.latestCourses?.courses?.filter((c) => c?.is_active));
+  }
+  if (zicopsLspCourseRes?.latestCourses?.courses?.length) {
+    courseData.push(...zicopsLspCourseRes?.latestCourses?.courses?.filter((c) => c?.is_active));
+  }
 
   console.log(courseData);
   if (!courseData) return { error: 'Error while loading courses!v' };
@@ -72,13 +93,15 @@ export async function getCohortCourses(cohortId = null) {
   const coursesArr = cohortCoursesRes?.getCohortCourseMaps;
   if (!cohortCoursesRes?.getCohortCourseMaps?.length) return { allCourses: [...courseData] };
 
+  const allCourseIdArr = coursesArr.map((c) => c?.CourseId);
+  const data = await loadQueryDataAsync(GET_COURSE, { course_id: allCourseIdArr });
+  if (!data?.getCourse) return { error: 'Error while loading courses!' };
+
   const cohortCourses = [];
   for (let i = 0; i < coursesArr?.length; i++) {
-    coursesArr[i];
-    const data = await loadQueryDataAsync(GET_COURSE, { course_id: coursesArr[i]?.CourseId });
-    if (!data?.getCourse) return { error: 'Error while loading courses!' };
+    const _courseData = data?.getCourse?.find((c) => c.id === coursesArr[i]?.CourseId) || {};
     cohortCourses.push({
-      ...data?.getCourse,
+      ..._courseData,
       IsActive: coursesArr[i]?.IsActive,
       cohortCourseId: coursesArr[i]?.id
     });

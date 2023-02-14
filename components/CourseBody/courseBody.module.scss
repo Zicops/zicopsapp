@@ -99,6 +99,11 @@
   border: 1px solid $darkThree;
   border-radius: 10px;
 }
+.topic_loop:hover {
+  .progress_bar {
+    background-color: $black;
+  }
+}
 .topic_loop:hover,
 .activeTopic {
   box-shadow: 0 0 10px 0 rgba($primary, 0.5);
@@ -124,7 +129,7 @@
   display: flex;
   .topic_number {
     color: $white;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     margin-right: 1%;
   }
@@ -133,7 +138,8 @@
 .topic_heading {
   h4 {
     color: $white;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: 400;
   }
 }
 .topic_loop:hover .topic_text .topic_number span {
@@ -166,7 +172,7 @@
   height: 8px;
   margin: auto;
   background: $darkOne;
-  border: 1px solid #ffffff;
+  // border: 1px solid #ffffff;
   position: relative;
 
   .progressBarFill {

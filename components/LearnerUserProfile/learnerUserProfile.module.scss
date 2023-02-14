@@ -205,40 +205,39 @@
   padding: 50px;
   color: $white;
   overflow-y: scroll;
-  .filterRow{
+  .filterRow {
     position: sticky;
     position: -webkit-sticky;
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
 
-
-    .datePickerContainer{
+    .datePickerContainer {
       //just for the sake of tab header in user profile
       z-index: 801;
     }
-    .dropDownContainer{
+    .dropDownContainer {
       display: flex;
       justify-content: flex-end;
       width: 20%;
     }
 
-    .filterRowLeft{
+    .filterRowLeft {
       flex: 1;
       display: flex;
       justify-content: flex-end;
       align-items: center;
       gap: 10px;
 
-      .resetFilter{
+      .resetFilter {
         color: $darkThree;
         cursor: pointer;
       }
-      .isActive{
+      .isActive {
         color: $white;
       }
     }
-    img{
+    img {
       margin-left: 10px;
     }
   }
@@ -246,16 +245,14 @@
   hr {
     margin-bottom: 20px;
   }
-  .scheduleBox{
+  .scheduleBox {
     padding: 10px 0;
-    .scheduleBoxTitle{
+    .scheduleBoxTitle {
       padding: 10px;
       font-weight: bold;
     }
   }
-  
 }
-
 
 .cardContainer {
   margin: auto;
@@ -599,24 +596,27 @@ $popUpHeight: 75vh;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 5px;
-      p {
-        font-size: 14px;
-      }
+      // padding: 5px;
+      // p {
+      //   font-size: 14px;
+      // }
+
       .rankNumber {
-        font-size: 50px;
+        // font-size: 30px;
         font-weight: 600;
         color: $primary;
       }
     }
   }
 }
-.cohortManager {
+
+.cohortManager,
+.cohortManager_date {
   border: 2px solid $primary;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 15px;
+  // padding: 5px 15px;
   border-radius: 5px;
   margin: 0px 0px 5px 5px;
   img {
@@ -625,6 +625,9 @@ $popUpHeight: 75vh;
   span {
     margin-left: 10px;
   }
+}
+.cohortManager {
+  padding: 5px 15px;
 }
 
 // Invite Tab
@@ -798,6 +801,11 @@ $popUpHeight: 75vh;
 
   // background-color: rgba($color: red, $alpha: 0.2);
 
+  .cohortCodeContainer {
+    display: flex;
+    gap: 20px;
+  }
+
   .lastContainer {
     // background-color: rgba($color: green, $alpha: 0.2);
     display: flex;
@@ -807,5 +815,62 @@ $popUpHeight: 75vh;
       // height: 80%;
       overflow: auto;
     }
+  }
+}
+@media screen and (min-width: 1200px) {
+  .cohortManager_date {
+    font-size: 14px;
+  }
+  .cohortManager {
+    font-size: 14px;
+  }
+
+  .rankText {
+    font-size: 14px;
+  }
+  .rankNumber {
+    font-size: 20px;
+  }
+}
+@media screen and (min-width: 1330px) {
+  .rankText {
+    font-size: 15px;
+  }
+  .rankNumber {
+    font-size: 25px;
+  }
+}
+@media screen and (min-width: 1440px) {
+  .cohortManager_date {
+    font-size: 16px;
+  }
+
+  .cohortManager {
+    font-size: 16px;
+  }
+  .rankText {
+    font-size: 16px;
+  }
+  .rankInside {
+    padding: 5px 5px 0px 5px;
+    .rankNumber {
+      font-size: 45px;
+    }
+  }
+}
+@media screen and (min-width: 1920px) {
+  .cohortManager_date {
+    font-size: 18px;
+  }
+
+  .cohortManager {
+    font-size: 18px;
+  }
+  .rankText {
+    font-size: 18px;
+  }
+
+  .rankNumber {
+    font-size: 50px;
   }
 }

@@ -2,6 +2,14 @@ export const OPTION_LABEL = ['A', 'B', 'C', 'D'];
 export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const USER_STATUS = { invite: 'Invited', activate: 'Active', disable: 'Disabled' };
 export const USER_MAP_STATUS = { invite: '', activate: 'active', disable: 'disable' };
+
+// userCourseMaps status (overall user course progress)
+export const COURSE_MAP_STATUS = {
+  assign: 'open',
+  started: 'started',
+  completed: 'completed',
+  disable: 'disable'
+};
 export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
@@ -14,6 +22,7 @@ export const ASSIGNED_COURSES = ['cohort', 'admin', 'chorot'];
 
 export const PUBLIC_PATHS = [
   '/login',
+  '/auth-verify',
   '/home',
   '/reset-password',
   '/forgot-password',
@@ -31,6 +40,7 @@ export const PUBLIC_PATHS = [
 ];
 export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
+  '/auth-verify',
   '/exam-live',
   '/exam-screen',
   '/course/[courseId]/topic/[topicId]/exam/[examId]',
@@ -58,7 +68,8 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
 
 // Default LSP is staging.zicops.com for demo and staging domains
-export const LEARNING_SPACE_ID = '93f3693c-d111-51aa-86ca-b883c6dfe647';
+export const LEARNING_SPACE_ID = '8ca0d540-aebc-5cb9-b7e0-a2f400b0e0c1';
+// export const LEARNING_SPACE_ID = '93f3693c-d111-51aa-86ca-b883c6dfe647';
 // Default LSP is zicops.com for zicops.com production domains
 // export const LEARNING_SPACE_ID = '98640aaa-a1e8-5584-bc14-2b1bfed7d65a';
 
@@ -72,6 +83,18 @@ export const CUSTOM_ERROR_MESSAGE = {
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
 
 export const LANGUAGES = ['English', 'Hindi', 'Arabic'];
+export const SUBTITLE_LANGUAGES = [
+  'English',
+  'Arabic',
+  'Hindi',
+  'Marathi',
+  'Telugu',
+  'Kannada',
+  'Tamil',
+  'Malayalam',
+  'Bengali',
+  'Gujarati'
+];
 
 export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';
 export const VIDEO_FILE_TYPES = '.mp4, .mkv';
@@ -87,17 +110,21 @@ export const DEFAULT_VALUES = {
 
 // Default LSP is staging.zicops.com for demo and staging domains
 export const COMMON_LSPS = {
-  zicops: '93f3693c-d111-51aa-86ca-b883c6dfe647'
+  zicops: '8ca0d540-aebc-5cb9-b7e0-a2f400b0e0c1'
+  // zicops: '93f3693c-d111-51aa-86ca-b883c6dfe647'
 };
 
 export const COURSE_STATUS = {
   draft: 'DRAFT',
   upload: 'UPLOADING',
   update: 'UPDATING',
+
   save: 'SAVED',
   freeze: 'FREEZED',
   publish: 'PUBLISHED',
-  reject: 'REJECTED'
+  reject: 'REJECTED',
+  approvalPending: 'APPROVAL_PENDING',
+  hold: 'ON_HOLD'
 };
 
 export const COURSE_TOPIC_STATUS = {
@@ -106,17 +133,43 @@ export const COURSE_TOPIC_STATUS = {
   completed: 'completed'
 };
 
+export const COURSE_EXPERTISES = ['Beginner', 'Competent', 'Proficient'];
+
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
 
 export const NOTIFICATION_TITLES = {
-  cohortAssign: 'New Cohort Mapped',
-  cohortUnassign: 'Cohort Unmapped',
-  courseAssign: 'New Course Assigned',
-  courseUnssigned: 'Course Unassigned'
+  cohortAssign: 'Cohort-Mapped',
+  cohortUnassign: 'Cohort-Unmapped',
+  courseAssign: 'Course-Assigned',
+  courseUnssigned: 'Course-Unassigned',
+  lspWelcome: 'Welcome-Lsp',
+  signIn: { course: 'Course-signInAssign' }
+};
+
+export const NOTIFICATION_MSG_LINKS = {
+  firstSigin: {
+    addCourses: {
+      msg: 'Get started by adding courses to your learning folder',
+      link: '/self-landing'
+    },
+    coursesAssigned: {
+      msg: 'You have courses assigned to you by your admin. Lets check them out',
+      link: 'my-profile?tabName=Courses'
+    },
+    cohortAssigned: {
+      msg: 'You are mapped to cohorts. Learn together in cohorts. Lets check them out',
+      link: 'my-profile?tabName=Cohort'
+    }
+  }
 };
 
 export const COURSE_SELF_ASSIGN_LIMIT = 30;
+// https://stackoverflow.com/a/49490014/13419786
+export const ONE_MB_IN_BYTES = 1_048_576;
+export const LIMITS = {
+  courseVideoSize: ONE_MB_IN_BYTES * 240
+};
 
 export const EMAIL_TEMPLATE_IDS = {
   courseAssignMandatory: 'd-bf691d7c93794afca36c326cd032ccbf',
@@ -127,3 +180,35 @@ export const EMAIL_TEMPLATE_IDS = {
   cohortManagerAssign: 'd-c9382610d3bb46f28291bca9f5d97cd4',
   cohortManagerUnassign: 'd-8b97231c38a44b6facb05172f39cc714'
 };
+
+export const COURSE_TOPIC_TYPES = {
+  content: 'Content',
+  assessment: 'Assessment',
+  lab: 'Lab',
+  classroom: 'Classroom'
+};
+
+export const ORG_DOMAINS = [
+  'https://demo.zicops.com',
+  'https://zicops.com',
+  'https://myspace.zicops.com'
+];
+
+//Vendor Constant Start
+
+export const VENDOR_LANGUAGES = [
+  'English',
+  'Arabic',
+  'Hindi',
+  'Marathi',
+  'Telugu',
+  'Kannada',
+  'Tamil',
+  'Malayalam',
+  'Bengali',
+  'Gujarati'
+];
+
+export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
+
+//Vendor Constant End

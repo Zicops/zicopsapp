@@ -27,13 +27,12 @@ const UserScheduleTab = () => {
 
   function filterData(filterType = '') {
     if (filterType === '') return;
+    let data = scheduleDataAtom;
     let sData = [];
-    if (filterType?.toLowerCase() === 'all') sData = scheduleDataAtom;
-    else
-      sData = scheduleData?.filter(
-        (course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase()
-      );
-
+    sData =
+      filterType?.toLowerCase() === 'all'
+        ? data
+        : data?.filter((course) => course?.dataType?.toLowerCase() === filterType?.toLowerCase());
     if (!filterDate?.from || !filterDate?.to) return setSchduleData(sData);
 
     const courses = sData?.filter(
@@ -60,21 +59,31 @@ const UserScheduleTab = () => {
   async function loadScheduleData() {
     // if(!scheduleDataAtom?.length) return ;
     setLoading(true);
-    const courseData = await getUserCourseData(35);
-    const examData = await getScheduleExams(courseData);
-    if (!courseData?.length && !examData?.length) return setLoading(false);
-    const scheduleData = [...courseData, ...examData];
+    const courseData = await getUserCourseData(50);
+    const _courseData = courseData?.filter((course) => !!course?.id);
+    const examData = await getScheduleExams(_courseData);
+    if (!_courseData?.length && !examData?.length) return setLoading(false);
+    const scheduleData = [..._courseData, ...examData];
     const sortedArray = scheduleData?.sort((a, b) => {
       return a?.scheduleDate - b?.scheduleDate;
     });
 
     //tells the schedule upto five min
     const currentEpochTime = getCurrentEpochTime() + 5 * 60;
-    const futureScheduleData = sortedArray?.filter(
-      (course) => course?.scheduleDate > currentEpochTime
+    const futureScheduleData = sortedArray?.filter((course) => {
+      if (course?.dataType?.toLowerCase() === 'exam') {
+        if (course?.scheduleDate > currentEpochTime) return course;
+        if (course?.endTime > currentEpochTime) return course;
+        return false;
+      }
+      return course?.scheduleDate > currentEpochTime;
+    });
+
+    // removing exams which comes from another course
+    const sData = futureScheduleData?.filter(
+      (course, i, a) => a?.findIndex((v2) => v2?.id === course?.id) === i
     );
-    console.log(futureScheduleData, 'data');
-    setSchduleDataAtom([...futureScheduleData], setLoading(false));
+    setSchduleDataAtom([...sData], setLoading(false));
   }
 
   const filterOptions = [
@@ -99,7 +108,7 @@ const UserScheduleTab = () => {
               minDate={new Date().setHours(0, 0, 0, 0)}
               changeHandler={(date) => {
                 setSchduleData(scheduleDataAtom);
-                setFilterDate((prevValue) => ({ ...prevValue, from: date.setHours(0, 0, 0, 0) }));
+                setFilterDate((prevValue) => ({ ...prevValue, from: date?.setHours(0, 0, 0, 0) }));
               }}
             />
           </div>
@@ -110,7 +119,7 @@ const UserScheduleTab = () => {
               minDate={filterDate?.from || new Date().setHours(23, 59, 0, 0)}
               changeHandler={(date) => {
                 setSchduleData(scheduleDataAtom);
-                setFilterDate((prevValue) => ({ ...prevValue, to: date.setHours(23, 59, 0, 0) }));
+                setFilterDate((prevValue) => ({ ...prevValue, to: date?.setHours(23, 59, 0, 0) }));
               }}
               styleClass={styles?.calenderCustom}
             />
@@ -122,6 +131,7 @@ const UserScheduleTab = () => {
                 value: { value: filterType, label: filterType }
               }}
               changeHandler={(e) => {
+                if (e.value?.toLowerCase() === filterType?.toLowerCase()) return;
                 setFilterType(e.value);
                 setSchduleData(scheduleDataAtom);
               }}
@@ -133,11 +143,14 @@ const UserScheduleTab = () => {
                 ? ''
                 : styles.isActive
             }`}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (filterType?.toLowerCase() === 'all' && !filterDate?.from && !filterDate?.to)
                 return;
               setFilterDate({ from: null, to: null });
+              setFilterType('All');
               setSchduleData(scheduleDataAtom);
+              return;
             }}>
             Reset
           </div>
@@ -176,10 +189,7 @@ const UserScheduleTab = () => {
               type={'cohort'}
               scheduleData={course}
               handleClick={() => {
-                router?.push(
-                  link?.[course?.dataType]?.url,
-                  link?.[course?.dataType]?.asUrl
-                );
+                router?.push(link?.[course?.dataType]?.url, link?.[course?.dataType]?.asUrl);
               }}
             />
           </div>

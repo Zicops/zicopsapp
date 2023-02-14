@@ -1,5 +1,5 @@
-import { COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
-import { displayUnixDate, getMinCourseAssignDate, parseJson } from '@/helper/utils.helper';
+import { COURSE_MAP_STATUS, COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
+import { displayUnixDate, parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
@@ -11,11 +11,7 @@ import { truncateToN } from '../../helper/common.helper';
 import { isLoadingAtom } from '../../state/atoms/module.atoms';
 import { courseContext } from '../../state/contexts/CourseContext';
 import ConfirmPopUp from '../common/ConfirmPopUp';
-import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
-import InputDatePicker from '../common/InputDatePicker';
-import PopUp from '../common/PopUp';
-import { IsDataPresentAtom } from '../common/PopUp/Logic/popUp.helper';
-import UserButton from '../common/UserButton';
+import AssignCourse from '../CourseComps/AssignCourse';
 import CourseHeader from './CourseHeader';
 import style from './courseHero.module.scss';
 import Info from './Info';
@@ -24,11 +20,9 @@ import useHandleCourseHero from './Logic/useHandleCourseHero';
 export default function CourseHero({ isPreview = false }) {
   const {
     courseAssignData,
-    setCourseAssignData,
     isAssignPopUpOpen,
     setIsAssignPopUpOpen,
     activateVideoPlayer,
-    assignCourseToUser,
     showPreviewVideo,
     unassignCourseFromUser
   } = useHandleCourseHero(isPreview);
@@ -36,13 +30,16 @@ export default function CourseHero({ isPreview = false }) {
   const [isCourseUnassign, setIsCourseUnassign] = useState(false);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
   const isLoading = useRecoilValue(isLoadingAtom);
-  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [isUnAssignPopUpOpen, setIsUnAssignPopUpOpen] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const minDate = getMinCourseAssignDate();
 
   const router = useRouter();
+  const courseId = router?.query?.courseId || null;
+  const isAssign = router?.query?.isAssign || null;
+  const isUnAssign = router?.query?.isUnAssign || null;
+  const startCourse = router?.query?.startCourse || null;
+
   const { fullCourse } = useContext(courseContext);
   const {
     name: courseTitle,
@@ -60,13 +57,27 @@ export default function CourseHero({ isPreview = false }) {
     publisher: publishedBy
   } = fullCourse;
 
+  // useEffect(() => {
+  //   if (!router?.query?.isAssign) return;
+  //   if (!fullCourse?.id) return;
+  //   if (router?.query?.courseId !== fullCourse?.id) return;
+  //   if (courseAssignData?.isCourseAssigned) return;
+  //   return setIsAssignPopUpOpen(true);
+  // }, [fullCourse]);
+
   useEffect(() => {
-    if (!router?.query?.isAssign) return;
-    if (!fullCourse?.id) return;
-    if (router?.query?.courseId !== fullCourse?.id) return;
-    if (courseAssignData?.isCourseAssigned) return;
-    return setIsAssignPopUpOpen(true);
-  }, [fullCourse]);
+    if (!router.isReady) return;
+    if (courseId !== fullCourse?.id) return;
+
+    // open course assign popup if query params passed and course already not assigned
+    if (isAssign && !courseAssignData?.isCourseAssigned) setIsAssignPopUpOpen(true);
+
+    // course not assigned
+    if (!courseAssignData?.isCourseAssigned) return;
+
+    if (isUnAssign) setIsUnAssignPopUpOpen(true);
+    if (startCourse && userCourseData?.allModules?.length) activateVideoPlayer();
+  }, [router.isReady, fullCourse.id, userCourseData?.allModules?.length]);
 
   useEffect(() => {
     // console.log(userCourseData?.userCourseMapping)
@@ -108,10 +119,14 @@ export default function CourseHero({ isPreview = false }) {
             isCourseUnassign={isCourseUnassign}
             handleUnAssign={() => setIsUnAssignPopUpOpen(true)}
             handleAssign={() => {
-              if(userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT){
-                return setToastMsg({ type: 'info', message: 'You have reached your self course assign limit!' });
+              if (userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT) {
+                return setToastMsg({
+                  type: 'info',
+                  message: 'You have reached your self course assign limit!'
+                });
               }
-              setIsAssignPopUpOpen(true)}}
+              setIsAssignPopUpOpen(true);
+            }}
           />
 
           <div className={`${style.summary}`}>
@@ -133,7 +148,7 @@ export default function CourseHero({ isPreview = false }) {
               <button
                 onClick={activateVideoPlayer}
                 disabled={userCourseData?.allModules?.length === 0}>
-                {userCourseData?.userCourseMapping?.course_status === 'started'
+                {userCourseData?.userCourseMapping?.course_status === COURSE_MAP_STATUS.started
                   ? 'Continue'
                   : 'Start'}{' '}
                 the course
@@ -198,86 +213,16 @@ export default function CourseHero({ isPreview = false }) {
         )}
       </div>
 
-      {/* <PopUp
-        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-        size="small"
-        title="Assign Course To Yourself"
-        positionLeft="50%"
-        submitBtn={{ handleClick: assignCourseToUser }}>
-        <div className={`${style.assignCoursePopUp}`}>
-          <section>
-            <label htmlFor="endDate">Course End Date:</label>
-            <InputDatePicker
-              selectedDate={courseAssignData?.endDate}
-              changeHandler={(date) => {
-                setIsPopUpDataPresent(true);
-                setCourseAssignData({ ...courseAssignData, endDate: date });
-              }}
-            />
-          </section>
+      <AssignCourse
+        isAssignPopUpOpen={isAssignPopUpOpen}
+        setIsAssignPopUpOpen={setIsAssignPopUpOpen}
+        courseId={fullCourse?.id}
+        courseType={fullCourse?.type}
+        lspId={fullCourse?.lspId}
+        suggestedCompletionDays={fullCourse?.expected_completion}
+        courseName={fullCourse?.name}
+      />
 
-          <LabeledRadioCheckbox
-            type="checkbox"
-            label="Is Mandatory"
-            name="isMandatory"
-            isChecked={courseAssignData?.isMandatory}
-            changeHandler={(e) =>
-              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
-            }
-          />
-        </div>
-      </PopUp> */}
-      <PopUp
-        // title="Course Mapping Configuration"
-        // submitBtn={{ handleClick: handleSubmit }}
-        popUpState={[isAssignPopUpOpen, setIsAssignPopUpOpen]}
-        // size="smaller"
-        customStyles={{ width: '400px' }}
-        isFooterVisible={false}
-        positionLeft="50%">
-        <div className={`${style.assignCoursePopUp}`}>
-          <p className={`${style.assignCoursePopUpTitle}`}>Course Mapping Configuration</p>
-          <LabeledRadioCheckbox
-            type="checkbox"
-            label="Course Mandatory"
-            name="isMandatory"
-            isChecked={courseAssignData?.isMandatory}
-            changeHandler={(e) =>
-              setCourseAssignData({ ...courseAssignData, isMandatory: e.target.checked })
-            }
-          />
-          <section>
-            <p htmlFor="endDate">Expected Completion date:</p>
-            <InputDatePicker
-              minDate={minDate}
-              selectedDate={courseAssignData?.endDate}
-              changeHandler={(date) => {
-                setIsPopUpDataPresent(true);
-                setCourseAssignData({ ...courseAssignData, endDate: date });
-              }}
-              styleClass={style.dataPickerStyle}
-            />
-          </section>
-          <div className={`${style.assignCourseButtonContainer}`}>
-            <UserButton
-              text={'Cancel'}
-              isPrimary={false}
-              type={'button'}
-              clickHandler={() => {
-                setIsAssignPopUpOpen(false);
-                setCourseAssignData({ ...courseAssignData, endDate: new Date() });
-              }}
-            />
-            <UserButton
-              text={'Save'}
-              type={'button'}
-              clickHandler={() => {
-                assignCourseToUser();
-              }}
-            />
-          </div>
-        </div>
-      </PopUp>
       {isUnAssignPopUpOpen && (
         <ConfirmPopUp
           title={'Are you sure you want to remove this course?'}

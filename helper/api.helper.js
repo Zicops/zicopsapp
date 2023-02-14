@@ -1,5 +1,10 @@
 import { mutationClient } from '@/api/Mutations';
-import { notificationClient, SEND_EMAIL, SEND_NOTIFICATIONS } from '@/api/NotificationClient';
+import {
+  notificationClient,
+  SEND_EMAIL,
+  SEND_NOTIFICATIONS,
+  SEND_NOTIFICATIONS_WITH_LINK
+} from '@/api/NotificationClient';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -60,6 +65,32 @@ export async function loadQueryDataAsync(
   return response?.data || {};
 }
 
+export async function loadMultipleLspDataWithMultipleQueries(
+  QUERY,
+  variableObj = {},
+  options = {},
+  client = queryClient,
+  lspIds = []
+) {
+  const response = [];
+
+  const _lspIds = [0, ...lspIds];
+  for (let i = 0; i < _lspIds.length; i++) {
+    const lspId = _lspIds[i];
+
+    // aviod query from same lsp
+    const currentLsp = sessionStorage.getItem('lsp_id');
+    if (currentLsp === lspId) continue;
+
+    const tenantObj = !!lspId ? { context: { headers: { tenant: lspId } } } : {};
+    const data = await loadQueryDataAsync(QUERY, variableObj, { ...tenantObj, ...options }, client);
+
+    response.push(data);
+  }
+
+  return response;
+}
+
 export async function loadAndCacheDataAsync(
   QUERY,
   variableObj = {},
@@ -106,6 +137,18 @@ export async function sendNotification(variableObj = {}, options = {}) {
   return response?.data || {};
 }
 
+export async function sendNotificationWithLink(variableObj = {}, options = {}) {
+  const response = await notificationClient
+    .mutate({ mutation: SEND_NOTIFICATIONS_WITH_LINK, variables: variableObj, ...options })
+    .catch((err) => {
+      console.error(`Send Notification error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
 // ============ How to use =============
 // sendNotification(
 //   {
@@ -115,7 +158,6 @@ export async function sendNotification(variableObj = {}, options = {}) {
 //   },
 //   { context: { headers: { 'fcm-token': fcmToken } } }
 // );
-
 
 export async function sendEmail(variableObj = {}, options = {}) {
   const response = await notificationClient
@@ -128,7 +170,6 @@ export async function sendEmail(variableObj = {}, options = {}) {
 
   return response?.data || {};
 }
-
 
 export async function sendNotificationAndEmail(
   notificationVariableObj = {},
@@ -153,7 +194,7 @@ export async function sendNotificationAndEmail(
 
   const response = { mail: resEmail?.data, notification: resNotification?.data };
 
-  console.log(resEmail,'emails res')
+  console.log(resEmail, 'emails res');
 
   if (!response?.mail || !resNotification?.notification) {
     return {};

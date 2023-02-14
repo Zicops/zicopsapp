@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
+  GET_ALL_COURSE_TOPICS_ID,
   GET_EXAM_CONFIG,
   GET_EXAM_INSTRUCTION,
   GET_EXAM_META,
@@ -39,8 +40,8 @@ import {
 } from '@/api/UserQueries';
 import ExamScreenPage from '@/components/LearnerExamComp/ExamScreenPage';
 import { getEndTime, getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { COURSE_MAP_STATUS, COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { DIFFICULTY, getUnixFromDate } from '@/helper/utils.helper';
 import { getResultsObj, LearnerExamAtom, QuestionOptionDataAtom } from '@/state/atoms/exams.atoms';
@@ -267,22 +268,30 @@ const ExamScreen = () => {
     )?.user_cp_id;
     // console.log(data?.userCourseProgress, userCourseProgressId, userCourseData);
     if (!userCourseProgressId) {
-      const sendData = {
-        userId: userData.id,
-        userCourseId: data?.userCourseMapping?.user_course_id,
-        topicId: topicId,
-        topicType: 'Assessment',
-        status: 'not-started',
-        videoProgress: '',
-        timestamp: ''
-      };
-      console.log(sendData);
-      const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
-        console.log(err);
-        return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
-      });
-      const userCPData = progressRes?.data?.addUserCourseProgress[0];
-      if (userCPData) data.userCourseProgress.push(userCPData);
+      const userCPData = await createUserTopicProgress(
+        data?.userCourseMapping?.user_course_id,
+        courseId,
+        userData.id,
+        data?.userCourseProgress
+      );
+      if (userCPData) data.userCourseProgress.push(...(userCPData || []));
+
+      // const sendData = {
+      //   userId: userData.id,
+      //   userCourseId: data?.userCourseMapping?.user_course_id,
+      //   topicId: topicId,
+      //   topicType: 'Assessment',
+      //   status: 'not-started',
+      //   videoProgress: '',
+      //   timestamp: ''
+      // };
+      // console.log(sendData);
+      // const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
+      //   console.log(err);
+      //   return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+      // });
+      // const userCPData = progressRes?.data?.addUserCourseProgress[0];
+      // if (userCPData) data.userCourseProgress.push(userCPData);
     }
 
     const attemptRes = await loadQueryDataAsync(
@@ -847,8 +856,8 @@ const ExamScreen = () => {
 
   async function setUserAttemptData(isNewAttempt = false) {
     const learnerData = learnerExamData;
-    const _courseData = structuredClone(userCourseData);
-    const _examData = structuredClone(userExamData);
+    const _courseData = structuredClone(userCourseData || {});
+    const _examData = structuredClone(userExamData || {});
     if (isNewAttempt) {
       _examData.currentAttemptId = null;
       _examData.userExamProgress = [];
@@ -856,11 +865,14 @@ const ExamScreen = () => {
 
     let isError = false;
     if (userCourseData?.userCourseMapping?.course_status === 'open') {
+      const userLspId =
+        _courseData?.userCourseMapping?.user_lsp_id || sessionStorage.getItem('user_lsp_id');
+
       const sendUserCourseData = {
-        courseStatus: 'started',
+        courseStatus: COURSE_MAP_STATUS.started,
         userCourseId: _courseData?.userCourseMapping?.user_course_id,
         userId: _courseData?.userCourseMapping?.user_id,
-        userLspId: _courseData?.userCourseMapping?.user_lsp_id,
+        userLspId: userLspId,
         courseId: _courseData?.userCourseMapping?.course_id,
         addedBy: _courseData?.userCourseMapping?.added_by,
         courseType: _courseData?.userCourseMapping?.course_type,
@@ -891,9 +903,14 @@ const ExamScreen = () => {
     if (!user_cp_id)
       return setToastMsg({ type: 'danger', message: 'Course Progress Id not found' });
 
+    const userLspId =
+      userOrgData?.user_lsp_id ||
+      userDataGlobal?.userDetails?.user_lsp_id ||
+      sessionStorage.getItem('user_lsp_id');
+
     const sendAttemptData = {
       user_id: userData?.id,
-      user_lsp_id: userOrgData?.user_lsp_id || userDataGlobal?.userDetails?.user_lsp_id,
+      user_lsp_id: userLspId,
       user_cp_id: user_cp_id,
       user_course_id: _courseData?.userCourseMapping?.user_course_id,
       exam_id: learnerData?.examData?.id,
@@ -951,10 +968,15 @@ const ExamScreen = () => {
     console.log(learnerData);
     learnerData?.sectionData?.forEach((section, sectionIndex) => {
       section?.questions?.forEach((qId, qIndex) => {
+        const userLspId =
+          userOrgData?.user_lsp_id ||
+          userDataGlobal?.userDetails?.user_lsp_id ||
+          sessionStorage.getItem('user_lsp_id');
+
         const progressData = {
           user_id: userData?.id,
           user_ea_id: examAttemptData?.user_ea_id,
-          user_lsp_id: userOrgData?.user_lsp_id || userDataGlobal?.userDetails?.user_lsp_id,
+          user_lsp_id: userLspId,
           user_cp_id: sendAttemptData?.user_cp_id,
           // user_course_id: userCourseMapData?.userCourseMapping?.user_course_id,
 
@@ -1242,6 +1264,44 @@ const ExamScreen = () => {
       }
     });
   }
+
+  async function createUserTopicProgress(userCourseId, courseId, userId, userCourseProgress = []) {
+    const userCourseProgressArr = [];
+    const courseTopicRes = await loadAndCacheDataAsync(GET_ALL_COURSE_TOPICS_ID, {
+      course_id: courseId
+    });
+
+    if (courseTopicRes?.error || !courseTopicRes?.getTopics?.length) return userCourseProgressArr;
+    const allTopics = courseTopicRes?.getTopics || [];
+
+    for (let i = 0; i < allTopics.length; i++) {
+      const topic = allTopics[i];
+
+      const isProgressCreated = userCourseProgress?.find((cp) => cp?.topic_id === topic?.id);
+      if (isProgressCreated) continue;
+
+      const sendData = {
+        userId,
+        userCourseId,
+        topicId: topic?.id,
+        topicType: topic?.type,
+        status: 'not-started',
+        videoProgress: '',
+        timestamp: ''
+      };
+
+      const progressRes = await addUserCourseProgress({ variables: sendData }).catch((err) => {
+        console.log(err);
+        return setToastMsg({ type: 'danger', message: 'Add Course Progress Error' });
+      });
+
+      const topicProgress = progressRes?.data?.addUserCourseProgress[0];
+      if (topicProgress) userCourseProgressArr.push(topicProgress);
+    }
+
+    return userCourseProgressArr;
+  }
+
   return (
     <>
       <ExamScreenPage

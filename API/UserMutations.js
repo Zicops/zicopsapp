@@ -145,6 +145,7 @@ export const ADD_USER_COURSE = gql`
   mutation addUserCourse(
     $userId: String!
     $userLspId: String!
+    $lspId: String
     $courseId: String!
     $addedBy: String!
     $courseType: String!
@@ -157,6 +158,7 @@ export const ADD_USER_COURSE = gql`
         {
           user_id: $userId
           user_lsp_id: $userLspId
+          lsp_id: $lspId
           course_id: $courseId
           course_type: $courseType
           added_by: $addedBy
@@ -169,6 +171,7 @@ export const ADD_USER_COURSE = gql`
       user_course_id
       user_id
       user_lsp_id
+      lsp_id
       course_id
       course_type
       added_by
@@ -188,6 +191,7 @@ export const UPDATE_USER_COURSE = gql`
     $userCourseId: ID!
     $userId: String!
     $userLspId: String!
+    $lspId: String
     $courseId: String!
     $addedBy: String!
     $courseType: String!
@@ -200,6 +204,7 @@ export const UPDATE_USER_COURSE = gql`
         user_course_id: $userCourseId
         user_id: $userId
         user_lsp_id: $userLspId
+        lsp_id: $lspId
         course_id: $courseId
         course_type: $courseType
         added_by: $addedBy
@@ -211,6 +216,7 @@ export const UPDATE_USER_COURSE = gql`
       user_course_id
       user_id
       user_lsp_id
+      lsp_id
       course_id
       course_type
       added_by
@@ -1321,6 +1327,114 @@ export const UPDATE_ORGAINIZATION_UNIT_DETAILS = gql`
       updated_at
       created_by
       updated_by
+    }
+  }
+`;
+export const ADD_VENDOR = gql`
+  mutation addvendorInput(
+    $lsp_id: String
+    $name: String
+    $level: String
+    $vendorId: String
+    $type: String
+    $photo: Upload
+    $address: String
+    $website: String
+    $facebook_url: String
+    $instagram_url: String
+    $twitter_url: String
+    $linkedin_url: String
+    $users: [String]
+    $description: String
+    $created_at: String
+    $reated_by: String
+    $updated_at: String
+    $updated_by: String
+    $status: String
+  ) {
+    addvendorInput(
+      input: {
+        lsp_id: $lsp_id
+        name: $name
+        level: $level
+        vendor_id: $vendorId
+        type: $type
+        photo: $photo
+        address: $address
+        website: $website
+        facebook_url: $facebook_url
+        instagram_url: $instagram_url
+        twitter_url: $twitter_url
+        linkedin_url: $linkedin_url
+        users: $users
+        description: $description
+        created_at: $created_at
+        reated_by: $reated_by
+        updated_at: $updated_at
+        updated_by: $updated_by
+        status: $status
+      }
+    )
+  }
+`;
+export const UPDATE_VENDOR = gql`
+  mutation updatevendor(
+    $vendorId: String
+    $level: String
+    $type: String
+    $photo: Upload
+    $address: String
+    $website: String
+    $facebook_url: String
+    $instagram_url: String
+    $twitter_url: String
+    $linkedin_url: String
+    $users: [String]
+    $description: String
+    $created_at: String
+    $reated_by: String
+    $updated_at: String
+    $updated_by: String
+    $status: String
+  ) {
+    updatevendor(
+      input: {
+        vendor_id: $vendorId
+        level: $level
+        type: $type
+        photo: $photo
+        address: $address
+        website: $website
+        facebook_url: $facebook_url
+        instagram_url: $instagram_url
+        twitter_url: $twitter_url
+        linkedin_url: $linkedin_url
+        users: $users
+        description: $description
+        created_at: $created_at
+        reated_by: $reated_by
+        updated_at: $updated_at
+        updated_by: $updated_by
+        status: $status
+      }
+    ) {
+      vendorId
+      level
+      type
+      photo
+      address
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      users
+      description
+      created_at
+      reated_by
+      updated_at
+      updated_by
+      status
     }
   }
 `;

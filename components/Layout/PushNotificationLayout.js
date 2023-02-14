@@ -12,12 +12,11 @@ import {
   NotificationAtom
 } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import notificationData from '../Notifications/data';
 
 export default function PushNotificationLayout({ children }) {
   const [sendFcmToken] = useMutation(GET_FCM_TOKEN, { client: notificationClient });
@@ -29,11 +28,14 @@ export default function PushNotificationLayout({ children }) {
   const [notification, setNotifications] = useRecoilState(NotificationAtom);
   const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [isListnerAdded, setIsListnerAdded] = useState(false);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   useEffect(() => {
     if (!userAboutData?.id) return;
+    let lspId = sessionStorage.getItem('lsp_id');
+    if(!lspId) return;
 
-    setToken().then((token) => {
+    setToken().then((token) => {  
       if (!token) return;
       loadAllNotifications(token);
     });
@@ -44,6 +46,7 @@ export default function PushNotificationLayout({ children }) {
 
       navigator.serviceWorker.addEventListener('message', (event) => {
         console.log('event for the service worker', event);
+        // loadAllNotifications(fcmToken)
 
         if (event?.data?.notification?.body) {
           setToastMsg({ type: 'info', message: event?.data?.notification?.body });
@@ -62,8 +65,8 @@ export default function PushNotificationLayout({ children }) {
                 title: event?.data?.notification?.title,
                 body: event?.data?.notification?.body,
                 isRead: false,
-                img: '/images/dnd1.jpg',
-                link: '',
+                img: `/images/${event?.data?.notification?.title || 'details'}.png`,
+                link: event?.data?.notification?.link || '',
                 route: '',
                 duration: moment().fromNow()
               }),
@@ -86,22 +89,43 @@ export default function PushNotificationLayout({ children }) {
     }
 
     async function loadAllNotifications(token) {
+      //context obj added
+      let queryVariables = { prevPageSnapShot: '', pageSize: 10, isRead: false };
+      let messages = [];
+      const contextObj = { context: { headers: { 'fcm-token': token } } };
       const allNotifications = await loadQueryDataAsync(
         GET_ALL_NOTIFICATIONS,
-        { prevPageSnapShot: '', pageSize: 10 },
-        { context: { headers: { 'fcm-token': token } } },
+        queryVariables,
+        contextObj,
         notificationClient
       );
 
-      const messages = allNotifications?.getAll?.messages || [];
+      const _unreadMessage = allNotifications?.getAll?.messages || [];
+
+      messages = [..._unreadMessage];
+      // messages = structuredClone(_message);
+      if (_unreadMessage?.length < 5) {
+        queryVariables.isRead = true;
+        const allNotifications = await loadQueryDataAsync(
+          GET_ALL_NOTIFICATIONS,
+          queryVariables,
+          contextObj,
+          notificationClient
+        );
+
+        const _readMessages = allNotifications?.getAll?.messages || [] ; 
+
+        messages = [..._unreadMessage, ..._readMessages];
+      }
+      
       const allMsg =
         messages?.map((msg) =>
           getNotificationObj({
             title: msg?.title,
             body: msg?.body,
             isRead: !!msg?.is_read,
-            img: '/images/dnd1.jpg',
-            link: '',
+            img: `/images/${msg?.title || 'details'}.png`,
+            link: msg?.link || '',
             route: '',
             fcmMessageId: msg?.message_id,
             duration: moment.unix(msg?.created_at).fromNow()
@@ -135,7 +159,6 @@ export default function PushNotificationLayout({ children }) {
       try {
         const token = await getFCMToken();
         if (!token) return null;
-        console.log('token', token);
         sessionStorage.setItem('fcm-token', token);
         setFcmToken(token);
         sendFcmToken({ context: { headers: { 'fcm-token': token } } }).catch((err) =>
@@ -147,7 +170,7 @@ export default function PushNotificationLayout({ children }) {
         return null;
       }
     }
-  }, [userAboutData?.id]);
+  }, [userAboutData?.id,userOrgData?.lsp_id]);
 
   return <>{children}</>;
 }

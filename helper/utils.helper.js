@@ -84,7 +84,7 @@ export function displayMinToHMS(mins) {
 export const TableResponsiveRows = [
   {
     breakpoint: 1200,
-    pageSize: 5
+    pageSize: 7
   },
   {
     breakpoint: 1500,
@@ -92,15 +92,16 @@ export const TableResponsiveRows = [
   },
   {
     breakpoint: 1900,
-    pageSize: 12
+    pageSize: 7
   }
 ];
 
 export function getPageSizeBasedOnScreen() {
-  if (!process.browser) return 6;
+  const defaultPageSize = 7;
+  if (!process.browser) return defaultPageSize;
 
   const screenWidth = window.screen.width;
-  let pageSize = 6;
+  let pageSize = defaultPageSize;
 
   TableResponsiveRows.forEach((r) => {
     if (r.breakpoint <= screenWidth) pageSize = r.pageSize;
@@ -154,6 +155,10 @@ export function toggleFullScreen(elem) {
 }
 
 export function getUnixFromDate(dateObj = new Date()) {
+  //implemented for unix timestamp
+  if(!(dateObj instanceof Date)) return dateObj;
+    
+  
   const newDate = new Date(dateObj);
 
   return Math.floor(newDate.getTime() / 1000) || 0;
@@ -258,9 +263,9 @@ export function parseJson(stringifiedJson) {
 export function getUnixTimeAt(hours = 7, minutes = 0, seconds = 0) {
   const now = new Date();
 
-  now.setHours(hours);
-  now.setMinutes(minutes);
-  now.setSeconds(seconds);
+  // now.setHours(hours);
+  // now.setMinutes(minutes);
+  // now.setSeconds(seconds);
 
   const unixTimestamp = Math.floor(now / 1000);
   return unixTimestamp;
@@ -270,7 +275,38 @@ export function isWordIncluded(sentence = '', word = '') {
   return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
 }
 
-export function getMinCourseAssignDate() {
-  const date = new Date().setDate(new Date().getDate() + 1);
+export function getMinCourseAssignDate(durationInSec = null) {
+  let date = new Date().setDate(new Date().getDate() + 1);
+  if (!durationInSec) return date;
+  date = new Date(new Date().getTime() + durationInSec * 1000).setDate(new Date().getDate() + 1);
   return date;
+}
+
+export function isDatesSame(date1 = new Date(), date2 = new Date()) {
+  if (date1?.getDate() !== date2?.getDate()) return false;
+  if (date1?.getMonth() !== date2?.getMonth()) return false;
+  if (date1?.getFullYear() !== date2?.getFullYear()) return false;
+
+  return true;
+}
+
+export function getCurrentHost() {
+  return process.browser && window?.location?.host ? window.location.host : 'zicops.com';
+}
+
+export function logger() {
+  const pub = {};
+  if (!process.browser) return null;
+  if (!window?.consoleLog) window.consoleLog = console.log;
+
+  pub.enableLogger = function enableLogger() {
+    console.log = window?.consoleLog;
+  };
+
+  pub.disableLogger = function disableLogger() {
+    if (!window?.consoleLog) window.consoleLog = console.log;
+    console.log = function () {};
+  };
+
+  return pub;
 }

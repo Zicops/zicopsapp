@@ -77,6 +77,7 @@
 .icons img {
   width: 40px;
   /* height: 40px; */
+  display: block;
   cursor: pointer;
 }
 
@@ -102,7 +103,7 @@ $lineColor: $darkThree;
 .sitemap {
   position: relative;
   display: flex;
-  column-gap: 20px;
+  column-gap: 40px;
   margin-top: 10px;
 
   // line below admin (long sleeping line)
