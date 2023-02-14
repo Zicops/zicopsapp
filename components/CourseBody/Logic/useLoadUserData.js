@@ -503,13 +503,13 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       const topic = topicDataLoaded[i];
 
       loadQuiz(topic?.id).then((newQuiz) => {
-        if (newQuiz?.length)
-          setQuizData((prev) => {
-            // console.log(prev, newQuiz);
-            const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
+        if (newQuiz?.length) setQuizData(newQuiz);
+        // setQuizData((prev) => {
+        //   // console.log(prev, newQuiz);
+        //   const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
 
-            return [...prev, ...filteredQuiz];
-          });
+        //   return [...prev, ...filteredQuiz];
+        // });
       });
     }
 
