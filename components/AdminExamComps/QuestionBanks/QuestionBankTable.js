@@ -56,11 +56,11 @@ export default function QuestionBankTable({ isEdit = false }) {
   }, [addPopUp]);
 
   async function loadQbData() {
-    const queryVariables = { publish_time: Date.now(), pageSize: 30, pageCursor: '' };
-    if (!isDev) queryVariables.pageSize = 1000;
+    const queryVariables = { publish_time: Date.now(), pageSize: 1000, pageCursor: '' };
+    // if (!isDev) queryVariables.pageSize = 1000;
 
     if (searchQuery) queryVariables.searchText = searchQuery?.trim();
-    if (pageCursor) queryVariables.pageCursor = pageCursor;
+    // if (pageCursor) queryVariables.pageCursor = pageCursor;
 
     const _questionBanks = structuredClone(questionBank || []);
     const qbRes = await loadQueryDataAsync(
@@ -73,8 +73,9 @@ export default function QuestionBankTable({ isEdit = false }) {
       return setToastMsg({ type: 'danger', message: 'question bank load error' });
     }
 
-    setPageCursor(qbRes?.getLatestQuestionBank?.pageCursor || null);
+    // setPageCursor(qbRes?.getLatestQuestionBank?.pageCursor || null);
     const questionBankData = structuredClone(qbRes?.getLatestQuestionBank?.questionBanks) || [];
+
     if (!questionBankData.length) return setLoading(false);
 
     for (let i = 0; i < questionBankData.length; i++) {
@@ -88,10 +89,8 @@ export default function QuestionBankTable({ isEdit = false }) {
     }
 
     if (!questionBankData?.length) return setLoading(false);
-    setQuestionBank(
-      sortArrByKeyInOrder([..._questionBanks, ...questionBankData], 'created_at', false),
-      setLoading(false)
-    );
+    // const qbData = searchQuery ? questionBankData : [..._questionBanks, ...questionBankData];
+    setQuestionBank(sortArrByKeyInOrder(questionBankData, 'created_at', false), setLoading(false));
   }
 
   function refetchBankData(data) {
