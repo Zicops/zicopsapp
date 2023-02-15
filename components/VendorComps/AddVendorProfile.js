@@ -13,6 +13,7 @@ import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
 import { changeHandler } from '@/helper/common.helper';
 import VendorPopUp from './common/VendorPopUp';
 import AddExpertise from './AddVendor/common/AddExpertise';
+import useHandleVendor from './Logic/useHandleVendor';
 
 const optionYearArray = ['1', '1+', '2', '2+', '3', '3+', '4', '4+'].map((val) => ({
   label: val,
@@ -26,6 +27,7 @@ const AddVendorProfile = ({ data = {} }) => {
   const [expertiseSearch, setExpertiseSearch] = useState('');
   const [experienceYear, setExpericeYear] = useState(null);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const { handleProfilePhoto } = useHandleVendor();
 
   const handleClick = () => {};
 
@@ -94,16 +96,24 @@ const AddVendorProfile = ({ data = {} }) => {
           />
         </div>
         <div className={`${styles.input2}`}>
-          <label for="vendorName">Upload photo: </label>
+          <label for="profileImage">Upload photo: </label>
           <BrowseAndUpload
             styleClass={`${styles.uploadImage}`}
             styleClassBtn={`${styles.uploadButton}`}
             title="Drag and drop"
-            handleFileUpload={() => {}}
+            handleFileUpload={handleProfilePhoto}
+            handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
+            previewData={{
+              fileName: profileData?.profileImage?.name,
+              filePath: profileData?.profileImage
+            }}
+            inputName="profileImage"
+            // hideRemoveBtn={true}
+            isActive={profileData?.profileImage}
           />
         </div>
         <div className={`${styles.input1}`}>
-          <label for="vendorName">Years of experience: </label>
+          <label for="expriences">Years of experience: </label>
           <LabeledDropdown
             dropdownOptions={{
               inputName: 'year',

@@ -25,7 +25,6 @@ export default function EditVendor() {
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
   useEffect(() => {
-    console.log('vendorData', vendorData);
     getSingleVendorInfo();
   }, []);
 

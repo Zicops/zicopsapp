@@ -1445,18 +1445,18 @@ export const UPDATE_VENDOR = gql`
 export const CREATE_PROFILE_VENDOR = gql`
   mutation createProfileVendor(
     $vendor_id: String!
-      $first_name: String!
-      $last_name: String
-      $email: String!
-      $phone: Int!
-      $photo: Upload
-      $description: String
-      $languages: [String]
-      $SME_Expertise: [String]
-      $Classroom_Expertise: [String]
-      $expereince: Int
-      $is_speaker: true!
-      $status: String!
+    $first_name: String!
+    $last_name: String
+    $email: String!
+    $phone: Int!
+    $photo: Upload
+    $description: String
+    $languages: [String]
+    $SME_Expertise: [String]
+    $Classroom_Expertise: [String]
+    $expereince: Int
+    $is_speaker: true!
+    $status: String!
   ) {
     createProfileVendor(
       input: {
@@ -1474,36 +1474,36 @@ export const CREATE_PROFILE_VENDOR = gql`
         is_speaker: $is_speaker
         status: $status
       }
-    ) {}
+    )
   }
 `;
 
 export const CREATE_EXPERIENCE_VENDOR = gql`
   mutation createExperienceVendor(
     $vendor_id: String!
-      $pf_id: String!
-      $title: String!
-      $company_name: String!
-      $employement_type: String!
-      $location: String!
-      $location_type: String!
-      $start_date: Int!
-      $end_date: Int
-      $status: String!
+    $pf_id: String!
+    $title: String!
+    $company_name: String!
+    $employement_type: String!
+    $location: String!
+    $location_type: String!
+    $start_date: Int!
+    $end_date: Int
+    $status: String!
   ) {
     createExperienceVendor(
       input: {
-      vendor_id: $vendor_id
-      pf_id: $pf_id
-      title: $title
-      company_name: $company_name
-      employement_type: $employement_type
-      location: $location
-      location_type: $location_type
-      start_date: $start_date
-      end_date: $end_date
-      status: $status
+        vendor_id: $vendor_id
+        pf_id: $pf_id
+        title: $title
+        company_name: $company_name
+        employement_type: $employement_type
+        location: $location
+        location_type: $location_type
+        start_date: $start_date
+        end_date: $end_date
+        status: $status
       }
-    ) {}
+    )
   }
 `;
