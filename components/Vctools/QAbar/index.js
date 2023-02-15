@@ -1,8 +1,7 @@
 import { useState } from "react";
 import styles from "../VctoolMain.module.scss"
 const QAbar = ({ShowQAbtn,ShowBtnFun,ShowHide}) => {
-    const [askQ, setaskQ] = useState(Boolean)
-    return (
+       return (
         <div className={`${styles.QAbar}`}>
             <div className={`${styles.QAbar_head}`}>
                 <div>Q & A</div>

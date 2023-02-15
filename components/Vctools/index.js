@@ -3,7 +3,10 @@ import MeetingCard from './MeetingCard';
 import { useRef, useState } from 'react';
 import Script from 'next/script';
 import MainToolbar from './Toolbar';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 const VcMaintool = () => {
+const userData=useRecoilValue(UserStateAtom)
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const GenerateString = (length) => {
     let result = ' ';
@@ -20,16 +23,25 @@ const VcMaintool = () => {
   const [toggleVideo, settoggleVideo] = useState(false);
   const [link, setlink] = useState(GenerateString(9).trim().toLocaleLowerCase());
   const [api, setapi] = useState(null);
+  const [Fullscreen, setFullscreen] = useState(false)
+  const FullScreenRef = useRef(null)
+  const [Userinfo, setUserinfo] = useState([])
+  const [Iframe,setIframe]=useState([])
+  const GetFullScreenElement = () => {
+    return document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullscreenElement ||
+      document.msFullscreenElement
+  }
+  const start_Name=userData.first_name +" "+userData.last_name
   const StartMeeting = (givenName) => {
     const domain = 'live.zicops.com';
     const options = {
       roomName: givenName,
-      // width: 100+"%",
-      // height: 100+"%",
       parentNode: ContainerRef.current,
       userInfo: {
-        email: 'email@jitsiexamplemail.com',
-        displayName: 'John Doe'   //default name
+        email: userData.email,
+        displayName: start_Name //default name
       },
       configOverwrite: {
         startWithAudioMuted: !toggleAudio,
@@ -41,24 +53,17 @@ const VcMaintool = () => {
         SHOW_JITSI_WATERMARK: false,
         DISABLE_DOMINANT_SPEAKER_INDICATOR: true,
         TOOLBAR_ALWAYS_VISIBLE: true,
-        TOOLBAR_BUTTONS: [
-          // 'closedcaptions',
-          // 'filmstrip',
-          // 'fullscreen',
-          // 'select-background',
-          // 'settings'
-        ]
+        TOOLBAR_BUTTONS: []
       },
       onload: function () {
         console.log('onload');
         settoobar(true)
-
       }
     };
     setapi(new JitsiMeetExternalAPI(domain, options));
   };
   return (
-    <div>
+    <div ref={FullScreenRef}>
       <div id="meet" className={toolbar && `${styles.meet}`} ref={ContainerRef}></div>
       {toolbar && (
         <MainToolbar
@@ -76,14 +81,66 @@ const VcMaintool = () => {
             api.dispose();
             settoobar(!toolbar);
             sethidecard(!hidecard)
+            localStorage.removeItem("canvasimg");
+
+            document.exitFullscreen().then((data => {
+              console.log(data)
+            })).catch((e) => {
+              console.log(e)
+            })
+            setFullscreen(false)
           }}
           ShareScreen={() => {
             api.executeCommand('toggleShareScreen');
-      
+            setFullscreen(false)
           }}
           HandRiseFun={() => {
             api.executeCommand('toggleRaiseHand');
-          }} />
+          }}
+          FullScreenFun={() => {
+            console.log(GetFullScreenElement())
+            if (GetFullScreenElement()) {
+              document.exitFullscreen().then((data => {
+                console.log(data)
+              })).catch((e) => {
+                console.log(e)
+              })
+            }
+            else {
+              FullScreenRef.current.requestFullscreen().catch((e) => {
+                console.log(e)
+              })
+
+            }
+            setFullscreen(!Fullscreen)
+          }}
+          MouseMoveFun={() => {
+            api.getRoomsInfo().then(rooms => {
+              // console.log(rooms.rooms[0].participants)
+
+              setUserinfo(rooms.rooms[0].participants)
+            })
+
+            // console.log(userData)
+            Userinfo.forEach((data)=>
+            {
+              // console.log(api.getEmail(data.id))
+              //  setuserEmailId(getEmail(data.id))
+              if(userData.email.includes("@zicops"))
+              {
+                api.executeCommand('grantModerator',data.id);
+              }
+              else
+              {
+                console.log("not a modarator")
+                // api.executeCommand('rejectParticipant',data.id);
+              }
+            })
+
+          }}
+          Fullscreen={Fullscreen}
+           GetUesrId={Userinfo}
+           />
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.main_div}`}>
@@ -92,7 +149,7 @@ const VcMaintool = () => {
           hidecard ? ""
             : <MeetingCard
               StartMeeting={() => {
-                StartMeeting(link);
+                StartMeeting("standup");
                 sethidecard(!hidecard)
               }}
               StartAudioenableFun={() => {
@@ -103,7 +160,6 @@ const VcMaintool = () => {
               }}
               StartmeetingVideoenable={toggleVideo}
               StartmeetingAudioenable={toggleAudio}
-
             />
         }
       </div>
