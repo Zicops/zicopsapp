@@ -1,6 +1,5 @@
 @import '../../styles/base.scss';
 
-
 .main_div {
     width: 100vw;
     height: 85vh;
@@ -130,7 +129,6 @@
 
 .toolbar_nav {
     // opacity: 0;
-
     transition: opacity 1s;
     // z-index: 1010;
     width: 100vw;
@@ -141,7 +139,6 @@
     display: flex;
     justify-content: right;
     align-items: center;
-
 }
 
 .toolbar_nav>button {
@@ -179,7 +176,6 @@
     width: 100vw;
     background-color: black;
     display: flex;
-
     // justify-content: center;
     align-items: center;
 }

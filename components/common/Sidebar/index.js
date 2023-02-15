@@ -81,7 +81,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
                 isActive = true;
               }
               return (
-                <Fragment key={val.link}>
+                <Fragment key={val.id}>
                   {isProductTooltip ? (
                     <ProductTooltip
                       title={tourData?.title}

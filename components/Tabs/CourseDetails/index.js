@@ -111,7 +111,12 @@ export default function CourseDetails() {
             inputClass={!fullCourse?.expected_completion > 0 && courseError?.details ? 'error' : ''}
             inputOptions={{
               inputName: 'expected_completion',
-              label: 'Suggested Duration: ',
+              label: (
+                <div>
+                  <p>Suggested Duration:</p>
+                  <small>(Total time ideally to be taken to complete the course. In days.)</small>
+                </div>
+              ),
               placeholder: 'Enter Suggested Duration in days',
               maxLength: 4,
               value: fullCourse?.expected_completion,

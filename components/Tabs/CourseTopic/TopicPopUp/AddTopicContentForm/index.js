@@ -35,7 +35,7 @@ export default function AddTopicContentForm({
     });
 
     setNewTopicVideo({ ...newTopicVideo, file: null });
-  }, []);
+  }, [topicContent?.length]);
 
   let selectedLanguages = topicContent?.map((content) => content?.language);
   const lanuages = [...fullCourse?.language]?.filter((lang) => !selectedLanguages?.includes(lang));

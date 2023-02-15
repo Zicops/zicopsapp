@@ -117,10 +117,13 @@ export const COURSE_STATUS = {
   draft: 'DRAFT',
   upload: 'UPLOADING',
   update: 'UPDATING',
+
   save: 'SAVED',
   freeze: 'FREEZED',
   publish: 'PUBLISHED',
-  reject: 'REJECTED'
+  reject: 'REJECTED',
+  approvalPending: 'APPROVAL_PENDING',
+  hold: 'ON_HOLD'
 };
 
 export const COURSE_TOPIC_STATUS = {
@@ -128,6 +131,8 @@ export const COURSE_TOPIC_STATUS = {
   started: 'in-progress',
   completed: 'completed'
 };
+
+export const COURSE_EXPERTISES = ['Beginner', 'Competent', 'Proficient'];
 
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
@@ -138,7 +143,7 @@ export const NOTIFICATION_TITLES = {
   courseAssign: 'Course-Assigned',
   courseUnssigned: 'Course-Unassigned',
   lspWelcome: 'Welcome-Lsp',
-  signIn: {course:'Course-signInAssign'}
+  signIn: { course: 'Course-signInAssign' }
 };
 
 export const NOTIFICATION_MSG_LINKS = {
@@ -181,3 +186,28 @@ export const COURSE_TOPIC_TYPES = {
   lab: 'Lab',
   classroom: 'Classroom'
 };
+
+export const ORG_DOMAINS = [
+  'https://demo.zicops.com',
+  'https://zicops.com',
+  // 'https://myspace.zicops.com'
+];
+
+//Vendor Constant Start
+
+export const VENDOR_LANGUAGES = [
+  'English',
+  'Arabic',
+  'Hindi',
+  'Marathi',
+  'Telugu',
+  'Kannada',
+  'Tamil',
+  'Malayalam',
+  'Bengali',
+  'Gujarati'
+];
+
+export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
+
+//Vendor Constant End

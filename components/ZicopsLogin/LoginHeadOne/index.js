@@ -1,19 +1,31 @@
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useRecoilValue } from 'recoil';
 import styles from '../zicopsLogin.module.scss';
 
-const LoginHeadOne = ({ heading, sub_heading, info , showImage = true }) => {
+const LoginHeadOne = ({ heading, sub_heading, info, showImage = true }) => {
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  //'/images/brand/zicops-icon.png'
   return (
     <>
-      {showImage &&
+      {showImage && (
         <div className={`${styles.zicops_logo}`}>
-          <img src={'/images/brand/zicops-icon.png'} />
+          {userOrgData?.logo_url == null ? (
+            <div></div>
+          ) : (
+            <img
+              src={`${
+                userOrgData?.logo_url?.length
+                  ? userOrgData?.logo_url
+                  : '/images/brand/zicops-icon.png'
+              }`}
+            />
+          )}
         </div>
-      }
+      )}
       <div className={`${styles.heading}`}>{heading}</div>
       <div className={`${styles.sub_heading}`}>
-          <p>
-              {sub_heading}
-          </p>
-          {info}
+        <p>{sub_heading}</p>
+        {info}
       </div>
     </>
   );

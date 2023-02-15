@@ -278,3 +278,26 @@
 .cardContainer:hover .cardInnerContainer {
   transform: rotateY(180deg);
 }
+
+// Vendor MarketYard
+
+.cardVendorContainer {
+  width: 100%;
+  // height: 10vh;
+  color: white;
+
+  .cardInnerVendorContainer {
+  }
+
+  .vendorImage {
+    width: 100%;
+  }
+  .vendorTitle {
+    font-size: 1em;
+    margin-top: 10px;
+  }
+  .vendorType {
+    font-size: 0.7em;
+    color: $bgBody;
+  }
+}

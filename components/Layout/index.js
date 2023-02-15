@@ -1,6 +1,7 @@
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import { deleteData, loadQueryDataAsync } from '@/helper/api.helper';
 import { HIDE_HEADER_FOOTER_FOR_ROUTE } from '@/helper/constants.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { NotificationAtom } from '@/state/atoms/notification.atom';
 import { DeleteConfirmDataAtom, getDeleteConfirmDataObj } from '@/state/atoms/popUp.atom';
@@ -16,12 +17,30 @@ import { main } from './layout.module.scss';
 
 export default function Layout({ children }) {
   const [userAboutData, setUserData] = useRecoilState(UserStateAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [deleteConfirmData, setDeleteConfirmData] = useRecoilState(DeleteConfirmDataAtom);
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
+  const { getOrgByDomain, OrgDetails } = useUserCourseData();
 
   const [isFullHeight, setIsFullHeight] = useState(0);
   const router = useRouter();
+
+  useEffect(async () => {
+    if (!!userOrgData?.logo_url) return;
+    let orgId = sessionStorage?.getItem('org_id');
+    //
+    if (!orgId) {
+      const orgData = await getOrgByDomain();
+      setUserOrgData((prev) => ({
+        ...prev,
+        logo_url: orgData?.logo_url || '',
+        organization_id: orgData?.org_id
+      }));
+      return;
+    }
+     OrgDetails();
+  }, [router?.asPath]);
 
   //refill the  recoil values
   useEffect(async () => {

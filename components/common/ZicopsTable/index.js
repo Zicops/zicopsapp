@@ -28,14 +28,15 @@ const ZicopsTable = ({
   data,
   pageSize,
   rowsPerPageOptions,
-  tableHeight,
+  tableHeight = '70vh',
   customStyles = {},
   loading = false,
   hideFooterPagination = false,
   showCustomSearch = false,
   searchProps = {},
   onPageChange = () => {},
-  currentPage = null
+  currentPage = null,
+  customId = null
 }) => {
   const tableContainerRef = useRef(null);
 
@@ -47,6 +48,7 @@ const ZicopsTable = ({
   const height = tableBody?.offsetHeight || null;
 
   if (data?.length >= pageSize && height) customProps.rowHeight = height / pageSize;
+  if (!!customId) customProps.getRowId = (row) => row?.[customId];
 
   return (
     <>
@@ -58,8 +60,6 @@ const ZicopsTable = ({
           ref={tableContainerRef}
           rows={data || []}
           columns={columns}
-          style={customStyles}
-          hideFooterPagination={hideFooterPagination}
           sx={{
             border: 0,
             pt: 2,
@@ -67,10 +67,12 @@ const ZicopsTable = ({
             px: 5,
             color: '#fff'
           }}
+          style={customStyles}
+          hideFooterPagination={hideFooterPagination}
           autoHeight={false}
-          // disableColumnMenu={true}
-          onPageChange={onPageChange}
+          disableColumnMenu={true}
           disableSelectionOnClick
+          onPageChange={onPageChange}
           components={{
             Pagination: CustomPagination,
             ColumnSortedDescendingIcon: CustomDescendingIcon,
