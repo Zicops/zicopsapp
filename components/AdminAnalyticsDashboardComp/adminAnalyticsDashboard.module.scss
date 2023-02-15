@@ -42,6 +42,11 @@
     align-items: center;
     gap: 10px;
   }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 .categoryAndExpertiseAvailability {
@@ -56,11 +61,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-
-    .footer {
-      display: flex;
-      justify-content: flex-end;
     }
   }
 }
@@ -94,5 +94,15 @@
     gap: 5px;
 
     cursor: pointer;
+  }
+}
+
+.categoryConsumption {
+  .barGraphContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 300px;
   }
 }
