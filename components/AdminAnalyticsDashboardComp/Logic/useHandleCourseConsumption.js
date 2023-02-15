@@ -2,6 +2,7 @@ import { GET_COURSE } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
 import { GET_COURSE_CONSUMPTION_STATS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { displayMinToHMS } from '@/helper/utils.helper';
 import { useEffect, useState } from 'react';
 
 export default function useHandleCourseConsumption() {
@@ -41,7 +42,7 @@ export default function useHandleCourseConsumption() {
           subCategory: d?.SubCategory,
 
           ownedBy: d?.Owner,
-          duration: d?.Duration,
+          duration: displayMinToHMS(d?.Duration / 60),
 
           totalLearners: d?.TotalLearners,
           activeLearners: d?.ActiveLearners,

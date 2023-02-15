@@ -77,7 +77,7 @@ export default function CourseConsumptionStatistics() {
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'course-list-header',
-      width: 100
+      width: 150
     }
   ];
 
