@@ -79,6 +79,7 @@ export default function CategoryConsumption() {
               width: `${categoryConsumptionData?.labels?.length * 150}px`,
               height: '300px'
             }}
+            labelLength={15}
           />
         )}
       </div>

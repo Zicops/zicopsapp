@@ -1,6 +1,6 @@
 // https://stackoverflow.com/a/74943769/13419786
 import 'chart.js/auto';
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import styles from '../charts.module.scss';
 
@@ -8,7 +8,8 @@ export default function BarChart({
   chartData,
   options = null,
   containerStyles = {},
-  direction = 'ltr'
+  direction = 'ltr',
+  labelLength = 10
 }) {
   const containerRef = useRef();
   const barContainerRef = useRef();
@@ -129,6 +130,28 @@ export default function BarChart({
     tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
   };
 
+  const _chartData = {
+    ...chartData,
+    labels: chartData?.labels?.map((label) => {
+      if (label?.length > 5) {
+        return getArrForLongName(label, labelLength);
+      }
+      return label;
+    })
+  };
+
+  function getArrForLongName(name = '', length = 10) {
+    if (name?.length <= length) return name;
+
+    const firstHalf = name.substring(0, length);
+    const secondHalf = name.substring(length);
+
+    const firstHalfValue = options?.indexAxis === 'x' ? `-${firstHalf}` : `${firstHalf}-`;
+    const secondHalfValue =
+      secondHalf?.length > length ? `...${secondHalf?.substring(0, length)}` : secondHalf;
+    return [firstHalfValue, secondHalfValue];
+  }
+
   const _options = {
     layout: {
       padding: {
@@ -165,14 +188,17 @@ export default function BarChart({
   };
 
   // append plugins to props options
-  if (options) options.plugins = { ...(options.plugins || {}), ..._options.plugins };
+  if (options) {
+    options.plugins = { ...(options.plugins || {}), ..._options.plugins };
+    options.scales = { ...(options.scales || {}), ..._options.scales };
+  }
 
   // https://stackoverflow.com/questions/39473991/how-to-make-a-chart-js-bar-chart-scrollable
   return (
     <>
       <div className={`${styles.userInfoWraper}`} dir={direction} ref={containerRef}>
         <div className={`${styles.chartAreaWrapper}`} style={containerStyles} ref={barContainerRef}>
-          <Bar data={chartData} options={options || _options} />
+          <Bar data={_chartData} options={options || _options} />
         </div>
       </div>
     </>
