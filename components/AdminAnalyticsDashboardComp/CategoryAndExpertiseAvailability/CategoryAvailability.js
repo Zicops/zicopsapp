@@ -1,28 +1,42 @@
 import BarChart from '@/components/common/Charts/BarChart';
 import Spinner from '@/components/common/Spinner';
-import { DownSortTriangleIcon } from '@/components/common/ZicopsIcons';
 import Dropdown from '@/components/DashboardComponents/Dropdown';
 import SwitchButton from '@/components/DashboardComponents/SwitchButton';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useState } from 'react';
 import styles from '../adminAnalyticsDashboard.module.scss';
 import SectionTitle from '../common/SectionTitle';
+import SortBtn from '../common/SortBtn';
 import useHandleCatConsumption from '../Logic/useHandleCatConsumption';
 
 export default function CategoryAvailability() {
   const [filters, setFilters] = useState({ category: null, subCategory: null, isCategory: false });
-  const [sortIndex, setSortIndex] = useState(0);
+  const [sortIndex, setSortIndex] = useState({ x: 0, y: 0 });
   const { catSubCat } = useHandleCatSubCat();
-  const { subCatData } = useHandleCatConsumption(filters?.isCategory);
+  const { subCatData, isLoading } = useHandleCatConsumption(filters?.isCategory);
 
   const sort = ['none', 'up', 'down'];
-  const dataArr = subCatData?.filter((subCat) => {
-    let isFiltered = true;
-    if (filters?.category) isFiltered = subCat?.cat?.Name === filters?.category;
-    if (filters?.subCategory) isFiltered = subCat?.Name === filters?.subCategory;
+  const dataArr = subCatData
+    ?.filter((subCat) => {
+      let isFiltered = true;
+      if (filters?.category) isFiltered = subCat?.cat?.Name === filters?.category;
+      if (filters?.subCategory) isFiltered = subCat?.Name === filters?.subCategory;
 
-    return isFiltered;
-  });
+      return isFiltered;
+    })
+    ?.sort((data1, data2) => {
+      const compare = data1?.name?.localeCompare(data2?.name);
+      if (sortIndex?.y === 1) return compare;
+      if (sortIndex?.y === 2) return compare * -1;
+
+      return -1;
+    })
+    ?.sort((data1, data2) => {
+      if (sortIndex?.x === 1) return data2?.count - data1?.count;
+      if (sortIndex?.x === 2) return data1?.count - data2?.count;
+
+      return -1;
+    });
   const options = {
     indexAxis: 'y',
     responsive: true,
@@ -34,16 +48,7 @@ export default function CategoryAvailability() {
     }
   };
 
-  const labels = dataArr
-    ?.map((data) => data.name)
-    ?.sort((l1, l2) => {
-      const compare = l1.localeCompare(l2);
-      if (sortIndex === 1) return compare;
-      if (sortIndex === 2) return compare * -1;
-
-      return -1;
-    });
-
+  const labels = dataArr?.map((data) => data.name);
   const data = {
     labels,
     datasets: [
@@ -63,7 +68,7 @@ export default function CategoryAvailability() {
   };
 
   return (
-    <div className={`${styles.wrapper}`}>
+    <div className={`${styles.wrapper} ${styles.courseAvailability}`}>
       <SectionTitle title="Category availability" />
 
       <div className={`${styles.wrapperSubHeading} ${styles.bottomBorder}`}>
@@ -92,27 +97,21 @@ export default function CategoryAvailability() {
         )}
       </div>
 
-      <div
-        className={`${styles.sortBtn}`}
-        onClick={() =>
+      <SortBtn
+        handleClick={() =>
           setSortIndex((prev) => {
-            const index = prev + 1;
-            if (index === sort?.length) return 0;
-            return index;
+            const index = prev.y + 1;
+            if (index === sort?.length) return { ...prev, y: 0 };
+            return { ...prev, y: index || 0 };
           })
-        }>
-        <span>
-          <DownSortTriangleIcon
-            color={sortIndex === 1 ? styles.primary : styles.darkThree}
-            turns="0.5"
-          />
-          <DownSortTriangleIcon color={sortIndex === 2 ? styles.primary : styles.darkThree} />
-        </span>
-        {filters?.isCategory ? 'Categories' : 'Sub-Categories'}
-      </div>
+        }
+        sortIndex={sortIndex.y}
+        isAxisX={false}
+        displayText={filters?.isCategory ? 'Categories' : 'Sub-Categories'}
+      />
 
       <div className={`${styles.barGraphContainer}`}>
-        {labels?.length ? (
+        {!isLoading ? (
           <BarChart
             options={options}
             chartData={data}
@@ -121,6 +120,22 @@ export default function CategoryAvailability() {
           />
         ) : (
           <Spinner />
+        )}
+      </div>
+
+      <div className={`${styles.footer}`}>
+        {!isLoading && (
+          <SortBtn
+            handleClick={() =>
+              setSortIndex((prev) => {
+                const index = prev.x + 1;
+                if (index === sort?.length) return { ...prev, x: 0 };
+                return { ...prev, x: index || 0 };
+              })
+            }
+            sortIndex={sortIndex.x}
+            displayText="Number of courses"
+          />
         )}
       </div>
     </div>

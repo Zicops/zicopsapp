@@ -10,6 +10,7 @@ export default function useHandleCatConsumption(isCategory = false) {
   const { catSubCat } = useHandleCatSubCat();
 
   const [subCatData, setSubCatData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!catSubCat?.subCat?.length) return;
@@ -18,6 +19,7 @@ export default function useHandleCatConsumption(isCategory = false) {
     isCategory ? loadAndSetCatData() : loadAndSetSubCatData();
 
     async function loadAndSetCatData() {
+      setIsLoading(true);
       const queryVariables = {
         lsp_id: _lspId,
         course_type: courseType,
@@ -33,9 +35,11 @@ export default function useHandleCatConsumption(isCategory = false) {
       });
 
       setSubCatData(categoryData);
+      setIsLoading(false);
     }
 
     async function loadAndSetSubCatData() {
+      setIsLoading(true);
       const queryVariables = {
         lsp_id: _lspId,
         course_type: courseType,
@@ -54,8 +58,9 @@ export default function useHandleCatConsumption(isCategory = false) {
       );
 
       setSubCatData(subCategoryData);
+      setIsLoading(false);
     }
   }, [courseType, catSubCat?.subCat?.length, isCategory]);
 
-  return { subCatData };
+  return { subCatData, isLoading };
 }

@@ -1,4 +1,5 @@
 // https://stackoverflow.com/a/74943769/13419786
+import { truncateToN } from '@/helper/common.helper';
 import 'chart.js/auto';
 import { useEffect, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
@@ -9,7 +10,7 @@ export default function BarChart({
   options = null,
   containerStyles = {},
   direction = 'ltr',
-  labelLength = 10
+  labelLength = 16
 }) {
   const containerRef = useRef();
   const barContainerRef = useRef();
@@ -133,9 +134,11 @@ export default function BarChart({
   const _chartData = {
     ...chartData,
     labels: chartData?.labels?.map((label) => {
-      if (label?.length > 5) {
-        return getArrForLongName(label, labelLength);
-      }
+      if (label?.length > labelLength) return truncateToN(label, labelLength);
+
+      // if (label?.length > 5) {
+      //   return getArrForLongName(label, labelLength);
+      // }
       return label;
     })
   };
@@ -146,7 +149,7 @@ export default function BarChart({
     const firstHalf = name.substring(0, length);
     const secondHalf = name.substring(length);
 
-    const firstHalfValue = options?.indexAxis === 'x' ? `-${firstHalf}` : `${firstHalf}-`;
+    const firstHalfValue = options?.indexAxis === 'y' ? `-${firstHalf}` : `${firstHalf}-`;
     const secondHalfValue =
       secondHalf?.length > length ? `...${secondHalf?.substring(0, length)}` : secondHalf;
     return [firstHalfValue, secondHalfValue];
@@ -197,7 +200,11 @@ export default function BarChart({
   return (
     <>
       <div className={`${styles.userInfoWraper}`} dir={direction} ref={containerRef}>
-        <div className={`${styles.chartAreaWrapper}`} style={containerStyles} ref={barContainerRef}>
+        <div
+          className={`${styles.chartAreaWrapper}`}
+          dir={'ltr'}
+          style={containerStyles}
+          ref={barContainerRef}>
           <Bar data={_chartData} options={options || _options} />
         </div>
       </div>
