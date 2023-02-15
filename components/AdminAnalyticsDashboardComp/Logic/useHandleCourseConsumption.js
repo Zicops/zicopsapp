@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 
 export default function useHandleCourseConsumption() {
   const [tableData, setTableData] = useState(null);
-  const [filteredData, setFilteredData] = useState(null);
   const [filters, setFilters] = useState({ category: null, subCategory: null });
+  const [isLoading, setIsLoading] = useState(false);
 
   // courses count
   useEffect(() => {
@@ -16,6 +16,7 @@ export default function useHandleCourseConsumption() {
     loadCourseStats();
 
     async function loadCourseStats() {
+      setIsLoading(true);
       const myCourseConsumptionStats = loadQueryDataAsync(
         GET_COURSE_CONSUMPTION_STATS,
         { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
@@ -59,22 +60,17 @@ export default function useHandleCourseConsumption() {
         };
       });
       setTableData(_tableData);
-      setFilteredData(_tableData);
+      setIsLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    setFilteredData(
-      tableData?.filter((data) => {
-        let isFiltered = true;
+  const filteredData = tableData?.filter((data) => {
+    let isFiltered = true;
+    if (filters?.category) isFiltered = data?.category?.includes(filters?.category);
+    if (filters?.subCategory) isFiltered = data?.subCategory?.includes(filters?.subCategory);
 
-        if (filters?.category) isFiltered = data?.category?.includes(filters?.category);
-        if (filters?.subCategory) isFiltered = data?.subCategory?.includes(filters?.subCategory);
+    return isFiltered;
+  });
 
-        return isFiltered;
-      })
-    );
-  }, [filters?.category, filters.subCategory]);
-
-  return { tableData: filteredData, filters, setFilters };
+  return { tableData: filteredData, filters, setFilters, isLoading, setIsLoading };
 }

@@ -95,6 +95,17 @@
   }
 }
 
+// top course section
+.tableContainer {
+  .seeMore {
+    color: $primary;
+    display: flex;
+    gap: 5px;
+
+    cursor: pointer;
+  }
+}
+
 .barGraphContainer {
   height: 380px;
 

@@ -110,7 +110,7 @@ export default function CourseConsumptionStatistics() {
               />
               <Dropdown
                 placeholder={'Category'}
-                options={[{ value: '', label: '-- Select --' }, ...catSubCat?.cat]}
+                options={[{ value: '', label: 'All Categories' }, ...catSubCat?.cat]}
                 value={{ value: filters.category, label: filters.category }}
                 changeHandler={(e) => {
                   setActiveCatId(e);
