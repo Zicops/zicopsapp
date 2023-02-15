@@ -29,6 +29,8 @@ $popupBgColor: #323232;
 $warning: #f6ac3c;
 $success: #12664f;
 
+$skeletonColor: dimgray;
+
 $headerHeight: 70px;
 $footerHeight: 100px;
 
@@ -62,6 +64,9 @@ $courseTitleSmall: 18px;
   bgHeader: $bgHeader;
   popupBgColor: $popupBgColor;
   warning: $warning;
+  success: $success;
+  skeletonColor: $skeletonColor;
+
   headerHeight: $headerHeight;
   footerHeight: $footerHeight;
   cardTileRatio: $cardTileRatio;

@@ -117,13 +117,18 @@
 }
 
 // pill styles
-.pill {
+.pill,
+.pillSkeleton {
   display: inline-block;
 
   background-color: $darkOne;
   width: fit-content;
   padding: 5px 15px;
   border-radius: 20px;
+
+  &.pillSkeleton {
+    background-color: $skeletonColor;
+  }
 }
 
 .statisticCard {
