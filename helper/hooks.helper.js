@@ -833,13 +833,14 @@ export default function useUserCourseData() {
     });
     setUserOrgData((prevValue) => ({
       ...prevValue,
-      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url || ''
     }));
     if (loadLsp) {
-      const lspData = await getLspDetails([lspId]).catch((err) => console.error(err));
+      const lspData = await getLspDetails([lspId]);
+
       setUserOrgData((prev) => ({
         ...prev,
-        lsp_logo_url: lspData?.data?.getLearningSpaceDetails?.[0]?.logo_url
+        lsp_logo_url: lspData?.getLearningSpaceDetails?.[0]?.logo_url || ''
       }));
     }
   };
@@ -847,30 +848,30 @@ export default function useUserCourseData() {
   async function getUserLspRoleLatest(userId = null, userLspId = null) {
     if (!userLspId || !userId) return;
     //this function gets users lsp role and return the latest one
-    const lspRoleArr = await loadQueryDataAsync(
+    const lspRoleArr = await loadAndCacheDataAsync(
       GET_USER_LSP_ROLES,
       { user_id: userId, user_lsp_ids: [userLspId] },
       {},
       userQueryClient
     );
 
-    const lspRoles = lspRoleArr?.getUserLspRoles;
+    const lspRoles = structuredClone(lspRoleArr?.getUserLspRoles);
     let userLspRole = 'learner';
-
-    if (lspRoleArr?.length > 1) {
-      const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
+ 
+    if (lspRoles?.length > 1) {
+      let latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
     } else {
       userLspRole = lspRoles?.[0]?.role ?? 'learner';
     }
-
     return userLspRole;
   }
 
   async function getOrgByDomain() {
     if (!API_LINKS?.getOrg?.split('/')?.[0]) return {};
     const data = await fetch(API_LINKS?.getOrg);
-    return await data.json();
+    const orgData = await data?.json();
+    return orgData?.data;
   }
 
   return {
@@ -1225,7 +1226,7 @@ export function useUpdateUserOrgData() {
     const data = res?.data?.updateUser;
     const _userData = { ...newUserOrgData, ...data };
     setUserOrgData(_userData);
-    sessionStorage.setItem('userAccountSetupData', JSON.stringify(_userData));
+    sessionStorage.setItShowHide})=>em('userAccountSetupData', JSON.stringify(_userData));
     return _userData;
   }
 
@@ -1309,4 +1310,17 @@ export function useHandleCohortUsers() {
   }
 
   return { removeCohortUser };
+}
+
+// https://stackoverflow.com/a/60907638/13419786
+export function useAsync(asyncFn, onSuccess) {
+  useEffect(() => {
+    let isActive = true;
+    asyncFn().then((data) => {
+      if (isActive) onSuccess(data);
+    });
+    return () => {
+      isActive = false;
+    };
+  }, [asyncFn, onSuccess]);
 }

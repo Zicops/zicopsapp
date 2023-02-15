@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
-import { useRouter } from 'next/router';
-import styles from './adminHeader.module.scss';
-import PopUp from '../PopUp';
-import Sitemap from './Sitemap';
-import AdminSubHeader from './AdminSubHeader';
-import ToolTip from '../ToolTip';
-import CustomTooltip from '../CustomTooltip';
-import ProductTooltip from '../ProductTour/ProductTooltip';
+import { snakeCaseToTitleCase } from '@/helper/common.helper';
+import { COURSE_TYPES } from '@/helper/constants.helper';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { ActiveTourAtom } from '@/state/atoms/productTour.atom';
-import { useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import Select from 'react-select';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import PopUp from '../PopUp';
+import ProductTooltip from '../ProductTour/ProductTooltip';
+import ToolTip from '../ToolTip';
+import styles from './adminHeader.module.scss';
+import AdminSubHeader from './AdminSubHeader';
+import Sitemap from './Sitemap';
 
 export default function AdminHeader({
   title,
@@ -23,31 +25,23 @@ export default function AdminHeader({
   productTooltipData,
   tourId
 }) {
+  const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
   const activeTour = useRecoilValue(ActiveTourAtom);
   const [showSitemap, setShowSitemap] = useState(false);
   const router = useRouter();
   const route = router.route;
 
-  const options = [
-    { value: 'self-paced', label: 'Self Paced' },
-    { value: 'classroom', label: 'Classroom' },
-    { value: 'labs', label: 'Labs' },
-    { value: 'test', label: 'Test' }
-  ];
+  const options = COURSE_TYPES.map((v, i) => {
+    return { value: v, label: snakeCaseToTitleCase(v), isDisabled: [1, 2].includes(i) };
+  });
 
   function gotoPageRoute() {
     if (!pageRoute) return;
     router.push(pageRoute);
   }
-
-  // let tooltipTitle = ""
-  // if(pageRoute==="/admin/exams/my-question-papers/add"){
-  //   tooltipTitle="Create new Question Paper"
-  // }else if(router?.query?.questionBankId){
-  //   tooltipTitle="Add Questions"
-  // }else if(pageRoute==="/admin/exams/zicops-question-papers"){
-  //   tooltipTitle="Create new Question Paper"
-  // }
+  useEffect(() => {
+    setCourseType(options[0].value);
+  }, []);
 
   return (
     <div>
@@ -58,7 +52,8 @@ export default function AdminHeader({
             <Select
               instanceId="coursehead_coursetype"
               options={options}
-              defaultValue={{ value: 'self-paced', label: 'Self Paced' }}
+              defaultValue={{ value: courseType, label: courseType }}
+              onChange={(e) => setCourseType(e.value)}
               className="zicops_select_container"
               classNamePrefix="zicops_select"
               isSearchable={false}

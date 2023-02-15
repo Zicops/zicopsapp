@@ -151,7 +151,8 @@ export function getTopicVideoObject(data) {
     courseId: data.courseId,
     contentId: data.contentId,
     file: data.file || null,
-    contentUrl: data.contentUrl || null
+    contentUrl: data.contentUrl || null,
+    language: data.language || null
   };
 }
 export function getTopicSubtitleObject(data) {

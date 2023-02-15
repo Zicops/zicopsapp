@@ -70,7 +70,10 @@ export default function CourseHero({ isPreview = false }) {
     if (courseId !== fullCourse?.id) return;
 
     // open course assign popup if query params passed and course already not assigned
-    if (isAssign && !courseAssignData?.isCourseAssigned) setIsAssignPopUpOpen(true);
+    if (isAssign && !courseAssignData?.isCourseAssigned) {
+      router.query.isAssign = false;
+      setIsAssignPopUpOpen(true);
+    }
 
     // course not assigned
     if (!courseAssignData?.isCourseAssigned) return;

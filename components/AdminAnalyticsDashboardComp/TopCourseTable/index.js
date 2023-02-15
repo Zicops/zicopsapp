@@ -1,8 +1,7 @@
-import DashboardTable from '@/components/AdminAnalyticsDashboardComp/CourseConsumptionStatistics/DashboardTable';
-import styles from '../adminAnalyticsDashboard.module.scss';
 import Dropdown from '@/components/DashboardComponents/Dropdown';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { useState } from 'react';
+import styles from '../adminAnalyticsDashboard.module.scss';
 import CourseTable from './CourseTable';
 
 export default function TopCourseTable() {
@@ -40,7 +39,7 @@ export default function TopCourseTable() {
         </div>
       </div>
       <div className={`${styles.wrapperSubHeading}`}>In all category</div>
-      <CourseTable/>
+      <CourseTable />
     </div>
   );
 }
