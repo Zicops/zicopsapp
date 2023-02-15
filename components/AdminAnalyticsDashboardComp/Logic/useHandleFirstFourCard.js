@@ -1,6 +1,3 @@
-import { userClient } from '@/api/UserMutations';
-import { GET_COURSE_CONSUMPTION_STATS } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
@@ -45,7 +42,10 @@ export default function useHandleFirstFourCard() {
   useEffect(() => {
     const _lspId = sessionStorage.getItem('lsp_id');
 
-    setCategoryCard((previousData) => ({ ...previousData, count: catSubCat?.cat?.length }));
+    setCategoryCard((previousData) => ({
+      ...previousData,
+      count: catSubCat?.cat?.filter((cat) => cat?.LspId === _lspId)?.length
+    }));
     setSubCategoryCard((previousData) => ({
       ...previousData,
       count: catSubCat?.subCat?.filter((subCat) => subCat?.LspId === _lspId)?.length
@@ -77,12 +77,13 @@ export default function useHandleFirstFourCard() {
       if (!lspId) return { totalAssignedCourses, totalMyCourses };
 
       const totalCourseCountRes = getAllCourseCountInLsp(lspId, { course_type: courseType });
-      const myCourseConsumptionStats = loadQueryDataAsync(
-        GET_COURSE_CONSUMPTION_STATS,
-        { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
-        {},
-        userClient
-      );
+      // Add API call for getting total assign courses in a particular lsp
+      // const myCourseConsumptionStats = loadQueryDataAsync(
+      //   GET_COURSE_CONSUMPTION_STATS,
+      //   { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
+      //   {},
+      //   userClient
+      // );
 
       return { totalAssignedCourses, totalMyCourses: await totalCourseCountRes };
     }

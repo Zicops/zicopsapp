@@ -15,11 +15,11 @@
 
   &:hover {
     background-color: $secondary;
-    border-color: $darkThree;
+    border-color: $secondaryBlack;
 
     .header {
       .iconContainer {
-        border-color: $darkThree;
+        border-color: $secondaryBlack;
       }
     }
   }
