@@ -399,7 +399,7 @@ export default function TopicBox({
   const progressBarStyles = {
     backgroundColor:
       userCourseData?.userCourseProgress?.[currentProgressIndex]?.status === 'completed'
-        ? 'green'
+        ? '#12664f'
         : '',
     width: `${limitValueInRange(
       +userCourseData?.userCourseProgress?.[currentProgressIndex]?.video_progress

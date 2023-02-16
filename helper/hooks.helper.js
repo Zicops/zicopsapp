@@ -32,7 +32,7 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
-import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
+import { CatSubCatAtom, FeatureFlagsAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
@@ -75,6 +75,7 @@ export function useHandleCatSubCat(selectedCategory) {
   });
   // this will have the whole cat object not just id
   const [activeCatId, setActiveCatId] = useState(null);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   useEffect(async () => {
     if (!refetch) return;
@@ -84,14 +85,14 @@ export function useHandleCatSubCat(selectedCategory) {
 
     const _lspId = sessionStorage?.getItem('lsp_id');
     const zicopsLsp = COMMON_LSPS.zicops;
-
-    const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+    const loadDataFunction = isDev ? loadAndCacheDataAsync : loadQueryDataAsync;
+    const zicopsLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
 
     let currentLspData = null;
     if (_lspId !== zicopsLsp) {
-      currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      currentLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
         lsp_ids: [_lspId]
       });
     }
@@ -844,27 +845,25 @@ export default function useUserCourseData() {
     }
   };
 
-  async function getUserLspRoleLatest(userId=null,userLspId = null){
-
-    if(!userLspId || !userId) return ;
+  async function getUserLspRoleLatest(userId = null, userLspId = null) {
+    if (!userLspId || !userId) return;
     //this function gets users lsp role and return the latest one
-    const lspRoleArr = await loadQueryDataAsync(
+    const lspRoleArr = await loadAndCacheDataAsync(
       GET_USER_LSP_ROLES,
       { user_id: userId, user_lsp_ids: [userLspId] },
       {},
       userQueryClient
     );
 
-    const lspRoles = lspRoleArr?.getUserLspRoles;
+    const lspRoles = structuredClone(lspRoleArr?.getUserLspRoles);
     let userLspRole = 'learner';
-
+ 
     if (lspRoles?.length > 1) {
-      const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
+      let latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
     } else {
       userLspRole = lspRoles?.[0]?.role ?? 'learner';
     }
-
     return userLspRole;
   }
 
@@ -1311,4 +1310,17 @@ export function useHandleCohortUsers() {
   }
 
   return { removeCohortUser };
+}
+
+// https://stackoverflow.com/a/60907638/13419786
+export function useAsync(asyncFn, onSuccess) {
+  useEffect(() => {
+    let isActive = true;
+    asyncFn().then((data) => {
+      if (isActive) onSuccess(data);
+    });
+    return () => {
+      isActive = false;
+    };
+  }, [asyncFn, onSuccess]);
 }

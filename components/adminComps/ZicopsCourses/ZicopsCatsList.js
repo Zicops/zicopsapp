@@ -1,7 +1,8 @@
 import PopUp from '@/components/common/PopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -20,6 +21,7 @@ function ZicopsCategoryList() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const userOrg = useRecoilValue(UsersOrganizationAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
 
@@ -45,9 +47,10 @@ function ZicopsCategoryList() {
     setIsLoading(true);
     const zicopsLsp = COMMON_LSPS.zicops;
 
+    const loadDataFunction = isDev ? loadAndCacheDataAsync : loadQueryDataAsync;
     const zicopsLspData =
-      zicopsLsp !== _lspId ? await loadQueryDataAsync(GET_CATS_MAIN, { lsp_ids: [zicopsLsp] }) : {};
-    const currentLspData = await loadQueryDataAsync(GET_CATS_MAIN, { lsp_ids: [_lspId] });
+      zicopsLsp !== _lspId ? await loadDataFunction(GET_CATS_MAIN, { lsp_ids: [zicopsLsp] }) : {};
+    const currentLspData = await loadDataFunction(GET_CATS_MAIN, { lsp_ids: [_lspId] });
 
     const data = { allCatMain: [] };
 
