@@ -868,6 +868,27 @@ export const GET_VENDOR_DETAILS = gql`
     }
   }
 `;
+export const GET_VENDOR_EXPERIENCES = gql`
+  query getVendorExperience($vendor_id: String!, $pf_id: String!) {
+    getVendorExperience(vendor_id: $vendor_id, pf_id: $pf_id) {
+      ExpId
+      VendorId
+      PfId
+      StartDate
+      EndDate
+      Title
+      Location
+      LocationType
+      EmployementType
+      CompanyName
+      CreatedAt
+      CreatedBy
+      UpdatedAt
+      UpdatedBy
+      Status
+    }
+  }
+`;
 
 // combined queries
 
