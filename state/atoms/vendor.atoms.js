@@ -41,12 +41,12 @@ export function getProfileObject(data) {
   };
 }
 
-export const VendorExpriencesAtom = atom({
-  key: 'vendorExpriences',
-  default: getExpriencesObject()
+export const VendorExperiencesAtom = atom({
+  key: 'vendorExperiences',
+  default: getExperiencesObject()
 });
 
-export function getExpriencesObject(data) {
+export function getExperiencesObject(data) {
   return {
     id: data?.id || '',
     title: data?.title || '',
@@ -56,7 +56,9 @@ export function getExpriencesObject(data) {
     employeeType: data?.employeeType || '',
     locationType: data?.locationType || '',
     startMonth: data?.startMonth || '',
-    endMonth: data?.endMonth || ''
+    startYear: data?.startYear || '',
+    endMonth: data?.endMonth || '',
+    endYear: data?.endYear || ''
   };
 }
 

@@ -6,25 +6,40 @@ import {
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useMutation } from '@apollo/client';
-import { getVendorObject, VendorProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import {
+  getVendorObject,
+  VendorProfileAtom,
+  VendorStateAtom,
+  VendorExperiencesAtom
+} from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
-import { ADD_VENDOR, UPDATE_VENDOR, userClient, CREATE_PROFILE_VENDOR } from '@/api/UserMutations';
+import {
+  ADD_VENDOR,
+  UPDATE_VENDOR,
+  userClient,
+  CREATE_PROFILE_VENDOR,
+  CREATE_EXPERIENCE_VENDOR
+} from '@/api/UserMutations';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
   const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
+  const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
 
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -139,7 +154,6 @@ export default function useHandleVendor() {
   async function addUpdateProfile() {
     // const vendorId = vendorData?.vendorId;
     const vendorId = sessionStorage.getItem('vendorId');
-    console.info(vendorId);
     const type = vendorData?.type;
     const sendData = {
       vendor_id: vendorId || '',
@@ -183,6 +197,47 @@ export default function useHandleVendor() {
     return res;
   }
 
+  async function addUpdateExperience() {
+    // const vendorId = vendorData?.vendorId;
+    const vendorId = sessionStorage.getItem('vendorId');
+    const sendData = {
+      vendor_id: vendorId || '',
+      title: experiencesData?.title?.trim() || '',
+      email: experiencesData?.email?.trim() || '',
+      company_name: experiencesData?.companyName?.trim() || '',
+      employement_type: experiencesData?.employeeType?.trim() || '',
+      location: experiencesData?.location?.trim() || '',
+      location_type: experiencesData?.locationType?.trim() || '',
+      // start_date: experiencesData?.startMonth?.trim() || '',
+      // end_date: experiencesData?.endMonth?.trim() || '',
+      status: VENDOR_MASTER_STATUS.active
+    };
+
+    let isError = false;
+
+    // if (profileData?.profileId) {
+    //   sendData.profileId = profileData?.profileId;
+
+    //   await updateVendor({ variables: sendData }).catch((err) => {
+    //     console.log(err);
+    //     isError = !!err;
+    //     return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
+    //   });
+
+    //   if (isError) return;
+    //   setToastMsg({ type: 'success', message: 'Vendor Updated' });
+    //   return;
+    // }
+
+    const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add profile Error' });
+    });
+    if (isError) return;
+    return res;
+  }
+
   return {
     vendorDetails,
     addUpdateVendor,
@@ -191,6 +246,7 @@ export default function useHandleVendor() {
     handleProfilePhoto,
     getAllVendors,
     addUpdateProfile,
+    addUpdateExperience,
     loading,
     setLoading
   };

@@ -29,6 +29,12 @@ const AddVendorProfile = ({ data = {} }) => {
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const { handleProfilePhoto } = useHandleVendor();
 
+  const { addUpdateExperience } = useHandleVendor();
+
+  const completeExperienceHandler = async () => {
+    await addUpdateExperience();
+  };
+
   const handleClick = () => {};
 
   return (
@@ -179,7 +185,7 @@ const AddVendorProfile = ({ data = {} }) => {
         popUpState={[isOpenExpriences, setIsOpenExpriences]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done', handleClick: handleClick }}
+        submitBtn={{ name: 'Done', handleClick: completeExperienceHandler }}
         isFooterVisible={true}>
         <AddExpriences />
       </VendorPopUp>

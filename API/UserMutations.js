@@ -1526,7 +1526,23 @@ export const CREATE_EXPERIENCE_VENDOR = gql`
         end_date: $end_date
         status: $status
       }
-    )
+    ) {
+      ExpId
+      VendorId
+      PfId
+      StartDate
+      EndDate
+      Title
+      Location
+      LocationType
+      EmployementType
+      CompanyName
+      CreatedAt
+      CreatedBy
+      UpdatedAt
+      UpdatedBy
+      Status
+    }
   }
 `;
 

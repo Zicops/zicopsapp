@@ -15,6 +15,10 @@ export const months = [
   'December'
 ];
 
+export const years = Array.from(Array(new Date().getFullYear() - 1979), (_, i) =>
+  (i + 1980).toString()
+);
+
 export function displayUnixDate(unixTime) {
   if (!unixTime) return '';
 
@@ -156,9 +160,8 @@ export function toggleFullScreen(elem) {
 
 export function getUnixFromDate(dateObj = new Date()) {
   //implemented for unix timestamp
-  if(!(dateObj instanceof Date)) return dateObj;
-    
-  
+  if (!(dateObj instanceof Date)) return dateObj;
+
   const newDate = new Date(dateObj);
 
   return Math.floor(newDate.getTime() / 1000) || 0;
