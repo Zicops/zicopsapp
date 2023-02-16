@@ -819,6 +819,7 @@ export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
       vendorId
       type
       name
+      updated_at
     }
   }
 `;
@@ -890,7 +891,45 @@ export const GET_VENDOR_EXPERIENCES = gql`
   }
 `;
 
-// combined queries
+// DASHBOARD QUERIES START
+export const GET_COURSE_CONSUMPTION_STATS = gql`
+  query getCourseConsumptionStats(
+    $lsp_id: String!
+    $pageCursor: String
+    $direction: String
+    $pageSize: Int
+  ) {
+    getCourseConsumptionStats(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: $direction
+      pageSize: $pageSize
+    ) {
+      stats {
+        ID
+        LspId
+        CourseId
+        Category
+        SubCategory
+        Owner
+        Duration
+        TotalLearners
+        ActiveLearners
+        CompletedLearners
+        ExpectedCompletionTime
+        AverageCompletionTime
+        AverageComplianceScore
+        CreatedAt
+        UpdatedAt
+        CreatedBy
+        UpdatedBy
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
 
 export const GET_COURSE_VIEWS = gql`
   query getCourseViews($lsp_id: [String!]!, $startTime: String, $endTime: String) {
