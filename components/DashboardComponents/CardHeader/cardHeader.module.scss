@@ -1,0 +1,21 @@
+@import '../../../styles/base.scss';
+.cardHeader{
+    background: #242630;
+    border: 1px solid #30323F;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    max-width: 150px;
+    cursor: pointer;
+    img{
+        
+    }
+    p{
+        font-weight: 500;
+        font-size: 16px;
+        color: $primary;
+    }
+}

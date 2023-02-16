@@ -4,13 +4,20 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { changeHandler } from '@/helper/common.helper';
 import { getFileNameFromUrl } from '@/helper/utils.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { useRecoilValue } from 'recoil';
 import styles from './addCatSubCat.module.scss';
 import useHandleAddCatSubCat from './Logic/useHandleAddCatSubCat';
+import useHandleCatSubCatMutations from './Logic/useHandleCatSubCatMutations';
 
 export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
   const popUpState = useRecoilValue(PopUpStatesAtomFamily('addCatSubCat'));
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
+  const dataWithoutCache = useHandleAddCatSubCat(isSubCat);
+  const dataWithCache = useHandleCatSubCatMutations(isSubCat);
+
   const {
     catSubCatData,
     catoptions,
@@ -19,7 +26,7 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
     handleFileInput,
     addCategory,
     addSubCategory
-  } = useHandleAddCatSubCat(isSubCat);
+  } = isDev ? dataWithCache : dataWithoutCache;
 
   return (
     <div className={`${styles.questionBankContainer}`}>
@@ -38,7 +45,7 @@ export default function AddCatSubCat({ isSubCat = false, closePopUp }) {
       {/* cat data */}
       {isSubCat && (
         <LabeledDropdown
-          styleClass={styles.marginBottom}
+          styleClass={styles.inputField}
           // isError={!fullCourse?.sub_category?.length && courseError?.details}
           dropdownOptions={{
             inputName: 'CatId',

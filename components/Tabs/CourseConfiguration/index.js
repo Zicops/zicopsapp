@@ -1,9 +1,8 @@
 import { UPDATE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
-import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -13,12 +12,11 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import RadioBox from '../common/RadioBox';
 import SwitchBox from '../common/SwitchBox';
+import styles from '../courseTabs.module.scss';
 import { isCourseUploadingAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 import CourseDetailsTable from './CourseDetailsTable';
 import FreezeConfirmation from './FreezeConfirmation';
-import styles from '../courseTabs.module.scss';
-import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 
 export default function CourseConfiguration() {
   const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
@@ -126,7 +124,7 @@ export default function CourseConfiguration() {
               description:
                 'Once a course is frozen it is no longer editable and ready for approval/publishing',
               name: 'qa_required',
-              isDisabled: isDisabled,
+              isDisabled: [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status),
               isChecked: fullCourse?.qa_required || false,
               handleChange: (e) => {
                 const isFreeze = e.target.checked;

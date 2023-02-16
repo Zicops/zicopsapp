@@ -108,13 +108,18 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Card
-              image="/images/TrainingManagement.png"
-              text="Training Management "
-              width="70px"
-              isDisabled={true}
-              tooltipTitle={ADMIN_HOME.trainingManagement}
-            />
+            <Link href={isDev ? '/admin/vctool' : ''}>
+              <a>
+                <Card
+                  image="/images/TrainingManagement.png"
+                  text="Training Management "
+                  isDisabled={!isDev}
+                  width="70px"
+                  tooltipTitle={ADMIN_HOME.trainingManagement}
+                />
+              </a>
+            </Link>
+
           </div>
           <div className="new_row">
             <Link href="/admin/administration/organization">
@@ -137,13 +142,17 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Card
-              image="/images/VendorManagement.png"
-              text="Vendor Management"
-              width="80px"
-              isDisabled={!isDev}
-              tooltipTitle={ADMIN_HOME.vendorManagement}
-            />
+            <Link href={isDev ? '/admin/vendor/manage-vendor' : ''}>
+              <a>
+                <Card
+                  image="/images/VendorManagement.png"
+                  text="Vendor Management"
+                  width="80px"
+                  isDisabled={!isDev}
+                  tooltipTitle={ADMIN_HOME.vendorManagement}
+                />
+              </a>
+            </Link>
             <Card
               image="/images/LabManagement.png"
               text="Lab Management"

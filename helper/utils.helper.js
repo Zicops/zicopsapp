@@ -84,7 +84,7 @@ export function displayMinToHMS(mins) {
 export const TableResponsiveRows = [
   {
     breakpoint: 1200,
-    pageSize: 5
+    pageSize: 7
   },
   {
     breakpoint: 1500,
@@ -92,15 +92,16 @@ export const TableResponsiveRows = [
   },
   {
     breakpoint: 1900,
-    pageSize: 12
+    pageSize: 7
   }
 ];
 
 export function getPageSizeBasedOnScreen() {
-  if (!process.browser) return 6;
+  const defaultPageSize = 7;
+  if (!process.browser) return defaultPageSize;
 
   const screenWidth = window.screen.width;
-  let pageSize = 6;
+  let pageSize = defaultPageSize;
 
   TableResponsiveRows.forEach((r) => {
     if (r.breakpoint <= screenWidth) pageSize = r.pageSize;
@@ -154,6 +155,10 @@ export function toggleFullScreen(elem) {
 }
 
 export function getUnixFromDate(dateObj = new Date()) {
+  //implemented for unix timestamp
+  if(!(dateObj instanceof Date)) return dateObj;
+    
+  
   const newDate = new Date(dateObj);
 
   return Math.floor(newDate.getTime() / 1000) || 0;

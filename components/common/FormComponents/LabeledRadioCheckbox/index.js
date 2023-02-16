@@ -8,7 +8,7 @@ import {
 
 const LabeledRadioCheckbox = ({
   label,
-  type,
+  type = 'radio',
   name,
   value,
   isChecked,

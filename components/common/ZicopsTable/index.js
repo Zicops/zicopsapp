@@ -1,4 +1,5 @@
 import { GridColumnMenuContainer, GridFilterMenuItem, SortGridMenuItems } from '@mui/x-data-grid';
+import { useRef } from 'react';
 import StyledDataGrid from '../../common/StyledDataGrid';
 import TableSearchComp from '../TableSearchComp';
 import {
@@ -6,6 +7,7 @@ import {
   CustomDescendingIcon,
   CustomPagination
 } from './Logic/zicopsTable.helper';
+import styles from './zicopsTable.module.scss';
 
 // https://stackoverflow.com/questions/66514102/how-can-you-disable-specific-material-ui-datagrid-column-menu-options
 const CustomColumnMenu = (props) => {
@@ -26,23 +28,38 @@ const ZicopsTable = ({
   data,
   pageSize,
   rowsPerPageOptions,
-  tableHeight,
+  tableHeight = '70vh',
   customStyles = {},
   loading = false,
   hideFooterPagination = false,
   showCustomSearch = false,
-  searchProps = {}
+  searchProps = {},
+  onPageChange = () => {},
+  currentPage = null,
+  customId = null
 }) => {
+  const tableContainerRef = useRef(null);
+
+  const customProps = {};
+
+  const tableBody = process.browser
+    ? document.getElementsByClassName('MuiDataGrid-virtualScroller')?.[0]
+    : null;
+  const height = tableBody?.offsetHeight || null;
+
+  if (data?.length >= pageSize && height) customProps.rowHeight = height / pageSize;
+  if (!!customId) customProps.getRowId = (row) => row?.[customId];
+
   return (
     <>
       {!!showCustomSearch && <TableSearchComp {...searchProps} />}
 
       <div style={{ height: tableHeight }}>
         <StyledDataGrid
+          {...customProps}
+          ref={tableContainerRef}
           rows={data || []}
           columns={columns}
-          style={customStyles}
-          hideFooterPagination={hideFooterPagination}
           sx={{
             border: 0,
             pt: 2,
@@ -50,14 +67,20 @@ const ZicopsTable = ({
             px: 5,
             color: '#fff'
           }}
+          style={customStyles}
+          hideFooterPagination={hideFooterPagination}
           autoHeight={false}
-          // disableColumnMenu={true}
+          disableColumnMenu={true}
           disableSelectionOnClick
+          onPageChange={onPageChange}
           components={{
             Pagination: CustomPagination,
             ColumnSortedDescendingIcon: CustomDescendingIcon,
             ColumnSortedAscendingIcon: CustomAscendingIcon,
             ColumnMenu: CustomColumnMenu
+          }}
+          componentsProps={{
+            pagination: { background: 'red', currentPage }
           }}
           pageSize={pageSize}
           rowsPerPageOptions={rowsPerPageOptions}

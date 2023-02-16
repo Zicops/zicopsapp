@@ -1,7 +1,7 @@
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { GIBBERISH_VALUE_FOR_LOGIN_STATE } from '../constants.helper';
+import { GIBBERISH_VALUE_FOR_LOGIN_STATE, ORG_DOMAINS } from '../constants.helper';
 import { auth } from './firebaseConfig';
 
 const formatAuthUser = (user) => ({
@@ -58,7 +58,9 @@ export default function useFirebaseAuth() {
     localStorage.removeItem(GIBBERISH_VALUE_FOR_LOGIN_STATE, GIBBERISH_VALUE_FOR_LOGIN_STATE);
     await signOut(auth).then(clear);
 
-    router.push('/login');
+    let origin = window?.location?.origin;
+    if (!ORG_DOMAINS?.includes(origin)) return router.push('/home');
+    return router.push('/login');
   };
 
   useEffect(() => {

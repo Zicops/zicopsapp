@@ -1,6 +1,6 @@
 import useUserCourseData from '@/helper/hooks.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { Container } from '@mui/material';
+import { Container, Skeleton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import AccountSetupOrg from './AccountSetupOrg';
@@ -25,8 +25,8 @@ const LoginComp = () => {
   };
 
   useEffect(() => {
-    if (orgData?.logo_url?.length) return;
-    OrgDetails();
+    if (orgData?.lsp_logo_url?.length) return;
+    OrgDetails(true);
   }, []);
 
   return (
@@ -34,12 +34,12 @@ const LoginComp = () => {
     <div className={`${styles.bgContainer}`}>
       <div className={`${styles.header}`}>
         <div className={`${styles.ZicopsLogo}`}>
-          <img
+          {orgData?.lsp_logo_url == null ? <Skeleton height={70} width={120}/> : <img
             src={
-              orgData?.logo_url?.length ? orgData?.logo_url : ''
+              orgData?.lsp_logo_url?.length ? orgData?.lsp_logo_url : "/images/svg/asset-6.svg"
             }
             alt="zicops logo"
-          />
+          /> }
         </div>
         <div className={`${styles.progress_container}`}>
           <div className={`${styles.progress_circle_selected}`} />

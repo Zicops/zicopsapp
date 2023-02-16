@@ -90,7 +90,8 @@ export default function RightDropDownMenu() {
           arrowpositon="left"
           submenurowdirection={true}
         />
-      )
+      ),
+      isHidden: !featureFlags?.isDemo
     },
     {
       id: 4,
@@ -105,7 +106,8 @@ export default function RightDropDownMenu() {
         sessionStorage.removeItem('org_id');
         router.push('/learning-spaces');
       },
-      isDisabled: !featureFlags?.isUserMappedToMultipleLsps
+      isDisabled: !featureFlags?.isUserMappedToMultipleLsps,
+      isHidden: !featureFlags?.isDemo
     },
     {
       id: 5,
@@ -168,7 +170,7 @@ export default function RightDropDownMenu() {
                       padding: '0px'
                     },
                     '&.Mui-disabled': {
-                      cursor: 'no-drop'
+                      cursor: 'no-drop !important'
                     }
                   }}
                   onClick={item?.onClick ? item.onClick : () => {}}

@@ -12,19 +12,15 @@ import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper'
 import {
   loadAndCacheDataAsync,
   loadQueryDataAsync,
-  sendEmail,
-  sendNotification,
-  sendNotificationWithLink
+  sendEmail, sendNotificationWithLink
 } from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import {
   COURSE_MAP_STATUS,
   COURSE_PROGRESS_STATUS,
-  EMAIL_TEMPLATE_IDS,
-  NOTIFICATION_MSG_LINKS,
-  NOTIFICATION_TITLES
+  EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES
 } from '@/helper/constants.helper';
-import { getUnixFromDate } from '@/helper/utils.helper';
+import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -190,11 +186,11 @@ export default function useHandleCourseAssign({
     closePopUp();
     setToastMsg({
       type: 'success',
-      message: `You have added a new course to your learning folder. End date for completing ${courseName || ''} is ${
+      message: `Course ${courseName || ''} added successfully. It's end date is ${
         courseAssignData?.endDate?.toDateString()
       }` });
 
-    if (assignBy !== 'self') {
+    // if (assignBy !== 'self') {
       sendCourseAssignNotificationAndEmail();
     // if(!!userLspId && !userIsVerified){
     //      await sendNotification(
@@ -206,17 +202,22 @@ export default function useHandleCourseAssign({
     //       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     //      )
     // }
-    }
+    // }
     
   }
 
   async function sendCourseAssignNotificationAndEmail() {
-    if (!userIdForCourseAssign || !userEmail) {
-      return setToastMsg({
-        type: 'danger',
-        message: 'Something went wrong while sending user Notification.'
-      });
-    }
+    // if (!userIdForCourseAssign || !userEmail ) {
+    //   return setToastMsg({
+    //     type: 'danger',
+    //     message: 'Something went wrong while sending user Notification.'
+    //   });
+    // }
+
+    const user = parseJson(sessionStorage?.getItem('loggedUser'));
+
+    let email = !!userEmail ? userEmail : user?.email;
+    let name = !!userName ? userName : userData?.first_name;
 
     const notificationBody = getNotificationMsg('courseAssign', {
       courseName: courseName || '',
@@ -226,7 +227,7 @@ export default function useHandleCourseAssign({
     const origin = window?.location?.origin || '';
 
     const bodyData = {
-      user_name: userName || '',
+      user_name: name || '',
       lsp_name: sessionStorage?.getItem('lsp_name'),
       course_name: courseName || '',
       end_date: moment(courseAssignData?.endDate?.valueOf()).format('D MMM YYYY'),
@@ -234,7 +235,7 @@ export default function useHandleCourseAssign({
     };
 
     const sendMailData = {
-      to: [userEmail],
+      to: [email],
       sender_name: sessionStorage?.getItem('lsp_name'),
       user_name: userName || '',
       body: JSON.stringify(bodyData),
@@ -309,5 +310,5 @@ export default function useHandleCourseAssign({
     return userCourseProgressArr;
   }
 
-  return { courseAssignData, setCourseAssignData, assignCourseToUser, isSaveDisabled };
+  return { courseAssignData, setCourseAssignData, assignCourseToUser, isSaveDisabled ,  };
 }
