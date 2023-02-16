@@ -1,21 +1,36 @@
-import styles from "../VctoolMain.module.scsss"
-const BreakoutRoom=({ShowHide})=>
+import styles from "../vctoolMain.module.scss"
+const BreakoutRoom=({showHide})=>
 {
     return(
         <>
-         <div className={`${styles.Pollbar}`}>
-            <div className={`${styles.Poll_head}`}>
-                <div>Polls</div>
+         <div className={`${styles.BreakoutRoomBar}`}>
+            <div className={`${styles.breakout_head}`}>
+                <div>Breakout Rooms</div>
                 <button onClick={() => {
-                    ShowHide()
+                    showHide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>
             </div>
 
-            <div className={`${styles.Poll_Screen}`}>
+            <div style={{
+                width:"296px",
+                height:"45%",
+                overflow:"scroll"
+            }} className={`${styles.BreakoutRoom_Screen}`}>
 
+           {/* list of breakout rooms */}
 
+            </div>
+
+            <div style={{
+              width:"296px",
+              height:"45%",
+              overflow:"scroll"
+            }} className={`${styles.BreakoutRoom_participants}`}>
+
+            </div>
+            <div>
 
             </div>
 {/* 
@@ -29,4 +44,5 @@ const BreakoutRoom=({ShowHide})=>
         </div>
         </>
     )
-}
+};
+export default BreakoutRoom;

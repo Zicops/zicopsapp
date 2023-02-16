@@ -1,12 +1,12 @@
 import { useState } from "react";
-import styles from "../VctoolMain.module.scss"
-const QAbar = ({ShowQAbtn,ShowBtnFun,ShowHide}) => {
+import styles from "../vctoolMain.module.scss"
+const QAbar = ({showQAbtn,showBtnFun,showHide}) => {
        return (
         <div className={`${styles.QAbar}`}>
             <div className={`${styles.QAbar_head}`}>
                 <div>Q & A</div>
                 <button onClick={() => {
-                    ShowHide()
+                    showHide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>
@@ -17,7 +17,7 @@ const QAbar = ({ShowQAbtn,ShowBtnFun,ShowHide}) => {
 
 
             {
-                ShowQAbtn ? <div className={`${styles.QAbar_input}`}>
+                showQAbtn ? <div className={`${styles.QAbar_input}`}>
                     <input type="text" placeholder="Type message here" />
                     <div className={`${styles.QAsendfile}`}>
                         <img src="/images/svg/vctool/image.svg" />
@@ -33,7 +33,7 @@ const QAbar = ({ShowQAbtn,ShowBtnFun,ShowHide}) => {
                     }}>
                         <button
                             onClick={() => {
-                                ShowBtnFun()
+                                showBtnFun()
                             }} className={`${styles.QAbtn}`}>
                             Ask a Question?
                         </button>

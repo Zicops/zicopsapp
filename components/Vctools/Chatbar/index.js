@@ -1,11 +1,11 @@
-import styles from "../VctoolMain.module.scss";
-const ChatBar = ({ShowHide}) => {
+import styles from "../vctoolMain.module.scss";
+const ChatBar = ({showHide}) => {
     return (
         <div className={`${styles.chatbar}`}>
             <div className={`${styles.chatbar_head}`}>
                 <div>Chat</div>
                 <button onClick={() => {
-                    ShowHide()
+                    showHide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>

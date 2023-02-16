@@ -1,68 +1,28 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import styles from '../VctoolMain.module.scss'
-const MeetingCard = ({ StartMeeting, StartmeetingAudioenable, StartmeetingVideoenable, StartAudioenableFun, StartVideoenableFun }) => {
+import styles from '../vctoolMain.module.scss'
+import {OnVideo,StopVideo} from "../help/vctool.helper"
+import VctoolButton from '../Vctoolbutton';
+const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoenable, startAudioenableFun, startVideoenableFun }) => {
     const videoref = useRef(null);
-    const [video1, setvideo1] = useState(StartmeetingVideoenable)
-    const [audio1, setaudio1] = useState(StartmeetingAudioenable)
+    const [video1, setvideo1] = useState(startmeetingVideoenable)
+    const [audio1, setaudio1] = useState(startmeetingAudioenable)
     const userData = useRecoilValue(UserStateAtom)
     const nameRef=useRef(null)
+    let video = videoref.current;
     let startName = ""
    if(!!userData?.first_name)
    startName=userData.first_name[0] + " " + userData.last_name[0];
-
-    //images/svg/vctool/mic-on.svg
-    const OnVideo = () => {
-        let video = videoref.current;
-        videoref.current.style.display="block"
-        videoref.current.style.backgroundColor = "black"
-        videoref.current.style.width = "200px"
-        videoref.current.style.height = "200px"
-        videoref.current.style.borderRadius = "50%"
-        // nameRef.current.style.display="none"
-        navigator.mediaDevices
-            .getUserMedia(
-                {
-                    video: { width: 200, height: 200 }
-                }
-            ).then((stream) => {
-                video.srcObject = stream;
-                video.play()
-            }).catch((err) => {
-                console.log(err)
-            })
-    }
-
-    const StopVideo = () => {
-        let video = videoref.current;
-        videoref.current.style.display="none"
-        
-       
-        try {
-            let stream = video.srcObject;
-            let tracks = stream.getTracks();
-            for (let i = 0; i < tracks.length; i++) {
-                let track = tracks[i];
-                track.stop();
-            }
-
-            video.srcObject = null;
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
     useEffect(() => {
         if (video1) {
-            OnVideo()
+            OnVideo(video,videoref)
             nameRef.current.style.display="none"
         
         }
         else {
-            StopVideo()
+            StopVideo(video,videoref)
             nameRef.current.style.display="block"
-           
         }
     }, [video1])
 
@@ -82,42 +42,33 @@ const MeetingCard = ({ StartMeeting, StartmeetingAudioenable, StartmeetingVideoe
                 </div>
             </div>
             <div className={`${styles.btns}`}>
-                <button onClick={() => {
-                    StartAudioenableFun()
+                <VctoolButton onClickfun={()=>
+                {
+                    startAudioenableFun()
                     setaudio1(!audio1)
-                }} style={audio1 ? { backgroundColor: "#202222" } : { backgroundColor: "#F53D41" }}>
-                    {
+                }} custamId={audio1 ? `${styles.btns_bg1}`:`${styles.btns_bg2}`}
+                toggle={audio1} trueSrc={"/images/svg/vctool/mic-on.svg"} falseSrc={"/images/svg/vctool/mic-off.svg"}/>
 
-                        audio1 ?
-                            <img src="/images/svg/vctool/mic-on.svg" />
-                            :
-                            <img src="/images/svg/vctool/mic-off.svg" />
-                    }
-                </button>
 
-                <button onClick={() => {
-                    StartVideoenableFun()
-                    setvideo1(!video1)
-
-                }} style={video1 ? { backgroundColor: "#202222" } : { backgroundColor: "#F53D41" }}>
-                    {
-
-                        video1 ?
-                            <img src="/images/svg/vctool/videocam-on.svg" />
-                            :
-                            <img src="/images/svg/vctool/videocam-off.svg" />
-                    }
-                </button>
+                <VctoolButton onClickfun={()=>{ startVideoenableFun()
+                    setvideo1(!video1)}} custamId={video1 ? `${styles.btns_bg1}`:`${styles.btns_bg2}` }
+                    trueSrc={"/images/svg/vctool/videocam-on.svg" } falseSrc={"/images/svg/vctool/videocam-off.svg"} toggle={video1}/>
 
                 <button><img src="/images/svg/vctool/settings.svg" /> </button>
 
                 <div className={`${styles.join_btn}`}>
-                    <button onClick={() => {
-                        StartMeeting()
-                        StopVideo()
+                    {/* <button onClick={() => {
+                        startMeeting()
+                        StopVideo(video,videoref)
                     }}>
                         Join
-                    </button>
+                    </button> */}
+
+                    <VctoolButton onClickfun={()=>
+                    {
+                        startMeeting()
+                        StopVideo(video,videoref)
+                    }} btnValue={"Join"}/>
                 </div>
             </div>
         </div>

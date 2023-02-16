@@ -1,83 +1,48 @@
-import styles from './VctoolMain.module.scss';
+import styles from './vctoolMain.module.scss';
 import MeetingCard from './MeetingCard';
 import { useRef, useState } from 'react';
 import Script from 'next/script';
 import MainToolbar from './Toolbar';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { StartMeeting, GenerateString } from "./help/vctool.helper"
 const VcMaintool = () => {
-const userData=useRecoilValue(UserStateAtom)
+  const userData = useRecoilValue(UserStateAtom)
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  const GenerateString = (length) => {
-    let result = ' ';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
-  const ContainerRef = useRef(null)
+  const containerRef = useRef(null)
   const [toolbar, settoobar] = useState(false);
   const [hidecard, sethidecard] = useState(false)
   const [toggleAudio, settoggleAudio] = useState(false);
   const [toggleVideo, settoggleVideo] = useState(false);
-  const [link, setlink] = useState(GenerateString(9).trim().toLocaleLowerCase());
+  // const [link, setlink] = useState(GenerateString(9).trim().toLocaleLowerCase());
   const [api, setapi] = useState(null);
   const [Fullscreen, setFullscreen] = useState(false)
-  const FullScreenRef = useRef(null)
-  const [Userinfo, setUserinfo] = useState([])
-  const [Iframe,setIframe]=useState([])
+  const fullScreenRef = useRef(null)
+  const [userinfo, setuserinfo] = useState([])
   const GetFullScreenElement = () => {
     return document.fullscreenElement ||
       document.webkitFullscreenElement ||
       document.mozFullscreenElement ||
       document.msFullscreenElement
   }
-  const start_Name=userData.first_name +" "+userData.last_name
-  const StartMeeting = (givenName) => {
-    const domain = 'live.zicops.com';
-    const options = {
-      roomName: givenName,
-      parentNode: ContainerRef.current,
-      userInfo: {
-        email: userData.email,
-        displayName: start_Name //default name
-      },
-      configOverwrite: {
-        startWithAudioMuted: !toggleAudio,
-        startWithVideoMuted: !toggleVideo,
-        prejoinPageEnabled: false
-      },
+  const startName = userData.first_name + " " + userData.last_name
 
-      interfaceConfigOverwrite: {
-        SHOW_JITSI_WATERMARK: false,
-        DISABLE_DOMINANT_SPEAKER_INDICATOR: true,
-        TOOLBAR_ALWAYS_VISIBLE: true,
-        TOOLBAR_BUTTONS: []
-      },
-      onload: function () {
-        console.log('onload');
-        settoobar(true)
-      }
-    };
-    setapi(new JitsiMeetExternalAPI(domain, options));
-  };
   return (
-    <div ref={FullScreenRef}>
-      <div id="meet" className={toolbar && `${styles.meet}`} ref={ContainerRef}></div>
+    <div ref={fullScreenRef}>
+      <div id="meet" className={toolbar ? `${styles.meet}`:''} ref={containerRef}></div>
       {toolbar && (
         <MainToolbar
-          SetAudio={() => {
+          setAudio={() => {
             settoggleAudio(!toggleAudio);
             api.executeCommand('toggleAudio');
           }}
-          SetVideo={() => {
+          setVideo={() => {
             settoggleVideo(!toggleVideo);
             api.executeCommand('toggleVideo');
           }}
           audiotoggle={toggleAudio}
           videotoggle={toggleVideo}
-          EndMeetng={() => {
+          endMeetng={() => {
             api.dispose();
             settoobar(!toolbar);
             sethidecard(!hidecard)
@@ -90,15 +55,14 @@ const userData=useRecoilValue(UserStateAtom)
             })
             setFullscreen(false)
           }}
-          ShareScreen={() => {
+          shareScreen={() => {
             api.executeCommand('toggleShareScreen');
             setFullscreen(false)
           }}
-          HandRiseFun={() => {
+          handRiseFun={() => {
             api.executeCommand('toggleRaiseHand');
           }}
-          FullScreenFun={() => {
-            console.log(GetFullScreenElement())
+          fullScreenFun={() => {
             if (GetFullScreenElement()) {
               document.exitFullscreen().then((data => {
                 console.log(data)
@@ -107,60 +71,51 @@ const userData=useRecoilValue(UserStateAtom)
               })
             }
             else {
-              FullScreenRef.current.requestFullscreen().catch((e) => {
+              fullScreenRef.current.requestFullscreen().catch((e) => {
                 console.log(e)
               })
 
             }
             setFullscreen(!Fullscreen)
           }}
-          MouseMoveFun={() => {
+          mouseMoveFun={() => {
             api.getRoomsInfo().then(rooms => {
-              // console.log(rooms.rooms[0].participants)
 
-              setUserinfo(rooms.rooms[0].participants)
+              setuserinfo(rooms.rooms[0].participants)
             })
-
-            // console.log(userData)
-            Userinfo.forEach((data)=>
-            {
-              // console.log(api.getEmail(data.id))
-              //  setuserEmailId(getEmail(data.id))
-              if(userData.email.includes("@zicops"))
-              {
-                api.executeCommand('grantModerator',data.id);
+            userinfo.forEach((data) => {
+              console.log(userData.role == "Learner")
+              if (userData.email.includes("@zicops")) {
+                api.executeCommand('grantModerator', data.id);
               }
-              else
-              {
+              else {
                 console.log("not a modarator")
-                // api.executeCommand('rejectParticipant',data.id);
               }
             })
 
           }}
-          Fullscreen={Fullscreen}
-           GetUesrId={Userinfo}
-           />
+          fullscreen={Fullscreen}
+          getUesrId={userinfo}
+        />
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.main_div}`}>
         {/* all components ara going to append here */}
         {
-          hidecard ? ""
-            : <MeetingCard
-              StartMeeting={() => {
-                StartMeeting("standup");
+         ! hidecard ? <MeetingCard
+              startMeeting={() => {
+                StartMeeting("standup", startName, containerRef, userData, toggleAudio, settoobar, setapi, toggleVideo);
                 sethidecard(!hidecard)
               }}
-              StartAudioenableFun={() => {
+              startAudioenableFun={() => {
                 settoggleAudio(!toggleAudio);
               }}
-              StartVideoenableFun={() => {
+              startVideoenableFun={() => {
                 settoggleVideo(!toggleVideo);
               }}
-              StartmeetingVideoenable={toggleVideo}
-              StartmeetingAudioenable={toggleAudio}
-            />
+              startmeetingVideoenable={toggleVideo}
+              startmeetingAudioenable={toggleAudio}
+            /> :''
         }
       </div>
     </div>

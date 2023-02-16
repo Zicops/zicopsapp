@@ -1,26 +1,28 @@
 import next from "next";
 import { useEffect, useState } from "react";
-import styles from "../VctoolMain.module.scss";
+import styles from "../vctoolMain.module.scss";
 import ChatBar from "../Chatbar";
 import QAbar from "../QAbar";
 import Poll from "../Polls";
 import Participants from "../Participants";
 import WhiteBoard from "../WhiteBoard";
-const MainToolbar = ({ audiotoggle, videotoggle, SetAudio, SetVideo, EndMeetng, ShareScreen, 
-    HandRiseFun, FullScreenFun, Fullscreen,GetUesrId,MouseMoveFun}) => {
+import BreakoutRoom from "../BreakOutRoom";
+import VctoolButton from "../Vctoolbutton";
+const MainToolbar = ({ audiotoggle, videotoggle, setAudio, setVideo, endMeetng, shareScreen,
+    handRiseFun, fullScreenFun, fullscreen, getUesrId, mouseMoveFun }) => {
     const [fade1, setfade1] = useState(true)
     const [fade2, setfade2] = useState(true)
     const [hand, sethand] = useState(true)
-    const [ShowQA, setShowQA] = useState(false)
-    const [ShowChat, setShowChat] = useState(false)
-    const [ShowQAbtn, setShowQAbtn] = useState(false)
-    const [ShowPoll, setShowPoll] = useState(false)
-    const [ShowWhiteBoard, setShowWhiteBoard] = useState(false);
-    const [ShowParticipants, setShowParticipants] = useState(false)
+    const [showQA, setshowQA] = useState(false)
+    const [showChat, setshowChat] = useState(false)
+    const [showQAbtn, setshowQAbtn] = useState(false)
+    const [showPoll, setshowPoll] = useState(false)
+    const [showWhiteBoard, setshowWhiteBoard] = useState(false);
+    const [showParticipants, setshowParticipants] = useState(false)
+    const [showbreakoutRoom, setshowbreakoutRoom] = useState(false)
     return (
-        <div className={`${styles.toolbar}`} onMouseMove={()=>
-        {
-            MouseMoveFun()
+        <div className={`${styles.toolbar}`} onMouseMove={() => {
+            mouseMoveFun()
         }}>
             <div className={`${styles.toolbar_nav}`}
                 id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}
@@ -31,11 +33,10 @@ const MainToolbar = ({ audiotoggle, videotoggle, SetAudio, SetVideo, EndMeetng, 
                 }}>
                 <button><img src="/images/svg/vctool/folder-open.svg" /></button>
                 <button><img src="/images/svg/vctool/library-books.svg" /></button>
-                <button onClick={() => {
-                    setShowWhiteBoard(!ShowWhiteBoard)
-                }}>
-                    <img src="/images/svg/vctool/sticky-note-2.svg" />
-                </button>
+                <VctoolButton onClickfun={() => {
+                    setshowWhiteBoard(!showWhiteBoard)
+                }} trueSrc={"/images/svg/vctool/sticky-note-2.svg"} falseSrc={"/images/svg/vctool/sticky-note-2.svg"} />
+
                 <button><img src="/images/svg/vctool/quiz.svg" /></button>
                 <button><img src="/images/svg/vctool/dashboard.svg" /></button>
                 <button><img src="/images/svg/vctool/info.svg" /></button>
@@ -46,135 +47,129 @@ const MainToolbar = ({ audiotoggle, videotoggle, SetAudio, SetVideo, EndMeetng, 
             }}>
                 {/* All screen items will come here */}
                 {
-                    ShowChat && <ChatBar ShowHide={() => {
-                        setShowChat(!ShowChat)
+                    showChat && <ChatBar showHide={() => {
+                        setshowChat(!showChat)
                     }} />
                 }
 
                 {
-                    ShowQA && <QAbar ShowQAbtn={ShowQAbtn} ShowBtnFun={() => {
-                        setShowQAbtn(true)
-                    }} ShowHide={() => {
-                        setShowQA(!ShowQA)
+                    showQA && <QAbar showQAbtn={showQAbtn} showBtnFun={() => {
+                        setshowQAbtn(true)
+                    }} showHide={() => {
+                        setshowQA(!showQA)
                     }} />
                 }
 
                 {
-                    ShowPoll && <Poll ShowHide={() => {
-                        setShowPoll(!ShowPoll)
+                    showPoll && <Poll showHide={() => {
+                        setshowPoll(!showPoll)
                     }} />
                 }
 
                 {
-                    ShowParticipants && <Participants ShowHide={() => {
-                        setShowParticipants(!ShowParticipants)
-                    }} Info={GetUesrId}/>
+                    showParticipants && <Participants showHide={() => {
+                        setshowParticipants(!showParticipants)
+                    }} Info={getUesrId} />
                 }
 
                 {
-                    ShowWhiteBoard && <WhiteBoard />
+                    showWhiteBoard && <WhiteBoard />
                 }
 
+                {
+                    showbreakoutRoom && <BreakoutRoom showHide={() => {
+                        setshowbreakoutRoom(!showbreakoutRoom)
+                    }} />
+                }
 
             </div>
 
-            <div className={`${styles.toolbar_footer}`} id={fade2 ? `${styles.fadeout2}` : `${styles.fadein2}`}
+            <div className={`${styles.toolbar_footer}`} id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}
                 onMouseLeave={() => {
-                    setfade2(false)
+                    setfade1(false)
                 }} onMouseOver={() => {
-                    setfade2(true)
+                    setfade1(true)
                 }}>
                 <div className={`${styles.footer_left}`}>
                     <div>
-                        <button onClick={() => {
-                            EndMeetng()
-                        }} className={`${styles.cansel_btn}`} >
-                            <img style={{ "marginRight": "10px" }} src="/images/svg/vctool/logout.svg" />
-                            Leave
-                        </button>
+                        <VctoolButton onClickfun={() => {
+                            endMeetng()
+                        }} trueSrc={"/images/svg/vctool/logout.svg"} falseSrc={"/images/svg/vctool/logout.svg"}
+                            custamStyle={`${styles.cansel_btn}`} btnValue={"Leave"}
+                        />
                     </div>
-                    <button onClick={() => {
-                        SetAudio()
-                    }} >
 
-                        {
-                            audiotoggle ? <img src="/images/svg/vctool/mic-on.svg" />
-                                : <img src="/images/svg/vctool/mic-off.svg" />
-                        }
+                    <VctoolButton onClickfun={() => {
+                        setAudio()
+                    }} trueSrc={"/images/svg/vctool/mic-on.svg"} falseSrc={"/images/svg/vctool/mic-off.svg"} toggle={audiotoggle} />
 
-                    </button>
-                    <button onClick={() => {
-                        SetVideo()
-                    }}>
-                        {
-                            videotoggle ? <img src="/images/svg/vctool/videocam-on.svg" />
-                                : <img src="/images/svg/vctool/videocam-off.svg" />
-                        }
-                    </button>
-                    <button onClick={() => {
-                        ShareScreen()
-                    }}><img src="/images/svg/vctool/present-to-all.svg" /></button>
+                    <VctoolButton onClickfun={() => {
+                        setVideo()
+                    }} trueSrc={"/images/svg/vctool/videocam-on.svg"} falseSrc={"/images/svg/vctool/videocam-off.svg"} toggle={videotoggle} />
 
-                    <button style={hand ? { backgroundColor: "#202222" } : { backgroundColor: "white" }} onClick={() => {
+
+                    <VctoolButton onClickfun={() => {
+                        shareScreen()
+                    }} trueSrc={"/images/svg/vctool/present-to-all.svg"} falseSrc={"/images/svg/vctool/present-to-all.svg"} />
+
+                    <VctoolButton onClickfun={() => {
                         sethand(!hand)
-                        HandRiseFun()
-                    }} >
-                        {
-                            hand ?
-                                <img src="/images/svg/vctool/back-hand.svg" />
-                                :
-                                <img src="/images/svg/vctool/back-hand-on.svg" />
-                        }
-
-                    </button>
+                        handRiseFun()
+                    }} toggle={hand} trueSrc={"/images/svg/vctool/back-hand.svg"} falseSrc={"/images/svg/vctool/back-hand-on.svg"}
+                        custamId={hand ? `${styles.footer_left_btn1}` : `${styles.footer_left_btn2}`} />
                 </div>
                 <div className={`${styles.footer_right}`}>
-                    <button onClick={() => {
-                        setShowQA(!ShowQA)
-                        setShowChat(false)
-                        setShowPoll(false)
-                        setShowParticipants(false)
-                    }}>
-                        <img src="/images/svg/vctool/help.svg" />
-                    </button>
 
-                    <button onClick={() => {
-                        setShowChat(!ShowChat)
-                        setShowQA(false)
-                        setShowPoll(false)
-                        setShowParticipants(false)
-                    }}>
-                        <img src="/images/svg/vctool/chat-bubble.svg" />
-                    </button>
+                    <VctoolButton onClickfun={() => {
+                        setshowQA(!showQA)
+                        setshowChat(false)
+                        setshowPoll(false)
+                        setshowbreakoutRoom(false)
+                        setshowParticipants(false)
+                    }} trueSrc={"/images/svg/vctool/help.svg"} falseSrc={"/images/svg/vctool/help.svg"} />
 
-                    <button onClick={() => {
-                        setShowQA(false)
-                        setShowChat(false)
-                        setShowParticipants(false)
-                        setShowPoll(!ShowPoll)
-                    }}>
-                        <img src="/images/svg/vctool/insert-chart.svg" />
-                    </button>
 
-                    <button onClick={() => {
-                        setShowQA(false)
-                        setShowChat(false)
-                        setShowPoll(false)
-                        setShowParticipants(!ShowParticipants)
-                    }}>
-                        <img src="/images/svg/vctool/group.svg" />
-                    </button>
-                    <button><img src="/images/svg/vctool/account-tree.svg" /> </button>
+                    <VctoolButton onClickfun={() => {
+                        setshowChat(!showChat)
+                        setshowQA(false)
+                        setshowPoll(false)
+                        setshowbreakoutRoom(false)
+                        setshowParticipants(false)
+                    }} trueSrc={"/images/svg/vctool/chat-bubble.svg"} falseSrc={"/images/svg/vctool/chat-bubble.svg"} />
+
+                    <VctoolButton onClickfun={() => {
+                        setshowQA(false)
+                        setshowChat(false)
+                        setshowParticipants(false)
+                        setshowbreakoutRoom(false)
+                        setshowPoll(!showPoll)
+                    }} trueSrc={"/images/svg/vctool/insert-chart.svg"} falseSrc={"/images/svg/vctool/insert-chart.svg"} />
+
+
+
+                    <VctoolButton onClickfun={() => {
+                        setshowQA(false)
+                        setshowChat(false)
+                        setshowPoll(false)
+                        setshowbreakoutRoom(false)
+                        setshowParticipants(!showParticipants)
+                    }} trueSrc={"/images/svg/vctool/group.svg"} falseSrc={"/images/svg/vctool/group.svg"} />
+
+
+                    <VctoolButton onClickfun={() => {
+                        setshowQA(false)
+                        setshowChat(false)
+                        setshowPoll(false)
+                        setshowbreakoutRoom(!showbreakoutRoom)
+                        setshowParticipants(false)
+                    }} trueSrc={"/images/svg/vctool/account-tree.svg"} falseSrc={"/images/svg/vctool/account-tree.svg"} />
+
                     <button><img src="/images/svg/vctool/settings.svg" /> </button>
-                    <button onClick={() => {
-                        FullScreenFun()
-                    }}>
-                        {
-                            Fullscreen ?
-                                <img src="/images/svg/vctool/fullscreen-exit.svg" />
-                                : <img src="/images/svg/vctool/fullscreen.svg" />
-                        }
-                    </button>
+
+
+                    <VctoolButton onClickfun={() => {
+                        fullScreenFun()
+                    }} toggle={fullscreen} trueSrc={"/images/svg/vctool/fullscreen-exit.svg"} falseSrc={"/images/svg/vctool/fullscreen.svg"} />
                 </div>
 
             </div>

@@ -1,11 +1,11 @@
-import styles from "../VctoolMain.module.scss"
-const Poll = ({ShowHide}) => {
+import styles from "../vctoolMain.module.scss"
+const Poll = ({showHide}) => {
     return (
         <div className={`${styles.Pollbar}`}>
             <div className={`${styles.Poll_head}`}>
                 <div>Polls</div>
                 <button onClick={() => {
-                    ShowHide()
+                    showHide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>

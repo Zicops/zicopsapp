@@ -54,6 +54,14 @@
     background-color: black;
 
 }
+#btns_bg1
+{
+    background-color: #202222;
+}
+#btns_bg2
+{
+    background-Color: #F53D41;
+}
 
 .btns {
     display: flex;
@@ -186,6 +194,16 @@
     align-items: center;
     width: 50%;
 }
+#footer_left_btn1
+{
+    background-color: #202222;
+}
+
+#footer_left_btn2
+{
+    background-color: white;
+
+}
 
 .footer_left>button {
     display: flex;
@@ -247,7 +265,9 @@
     background-color: #F53D41;
     cursor: pointer;
 }
-
+.cansel_btn>img{
+    margin-right: 10px;
+}
 #fadein1 {
     opacity: 0;
     transition: opacity 1s;
@@ -257,17 +277,6 @@
     opacity: 1011;
     z-index: 1010;
 }
-
-#fadein2 {
-    opacity: 0;
-    transition: opacity 1s;
-}
-
-#fadeout2 {
-    opacity: 1011;
-    z-index: 1010;
-}
-
 
 // /styling chatbar
 .chatbar {
@@ -636,4 +645,47 @@ margin-left: 5px;
     line-height: 15px;
     justify-content: center;
     align-items: center;
+}
+// styling BreakoutRooms
+
+.BreakoutRoomBar {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.breakout_head {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.breakout_head>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+.BreakoutRoom_Screen::-webkit-scrollbar
+{
+    display: none;
+}
+.BreakoutRoom_participants::-webkit-scrollbar
+{
+    display: none;
 }
