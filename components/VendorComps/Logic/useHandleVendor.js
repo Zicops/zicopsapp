@@ -11,14 +11,16 @@ import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
-import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
+import { ADD_VENDOR, UPDATE_VENDOR, userClient, CREATE_PROFILE_VENDOR } from '@/api/UserMutations';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
+  const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -107,7 +109,6 @@ export default function useHandleVendor() {
     };
 
     let isError = false;
-
     if (vendorData?.vendorId) {
       sendData.vendorId = vendorData?.vendorId;
 
@@ -128,6 +129,57 @@ export default function useHandleVendor() {
       return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
     });
     if (isError) return;
+
+    const _id = res.data.addVendor.vendorId;
+    setVendorData({ ...vendorData, vendorId: _id });
+    sessionStorage.setItem('vendorId', _id);
+    return res;
+  }
+
+  async function addUpdateProfile() {
+    // const vendorId = vendorData?.vendorId;
+    const vendorId = sessionStorage.getItem('vendorId');
+    console.info(vendorId);
+    const type = vendorData?.type;
+    const sendData = {
+      vendor_id: vendorId || '',
+      type: type || '',
+      first_name: profileData?.firstName?.trim() || '',
+      last_name: profileData?.lastName?.trim() || '',
+      email: profileData?.email?.trim() || '',
+      phone: profileData?.contactNumber.trim() || '',
+      photo: profileData?.profileImage || null,
+      description: profileData?.description.trim() || '',
+      languages: [],
+      SME_expertise: [],
+      Classroom_expertise: [],
+      // experience: profileData?.experience || '',
+      is_speaker: profileData?.isSpeaker || false,
+      status: VENDOR_MASTER_STATUS.active
+    };
+
+    let isError = false;
+
+    // if (profileData?.profileId) {
+    //   sendData.profileId = profileData?.profileId;
+
+    //   await updateVendor({ variables: sendData }).catch((err) => {
+    //     console.log(err);
+    //     isError = !!err;
+    //     return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
+    //   });
+
+    //   if (isError) return;
+    //   setToastMsg({ type: 'success', message: 'Vendor Updated' });
+    //   return;
+    // }
+
+    const res = await createProfileVendor({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add profile Error' });
+    });
+    if (isError) return;
     return res;
   }
 
@@ -138,6 +190,7 @@ export default function useHandleVendor() {
     handlePhotoInput,
     handleProfilePhoto,
     getAllVendors,
+    addUpdateProfile,
     loading,
     setLoading
   };

@@ -1455,8 +1455,8 @@ export const CREATE_PROFILE_VENDOR = gql`
     $languages: [String]
     $SME_Expertise: [String]
     $Classroom_Expertise: [String]
-    $expereince: Int
-    $is_speaker: true!
+    $experience: [String]
+    $is_speaker: Boolean
     $status: String!
   ) {
     createProfileVendor(
@@ -1472,11 +1472,31 @@ export const CREATE_PROFILE_VENDOR = gql`
         languages: $languages
         SME_expertise: $SME_Expertise
         Classroom_expertise: $Classroom_Expertise
-        expereince: $experience
+        experience: $experience
         is_speaker: $is_speaker
         status: $status
       }
-    )
+    ) {
+      pf_id
+      vendor_id
+      type
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      experience
+      is_speaker
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
   }
 `;
 

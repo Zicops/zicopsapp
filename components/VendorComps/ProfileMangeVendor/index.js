@@ -5,6 +5,7 @@ import { manageVendorProfiles } from '../Logic/vendorComps.helper';
 import { useState } from 'react';
 import VendorPopUp from '../common/VendorPopUp';
 import AddVendorProfile from '../AddVendorProfile';
+import useHandleVendor from '../Logic/useHandleVendor';
 const ProfileManageVendor = () => {
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   const [showCompleteProfile, setCompleteProfile] = useState(false);
@@ -12,7 +13,10 @@ const ProfileManageVendor = () => {
     setIsOpenProfile(true);
   };
 
-  const completeProfileHandler = () => {
+  const { addUpdateProfile } = useHandleVendor();
+
+  const completeProfileHandler = async () => {
+    await addUpdateProfile();
     setCompleteProfile(true);
   };
 

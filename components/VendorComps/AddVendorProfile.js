@@ -116,12 +116,15 @@ const AddVendorProfile = ({ data = {} }) => {
           <label for="expriences">Years of experience: </label>
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'year',
+              inputName: 'experienceYear',
               placeholder: 'Select Years',
-              value: data?.experience || experienceYear,
+              value: {
+                label: data?.experience || profileData.experienceYear,
+                value: data?.experience || profileData.experienceYear
+              },
               options: optionYearArray
             }}
-            changeHandler={(val) => setExpericeYear(val)}
+            changeHandler={(e) => changeHandler(e, profileData, setProfileData, 'experienceYear')}
             styleClass={styles.dropDownMain}
           />
         </div>
