@@ -39,7 +39,6 @@ export const UPDATE_SUB_CATS_MAIN = gql`
       Description
       ImageUrl
       Code
-      CatId
       CreatedAt
       UpdatedAt
       CreatedBy
@@ -1974,74 +1973,64 @@ export const ADD_COURSE_DISCUSSION = gql`
         ReplyCount: $ReplyCount
         Status: $Status
       }
-    ) 
+    )
   }
 `;
 export const UPDATE_COURSE_DISCUSSION = gql`
-mutation updateCourseDiscussion(
-  $discussionId:String!
-  $courseId:String!
-  $Content:String
-  $likes:[String]
-  $dislikes:[String]
-  $isAnonymous:Boolean
-  $IsPinned:Boolean
-  $IsAnnouncement:Boolean
-  $status:String
-){
-  updateCourseDiscussion(
-    discussionId: $discussionId
-    courseId: $courseId
-    Content: $Content
-    likes: $likes
-    dislikes: $dislikes
-    isAnonymous: $isAnonymous
-    IsPinned: $IsPinned
-    IsAnnouncement: $IsAnnouncement
-    status: $status
+  mutation updateCourseDiscussion(
+    $discussionId: String!
+    $courseId: String!
+    $Content: String
+    $likes: [String]
+    $dislikes: [String]
+    $isAnonymous: Boolean
+    $IsPinned: Boolean
+    $IsAnnouncement: Boolean
+    $status: String
   ) {
-    DiscussionId
-    CourseId
-    ReplyId
-    UserId
-    Time
-    Content
-    Module
-    Chapter
-    Topic
-    Likes
-    Dislike
-    IsAnonymous
-    IsPinned
-    IsAnnouncement
-    ReplyCount
-    CreatedBy
-    Created_at
-    Updated_by
-    Updated_at
-    Status
+    updateCourseDiscussion(
+      discussionId: $discussionId
+      courseId: $courseId
+      Content: $Content
+      likes: $likes
+      dislikes: $dislikes
+      isAnonymous: $isAnonymous
+      IsPinned: $IsPinned
+      IsAnnouncement: $IsAnnouncement
+      status: $status
+    ) {
+      DiscussionId
+      CourseId
+      ReplyId
+      UserId
+      Time
+      Content
+      Module
+      Chapter
+      Topic
+      Likes
+      Dislike
+      IsAnonymous
+      IsPinned
+      IsAnnouncement
+      ReplyCount
+      CreatedBy
+      Created_at
+      Updated_by
+      Updated_at
+      Status
+    }
   }
-}`
+`;
 
 export const UPDATE_LIKE_DISLIKE = gql`
-mutation updateLikesDislikes(
-    $discussionId: String!, 
-    $input: String!, 
-    $UserId: String!
-    )
-    {
-    updateLikesDislikes(
-    discussionId:$discussionId
-    input:$input
-    UserId:$UserId
-  )
-  
-}
-`
+  mutation updateLikesDislikes($discussionId: String!, $input: String!, $UserId: String!) {
+    updateLikesDislikes(discussionId: $discussionId, input: $input, UserId: $UserId)
+  }
+`;
 
 export const DELETE_SUBTITLE = gql`
   mutation deleteTopicContentSubtitle($courseId: String!, $topicId: String!, $fileName: String!) {
     deleteTopicContentSubtitle(courseId: $courseId, topicId: $topicId, fileName: $fileName)
   }
 `;
-

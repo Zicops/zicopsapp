@@ -1,10 +1,11 @@
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { getUserCourseDataObj, UserCourseDataAtom } from '@/state/atoms/video.atom';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../state/contexts/CourseContext';
 import AlertBox from '../common/AlertBox';
+import ConfirmPopUp from '../common/ConfirmPopUp';
 import BottomTabsMenu from '../small/BottomTabsMenu';
 import {
   coursebody,
@@ -35,6 +36,7 @@ export default function CourseBody({ isPreview = false }) {
   useLoadUserData(isPreview, setSelectedModule, getModuleOptions);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   useEffect(() => {
     setActiveCourseTab(tabs[0].name);
@@ -84,11 +86,35 @@ export default function CourseBody({ isPreview = false }) {
       </div>
 
       {showAlert && (
-        <AlertBox
-          title="Course Not Assigned"
-          description="Please assign course to access the course contents"
-          handleClose={() => setShowAlert(false)}
-        />
+        <>
+          {isDev ? (
+            <ConfirmPopUp
+              title="Course Not Assigned!!"
+              message="Please assign course to access the course contents"
+              btnObj={{
+                textLeft: 'Assign',
+                textRight: 'Close',
+                handleClickLeft: () => {
+                  setShowAlert(false);
+                  router.push(
+                    { pathname: router.asPath, query: { isAssign: true } },
+                    router.asPath,
+                    {
+                      shallow: true
+                    }
+                  );
+                },
+                handleClickRight: () => setShowAlert(false)
+              }}
+            />
+          ) : (
+            <AlertBox
+              title="Course Not Assigned"
+              description="Please assign course to access the course contents"
+              handleClose={() => setShowAlert(false)}
+            />
+          )}
+        </>
       )}
     </>
   );
