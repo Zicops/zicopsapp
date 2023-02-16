@@ -6,7 +6,7 @@ import {
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useMutation } from '@apollo/client';
-import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { getVendorObject, VendorProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
@@ -19,6 +19,7 @@ export default function useHandleVendor() {
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,17 @@ export default function useHandleVendor() {
       setVendorData({
         ...vendorData,
         vendorProfileImage: e.target.files[0]
+      });
+    }
+    e.target.value = '';
+  }
+
+  function handleProfilePhoto(e) {
+    const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
+    if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
+      setProfileData({
+        ...profileData,
+        profileImage: e.target.files[0]
       });
     }
     e.target.value = '';
@@ -124,6 +136,7 @@ export default function useHandleVendor() {
     addUpdateVendor,
     getSingleVendorInfo,
     handlePhotoInput,
+    handleProfilePhoto,
     getAllVendors,
     loading,
     setLoading

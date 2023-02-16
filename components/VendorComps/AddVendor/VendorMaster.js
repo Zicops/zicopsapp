@@ -93,7 +93,6 @@ export default function VendorMaster() {
               filePath: vendorData?.vendorProfileImage
             }}
             inputName="vendorProfileImage"
-            // hideRemoveBtn={true}
             isActive={vendorData?.vendorProfileImage}
           />
         </div>
