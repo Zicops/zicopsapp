@@ -1445,10 +1445,11 @@ export const UPDATE_VENDOR = gql`
 export const CREATE_PROFILE_VENDOR = gql`
   mutation createProfileVendor(
     $vendor_id: String!
-    $first_name: String!
+    $type: String!
+    $first_name: String
     $last_name: String
-    $email: String!
-    $phone: Int!
+    $email: String
+    $phone: String
     $photo: Upload
     $description: String
     $languages: [String]
@@ -1461,6 +1462,7 @@ export const CREATE_PROFILE_VENDOR = gql`
     createProfileVendor(
       input: {
         vendor_id: $vendor_id
+        type: $type
         first_name: $first_name
         last_name: $last_name
         email: $email
@@ -1468,8 +1470,8 @@ export const CREATE_PROFILE_VENDOR = gql`
         photo: $photo
         description: $description
         languages: $languages
-        SME_Expertise: $SME_Expertise
-        Classroom_Expertise: $Classroom_Expertise
+        SME_expertise: $SME_Expertise
+        Classroom_expertise: $Classroom_Expertise
         expereince: $experience
         is_speaker: $is_speaker
         status: $status
@@ -1480,22 +1482,22 @@ export const CREATE_PROFILE_VENDOR = gql`
 
 export const CREATE_EXPERIENCE_VENDOR = gql`
   mutation createExperienceVendor(
-    $vendor_id: String!
-    $pf_id: String!
-    $title: String!
-    $company_name: String!
-    $employement_type: String!
-    $location: String!
-    $location_type: String!
-    $start_date: Int!
+    $vendor_id: String
+    $title: String
+    $email: String
+    $company_name: String
+    $employement_type: String
+    $location: String
+    $location_type: String
+    $start_date: Int
     $end_date: Int
-    $status: String!
+    $status: String
   ) {
     createExperienceVendor(
       input: {
         vendor_id: $vendor_id
-        pf_id: $pf_id
         title: $title
+        email: $email
         company_name: $company_name
         employement_type: $employement_type
         location: $location
@@ -1505,5 +1507,53 @@ export const CREATE_EXPERIENCE_VENDOR = gql`
         status: $status
       }
     )
+  }
+`;
+
+export const UPDATE_EXPERIENCE_VENDOR = gql`
+  mutation updateExperienceVendor(
+    $vendor_id: String
+    $expId: String
+    $title: String
+    $email: String
+    $company_name: String
+    $employement_type: String
+    $location: String
+    $location_type: String
+    $start_date: Int
+    $end_date: Int
+    $status: String
+  ) {
+    updateExperienceVendor(
+      input: {
+        vendor_id: $vendor_id
+        exp_id: $expId
+        title: $title
+        email: $email
+        company_name: $company_name
+        employement_type: $employement_type
+        location: $location
+        location_type: $location_type
+        start_date: $start_date
+        end_date: $end_date
+        status: $status
+      }
+    ) {
+      ExpId
+      VendorId
+      PfId
+      StartDate
+      EndDate
+      Title
+      Location
+      LocationType
+      EmployementType
+      CompanyName
+      CreatedAt
+      CreatedBy
+      UpdatedAt
+      UpdatedBy
+      Status
+    }
   }
 `;
