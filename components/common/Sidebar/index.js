@@ -12,9 +12,13 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import ProductTooltip from '../ProductTour/ProductTooltip';
 import ToolTip from '../ToolTip';
 import styles from './sidebar.module.scss';
-
 // move the styles in sidebar.module.scss in this folder
-export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductTooltipData }) {
+export default function Sidebar({
+  sidebarItemsArr,
+  isProductTooltip,
+  setPage,
+  proproductTooltipData
+}) {
   const activeTour = useRecoilValue(ActiveTourAtom);
   const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
   const [index, setIndex] = useRecoilState(ProductTourIndex);
@@ -22,22 +26,18 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
   const router = useRouter();
   const lastItem = useRef();
   const [isSidebarBottomReached, setIsSidebarBottomReached] = useState(false);
-
   const handleProductTour = () => {
     setShowProductTour(true);
-    return setIndex(0);
+    if (setPage === 'exams') return setIndex(0);
+    else if (setPage === 'courses') return setIndex(6);
   };
-
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       setIsSidebarBottomReached(entries[0].isIntersecting);
     });
-
     if (lastItem?.current) observer.observe(lastItem?.current);
   }, []);
-
   const isProductTourValid = PRODUCT_TOUR_PATHS.includes(router?.asPath?.split('/')?.[2]);
-
   return (
     <>
       <div
@@ -62,7 +62,6 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
             </ToolTip>
           )}
         </div>
-
         <div className={styles.sidebar_menu}>
           <ul>
             {sidebarItemsArr.data.map((val, key) => {
@@ -70,9 +69,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
               const pathUrl = val.link.split('/');
               let isActive = currentUrl === pathUrl[pathUrl.length - 1];
               const tourData = activeTour?.id === val?.tourId ? activeTour : null;
-
               if (val?.isHidden && !isDemo && !isDev) return null;
-
               // temp fix: Change page route for edit course later
               if (
                 router.pathname?.split('/')?.[2]?.includes('courses') &&
@@ -81,7 +78,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
                 isActive = true;
               }
               return (
-                <Fragment key={val.link}>
+                <Fragment key={val.id}>
                   {isProductTooltip ? (
                     <ProductTooltip
                       title={tourData?.title}
@@ -121,7 +118,6 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
             })}
           </ul>
         </div>
-
         <ToolTip title="Go Back to Admin Home" placement="top">
           <div
             className={styles.sidebar_footer_menu}

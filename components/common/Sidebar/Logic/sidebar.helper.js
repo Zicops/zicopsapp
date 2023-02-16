@@ -13,23 +13,27 @@ export const courseSidebarData = {
     {
       title: 'My Courses',
       link: '/admin/course/my-courses',
-      description: ADMIN_COURSES.sidebarData.myCourses
+      description: ADMIN_COURSES.sidebarData.myCourses,
+      tourId: PRODUCT_TOUR_FLOW?.[7]?.id
     },
     {
       title: 'Categories',
       link: '/admin/course/categories',
-      description: ADMIN_COURSES.sidebarData.categories
+      description: ADMIN_COURSES.sidebarData.categories,
+      tourId: PRODUCT_TOUR_FLOW?.[9]?.id
     },
     {
       title: 'Sub-categories',
       link: '/admin/course/subcategories',
-      description: ADMIN_COURSES.sidebarData.addSubCategories
+      description: ADMIN_COURSES.sidebarData.addSubCategories,
+      tourId: PRODUCT_TOUR_FLOW?.[11]?.id
     },
     {
       title: 'Dashboard',
       link: '/admin',
       description: ADMIN_COURSES.sidebarData.dashboard,
-      isHidden: true
+      isHidden: true,
+      tourId: PRODUCT_TOUR_FLOW?.[12]?.id
     }
   ]
 };

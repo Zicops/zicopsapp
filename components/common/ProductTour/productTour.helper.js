@@ -81,6 +81,37 @@ export const PROD_TOUR_ADMIN_EXAMS = {
       title:
         'Configure duration, passing criteria and attempt specifications from here and tranck all your exams'
     }
+  ],
+  myCourses: [
+    {
+      id: 0,
+      btnName: 'Create Courses',
+      title: 'Create new Courses under any category and start add courses to your learning spaces.'
+    },
+    {
+      id: 1,
+      btnName: 'View And Manage Your Courses',
+      title: 'Create new Courses under any category and start add courses to your learning spaces.'
+    },
+    {
+      id: 3,
+      btnName: 'Crate New Courses',
+      title: 'Create new Courses under any category and start add courses to your learning spaces.',
+      nextPageRoute: 'admin/my-question-papers'
+    },
+    {
+      id: 4,
+      btnName: 'Crate New new Courses',
+      title: 'Create new Courses under any category and start add courses to your learning spaces.',
+      nextPageRoute: 'admin/my-question-papers'
+    },
+    {
+      id: 5,
+      route: '/admin/exams/my-exams',
+      btnName: 'Manage Your Exams',
+      title:
+        'Configure duration, passing criteria and attempt specifications from here and tranck all your exams'
+    }
   ]
 };
 // export const MY_QUESTION_BANK = [

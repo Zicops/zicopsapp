@@ -44,5 +44,54 @@ export const PRODUCT_TOUR_FLOW = [
     btnName: 'Manage Your Exams',
     title:
       'Configure duration, passing criteria and attempt specifications from here and track all your exams'
+  },
+  {
+    id: 'myCoursesSidebar',
+    index: 6,
+    route: '/admin/course/my-courses',
+    btnName: 'Create Courses',
+    title: 'Create new Courses under any category and start add courses to your learning spaces.'
+  },
+  {
+    id: 'myCoursesPlusSidebar',
+    index: 7,
+    route: '/admin/course/my-courses',
+    btnName: 'View And Manage Your Courses',
+    title: 'Create new Courses under any category and start add courses to your learning spaces.'
+  },
+  {
+    id: 'myCatagoryPlus',
+    index: 8,
+    route: '/admin/course/categories',
+    btnName: 'Create Catagory',
+    title: 'Create new Catagory and start add Catagory to your courses.'
+  },
+  {
+    id: 'myCatagoryPlusSidebar',
+    index: 9,
+    route: '/admin/course/categories',
+    btnName: 'View And Manage Your Catagory',
+    title: 'Create new Catagory and start add Catagory to your courses.'
+  },
+  {
+    id: 'mySubCatagoryPlus',
+    index: 10,
+    route: '/admin/course/subcategories',
+    btnName: 'Create SubCatagory',
+    title: 'Create new SubCatagory and start add SubCatagory to your courses.'
+  },
+  {
+    id: 'mySubCatagoryPlusSidebar',
+    index: 11,
+    route: '/admin/course/subcategories',
+    btnName: 'View And Manage Your SubCatagory',
+    title: 'Create new SubCatagory and start add SubCatagory to your courses.'
+  },
+  {
+    id: 'courseDashboardSidebar',
+    index: 11,
+    route: '/admin/course/subcategories',
+    btnName: 'View Course Dashboard',
+    title: 'Show Courses and courses progress.'
   }
 ];

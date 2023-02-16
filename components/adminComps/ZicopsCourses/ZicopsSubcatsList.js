@@ -1,7 +1,9 @@
 import PopUp from '@/components/common/PopUp';
+import { PRODUCT_TOUR_FLOW } from '@/components/common/ProductTour/productTour.flow';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
+import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { ApolloProvider } from '@apollo/client';
 import { useEffect, useState } from 'react';
@@ -136,6 +138,7 @@ const ZicopsSubcatsList = () => {
   function closePopUp() {
     udpatePopUpState(false);
   }
+  const showProductTourComps = useRecoilValue(ProductTourVisible);
   return (
     <>
       <div className="content">
@@ -143,6 +146,9 @@ const ZicopsSubcatsList = () => {
           title="Zicops Subcategories"
           tooltipTitle={ADMIN_COURSES.addSubCategories.addBtn}
           hideCourseTypeDropdown={true}
+          isProductTooltip={showProductTourComps}
+          productTooltipData={PRODUCT_TOUR_FLOW?.[10]}
+          tourId={PRODUCT_TOUR_FLOW?.[10]?.id}
           handlePlusClick={() => udpatePopUpState(true)}
         />
 

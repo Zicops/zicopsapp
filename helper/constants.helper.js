@@ -130,7 +130,7 @@ export const COURSE_TOPIC_STATUS = {
 };
 
 //need to delete later
-export const PRODUCT_TOUR_PATHS = ['exams'];
+export const PRODUCT_TOUR_PATHS = ['exams', 'course'];
 
 export const NOTIFICATION_TITLES = {
   cohortAssign: 'Cohort-Mapped',
@@ -138,7 +138,7 @@ export const NOTIFICATION_TITLES = {
   courseAssign: 'Course-Assigned',
   courseUnssigned: 'Course-Unassigned',
   lspWelcome: 'Welcome-Lsp',
-  signIn: {course:'Course-signInAssign'}
+  signIn: { course: 'Course-signInAssign' }
 };
 
 export const NOTIFICATION_MSG_LINKS = {

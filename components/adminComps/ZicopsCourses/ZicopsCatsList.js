@@ -1,8 +1,10 @@
 import PopUp from '@/components/common/PopUp';
+import { PRODUCT_TOUR_FLOW } from '@/components/common/ProductTour/productTour.flow';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COMMON_LSPS } from '@/helper/constants.helper';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
+import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { ApolloProvider } from '@apollo/client';
@@ -139,6 +141,7 @@ const ZicopsCatsList = () => {
   function closePopUp() {
     udpatePopUpState(false);
   }
+  const showProductTourComps = useRecoilValue(ProductTourVisible);
   return (
     <>
       <div className="content">
@@ -147,6 +150,9 @@ const ZicopsCatsList = () => {
           hideCourseTypeDropdown={true}
           handlePlusClick={() => udpatePopUpState(true)}
           tooltipTitle={ADMIN_COURSES.categories.addBtn}
+          isProductTooltip={showProductTourComps}
+          productTooltipData={PRODUCT_TOUR_FLOW?.[8]}
+          tourId={PRODUCT_TOUR_FLOW?.[8]?.id}
         />
 
         <ApolloProvider client={queryClient}>

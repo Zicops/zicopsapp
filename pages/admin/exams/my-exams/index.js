@@ -21,6 +21,7 @@ const MyExams = () => {
         sidebarItemsArr={examSidebarData}
         isProductTooltip={showProductTourComps}
         proproductTooltipData={PROD_TOUR_ADMIN_EXAMS?.myExamBanks}
+        setPage="exams"
       />
       <MainBody>
         <AdminHeader
