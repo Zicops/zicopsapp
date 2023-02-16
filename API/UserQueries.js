@@ -819,6 +819,7 @@ export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
       vendorId
       type
       name
+      updated_at
     }
   }
 `;

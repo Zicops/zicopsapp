@@ -12,6 +12,7 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
 import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
@@ -49,7 +50,10 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    setVendorDetails(vendorList?.getVendors);
+
+    const _sortedData = sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
+
+    setVendorDetails(_sortedData);
     setLoading(false);
   }
 
