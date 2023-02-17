@@ -95,7 +95,7 @@ export default function CourseViewAnalytics() {
         label: 'User Course Views',
         data: courseViews?.map((obj) => ({ ...obj, minutes: obj?.seconds / 60 })),
         fill: true,
-        tension: 0.2,
+        tension: 0,
         backgroundColor: (context) => {
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 500);
@@ -109,7 +109,7 @@ export default function CourseViewAnalytics() {
   };
   const options = {
     parsing: {
-      xAxisKey: 'minutes',
+      xAxisKey: 'index',
       yAxisKey: 'minutes'
     },
     scales: {
@@ -120,6 +120,9 @@ export default function CourseViewAnalytics() {
           maxRotation: 0,
           minRotation: 0
         }
+      },
+      y: {
+        beginAtZero: true
       }
     }
   };
