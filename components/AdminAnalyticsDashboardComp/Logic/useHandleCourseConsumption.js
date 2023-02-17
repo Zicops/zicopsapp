@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 export default function useHandleCourseConsumption() {
   const [tableData, setTableData] = useState(null);
   const [filters, setFilters] = useState({ category: null, subCategory: null });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // courses count
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function useHandleCourseConsumption() {
 
       const data = (await myCourseConsumptionStats)?.getCourseConsumptionStats?.stats || [];
 
-      const allCourseIds = data?.map((d) => d?.CourseId);
+      const allCourseIds = data?.map((d) => d?.CourseId) || [];
       const allCourseData = await loadAndCacheDataAsync(GET_COURSE, { course_id: allCourseIds });
 
       const _tableData = data?.map((d) => {
@@ -60,7 +60,7 @@ export default function useHandleCourseConsumption() {
           publishedOn: new Date(+courseData?.publish_date * 1000).toLocaleDateString()
         };
       });
-      setTableData(_tableData);
+      setTableData(_tableData || []);
       setIsLoading(false);
     }
   }, []);

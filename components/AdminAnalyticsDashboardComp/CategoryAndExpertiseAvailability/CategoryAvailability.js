@@ -39,11 +39,29 @@ export default function CategoryAvailability() {
     });
   const options = {
     indexAxis: 'y',
+    interaction: {
+      mode: 'point',
+      axis: 'y'
+    },
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false
+      }
+    },
+    parsing: {
+      xAxisKey: 'count',
+      yAxisKey: 'count'
+    },
+    scales: {
+      y: {
+        ticks: {
+          font: {
+            size: 14
+            // family: 'vazir'
+          }
+        }
       }
     }
   };
@@ -53,19 +71,60 @@ export default function CategoryAvailability() {
     labels,
     datasets: [
       {
+        axis: 'y',
         label: 'Courses',
-        data: dataArr?.map((data) => data.count),
+        data: dataArr,
         // borderColor: 'rgb(255, 99, 132)',
         backgroundColor: styles.primary,
         borderRadius: ['1'],
         barThickness: 20,
         minBarLength: 2,
-        barPercentage: 0.2,
+        barPercentage: 2,
+        categoryPercentage: 0.5,
         height: 500,
         fill: true
       }
     ]
   };
+
+  function tooltipUI(tooltipData) {
+    const parentNode = document.createElement('div');
+
+    const catTitleNode = document.createElement('div');
+    const catData = document.createTextNode(tooltipData?.cat?.Name || tooltipData?.name);
+    catTitleNode.appendChild(catData);
+
+    const subCatNode = document.createElement('span');
+    const subCatData = document.createTextNode(`Sub-categories: ${tooltipData?.subCatCount || 0}`);
+    subCatNode.appendChild(subCatData);
+    subCatNode.style.fontSize = '13px';
+    subCatNode.style.color = styles.darkThree;
+
+    const courseTitleNode = document.createElement('div');
+    const courseData = document.createTextNode(`Courses: ${tooltipData?.count}`);
+    courseTitleNode.appendChild(courseData);
+
+    const zicopsCourseNode = document.createElement('div');
+    const zicopsCourseData = document.createTextNode(
+      `Zicops courses: ${tooltipData?.zicopsCourseCount}`
+    );
+    zicopsCourseNode.appendChild(zicopsCourseData);
+    zicopsCourseNode.style.fontSize = '13px';
+    zicopsCourseNode.style.color = styles.darkThree;
+
+    const myCourseNode = document.createElement('div');
+    const myCourseData = document.createTextNode(`My courses: ${tooltipData?.myCourseCount}`);
+    myCourseNode.appendChild(myCourseData);
+    myCourseNode.style.fontSize = '13px';
+    myCourseNode.style.color = styles.darkThree;
+
+    parentNode.appendChild(catTitleNode);
+    parentNode.appendChild(subCatNode);
+    parentNode.appendChild(courseTitleNode);
+    parentNode.appendChild(myCourseNode);
+    parentNode.appendChild(zicopsCourseNode);
+    return parentNode;
+  }
 
   return (
     <div className={`${styles.wrapper} ${styles.courseAvailability}`}>
@@ -116,9 +175,20 @@ export default function CategoryAvailability() {
             options={options}
             chartData={data}
             direction="rtl"
-            containerStyles={{ height: `${labels?.length < 8 ? '340' : labels?.length * 30}px` }}
+            tooltipBody={tooltipUI}
+            containerStyles={{ height: `${labels?.length < 8 ? '340' : labels?.length * 50}px` }}
           />
         ) : (
+          // <ZicopsBarChart
+          //   data={d?.map((data) => ({ key: data.name, data: data.count }))}
+          //   // containerStyles={{ height: `${dataArr?.length < 8 ? '340' : dataArr?.length * 30}px` }}
+          //   barGraphHeight={getBarGraphHeight()}
+          //   // data={[
+          //   //   { key: 'DLP', data: 13 },
+          //   //   { key: 'SIEM', data: 2 },
+          //   //   { key: 'Endpoint', data: 7 }
+          //   // ]}
+          // />
           <Spinner />
         )}
       </div>

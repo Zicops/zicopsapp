@@ -18,7 +18,7 @@ export function DownArrowIcon({ color = '#6BCFCF', turns = '0' }) {
   );
 }
 
-export function DownSortTriangleIcon({ color = '#6BCFCF', turns = '0' }) {
+export function DownSortTriangleIcon({ color = '#C4C4C4', turns = '0' }) {
   return (
     <svg
       width="12"

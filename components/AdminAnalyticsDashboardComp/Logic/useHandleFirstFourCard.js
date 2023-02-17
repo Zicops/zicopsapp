@@ -41,6 +41,7 @@ export default function useHandleFirstFourCard() {
   // cat sub cat count
   useEffect(() => {
     const _lspId = sessionStorage.getItem('lsp_id');
+    if (!catSubCat?.cat?.length && !catSubCat?.subCat?.length) return;
 
     setCategoryCard((previousData) => ({
       ...previousData,
