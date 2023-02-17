@@ -71,7 +71,7 @@ export default function useHandleCatConsumption(isCategory = false) {
       const myCourseStatsRes = await loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
         input: queryVariables
       });
-      let zicopsCourseStats = {};
+      let zicopsCourseStats = [];
       if (_lspId !== COMMON_LSPS.zicops) {
         queryVariables.lsp_id = COMMON_LSPS.zicops;
         const zicopsCourseStatsRes = await loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
@@ -89,11 +89,12 @@ export default function useHandleCatConsumption(isCategory = false) {
           (zicopsCat) => zicopsCat?.name === data?.name
         );
 
+        const zicopsCourseCount = +zicopsCatData?.count || 0;
         return {
           ...data,
           ...subCat,
-          count: zicopsCatData?.count + data?.count,
-          zicopsCourseCount: zicopsCatData?.count,
+          count: zicopsCourseCount + +data?.count,
+          zicopsCourseCount: zicopsCourseCount,
           myCourseCount: data?.count,
           cat: cat?.cat,
           subCatCount:
