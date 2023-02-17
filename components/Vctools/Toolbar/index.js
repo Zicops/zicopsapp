@@ -1,13 +1,12 @@
-import next from "next";
-import { useEffect, useState } from "react";
-import styles from "../VctoolMain.module.scss";
-import ChatBar from "../Chatbar";
-import QAbar from "../QAbar";
-import Poll from "../Polls";
-import Participants from "../Participants";
-import WhiteBoard from "../WhiteBoard";
+import { useState } from "react";
 import BreakoutRoom from "../BreakOutRoom";
+import ChatBar from "../Chatbar";
+import Participants from "../Participants";
+import Poll from "../Polls";
+import QAbar from "../QAbar";
 import VctoolButton from "../Vctoolbutton";
+import styles from "../vctoolMain.module.scss";
+import WhiteBoard from "../WhiteBoard";
 const MainToolbar = ({ audiotoggle, videotoggle, setAudio, setVideo, endMeetng, shareScreen,
     handRiseFun, fullScreenFun, fullscreen, getUesrId, mouseMoveFun }) => {
     const [fade1, setfade1] = useState(true)
