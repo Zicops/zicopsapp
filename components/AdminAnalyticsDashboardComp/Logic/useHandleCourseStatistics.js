@@ -2,13 +2,28 @@ import { GET_COURSE } from '@/api/Queries';
 import { userClient } from '@/api/UserMutations';
 import { GET_COURSE_CONSUMPTION_STATS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { displayMinToHMS } from '@/helper/utils.helper';
+import { snakeCaseToTitleCase } from '@/helper/common.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { useEffect, useState } from 'react';
 
-export default function useHandleCourseConsumption() {
-  const [tableData, setTableData] = useState(null);
-  const [filters, setFilters] = useState({ category: null, subCategory: null });
-  const [isLoading, setIsLoading] = useState(true);
+export default function useHandleCourseStatistics() {
+  const [mostAssigned, setMostAssigned] = useState({
+    id: 1,
+    title: 'Most added/assigned',
+    icon: '/images/svg/trending_up.svg',
+    courseName: null,
+    learnerCount: null,
+    type: null
+  });
+  const [leastAssigned, setLeastAssigned] = useState({
+    id: 2,
+    title: 'Least added/assigned',
+    icon: '/images/svg/trending_down.svg',
+    courseName: null,
+    learnerCount: null,
+    type: null
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   // courses count
   useEffect(() => {
@@ -27,7 +42,7 @@ export default function useHandleCourseConsumption() {
 
       const data = (await myCourseConsumptionStats)?.getCourseConsumptionStats?.stats || [];
 
-      const allCourseIds = data?.map((d) => d?.CourseId) || [];
+      const allCourseIds = data?.map((d) => d?.CourseId);
       const allCourseData = await loadAndCacheDataAsync(GET_COURSE, { course_id: allCourseIds });
 
       const _tableData = data?.map((d) => {
@@ -42,7 +57,7 @@ export default function useHandleCourseConsumption() {
           subCategory: d?.SubCategory,
 
           ownedBy: d?.Owner,
-          duration: displayMinToHMS(d?.Duration / 60),
+          duration: d?.Duration,
 
           totalLearners: d?.TotalLearners,
           activeLearners: d?.ActiveLearners,
@@ -60,18 +75,25 @@ export default function useHandleCourseConsumption() {
           publishedOn: new Date(+courseData?.publish_date * 1000).toLocaleDateString()
         };
       });
-      setTableData(_tableData || []);
+
+      const _sortedData = sortArrByKeyInOrder(_tableData, 'totalLearners', false);
+      const _mostAssigned = _sortedData[0];
+      const _leastAssigned = _sortedData[_sortedData?.length - 1];
+      setMostAssigned({
+        ...mostAssigned,
+        courseName: _mostAssigned?.name,
+        learnerCount: _mostAssigned?.totalLearners,
+        type: snakeCaseToTitleCase(_mostAssigned?.type)
+      });
+      setLeastAssigned({
+        ...leastAssigned,
+        courseName: _leastAssigned?.name,
+        learnerCount: _leastAssigned?.totalLearners,
+        type: snakeCaseToTitleCase(_leastAssigned?.type)
+      });
       setIsLoading(false);
     }
   }, []);
 
-  const filteredData = tableData?.filter((data) => {
-    let isFiltered = true;
-    if (filters?.category) isFiltered = data?.category?.includes(filters?.category);
-    if (filters?.subCategory) isFiltered = data?.subCategory?.includes(filters?.subCategory);
-
-    return isFiltered;
-  });
-
-  return { tableData: filteredData, filters, setFilters, isLoading, setIsLoading };
+  return { mostAssigned, leastAssigned, isLoading, setIsLoading };
 }
