@@ -135,13 +135,15 @@ export default function BarChart({
   }
 
   const _options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    ...(options || {}),
     layout: {
       padding: {
         top: 5
-      }
+      },
+      ...(options?.layout || {})
     },
-    responsive: true,
-    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false
@@ -161,24 +163,27 @@ export default function BarChart({
         //     return 'Sum: ' + sum;
         //   }
         // }
-      }
+      },
+      ...(options.plugins || {})
     },
     animation: {
       animateScale: true,
-      animateRotate: true
+      animateRotate: true,
+      ...(options.animation || {})
     },
     interaction: {
       mode: 'index',
-      intersect: false
+      intersect: false,
+      ...(options.interaction || {})
     }
   };
 
   // append plugins to props options
-  if (options) {
-    options.plugins = { ...(options.plugins || {}), ..._options.plugins };
-    options.scales = { ...(options.scales || {}), ..._options.scales };
-    options.interaction = { ...(options.interaction || {}), ..._options.interaction };
-  }
+  // if (options) {
+  //   options.plugins = { ...(options.plugins || {}), ..._options.plugins };
+  //   options.scales = { ...(options.scales || {}), ..._options.scales };
+  //   options.interaction = { ...(options.interaction || {}), ..._options.interaction };
+  // }
 
   // https://stackoverflow.com/questions/39473991/how-to-make-a-chart-js-bar-chart-scrollable
   return (
@@ -189,7 +194,7 @@ export default function BarChart({
           dir={'ltr'}
           style={containerStyles}
           ref={barContainerRef}>
-          <Bar data={_chartData} options={options || _options} />
+          <Bar data={_chartData} options={_options} />
         </div>
       </div>
     </>

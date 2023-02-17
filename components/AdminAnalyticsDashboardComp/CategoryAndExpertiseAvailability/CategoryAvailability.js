@@ -43,13 +43,6 @@ export default function CategoryAvailability() {
       mode: 'point',
       axis: 'y'
     },
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false
-      }
-    },
     parsing: {
       xAxisKey: 'count',
       yAxisKey: 'count'

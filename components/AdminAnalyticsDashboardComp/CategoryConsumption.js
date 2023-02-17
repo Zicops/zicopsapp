@@ -36,12 +36,19 @@ export default function CategoryConsumption() {
 
       return -1;
     });
+
+  const options = {
+    parsing: {
+      xAxisKey: 'count',
+      yAxisKey: 'count'
+    }
+  };
   const categoryConsumptionData = {
     labels: dataArr?.map((data) => data.name),
     datasets: [
       {
         label: ['Courses'],
-        data: dataArr?.map((data) => data.count),
+        data: dataArr,
         backgroundColor: [styles.primary],
         borderRadius: ['1'],
         barThickness: 20,
@@ -58,6 +65,45 @@ export default function CategoryConsumption() {
     if (filters?.category) return `${filters?.category} sub-categories`;
 
     return 'All categories';
+  }
+
+  function tooltipUI(tooltipData) {
+    const parentNode = document.createElement('div');
+
+    const catTitleNode = document.createElement('div');
+    const catData = document.createTextNode(tooltipData?.cat?.Name || tooltipData?.name);
+    catTitleNode.appendChild(catData);
+
+    const subCatNode = document.createElement('span');
+    const subCatData = document.createTextNode(`Sub-categories: ${tooltipData?.subCatCount || 0}`);
+    subCatNode.appendChild(subCatData);
+    subCatNode.style.fontSize = '13px';
+    subCatNode.style.color = styles.darkThree;
+
+    const courseTitleNode = document.createElement('div');
+    const courseData = document.createTextNode(`Courses: ${tooltipData?.count}`);
+    courseTitleNode.appendChild(courseData);
+
+    const zicopsCourseNode = document.createElement('div');
+    const zicopsCourseData = document.createTextNode(
+      `Zicops courses: ${tooltipData?.zicopsCourseCount}`
+    );
+    zicopsCourseNode.appendChild(zicopsCourseData);
+    zicopsCourseNode.style.fontSize = '13px';
+    zicopsCourseNode.style.color = styles.darkThree;
+
+    const myCourseNode = document.createElement('div');
+    const myCourseData = document.createTextNode(`My courses: ${tooltipData?.myCourseCount}`);
+    myCourseNode.appendChild(myCourseData);
+    myCourseNode.style.fontSize = '13px';
+    myCourseNode.style.color = styles.darkThree;
+
+    parentNode.appendChild(catTitleNode);
+    parentNode.appendChild(subCatNode);
+    parentNode.appendChild(courseTitleNode);
+    parentNode.appendChild(myCourseNode);
+    parentNode.appendChild(zicopsCourseNode);
+    return parentNode;
   }
 
   return (
@@ -106,11 +152,13 @@ export default function CategoryConsumption() {
         {!isLoading ? (
           <BarChart
             chartData={categoryConsumptionData}
+            options={options}
             containerStyles={{
-              width: `${categoryConsumptionData?.labels?.length * 150}px`,
+              width: `${categoryConsumptionData?.labels?.length * 100}px`,
               height: '300px'
             }}
-            labelLength={15}
+            labelLength={10}
+            tooltipBody={tooltipUI}
           />
         ) : (
           <Spinner />
