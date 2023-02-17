@@ -94,7 +94,7 @@ const MainToolbar = ({ audiotoggle, videotoggle, setAudio, setVideo, endMeetng, 
                         <VctoolButton onClickfun={() => {
                             endMeetng()
                         }} trueSrc={"/images/svg/vctool/logout.svg"} falseSrc={"/images/svg/vctool/logout.svg"}
-                            custamStyle={`${styles.cansel_btn}`} btnValue={"Leave"}
+                            customStyle={`${styles.cansel_btn}`} btnValue={"Leave"}
                         />
                     </div>
 
@@ -115,7 +115,7 @@ const MainToolbar = ({ audiotoggle, videotoggle, setAudio, setVideo, endMeetng, 
                         sethand(!hand)
                         handRiseFun()
                     }} toggle={hand} trueSrc={"/images/svg/vctool/back-hand.svg"} falseSrc={"/images/svg/vctool/back-hand-on.svg"}
-                        custamId={hand ? `${styles.footer_left_btn1}` : `${styles.footer_left_btn2}`} />
+                        customId={hand ? `${styles.footer_left_btn1}` : `${styles.footer_left_btn2}`} />
                 </div>
                 <div className={`${styles.footer_right}`}>
 

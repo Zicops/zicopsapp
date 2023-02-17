@@ -1,5 +1,5 @@
 import styles from "../vctoolMain.module.scss";
-const Poll = ({showHide}) => {
+const Poll = ({ showHide }) => {
     return (
         <div className={`${styles.Pollbar}`}>
             <div className={`${styles.Poll_head}`}>
@@ -16,7 +16,7 @@ const Poll = ({showHide}) => {
 
 
             </div>
-{/* 
+            {/* 
             <div className={`${styles.Poll_input}`}>
                 <input type="text" placeholder="Type message here" />
                 <div className={`${styles.chatsendfile}`}>

@@ -1,7 +1,7 @@
-const VctoolButton = ({ onClickfun, trueSrc, falseSrc, toggle, custamStyle, btnValue,custamId }) => {
+const VctoolButton = ({ onClickfun, trueSrc, falseSrc, toggle, customStyle, btnValue, customId }) => {
     return (
-        <button onClick={onClickfun} id={custamId}
-            className={custamStyle}>
+        <button onClick={onClickfun} id={customId}
+            className={customStyle}>
             {
                 toggle ?
                     <img src={trueSrc} />

@@ -1,39 +1,38 @@
 import styles from "../vctoolMain.module.scss";
-const BreakoutRoom=({showHide})=>
-{
-    return(
+const BreakoutRoom = ({ showHide }) => {
+    return (
         <>
-         <div className={`${styles.BreakoutRoomBar}`}>
-            <div className={`${styles.breakout_head}`}>
-                <div>Breakout Rooms</div>
-                <button onClick={() => {
-                    showHide()
-                }}>
-                    <img src="/images/svg/vctool/close.svg" />
-                </button>
-            </div>
+            <div className={`${styles.BreakoutRoomBar}`}>
+                <div className={`${styles.breakout_head}`}>
+                    <div>Breakout Rooms</div>
+                    <button onClick={() => {
+                        showHide()
+                    }}>
+                        <img src="/images/svg/vctool/close.svg" />
+                    </button>
+                </div>
 
-            <div style={{
-                width:"296px",
-                height:"45%",
-                overflow:"scroll"
-            }} className={`${styles.BreakoutRoom_Screen}`}>
+                <div style={{
+                    width: "296px",
+                    height: "45%",
+                    overflow: "scroll"
+                }} className={`${styles.BreakoutRoom_Screen}`}>
 
-           {/* list of breakout rooms */}
+                    {/* list of breakout rooms */}
 
-            </div>
+                </div>
 
-            <div style={{
-              width:"296px",
-              height:"45%",
-              overflow:"scroll"
-            }} className={`${styles.BreakoutRoom_participants}`}>
+                <div style={{
+                    width: "296px",
+                    height: "45%",
+                    overflow: "scroll"
+                }} className={`${styles.BreakoutRoom_participants}`}>
 
-            </div>
-            <div>
+                </div>
+                <div>
 
-            </div>
-{/* 
+                </div>
+                {/* 
             <div className={`${styles.Poll_input}`}>
                 <input type="text" placeholder="Type message here" />
                 <div className={`${styles.chatsendfile}`}>
@@ -41,7 +40,7 @@ const BreakoutRoom=({showHide})=>
                     <img src="/images/svg/vctool/send.svg" />
                 </div>
             </div> */}
-        </div>
+            </div>
         </>
     )
 };

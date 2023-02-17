@@ -2,15 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../vctoolMain.module.scss";
 const WhiteBoard = () => {
     const [IsDrawing, setIsDrawing] = useState(false)
-    const [LineWidth,setLineWidth]=useState(1);
-    const [Color,setColor]=useState("#000000")
+    const [LineWidth, setLineWidth] = useState(1);
+    const [Color, setColor] = useState("#000000")
     const CanvasRef = useRef(null)
     const ctx = useRef(null)
     const timeout = useRef(null);
-    const Change=(e)=>
-    {
-    setColor(e.target.value)
-    setLineWidth(e.target.value)
+    const Change = (e) => {
+        setColor(e.target.value)
+        setLineWidth(e.target.value)
     }
     useEffect(() => {
         const canvas = CanvasRef.current;
@@ -49,7 +48,7 @@ const WhiteBoard = () => {
         ctx.current = canvas.getContext("2d");
         ctx.current.lineWidth = LineWidth;
         ctx.current.lineCap = "round";
-        ctx.current.strokeStyle =Color;
+        ctx.current.strokeStyle = Color;
         ctx.current.lineTo(e.clientX, e.clientY)
         ctx.current.stroke();
         ctx.current.beginPath();

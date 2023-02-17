@@ -79,13 +79,9 @@ const VcMaintool = () => {
           }}
           mouseMoveFun={() => {
             api.getRoomsInfo().then(rooms => {
-              //  console.log(rooms)
               setuserinfo(rooms.rooms[0].participants)
             })
-            console.log(api.getParticipantsInfo())
             userinfo.forEach((data) => {
-              // console.log(userData.role == "Learner")
-
               api.executeCommand('overwriteNames', [{
                 id: data.id,
                 name: startName// The new name.
@@ -110,9 +106,7 @@ const VcMaintool = () => {
         {
           !hidecard ? <MeetingCard
             startMeeting={() => {
-              // api.executeCommand('displayName', startName);
               StartMeeting("standup", "sandeep", containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
-              // StartMeeting("standup")
               sethidecard(!hidecard)
             }}
             startAudioenableFun={() => {
