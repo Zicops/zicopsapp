@@ -1,4 +1,4 @@
-import styles from "../VctoolMain.module.scss"
+import styles from "../vctoolMain.module.scss";
 const StudentFrame = ({ name, UserIfram }) => {
     return (
         <div className={`${styles.Student_Frame}`}>

@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import styles from '../VctoolMain.module.scss'
-import {OnVideo,StopVideo} from "../help/vctool.helper"
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { OnVideo, StopVideo } from "../help/vctool.helper";
 import VctoolButton from '../Vctoolbutton';
+import styles from '../vctoolMain.module.scss';
 const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoenable, startAudioenableFun, startVideoenableFun }) => {
     const videoref = useRef(null);
     const [video1, setvideo1] = useState(startmeetingVideoenable)

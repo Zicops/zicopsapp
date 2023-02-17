@@ -1,5 +1,4 @@
-import { useState } from "react";
-import styles from "../VctoolMain.module.scss"
+import styles from "../vctoolMain.module.scss";
 const QAbar = ({showQAbtn,showBtnFun,showHide}) => {
        return (
         <div className={`${styles.QAbar}`}>
