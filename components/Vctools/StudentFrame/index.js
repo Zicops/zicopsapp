@@ -1,8 +1,8 @@
-import styles from "../vctoolMain.module.scss"
+import styles from "../VctoolMain.module.scss"
 const StudentFrame = ({ name, UserIfram }) => {
     return (
         <div className={`${styles.Student_Frame}`}>
-            <div className={`${styles.avtar}`}>{name[0] + name[1]}</div>
+            <div className={`${styles.avtar}`}>{name?.[0] + name?.[1]}</div>
             <div className={styles.student_frame_name}>{name}</div>
             <div className={`${styles.student_frame_icons}`}>
                 <img src="/images/svg/vctool/back-hand.svg" />

@@ -1,6 +1,6 @@
 import next from "next";
 import { useEffect, useState } from "react";
-import styles from "../vctoolMain.module.scss";
+import styles from "../VctoolMain.module.scss";
 import ChatBar from "../Chatbar";
 import QAbar from "../QAbar";
 import Poll from "../Polls";

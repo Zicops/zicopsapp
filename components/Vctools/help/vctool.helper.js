@@ -1,11 +1,11 @@
-export function StartMeeting(givenName, startName, containerRef, userData, toggleAudio, setToobar, setApi, toggleVideo) {
+export const StartMeeting =(givenName, startingName, containerRef, email, toggleAudio, setToobar, setApi, toggleVideo)=> {
     const domain = 'live.zicops.com';
     const options = {
       roomName: givenName,
       parentNode: containerRef.current,
       userinfo: {
-        email: userData.email,
-        displayName: startName //default name
+        email: email,
+        displayName: startingName //default name
       },
       configOverwrite: {
         startWithAudioMuted: !toggleAudio,
@@ -25,6 +25,7 @@ export function StartMeeting(givenName, startName, containerRef, userData, toggl
       }
     };
     setApi(new JitsiMeetExternalAPI(domain, options));
+
   };
   
   

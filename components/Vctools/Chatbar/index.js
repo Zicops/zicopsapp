@@ -1,4 +1,4 @@
-import styles from "../vctoolMain.module.scss";
+import styles from "../VctoolMain.module.scss";
 const ChatBar = ({showHide}) => {
     return (
         <div className={`${styles.chatbar}`}>

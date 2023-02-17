@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import styles from '../vctoolMain.module.scss'
+import styles from '../VctoolMain.module.scss'
 import {OnVideo,StopVideo} from "../help/vctool.helper"
 import VctoolButton from '../Vctoolbutton';
 const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoenable, startAudioenableFun, startVideoenableFun }) => {
@@ -57,18 +57,19 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                 <button><img src="/images/svg/vctool/settings.svg" /> </button>
 
                 <div className={`${styles.join_btn}`}>
-                    {/* <button onClick={() => {
+                    <button onClick={() => {
+                        console.log("cliked")
                         startMeeting()
                         StopVideo(video,videoref)
                     }}>
                         Join
-                    </button> */}
+                    </button>
 
-                    <VctoolButton onClickfun={()=>
+                    {/* <VctoolButton onClickfun={()=>
                     {
                         startMeeting()
                         StopVideo(video,videoref)
-                    }} btnValue={"Join"}/>
+                    }} btnValue={"Join"}/> */}
                 </div>
             </div>
         </div>

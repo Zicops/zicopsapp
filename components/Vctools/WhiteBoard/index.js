@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import styles from "../vctoolMain.module.scss"
+import styles from "../VctoolMain.module.scss"
 import { Draw } from "../help/vctool.helper"
 const WhiteBoard = () => {
     const [isDrawing, setisDrawing] = useState(false)

@@ -26,10 +26,9 @@ const VcMaintool = () => {
       document.msFullscreenElement
   }
   const startName = userData.first_name + " " + userData.last_name
-
   return (
     <div ref={fullScreenRef}>
-      <div id="meet" className={toolbar ? `${styles.meet}`:''} ref={containerRef}></div>
+      <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}></div>
       {toolbar && (
         <MainToolbar
           setAudio={() => {
@@ -80,16 +79,23 @@ const VcMaintool = () => {
           }}
           mouseMoveFun={() => {
             api.getRoomsInfo().then(rooms => {
-
+              //  console.log(rooms)
               setuserinfo(rooms.rooms[0].participants)
             })
+            console.log(api.getParticipantsInfo())
             userinfo.forEach((data) => {
-              console.log(userData.role == "Learner")
+              // console.log(userData.role == "Learner")
+
+              api.executeCommand('overwriteNames', [{
+                id: data.id,
+                name: startName// The new name.
+              }]
+              );
               if (userData.email.includes("@zicops")) {
                 api.executeCommand('grantModerator', data.id);
               }
               else {
-                console.log("not a modarator")
+                // console.log("not a modarator")
               }
             })
 
@@ -102,20 +108,22 @@ const VcMaintool = () => {
       <div className={`${styles.main_div}`}>
         {/* all components ara going to append here */}
         {
-         ! hidecard ? <MeetingCard
-              startMeeting={() => {
-                StartMeeting("standup", startName, containerRef, userData, toggleAudio, settoobar, setapi, toggleVideo);
-                sethidecard(!hidecard)
-              }}
-              startAudioenableFun={() => {
-                settoggleAudio(!toggleAudio);
-              }}
-              startVideoenableFun={() => {
-                settoggleVideo(!toggleVideo);
-              }}
-              startmeetingVideoenable={toggleVideo}
-              startmeetingAudioenable={toggleAudio}
-            /> :''
+          !hidecard ? <MeetingCard
+            startMeeting={() => {
+              // api.executeCommand('displayName', startName);
+              StartMeeting("standup", "sandeep", containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              // StartMeeting("standup")
+              sethidecard(!hidecard)
+            }}
+            startAudioenableFun={() => {
+              settoggleAudio(!toggleAudio);
+            }}
+            startVideoenableFun={() => {
+              settoggleVideo(!toggleVideo);
+            }}
+            startmeetingVideoenable={toggleVideo}
+            startmeetingAudioenable={toggleAudio}
+          /> : ''
         }
       </div>
     </div>
