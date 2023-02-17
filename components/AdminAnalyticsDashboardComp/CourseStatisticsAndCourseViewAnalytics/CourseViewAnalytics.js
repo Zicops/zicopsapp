@@ -85,7 +85,7 @@ export default function CourseViewAnalytics() {
   const labels = moment.weekdays()?.map((day) => day?.slice(0, 3));
   if (filterBy === 'Month') {
     labels.length = 0;
-    labels.push(...Array(selectedDate?.end?.get('D')));
+    labels.push(...[...Array(selectedDate?.end?.get('D'))].map((v, i) => i + 1));
   }
 
   const data = {
@@ -93,7 +93,7 @@ export default function CourseViewAnalytics() {
     datasets: [
       {
         label: 'User Course Views',
-        data: courseViews,
+        data: courseViews?.map((obj) => ({ ...obj, minutes: obj?.seconds / 60 })),
         fill: true,
         tension: 0.2,
         backgroundColor: (context) => {
@@ -109,8 +109,18 @@ export default function CourseViewAnalytics() {
   };
   const options = {
     parsing: {
-      xAxisKey: 'seconds',
-      yAxisKey: 'seconds'
+      xAxisKey: 'minutes',
+      yAxisKey: 'minutes'
+    },
+    scales: {
+      x: {
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 7,
+          maxRotation: 0,
+          minRotation: 0
+        }
+      }
     }
   };
 
