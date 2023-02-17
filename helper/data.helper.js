@@ -14,7 +14,7 @@ import { tabData } from '../components/Tabs/Logic/tabs.helper';
 import { ToastMsgAtom } from '../state/atoms/toast.atom';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
-import { COMMON_LSPS, COURSE_MAP_STATUS, COURSE_STATUS, DEFAULT_VALUES } from './constants.helper';
+import { COMMON_LSPS, COURSE_STATUS, DEFAULT_VALUES } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { getUnixTimeAt, parseJson } from './utils.helper';
 
@@ -312,4 +312,17 @@ export async function getUserAssignCourses(filters = {}, pageSize = 28) {
     sortArrByKeyInOrder(structuredClone(allUserCourses || []), 'updated_at', false) || [];
 
   return _sortedCourses;
+}
+
+export function handleCacheUpdate(
+  QUERY = null,
+  variables = {},
+  callbackFunc = (d) => d,
+  client = queryClient
+) {
+  try {
+    client?.cache?.updateQuery({ query: QUERY, variables: variables }, callbackFunc);
+  } catch (error) {
+    console.error(`Error while updating cache: ${error}`);
+  }
 }
