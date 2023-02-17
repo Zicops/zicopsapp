@@ -92,17 +92,20 @@ export default function BarChart({
 
     const estimatedPostionLeft = positionX + tooltip.caretX;
     let positionLeft = estimatedPostionLeft;
+    if (estimatedPostionLeft - tooltipContainer.width < 100)
+      positionLeft = estimatedPostionLeft - tooltipContainer.width / 2 + 175;
     if (estimatedPostionLeft + tooltipContainer.width >= container.width + 10)
-      positionLeft = estimatedPostionLeft - tooltipContainer.width - 10;
+      positionLeft = estimatedPostionLeft - tooltipContainer.width / 2 + 75;
 
     const estimatedPostionTop = positionY + tooltip.caretY;
     let positionTop = estimatedPostionTop;
     if (estimatedPostionTop + tooltipContainer.height >= container.height + 10)
-      positionTop = estimatedPostionTop - tooltipContainer.height - 10;
+      positionTop = estimatedPostionTop - tooltipContainer.height / 2 - 75;
 
     // Display, position, and set styles for font
     tooltipEl.style.left = positionLeft + 'px';
     tooltipEl.style.top = positionTop + 'px';
+    tooltipEl.style.minWidth = '160px';
     tooltipEl.style.font = tooltip.options.bodyFont.string;
     tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
   };

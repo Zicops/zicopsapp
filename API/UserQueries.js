@@ -864,7 +864,7 @@ export const GET_COURSE_CONSUMPTION_STATS = gql`
 `;
 
 export const GET_COURSE_VIEWS = gql`
-  query getCourseViews($lsp_id: [String!]!, $startTime: String, $endTime: String) {
+  query getCourseViews($lsp_id: [String!]!, $startTime: String!, $endTime: String!) {
     getCourseViews(lsp_ids: $lsp_id, start_time: $startTime, end_time: $endTime) {
       seconds
       created_at
