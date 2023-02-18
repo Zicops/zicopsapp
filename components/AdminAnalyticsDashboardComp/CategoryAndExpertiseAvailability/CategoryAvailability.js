@@ -94,7 +94,7 @@ export default function CategoryAvailability() {
     subCatNode.style.color = styles.darkThree;
 
     const courseTitleNode = document.createElement('div');
-    const courseData = document.createTextNode(`Courses:1 ${tooltipData?.count}`);
+    const courseData = document.createTextNode(`Courses: ${tooltipData?.count}`);
     courseTitleNode.appendChild(courseData);
 
     const zicopsCourseNode = document.createElement('div');
