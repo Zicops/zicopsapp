@@ -72,8 +72,8 @@ export const VendorAllLanguages = atom({
   default: []
 });
 
-export const VendorAllExperitise = atom({
-  key: 'vendorAllExperitise',
+export const VendorAllExpertise = atom({
+  key: 'vendorAllExpertise',
   default: []
 });
 

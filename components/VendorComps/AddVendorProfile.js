@@ -11,6 +11,7 @@ import { VENDOR_LANGUAGES, VENDOR_MASTER_STATUS } from '@/helper/constants.helpe
 import { useRecoilState } from 'recoil';
 import {
   VendorAllExperiencesAtom,
+  VendorAllExpertise,
   VendorAllLanguages,
   VendorExperiencesAtom,
   VendorProfileAtom
@@ -34,6 +35,8 @@ const AddVendorProfile = ({ data = {} }) => {
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
   const [allExperiences, setAllExperiences] = useRecoilState(VendorAllExperiencesAtom);
   const [allLanguages, setAllLanguages] = useRecoilState(VendorAllLanguages);
+  const [allExpertise, setAllExpertise] = useRecoilState(VendorAllExpertise);
+  const [selectedExpertise, setSelectedExpertise] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
   const { handleProfilePhoto, addUpdateExperience } = useHandleVendor();
@@ -47,21 +50,12 @@ const AddVendorProfile = ({ data = {} }) => {
     const end_timestamp = end_date.getTime() / 1000;
     setAllExperiences([
       ...allExperiences,
-      {
-        title: experiencesData?.title?.trim() || '',
-        company_name: experiencesData?.companyName?.trim() || '',
-        employement_type: experiencesData?.employeeType?.trim() || '',
-        location: experiencesData?.location?.trim() || '',
-        location_type: experiencesData?.locationType?.trim() || '',
-        start_date: start_timestamp || null,
-        end_date: end_timestamp || null,
-        status: VENDOR_MASTER_STATUS.active
-      }
+      experiencesData?.title?.trim() + ' @ ' + experiencesData?.companyName?.trim()
     ]);
     setExperiencesData(null);
     setIsOpenExpriences(false);
   };
-
+  console.info('allExperiences', allExperiences);
   const handleLanguageSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -70,13 +64,16 @@ const AddVendorProfile = ({ data = {} }) => {
       setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
     }
   };
-  console.info('selectedLanguages', selectedLanguages);
+
   const addLanguagesHandler = () => {
     setAllLanguages([...selectedLanguages]);
     setIsOpenLanguage(false);
   };
-  console.info('allLanguages', allLanguages);
-  const handleClick = () => {};
+
+  const handleAddExpertise = () => {
+    setAllExpertise([...selectedExpertise]);
+    setOpenExpertise(false);
+  };
 
   return (
     <div className={`${styles.inputMain}`}>
@@ -188,7 +185,7 @@ const AddVendorProfile = ({ data = {} }) => {
             <>
               {allExperiences?.map((data) => (
                 <IconButton
-                  text={`${data?.title + ' ' + ' @ ' + ' ' + data?.company_name}`}
+                  text={data}
                   styleClasses={`${styles.exButton}`}
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => setIsOpenExpriences(true)}
@@ -238,12 +235,35 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Subject matter expertise:</label>
-          <IconButton
-            text="Add subject matter expertise"
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-            handleClick={() => setOpenExpertise(true)}
-          />
+          {!allExpertise?.length ? (
+            <IconButton
+              text="Add subject matter expertise"
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              handleClick={() => setOpenExpertise(true)}
+            />
+          ) : (
+            <>
+              <div className={`${styles.languages}`}>
+                {allExpertise?.map((data, index) => (
+                  <div className={`${styles.singleLanguage}`} key={index}>
+                    <LabeledRadioCheckbox
+                      type="checkbox"
+                      label={data}
+                      value={data}
+                      isChecked={true}
+                    />
+                  </div>
+                ))}
+              </div>
+              <IconButton
+                text="Add more"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setOpenExpertise(true)}
+              />
+            </>
+          )}
         </div>
       </div>
       <div className={`${styles.addProfileContainer}`}>
@@ -280,9 +300,14 @@ const AddVendorProfile = ({ data = {} }) => {
         popUpState={[isOpenExpertise, setOpenExpertise]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add', handleClick: handleClick }}
+        submitBtn={{ name: 'Add', handleClick: handleAddExpertise }}
         isFooterVisible={true}>
-        <AddExpertise expertiseValue={expertiseSearch} setExpertise={setExpertiseSearch} />
+        <AddExpertise
+          expertiseValue={expertiseSearch}
+          setExpertise={setExpertiseSearch}
+          selectedExpertise={selectedExpertise}
+          setSelectedExpertise={setSelectedExpertise}
+        />
       </VendorPopUp>
       <VendorPopUp
         open={isOpenLanguage}

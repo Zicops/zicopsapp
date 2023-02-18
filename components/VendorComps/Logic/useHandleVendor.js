@@ -11,7 +11,10 @@ import {
   getVendorObject,
   VendorProfileAtom,
   VendorStateAtom,
-  VendorExperiencesAtom
+  VendorExperiencesAtom,
+  VendorAllExperiencesAtom,
+  VendorAllLanguages,
+  VendorAllExpertise
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -35,6 +38,9 @@ export default function useHandleVendor() {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const [allExperiences, setAllExperiences] = useRecoilState(VendorAllExperiencesAtom);
+  const [allLanguages, setAllLanguages] = useRecoilState(VendorAllLanguages);
+  const [allExpertise, setAllExpertise] = useRecoilState(VendorAllExpertise);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -174,10 +180,10 @@ export default function useHandleVendor() {
       phone: profileData?.contactNumber.trim() || '',
       photo: profileData?.profileImage || null,
       description: profileData?.description.trim() || '',
-      languages: [],
-      SME_expertise: [],
+      languages: allLanguages || [],
+      SME_expertise: allExpertise || [],
       Classroom_expertise: [],
-      experience: [],
+      experience: allExperiences || [],
       is_speaker: profileData?.isSpeaker || false,
       status: VENDOR_MASTER_STATUS.active
     };
