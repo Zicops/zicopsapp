@@ -42,12 +42,27 @@
     align-items: center;
     gap: 10px;
   }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 .categoryAndExpertiseAvailability {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+
+  .courseAvailability {
+    .barGraphContainer {
+      height: 380px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }
 
 .downloadBtn {
@@ -71,34 +86,40 @@
   }
 }
 
-.sortBtn {
-  color: $darkThree;
-  font-size: 13px;
+// top course section
+.tableContainer {
+  .seeMore {
+    color: $primary;
+    display: flex;
+    gap: 5px;
 
-  display: flex;
-  gap: 5px;
-
-  cursor: pointer;
-
-  span {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;
-
-    svg {
-      max-width: 10px;
-      padding: 0;
-      margin: 0;
-    }
+    cursor: pointer;
   }
 }
 
-.barGraphContainer {
-  height: 380px;
+.categoryConsumption {
+  .barGraphContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+    min-height: 300px;
+  }
+}
+
+.displayMonth {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+
+  span {
+    cursor: pointer;
+  }
+  div {
+    text-align: center;
+
+    .year {
+      color: $darkThree;
+    }
+  }
 }

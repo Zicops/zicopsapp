@@ -15,11 +15,11 @@
 
   &:hover {
     background-color: $secondary;
-    border-color: $darkThree;
+    border-color: $secondaryBlack;
 
     .header {
       .iconContainer {
-        border-color: $darkThree;
+        border-color: $secondaryBlack;
       }
     }
   }
@@ -117,13 +117,18 @@
 }
 
 // pill styles
-.pill {
+.pill,
+.pillSkeleton {
   display: inline-block;
 
   background-color: $darkOne;
   width: fit-content;
   padding: 5px 15px;
   border-radius: 20px;
+
+  &.pillSkeleton {
+    background-color: $skeletonColor;
+  }
 }
 
 .statisticCard {

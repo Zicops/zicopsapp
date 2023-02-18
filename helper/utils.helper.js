@@ -74,7 +74,7 @@ export function secondsToHMS(secs, showHour = true) {
 
 export function displayMinToHMS(mins) {
   if (!mins) return '00 mins';
-  if (mins < 60) return `${mins} mins`;
+  if (mins < 60) return `${Math.ceil(mins)} mins`;
 
   const hours = ('0' + Math.floor(mins / 60)).substr(-2) || '00';
   const divisor_for_minutes = mins % 60;
