@@ -191,7 +191,7 @@ export const COURSE_TOPIC_TYPES = {
 export const ORG_DOMAINS = [
   'https://demo.zicops.com',
   'https://zicops.com',
-  'https://myspace.zicops.com'
+  // 'https://myspace.zicops.com'
 ];
 
 //Vendor Constant Start
