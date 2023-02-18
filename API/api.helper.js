@@ -40,7 +40,8 @@ export async function getLatestToken(token) {
 }
 
 export const authLink = setContext(async (_, { headers }) => {
-  let initialToken = sessionStorage.getItem('tokenF');
+  const isUserLspRoleAdmin = sessionStorage?.getItem('user_lsp_role') !== 'learner';
+  let initialToken = sessionStorage?.getItem('tokenF');
   if (!initialToken) initialToken = auth?.currentUser?.accessToken;
   if (!initialToken) initialToken = headers?.Authorization;
 
@@ -50,6 +51,7 @@ export const authLink = setContext(async (_, { headers }) => {
     headers: {
       Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : '',
       tenant: lspId,
+      role: isUserLspRoleAdmin ? 'admin' : 'learner',
       ...headers
     }
   };
