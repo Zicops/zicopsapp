@@ -37,10 +37,6 @@ const optionYearArray = _years.map((val) => ({
 }));
 
 const AddExpriences = () => {
-  const [employmentType, setEmploymentType] = useState(null);
-  const [locationType, setLocationType] = useState(null);
-  const [startMonth, setStartMonth] = useState(null);
-  const [endMonth, setEndMonth] = useState(null);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
 
   return (
@@ -75,8 +71,8 @@ const AddExpriences = () => {
               inputName: 'employeeType',
               placeholder: 'Select employment type',
               value: {
-                label: experiencesData.employeeType,
-                value: experiencesData.employeeType
+                label: experiencesData?.employeeType,
+                value: experiencesData?.employeeType
               },
               options: optionEmploymentTypeArray
             }}
@@ -104,8 +100,8 @@ const AddExpriences = () => {
               inputName: 'locationType',
               placeholder: 'Select location type',
               value: {
-                label: experiencesData.locationType,
-                value: experiencesData.locationType
+                label: experiencesData?.locationType,
+                value: experiencesData?.locationType
               },
               options: optionLocationTypeArray
             }}
@@ -133,8 +129,8 @@ const AddExpriences = () => {
               inputName: 'startMonth',
               placeholder: 'Month',
               value: {
-                label: experiencesData.startMonth,
-                value: experiencesData.startMonth
+                label: experiencesData?.startMonth,
+                value: experiencesData?.startMonth
               },
               options: optionMonthArray
             }}
@@ -149,8 +145,8 @@ const AddExpriences = () => {
               placeholder: 'year',
               options: optionYearArray,
               value: {
-                label: experiencesData.startYear,
-                value: experiencesData.startYear
+                label: experiencesData?.startYear,
+                value: experiencesData?.startYear
               }
             }}
             changeHandler={(e) =>
@@ -168,9 +164,10 @@ const AddExpriences = () => {
                 placeholder: 'Month',
                 options: optionMonthArray,
                 value: {
-                  label: experiencesData.endMonth,
-                  value: experiencesData.endMonth
-                }
+                  label: experiencesData?.endMonth,
+                  value: experiencesData?.endMonth
+                },
+                isDisabled: experiencesData?.isWorking ? true : false
               }}
               changeHandler={(e) =>
                 changeHandler(e, experiencesData, setExperiencesData, 'endMonth')
@@ -183,9 +180,10 @@ const AddExpriences = () => {
                 placeholder: 'year',
                 options: optionYearArray,
                 value: {
-                  label: experiencesData.endYear,
-                  value: experiencesData.endYear
-                }
+                  label: experiencesData?.endYear,
+                  value: experiencesData?.endYear
+                },
+                isDisabled: experiencesData?.isWorking ? true : false
               }}
               changeHandler={(e) =>
                 changeHandler(e, experiencesData, setExperiencesData, 'endYear')

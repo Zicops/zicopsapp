@@ -7,9 +7,14 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import IconButton from '@/components/common/IconButton';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import AddExpriences from './AddExpriences';
-import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import { VENDOR_LANGUAGES, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
-import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
+import {
+  VendorAllExperiencesAtom,
+  VendorAllLanguages,
+  VendorExperiencesAtom,
+  VendorProfileAtom
+} from '@/state/atoms/vendor.atoms';
 import { changeHandler } from '@/helper/common.helper';
 import VendorPopUp from './common/VendorPopUp';
 import AddExpertise from './AddVendor/common/AddExpertise';
@@ -25,16 +30,52 @@ const AddVendorProfile = ({ data = {} }) => {
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
   const [isOpenExpertise, setOpenExpertise] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
-  const [experienceYear, setExpericeYear] = useState(null);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
-  const { handleProfilePhoto } = useHandleVendor();
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const [allExperiences, setAllExperiences] = useRecoilState(VendorAllExperiencesAtom);
+  const [allLanguages, setAllLanguages] = useRecoilState(VendorAllLanguages);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
 
-  const { addUpdateExperience } = useHandleVendor();
-
-  const completeExperienceHandler = async () => {
-    await addUpdateExperience();
+  const { handleProfilePhoto, addUpdateExperience } = useHandleVendor();
+  const completeExperienceHandler = () => {
+    // const exprienceData = await addUpdateExperience();
+    const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);
+    const start_date = new Date(StartDate);
+    const start_timestamp = start_date.getTime() / 1000;
+    const EndDate = experiencesData?.endMonth?.concat('-', experiencesData?.endYear);
+    const end_date = new Date(EndDate);
+    const end_timestamp = end_date.getTime() / 1000;
+    setAllExperiences([
+      ...allExperiences,
+      {
+        title: experiencesData?.title?.trim() || '',
+        company_name: experiencesData?.companyName?.trim() || '',
+        employement_type: experiencesData?.employeeType?.trim() || '',
+        location: experiencesData?.location?.trim() || '',
+        location_type: experiencesData?.locationType?.trim() || '',
+        start_date: start_timestamp || null,
+        end_date: end_timestamp || null,
+        status: VENDOR_MASTER_STATUS.active
+      }
+    ]);
+    setExperiencesData(null);
+    setIsOpenExpriences(false);
   };
 
+  const handleLanguageSelection = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedLanguages([...selectedLanguages, value]);
+    } else {
+      setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
+    }
+  };
+  console.info('selectedLanguages', selectedLanguages);
+  const addLanguagesHandler = () => {
+    setAllLanguages([...selectedLanguages]);
+    setIsOpenLanguage(false);
+  };
+  console.info('allLanguages', allLanguages);
   const handleClick = () => {};
 
   return (
@@ -136,21 +177,64 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Experience: </label>
-          <IconButton
-            text="Add experiences"
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-            handleClick={() => setIsOpenExpriences(true)}
-          />
+          {!allExperiences?.length ? (
+            <IconButton
+              text="Add experiences"
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              handleClick={() => setIsOpenExpriences(true)}
+            />
+          ) : (
+            <>
+              {allExperiences?.map((data) => (
+                <IconButton
+                  text={`${data?.title + ' ' + ' @ ' + ' ' + data?.company_name}`}
+                  styleClasses={`${styles.exButton}`}
+                  imgUrl="/images/svg/business_center.svg"
+                  handleClick={() => setIsOpenExpriences(true)}
+                />
+              ))}
+              <IconButton
+                text="Add more"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setIsOpenExpriences(true)}
+              />
+            </>
+          )}
         </div>
+
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Language: </label>
-          <IconButton
-            text="Add language"
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-            handleClick={() => setIsOpenLanguage(true)}
-          />
+          {!allLanguages?.length ? (
+            <IconButton
+              text="Add language"
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              handleClick={() => setIsOpenLanguage(true)}
+            />
+          ) : (
+            <>
+              <div className={`${styles.languages}`}>
+                {allLanguages?.map((data, index) => (
+                  <div className={`${styles.singleLanguage}`} key={index}>
+                    <LabeledRadioCheckbox
+                      type="checkbox"
+                      label={data}
+                      value={data}
+                      isChecked={true}
+                    />
+                  </div>
+                ))}
+              </div>
+              <IconButton
+                text="Add more"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setIsOpenLanguage(true)}
+              />
+            </>
+          )}
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Subject matter expertise:</label>
@@ -206,12 +290,18 @@ const AddVendorProfile = ({ data = {} }) => {
         popUpState={[isOpenLanguage, setIsOpenLanguage]}
         size="small"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add', handleClick: handleClick }}
+        submitBtn={{ name: 'Add', handleClick: addLanguagesHandler }}
         isFooterVisible={true}>
         {VENDOR_LANGUAGES.map((data, index) => {
           return (
-            <div className={`${styles.expertiseCheckbox}`}>
-              <LabeledRadioCheckbox type="checkbox" label={data} />
+            <div className={`${styles.expertiseCheckbox}`} key={index}>
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={data}
+                value={data}
+                isChecked={selectedLanguages.includes(data)}
+                changeHandler={handleLanguageSelection}
+              />
             </div>
           );
         })}

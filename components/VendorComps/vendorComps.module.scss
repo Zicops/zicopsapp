@@ -913,7 +913,7 @@
 }
 .inputContainer {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
 
   label {
@@ -939,8 +939,7 @@
   }
 
   .addExpertise {
-    width: 50%;
-
+    // width: 50%;
     button {
       display: flex;
       flex-direction: row-reverse;
@@ -958,6 +957,31 @@
       margin-top: 8px;
       cursor: pointer;
     }
+        .exButton {
+          background-color: #1A1D21 !important;
+          width: max-content;
+          flex-direction: row;
+          span{
+            display: flex;
+            align-items: center;
+            img{
+              width: 24px;
+              height: 24px;
+            }
+
+          }
+        }
+  }
+  .languages{
+        display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 8px;
+          .singleLanguage{
+                background: #1A1D21;
+                  padding: 12px 16px;
+                  border-radius: 4px;
+          }
   }
 }
 

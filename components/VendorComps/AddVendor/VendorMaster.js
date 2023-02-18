@@ -12,7 +12,6 @@ import { useRecoilState } from 'recoil';
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
 import { useRouter } from 'next/router';
-import { isDisabledArr } from '@/components/LearnerUserProfile/Logic/singleInfo.helper';
 
 export default function VendorMaster() {
   const [openSocialMedia, setOpenSocialMedia] = useState(null);

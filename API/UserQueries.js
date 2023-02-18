@@ -891,6 +891,28 @@ export const GET_VENDOR_EXPERIENCES = gql`
   }
 `;
 
+export const GET_SINGLE_EXPERIENCE_DETAILS = gql`
+  query getVendorExperienceDetails($vendor_id: String!, $pf_id: String!, $exp_id: String!) {
+    getVendorExperienceDetails(vendor_id: $vendor_id, pf_id: $pf_id, exp_id: $exp_id) {
+      ExpId
+      VendorId
+      PfId
+      StartDate
+      EndDate
+      Title
+      Location
+      LocationType
+      EmployementType
+      CompanyName
+      CreatedAt
+      CreatedBy
+      UpdatedAt
+      UpdatedBy
+      Status
+    }
+  }
+`;
+
 // DASHBOARD QUERIES START
 export const GET_COURSE_CONSUMPTION_STATS = gql`
   query getCourseConsumptionStats(

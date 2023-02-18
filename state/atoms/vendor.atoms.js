@@ -41,6 +41,11 @@ export function getProfileObject(data) {
   };
 }
 
+export const VendorAllExperiencesAtom = atom({
+  key: 'vendorAllExperiences',
+  default: []
+});
+
 export const VendorExperiencesAtom = atom({
   key: 'vendorExperiences',
   default: getExperiencesObject()
@@ -48,7 +53,7 @@ export const VendorExperiencesAtom = atom({
 
 export function getExperiencesObject(data) {
   return {
-    id: data?.id || '',
+    expId: data?.expId || '',
     title: data?.title || '',
     companyName: data?.companyName || '',
     location: data?.location || '',
@@ -61,6 +66,16 @@ export function getExperiencesObject(data) {
     endYear: data?.endYear || ''
   };
 }
+
+export const VendorAllLanguages = atom({
+  key: 'vendorAllLanguages',
+  default: []
+});
+
+export const VendorAllExperitise = atom({
+  key: 'vendorAllExperitise',
+  default: []
+});
 
 // export const VendorServicesAtom = atom({
 //   key: 'vendorServicesState',

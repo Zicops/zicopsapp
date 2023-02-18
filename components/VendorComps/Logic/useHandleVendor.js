@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  GET_SINGLE_EXPERIENCE_DETAILS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
   GET_VENDOR_DETAILS,
   userQueryClient
@@ -32,7 +33,6 @@ export default function useHandleVendor() {
   const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
-
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
 
@@ -104,6 +104,17 @@ export default function useHandleVendor() {
     setVendorData(getVendorObject(singleData));
   }
 
+  // async function getSingleExperience() {
+  //   const vendorInfo = await loadQueryDataAsync(
+  //     GET_SINGLE_EXPERIENCE_DETAILS,
+  //     { vendor_id: vendorId , pf_id: , exp_id: },
+  //     {},
+  //     userQueryClient
+  //   );
+  //   const singleData = {};
+  //   setExperiencesData(getVendorObject(singleData));
+  // }
+
   async function addUpdateVendor() {
     const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
@@ -146,7 +157,6 @@ export default function useHandleVendor() {
     if (isError) return;
 
     const _id = res.data.addVendor.vendorId;
-    setVendorData({ ...vendorData, vendorId: _id });
     sessionStorage.setItem('vendorId', _id);
     return res;
   }
@@ -167,7 +177,7 @@ export default function useHandleVendor() {
       languages: [],
       SME_expertise: [],
       Classroom_expertise: [],
-      // experience: profileData?.experience || '',
+      experience: [],
       is_speaker: profileData?.isSpeaker || false,
       status: VENDOR_MASTER_STATUS.active
     };
@@ -198,18 +208,23 @@ export default function useHandleVendor() {
   }
 
   async function addUpdateExperience() {
-    // const vendorId = vendorData?.vendorId;
+    const StartDate = experiencesData?.startMonth.concat('-', experiencesData?.startYear);
+    const start_date = new Date(StartDate);
+    const start_timestamp = start_date.getTime() / 1000;
+    const EndDate = experiencesData?.endMonth.concat('-', experiencesData?.endYear);
+    const end_date = new Date(EndDate);
+    const end_timestamp = end_date.getTime() / 1000;
     const vendorId = sessionStorage.getItem('vendorId');
     const sendData = {
       vendor_id: vendorId || '',
       title: experiencesData?.title?.trim() || '',
-      email: experiencesData?.email?.trim() || '',
+      // email: experiencesData?.email?.trim() || '',
       company_name: experiencesData?.companyName?.trim() || '',
       employement_type: experiencesData?.employeeType?.trim() || '',
       location: experiencesData?.location?.trim() || '',
       location_type: experiencesData?.locationType?.trim() || '',
-      // start_date: experiencesData?.startMonth?.trim() || '',
-      // end_date: experiencesData?.endMonth?.trim() || '',
+      start_date: start_timestamp || null,
+      end_date: end_timestamp || null,
       status: VENDOR_MASTER_STATUS.active
     };
 
@@ -235,7 +250,7 @@ export default function useHandleVendor() {
       return setToastMsg({ type: 'danger', message: 'Add profile Error' });
     });
     if (isError) return;
-    return res;
+    return res?.data?.createExperienceVendor;
   }
 
   return {

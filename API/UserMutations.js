@@ -1448,7 +1448,7 @@ export const CREATE_PROFILE_VENDOR = gql`
     $type: String!
     $first_name: String
     $last_name: String
-    $email: String
+    $email: String!
     $phone: String
     $photo: Upload
     $description: String
