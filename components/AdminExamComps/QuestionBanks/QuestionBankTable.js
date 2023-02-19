@@ -105,7 +105,7 @@ export default function QuestionBankTable({ isEdit = false }) {
         return isCurrentQb;
       });
 
-      if (index >= 0) _questionBank?.splice(index, 1, updatedQb);
+      if (index >= 0) _questionBank?.splice(index, 1, { ...updatedQb, ...data });
 
       return _questionBank;
     });
