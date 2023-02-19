@@ -1,7 +1,23 @@
-export const OPTION_LABEL = ['A', 'B', 'C', 'D'];
-export const QUESTION_STATUS = ['Y', 'Q', 'N'];
-export const USER_STATUS = { invite: 'Invited', activate: 'Active', disable: 'Disabled' };
-export const USER_MAP_STATUS = { invite: '', activate: 'active', disable: 'disable' };
+// COURSE CONSTANTS START
+export const ALL_COURSE_TYPES = {
+  selfPaced: 'self-paced',
+  classroom: 'classroom',
+  labs: 'labs',
+  testSeries: 'test-series'
+};
+
+export const COURSE_STATUS = {
+  draft: 'DRAFT',
+  upload: 'UPLOADING',
+  update: 'UPDATING',
+
+  save: 'SAVED',
+  freeze: 'FREEZED',
+  publish: 'PUBLISHED',
+  reject: 'REJECTED',
+  approvalPending: 'APPROVAL_PENDING',
+  hold: 'ON_HOLD'
+};
 
 // userCourseMaps status (overall user course progress)
 export const COURSE_MAP_STATUS = {
@@ -10,6 +26,13 @@ export const COURSE_MAP_STATUS = {
   completed: 'completed',
   disable: 'disable'
 };
+// COURSE CONSTANTS END
+
+export const OPTION_LABEL = ['A', 'B', 'C', 'D'];
+export const QUESTION_STATUS = ['Y', 'Q', 'N'];
+export const USER_STATUS = { invite: 'Invited', activate: 'Active', disable: 'Disabled' };
+export const USER_MAP_STATUS = { invite: '', activate: 'active', disable: 'disable' };
+
 export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
@@ -114,19 +137,6 @@ export const COMMON_LSPS = {
   // zicops: '93f3693c-d111-51aa-86ca-b883c6dfe647'
 };
 
-export const COURSE_STATUS = {
-  draft: 'DRAFT',
-  upload: 'UPLOADING',
-  update: 'UPDATING',
-
-  save: 'SAVED',
-  freeze: 'FREEZED',
-  publish: 'PUBLISHED',
-  reject: 'REJECTED',
-  approvalPending: 'APPROVAL_PENDING',
-  hold: 'ON_HOLD'
-};
-
 export const COURSE_TOPIC_STATUS = {
   assign: 'non-started',
   started: 'in-progress',
@@ -190,7 +200,7 @@ export const COURSE_TOPIC_TYPES = {
 
 export const ORG_DOMAINS = [
   'https://demo.zicops.com',
-  'https://zicops.com',
+  'https://zicops.com'
   // 'https://myspace.zicops.com'
 ];
 

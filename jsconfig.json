@@ -9,8 +9,9 @@
       "@/state/*": ["state/*"],
       "@/styles/*": ["styles/*"],
       "@/api/*": ["API/*"],
-    //   "/jsx-dev-runtime": ["/jsx-dev-runtime.js"],
-    // "/jsx-runtime": ["/jsx-runtime.js"]
+      "@/utils/*": ["utils/*"]
+      //   "/jsx-dev-runtime": ["/jsx-dev-runtime.js"],
+      // "/jsx-runtime": ["/jsx-runtime.js"]
     }
   }
 }
