@@ -1,0 +1,27 @@
+.keyValue {
+  display: flex;
+  align-items: baseline;
+  font-size: 0.8rem;
+
+  > span {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+
+    .colon {
+      padding-right: 2em;
+    }
+
+    &:last-child {
+      flex: 2;
+    }
+
+    &.value {
+      display: block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100%;
+    }
+  }
+}
