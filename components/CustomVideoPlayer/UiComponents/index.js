@@ -163,6 +163,7 @@ export default function UiComponents({
         <div
           className={`${styles.videoBookmark}`}
           onClick={(e) => {
+            if (isPreview) return;
             e.stopPropagation();
             switchBox(3);
             updateIsPlayingTo(false);
@@ -173,6 +174,7 @@ export default function UiComponents({
           freezeState={freezeState}
           bookmarkState={[bookmarkData, setBookmarkData]}
           handleSave={async () => {
+            if (isPreview) return;
             await handleSaveBookmark();
             updateIsPlayingTo(true);
           }}
@@ -182,6 +184,7 @@ export default function UiComponents({
         />
       ),
       handleClick: () => {
+        if (isPreview) return;
         switchBox(3);
         if (playerState?.isPlaying) updateIsPlayingTo(false);
       }
