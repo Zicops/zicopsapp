@@ -6,26 +6,34 @@ import styles from '../../learnerCourseComps.module.scss';
 
 export default function CourseBtn({
   suggestedDurationInDays = null,
-  completionDateUnix,
-  isAssigned,
-  completedPercent = null
+  completionDateUnix = null,
+  isAssigned = false,
+  isStarted = false,
+  handleClick = () => {},
+  completedPercent = null,
 }) {
-  const btnText = (
-    <span className={`${styles.courseBtn}`}>
-      <span className={`${styles.progress} w-${completedPercent}`}></span>
-      <span className={`${styles.playBtnImgContainer}`}>
-        <PlayBtnIcon color={styles.primary} />
-      </span>
-      Start the Course
-    </span>
-  );
+  function getBtnText() {
+    if (isStarted) return 'Continue the Course';
+    if (isAssigned) return 'Start the Course';
+
+    return 'Preview the Course';
+  }
 
   return (
     <div className={`${styles.courseBtnContainer}`}>
       <span>
         <ZicopsButton
-          display={btnText}
-          handleClick={() => {}}
+          display={
+            <span className={`${styles.courseBtn}`}>
+              <span className={`${styles.progress} w-${completedPercent}`}></span>
+              <span className={`${styles.playBtnImgContainer}`}>
+                <PlayBtnIcon color={styles.primary} />
+              </span>
+
+              {getBtnText()}
+            </span>
+          }
+          handleClick={handleClick}
           padding="0.5em 5em"
           fontSize="1em"
           fontWeight="bold"
@@ -45,7 +53,8 @@ export default function CourseBtn({
             {suggestedDurationInDays > 1 ? 's' : ''}
           </p>
         )}
-        {!!isAssigned && (
+
+        {!!(isAssigned && completionDateUnix) && (
           <p className={`${styles.textGray}`}>
             Completion date of the assigned course is {displayDateFromUnix(completionDateUnix)}
           </p>
@@ -59,12 +68,12 @@ CourseBtn.defaultProps = {
   suggestedDurationInSeconds: null,
 
   isAssigned: false,
-  completionDateUnix: null
+  completionDateUnix: null,
 };
 
 CourseBtn.propTypes = {
   suggestedDurationInSeconds: PropTypes.number,
 
   isAssigned: PropTypes.bool,
-  completionDateUnix: PropTypes.number
+  completionDateUnix: PropTypes.number,
 };

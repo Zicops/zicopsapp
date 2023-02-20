@@ -1,16 +1,54 @@
-$gradient: linear-gradient(
-  90deg,
-  rgba(0, 0, 0, 1) 0em,
-  rgba(0, 0, 0, 0.9) 35em,
-  rgba(0, 0, 0, 0.8) 50em,
-  rgba(0, 0, 0, 0) 100em
-);
-$dotSize: 0.5em;
+$heroSectionPadding: 1em;
+
+.topBar {
+  position: absolute;
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 5% auto 5%;
+  place-items: center;
+  align-items: center;
+
+  padding: $heroSectionPadding 0px;
+  background: linear-gradient(180deg, rgba($black, 0.7), transparent 80%);
+
+  z-index: 1;
+
+  .topbarIcons {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    gap: 1em;
+  }
+
+  .topBarCenterTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+
+    .title {
+      font-size: 1rem;
+      font-weight: bold;
+      color: $primary;
+    }
+  }
+}
 
 .courseHero {
+  $gradient: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 1) 0em,
+    rgba(0, 0, 0, 0.9) 35em,
+    rgba(0, 0, 0, 0.8) 50em,
+    rgba(0, 0, 0, 0) 100em
+  );
+  $dotSize: 0.5em;
+
   position: relative;
 
-  padding: 1.5em;
+  padding: $heroSectionPadding;
   height: 100%;
 
   background-position: center;
@@ -39,27 +77,8 @@ $dotSize: 0.5em;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 0.5em;
+    // padding: 0.5em;
     gap: 1em;
-
-    .backBtn,
-    .assignBtn {
-      margin: 0.5em;
-    }
-
-    .assignBtn {
-      height: 2.5em;
-      width: 2.5em;
-      padding: 0.4em;
-      border: 1px solid $primary;
-
-      cursor: pointer;
-
-      svg {
-        height: 100%;
-        width: 100%;
-      }
-    }
 
     .courseTitle {
       display: flex;
@@ -67,6 +86,20 @@ $dotSize: 0.5em;
       h1 {
         font-size: 2rem;
         flex: 1;
+      }
+
+      .assignBtn {
+        height: 2.5em;
+        width: 2.5em;
+        padding: 0.4em;
+        border: 1px solid $primary;
+
+        cursor: pointer;
+
+        svg {
+          height: 100%;
+          width: 100%;
+        }
       }
     }
 
@@ -136,6 +169,19 @@ $dotSize: 0.5em;
         > span {
           display: flex;
           gap: 10px;
+
+          button {
+            transition: all 0.5s;
+
+            &:hover {
+              background-color: $primary;
+              color: $black;
+
+              path {
+                fill: $black !important;
+              }
+            }
+          }
 
           p {
             display: flex;
@@ -252,4 +298,9 @@ $dotSize: 0.5em;
     font-weight: 500;
     color: $white;
   }
+}
+
+.coursePreview {
+  height: 100%;
+  width: 100%;
 }

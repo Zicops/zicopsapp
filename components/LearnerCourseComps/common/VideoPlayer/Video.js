@@ -3,11 +3,12 @@
 import styles from './videoPlayer.module.scss';
 
 export default function Video({
-  videoRef,
-  videoSrc,
-  updateStateProgress,
-  toggleIsPlaying,
-  children,
+  videoRef = null,
+  videoSrc = '',
+  updateStateProgress = () => {},
+  toggleIsPlaying = () => {},
+  children = null,
+  playerState = {},
 }) {
   return (
     <>
@@ -18,13 +19,13 @@ export default function Video({
           // onClick={handleClick}
           // onKeyDown={handleKeyDown}
           onTimeUpdate={() => updateStateProgress()}
-          // muted={playerState.isMuted}
+          muted={playerState?.isMute}
           // className={`${styles.videoElement}`}
           src={videoSrc}
           // onPlay={() => updateIsPlayingTo(true)}
           // onPause={() => updateIsPlayingTo(false)}
           // src={'https://www.youtube.com/watch?v=PNtFSVU-YTI'}
-          // autoPlay={true}
+          // autoPlay={isAutoPlay}
           // controls
         >
           {/* {isSubtitleShown && (

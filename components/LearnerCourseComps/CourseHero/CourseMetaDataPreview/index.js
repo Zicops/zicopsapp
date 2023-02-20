@@ -8,7 +8,6 @@ import MetaData from './MetaData';
 
 export default function CourseMetaDataPreview() {
   const { backgroundImageUrl } = useRecoilValue(CourseMetaDataAtom);
-  const isAssigned = false;
 
   const actionIcons = [
     {
@@ -17,7 +16,7 @@ export default function CourseMetaDataPreview() {
           <ShareIcon color={styles.primary} />
           Share
         </>
-      )
+      ),
     },
     {
       icon: (
@@ -25,7 +24,7 @@ export default function CourseMetaDataPreview() {
           <EditIcon color={styles.primary} />
           Feedback
         </>
-      )
+      ),
     },
     {
       icon: (
@@ -33,8 +32,8 @@ export default function CourseMetaDataPreview() {
           <SendIcon color={styles.primary} />
           Enquire
         </>
-      )
-    }
+      ),
+    },
   ];
   return (
     <div
@@ -77,8 +76,8 @@ CourseMetaDataPreview.defaultProps = {
     suggestedDurationInSeconds: null,
 
     isAssigned: false,
-    completionDateUnix: null
-  }
+    completionDateUnix: null,
+  },
 };
 
 CourseMetaDataPreview.propTypes = {
@@ -98,6 +97,6 @@ CourseMetaDataPreview.propTypes = {
     suggestedDurationInSeconds: PropTypes.number,
 
     isAssigned: PropTypes.bool,
-    completionDateUnix: PropTypes.number
-  })
+    completionDateUnix: PropTypes.number,
+  }),
 };

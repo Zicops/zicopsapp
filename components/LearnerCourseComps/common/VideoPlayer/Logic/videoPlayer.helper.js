@@ -1,10 +1,32 @@
+import { atom } from 'recoil';
+
+export const videoStateChangeList = {
+  play: 'play',
+  pause: 'pause',
+  forward: 'forward',
+  backward: 'backward',
+  volumeUp: 'volumeUp',
+  volumeDown: 'volumeDown',
+  enterFullScreen: 'enterFullScreen',
+  exitFullScreen: 'exitFullScreen',
+  reload: 'reload',
+  unmute: 'unmute',
+  mute: 'mute',
+  next: 'next',
+  previous: 'previous',
+};
+
+export const VideoStateChangeAtom = atom({
+  key: 'VideoStateChange',
+  default: null,
+});
+
 export function getPlayerState(data) {
   return {
     videoSrc: data?.videoSrc || '',
-    videoType: data?.videoType || 'mp4',
 
     isPlaying: data?.isPlaying || false,
-    isMuted: data?.isMuted || false,
+    isMute: data?.isMute || false,
     isFullScreen: data?.isFullScreen || false,
 
     volume: data?.volume || 0.7,
@@ -18,15 +40,15 @@ export function getPlayerState(data) {
 
 export function playerStateReducer(state, action) {
   if (action.type?.includes('updateVideoData')) {
-    return {
-      ...state,
-      videoSrc: action.payload.videoSrc,
-      videoType: action.payload.videoType,
-    };
+    return { ...state, videoSrc: action.payload.videoSrc };
   }
 
   if (action.type?.includes('updateProgress')) {
     return { ...state, ...action.payload };
+  }
+
+  if (action.type?.includes('updateVolume')) {
+    return { ...state, volume: +action.payload?.volume || 0 };
   }
 
   if (action.type?.includes('togglePlaying')) {
@@ -41,6 +63,13 @@ export function playerStateReducer(state, action) {
 
     if (typeof action?.payload === 'boolean') _isFullScreen = action.payload;
     return { ...state, isFullScreen: _isFullScreen };
+  }
+
+  if (action.type?.includes('toggleMute')) {
+    let _isMute = !state.isMute;
+
+    if (typeof action?.payload === 'boolean') _isMute = action.payload;
+    return { ...state, isMute: _isMute };
   }
 
   return state;

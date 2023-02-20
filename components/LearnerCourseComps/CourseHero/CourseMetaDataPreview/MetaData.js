@@ -1,12 +1,18 @@
 import PropTypes from 'prop-types';
-import { useRecoilValue } from 'recoil';
-import { CourseMetaDataAtom } from '../../atoms/learnerCourseComps.atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  ActiveCourseHeroAtom,
+  courseHeroObj,
+  CourseMetaDataAtom,
+} from '../../atoms/learnerCourseComps.atom';
+import ButtonWithNoStyles from '../../common/ButtonWithNoStyles';
 import KeyValueWithColon from '../../common/KeyValueWithColon';
 import styles from '../../learnerCourseComps.module.scss';
 import CourseBtn from './CourseBtn';
 import CourseTitle from './CourseTitle';
 
 export default function MetaData() {
+  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
   const durationInMinutes = isNaN(+courseMeta?.duration)
     ? null
@@ -19,7 +25,7 @@ export default function MetaData() {
     { id: 2, key: 'Expertise Level', value: courseMeta?.expertiseLevel },
     { id: 3, key: 'Prerequisites', value: courseMeta?.prequisites },
     { id: 4, key: 'Good For', value: courseMeta?.goodFor },
-    { id: 5, key: 'Must For', value: courseMeta?.mustFor }
+    { id: 5, key: 'Must For', value: courseMeta?.mustFor },
   ];
   return (
     <div className={`${styles.courseDataContainer}`}>
@@ -54,6 +60,9 @@ export default function MetaData() {
           isAssigned={isAssigned}
           // completionDateUnix={courseMeta?.completionDateUnix}
           suggestedDurationInDays={+courseMeta?.expectedCompletion}
+          handleClick={() => {
+            if (!isAssigned) return setActiveHero(courseHeroObj.coursePreviewVideo);
+          }}
         />
 
         <div className={`${styles.details}`}>
@@ -67,7 +76,13 @@ export default function MetaData() {
         </div>
       </section>
 
-      <div className={`${styles.coursePreviewBtn}`}>Preview the course</div>
+      {!!isAssigned && (
+        <ButtonWithNoStyles
+          text="Preview the course"
+          styleClass={`${styles.coursePreviewBtn}`}
+          handleClick={() => setActiveHero(courseHeroObj.coursePreviewVideo)}
+        />
+      )}
     </div>
   );
 }
@@ -81,7 +96,7 @@ MetaData.defaultProps = {
   suggestedDurationInSeconds: null,
 
   isAssigned: false,
-  completionDateUnix: null
+  completionDateUnix: null,
 };
 
 MetaData.propTypes = {
@@ -93,5 +108,5 @@ MetaData.propTypes = {
   suggestedDurationInSeconds: PropTypes.number,
 
   isAssigned: PropTypes.bool,
-  completionDateUnix: PropTypes.number
+  completionDateUnix: PropTypes.number,
 };

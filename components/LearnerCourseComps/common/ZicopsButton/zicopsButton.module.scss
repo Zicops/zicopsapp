@@ -10,6 +10,7 @@
   border: 2px solid $primary;
 
   max-height: 4em;
+  cursor: pointer;
 
   &.shrink {
     width: fit-content;

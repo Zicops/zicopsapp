@@ -1,9 +1,20 @@
 import { ALL_COURSE_TYPES, COURSE_MAP_STATUS, COURSE_STATUS } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 
+export const courseHeroObj = {
+  courseMetaPreview: 'courseMetaPreview',
+  coursePreviewVideo: 'coursePreviewVideo',
+  topicPreview: 'topicPreview',
+};
+
+export const ActiveCourseHeroAtom = atom({
+  key: 'ActiveCourseHero',
+  default: courseHeroObj.courseMetaPreview,
+});
+
 export const CourseMetaDataAtom = atom({
   key: 'CourseMetaData',
-  default: getCourseMetaDataObj()
+  default: getCourseMetaDataObj(),
 });
 
 export function getCourseMetaDataObj(data = {}) {
@@ -51,13 +62,13 @@ export function getCourseMetaDataObj(data = {}) {
     duration: data?.duration || 0, // expected to be in seconds
     type: data?.type || ALL_COURSE_TYPES.selfPaced,
 
-    expectedCompletion: data?.expectedCompletion || 0
+    expectedCompletion: data?.expectedCompletion || 0,
   };
 }
 
 export const UserCourseMapDataAtom = atom({
   key: 'UserCourseData',
-  default: getUserCourseMapDataObj()
+  default: getUserCourseMapDataObj(),
 });
 
 export function getUserCourseMapDataObj(data = {}) {
@@ -76,6 +87,6 @@ export function getUserCourseMapDataObj(data = {}) {
     createdAt: data?.createdAt || '',
     updatedAt: data?.updatedAt || '',
     createdBy: data?.createdBy || '',
-    updatedBy: data?.updatedBy || ''
+    updatedBy: data?.updatedBy || '',
   };
 }

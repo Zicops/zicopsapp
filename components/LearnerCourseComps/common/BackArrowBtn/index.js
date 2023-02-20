@@ -3,10 +3,10 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import styles from './backArrowBtn.module.scss';
 
-export default function BackArrowBtn({ backRoute = '' }) {
+export default function BackArrowBtn({ backRoute = '', handleClick = () => {} }) {
   const router = useRouter();
 
-  function handleClick() {
+  function goBackOnClick() {
     if (!!backRoute) return router.push(backRoute);
 
     router.back();
@@ -14,16 +14,19 @@ export default function BackArrowBtn({ backRoute = '' }) {
 
   return (
     <>
-      <button type="button" className={`${styles.backBtn}`} onClick={handleClick}>
+      <button
+        type="button"
+        className={`${styles.backBtn}`}
+        onClick={!!handleClick ? handleClick : goBackOnClick}>
         <ArrowLeft color={styles.primary} />
       </button>
     </>
   );
 }
 BackArrowBtn.defaultProps = {
-  backRoute: null
+  backRoute: null,
 };
 
 BackArrowBtn.propTypes = {
-  backRoute: PropTypes.string
+  backRoute: PropTypes.string,
 };

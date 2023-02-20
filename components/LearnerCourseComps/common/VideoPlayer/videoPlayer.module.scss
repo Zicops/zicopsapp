@@ -20,6 +20,37 @@ $iconHeight: 35px;
 
   overflow: hidden;
 
+  .centerFlashIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100px;
+    width: 100px;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+
+    background-color: rgba($black, 0.5);
+    padding: 15px;
+    border-radius: 50%;
+    animation: myflash 1s;
+
+    .centerFlashIconImg {
+      opacity: 0.8;
+    }
+
+    @keyframes myflash {
+      0% {
+        opacity: 0;
+      }
+      30% {
+        opacity: 1;
+      }
+      70% {
+        opacity: 1;
+      }
+    }
+  }
+
   .controlBar {
     position: absolute;
     bottom: 0;
@@ -31,13 +62,19 @@ $iconHeight: 35px;
 
     width: 100%;
     height: $control-bar-height;
-    background-color: rgba($primary, 0.5);
+    background: linear-gradient(
+      0deg,
+      rgba($black, 1) 0%,
+      rgba($black, 0) 100%,
+      rgba($black, 0) 100%
+    );
 
     z-index: $z-index-control-bar;
 
     .progressBar {
       grid-column: 1/14;
 
+      position: relative;
       background-color: $progress-bar-background;
       width: 100%;
       height: $progress-bar-height;
@@ -56,6 +93,12 @@ $iconHeight: 35px;
             width: calc($progress-bar-height + 10px);
           }
         }
+      }
+
+      canvas {
+        position: absolute;
+        height: 100%;
+        width: 100%;
       }
 
       .progressFill {
@@ -87,11 +130,41 @@ $iconHeight: 35px;
       gap: 50px;
 
       span {
+        position: relative;
         height: $iconHeight;
         cursor: pointer;
 
         &.rotate {
           transform: rotate(180deg);
+        }
+        &.disabled {
+          cursor: not-allowed;
+        }
+
+        .extraComp {
+          position: absolute;
+          bottom: 240%;
+          left: 50%;
+
+          transform: translateX(-50%) rotate(-90deg);
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .volumeSlider {
+            padding-left: 10px;
+
+            input {
+              accent-color: $primary;
+            }
+          }
+        }
+      }
+
+      .playBtn {
+        &:hover {
+          transform: scale(1.2);
         }
       }
     }
@@ -121,4 +194,13 @@ $iconHeight: 35px;
       z-index: $z-index-video-element;
     }
   }
+}
+
+.noVideoPresent {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

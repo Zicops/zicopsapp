@@ -10,6 +10,8 @@ export const theme = {
   white: sassVariables.white,
   secondaryWhite: sassVariables.secondaryWhite,
   tertiaryWhite: sassVariables.tertiaryWhite,
+  neutralWhite: sassVariables.neutralWhite,
+
   black: sassVariables.black,
   secondaryBlack: sassVariables.secondaryBlack,
   tertiaryBlack: sassVariables.tertiaryBlack,
@@ -32,5 +34,5 @@ export const theme = {
   footerHeight: sassVariables.footerHeight,
   cardTileRatio: sassVariables.cardTileRatio,
   courseTitle: sassVariables.courseTitle,
-  courseTitleSmall: sassVariables.courseTitleSmall
+  courseTitleSmall: sassVariables.courseTitleSmall,
 };
