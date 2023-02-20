@@ -171,6 +171,7 @@ $heroSectionPadding: 1em;
           gap: 10px;
 
           button {
+            min-width: 20em;
             transition: all 0.5s;
 
             &:hover {

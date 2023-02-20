@@ -1,4 +1,4 @@
-import Snipper from '@/common/Spinner';
+import Spinner from '@/common/Spinner';
 import PropTypes from 'prop-types';
 import styles from './zicopsButton.module.scss';
 
@@ -15,7 +15,7 @@ export default function ZicopsButton({
   backgroundColor,
   border,
   fontSize,
-  fontWeight
+  fontWeight,
 }) {
   if (!display) return null;
 
@@ -24,19 +24,23 @@ export default function ZicopsButton({
       <button
         className={`${styles.zicopsButton} ${!!padding ? styles.shrink : ''} ${
           isError ? styles.error : ''
-        }`}
+        } ${isLoading ? styles.loading : ''}`}
         style={{
           padding,
           color,
           backgroundColor,
           border,
           fontSize,
-          fontWeight
+          fontWeight,
         }}
-        onClick={handleClick}
+        onClick={(e) => {
+          if (isLoading || isDisabled) return;
+
+          handleClick(e);
+        }}
         disabled={!!isDisabled}
         type={type}>
-        {isLoading ? <Snipper /> : display}
+        {isLoading ? <Spinner size="30px" /> : display}
       </button>
     </>
   );
@@ -56,7 +60,7 @@ ZicopsButton.defaultProps = {
 
   isDisabled: false,
   isError: false,
-  isLoading: false
+  isLoading: false,
 };
 
 ZicopsButton.propTypes = {
@@ -73,5 +77,5 @@ ZicopsButton.propTypes = {
 
   isDisabled: PropTypes.bool,
   isError: PropTypes.bool,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
 };

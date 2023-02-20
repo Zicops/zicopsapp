@@ -12,8 +12,19 @@
   max-height: 4em;
   cursor: pointer;
 
+  width: 100%;
+
   &.shrink {
     width: fit-content;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    border-color: $darkThree;
+  }
+
+  &.loading {
+    cursor: progress;
   }
 
   &.error {

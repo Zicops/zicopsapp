@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -7,6 +8,7 @@ import {
 } from '../../atoms/learnerCourseComps.atom';
 import ButtonWithNoStyles from '../../common/ButtonWithNoStyles';
 import KeyValueWithColon from '../../common/KeyValueWithColon';
+import ZicopsSkeleton from '../../common/ZicopsSkeleton';
 import styles from '../../learnerCourseComps.module.scss';
 import CourseBtn from './CourseBtn';
 import CourseTitle from './CourseTitle';
@@ -19,7 +21,16 @@ export default function MetaData() {
     : Math.floor(courseMeta?.duration / 60);
 
   const isAssigned = false;
+  const router = useRouter();
+  const courseId = router.query.courseId;
 
+  const isLoading = courseMeta?.id !== courseId;
+
+  const catSubCatData = [
+    courseMeta?.category,
+    courseMeta?.subCategory,
+    durationInMinutes ? `Duration: ${durationInMinutes} mins` : null,
+  ];
   const keyValues = [
     { id: 1, key: 'Course Benefits', value: courseMeta?.benefits },
     { id: 2, key: 'Expertise Level', value: courseMeta?.expertiseLevel },
@@ -27,23 +38,39 @@ export default function MetaData() {
     { id: 4, key: 'Good For', value: courseMeta?.goodFor },
     { id: 5, key: 'Must For', value: courseMeta?.mustFor },
   ];
+
   return (
     <div className={`${styles.courseDataContainer}`}>
-      <CourseTitle name={courseMeta?.name} />
+      <CourseTitle name={courseMeta?.name} isLoading={isLoading} />
 
       <p className={`${styles.textGray}`}>
-        This course is provisioned by{' '}
-        <span className={`${styles.boldWhite}`}>{courseMeta?.owner}</span> and published by{' '}
-        <span className={`${styles.boldWhite}`}>{courseMeta?.publisher}</span>
+        {isLoading ? (
+          <ZicopsSkeleton variant="text" height={30} width={400} />
+        ) : (
+          <>
+            This course is provisioned by{' '}
+            <span className={`${styles.boldWhite}`}>{courseMeta?.owner}</span> and published by{' '}
+            <span className={`${styles.boldWhite}`}>{courseMeta?.publisher}</span>
+          </>
+        )}
       </p>
 
       <ul className={`${styles.catSubCat}`}>
-        {!!courseMeta?.category && <li>{courseMeta?.category}</li>}
-        {!!courseMeta?.subCategory && <li>{courseMeta?.subCategory}</li>}
-        {!!durationInMinutes && <li>Duration: {durationInMinutes} mins</li>}
+        {catSubCatData?.map((data) => {
+          if (!data) return null;
+          if (isLoading) return <ZicopsSkeleton variant="text" height={30} width={100} />;
+
+          <li>{data}</li>;
+        })}
       </ul>
 
-      <summary className={`${styles.caption} ${styles.textGray}`}>{courseMeta?.summary}</summary>
+      <summary className={`${styles.caption} ${styles.textGray}`}>
+        {isLoading ? (
+          <ZicopsSkeleton variant="rounded" height={40} width={600} />
+        ) : (
+          courseMeta?.summary
+        )}
+      </summary>
 
       <section className={`${styles.detailsSection}`}>
         <div className={`${styles.details}`}>
@@ -52,12 +79,14 @@ export default function MetaData() {
               key={obj.id}
               keyData={{ text: obj.key, textColor: styles.primary }}
               valueData={{ text: obj.value, textColor: styles.darkThree }}
+              isLoading={isLoading}
             />
           ))}
         </div>
 
         <CourseBtn
           isAssigned={isAssigned}
+          isLoading={isLoading}
           // completionDateUnix={courseMeta?.completionDateUnix}
           suggestedDurationInDays={+courseMeta?.expectedCompletion}
           handleClick={() => {
@@ -71,6 +100,7 @@ export default function MetaData() {
               key={obj.id}
               keyData={{ text: obj.key, textColor: styles.primary }}
               valueData={{ text: obj.value, textColor: styles.darkThree }}
+              isLoading={isLoading}
             />
           ))}
         </div>

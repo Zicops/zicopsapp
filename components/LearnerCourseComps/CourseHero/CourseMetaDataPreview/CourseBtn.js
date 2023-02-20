@@ -2,6 +2,7 @@ import { PlayBtnIcon } from '@/common/ZicopsIcons';
 import { displayDateFromUnix } from '@/utils/date.utils';
 import PropTypes from 'prop-types';
 import ZicopsButton from '../../common/ZicopsButton';
+import ZicopsSkeleton from '../../common/ZicopsSkeleton';
 import styles from '../../learnerCourseComps.module.scss';
 
 export default function CourseBtn({
@@ -9,6 +10,7 @@ export default function CourseBtn({
   completionDateUnix = null,
   isAssigned = false,
   isStarted = false,
+  isLoading = false,
   handleClick = () => {},
   completedPercent = null,
 }) {
@@ -37,6 +39,7 @@ export default function CourseBtn({
           padding="0.5em 5em"
           fontSize="1em"
           fontWeight="bold"
+          isLoading={isLoading}
         />
         {completedPercent !== null && (
           <p>
@@ -47,14 +50,15 @@ export default function CourseBtn({
       </span>
 
       <div className={`${styles.courseEndData}`}>
-        {!!suggestedDurationInDays && (
+        {!!isLoading && <ZicopsSkeleton variant="text" height={10} width={320} />}
+        {!!suggestedDurationInDays && !isLoading && (
           <p className={`${styles.textGray}`}>
             **Suggested duration for completion of this course is {suggestedDurationInDays} day
             {suggestedDurationInDays > 1 ? 's' : ''}
           </p>
         )}
 
-        {!!(isAssigned && completionDateUnix) && (
+        {!!(isAssigned && completionDateUnix && !isLoading) && (
           <p className={`${styles.textGray}`}>
             Completion date of the assigned course is {displayDateFromUnix(completionDateUnix)}
           </p>
