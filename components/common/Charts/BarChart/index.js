@@ -22,94 +22,6 @@ export default function BarChart({
     containerRef.current.scrollTop = containerRef?.current?.scrollHeight;
   }, [containerRef?.current?.scrollHeight]);
 
-  const getOrCreateTooltip = (chart) => {
-    let tooltipEl = chart.canvas.parentNode.querySelector('div');
-
-    if (!tooltipEl) {
-      tooltipEl = document.createElement('div');
-      tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
-      tooltipEl.style.borderRadius = '3px';
-      tooltipEl.style.color = 'white';
-      tooltipEl.style.opacity = 1;
-      tooltipEl.style.pointerEvents = 'none';
-      tooltipEl.style.position = 'absolute';
-      tooltipEl.style.transform = 'translate(-50%, 0)';
-      tooltipEl.style.transition = 'all .1s ease';
-
-      const div = document.createElement('div');
-      div.classList.add('tooltip');
-      div.style.margin = '0px';
-
-      tooltipEl.appendChild(div);
-      chart.canvas.parentNode.appendChild(tooltipEl);
-    }
-
-    return tooltipEl;
-  };
-
-  const externalTooltipHandler = (context) => {
-    // Tooltip Element
-    const { chart, tooltip } = context;
-    const tooltipEl = getOrCreateTooltip(chart);
-
-    // // Hide if no tooltip
-    if (tooltip.opacity === 0) {
-      tooltipEl.style.opacity = 0;
-      return;
-    }
-
-    const tooltipRoot = tooltipEl.querySelector('.tooltip');
-    tooltipEl.style.opacity = 1;
-
-    let bodyNode = null;
-    if (tooltip?.body) {
-      const dataPoints = tooltip?.dataPoints?.[0];
-      const tooltipData = dataPoints?.dataset?.data?.[dataPoints?.dataIndex];
-
-      bodyNode = tooltipBody(tooltipData, tooltip);
-
-      // Remove old children
-      while (tooltipRoot?.firstChild) {
-        tooltipRoot?.firstChild?.remove();
-      }
-
-      if (bodyNode) tooltipRoot.appendChild(bodyNode);
-      if (!bodyNode) tooltipEl.style.opacity = 0;
-    }
-
-    const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
-
-    const containerDom = chart?.canvas?.parentNode?.parentNode;
-
-    const container = {
-      height: containerDom?.clientHeight || 0,
-      width: containerDom?.clientWidth || 0
-    };
-    const tooltipContainer = {
-      height: tooltipRoot?.clientHeight || 0,
-      width: tooltipRoot?.clientWidth || 0
-    };
-
-    const estimatedPostionLeft = positionX + tooltip.caretX;
-    let positionLeft = estimatedPostionLeft;
-    if (estimatedPostionLeft - tooltipContainer.width < 100)
-      positionLeft = estimatedPostionLeft - tooltipContainer.width / 2 + 175;
-    if (estimatedPostionLeft + tooltipContainer.width >= container.width + 10)
-      positionLeft = estimatedPostionLeft - tooltipContainer.width / 2 + 75;
-
-    const estimatedPostionTop = positionY + tooltip.caretY;
-    let positionTop = estimatedPostionTop;
-    if (estimatedPostionTop + tooltipContainer.height >= container.height + 10)
-      positionTop = estimatedPostionTop - tooltipContainer.height / 2 - 75;
-
-    // Display, position, and set styles for font
-    tooltipEl.style.left = positionLeft + 'px';
-    tooltipEl.style.top = positionTop + 'px';
-    tooltipEl.style.minWidth = '160px';
-    tooltipEl.style.font = tooltip.options.bodyFont.string;
-    tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
-  };
-
   const _chartData = {
     ...chartData,
     labels: chartData?.labels?.map((label) => {
@@ -181,6 +93,93 @@ export default function BarChart({
     }
   };
 
+  function getOrCreateTooltip(chart) {
+    let tooltipEl = chart.canvas.parentNode.querySelector('div');
+
+    if (!tooltipEl) {
+      tooltipEl = document.createElement('div');
+      tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+      tooltipEl.style.borderRadius = '3px';
+      tooltipEl.style.color = 'white';
+      tooltipEl.style.opacity = 1;
+      tooltipEl.style.pointerEvents = 'none';
+      tooltipEl.style.position = 'absolute';
+      tooltipEl.style.transform = 'translate(-50%, 0)';
+      tooltipEl.style.transition = 'all .1s ease';
+
+      const div = document.createElement('div');
+      div.classList.add('tooltip');
+      div.style.margin = '0px';
+
+      tooltipEl.appendChild(div);
+      chart.canvas.parentNode.appendChild(tooltipEl);
+    }
+
+    return tooltipEl;
+  }
+
+  function externalTooltipHandler(context) {
+    // Tooltip Element
+    const { chart, tooltip } = context;
+    const tooltipEl = getOrCreateTooltip(chart);
+
+    // // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = 0;
+      return;
+    }
+
+    const tooltipRoot = tooltipEl.querySelector('.tooltip');
+    tooltipEl.style.opacity = 1;
+
+    let bodyNode = null;
+    if (tooltip?.body) {
+      const dataPoints = tooltip?.dataPoints?.[0];
+      const tooltipData = dataPoints?.dataset?.data?.[dataPoints?.dataIndex];
+
+      bodyNode = tooltipBody(tooltipData, tooltip);
+
+      // Remove old children
+      while (tooltipRoot?.firstChild) {
+        tooltipRoot?.firstChild?.remove();
+      }
+
+      if (bodyNode) tooltipRoot.appendChild(bodyNode);
+      if (!bodyNode) tooltipEl.style.opacity = 0;
+    }
+
+    const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+
+    const containerDom = chart?.canvas?.parentNode?.parentNode;
+
+    const container = {
+      height: containerDom?.clientHeight || 0,
+      width: containerDom?.clientWidth || 0
+    };
+    const tooltipContainer = {
+      height: tooltipRoot?.clientHeight || 0,
+      width: tooltipRoot?.clientWidth || 0
+    };
+
+    const estimatedPostionLeft = positionX + tooltip.caretX;
+    let positionLeft = estimatedPostionLeft;
+    if (estimatedPostionLeft - tooltipContainer.width < 100)
+      positionLeft = estimatedPostionLeft - tooltipContainer.width / 2 + 10;
+    if (estimatedPostionLeft + tooltipContainer.width >= container.width + 10)
+      positionLeft = estimatedPostionLeft - tooltipContainer.width / 2 + 10;
+
+    const estimatedPostionTop = positionY + tooltip.caretY;
+    let positionTop = estimatedPostionTop;
+    if (estimatedPostionTop + tooltipContainer.height >= container.height + 10)
+      positionTop = estimatedPostionTop - tooltipContainer.height / 2 - 75;
+
+    // Display, position, and set styles for font
+    tooltipEl.style.left = positionLeft + 'px';
+    tooltipEl.style.top = positionTop + 'px';
+    tooltipEl.style.minWidth = '160px';
+    tooltipEl.style.font = tooltip.options.bodyFont.string;
+    tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+  }
   // append plugins to props options
   // if (options) {
   //   options.plugins = { ...(options.plugins || {}), ..._options.plugins };

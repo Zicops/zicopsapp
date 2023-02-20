@@ -50,10 +50,10 @@ export default function useHandleCourseViews() {
           lsp_id: _lspId,
           user_ids: [],
           date_string: dateString,
+          index: i + 1,
           ...dataFromBackend
         });
       }
-
       setCourseViews(allDates);
     }
   }, [selectedDate?.start, selectedDate.end]);
