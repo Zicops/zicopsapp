@@ -1081,7 +1081,7 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
-      console.log(user);
+      if (user?.id === userDataAbout?.id) continue;
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
       if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {
