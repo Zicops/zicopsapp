@@ -355,6 +355,7 @@ export default function useUserCourseData() {
       if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
       userCourseArray.push({
+        
         ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
