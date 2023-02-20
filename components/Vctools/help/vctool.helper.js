@@ -99,3 +99,5 @@ export function Draw(e, canvasRef, ctx, lineWidth, Color, isDrawing, timeout) {
     localStorage.setItem("canvasimg", savedimg);
   }, 1);
 }
+
+//  export const meetingInfo=[{img:"sandeep",}]

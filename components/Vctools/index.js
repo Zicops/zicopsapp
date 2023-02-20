@@ -8,6 +8,7 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { StartMeeting, GenerateString } from "./help/vctool.helper"
 const VcMaintool = () => {
   const userData = useRecoilValue(UserStateAtom)
+  const [isStarted, setisStarted] = useState(false)
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const containerRef = useRef(null)
   const [toolbar, settoobar] = useState(false);
@@ -53,6 +54,7 @@ const VcMaintool = () => {
               console.log(e)
             })
             setFullscreen(false)
+            setisStarted(false)
           }}
           shareScreen={() => {
             api.executeCommand('toggleShareScreen');
@@ -81,9 +83,10 @@ const VcMaintool = () => {
             api.getRoomsInfo().then(rooms => {
               setuserinfo(rooms.rooms[0].participants)
             })
+
             userinfo.forEach((data) => {
               api.executeCommand('overwriteNames', [{
-                id: data.id,
+                id: data?.id,
                 name: startName// The new name.
               }]
               );
@@ -95,9 +98,22 @@ const VcMaintool = () => {
               }
             })
 
+          
+
           }}
+
+
           fullscreen={Fullscreen}
           getUesrId={userinfo}
+          isStarted={isStarted}
+          startAdvertisement={() => {
+            api.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
+          }}
+        
+          stopAdvertisement={()=>
+          {
+            api.executeCommand('stopShareVideo');
+          }}
         />
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
@@ -107,7 +123,8 @@ const VcMaintool = () => {
           !hidecard ? <MeetingCard
             startMeeting={() => {
               StartMeeting("standup", "sandeep", containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
-              sethidecard(!hidecard)
+              setisStarted(true)
+              sethidecard(!hidecard) 
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);

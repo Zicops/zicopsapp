@@ -11,7 +11,6 @@ import styles from "../vctoolMain.module.scss";
 import WhiteBoard from "../WhiteBoard";
 import ResourcePage from "../Resource";
 import About from "../About";
-import Quiz from "../Quiz";
 import QuizPage from "../Quiz";
 const MainToolbar = ({ audiotoggle, videotoggle, setAudio, setVideo, endMeetng, shareScreen,
     handRiseFun, fullScreenFun, fullscreen, getUesrId, mouseMoveFun, isStarted, startAdvertisement, stopAdvertisement }) => {
@@ -38,7 +37,7 @@ const MainToolbar = ({ audiotoggle, videotoggle, setAudio, setVideo, endMeetng, 
             setfade1(true)
                 setTimeout(() => {
                     setfade1(false)
-                }, 3000)
+                }, 4000)
         }}>
             <div className={`${styles.toolbar_nav}`}
                 id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}
