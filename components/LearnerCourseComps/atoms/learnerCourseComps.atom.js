@@ -1,5 +1,5 @@
 import { ALL_COURSE_TYPES, COURSE_MAP_STATUS, COURSE_STATUS } from '@/helper/constants.helper';
-import { atom } from 'recoil';
+import { atom, atomFamily } from 'recoil';
 
 export const courseHeroObj = {
   courseMetaPreview: 'courseMetaPreview',
@@ -7,6 +7,7 @@ export const courseHeroObj = {
   topicPreview: 'topicPreview',
 };
 
+// used for displaying different sections in course hero
 export const ActiveCourseHeroAtom = atom({
   key: 'ActiveCourseHero',
   default: courseHeroObj.courseMetaPreview,
@@ -90,3 +91,67 @@ export function getUserCourseMapDataObj(data = {}) {
     updatedBy: data?.updatedBy || '',
   };
 }
+
+export const UserTopicProgressDataAtom = atom({
+  key: 'UserTopicProgressData',
+  default: [],
+});
+
+export function getUserTopicProgressDataObj(data = {}) {
+  return {
+    userCpId: data?.userCpId || null,
+    userId: data?.userId || null,
+    userCourseId: data?.userCourseId || null,
+    topicId: data?.topicId || '',
+    topicType: data?.topicType || '',
+    status: data?.status || '',
+    videoProgress: data?.videoProgress || 0,
+    timestamp: data?.timestamp || '',
+
+    createdAt: data?.createdAt || '',
+    updatedAt: data?.updatedAt || '',
+    createdBy: data?.createdBy || '',
+    updatedBy: data?.updatedBy || '',
+  };
+}
+
+// used to set active topic and display topic preview accordingly
+export const ActiveCourseDataAtom = atom({
+  key: 'ActiveCourseData',
+  default: getActiveCourseDataObj(),
+});
+
+export function getActiveCourseDataObj(data = {}) {
+  return {
+    moduleId: data?.moduleId || null,
+    chapterId: data?.chapterId || null,
+    topicId: data?.topicId || null,
+    topicContentId: data?.topicContentId || null,
+    language: data?.language || null,
+  };
+}
+
+export const CourseModuleIdsAtom = atom({
+  key: 'CourseModuleIds',
+  default: [],
+});
+
+export const CourseTopcIdsAtom = atom({
+  key: 'CourseTopcIds',
+  default: [],
+});
+
+export const CourseModulesAtomFamily = atomFamily({
+  key: 'CourseModules',
+  default: [],
+});
+
+export const CourseTopicsAtomFamily = atomFamily({
+  key: 'CourseTopics',
+  default: [],
+});
+
+export const CourseTopicContentAtomFamily = atomFamily({
+  key: 'CourseTopicContent',
+  default: [],
+});

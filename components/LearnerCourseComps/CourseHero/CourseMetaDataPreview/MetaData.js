@@ -1,3 +1,4 @@
+import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -5,26 +6,33 @@ import {
   ActiveCourseHeroAtom,
   courseHeroObj,
   CourseMetaDataAtom,
+  UserCourseMapDataAtom,
+  UserTopicProgressDataAtom,
 } from '../../atoms/learnerCourseComps.atom';
 import ButtonWithNoStyles from '../../common/ButtonWithNoStyles';
 import KeyValueWithColon from '../../common/KeyValueWithColon';
 import ZicopsSkeleton from '../../common/ZicopsSkeleton';
 import styles from '../../learnerCourseComps.module.scss';
+import { getCourseCompletePercent } from '../../Logic/learnerCourseComps.helper';
 import CourseBtn from './CourseBtn';
 import CourseTitle from './CourseTitle';
 
 export default function MetaData() {
   const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
+  const userCourseMapData = useRecoilValue(UserCourseMapDataAtom);
+  const topicProgressData = useRecoilValue(UserTopicProgressDataAtom);
   const durationInMinutes = isNaN(+courseMeta?.duration)
     ? null
     : Math.floor(courseMeta?.duration / 60);
 
-  const isAssigned = false;
   const router = useRouter();
   const courseId = router.query.courseId;
 
   const isLoading = courseMeta?.id !== courseId;
+  const isAssigned =
+    userCourseMapData?.userCourseId &&
+    userCourseMapData?.courseStatus !== COURSE_MAP_STATUS.disable;
 
   const catSubCatData = [
     courseMeta?.category,
@@ -41,7 +49,7 @@ export default function MetaData() {
 
   return (
     <div className={`${styles.courseDataContainer}`}>
-      <CourseTitle name={courseMeta?.name} isLoading={isLoading} />
+      <CourseTitle name={courseMeta?.name} isLoading={isLoading} isAssigned={isAssigned} />
 
       <p className={`${styles.textGray}`}>
         {isLoading ? (
@@ -87,8 +95,9 @@ export default function MetaData() {
         <CourseBtn
           isAssigned={isAssigned}
           isLoading={isLoading}
-          // completionDateUnix={courseMeta?.completionDateUnix}
+          completionDateUnix={userCourseMapData?.endDate}
           suggestedDurationInDays={+courseMeta?.expectedCompletion}
+          completedPercent={isAssigned ? getCourseCompletePercent(topicProgressData) : null}
           handleClick={() => {
             if (!isAssigned) return setActiveHero(courseHeroObj.coursePreviewVideo);
           }}
