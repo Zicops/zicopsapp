@@ -179,14 +179,10 @@ const MainToolbar = ({
 
         <VctoolButton
           onClickfun={() => {
-            setresourcePage(!showresourcePage);
-            setshowQA(false);
-            setshowChat(false);
-            setshowPoll(false);
-            setshowbreakoutRoom(false);
-            setshowParticipants(false);
-            setshowAbout(false);
-            setshowQuiz(false);
+             
+            selectedButton === 'resourceBar'
+            ? setSelectedButton('')
+            :setSelectedButton('resourceBar');
           }}
           trueSrc={'/images/svg/vctool/library-books.svg'}
           falseSrc={'/images/svg/vctool/library-books.svg'}
@@ -206,14 +202,10 @@ const MainToolbar = ({
                 </button> */}
         <VctoolButton
           onClickfun={() => {
-            setshowQA(false);
-            setshowChat(false);
-            setshowPoll(false);
-            setshowbreakoutRoom(false);
-            setresourcePage(false);
-            setshowParticipants(false);
-            setshowAbout(false);
-            setshowQuiz(!showQuiz);
+             
+            selectedButton === 'quiz'
+            ? setSelectedButton('')
+            :setSelectedButton('quiz');
           }}
           trueSrc={'/images/svg/vctool/quiz.svg'}
           falseSrc={'/images/svg/vctool/quiz.svg'}
@@ -225,14 +217,10 @@ const MainToolbar = ({
         </button>
         <VctoolButton
           onClickfun={() => {
-            setshowAbout(!showAbout);
-            setresourcePage(false);
-            setshowQA(false);
-            setshowChat(false);
-            setshowPoll(false);
-            setshowbreakoutRoom(false);
-            setshowParticipants(false);
-            setshowQuiz(false);
+             
+            selectedButton === 'about'
+            ? setSelectedButton('')
+            :setSelectedButton('about');
           }}
           toggle={showAbout}
           trueSrc={'/images/svg/vctool/info.svg'}
