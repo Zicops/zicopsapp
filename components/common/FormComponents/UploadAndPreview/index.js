@@ -32,6 +32,7 @@ const UploadAndPreview = ({
 
   useEffect(async () => {
     if (!initialImage) return;
+    if (initialImage.includes('/images/Avatars')) return;
 
     const response = await fetch(`/api/overrideCors?filePath=${encodeURIComponent(initialImage)}`);
     // here image is url/location of image
@@ -260,6 +261,8 @@ const UploadAndPreview = ({
                     const imageFile = dataURLtoFile(preview, `${file?.name}`);
                     if (image.type.includes('text'))
                       return setToastMsg({ type: 'info', message: 'Please select image first.' });
+                    if (initialImage.includes('/images/Avatars'))
+                      setToastMsg({ type: 'info', message: 'Please select image first.' });
                     handleUpdateImage(imageFile);
                   }}
                   variant={'contained'}
