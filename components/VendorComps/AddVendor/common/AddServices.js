@@ -12,9 +12,9 @@ import ProfileManageVendor from '../../ProfileMangeVendor';
 import styles from '../../vendorComps.module.scss';
 import VendorPopUp from '../../common/VendorPopUp';
 import AddExpertise from './AddExpertise';
+import useHandleVendor from '../../Logic/useHandleVendor';
 
 export default function AddServices({ data, setData = () => {}, inputName }) {
-  const [popupState, setPopupState] = useState(false);
   const [isOpenProflie, setIsOpenProfile] = useState(false);
   const [expertisePopupState, setExpertisePopupState] = useState(false);
   const [languagePopupState, setLanguagePopupState] = useState(false);
@@ -22,6 +22,9 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
   const [samplePopupState, setSamplePopupState] = useState(false);
   const [showCompleteProfile, setCompleteProfile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
+  const [selectedExpertise, setSelectedExpertise] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const { addUpdateProfile, addUpdateExperience } = useHandleVendor();
 
   const fileFormatArray = ['PDF', 'PPT', 'Consultancy'].map((val) => ({
     label: val,
@@ -37,10 +40,6 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
     label: val,
     value: val
   }));
-
-  const clickHandler = () => {
-    setPopupState(true);
-  };
 
   const clickHandlerExpertise = () => {
     setExpertisePopupState(true);
@@ -62,7 +61,18 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
     setIsOpenProfile(true);
   };
   const completeProfileHandler = () => {
+    addUpdateProfile();
+    addUpdateExperience();
+    setIsOpenProfile(false);
     setCompleteProfile(true);
+  };
+  const handleLanguageSelection = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedLanguages([...selectedLanguages, value]);
+    } else {
+      setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
+    }
   };
 
   return (
@@ -148,7 +158,12 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         title="Add expertise"
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add' }}>
-        <AddExpertise expertiseValue={expertiseSearch} setExpertise={setExpertiseSearch} />
+        <AddExpertise
+          expertiseValue={expertiseSearch}
+          setExpertise={setExpertiseSearch}
+          selectedExpertise={selectedExpertise}
+          setSelectedExpertise={setSelectedExpertise}
+        />
       </VendorPopUp>
       <VendorPopUp
         open={isOpenProflie}
@@ -181,7 +196,13 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         {VENDOR_LANGUAGES.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
-              <LabeledRadioCheckbox type="checkbox" label={data} />
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={data}
+                value={data}
+                isChecked={selectedLanguages.includes(data)}
+                changeHandler={handleLanguageSelection}
+              />
             </div>
           );
         })}
@@ -224,57 +245,59 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add' }}>
         <h1>Add Sample</h1>
-        <div className={`${styles.sampleName}`}>
-          <label>Sample name:</label>
-          <LabeledInput inputOptions={{ inputName: 'sampleName' }} />
-        </div>
-        <div className={`${styles.descriptionSample}`}>
-          <div className={`${styles.description}`}>
-            <label>Description</label>
-            <LabeledTextarea inputOptions={{ inputName: 'sampleDescription' }} />
+        <div style={{ padding: '10px' }}>
+          <div className={`${styles.sampleName}`}>
+            <label>Sample name:</label>
+            <LabeledInput inputOptions={{ inputName: 'sampleName' }} />
           </div>
-          <div className={`${styles.sample}`}>
-            <label>Add sample file: </label>
-            <BrowseAndUpload styleClassBtn={`${styles.button}`} title="Drag & Drop" />
+          <div className={`${styles.descriptionSample}`}>
+            <div className={`${styles.description}`}>
+              <label>Description</label>
+              <LabeledTextarea inputOptions={{ inputName: 'sampleDescription' }} />
+            </div>
+            <div className={`${styles.sample}`}>
+              <label>Add sample file: </label>
+              <BrowseAndUpload styleClassBtn={`${styles.button}`} title="Drag & Drop" />
+            </div>
           </div>
-        </div>
-        <div className={`${styles.file}`}>
-          <label>File type:</label>
-          <LabeledDropdown
-            dropdownOptions={{
-              inputName: 'FileType',
-              placeholder: 'Select File Type',
-              options: fileFormatArray
-            }}
-            styleClass={`${styles.fileFormatDropDown}`}
-          />
-        </div>
-        <div className={`${styles.rateCurrencyUnit}`}>
-          <div className={`${styles.rate}`}>
-            <label>Rate:</label>
-            <LabeledInput inputOptions={{ inputName: 'rate', placeholder: 'Enter Rate' }} />
-          </div>
-          <div className={`${styles.currency}`}>
-            <label>Currency:</label>
+          <div className={`${styles.file}`}>
+            <label>File type:</label>
             <LabeledDropdown
               dropdownOptions={{
-                inputName: 'Currency',
-                placeholder: 'Select Currency',
-                options: currency
+                inputName: 'FileType',
+                placeholder: 'Select File Type',
+                options: fileFormatArray
               }}
-              styleClass={`${styles.currencyDropDown}`}
+              styleClass={`${styles.fileFormatDropDown}`}
             />
           </div>
-          <div className={`${styles.unit}`}>
-            <label>Unit:</label>
-            <LabeledDropdown
-              dropdownOptions={{
-                inputName: 'Currency',
-                placeholder: 'Select Unit',
-                options: unit
-              }}
-              styleClass={`${styles.unitDropDown}`}
-            />
+          <div className={`${styles.rateCurrencyUnit}`}>
+            <div className={`${styles.rate}`}>
+              <label>Rate:</label>
+              <LabeledInput inputOptions={{ inputName: 'rate', placeholder: 'Enter Rate' }} />
+            </div>
+            <div className={`${styles.currency}`}>
+              <label>Currency:</label>
+              <LabeledDropdown
+                dropdownOptions={{
+                  inputName: 'Currency',
+                  placeholder: 'Select Currency',
+                  options: currency
+                }}
+                styleClass={`${styles.currencyDropDown}`}
+              />
+            </div>
+            <div className={`${styles.unit}`}>
+              <label>Unit:</label>
+              <LabeledDropdown
+                dropdownOptions={{
+                  inputName: 'Currency',
+                  placeholder: 'Select Unit',
+                  options: unit
+                }}
+                styleClass={`${styles.unitDropDown}`}
+              />
+            </div>
           </div>
         </div>
       </VendorPopUp>

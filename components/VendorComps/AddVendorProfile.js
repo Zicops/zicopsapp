@@ -9,6 +9,7 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import AddExpriences from './AddExpriences';
 import { VENDOR_LANGUAGES, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
 import {
   VendorAllExperiencesAtom,
   VendorAllExpertise,
@@ -40,8 +41,9 @@ const AddVendorProfile = ({ data = {} }) => {
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
   const { handleProfilePhoto, addUpdateExperience } = useHandleVendor();
+  const router = useRouter();
+  const vendorId = router.query.vendorId || '0';
   const completeExperienceHandler = () => {
-    // const exprienceData = await addUpdateExperience();
     const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);
     const start_date = new Date(StartDate);
     const start_timestamp = start_date.getTime() / 1000;
@@ -50,12 +52,24 @@ const AddVendorProfile = ({ data = {} }) => {
     const end_timestamp = end_date.getTime() / 1000;
     setAllExperiences([
       ...allExperiences,
-      experiencesData?.title?.trim() + ' @ ' + experiencesData?.companyName?.trim()
+      {
+        vendor_id: vendorId || '',
+        title: experiencesData?.title?.trim() || '',
+        email: profileData?.email?.trim() || '',
+        company_name: experiencesData?.companyName?.trim() || '',
+        employement_type: experiencesData?.employeeType?.trim() || '',
+        location: experiencesData?.location?.trim() || '',
+        location_type: experiencesData?.locationType?.trim() || '',
+        start_date: start_timestamp || null,
+        end_date: end_timestamp || null,
+        status: VENDOR_MASTER_STATUS.active
+      }
     ]);
-    setExperiencesData(null);
+    // setAllExperiences(null);
     setIsOpenExpriences(false);
   };
   console.info('allExperiences', allExperiences);
+
   const handleLanguageSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -185,7 +199,7 @@ const AddVendorProfile = ({ data = {} }) => {
             <>
               {allExperiences?.map((data) => (
                 <IconButton
-                  text={data}
+                  text={data?.title + ' ' + '@' + ' ' + data?.company_name}
                   styleClasses={`${styles.exButton}`}
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => setIsOpenExpriences(true)}

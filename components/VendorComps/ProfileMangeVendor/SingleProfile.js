@@ -3,14 +3,19 @@ import AddVendorProfile from '../AddVendorProfile';
 import { manageVendorProfiles } from '../Logic/vendorComps.helper';
 import styles from '../vendorComps.module.scss';
 import VendorPopUp from '../common/VendorPopUp';
+import useHandleVendor from '../Logic/useHandleVendor';
 const SingleProfile = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { addUpdateProfile, addUpdateExperience } = useHandleVendor();
   const editProfileData = manageVendorProfiles?.filter((e) => e?.id === data?.id);
   const editProfilehandler = () => {
     setIsOpen(true);
   };
 
-  const completeProfileHandler = () => {};
+  const completeProfileHandler = () => {
+    addUpdateProfile();
+    addUpdateExperience();
+  };
 
   return (
     <div className={`${styles.singleProfileContainer}`}>

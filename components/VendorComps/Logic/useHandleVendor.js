@@ -163,13 +163,11 @@ export default function useHandleVendor() {
     if (isError) return;
 
     const _id = res.data.addVendor.vendorId;
-    sessionStorage.setItem('vendorId', _id);
+    router.push(`/admin/vendor/manage-vendor/add-vendor/${_id}`);
     return res;
   }
 
   async function addUpdateProfile() {
-    // const vendorId = vendorData?.vendorId;
-    const vendorId = sessionStorage.getItem('vendorId');
     const type = vendorData?.type;
     const sendData = {
       vendor_id: vendorId || '',
@@ -183,7 +181,8 @@ export default function useHandleVendor() {
       languages: allLanguages || [],
       SME_expertise: allExpertise || [],
       Classroom_expertise: [],
-      experience: allExperiences || [],
+      experience: allExperiences?.map((exp) => exp?.title + '@' + exp?.company_name) || [],
+      experience_years: profileData?.experienceYear,
       is_speaker: profileData?.isSpeaker || false,
       status: VENDOR_MASTER_STATUS.active
     };
@@ -214,27 +213,29 @@ export default function useHandleVendor() {
   }
 
   async function addUpdateExperience() {
-    const StartDate = experiencesData?.startMonth.concat('-', experiencesData?.startYear);
-    const start_date = new Date(StartDate);
-    const start_timestamp = start_date.getTime() / 1000;
-    const EndDate = experiencesData?.endMonth.concat('-', experiencesData?.endYear);
-    const end_date = new Date(EndDate);
-    const end_timestamp = end_date.getTime() / 1000;
-    const vendorId = sessionStorage.getItem('vendorId');
-    const sendData = {
-      vendor_id: vendorId || '',
-      title: experiencesData?.title?.trim() || '',
-      // email: experiencesData?.email?.trim() || '',
-      company_name: experiencesData?.companyName?.trim() || '',
-      employement_type: experiencesData?.employeeType?.trim() || '',
-      location: experiencesData?.location?.trim() || '',
-      location_type: experiencesData?.locationType?.trim() || '',
-      start_date: start_timestamp || null,
-      end_date: end_timestamp || null,
-      status: VENDOR_MASTER_STATUS.active
-    };
-
     let isError = false;
+    for (let i = 0; i < allExperiences?.length; i++) {
+      let sendData = {
+        vendor_id: vendorId || '',
+        title: allExperiences[i]?.title?.trim() || '',
+        email: profileData?.email?.trim() || '',
+        company_name: allExperiences[i]?.company_name?.trim() || '',
+        employement_type: allExperiences[i]?.employement_type?.trim() || '',
+        location: allExperiences[i]?.location?.trim() || '',
+        location_type: allExperiences[i]?.locationType?.trim() || '',
+        start_date: allExperiences[i]?.start_date || null,
+        end_date: allExperiences[i]?.end_date || null,
+        status: allExperiences[i]?.status
+      };
+
+      const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Add profile Error' });
+      });
+      if (isError) break;
+    }
+    return isError;
 
     // if (profileData?.profileId) {
     //   sendData.profileId = profileData?.profileId;
@@ -249,14 +250,6 @@ export default function useHandleVendor() {
     //   setToastMsg({ type: 'success', message: 'Vendor Updated' });
     //   return;
     // }
-
-    const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Add profile Error' });
-    });
-    if (isError) return;
-    return res?.data?.createExperienceVendor;
   }
 
   return {

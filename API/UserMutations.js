@@ -1456,6 +1456,7 @@ export const CREATE_PROFILE_VENDOR = gql`
     $SME_Expertise: [String]
     $Classroom_Expertise: [String]
     $experience: [String]
+    $experienceYear: String
     $is_speaker: Boolean
     $status: String!
   ) {
@@ -1473,6 +1474,7 @@ export const CREATE_PROFILE_VENDOR = gql`
         SME_expertise: $SME_Expertise
         Classroom_expertise: $Classroom_Expertise
         experience: $experience
+        experience_years: $experienceYear
         is_speaker: $is_speaker
         status: $status
       }
@@ -1504,7 +1506,7 @@ export const CREATE_EXPERIENCE_VENDOR = gql`
   mutation createExperienceVendor(
     $vendor_id: String
     $title: String
-    $email: String
+    $email: String!
     $company_name: String
     $employement_type: String
     $location: String

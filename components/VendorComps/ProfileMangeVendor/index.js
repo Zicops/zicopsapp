@@ -17,6 +17,7 @@ const ProfileManageVendor = () => {
   const completeProfileHandler = async () => {
     await addUpdateProfile();
     setCompleteProfile(true);
+    setIsOpenProfile(false);
   };
 
   return (
