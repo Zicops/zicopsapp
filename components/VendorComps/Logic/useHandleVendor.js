@@ -14,7 +14,8 @@ import {
   VendorExperiencesAtom,
   VendorAllExperiencesAtom,
   VendorAllLanguages,
-  VendorAllExpertise
+  VendorAllExpertise,
+  SampleAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -25,7 +26,8 @@ import {
   UPDATE_VENDOR,
   userClient,
   CREATE_PROFILE_VENDOR,
-  CREATE_EXPERIENCE_VENDOR
+  CREATE_EXPERIENCE_VENDOR,
+  CREATE_SAMPLE_FILE
 } from '@/api/UserMutations';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
@@ -34,13 +36,14 @@ export default function useHandleVendor() {
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
   const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
   const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
+  const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
-  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
   const [allExperiences, setAllExperiences] = useRecoilState(VendorAllExperiencesAtom);
   const [allLanguages, setAllLanguages] = useRecoilState(VendorAllLanguages);
   const [allExpertise, setAllExpertise] = useRecoilState(VendorAllExpertise);
+  const [sampleData, setSampleData] = useRecoilState(SampleAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -171,7 +174,7 @@ export default function useHandleVendor() {
     const type = vendorData?.type;
     const sendData = {
       vendor_id: vendorId || '',
-      type: type || '',
+      type: 'sme' || '',
       first_name: profileData?.firstName?.trim() || '',
       last_name: profileData?.lastName?.trim() || '',
       email: profileData?.email?.trim() || '',
@@ -252,6 +255,29 @@ export default function useHandleVendor() {
     // }
   }
 
+  async function addSampleFile() {
+    const sendData = {
+      vendorId: vendorId,
+      pType: 'sme' || '',
+      name: sampleData?.sampleName || '',
+      description: sampleData?.description || '',
+      pricing: sampleData?.rate + sampleData?.currency + '/' + sampleData?.unit || '',
+      file: sampleData?.sampleFile || null,
+      fileType: sampleData?.fileType || '',
+      status: VENDOR_MASTER_STATUS.active
+    };
+
+    let isError = false;
+
+    const res = await createSampleFiles({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
+    });
+    if (isError) return;
+    return res;
+  }
+
   return {
     vendorDetails,
     addUpdateVendor,
@@ -261,6 +287,7 @@ export default function useHandleVendor() {
     getAllVendors,
     addUpdateProfile,
     addUpdateExperience,
+    addSampleFile,
     loading,
     setLoading
   };

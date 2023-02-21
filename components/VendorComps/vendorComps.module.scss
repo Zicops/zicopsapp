@@ -595,6 +595,18 @@
         margin-top: 10px;
         cursor: pointer;
       }
+      .languages {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 8px;
+ 
+        .singleLanguage {
+          background: #1A1D21;
+          padding: 12px 16px;
+          border-radius: 4px;
+        }
+      }
     }
   }
 
@@ -623,6 +635,18 @@
         cursor: pointer;
       }
     }
+        .languages {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 8px;
+    
+          .singleLanguage {
+            background: #1A1D21;
+            padding: 12px 16px;
+            border-radius: 4px;
+          }
+        }
 
     .addOPFormat {
       width: 50%;
@@ -1067,7 +1091,7 @@
 .dropDownMain {
   margin-top: 8px;
 }
-.singleProfileContainer {
+.singleProfileContainer , .singleFileContainer{
   max-height: 146px;
   padding: 16px;
   background: #1a1a1a;
@@ -1112,8 +1136,37 @@
   .editIcon {
     cursor: pointer;
   }
+  .singleFileDetails{
+    display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 70%;
+      color: $white;
+      .fileName{
+        font-size: 20px;
+      }
+      .filePrice{
+        display: flex;
+          width: 100%;
+          font-size: 18px;
+          justify-content: space-between;
+          align-items: center;
+          color: $bgBody;
+      }
+  }
+    .deleteIcon {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+     width: 20px;
+    height: 20px;
+      img {
+       width: 100%;
+       height: 100%;
+      }
+    }
 }
-.manageVendorProfileMain {
+.manageVendorProfileMain , .vendorFileMain {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;

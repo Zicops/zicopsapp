@@ -40,7 +40,7 @@ const AddVendorProfile = ({ data = {} }) => {
   const [selectedExpertise, setSelectedExpertise] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
-  const { handleProfilePhoto, addUpdateExperience } = useHandleVendor();
+  const { handleProfilePhoto } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
   const completeExperienceHandler = () => {
@@ -68,7 +68,6 @@ const AddVendorProfile = ({ data = {} }) => {
     // setAllExperiences(null);
     setIsOpenExpriences(false);
   };
-  console.info('allExperiences', allExperiences);
 
   const handleLanguageSelection = (e) => {
     const { value, checked } = e.target;

@@ -97,7 +97,10 @@ export const SmeServicesAtom = atom({
 export function getSMEServicesObject(data) {
   return {
     isApplicableSME: data?.isApplicableSME || false,
-    serviceDescription: data?.serviceDescription || ''
+    serviceDescription: data?.serviceDescription || '',
+    languages: data?.languages || [],
+    expertises: data?.expertises || [],
+    formats: data?.formats || []
   };
 }
 
@@ -124,3 +127,25 @@ export function getCDServicesObject(data) {
     serviceDescription: data?.serviceDescription || ''
   };
 }
+
+export const SampleAtom = atom({
+  key: 'SampleAtom',
+  default: getSampleObject()
+});
+export function getSampleObject(data) {
+  return {
+    sampleId: data?.sampleId || null,
+    sampleName: data?.sampleName || '',
+    description: data?.description || '',
+    sampleFile: data?.sampleFile || null,
+    fileType: data?.fileType || '',
+    rate: data?.rate || '',
+    currency: data?.currency || '',
+    unit: data?.unit || ''
+  };
+}
+
+export const AllSampleFilesAtom = atom({
+  key: 'allSampleFiles',
+  default: []
+});

@@ -1502,6 +1502,67 @@ export const CREATE_PROFILE_VENDOR = gql`
   }
 `;
 
+export const UPDATE_PROFILE_VENDOR = gql`
+  mutation updateProfileVendor(
+    $vendor_id: String!
+    $type: String!
+    $first_name: String
+    $last_name: String
+    $email: String!
+    $phone: String
+    $photo: Upload
+    $description: String
+    $languages: [String]
+    $SME_Expertise: [String]
+    $Classroom_Expertise: [String]
+    $experience: [String]
+    $experienceYear: String
+    $is_speaker: Boolean
+    $status: String!
+  ) {
+    updateProfileVendor(
+      input: {
+        vendor_id: $vendor_id
+        type: $type
+        first_name: $first_name
+        last_name: $last_name
+        email: $email
+        phone: $phone
+        photo: $photo
+        description: $description
+        languages: $languages
+        SME_expertise: $SME_Expertise
+        Classroom_expertise: $Classroom_Expertise
+        experience: $experience
+        experience_years: $experienceYear
+        is_speaker: $is_speaker
+        status: $status
+      }
+    ) {
+      pf_id
+      vendor_id
+      type
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      experience
+      experience_years
+      is_speaker
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
 export const CREATE_EXPERIENCE_VENDOR = gql`
   mutation createExperienceVendor(
     $vendor_id: String
@@ -1592,6 +1653,43 @@ export const UPDATE_EXPERIENCE_VENDOR = gql`
       UpdatedAt
       UpdatedBy
       Status
+    }
+  }
+`;
+
+export const CREATE_SAMPLE_FILE = gql`
+  mutation uploadSampleFile(
+    $vendorId: String!
+    $pType: String!
+    $name: String!
+    $description: String!
+    $pricing: String!
+    $file: Upload!
+    $fileType: String
+    $status: String
+  ) {
+    uploadSampleFile(
+      input: {
+        vendorId: $vendorId
+        p_type: $pType
+        name: $name
+        description: $description
+        pricing: $pricing
+        file: $file
+        fileType: $fileType
+        status: $status
+      }
+    ) {
+      sf_id
+      name
+      fileType
+      price
+      file_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
     }
   }
 `;

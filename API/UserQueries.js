@@ -912,6 +912,75 @@ export const GET_SINGLE_EXPERIENCE_DETAILS = gql`
     }
   }
 `;
+export const GET_SINGLE_PROFILE_DETAILS = gql`
+  query viewProfileVendorDetails($vendor_id: String!, $email: String!, $ptype: String!) {
+    viewProfileVendorDetails(vendor_id: $vendor_id, email: $email, p_type: $ptype) {
+      pf_id
+      vendor_id
+      type
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      experience
+      experience_years
+      is_speaker
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+export const GET_ALL_PROFILE_DETAILS = gql`
+  query viewAllProfiles($vendor_id: String!, $ptype: String!) {
+    viewAllProfiles(vendor_id: $vendor_id, p_type: $ptype) {
+      pf_id
+      vendor_id
+      type
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      experience
+      experience_years
+      is_speaker
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_SAMPLE_FILES = gql`
+  query getSampleFiles($vendor_id: String!, $ptype: String!) {
+    getSampleFiles(vendor_id: $vendor_id, p_type: $ptype) {
+      sf_id
+      name
+      fileType
+      price
+      file_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
 
 // DASHBOARD QUERIES START
 export const GET_COURSE_CONSUMPTION_STATS = gql`

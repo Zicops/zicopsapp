@@ -9,13 +9,14 @@ import useHandleVendor from '../Logic/useHandleVendor';
 const ProfileManageVendor = () => {
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   const [showCompleteProfile, setCompleteProfile] = useState(false);
-  const { addUpdateProfile } = useHandleVendor();
+  const { addUpdateProfile, addUpdateExperience } = useHandleVendor();
   const addProfileHandler = () => {
     setIsOpenProfile(true);
   };
 
   const completeProfileHandler = async () => {
-    await addUpdateProfile();
+    addUpdateExperience();
+    addUpdateProfile();
     setCompleteProfile(true);
     setIsOpenProfile(false);
   };
