@@ -155,22 +155,24 @@ const MainToolbar = ({
       )
     }
   ];
+  const clearTime=()=>
+  {
+  setTimeout(() => {
+    setfade1(false)
+  },5000);
+  }
   return (
     <div
       className={`${styles.toolBar}`}
-      onMouseMove={() => {
+      onMouseMove={(e) => {
         mouseMoveFun();
         setfade1(true);
-        setTimeout(() => {
-          setfade1(false);
-        }, 5000);
-      }}>
+        clearTimeout(clearTime())
+      }}
+      >
       <div className={`${styles.toolBarnav}`}
-        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onClick={() => {
+        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onMouseOver={() => {
           setfade1(true);
-          setTimeout(() => {
-            setfade1(false);
-          }, 5000);
         }}>
         <button>
           <img src="/images/svg/vctool/folder-open.svg" />
@@ -183,9 +185,10 @@ const MainToolbar = ({
               ? setSelectedButton('')
               : setSelectedButton('resourceBar');
           }}
-          trueSrc={'/images/svg/vctool/library-books.svg'}
+          trueSrc={'/images/svg/vctool/library-books-active.svg'}
           falseSrc={'/images/svg/vctool/library-books.svg'}
-          toggle={setresourcePage}
+          toggle={selectedButton === 'resourceBar'}
+          customId={selectedButton === 'resourceBar' ? `${styles.changeBackground}` : ''}
         />
 
         <VctoolButton
@@ -197,6 +200,7 @@ const MainToolbar = ({
           }}
           trueSrc={'/images/svg/vctool/sticky-note-2.svg'}
           falseSrc={'/images/svg/vctool/sticky-note-2.svg'}
+          customId={selectedButton === 'whiteBoard' ? `${styles.changeBackground}` : ''}
         />
         <VctoolButton
           onClickfun={() => {
@@ -205,9 +209,10 @@ const MainToolbar = ({
               ? setSelectedButton('')
               : setSelectedButton('quiz');
           }}
-          trueSrc={'/images/svg/vctool/quiz.svg'}
+          trueSrc={'/images/svg/vctool/quiz-active.svg'}
           falseSrc={'/images/svg/vctool/quiz.svg'}
-          toggle={showQuiz}
+          toggle={selectedButton === 'quiz'}
+          customId={selectedButton === 'quiz' ? `${styles.changeBackground}` : ''}
         />
 
         <button>
@@ -220,9 +225,10 @@ const MainToolbar = ({
               ? setSelectedButton('')
               : setSelectedButton('about');
           }}
-          toggle={showAbout}
-          trueSrc={'/images/svg/vctool/info.svg'}
+          toggle={selectedButton === 'about'}
+          trueSrc={'/images/svg/vctool/info-active.svg'}
           falseSrc={'/images/svg/vctool/info.svg'}
+          customId={selectedButton === 'about' ? `${styles.changeBackground}` : ''}
         />
       </div>
       <div
@@ -235,11 +241,8 @@ const MainToolbar = ({
       </div>
 
       <div className={`${styles.toolBarfooter}`}
-        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onClick={() => {
+        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onMouseOver={() => {
           setfade1(true);
-          setTimeout(() => {
-            setfade1(false);
-          }, 5000);
         }}>
         <div className={`${styles.footerLeft}`}>
           <div>
@@ -260,7 +263,7 @@ const MainToolbar = ({
             }}
             trueSrc={'/images/svg/vctool/mic-on.svg'}
             falseSrc={'/images/svg/vctool/mic-off.svg'}
-            toggle={audiotoggle}
+            toggle={audiotoggle} customId={!audiotoggle ? `${styles.changeBackground}` : ''}
           />
 
           <VctoolButton
@@ -270,6 +273,7 @@ const MainToolbar = ({
             trueSrc={'/images/svg/vctool/videocam-on.svg'}
             falseSrc={'/images/svg/vctool/videocam-off.svg'}
             toggle={videotoggle}
+            customId={!videotoggle ? `${styles.changeBackground}` : ''}
           />
 
           <VctoolButton
@@ -299,8 +303,10 @@ const MainToolbar = ({
                 ? setSelectedButton('')
                 : setSelectedButton('qaBar');
             }}
-            trueSrc={'/images/svg/vctool/help.svg'}
+            trueSrc={'/images/svg/vctool/help-active.svg'}
             falseSrc={'/images/svg/vctool/help.svg'}
+            customId={selectedButton === 'qaBar' ? `${styles.changeBackground}` : ''}
+            toggle={selectedButton === 'qaBar'}
           />
 
           <VctoolButton
@@ -310,8 +316,10 @@ const MainToolbar = ({
                 ? setSelectedButton('')
                 : setSelectedButton('chatBar');
             }}
-            trueSrc={'/images/svg/vctool/chat-bubble.svg'}
+            trueSrc={'/images/svg/vctool/chat-bubble-active.svg'}
             falseSrc={'/images/svg/vctool/chat-bubble.svg'}
+            customId={selectedButton === 'chatBar' ? `${styles.changeBackground}` : ''}
+            toggle={selectedButton === 'chatBar'}
           />
 
           <VctoolButton
@@ -321,8 +329,10 @@ const MainToolbar = ({
                 ? setSelectedButton('')
                 : setSelectedButton('poll');
             }}
-            trueSrc={'/images/svg/vctool/insert-chart.svg'}
+            trueSrc={'/images/svg/vctool/insert-chart-active.svg'}
             falseSrc={'/images/svg/vctool/insert-chart.svg'}
+            customId={selectedButton === 'poll' ? `${styles.changeBackground}` : ''}
+            toggle={selectedButton === 'poll'}
           />
 
           <VctoolButton
@@ -331,8 +341,10 @@ const MainToolbar = ({
                 ? setSelectedButton('')
                 : setSelectedButton('participants');
             }}
-            trueSrc={'/images/svg/vctool/group.svg'}
+            trueSrc={'/images/svg/vctool/group-active.svg'}
             falseSrc={'/images/svg/vctool/group.svg'}
+            customId={selectedButton === 'participants' ? `${styles.changeBackground}` : ''}
+            toggle={selectedButton === 'participants'}
           />
 
           <VctoolButton
@@ -341,8 +353,10 @@ const MainToolbar = ({
                 ? setSelectedButton('')
                 : setSelectedButton('breakOutRoom');
             }}
-            trueSrc={'/images/svg/vctool/account-tree.svg'}
+            trueSrc={'/images/svg/vctool/account-tree-active.svg'}
             falseSrc={'/images/svg/vctool/account-tree.svg'}
+            customId={selectedButton === 'breakOutRoom' ? `${styles.changeBackground}` : ''}
+            toggle={selectedButton === 'breakOutRoom'}
           />
 
           <button>
@@ -356,6 +370,7 @@ const MainToolbar = ({
             toggle={fullscreen}
             trueSrc={'/images/svg/vctool/fullscreen-exit.svg'}
             falseSrc={'/images/svg/vctool/fullscreen.svg'}
+
           />
         </div>
       </div>
