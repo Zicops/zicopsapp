@@ -32,7 +32,7 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
-import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
+import { CatSubCatAtom, FeatureFlagsAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
@@ -75,6 +75,7 @@ export function useHandleCatSubCat(selectedCategory) {
   });
   // this will have the whole cat object not just id
   const [activeCatId, setActiveCatId] = useState(null);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   useEffect(async () => {
     if (!refetch) return;
@@ -84,14 +85,14 @@ export function useHandleCatSubCat(selectedCategory) {
 
     const _lspId = sessionStorage?.getItem('lsp_id');
     const zicopsLsp = COMMON_LSPS.zicops;
-
-    const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+    const loadDataFunction = isDev ? loadAndCacheDataAsync : loadQueryDataAsync;
+    const zicopsLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
 
     let currentLspData = null;
     if (_lspId !== zicopsLsp) {
-      currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      currentLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
         lsp_ids: [_lspId]
       });
     }
@@ -354,6 +355,7 @@ export default function useUserCourseData() {
       if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
       userCourseArray.push({
+        
         ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
@@ -1080,7 +1082,7 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
-      console.log(user);
+      if (user?.id === userDataAbout?.id) continue;
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
       if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {

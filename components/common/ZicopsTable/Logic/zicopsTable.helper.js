@@ -1,5 +1,6 @@
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
+import usePagination from '@mui/material/usePagination';
 import {
   gridPageCountSelector,
   gridPageSelector,
@@ -8,14 +9,15 @@ import {
 } from '@mui/x-data-grid';
 import ToolTip from '../../ToolTip';
 import styles from '../zicopsTable.module.scss';
-import usePagination from '@mui/material/usePagination';
 
-export function CustomPagination({ currentPage = null }) {
+export function CustomPagination({ currentPage = null, customUiComp = null }) {
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
   if (currentPage !== null && currentPage !== page) apiRef.current.setPage(currentPage);
+
+  if (customUiComp) return <div>{customUiComp}</div>;
 
   return (
     <Pagination
@@ -103,3 +105,18 @@ export function CustomDescendingIcon() {
     </div>
   );
 }
+
+// https://stackoverflow.com/questions/66514102/how-can-you-disable-specific-material-ui-datagrid-column-menu-options
+export const CustomColumnMenu = (props) => {
+  const { hideMenu, currentColumn } = props;
+  return (
+    <GridColumnMenuContainer
+      hideMenu={hideMenu}
+      currentColumn={currentColumn}
+      style={{ backgroundColor: 'var(--dark_three)' }}>
+      <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
+      <div>Custom Text</div>
+      <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
+    </GridColumnMenuContainer>
+  );
+};
