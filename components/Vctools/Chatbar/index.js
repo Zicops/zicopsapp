@@ -1,5 +1,5 @@
 import styles from "../vctoolMain.module.scss";
-const ChatBar = ({ showHide }) => {
+const ChatBar = ({ showHide=false }) => {
     return (
         <div className={`${styles.chatbar}`}>
             <div className={`${styles.chatbar_head}`}>

@@ -1,9 +1,9 @@
 import styles from "../vctoolMain.module.scss"
 import QuizQuestion from "../QuizQuestion";
-const QuizPage = ({ showHide }) => {
+const QuizPage = ({ showHide=false }) => {
     return (
-        <div className={`${styles.Quiz}`}>
-            <div className={`${styles.Quiz_head}`}>
+        <div className={`${styles.quiz}`}>
+            <div className={`${styles.quizHead}`}>
                 <div>Quiz</div>
                 <button onClick={() => {
                     showHide()
@@ -12,13 +12,13 @@ const QuizPage = ({ showHide }) => {
                 </button>
             </div>
 
-            <div className={`${styles.Quiz_Screen}`}>
+            <div className={`${styles.quizScreen}`}>
                 <div style={{
                     paddingTop: "12px",
                     color: "#ACACAC",
                     fontSize: "14px"
                 }}>Un-attempted</div>
-                <div className={`${styles.Quiz_unattempted}`}>
+                <div className={`${styles.quizUnattempted}`}>
                     <QuizQuestion />
                     <QuizQuestion />
                     <QuizQuestion />
@@ -28,7 +28,7 @@ const QuizPage = ({ showHide }) => {
                     color: "#ACACAC",
                     fontSize: "14px"
                 }}>Attempted</div>
-                <div className={`${styles.Quiz_attempted}`}>
+                <div className={`${styles.quizAttempted}`}>
                     <QuizQuestion />
                 </div>
             </div>

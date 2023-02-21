@@ -1,8 +1,8 @@
 import styles from "../vctoolMain.module.scss";
-const Poll = ({ showHide }) => {
+const Poll = ({ showHide=false }) => {
     return (
-        <div className={`${styles.Pollbar}`}>
-            <div className={`${styles.Poll_head}`}>
+        <div className={`${styles.pollBar}`}>
+            <div className={`${styles.pollHead}`}>
                 <div>Polls</div>
                 <button onClick={() => {
                     showHide()
@@ -11,7 +11,7 @@ const Poll = ({ showHide }) => {
                 </button>
             </div>
 
-            <div className={`${styles.Poll_Screen}`}>
+            <div className={`${styles.pollScreen}`}>
 
 
 

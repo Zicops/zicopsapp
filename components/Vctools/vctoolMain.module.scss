@@ -111,7 +111,7 @@
 }
 
 // Styling footertool
-.toolbar {
+.toolBar {
     // opacity: 0;
     transition: opacity 1s;
     z-index: 1010;
@@ -122,7 +122,7 @@
 
 }
 
-.toolbar_nav {
+.toolBarnav {
     // opacity: 0;
     transition: opacity 1s;
     z-index: 1010;
@@ -137,7 +137,7 @@
     align-items: center;
 }
 
-.toolbar_nav>button {
+.toolBarnav>button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -162,7 +162,7 @@
     width: 100vw;
 }
 
-.toolbar_footer {
+.toolBarfooter {
     // opacity: 0;
     transition: opacity 1s;
     position: absolute;
@@ -176,23 +176,23 @@
     align-items: center;
 }
 
-.footer_left {
+.footerLeft {
     display: flex;
     justify-content: left;
     align-items: center;
     width: 50%;
 }
 
-#footer_left_btn1 {
+#footerLeftbtn1 {
     background-color: #202222;
 }
 
-#footer_left_btn2 {
+#footerLeftbtn2 {
     background-color: white;
 
 }
 
-.footer_left>button {
+.footerLeft>button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -210,14 +210,14 @@
     cursor: pointer;
 }
 
-.footer_right {
+.footerRight {
     display: flex;
     justify-content: right;
     align-items: center;
     width: 50%;
 }
 
-.footer_right>button {
+.footerRight>button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -235,7 +235,7 @@
     cursor: pointer;
 }
 
-.cansel_btn {
+.canselBtn {
     height: 48px;
     width: 127px;
     border-radius: 4rem;
@@ -253,13 +253,14 @@
     cursor: pointer;
 }
 
-.cansel_btn>img {
+.canselBtn>img {
     margin-right: 10px;
 }
 
 #fadein1 {
     opacity: 0;
     transition: opacity 1s;
+    z-index: 999;
 }
 
 #fadeout1 {
@@ -355,7 +356,7 @@
 }
 
 // styling AQ bar
-.QAbar {
+.qaBar {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -366,7 +367,7 @@
     background-color: #1A1D21;
 }
 
-.QAbar_head {
+.qaBarhead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -383,24 +384,24 @@
     padding-bottom: 20px;
 }
 
-.QAbar_head>button {
+.qaBarhead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.QAbar_Screen {
+.qaBarscreen {
     width: 300px;
     height: 75%;
     overflow: scroll;
     // padding-bottom: 20px;
 }
 
-.QAbar_Screen::-webkit-scrollbar {
+.qaBarscreen::-webkit-scrollbar {
     display: none;
 }
 
-.QAbar_input {
+.qaBarinput {
     // margin-top: 20px;
     height: 15%;
     width: 300px;
@@ -412,7 +413,7 @@
     flex-direction: column;
 }
 
-.QAbar_input>input {
+.qaBarinput>input {
     width: 270px;
     font-size: 16px;
     height: 20px;
@@ -423,24 +424,24 @@
 
 }
 
-.QAsendfile {
+.qaSendfile {
     width: 276px;
     display: flex;
     justify-content: space-between;
 }
 
-.QAsendfile>input {
+.qaSendfile>input {
     color: white;
     background-color: #1A1D21;
     outline: none;
     border: none;
 }
 
-.QAbar>input> ::placeholder {
+.qaBtn>input> ::placeholder {
     color: #747474;
 }
 
-.QAbtn {
+.qaBtn {
     width: 161px;
     height: 48px;
     background: #6BCFCF;
@@ -451,7 +452,7 @@
 }
 
 // Stylling Polls
-.Pollbar {
+.pollBar {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -462,7 +463,7 @@
     background-color: #1A1D21;
 }
 
-.Poll_head {
+.pollHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -479,19 +480,19 @@
     padding-bottom: 20px;
 }
 
-.Poll_Screen {
+.pollScreen {
     height: 75%;
     width: 296px;
 }
 
-.Poll_head>button {
+.pollHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
 // styling Participants bar
-.Participants_bar {
+.participantsBar {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -502,7 +503,7 @@
     background-color: #1A1D21;
 }
 
-.Participants_head {
+.participantsHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -519,24 +520,24 @@
     padding-bottom: 20px;
 }
 
-.Participants_head>button {
+.participantsHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.Participants_Screen {
+.participantsScreen {
     height: 90%;
     width: 296px;
     overflow: scroll;
 
 }
 
-.Participants_Screen::-webkit-scrollbar {
+.participantsScreen::-webkit-scrollbar {
     display: none;
 }
 
-.Participants_Screen_head {
+.participantsScreenhead {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
@@ -545,7 +546,7 @@
     color: #ACACAC;
 }
 
-.Allinstructors {
+.allInstructors {
     width: 276px;
     height: auto;
     font-family: 'Poppins';
@@ -557,7 +558,7 @@
 
 // styling student frame
 
-.Student_Frame {
+.studentFrame {
     display: flex;
     width: 296px;
     // justify-content:baseline;
@@ -565,23 +566,23 @@
 
 }
 
-.student_frame_name {
+.studentFramename {
     font-size: 13px;
     margin-left: 10px;
 }
 
-.student_frame_icons {
+.studentFrameicons {
     width: 40%;
     display: flex;
     justify-content: right;
     align-items: center;
 }
 
-.student_frame_icons>img {
+.studentFrameicons>img {
     margin-left: 5px;
 }
 
-.student_frame_icons>img {
+.studentFrameicons>img {
     margin-right: 4px;
 }
 
@@ -597,7 +598,7 @@
 }
 
 // styling White board
-.WhiteBoard {
+.whiteBoard {
     z-index: 1010;
     width: 100vw;
     z-index: 1000;
@@ -638,7 +639,7 @@
 
 // styling BreakoutRooms
 
-.BreakoutRoomBar {
+.breakoutRoombar {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -649,7 +650,7 @@
     background-color: #1A1D21;
 }
 
-.breakout_head {
+.breakoutHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -666,22 +667,22 @@
     padding-bottom: 20px;
 }
 
-.breakout_head>button {
+.breakoutHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.BreakoutRoom_Screen::-webkit-scrollbar {
+.breakoutRoomscreen::-webkit-scrollbar {
     display: none;
 }
 
-.BreakoutRoom_participants::-webkit-scrollbar {
+.breakoutRoomparticipants::-webkit-scrollbar {
     display: none;
 }
 
 // styling resources page
-.Resourcebar {
+.resourceBar {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -692,7 +693,7 @@
     background-color: #1A1D21;
 }
 
-.Resource_head {
+.resourceHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -709,23 +710,23 @@
     padding-bottom: 20px;
 }
 
-.Resource_head>button {
+.resourceHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.Resource_screen {
+.resourceScreen {
     height: 90%;
     width: 296px;
     overflow: scroll;
 }
 
-.Resource_screen::-webkit-scrollbar {
+.resourceScreen::-webkit-scrollbar {
     display: none;
 }
 
-.Resource_screen_head {
+.resourceScreenhead {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
@@ -735,7 +736,7 @@
 }
 
 //styling about page
-.Aboutbar {
+.aboutBar {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -746,7 +747,7 @@
     background-color: #1A1D21;
 }
 
-.About_head {
+.aboutHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -763,7 +764,7 @@
     padding-bottom: 20px;
 }
 
-.About_head>button {
+.aboutHead>button {
     background-color: transparent;
     outline: none;
     border: none;
@@ -788,7 +789,7 @@
     background-color: white;
 }
 
-.Intructorinfo {
+.intructorInfo {
     width: 236px;
     justify-content: center;
     align-items: center;
@@ -825,7 +826,7 @@
 }
 
 // styling quiz bar
-.Quiz {
+.quiz {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -837,17 +838,17 @@
     // height: 88vh;
     
 }
-.Quiz_Screen
+.quizScreen
 {
     overflow: scroll;
     height: 90%;
 }
-.Quiz_Screen::-webkit-scrollbar
+.quizScreen::-webkit-scrollbar
 {
     display: none;
 }
 
-.Quiz_head {
+.quizHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -864,53 +865,53 @@
     padding-bottom: 20px;
 }
 
-.Quiz_head>button {
+.quizHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.Quiz_unattempted {
+.quizUnattempted {
     width: 276px;
 }
 
-.Quiz_attempted {
+.quizAttempted {
     width: 276px;
 }
 
-.QuizQuestion {
+.quizQuestion {
     width: 276px;
     margin-top: 12px;
 }
 
-.QuizQuestion_head {
+.quizQuestionhead {
     display: flex;
     width: 276px;
 }
 
-.Quizlable {
+.quizLable {
     display: flex;
     width: 30%;
     justify-content: space-between;
 }
 
-.Quize_expand {
+.quizeExpand {
     width: 70%;
     display: flex;
     justify-content: right;
 }
-.Quize_expand>img 
+.quizeExpand>img 
 {
     width: 12px;
 }
-.QuestionScreen
+.questionScreen
 {
     height: 60vh;
     margin-top: 7px;
     background-color: #121212;
    
 }
-.Quize_expand>button
+.quizeExpand>button
 {
     background-color: transparent;
     outline: none;

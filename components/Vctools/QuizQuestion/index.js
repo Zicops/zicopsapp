@@ -4,16 +4,16 @@ import styles from "../vctoolMain.module.scss"
 const QuizQuestion = () => {
     const [expand, setexpand] = useState(true)
     return (
-        <div className={`${styles.QuizQuestion}`}>
-            <div className={`${styles.QuizQuestion_head}`} >
-                <div className={`${styles.Quizlable}`}>
+        <div className={`${styles.quizQuestion}`}>
+            <div className={`${styles.quizQuestionhead}`} >
+                <div className={`${styles.quizLable}`}>
                     <img src="/images/svg/vctool/quiz.svg" />
                     <div style={{
                         color:"white",
                         fontSize:"14px"
                     }}>Quiz</div>
                 </div>
-                <div className={`${styles.Quize_expand}`}>
+                <div className={`${styles.quizeExpand}`}>
                     <button onClick={()=>{
                         setexpand(!expand)
                     }}>
@@ -27,7 +27,7 @@ const QuizQuestion = () => {
          
           <div>
             {
-                !expand ?    <div className={`${styles.QuestionScreen}`} ></div> :""
+                !expand ?    <div className={`${styles.questionScreen}`} ></div> :""
             }
           </div>
         </div>

@@ -1,9 +1,9 @@
 import styles from "../vctoolMain.module.scss"
-const ResourcePage=({showHide})=>
+const ResourcePage=({showHide=false})=>
 {
     return(
-        <div className={`${styles.Resourcebar}`}>
-            <div className={`${styles.Resource_head}`}>
+        <div className={`${styles.resourceBar}`}>
+            <div className={`${styles.resourceHead}`}>
                 <div>Resources</div>
                 <button onClick={() => {
                     showHide()
@@ -12,8 +12,8 @@ const ResourcePage=({showHide})=>
                 </button>
             </div>
             
-            <div className={`${styles.Resource_screen}`}>
-            <div className={`${styles.Resource_screen_head}`}>All files</div>
+            <div className={`${styles.resourceScreen}`}>
+            <div className={`${styles.resourceScreenhead}`}>All files</div>
 
 
             </div>

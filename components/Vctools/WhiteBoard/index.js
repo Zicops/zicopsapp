@@ -63,7 +63,7 @@ const WhiteBoard = () => {
         }, 1);
     }
     return (
-        <div className={`${styles.WhiteBoard}`}>
+        <div className={`${styles.whiteBoard}`}>
             <div className={`${styles.whiteBoardControlls}`}>
                 <div>
                     <input onChange={Change} type="color" />

@@ -49,9 +49,8 @@ const VcMaintool = () => {
             localStorage.removeItem("canvasimg");
 
             document.exitFullscreen().then((data => {
-              console.log(data)
+           
             })).catch((e) => {
-              console.log(e)
             })
             setFullscreen(false)
             setisStarted(false)
@@ -66,14 +65,12 @@ const VcMaintool = () => {
           fullScreenFun={() => {
             if (GetFullScreenElement()) {
               document.exitFullscreen().then((data => {
-                console.log(data)
               })).catch((e) => {
-                console.log(e)
               })
             }
             else {
               fullScreenRef.current.requestFullscreen().catch((e) => {
-                console.log(e)
+        
               })
 
             }

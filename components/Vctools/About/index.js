@@ -1,8 +1,8 @@
 import styles from "../vctoolMain.module.scss"
-const About = ({ showHide }) => {
+const About = ({ showHide=false}) => {
     return (
-        <div className={`${styles.Aboutbar}`}>
-            <div className={`${styles.About_head}`}>
+        <div className={`${styles.aboutBar}`}>
+            <div className={`${styles.aboutHead}`}>
                 <div>About</div>
                 <button onClick={() => {
                     showHide()
@@ -11,7 +11,7 @@ const About = ({ showHide }) => {
                 </button>
             </div>
 
-            <div className={`${styles.about_head_screen}`}>
+            <div className={`${styles.aboutHeadscreen}`}>
                 <div style={{
                     marginTop: "15px",
                     paddingTop: "10px",
@@ -29,7 +29,7 @@ const About = ({ showHide }) => {
                 }}>sessions :2</div>
                 <div className={`${styles.aboutInstructor}`}>
                     <div className={`${styles.aboutInstructorlogo}`}></div>
-                    <div className={`${styles.Intructorinfo}`}>
+                    <div className={`${styles.intructorInfo}`}>
                         <div style={{
                             color: "#ACACAC"
                         }}>Instructor:</div>
@@ -45,7 +45,7 @@ const About = ({ showHide }) => {
                         <div className={`${styles.aboutmeetinglogo}`}>
                             <img src="/images/svg/vctool/translate.svg" />
                         </div>
-                        <div className={`${styles.Intructorinfo}`}>
+                        <div className={`${styles.intructorInfo}`}>
                             <div style={{
                                 color: "#ACACAC"
                             }}>Language:</div>
@@ -59,7 +59,7 @@ const About = ({ showHide }) => {
                         <div className={`${styles.aboutmeetinglogo}`}>
                             <img src="/images/svg/vctool/supervisor-account.svg" />
                         </div>
-                        <div className={`${styles.Intructorinfo}`}>
+                        <div className={`${styles.intructorInfo}`}>
                             <div style={{
                                 color: "#ACACAC"
                             }}>Moderator:</div>
@@ -74,7 +74,7 @@ const About = ({ showHide }) => {
                         <div className={`${styles.aboutmeetinglogo}`}>
                             <img src="/images/svg/vctool/calendar-month.svg" />
                         </div>
-                        <div className={`${styles.Intructorinfo}`}>
+                        <div className={`${styles.intructorInfo}`}>
                             <div style={{
                                 color: "#ACACAC"
                             }}>Date:</div>
@@ -88,7 +88,7 @@ const About = ({ showHide }) => {
                         <div className={`${styles.aboutmeetinglogo}`}>
                             <img src="/images/svg/vctool/schedule.svg" />
                         </div>
-                        <div className={`${styles.Intructorinfo}`}>
+                        <div className={`${styles.intructorInfo}`}>
                             <div style={{
                                 color: "#ACACAC"
                             }}>Start time:</div>
@@ -101,7 +101,7 @@ const About = ({ showHide }) => {
                         <div className={`${styles.aboutmeetinglogo}`}>
                             <img src="/images/svg/vctool/timelapse.svg" />
                         </div>
-                        <div className={`${styles.Intructorinfo}`}>
+                        <div className={`${styles.intructorInfo}`}>
                             <div style={{
                                 color: "#ACACAC"
                             }}>Duration:</div>

@@ -1,9 +1,9 @@
 import styles from "../vctoolMain.module.scss";
-const BreakoutRoom = ({ showHide }) => {
+const BreakoutRoom = ({ showHide=false }) => {
     return (
         <>
-            <div className={`${styles.BreakoutRoomBar}`}>
-                <div className={`${styles.breakout_head}`}>
+            <div className={`${styles.breakoutRoombar}`}>
+                <div className={`${styles.breakoutHead}`}>
                     <div>Breakout Rooms</div>
                     <button onClick={() => {
                         showHide()
@@ -16,7 +16,7 @@ const BreakoutRoom = ({ showHide }) => {
                     width: "296px",
                     height: "45%",
                     overflow: "scroll"
-                }} className={`${styles.BreakoutRoom_Screen}`}>
+                }} className={`${styles.breakoutRoomscreen}`}>
 
                     {/* list of breakout rooms */}
 
@@ -26,7 +26,7 @@ const BreakoutRoom = ({ showHide }) => {
                     width: "296px",
                     height: "45%",
                     overflow: "scroll"
-                }} className={`${styles.BreakoutRoom_participants}`}>
+                }} className={`${styles.breakoutRoomparticipants}`}>
 
                 </div>
                 <div>

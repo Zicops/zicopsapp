@@ -29,15 +29,11 @@ const MainToolbar = ({
   stopAdvertisement
 }) => {
   const [fade1, setfade1] = useState(false);
-  const [fade2, setfade2] = useState(true);
   const [hand, sethand] = useState(true);
-  const [showQA, setshowQA] = useState(false);
-  const [showChat, setshowChat] = useState(false);
   const [showQAbtn, setshowQAbtn] = useState(false);
-  const [showPoll, setshowPoll] = useState(false);
-  const [showWhiteBoard, setshowWhiteBoard] = useState(false);
-  const [showParticipants, setshowParticipants] = useState(false);
-  const [showbreakoutRoom, setshowbreakoutRoom] = useState(false);
+
+  const [showWhiteBoard, setshowWhiteBoard] = useState(true);
+
   const [showresourcePage, setresourcePage] = useState(false);
   const [showAbout, setshowAbout] = useState(false);
   const [showQuiz, setshowQuiz] = useState(false);
@@ -159,30 +155,33 @@ const MainToolbar = ({
       )
     }
   ];
-
   return (
     <div
-      className={`${styles.toolbar}`}
+      className={`${styles.toolBar}`}
       onMouseMove={() => {
         mouseMoveFun();
         setfade1(true);
         setTimeout(() => {
           setfade1(false);
-        }, 4000);
+        }, 5000);
       }}>
-      <div
-        className={`${styles.toolbar_nav}`}
-        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}>
+      <div className={`${styles.toolBarnav}`}
+        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onClick={() => {
+          setfade1(true);
+          setTimeout(() => {
+            setfade1(false);
+          }, 5000);
+        }}>
         <button>
           <img src="/images/svg/vctool/folder-open.svg" />
         </button>
 
         <VctoolButton
           onClickfun={() => {
-             
+
             selectedButton === 'resourceBar'
-            ? setSelectedButton('')
-            :setSelectedButton('resourceBar');
+              ? setSelectedButton('')
+              : setSelectedButton('resourceBar');
           }}
           trueSrc={'/images/svg/vctool/library-books.svg'}
           falseSrc={'/images/svg/vctool/library-books.svg'}
@@ -191,21 +190,18 @@ const MainToolbar = ({
 
         <VctoolButton
           onClickfun={() => {
+
             setshowWhiteBoard(!showWhiteBoard);
           }}
           trueSrc={'/images/svg/vctool/sticky-note-2.svg'}
           falseSrc={'/images/svg/vctool/sticky-note-2.svg'}
         />
-        {/* 
-                <button>
-                <img src="/images/svg/vctool/quiz.svg" />
-                </button> */}
         <VctoolButton
           onClickfun={() => {
-             
+
             selectedButton === 'quiz'
-            ? setSelectedButton('')
-            :setSelectedButton('quiz');
+              ? setSelectedButton('')
+              : setSelectedButton('quiz');
           }}
           trueSrc={'/images/svg/vctool/quiz.svg'}
           falseSrc={'/images/svg/vctool/quiz.svg'}
@@ -217,10 +213,10 @@ const MainToolbar = ({
         </button>
         <VctoolButton
           onClickfun={() => {
-             
+
             selectedButton === 'about'
-            ? setSelectedButton('')
-            :setSelectedButton('about');
+              ? setSelectedButton('')
+              : setSelectedButton('about');
           }}
           toggle={showAbout}
           trueSrc={'/images/svg/vctool/info.svg'}
@@ -232,88 +228,18 @@ const MainToolbar = ({
         onMouseMove={() => {
           setfade1(false);
         }}>
-        {/* All screen items will come here */}
-        {/* {showChat && (
-          <ChatBar
-            showHide={() => {
-              setshowChat(!showChat);
-            }}
-          />
-        )} */}
-
-        {/* {showQA && (
-          <QAbar
-            showQAbtn={showQAbtn}
-            showBtnFun={() => {
-              setshowQAbtn(true);
-            }}
-            showHide={() => {
-              setshowQA(!showQA);
-            }}
-          />
-        )} */}
-
-        {/* {showPoll && (
-          <Poll
-            showHide={() => {
-              setshowPoll(!showPoll);
-            }}
-          />
-        )} */}
-
-        {/* {showParticipants && (
-          <Participants
-            showHide={() => {
-              setshowParticipants(!showParticipants);
-            }}
-            Info={getUesrId}
-          />
-        )} */}
-
-        {/* {showWhiteBoard && <WhiteBoard />} */}
-
-        {/* {showbreakoutRoom && (
-          <BreakoutRoom
-            showHide={() => {
-              setshowbreakoutRoom(!showbreakoutRoom);
-            }}
-          />
-        )} */}
-        {
-          // isStarted ? (userEmali.includes("@zicops"))? " " :<AdvertisePopup/>:""
-          // https://www.youtube.com/watch?v=QNuILonXlRo
-          // isStarted ? <AdvertisePopup/> :''
-          // isStarted ? (userEmali.includes("@zicops"))? stopAdvertisement() :startAdvertisement():""
-        }
-        {/* {showresourcePage && (
-          <ResourcePage
-            showHide={() => {
-              setresourcePage(!showresourcePage);
-            }}
-          />
-        )} */}
-        {/* {showAbout && (
-          <About
-            showHide={() => {
-              setshowAbout(!showAbout);
-            }}
-          />
-        )} */}
-        {/* {showQuiz && (
-          <QuizPage
-            showHide={() => {
-              setshowQuiz(!showQuiz);
-            }}
-          />
-        )} */}
 
         <>{getClickedComponent(selectedButton)}</>
       </div>
 
-      <div
-        className={`${styles.toolbar_footer}`}
-        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}>
-        <div className={`${styles.footer_left}`}>
+      <div className={`${styles.toolBarfooter}`}
+        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onClick={() => {
+          setfade1(true);
+          setTimeout(() => {
+            setfade1(false);
+          }, 5000);
+        }}>
+        <div className={`${styles.footerLeft}`}>
           <div>
             <VctoolButton
               onClickfun={() => {
@@ -321,7 +247,7 @@ const MainToolbar = ({
               }}
               trueSrc={'/images/svg/vctool/logout.svg'}
               falseSrc={'/images/svg/vctool/logout.svg'}
-              customStyle={`${styles.cansel_btn}`}
+              customStyle={`${styles.canselBtn}`}
               btnValue={'Leave'}
             />
           </div>
@@ -360,16 +286,16 @@ const MainToolbar = ({
             toggle={hand}
             trueSrc={'/images/svg/vctool/back-hand.svg'}
             falseSrc={'/images/svg/vctool/back-hand-on.svg'}
-            customId={hand ? `${styles.footer_left_btn1}` : `${styles.footer_left_btn2}`}
+            customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
           />
         </div>
-        <div className={`${styles.footer_right}`}>
+        <div className={`${styles.footerRight}`}>
           <VctoolButton
             onClickfun={() => {
-              
+
               selectedButton === 'qaBar'
-              ? setSelectedButton('')
-              :setSelectedButton('qaBar');
+                ? setSelectedButton('')
+                : setSelectedButton('qaBar');
             }}
             trueSrc={'/images/svg/vctool/help.svg'}
             falseSrc={'/images/svg/vctool/help.svg'}
@@ -377,10 +303,10 @@ const MainToolbar = ({
 
           <VctoolButton
             onClickfun={() => {
-             
+
               selectedButton === 'chatBar'
-              ? setSelectedButton('')
-              :setSelectedButton('chatBar');
+                ? setSelectedButton('')
+                : setSelectedButton('chatBar');
             }}
             trueSrc={'/images/svg/vctool/chat-bubble.svg'}
             falseSrc={'/images/svg/vctool/chat-bubble.svg'}
@@ -388,10 +314,10 @@ const MainToolbar = ({
 
           <VctoolButton
             onClickfun={() => {
-            
+
               selectedButton === 'poll'
-              ? setSelectedButton('')
-              :setSelectedButton('poll');
+                ? setSelectedButton('')
+                : setSelectedButton('poll');
             }}
             trueSrc={'/images/svg/vctool/insert-chart.svg'}
             falseSrc={'/images/svg/vctool/insert-chart.svg'}
