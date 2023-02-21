@@ -191,7 +191,9 @@ const MainToolbar = ({
         <VctoolButton
           onClickfun={() => {
 
-            setshowWhiteBoard(!showWhiteBoard);
+            selectedButton === 'whiteBoard'
+              ? setSelectedButton('')
+              : setSelectedButton('whiteBoard');
           }}
           trueSrc={'/images/svg/vctool/sticky-note-2.svg'}
           falseSrc={'/images/svg/vctool/sticky-note-2.svg'}
