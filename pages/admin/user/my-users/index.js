@@ -2,8 +2,9 @@ import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
 import { useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -18,6 +19,7 @@ export default function MyUserPage() {
   const [userType, setUserType] = useState('Internal');
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [disableAlert, setDisableAlert] = useState(false);
+  const userData = useRecoilValue(UserStateAtom);
 
   const { setMultiUserArr, updateMultiUserAbout, disableMultiUser, resetMultiPassword } =
     useUpdateUserAboutData();
@@ -27,7 +29,9 @@ export default function MyUserPage() {
       text: 'Disable User',
       handleClick: () => {
         setDisableAlert(true);
-      }
+      },
+      isHidden:
+        !!selectedUser?.find((users) => users?.id === userData?.id) && selectedUser?.length === 1
     },
     {
       text: 'Reset  Password',
@@ -37,7 +41,6 @@ export default function MyUserPage() {
           return setToastMsg({ type: 'danger', message: 'Error while resetting password!' });
 
         return setToastMsg({ type: 'success', message: 'Reset password link sent successfully.' });
-
       }
     }
     // {
