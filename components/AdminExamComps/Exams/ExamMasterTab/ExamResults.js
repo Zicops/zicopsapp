@@ -6,6 +6,7 @@ import PopUp from '@/components/common/PopUp';
 import { getPassingMarks } from '@/components/LearnerExamComp/Logic/exam.helper';
 import { parseJson, secondsToHMS } from '@/helper/utils.helper';
 import { ExamTabDataAtom } from '@/state/atoms/exams.atoms';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -17,6 +18,7 @@ export default function ExamResults() {
   const [showDetailsResults, setShowDetailsResults] = useState(false);
   const { examResultsData } = useHandleExamResults();
   const examTabData = useRecoilValue(ExamTabDataAtom);
+  const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const router = useRouter();
   const examId = router.query?.examId;
@@ -60,7 +62,7 @@ export default function ExamResults() {
 
         <div className={styles.btns}>
           <IconBtn handleClick={() => setShowDetailsResults(true)}>View Attempted Results</IconBtn>
-          <IconBtn>Download Results</IconBtn>
+          {!!(isDev || isDemo) && <IconBtn>Download Results</IconBtn>}
         </div>
       </div>
 

@@ -9,6 +9,7 @@ export default function DeleteBtn({
   mutation = null,
   resKey = null,
   onDelete = () => {},
+  beforeDelete = () => {},
   deleteCondition = null,
   variableObj = {}
 }) {
@@ -28,6 +29,7 @@ export default function DeleteBtn({
               mutation: mutation,
               confirmMsg: confrimMsg,
               onDelete: onDelete,
+              beforeDelete: beforeDelete,
               resKey: resKey,
               variableObj: variableObj || {}
             });

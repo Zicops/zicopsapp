@@ -10,10 +10,10 @@ export default function QuestionPaperTop({ data }) {
           </p>
 
           <p>
-            Sub-Category: <span>{data.sub_category}</span>
+            Sub-Category: <span>{data?.sub_category || data?.subCategory}</span>
           </p>
           <p>
-            Level: <span>{data.difficulty_level}</span>
+            Level: <span>{data?.difficulty_level || data?.difficultyLevel}</span>
           </p>
         </div>
 
