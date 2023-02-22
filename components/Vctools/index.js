@@ -33,12 +33,25 @@ const VcMaintool = () => {
       {toolbar && (
         <MainToolbar
           setAudio={() => {
-            settoggleAudio(!toggleAudio);
-            api.executeCommand('toggleAudio');
+            // settoggleAudio(!toggleAudio);
+            // api.executeCommand('toggleAudio');
+            api.isAudioAvailable().then(available => {
+              if (available) {
+                // console.log("mic is on")
+                settoggleAudio(!toggleAudio);
+                api.executeCommand('toggleAudio');
+              }
+            });
           }}
           setVideo={() => {
-            settoggleVideo(!toggleVideo);
-            api.executeCommand('toggleVideo');
+            // settoggleVideo(!toggleVideo);
+            // api.executeCommand('toggleVideo');
+            api.isVideoAvailable().then(available => {
+              if (available) {
+                settoggleVideo(!toggleVideo);
+                api.executeCommand('toggleVideo');
+              }
+            });
           }}
           audiotoggle={toggleAudio}
           videotoggle={toggleVideo}
@@ -49,7 +62,7 @@ const VcMaintool = () => {
             localStorage.removeItem("canvasimg");
 
             document.exitFullscreen().then((data => {
-           
+
             })).catch((e) => {
             })
             setFullscreen(false)
@@ -70,7 +83,7 @@ const VcMaintool = () => {
             }
             else {
               fullScreenRef.current.requestFullscreen().catch((e) => {
-        
+
               })
 
             }
@@ -79,23 +92,15 @@ const VcMaintool = () => {
           mouseMoveFun={() => {
             api.getRoomsInfo().then(rooms => {
               setuserinfo(rooms.rooms[0].participants)
+              // console.log(":",rooms)
             })
-
             userinfo.forEach((data) => {
-              api.executeCommand('overwriteNames', [{
-                id: data?.id,
-                name: startName// The new name.
-              }]
-              );
-              if (userData.email.includes("@zicops")) {
+              // console.log(api.getParticipantsInfo())
+              //  console.log([api.getEmail(data.id)].toString().includes("@zicops"))
+              if ([api.getEmail(data.id)].toString().includes("@zicops")) {
                 api.executeCommand('grantModerator', data.id);
               }
-              else {
-                // console.log("not a modarator")
-              }
             })
-
-          
 
           }}
 
@@ -106,9 +111,8 @@ const VcMaintool = () => {
           startAdvertisement={() => {
             api.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
           }}
-        
-          stopAdvertisement={()=>
-          {
+
+          stopAdvertisement={() => {
             api.executeCommand('stopShareVideo');
           }}
         />
@@ -119,9 +123,10 @@ const VcMaintool = () => {
         {
           !hidecard ? <MeetingCard
             startMeeting={() => {
-              StartMeeting("standup", "sandeep", containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              StartMeeting("standup", startName, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
               setisStarted(true)
-              sethidecard(!hidecard) 
+              sethidecard(!hidecard)
+              
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);
