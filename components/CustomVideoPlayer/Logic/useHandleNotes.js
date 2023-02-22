@@ -34,13 +34,17 @@ export default function useHandleNotes() {
             notes?.is_active
         )
       ) || [];
+    const allTopicNotes =
+      floatingNotes?.filter((notes) => notes?.topic_id === topic_id && notes?.is_active)?.length ||
+      0;
+
     // const lastNote = allNotes?.[allNotes.length - 1];
     // console.log(allNotes, floatingNotes);
 
     allNotes.push({
       ...getNoteCardObj({
         user_notes_id: Math.random(),
-        sequence: allNotes?.length + 1 || 1,
+        sequence: allTopicNotes?.length + 1 || 1,
         topic_id: topic_id
       }),
       isNew: true
