@@ -24,6 +24,7 @@ export default function Layout({ children }) {
   const { getOrgByDomain, OrgDetails } = useUserCourseData();
 
   const [isFullHeight, setIsFullHeight] = useState(0);
+  const [disableBtn, setDisableBtn] = useState(false);
   const router = useRouter();
 
   useEffect(async () => {
@@ -39,7 +40,7 @@ export default function Layout({ children }) {
       }));
       return;
     }
-     OrgDetails();
+    OrgDetails();
   }, [router?.asPath]);
 
   //refill the  recoil values
@@ -93,15 +94,22 @@ export default function Layout({ children }) {
             'Are you sure about deleting? This will delete it permanently!'
           }
           btnObj={{
+            leftIsDisable: disableBtn,
+            rightIsDisable: disableBtn,
             handleClickLeft: async () => {
+              setDisableBtn(true);
+
               let isDeleted = 'localDelete';
+              const isBeforeDeleteSuccess = await deleteConfirmData?.beforeDelete();
+              if (!isBeforeDeleteSuccess) return setDeleteConfirmData(getDeleteConfirmDataObj());
+
               if (deleteConfirmData?.id) {
                 isDeleted = await deleteData(deleteConfirmData?.mutation, {
                   id: deleteConfirmData?.id,
                   ...deleteConfirmData?.variableObj
                 });
               }
-              console.log(isDeleted, deleteConfirmData);
+
               setDeleteConfirmData(getDeleteConfirmDataObj());
 
               if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey])
