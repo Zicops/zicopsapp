@@ -97,7 +97,7 @@ const VcMaintool = () => {
             userinfo.forEach((data) => {
               // console.log(api.getParticipantsInfo())
               //  console.log([api.getEmail(data.id)].toString().includes("@zicops"))
-              if ([api.getEmail(data.id)].toString().includes("@zicops")) {
+              if ([api.getEmail(data?.id)].toString().includes("@zicops")) {
                 api.executeCommand('grantModerator', data.id);
               }
             })
