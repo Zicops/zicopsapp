@@ -10,8 +10,9 @@ import {
   VolumeMuteIcon,
 } from '@/components/common/ZicopsIcons';
 import { theme } from '@/helper/theme.helper';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useRecoilState } from 'recoil';
+import useHandleControlBar from './Logic/useHandleControlBar';
 import { VideoStateChangeAtom, videoStateChangeList } from './Logic/videoPlayer.helper';
 import Timeline from './Timeline';
 import styles from './videoPlayer.module.scss';
@@ -22,6 +23,7 @@ export default memo(function ControlBar({
   updateVideoProgress,
   moveVideoProgressBy,
   toggleVideoFullScreen,
+  videoRef = null,
   canvasRef = null,
   handleNextClick = null,
   handlePreviousClick = null,
@@ -30,11 +32,17 @@ export default memo(function ControlBar({
 }) {
   const [videoStateChange, setVideoStateChange] = useRecoilState(VideoStateChangeAtom);
 
-  const [activeBtn, setActiveBtn] = useState(null);
+  const {
+    activeBtn,
+    toggleActiveId,
+    selectedWidth,
+    isSelected,
+    activateSelection,
+    deactivateSelection,
+  } = useHandleControlBar(playerState, updateVideoProgress);
 
   const isPlaying = playerState?.isPlaying || false;
   const isFullScreen = playerState?.isFullScreen || false;
-  const progressPercent = playerState?.progressPercent || 0;
   const isMute = playerState?.isMute || false;
   const volume = playerState?.volume || 0;
 
@@ -103,14 +111,18 @@ export default memo(function ControlBar({
       ),
     },
   ];
-
   const volumeBtnId = 7;
   return (
     <>
       <div className={`${styles.controlBar}`}>
         <Timeline
-          progressPercent={progressPercent}
+          playerState={playerState}
+          videoRef={videoRef}
           canvasRef={canvasRef}
+          selectedWidth={selectedWidth}
+          isSelected={isSelected}
+          activateSelection={activateSelection}
+          deactivateSelection={deactivateSelection}
           customStyles={activeBtn === volumeBtnId ? { opacity: 0.1 } : {}}
         />
 
@@ -130,21 +142,18 @@ export default memo(function ControlBar({
               let iconIsFill = false;
               let iconColor = theme.neutralWhite;
 
-              if (activeBtn === id) {
-                (iconIsFill = true), (iconColor = theme.white);
-              }
+              if (activeBtn === id) (iconIsFill = true), (iconColor = theme.white);
 
-              if (isDisabled) {
-                (iconIsFill = false), (iconColor = theme.darkThree);
-              }
+              if (isDisabled) (iconIsFill = false), (iconColor = theme.darkThree);
+
               return (
                 <span
                   key={id}
                   className={`${isRotate ? styles.rotate : ''} ${
                     isDisabled ? styles.disabled : ''
                   } ${customIconClass}`}
-                  onMouseEnter={() => setActiveBtn(id)}
-                  onMouseLeave={() => setActiveBtn(null)}
+                  onMouseEnter={() => toggleActiveId(id)}
+                  onMouseLeave={() => toggleActiveId()}
                   onClick={handleClick}>
                   {activeBtn === id && <span className={`${styles.extraComp}`}>{extraComp}</span>}
                   <IconComp {...iconProps} isFill={iconIsFill || isFill} color={iconColor} />
@@ -158,6 +167,12 @@ export default memo(function ControlBar({
           {isFullScreen ? <ExitFullScreenIcon /> : <FullScreenIcon />}
         </span>
       </div>
+
+      {!!isSelected && (
+        <span className={`${styles.previewImage}`}>
+          <img src="/images/dnd3.jpg" alt="" />
+        </span>
+      )}
     </>
   );
 });

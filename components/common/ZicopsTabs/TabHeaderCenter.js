@@ -10,7 +10,7 @@ export default function TabHeaderCenter({ activeTabData, tabData, handleClick })
         {tabData.map((tab) => (
           <li
             onClick={() => {
-              var headerOffset = 75;
+              var headerOffset = 80;
               var elementPosition = tabHeaderRef.current.getBoundingClientRect().top;
               var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 

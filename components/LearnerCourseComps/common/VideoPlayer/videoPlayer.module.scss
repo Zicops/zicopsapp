@@ -9,6 +9,11 @@ $z-index-video-element: 0;
 $z-index-control-bar: 1;
 
 $iconHeight: 35px;
+$thumbnailWidth: 200px;
+
+:export {
+  thumbnailWidth: $thumbnailWidth;
+}
 
 .videoPlayer {
   position: relative;
@@ -51,9 +56,24 @@ $iconHeight: 35px;
     }
   }
 
+  .previewImage {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    height: 100%;
+    width: 100%;
+
+    img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
   .controlBar {
     position: absolute;
-    bottom: 0;
+    bottom: 0%;
 
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -71,53 +91,118 @@ $iconHeight: 35px;
 
     z-index: $z-index-control-bar;
 
-    .progressBar {
-      grid-column: 1/14;
+    .thumbnailPreview {
+      width: $thumbnailWidth;
 
-      position: relative;
-      background-color: $progress-bar-background;
-      width: 100%;
-      height: $progress-bar-height;
+      position: absolute;
+      bottom: calc(100% + 1.5em);
+      left: 0px;
 
-      opacity: 0.6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5em;
 
-      cursor: pointer;
+      transform: translateX(-50%);
 
-      &:hover {
-        opacity: 1;
-        height: calc($progress-bar-height + 1px);
+      z-index: 1;
 
-        .progressFill {
-          &::after {
-            height: calc($progress-bar-height + 10px);
-            width: calc($progress-bar-height + 10px);
-          }
+      .preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        flex: 1;
+
+        border: 2px solid $white;
+        min-height: 110px;
+        background-color: $darkTwo;
+      }
+
+      .pill {
+        background-color: $darkThree;
+        border-radius: 20px;
+        padding: 0px 10px;
+        width: fit-content;
+        margin: auto;
+
+        &.extraDataSlot {
+          background-color: $darkTwo;
         }
       }
+    }
 
-      canvas {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-      }
+    .progressContainer {
+      grid-column: 1/14;
+      width: 100%;
+      height: calc($progress-bar-height + 2px);
 
-      .progressFill {
+      position: relative;
+
+      .progressBar {
         position: relative;
-        background-color: $progress-fill-background;
-        height: 100%;
+        background-color: $progress-bar-background;
+        height: $progress-bar-height;
 
-        &::after {
+        opacity: 0.6;
+
+        cursor: pointer;
+        transition: all 0.5 ease-in-out;
+
+        // added this for continuous drag of progress bar outside the bar area
+        &:before {
           content: '';
+          position: fixed;
+          top: $headerHeight;
+
+          width: 100%;
+          z-index: 1;
+        }
+
+        &.activeDrag {
+          &::before {
+            height: 80vh;
+          }
+        }
+
+        &:hover {
+          opacity: 1;
+          height: calc($progress-bar-height + 2px);
+
+          .progressFill {
+            &::after {
+              height: calc($progress-bar-height + 10px);
+              width: calc($progress-bar-height + 10px);
+            }
+          }
+        }
+
+        canvas {
           position: absolute;
-          top: 50%;
-          left: 100%;
-          transform: translate(-50%, -50%);
+          height: 100%;
+          width: 100%;
+        }
 
-          height: calc($progress-bar-height + 5px);
-          width: calc($progress-bar-height + 5px);
-
+        .progressFill {
+          position: relative;
           background-color: $progress-fill-background;
-          border-radius: 50%;
+          height: 100%;
+
+          pointer-events: none;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translate(-50%, -50%);
+
+            height: calc($progress-bar-height + 5px);
+            width: calc($progress-bar-height + 5px);
+
+            background-color: $progress-fill-background;
+            border-radius: 50%;
+          }
         }
       }
     }

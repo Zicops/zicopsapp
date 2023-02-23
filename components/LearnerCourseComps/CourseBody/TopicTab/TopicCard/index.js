@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
+  ActiveCourseHeroAtom,
+  courseHeroObj,
   CourseTopicsAtomFamily,
 } from '../../../atoms/learnerCourseComps.atom';
 import styles from '../../../learnerCourseComps.module.scss';
@@ -11,6 +13,7 @@ import TopicContentDetails from './TopicContentDetails';
 
 export default function TopicCard({ topicId }) {
   const topicData = useRecoilValue(CourseTopicsAtomFamily(topicId));
+  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
 
   return (
@@ -19,7 +22,10 @@ export default function TopicCard({ topicId }) {
         className={`${styles.topicCard} ${
           activeCourseData?.topicId === topicData?.id ? styles.activeTopic : ''
         }`}
-        onClick={() => setActiveCourseData({ ...activeCourseData, topicId })}>
+        onClick={() => {
+          setActiveHero(courseHeroObj.topicPreview);
+          setActiveCourseData({ ...activeCourseData, topicId });
+        }}>
         <div className={`${styles.resourcesLink}`}>
           <div
             onClick={(e) => {

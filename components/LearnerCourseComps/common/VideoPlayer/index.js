@@ -50,6 +50,7 @@ export default function VideoPlayer({
 
       <ControlBar
         playerState={playerState}
+        videoRef={videoRef}
         canvasRef={canvasRef}
         toggleIsPlaying={toggleIsPlaying}
         moveVideoProgressBy={moveVideoProgressBy}

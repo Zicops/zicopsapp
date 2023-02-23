@@ -21,7 +21,6 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
 
   // initial video load setup
   useEffect(() => {
-    console.info(videoRef);
     const videoElem = videoRef.current;
     videoElem.addEventListener('loadstart', () => setIsBuffering(true));
     videoElem.addEventListener('canplay', () => setIsBuffering(false));
@@ -106,7 +105,7 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
         duration: videoDuration,
       },
     });
-  }, [videoRef.current]);
+  }, [videoRef?.current?.currentTime]);
 
   // update progressPercent on specific time
   const updateVideoProgress = useCallback(

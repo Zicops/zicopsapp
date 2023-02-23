@@ -9,13 +9,12 @@ export default function CourseBtn({
   suggestedDurationInDays = null,
   completionDateUnix = null,
   isAssigned = false,
-  isStarted = false,
   isLoading = false,
   handleClick = () => {},
   completedPercent = null,
 }) {
   function getBtnText() {
-    if (isStarted) return 'Continue the Course';
+    if (completedPercent > 0) return 'Continue the Course';
     if (isAssigned) return 'Start the Course';
 
     return 'Preview the Course';
