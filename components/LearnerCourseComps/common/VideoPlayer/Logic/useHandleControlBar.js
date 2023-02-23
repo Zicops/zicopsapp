@@ -15,12 +15,14 @@ export default function useHandleControlBar(playerState = {}, updateVideoProgres
     setSelectedWidth(getDataFromEvent(e).seekPercent);
   }
 
-  function deactivateSelection(e, isSelected = false) {
+  function deactivateSelection(e, options = {}) {
+    const { isSelected = false, updateVideo = false } = options;
     if (isSelected) return;
 
     setIsSelected(null);
     setSelectedWidth(null);
-    updateVideoProgress(getDataFromEvent(e).timeInSeconds);
+
+    if (updateVideo) updateVideoProgress(getDataFromEvent(e).timeInSeconds);
   }
 
   // internal helper function

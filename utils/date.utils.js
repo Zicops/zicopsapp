@@ -21,6 +21,9 @@ export function getSecondsToHMS(seconds = 0) {
   return `${hrs}:${mins}:${sec}`;
 }
 
+// returns
+// 23m 40s
+// 02h 23m 40s
 export function getCourseDisplayTime(durationInSeconds = 0) {
   const hours = `0${Math.floor(durationInSeconds / (60 * 60))}`.substr(-2) || '00';
 
@@ -30,10 +33,10 @@ export function getCourseDisplayTime(durationInSeconds = 0) {
   const divisorForSeconds = divisorForMinutes % 60;
   const seconds = `0${Math.ceil(divisorForSeconds)}`.substr(-2) || '00';
 
-  const minsWithUnits = `${minutes}:${seconds} min${minutes < 2 ? '' : 's'}`;
-  const hrsWithUnits = `${hours} hr${hours < 2 ? '' : 's'}`;
+  const displayTime = `${minutes}m ${seconds}s`;
+  const hrsWithUnits = `${hours}h `;
 
-  if (hours == 0) return `${minsWithUnits}`;
+  if (hours == 0) return `${displayTime}`;
 
-  return `${hrsWithUnits} ${minsWithUnits}`;
+  return `${hrsWithUnits} ${displayTime}`;
 }

@@ -35,9 +35,9 @@ export default function Timeline({
           className={`${styles.progressBar} ${!!isSelected ? styles.activeDrag : ''}`}
           style={customStyles}
           onMouseMove={activateSelection}
-          onMouseLeave={(e) => deactivateSelection(e, isSelected)}
+          onMouseLeave={(e) => deactivateSelection(e, { isSelected })}
           onPointerDown={(e) => activateSelection(e, true)}
-          onPointerUp={deactivateSelection}>
+          onPointerUp={(e) => deactivateSelection(e, { isSelected: false, updateVideo: true })}>
           <canvas ref={canvasRef} />
           <div
             className={`${styles.progressFill}`}

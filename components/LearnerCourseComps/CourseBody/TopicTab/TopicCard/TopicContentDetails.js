@@ -2,6 +2,7 @@ import {
   CourseTopicContentAtomFamily,
   UserTopicProgressDataAtom,
 } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
+import ZicopsSkeleton from '@/components/LearnerCourseComps/common/ZicopsSkeleton';
 import useHandleCourseData from '@/components/LearnerCourseComps/Logic/useHandleCourseData';
 import { COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
@@ -26,7 +27,9 @@ export default function TopicContentDetails({ topicId = null }) {
 
   const isCompleted = currentTopicProgress?.status === COURSE_TOPIC_STATUS.completed;
   // default topic content is the first because we sort based on is_default (check loadTopicContent())
-  const defaultTopicContent = topicContent?.[0] || {};
+  const defaultTopicContent = topicContent?.[0] || null;
+  const isLoading = defaultTopicContent == null;
+
   const progressBarStyles = {
     backgroundColor: isCompleted ? styles.success : styles.primary,
     width: `${limitValueInRange(currentTopicProgress?.videoProgress)}%`,
@@ -41,7 +44,13 @@ export default function TopicContentDetails({ topicId = null }) {
 
         <div className={styles.details}>
           <span>e-Content</span>
-          <span>Duration: {getCourseDisplayTime(defaultTopicContent?.duration)}</span>
+          <span>
+            {isLoading ? (
+              <ZicopsSkeleton variant="text" height={30} width={150} />
+            ) : (
+              <>Duration: {getCourseDisplayTime(defaultTopicContent?.duration)}</>
+            )}
+          </span>
         </div>
       </div>
     </>
